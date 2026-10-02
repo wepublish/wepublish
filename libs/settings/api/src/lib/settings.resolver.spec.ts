@@ -120,6 +120,7 @@ const mockSettingUpdate = jest.fn().mockResolvedValue({
 
 jest.mock('@prisma/client', () => {
   return {
+    ...jest.requireActual('@prisma/client'),
     PrismaClient: jest.fn().mockImplementation(() => {
       return {
         setting: {

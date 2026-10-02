@@ -1,3 +1,5 @@
+import { existsSync } from 'fs';
+import { join } from 'path';
 import { getPathMatch } from 'next/dist/shared/lib/router/utils/path-match';
 import nextConfig from './next.config';
 
@@ -34,7 +36,6 @@ describe('cache headers in production', () => {
     '/profile',
     '/profile/subscription/1234',
     '/profile/rechnungen',
-    '/api/revalidate',
     '/api/cookie',
   ])('never lets a shared cache keep %s', async path => {
     await expect(cacheControlFor(path)).resolves.toBe('no-store');
@@ -46,4 +47,13 @@ describe('cache headers in production', () => {
       await expect(cacheControlFor(path)).resolves.toContain('s-maxage=59');
     }
   );
+});
+
+describe('page cache', () => {
+  it('lets every website share rendered pages through Dragonfly', () => {
+    expect(nextConfig.cacheHandler).toBe(
+      join(__dirname, 'page-cache', 'page-cache-handler.js')
+    );
+    expect(existsSync(nextConfig.cacheHandler)).toBe(true);
+  });
 });

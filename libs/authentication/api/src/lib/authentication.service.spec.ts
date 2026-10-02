@@ -211,6 +211,25 @@ describe('AuthenticationService', () => {
       expect(cacheSpy.mock.calls[0][1]).toMatch(/^peer:/);
     });
 
+    it('keeps user and peer sessions for 5 minutes, since every write to them clears the cache', async () => {
+      jest
+        .spyOn(prisma.session, 'findFirst')
+        .mockResolvedValue(userSession as any);
+      jest.spyOn(prisma.token, 'findFirst').mockResolvedValue({
+        id: 'token-1',
+        name: 'Peer',
+        token: 'peer-token',
+        roleIDs: [],
+      } as any);
+      jest.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      const cacheSpy = jest.spyOn(kv, 'getOrLoadNs');
+
+      await service.getUserSession('secret-token');
+      await service.getPeerSession('peer-token');
+
+      expect(cacheSpy.mock.calls.map(call => call[3])).toEqual([300, 300]);
+    });
+
     it('does not cache unknown tokens', async () => {
       const sessionSpy = jest
         .spyOn(prisma.session, 'findFirst')

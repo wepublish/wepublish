@@ -12,6 +12,9 @@ import { getBaseConfig, setCommonTags } from './config';
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
+    const { forbidCachingErrors } = await import('./error-no-store');
+    forbidCachingErrors();
+
     const { nodeProfilingIntegration } = await import('@sentry/profiling-node');
 
     Sentry.init({

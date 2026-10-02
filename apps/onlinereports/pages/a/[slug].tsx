@@ -4,7 +4,7 @@ import {
   ArticleListContainer,
 } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   ArticleDocument,
@@ -184,6 +184,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(article.data?.article, article.errors),
   };
 };

@@ -19,6 +19,7 @@ describe('TrackingPixelService cache', () => {
       findMany: ReturnType<typeof vi.fn>;
       create: ReturnType<typeof vi.fn>;
       delete: ReturnType<typeof vi.fn>;
+      deleteMany: ReturnType<typeof vi.fn>;
     };
     trackingPixelMethod: { upsert: ReturnType<typeof vi.fn> };
   };
@@ -43,6 +44,7 @@ describe('TrackingPixelService cache', () => {
         ]),
         create: vi.fn().mockResolvedValue({}),
         delete: vi.fn().mockResolvedValue({}),
+        deleteMany: vi.fn().mockResolvedValue({ count: 1 }),
       },
       trackingPixelMethod: {
         upsert: vi.fn().mockResolvedValue({ id: 'method-1' }),
@@ -94,6 +96,30 @@ describe('TrackingPixelService cache', () => {
     await service([failing]).addMissingArticleTrackingPixels('article-1');
 
     expect(failing.createPixelUri).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not fail the article when another request replaced the failed pixel first', async () => {
+    prisma.articleTrackingPixels.findMany.mockResolvedValue([
+      {
+        id: 'pixel-1',
+        error: '"ProLitteris down"',
+        trackingPixelMethod: { trackingPixelProviderID: 'prolitteris-1' },
+      },
+    ]);
+    prisma.articleTrackingPixels.delete.mockRejectedValue(
+      new Error('No record was found for a delete.')
+    );
+    prisma.articleTrackingPixels.deleteMany.mockResolvedValue({ count: 0 });
+
+    await expect(
+      service().addMissingArticleTrackingPixels('article-1')
+    ).resolves.toBeUndefined();
+    expect(prisma.articleTrackingPixels.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        articleId: 'article-1',
+        uri: 'https://prolitteris-1/px',
+      }),
+    });
   });
 
   it('does not ask the database when no provider is configured', async () => {

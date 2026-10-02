@@ -6,6 +6,7 @@ import {
 } from './audit-log-retention.service';
 import { ConfigService } from '@nestjs/config';
 import { AuditLogService } from './audit-log.service';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 describe('AuditLogRetentionService', () => {
   let service: AuditLogRetentionService;
@@ -25,8 +26,51 @@ describe('AuditLogRetentionService', () => {
 
     service = new AuditLogRetentionService(
       auditLogService as unknown as AuditLogService,
-      config as unknown as ConfigService
+      config as unknown as ConfigService,
+      {} as unknown as KvTtlCacheService
     );
+  });
+
+  describe('once a night', () => {
+    const night = (claimed: boolean | undefined) => {
+      const kv = { claim: jest.fn().mockResolvedValue(claimed) };
+      const retention = new AuditLogRetentionService(
+        auditLogService as unknown as AuditLogService,
+        { get: jest.fn() } as unknown as ConfigService,
+        kv as unknown as KvTtlCacheService
+      );
+
+      return { retention, kv };
+    };
+
+    it('prunes on the replica that claims the night', async () => {
+      await night(true).retention.pruneNightly();
+
+      expect(auditLogService.deleteOlderThan).toHaveBeenCalled();
+    });
+
+    it('leaves the night to the replica that claimed it', async () => {
+      await night(false).retention.pruneNightly();
+
+      expect(auditLogService.deleteOlderThan).not.toHaveBeenCalled();
+    });
+
+    it('prunes nothing without Dragonfly, which cannot keep it to one replica', async () => {
+      await night(undefined).retention.pruneNightly();
+
+      expect(auditLogService.deleteOlderThan).not.toHaveBeenCalled();
+    });
+
+    it('claims the night for longer than a run takes, but frees it before the next night', async () => {
+      const { retention, kv } = night(true);
+
+      await retention.pruneNightly();
+
+      const [[name, ttlMs]] = kv.claim.mock.calls;
+      expect(name).toBe('audit-log-retention');
+      expect(ttlMs).toBeGreaterThanOrEqual(2 * 60 * 60 * 1000);
+      expect(ttlMs).toBeLessThan(24 * 60 * 60 * 1000);
+    });
   });
 
   describe('retentionDays', () => {

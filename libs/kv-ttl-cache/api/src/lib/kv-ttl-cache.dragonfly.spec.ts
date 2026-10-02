@@ -134,6 +134,35 @@ describe.skipIf(!adminUrl)('KvTtlCacheModule on Dragonfly', () => {
     expect(loader).not.toHaveBeenCalled();
   });
 
+  it('tells the websites under <prefix>::nsv:website:pages, four seconds after a change and at most once a minute', async () => {
+    const service = await createApiInstance();
+    const before = await admin.get(`${user}::nsv:website:pages`);
+
+    await service.resetNamespace('navigations');
+    await new Promise(resolve => setTimeout(resolve, 4300));
+
+    const after = await admin.get(`${user}::nsv:website:pages`);
+    expect(after).toEqual(expect.any(String));
+    expect(after).not.toBe(before);
+    const window = await admin.pTTL(`${user}::nsw:website:pages`);
+    expect(window).toBeGreaterThan(50_000);
+    expect(window).toBeLessThanOrEqual(60_000);
+
+    await service.resetNamespace('content:articles');
+    await new Promise(resolve => setTimeout(resolve, 4300));
+
+    await expect(admin.get(`${user}::nsv:website:pages`)).resolves.toBe(after);
+  });
+
+  it('lets exactly one api instance claim the nightly job under the production ACL', async () => {
+    const first = await createApiInstance();
+    const second = await createApiInstance();
+
+    await expect(first.claim('nightly-job', 60_000)).resolves.toBe(true);
+    await expect(second.claim('nightly-job', 60_000)).resolves.toBe(false);
+    expect(await admin.pTTL(`${user}::lock:nightly-job`)).toBeGreaterThan(0);
+  });
+
   it('never stores integration settings in Dragonfly', async () => {
     const service = await createApiInstance();
 

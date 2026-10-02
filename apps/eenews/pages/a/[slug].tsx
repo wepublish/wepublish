@@ -1,5 +1,5 @@
 import { ArticleContainer } from '@wepublish/article/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   ArticleDocument,
@@ -68,6 +68,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: 60,
+    revalidate: revalidateFor(article.data?.article, article.errors),
   };
 };

@@ -10,7 +10,11 @@ import {
 import { MemoryAtomicStore } from './kv-ttl-cache-atomic-store';
 
 const typeDefs = `
-  type Article { id: ID!, title: String! }
+  type PollBlock { disabled: Boolean }
+  type CrowdfundingBlock { disabled: Boolean }
+  type RichTextBlock { text: String }
+  union Block = PollBlock | CrowdfundingBlock | RichTextBlock
+  type Article { id: ID!, title: String!, blocks: [Block!]! }
   type Query {
     article(id: ID!): Article
     challenge: String!
@@ -21,6 +25,12 @@ const typeDefs = `
   }
   type Mutation { tags: String! }
 `;
+
+const BLOCKS: Record<string, Array<{ kind: string; disabled?: boolean }>> = {
+  poll: [{ kind: 'PollBlock', disabled: false }],
+  crowdfunding: [{ kind: 'CrowdfundingBlock' }],
+  'poll-off': [{ kind: 'PollBlock', disabled: true }],
+};
 
 type Request = {
   headers?: Record<string, string>;
@@ -52,7 +62,11 @@ const createApi = async (dragonfly: FakeDragonfly) => {
             throw new Error('database down');
           }
 
-          return { id, title: `Title ${calls.article}` };
+          return {
+            id,
+            title: `Title ${calls.article}`,
+            blocks: BLOCKS[id] ?? [{ kind: 'RichTextBlock', text: 'text' }],
+          };
         },
         challenge: () => `challenge ${++calls.challenge}`,
         me: () => `me ${++calls.me}`,
@@ -62,6 +76,9 @@ const createApi = async (dragonfly: FakeDragonfly) => {
       },
       Mutation: {
         tags: () => `tags ${++calls.tags}`,
+      },
+      Block: {
+        __resolveType: (block: { kind: string }) => block.kind,
       },
     },
     plugins: [new GraphqlResponseCachePlugin(kv)],
@@ -215,6 +232,49 @@ describe('GraphqlResponseCachePlugin', () => {
       await api.query(ARTICLE);
 
       expect(api.calls.article).toBe(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it.each(['poll', 'crowdfunding'])(
+    'keeps an answer with a live %s for 30 seconds only',
+    async id => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+
+      try {
+        const api = await start();
+        const live = `{ article(id: "${id}") { id blocks { __typename ... on PollBlock { disabled } ... on CrowdfundingBlock { disabled } } } }`;
+
+        await api.query(live);
+        vi.advanceTimersByTime(29_000);
+        await api.query(live);
+
+        expect(api.calls.article).toBe(1);
+
+        vi.advanceTimersByTime(3_000);
+        await api.query(live);
+
+        expect(api.calls.article).toBe(2);
+      } finally {
+        vi.useRealTimers();
+      }
+    }
+  );
+
+  it('keeps an answer with a switched-off poll for five minutes', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+
+    try {
+      const api = await start();
+      const off =
+        '{ article(id: "poll-off") { id blocks { __typename ... on PollBlock { disabled } } } }';
+
+      await api.query(off);
+      vi.advanceTimersByTime(299_000);
+      await api.query(off);
+
+      expect(api.calls.article).toBe(1);
     } finally {
       vi.useRealTimers();
     }
@@ -401,6 +461,128 @@ describe('PublicContentCacheInvalidator', () => {
     await vi.advanceTimersByTimeAsync(60_000);
 
     expect(invalidate).not.toHaveBeenCalled();
+  });
+
+  describe('website pages', () => {
+    const withPagesCount = () => {
+      const atomic = new MemoryAtomicStore();
+      const writes = vi.spyOn(atomic, 'setRaw');
+      const kv = new KvTtlCacheService(createCache(), atomic);
+
+      return {
+        kv,
+        invalidator: new PublicContentCacheInvalidator(kv),
+        pagesChanges: () =>
+          writes.mock.calls.filter(([key]) => key === 'nsv:website:pages')
+            .length,
+      };
+    };
+
+    it('tells the websites once per publication, after other replicas caught up', async () => {
+      vi.useFakeTimers();
+      const { invalidator, pagesChanges } = withPagesCount();
+
+      await invalidator.invalidate('articles');
+      await vi.advanceTimersByTimeAsync(3999);
+
+      expect(pagesChanges()).toBe(0);
+
+      await vi.advanceTimersByTimeAsync(66_000);
+
+      expect(pagesChanges()).toBe(1);
+    });
+
+    it.each([false, true])(
+      'never tells the websites about a reader comment (removed: %s)',
+      async removed => {
+        vi.useFakeTimers();
+        const { invalidator, pagesChanges } = withPagesCount();
+
+        await invalidator.invalidateReaderComments(removed);
+        await vi.advanceTimersByTimeAsync(70_000);
+
+        expect(pagesChanges()).toBe(0);
+      }
+    );
+
+    it('still retires article answers when a reader comment disappears, since comment blocks show it', async () => {
+      vi.useFakeTimers();
+      const { kv, invalidator } = withPagesCount();
+      const before = await kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE);
+
+      await invalidator.invalidateReaderComments(true);
+
+      await expect(
+        kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE)
+      ).resolves.not.toBe(before);
+    });
+
+    it('tells the websites when a moderator removes a comment', async () => {
+      vi.useFakeTimers();
+      const { invalidator, pagesChanges } = withPagesCount();
+
+      await invalidator.invalidateComments(true);
+      await vi.advanceTimersByTimeAsync(70_000);
+
+      expect(pagesChanges()).toBe(1);
+    });
+  });
+
+  describe('article pages', () => {
+    const withPaths = () => {
+      const { kv, invalidator } = setup();
+      const paths = vi.spyOn(kv, 'resetWebsitePaths');
+
+      return { invalidator, paths };
+    };
+
+    it('tells the websites which article pages changed, old slug included', async () => {
+      const { invalidator, paths } = withPaths();
+
+      await invalidator.invalidateArticlePages(
+        { id: '1', slug: 'one' },
+        { id: '1', slug: 'renamed' }
+      );
+
+      expect(paths).toHaveBeenCalledWith(['/a/one', '/a/id/1', '/a/renamed']);
+    });
+
+    it('only names the id path of an article without slug', async () => {
+      const { invalidator, paths } = withPaths();
+
+      await invalidator.invalidateArticlePages({ id: '1', slug: null });
+
+      expect(paths).toHaveBeenCalledWith(['/a/id/1']);
+    });
+
+    it('tells the websites the commented article changed when a moderator removes a comment', async () => {
+      const { invalidator, paths } = withPaths();
+
+      await invalidator.invalidateComments(true, { id: '1', slug: 'one' });
+
+      expect(paths).toHaveBeenCalledWith(['/a/one', '/a/id/1']);
+    });
+
+    it('tells the websites the commented article changed when a comment gets approved, retiring no other answers', async () => {
+      const { kv, invalidator } = setup();
+      const paths = vi.spyOn(kv, 'resetWebsitePaths');
+      const content = await kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE);
+
+      await invalidator.invalidateComments(false, { id: '1', slug: 'one' });
+
+      expect(paths).toHaveBeenCalledWith(['/a/one', '/a/id/1']);
+      await expect(
+        kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE)
+      ).resolves.toBe(content);
+    });
+
+    it('names no article page when an approved comment is not on an article', async () => {
+      const { invalidator, paths } = withPaths();
+
+      await invalidator.invalidateComments(false);
+
+      expect(paths).not.toHaveBeenCalled();
+    });
   });
 
   it('clears cached navigations', async () => {

@@ -9,6 +9,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { ArticlePublicationWatcher } from './article-publication.watcher';
 
 jest.mock('@wepublish/block-content/api');
 
@@ -33,7 +34,9 @@ describe('ArticleService', () => {
     invalidateDraft: jest.Mock;
     invalidateAt: jest.Mock;
     invalidateNavigations: jest.Mock;
+    invalidateArticlePages: jest.Mock;
   };
+  let publicationWatcher: { schedule: jest.Mock };
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -78,7 +81,10 @@ describe('ArticleService', () => {
       invalidateDraft: jest.fn().mockResolvedValue(undefined),
       invalidateAt: jest.fn(),
       invalidateNavigations: jest.fn().mockResolvedValue(undefined),
+      invalidateArticlePages: jest.fn().mockResolvedValue(undefined),
     };
+
+    publicationWatcher = { schedule: jest.fn() };
 
     trackingPixelMock = {
       addMissingArticleTrackingPixels: jest.fn(),
@@ -94,6 +100,10 @@ describe('ArticleService', () => {
         {
           provide: PublicContentCacheInvalidator,
           useValue: publicContentCache,
+        },
+        {
+          provide: ArticlePublicationWatcher,
+          useValue: publicationWatcher,
         },
         {
           provide: ArticleDataloaderService,
@@ -600,6 +610,62 @@ describe('ArticleService', () => {
     expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
   });
 
+  it.each([
+    [
+      'publishing',
+      () => service.publishArticle('1234', new Date('2025-01-01')),
+    ],
+    ['unpublishing', () => service.unpublishArticle('1234')],
+    ['deleting', () => service.deleteArticle('1234')],
+  ])(
+    'tells the websites the article page changed after %s a article',
+    async (_, change) => {
+      prismaMock.article.findUnique?.mockResolvedValue({
+        id: '1234',
+        slug: 'one',
+        revisions: [{ id: '1234-1234' }],
+      });
+      prismaMock.article.update?.mockResolvedValue({
+        id: '1234',
+        slug: 'one',
+        revisions: [],
+      });
+
+      await change();
+
+      expect(publicContentCache.invalidateArticlePages).toHaveBeenCalledWith(
+        expect.objectContaining({ id: '1234', slug: 'one' })
+      );
+    }
+  );
+
+  it('tells the websites about the old and the new slug after updating a published article', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      slug: 'old',
+      publishedAt: new Date('2022-01-01'),
+      tags: [],
+    });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234', slug: 'new' });
+
+    await service.updateArticle(
+      {
+        id: '1234',
+        slug: 'new',
+        tagIds: [],
+        authors: [],
+        socialMediaAuthorIds: [],
+        blocks: [],
+      } as any,
+      '1'
+    );
+
+    expect(publicContentCache.invalidateArticlePages).toHaveBeenCalledWith(
+      expect.objectContaining({ id: '1234', slug: 'old' }),
+      expect.objectContaining({ id: '1234', slug: 'new' })
+    );
+  });
+
   it('schedules a clear for the moment a article goes live', async () => {
     const publishedAt = new Date('2023-01-01T00:00:20.000Z');
     prismaMock.article.findUnique?.mockResolvedValue({
@@ -610,10 +676,22 @@ describe('ArticleService', () => {
 
     await service.publishArticle('1234', publishedAt);
 
-    expect(publicContentCache.invalidateAt).toHaveBeenCalledWith(
-      publishedAt,
-      'articles'
-    );
+    expect(publicationWatcher.schedule).toHaveBeenCalledWith(publishedAt);
+  });
+
+  it('schedules a clear for the moment a new revision of a published article goes live', async () => {
+    const publishedAt = new Date('2023-01-01T00:00:20.000Z');
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      slug: 'news',
+      publishedAt: new Date('2022-06-01'),
+      revisions: [{ id: '1234-1234' }],
+    });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234' });
+
+    await service.publishArticle('1234', publishedAt);
+
+    expect(publicationWatcher.schedule).toHaveBeenCalledWith(publishedAt);
   });
 
   it('clears cached navigations after deleting a article', async () => {
@@ -710,6 +788,7 @@ describe('ArticleService', () => {
 
     expect(publicContentCache.invalidateDraft).toHaveBeenCalledWith('articles');
     expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+    expect(publicContentCache.invalidateArticlePages).not.toHaveBeenCalled();
   });
 
   it('should like an article', async () => {

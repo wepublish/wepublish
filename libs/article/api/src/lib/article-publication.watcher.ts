@@ -12,6 +12,7 @@ import {
 } from '@wepublish/kv-ttl-cache/api';
 
 const LOOKAHEAD_MS = 70_000;
+const LONGEST_SCHEDULE_MS = 24 * 60 * 60 * 1000;
 
 @Injectable()
 export class ArticlePublicationWatcher
@@ -33,6 +34,16 @@ export class ArticlePublicationWatcher
     this.timers.clear();
   }
 
+  schedule(publishedAt: Date) {
+    const wait = publishedAt.getTime() - Date.now();
+
+    if (wait <= 0 || wait > LONGEST_SCHEDULE_MS) {
+      return;
+    }
+
+    this.timers.schedule([publishedAt], () => this.publish(publishedAt));
+  }
+
   @Interval(60_000)
   async scheduleUpcoming() {
     const now = new Date();
@@ -49,12 +60,11 @@ export class ArticlePublicationWatcher
         }),
       ]);
 
-      this.timers.schedule(
-        upcoming
-          .flat()
-          .flatMap(({ publishedAt }) => (publishedAt ? [publishedAt] : [])),
-        () => this.publicContentCache.invalidate('articles')
-      );
+      for (const { publishedAt } of upcoming.flat()) {
+        if (publishedAt) {
+          this.timers.schedule([publishedAt], () => this.publish(publishedAt));
+        }
+      }
     } catch (error) {
       this.logger.error(
         `Could not look up scheduled articles: ${
@@ -62,5 +72,24 @@ export class ArticlePublicationWatcher
         }`
       );
     }
+  }
+
+  private async publish(publishedAt: Date) {
+    const [articles, revisions] = await Promise.all([
+      this.prisma.article.findMany({
+        where: { publishedAt },
+        select: { id: true, slug: true },
+      }),
+      this.prisma.articleRevision.findMany({
+        where: { publishedAt },
+        select: { article: { select: { id: true, slug: true } } },
+      }),
+    ]);
+
+    await this.publicContentCache.invalidate('articles');
+    await this.publicContentCache.invalidateArticlePages(
+      ...articles,
+      ...revisions.map(({ article }) => article)
+    );
   }
 }

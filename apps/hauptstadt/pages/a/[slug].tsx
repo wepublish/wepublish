@@ -12,7 +12,7 @@ import {
 } from '@wepublish/block-content/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ShowPaywallContext, useShowPaywall } from '@wepublish/paywall/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   ArticleDocument,
@@ -271,7 +271,7 @@ const createArticleGetStaticProps =
 
     return {
       props,
-      revalidate: 60, // every 60 seconds
+      revalidate: revalidateFor(article.data?.article, article.errors),
     };
   };
 

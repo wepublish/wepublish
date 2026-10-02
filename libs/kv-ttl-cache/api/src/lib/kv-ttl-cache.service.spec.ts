@@ -180,6 +180,346 @@ describe('KvTtlCacheService', () => {
     });
   });
 
+  describe('website pages version', () => {
+    const pagesChanges = (atomic: KvAtomicStore) => {
+      const writes = vi.spyOn(atomic, 'setRaw');
+
+      return () =>
+        writes.mock.calls.filter(([key]) => key === 'nsv:website:pages').length;
+    };
+
+    it.each([
+      'graphql:content',
+      'navigations',
+      'banners',
+      'settings',
+      'website-settings',
+      'peer-profile',
+      'member-plans',
+      'peering:remote-profiles',
+    ])('changes four seconds after %s is reset', async namespace => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const replica = createReplica(dragonfly);
+      const before = await replica.getNamespaceVersion('website:pages');
+
+      await replica.resetNamespace(namespace);
+      await vi.advanceTimersByTimeAsync(3999);
+
+      await expect(dragonfly.getRaw('nsv:website:pages')).resolves.toBe(before);
+
+      await vi.advanceTimersByTimeAsync(1);
+
+      await expect(dragonfly.getRaw('nsv:website:pages')).resolves.not.toBe(
+        before
+      );
+    });
+
+    it.each(['content:articles', 'auth:sessions', 'graphql:comments'])(
+      'stays the same when %s is reset',
+      async namespace => {
+        vi.useFakeTimers();
+        const dragonfly = new FakeDragonfly();
+        const replica = createReplica(dragonfly);
+        const before = await replica.getNamespaceVersion('website:pages');
+
+        await replica.resetNamespace(namespace);
+        await vi.advanceTimersByTimeAsync(70_000);
+
+        await expect(dragonfly.getRaw('nsv:website:pages')).resolves.toBe(
+          before
+        );
+      }
+    );
+
+    it('stays the same when the reset is told to leave the websites alone', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const changes = pagesChanges(dragonfly);
+
+      await createReplica(dragonfly).resetNamespace('graphql:content', {
+        pages: false,
+      });
+      await vi.advanceTimersByTimeAsync(70_000);
+
+      expect(changes()).toBe(0);
+    });
+
+    it('bundles a publication and its reset three seconds later into one change after the second reset', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const changes = pagesChanges(dragonfly);
+      const replica = createReplica(dragonfly);
+
+      await replica.resetNamespace('graphql:content');
+      await vi.advanceTimersByTimeAsync(3000);
+      await replica.resetNamespace('graphql:content');
+      await vi.advanceTimersByTimeAsync(3999);
+
+      expect(changes()).toBe(0);
+
+      await vi.advanceTimersByTimeAsync(70_000);
+
+      expect(changes()).toBe(1);
+    });
+
+    it('bundles changes made in quick succession into one change', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const changes = pagesChanges(dragonfly);
+      const replica = createReplica(dragonfly);
+
+      await replica.resetNamespace('navigations');
+      await vi.advanceTimersByTimeAsync(1000);
+      await replica.resetNamespace('banners');
+      await vi.advanceTimersByTimeAsync(1500);
+      await replica.resetNamespace('settings');
+      await vi.advanceTimersByTimeAsync(70_000);
+
+      expect(changes()).toBe(1);
+    });
+
+    it('changes at most once a minute, also across replicas, without losing a change', async () => {
+      vi.useFakeTimers();
+      const { dragonfly, first, second } = twoReplicas();
+      const changes = pagesChanges(dragonfly);
+
+      await first.resetNamespace('navigations');
+      await vi.advanceTimersByTimeAsync(10_000);
+      await second.resetNamespace('banners');
+      await vi.advanceTimersByTimeAsync(53_000);
+
+      expect(changes()).toBe(1);
+
+      await vi.advanceTimersByTimeAsync(7000);
+
+      expect(changes()).toBe(2);
+    });
+
+    it('does not lose a change when the replica that saw it crashes', async () => {
+      vi.useFakeTimers();
+      const { dragonfly, first, second } = twoReplicas();
+
+      await first.resetNamespace('navigations');
+      vi.clearAllTimers();
+      const before = await second.getNamespaceVersion('website:pages');
+      await vi.advanceTimersByTimeAsync(10_000);
+
+      await expect(dragonfly.getRaw('nsv:website:pages')).resolves.not.toBe(
+        before
+      );
+    });
+
+    it('changes once when two replicas fire the same scheduled publication', async () => {
+      vi.useFakeTimers();
+      const { dragonfly, first, second } = twoReplicas();
+      const changes = pagesChanges(dragonfly);
+
+      await Promise.all([
+        first.resetNamespace('graphql:content'),
+        second.resetNamespace('graphql:content'),
+      ]);
+      await vi.advanceTimersByTimeAsync(3000);
+      await Promise.all([
+        first.resetNamespace('graphql:content'),
+        second.resetNamespace('graphql:content'),
+      ]);
+      await vi.advanceTimersByTimeAsync(70_000);
+
+      expect(changes()).toBe(1);
+    });
+
+    it('changes at the latest a minute after the first of a steady stream of changes', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const changes = pagesChanges(dragonfly);
+      const replica = createReplica(dragonfly);
+
+      for (let second = 0; second < 64; second += 2) {
+        await replica.resetNamespace('banners');
+        await vi.advanceTimersByTimeAsync(2000);
+      }
+
+      expect(changes()).toBe(1);
+    });
+
+    it('is shared once Dragonfly is back after a change during an outage', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const replica = createReplica(dragonfly);
+      const before = await replica.getNamespaceVersion('website:pages');
+
+      dragonfly.down = true;
+      await replica.resetNamespace('navigations');
+      await vi.advanceTimersByTimeAsync(4000);
+      dragonfly.down = false;
+      await vi.advanceTimersByTimeAsync(5000);
+
+      const shared = await dragonfly.getRaw('nsv:website:pages');
+      expect(shared).toBeDefined();
+      expect(shared).not.toBe(before);
+    });
+  });
+
+  describe('website layout version', () => {
+    const layoutChanges = (atomic: KvAtomicStore) => {
+      const writes = vi.spyOn(atomic, 'setRaw');
+
+      return () =>
+        writes.mock.calls.filter(([key]) => key === 'nsv:website:layout')
+          .length;
+    };
+
+    it.each([
+      'navigations',
+      'banners',
+      'settings',
+      'website-settings',
+      'peer-profile',
+      'member-plans',
+      'peering:remote-profiles',
+      'content:paywalls',
+    ])(
+      'changes at once and again six seconds after %s is reset',
+      async namespace => {
+        vi.useFakeTimers();
+        const dragonfly = new FakeDragonfly();
+        const changes = layoutChanges(dragonfly);
+
+        await createReplica(dragonfly).resetNamespace(namespace);
+
+        expect(changes()).toBe(1);
+
+        await vi.advanceTimersByTimeAsync(5999);
+
+        expect(changes()).toBe(1);
+
+        await vi.advanceTimersByTimeAsync(1);
+
+        expect(changes()).toBe(2);
+      }
+    );
+
+    it.each(['graphql:content', 'content:articles', 'auth:sessions'])(
+      'stays the same when %s is reset',
+      async namespace => {
+        vi.useFakeTimers();
+        const dragonfly = new FakeDragonfly();
+        const changes = layoutChanges(dragonfly);
+
+        await createReplica(dragonfly).resetNamespace(namespace);
+        await vi.advanceTimersByTimeAsync(70_000);
+
+        expect(changes()).toBe(0);
+      }
+    );
+
+    it('stays the same when the reset is told to leave the websites alone', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const changes = layoutChanges(dragonfly);
+
+      await createReplica(dragonfly).resetNamespace('navigations', {
+        pages: false,
+      });
+      await vi.advanceTimersByTimeAsync(70_000);
+
+      expect(changes()).toBe(0);
+    });
+  });
+
+  describe('website article page versions', () => {
+    it('changes the versions of the given pages at once and again six seconds later', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const replica = createReplica(dragonfly);
+
+      await replica.resetWebsitePaths(['/a/one', '/a/id/1']);
+      const first = await dragonfly.getRaw('nsv:website:path:/a/one');
+
+      expect(first).toBeDefined();
+      await expect(
+        dragonfly.getRaw('nsv:website:path:/a/id/1')
+      ).resolves.toBeDefined();
+
+      await vi.advanceTimersByTimeAsync(5999);
+
+      await expect(dragonfly.getRaw('nsv:website:path:/a/one')).resolves.toBe(
+        first
+      );
+
+      await vi.advanceTimersByTimeAsync(1);
+
+      await expect(
+        dragonfly.getRaw('nsv:website:path:/a/one')
+      ).resolves.not.toBe(first);
+    });
+
+    it('forgets the versions after four hours', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+
+      await createReplica(dragonfly).resetWebsitePaths(['/a/one']);
+      await vi.advanceTimersByTimeAsync(6000 + 4 * 60 * 60 * 1000);
+
+      await expect(
+        dragonfly.getRaw('nsv:website:path:/a/one')
+      ).resolves.toBeUndefined();
+    });
+
+    it('writes the versions once Dragonfly is back after a longer outage', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const replica = createReplica(dragonfly);
+
+      dragonfly.down = true;
+      await replica.resetWebsitePaths(['/a/one', '/a/id/1']);
+      await vi.advanceTimersByTimeAsync(30_000);
+      dragonfly.down = false;
+      await vi.advanceTimersByTimeAsync(5000);
+
+      await expect(
+        dragonfly.getRaw('nsv:website:path:/a/one')
+      ).resolves.toBeDefined();
+      await expect(
+        dragonfly.getRaw('nsv:website:path:/a/id/1')
+      ).resolves.toBeDefined();
+    });
+
+    it('forgets versions written after an outage after four hours too', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const replica = createReplica(dragonfly);
+
+      dragonfly.down = true;
+      await replica.resetWebsitePaths(['/a/one']);
+      await vi.advanceTimersByTimeAsync(30_000);
+      dragonfly.down = false;
+      await vi.advanceTimersByTimeAsync(10_000);
+      await vi.advanceTimersByTimeAsync(4 * 60 * 60 * 1000);
+
+      await expect(
+        dragonfly.getRaw('nsv:website:path:/a/one')
+      ).resolves.toBeUndefined();
+    });
+
+    it('leaves the website pages and layout versions alone', async () => {
+      vi.useFakeTimers();
+      const dragonfly = new FakeDragonfly();
+      const replica = createReplica(dragonfly);
+      const pages = await replica.getNamespaceVersion('website:pages');
+      const layout = await replica.getNamespaceVersion('website:layout');
+
+      await replica.resetWebsitePaths(['/a/one']);
+      await vi.advanceTimersByTimeAsync(70_000);
+
+      await expect(dragonfly.getRaw('nsv:website:pages')).resolves.toBe(pages);
+      await expect(dragonfly.getRaw('nsv:website:layout')).resolves.toBe(
+        layout
+      );
+    });
+  });
+
   describe('values', () => {
     it('keeps caching in memory while Dragonfly is unavailable', async () => {
       const replica = createReplica(new UnavailableAtomicStore());

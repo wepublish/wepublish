@@ -4,6 +4,7 @@ export * from './lib/kv-ttl-cache-mock.service';
 export * from './lib/graphql-response-cache.module';
 export {
   PUBLIC_CONTENT_NAMESPACE,
+  PUBLIC_COMMENTS_NAMESPACE,
   PublicContentCacheInvalidator,
   contentCacheNamespace,
   CONTENT_CACHE_TTL_SECONDS,

@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 // Slate keeps a node's visible text in `text`, or nested in `children`.
 const slateText = (node: any): string => {
@@ -212,20 +213,32 @@ const slateToPm = (content: any): RichtextElements | [] => {
   return [];
 };
 
+const TEN_SECONDS = 10_000;
+const FIVE_SECONDS = 5_000;
+
 @Injectable()
 export class SlateToPmMigrator {
   private readonly logger = new Logger(SlateToPmMigrator.name);
 
   constructor(
     private prisma: PrismaClient,
-    private schedulerRegistry: SchedulerRegistry
+    private schedulerRegistry: SchedulerRegistry,
+    private kv: KvTtlCacheService
   ) {}
+
+  private async isAnotherReplicasTurn(job: string, intervalMs: number) {
+    return (await this.kv.claim(job, intervalMs - 1000)) === false;
+  }
 
   @Cron(CronExpression.EVERY_10_SECONDS, {
     name: 'slate.migrateAuthors',
     waitForCompletion: true,
   })
   async migrateAuthors() {
+    if (await this.isAnotherReplicasTurn('slate.migrateAuthors', TEN_SECONDS)) {
+      return;
+    }
+
     const authors = await this.prisma.author.findMany({
       where: {
         slateBio: {
@@ -262,6 +275,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateComments() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migrateComments', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const revisions = await this.prisma.commentsRevisions.findMany({
       where: {
         slateText: {
@@ -299,6 +318,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateEvents() {
+    if (await this.isAnotherReplicasTurn('slate.migrateEvents', TEN_SECONDS)) {
+      return;
+    }
+
     const events = await this.prisma.event.findMany({
       where: {
         slateDescription: {
@@ -336,6 +359,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePeerProfiles() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migratePeerProfiles', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const peerProfiles = await this.prisma.peerProfile.findMany({
       where: {
         slateCallToActionText: {
@@ -376,6 +405,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePeers() {
+    if (await this.isAnotherReplicasTurn('slate.migratePeers', TEN_SECONDS)) {
+      return;
+    }
+
     const peers = await this.prisma.peer.findMany({
       where: {
         slateInformation: {
@@ -414,6 +447,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePolls() {
+    if (await this.isAnotherReplicasTurn('slate.migratePolls', TEN_SECONDS)) {
+      return;
+    }
+
     const polls = await this.prisma.poll.findMany({
       where: {
         slateInfoText: {
@@ -453,6 +490,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateTags() {
+    if (await this.isAnotherReplicasTurn('slate.migrateTags', TEN_SECONDS)) {
+      return;
+    }
+
     const tags = await this.prisma.tag.findMany({
       where: {
         slateDescription: {
@@ -492,6 +533,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateMemberPlans() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migrateMemberPlans', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const memberPlansByDescription = await this.prisma.memberPlan.findMany({
       where: {
         slateDescription: {
@@ -559,6 +606,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePaywalls() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migratePaywalls', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const paywallsByDescription = await this.prisma.paywall.findMany({
       where: {
         slateDescription: {
@@ -675,6 +728,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateArticles() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migrateArticles', FIVE_SECONDS)
+    ) {
+      return;
+    }
+
     const revisionIds: { id: string }[] = await this.prisma.$queryRaw`
         SELECT id from "articles.revisions" WHERE blocks::text LIKE '%"richText": null%' OR blocks::text LIKE '%"richText":null%';
     `;
@@ -729,6 +788,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePages() {
+    if (await this.isAnotherReplicasTurn('slate.migratePages', FIVE_SECONDS)) {
+      return;
+    }
+
     const revisionIds: { id: string }[] = await this.prisma.$queryRaw`
         SELECT id from "pages.revisions" WHERE blocks::text LIKE '%"richText": null%' OR blocks::text LIKE '%"richText":null%';
     `;
@@ -940,6 +1003,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateBuggyArticles() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateBuggyArticles',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateBuggyArticles',
       'articles.revisions',
@@ -953,6 +1025,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateBuggyPages() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateBuggyPages',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateBuggyPages',
       'pages.revisions',
@@ -966,6 +1047,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateUnmigratedArticles() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateUnmigratedArticles',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateUnmigratedArticles',
       'articles.revisions',
@@ -979,6 +1069,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateUnmigratedPages() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateUnmigratedPages',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateUnmigratedPages',
       'pages.revisions',
@@ -1033,6 +1132,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateBuggyEntities() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateBuggyEntities',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     let matched = 0;
     let changed = 0;
     for (const {

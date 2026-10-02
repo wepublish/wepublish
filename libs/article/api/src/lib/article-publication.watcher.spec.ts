@@ -6,7 +6,10 @@ describe('ArticlePublicationWatcher', () => {
     article: { findMany: jest.Mock };
     articleRevision: { findMany: jest.Mock };
   };
-  let publicContentCache: { invalidate: jest.Mock };
+  let publicContentCache: {
+    invalidate: jest.Mock;
+    invalidateArticlePages: jest.Mock;
+  };
   let watcher: ArticlePublicationWatcher;
 
   beforeEach(() => {
@@ -16,7 +19,10 @@ describe('ArticlePublicationWatcher', () => {
       article: { findMany: jest.fn().mockResolvedValue([]) },
       articleRevision: { findMany: jest.fn().mockResolvedValue([]) },
     };
-    publicContentCache = { invalidate: jest.fn().mockResolvedValue(undefined) };
+    publicContentCache = {
+      invalidate: jest.fn().mockResolvedValue(undefined),
+      invalidateArticlePages: jest.fn().mockResolvedValue(undefined),
+    };
     watcher = new ArticlePublicationWatcher(
       prisma as any,
       publicContentCache as any
@@ -52,6 +58,31 @@ describe('ArticlePublicationWatcher', () => {
     expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
   });
 
+  it('tells the websites which article pages changed once a scheduled revision goes live', async () => {
+    const publishedAt = new Date('2026-10-01T10:00:10.000Z');
+    prisma.articleRevision.findMany.mockResolvedValue([
+      { publishedAt, article: { id: '1', slug: 'one' } },
+    ]);
+    prisma.article.findMany.mockImplementation(({ where }) =>
+      Promise.resolve(
+        where.publishedAt === publishedAt ?
+          [{ publishedAt, id: '2', slug: 'two' }]
+        : []
+      )
+    );
+
+    await watcher.scheduleUpcoming();
+    await jest.advanceTimersByTimeAsync(15_000);
+
+    expect(prisma.article.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { publishedAt } })
+    );
+    expect(publicContentCache.invalidateArticlePages).toHaveBeenCalledWith(
+      expect.objectContaining({ id: '2', slug: 'two' }),
+      expect.objectContaining({ id: '1', slug: 'one' })
+    );
+  });
+
   it('only asks for publications in the next 70 seconds', async () => {
     await watcher.scheduleUpcoming();
 
@@ -64,6 +95,47 @@ describe('ArticlePublicationWatcher', () => {
     expect(prisma.articleRevision.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where })
     );
+  });
+
+  it('tells the websites right when a revision scheduled less than a minute ahead goes live', async () => {
+    const publishedAt = new Date('2026-10-01T10:00:20.000Z');
+    prisma.articleRevision.findMany.mockImplementation(({ where }) =>
+      Promise.resolve(
+        where.publishedAt === publishedAt ?
+          [{ article: { id: '1', slug: 'one' } }]
+        : []
+      )
+    );
+
+    watcher.schedule(publishedAt);
+    await jest.advanceTimersByTimeAsync(19_000);
+    expect(publicContentCache.invalidateArticlePages).not.toHaveBeenCalled();
+
+    await jest.advanceTimersByTimeAsync(4_000);
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
+    expect(publicContentCache.invalidateArticlePages).toHaveBeenCalledWith(
+      expect.objectContaining({ id: '1', slug: 'one' })
+    );
+  });
+
+  it('clears once when the same publication is scheduled and found upcoming', async () => {
+    const publishedAt = new Date('2026-10-01T10:00:20.000Z');
+    prisma.articleRevision.findMany.mockResolvedValue([{ publishedAt }]);
+
+    watcher.schedule(publishedAt);
+    await watcher.scheduleUpcoming();
+    await jest.advanceTimersByTimeAsync(25_000);
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
+  });
+
+  it('leaves publications in the past and more than a day ahead to the minute check', async () => {
+    watcher.schedule(new Date('2026-10-01T09:59:00.000Z'));
+    watcher.schedule(new Date('2026-10-02T10:00:01.000Z'));
+    await jest.advanceTimersByTimeAsync(25 * 60 * 60 * 1000);
+
+    expect(prisma.article.findMany).not.toHaveBeenCalled();
+    expect(publicContentCache.invalidate).not.toHaveBeenCalled();
   });
 
   it('keeps running when the database is unavailable', async () => {

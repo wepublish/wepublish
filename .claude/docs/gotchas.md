@@ -174,8 +174,9 @@ Pinned by `kv-ttl-cache-shared-namespaces.spec.ts`,
 
 ### ⚠️ A new write path must clear the cache it changes
 
-Sessions (30 s), page data, articles, pages, authors, images and anonymous
-GraphQL answers (5 min) are cached — for logged-in requests too. Writers call
+Sessions, page data, articles, pages, authors, images, polls, readers'
+comments and anonymous GraphQL answers are cached for 5 min — for logged-in
+requests too. Writers call
 `kv.resetNamespace(...)`, `SessionCacheInvalidator` (user, role, session, peer
 token) or `PublicContentCacheInvalidator` (`invalidate` for public changes,
 `invalidateDraft` for drafts, `invalidateComments`); otherwise stale data shows
@@ -206,6 +207,48 @@ queue `prefix` must be `{<REDIS_KEY_PREFIX>}`, and a node-redis `connection`
 must drop `name` in `duplicate()` — the worker's `CLIENT SETNAME` is denied by
 `-client`, and Dragonfly cannot allow single subcommands. The flag is not in
 `docker-compose.yml`; check dragonfly01 first. Nothing guards this.
+
+---
+
+### ⚠️ The page cache hands Next a fake `lastModified`
+
+`page-cache.js` returns "now" for a fresh page and `1` for a stale one. Next
+16.1.7 knows a route's `revalidate` only from the prerender manifest or its own
+renders, and assumes **1 s** for every other path — every `fallback: 'blocking'`
+article read by a second pod (verified 2026-10-01). The handler is plain
+CommonJS (Next `import()`s it unbundled) and is reached via two spellings of
+`serverDistDir`, hence `resolve()` in `cacheFor`. Pinned by
+`page-cache-handler.spec.ts` (drives Next's real `IncrementalCache`).
+
+---
+
+### ⚠️ 404s and 5xx are `no-store` only through a `writeHead` patch
+
+`next.config.js` sends `s-maxage=59` for `/:path*` and Next never replaces a
+`Cache-Control` already set (`pages-handler.js`); without it Next still sends
+`s-maxage=1` for `notFound`, and a 500 (api down while a page renders for the
+first time) went out as `public, s-maxage=59` (verified end-to-end 2026-10-02).
+`register()` in `instrumentation.nextjs.ts` makes every 404 and 5xx `private,
+no-store, max-age=0` (`libs/utils/sentry/error-no-store.ts`) so Cloudflare
+never keeps one. Pinned by `error-no-store.spec.ts`; nothing checks the wiring
+in CI (verified end-to-end 2026-10-01).
+
+---
+
+### ⚠️ A missing article is not always a 404: keep `errors` in `revalidateFor`
+
+`article(slug)` for a draft or unpublished article answers
+`Cannot return null for non-nullable field Article.latest`
+(`INTERNAL_SERVER_ERROR`), not 404, and the website clients use
+`errorPolicy: 'all'`, so `getStaticProps` renders an empty 200 page (verified
+end-to-end 2026-10-02). A database hiccup looks the same. `revalidateFor(content,
+errors)` keeps such a page 60 s; with only `content` it was stored for an hour
+and shared to every pod through Dragonfly.
+
+**Load-bearing:** the `!content || errors?.length` branch in
+`libs/utils/website/src/lib/revalidate-for.ts` and the `, article.errors` /
+`, page.errors` argument in every app's `getStaticProps`. Pinned by
+`revalidate-for.spec.ts`; nothing checks that an app passes `errors`.
 
 ---
 

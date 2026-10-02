@@ -25,4 +25,4 @@ export * from './lib/with-builder-router';
 export * from './lib/i18n-formatter';
 export * from './lib/components/daily-briefing-teaser';
 export * from './lib/website-token';
-export * from './lib/revalidate-handler';
+export * from './lib/revalidate-for';

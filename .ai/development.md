@@ -129,6 +129,5 @@ Key variables for local development (set via `.env` or docker-compose):
 | `MEDIA_SERVER_URL` | `http://localhost:4100` | Public media URL |
 | `MEDIA_SERVER_TOKEN` | `secret` | Media server auth token |
 | `S3_ACCESS_KEY` / `S3_SECRET_KEY` | from `.env` | MinIO credentials |
-| `REDIS_URL` | `redis://wepublish-local:…@localhost:6379/0` | Dragonfly for `KvTtlCacheModule`; unset = all caching per replica |
+| `REDIS_URL` | `redis://wepublish-local:…@localhost:6379/0` | Dragonfly for `KvTtlCacheModule` (api) and the page cache (websites); unset = all caching per replica |
 | `REDIS_KEY_PREFIX` | `wepublish-local` | Required with `REDIS_URL`; every key must start with it |
-| `REVALIDATE_TOKEN` | unset | Website: secret for `/api/revalidate?secret=…&path=/…`; unset = the endpoint refuses every request |

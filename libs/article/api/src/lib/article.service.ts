@@ -29,6 +29,7 @@ import {
   contentCacheNamespace,
 } from '@wepublish/kv-ttl-cache/api';
 import { uniqBy } from 'ramda';
+import { ArticlePublicationWatcher } from './article-publication.watcher';
 
 export const mapArticleRevisionAuthors = (
   authors: { authorId: string; role?: string | null }[]
@@ -47,7 +48,8 @@ export class ArticleService {
     private prisma: PrismaClient,
     private trackingPixelService: TrackingPixelService,
     private publicContentCache: PublicContentCacheInvalidator,
-    private kv: KvTtlCacheService
+    private kv: KvTtlCacheService,
+    private publicationWatcher: ArticlePublicationWatcher
   ) {}
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -293,6 +295,7 @@ export class ArticleService {
     });
     if (article.publishedAt) {
       await this.publicContentCache.invalidate('articles');
+      await this.publicContentCache.invalidateArticlePages(article, result);
     } else {
       await this.publicContentCache.invalidateDraft('articles');
     }
@@ -315,6 +318,7 @@ export class ArticleService {
       },
     });
     await this.publicContentCache.invalidate('articles');
+    await this.publicContentCache.invalidateArticlePages(article);
     await this.publicContentCache.invalidateNavigations();
 
     return deleted;
@@ -382,8 +386,9 @@ export class ArticleService {
       },
     });
     await this.publicContentCache.invalidate('articles');
-    this.publicContentCache.invalidateAt(publishedAt, 'articles');
-    this.publicContentCache.invalidateAt(articlePublishedAt, 'articles');
+    await this.publicContentCache.invalidateArticlePages(article);
+    this.publicationWatcher.schedule(publishedAt);
+    this.publicationWatcher.schedule(articlePublishedAt);
 
     return published;
   }
@@ -441,6 +446,7 @@ export class ArticleService {
     }
 
     await this.publicContentCache.invalidate('articles');
+    await this.publicContentCache.invalidateArticlePages(article);
 
     return updatedArticle;
   }

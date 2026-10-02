@@ -10,16 +10,25 @@ import type { FormattedExecutionResult } from 'graphql';
 import { createHash } from 'crypto';
 import { KvTtlCacheService } from './kv-ttl-cache.service';
 import { PublicationTimers } from './publication-timers';
+import { traceCacheGet } from './kv-ttl-cache-tracing';
+import {
+  PAGE_CONTENT_NAMESPACES,
+  PUBLIC_CONTENT_NAMESPACE,
+  articlePagePaths,
+} from './kv-ttl-cache-shared-namespaces';
 
-export const PUBLIC_CONTENT_NAMESPACE = 'graphql:content';
+export { PUBLIC_CONTENT_NAMESPACE };
 export const PUBLIC_COMMENTS_NAMESPACE = 'graphql:comments';
+
+export type ArticlePage = { id: string; slug?: string | null };
 
 export type PublicContent =
   | 'articles'
   | 'pages'
   | 'authors'
   | 'images'
-  | 'paywalls';
+  | 'paywalls'
+  | 'polls';
 
 export const contentCacheNamespace = (content: PublicContent) =>
   `content:${content}`;
@@ -32,17 +41,32 @@ const NAVIGATIONS_NAMESPACE = 'navigations';
 
 const RESPONSE_NAMESPACE = 'graphql:responses';
 const RESPONSE_TTL_SECONDS = 300;
+const LIVE_RESPONSE_TTL_SECONDS = 30;
+const LIVE_BLOCKS = new Set(['PollBlock', 'CrowdfundingBlock']);
 
-const VERSIONED_BY = [
-  PUBLIC_CONTENT_NAMESPACE,
-  'navigations',
-  'banners',
-  'settings',
-  'website-settings',
-  'peer-profile',
-  'member-plans',
-  'peering:remote-profiles',
-];
+const hasLiveBlock = (value: unknown): boolean => {
+  if (Array.isArray(value)) {
+    return value.some(hasLiveBlock);
+  }
+
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+
+  const node = value as { __typename?: unknown; disabled?: unknown };
+
+  if (node.disabled === true) {
+    return false;
+  }
+
+  if (typeof node.__typename === 'string' && LIVE_BLOCKS.has(node.__typename)) {
+    return true;
+  }
+
+  return Object.values(value).some(hasLiveBlock);
+};
+
+const VERSIONED_BY = PAGE_CONTENT_NAMESPACES;
 
 export const CACHEABLE_QUERIES = new Set([
   '__typename',
@@ -148,10 +172,16 @@ export class PublicContentCacheInvalidator implements OnModuleDestroy {
 
   async invalidate(...contents: PublicContent[]) {
     await this.invalidateDraft(...contents);
-    await this.kv.resetNamespace(PUBLIC_CONTENT_NAMESPACE);
+    await this.resetPublicContent();
+  }
+
+  private async resetPublicContent(options?: { pages?: boolean }) {
+    await this.kv.resetNamespace(PUBLIC_CONTENT_NAMESPACE, options);
 
     setTimeout(() => {
-      this.kv.resetNamespace(PUBLIC_CONTENT_NAMESPACE).catch(() => undefined);
+      this.kv
+        .resetNamespace(PUBLIC_CONTENT_NAMESPACE, options)
+        .catch(() => undefined);
     }, REPLICAS_CAUGHT_UP_MS).unref?.();
   }
 
@@ -163,11 +193,29 @@ export class PublicContentCacheInvalidator implements OnModuleDestroy {
     );
   }
 
-  async invalidateComments(removed = false) {
+  async invalidateArticlePages(...articles: ArticlePage[]) {
+    await this.kv.resetWebsitePaths([
+      ...new Set(articles.flatMap(articlePagePaths)),
+    ]);
+  }
+
+  async invalidateComments(removed = false, ...articles: ArticlePage[]) {
     await this.kv.resetNamespace(PUBLIC_COMMENTS_NAMESPACE);
 
     if (removed) {
       await this.invalidate();
+    }
+
+    if (articles.length) {
+      await this.invalidateArticlePages(...articles);
+    }
+  }
+
+  async invalidateReaderComments(removed = false) {
+    await this.kv.resetNamespace(PUBLIC_COMMENTS_NAMESPACE);
+
+    if (removed) {
+      await this.resetPublicContent({ pages: false });
     }
   }
 }
@@ -217,7 +265,7 @@ export class GraphqlResponseCachePlugin implements ApolloServerPlugin<Context> {
           [...namespaces].map(namespace => kv.getNamespaceVersion(namespace))
         );
 
-        key = createHash('sha256')
+        const responseKey = createHash('sha256')
           .update(
             JSON.stringify([
               requestContext.source,
@@ -228,10 +276,16 @@ export class GraphqlResponseCachePlugin implements ApolloServerPlugin<Context> {
           )
           .digest('hex');
 
-        const cached = await kv.getNs<FormattedExecutionResult>(
-          RESPONSE_NAMESPACE,
-          key
-        );
+        key = responseKey;
+
+        const cached = await traceCacheGet(RESPONSE_NAMESPACE, async () => {
+          const value = await kv.getNs<FormattedExecutionResult>(
+            RESPONSE_NAMESPACE,
+            responseKey
+          );
+
+          return { value, hit: !!value };
+        });
 
         if (!cached) {
           return null;
@@ -261,7 +315,14 @@ export class GraphqlResponseCachePlugin implements ApolloServerPlugin<Context> {
           return;
         }
 
-        await kv.setNs(RESPONSE_NAMESPACE, key, result, RESPONSE_TTL_SECONDS);
+        await kv.setNs(
+          RESPONSE_NAMESPACE,
+          key,
+          result,
+          hasLiveBlock(result.data) ?
+            LIVE_RESPONSE_TTL_SECONDS
+          : RESPONSE_TTL_SECONDS
+        );
       },
     };
   }

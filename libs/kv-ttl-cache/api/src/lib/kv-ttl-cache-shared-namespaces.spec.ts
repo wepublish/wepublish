@@ -1,8 +1,10 @@
 import {
   SHARED_NAMESPACES,
+  articlePagePaths,
   assertSharedNamespaces,
   findSecretField,
   isSharedNamespace,
+  isWebsiteLayoutNamespace,
 } from './kv-ttl-cache-shared-namespaces';
 import { INTEGRATION_NAMESPACES } from './kv-ttl-cache.testing';
 
@@ -24,6 +26,12 @@ describe('shared namespaces', () => {
         'graphql:responses',
         'content:paywalls',
       ])
+    );
+  });
+
+  it('shares the comments and polls every logged-in article view reads', () => {
+    expect(SHARED_NAMESPACES).toEqual(
+      expect.arrayContaining(['graphql:comments', 'content:polls'])
     );
   });
 
@@ -54,5 +62,34 @@ describe('findSecretField', () => {
     ['apiKey'],
   ])('finds nothing in %j', value => {
     expect(findSecretField(value)).toBeUndefined();
+  });
+});
+
+describe('website layout', () => {
+  it.each(['navigations', 'settings', 'banners', 'content:paywalls'])(
+    'counts %s as layout every page shows',
+    namespace => {
+      expect(isWebsiteLayoutNamespace(namespace)).toBe(true);
+    }
+  );
+
+  it.each(['graphql:content', 'content:articles', 'content:images'])(
+    'does not count %s as layout',
+    namespace => {
+      expect(isWebsiteLayoutNamespace(namespace)).toBe(false);
+    }
+  );
+});
+
+describe('articlePagePaths', () => {
+  it('names the slug and the id route every website serves an article under', () => {
+    expect(articlePagePaths({ id: '1', slug: 'one' })).toEqual([
+      '/a/one',
+      '/a/id/1',
+    ]);
+  });
+
+  it('names only the id route without a slug', () => {
+    expect(articlePagePaths({ id: '1', slug: null })).toEqual(['/a/id/1']);
   });
 });

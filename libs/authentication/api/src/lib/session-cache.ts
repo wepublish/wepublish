@@ -6,7 +6,7 @@ import {
 import { createHash } from 'crypto';
 
 export const SESSION_CACHE_NAMESPACE = 'auth:sessions';
-export const SESSION_CACHE_TTL_SECONDS = 30;
+export const SESSION_CACHE_TTL_SECONDS = 300;
 
 export const sessionCacheKey = (kind: 'user' | 'peer', token: string) =>
   `${kind}:${createHash('sha256').update(token).digest('hex')}`;

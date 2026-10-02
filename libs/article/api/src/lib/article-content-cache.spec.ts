@@ -31,7 +31,8 @@ describe('article content cache', () => {
         prisma as any,
         {} as any,
         new PublicContentCacheInvalidator(kv),
-        kv
+        kv,
+        { schedule: jest.fn() } as any
       ),
       { __DATALOADER__ArticleDataloaderService: { prime: jest.fn() } }
     );

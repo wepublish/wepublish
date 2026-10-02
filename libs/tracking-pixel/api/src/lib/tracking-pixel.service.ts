@@ -121,7 +121,7 @@ export class TrackingPixelService {
       });
 
       if (matchingPixel) {
-        await this.prisma.articleTrackingPixels.delete({
+        await this.prisma.articleTrackingPixels.deleteMany({
           where: {
             id: matchingPixel.id,
           },

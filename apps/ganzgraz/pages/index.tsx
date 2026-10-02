@@ -5,7 +5,11 @@ import mailchimp, {
 } from '@mailchimp/mailchimp_marketing';
 import { captureException } from '@sentry/react';
 import { PageContainer } from '@wepublish/page/website';
-import { DailyBriefingContext, getApiUrl } from '@wepublish/utils/website';
+import {
+  revalidateFor,
+  DailyBriefingContext,
+  getApiUrl,
+} from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -79,7 +83,7 @@ export const getStaticProps: GetStaticProps = (async () => {
   }
 
   const client = getApiClient(getApiUrl(), []);
-  await Promise.all([
+  const [page] = await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
@@ -101,6 +105,6 @@ export const getStaticProps: GetStaticProps = (async () => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(page.data?.page, page.errors),
   };
 }) satisfies GetStaticProps;

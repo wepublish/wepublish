@@ -8,6 +8,7 @@ import {
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
 import { randomBytes } from 'crypto';
+import { hostname } from 'os';
 import {
   KV_ATOMIC_STORE,
   KvAtomicStore,
@@ -18,14 +19,26 @@ import {
   serializeCacheValue,
 } from './kv-ttl-cache-serializer';
 import {
+  WEBSITE_LAYOUT_NAMESPACE,
+  WEBSITE_PAGES_NAMESPACE,
   findSecretField,
+  isPageContentNamespace,
   isSharedNamespace,
+  isWebsiteLayoutNamespace,
+  websitePathNamespace,
 } from './kv-ttl-cache-shared-namespaces';
+import { traceCacheGet } from './kv-ttl-cache-tracing';
 
 const VERSION_REFRESH_MS = 2000;
 const RESYNC_INTERVAL_MS = 5000;
 const REPLICAS_CAUGHT_UP_MS = 3000;
 const MAX_SHARED_VALUE_CHARS = 256 * 1024;
+const PAGES_QUIET_MS = 4000;
+const PAGES_CHECK_MS = 5000;
+const PAGES_CHANGE_INTERVAL_MS = 60_000;
+const PAGES_LONGEST_WAIT_MS = 60_000;
+const WEBSITE_REBUILD_AGAIN_MS = 6000;
+const WEBSITE_PATH_TTL_MS = 4 * 60 * 60 * 1000;
 
 const logger = new Logger('KvTtlCache');
 
@@ -39,9 +52,16 @@ export class KvTtlCacheService implements OnModuleDestroy {
   private inFlight = new Map<string, Promise<unknown>>();
   private nsVersionInFlight = new Map<string, Promise<string>>();
   private knownVersions = new Map<string, KnownVersion>();
-  private unsyncedVersions = new Map<string, string>();
+  private unsyncedVersions = new Map<
+    string,
+    { version: string; ttlMs?: number }
+  >();
   private release = process.env['APP_RELEASE_ID'] || 'dev';
   private resyncTimer?: ReturnType<typeof setInterval>;
+  private pagesTimer?: ReturnType<typeof setTimeout>;
+  private pagesWatch?: ReturnType<typeof setInterval>;
+  private pagesCheck?: Promise<void>;
+  private unrecordedPagesChange?: number;
   private reportedSecrets = new Set<string>();
 
   constructor(
@@ -64,6 +84,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
   }
 
   async getNamespaceVersion(namespace: string): Promise<string> {
+    this.watchPagesChanges();
     const vk = this.versionKey(namespace);
     const known = this.knownVersions.get(vk);
 
@@ -77,7 +98,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
     }
 
     const p = (async () => {
-      const unsynced = this.unsyncedVersions.get(vk);
+      const unsynced = this.unsyncedVersions.get(vk)?.version;
 
       if (unsynced) {
         await this.resyncVersions();
@@ -115,15 +136,17 @@ export class KvTtlCacheService implements OnModuleDestroy {
 
   onModuleDestroy() {
     clearInterval(this.resyncTimer);
+    clearTimeout(this.pagesTimer);
+    clearInterval(this.pagesWatch);
   }
 
-  private async writeVersion(vk: string): Promise<void> {
+  private async writeVersion(vk: string, ttlMs?: number): Promise<void> {
     const version = newVersion();
 
-    if (await this.atomic.setRaw(vk, version)) {
+    if (await this.atomic.setRaw(vk, version, ttlMs)) {
       this.unsyncedVersions.delete(vk);
     } else {
-      this.unsyncedVersions.set(vk, version);
+      this.unsyncedVersions.set(vk, { version, ttlMs });
       this.resyncTimer ??= setInterval(
         () => void this.resyncVersions(),
         RESYNC_INTERVAL_MS
@@ -131,16 +154,18 @@ export class KvTtlCacheService implements OnModuleDestroy {
       this.resyncTimer.unref?.();
     }
 
-    this.knownVersions.set(vk, { version, checkedAt: Date.now() });
+    if (ttlMs === undefined) {
+      this.knownVersions.set(vk, { version, checkedAt: Date.now() });
+    }
   }
 
   private async resyncVersions(): Promise<void> {
-    const resynced: string[] = [];
+    const resynced: [string, number | undefined][] = [];
 
-    for (const [vk, version] of [...this.unsyncedVersions]) {
-      if (await this.atomic.setRaw(vk, version)) {
+    for (const [vk, { version, ttlMs }] of [...this.unsyncedVersions]) {
+      if (await this.atomic.setRaw(vk, version, ttlMs)) {
         this.unsyncedVersions.delete(vk);
-        resynced.push(vk);
+        resynced.push([vk, ttlMs]);
       }
     }
 
@@ -151,22 +176,153 @@ export class KvTtlCacheService implements OnModuleDestroy {
 
     if (resynced.length) {
       setTimeout(() => {
-        for (const vk of resynced) {
-          void this.writeVersion(vk);
+        for (const [vk, ttlMs] of resynced) {
+          void this.writeVersion(vk, ttlMs);
         }
       }, REPLICAS_CAUGHT_UP_MS).unref?.();
     }
   }
 
-  async resetNamespace(namespace: string): Promise<void> {
+  async resetNamespace(
+    namespace: string,
+    { pages = true }: { pages?: boolean } = {}
+  ): Promise<void> {
     const vk = this.versionKey(namespace);
     await this.writeVersion(vk);
+
+    if (pages && isPageContentNamespace(namespace)) {
+      await this.recordPagesChange();
+    }
+
+    if (pages && isWebsiteLayoutNamespace(namespace)) {
+      await this.resetWebsiteLayout();
+    }
 
     for (const k of this.inFlight.keys()) {
       if (k.startsWith(`ns:${namespace}:`)) {
         this.inFlight.delete(k);
       }
     }
+  }
+
+  async resetWebsitePaths(paths: string[]): Promise<void> {
+    const write = () =>
+      Promise.all(
+        paths.map(path =>
+          this.writeVersion(
+            this.versionKey(websitePathNamespace(path)),
+            WEBSITE_PATH_TTL_MS
+          )
+        )
+      );
+
+    await write();
+    setTimeout(() => void write(), WEBSITE_REBUILD_AGAIN_MS).unref?.();
+  }
+
+  private async resetWebsiteLayout(): Promise<void> {
+    const vk = this.versionKey(WEBSITE_LAYOUT_NAMESPACE);
+
+    await this.writeVersion(vk);
+    setTimeout(
+      () => void this.writeVersion(vk),
+      WEBSITE_REBUILD_AGAIN_MS
+    ).unref?.();
+  }
+
+  private pagesKey(kind: 'nsl' | 'nsf' | 'nsd' | 'nsw') {
+    return `${kind}:${WEBSITE_PAGES_NAMESPACE}`;
+  }
+
+  private watchPagesChanges() {
+    if (this.pagesWatch) {
+      return;
+    }
+
+    this.pagesWatch = setInterval(
+      () => void this.checkPagesChange(),
+      PAGES_CHECK_MS
+    );
+    this.pagesWatch.unref?.();
+  }
+
+  private async recordPagesChange(): Promise<void> {
+    const now = Date.now();
+    const recorded = await this.atomic.setRaw(
+      this.pagesKey('nsl'),
+      String(now)
+    );
+    await this.atomic.setIfAbsent(this.pagesKey('nsf'), String(now));
+
+    if (!recorded) {
+      this.unrecordedPagesChange = now;
+    }
+
+    this.watchPagesChanges();
+    clearTimeout(this.pagesTimer);
+    this.pagesTimer = setTimeout(
+      () => void this.checkPagesChange(),
+      PAGES_QUIET_MS
+    );
+    this.pagesTimer.unref?.();
+  }
+
+  private checkPagesChange(): Promise<void> {
+    this.pagesCheck ??= this.changePagesIfDue().finally(() => {
+      this.pagesCheck = undefined;
+    });
+
+    return this.pagesCheck;
+  }
+
+  private async changePagesIfDue(): Promise<void> {
+    const now = Date.now();
+
+    if (
+      this.unrecordedPagesChange !== undefined &&
+      now - this.unrecordedPagesChange >= PAGES_QUIET_MS
+    ) {
+      this.unrecordedPagesChange = undefined;
+      await this.writeVersion(this.versionKey(WEBSITE_PAGES_NAMESPACE));
+
+      return;
+    }
+
+    const last = Number(await this.atomic.getRaw(this.pagesKey('nsl')));
+    const done = Number((await this.atomic.getRaw(this.pagesKey('nsd'))) ?? 0);
+
+    if (!last || last <= done) {
+      return;
+    }
+
+    const first =
+      Number(await this.atomic.getRaw(this.pagesKey('nsf'))) || last;
+    const quiet = now - last >= PAGES_QUIET_MS;
+
+    if (!quiet && now - first < PAGES_LONGEST_WAIT_MS) {
+      return;
+    }
+
+    const claimed = await this.atomic.setIfAbsent(
+      this.pagesKey('nsw'),
+      '1',
+      PAGES_CHANGE_INTERVAL_MS
+    );
+
+    if (!claimed) {
+      return;
+    }
+
+    const covered = quiet ? last : now - PAGES_QUIET_MS;
+    await this.atomic.setRaw(this.pagesKey('nsd'), String(covered));
+
+    if (quiet) {
+      await this.atomic.delRaw(this.pagesKey('nsf'));
+    } else {
+      await this.atomic.setRaw(this.pagesKey('nsf'), String(covered + 1));
+    }
+
+    await this.writeVersion(this.versionKey(WEBSITE_PAGES_NAMESPACE));
   }
 
   async getOrLoad<T>(
@@ -219,6 +375,29 @@ export class KvTtlCacheService implements OnModuleDestroy {
     loader: () => Promise<T> | T,
     ttlSeconds: number
   ): Promise<T> {
+    return traceCacheGet(namespace, async () => {
+      let loaded = false;
+      const value = await this.loadNs(
+        namespace,
+        key,
+        () => {
+          loaded = true;
+
+          return loader();
+        },
+        ttlSeconds
+      );
+
+      return { value, hit: !loaded };
+    });
+  }
+
+  private async loadNs<T>(
+    namespace: string,
+    key: string,
+    loader: () => Promise<T> | T,
+    ttlSeconds: number
+  ): Promise<T> {
     const version = await this.getNamespaceVersion(namespace);
     const fullKey = this.namespacedKey(namespace, version, key);
 
@@ -255,6 +434,31 @@ export class KvTtlCacheService implements OnModuleDestroy {
     loader: (missing: string[]) => Promise<Array<T | null>>,
     ttlSeconds: number,
     keyPrefix = ''
+  ): Promise<Array<T | null>> {
+    return traceCacheGet(namespace, async () => {
+      let misses = 0;
+      const value = await this.loadManyNs(
+        namespace,
+        keys,
+        missing => {
+          misses = missing.length;
+
+          return loader(missing);
+        },
+        ttlSeconds,
+        keyPrefix
+      );
+
+      return { value, hit: misses === 0, keys: keys.length, misses };
+    });
+  }
+
+  private async loadManyNs<T>(
+    namespace: string,
+    keys: string[],
+    loader: (missing: string[]) => Promise<Array<T | null>>,
+    ttlSeconds: number,
+    keyPrefix: string
   ): Promise<Array<T | null>> {
     const cached = await this.getManyNs<T>(
       namespace,
@@ -368,6 +572,30 @@ export class KvTtlCacheService implements OnModuleDestroy {
     if (this.isShared(namespace)) {
       await this.atomic.delRaw(this.sharedKey(fullKey));
     }
+  }
+
+  async dragonflyStatus(): Promise<
+    'reachable' | 'unreachable' | 'not-configured'
+  > {
+    if (!this.atomic.shared) {
+      return 'not-configured';
+    }
+
+    return (await this.atomic.ping()) ? 'reachable' : 'unreachable';
+  }
+
+  async claim(name: string, ttlMs: number): Promise<boolean | undefined> {
+    if (!this.atomic.shared || !this.atomic.isAvailable()) {
+      return undefined;
+    }
+
+    const claimed = await this.atomic.setIfAbsent(
+      `lock:${name}`,
+      hostname(),
+      ttlMs
+    );
+
+    return this.atomic.isAvailable() ? claimed : undefined;
   }
 
   private isShared(namespace: string): boolean {
