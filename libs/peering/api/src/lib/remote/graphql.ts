@@ -2173,6 +2173,14 @@ export enum MailchimpContactStatus {
   Subscribed = 'Subscribed'
 }
 
+export type MailchimpDraft = {
+  __typename?: 'MailchimpDraft';
+  editUrl: Scalars['String'];
+  id: Scalars['String'];
+  title: Scalars['String'];
+  webId: Scalars['Int'];
+};
+
 export type MailchimpFormBlock = BaseBlock & {
   __typename?: 'MailchimpFormBlock';
   autoFocus: Scalars['Boolean'];
@@ -2723,6 +2731,7 @@ export type Mutation = {
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
   createNavigation: Navigation;
+  createNewsletterCampaign: NewsletterCampaign;
   /** Creates an page. */
   createPage: Page;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
@@ -2816,6 +2825,7 @@ export type Mutation = {
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
   deleteNavigation: Navigation;
+  deleteNewsletterCampaign: Scalars['Boolean'];
   /** Deletes an page. */
   deletePage: Scalars['String'];
   /** Deletes an existing payment method. */
@@ -2898,6 +2908,7 @@ export type Mutation = {
   markNotificationRead: NotificationRead;
   /** Publishes an article at the given time. */
   publishArticle: Article;
+  publishNewsletterCampaign: NewsletterPublishResult;
   /** Publishes an page at the given time. */
   publishPage: Page;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
@@ -2998,6 +3009,7 @@ export type Mutation = {
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
   updateNavigation: Navigation;
+  updateNewsletterCampaign: NewsletterCampaign;
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
@@ -3316,6 +3328,12 @@ export type MutationCreateNavigationArgs = {
   key: Scalars['String'];
   links: Array<NavigationLinkInput>;
   name: Scalars['String'];
+};
+
+
+export type MutationCreateNewsletterCampaignArgs = {
+  document?: InputMaybe<Scalars['JSONObject']>;
+  title: Scalars['String'];
 };
 
 
@@ -3678,6 +3696,11 @@ export type MutationDeleteNavigationArgs = {
 };
 
 
+export type MutationDeleteNewsletterCampaignArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeletePageArgs = {
   id: Scalars['String'];
 };
@@ -3869,6 +3892,11 @@ export type MutationMarkNotificationReadArgs = {
 export type MutationPublishArticleArgs = {
   id: Scalars['String'];
   publishedAt: Scalars['DateTime'];
+};
+
+
+export type MutationPublishNewsletterCampaignArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -4272,6 +4300,13 @@ export type MutationUpdateNavigationArgs = {
 };
 
 
+export type MutationUpdateNewsletterCampaignArgs = {
+  document: Scalars['JSONObject'];
+  id: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdatePageArgs = {
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']>;
@@ -4604,6 +4639,55 @@ export enum NavigationLinkType {
   External = 'External',
   Page = 'Page'
 }
+
+export type NewsletterCampaign = {
+  __typename?: 'NewsletterCampaign';
+  blockCount: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  document: Scalars['JSONObject'];
+  id: Scalars['String'];
+  images: Array<Image>;
+  mailchimpCampaignId?: Maybe<Scalars['String']>;
+  mailchimpCampaignWebId?: Maybe<Scalars['Int']>;
+  mailchimpEditUrl?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
+  title: Scalars['String'];
+};
+
+export type NewsletterInterestCategory = {
+  __typename?: 'NewsletterInterestCategory';
+  groups: Array<Scalars['String']>;
+  title: Scalars['String'];
+};
+
+export type NewsletterMergeFields = {
+  __typename?: 'NewsletterMergeFields';
+  error?: Maybe<Scalars['String']>;
+  fields: Array<NewsletterMergeTag>;
+  interests: Array<NewsletterInterestCategory>;
+};
+
+export type NewsletterMergeTag = {
+  __typename?: 'NewsletterMergeTag';
+  description: Scalars['String'];
+  kind?: Maybe<Scalars['String']>;
+  label: Scalars['String'];
+  tag: Scalars['String'];
+};
+
+export type NewsletterPublishResult = {
+  __typename?: 'NewsletterPublishResult';
+  campaign: MailchimpDraft;
+  created: Scalars['Boolean'];
+  report: NewsletterReport;
+};
+
+export type NewsletterReport = {
+  __typename?: 'NewsletterReport';
+  bytes: Scalars['Int'];
+  missingArticles: Array<Scalars['String']>;
+  missingFooter: Array<Scalars['String']>;
+};
 
 export type NotificationConfirmation = {
   __typename?: 'NotificationConfirmation';
@@ -5731,6 +5815,12 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  newsletterCampaign: NewsletterCampaign;
+  /** The stored issue rendered as the HTML Mailchimp receives. */
+  newsletterCampaignPreview: Scalars['String'];
+  newsletterCampaignReport: NewsletterReport;
+  newsletterCampaigns: Array<NewsletterCampaign>;
+  newsletterMergeFields: NewsletterMergeFields;
   /** Returns the instance-wide notification confirmations. Requires authentication. */
   notificationConfirmations: Array<NotificationConfirmation>;
   /** Returns the current user's read notifications. Requires authentication. */
@@ -6346,6 +6436,21 @@ export type QueryNewDeactivationsArgs = {
 export type QueryNewSubscribersArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryNewsletterCampaignArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryNewsletterCampaignPreviewArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryNewsletterCampaignReportArgs = {
+  id: Scalars['String'];
 };
 
 

@@ -1,0 +1,25 @@
+{
+  "name": "newsletter-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/newsletter/api/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "command": "NODE_OPTIONS=--experimental-vm-modules jest --config {projectRoot}/jest.config.ts"
+      },
+      "configurations": {
+        "ci": {
+          "command": "NODE_OPTIONS=--experimental-vm-modules jest --ci --coverage --config {projectRoot}/jest.config.ts"
+        }
+      }
+    }
+  }
+}

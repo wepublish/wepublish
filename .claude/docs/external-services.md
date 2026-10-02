@@ -10,7 +10,8 @@
 ## Email Provider
 
 - Mailgun
-- Mailchimp
+- Mailchimp — the newsletter editor (`libs/newsletter`) pushes drafts, never
+  sends, through the Marketing API key and list of the sync-provider integration
 
 ## Analytics Provider
 
