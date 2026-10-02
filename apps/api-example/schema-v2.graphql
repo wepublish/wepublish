@@ -2944,6 +2944,11 @@ type Mutation {
   """Duplicates an article."""
   duplicateArticle(id: String!): Article!
 
+  """
+  A new campaign with the given one's document. The Mailchimp draft is not copied.
+  """
+  duplicateNewsletterCampaign(id: String!): NewsletterCampaign!
+
   """Duplicates an page."""
   duplicatePage(id: String!): Page!
 

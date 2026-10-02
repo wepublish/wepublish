@@ -1,6 +1,6 @@
 export * from './lib/blocks';
 export * from './lib/css';
-export * from './lib/default-document';
+export * from './lib/new-issue';
 export * from './lib/document';
 export * from './lib/inline';
 export * from './lib/merge-tags';

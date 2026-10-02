@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { renderBlock } from './blocks';
-import { DEFAULT_DOCUMENT } from './default-document';
+import { newIssueDocument } from './new-issue';
 import type { NewsletterDocument } from './document';
 import { renderParagraphs } from './inline';
 import { conditionTags, missingRequiredFooterTags } from './merge-tags';
@@ -112,15 +112,34 @@ describe('image block', () => {
   });
 });
 
-describe('renderNewsletter', () => {
-  const rendered = () => renderNewsletter(DEFAULT_DOCUMENT);
+const EVERY_BLOCK: NewsletterDocument = {
+  preheader: 'Vorschau',
+  blocks: [
+    { type: 'image', alt: 'Logo', href: 'https://example.com', gutter: 'none' },
+    { type: 'meta', left: 'Newsletter', right: '13.8.2026' },
+    { type: 'heading', text: 'Titel' },
+    { type: 'text', gutter: 'intro', paragraphs: ['**Fett**', '- Liste'] },
+    { type: 'button', label: 'Weiter', href: 'https://example.com' },
+    { type: 'panel', title: 'Gewusst?', paragraphs: ['Text'] },
+    { type: 'rubric', name: 'Solar' },
+    { type: 'teaser', variant: 'big', articleId: 'article-1' },
+    { type: 'divider' },
+    { type: 'teaser', variant: 'short', articleId: 'article-2' },
+    { type: 'footer', title: 'Fusszeile', lines: ['Redaktion'] },
+  ],
+};
 
+describe('renderNewsletter', () => {
   it('never pretty-prints end tags', async () => {
-    expect(await rendered()).not.toMatch(/<\/\w+\n/);
+    expect(await renderNewsletter(EVERY_BLOCK)).not.toMatch(/<\/\w+\n/);
   });
 
-  it('carries the footer tags Mailchimp requires', async () => {
-    expect(missingRequiredFooterTags(await rendered())).toEqual([]);
+  it('gives a new issue the footer tags Mailchimp requires', async () => {
+    expect(
+      missingRequiredFooterTags(
+        await renderNewsletter(newIssueDocument('Ausgabe 1'))
+      )
+    ).toEqual([]);
   });
 });
 

@@ -119,6 +119,21 @@ describe('NewsletterCampaignResolver', () => {
     );
   });
 
+  it('duplicates a campaign by id', async () => {
+    campaigns.duplicate?.mockResolvedValue({
+      ...campaign,
+      id: 'campaign-2',
+    });
+
+    const { body } = await gql(
+      `mutation { duplicateNewsletterCampaign(id: "campaign-1") { id } }`
+    );
+
+    expect(body.errors).toBeUndefined();
+    expect(body.data.duplicateNewsletterCampaign).toEqual({ id: 'campaign-2' });
+    expect(campaigns.duplicate).toHaveBeenCalledWith('campaign-1');
+  });
+
   it('answers the preview as html', async () => {
     campaigns.preview?.mockResolvedValue('<html></html>');
 

@@ -2,7 +2,6 @@ import type { Mock } from 'vitest';
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { DEFAULT_DOCUMENT } from '@wepublish/newsletter/email';
 import { NewsletterCampaignService } from './newsletter-campaign.service';
 import { NewsletterMailchimpService } from './newsletter-mailchimp.service';
 import { NewsletterRenderService } from './newsletter-render.service';
@@ -31,7 +30,6 @@ describe('NewsletterCampaignService', () => {
       'findMany' | 'findUnique' | 'create' | 'update' | 'delete',
       Mock
     >;
-    article: { findFirst: Mock };
   };
   let renderer: { render: Mock };
   let mailchimp: { pushDraft: Mock; editUrls: Mock };
@@ -45,7 +43,6 @@ describe('NewsletterCampaignService', () => {
         update: vi.fn(async ({ data }) => ({ ...row, ...data })),
         delete: vi.fn().mockResolvedValue(row),
       },
-      article: { findFirst: vi.fn().mockResolvedValue({ id: 'newest' }) },
     };
     renderer = {
       render: vi.fn(async (doc: typeof document) => ({
@@ -101,57 +98,49 @@ describe('NewsletterCampaignService', () => {
 
   const created = () => prisma.newsletterCampaign.create.mock.calls[0][0].data;
 
-  const teasersOf = (doc: { blocks: { type: string }[] }) =>
-    doc.blocks.filter(block => block.type === 'teaser');
-
-  it('starts a new issue from the default document', async () => {
+  it('starts a new issue with its title, a placeholder text and the footer', async () => {
     await service.create('  Ausgabe 2  ');
 
     expect(created()).toEqual({
       title: 'Ausgabe 2',
-      document: expect.objectContaining({
-        preheader: DEFAULT_DOCUMENT.preheader,
-      }),
-    });
-    expect(created().document.blocks).toHaveLength(
-      DEFAULT_DOCUMENT.blocks.length
-    );
-  });
-
-  it('fills every sample teaser with the newest article the website lists', async () => {
-    await service.create('Ausgabe 2');
-
-    expect(prisma.article.findFirst).toHaveBeenCalledWith({
-      where: {
-        AND: expect.arrayContaining([
-          { hidden: false },
-          { OR: [{ publishedAt: { lte: expect.any(Date) } }] },
-        ]),
+      document: {
+        preheader: '',
+        blocks: [
+          expect.objectContaining({ type: 'heading', text: 'Ausgabe 2' }),
+          expect.objectContaining({
+            type: 'text',
+            paragraphs: [expect.stringContaining('Lorem ipsum')],
+          }),
+          expect.objectContaining({ type: 'footer' }),
+        ],
       },
-      orderBy: { publishedAt: 'desc' },
-      select: { id: true },
     });
-    expect(teasersOf(created().document).length).toBeGreaterThan(0);
-    expect(teasersOf(created().document)).toEqual(
-      teasersOf(DEFAULT_DOCUMENT).map(() =>
-        expect.objectContaining({ articleId: 'newest' })
-      )
-    );
-  });
-
-  it('leaves the sample teasers out when nothing is published yet', async () => {
-    prisma.article.findFirst.mockResolvedValue(null);
-
-    await service.create('Ausgabe 2');
-
-    expect(teasersOf(created().document)).toEqual([]);
   });
 
   it('takes a given document as it is', async () => {
     await service.create('Ausgabe 2', document);
 
-    expect(prisma.article.findFirst).not.toHaveBeenCalled();
     expect(created().document.blocks).toHaveLength(2);
+  });
+
+  it('duplicates an issue under a new title, without its Mailchimp draft', async () => {
+    const copy = await service.duplicate('campaign-1');
+
+    expect(created()).toEqual({
+      title: 'Ausgabe 1 (Kopie)',
+      document: expect.objectContaining({ preheader: 'Vorschau' }),
+    });
+    expect(created().document.blocks).toHaveLength(2);
+    expect(copy).toEqual(
+      expect.objectContaining({ title: 'Ausgabe 1 (Kopie)' })
+    );
+  });
+
+  it('reports duplicating an unknown id as not found', async () => {
+    prisma.newsletterCampaign.findUnique.mockResolvedValue(null);
+
+    await expect(service.duplicate('nope')).rejects.toThrow(NotFoundException);
+    expect(prisma.newsletterCampaign.create).not.toHaveBeenCalled();
   });
 
   it('refuses an issue without a title', async () => {

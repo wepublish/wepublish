@@ -4,13 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { NewsletterCampaign, Prisma, PrismaClient } from '@prisma/client';
-import { createArticleFilter } from '@wepublish/article/api';
 import {
-  DEFAULT_DOCUMENT,
   describeRequiredTag,
   missingRequiredFooterTags,
-  NewsletterBlock,
   NewsletterDocument,
+  newIssueDocument,
   newsletterReport,
 } from '@wepublish/newsletter/email';
 import { NewsletterMailchimpService } from './newsletter-mailchimp.service';
@@ -91,36 +89,10 @@ export class NewsletterCampaignService {
   }
 
   /**
-   * The default issue with every sample teaser pointing at the newest article
-   * the website lists — published and not hidden, by the website's own filter —
-   * so the sample renders on any instance. With nothing published yet the
-   * sample teasers are left out: a teaser without an article cannot be stored.
-   */
-  private async sampleDocument(): Promise<NewsletterDocument> {
-    const newest = await this.prisma.article.findFirst({
-      where: createArticleFilter({ published: true }),
-      orderBy: { publishedAt: 'desc' },
-      select: { id: true },
-    });
-
-    return {
-      ...DEFAULT_DOCUMENT,
-      blocks: DEFAULT_DOCUMENT.blocks.flatMap((block): NewsletterBlock[] => {
-        if (block.type !== 'teaser') {
-          return [block];
-        }
-
-        return newest ? [{ ...block, articleId: newest.id }] : [];
-      }),
-    };
-  }
-
-  /**
-   * A new issue starts from the default rather than blank: the masthead, intro,
-   * rubric order and two articles per rubric are the same every week, so an
-   * editor edits rather than assembles. It goes through `parseDocument` like any
-   * other input; a default that skipped validation would be the one document
-   * that could break the render.
+   * A new issue starts from `newIssueDocument` — its title, a placeholder text
+   * and the pinned closing block; an editor who wants last week's masthead and
+   * rubrics duplicates last week's issue. The document goes through
+   * `parseDocument` like any other input.
    */
   async create(title: string, document?: unknown) {
     const trimmed = title.trim();
@@ -132,13 +104,22 @@ export class NewsletterCampaignService {
     const row = await this.prisma.newsletterCampaign.create({
       data: {
         title: trimmed,
-        document: asJson(
-          parseDocument(document ?? (await this.sampleDocument()))
-        ),
+        document: asJson(parseDocument(document ?? newIssueDocument(trimmed))),
       },
     });
 
     return toCampaign(row);
+  }
+
+  /**
+   * A copy of the issue's document under a new title. The Mailchimp draft stays
+   * with the original: sharing it would let the copy overwrite a draft that may
+   * already be scheduled.
+   */
+  async duplicate(id: string) {
+    const original = await this.row(id);
+
+    return this.create(`${original.title} (Kopie)`, original.document);
   }
 
   async update(id: string, title: string | undefined, document: unknown) {

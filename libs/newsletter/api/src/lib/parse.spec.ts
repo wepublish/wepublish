@@ -1,15 +1,39 @@
-import { DEFAULT_DOCUMENT } from '@wepublish/newsletter/email';
+import {
+  newIssueDocument,
+  NewsletterDocument,
+} from '@wepublish/newsletter/email';
 import { DocumentError, parseDocument } from './parse';
+
+const EVERY_BLOCK: NewsletterDocument = {
+  preheader: 'Vorschau',
+  blocks: [
+    { type: 'image', alt: 'Logo', href: 'https://example.com', gutter: 'none' },
+    { type: 'meta', left: 'Newsletter', right: '13.8.2026' },
+    { type: 'heading', text: 'Titel' },
+    { type: 'text', gutter: 'intro', paragraphs: ['**Fett**', '- Liste'] },
+    { type: 'button', label: 'Weiter', href: 'https://example.com' },
+    { type: 'panel', title: 'Gewusst?', paragraphs: ['Text'] },
+    { type: 'rubric', name: 'Solar' },
+    { type: 'teaser', variant: 'big', articleId: 'article-1' },
+    { type: 'divider' },
+    { type: 'teaser', variant: 'short', articleId: 'article-2' },
+    { type: 'footer', title: 'Fusszeile', lines: ['Redaktion'] },
+  ],
+};
 
 const withBlocks = (...blocks: unknown[]) => ({ preheader: '', blocks });
 
 describe('parseDocument', () => {
-  it('accepts the default document', () => {
+  it('accepts every block type', () => {
     const types = (document: { blocks: { type: string }[] }) =>
       document.blocks.map(block => block.type);
 
-    expect(types(parseDocument(DEFAULT_DOCUMENT))).toEqual(
-      types(DEFAULT_DOCUMENT)
+    expect(types(parseDocument(EVERY_BLOCK))).toEqual(types(EVERY_BLOCK));
+  });
+
+  it('accepts the document a new issue starts from', () => {
+    expect(parseDocument(newIssueDocument('Ausgabe 1'))).toEqual(
+      newIssueDocument('Ausgabe 1')
     );
   });
 

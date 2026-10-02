@@ -335,6 +335,7 @@ export type {
   MutationDislikeArticleArgs,
   MutationDryRunMailchimpSyncArgs,
   MutationDuplicateArticleArgs,
+  MutationDuplicateNewsletterCampaignArgs,
   MutationDuplicatePageArgs,
   MutationEnableTotpArgs,
   MutationExtendUserSubscriptionArgs,

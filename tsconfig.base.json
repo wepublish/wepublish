@@ -83,6 +83,7 @@
       "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
       "@wepublish/newsletter/api": ["libs/newsletter/api/src/index.ts"],
+      "@wepublish/newsletter/editor": ["libs/newsletter/editor/src/index.ts"],
       "@wepublish/newsletter/email": ["libs/newsletter/email/src/index.ts"],
       "@wepublish/newsletter/email/render": [
         "libs/newsletter/email/src/render.ts"

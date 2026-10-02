@@ -75,6 +75,15 @@ export class NewsletterCampaignResolver {
     return this.campaigns.create(title, document);
   }
 
+  @Permissions(CanCreateNewsletterCampaign)
+  @Mutation(() => NewsletterCampaign, {
+    description:
+      "A new campaign with the given one's document. The Mailchimp draft is not copied.",
+  })
+  duplicateNewsletterCampaign(@Args('id') id: string) {
+    return this.campaigns.duplicate(id);
+  }
+
   @Permissions(CanUpdateNewsletterCampaign)
   @Mutation(() => NewsletterCampaign)
   updateNewsletterCampaign(

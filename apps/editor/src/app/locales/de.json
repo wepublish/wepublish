@@ -3749,6 +3749,171 @@
     "listInput": {
       "dragToReorder": "Ziehen, um die Reihenfolge zu ändern",
       "add": "Eintrag hinzufügen"
+    },
+    "newsletter": {
+      "blocks": {
+        "button": {
+          "href": "Ziel",
+          "label": "Button",
+          "text": "Beschriftung"
+        },
+        "condition": "Dynamischer Inhalt (optional)",
+        "divider": {
+          "label": "Trennlinie"
+        },
+        "footer": {
+          "label": "Fusszeile",
+          "legal": "Rechtliches (Abmeldelink & Adresse)",
+          "lines": "Impressum: Text",
+          "title": "Impressum: Titel"
+        },
+        "gutter": {
+          "article": "Artikel ({{size}})",
+          "intro": "Intro ({{size}})",
+          "label": "Einzug",
+          "none": "Keiner ({{size}})"
+        },
+        "heading": {
+          "label": "Titel",
+          "text": "Titel"
+        },
+        "image": {
+          "alt": "Alt-Text",
+          "caption": "Bildlegende (optional)",
+          "href": "Verlinkt auf (optional)",
+          "image": "Bild",
+          "label": "Bild"
+        },
+        "meta": {
+          "label": "Kopfzeile (Label / Datum)",
+          "left": "Links",
+          "right": "Rechts"
+        },
+        "panel": {
+          "image": "Bild links (optional)",
+          "label": "Info-Box",
+          "linkHref": "Link-Ziel (optional)",
+          "linkLabel": "Link-Text (optional)",
+          "title": "Titel"
+        },
+        "preheader": "Vorschautext (erscheint neben dem Betreff)",
+        "rubric": {
+          "label": "Rubrik-Balken",
+          "name": "Rubrik"
+        },
+        "teaser": {
+          "allTags": "Alle Tags",
+          "article": "Artikel",
+          "big": "Gross (mit Bild)",
+          "count": "{{count}} von {{total}} Artikeln",
+          "label": "Artikel-Teaser",
+          "pick": "Artikel wählen …",
+          "short": "Kurz",
+          "tag": "Tag",
+          "variant": "Darstellung"
+        },
+        "text": {
+          "body": "Text",
+          "label": "Textblock"
+        }
+      },
+      "categories": {
+        "articles": "Artikel",
+        "content": "Inhalt",
+        "footer": "Fusszeile",
+        "header": "Kopfzeile"
+      },
+      "condition": {
+        "always": "Immer anzeigen (keine Bedingung)",
+        "evaluatedAtSend": "Mailchimp wertet die Bedingung erst beim Versand aus. Im Editor, in der Vorschau und im Mailchimp-Entwurf bleibt der Block sichtbar.",
+        "interests": "Interessengruppen",
+        "is": "ist",
+        "noValue": "Ohne Wert gilt keine Bedingung — der Block geht an alle Empfänger.",
+        "not": "ist nicht",
+        "nothingToCompare": "Das Mailchimp-Publikum hat keine eigenen Kontaktfelder und keine Interessengruppen — es gibt nichts, worauf sich eine Bedingung beziehen könnte.",
+        "pickGroup": "Gruppe wählen …",
+        "stored": "Im Dokument gespeichert",
+        "value": "Wert"
+      },
+      "delete": {
+        "body": "«{{title}}» wird gelöscht. Ein bereits erstellter Mailchimp-Entwurf bleibt erhalten.",
+        "delete": "Löschen",
+        "title": "Ausgabe löschen?"
+      },
+      "editor": {
+        "back": "Zurück zur Übersicht",
+        "createdAt": "Kampagne erstellt um {{time}}.",
+        "loading": "Wird geladen …",
+        "notPushed": "Nicht an Mailchimp übertragen",
+        "notSaved": "Nicht gespeichert",
+        "openInMailchimp": "In Mailchimp öffnen",
+        "pickImage": "Bild aus der Medienbibliothek wählen ({{alt}})",
+        "preview": "Vorschau",
+        "publishing": "Wird an Mailchimp übertragen …",
+        "pushed": "An Mailchimp übertragen",
+        "save": "Speichern",
+        "savedAt": "Gespeichert um {{time}}.",
+        "savedNotSynced": "Gespeichert, aber nicht an Mailchimp übertragen: {{reason}}",
+        "saving": "Wird gespeichert …",
+        "unknownBlock": "Unbekannter Block: {{type}}",
+        "updatedAt": "Kampagne aktualisiert um {{time}}."
+      },
+      "list": {
+        "actions": "Aktionen",
+        "blocks": "Blöcke",
+        "createNew": "Neue Ausgabe",
+        "duplicate": "Duplizieren",
+        "mailchimp": "Mailchimp",
+        "modified": "Zuletzt geändert",
+        "name": "Titel",
+        "openDraft": "Mailchimp-Entwurf",
+        "title": "Newsletter",
+        "titlePlaceholder": "Titel der Ausgabe, z.B. Newsletter 21.8.26"
+      },
+      "mergeTags": {
+        "fields": "Kontaktfelder",
+        "system": "System-Tags"
+      },
+      "navbar": "Newsletter",
+      "prose": {
+        "apply": "Übernehmen",
+        "bold": "F",
+        "boldTitle": "Fett (Strg/Cmd+B)",
+        "hint": "Enter beginnt einen neuen Absatz. Merge-Tags werden erst von Mailchimp ersetzt — im Editor und in der Vorschau bleibt der Tag stehen.",
+        "link": "Link",
+        "list": "Liste",
+        "listTitle": "Aufzählung",
+        "loadingTags": "Merge-Tags werden geladen …",
+        "mergeTag": "Merge-Tag",
+        "mergeTagTitle": "Mailchimp-Merge-Tag einfügen",
+        "noTag": "Kein Merge-Tag gefunden.",
+        "remove": "Entfernen",
+        "searchTag": "Merge-Tag suchen …"
+      },
+      "report": {
+        "clipped": "Gmail schneidet die Ausgabe ab und versteckt den Schluss — Impressum, Abmeldelink und Adresse — hinter «Nachricht gekürzt».",
+        "heading": "Prüfung",
+        "measuring": "Grösse wird bestimmt …",
+        "missingArticles_one": "{{count}} Artikel wird nicht mehr geliefert ({{ids}}). Die Übertragung an Mailchimp wird abgelehnt, bis der Teaser ersetzt oder entfernt ist.",
+        "missingArticles_other": "{{count}} Artikel werden nicht mehr geliefert ({{ids}}). Die Übertragung an Mailchimp wird abgelehnt, bis die Teaser ersetzt oder entfernt sind.",
+        "missingFooter": "In der Fusszeile fehlt {{missing}}. Mailchimp verweigert den Versand einer Kampagne ohne diese Angabe.",
+        "nearLimit": "Nahe an der Grenze. Beim Versand kommt Grösse dazu: Mailchimp setzt jedes Merge-Tag ein und ersetzt jeden Link durch eine längere Tracking-Adresse.",
+        "ok": "in Ordnung",
+        "problems_one": "{{count}} Problem",
+        "problems_other": "{{count}} Probleme",
+        "room": "Bis Gmail kürzt, sind noch {{size}} frei.",
+        "size": "{{size}} von {{limit}} ({{percent}} %)",
+        "sizeFailed": "Grösse konnte nicht bestimmt werden: {{error}}",
+        "stale": "gespeicherter Stand",
+        "unsaved": "Die Änderungen seit dem Speichern sind nicht eingerechnet — Speichern rechnet neu.",
+        "warnings_one": "{{count}} Hinweis",
+        "warnings_other": "{{count}} Hinweise"
+      },
+      "settings": {
+        "heading": "Einstellungen",
+        "title": "Titel",
+        "titleHint": "Zugleich die Betreffzeile des Mailchimp-Entwurfs. Wird beim Speichern übernommen."
+      }
     }
   }
 }

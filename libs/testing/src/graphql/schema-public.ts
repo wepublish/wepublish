@@ -2825,6 +2825,8 @@ export type Mutation = {
   dryRunMailchimpSync: MailchimpSyncDryRunResult;
   /** Duplicates an article. */
   duplicateArticle: Article;
+  /** A new campaign with the given one's document. The Mailchimp draft is not copied. */
+  duplicateNewsletterCampaign: NewsletterCampaign;
   /** Duplicates an page. */
   duplicatePage: Page;
   /** Enables two-factor authentication for the current user after verifying the TOTP token. */
@@ -3810,6 +3812,11 @@ export type MutationDryRunMailchimpSyncArgs = {
 
 
 export type MutationDuplicateArticleArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDuplicateNewsletterCampaignArgs = {
   id: Scalars['String']['input'];
 };
 
