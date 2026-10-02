@@ -468,6 +468,22 @@ Pinned by [apps/editor/src/server-app.spec.ts](../../apps/editor/src/server-app.
 
 ---
 
+### ⚠️ The newsletter renderer is shared, and two things keep it working
+
+`libs/newsletter/email` draws the Puck canvas *and* the mail. Load-bearing:
+`renderNewsletter` lives behind `@wepublish/newsletter/email/render`, outside
+the barrel, so the editor bundle never pulls in `@react-email/render`'s
+Prettier; and `apps/api-example/tsconfig.app.json` sets `jsx: react-jsx`, or
+the API build fails on the lib's TSX. Mail
+images are asked for as `format: 'jpeg'` (png/gif kept): the media server's
+default WebP is an empty frame in Outlook. `format` is deliberately not in the
+GraphQL `ImageTransformation`, so the public API cannot multiply cached variants.
+
+Pinned by `newsletter-render.service.spec.ts`, `media.service.spec.ts` and
+`novaMediaAdapter.spec.ts`; nothing guards the editor-bundle split.
+
+---
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell *why* the obvious
