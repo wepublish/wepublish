@@ -26,6 +26,7 @@ import {
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
+import type { AggregatedValidation } from '@wepublish/ui/editor';
 import {
   ArticleMetadata,
   ArticleMetadataPanel,
@@ -36,6 +37,7 @@ import {
   createCheckedPermissionComponent,
   DocumentUrlProvider,
   EditorTemplate,
+  EditorValidationProvider,
   InfoData,
   ListicleBlockListValue,
   mapBlockValueToBlockInput,
@@ -53,7 +55,7 @@ import {
   VersionHistory,
   VersionHistoryRevision,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
@@ -647,7 +649,43 @@ function ArticleEditor() {
     }
   }
 
+  const validateAll = useRef<() => AggregatedValidation>(() => ({
+    ok: true,
+    failures: [],
+  }));
+
+  function runEditorValidation(reason: 'save' | 'publish' = 'save'): boolean {
+    const result = validateAll.current();
+    if (result.ok) {
+      return true;
+    }
+    const summaries = result.failures
+      .map(f => f.summary)
+      .filter(Boolean)
+      .join(' · ');
+    const header =
+      reason === 'publish' ?
+        t('articleEditor.publishValidationFailed')
+      : t('articleEditor.saveValidationFailed');
+    toaster.push(
+      <Message
+        type="error"
+        showIcon={false}
+        closable
+        duration={5000}
+      >
+        <strong>{header}</strong>
+        <div>{summaries || t('articleEditor.validationFailedGeneric')}</div>
+      </Message>,
+      { placement: 'topEnd' }
+    );
+    return false;
+  }
+
   async function handleSave() {
+    if (!runEditorValidation('save')) {
+      return;
+    }
     const input = createInput();
 
     if (articleID) {
@@ -681,6 +719,9 @@ function ArticleEditor() {
   }
 
   async function handlePublish(publishedAt: Date) {
+    if (!runEditorValidation('publish')) {
+      return;
+    }
     if (!metadata.slug) {
       toaster.push(
         <Message
@@ -878,6 +919,9 @@ function ArticleEditor() {
                             icon={<MdCloudUpload />}
                             disabled={isDisabled}
                             onClick={() => {
+                              if (!runEditorValidation('publish')) {
+                                return;
+                              }
                               setPublishDialogOpen(true);
                             }}
                           >
@@ -942,15 +986,17 @@ function ArticleEditor() {
           )}
 
           <EditorContent hidden={showPreview}>
-            <DocumentUrlProvider documentUrl={articleData?.article?.url}>
-              <BlockList
-                itemId={articleID}
-                value={blocks}
-                onChange={handleChange}
-                disabled={isLoading || isDisabled || !isAuthorized}
-                blockMap={BlockMap}
-              />
-            </DocumentUrlProvider>
+            <EditorValidationProvider runAllRef={validateAll}>
+              <DocumentUrlProvider documentUrl={articleData?.article?.url}>
+                <BlockList
+                  itemId={articleID}
+                  value={blocks}
+                  onChange={handleChange}
+                  disabled={isLoading || isDisabled || !isAuthorized}
+                  blockMap={BlockMap}
+                />
+              </DocumentUrlProvider>
+            </EditorValidationProvider>
           </EditorContent>
         </EditorTemplate>
       </FieldSet>

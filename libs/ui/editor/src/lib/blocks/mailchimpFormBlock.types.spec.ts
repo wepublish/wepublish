@@ -194,6 +194,31 @@ describe('Mailchimp form block mapping', () => {
       expect(mappedInput?.options?.[0]).not.toHaveProperty('image');
     });
 
+    it('should not send interest options without an interest', () => {
+      const input = mapBlockValueToBlockInput(
+        editorBlock({
+          options: [
+            { id: '', name: 'Unfinished', description: null, image },
+            {
+              id: 'interest-weekly',
+              name: 'Weekly Culture',
+              description: null,
+              image: null,
+            },
+          ],
+        })
+      );
+
+      expect(input.mailchimpForm?.steps?.[0].inputs?.[0].options).toEqual([
+        {
+          id: 'interest-weekly',
+          name: 'Weekly Culture',
+          description: null,
+          imageID: undefined,
+        },
+      ]);
+    });
+
     it('should not send the removed multiple lists fields', () => {
       const input = mapBlockValueToBlockInput(editorBlock());
 

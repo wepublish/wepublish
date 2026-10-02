@@ -17,6 +17,10 @@ import {
 } from '@wepublish/editor/api';
 import { SetStateAction, useState } from 'react';
 
+import {
+  AggregatedValidation,
+  EditorValidationProvider,
+} from '../hooks/useEditorValidation';
 import { BlockMap } from './blockMap';
 import { MailchimpFormBlock } from './mailchimpFormBlock';
 import {
@@ -27,7 +31,8 @@ import {
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: (key: string, options?: { number?: number }) =>
+      options?.number ? `${key} ${options.number}` : key,
     i18n: { language: 'en' },
   }),
 }));
@@ -96,8 +101,15 @@ const defaultValue = BlockMap[EditorBlockType.MailchimpForm]
   .defaultValue as MailchimpFormBlockValue;
 
 const renderBlock = (value: Partial<MailchimpFormBlockValue> = {}) => {
-  const latest: { value: MailchimpFormBlockValue } = {
+  const runAllRef = {
+    current: (): AggregatedValidation => ({ ok: true, failures: [] }),
+  };
+  const latest: {
+    value: MailchimpFormBlockValue;
+    validate: () => AggregatedValidation;
+  } = {
     value: { ...defaultValue, syncProviderId: 'provider', ...value },
+    validate: () => runAllRef.current(),
   };
 
   function Harness() {
@@ -120,7 +132,9 @@ const renderBlock = (value: Partial<MailchimpFormBlockValue> = {}) => {
 
   render(
     <MockedProvider mocks={mocks}>
-      <Harness />
+      <EditorValidationProvider runAllRef={runAllRef}>
+        <Harness />
+      </EditorValidationProvider>
     </MockedProvider>
   );
 
@@ -201,7 +215,10 @@ const itemPanel = (heading: string) =>
   screen.getByText(heading).closest('.rs-panel') as HTMLElement;
 
 const stepHeader = (index: number) =>
-  screen.getAllByText('blocks.mailchimpForm.step')[index].parentElement!;
+  screen.getByText(`blocks.mailchimpForm.step ${index + 1}`).parentElement!;
+
+const stepPanel = (index: number) =>
+  stepHeader(index).closest('.rs-panel') as HTMLElement;
 
 const moveUp = (header: HTMLElement) =>
   within(header).getByLabelText('blocks.mailchimpForm.moveUp');
@@ -336,6 +353,138 @@ describe('MailchimpFormBlock', () => {
     );
   });
 
+  it('should update a prefilled name when picking a different interest', async () => {
+    const latest = renderWithGroupsInput({
+      options: [
+        { ...emptyOption, id: 'interest-daily', name: 'Daily Briefing' },
+      ],
+    });
+
+    const itemPicker = screen.getByText(
+      'blocks.mailchimpForm.interestOption'
+    ).parentElement!;
+
+    await openPicker(itemPicker);
+
+    fireEvent.click(
+      await screen.findByRole('option', { name: 'Weekly Culture' })
+    );
+
+    await waitFor(() =>
+      expect(getOptions(latest.value)).toMatchObject([
+        { id: 'interest-weekly', name: 'Weekly Culture' },
+      ])
+    );
+  });
+
+  it('should keep a custom name when picking a different interest', async () => {
+    const latest = renderWithGroupsInput({
+      options: [
+        { ...emptyOption, id: 'interest-daily', name: 'My newsletter' },
+      ],
+    });
+
+    const itemPicker = screen.getByText(
+      'blocks.mailchimpForm.interestOption'
+    ).parentElement!;
+
+    await openPicker(itemPicker);
+
+    fireEvent.click(
+      await screen.findByRole('option', { name: 'Weekly Culture' })
+    );
+
+    await waitFor(() =>
+      expect(getOptions(latest.value)).toMatchObject([
+        { id: 'interest-weekly', name: 'My newsletter' },
+      ])
+    );
+  });
+
+  it('should number the titles of items without a name', () => {
+    const successOption = {
+      background: '#ff8900',
+      url: 'https://example.com',
+      mergeFieldName: null,
+      mergeFieldValue: null,
+    };
+
+    renderWithGroupsInput(
+      {
+        label: null,
+        options: [
+          { ...emptyOption, id: 'interest-daily', name: 'Daily Briefing' },
+          emptyOption,
+        ],
+      },
+      {
+        successPage: {
+          description: '',
+          options: [
+            { ...successOption, label: 'Read more' },
+            { ...successOption, label: '' },
+          ],
+        },
+      }
+    );
+
+    expect(screen.getByText('blocks.mailchimpForm.inputTitle 1')).toBeTruthy();
+    expect(
+      screen.getByText('blocks.mailchimpForm.interestOptionTitle 2')
+    ).toBeTruthy();
+    expect(
+      screen.queryByText('blocks.mailchimpForm.interestOptionTitle 1')
+    ).toBeNull();
+    expect(
+      screen.getByText('blocks.mailchimpForm.successOptionTitle 2')
+    ).toBeTruthy();
+    expect(
+      screen.queryByText('blocks.mailchimpForm.successOptionTitle 1')
+    ).toBeNull();
+  });
+
+  it('should hide the step conditions behind the advanced toggle', () => {
+    renderBlock();
+
+    expect(
+      screen.queryByText('blocks.mailchimpForm.skipIfFieldsFilled')
+    ).toBeNull();
+
+    const [stepAdvanced] = screen.getAllByText('blocks.mailchimpForm.advanced');
+
+    fireEvent.click(within(stepAdvanced.parentElement!).getByRole('switch'));
+
+    expect(
+      screen.getByText('blocks.mailchimpForm.skipIfFieldsFilled')
+    ).toBeTruthy();
+    expect(
+      screen.getByText('blocks.mailchimpForm.skipIfInterestsFilled')
+    ).toBeTruthy();
+    expect(
+      screen.getByText('blocks.mailchimpForm.showIfInterestsFilled')
+    ).toBeTruthy();
+  });
+
+  it('should show the step conditions if the step already has conditions', () => {
+    renderWithGroupsInput(
+      {},
+      {
+        steps: [
+          {
+            skipIfFieldsFilled: ['FNAME'],
+            skipIfInterestsFilled: [],
+            showIfInterestsFilled: [],
+            inputs: [groupsInput()],
+          },
+        ],
+      }
+    );
+
+    expect(
+      screen.getByText('blocks.mailchimpForm.skipIfFieldsFilled')
+    ).toBeTruthy();
+  });
+
   it('should explain what a groups input is for', () => {
     renderWithGroupsInput();
 
@@ -468,6 +617,30 @@ describe('MailchimpFormBlock', () => {
     ).toBeNull();
   });
 
+  it('should keep the step conditions open on a moved step', () => {
+    renderBlock({
+      steps: [step([textInput('Input A')]), step([textInput('Input B')])],
+    });
+
+    const [stepAdvanced] = within(stepPanel(0)).getAllByText(
+      'blocks.mailchimpForm.advanced'
+    );
+
+    fireEvent.click(within(stepAdvanced.parentElement!).getByRole('switch'));
+    fireEvent.click(moveDown(stepHeader(0)));
+
+    expect(
+      within(stepPanel(1)).queryByText(
+        'blocks.mailchimpForm.skipIfFieldsFilled'
+      )
+    ).toBeTruthy();
+    expect(
+      within(stepPanel(0)).queryByText(
+        'blocks.mailchimpForm.skipIfFieldsFilled'
+      )
+    ).toBeNull();
+  });
+
   it('should reorder interest options', () => {
     const latest = renderWithGroupsInput({
       options: [
@@ -502,5 +675,165 @@ describe('MailchimpFormBlock', () => {
     expect(
       screen.getByText('blocks.mailchimpForm.interestOptionsNoList')
     ).toBeTruthy();
+  });
+
+  describe('validation', () => {
+    const emailInput = defaultValue.steps[0].inputs[0];
+
+    const validate = (latest: { validate: () => AggregatedValidation }) => {
+      let result: AggregatedValidation | undefined;
+
+      act(() => {
+        result = latest.validate();
+      });
+
+      return result!;
+    };
+
+    const stepWith = (...inputs: MailchimpFormFieldConfigValue[]) => ({
+      skipIfFieldsFilled: [],
+      skipIfInterestsFilled: [],
+      showIfInterestsFilled: [],
+      inputs,
+    });
+
+    it('should allow saving a complete form', () => {
+      const latest = renderBlock({ listId: 'list-daily' });
+
+      expect(validate(latest)).toEqual({ ok: true, failures: [] });
+    });
+
+    it('should prevent saving a text input without merge field and label', () => {
+      const latest = renderBlock({
+        listId: 'list-daily',
+        steps: [
+          stepWith(emailInput, {
+            ...emailInput,
+            inputType: 'text',
+            name: '',
+            label: '',
+          }),
+        ],
+      });
+
+      expect(
+        screen.queryByText('blocks.mailchimpForm.inputNameRequired')
+      ).toBeNull();
+
+      expect(validate(latest)).toMatchObject({
+        ok: false,
+        failures: [{ summary: 'blocks.mailchimpForm.validationSummaryMany' }],
+      });
+      expect(
+        screen.getByText('blocks.mailchimpForm.inputNameRequired')
+      ).toBeTruthy();
+      expect(
+        screen.getByText('blocks.mailchimpForm.inputLabelRequired')
+      ).toBeTruthy();
+    });
+
+    it('should not require a label for hidden inputs', () => {
+      const latest = renderBlock({
+        listId: 'list-daily',
+        steps: [
+          stepWith(emailInput, {
+            ...emailInput,
+            inputType: 'hidden',
+            name: 'SOURCE',
+            label: '',
+          }),
+        ],
+      });
+
+      expect(validate(latest).ok).toBe(true);
+    });
+
+    it('should prevent saving without account, list and email input', () => {
+      const latest = renderBlock({
+        syncProviderId: null,
+        listId: null,
+        steps: [
+          stepWith(
+            groupsInput({
+              options: [{ ...emptyOption, id: 'interest-daily' }],
+            })
+          ),
+        ],
+      });
+
+      expect(validate(latest)).toMatchObject({
+        ok: false,
+        failures: [{ summary: 'blocks.mailchimpForm.validationSummaryMany' }],
+      });
+      expect(
+        screen.getByText('blocks.mailchimpForm.syncProviderRequired')
+      ).toBeTruthy();
+      expect(
+        screen.getByText('blocks.mailchimpForm.listRequired')
+      ).toBeTruthy();
+      expect(
+        screen.getByText('blocks.mailchimpForm.emailInputRequired')
+      ).toBeTruthy();
+    });
+
+    it('should prevent saving an interest selection without options', () => {
+      const latest = renderBlock({
+        listId: 'list-daily',
+        steps: [stepWith(emailInput, groupsInput({ options: [] }))],
+      });
+
+      expect(validate(latest)).toMatchObject({
+        ok: false,
+        failures: [{ summary: 'blocks.mailchimpForm.validationSummaryOne' }],
+      });
+      expect(
+        screen.getByText('blocks.mailchimpForm.interestOptionsRequired')
+      ).toBeTruthy();
+    });
+
+    it('should prevent saving an interest option without an interest', () => {
+      const latest = renderBlock({
+        listId: 'list-daily',
+        steps: [
+          stepWith(
+            emailInput,
+            groupsInput({
+              options: [
+                { ...emptyOption, name: 'My newsletter' },
+                {
+                  ...emptyOption,
+                  id: 'interest-daily',
+                  name: 'Daily Briefing',
+                },
+              ],
+            })
+          ),
+        ],
+      });
+
+      expect(
+        screen.queryByText('blocks.mailchimpForm.interestOptionRequired')
+      ).toBeNull();
+
+      expect(validate(latest)).toMatchObject({
+        ok: false,
+        failures: [{ summary: 'blocks.mailchimpForm.validationSummaryOne' }],
+      });
+      expect(
+        screen.getAllByText('blocks.mailchimpForm.interestOptionRequired')
+      ).toHaveLength(1);
+      expect(
+        screen.queryByText('blocks.mailchimpForm.interestOptionsRequired')
+      ).toBeNull();
+    });
+
+    it('should not validate a hidden block', () => {
+      const latest = renderBlock({ disabled: true, listId: null });
+
+      expect(validate(latest).ok).toBe(true);
+      expect(
+        screen.queryByText('blocks.mailchimpForm.listRequired')
+      ).toBeNull();
+    });
   });
 });

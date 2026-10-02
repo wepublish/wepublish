@@ -620,12 +620,14 @@ export function mapBlockValueToBlockInput(
               value: input.value,
               optionsLayout:
                 input.optionsLayout ?? MailchimpFormOptionsLayout.List,
-              options: input.options.map(option => ({
-                id: option.id,
-                name: option.name,
-                description: option.description,
-                imageID: option.image?.id,
-              })),
+              options: input.options
+                .filter(option => !!option.id)
+                .map(option => ({
+                  id: option.id,
+                  name: option.name,
+                  description: option.description,
+                  imageID: option.image?.id,
+                })),
             })),
           })),
           successPage:
