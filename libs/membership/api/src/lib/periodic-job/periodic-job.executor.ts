@@ -9,6 +9,7 @@ const SCHEDULE =
   process.env['PERIODIC_JOB_EXECUTION_SCHEDULE'] || '0 0 3 * * *';
 
 const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
+const CLAIM_RETRY_FOR_MS = 60_000;
 
 @Injectable()
 export class PeriodicJobExecutor {
@@ -28,7 +29,9 @@ export class PeriodicJobExecutor {
     }
   )
   async handleCron() {
-    const claimed = await this.kv.claim('nightly-job', NIGHT_CLAIM_MS);
+    const claimed = await this.kv.claim('nightly-job', NIGHT_CLAIM_MS, {
+      retryForMs: CLAIM_RETRY_FOR_MS,
+    });
 
     if (claimed === undefined) {
       this.logger.error(

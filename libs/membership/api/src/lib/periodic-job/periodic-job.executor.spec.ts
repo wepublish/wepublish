@@ -66,4 +66,13 @@ describe('PeriodicJobExecutor', () => {
     expect(ttlMs).toBeGreaterThanOrEqual(2 * 60 * 60 * 1000);
     expect(ttlMs).toBeLessThan(24 * 60 * 60 * 1000);
   });
+
+  it('keeps trying to claim the night for a while, so a short Dragonfly blip does not skip it', async () => {
+    const { executor, kv } = setup(true);
+
+    await executor.handleCron();
+
+    const [[, , options]] = kv.claim.mock.calls;
+    expect(options.retryForMs).toBeGreaterThanOrEqual(30_000);
+  });
 });

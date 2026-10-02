@@ -49,13 +49,34 @@ describe('MemoryAtomicStore', () => {
 });
 
 describe('DragonflyAtomicStore', () => {
-  const createStore = (sendCommand: ReturnType<typeof vi.fn>) =>
-    new DragonflyAtomicStore({
+  const createStore = (sendCommand: ReturnType<typeof vi.fn>) => {
+    const client = {
+      isOpen: true,
+      isReady: true,
+      sendCommand,
+      connect: async () => {
+        client.isOpen = true;
+        client.isReady = true;
+      },
+      destroy: () => {
+        client.isOpen = false;
+        client.isReady = false;
+      },
+    };
+
+    return new DragonflyAtomicStore({
       namespace: 'wepublish-demo',
       createKeyPrefix: (key: string, namespace: string) =>
         `${namespace}::${key}`,
-      getClient: async () => ({ sendCommand }),
+      client,
+      getClient: async () => client,
+      disconnect: async (force?: boolean) => {
+        if (force) {
+          client.destroy();
+        }
+      },
     } as unknown as ConstructorParameters<typeof DragonflyAtomicStore>[0]);
+  };
 
   beforeEach(() => {
     vi.useFakeTimers();
@@ -110,6 +131,247 @@ describe('DragonflyAtomicStore', () => {
 
     expect(logged).toHaveBeenCalledTimes(1);
     logged.mockRestore();
+  });
+
+  describe('connection', () => {
+    const fakeAdapter = (sendCommand: ReturnType<typeof vi.fn>) => {
+      const client = {
+        isOpen: true,
+        isReady: true,
+        sendCommand,
+        connect: vi.fn(async () => {
+          client.isOpen = true;
+          client.isReady = true;
+        }),
+        destroy: vi.fn(() => {
+          client.isOpen = false;
+          client.isReady = false;
+        }),
+      };
+      const adapter = {
+        namespace: 'wepublish-demo',
+        createKeyPrefix: (key: string, namespace: string) =>
+          `${namespace}::${key}`,
+        client,
+        getClient: vi.fn(async () => client),
+        disconnect: vi.fn(async (force?: boolean) => {
+          if (client.isOpen && force) {
+            client.destroy();
+          }
+        }),
+      };
+      const store = new DragonflyAtomicStore(
+        adapter as unknown as ConstructorParameters<
+          typeof DragonflyAtomicStore
+        >[0]
+      );
+
+      return { adapter, client, store };
+    };
+
+    it('drops a connection that stopped answering, so the next command connects anew instead of waiting on a dead socket', async () => {
+      const { client, store } = fakeAdapter(
+        vi
+          .fn()
+          .mockImplementationOnce(() => new Promise(() => undefined))
+          .mockResolvedValue('v1')
+      );
+
+      const reply = store.getRaw('nsv:settings');
+      await vi.advanceTimersByTimeAsync(500);
+      await expect(reply).resolves.toBeUndefined();
+      expect(client.destroy).toHaveBeenCalledTimes(1);
+
+      vi.advanceTimersByTime(5000);
+
+      await expect(store.getRaw('nsv:settings')).resolves.toBe('v1');
+      expect(client.connect).toHaveBeenCalledTimes(1);
+    });
+
+    it('reconnects without adding the client listeners again each time', async () => {
+      const { adapter, client, store } = fakeAdapter(
+        vi.fn().mockResolvedValue('v1')
+      );
+
+      for (let attempt = 0; attempt < 15; attempt++) {
+        await store.getRaw('nsv:settings');
+        client.isOpen = false;
+        client.isReady = false;
+      }
+
+      expect(adapter.getClient).toHaveBeenCalledTimes(1);
+      expect(client.connect).toHaveBeenCalledTimes(14);
+    });
+
+    it('lets commands sent at the same time on a fresh replica wait for the one connection being set up', async () => {
+      let ready!: () => void;
+      const client = {
+        isOpen: false,
+        isReady: false,
+        sendCommand: vi.fn(async () => {
+          if (!client.isReady) {
+            throw new Error('The client is offline');
+          }
+
+          return 'v1';
+        }),
+        connect: vi.fn(async () => {
+          client.isOpen = true;
+          await new Promise<void>(resolve => (ready = resolve));
+          client.isReady = true;
+        }),
+      };
+      const store = new DragonflyAtomicStore({
+        namespace: 'wepublish-demo',
+        createKeyPrefix: (key: string, namespace: string) =>
+          `${namespace}::${key}`,
+        client,
+        getClient: vi.fn(async () => {
+          await client.connect();
+
+          return client;
+        }),
+        disconnect: vi.fn(async () => undefined),
+      } as unknown as ConstructorParameters<typeof DragonflyAtomicStore>[0]);
+
+      const replies = ['a', 'b', 'c', 'd'].map(key => store.getRaw(key));
+      await vi.advanceTimersByTimeAsync(10);
+      ready();
+
+      await expect(Promise.all(replies)).resolves.toEqual([
+        'v1',
+        'v1',
+        'v1',
+        'v1',
+      ]);
+      expect(store.isAvailable()).toBe(true);
+      expect(client.connect).toHaveBeenCalledTimes(1);
+    });
+
+    it('works again once Dragonfly is back, even when it came back while a connection was being set up', async () => {
+      let handshake!: () => void;
+      const client = {
+        isOpen: false,
+        isReady: false,
+        sendCommand: vi.fn(async () => {
+          if (!client.isOpen) {
+            throw new Error('The client is closed');
+          }
+
+          if (!client.isReady) {
+            throw new Error('The client is offline');
+          }
+
+          return 'v1';
+        }),
+        connect: vi.fn(async () => {
+          client.isOpen = true;
+          await new Promise<void>(resolve => (handshake = resolve));
+          client.isReady = true;
+        }),
+        destroy: vi.fn(() => {
+          client.isOpen = false;
+          client.isReady = false;
+        }),
+      };
+      const store = new DragonflyAtomicStore({
+        namespace: 'wepublish-demo',
+        createKeyPrefix: (key: string, namespace: string) =>
+          `${namespace}::${key}`,
+        client,
+        getClient: vi.fn(async () => {
+          await client.connect();
+
+          return client;
+        }),
+        disconnect: vi.fn(async (force?: boolean) => {
+          if (client.isOpen && force) {
+            client.destroy();
+          }
+        }),
+      } as unknown as ConstructorParameters<typeof DragonflyAtomicStore>[0]);
+
+      const whilePaused = store.getRaw('nsv:settings');
+      await vi.advanceTimersByTimeAsync(500);
+      await expect(whilePaused).resolves.toBeUndefined();
+
+      handshake();
+      await vi.advanceTimersByTimeAsync(5000);
+      const afterwards = store.getRaw('nsv:settings');
+      await vi.advanceTimersByTimeAsync(10);
+      handshake?.();
+
+      await expect(afterwards).resolves.toBe('v1');
+    });
+
+    it('gives up on a reconnect whose handshake Dragonfly never answers, so it can connect again later', async () => {
+      let answering = true;
+      const client = {
+        isOpen: true,
+        isReady: true,
+        sendCommand: vi.fn(async () => {
+          if (!client.isOpen) {
+            throw new Error('The client is closed');
+          }
+
+          if (!client.isReady) {
+            throw new Error('The client is offline');
+          }
+
+          return 'v1';
+        }),
+        connect: vi.fn(() => {
+          client.isOpen = true;
+
+          return answering ?
+              Promise.resolve().then(() => {
+                client.isReady = true;
+              })
+            : new Promise<void>(() => undefined);
+        }),
+        destroy: vi.fn(() => {
+          client.isOpen = false;
+          client.isReady = false;
+        }),
+      };
+      const store = new DragonflyAtomicStore({
+        namespace: 'wepublish-demo',
+        createKeyPrefix: (key: string, namespace: string) =>
+          `${namespace}::${key}`,
+        client,
+        getClient: vi.fn(async () => client),
+        disconnect: vi.fn(async () => undefined),
+      } as unknown as ConstructorParameters<typeof DragonflyAtomicStore>[0]);
+
+      await expect(store.getRaw('nsv:settings')).resolves.toBe('v1');
+      client.isOpen = false;
+      client.isReady = false;
+      answering = false;
+
+      const silent = store.getRaw('nsv:settings');
+      await vi.advanceTimersByTimeAsync(500);
+      await expect(silent).resolves.toBeUndefined();
+
+      answering = true;
+      await vi.advanceTimersByTimeAsync(5000);
+      const afterwards = store.getRaw('nsv:settings');
+      await vi.advanceTimersByTimeAsync(600);
+
+      await expect(afterwards).resolves.toBe('v1');
+      expect(client.destroy).toHaveBeenCalled();
+    });
+
+    it('keeps a connection that answered, even with an error', async () => {
+      const { client, store } = fakeAdapter(
+        vi
+          .fn()
+          .mockRejectedValue(new Error('NOPERM this user has no permissions'))
+      );
+
+      await store.getRaw('other::key');
+
+      expect(client.destroy).not.toHaveBeenCalled();
+    });
   });
 
   it('asks Dragonfly again once the five seconds are over', async () => {

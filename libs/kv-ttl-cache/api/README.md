@@ -25,7 +25,7 @@ Integration secrets never reach Dragonfly, enforced three ways:
 
 Sessions are shared without their token (the key is a sha256 of it; the api adds
 the token back on read). Empty results (`null`) and values over 256 KB stay in
-memory.
+memory; a value whose Dragonfly write failed stays in memory for at most 30 s.
 
 Process memory is one LRU store of at most 50 000 entries and 32 MB, for the
 in-memory namespaces, the 2 s copies and the fallback below.
@@ -39,11 +39,14 @@ in-memory namespaces, the 2 s copies and the fallback below.
 Values are serialized by `kv-ttl-cache-serializer.ts`, in memory too: `Date`s
 and Prisma `Decimal`s (e.g. `payrexx_vatrate`) come back as such and every read
 returns a copy; `BigInt`, `Map`, `Set` and other class instances do not survive
-— cache plain data.
+— cache plain data. Data that merely looks like the serializer's tags (e.g. a
+comment containing `{"$kvDecimal": …}`) is escaped and comes back unchanged.
 
 A replica re-reads a namespace version at most every 2 seconds, so a reset on
 one replica reaches the others within 2 s; the replica that reset sees it
-immediately.
+immediately. `getNamespaceVersions(namespaces)` re-reads all stale ones with one
+`MGET` (the answer cache and the provider registry use it), so a cache hit needs
+no Dragonfly round trip.
 
 If a Dragonfly command fails or does not answer within 500 ms, the replica
 caches in memory only and does not ask Dragonfly again for 5 s (`Dragonfly
@@ -51,12 +54,17 @@ unavailable, caching on this replica only …` is logged at most once per 5 s, n
 per command). Requests do not fail or queue. A reset that could not be written is
 kept and written again every 5 s until Dragonfly takes it, then once more 3 s
 later (another replica may have created an older version meanwhile), so no
-replica falls back to the older version.
+replica falls back to the older version. Commands sent while the connection is
+being set up wait for that one connect (at most 1 s, then the half-open client
+is destroyed; node-redis' own timeout does not cover the handshake). A command
+timeout never destroys a connection that is still being set up, and a client
+that ended up ready but closed reconnects.
 Batches (`getOrLoadManyNs`) read Dragonfly with one `MGET`. At boot the module
 pings Dragonfly and logs an error if it is unreachable (wrong password, ACL user
 or CA), and warns in production when `REDIS_URL` is missing. `/health` (watched
 by UptimeRobot) reports `dragonfly` down while `REDIS_URL` is unset or Dragonfly
-does not answer (`dragonflyStatus()`); the Kubernetes probes
+refuses a probe write to `<REDIS_KEY_PREFIX>::health` (`dragonflyStatus()`:
+unreachable, wrong prefix, out of memory); the Kubernetes probes
 (`/health/readinessProbe` etc.) ignore it, so pods stay in service.
 
 ## Published content
@@ -73,9 +81,10 @@ per-user. Writers call `PublicContentCacheInvalidator`:
 | Call | Clears | Used by |
 | --- | --- | --- |
 | `invalidate(...contents)` | those content caches + anonymous answers, and the answers again 3 s later (another replica may have built one from content that was stale for up to 2 s) | publish, unpublish, delete, updates of published articles/pages; authors, tags, events, paywalls, image updates/deletes, event import |
-| `invalidateDraft(...contents)` | only those content caches | create, update of unpublished, duplicate, restore, discard; peer import |
+| `invalidateDraft(...contents)` | only those content caches (plus anonymous answers that show `draft` or `pending`, which are versioned by `content:articles`/`content:pages`) | create, update of unpublished, duplicate, restore, discard; peer import; image upload and a reader's own profile image |
 | `invalidateArticlePages(...articles)` | the website pages of those articles (`/a/<slug>`, `/a/id/<id>`), see [Website pages](#website-pages) | publish, unpublish, delete and updates of published articles (old and new slug); `ArticlePublicationWatcher` |
 | `invalidateComments(removed, ...articles)` | answers containing `commentsForItem` / `ratingSystem` and the pages of those articles; with `removed` also all anonymous answers (comment blocks inside articles/pages) | create (`false`, with the article once an editor publishes it), approve (`false`, with the commented article), edit/reject/delete (`true`, with the commented article); rating system changes; not ratings |
+| `invalidateReaderComments(removed, ...articles)` | like `invalidateComments`, but with `removed` only the anonymous answers, not `website:pages` | a reader's comment that is approved at once, a reader editing an approved comment (`removed` = it was public before) |
 | `invalidateAt(time, ...contents)` | `invalidate(...contents)` at that time (+2 s) | page publish with a future `publishedAt` (the watchers only look 70 s ahead once a minute); an article publish hands its time to `ArticlePublicationWatcher.schedule` instead, which then also clears the pages of every article and revision going live |
 | `invalidateNavigations()` | cached navigations and their links | article/page delete (links cascade) |
 
@@ -95,8 +104,10 @@ content for up to 2 s after a write.
 approved comments of an article or page from `graphql:comments`
 (`items:<type>:<id>`, 5 min): ratings already counted, only the latest
 revision, no rating rows — rater ids and fingerprints never reach Dragonfly. A
-logged-in reader's own unapproved comments and own ratings come from two small
-queries on top. Values and comment answers share the namespace, so every
+logged-in reader's own comments (every state, fresh from the database, replacing
+their cached copy — so the author sees an approved comment at once even where
+the list is still the old one) and own ratings come from two small queries on
+top. Values and comment answers share the namespace, so every
 `invalidateComments` / `invalidateReaderComments` retires both at once and a
 replica never mixes versions; a comment rating deletes only that item's entry,
 so logged-in readers see it at once and anonymous answers within 5 min.
@@ -106,7 +117,11 @@ payment provider customer writes reset them.
 `TrackingPixelService.addMissingArticleTrackingPixels` (run on every `article`
 query) remembers per article and provider set that the pixels are complete for
 24 h, retries a failed pixel at most every 15 min, and deletes the article's
-cached pixel rows when it changed them. Member plan writes call
+cached pixel rows when it changed them. It runs once at a time per article on a
+replica and claims `tracking-pixels:<articleId>` for 60 s across replicas, so
+concurrent first reads request one pixel; a replica that loses the claim waits
+up to 3 s for the other one to finish, so its answer carries the pixel too. A
+retry replaces every failed row of the provider. Member plan writes call
 `invalidate('paywalls')` (paywall member plans embed them) and payment method
 writes `invalidate()`; paywall bypasses are never cached.
 
@@ -114,7 +129,8 @@ writes `invalidate()`; paywall bypasses are never cached.
 
 `GraphqlResponseCachePlugin` (registered through `GraphqlResponseCacheModule`)
 answers a repeated query from `graphql:responses` for 5 min (30 s when the
-answer contains an enabled `PollBlock` or `CrowdfundingBlock`, so vote counts
+answer contains an enabled `PollBlock` or `CrowdfundingBlock` — also when the
+client selects a `poll`/`crowdfunding` field without `__typename` — so vote counts
 and amounts reach the 60 s pages of the websites within ~1.5 min) when:
 
 - the request carries no login (`Authorization` header, `access_token` in url or
@@ -128,10 +144,14 @@ Logged-in requests only *read* answers, and only for
 `SAME_FOR_EVERYONE_QUERIES` (`navigations`, `peerProfile`): they get exactly
 what an anonymous visitor gets, and answers computed for them are never stored.
 
-The key includes the query, variables and the versions of `graphql:content`,
-`navigations`, `banners`, `settings`, `website-settings`, `peer-profile`,
-`member-plans`, `peering:remote-profiles` (plus `graphql:comments` for comment
-fields), so a reset of any of them retires the answers.
+The key includes the query, the variables the operation declares (sorted, so
+order and undeclared extras do not matter) and the versions of
+`graphql:content`, `navigations`, `banners`, `settings`, `website-settings`,
+`peer-profile`, `member-plans`, `peering:remote-profiles` — plus
+`graphql:comments` for comment fields, `content:images` for `getImagesByTag`
+and `content:articles`/`content:pages` when a `draft` or `pending` field is
+selected (externals may read drafts anonymously) — so a reset of any of them
+retires the answers.
 
 ## Website pages
 
@@ -147,7 +167,12 @@ changes. Pending changes live in Dragonfly (`nsl`/`nsf`/`nsd:website:pages`)
 and every replica checks them every 5 s, so a restart or crash loses none.
 Drafts (`content:*`), sessions, comments of readers (`invalidateReaderComments`)
 and `resetNamespace(ns, { pages: false })` leave it alone; a moderator removing
-a comment does not.
+a comment does not. The api also keeps `<REDIS_KEY_PREFIX>::website:heartbeat`
+(every 20 s, 60 s TTL); websites that do not see it treat the versions as
+missing and refresh every 60 s, so a website on Dragonfly next to an api that
+writes no versions never keeps pages for an hour. The first replica of a new
+`APP_RELEASE_ID` claims `release:<id>` (30 days) and changes `website:pages` and
+`website:layout` once, since a new release may render pages differently.
 
 Article pages (`/a/<slug>`, `/a/id/<id>`) ignore `website:pages`, so a
 publication does not rebuild every article. They follow two versions instead:
@@ -167,8 +192,16 @@ of the html: `ssrForceFetchDelay` turns the comment list's first query into
 `claim(name, ttlMs)` sets `<REDIS_KEY_PREFIX>::lock:<name>` with `SET NX PX`
 (allowed by the production ACL; no Lua, `-script` forbids it) and answers `true`
 for the one replica that got it, `false` for the others and `undefined` when
-it cannot tell (no `REDIS_URL`, Dragonfly unreachable or failing). Claims are
-never released, they expire.
+it cannot tell (no `REDIS_URL`, Dragonfly unreachable or failing);
+`{ retryForMs }` asks again every 5 s while it cannot tell. Claims are never
+released, they expire. `increment(name, ttlMs)` / `count(name)` /
+`forgetCount(name)` keep a counter in `<REDIS_KEY_PREFIX>::count:<name>`
+(`INCR`, then `PEXPIRE`, so the window restarts with every increment;
+`undefined` without Dragonfly). `TotpService` uses both: a code is refused once
+`lock:totp-used:<sha256(user:code)>` exists (90 s), and every attempt is counted
+in `count:totp-failures:<user>` before the code is checked (15 min, reset on
+success), so parallel guesses beyond 5 are refused on every replica; the
+per-replica maps stay as fallback.
 `PeriodicJobExecutor` claims `nightly-job` for 12 h: that replica runs the
 periodic jobs and then the Mailchimp sync, the others skip both. With
 `undefined` no replica runs and the executor logs an error; the next run catches
@@ -178,6 +211,16 @@ same with `audit-log-retention`. `SlateToPmMigrator` claims each cron job for
 it migrates anyway (rows are rewritten idempotently, unmigrated content would
 stay broken).
 
+## Integration providers
+
+`ProviderRegistryService` builds the payment, tracking-pixel, mail and
+challenge providers from their settings. The replica that saves a setting
+rebuilds at once; every replica also compares the versions of
+`settings:paymentprovider`, `settings:tracking-pixel`, `settings:mailprovider`
+and `settings:challenge` every 5 s and rebuilds when another replica changed
+them, so a new provider, a deleted one or a type change reaches all replicas
+within ~7 s.
+
 ## Hit rates in Sentry
 
 Every `getOrLoadNs`, every `getOrLoadManyNs` batch and the anonymous-answer
@@ -186,6 +229,10 @@ never the key; `cache.hit`, for batches also `cache.keys` / `cache.misses`; a
 call that did not run its loader is a hit). Spans exist only inside sampled
 traces (`onlyIfParent`), so hit rates per namespace and GraphQL operation show
 under *Insights → Caches* from the 10 % of production requests Sentry samples.
+Sentry's own Redis integration is removed (`libs/utils/sentry/config.ts`,
+`withoutKeySpans`): its spans carried full keys, session token hashes included.
+Root spans that are only database work outside a request (background version
+checks, cron queries) are not sampled (`getServerConfig().tracesSampler`).
 
 ## Running unit tests
 

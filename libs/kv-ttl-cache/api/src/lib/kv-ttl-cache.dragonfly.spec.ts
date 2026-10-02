@@ -163,6 +163,23 @@ describe.skipIf(!adminUrl)('KvTtlCacheModule on Dragonfly', () => {
     expect(await admin.pTTL(`${user}::lock:nightly-job`)).toBeGreaterThan(0);
   });
 
+  it('counts failed attempts across api instances under the production ACL', async () => {
+    const first = await createApiInstance();
+    const second = await createApiInstance();
+
+    await first.increment('totp-failures:user-1', 60_000);
+    await expect(
+      second.increment('totp-failures:user-1', 60_000)
+    ).resolves.toBe(2);
+    await expect(first.count('totp-failures:user-1')).resolves.toBe(2);
+    expect(
+      await admin.pTTL(`${user}::count:totp-failures:user-1`)
+    ).toBeGreaterThan(0);
+
+    await second.forgetCount('totp-failures:user-1');
+    await expect(first.count('totp-failures:user-1')).resolves.toBe(0);
+  });
+
   it('never stores integration settings in Dragonfly', async () => {
     const service = await createApiInstance();
 

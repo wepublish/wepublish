@@ -217,6 +217,44 @@ describe('commentsForItem cache', () => {
     expect(ids(readerTwo).sort()).toEqual(['c1', 'c3']);
   });
 
+  it("shows a reader's own comment once, in its current state, while the cached list still has the old one", async () => {
+    data.comments.push(comment('c6', { userID: 'reader-1' }));
+    await service().getPublicCommentsForItem(args());
+    Object.assign(data.comments[data.comments.length - 1], {
+      state: CommentState.pendingUserChanges,
+    });
+
+    const readerOne = await service().getPublicCommentsForItem(
+      args(),
+      'reader-1'
+    );
+    const own = readerOne.filter(({ id }) => id === 'c6');
+
+    expect(own.map(({ state }) => state)).toEqual([
+      CommentState.pendingUserChanges,
+    ]);
+  });
+
+  it('keeps showing a reader their own comment right after it was approved, while the cached list does not have it yet', async () => {
+    data.comments.push(
+      comment('c6', {
+        state: CommentState.pendingApproval,
+        userID: 'reader-1',
+      })
+    );
+    await service().getPublicCommentsForItem(args());
+    Object.assign(data.comments[data.comments.length - 1], {
+      state: CommentState.approved,
+    });
+
+    const readerOne = await service().getPublicCommentsForItem(
+      args(),
+      'reader-1'
+    );
+
+    expect(ids(readerOne).filter(id => id === 'c6')).toEqual(['c6']);
+  });
+
   it('counts the ratings of the cached comments', async () => {
     await service().getPublicCommentsForItem(args());
     const [cached] = await service().getPublicCommentsForItem(args());

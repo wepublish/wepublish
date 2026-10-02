@@ -3,12 +3,21 @@ const DEFAULT_REVALIDATE_SECONDS = 60;
 const UNSIGNALLED_REVALIDATE_SECONDS = 60;
 const DEFAULT_MAX_LOCAL_BYTES = 50 * 1024 * 1024;
 const MAX_PENDING = 10000;
+const RENDER_GRACE_MS = 3000;
 const STALE = 1;
 const SHARED_KINDS = new Set(['PAGES', 'REDIRECT']);
 const LAYOUT_VERSION = 'website:layout';
 const ARTICLE_PAGE = /^\/a\/(?:id\/[^/]+|(?!tag$|index$)[^/]+)$/;
 
+const TRACE_META =
+  /<meta name="(?:sentry-trace|baggage)" content="[^"]*"\s*\/?>/g;
+
 const isArticlePage = key => ARTICLE_PAGE.test(key);
+
+const withoutTrace = value =>
+  value?.kind === 'PAGES' && typeof value.html === 'string' ?
+    { ...value, html: value.html.replace(TRACE_META, '') }
+  : value;
 
 const sizeOf = value => {
   try {
@@ -248,10 +257,20 @@ function createPageCache({
         return stale(best);
       }
 
-      return fresh(best);
+      const since = await shared.lockedSince(key);
+
+      if (since !== undefined && clock.now() - since < RENDER_GRACE_MS) {
+        return fresh(best);
+      }
+
+      remember(key, version);
+
+      return stale(best);
     },
 
-    async set(key, value, ctx) {
+    async set(key, rendered, ctx) {
+      const value = withoutTrace(rendered);
+
       if (value && !SHARED_KINDS.has(value.kind)) {
         keep(key, { value, lastModified: clock.now() });
 

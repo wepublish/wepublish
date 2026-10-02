@@ -26,6 +26,7 @@ import {
   SCOPED_JWT_VERIFIER,
   ScopedJwtGuard,
 } from '@wepublish/authentication/api';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 export interface SessionModuleOptions {
   sessionTTL: number;
@@ -50,6 +51,7 @@ export interface SessionModuleAsyncOptions
     ChallengeModule,
     SettingModule,
     SessionCacheModule,
+    KvTtlCacheModule,
   ],
   exports: [SessionService, JwtService, SCOPED_JWT_VERIFIER, ScopedJwtGuard],
 })

@@ -6,7 +6,11 @@ import {
   type GraphQLRequestContext,
   type GraphQLRequestListener,
 } from '@apollo/server';
-import type { FormattedExecutionResult } from 'graphql';
+import {
+  Kind,
+  type FormattedExecutionResult,
+  type SelectionSetNode,
+} from 'graphql';
 import { createHash } from 'crypto';
 import { KvTtlCacheService } from './kv-ttl-cache.service';
 import { PublicationTimers } from './publication-timers';
@@ -43,6 +47,7 @@ const RESPONSE_NAMESPACE = 'graphql:responses';
 const RESPONSE_TTL_SECONDS = 300;
 const LIVE_RESPONSE_TTL_SECONDS = 30;
 const LIVE_BLOCKS = new Set(['PollBlock', 'CrowdfundingBlock']);
+const LIVE_FIELDS = ['poll', 'crowdfunding'];
 
 const hasLiveBlock = (value: unknown): boolean => {
   if (Array.isArray(value)) {
@@ -60,6 +65,16 @@ const hasLiveBlock = (value: unknown): boolean => {
   }
 
   if (typeof node.__typename === 'string' && LIVE_BLOCKS.has(node.__typename)) {
+    return true;
+  }
+
+  if (
+    LIVE_FIELDS.some(
+      field =>
+        typeof (node as Record<string, unknown>)[field] === 'object' &&
+        (node as Record<string, unknown>)[field] !== null
+    )
+  ) {
     return true;
   }
 
@@ -94,7 +109,6 @@ export const CACHEABLE_QUERIES = new Set([
   'stats',
   'tag',
   'tags',
-  'versionInformation',
   'websiteSettings',
 ]);
 
@@ -107,6 +121,50 @@ export const SAME_FOR_EVERYONE_QUERIES = new Set([
 const VERSIONED_BY_FIELD: Record<string, string[]> = {
   commentsForItem: [PUBLIC_COMMENTS_NAMESPACE],
   ratingSystem: [PUBLIC_COMMENTS_NAMESPACE],
+  getImagesByTag: [contentCacheNamespace('images')],
+};
+
+const DRAFT_FIELDS = new Set(['draft', 'pending']);
+const VERSIONED_BY_DRAFTS = [
+  contentCacheNamespace('articles'),
+  contentCacheNamespace('pages'),
+];
+
+const selectsDrafts = ({ operation, document }: RequestContext) => {
+  const fragments = new Map<string, SelectionSetNode>();
+
+  for (const definition of document?.definitions ?? []) {
+    if (definition.kind === Kind.FRAGMENT_DEFINITION) {
+      fragments.set(definition.name.value, definition.selectionSet);
+    }
+  }
+
+  const visited = new Set<string>();
+  const selects = (selectionSet: SelectionSetNode | undefined): boolean =>
+    (selectionSet?.selections ?? []).some(selection => {
+      if (selection.kind === Kind.FIELD) {
+        return (
+          DRAFT_FIELDS.has(selection.name.value) ||
+          selects(selection.selectionSet)
+        );
+      }
+
+      if (selection.kind === Kind.INLINE_FRAGMENT) {
+        return selects(selection.selectionSet);
+      }
+
+      const name = selection.name.value;
+
+      if (visited.has(name)) {
+        return false;
+      }
+
+      visited.add(name);
+
+      return selects(fragments.get(name));
+    });
+
+  return selects(operation?.selectionSet);
 };
 
 type Context = {
@@ -128,6 +186,32 @@ const isAnonymous = ({ request, contextValue }: RequestContext) => {
     contextValue.req?.body?.['access_token'] === undefined
   );
 };
+
+const sortedKeys = (value: unknown): unknown => {
+  if (Array.isArray(value)) {
+    return value.map(sortedKeys);
+  }
+
+  if (!value || typeof value !== 'object') {
+    return value;
+  }
+
+  return Object.fromEntries(
+    Object.keys(value)
+      .sort()
+      .map(key => [key, sortedKeys((value as Record<string, unknown>)[key])])
+  );
+};
+
+const declaredVariables = ({ operation, request }: RequestContext) =>
+  sortedKeys(
+    Object.fromEntries(
+      (operation?.variableDefinitions ?? [])
+        .map(definition => definition.variable.name.value)
+        .filter(name => request.variables?.[name] !== undefined)
+        .map(name => [name, request.variables?.[name]])
+    )
+  );
 
 const asksOnly =
   (queries: Set<string>) =>
@@ -153,10 +237,10 @@ export class PublicContentCacheInvalidator implements OnModuleDestroy {
     }
   }
 
-  invalidateAt(at: Date, ...contents: PublicContent[]) {
-    const wait = at.getTime() - Date.now();
+  invalidateAt(at: Date | null | undefined, ...contents: PublicContent[]) {
+    const wait = (at?.getTime() ?? Number.NaN) - Date.now();
 
-    if (wait <= 0 || wait > LONGEST_SCHEDULE_MS) {
+    if (!at || !(wait > 0) || wait > LONGEST_SCHEDULE_MS) {
       return;
     }
 
@@ -211,11 +295,15 @@ export class PublicContentCacheInvalidator implements OnModuleDestroy {
     }
   }
 
-  async invalidateReaderComments(removed = false) {
+  async invalidateReaderComments(removed = false, ...articles: ArticlePage[]) {
     await this.kv.resetNamespace(PUBLIC_COMMENTS_NAMESPACE);
 
     if (removed) {
       await this.resetPublicContent({ pages: false });
+    }
+
+    if (articles.length) {
+      await this.invalidateArticlePages(...articles);
     }
   }
 }
@@ -261,16 +349,20 @@ export class GraphqlResponseCachePlugin implements ApolloServerPlugin<Context> {
           }
         }
 
-        const versions = await Promise.all(
-          [...namespaces].map(namespace => kv.getNamespaceVersion(namespace))
-        );
+        if (selectsDrafts(requestContext)) {
+          for (const namespace of VERSIONED_BY_DRAFTS) {
+            namespaces.add(namespace);
+          }
+        }
+
+        const versions = await kv.getNamespaceVersions([...namespaces]);
 
         const responseKey = createHash('sha256')
           .update(
             JSON.stringify([
               requestContext.source,
               requestContext.request.operationName ?? null,
-              requestContext.request.variables ?? {},
+              declaredVariables(requestContext),
               versions,
             ])
           )

@@ -41,6 +41,10 @@ export class FakeDragonfly extends MemoryAtomicStore {
     return this.down ? keys.map(() => undefined) : super.getManyRaw(keys);
   }
 
+  override async incrementRaw(key: string, ttlMs: number) {
+    return this.down ? undefined : super.incrementRaw(key, ttlMs);
+  }
+
   override async setRaw(key: string, value: string, ttlMs?: number) {
     if (this.down) {
       return false;

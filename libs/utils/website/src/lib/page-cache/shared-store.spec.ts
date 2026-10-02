@@ -282,21 +282,36 @@ describe('shared page store', () => {
   describe('versions', () => {
     it('reads the website pages version the api writes', async () => {
       const { dragonfly, store } = setup();
+      dragonfly.data.set('wep-x::website:heartbeat', { value: '1' });
       dragonfly.data.set('wep-x::nsv:website:pages', { value: 'v7' });
 
       await expect(store()?.getVersion()).resolves.toBe('v7');
     });
 
     it('answers null while the api has not written a version yet', async () => {
-      const { store } = setup();
+      const { dragonfly, store } = setup();
+      dragonfly.data.set('wep-x::website:heartbeat', { value: '1' });
 
       await expect(store()?.getVersion()).resolves.toBeNull();
+    });
+
+    it('answers undefined while no api signals versions, so pages fall back to the short refresh', async () => {
+      const { dragonfly, store } = setup();
+      dragonfly.data.set('wep-x::nsv:website:pages', { value: 'v7' });
+      dragonfly.data.set('wep-x::nsv:website:layout', { value: 'l3' });
+      const shared = store();
+
+      await expect(shared?.getVersion()).resolves.toBeUndefined();
+      await expect(
+        shared?.getVersions(['website:layout', 'website:path:/a/one'])
+      ).resolves.toBeUndefined();
     });
 
     it('reads the layout and article versions the api writes in one round trip', async () => {
       const { dragonfly, store } = setup();
       const shared = store();
       await shared?.getVersion();
+      dragonfly.data.set('wep-x::website:heartbeat', { value: '1' });
       dragonfly.data.set('wep-x::nsv:website:layout', { value: 'l3' });
       dragonfly.data.set('wep-x::nsv:website:path:/a/one', { value: 'p2' });
       const sent = vi.spyOn(dragonfly.clients[0], 'sendCommand');
@@ -354,12 +369,28 @@ describe('shared page store', () => {
 
       await expect(store()?.acquireLock('/a/one')).resolves.toBe(true);
     });
+
+    it('tells other pods since when a page is being regenerated', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(1_800_000_000_000);
+      const { store } = setup();
+      const first = store();
+      const second = store();
+
+      await first?.acquireLock('/a/one');
+
+      await expect(second?.lockedSince('/a/one')).resolves.toBe(
+        1_800_000_000_000
+      );
+      await expect(second?.lockedSince('/a/two')).resolves.toBeUndefined();
+    });
   });
 
   describe('connection', () => {
     it('waits for the connection before its first commands', async () => {
       const { dragonfly, errors, store } = setup();
       dragonfly.connectDelayMs = 5;
+      dragonfly.data.set('wep-x::website:heartbeat', { value: '1' });
       dragonfly.data.set('wep-x::nsv:website:pages', { value: 'v1' });
       const shared = store();
 
@@ -375,6 +406,7 @@ describe('shared page store', () => {
     it('answers undefined and pauses for five seconds after a failure', async () => {
       vi.useFakeTimers();
       const { dragonfly, errors, store } = setup();
+      dragonfly.data.set('wep-x::website:heartbeat', { value: '1' });
       const shared = store();
       await shared?.getVersion();
       dragonfly.failing = true;

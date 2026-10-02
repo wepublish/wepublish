@@ -339,7 +339,7 @@ export class CommentService {
         () => this.loadApprovedComments(itemId, itemType),
         CONTENT_CACHE_TTL_SECONDS
       ),
-      userId ? this.loadOwnUnapprovedComments(itemId, itemType, userId) : [],
+      userId ? this.loadOwnComments(itemId, itemType, userId) : [],
       userId ?
         this.prisma.commentRating.findMany({
           where: {
@@ -356,13 +356,16 @@ export class CommentService {
       : [],
     ]);
     const ownRatingsOf = groupBy(({ commentId }) => commentId, ownRatings);
+    const ownIds = new Set(own.map(({ id }) => id));
 
     return nestComments(
       [
-        ...approved.map(comment => ({
-          ...comment,
-          ratings: ownRatingsOf[comment.id] ?? [],
-        })),
+        ...approved
+          .filter(({ id }) => !ownIds.has(id))
+          .map(comment => ({
+            ...comment,
+            ratings: ownRatingsOf[comment.id] ?? [],
+          })),
         ...own,
       ],
       { sort, order }
@@ -392,7 +395,7 @@ export class CommentService {
     }));
   }
 
-  private async loadOwnUnapprovedComments(
+  private async loadOwnComments(
     itemID: string,
     itemType: CommentItemType,
     userID: string
@@ -402,9 +405,6 @@ export class CommentService {
         itemID,
         itemType,
         userID,
-        state: {
-          not: CommentState.approved,
-        },
       },
       include: commentRelations,
     });
@@ -701,7 +701,13 @@ export class CommentService {
           : CommentState.pendingApproval,
       },
     });
-    await this.publicContentCache.invalidateReaderComments(false);
+
+    if (comment.state === CommentState.approved) {
+      await this.publicContentCache.invalidateReaderComments(
+        false,
+        ...(await this.commentedArticles(comment))
+      );
+    }
 
     return this.getComment(comment.id);
   }
@@ -758,7 +764,14 @@ export class CommentService {
           : CommentState.pendingApproval,
       },
     });
-    await this.publicContentCache.invalidateReaderComments(true);
+    const wasPublic = comment.state === CommentState.approved;
+
+    if (wasPublic || updatedComment.state === CommentState.approved) {
+      await this.publicContentCache.invalidateReaderComments(
+        wasPublic,
+        ...(await this.commentedArticles(comment))
+      );
+    }
 
     return this.getComment(updatedComment.id);
   }

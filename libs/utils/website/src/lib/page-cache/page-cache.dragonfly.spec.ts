@@ -118,6 +118,10 @@ describe.skipIf(!adminUrl)('page cache on Dragonfly', () => {
   it('reads the version the api writes under <prefix>::nsv:website:pages', async () => {
     const pod = websitePod();
 
+    await expect(pod?.getVersion()).resolves.toBeUndefined();
+
+    await admin.set(`${user}::website:heartbeat`, '1', { PX: 60_000 });
+
     await expect(pod?.getVersion()).resolves.toBeNull();
 
     await admin.set(`${user}::nsv:website:pages`, 'published-1');
@@ -129,6 +133,7 @@ describe.skipIf(!adminUrl)('page cache on Dragonfly', () => {
   it('reads the layout and article versions the api writes', async () => {
     const pod = websitePod();
 
+    await admin.set(`${user}::website:heartbeat`, '1', { PX: 60_000 });
     await admin.set(`${user}::nsv:website:layout`, 'layout-1');
     await admin.set(`${user}::nsv:website:path:/a/one`, 'article-1');
 

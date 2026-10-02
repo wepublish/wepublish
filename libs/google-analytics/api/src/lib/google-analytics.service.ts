@@ -74,7 +74,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
       return this.cachedClient;
     }
 
-    this.cachedClient?.close();
+    Promise.resolve(this.cachedClient?.close()).catch(() => undefined);
     this.cachedClient = new BetaAnalyticsDataClient({ credentials });
     this.cachedClientEmail = credentials.client_email ?? null;
 
@@ -175,6 +175,14 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     if (!config.credentials || !config.property) {
       this.logger.warn(
         'No Google Analytics credentials set, returning empty array'
+      );
+
+      return [];
+    }
+
+    if (!config.credentials.client_email || !config.credentials.private_key) {
+      this.logger.warn(
+        'Google Analytics credentials lack client_email or private_key, returning empty array'
       );
 
       return [];

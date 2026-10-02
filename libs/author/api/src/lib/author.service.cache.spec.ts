@@ -33,7 +33,16 @@ describe('AuthorService cache', () => {
     async (_, change) => {
       await change();
 
-      expect(publicContentCache.invalidate).toHaveBeenCalledWith('authors');
+      expect(publicContentCache.invalidate.mock.calls[0]).toContain('authors');
     }
   );
+
+  it('also clears cached articles after deleting an author, since lists filtered by that author change', async () => {
+    await service.deleteAuthor('author-1');
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith(
+      'authors',
+      'articles'
+    );
+  });
 });

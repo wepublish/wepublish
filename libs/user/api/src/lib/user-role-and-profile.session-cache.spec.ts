@@ -61,4 +61,36 @@ describe('session cache after role and profile changes', () => {
 
     expect(sessionCache.invalidate).toHaveBeenCalled();
   });
+
+  it.each([
+    ['replaced', { id: 'user-1', userImageID: 'image-1' }, {}],
+    ['removed', { id: 'user-1', userImageID: 'image-1' }, null],
+  ])(
+    'treats a %s profile image as a profile image, so it does not rebuild public content',
+    async (_, user, upload) => {
+      const imageService = {
+        replaceImage: jest.fn().mockResolvedValue({ id: 'image-2' }),
+        uploadImage: jest.fn().mockResolvedValue({ id: 'image-2' }),
+        deleteImage: jest.fn().mockResolvedValue('image-1'),
+      };
+      const profile = new ProfileService(
+        prisma,
+        imageService as unknown as ImageUploadService,
+        sessionCache as unknown as SessionCacheInvalidator
+      );
+
+      await profile.uploadUserProfileImage(user as User, upload as never);
+
+      for (const call of [
+        ...imageService.replaceImage.mock.calls,
+        ...imageService.deleteImage.mock.calls,
+      ]) {
+        expect(call.at(-1)).toEqual({ profileImage: true });
+      }
+      expect(
+        imageService.replaceImage.mock.calls.length +
+          imageService.deleteImage.mock.calls.length
+      ).toBeGreaterThan(0);
+    }
+  );
 });

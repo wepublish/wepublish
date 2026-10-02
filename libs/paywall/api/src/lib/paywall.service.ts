@@ -135,7 +135,7 @@ export class PaywallService {
         id,
       },
     });
-    await this.publicContentCache.invalidate('paywalls');
+    await this.publicContentCache.invalidate('paywalls', 'articles');
 
     return result;
   }

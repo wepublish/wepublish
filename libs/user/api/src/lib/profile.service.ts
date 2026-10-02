@@ -24,7 +24,8 @@ export class ProfileService {
       if (user.userImageID) {
         newImage = await this.imageService.replaceImage(
           user.userImageID,
-          uploadImageInput
+          uploadImageInput,
+          { profileImage: true }
         );
       } else {
         // create new image
@@ -32,13 +33,17 @@ export class ProfileService {
       }
       // cleanup existing user profile from file system
       if (newImage && user.userImageID) {
-        await this.imageService.deleteImage(user.userImageID);
+        await this.imageService.deleteImage(user.userImageID, {
+          profileImage: true,
+        });
       }
     }
 
     // eventually delete image, if upload is set to null
     if (uploadImageInput === null && user.userImageID) {
-      await this.imageService.deleteImage(user.userImageID);
+      await this.imageService.deleteImage(user.userImageID, {
+        profileImage: true,
+      });
     }
 
     const updatedUser = await this.prisma.user.update({

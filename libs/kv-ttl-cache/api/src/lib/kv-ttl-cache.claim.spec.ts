@@ -72,4 +72,40 @@ describe('KvTtlCacheService claim', () => {
       createReplica(new MemoryAtomicStore()).claim('nightly-job', 60_000)
     ).resolves.toBeUndefined();
   });
+
+  it('keeps trying while Dragonfly is briefly unreachable and claims once it is back', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout'] });
+    const dragonfly = new FakeDragonfly();
+    dragonfly.down = true;
+
+    const claiming = createReplica(dragonfly).claim('nightly-job', 60_000, {
+      retryForMs: 60_000,
+    });
+    await vi.advanceTimersByTimeAsync(5_000);
+    dragonfly.down = false;
+    await vi.advanceTimersByTimeAsync(5_000);
+
+    await expect(claiming).resolves.toBe(true);
+  });
+
+  it('gives up when Dragonfly stays unreachable for the whole retry window', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout'] });
+    const dragonfly = new FakeDragonfly();
+    dragonfly.down = true;
+
+    const claiming = createReplica(dragonfly).claim('nightly-job', 60_000, {
+      retryForMs: 60_000,
+    });
+    await vi.advanceTimersByTimeAsync(65_000);
+
+    await expect(claiming).resolves.toBeUndefined();
+  });
+
+  it('does not wait without Dragonfly, where trying again cannot help', async () => {
+    await expect(
+      createReplica(new MemoryAtomicStore()).claim('nightly-job', 60_000, {
+        retryForMs: 60_000,
+      })
+    ).resolves.toBeUndefined();
+  });
 });

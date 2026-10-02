@@ -70,4 +70,26 @@ describe('kv-ttl-cache serializer', () => {
 
     expect(roundTrip(value)).toEqual(value);
   });
+
+  it.each([
+    ['a decimal tag', { type: 'paragraph', attrs: { $kvDecimal: 'x' } }],
+    ['a date tag', { attrs: { $kvDate: '2026-01-01T00:00:00.000Z' } }],
+    ['an empty date tag', { attrs: { $kvDate: null } }],
+    ['an escape look-alike', { attrs: { $kvEscaped: { $kvDecimal: 'x' } } }],
+  ])('serves user content that looks like %s back unchanged', (_, value) => {
+    expect(roundTrip(value)).toEqual(value);
+  });
+
+  it('still revives dates and decimals next to look-alike user content', () => {
+    const value = {
+      at: new Date('2026-01-01T00:00:00.000Z'),
+      vat: new Prisma.Decimal('0.081'),
+      text: { $kvDecimal: 'x' },
+    };
+    const result = roundTrip(value);
+
+    expect(result.at).toBeInstanceOf(Date);
+    expect(Prisma.Decimal.isDecimal(result.vat)).toBe(true);
+    expect(result.text).toEqual({ $kvDecimal: 'x' });
+  });
 });

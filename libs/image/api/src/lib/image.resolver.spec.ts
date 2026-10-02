@@ -7,6 +7,7 @@ import request from 'supertest';
 import { ImageResolver } from './image.resolver';
 import { ImageDataloaderService } from './image-dataloader.service';
 import { MediaAdapter } from './media-adapter';
+import { ImageService } from './image.service';
 
 const imageQuery = `
   query Image($id: String!) {
@@ -56,6 +57,10 @@ describe('ImageService', () => {
           provide: PrismaClient,
           useValue: jest.fn(), // not used due to mocks but needs to be provided
         },
+        {
+          provide: ImageService,
+          useValue: {},
+        },
       ],
     }).compile();
 
@@ -86,7 +91,7 @@ describe('ImageService', () => {
         expect(
           imageDataloaderServiceMock.load?.mock.calls[0]
         ).toMatchSnapshot();
-        expect(res.body.data.getImage).toMatchSnapshot();
+        expect(res.body.data.image).toMatchSnapshot();
       });
   });
 });

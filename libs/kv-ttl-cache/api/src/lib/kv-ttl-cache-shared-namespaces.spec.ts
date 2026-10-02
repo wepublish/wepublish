@@ -51,6 +51,8 @@ describe('findSecretField', () => {
     [{ password: 'x' }, 'password'],
     [{ token: 'session-token' }, 'token'],
     [[{ name: 'a' }, { accessToken: 'x' }], '1.accessToken'],
+    [{ peer: { token: 'peer-secret' } }, 'peer.token'],
+    [{ paywall: { token: 'x' } }, 'paywall.token'],
   ])('finds the secret in %j', (value, path) => {
     expect(findSecretField(value)).toBe(path);
   });
@@ -60,6 +62,15 @@ describe('findSecretField', () => {
     [{ expiresAt: new Date(), roles: [{ permissions: ['CanGetArticle'] }] }],
     [null],
     ['apiKey'],
+    [
+      {
+        article: {
+          paywall: { bypasses: [{ id: 'b1', token: 'public-bypass' }] },
+        },
+      },
+    ],
+    [{ peer: { token: '' } }],
+    [{ apiKey: null, password: '' }],
   ])('finds nothing in %j', value => {
     expect(findSecretField(value)).toBeUndefined();
   });

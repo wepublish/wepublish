@@ -33,6 +33,10 @@ class UnavailableAtomicStore implements KvAtomicStore {
     return false;
   }
 
+  async incrementRaw() {
+    return undefined;
+  }
+
   async delRaw() {
     return;
   }

@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { SessionCacheInvalidator } from '@wepublish/authentication/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import * as OTPAuth from 'otpauth';
 import {
   createCipheriv,
@@ -21,6 +22,10 @@ const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 const USED_CODE_TTL_MS = 90 * 1000; // 90 seconds (3 TOTP periods)
 
+const failedAttemptsName = (userId: string) => `totp-failures:${userId}`;
+const usedCodeName = (userId: string, token: string) =>
+  `totp-used:${createHash('sha256').update(`${userId}:${token}`).digest('hex')}`;
+
 @Injectable()
 export class TotpService {
   private encryptionKey: Buffer;
@@ -36,7 +41,8 @@ export class TotpService {
 
   constructor(
     private prisma: PrismaClient,
-    private sessionCache: SessionCacheInvalidator
+    private sessionCache: SessionCacheInvalidator,
+    private kv: KvTtlCacheService
   ) {
     const appSecretKey = process.env.APP_SECRET_KEY;
 
@@ -90,44 +96,64 @@ export class TotpService {
     };
   }
 
-  private checkRateLimit(userId: string) {
-    const entry = this.failedAttempts.get(userId);
-    if (entry?.lockedUntil && Date.now() < entry.lockedUntil) {
-      const remainingMin = Math.ceil((entry.lockedUntil - Date.now()) / 60000);
+  private async reserveAttempt(userId: string) {
+    const now = Date.now();
+    const known = this.failedAttempts.get(userId);
+
+    if (known?.lockedUntil && now < known.lockedUntil) {
+      const remainingMin = Math.ceil((known.lockedUntil - now) / 60000);
       throw new BadRequestException(
         `Too many failed attempts. Account locked for ${remainingMin} more minute(s).`
       );
     }
 
-    // Clear expired lockout
-    if (entry?.lockedUntil && Date.now() >= entry.lockedUntil) {
-      this.failedAttempts.delete(userId);
-    }
-  }
-
-  private recordFailedAttempt(userId: string) {
-    const entry = this.failedAttempts.get(userId) || { count: 0 };
+    const entry =
+      known && !known.lockedUntil ?
+        known
+      : { count: 0, lockedUntil: undefined };
     entry.count++;
+    const lockedHere = entry.count > MAX_FAILED_ATTEMPTS;
 
-    if (entry.count >= MAX_FAILED_ATTEMPTS) {
-      entry.lockedUntil = Date.now() + LOCKOUT_DURATION_MS;
+    if (lockedHere) {
+      entry.lockedUntil = now + LOCKOUT_DURATION_MS;
     }
 
     this.failedAttempts.set(userId, entry);
+
+    const attempts = await this.kv.increment(
+      failedAttemptsName(userId),
+      LOCKOUT_DURATION_MS
+    );
+
+    if (
+      lockedHere ||
+      (attempts !== undefined && attempts > MAX_FAILED_ATTEMPTS)
+    ) {
+      throw new BadRequestException(
+        `Too many failed attempts. Account locked for ${
+          LOCKOUT_DURATION_MS / 60000
+        } more minute(s).`
+      );
+    }
   }
 
-  private clearFailedAttempts(userId: string) {
+  private async clearFailedAttempts(userId: string) {
     this.failedAttempts.delete(userId);
+    await this.kv.forgetCount(failedAttemptsName(userId));
   }
 
-  private checkReplay(userId: string, token: string) {
+  private async checkReplay(userId: string, token: string) {
     const now = Date.now();
     const codes = this.usedCodes.get(userId) || [];
 
     // Clean expired entries
     const valid = codes.filter(c => now - c.usedAt < USED_CODE_TTL_MS);
 
-    if (valid.some(c => c.code === token)) {
+    if (
+      valid.some(c => c.code === token) ||
+      (await this.kv.claim(usedCodeName(userId, token), USED_CODE_TTL_MS)) ===
+        false
+    ) {
       throw new BadRequestException(
         'This verification code has already been used. Wait for a new code.'
       );
@@ -194,17 +220,16 @@ export class TotpService {
       );
     }
 
-    this.checkRateLimit(userId);
-    this.checkReplay(userId, token);
+    await this.reserveAttempt(userId);
+    await this.checkReplay(userId, token);
 
     const decryptedSecret = this.decrypt(user.totpSecret);
 
     if (!this.verifyToken(decryptedSecret, token)) {
-      this.recordFailedAttempt(userId);
       throw new BadRequestException('Invalid verification code.');
     }
 
-    this.clearFailedAttempts(userId);
+    await this.clearFailedAttempts(userId);
 
     await this.prisma.user.update({
       where: { id: userId },
@@ -216,7 +241,7 @@ export class TotpService {
   }
 
   async verifyUserTotp(userId: string, token: string): Promise<boolean> {
-    this.checkRateLimit(userId);
+    await this.reserveAttempt(userId);
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -229,16 +254,15 @@ export class TotpService {
       );
     }
 
-    this.checkReplay(userId, token);
+    await this.checkReplay(userId, token);
 
     const decryptedSecret = this.decrypt(user.totpSecret);
 
     if (!this.verifyToken(decryptedSecret, token)) {
-      this.recordFailedAttempt(userId);
       throw new BadRequestException('Invalid verification code.');
     }
 
-    this.clearFailedAttempts(userId);
+    await this.clearFailedAttempts(userId);
     return true;
   }
 

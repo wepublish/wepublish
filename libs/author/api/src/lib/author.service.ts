@@ -161,7 +161,7 @@ export class AuthorService {
         id,
       },
     });
-    await this.publicContentCache.invalidate('authors');
+    await this.publicContentCache.invalidate('authors', 'articles');
 
     return result;
   }

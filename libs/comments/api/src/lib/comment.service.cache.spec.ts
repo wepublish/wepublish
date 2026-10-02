@@ -1,8 +1,27 @@
 import { CommentItemType, CommentState } from '@prisma/client';
+import { CanCreateApprovedComment } from '@wepublish/permissions';
 import { CommentService } from './comment.service';
 import { RatingSystemService } from './rating-system/rating-system.service';
 
 const session = { user: { id: 'user-1' }, roles: [] } as any;
+const approvedReader = {
+  user: { id: 'user-1' },
+  roles: [{ id: 'reader', permissionIDs: [CanCreateApprovedComment.id] }],
+} as any;
+const article = { id: 'article-1', slug: 'one' };
+const ownComment = {
+  id: 'comment-1',
+  itemID: 'article-1',
+  itemType: CommentItemType.article,
+  userID: 'user-1',
+  state: CommentState.pendingUserChanges,
+  revisions: [],
+};
+const readerComment = {
+  itemID: 'article-1',
+  itemType: 'article',
+  text: { type: 'doc', content: [] },
+} as any;
 
 const createPrisma = () => ({
   comment: {
@@ -246,31 +265,76 @@ describe('comment cache', () => {
     expect(publicContentCache.invalidateComments).toHaveBeenCalledWith(false);
   });
 
-  it.each<[string, () => Promise<unknown>, boolean]>([
-    [
-      'a reader writes a comment',
-      () =>
-        comments.addUserComment(
-          {
-            itemID: 'article-1',
-            itemType: 'article',
-            text: { type: 'doc', content: [] },
-          } as any,
-          session
-        ),
-      false,
-    ],
-    [
-      'a reader changes a comment',
-      () => comments.updateUserComment({ id: 'comment-1' } as any, session),
-      true,
-    ],
-  ])('never lets %s rebuild the website pages', async (_, change, removed) => {
-    await change();
+  describe('reader comments', () => {
+    beforeEach(() => {
+      prisma.comment.create.mockResolvedValue(ownComment);
+      prisma.comment.update.mockResolvedValue(ownComment);
+      prisma.comment.findUnique.mockResolvedValue(ownComment);
+    });
 
-    expect(publicContentCache.invalidateReaderComments).toHaveBeenCalledWith(
-      removed
-    );
-    expect(publicContentCache.invalidateComments).not.toHaveBeenCalled();
+    it('leaves every public cache alone when a reader writes a comment that waits for approval', async () => {
+      await comments.addUserComment(readerComment, session);
+
+      expect(
+        publicContentCache.invalidateReaderComments
+      ).not.toHaveBeenCalled();
+      expect(publicContentCache.invalidateComments).not.toHaveBeenCalled();
+    });
+
+    it('shows a reader comment that needs no approval at once and rebuilds only its article page', async () => {
+      prisma.comment.create.mockResolvedValue({
+        ...ownComment,
+        state: CommentState.approved,
+      });
+
+      await comments.addUserComment(readerComment, approvedReader);
+
+      expect(publicContentCache.invalidateReaderComments).toHaveBeenCalledWith(
+        false,
+        article
+      );
+      expect(publicContentCache.invalidateComments).not.toHaveBeenCalled();
+    });
+
+    it('refreshes comments, comment blocks and the article page when a reader edits a published comment', async () => {
+      prisma.comment.findUnique.mockResolvedValue({
+        ...ownComment,
+        state: CommentState.approved,
+      });
+
+      await comments.updateUserComment({ id: 'comment-1' } as any, session);
+
+      expect(publicContentCache.invalidateReaderComments).toHaveBeenCalledWith(
+        true,
+        article
+      );
+      expect(publicContentCache.invalidateComments).not.toHaveBeenCalled();
+    });
+
+    it('leaves public caches alone when a reader edits a comment nobody else sees yet', async () => {
+      await comments.updateUserComment({ id: 'comment-1' } as any, session);
+
+      expect(
+        publicContentCache.invalidateReaderComments
+      ).not.toHaveBeenCalled();
+      expect(publicContentCache.invalidateComments).not.toHaveBeenCalled();
+    });
+
+    it('publishes an edit that needs no approval like an approval', async () => {
+      prisma.comment.update.mockResolvedValue({
+        ...ownComment,
+        state: CommentState.approved,
+      });
+
+      await comments.updateUserComment(
+        { id: 'comment-1' } as any,
+        approvedReader
+      );
+
+      expect(publicContentCache.invalidateReaderComments).toHaveBeenCalledWith(
+        false,
+        article
+      );
+    });
   });
 });

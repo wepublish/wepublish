@@ -98,8 +98,19 @@ describe('paywall cache', () => {
       async (_, change) => {
         await change();
 
-        expect(publicContentCache.invalidate).toHaveBeenCalledWith('paywalls');
+        expect(publicContentCache.invalidate.mock.calls[0]).toContain(
+          'paywalls'
+        );
       }
     );
+
+    it('also clears cached articles after deleting a paywall, since they would keep its id', async () => {
+      await service().deletePaywall('paywall-1');
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledWith(
+        'paywalls',
+        'articles'
+      );
+    });
   });
 });

@@ -39,7 +39,10 @@ describe('GoogleAnalyticsService', () => {
 
   beforeEach(async () => {
     config = {
-      credentials: {},
+      credentials: {
+        client_email: 'ga@example.iam.gserviceaccount.com',
+        private_key: 'private-key',
+      },
       articlePrefix: '/a/',
       property: '1234',
     };
@@ -86,6 +89,46 @@ describe('GoogleAnalyticsService', () => {
 
     expect(result).toHaveLength(0);
     expect(runReportSpy).not.toHaveBeenCalled();
+  });
+
+  it('should return an empty array without contacting Google when the credentials lack client_email or private_key', async () => {
+    const { BetaAnalyticsDataClient } = jest.requireMock(
+      '@google-analytics/data'
+    );
+    config.credentials = { type: 'service_account', private_key: 'key' };
+
+    const result = await service.getMostViewedArticles({});
+
+    expect(result).toHaveLength(0);
+    expect(BetaAnalyticsDataClient).not.toHaveBeenCalled();
+  });
+
+  it('should not crash the api when a replaced client fails to close', async () => {
+    const { BetaAnalyticsDataClient } = jest.requireMock(
+      '@google-analytics/data'
+    );
+    BetaAnalyticsDataClient.mockImplementationOnce(() => ({
+      runReport: runReportSpy,
+      close: jest.fn(() => Promise.reject(new Error('stub never created'))),
+    }));
+    runReportSpy.mockRejectedValue(new Error('gRPC timeout'));
+    const unhandled = jest.fn();
+    process.on('unhandledRejection', unhandled);
+
+    await service.getMostViewedArticles({});
+    config.credentials = {
+      client_email: 'other@example.iam.gserviceaccount.com',
+      private_key: 'private-key',
+    };
+    await service.getMostViewedArticles({});
+    jest.useRealTimers();
+    await new Promise(resolve => setImmediate(resolve));
+    await new Promise(resolve => setImmediate(resolve));
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2023-01-01'));
+    process.off('unhandledRejection', unhandled);
+
+    expect(unhandled).not.toHaveBeenCalled();
   });
 
   it('should return an empty array when runReport throws', async () => {

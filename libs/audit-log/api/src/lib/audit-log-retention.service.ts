@@ -11,6 +11,7 @@ export const MAX_BATCHES_PER_RUN = 20;
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
+const CLAIM_RETRY_FOR_MS = 60_000;
 
 @Injectable()
 export class AuditLogRetentionService {
@@ -34,7 +35,9 @@ export class AuditLogRetentionService {
 
   @Cron(CronExpression.EVERY_DAY_AT_3AM, { name: 'auditLogRetention' })
   async pruneNightly() {
-    const claimed = await this.kv.claim('audit-log-retention', NIGHT_CLAIM_MS);
+    const claimed = await this.kv.claim('audit-log-retention', NIGHT_CLAIM_MS, {
+      retryForMs: CLAIM_RETRY_FOR_MS,
+    });
 
     if (claimed === undefined) {
       logger('audit-log').error(

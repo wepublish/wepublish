@@ -64,15 +64,23 @@ class FakeShared {
       return true;
     }
 
-    const until = this.locks.get(key);
+    const since = this.locks.get(key);
 
-    if (until !== undefined && until > this.clock.now()) {
+    if (since !== undefined && since + LOCK_MS > this.clock.now()) {
       return false;
     }
 
-    this.locks.set(key, this.clock.now() + LOCK_MS);
+    this.locks.set(key, this.clock.now());
 
     return true;
+  }
+
+  async lockedSince(key: string) {
+    const since = this.available ? this.locks.get(key) : undefined;
+
+    return since !== undefined && since + LOCK_MS > this.clock.now() ?
+        since
+      : undefined;
   }
 
   async releaseLock(key: string) {
@@ -262,6 +270,39 @@ describe('page cache', () => {
     await expect(second.get('/one', PAGES)).resolves.toMatchObject({
       lastModified: 1,
     });
+  });
+
+  it('lets another pod regenerate once the pod holding the lock has not stored the page for 3 s, as after a prefetch that never renders', async () => {
+    const { clock, shared, pod } = setup();
+    const first = pod();
+    const second = pod();
+
+    await first.set('/one', page('old'), revalidate(900));
+    shared.version = 'v2';
+    clock.advance(2001);
+    await first.get('/one', PAGES);
+    clock.advance(3001);
+
+    await expect(second.get('/one', PAGES)).resolves.toMatchObject({
+      value: page('old'),
+      lastModified: 1,
+    });
+  });
+
+  it("stores pages without the render's Sentry trace, so cached pages do not join one old trace", async () => {
+    const { pod } = setup();
+    const first = pod();
+    const html =
+      '<head><meta name="sentry-trace" content="0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-1"/>' +
+      '<meta name="baggage" content="sentry-environment=production,sentry-trace_id=0af7651916cd43dd8448eb211c80319c"/>' +
+      '<title>One</title></head>';
+
+    await first.set('/one', page(html), revalidate(900));
+
+    const stored = (await pod().get('/one', PAGES)) as {
+      value: { html: string };
+    };
+    expect(stored.value.html).toBe('<head><title>One</title></head>');
   });
 
   it('frees the page for the next change once it is stored', async () => {

@@ -40,7 +40,7 @@ describe('EventService', () => {
         { provide: PrismaClient, useValue: prismaMock },
         {
           provide: PublicContentCacheInvalidator,
-          useValue: { invalidate: jest.fn() },
+          useValue: { invalidate: jest.fn(), invalidateAt: jest.fn() },
         },
         {
           provide: EventDataloaderService,

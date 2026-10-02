@@ -8,7 +8,7 @@
  */
 import * as Sentry from '@sentry/nextjs';
 
-import { getBaseConfig, setCommonTags } from './config';
+import { getServerConfig, setCommonTags, withoutKeySpans } from './config';
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
@@ -18,8 +18,11 @@ export async function register() {
     const { nodeProfilingIntegration } = await import('@sentry/profiling-node');
 
     Sentry.init({
-      ...getBaseConfig(),
-      integrations: [nodeProfilingIntegration()],
+      ...getServerConfig(),
+      integrations: defaults => [
+        ...withoutKeySpans(defaults),
+        nodeProfilingIntegration(),
+      ],
       profileLifecycle: 'trace',
       profileSessionSampleRate:
         process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0,

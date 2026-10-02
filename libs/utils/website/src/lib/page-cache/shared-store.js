@@ -6,7 +6,8 @@ const UNAVAILABLE_RETRY_MS = 5000;
 const PAGE_TTL_MS = 3 * 60 * 60 * 1000;
 const LOCK_TTL_MS = 10_000;
 const MAX_SHARED_CHARS = 2 * 1024 * 1024;
-const WEBSITE_PAGES_VERSION_KEY = 'nsv:website:pages';
+const WEBSITE_PAGES_VERSION = 'website:pages';
+const API_HEARTBEAT_KEY = 'website:heartbeat';
 
 const describe = error =>
   error instanceof Error ? error.message : String(error);
@@ -196,20 +197,25 @@ function createSharedStore({
 
   return {
     async getVersion() {
-      const reply = await send(['GET', key(WEBSITE_PAGES_VERSION_KEY)]);
+      const versions = await this.getVersions([WEBSITE_PAGES_VERSION]);
 
-      return typeof reply === 'string' || reply === null ? reply : undefined;
+      return versions?.[0];
     },
 
     async getVersions(names) {
       const reply = await send([
         'MGET',
+        key(API_HEARTBEAT_KEY),
         ...names.map(name => key(`nsv:${name}`)),
       ]);
 
-      return Array.isArray(reply) ?
-          reply.map(version => (typeof version === 'string' ? version : null))
-        : undefined;
+      if (!Array.isArray(reply) || typeof reply[0] !== 'string') {
+        return undefined;
+      }
+
+      return reply
+        .slice(1)
+        .map(version => (typeof version === 'string' ? version : null));
     },
 
     async getEntry(path) {
@@ -246,13 +252,22 @@ function createSharedStore({
       const reply = await send([
         'SET',
         lockKey(path),
-        '1',
+        String(Date.now()),
         'NX',
         'PX',
         String(LOCK_TTL_MS),
       ]);
 
       return reply !== null;
+    },
+
+    async lockedSince(path) {
+      const reply = await send(['GET', lockKey(path)]);
+      const since = Number(reply);
+
+      return typeof reply === 'string' && Number.isFinite(since) ?
+          since
+        : undefined;
     },
 
     async releaseLock(path) {

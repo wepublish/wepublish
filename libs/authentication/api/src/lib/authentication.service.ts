@@ -117,7 +117,7 @@ export class AuthenticationService {
     }
 
     if (session.type === AuthSessionType.User) {
-      return session.expiresAt > new Date();
+      return session.expiresAt > new Date() && session.user?.active === true;
     }
 
     return true;

@@ -222,6 +222,22 @@ CommonJS (Next `import()`s it unbundled) and is reached via two spellings of
 
 ---
 
+### ⚠️ Next never re-renders a stale page for a prefetch, so the page lock expires early
+
+[`page-cache.js`](../../libs/utils/website/src/lib/page-cache/page-cache.js)
+gives the pod that takes `page-lock:<build>:<path>` the stale copy so Next
+re-renders it, and every other pod the same copy as fresh. Next 16 skips that
+re-render for `purpose: prefetch` requests (`response-cache/index.js`), and the
+handler cannot tell them apart. With a prefetch every 5 s after an edit, both
+pods served the old article as fresh for 61 s (E2E 2026-10-02). So the lock
+stores its start time and other pods only wait 3 s (`RENDER_GRACE_MS`).
+
+**Load-bearing:** the timestamp in `acquireLock` and the `lockedSince` check;
+"the lock owner always renders" is not true. Pinned by `page-cache.spec.ts`
+("…as after a prefetch that never renders").
+
+---
+
 ### ⚠️ 404s and 5xx are `no-store` only through a `writeHead` patch
 
 `next.config.js` sends `s-maxage=59` for `/:path*` and Next never replaces a

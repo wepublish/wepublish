@@ -59,6 +59,34 @@ describe('cache spans for Sentry', () => {
     ]);
   });
 
+  it.each([
+    ['a shared namespace', 'content:articles'],
+    ['a namespace kept in memory', 'settings:paymentprovider'],
+  ])(
+    'counts a lookup that waited for another request loading the same key as a miss in %s',
+    async (_, namespace) => {
+      const kv = createReplica();
+      let finishLoad!: () => void;
+      const loading = new Promise<void>(resolve => (finishLoad = resolve));
+      const loader = async () => {
+        await loading;
+
+        return { id: '1' };
+      };
+
+      const first = kv.getOrLoadNs(namespace, 'id:1', loader, 60);
+      const second = kv.getOrLoadNs(namespace, 'id:1', loader, 60);
+      await new Promise(resolve => setTimeout(resolve, 0));
+      finishLoad();
+      await Promise.all([first, second]);
+
+      expect(spans.map(({ attributes }) => attributes['cache.hit'])).toEqual([
+        false,
+        false,
+      ]);
+    }
+  );
+
   it('traces namespaces kept in memory too', async () => {
     const kv = createReplica();
 

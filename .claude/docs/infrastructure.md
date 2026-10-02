@@ -34,6 +34,8 @@ anonymous GraphQL answers — never integration settings. Run it with
 `--cache_mode=true`: when full it otherwise rejects writes, cache resets included.
 The nightly job only runs with Dragonfly, so a missing or unreachable one turns
 the UptimeRobot check (`/health`, `monitoring.tf`) red; pod probes ignore it.
+Cross-replica locks (`lock:*`: jobs, migrator ticks, tracking pixels, used TOTP
+codes) and counters (`count:*`: TOTP failures) live there as well.
 Websites share their rendered ISR pages there too (Next `cacheHandler`, nothing
 written to disk; [utils-website README](../../libs/utils/website/README.md)):
 publishing rebuilds front page and pages through `website:pages`, but an

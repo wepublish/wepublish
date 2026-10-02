@@ -88,6 +88,7 @@ describe('AuthenticationService', () => {
     const session = {
       type: AuthSessionType.User,
       expiresAt: future,
+      user: { id: 'user-1', active: true },
     } as AuthSession;
 
     const result = service.isSessionValid(session);
@@ -115,6 +116,16 @@ describe('AuthenticationService', () => {
 
     const result = service.isSessionValid(session);
     expect(result).toBeFalsy();
+  });
+
+  it('should return that the session is invalid once the user was deactivated', () => {
+    const session = {
+      type: AuthSessionType.User,
+      expiresAt: new Date('2030-01-01T00:00:00.000Z'),
+      user: { id: 'user-1', active: false },
+    } as AuthSession;
+
+    expect(service.isSessionValid(session)).toBeFalsy();
   });
 
   it("should return that the session is invalid if it's null", () => {

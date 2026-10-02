@@ -61,6 +61,15 @@ describe('AuditLogRetentionService', () => {
       expect(auditLogService.deleteOlderThan).not.toHaveBeenCalled();
     });
 
+    it('keeps trying to claim the night for a while, so a short Dragonfly blip does not skip it', async () => {
+      const { retention, kv } = night(true);
+
+      await retention.pruneNightly();
+
+      const [[, , options]] = kv.claim.mock.calls;
+      expect(options.retryForMs).toBeGreaterThanOrEqual(30_000);
+    });
+
     it('claims the night for longer than a run takes, but frees it before the next night', async () => {
       const { retention, kv } = night(true);
 

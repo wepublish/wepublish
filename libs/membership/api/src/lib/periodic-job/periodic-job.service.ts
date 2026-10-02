@@ -72,11 +72,6 @@ export class PeriodicJobService {
   }
 
   /**
-   * Run the periodic jobs. This makes sure that no two instances of the same
-   * controller run their jobs at the same time and returns if they are.
-   * @returns void
-   */
-  /**
    * Runs all outstanding {@link getOutstandingRuns} runs by doing the following for each run:
    * - send custom mails
    * - create invoices

@@ -131,6 +131,7 @@ export class EventService {
       },
     });
     await this.publicContentCache.invalidate();
+    this.scheduleRefresh(result);
 
     return result;
   }
@@ -154,8 +155,20 @@ export class EventService {
       },
     });
     await this.publicContentCache.invalidate();
+    this.scheduleRefresh(result);
 
     return result;
+  }
+
+  private scheduleRefresh({
+    startsAt,
+    endsAt,
+  }: {
+    startsAt?: Date | null;
+    endsAt?: Date | null;
+  } = {}) {
+    this.publicContentCache.invalidateAt(startsAt);
+    this.publicContentCache.invalidateAt(endsAt);
   }
 
   async deleteEvent(id: string) {

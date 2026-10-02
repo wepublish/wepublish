@@ -3,6 +3,8 @@ import {
   SessionCacheInvalidator,
   UserSession,
 } from '@wepublish/authentication/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { createCache } from 'cache-manager';
 import { TotpService } from './totp.service';
 import { SessionService } from './session.service';
 
@@ -41,7 +43,8 @@ describe('session cache after authentication changes', () => {
   const totp = () =>
     new TotpService(
       prisma as unknown as PrismaClient,
-      sessionCache as unknown as SessionCacheInvalidator
+      sessionCache as unknown as SessionCacheInvalidator,
+      new KvTtlCacheService(createCache())
     );
 
   const sessions = () =>

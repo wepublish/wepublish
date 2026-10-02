@@ -11,10 +11,15 @@ const CONNECTION_TIMEOUT_MS = 1000;
 const UNAVAILABLE_RETRY_MS = 5000;
 const COMMAND_TIMEOUT_MS = 500;
 
+class DragonflyTimeout extends Error {}
+
 const withTimeout = <T>(promise: Promise<T>, ms: number) =>
   new Promise<T>((resolve, reject) => {
     const timer = setTimeout(
-      () => reject(new Error(`Dragonfly did not answer within ${ms} ms`)),
+      () =>
+        reject(
+          new DragonflyTimeout(`Dragonfly did not answer within ${ms} ms`)
+        ),
       ms
     );
 
@@ -47,6 +52,7 @@ export interface KvAtomicStore {
   getRaw(key: string): Promise<string | undefined>;
   getManyRaw(keys: string[]): Promise<Array<string | undefined>>;
   setRaw(key: string, value: string, ttlMs?: number): Promise<boolean>;
+  incrementRaw(key: string, ttlMs: number): Promise<number | undefined>;
   delRaw(key: string): Promise<void>;
   disconnect(): Promise<void>;
 }
@@ -89,6 +95,13 @@ export class MemoryAtomicStore implements KvAtomicStore {
     return true;
   }
 
+  async incrementRaw(key: string, ttlMs: number): Promise<number | undefined> {
+    const count = Number(this.read(key) ?? 0) + 1;
+    this.write(key, String(count), ttlMs);
+
+    return count;
+  }
+
   async delRaw(key: string) {
     this.entries.delete(key);
   }
@@ -120,6 +133,8 @@ export class MemoryAtomicStore implements KvAtomicStore {
 export class DragonflyAtomicStore implements KvAtomicStore {
   readonly shared = true;
   private unavailableUntil = 0;
+  private listenersAttached = false;
+  private connecting?: Promise<void>;
 
   constructor(readonly adapter: KeyvRedis<unknown>) {}
 
@@ -170,6 +185,18 @@ export class DragonflyAtomicStore implements KvAtomicStore {
     return reply === 'OK';
   }
 
+  async incrementRaw(key: string, ttlMs: number) {
+    const count = await this.send(['INCR', this.key(key)]);
+
+    if (typeof count !== 'number') {
+      return undefined;
+    }
+
+    await this.send(['PEXPIRE', this.key(key), String(ttlMs)]);
+
+    return count;
+  }
+
   async delRaw(key: string) {
     await this.send(['DEL', this.key(key)]);
   }
@@ -182,16 +209,56 @@ export class DragonflyAtomicStore implements KvAtomicStore {
     return this.adapter.createKeyPrefix(key, this.adapter.namespace);
   }
 
+  private async connectedClient(): Promise<RedisClientType> {
+    const client = this.adapter.client as RedisClientType;
+
+    if (!this.listenersAttached || !client.isOpen || !client.isReady) {
+      this.connecting ??= this.connect(client).finally(() => {
+        this.connecting = undefined;
+      });
+
+      try {
+        await withTimeout(this.connecting, COMMAND_TIMEOUT_MS);
+      } catch (error) {
+        throw error instanceof DragonflyTimeout ?
+            new Error(
+              `Dragonfly did not connect within ${COMMAND_TIMEOUT_MS} ms`
+            )
+          : error;
+      }
+    }
+
+    return client;
+  }
+
+  private async connect(client: RedisClientType) {
+    if (!this.listenersAttached) {
+      this.listenersAttached = true;
+      await this.adapter.getClient();
+
+      return;
+    }
+
+    if (!client.isOpen) {
+      try {
+        await withTimeout(client.connect(), CONNECTION_TIMEOUT_MS);
+      } catch (error) {
+        if (error instanceof DragonflyTimeout && client.isOpen) {
+          client.destroy();
+        }
+
+        throw error;
+      }
+    }
+  }
+
   private async send(command: string[]): Promise<unknown> {
     if (!this.isAvailable()) {
       return undefined;
     }
 
     try {
-      const client = (await withTimeout(
-        this.adapter.getClient(),
-        COMMAND_TIMEOUT_MS
-      )) as RedisClientType;
+      const client = await this.connectedClient();
 
       return (
         (await withTimeout(client.sendCommand(command), COMMAND_TIMEOUT_MS)) ??
@@ -200,6 +267,10 @@ export class DragonflyAtomicStore implements KvAtomicStore {
     } catch (error) {
       const wasAvailable = this.isAvailable();
       this.unavailableUntil = Date.now() + UNAVAILABLE_RETRY_MS;
+
+      if (error instanceof DragonflyTimeout) {
+        await this.adapter.disconnect(true).catch(() => undefined);
+      }
 
       if (!wasAvailable) {
         return undefined;

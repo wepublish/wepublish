@@ -88,6 +88,9 @@ const shared = new Set<string>(SHARED_NAMESPACES);
 
 export const isSharedNamespace = (namespace: string) => shared.has(namespace);
 
+const isPublicBypassToken = (path: string[], key: string) =>
+  key === 'token' && path.at(-2) === 'bypasses';
+
 export function findSecretField(
   value: unknown,
   path: string[] = []
@@ -99,7 +102,14 @@ export function findSecretField(
   for (const [key, child] of Object.entries(value)) {
     const childPath = [...path, key];
 
-    if (!Array.isArray(value) && SECRET_FIELD.test(key)) {
+    if (
+      !Array.isArray(value) &&
+      SECRET_FIELD.test(key) &&
+      child !== null &&
+      child !== undefined &&
+      child !== '' &&
+      !isPublicBypassToken(path, key)
+    ) {
       return childPath.join('.');
     }
 

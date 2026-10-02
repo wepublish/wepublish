@@ -18,7 +18,7 @@ export class DragonflyHealthIndicator {
       case 'not-configured':
         return indicator.down('REDIS_URL is not set');
       default:
-        return indicator.down('Dragonfly is unreachable');
+        return indicator.down('Dragonfly is unreachable or refuses writes');
     }
   }
 }

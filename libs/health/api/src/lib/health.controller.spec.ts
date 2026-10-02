@@ -20,7 +20,7 @@ describe('DragonflyHealthIndicator', () => {
 
   it.each([
     ['not-configured', 'REDIS_URL is not set'],
-    ['unreachable', 'Dragonfly is unreachable'],
+    ['unreachable', 'Dragonfly is unreachable or refuses writes'],
   ])('is down when Dragonfly is %s', async (status, message) => {
     await expect(indicator(status).isHealthy('dragonfly')).resolves.toEqual({
       dragonfly: { status: 'down', message },

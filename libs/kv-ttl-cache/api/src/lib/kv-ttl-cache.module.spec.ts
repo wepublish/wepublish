@@ -88,4 +88,15 @@ describe('KvTtlCacheModule', () => {
       expect.stringContaining('not reachable at boot')
     );
   });
+
+  it('announces its release at boot, so websites rebuild pages a new release may render differently', async () => {
+    delete process.env['REDIS_URL'];
+    const announced = vi
+      .spyOn(KvTtlCacheService.prototype, 'announceRelease')
+      .mockResolvedValue(undefined);
+
+    await createService();
+
+    expect(announced).toHaveBeenCalledTimes(1);
+  });
 });
