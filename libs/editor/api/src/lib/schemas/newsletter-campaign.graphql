@@ -1,0 +1,133 @@
+fragment NewsletterCampaignSummary on NewsletterCampaign {
+  id
+  title
+  createdAt
+  modifiedAt
+  blockCount
+  mailchimpCampaignWebId
+  mailchimpEditUrl
+}
+
+fragment NewsletterReport on NewsletterReport {
+  bytes
+  missingFooter
+  missingArticles
+}
+
+fragment NewsletterArticle on Article {
+  id
+  url
+  publishedAt
+  tags {
+    tag
+  }
+  published {
+    preTitle
+    title
+    lead
+    image {
+      id
+      url: transformURL(input: { width: 500 })
+    }
+  }
+}
+
+query NewsletterCampaigns {
+  newsletterCampaigns {
+    ...NewsletterCampaignSummary
+  }
+}
+
+query NewsletterCampaign($id: String!) {
+  newsletterCampaign(id: $id) {
+    ...NewsletterCampaignSummary
+    document
+    images {
+      ...FullImage
+    }
+  }
+}
+
+query NewsletterCampaignPreview($id: String!) {
+  newsletterCampaignPreview(id: $id)
+}
+
+query NewsletterCampaignReport($id: String!) {
+  newsletterCampaignReport(id: $id) {
+    ...NewsletterReport
+  }
+}
+
+query NewsletterMergeFields {
+  newsletterMergeFields {
+    fields {
+      tag
+      label
+      description
+      kind
+    }
+    interests {
+      title
+      groups
+    }
+    error
+  }
+}
+
+query NewsletterArticles($filter: ArticleFilter, $take: Int, $skip: Int) {
+  articles(
+    filter: $filter
+    take: $take
+    skip: $skip
+    sort: PublishedAt
+    order: Descending
+  ) {
+    pageInfo {
+      hasNextPage
+    }
+    nodes {
+      ...NewsletterArticle
+    }
+  }
+}
+
+mutation CreateNewsletterCampaign($title: String!, $document: JSONObject) {
+  createNewsletterCampaign(title: $title, document: $document) {
+    ...NewsletterCampaignSummary
+  }
+}
+
+mutation DuplicateNewsletterCampaign($id: String!) {
+  duplicateNewsletterCampaign(id: $id) {
+    ...NewsletterCampaignSummary
+  }
+}
+
+mutation UpdateNewsletterCampaign(
+  $id: String!
+  $title: String
+  $document: JSONObject!
+) {
+  updateNewsletterCampaign(id: $id, title: $title, document: $document) {
+    ...NewsletterCampaignSummary
+  }
+}
+
+mutation DeleteNewsletterCampaign($id: String!) {
+  deleteNewsletterCampaign(id: $id)
+}
+
+mutation PublishNewsletterCampaign($id: String!) {
+  publishNewsletterCampaign(id: $id) {
+    created
+    campaign {
+      id
+      webId
+      title
+      editUrl
+    }
+    report {
+      ...NewsletterReport
+    }
+  }
+}

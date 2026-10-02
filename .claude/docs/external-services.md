@@ -21,7 +21,8 @@
 ## Email Provider
 
 - Mailgun
-- Mailchimp
+- Mailchimp — the newsletter editor (`libs/newsletter`) pushes drafts, never
+  sends, through the Marketing API key and list of the sync-provider integration
 
 Mail, challenge (captcha) and Mailchimp sync run with exactly one provider
 each: the runtime uses the first non-deleted row. Their `create*Setting`

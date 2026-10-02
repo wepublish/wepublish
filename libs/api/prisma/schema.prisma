@@ -1624,6 +1624,21 @@ model BlockTemplate {
   @@map("block_templates")
 }
 
+model NewsletterCampaign {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  title    String
+  document Json
+
+  mailchimpCampaignId    String?
+  mailchimpCampaignWebId Int?
+
+  @@index([modifiedAt(sort: Desc)])
+  @@map("newsletter_campaigns")
+}
+
 model Banner {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
