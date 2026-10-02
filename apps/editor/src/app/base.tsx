@@ -78,6 +78,7 @@ import {
   CanGetMailLogs,
   CanGetMailProviderSettings,
   CanGetMailTemplates,
+  CanGetNewsletterCampaigns,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetNavigation,
@@ -169,6 +170,7 @@ import {
   MdLogout,
   MdMail,
   MdMenu,
+  MdNewspaper,
   MdMoney,
   MdMultilineChart,
   MdNotificationsNone,
@@ -1091,6 +1093,7 @@ export function Base({ children }: BaseProps) {
                   CanSendMailTemplates.id,
                   CanGetMailLogs.id,
                   CanGetSubscriptionFlows.id,
+                  CanGetNewsletterCampaigns.id,
                 ]}
               >
                 <SidebarNavMenu
@@ -1137,6 +1140,17 @@ export function Base({ children }: BaseProps) {
                       icon={<MdMail />}
                     >
                       {t('navbar.mailTemplates')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[CanGetNewsletterCampaigns.id]}
+                  >
+                    <SidebarNavItem
+                      href="/newsletter"
+                      icon={<MdNewspaper />}
+                    >
+                      {t('newsletter.navbar')}
                     </SidebarNavItem>
                   </PermissionControl>
 

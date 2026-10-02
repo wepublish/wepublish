@@ -2231,6 +2231,14 @@ export enum MailchimpContactStatus {
   Subscribed = 'Subscribed'
 }
 
+export type MailchimpDraft = {
+  __typename: 'MailchimpDraft';
+  editUrl: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  webId: Scalars['Int']['output'];
+};
+
 export type MailchimpFormBlock = BaseBlock & {
   __typename: 'MailchimpFormBlock';
   autoFocus: Scalars['Boolean']['output'];
@@ -2801,6 +2809,7 @@ export type Mutation = {
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
   createNavigation: Navigation;
+  createNewsletterCampaign: NewsletterCampaign;
   /** Creates an page. */
   createPage: Page;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
@@ -2896,6 +2905,7 @@ export type Mutation = {
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
   deleteNavigation: Navigation;
+  deleteNewsletterCampaign: Scalars['Boolean']['output'];
   /** Deletes an page. */
   deletePage: Scalars['String']['output'];
   /** Deletes an existing payment method. */
@@ -2949,6 +2959,8 @@ export type Mutation = {
   dryRunMailchimpSync: MailchimpSyncDryRunResult;
   /** Duplicates an article. */
   duplicateArticle: Article;
+  /** A new campaign with the given one's document. The Mailchimp draft is not copied. */
+  duplicateNewsletterCampaign: NewsletterCampaign;
   /** Duplicates an page. */
   duplicatePage: Page;
   /** Enables two-factor authentication for the current user after verifying the TOTP token. */
@@ -2978,6 +2990,7 @@ export type Mutation = {
   markNotificationRead: NotificationRead;
   /** Publishes an article at the given time. */
   publishArticle: Article;
+  publishNewsletterCampaign: NewsletterPublishResult;
   /** Publishes an page at the given time. */
   publishPage: Page;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
@@ -3090,6 +3103,7 @@ export type Mutation = {
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
   updateNavigation: Navigation;
+  updateNewsletterCampaign: NewsletterCampaign;
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
@@ -3448,6 +3462,12 @@ export type MutationCreateNavigationArgs = {
   key: Scalars['String']['input'];
   links: Array<NavigationLinkInput>;
   name: Scalars['String']['input'];
+};
+
+
+export type MutationCreateNewsletterCampaignArgs = {
+  document?: InputMaybe<Scalars['JSONObject']['input']>;
+  title: Scalars['String']['input'];
 };
 
 
@@ -3826,6 +3846,11 @@ export type MutationDeleteNavigationArgs = {
 };
 
 
+export type MutationDeleteNewsletterCampaignArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeletePageArgs = {
   id: Scalars['String']['input'];
 };
@@ -3947,6 +3972,11 @@ export type MutationDuplicateArticleArgs = {
 };
 
 
+export type MutationDuplicateNewsletterCampaignArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDuplicatePageArgs = {
   id: Scalars['String']['input'];
 };
@@ -4017,6 +4047,11 @@ export type MutationMarkNotificationReadArgs = {
 export type MutationPublishArticleArgs = {
   id: Scalars['String']['input'];
   publishedAt: Scalars['DateTime']['input'];
+};
+
+
+export type MutationPublishNewsletterCampaignArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -4445,6 +4480,13 @@ export type MutationUpdateNavigationArgs = {
 };
 
 
+export type MutationUpdateNewsletterCampaignArgs = {
+  document: Scalars['JSONObject']['input'];
+  id: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationUpdatePageArgs = {
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -4778,6 +4820,55 @@ export enum NavigationLinkType {
   External = 'External',
   Page = 'Page'
 }
+
+export type NewsletterCampaign = {
+  __typename: 'NewsletterCampaign';
+  blockCount: Scalars['Int']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  document: Scalars['JSONObject']['output'];
+  id: Scalars['String']['output'];
+  images: Array<Image>;
+  mailchimpCampaignId?: Maybe<Scalars['String']['output']>;
+  mailchimpCampaignWebId?: Maybe<Scalars['Int']['output']>;
+  mailchimpEditUrl?: Maybe<Scalars['String']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type NewsletterInterestCategory = {
+  __typename: 'NewsletterInterestCategory';
+  groups: Array<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+};
+
+export type NewsletterMergeFields = {
+  __typename: 'NewsletterMergeFields';
+  error?: Maybe<Scalars['String']['output']>;
+  fields: Array<NewsletterMergeTag>;
+  interests: Array<NewsletterInterestCategory>;
+};
+
+export type NewsletterMergeTag = {
+  __typename: 'NewsletterMergeTag';
+  description: Scalars['String']['output'];
+  kind?: Maybe<Scalars['String']['output']>;
+  label: Scalars['String']['output'];
+  tag: Scalars['String']['output'];
+};
+
+export type NewsletterPublishResult = {
+  __typename: 'NewsletterPublishResult';
+  campaign: MailchimpDraft;
+  created: Scalars['Boolean']['output'];
+  report: NewsletterReport;
+};
+
+export type NewsletterReport = {
+  __typename: 'NewsletterReport';
+  bytes: Scalars['Int']['output'];
+  missingArticles: Array<Scalars['String']['output']>;
+  missingFooter: Array<Scalars['String']['output']>;
+};
 
 export type NotificationConfirmation = {
   __typename: 'NotificationConfirmation';
@@ -5924,6 +6015,12 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  newsletterCampaign: NewsletterCampaign;
+  /** The stored issue rendered as the HTML Mailchimp receives. */
+  newsletterCampaignPreview: Scalars['String']['output'];
+  newsletterCampaignReport: NewsletterReport;
+  newsletterCampaigns: Array<NewsletterCampaign>;
+  newsletterMergeFields: NewsletterMergeFields;
   /** Returns the instance-wide notification confirmations. Requires authentication. */
   notificationConfirmations: Array<NotificationConfirmation>;
   /** Returns the current user's read notifications. Requires authentication. */
@@ -6564,6 +6661,21 @@ export type QueryNewDeactivationsArgs = {
 export type QueryNewSubscribersArgs = {
   end?: InputMaybe<Scalars['DateTime']['input']>;
   start: Scalars['DateTime']['input'];
+};
+
+
+export type QueryNewsletterCampaignArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryNewsletterCampaignPreviewArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryNewsletterCampaignReportArgs = {
+  id: Scalars['String']['input'];
 };
 
 

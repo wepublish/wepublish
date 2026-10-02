@@ -52,6 +52,7 @@ catalog:
   '@node-rs/bcrypt': '^1.10.7'
   '@prisma/adapter-pg': 7.5.0
   '@prisma/client': 7.5.0
+  '@react-email/components': '^1.0.12'
   '@sentry/nestjs': '^11.4.0'
   '@sentry/profiling-node': '^11.4.0'
   '@tiptap/core': '^3.26.1'
@@ -94,6 +95,8 @@ catalog:
   prosemirror-model: '^1.25.8'
   qs: '^6.9.1'
   ramda: '^0.28.0'
+  react: '^19.2.7'
+  react-dom: '^19.2.7'
   rxjs: '^7.8.0'
   sharp: '^0.33.5'
   stripe: '^8.126.0'
