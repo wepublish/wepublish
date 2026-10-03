@@ -31,6 +31,54 @@ describe('KvTtlCacheService while Dragonfly is unreachable', () => {
     expect(loader).toHaveBeenCalledTimes(2);
   });
 
+  it('never puts a session into Dragonfly', async () => {
+    const dragonfly = new FakeDragonfly();
+
+    await createReplica(dragonfly).getOrLoadNs(
+      'auth:sessions',
+      'user:x',
+      () => ({ id: 'session', email: 'reader@example.com' }),
+      300
+    );
+
+    expect(dragonfly.written.some(([key]) => key.startsWith('val:'))).toBe(
+      false
+    );
+  });
+
+  it('drops a session cached before Dragonfly became unreachable within a minute, so a logout on another replica takes effect', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(START);
+    const dragonfly = new FakeDragonfly();
+    const replica = createReplica(dragonfly);
+    const loader = vi.fn().mockResolvedValue({ id: 'session' });
+
+    await replica.getOrLoadNs('auth:sessions', 'user:x', loader, 300);
+    dragonfly.down = true;
+    await createReplica(dragonfly).resetNamespace('auth:sessions');
+
+    vi.setSystemTime(START + 10_000);
+    await replica.getOrLoadNs('auth:sessions', 'user:x', loader, 300);
+    expect(loader).toHaveBeenCalledTimes(1);
+
+    vi.setSystemTime(START + 65_000);
+    await replica.getOrLoadNs('auth:sessions', 'user:x', loader, 300);
+    expect(loader).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps sessions for their full ttl while Dragonfly is reachable', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(START);
+    const replica = createReplica(new FakeDragonfly());
+    const loader = vi.fn().mockResolvedValue({ id: 'session' });
+
+    await replica.getOrLoadNs('auth:sessions', 'user:x', loader, 300);
+    vi.setSystemTime(START + 250_000);
+    await replica.getOrLoadNs('auth:sessions', 'user:x', loader, 300);
+
+    expect(loader).toHaveBeenCalledTimes(1);
+  });
+
   it('keeps the full ttl for values kept local on purpose, like oversized ones', async () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(START);

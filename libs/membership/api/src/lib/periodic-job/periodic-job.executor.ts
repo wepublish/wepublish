@@ -2,13 +2,12 @@ import { Cron } from '@nestjs/schedule';
 import { Injectable, Logger } from '@nestjs/common';
 import { ContextIdFactory, ModuleRef } from '@nestjs/core';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { PeriodicJobService } from './periodic-job.service';
+import { NIGHT_CLAIM_MS, PeriodicJobService } from './periodic-job.service';
 import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
 
 const SCHEDULE =
   process.env['PERIODIC_JOB_EXECUTION_SCHEDULE'] || '0 0 3 * * *';
 
-const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
 const CLAIM_RETRY_FOR_MS = 60_000;
 
 @Injectable()
@@ -34,8 +33,18 @@ export class PeriodicJobExecutor {
     });
 
     if (claimed === undefined) {
+      if ((await this.kv.dragonflyStatus()) === 'not-configured') {
+        this.logger.log(
+          'No Dragonfly configured (REDIS_URL unset), the database makes sure only one replica runs the nightly job'
+        );
+
+        return this.runNight(() =>
+          this.periodicJobController.concurrentExecute()
+        );
+      }
+
       this.logger.error(
-        'Nightly job not run: without Dragonfly (REDIS_URL unset or Dragonfly unreachable) nothing makes sure only one replica runs it. The next run catches up.'
+        'Nightly job not run: Dragonfly is configured but unreachable, so nothing makes sure only one replica runs it. The next run catches up.'
       );
 
       return;
@@ -47,8 +56,12 @@ export class PeriodicJobExecutor {
       return;
     }
 
+    return this.runNight(() => this.periodicJobController.execute());
+  }
+
+  private async runNight(runPeriodicJobs: () => Promise<void>) {
     try {
-      await this.periodicJobController.execute();
+      await runPeriodicJobs();
     } catch (error) {
       this.logger.error('Periodic jobs failed:', error);
     }

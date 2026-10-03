@@ -35,6 +35,7 @@ describe('ArticleService', () => {
     invalidateAt: jest.Mock;
     invalidateNavigations: jest.Mock;
     invalidateArticlePages: jest.Mock;
+    invalidateArticleLayout: jest.Mock;
   };
   let publicationWatcher: { schedule: jest.Mock };
 
@@ -82,6 +83,7 @@ describe('ArticleService', () => {
       invalidateAt: jest.fn(),
       invalidateNavigations: jest.fn().mockResolvedValue(undefined),
       invalidateArticlePages: jest.fn().mockResolvedValue(undefined),
+      invalidateArticleLayout: jest.fn().mockResolvedValue(undefined),
     };
 
     publicationWatcher = { schedule: jest.fn() };
@@ -638,6 +640,42 @@ describe('ArticleService', () => {
       );
     }
   );
+
+  it.each([
+    ['unpublishing', () => service.unpublishArticle('1234')],
+    ['deleting', () => service.deleteArticle('1234')],
+  ])(
+    'tells the websites to rebuild every article page after %s a article, since other articles show its teaser',
+    async (_, change) => {
+      prismaMock.article.findUnique?.mockResolvedValue({
+        id: '1234',
+        slug: 'one',
+        revisions: [{ id: '1234-1234' }],
+      });
+      prismaMock.article.update?.mockResolvedValue({
+        id: '1234',
+        slug: 'one',
+        revisions: [],
+      });
+
+      await change();
+
+      expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+    }
+  );
+
+  it('leaves the other article pages alone after publishing a article', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      slug: 'one',
+      revisions: [{ id: '1234-1234' }],
+    });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234', slug: 'one' });
+
+    await service.publishArticle('1234', new Date('2025-01-01'));
+
+    expect(publicContentCache.invalidateArticleLayout).not.toHaveBeenCalled();
+  });
 
   it('tells the websites about the old and the new slug after updating a published article', async () => {
     prismaMock.article.findUnique?.mockResolvedValue({

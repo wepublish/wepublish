@@ -86,6 +86,98 @@ describe('DragonflyAtomicStore', () => {
     vi.useRealTimers();
   });
 
+  const createClosingStore = (sendCommand: ReturnType<typeof vi.fn>) => {
+    const client = {
+      isOpen: true,
+      isReady: true,
+      sendCommand,
+      connect: vi.fn(async () => {
+        client.isOpen = true;
+        client.isReady = true;
+      }),
+      destroy: vi.fn(() => {
+        client.isOpen = false;
+        client.isReady = false;
+      }),
+    };
+    const store = new DragonflyAtomicStore({
+      namespace: 'wepublish-demo',
+      createKeyPrefix: (key: string, namespace: string) =>
+        `${namespace}::${key}`,
+      client,
+      getClient: async () => client,
+      disconnect: (force?: boolean) => {
+        if (force) {
+          client.destroy();
+
+          return Promise.resolve();
+        }
+
+        client.isOpen = false;
+
+        return new Promise<void>(() => undefined);
+      },
+    } as unknown as ConstructorParameters<typeof DragonflyAtomicStore>[0]);
+
+    return { client, store };
+  };
+
+  it('finishes shutting down when Dragonfly never answers while closing', async () => {
+    const { client, store } = createClosingStore(vi.fn());
+    let closed = false;
+
+    void store.disconnect().then(() => (closed = true));
+    await vi.advanceTimersByTimeAsync(1000);
+
+    expect(closed).toBe(true);
+    expect(client.destroy).toHaveBeenCalled();
+  });
+
+  it('sends nothing after shutting down, so a delayed reset cannot open a new connection', async () => {
+    const sendCommand = vi.fn().mockResolvedValue('OK');
+    const { client, store } = createClosingStore(sendCommand);
+
+    void store.disconnect();
+    await vi.advanceTimersByTimeAsync(1000);
+    await store.delRaw('val:x');
+    await store.setRaw('nsv:settings', 'v2');
+
+    expect(sendCommand).not.toHaveBeenCalled();
+    expect(client.connect).not.toHaveBeenCalled();
+  });
+
+  it('creates a counter with its expiry before counting, so it still expires when renewing the expiry fails', async () => {
+    const sendCommand = vi.fn(async (command: string[]) => {
+      if (command[0] === 'INCR') {
+        return 1;
+      }
+
+      if (command[0] === 'PEXPIRE') {
+        throw new Error('ECONNRESET');
+      }
+
+      return 'OK';
+    });
+    const store = createStore(sendCommand);
+
+    await expect(
+      store.incrementRaw('count:totp-failures:1', 900_000)
+    ).resolves.toBe(1);
+
+    expect(sendCommand.mock.calls.map(([command]) => command)).toEqual([
+      [
+        'SET',
+        'wepublish-demo::count:totp-failures:1',
+        '0',
+        'NX',
+        'PX',
+        '900000',
+      ],
+      ['INCR', 'wepublish-demo::count:totp-failures:1'],
+      ['PEXPIRE', 'wepublish-demo::count:totp-failures:1', '900000'],
+    ]);
+  });
+
   it('is shared between replicas, unlike memory', () => {
     expect(createStore(vi.fn()).shared).toBe(true);
     expect(new MemoryAtomicStore().shared).toBe(false);

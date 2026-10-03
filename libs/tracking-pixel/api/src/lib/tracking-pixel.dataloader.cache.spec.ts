@@ -12,6 +12,7 @@ describe('tracking pixel row cache', () => {
       delete: ReturnType<typeof vi.fn>;
     };
     trackingPixelMethod: { upsert: ReturnType<typeof vi.fn> };
+    article: { findUnique: ReturnType<typeof vi.fn> };
   };
 
   beforeEach(() => {
@@ -25,6 +26,7 @@ describe('tracking pixel row cache', () => {
       trackingPixelMethod: {
         upsert: vi.fn().mockResolvedValue({ id: 'method-1' }),
       },
+      article: { findUnique: vi.fn().mockResolvedValue({ slug: 'a1' }) },
     };
   });
 
@@ -62,7 +64,8 @@ describe('tracking pixel row cache', () => {
           },
         ],
       } as any,
-      kv
+      kv,
+      { invalidateArticleAnswers: vi.fn() } as any
     ).addMissingArticleTrackingPixels('a1');
     await new TrackingPixelDataloader(prisma as any, kv).load('a1');
 

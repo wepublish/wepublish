@@ -245,14 +245,19 @@ popup, session cookie, `SHOW_PENDING_WHEN_NOT_PUBLISHED`).
 [`page-cache.js`](../../libs/utils/website/src/lib/page-cache/page-cache.js)
 gives the pod that takes `page-lock:<build>:<path>` the stale copy so Next
 re-renders it, and every other pod the same copy as fresh. Next 16 skips that
-re-render for `purpose: prefetch` requests (`response-cache/index.js`), and the
-handler cannot tell them apart. With a prefetch every 5 s after an edit, both
-pods served the old article as fresh for 61 s (E2E 2026-10-02). So the lock
-stores its start time and other pods only wait 3 s (`RENDER_GRACE_MS`).
+re-render for `purpose: prefetch` requests (`response-cache/index.js`), yet the
+handler takes the lock for them too. With a prefetch every 5 s after an edit,
+both pods served the old article as fresh for 61 s (E2E 2026-10-02). So the lock
+stores its start time and other pods only wait 3 s (`RENDER_GRACE_MS`). A pod
+that handed out the stale copy then serves it as fresh for 30 s unless the
+render stored the page (`RENDER_BACKOFF_MS`; Next's own error backoff needs the
+route's `cacheControl`, which only the rendering process knows) — but not after
+a prefetch, which the handler reads from `ctx._requestHeaders.purpose` (Next
+builds one handler per request).
 
-**Load-bearing:** the timestamp in `acquireLock` and the `lockedSince` check;
-"the lock owner always renders" is not true. Pinned by `page-cache.spec.ts`
-("…as after a prefetch that never renders").
+**Load-bearing:** the timestamp in `acquireLock`, the `lockedSince` check and
+the prefetch exception around `startRender`; "the lock owner always renders" is
+not true. Pinned by `page-cache.spec.ts` and `page-cache-handler.spec.ts`.
 
 ---
 
@@ -269,20 +274,44 @@ in CI (verified end-to-end 2026-10-01).
 
 ---
 
-### ⚠️ A missing article is not always a 404: keep `errors` in `revalidateFor`
+### ⚠️ A missing article is not always a 404: `revalidateFor` tells it from a failing api
 
-`article(slug)` for a draft or unpublished article answers
-`Cannot return null for non-nullable field Article.latest`
-(`INTERNAL_SERVER_ERROR`), not 404, and the website clients use
-`errorPolicy: 'all'`, so `getStaticProps` renders an empty 200 page (verified
-end-to-end 2026-10-02). A database hiccup looks the same. `revalidateFor(content,
-errors)` keeps such a page 60 s; with only `content` it was stored for an hour
-and shared to every pod through Dragonfly.
+`article(slug)` for a never-published article answers `Cannot return null for
+non-nullable field ArticleRevision.id` (or `Article.latest`), code
+`INTERNAL_SERVER_ERROR` without `status` — exactly like a Prisma pool timeout —
+and the website clients use `errorPolicy: 'all'`. The preview needs that page as
+an empty 200 (see above), so `revalidateFor(content, errors)` keeps it 60 s.
+Without content it throws on every other error that is not a 4xx
+(`extensions.status`, or `extensions.originalError.statusCode` for 400/401/403/422),
+so Next keeps the previous page instead of storing an empty one for every pod —
+except during `next build` (`NEXT_PHASE`), which prerenders `index.tsx`.
 
-**Load-bearing:** the `!content || errors?.length` branch in
-`libs/utils/website/src/lib/revalidate-for.ts` and the `, article.errors` /
-`, page.errors` argument in every app's `getStaticProps`. Pinned by
-`revalidate-for.spec.ts`; nothing checks that an app passes `errors`.
+**Load-bearing:** `HIDDEN_CONTENT` in `revalidate-for.ts` — without it the first
+view of an unpublished article (the editor preview) is a 500 and an unpublished
+article stays served stale — and the `, article.errors` / `, page.errors`
+argument in every app. Pinned by `revalidate-for.spec.ts` (shapes checked against
+`@nestjs/apollo` 13.2 and the real SDL, 2026-10-02); nothing checks that an app
+passes `errors`.
+
+---
+
+### ⚠️ Loading the Redis client slows every string method until `restoreFastStringPrototype` runs
+
+`@redis/client` 5 (via `@keyv/redis`) defines `class VerbatimString extends
+String`; loading it puts `String.prototype` into V8 dictionary mode, and every
+string method in the process gets slower. Next's ETag hash over each cached page
+took 3 ms instead of 0.7 ms, cache hits per pod dropped from ~290/s to ~170/s
+(verified with `%HasFastProperties` and a CPU profile, Node 22.20, 2026-10-02).
+`restoreFastStringPrototype()` reads a property 1 000 times through an object
+whose prototype is `String.prototype`, which makes V8 turn it fast again; fewer
+than ~100 reads do not.
+
+**Load-bearing:** the call after the imports in `kv-ttl-cache-atomic-store.ts`
+(`fast-string-prototype.ts`) and in `createRedisClient` in
+`page-cache/shared-store.js`, which also loads the client only when it connects.
+Pinned by `fast-string-prototype.spec.ts` and `shared-store.fast-strings.spec.ts`
+(fresh `node --allow-natives-syntax`); a new place that loads `@keyv/redis` or
+`@redis/client` needs the same call.
 
 ---
 

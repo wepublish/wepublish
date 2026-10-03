@@ -268,6 +268,18 @@ describe('shared page store', () => {
       await expect(shared?.getEntry('/a/one')).resolves.toBeNull();
     });
 
+    it('tells whether a page fits into Dragonfly, so a page over 2 MB stays on its pod', async () => {
+      const { store } = setup();
+      const shared = store();
+
+      await expect(shared?.setEntry('/a/one', entry('small'))).resolves.toBe(
+        true
+      );
+      await expect(
+        shared?.setEntry('/a/one', entry('x'.repeat(2 * 1024 * 1024)))
+      ).resolves.toBe(false);
+    });
+
     it('deletes a page', async () => {
       const { store } = setup();
       const shared = store();

@@ -20,6 +20,7 @@ export class ArticlePublicationWatcher
 {
   private logger = new Logger('ArticlePublicationWatcher');
   private timers = new PublicationTimers();
+  private coveredUntil?: Date;
 
   constructor(
     private prisma: PrismaClient,
@@ -47,9 +48,10 @@ export class ArticlePublicationWatcher
   @Interval(60_000)
   async scheduleUpcoming() {
     const now = new Date();
-    const where = {
-      publishedAt: { gt: now, lte: new Date(now.getTime() + LOOKAHEAD_MS) },
-    };
+    const until = new Date(now.getTime() + LOOKAHEAD_MS);
+    const from =
+      this.coveredUntil && this.coveredUntil < now ? this.coveredUntil : now;
+    const where = { publishedAt: { gt: from, lte: until } };
 
     try {
       const upcoming = await Promise.all([
@@ -65,6 +67,8 @@ export class ArticlePublicationWatcher
           this.timers.schedule([publishedAt], () => this.publish(publishedAt));
         }
       }
+
+      this.coveredUntil = until;
     } catch (error) {
       this.logger.error(
         `Could not look up scheduled articles: ${

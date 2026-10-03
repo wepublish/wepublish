@@ -17,10 +17,13 @@ describe('shared namespaces', () => {
     expect(isSharedNamespace('some-new-integration')).toBe(false);
   });
 
-  it('shares page data, sessions and graphql responses', () => {
+  it("keeps sessions on the api replica, so nobody with the websites' Dragonfly access can forge a login or read readers' personal data", () => {
+    expect(isSharedNamespace('auth:sessions')).toBe(false);
+  });
+
+  it('shares page data and graphql responses', () => {
     expect(SHARED_NAMESPACES).toEqual(
       expect.arrayContaining([
-        'auth:sessions',
         'settings',
         'navigations',
         'graphql:responses',

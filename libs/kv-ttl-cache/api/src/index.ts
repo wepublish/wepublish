@@ -6,6 +6,7 @@ export {
   PUBLIC_CONTENT_NAMESPACE,
   PUBLIC_COMMENTS_NAMESPACE,
   PublicContentCacheInvalidator,
+  skipAnswerCache,
   contentCacheNamespace,
   CONTENT_CACHE_TTL_SECONDS,
   type PublicContent,

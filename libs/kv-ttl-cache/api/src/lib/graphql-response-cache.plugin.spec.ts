@@ -6,6 +6,7 @@ import {
   GraphqlResponseCachePlugin,
   PUBLIC_CONTENT_NAMESPACE,
   PublicContentCacheInvalidator,
+  skipAnswerCache,
 } from './graphql-response-cache.plugin';
 import { MemoryAtomicStore } from './kv-ttl-cache-atomic-store';
 
@@ -54,8 +55,12 @@ const createApi = async (dragonfly: FakeDragonfly) => {
     typeDefs,
     resolvers: {
       Query: {
-        article: (_: unknown, { id }: { id: string }) => {
+        article: (_: unknown, { id }: { id: string }, context: object) => {
           calls.article++;
+
+          if (id === 'not-to-store') {
+            skipAnswerCache(context);
+          }
 
           if (failNext) {
             failNext = false;
@@ -328,6 +333,17 @@ describe('GraphqlResponseCachePlugin', () => {
     expect(api.calls.article).toBe(2);
   });
 
+  it('never caches an answer a resolver marked as not to be stored', async () => {
+    const api = await start();
+    const NOT_TO_STORE = '{ article(id: "not-to-store") { id title } }';
+
+    const first = await api.query(NOT_TO_STORE);
+    await api.query(NOT_TO_STORE);
+
+    expect(first?.errors).toBeUndefined();
+    expect(api.calls.article).toBe(2);
+  });
+
   it('keeps answers for different variables apart', async () => {
     const api = await start();
     const byId = 'query ($id: ID!) { article(id: $id) { id } }';
@@ -515,6 +531,36 @@ describe('PublicContentCacheInvalidator', () => {
       await expect(
         kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE)
       ).resolves.not.toBe(before);
+    });
+
+    it('retires anonymous answers and the article pages for a changed article without rebuilding other pages', async () => {
+      vi.useFakeTimers();
+      const { kv, invalidator, pagesChanges } = withPagesCount();
+      const paths = vi.spyOn(kv, 'resetWebsitePaths');
+      const before = await kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE);
+
+      await invalidator.invalidateArticleAnswers({ id: '1', slug: 'one' });
+      await vi.advanceTimersByTimeAsync(70_000);
+
+      await expect(
+        kv.getNamespaceVersion(PUBLIC_CONTENT_NAMESPACE)
+      ).resolves.not.toBe(before);
+      expect(paths).toHaveBeenCalledWith(['/a/one', '/a/id/1']);
+      expect(pagesChanges()).toBe(0);
+    });
+
+    it('rebuilds every article page when the layout of all articles changed', async () => {
+      const atomic = new MemoryAtomicStore();
+      const writes = vi.spyOn(atomic, 'setRaw');
+      const invalidator = new PublicContentCacheInvalidator(
+        new KvTtlCacheService(createCache(), atomic)
+      );
+
+      await invalidator.invalidateArticleLayout();
+
+      expect(
+        writes.mock.calls.filter(([key]) => key === 'nsv:website:layout')
+      ).toHaveLength(1);
     });
 
     it('tells the websites when a moderator removes a comment', async () => {

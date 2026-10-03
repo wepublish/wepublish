@@ -33,7 +33,7 @@ export class TotpService {
   // Rate limiting: track failed TOTP attempts per user
   private failedAttempts = new Map<
     string,
-    { count: number; lockedUntil?: number }
+    { count: number; lockedUntil?: number; lastAttemptAt: number }
   >();
 
   // Replay protection: track used TOTP time steps per user
@@ -108,10 +108,15 @@ export class TotpService {
     }
 
     const entry =
-      known && !known.lockedUntil ?
+      (
+        known &&
+        !known.lockedUntil &&
+        now - known.lastAttemptAt < LOCKOUT_DURATION_MS
+      ) ?
         known
-      : { count: 0, lockedUntil: undefined };
+      : { count: 0, lockedUntil: undefined, lastAttemptAt: now };
     entry.count++;
+    entry.lastAttemptAt = now;
     const lockedHere = entry.count > MAX_FAILED_ATTEMPTS;
 
     if (lockedHere) {
@@ -177,9 +182,10 @@ export class TotpService {
       secret: OTPAuth.Secret.fromBase32(secret),
     });
 
-    const delta = totp.validate({ token, window: 1 });
+    const timestamp = Date.now();
+    const delta = totp.validate({ token, timestamp, window: 1 });
 
-    return delta === null ? undefined : totp.counter() + delta;
+    return delta === null ? undefined : totp.counter({ timestamp }) + delta;
   }
 
   async setupTotp(userId: string, email: string, website?: boolean) {

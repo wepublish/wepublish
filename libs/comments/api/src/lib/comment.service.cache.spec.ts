@@ -231,6 +231,33 @@ describe('comment cache', () => {
       expect(prisma.article.findUnique).not.toHaveBeenCalled();
     });
 
+    it.each([
+      [false, []],
+      [true, [{ id: 'article-1', slug: 'one' }]],
+    ])(
+      'also clears article and page answers when an editor writes a tagged comment (published: %s), since comment blocks select comments by tag',
+      async (publish, articles) => {
+        prisma.comment.create.mockResolvedValue({
+          id: 'comment-1',
+          itemID: 'article-1',
+          itemType: CommentItemType.article,
+        });
+
+        await comments.createAdminComment({
+          itemID: 'article-1',
+          itemType: CommentItemType.article,
+          text: [],
+          tagIds: ['tag-1'],
+          publish,
+        } as any);
+
+        expect(publicContentCache.invalidateComments).toHaveBeenCalledWith(
+          true,
+          ...articles
+        );
+      }
+    );
+
     it('names no article page for a comment on a page', async () => {
       commentOn(CommentItemType.page);
 

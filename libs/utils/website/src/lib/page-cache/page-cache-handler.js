@@ -44,11 +44,12 @@ const cacheFor = serverDistDir => {
 class PageCacheHandler {
   constructor(ctx) {
     this.cache = cacheFor(ctx?.serverDistDir);
+    this.request = { prefetch: ctx?._requestHeaders?.purpose === 'prefetch' };
   }
 
   get(key, ctx) {
     return tracePageCacheGet(startSpan, key, ctx, () =>
-      this.cache.get(key, ctx)
+      this.cache.get(key, ctx, this.request)
     );
   }
 

@@ -109,4 +109,28 @@ describe('PeerProfileService', () => {
 
     expect(request).toHaveBeenCalledTimes(2);
   });
+
+  it('asks the remote peer again for another token, so a wrong token is not shown as working', async () => {
+    process.env['NODE_ENV'] = 'production';
+
+    await service.getRemotePeerProfile('https://peer.example', 'token');
+    request.mockRejectedValueOnce(new Error('Unauthorized'));
+
+    await expect(
+      service.getRemotePeerProfile('https://peer.example', 'wrong-token')
+    ).rejects.toThrow('Unauthorized');
+    expect(request).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps the token out of the cache key', async () => {
+    process.env['NODE_ENV'] = 'production';
+    const getOrLoadNs = jest.spyOn(kv, 'getOrLoadNs');
+
+    await service.getRemotePeerProfile('https://peer.example', 'secret-token');
+
+    const [[namespace, key]] = getOrLoadNs.mock.calls;
+    expect(namespace).toBe(REMOTE_PEER_PROFILE_CACHE_NAMESPACE);
+    expect(key).toContain('https://peer.example');
+    expect(key).not.toContain('secret-token');
+  });
 });

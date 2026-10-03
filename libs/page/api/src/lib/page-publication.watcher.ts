@@ -19,6 +19,7 @@ export class PagePublicationWatcher
 {
   private logger = new Logger('PagePublicationWatcher');
   private timers = new PublicationTimers();
+  private coveredUntil?: Date;
 
   constructor(
     private prisma: PrismaClient,
@@ -36,9 +37,10 @@ export class PagePublicationWatcher
   @Interval(60_000)
   async scheduleUpcoming() {
     const now = new Date();
-    const where = {
-      publishedAt: { gt: now, lte: new Date(now.getTime() + LOOKAHEAD_MS) },
-    };
+    const until = new Date(now.getTime() + LOOKAHEAD_MS);
+    const from =
+      this.coveredUntil && this.coveredUntil < now ? this.coveredUntil : now;
+    const where = { publishedAt: { gt: from, lte: until } };
 
     try {
       const upcoming = await Promise.all([
@@ -55,6 +57,8 @@ export class PagePublicationWatcher
           .flatMap(({ publishedAt }) => (publishedAt ? [publishedAt] : [])),
         () => this.publicContentCache.invalidate('pages')
       );
+
+      this.coveredUntil = until;
     } catch (error) {
       this.logger.error(
         `Could not look up scheduled pages: ${

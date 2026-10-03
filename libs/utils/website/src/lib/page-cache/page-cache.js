@@ -4,6 +4,7 @@ const UNSIGNALLED_REVALIDATE_SECONDS = 60;
 const DEFAULT_MAX_LOCAL_BYTES = 50 * 1024 * 1024;
 const MAX_PENDING = 10000;
 const RENDER_GRACE_MS = 3000;
+const RENDER_BACKOFF_MS = 30_000;
 const STALE = 1;
 const SHARED_KINDS = new Set(['PAGES', 'REDIRECT']);
 const LAYOUT_VERSION = 'website:layout';
@@ -37,6 +38,7 @@ function createPageCache({
 }) {
   const local = new Map();
   const pending = new Map();
+  const renders = new Map();
   const knownVersions = new Map();
   const versionsInFlight = new Map();
   let localBytes = 0;
@@ -92,6 +94,18 @@ function createPageCache({
     }
   };
 
+  const startRender = key => {
+    renders.delete(key);
+    renders.set(key, clock.now());
+
+    if (renders.size > MAX_PENDING) {
+      renders.delete(renders.keys().next().value);
+    }
+  };
+
+  const isRendering = key =>
+    renders.has(key) && clock.now() - renders.get(key) < RENDER_BACKOFF_MS;
+
   const currentVersion = async () => {
     if (!shared) {
       return undefined;
@@ -104,12 +118,12 @@ function createPageCache({
     versionInFlight ??= (async () => {
       const version = await shared.getVersion();
       signalled = version !== undefined;
+      known = {
+        version: version === undefined ? known?.version : version,
+        checkedAt: clock.now(),
+      };
 
-      if (version !== undefined) {
-        known = { version, checkedAt: clock.now() };
-      }
-
-      return version === undefined ? known?.version : version;
+      return known.version;
     })().finally(() => {
       versionInFlight = undefined;
     });
@@ -126,6 +140,11 @@ function createPageCache({
     }
   };
 
+  const serialize = versions =>
+    versions.some(version => version === undefined) ? undefined : (
+      JSON.stringify(versions)
+    );
+
   const articleVersion = async key => {
     if (!shared) {
       return undefined;
@@ -139,7 +158,7 @@ function createPageCache({
         item => item && clock.now() - item.checkedAt < VERSION_REFRESH_MS
       )
     ) {
-      return JSON.stringify(recent.map(item => item.version));
+      return serialize(recent.map(item => item.version));
     }
 
     if (!versionsInFlight.has(key)) {
@@ -149,16 +168,12 @@ function createPageCache({
           const versions = await shared.getVersions(names);
           signalled = versions !== undefined;
 
-          if (versions) {
-            names.forEach((name, index) => knowVersion(name, versions[index]));
-          }
-
           const resolved =
             versions ?? names.map(name => knownVersions.get(name)?.version);
 
-          return resolved.some(version => version === undefined) ? undefined : (
-              JSON.stringify(resolved)
-            );
+          names.forEach((name, index) => knowVersion(name, resolved[index]));
+
+          return serialize(resolved);
         })().finally(() => {
           versionsInFlight.delete(key);
         })
@@ -210,7 +225,7 @@ function createPageCache({
   };
 
   return {
-    async get(key, ctx) {
+    async get(key, ctx, request) {
       if (ctx?.kind !== 'PAGES') {
         const entry = read(key);
 
@@ -228,7 +243,7 @@ function createPageCache({
 
       const theirs = shared ? await shared.getEntry(key) : undefined;
 
-      if (theirs === null && mine) {
+      if (theirs === null && mine && !mine.localOnly) {
         forget(key);
         remember(key, version);
 
@@ -247,12 +262,16 @@ function createPageCache({
         keep(key, theirs);
       }
 
-      if (isFresh(best, version)) {
+      if (isFresh(best, version) || isRendering(key)) {
         return fresh(best);
       }
 
       if (!shared || (await shared.acquireLock(key))) {
         remember(key, version);
+
+        if (!request?.prefetch) {
+          startRender(key);
+        }
 
         return stale(best);
       }
@@ -264,6 +283,10 @@ function createPageCache({
       }
 
       remember(key, version);
+
+      if (!request?.prefetch) {
+        startRender(key);
+      }
 
       return stale(best);
     },
@@ -280,6 +303,7 @@ function createPageCache({
       const version =
         pending.has(key) ? pending.get(key) : await versionFor(key);
       pending.delete(key);
+      renders.delete(key);
 
       if (isNotFound(value)) {
         forget(key);
@@ -302,7 +326,10 @@ function createPageCache({
       keep(key, entry);
 
       if (shared) {
-        await shared.setEntry(key, entry);
+        if ((await shared.setEntry(key, entry)) === false) {
+          entry.localOnly = true;
+        }
+
         await shared.releaseLock(key);
       }
     },

@@ -29,11 +29,14 @@ serves all media. Terraform in `application-configuration` creates a user
 `NODE_EXTRA_CA_CERTS` on api and website pods; media are separated by key
 prefix ([gotchas.md](gotchas.md)), mirrored locally by `docker/dragonfly/users.acl`.
 In production the api refuses `redis://` and verifies Dragonfly against the CA.
-It holds page data, articles/pages/authors/images, sessions (without token) and
-anonymous GraphQL answers — never integration settings. Run it with
-`--cache_mode=true`: when full it otherwise rejects writes, cache resets included.
-The nightly job only runs with Dragonfly, so a missing or unreachable one turns
-the UptimeRobot check (`/health`, `monitoring.tf`) red; pod probes ignore it.
+It holds page data, articles/pages/authors/images and anonymous GraphQL
+answers — never sessions or integration settings. Run it with
+`--cache_mode=true`: when full it otherwise rejects writes, cache resets
+included. Give it headroom all the same: full, it evicts keys, the locks and
+counters below among them (`evicted_keys` in `INFO stats` should stay 0).
+With Dragonfly configured but unreachable the nightly job does not run (without
+`REDIS_URL` the database keeps it to one replica), and the UptimeRobot check
+(`/health`, `monitoring.tf`) turns red; pod probes ignore it.
 Cross-replica locks (`lock:*`: jobs, migrator ticks, tracking pixels, used TOTP
 codes) and counters (`count:*`: TOTP failures) live there as well.
 Websites share their rendered ISR pages there too (Next `cacheHandler`, nothing

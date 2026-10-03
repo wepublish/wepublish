@@ -14,9 +14,10 @@ import {
   KvAtomicStore,
   MemoryAtomicStore,
 } from './kv-ttl-cache-atomic-store';
+import { LruMap } from './kv-ttl-cache-lru-map';
 import {
-  deserializeCacheValue,
-  serializeCacheValue,
+  deserializeCacheValueIfPossible,
+  serializeCacheValueIfPossible,
 } from './kv-ttl-cache-serializer';
 import {
   WEBSITE_LAYOUT_NAMESPACE,
@@ -44,7 +45,9 @@ const CLAIM_RETRY_MS = 5000;
 const WEBSITE_HEARTBEAT_KEY = 'website:heartbeat';
 const WEBSITE_HEARTBEAT_EVERY_MS = 20_000;
 const WEBSITE_HEARTBEAT_TTL_MS = 60_000;
-const RELEASE_CLAIM_MS = 30 * 24 * 60 * 60 * 1000;
+const RELEASE_KEY = 'release:current';
+const RELEASE_CLAIM_MS = 10 * 60 * 1000;
+const REMEMBERED_DELETES = 10_000;
 export const HEALTH_PROBE_KEY = 'health';
 export const HEALTH_PROBE_TTL_MS = 60_000;
 
@@ -72,6 +75,10 @@ export class KvTtlCacheService implements OnModuleDestroy {
   private unrecordedPagesChange?: number;
   private reportedSecrets = new Set<string>();
   private lastHeartbeat = 0;
+  private unreachableSince?: number;
+  private deletes = 0;
+  private versionWrites = new Map<string, number>();
+  private deletedAt = new LruMap<string, number>(REMEMBERED_DELETES);
 
   constructor(
     @Inject(CACHE_MANAGER) private cache: Cache,
@@ -110,18 +117,15 @@ export class KvTtlCacheService implements OnModuleDestroy {
       const replies = this.atomic.getManyRaw(stale);
 
       stale.forEach((vk, index) => {
+        const writes = this.versionWrites.get(vk);
         const p = replies
           .then(async shared => {
             const version =
-              shared[index] ??
-              (await this.createSharedVersion(
-                vk,
-                this.knownVersions.get(vk)?.version
-              ));
+              shared[index] ?? (await this.createSharedVersion(vk));
 
-            this.knownVersions.set(vk, { version, checkedAt: Date.now() });
+            this.noteReachability();
 
-            return version;
+            return this.rememberVersion(vk, version, writes);
           })
           .finally(() => this.nsVersionInFlight.delete(vk));
 
@@ -149,37 +153,75 @@ export class KvTtlCacheService implements OnModuleDestroy {
     }
 
     const p = (async () => {
+      const writes = this.versionWrites.get(vk);
       const unsynced = this.unsyncedVersions.get(vk)?.version;
 
       if (unsynced) {
         await this.resyncVersions();
 
-        this.knownVersions.set(vk, {
-          version: unsynced,
-          checkedAt: Date.now(),
-        });
-
-        return unsynced;
+        return this.rememberVersion(vk, unsynced, writes);
       }
 
       const shared =
-        (await this.atomic.getRaw(vk)) ??
-        (await this.createSharedVersion(vk, known?.version));
+        (await this.atomic.getRaw(vk)) ?? (await this.createSharedVersion(vk));
 
-      this.knownVersions.set(vk, { version: shared, checkedAt: Date.now() });
+      this.noteReachability();
 
-      return shared;
+      return this.rememberVersion(vk, shared, writes);
     })().finally(() => this.nsVersionInFlight.delete(vk));
 
     this.nsVersionInFlight.set(vk, p);
     return p;
   }
 
-  private async createSharedVersion(
+  private noteReachability() {
+    if (this.atomic.isAvailable()) {
+      this.unreachableSince = undefined;
+    } else {
+      this.unreachableSince ??= Date.now();
+    }
+  }
+
+  private async localVersion(namespace: string): Promise<string> {
+    const version = await this.getNamespaceVersion(namespace);
+
+    if (this.isShared(namespace) || this.unreachableSince === undefined) {
+      return version;
+    }
+
+    const period = Math.floor(
+      (Date.now() - this.unreachableSince) / UNSHARED_FALLBACK_TTL_MS
+    );
+
+    return period ? `${version}~${period}` : version;
+  }
+
+  private localTtlSeconds(ttlSeconds: number): number {
+    return this.unreachableSince === undefined ?
+        ttlSeconds
+      : Math.min(ttlSeconds, UNSHARED_FALLBACK_TTL_MS / 1000);
+  }
+
+  private rememberVersion(
     vk: string,
-    localVersion: string | undefined
-  ): Promise<string> {
-    const version = localVersion ?? newVersion();
+    version: string,
+    writesBefore: number | undefined
+  ): string {
+    if (this.versionWrites.get(vk) !== writesBefore) {
+      return (
+        this.unsyncedVersions.get(vk)?.version ??
+        this.knownVersions.get(vk)?.version ??
+        version
+      );
+    }
+
+    this.knownVersions.set(vk, { version, checkedAt: Date.now() });
+
+    return version;
+  }
+
+  private async createSharedVersion(vk: string): Promise<string> {
+    const version = this.knownVersions.get(vk)?.version ?? newVersion();
     await this.atomic.setIfAbsent(vk, version);
 
     return (await this.atomic.getRaw(vk)) ?? version;
@@ -193,6 +235,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
 
   private async writeVersion(vk: string, ttlMs?: number): Promise<void> {
     const version = newVersion();
+    this.versionWrites.set(vk, (this.versionWrites.get(vk) ?? 0) + 1);
 
     if (await this.atomic.setRaw(vk, version, ttlMs)) {
       this.unsyncedVersions.delete(vk);
@@ -213,10 +256,19 @@ export class KvTtlCacheService implements OnModuleDestroy {
   private async resyncVersions(): Promise<void> {
     const resynced: [string, number | undefined][] = [];
 
-    for (const [vk, { version, ttlMs }] of [...this.unsyncedVersions]) {
-      if (await this.atomic.setRaw(vk, version, ttlMs)) {
-        this.unsyncedVersions.delete(vk);
-        resynced.push([vk, ttlMs]);
+    for (const vk of [...this.unsyncedVersions.keys()]) {
+      const unsynced = this.unsyncedVersions.get(vk);
+
+      if (!unsynced) {
+        continue;
+      }
+
+      if (await this.atomic.setRaw(vk, unsynced.version, unsynced.ttlMs)) {
+        if (this.unsyncedVersions.get(vk) === unsynced) {
+          this.unsyncedVersions.delete(vk);
+        }
+
+        resynced.push([vk, unsynced.ttlMs]);
       }
     }
 
@@ -261,7 +313,19 @@ export class KvTtlCacheService implements OnModuleDestroy {
       return;
     }
 
-    if (await this.claim(`release:${this.release}`, RELEASE_CLAIM_MS)) {
+    const current = await this.atomic.getRaw(RELEASE_KEY);
+
+    if (current === this.release) {
+      return;
+    }
+
+    if (
+      await this.claim(
+        `release:${this.release}:after:${current ?? 'none'}`,
+        RELEASE_CLAIM_MS
+      )
+    ) {
+      await this.atomic.setRaw(RELEASE_KEY, this.release);
       await this.recordPagesChange();
       await this.resetWebsiteLayout();
     }
@@ -282,7 +346,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
     setTimeout(() => void write(), WEBSITE_REBUILD_AGAIN_MS).unref?.();
   }
 
-  private async resetWebsiteLayout(): Promise<void> {
+  async resetWebsiteLayout(): Promise<void> {
     const vk = this.versionKey(WEBSITE_LAYOUT_NAMESPACE);
 
     await this.writeVersion(vk);
@@ -492,11 +556,16 @@ export class KvTtlCacheService implements OnModuleDestroy {
     ttlSeconds: number,
     onMiss: () => void
   ): Promise<T> {
-    const version = await this.getNamespaceVersion(namespace);
+    const version = await this.localVersion(namespace);
     const fullKey = this.namespacedKey(namespace, version, key);
 
     if (!this.isShared(namespace)) {
-      return this.getOrLoad(fullKey, loader, ttlSeconds, onMiss);
+      return this.getOrLoad(
+        fullKey,
+        loader,
+        this.localTtlSeconds(ttlSeconds),
+        onMiss
+      );
     }
 
     const cached = await this.readShared<T>(fullKey);
@@ -563,7 +632,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
     ttlSeconds: number,
     keyPrefix: string
   ): Promise<Array<T | null>> {
-    const version = await this.getNamespaceVersion(namespace);
+    const version = await this.localVersion(namespace);
     const cached = await this.getManyNs<T>(
       namespace,
       version,
@@ -577,22 +646,26 @@ export class KvTtlCacheService implements OnModuleDestroy {
       return cached as T[];
     }
 
+    const deletesBefore = this.deletes;
     const loaded = await loader(missing);
     const loadedByKey = new Map(
       missing.map((key, index) => [key, loaded[index] ?? null])
     );
 
     await Promise.all(
-      [...loadedByKey].map(([key, value]) =>
-        value === null ? undefined : (
-          this.setAt(
-            namespace,
-            this.namespacedKey(namespace, version, `${keyPrefix}${key}`),
-            value,
-            ttlSeconds
-          )
-        )
-      )
+      [...loadedByKey].map(([key, value]) => {
+        const fullKey = this.namespacedKey(
+          namespace,
+          version,
+          `${keyPrefix}${key}`
+        );
+
+        return (
+            value === null || (this.deletedAt.get(fullKey) ?? 0) > deletesBefore
+          ) ?
+            undefined
+          : this.setAt(namespace, fullKey, value, ttlSeconds);
+      })
     );
 
     return keys.map(
@@ -637,7 +710,12 @@ export class KvTtlCacheService implements OnModuleDestroy {
           return;
         }
 
-        const value = deserializeCacheValue<T>(text);
+        const value = deserializeCacheValueIfPossible<T>(text);
+
+        if (value === undefined) {
+          return;
+        }
+
         remoteValues.set(fullKey, value);
         await this.cache.set(fullKey, value as any, VERSION_REFRESH_MS);
       })
@@ -654,7 +732,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
     value: T,
     ttlSeconds?: number
   ): Promise<void> {
-    const version = await this.getNamespaceVersion(namespace);
+    const version = await this.localVersion(namespace);
 
     await this.setAt(
       namespace,
@@ -674,11 +752,15 @@ export class KvTtlCacheService implements OnModuleDestroy {
       return this.writeShared(namespace, fullKey, value, ttlSeconds);
     }
 
-    await this.set(fullKey, value, ttlSeconds);
+    await this.set(
+      fullKey,
+      value,
+      ttlSeconds && this.localTtlSeconds(ttlSeconds)
+    );
   }
 
   async getNs<T>(namespace: string, key: string): Promise<T | undefined> {
-    const version = await this.getNamespaceVersion(namespace);
+    const version = await this.localVersion(namespace);
     const fullKey = this.namespacedKey(namespace, version, key);
 
     if (this.isShared(namespace)) {
@@ -689,22 +771,48 @@ export class KvTtlCacheService implements OnModuleDestroy {
   }
 
   async delNs(namespace: string, key: string): Promise<void> {
-    const version = await this.getNamespaceVersion(namespace);
-    const fullKey = this.namespacedKey(namespace, version, key);
-    this.inFlight.delete(fullKey);
-    await this.del(fullKey);
+    await this.deleteUnder(namespace, key, await this.versionsOf(namespace));
 
     if (!this.isShared(namespace)) {
       return;
     }
 
-    const sharedKey = this.sharedKey(fullKey);
-    await this.atomic.delRaw(sharedKey);
-
     setTimeout(() => {
-      void this.atomic.delRaw(sharedKey);
-      void this.del(fullKey);
+      void this.versionsOf(namespace).then(versions =>
+        this.deleteUnder(namespace, key, versions)
+      );
     }, REPLICAS_CAUGHT_UP_MS).unref?.();
+  }
+
+  private async versionsOf(namespace: string): Promise<string[]> {
+    const versions = new Set([await this.localVersion(namespace)]);
+    const current =
+      this.atomic.shared ?
+        await this.atomic.getRaw(this.versionKey(namespace))
+      : undefined;
+
+    if (current) {
+      versions.add(current);
+    }
+
+    return [...versions];
+  }
+
+  private async deleteUnder(
+    namespace: string,
+    key: string,
+    versions: string[]
+  ): Promise<void> {
+    for (const version of versions) {
+      const fullKey = this.namespacedKey(namespace, version, key);
+      this.inFlight.delete(fullKey);
+      this.deletedAt.set(fullKey, ++this.deletes);
+      await this.del(fullKey);
+
+      if (this.isShared(namespace)) {
+        await this.atomic.delRaw(this.sharedKey(fullKey));
+      }
+    }
   }
 
   async dragonflyStatus(): Promise<
@@ -729,9 +837,12 @@ export class KvTtlCacheService implements OnModuleDestroy {
     { retryForMs = 0 }: { retryForMs?: number } = {}
   ): Promise<boolean | undefined> {
     const retries = Math.floor(retryForMs / CLAIM_RETRY_MS);
+    const token = `${hostname()}:${process.pid}:${randomBytes(8).toString(
+      'hex'
+    )}`;
 
     for (let attempt = 0; ; attempt++) {
-      const claimed = await this.claimOnce(name, ttlMs);
+      const claimed = await this.claimOnce(name, ttlMs, token);
 
       if (claimed !== undefined || !this.atomic.shared || attempt >= retries) {
         return claimed;
@@ -769,19 +880,27 @@ export class KvTtlCacheService implements OnModuleDestroy {
 
   private async claimOnce(
     name: string,
-    ttlMs: number
+    ttlMs: number,
+    token: string
   ): Promise<boolean | undefined> {
     if (!this.atomic.shared || !this.atomic.isAvailable()) {
       return undefined;
     }
 
-    const claimed = await this.atomic.setIfAbsent(
-      `lock:${name}`,
-      hostname(),
-      ttlMs
-    );
+    const key = `lock:${name}`;
 
-    return this.atomic.isAvailable() ? claimed : undefined;
+    if (
+      (await this.atomic.setIfAbsent(key, token, ttlMs)) &&
+      this.atomic.isAvailable()
+    ) {
+      return true;
+    }
+
+    if ((await this.atomic.getRaw(key)) === token) {
+      return true;
+    }
+
+    return this.atomic.isAvailable() ? false : undefined;
   }
 
   private isShared(namespace: string): boolean {
@@ -803,7 +922,12 @@ export class KvTtlCacheService implements OnModuleDestroy {
       return undefined;
     }
 
-    const value = deserializeCacheValue<T>(text);
+    const value = deserializeCacheValueIfPossible<T>(text);
+
+    if (value === undefined) {
+      return undefined;
+    }
+
     await this.cache.set(fullKey, value as any, VERSION_REFRESH_MS);
 
     return value;
@@ -816,7 +940,7 @@ export class KvTtlCacheService implements OnModuleDestroy {
     ttlSeconds: number
   ): Promise<void> {
     const ttlMs = ttlSeconds * 1000;
-    const text = serializeCacheValue(value);
+    const text = serializeCacheValueIfPossible(value);
     const secret = findSecretField(value);
 
     if (secret && !this.reportedSecrets.has(namespace)) {

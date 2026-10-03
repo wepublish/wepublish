@@ -14,6 +14,21 @@ class FailingDragonfly extends FakeDragonfly {
   }
 }
 
+class LostReplyDragonfly extends FakeDragonfly {
+  override async setIfAbsent(key: string, value: string, ttlMs?: number) {
+    const claimed = await super.setIfAbsent(key, value, ttlMs);
+
+    if (!this.lostOnce) {
+      this.lostOnce = true;
+      this.down = true;
+    }
+
+    return claimed;
+  }
+
+  lostOnce = false;
+}
+
 describe('KvTtlCacheService claim', () => {
   afterEach(() => {
     vi.useRealTimers();
@@ -86,6 +101,31 @@ describe('KvTtlCacheService claim', () => {
     await vi.advanceTimersByTimeAsync(5_000);
 
     await expect(claiming).resolves.toBe(true);
+  });
+
+  it('still claims the job when the answer to its claim got lost, and no other replica gets it', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout'] });
+    const dragonfly = new LostReplyDragonfly();
+
+    const claiming = createReplica(dragonfly).claim('nightly-job', 60_000, {
+      retryForMs: 60_000,
+    });
+    await vi.advanceTimersByTimeAsync(1_000);
+    dragonfly.down = false;
+    await vi.advanceTimersByTimeAsync(5_000);
+
+    await expect(claiming).resolves.toBe(true);
+    await expect(
+      createReplica(dragonfly).claim('nightly-job', 60_000)
+    ).resolves.toBe(false);
+  });
+
+  it('never takes over a claim of the same name made elsewhere on this host', async () => {
+    const dragonfly = new FakeDragonfly();
+    const replica = createReplica(dragonfly);
+
+    await expect(replica.claim('totp-used:1:5', 60_000)).resolves.toBe(true);
+    await expect(replica.claim('totp-used:1:5', 60_000)).resolves.toBe(false);
   });
 
   it('gives up when Dragonfly stays unreachable for the whole retry window', async () => {

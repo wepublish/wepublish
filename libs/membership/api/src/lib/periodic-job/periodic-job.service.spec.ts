@@ -797,6 +797,158 @@ describe('PeriodicJobService', () => {
     }
   });
 
+  it('Get outstanding runs retries a run that was started longer ago than a night but never finished', async () => {
+    const today = new Date();
+    mockPrisma.periodicJob.findFirst.mockResolvedValue({
+      id: 'job-aborted',
+      date: startOfDay(sub(today, { days: 1 })),
+      executionTime: sub(today, { days: 1 }),
+      successfullyFinished: null,
+      finishedWithError: null,
+      tries: 0,
+      error: null,
+    });
+
+    const runs = await service['getOutstandingRuns'](today);
+
+    expect(runs).toEqual([
+      { isRetry: true, date: startOfDay(sub(today, { days: 1 })) },
+      { isRetry: false, date: startOfDay(today) },
+    ]);
+  });
+
+  it('Get outstanding runs leaves a run alone that was started recently and may still be running', async () => {
+    const today = new Date();
+    mockPrisma.periodicJob.findFirst.mockResolvedValue({
+      id: 'job-running',
+      date: startOfDay(today),
+      executionTime: sub(today, { hours: 1 }),
+      successfullyFinished: null,
+      finishedWithError: null,
+      tries: 0,
+      error: null,
+    });
+
+    const runs = await service['getOutstandingRuns'](today);
+
+    expect(runs).toEqual([]);
+  });
+
+  it('reruns an aborted night on the row it left behind and marks it successful', async () => {
+    const today = new Date();
+    const abortedDate = startOfDay(sub(today, { days: 1 }));
+    mockPrisma.periodicJob.findFirst.mockResolvedValue({
+      id: 'job-aborted',
+      date: abortedDate,
+      executionTime: sub(today, { days: 1 }),
+      successfullyFinished: null,
+      finishedWithError: null,
+      tries: 0,
+      error: null,
+    });
+    mockPrisma.periodicJob.update.mockImplementation(({ where, data }) => ({
+      id: 'job-aborted',
+      date: where.date ?? abortedDate,
+      tries: 0,
+      ...data,
+    }));
+
+    await service.execute(today);
+
+    expect(mockPrisma.periodicJob.update).toHaveBeenCalledWith({
+      where: { date: abortedDate },
+      data: { executionTime: expect.any(Date) },
+    });
+    expect(mockPrisma.periodicJob.update).toHaveBeenCalledWith({
+      where: { id: 'job-aborted' },
+      data: { successfullyFinished: expect.any(Date), tries: 1 },
+    });
+    expect(mockPrisma.periodicJob.create).toHaveBeenCalledTimes(1);
+    expect(mockPrisma.periodicJob.create).toHaveBeenCalledWith({
+      data: { date: startOfDay(today), executionTime: expect.any(Date) },
+    });
+  });
+
+  it('Concurrent periodic job run protection', async () => {
+    mockPrisma.periodicJob.findFirst.mockResolvedValue(null);
+    mockPrisma.periodicJob.findMany.mockResolvedValue([]);
+
+    const runs = await service['getOutstandingRuns'](new Date());
+    expect(await service['isAlreadyAJobRunning']()).toBeFalsy();
+
+    mockPrisma.periodicJob.create.mockResolvedValue({
+      id: 'job-1',
+      date: runs[0].date,
+      executionTime: new Date(),
+      tries: 1,
+    });
+
+    await service['markJobStarted'](runs[0].date);
+
+    mockPrisma.periodicJob.findMany.mockResolvedValue([{ id: 'job-1' }]);
+    expect(await service['isAlreadyAJobRunning']()).toBeTruthy();
+
+    await service['markJobFailed']('Failed with X');
+
+    // After marking failed, runningJob is cleared but DB still shows recent job
+    expect(await service['isAlreadyAJobRunning']()).toBeTruthy();
+
+    // Simulate job older than 2 hours
+    mockPrisma.periodicJob.findMany.mockResolvedValue([]);
+    expect(await service['isAlreadyAJobRunning']()).toBeFalsy();
+
+    mockPrisma.periodicJob.update.mockResolvedValue({
+      id: 'job-1',
+      date: runs[0].date,
+      executionTime: new Date(),
+      tries: 2,
+    });
+    await service['retryFailedJob'](runs[0].date);
+
+    mockPrisma.periodicJob.findMany.mockResolvedValue([{ id: 'job-1' }]);
+    expect(await service['isAlreadyAJobRunning']()).toBeTruthy();
+
+    await service['markJobSuccessful']();
+    expect(await service['isAlreadyAJobRunning']()).toBeTruthy();
+  });
+
+  it('random timeout for concurrent execution of periodic job', async () => {
+    service['randomNumberRangeForConcurrency'] = 500;
+    const timeout =
+      await service['sleepForRandomIntervalToEnsureConcurrency']();
+    expect(timeout).toBeLessThanOrEqual(500);
+    expect(timeout).toBeGreaterThanOrEqual(0);
+  });
+
+  it('Concurrent execute', async () => {
+    service['randomNumberRangeForConcurrency'] = 500;
+    mockPrisma.periodicJob.findMany.mockResolvedValue([]);
+    mockPrisma.periodicJob.findFirst.mockResolvedValue(null);
+
+    await service.concurrentExecute();
+
+    // Should have created a job for today
+    expect(mockPrisma.periodicJob.create).toHaveBeenCalled();
+  });
+
+  it('Concurrent execute with already running process', async () => {
+    service['randomNumberRangeForConcurrency'] = 500;
+
+    // Simulate a recently started job
+    mockPrisma.periodicJob.findMany.mockResolvedValue([
+      {
+        id: 'job-running',
+        date: new Date(),
+        executionTime: new Date(),
+      },
+    ]);
+
+    await service.concurrentExecute();
+
+    // Should not have created a new job since one is already running
+    expect(mockPrisma.periodicJob.create).not.toHaveBeenCalled();
+  });
+
   it('Mark job as successful while now job runs', async () => {
     try {
       await service['markJobSuccessful']();

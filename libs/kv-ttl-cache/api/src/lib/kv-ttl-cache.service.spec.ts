@@ -643,13 +643,13 @@ describe('KvTtlCacheService', () => {
       const expiresAt = new Date('2030-01-01T00:00:00.000Z');
 
       await first.getOrLoadNs(
-        'auth:sessions',
+        'content:articles',
         'hash',
         () => ({ expiresAt }),
         30
       );
       const session = await second.getOrLoadNs<{ expiresAt: Date }>(
-        'auth:sessions',
+        'content:articles',
         'hash',
         vi.fn(),
         30
@@ -738,8 +738,13 @@ describe('KvTtlCacheService', () => {
     it('does not put empty results into Dragonfly', async () => {
       const { dragonfly, first } = twoReplicas();
 
-      await first.getOrLoadNs('auth:sessions', 'unknown', () => null, 30);
-      await first.getOrLoadNs('auth:sessions', 'missing', () => undefined, 30);
+      await first.getOrLoadNs('content:articles', 'unknown', () => null, 30);
+      await first.getOrLoadNs(
+        'content:articles',
+        'missing',
+        () => undefined,
+        30
+      );
 
       expect(dragonfly.written.some(([key]) => key.startsWith('val:'))).toBe(
         false

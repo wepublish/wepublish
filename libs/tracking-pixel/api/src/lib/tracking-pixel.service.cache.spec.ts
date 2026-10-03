@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { createCache } from 'cache-manager';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { TrackingPixelService } from './tracking-pixel.service';
@@ -22,13 +23,18 @@ describe('TrackingPixelService cache', () => {
       deleteMany: ReturnType<typeof vi.fn>;
     };
     trackingPixelMethod: { upsert: ReturnType<typeof vi.fn> };
+    article: { findUnique: ReturnType<typeof vi.fn> };
+  };
+  let publicContentCache: {
+    invalidateArticleAnswers: ReturnType<typeof vi.fn>;
   };
 
   const service = (providers = [provider('prolitteris-1')]) =>
     new TrackingPixelService(
       prisma as any,
       { trackingPixelProviders: providers } as any,
-      kv
+      kv,
+      publicContentCache as any
     );
 
   beforeEach(() => {
@@ -49,11 +55,18 @@ describe('TrackingPixelService cache', () => {
       trackingPixelMethod: {
         upsert: vi.fn().mockResolvedValue({ id: 'method-1' }),
       },
+      article: {
+        findUnique: vi.fn().mockResolvedValue({ slug: 'my-article' }),
+      },
+    };
+    publicContentCache = {
+      invalidateArticleAnswers: vi.fn().mockResolvedValue(undefined),
     };
   });
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it('checks the pixels of an article only once', async () => {
@@ -227,6 +240,166 @@ describe('TrackingPixelService cache', () => {
     });
     expect(pixels.createPixelUri).toHaveBeenCalledTimes(1);
     expect(prisma.articleTrackingPixels.create).toHaveBeenCalledTimes(1);
+  });
+
+  describe('when adding the pixels fails outside the pixel request', () => {
+    const failures: Array<[string, () => void]> = [
+      [
+        'the provider type cannot be read',
+        () => {
+          broken.getTrackingPixelType.mockRejectedValue(
+            new Error('ProLitteris credentials could not be decrypted')
+          );
+        },
+      ],
+      [
+        'another request created the pixel method first',
+        () => {
+          prisma.trackingPixelMethod.upsert.mockRejectedValue(
+            new Error('Unique constraint failed (P2002)')
+          );
+        },
+      ],
+      [
+        'the database is unreachable',
+        () => {
+          prisma.articleTrackingPixels.findMany.mockRejectedValue(
+            new Error("Can't reach database server")
+          );
+        },
+      ],
+    ];
+    let broken: ReturnType<typeof provider>;
+
+    beforeEach(() => {
+      vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+      broken = provider('prolitteris-1');
+      prisma.articleTrackingPixels.findMany.mockResolvedValue([]);
+    });
+
+    it.each(failures)(
+      'does not fail the article when %s',
+      async (_reason, fail) => {
+        fail();
+
+        await expect(
+          service([broken]).addMissingArticleTrackingPixels('article-1')
+        ).resolves.toBeUndefined();
+      }
+    );
+
+    it.each(failures)(
+      'does not keep the next request waiting for the replica that failed when %s',
+      async (_reason, fail) => {
+        vi.useFakeTimers({ toFake: ['setTimeout', 'Date'] });
+        vi.spyOn(kv, 'claim')
+          .mockResolvedValueOnce(true)
+          .mockResolvedValue(false);
+        fail();
+
+        await service([broken])
+          .addMissingArticleTrackingPixels('article-1')
+          .catch(() => undefined);
+
+        let answered = false;
+        const next = service([broken])
+          .addMissingArticleTrackingPixels('article-1')
+          .then(() => {
+            answered = true;
+          });
+        await vi.advanceTimersByTimeAsync(100);
+        const answeredAtOnce = answered;
+        await vi.advanceTimersByTimeAsync(5_000);
+        await next;
+
+        expect(answeredAtOnce).toBe(true);
+      }
+    );
+
+    it('tries again 15 minutes later', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      broken.getTrackingPixelType.mockRejectedValue(
+        new Error('ProLitteris credentials could not be decrypted')
+      );
+
+      await service([broken]).addMissingArticleTrackingPixels('article-1');
+      vi.advanceTimersByTime(14 * 60_000);
+      await service([broken]).addMissingArticleTrackingPixels('article-1');
+
+      expect(prisma.articleTrackingPixels.findMany).toHaveBeenCalledTimes(1);
+
+      vi.advanceTimersByTime(2 * 60_000);
+      await service([broken]).addMissingArticleTrackingPixels('article-1');
+
+      expect(prisma.articleTrackingPixels.findMany).toHaveBeenCalledTimes(2);
+    });
+
+    it('reports the failure', async () => {
+      const failed = vi.mocked(Logger.prototype.error);
+      broken.getTrackingPixelType.mockRejectedValue(
+        new Error('ProLitteris credentials could not be decrypted')
+      );
+
+      await service([broken]).addMissingArticleTrackingPixels('article-1');
+
+      expect(failed).toHaveBeenCalledWith(
+        expect.stringContaining('article-1'),
+        expect.any(Error)
+      );
+    });
+  });
+
+  describe('cached answers of the article', () => {
+    it('are rebuilt once a pixel was added, so readers get the pixel', async () => {
+      prisma.articleTrackingPixels.findMany.mockResolvedValue([]);
+
+      await service().addMissingArticleTrackingPixels('article-1');
+
+      expect(prisma.article.findUnique).toHaveBeenCalledWith({
+        where: { id: 'article-1' },
+        select: { slug: true },
+      });
+      expect(publicContentCache.invalidateArticleAnswers).toHaveBeenCalledWith({
+        id: 'article-1',
+        slug: 'my-article',
+      });
+    });
+
+    it('are rebuilt once a failed pixel was replaced by a working one', async () => {
+      prisma.articleTrackingPixels.findMany.mockResolvedValue([
+        {
+          id: 'failed-1',
+          error: '"ProLitteris down"',
+          trackingPixelMethod: { trackingPixelProviderID: 'prolitteris-1' },
+        },
+      ]);
+
+      await service().addMissingArticleTrackingPixels('article-1');
+
+      expect(publicContentCache.invalidateArticleAnswers).toHaveBeenCalledTimes(
+        1
+      );
+    });
+
+    it('are kept when the article already had its pixel', async () => {
+      await service().addMissingArticleTrackingPixels('article-1');
+
+      expect(
+        publicContentCache.invalidateArticleAnswers
+      ).not.toHaveBeenCalled();
+    });
+
+    it('are kept while the pixel request keeps failing, so an outage does not empty the cache', async () => {
+      const failing = provider('prolitteris-1');
+      failing.createPixelUri.mockRejectedValue(new Error('ProLitteris down'));
+      prisma.articleTrackingPixels.findMany.mockResolvedValue([]);
+
+      await service([failing]).addMissingArticleTrackingPixels('article-1');
+
+      expect(
+        publicContentCache.invalidateArticleAnswers
+      ).not.toHaveBeenCalled();
+    });
   });
 
   it('does not ask the database when no provider is configured', async () => {

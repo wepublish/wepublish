@@ -27,13 +27,16 @@ const buildOutput = () => {
   return serverDistDir;
 };
 
-const incrementalCache = (serverDistDir: string) =>
+const incrementalCache = (
+  serverDistDir: string,
+  requestHeaders: Record<string, string> = {}
+) =>
   new IncrementalCache({
     dev: false,
     flushToDisk: false,
     minimalMode: false,
     serverDistDir,
-    requestHeaders: {},
+    requestHeaders,
     maxMemoryCacheSize: 0,
     getPrerenderManifest: () => manifest as never,
     fetchCacheKeyPrefix: '',
@@ -107,6 +110,37 @@ describe('PageCacheHandler', () => {
 
     expect(entry?.value).toEqual(page('one'));
     expect(entry?.isStale).toBe(true);
+  });
+
+  it('does not hold back the next render after a prefetch, for which Next never renders', async () => {
+    const serverDistDir = buildOutput();
+
+    await incrementalCache(serverDistDir).set(
+      '/a/one',
+      page('one') as never,
+      {
+        cacheControl: { revalidate: 1, expire: undefined },
+        isRoutePPREnabled: false,
+        isFallback: false,
+      } as never
+    );
+    await sleep(1100);
+
+    const prefetched = await incrementalCache(serverDistDir, {
+      purpose: 'prefetch',
+    }).get('/a/one', PAGES as never);
+    const visited = await incrementalCache(serverDistDir).get(
+      '/a/one',
+      PAGES as never
+    );
+    const visitedAgain = await incrementalCache(serverDistDir).get(
+      '/a/one',
+      PAGES as never
+    );
+
+    expect(prefetched?.isStale).toBe(true);
+    expect(visited?.isStale).toBe(true);
+    expect(visitedAgain?.isStale).toBeFalsy();
   });
 
   it('shares one cache between the handlers Next creates per request', async () => {

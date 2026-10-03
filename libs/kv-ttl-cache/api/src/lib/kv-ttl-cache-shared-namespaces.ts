@@ -19,7 +19,6 @@ export function assertSharedNamespaces<T extends readonly string[]>(
 }
 
 export const SHARED_NAMESPACES = assertSharedNamespaces([
-  'auth:sessions',
   'settings',
   'website-settings',
   'navigations',

@@ -75,6 +75,19 @@ describe('GoogleAnalyticsService', () => {
     service = module.get<GoogleAnalyticsService>(GoogleAnalyticsService);
   });
 
+  const failingLookup = () =>
+    service.getMostViewedArticles({}).catch(() => undefined);
+
+  const viewMap = (...slugs: string[]) =>
+    Promise.resolve([
+      {
+        rows: slugs.map(slug => ({
+          dimensionValues: [{ value: `/a/${slug}` }],
+          metricValues: [{ value: '100' }],
+        })),
+      },
+    ]);
+
   it('should return an empty array when property is not set', async () => {
     config.property = undefined;
     const result = await service.getMostViewedArticles({});
@@ -115,12 +128,12 @@ describe('GoogleAnalyticsService', () => {
     const unhandled = jest.fn();
     process.on('unhandledRejection', unhandled);
 
-    await service.getMostViewedArticles({});
+    await failingLookup();
     config.credentials = {
       client_email: 'other@example.iam.gserviceaccount.com',
       private_key: 'private-key',
     };
-    await service.getMostViewedArticles({});
+    await failingLookup();
     jest.useRealTimers();
     await new Promise(resolve => setImmediate(resolve));
     await new Promise(resolve => setImmediate(resolve));
@@ -131,34 +144,120 @@ describe('GoogleAnalyticsService', () => {
     expect(unhandled).not.toHaveBeenCalled();
   });
 
-  it('should return an empty array when runReport throws', async () => {
+  it('should reject when runReport throws, so callers can tell a failed lookup from an empty list', async () => {
     runReportSpy.mockRejectedValue(new Error('gRPC timeout'));
 
+    await expect(service.getMostViewedArticles({})).rejects.toThrow(
+      'gRPC timeout'
+    );
+  });
+
+  it('should reject while the circuit breaker is open', async () => {
+    runReportSpy.mockRejectedValue(new Error('gRPC timeout'));
+
+    await failingLookup();
+    await failingLookup();
+    await failingLookup();
+
+    await expect(service.getMostViewedArticles({})).rejects.toThrow(
+      'Circuit breaker is open'
+    );
+  });
+
+  it('should not cache a failed lookup', async () => {
+    runReportSpy.mockRejectedValueOnce(new Error('gRPC timeout'));
+    runReportSpy.mockReturnValue(viewMap('foobar'));
+    prismaMock.article.findMany?.mockReturnValue([{ slug: 'foobar' }]);
+
+    await failingLookup();
     const result = await service.getMostViewedArticles({});
 
-    expect(result).toHaveLength(0);
+    expect(runReportSpy).toHaveBeenCalledTimes(2);
+    expect(result).toEqual([{ slug: 'foobar' }]);
+  });
+
+  it('should cache the view map per start day, property and article prefix', async () => {
+    runReportSpy.mockReturnValue(viewMap('foobar'));
+    prismaMock.article.findMany?.mockReturnValue([]);
+
+    await service.getMostViewedArticles({
+      start: new Date('2022-12-31T08:00:00'),
+    });
+    await service.getMostViewedArticles({
+      start: new Date('2022-12-31T09:30:00'),
+    });
+    await service.getMostViewedArticles({
+      start: new Date('2022-12-01T08:00:00'),
+    });
+    await service.getMostViewedArticles({});
+    config.property = '5678';
+    await service.getMostViewedArticles({});
+    config.articlePrefix = '/artikel/';
+    await service.getMostViewedArticles({});
+
+    expect(
+      runReportSpy.mock.calls.map(([request]) => [
+        request.property,
+        request.dateRanges[0].startDate,
+      ])
+    ).toEqual([
+      ['properties/1234', '2022-12-31'],
+      ['properties/1234', '2022-12-01'],
+      ['properties/1234', '2022-12-01'],
+      ['properties/5678', '2022-12-01'],
+      ['properties/5678', '2022-12-01'],
+    ]);
+  });
+
+  it('should build a new client when the private key of the same account is rotated', async () => {
+    const { BetaAnalyticsDataClient } = jest.requireMock(
+      '@google-analytics/data'
+    );
+    runReportSpy.mockReturnValue(viewMap('foobar'));
+    prismaMock.article.findMany?.mockReturnValue([]);
+
+    await service.getMostViewedArticles({ start: new Date('2022-12-30') });
+    await service.getMostViewedArticles({ start: new Date('2022-12-29') });
+
+    expect(BetaAnalyticsDataClient).toHaveBeenCalledTimes(1);
+
+    config.credentials = {
+      client_email: 'ga@example.iam.gserviceaccount.com',
+      private_key: 'rotated-private-key',
+    };
+    await service.getMostViewedArticles({ start: new Date('2022-12-28') });
+
+    expect(BetaAnalyticsDataClient).toHaveBeenCalledTimes(2);
+    expect(BetaAnalyticsDataClient).toHaveBeenLastCalledWith({
+      credentials: config.credentials,
+    });
+    expect(
+      Object.values(service)
+        .filter(value => typeof value === 'string')
+        .join(' ')
+    ).not.toContain('private-key');
   });
 
   it('should open the circuit breaker after 3 consecutive failures', async () => {
     runReportSpy.mockRejectedValue(new Error('gRPC timeout'));
 
-    await service.getMostViewedArticles({});
-    await service.getMostViewedArticles({});
-    await service.getMostViewedArticles({});
+    await failingLookup();
+    await failingLookup();
+    await failingLookup();
 
     expect(runReportSpy).toHaveBeenCalledTimes(3);
 
     // Circuit is now open — should not call runReport
-    await service.getMostViewedArticles({});
+    await failingLookup();
     expect(runReportSpy).toHaveBeenCalledTimes(3);
   });
 
   it('should reset the circuit breaker after cooldown', async () => {
     runReportSpy.mockRejectedValue(new Error('gRPC timeout'));
 
-    await service.getMostViewedArticles({});
-    await service.getMostViewedArticles({});
-    await service.getMostViewedArticles({});
+    await failingLookup();
+    await failingLookup();
+    await failingLookup();
 
     // Advance past the 5-minute cooldown
     jest.setSystemTime(new Date('2023-01-01T00:06:00'));
@@ -180,8 +279,8 @@ describe('GoogleAnalyticsService', () => {
     runReportSpy.mockReturnValueOnce(Promise.resolve([{ rows: [] }]));
     prismaMock.article.findMany?.mockReturnValue([]);
 
-    await service.getMostViewedArticles({});
-    await service.getMostViewedArticles({});
+    await failingLookup();
+    await failingLookup();
     await service.getMostViewedArticles({}); // success — resets counter and caches
 
     expect(runReportSpy).toHaveBeenCalledTimes(3);

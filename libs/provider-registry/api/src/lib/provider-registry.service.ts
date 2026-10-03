@@ -53,6 +53,8 @@ export class ProviderRegistryService
   private loaded: Promise<void> | null = null;
   private loadedVersions?: string;
   private reloading = false;
+  private runningReload: Promise<void> | null = null;
+  private nextReload: Promise<void> | null = null;
 
   constructor(
     private readonly prisma: PrismaClient,
@@ -101,7 +103,39 @@ export class ProviderRegistryService
     }
   }
 
-  async reload(): Promise<void> {
+  reload(): Promise<void> {
+    if (this.nextReload) {
+      return this.nextReload;
+    }
+
+    if (this.runningReload) {
+      const next = this.runningReload
+        .catch(() => undefined)
+        .then(() => {
+          this.nextReload = null;
+
+          return this.startReload();
+        });
+      this.nextReload = next;
+
+      return next;
+    }
+
+    return this.startReload();
+  }
+
+  private startReload(): Promise<void> {
+    const running = this.loadProviders().finally(() => {
+      if (this.runningReload === running) {
+        this.runningReload = null;
+      }
+    });
+    this.runningReload = running;
+
+    return running;
+  }
+
+  private async loadProviders(): Promise<void> {
     const versions = await this.providerSettingsVersions();
     const deps = { prisma: this.prisma, kv: this.kv };
 

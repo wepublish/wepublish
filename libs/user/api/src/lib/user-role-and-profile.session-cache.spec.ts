@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { PrismaClient, User } from '@prisma/client';
 import { SessionCacheInvalidator } from '@wepublish/authentication/api';
 import { ImageUploadService } from '@wepublish/image/api';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { UserRoleService } from './user-role.service';
 import { UserRoleDataloader } from './user-role.dataloader';
 import { ProfileService } from './profile.service';
@@ -15,6 +16,10 @@ const prisma = {
     update: jest.fn().mockResolvedValue({ id: 'user-1' }),
   },
 } as unknown as PrismaClient;
+
+const publicContentCache = {
+  invalidateComments: jest.fn().mockResolvedValue(undefined),
+} as unknown as PublicContentCacheInvalidator;
 
 describe('session cache after role and profile changes', () => {
   let sessionCache: { invalidate: jest.Mock };
@@ -51,7 +56,8 @@ describe('session cache after role and profile changes', () => {
     const profile = new ProfileService(
       prisma,
       {} as ImageUploadService,
-      sessionCache as unknown as SessionCacheInvalidator
+      sessionCache as unknown as SessionCacheInvalidator,
+      publicContentCache
     );
 
     await profile.uploadUserProfileImage(
@@ -76,7 +82,8 @@ describe('session cache after role and profile changes', () => {
       const profile = new ProfileService(
         prisma,
         imageService as unknown as ImageUploadService,
-        sessionCache as unknown as SessionCacheInvalidator
+        sessionCache as unknown as SessionCacheInvalidator,
+        publicContentCache
       );
 
       await profile.uploadUserProfileImage(user as User, upload as never);

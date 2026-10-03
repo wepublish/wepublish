@@ -66,6 +66,68 @@ describe('PagePublicationWatcher', () => {
     );
   });
 
+  describe('after a check that failed or ran late', () => {
+    const publishedIn =
+      (...dates: string[]) =>
+      ({ where }: any) =>
+        Promise.resolve(
+          dates
+            .map(date => ({ publishedAt: new Date(date) }))
+            .filter(
+              ({ publishedAt }) =>
+                publishedAt > where.publishedAt.gt &&
+                publishedAt <= where.publishedAt.lte
+            )
+        );
+
+    it('still clears the caches for a page that went live while the database was unavailable', async () => {
+      prisma.pageRevision.findMany.mockImplementation(
+        publishedIn('2026-10-01T10:01:30.000Z')
+      );
+
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      prisma.page.findMany.mockRejectedValueOnce(new Error('connection lost'));
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(5_000);
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledWith('pages');
+    });
+
+    it('still clears the caches for a page that went live while a check ran late', async () => {
+      prisma.page.findMany.mockImplementation(
+        publishedIn('2026-10-01T10:01:12.000Z')
+      );
+
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(75_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(5_000);
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledWith('pages');
+    });
+
+    it('clears once for a page it caught up on', async () => {
+      prisma.page.findMany.mockImplementation(
+        publishedIn('2026-10-01T10:01:30.000Z')
+      );
+
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      prisma.page.findMany.mockRejectedValueOnce(new Error('connection lost'));
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
+    });
+  });
+
   it('keeps running when the database is unavailable', async () => {
     prisma.page.findMany.mockRejectedValue(new Error('connection lost'));
 

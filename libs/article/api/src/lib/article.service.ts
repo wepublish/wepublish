@@ -319,6 +319,7 @@ export class ArticleService {
     });
     await this.publicContentCache.invalidate('articles');
     await this.publicContentCache.invalidateArticlePages(article);
+    await this.publicContentCache.invalidateArticleLayout();
     await this.publicContentCache.invalidateNavigations();
 
     return deleted;
@@ -447,6 +448,7 @@ export class ArticleService {
 
     await this.publicContentCache.invalidate('articles');
     await this.publicContentCache.invalidateArticlePages(article);
+    await this.publicContentCache.invalidateArticleLayout();
 
     return updatedArticle;
   }

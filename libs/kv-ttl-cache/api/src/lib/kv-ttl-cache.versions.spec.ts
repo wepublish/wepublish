@@ -4,6 +4,32 @@ import { FakeDragonfly } from './kv-ttl-cache.testing';
 
 const NAMESPACES = ['graphql:content', 'navigations', 'banners', 'settings'];
 
+class HeldDragonfly extends FakeDragonfly {
+  private held = new Map<string, Promise<void>>();
+
+  hold(key: string) {
+    let release!: () => void;
+    this.held.set(key, new Promise<void>(resolve => (release = resolve)));
+
+    return () => {
+      this.held.delete(key);
+      release();
+    };
+  }
+
+  override async getRaw(key: string) {
+    await this.held.get(`get ${key}`);
+
+    return super.getRaw(key);
+  }
+
+  override async setRaw(key: string, value: string, ttlMs?: number) {
+    await this.held.get(`set ${key}`);
+
+    return super.setRaw(key, value, ttlMs);
+  }
+}
+
 describe('KvTtlCacheService namespace versions', () => {
   afterEach(() => {
     vi.useRealTimers();
@@ -61,5 +87,48 @@ describe('KvTtlCacheService namespace versions', () => {
 
     expect(batch).not.toHaveBeenCalled();
     expect(single).not.toHaveBeenCalled();
+  });
+
+  it('keeps its own reset when a version read that started before it fails afterwards', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-02T10:00:00.000Z'));
+    const dragonfly = new HeldDragonfly();
+    const replica = new KvTtlCacheService(createCache(), dragonfly);
+    await replica.getNamespaceVersion('navigations');
+    vi.setSystemTime(new Date('2026-10-02T10:00:02.100Z'));
+
+    const release = dragonfly.hold('get nsv:navigations');
+    const reading = replica.getNamespaceVersion('navigations');
+    dragonfly.down = true;
+    await replica.resetNamespace('navigations');
+    const reset = await replica.getNamespaceVersion('navigations');
+    release();
+    await reading;
+
+    await expect(replica.getNamespaceVersion('navigations')).resolves.toBe(
+      reset
+    );
+  });
+
+  it('never brings back an older version of its own when it catches up after an outage', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-02T10:00:00.000Z'));
+    const dragonfly = new HeldDragonfly();
+    const replica = new KvTtlCacheService(createCache(), dragonfly);
+    dragonfly.down = true;
+    await replica.resetNamespace('navigations');
+    await replica.resetNamespace('banners');
+    dragonfly.down = false;
+    vi.setSystemTime(new Date('2026-10-02T10:00:02.100Z'));
+
+    const release = dragonfly.hold('set nsv:navigations');
+    const catchingUp = replica.getNamespaceVersion('navigations');
+    await new Promise(resolve => setTimeout(resolve, 0));
+    await replica.resetNamespace('banners');
+    const banners = await replica.getNamespaceVersion('banners');
+    release();
+    await catchingUp;
+
+    await expect(dragonfly.getRaw('nsv:banners')).resolves.toBe(banners);
   });
 });

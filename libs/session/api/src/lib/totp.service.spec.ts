@@ -88,6 +88,59 @@ describe('TotpService across replicas', () => {
     return { a, b };
   };
 
+  describe('at the end of a time step', () => {
+    const stepEnd = Math.ceil(Date.now() / 30_000) * 30_000 + 30_000;
+
+    beforeEach(() => {
+      jest.useFakeTimers({ now: stepEnd - 1 });
+      const validate = OTPAuth.TOTP.prototype.validate;
+      jest
+        .spyOn(OTPAuth.TOTP.prototype, 'validate')
+        .mockImplementation(function (this: OTPAuth.TOTP, options) {
+          const delta = validate.call(this, options);
+          jest.setSystemTime(Date.now() + 2);
+
+          return delta;
+        });
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+      jest.useRealTimers();
+    });
+
+    it('refuses the same code again, even when the next time step started while checking it', async () => {
+      const { a, b } = replicas(sharedDragonfly());
+      const code = totp.generate({ timestamp: stepEnd - 1 });
+
+      await expect(a.verifyUserTotp('user-1', code)).resolves.toBe(true);
+      await expect(b.verifyUserTotp('user-1', code)).rejects.toThrow(
+        'already been used'
+      );
+    });
+  });
+
+  it('forgets failed codes on a replica without Dragonfly after fifteen minutes without one', async () => {
+    jest.useFakeTimers({ now: new Date('2026-10-02T10:00:00.000Z') });
+    const { a } = replicas(noDragonfly());
+
+    try {
+      for (let attempt = 0; attempt < 5; attempt++) {
+        await expect(a.verifyUserTotp('user-1', wrongCode())).rejects.toThrow(
+          'Invalid verification code'
+        );
+      }
+
+      jest.setSystemTime(new Date('2026-10-02T10:16:00.000Z'));
+
+      await expect(a.verifyUserTotp('user-1', wrongCode())).rejects.toThrow(
+        'Invalid verification code'
+      );
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
   it('refuses a code that was already used on another replica', async () => {
     const { a, b } = replicas(sharedDragonfly());
     const code = totp.generate();

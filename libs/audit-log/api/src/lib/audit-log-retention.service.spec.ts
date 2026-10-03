@@ -55,10 +55,11 @@ describe('AuditLogRetentionService', () => {
       expect(auditLogService.deleteOlderThan).not.toHaveBeenCalled();
     });
 
-    it('prunes nothing without Dragonfly, which cannot keep it to one replica', async () => {
-      await night(undefined).retention.pruneNightly();
+    it('still prunes when Dragonfly cannot tell who claimed the night, because deleting old entries twice is harmless', async () => {
+      auditLogService.deleteOlderThan.mockResolvedValueOnce(3);
 
-      expect(auditLogService.deleteOlderThan).not.toHaveBeenCalled();
+      expect(await night(undefined).retention.pruneNightly()).toBe(3);
+      expect(auditLogService.deleteOlderThan).toHaveBeenCalled();
     });
 
     it('keeps trying to claim the night for a while, so a short Dragonfly blip does not skip it', async () => {

@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { SessionCacheInvalidator } from '@wepublish/authentication/api';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { MailContext, MailchimpContactService } from '@wepublish/mail/api';
 import { UserService } from './user.service';
 import { HibpService } from './hibp.service';
@@ -35,6 +36,7 @@ describe('UserService session cache', () => {
               findFirst: jest.fn().mockResolvedValue(null),
             },
             session: sessions,
+            comment: { findMany: jest.fn().mockResolvedValue([]) },
           },
         },
         {
@@ -56,6 +58,10 @@ describe('UserService session cache', () => {
         },
         { provide: UserDataloaderService, useValue: { prime: jest.fn() } },
         { provide: SessionCacheInvalidator, useValue: sessionCache },
+        {
+          provide: PublicContentCacheInvalidator,
+          useValue: { invalidateComments: jest.fn() },
+        },
       ],
     }).compile();
 

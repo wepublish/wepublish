@@ -73,10 +73,30 @@ const tlsOptions = (env, url, logger) => {
   }
 };
 
+const restoreFastStringPrototype = () => {
+  const probe = Object.setPrototypeOf({}, String.prototype);
+  let found = 0;
+
+  for (let i = 0; i < 1000; i++) {
+    if (probe.charCodeAt) {
+      found++;
+    }
+  }
+
+  return found;
+};
+
+const createRedisClient = options => {
+  const client = require('@keyv/redis').createClient(options);
+  restoreFastStringPrototype();
+
+  return client;
+};
+
 function createSharedStore({
   env,
   buildId,
-  createClient = require('@keyv/redis').createClient,
+  createClient = createRedisClient,
   logger = console,
 }) {
   if (!env.REDIS_URL || env.NEXT_PHASE === 'phase-production-build') {
@@ -238,10 +258,12 @@ function createSharedStore({
       if (text.length > MAX_SHARED_CHARS) {
         await send(['DEL', pageKey(path)]);
 
-        return;
+        return false;
       }
 
       await send(['SET', pageKey(path), text, 'PX', String(PAGE_TTL_MS)]);
+
+      return true;
     },
 
     async deleteEntry(path) {

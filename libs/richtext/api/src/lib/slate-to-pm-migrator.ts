@@ -2,7 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  KvTtlCacheService,
+  PublicContentCacheInvalidator,
+} from '@wepublish/kv-ttl-cache/api';
 
 // Slate keeps a node's visible text in `text`, or nested in `children`.
 const slateText = (node: any): string => {
@@ -216,6 +219,23 @@ const slateToPm = (content: any): RichtextElements | [] => {
 const TEN_SECONDS = 10_000;
 const FIVE_SECONDS = 5_000;
 
+const PEER_PROFILE_NAMESPACE = 'peer-profile';
+const REMOTE_PEER_PROFILES_NAMESPACE = 'peering:remote-profiles';
+const MEMBER_PLANS_NAMESPACE = 'member-plans';
+
+type MigratedTable =
+  | 'authors'
+  | 'comments.revisions'
+  | 'events'
+  | 'peerProfiles'
+  | 'peers'
+  | 'polls'
+  | 'tags'
+  | 'member.plans'
+  | 'paywalls'
+  | 'articles.revisions'
+  | 'pages.revisions';
+
 @Injectable()
 export class SlateToPmMigrator {
   private readonly logger = new Logger(SlateToPmMigrator.name);
@@ -223,11 +243,45 @@ export class SlateToPmMigrator {
   constructor(
     private prisma: PrismaClient,
     private schedulerRegistry: SchedulerRegistry,
-    private kv: KvTtlCacheService
+    private kv: KvTtlCacheService,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   private async isAnotherReplicasTurn(job: string, intervalMs: number) {
     return (await this.kv.claim(job, intervalMs - 1000)) === false;
+  }
+
+  private async forgetMigrated(table: MigratedTable, changed: number) {
+    if (!changed) {
+      return;
+    }
+
+    switch (table) {
+      case 'authors':
+        return this.publicContentCache.invalidate('authors');
+      case 'comments.revisions':
+        return this.publicContentCache.invalidateComments(true);
+      case 'events':
+        return this.publicContentCache.invalidate();
+      case 'peerProfiles':
+        return this.kv.resetNamespace(PEER_PROFILE_NAMESPACE);
+      case 'peers':
+        return this.kv.resetNamespace(REMOTE_PEER_PROFILES_NAMESPACE);
+      case 'polls':
+        return this.publicContentCache.invalidate('polls');
+      case 'tags':
+        return this.publicContentCache.invalidate('articles');
+      case 'member.plans':
+        await this.kv.resetNamespace(MEMBER_PLANS_NAMESPACE);
+        return this.publicContentCache.invalidate('paywalls');
+      case 'paywalls':
+        return this.publicContentCache.invalidate('paywalls');
+      case 'articles.revisions':
+        await this.publicContentCache.invalidate('articles');
+        return this.publicContentCache.invalidateArticleLayout();
+      case 'pages.revisions':
+        return this.publicContentCache.invalidate('pages');
+    }
   }
 
   @Cron(CronExpression.EVERY_10_SECONDS, {
@@ -261,6 +315,8 @@ export class SlateToPmMigrator {
         });
       })
     );
+
+    await this.forgetMigrated('authors', authors.length);
 
     if (authors.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migrateAuthors');
@@ -305,6 +361,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('comments.revisions', revisions.length);
+
     if (revisions.length < 300) {
       this.schedulerRegistry.deleteCronJob('slate.migrateComments');
       this.logger.warn(
@@ -345,6 +403,8 @@ export class SlateToPmMigrator {
         });
       })
     );
+
+    await this.forgetMigrated('events', events.length);
 
     if (events.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migrateEvents');
@@ -392,6 +452,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('peerProfiles', peerProfiles.length);
+
     if (peerProfiles.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migratePeerProfiles');
       this.logger.warn(
@@ -433,6 +495,8 @@ export class SlateToPmMigrator {
         });
       })
     );
+
+    await this.forgetMigrated('peers', peers.length);
 
     if (peers.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migratePeers');
@@ -477,6 +541,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('polls', polls.length);
+
     if (polls.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migratePolls');
       this.logger.warn(
@@ -519,6 +585,8 @@ export class SlateToPmMigrator {
         });
       })
     );
+
+    await this.forgetMigrated('tags', tags.length);
 
     if (tags.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migrateTags');
@@ -589,6 +657,11 @@ export class SlateToPmMigrator {
         });
       }),
     ]);
+
+    await this.forgetMigrated(
+      'member.plans',
+      memberPlansByDescription.length + memberPlansByShortDescription.length
+    );
 
     if (
       memberPlansByDescription.length < 30 &&
@@ -710,6 +783,14 @@ export class SlateToPmMigrator {
       }),
     ]);
 
+    await this.forgetMigrated(
+      'paywalls',
+      paywallsByDescription.length +
+        paywallsByUpgradeDescription.length +
+        paywallsByCircumventDescription.length +
+        paywallsByUpgradeCircumventDescription.length
+    );
+
     if (
       paywallsByDescription.length < 30 &&
       paywallsByUpgradeDescription.length < 30 &&
@@ -775,6 +856,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('articles.revisions', revisions.length);
+
     if (revisions.length < 300) {
       this.schedulerRegistry.deleteCronJob('slate.migrateArticles');
       this.logger.warn(
@@ -832,6 +915,8 @@ export class SlateToPmMigrator {
         });
       })
     );
+
+    await this.forgetMigrated('pages.revisions', revisions.length);
 
     if (revisions.length < 300) {
       this.schedulerRegistry.deleteCronJob('slate.migratePages');
@@ -957,7 +1042,7 @@ export class SlateToPmMigrator {
   // `transform`, write back only changed rows, stop when none match or no progress.
   private async remigrateRevisionTable(
     cronName: string,
-    table: string,
+    table: 'articles.revisions' | 'pages.revisions',
     predicate: string,
     transform: (blocks: any[]) => any[]
   ): Promise<void> {
@@ -990,6 +1075,7 @@ export class SlateToPmMigrator {
       );
       this.logger.log(`Re-migrated ${table} ${row.id}`);
     }
+    await this.forgetMigrated(table, changed);
     if (changed === 0) {
       this.stopCron(
         cronName,
@@ -1143,6 +1229,7 @@ export class SlateToPmMigrator {
 
     let matched = 0;
     let changed = 0;
+    const changedRows = new Map<MigratedTable, number>();
     for (const {
       table,
       source,
@@ -1171,6 +1258,7 @@ export class SlateToPmMigrator {
           continue;
         }
         changed++;
+        changedRows.set(table, (changedRows.get(table) ?? 0) + 1);
         await this.prisma.$executeRawUnsafe(
           `UPDATE "${table}" SET "${target}" = $1::jsonb WHERE id = $2`,
           JSON.stringify(next),
@@ -1178,6 +1266,9 @@ export class SlateToPmMigrator {
         );
         this.logger.log(`Re-migrated ${table}.${target} ${row.id}`);
       }
+    }
+    for (const [table, rows] of changedRows) {
+      await this.forgetMigrated(table, rows);
     }
     if (matched === 0) {
       this.stopCron('slate.remigrateBuggyEntities', 'none left');

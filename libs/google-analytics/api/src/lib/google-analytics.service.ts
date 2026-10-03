@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import { JWTInput } from 'google-auth-library';
 import { format } from 'date-fns';
+import { createHash } from 'crypto';
 import { HotAndTrendingDataSource } from '@wepublish/article/api';
 import { getMaxTake } from '@wepublish/utils/api';
 import { GoogleAnalyticsDbConfig } from './google-analytics-db-config';
@@ -25,7 +26,7 @@ const RESULT_CACHE_TTL_S = 5 * 60;
 export class GoogleAnalyticsService implements HotAndTrendingDataSource {
   private readonly logger = new Logger(GoogleAnalyticsService.name);
   private cachedClient: BetaAnalyticsDataClient | null = null;
-  private cachedClientEmail: string | null = null;
+  private cachedClientKey: string | null = null;
 
   private consecutiveFailures = 0;
   private circuitOpenUntil = 0;
@@ -67,16 +68,17 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
   }
 
   private getClient(credentials: JWTInput): BetaAnalyticsDataClient {
-    if (
-      this.cachedClient &&
-      this.cachedClientEmail === credentials.client_email
-    ) {
+    const clientKey = `${credentials.client_email}:${createHash('sha256')
+      .update(credentials.private_key ?? '')
+      .digest('hex')}`;
+
+    if (this.cachedClient && this.cachedClientKey === clientKey) {
       return this.cachedClient;
     }
 
     Promise.resolve(this.cachedClient?.close()).catch(() => undefined);
     this.cachedClient = new BetaAnalyticsDataClient({ credentials });
-    this.cachedClientEmail = credentials.client_email ?? null;
+    this.cachedClientKey = clientKey;
 
     return this.cachedClient;
   }
@@ -188,24 +190,19 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
       return [];
     }
 
-    let articleViewMap: Record<string, number>;
-    try {
-      articleViewMap = await this.kv.getOrLoadNs<Record<string, number>>(
-        'ga4',
-        'article-view-map',
-        () =>
-          this.loadArticleViewMap(
-            config as GoogleAnalyticsConfig & {
-              credentials: JWTInput;
-              property: string;
-            },
-            start
-          ),
-        RESULT_CACHE_TTL_S
-      );
-    } catch (error) {
-      return [];
-    }
+    const articleViewMap = await this.kv.getOrLoadNs<Record<string, number>>(
+      'ga4',
+      `article-view-map:${config.property}:${start ? format(start, 'yyyy-MM-dd') : ''}:${config.articlePrefix}`,
+      () =>
+        this.loadArticleViewMap(
+          config as GoogleAnalyticsConfig & {
+            credentials: JWTInput;
+            property: string;
+          },
+          start
+        ),
+      RESULT_CACHE_TTL_S
+    );
 
     if (!Object.keys(articleViewMap).length) {
       return [];

@@ -3,6 +3,8 @@ import { Keyv } from 'keyv';
 import { createCache } from 'cache-manager';
 import { createKvTtlCacheOptions } from './kv-ttl-cache-options';
 import { LruMap } from './kv-ttl-cache-lru-map';
+import { KvTtlCacheService } from './kv-ttl-cache.service';
+import { FakeDragonfly } from './kv-ttl-cache.testing';
 
 describe('createKvTtlCacheOptions', () => {
   it('keeps values in a bounded in-memory store', () => {
@@ -48,4 +50,22 @@ describe('createKvTtlCacheOptions', () => {
     expect(first?.payrexx_vatrate.toNumber()).toBe(0.081);
     expect(second?.payrexx_vatrate.toNumber()).toBe(0.081);
   });
+
+  it.each(['content:articles', 'settings:paymentprovider'])(
+    'answers a %s value it cannot store and loads it again next time',
+    async namespace => {
+      const kv = new KvTtlCacheService(
+        createCache(createKvTtlCacheOptions()),
+        new FakeDragonfly()
+      );
+      const loader = vi.fn().mockResolvedValue({ views: BigInt(1) });
+
+      await expect(kv.getOrLoadNs(namespace, 'x', loader, 60)).resolves.toEqual(
+        { views: BigInt(1) }
+      );
+      await kv.getOrLoadNs(namespace, 'x', loader, 60);
+
+      expect(loader).toHaveBeenCalledTimes(2);
+    }
+  );
 });

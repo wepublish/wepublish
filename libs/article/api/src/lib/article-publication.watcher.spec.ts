@@ -138,6 +138,92 @@ describe('ArticlePublicationWatcher', () => {
     expect(publicContentCache.invalidate).not.toHaveBeenCalled();
   });
 
+  describe('after a check that failed or ran late', () => {
+    const publishedIn =
+      (rows: Array<{ publishedAt: Date; id: string; slug: string }>) =>
+      ({ where }: any) =>
+        Promise.resolve(
+          rows.filter(({ publishedAt }) =>
+            where.publishedAt instanceof Date ?
+              publishedAt.getTime() === where.publishedAt.getTime()
+            : publishedAt > where.publishedAt.gt &&
+              publishedAt <= where.publishedAt.lte
+          )
+        );
+    const article = (publishedAt: string) => ({
+      publishedAt: new Date(publishedAt),
+      id: '1',
+      slug: 'one',
+    });
+
+    it('still clears the caches for an article that went live while the database was unavailable', async () => {
+      prisma.article.findMany.mockImplementation(
+        publishedIn([article('2026-10-01T10:01:30.000Z')])
+      );
+
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      prisma.article.findMany.mockRejectedValueOnce(
+        new Error('connection lost')
+      );
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(5_000);
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
+      expect(publicContentCache.invalidateArticlePages).toHaveBeenCalledWith(
+        expect.objectContaining({ id: '1', slug: 'one' })
+      );
+    });
+
+    it('still clears the caches for an article that went live while a check ran late', async () => {
+      prisma.article.findMany.mockImplementation(
+        publishedIn([article('2026-10-01T10:01:12.000Z')])
+      );
+
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(75_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(5_000);
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
+    });
+
+    it('clears once for an article it caught up on', async () => {
+      prisma.article.findMany.mockImplementation(
+        publishedIn([article('2026-10-01T10:01:30.000Z')])
+      );
+
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      prisma.article.findMany.mockRejectedValueOnce(
+        new Error('connection lost')
+      );
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
+    });
+
+    it('clears once for an article two checks found ahead', async () => {
+      prisma.article.findMany.mockImplementation(
+        publishedIn([article('2026-10-01T10:01:05.000Z')])
+      );
+
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(10_000);
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
+    });
+  });
+
   it('keeps running when the database is unavailable', async () => {
     prisma.article.findMany.mockRejectedValue(new Error('connection lost'));
 

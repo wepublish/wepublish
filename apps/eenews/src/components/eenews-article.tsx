@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { Blocks, QuoteBlockWrapper } from '@wepublish/block-content/website';
 import { CommentListContainer } from '@wepublish/comments/website';
+import { ContentUnavailable } from '@wepublish/content/website';
 import {
   CommentItemType,
   FullBlockFragment,
@@ -246,6 +247,7 @@ const formatDateDE = (raw: string | Date | null | undefined): string => {
 
 export const EenewsArticle = ({
   data,
+  loading,
   showPaywall,
   hideContent,
   className,
@@ -271,7 +273,15 @@ export const EenewsArticle = ({
   });
 
   if (!article) {
-    return null;
+    if (loading) {
+      return null;
+    }
+
+    return (
+      <Wrapper className={className}>
+        <ContentUnavailable />
+      </Wrapper>
+    );
   }
 
   const latest = article.latest;

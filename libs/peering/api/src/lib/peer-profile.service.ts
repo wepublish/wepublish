@@ -7,6 +7,7 @@ import {
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { createSafeHostUrl } from './create-safe-host-url';
 import { GraphQLClient } from 'graphql-request';
+import { createHash } from 'crypto';
 import {
   PeerProfile as RemoteGqlPeerProfile,
   PeerProfileQuery,
@@ -61,7 +62,7 @@ export class PeerProfileService {
 
     return this.kv.getOrLoadNs(
       REMOTE_PEER_PROFILE_CACHE_NAMESPACE,
-      hostURL,
+      `${hostURL}:${createHash('sha256').update(token).digest('hex')}`,
       () => this.fetchRemotePeerProfile(hostURL, token),
       REMOTE_PEER_PROFILE_CACHE_TTL_SECONDS
     );

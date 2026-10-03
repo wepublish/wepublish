@@ -40,11 +40,11 @@ export class AuditLogRetentionService {
     });
 
     if (claimed === undefined) {
-      logger('audit-log').error(
-        'Audit log retention not run: without Dragonfly (REDIS_URL unset or Dragonfly unreachable) nothing makes sure only one replica runs it. The next run catches up.'
+      logger('audit-log').info(
+        'Audit log retention runs on every replica: without Dragonfly (REDIS_URL unset or Dragonfly unreachable) nothing keeps it to one, and deleting old entries twice is harmless'
       );
 
-      return 0;
+      return this.pruneExpiredEntries();
     }
 
     return claimed ? this.pruneExpiredEntries() : 0;

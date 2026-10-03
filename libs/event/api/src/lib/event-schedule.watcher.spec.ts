@@ -56,6 +56,90 @@ describe('EventScheduleWatcher', () => {
     );
   });
 
+  describe('after a check that failed or ran late', () => {
+    const scheduled =
+      (...events: Array<{ startsAt: Date; endsAt: Date | null }>) =>
+      ({ where }: any) => {
+        const [{ startsAt: window }] = where.OR;
+        const inWindow = (date: Date | null) =>
+          !!date && date > window.gt && date <= window.lte;
+
+        return Promise.resolve(
+          events.filter(
+            ({ startsAt, endsAt }) => inWindow(startsAt) || inWindow(endsAt)
+          )
+        );
+      };
+
+    it.each([
+      [
+        'started',
+        { startsAt: new Date('2026-10-01T10:01:30.000Z'), endsAt: null },
+      ],
+      [
+        'ended',
+        {
+          startsAt: new Date('2026-10-01T08:00:00.000Z'),
+          endsAt: new Date('2026-10-01T10:01:30.000Z'),
+        },
+      ],
+    ])(
+      'still clears cached answers for an event that %s while the database was unavailable',
+      async (_, event) => {
+        prisma.event.findMany.mockImplementation(scheduled(event));
+
+        await watcher.scheduleUpcoming();
+        await jest.advanceTimersByTimeAsync(60_000);
+        prisma.event.findMany.mockRejectedValueOnce(
+          new Error('connection lost')
+        );
+        await watcher.scheduleUpcoming();
+        await jest.advanceTimersByTimeAsync(60_000);
+        await watcher.scheduleUpcoming();
+        await jest.advanceTimersByTimeAsync(5_000);
+
+        expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
+      }
+    );
+
+    it('still clears cached answers for an event that started while a check ran late', async () => {
+      prisma.event.findMany.mockImplementation(
+        scheduled({
+          startsAt: new Date('2026-10-01T10:01:12.000Z'),
+          endsAt: null,
+        })
+      );
+
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(75_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(5_000);
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
+    });
+
+    it('clears once for an event it caught up on', async () => {
+      prisma.event.findMany.mockImplementation(
+        scheduled({
+          startsAt: new Date('2026-10-01T10:01:30.000Z'),
+          endsAt: null,
+        })
+      );
+
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      prisma.event.findMany.mockRejectedValueOnce(new Error('connection lost'));
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+      await watcher.scheduleUpcoming();
+      await jest.advanceTimersByTimeAsync(60_000);
+
+      expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
+    });
+  });
+
   it('keeps running when the database is unavailable', async () => {
     prisma.event.findMany.mockRejectedValue(new Error('connection lost'));
 

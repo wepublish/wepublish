@@ -1,7 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
   KvTtlCacheService,
+  PublicContentCacheInvalidator,
   contentCacheNamespace,
 } from '@wepublish/kv-ttl-cache/api';
 import { TrackingPixelProvider } from './tracking-pixel-provider/tracking-pixel-provider';
@@ -22,12 +23,14 @@ export interface TrackingPixelModuleOptions {
 @Injectable()
 export class TrackingPixelService {
   private adding = new Map<string, Promise<void>>();
+  private logger = new Logger('TrackingPixelService');
 
   constructor(
     private prisma: PrismaClient,
     @Inject(TRACKING_PIXEL_MODULE_OPTIONS)
     private config: TrackingPixelModuleOptions,
-    private kv: KvTtlCacheService
+    private kv: KvTtlCacheService,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   async getArticlePixels(
@@ -113,8 +116,58 @@ export class TrackingPixelService {
       return;
     }
 
-    let failed = false;
-    let changed = false;
+    let failed = true;
+
+    try {
+      failed = await this.addPixels(articleId);
+    } catch (error) {
+      this.logger.error(
+        `Could not add the tracking pixels of article ${articleId}`,
+        error
+      );
+    } finally {
+      await this.kv.setNs(
+        CHECKED_NAMESPACE,
+        checkedKey,
+        true,
+        failed ? RETRY_FAILED_SECONDS : CHECKED_TTL_SECONDS
+      );
+    }
+  }
+
+  private async addPixels(articleId: string) {
+    const outcome = { failed: false, changed: false, added: false };
+
+    try {
+      await this.addPixelsOfProviders(articleId, outcome);
+    } finally {
+      if (outcome.changed) {
+        await this.kv.delNs(
+          contentCacheNamespace('articles'),
+          `tracking-pixels:${articleId}`
+        );
+      }
+
+      if (outcome.added) {
+        const article = await this.prisma.article.findUnique({
+          where: { id: articleId },
+          select: { slug: true },
+        });
+
+        await this.publicContentCache.invalidateArticleAnswers({
+          id: articleId,
+          slug: article?.slug,
+        });
+      }
+    }
+
+    return outcome.failed;
+  }
+
+  private async addPixelsOfProviders(
+    articleId: string,
+    outcome: { failed: boolean; changed: boolean; added: boolean }
+  ) {
     const trackingPixels = await this.prisma.articleTrackingPixels.findMany({
       where: {
         articleId,
@@ -134,14 +187,14 @@ export class TrackingPixelService {
 
       if (pixels.some(tp => !tp.error)) {
         if (failedPixels.length) {
-          changed = true;
+          outcome.changed = true;
           await this.deletePixels(failedPixels);
         }
 
         continue;
       }
 
-      changed = true;
+      outcome.changed = true;
 
       const trackingPixelMethod = await this.prisma.trackingPixelMethod.upsert({
         where: {
@@ -172,8 +225,9 @@ export class TrackingPixelService {
             pixelUid: trackingPixel.pixelUid,
           },
         });
+        outcome.added = true;
       } catch (error: any) {
-        failed = true;
+        outcome.failed = true;
         await this.prisma.articleTrackingPixels.create({
           data: {
             articleId,
@@ -185,20 +239,6 @@ export class TrackingPixelService {
         });
       }
     }
-
-    if (changed) {
-      await this.kv.delNs(
-        contentCacheNamespace('articles'),
-        `tracking-pixels:${articleId}`
-      );
-    }
-
-    await this.kv.setNs(
-      CHECKED_NAMESPACE,
-      checkedKey,
-      true,
-      failed ? RETRY_FAILED_SECONDS : CHECKED_TTL_SECONDS
-    );
   }
 
   private async waitForOtherReplica(checkedKey: string) {

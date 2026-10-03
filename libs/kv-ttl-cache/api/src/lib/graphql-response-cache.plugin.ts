@@ -225,6 +225,14 @@ const asksOnly =
 const asksOnlyCacheableQueries = asksOnly(CACHEABLE_QUERIES);
 const asksOnlySameForEveryoneQueries = asksOnly(SAME_FOR_EVERYONE_QUERIES);
 
+const answersNotToStore = new WeakSet<object>();
+
+export const skipAnswerCache = (context: object | null | undefined) => {
+  if (context) {
+    answersNotToStore.add(context);
+  }
+};
+
 @Injectable()
 export class PublicContentCacheInvalidator implements OnModuleDestroy {
   private timers = new Map<string, PublicationTimers>();
@@ -281,6 +289,15 @@ export class PublicContentCacheInvalidator implements OnModuleDestroy {
     await this.kv.resetWebsitePaths([
       ...new Set(articles.flatMap(articlePagePaths)),
     ]);
+  }
+
+  async invalidateArticleAnswers(...articles: ArticlePage[]) {
+    await this.resetPublicContent({ pages: false });
+    await this.invalidateArticlePages(...articles);
+  }
+
+  invalidateArticleLayout() {
+    return this.kv.resetWebsiteLayout();
   }
 
   async invalidateComments(removed = false, ...articles: ArticlePage[]) {
@@ -391,11 +408,12 @@ export class GraphqlResponseCachePlugin implements ApolloServerPlugin<Context> {
         };
       },
 
-      async willSendResponse({ response }) {
+      async willSendResponse({ response, contextValue }) {
         if (
           !key ||
           !storeAnswer ||
           answeredFromCache ||
+          answersNotToStore.has(contextValue) ||
           response.body.kind !== 'single'
         ) {
           return;

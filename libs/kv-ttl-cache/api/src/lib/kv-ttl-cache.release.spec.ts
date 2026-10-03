@@ -40,6 +40,28 @@ describe('KvTtlCacheService release announcement', () => {
     expect(websiteWrites(dragonfly)).toBe(4);
   });
 
+  it('announces a rollback to a release that ran before', async () => {
+    const dragonfly = new FakeDragonfly();
+
+    await replica(dragonfly, 'release-2').announceRelease();
+    await replica(dragonfly, 'release-3').announceRelease();
+    await replica(dragonfly, 'release-2').announceRelease();
+
+    expect(websiteWrites(dragonfly)).toBe(6);
+  });
+
+  it('announces a release once when several replicas start it at the same time', async () => {
+    const dragonfly = new FakeDragonfly();
+
+    await Promise.all([
+      replica(dragonfly, 'release-2').announceRelease(),
+      replica(dragonfly, 'release-2').announceRelease(),
+      replica(dragonfly, 'release-2').announceRelease(),
+    ]);
+
+    expect(websiteWrites(dragonfly)).toBe(2);
+  });
+
   it('announces nothing for local development builds', async () => {
     const dragonfly = new FakeDragonfly();
 

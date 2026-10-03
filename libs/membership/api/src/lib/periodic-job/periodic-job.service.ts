@@ -32,6 +32,7 @@ import {
   endOfDay,
   set,
   startOfDay,
+  sub,
   subMinutes,
 } from 'date-fns';
 import { inspect } from 'util';
@@ -40,6 +41,10 @@ import { Action } from '../subscription-event-dictionary/subscription-event-dict
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobRunObject } from './periodic-job.type';
 import { getMaxTake } from '@wepublish/utils/api';
+
+const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
+
+export const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
 
 /**
  * Controller responsible for performing periodic jobs. A new controller
@@ -52,6 +57,7 @@ export class PeriodicJobService {
   );
   private runningJob?: PeriodicJob;
   private logger = new Logger('PeriodicJobService');
+  private randomNumberRangeForConcurrency = FIVE_MINUTES_IN_MS;
 
   constructor(
     private prismaService: PrismaClient,
@@ -69,6 +75,24 @@ export class PeriodicJobService {
         date: 'desc',
       },
     });
+  }
+
+  /**
+   * Run the periodic jobs. This makes sure that no two instances of the same
+   * controller run their jobs at the same time and returns if they are.
+   * @returns void
+   */
+  public async concurrentExecute(): Promise<void> {
+    await this.sleepForRandomIntervalToEnsureConcurrency();
+
+    if (await this.isAlreadyAJobRunning()) {
+      this.logger.log(
+        'Periodic job already running on an other instance. skipping...'
+      );
+      return;
+    }
+
+    await this.execute();
   }
 
   /**
@@ -551,6 +575,23 @@ export class PeriodicJobService {
   }
 
   /**
+   * Check if any job is already being processed.
+   * @returns if there are any jobs running.
+   */
+  private async isAlreadyAJobRunning(): Promise<boolean> {
+    const runLimit = sub(new Date(), { hours: 2 });
+    const runs = await this.prismaService.periodicJob.findMany({
+      where: {
+        executionTime: {
+          gte: runLimit,
+        },
+      },
+    });
+
+    return runs.length > 0;
+  }
+
+  /**
    * Mark a job as completed in the database.
    */
   private async markJobSuccessful() {
@@ -569,6 +610,24 @@ export class PeriodicJobService {
     });
 
     this.runningJob = undefined;
+  }
+
+  /**
+   * Sleep for a random time between 0 and 300 seconds to ensure that two parallel processes
+   * are not starting to process the queue at the same time.
+   * @returns void
+   */
+  private async sleepForRandomIntervalToEnsureConcurrency() {
+    const randomSleepTimeout = Math.floor(
+      Math.random() * this.randomNumberRangeForConcurrency
+    );
+    this.logger.log(
+      `To ensure concurrent execution in multi instance environment choosing random number between 0 and ${this.randomNumberRangeForConcurrency}... sleeping for  ${randomSleepTimeout}ms`
+    );
+    const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+    await sleep(randomSleepTimeout);
+
+    return randomSleepTimeout;
   }
 
   /**
@@ -619,6 +678,12 @@ export class PeriodicJobService {
 
     if (latestRun.finishedWithError && !latestRun.successfullyFinished) {
       this.logger.warn('Last run had errors retrying....');
+      runDates.push({ isRetry: true, date: startOfDay(latestRun.date) });
+    } else if (
+      !latestRun.successfullyFinished &&
+      (latestRun.executionTime?.getTime() ?? 0) < Date.now() - NIGHT_CLAIM_MS
+    ) {
+      this.logger.warn('Last run was aborted before it finished retrying....');
       runDates.push({ isRetry: true, date: startOfDay(latestRun.date) });
     }
 

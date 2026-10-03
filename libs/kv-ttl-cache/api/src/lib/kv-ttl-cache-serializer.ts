@@ -94,3 +94,23 @@ const revive = (value: unknown): unknown => {
 export function deserializeCacheValue<T>(text: string): T {
   return revive(JSON.parse(text)) as T;
 }
+
+export function serializeCacheValueIfPossible(
+  value: unknown
+): string | undefined {
+  try {
+    return serializeCacheValue(value);
+  } catch {
+    return undefined;
+  }
+}
+
+export function deserializeCacheValueIfPossible<T>(
+  text: string
+): T | undefined {
+  try {
+    return deserializeCacheValue<T>(text);
+  } catch {
+    return undefined;
+  }
+}

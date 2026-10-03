@@ -19,6 +19,7 @@ export class EventScheduleWatcher
 {
   private logger = new Logger('EventScheduleWatcher');
   private timers = new PublicationTimers();
+  private coveredUntil?: Date;
 
   constructor(
     private prisma: PrismaClient,
@@ -37,9 +38,11 @@ export class EventScheduleWatcher
   async scheduleUpcoming() {
     const now = new Date();
     const until = new Date(now.getTime() + LOOKAHEAD_MS);
-    const window = { gt: now, lte: until };
+    const from =
+      this.coveredUntil && this.coveredUntil < now ? this.coveredUntil : now;
+    const window = { gt: from, lte: until };
     const inWindow = (date: Date | null): date is Date =>
-      !!date && date > now && date <= until;
+      !!date && date > from && date <= until;
 
     try {
       const events = await this.prisma.event.findMany({
@@ -53,6 +56,8 @@ export class EventScheduleWatcher
         ),
         () => this.publicContentCache.invalidate()
       );
+
+      this.coveredUntil = until;
     } catch (error) {
       this.logger.error(
         `Could not look up starting or ending events: ${

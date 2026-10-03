@@ -19,10 +19,13 @@ class FakeShared {
   locks = new Map<string, number>();
   version: string | null = 'v1';
   available = true;
+  maxChars = Number.POSITIVE_INFINITY;
 
   constructor(private clock: FakeClock) {}
 
   async getVersion() {
+    this.versionReads++;
+
     return this.available ? this.version : undefined;
   }
 
@@ -48,9 +51,21 @@ class FakeShared {
   }
 
   async setEntry(key: string, entry: unknown) {
-    if (this.available) {
-      this.entries.set(key, JSON.stringify(entry));
+    const text = JSON.stringify(entry);
+
+    if (text.length > this.maxChars) {
+      if (this.available) {
+        this.entries.delete(key);
+      }
+
+      return false;
     }
+
+    if (this.available) {
+      this.entries.set(key, text);
+    }
+
+    return true;
   }
 
   async deleteEntry(key: string) {
@@ -289,6 +304,116 @@ describe('page cache', () => {
     });
   });
 
+  it('does not render again for half a minute when the render it started never stored the page, as when the api fails', async () => {
+    const { clock, shared, pod } = setup();
+    const first = pod();
+    const second = pod();
+
+    await first.set('/one', page('old'), revalidate(900));
+    shared.version = 'v2';
+    clock.advance(2001);
+
+    await expect(second.get('/one', PAGES)).resolves.toMatchObject({
+      lastModified: 1,
+    });
+
+    clock.advance(3001);
+
+    await expect(second.get('/one', PAGES)).resolves.toEqual({
+      value: page('old'),
+      lastModified: clock.perfNow(),
+    });
+
+    clock.advance(26_000);
+
+    await expect(second.get('/one', PAGES)).resolves.toMatchObject({
+      lastModified: clock.perfNow(),
+    });
+
+    clock.advance(1000);
+
+    await expect(second.get('/one', PAGES)).resolves.toMatchObject({
+      value: page('old'),
+      lastModified: 1,
+    });
+  });
+
+  it('does not render again right away after taking over a render the lock holder never finished', async () => {
+    const { clock, shared, pod } = setup();
+    const first = pod();
+    const second = pod();
+
+    await first.set('/one', page('old'), revalidate(900));
+    shared.version = 'v2';
+    clock.advance(2001);
+    await first.get('/one', PAGES);
+    clock.advance(3001);
+
+    await expect(second.get('/one', PAGES)).resolves.toMatchObject({
+      lastModified: 1,
+    });
+
+    clock.advance(100);
+
+    await expect(second.get('/one', PAGES)).resolves.toEqual({
+      value: page('old'),
+      lastModified: clock.perfNow(),
+    });
+  });
+
+  it('does not wait to render after a prefetch, as Next never renders for one', async () => {
+    const { clock, shared, pod } = setup();
+    const cache = pod();
+
+    await cache.set('/one', page('old'), revalidate(900));
+    shared.version = 'v2';
+    clock.advance(2001);
+    await cache.get('/one', PAGES, { prefetch: true });
+    clock.advance(3001);
+
+    await expect(cache.get('/one', PAGES)).resolves.toMatchObject({
+      value: page('old'),
+      lastModified: 1,
+    });
+  });
+
+  it('renders again on the next change once the render it started stored the page', async () => {
+    const { clock, shared, pod } = setup();
+    const cache = pod();
+
+    await cache.set('/one', page('old'), revalidate(900));
+    shared.version = 'v2';
+    clock.advance(2001);
+    await cache.get('/one', PAGES);
+    await cache.set('/one', page('v2'), revalidate(900));
+    shared.version = 'v3';
+    clock.advance(2001);
+
+    await expect(cache.get('/one', PAGES)).resolves.toMatchObject({
+      value: page('v2'),
+      lastModified: 1,
+    });
+  });
+
+  it('serves the copy another pod stored while it waits to render again', async () => {
+    const { clock, shared, pod } = setup();
+    const first = pod();
+    const second = pod();
+
+    await first.set('/one', page('old'), revalidate(900));
+    shared.version = 'v2';
+    clock.advance(2001);
+    await second.get('/one', PAGES);
+    clock.advance(3001);
+    await first.get('/one', PAGES);
+    await first.set('/one', page('v2'), revalidate(900));
+
+    await expect(second.get('/one', PAGES)).resolves.toEqual({
+      value: page('v2'),
+      lastModified: clock.perfNow(),
+    });
+  });
+
   it("stores pages without the render's Sentry trace, so cached pages do not join one old trace", async () => {
     const { pod } = setup();
     const first = pod();
@@ -416,6 +541,39 @@ describe('page cache', () => {
     });
   });
 
+  it('keeps serving a page too large to share while it renders it again, instead of making a visitor wait', async () => {
+    const { clock, shared, pod } = setup();
+    shared.maxChars = 5000;
+    const cache = pod();
+    const big = page('x'.repeat(10_000));
+
+    await cache.get('/big', PAGES);
+    await cache.set('/big', big, revalidate(900));
+    shared.version = 'v2';
+    clock.advance(2001);
+
+    await expect(cache.get('/big', PAGES)).resolves.toEqual({
+      value: big,
+      lastModified: 1,
+    });
+  });
+
+  it('forgets a page once it shrank enough to share and another pod deleted it', async () => {
+    const { clock, shared, pod } = setup();
+    shared.maxChars = 5000;
+    const first = pod();
+    const second = pod();
+
+    await first.set('/one', page('x'.repeat(10_000)), revalidate(900));
+    await first.set('/one', page('small'), revalidate(900));
+    shared.version = 'v2';
+    clock.advance(2001);
+    await second.get('/one', PAGES);
+    await second.set('/one', null, revalidate(1));
+
+    await expect(first.get('/one', PAGES)).resolves.toBeNull();
+  });
+
   it('keeps serving pages from memory while Dragonfly is unavailable', async () => {
     const { clock, shared, pod } = setup();
     const cache = pod();
@@ -538,6 +696,32 @@ describe('page cache', () => {
       lastModified: clock.perfNow(),
     });
   });
+
+  it.each(['/one', '/a/one'])(
+    'asks Dragonfly for the versions of %s at most every two seconds while it cannot answer',
+    async path => {
+      const { clock, shared, pod } = setup();
+      const cache = pod();
+
+      await cache.get(path, PAGES);
+      await cache.set(path, page(path), revalidate(3600));
+      shared.available = false;
+      clock.advance(2001);
+      await cache.get(path, PAGES);
+      const reads = shared.versionReads;
+
+      await cache.get(path, PAGES);
+      clock.advance(1999);
+      await cache.get(path, PAGES);
+
+      expect(shared.versionReads).toBe(reads);
+
+      clock.advance(1);
+      await cache.get(path, PAGES);
+
+      expect(shared.versionReads).toBe(reads + 1);
+    }
+  );
 
   it('drops the least recently used pages beyond its memory budget', async () => {
     const { shared, pod } = setup({ maxLocalBytes: 5000 });

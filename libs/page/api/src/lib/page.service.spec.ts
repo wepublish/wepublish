@@ -18,6 +18,7 @@ describe('PageService', () => {
     invalidateDraft: jest.Mock;
     invalidateAt: jest.Mock;
     invalidateNavigations: jest.Mock;
+    invalidateArticleLayout: jest.Mock;
   };
   let prismaMock: {
     $queryRaw: jest.Mock;
@@ -63,6 +64,7 @@ describe('PageService', () => {
       invalidateDraft: jest.fn().mockResolvedValue(undefined),
       invalidateAt: jest.fn(),
       invalidateNavigations: jest.fn().mockResolvedValue(undefined),
+      invalidateArticleLayout: jest.fn().mockResolvedValue(undefined),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -602,6 +604,36 @@ describe('PageService', () => {
     await change();
 
     expect(publicContentCache.invalidate).toHaveBeenCalledWith('pages');
+  });
+
+  it.each([
+    ['unpublishing', () => service.unpublishPage('1234')],
+    ['deleting', () => service.deletePage('1234')],
+  ])(
+    'tells the websites to rebuild every article page after %s a page, since articles show its teaser',
+    async (_, change) => {
+      prismaMock.page.findUnique?.mockResolvedValue({
+        id: '1234',
+        revisions: [{ id: '1234-1234' }],
+      });
+      prismaMock.page.update?.mockResolvedValue({ id: '1234', revisions: [] });
+
+      await change();
+
+      expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+    }
+  );
+
+  it('leaves the article pages alone after publishing a page', async () => {
+    prismaMock.page.findUnique?.mockResolvedValue({
+      id: '1234',
+      revisions: [{ id: '1234-1234' }],
+    });
+    prismaMock.page.update?.mockResolvedValue({ id: '1234', revisions: [] });
+
+    await service.publishPage('1234', new Date('2025-01-01'));
+
+    expect(publicContentCache.invalidateArticleLayout).not.toHaveBeenCalled();
   });
 
   it('schedules a clear for the moment a page goes live', async () => {

@@ -4,6 +4,9 @@ import KeyvRedis, {
 } from '@keyv/redis';
 import { Logger } from '@nestjs/common';
 import { readFileSync } from 'fs';
+import { restoreFastStringPrototype } from './fast-string-prototype';
+
+restoreFastStringPrototype();
 
 export const KV_ATOMIC_STORE = Symbol('KV_ATOMIC_STORE');
 
@@ -135,6 +138,7 @@ export class DragonflyAtomicStore implements KvAtomicStore {
   private unavailableUntil = 0;
   private listenersAttached = false;
   private connecting?: Promise<void>;
+  private closed = false;
 
   constructor(readonly adapter: KeyvRedis<unknown>) {}
 
@@ -186,6 +190,7 @@ export class DragonflyAtomicStore implements KvAtomicStore {
   }
 
   async incrementRaw(key: string, ttlMs: number) {
+    await this.send(['SET', this.key(key), '0', 'NX', 'PX', String(ttlMs)]);
     const count = await this.send(['INCR', this.key(key)]);
 
     if (typeof count !== 'number') {
@@ -202,7 +207,17 @@ export class DragonflyAtomicStore implements KvAtomicStore {
   }
 
   async disconnect() {
-    await this.adapter.disconnect();
+    this.closed = true;
+
+    try {
+      await withTimeout(this.adapter.disconnect(), COMMAND_TIMEOUT_MS);
+    } catch {
+      try {
+        (this.adapter.client as RedisClientType).destroy();
+      } catch {
+        return;
+      }
+    }
   }
 
   private key(key: string) {
@@ -253,7 +268,7 @@ export class DragonflyAtomicStore implements KvAtomicStore {
   }
 
   private async send(command: string[]): Promise<unknown> {
-    if (!this.isAvailable()) {
+    if (this.closed || !this.isAvailable()) {
       return undefined;
     }
 

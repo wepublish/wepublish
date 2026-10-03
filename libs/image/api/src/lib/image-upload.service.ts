@@ -83,6 +83,10 @@ export class ImageUploadService {
     });
     await this.forgetImages(profileImage);
 
+    if (id !== imageId) {
+      await this.mediaAdapter.deleteImage(imageId);
+    }
+
     return result;
   }
 

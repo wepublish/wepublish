@@ -23,6 +23,10 @@ type function fail. When setting up a new NestJS lib, copy the Jest setup from
 `libs/consent/api` (`jest.config.ts`, the `project.json` test target and
 `tsconfig.spec.json`).
 
+`libs/block-content/api` and `libs/image/api` are in `.nxignore` (load-bearing:
+circular imports), so neither `nx test` nor CI runs their specs — run
+`npx jest -c libs/<lib>/api/jest.config.ts` yourself.
+
 ## Test-driven development is mandatory
 
 For any new feature or bugfix, in this order:

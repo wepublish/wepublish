@@ -486,7 +486,7 @@ export class CommentService {
       },
     });
     await this.publicContentCache.invalidateComments(
-      false,
+      !!tagIds?.length,
       ...(publish ? await this.commentedArticles(comment) : [])
     );
 
