@@ -10,7 +10,7 @@ will not run at all.
 | `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils`, `libs/richtext`, `libs/errors`, `apps/<tenant>` | **Vitest** | `vi.fn()`, `vi.mock()` | `vitest.config.ts` |
 
 Exceptions that look like backend but are Vitest: `libs/document/api`,
-`libs/richtext/api`, `libs/media-transform-guard/api`.
+`libs/richtext/api`, `libs/media-transform-guard/api`, `libs/kv-ttl-cache/api`.
 
 **Always check for `jest.config.ts` vs `vitest.config.ts` in the project root
 before writing a test.** NestJS stays on Jest until its next major release —
@@ -22,6 +22,10 @@ a `vitest.config.ts`. Vitest transpiles with esbuild, which does not emit
 type function fail. When setting up a new NestJS lib, copy the Jest setup from
 `libs/consent/api` (`jest.config.ts`, the `project.json` test target and
 `tsconfig.spec.json`).
+
+`libs/block-content/api` and `libs/image/api` are in `.nxignore` (load-bearing:
+circular imports), so neither `nx test` nor CI runs their specs — run
+`npx jest -c libs/<lib>/api/jest.config.ts` yourself.
 
 ## Test-driven development is mandatory
 
@@ -198,7 +202,11 @@ Backend tests need these (CI sets them; mirror them locally if a test hits the D
 ```
 DATABASE_URL=postgresql://postgres:test@localhost:5432/wepublish_test?schema=public
 JWT_PRIVATE_KEY / JWT_PUBLIC_KEY   # ed25519 pair, see .github/workflows/test.yml
+REDIS_TEST_ADMIN_URL=redis://default:dragonfly@localhost:6379   # kv-ttl-cache Dragonfly spec; skipped if unset
 ```
+
+Both setup files delete `REDIS_URL`/`REDIS_KEY_PREFIX`, so tests use the
+in-memory cache even though nx loads them from `.env` — see [gotchas.md](gotchas.md).
 
 `npm run start:docker` brings up the local Postgres. Vitest sets `TZ=UTC`
 globally via `vitest.setup-tests.ts` — do not write tests that depend on local time.

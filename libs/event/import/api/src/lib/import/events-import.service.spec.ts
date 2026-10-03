@@ -1,3 +1,4 @@
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventStatus, PrismaClient } from '@prisma/client';
@@ -29,6 +30,10 @@ describe('EventsImportService', () => {
             get: jest.fn(),
             set: jest.fn(),
           },
+        },
+        {
+          provide: PublicContentCacheInvalidator,
+          useValue: { invalidate: jest.fn() },
         },
         {
           provide: PrismaClient,

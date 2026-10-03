@@ -1,3 +1,4 @@
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PaywallDataloaderService } from './paywall-dataloader.service';
 import { PrismaClient } from '@prisma/client';
@@ -21,6 +22,7 @@ describe('PaywallDataloaderService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [KvTtlCacheModule],
       providers: [
         PaywallDataloaderService,
         {
@@ -53,6 +55,7 @@ describe('PaywallDataloaderService', () => {
       });
 
       const module: TestingModule = await Test.createTestingModule({
+        imports: [KvTtlCacheModule],
         providers: [
           PaywallDataloaderService,
           {

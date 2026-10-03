@@ -17,6 +17,7 @@ import DataLoader from 'dataloader';
 import { timingSafeEqual } from 'crypto';
 import { sub } from 'date-fns';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SESSION_CACHE_NAMESPACE } from '@wepublish/authentication/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 
 export type InvoiceWithItems = Invoice & {
@@ -408,6 +409,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
         },
       },
     });
+    await this.kv.resetNamespace(SESSION_CACHE_NAMESPACE);
   }
 
   protected timeConstantCompare(a: string, b: string): boolean {

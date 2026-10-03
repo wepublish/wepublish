@@ -1,5 +1,5 @@
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -63,6 +63,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(page.data?.page, page.errors),
   };
 };

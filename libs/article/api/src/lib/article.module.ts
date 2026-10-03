@@ -1,3 +1,5 @@
+import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { ArticlePublicationWatcher } from './article-publication.watcher';
 import { forwardRef, Module } from '@nestjs/common';
 import { ImageModule } from '@wepublish/image/api';
 import { PrismaModule } from '@wepublish/nest-modules';
@@ -19,6 +21,7 @@ import { TagModule } from '@wepublish/tag/api';
 
 @Module({
   imports: [
+    GraphqlResponseCacheModule,
     PrismaModule,
     ImageModule,
     AuthorModule,
@@ -27,6 +30,7 @@ import { TagModule } from '@wepublish/tag/api';
     forwardRef(() => BlockContentModule),
   ],
   providers: [
+    ArticlePublicationWatcher,
     ArticleDataloaderService,
     ArticleRevisionDataloaderService,
     ArticleService,

@@ -1,3 +1,4 @@
+import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { forwardRef, Module } from '@nestjs/common';
 import { CommentDataloaderService } from './comment-dataloader.service';
 import {
@@ -17,6 +18,7 @@ import { PageModule } from '@wepublish/page/api';
 
 @Module({
   imports: [
+    GraphqlResponseCacheModule,
     PrismaModule,
     TagModule,
     SettingModule,

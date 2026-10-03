@@ -58,7 +58,7 @@ reference — architecture, repo-specific patterns, commands, env vars.
 `.claude/docs/` holds agent behaviour — what to do, what never to do, and what
 to run before claiming something is done.
 
-**Keep the whole set under ~60 KB** (it is ~57 KB today). This is context every
+**Keep the whole set under ~60 KB** (it is ~60 KB today). This is context every
 task pays for, so a new doc earns its place by changing what an agent *does*.
 Prose restating what a competent reader already knows about Nest, React or
 Prisma does not. Prefer editing an existing file over adding one, and when a

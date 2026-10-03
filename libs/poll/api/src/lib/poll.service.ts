@@ -10,6 +10,7 @@ import {
   PrimeDataLoader,
   SortOrder,
 } from '@wepublish/utils/api';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { PollDataloaderService } from './poll-dataloader.service';
 import {
   CreatePollExternalVoteSourceInput,
@@ -23,7 +24,10 @@ import { CreatePollAnswerInput } from './poll-answer.model';
 
 @Injectable()
 export class PollService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private publicContentCache: PublicContentCacheInvalidator
+  ) {}
 
   @PrimeDataLoader(PollDataloaderService)
   async getPolls({
@@ -78,7 +82,7 @@ export class PollService {
     externalVoteSources,
     ...input
   }: UpdatePollInput) {
-    return this.prisma.poll.update({
+    const poll = await this.prisma.poll.update({
       where: { id },
       data: {
         ...input,
@@ -124,6 +128,9 @@ export class PollService {
         },
       },
     });
+    await this.publicContentCache.invalidate('polls');
+
+    return poll;
   }
 
   @PrimeDataLoader(PollDataloaderService)
@@ -160,7 +167,7 @@ export class PollService {
       },
     });
 
-    return this.prisma.pollAnswer.create({
+    const answer = await this.prisma.pollAnswer.create({
       data: {
         ...input,
         poll: {
@@ -177,6 +184,9 @@ export class PollService {
         },
       },
     });
+    await this.publicContentCache.invalidate('polls');
+
+    return answer;
   }
 
   async createPollExternalVoteSource({
@@ -189,7 +199,7 @@ export class PollService {
       },
     });
 
-    return this.prisma.pollExternalVoteSource.create({
+    const source = await this.prisma.pollExternalVoteSource.create({
       data: {
         ...input,
         pollId,
@@ -205,10 +215,13 @@ export class PollService {
         voteAmounts: true,
       },
     });
+    await this.publicContentCache.invalidate('polls');
+
+    return source;
   }
 
   async deletePoll(id: string) {
-    return this.prisma.poll.delete({
+    const poll = await this.prisma.poll.delete({
       where: { id },
       include: {
         answers: {
@@ -223,6 +236,9 @@ export class PollService {
         },
       },
     });
+    await this.publicContentCache.invalidate('polls');
+
+    return poll;
   }
 
   async deletePollAnswer(id: string) {
@@ -247,16 +263,19 @@ export class PollService {
       throw new BadRequestException('A poll requires at least one answer.');
     }
 
-    return this.prisma.pollAnswer.delete({
+    const answer = await this.prisma.pollAnswer.delete({
       where: { id },
       include: {
         _count: true,
       },
     });
+    await this.publicContentCache.invalidate('polls');
+
+    return answer;
   }
 
   async deletePollExternalVoteSource(id: string) {
-    return this.prisma.pollExternalVoteSource.delete({
+    const source = await this.prisma.pollExternalVoteSource.delete({
       where: {
         id,
       },
@@ -264,6 +283,9 @@ export class PollService {
         voteAmounts: true,
       },
     });
+    await this.publicContentCache.invalidate('polls');
+
+    return source;
   }
 }
 

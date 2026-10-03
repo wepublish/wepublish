@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { BlockContentInput } from '../block-content.model';
 import { BlockType } from '../block-type.model';
 import { BlockTemplateDataloaderService } from './block-template-dataloader.service';
@@ -35,6 +36,10 @@ describe('BlockTemplateService', () => {
       [method in keyof PrismaClient['blockTemplate']]?: jest.Mock;
     };
   };
+  let publicContentCache: {
+    invalidate: jest.Mock;
+    invalidateArticleLayout: jest.Mock;
+  };
 
   beforeEach(async () => {
     prismaMock = {
@@ -47,11 +52,19 @@ describe('BlockTemplateService', () => {
         update: jest.fn(),
       },
     };
+    publicContentCache = {
+      invalidate: jest.fn(),
+      invalidateArticleLayout: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BlockTemplateService,
         { provide: PrismaClient, useValue: prismaMock },
+        {
+          provide: PublicContentCacheInvalidator,
+          useValue: publicContentCache,
+        },
         {
           provide: BlockTemplateDataloaderService,
           useValue: {
@@ -207,5 +220,46 @@ describe('BlockTemplateService', () => {
     await service.deleteBlockTemplate('1234');
 
     expect(prismaMock.blockTemplate.delete?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it('should retire cached answers and article pages after an update', async () => {
+    prismaMock.blockTemplate.update?.mockImplementation(async () => {
+      expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+
+      return { id: '1234' };
+    });
+
+    await service.updateBlockTemplate({
+      id: '1234',
+      name: 'Name',
+      blocks: [{ [BlockType.Title]: { title: 'Title' } }],
+    });
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith();
+    expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+  });
+
+  it('should retire cached answers and article pages after a delete', async () => {
+    prismaMock.blockTemplate.delete?.mockResolvedValue({ id: '1234' });
+
+    await expect(service.deleteBlockTemplate('1234')).resolves.toEqual({
+      id: '1234',
+    });
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith();
+    expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+  });
+
+  it('should not retire cached answers when an update is rejected', async () => {
+    await expect(
+      service.updateBlockTemplate({
+        id: '1234',
+        name: 'Name',
+        blocks: [templateBlock('1234')],
+      })
+    ).rejects.toThrow();
+
+    expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+    expect(publicContentCache.invalidateArticleLayout).not.toHaveBeenCalled();
   });
 });

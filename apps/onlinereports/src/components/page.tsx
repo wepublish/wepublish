@@ -1,3 +1,4 @@
+import { ContentUnavailable } from '@wepublish/content/website';
 import { Page as PageType } from '@wepublish/website/api';
 import {
   BuilderPageProps,
@@ -20,6 +21,7 @@ export function OnlineReportsPage({
 
   return (
     <OnlineReportsContentWrapper className={className}>
+      {!data?.page && !loading && <ContentUnavailable />}
       {data?.page && <PageSEO page={data.page as PageType} />}
 
       {data?.page && (

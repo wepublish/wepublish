@@ -19,6 +19,10 @@ jobs:
           POSTGRES_USER: postgres
         ports:
           - 5432:5432
+      dragonfly:
+        image: docker.dragonflydb.io/dragonflydb/dragonfly:v2.0.0
+        ports:
+          - 6379:6379
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,6 +36,7 @@ jobs:
           JWT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJWbdZ23hpurtFiEpnulSfJ1U4TwbkiDWmbGZSDVx3nR\n-----END PRIVATE KEY-----"
           JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA93mjXbSful1W9nAVHuYHdRfgKEF+pvkwm4/5P27J4RA=\n-----END PUBLIC KEY-----"
           DATABASE_URL: 'postgresql://postgres:test@localhost:5432/wepublish_test?schema=public'
+          REDIS_TEST_ADMIN_URL: 'redis://localhost:6379'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2

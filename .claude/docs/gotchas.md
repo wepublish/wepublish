@@ -141,6 +141,180 @@ zone. Jest projects do **not** get this setup file — set the zone yourself the
 
 ---
 
+### ⚠️ Every Dragonfly key must start with `REDIS_KEY_PREFIX`
+
+All media share database 0; a medium's user may only touch `<prefix>:*` /
+`{<prefix>}:*` — anything else is `NOPERM`. `-@dangerous` is not enough:
+`CLIENT PAUSE`/`KILL`, `DFLY`, `SCRIPT FLUSH`, `SCAN`/`RANDOMKEY` reach other
+media, hence `-@admin -client -script -function -memory -pubsub -scan -randomkey
+-dbsize` (verified on v2.0.0, 2026-10-01).
+
+**Load-bearing:** `docker/dragonfly/users.acl` must match `redisacl_user` in
+`application-configuration` (`modules/wepublish_app/dragonfly.tf`). Pinned by
+`kv-ttl-cache.dragonfly.spec.ts` (runs in CI against Dragonfly).
+
+---
+
+### ⚠️ `KvTtlCacheModule` builds `CACHE_MANAGER` itself; only listed namespaces leave the process
+
+Not `CacheModule.register`: `@nestjs/cache-manager` checks `store instanceof
+Keyv`, which fails under Vitest (ESM vs CJS `keyv`) with *"Cannot read
+properties of undefined (reading 'includes')"*. Only `SHARED_NAMESPACES` go to
+Dragonfly; integration settings (`settings:*`) must never be added (startup
+throws). Values are JSON even in memory (master kept live objects):
+`kv-ttl-cache-serializer.ts` keeps `Date`s and Prisma `Decimal`s
+(`payrexx_vatrate.toNumber()`); `BigInt`/`Map` do not survive. See the
+[lib README](../../libs/kv-ttl-cache/api/README.md).
+
+Pinned by `kv-ttl-cache-shared-namespaces.spec.ts`,
+`kv-ttl-cache.service.spec.ts`, `kv-ttl-cache-serializer.spec.ts` and
+`kv-ttl-cache-options.spec.ts`.
+
+---
+
+### ⚠️ A new write path must clear the cache it changes
+
+Sessions, page data, articles, pages, authors, images, polls, readers'
+comments and anonymous GraphQL answers are cached for 5 min — for logged-in
+requests too. Writers call
+`kv.resetNamespace(...)`, `SessionCacheInvalidator` (user, role, session, peer
+token) or `PublicContentCacheInvalidator` (`invalidate` for public changes,
+`invalidateDraft` for drafts, `invalidateComments`); otherwise stale data shows
+until the TTL ends, in the editor as well. A field joins `CACHEABLE_QUERIES`
+only if its anonymous answer is the same for every visitor; see the
+[lib README](../../libs/kv-ttl-cache/api/README.md).
+
+Pinned by the `*session-cache*`, `*.cache.spec.ts` and `*content-cache*` specs;
+a new write path needs its own test.
+
+---
+
+### ⚠️ nx loads `.env` into every task, tests included
+
+`.env` sets `REDIS_URL` and nx passes it into tests (verified 2026-10-01), so
+`jest.setup.ts` and `vitest.setup-tests.ts` delete it. Pinned for Vitest by
+`kv-ttl-cache.module.spec.ts`; nothing guards the Jest side. The built api
+loads `.env` too (`ConfigModule.forRoot()`), so to run it without Dragonfly set
+`REDIS_URL=` (empty) instead of unsetting it.
+
+---
+
+### ⚠️ BullMQ on our Dragonfly needs three things
+
+Verified with bullmq 6.3.11 on v2.0.0 (2026-10-01): Dragonfly must run with
+`--lock_on_hashtags` (else *"script tried accessing undeclared key"*), the
+queue `prefix` must be `{<REDIS_KEY_PREFIX>}`, and a node-redis `connection`
+must drop `name` in `duplicate()` — the worker's `CLIENT SETNAME` is denied by
+`-client`, and Dragonfly cannot allow single subcommands. The flag is not in
+`docker-compose.yml`; check dragonfly01 first. Nothing guards this.
+
+---
+
+### ⚠️ The page cache hands Next a fake `lastModified`
+
+`page-cache.js` returns "now" for a fresh page and `1` for a stale one. Next
+16.1.7 knows a route's `revalidate` only from the prerender manifest or its own
+renders, and assumes **1 s** for every other path — every `fallback: 'blocking'`
+article read by a second pod (verified 2026-10-01). The handler is plain
+CommonJS (Next `import()`s it unbundled) and is reached via two spellings of
+`serverDistDir`, hence `resolve()` in `cacheFor`. Pinned by
+`page-cache-handler.spec.ts` (drives Next's real `IncrementalCache`).
+
+---
+
+### ⚠️ Unpublished articles must answer 200, never 404 — the preview needs that page
+
+The editor preview (iframe or window, `?preview`) opens the article's public
+URL and only then logs in and fetches the draft in the browser
+(`with-jwt-handler.tsx`). A 404 for "no visible version" renders the 404 page
+instead, and the preview of every never-published article goes blank
+(customers have hit preview regressions repeatedly). Visitors get
+[`ContentUnavailable`](../../libs/content/website/src/lib/preview-unavailable/content-unavailable.tsx)
+instead: `noindex` plus a note, never shown with `?preview`, admin-bar preview
+mode or a login that may preview. The API likewise keeps returning unpublished
+articles to anonymous callers (external draft readers).
+
+Pinned by `content-unavailable.spec.tsx` and `preview-unavailable.spec.tsx`;
+verified end to end 2026-10-02 (24 browser cases incl. hauptstadt, iframe,
+popup, session cookie, `SHOW_PENDING_WHEN_NOT_PUBLISHED`).
+
+---
+
+### ⚠️ Next never re-renders a stale page for a prefetch, so the page lock expires early
+
+[`page-cache.js`](../../libs/utils/website/src/lib/page-cache/page-cache.js)
+gives the pod that takes `page-lock:<build>:<path>` the stale copy so Next
+re-renders it, and every other pod the same copy as fresh. Next 16 skips that
+re-render for `purpose: prefetch` requests (`response-cache/index.js`), yet the
+handler takes the lock for them too. With a prefetch every 5 s after an edit,
+both pods served the old article as fresh for 61 s (E2E 2026-10-02). So the lock
+stores its start time and other pods only wait 3 s (`RENDER_GRACE_MS`). A pod
+that handed out the stale copy then serves it as fresh for 30 s unless the
+render stored the page (`RENDER_BACKOFF_MS`; Next's own error backoff needs the
+route's `cacheControl`, which only the rendering process knows) — but not after
+a prefetch, which the handler reads from `ctx._requestHeaders.purpose` (Next
+builds one handler per request).
+
+**Load-bearing:** the timestamp in `acquireLock`, the `lockedSince` check and
+the prefetch exception around `startRender`; "the lock owner always renders" is
+not true. Pinned by `page-cache.spec.ts` and `page-cache-handler.spec.ts`.
+
+---
+
+### ⚠️ 404s and 5xx are `no-store` only through a `writeHead` patch
+
+`next.config.js` sends `s-maxage=59` for `/:path*` and Next never replaces a
+`Cache-Control` already set (`pages-handler.js`); without it Next still sends
+`s-maxage=1` for `notFound`, and a 500 (api down while a page renders for the
+first time) went out as `public, s-maxage=59` (verified end-to-end 2026-10-02).
+`register()` in `instrumentation.nextjs.ts` makes every 404 and 5xx `private,
+no-store, max-age=0` (`libs/utils/sentry/error-no-store.ts`) so Cloudflare
+never keeps one. Pinned by `error-no-store.spec.ts`; nothing checks the wiring
+in CI (verified end-to-end 2026-10-01).
+
+---
+
+### ⚠️ A missing article is not always a 404: `revalidateFor` tells it from a failing api
+
+`article(slug)` for a never-published article answers `Cannot return null for
+non-nullable field ArticleRevision.id` (or `Article.latest`), code
+`INTERNAL_SERVER_ERROR` without `status` — exactly like a Prisma pool timeout —
+and the website clients use `errorPolicy: 'all'`. The preview needs that page as
+an empty 200 (see above), so `revalidateFor(content, errors)` keeps it 60 s.
+Without content it throws on every other error that is not a 4xx
+(`extensions.status`, or `extensions.originalError.statusCode` for 400/401/403/422),
+so Next keeps the previous page instead of storing an empty one for every pod —
+except during `next build` (`NEXT_PHASE`), which prerenders `index.tsx`.
+
+**Load-bearing:** `HIDDEN_CONTENT` in `revalidate-for.ts` — without it the first
+view of an unpublished article (the editor preview) is a 500 and an unpublished
+article stays served stale — and the `, article.errors` / `, page.errors`
+argument in every app. Pinned by `revalidate-for.spec.ts` (shapes checked against
+`@nestjs/apollo` 13.2 and the real SDL, 2026-10-02); nothing checks that an app
+passes `errors`.
+
+---
+
+### ⚠️ Loading the Redis client slows every string method until `restoreFastStringPrototype` runs
+
+`@redis/client` 5 (via `@keyv/redis`) defines `class VerbatimString extends
+String`; loading it puts `String.prototype` into V8 dictionary mode, and every
+string method in the process gets slower. Next's ETag hash over each cached page
+took 3 ms instead of 0.7 ms, cache hits per pod dropped from ~290/s to ~170/s
+(verified with `%HasFastProperties` and a CPU profile, Node 22.20, 2026-10-02).
+`restoreFastStringPrototype()` reads a property 1 000 times through an object
+whose prototype is `String.prototype`, which makes V8 turn it fast again; fewer
+than ~100 reads do not.
+
+**Load-bearing:** the call after the imports in `kv-ttl-cache-atomic-store.ts`
+(`fast-string-prototype.ts`) and in `createRedisClient` in
+`page-cache/shared-store.js`, which also loads the client only when it connects.
+Pinned by `fast-string-prototype.spec.ts` and `shared-store.fast-strings.spec.ts`
+(fresh `node --allow-natives-syntax`); a new place that loads `@keyv/redis` or
+`@redis/client` needs the same call.
+
+---
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell *why* the obvious

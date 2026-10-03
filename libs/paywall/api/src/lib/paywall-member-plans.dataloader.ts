@@ -1,3 +1,8 @@
+import {
+  CONTENT_CACHE_TTL_SECONDS,
+  KvTtlCacheService,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
 import { DataLoaderService } from '@wepublish/utils/api';
 import {
   AvailablePaymentMethod,
@@ -19,11 +24,24 @@ export type MemberPlanWithPaymentMethods = MemberPlan & {
 export class PaywallMemberPlansDataloader extends DataLoaderService<
   MemberPlanWithPaymentMethods[]
 > {
-  constructor(private prisma: PrismaClient) {
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {
     super();
   }
 
-  protected async loadByKeys(paywallIds: string[]) {
+  protected loadByKeys(paywallIds: string[]) {
+    return this.kv.getOrLoadManyNs(
+      contentCacheNamespace('paywalls'),
+      paywallIds,
+      missing => this.loadFromDatabase(missing),
+      CONTENT_CACHE_TTL_SECONDS,
+      'member-plans:'
+    );
+  }
+
+  private async loadFromDatabase(paywallIds: string[]) {
     const paywallMemberPlans = groupBy(
       paywallMemberPlan => paywallMemberPlan.paywallId,
       await this.prisma.paywallMemberplan.findMany({
