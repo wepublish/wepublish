@@ -8,6 +8,7 @@ import {
   FullCrowdfundingFragment,
   FullEventFragment,
   FullImageFragment,
+  FullAuthorFragment,
   FullPollFragment,
   SubscribeBlock,
   FullTagFragment,
@@ -168,6 +169,10 @@ export interface MailchimpFormBlockValue extends BaseBlockValue {
 
 export interface PollBlockValue extends BaseBlockValue {
   poll: Pick<FullPollFragment, 'id' | 'question'> | null | undefined;
+}
+
+export interface AuthorBlockValue extends BaseBlockValue {
+  author: FullAuthorFragment | null | undefined;
 }
 
 export interface CrowdfundingBlockValue extends BaseBlockValue {
@@ -483,6 +488,10 @@ export type PollBlockListValue = BlockListValue<
   EditorBlockType.Poll,
   PollBlockValue
 >;
+export type AuthorBlockListValue = BlockListValue<
+  EditorBlockType.Author,
+  AuthorBlockValue
+>;
 export type CrowdfundingBlockListValue = BlockListValue<
   EditorBlockType.Crowdfunding,
   CrowdfundingBlockValue
@@ -528,6 +537,7 @@ export type BlockValue =
   | SubscribeBlockListValue
   | MailchimpFormBlockListValue
   | PollBlockListValue
+  | AuthorBlockListValue
   | CrowdfundingBlockListValue
   | CommentBlockListValue
   | EventBlockListValue
@@ -555,6 +565,15 @@ export function mapBlockValueToBlockInput(
       return {
         poll: {
           pollId: block.value?.poll?.id,
+          blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
+        },
+      };
+
+    case EditorBlockType.Author:
+      return {
+        author: {
+          authorId: block.value?.author?.id,
           blockStyle: block.value.blockStyle,
           disabled: block.value.disabled,
         },
@@ -1494,6 +1513,17 @@ export function blockForQueryBlock(
           disabled: block.disabled,
           blockStyle: block.blockStyle,
           poll: block.poll,
+        },
+      };
+
+    case 'AuthorBlock':
+      return {
+        key,
+        type: EditorBlockType.Author,
+        value: {
+          disabled: block.disabled,
+          blockStyle: block.blockStyle,
+          author: block.authorObj,
         },
       };
 

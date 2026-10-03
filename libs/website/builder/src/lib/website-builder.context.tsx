@@ -47,6 +47,7 @@ import {
   BuilderInstagramPostBlockProps,
   BuilderListicleBlockProps,
   BuilderPolisConversationBlockProps,
+  BuilderAuthorBlockProps,
   BuilderPollBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
@@ -253,6 +254,7 @@ export type WebsiteBuilderProps = {
     IFrame: ComponentType<BuilderIFrameBlockProps>;
     Event: ComponentType<BuilderEventBlockProps>;
     Poll: ComponentType<BuilderPollBlockProps>;
+    Author: ComponentType<BuilderAuthorBlockProps>;
     Crowdfunding: ComponentType<BuilderCrowdfundingBlockProps>;
     Listicle: ComponentType<BuilderListicleBlockProps>;
     FlexBlock: ComponentType<BuilderFlexBlockProps>;
@@ -397,6 +399,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     IFrame: NoComponent,
     Event: NoComponent,
     Poll: NoComponent,
+    Author: NoComponent,
     Crowdfunding: NoComponent,
     Listicle: NoComponent,
     TeaserGridFlex: NoComponent,

@@ -605,6 +605,10 @@
         "optionMergeFieldName": "Nom du merge field",
         "optionMergeFieldValue": "Valeur du merge field",
         "addSuccessOption": "Ajouter une option"
+      },
+      "author": {
+        "label": "Auteur·e",
+        "placeholder": "Sélectionner un·e auteur·e"
       }
     },
     "cancel": "Annuler",
@@ -2055,9 +2059,9 @@
       "periodicityPricingNoPeriodicities": "Active d'abord des intervalles de paiement dans les paramètres de paiement pour configurer des prix spécifiques aux intervalles.",
       "periodicityPricingRequired": "Au moins un intervalle de paiement nécessite un montant minimal.",
       "periodicityPricingLabel": "Label marketing",
-      "periodicityPricingLabelHelpText": "Note facultative affich\u00e9e pour cet intervalle de paiement sur la page d\u2019abonnement, p.ex. \u00ab2 mois offerts\u00bb.",
-      "defaultPaymentPeriodicity": "Intervalle de paiement par d\u00e9faut",
-      "defaultPaymentPeriodicityHelpText": "Cet intervalle de paiement est pr\u00e9s\u00e9lectionn\u00e9 sur la page d\u2019abonnement. Sans s\u00e9lection, le premier intervalle configur\u00e9 est utilis\u00e9.",
+      "periodicityPricingLabelHelpText": "Note facultative affichée pour cet intervalle de paiement sur la page d’abonnement, p.ex. «2 mois offerts».",
+      "defaultPaymentPeriodicity": "Intervalle de paiement par défaut",
+      "defaultPaymentPeriodicityHelpText": "Cet intervalle de paiement est présélectionné sur la page d’abonnement. Sans sélection, le premier intervalle configuré est utilisé.",
       "periodicityPricingDelta": "Rabais par rapport au prix mensuel : {{delta}}",
       "periodicityPricingCustom": "Prix personnalisés",
       "periodicityPricingDerived": "À partir du prix mensuel",

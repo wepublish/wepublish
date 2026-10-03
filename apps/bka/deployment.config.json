@@ -11,7 +11,7 @@
       "secret_env": []
     },
     "review": {
-      "deployment": false,
+      "deployment": true,
       "env": {},
       "secret_env": []
     }

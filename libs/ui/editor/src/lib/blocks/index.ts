@@ -16,6 +16,7 @@ export * from './imageBlock';
 export * from './imageGalleryBlock';
 export * from './linkPageBreakBlock';
 export * from './listicleBlock';
+export * from './authorBlock';
 export * from './pollBlock';
 export * from './quoteBlock';
 export * from './subscribeBlock';

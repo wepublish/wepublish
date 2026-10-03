@@ -9,6 +9,7 @@ import {
   BuilderHTMLBlockProps,
   BuilderMailchimpFormBlockProps,
   BuilderListicleBlockProps,
+  BuilderAuthorBlockProps,
   BuilderPollBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
@@ -40,6 +41,7 @@ import { isYouTubeVideoBlock } from './youtube/youtube-video-block';
 import { isStreamableVideoBlock } from './streamable/streamable-video-block';
 import { isTeaserGridBlock } from './teaser/teaser-grid-block';
 import { isImageGalleryBlock } from './image-gallery/image-gallery-block';
+import { isAuthorBlock } from './author/author-block';
 import { isPollBlock } from './poll/poll-block';
 import { isListicleBlock } from './listicle/listicle-block';
 import { isEventBlock } from './event/event-block';
@@ -438,6 +440,15 @@ export const BlockRenderer = memo(
           block => (
             <blocks.Poll
               {...(block as BuilderPollBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isAuthorBlock,
+          block => (
+            <blocks.Author
+              {...(block as BuilderAuthorBlockProps)}
               className={className}
             />
           ),

@@ -600,6 +600,10 @@
         "optionMergeFieldName": "Merge field name",
         "optionMergeFieldValue": "Merge field value",
         "addSuccessOption": "Add option"
+      },
+      "author": {
+        "label": "Author",
+        "placeholder": "Select an author"
       }
     },
     "cancel": "Cancel",
@@ -2182,7 +2186,7 @@
       "periodicityPricingNoPeriodicities": "Enable payment intervals in the payment settings first to configure interval-specific prices.",
       "periodicityPricingRequired": "At least one payment interval needs a minimum amount.",
       "periodicityPricingLabel": "Marketing label",
-      "periodicityPricingLabelHelpText": "Optional note shown for this payment interval on the subscribe page, e.g. \u201c2 months for free\u201d.",
+      "periodicityPricingLabelHelpText": "Optional note shown for this payment interval on the subscribe page, e.g. “2 months for free”.",
       "defaultPaymentPeriodicity": "Default payment interval",
       "defaultPaymentPeriodicityHelpText": "This payment interval is preselected on the subscribe page. Without a selection, the first configured interval is used.",
       "periodicityPricingDelta": "Discount compared to monthly price: {{delta}}",

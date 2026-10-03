@@ -4,6 +4,7 @@ export * from './lib/block-styles/block-styles.service';
 export * from './lib/block-styles/block-styles-dataloader.service';
 
 export * from './lib/title/title-block.model';
+export * from './lib/author/author-block.model';
 export * from './lib/poll/poll-block.model';
 export * from './lib/comment/comment-block.model';
 export * from './lib/quote/quote-block.model';

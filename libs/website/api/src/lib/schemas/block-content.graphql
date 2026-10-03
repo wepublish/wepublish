@@ -216,6 +216,14 @@ fragment FullPollBlock on PollBlock {
   }
 }
 
+fragment FullAuthorBlock on AuthorBlock {
+  disabled
+  blockStyle: blockStyleName
+  authorObj: author {
+    ...FullAuthor
+  }
+}
+
 fragment FullCrowdfundingBlock on CrowdfundingBlock {
   disabled
   blockStyle: blockStyleName
@@ -376,6 +384,10 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on PollBlock {
     ...FullPollBlock
+  }
+
+  ... on AuthorBlock {
+    ...FullAuthorBlock
   }
 
   ... on CrowdfundingBlock {

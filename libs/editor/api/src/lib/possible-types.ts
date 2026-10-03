@@ -28,6 +28,7 @@ const result: PossibleTypesResultData = {
       'UserCreatedAction',
     ],
     BaseBlock: [
+      'AuthorBlock',
       'BildwurfAdBlock',
       'BreakBlock',
       'CommentBlock',
@@ -71,6 +72,7 @@ const result: PossibleTypesResultData = {
     BaseToken: ['Token', 'TokenWithSecret'],
     BaseUser: ['SensitiveDataUser', 'User'],
     BlockContent: [
+      'AuthorBlock',
       'BildwurfAdBlock',
       'BreakBlock',
       'CommentBlock',
@@ -129,6 +131,7 @@ const result: PossibleTypesResultData = {
     HasMemberPlanLc: ['DiscountCode'],
     HasOneBlockContent: ['BlockWithAlignment'],
     HasOptionalArticle: ['ArticleTeaser'],
+    HasOptionalAuthor: ['AuthorBlock'],
     HasOptionalCrowdfunding: ['CrowdfundingBlock'],
     HasOptionalEvent: ['EventTeaser'],
     HasOptionalPage: ['PageTeaser'],

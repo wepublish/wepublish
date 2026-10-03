@@ -26,6 +26,7 @@ export enum BlockType {
   TeaserSlots = 'teaserSlots',
   HTML = 'html',
   Poll = 'poll',
+  Author = 'author',
   Crowdfunding = 'crowdfunding',
   Comment = 'comment',
   Event = 'event',

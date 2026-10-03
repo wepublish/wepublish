@@ -63,6 +63,13 @@ export type ArticleTeaserInput = {
   title?: string | null | undefined;
 };
 
+export type AuthorBlockInput = {
+  authorId?: string | null | undefined;
+  blockStyle?: string | null | undefined;
+  blockStyleName?: string | null | undefined;
+  disabled?: boolean | null | undefined;
+};
+
 export type AuthorLinkInput = {
   title: string;
   url: string;
@@ -95,6 +102,7 @@ export type BildwurfAdBlockInput = {
 };
 
 export type BlockContentInput = {
+  author?: AuthorBlockInput | null | undefined;
   bildwurfAd?: BildwurfAdBlockInput | null | undefined;
   comment?: CommentBlockInput | null | undefined;
   crowdfunding?: CrowdfundingBlockInput | null | undefined;
@@ -129,6 +137,7 @@ export type BlockContentInput = {
 };
 
 export enum BlockType {
+  Author = 'Author',
   BildwurfAd = 'BildwurfAd',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
@@ -345,6 +354,7 @@ export enum DiscountCodesort {
 }
 
 export enum EditorBlockType {
+  Author = 'Author',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
@@ -1758,6 +1768,7 @@ export type ArticleWithoutBlocksFragment = {
 export type FullArticleRevisionFragment = {
   __typename: 'ArticleRevision';
   blocks: Array<
+    | ({ __typename: 'AuthorBlock' } & FullBlock_AuthorBlock_Fragment)
     | ({ __typename: 'BildwurfAdBlock' } & FullBlock_BildwurfAdBlock_Fragment)
     | ({ __typename: 'BreakBlock' } & FullBlock_BreakBlock_Fragment)
     | ({ __typename: 'CommentBlock' } & FullBlock_CommentBlock_Fragment)
@@ -2390,6 +2401,15 @@ export type DeleteBlockStyleMutation = {
   deleteBlockStyle: { __typename: 'BlockStyle' } & FullBlockStyleFragment;
 };
 
+type BlockWithoutTeaser_AuthorBlock_Fragment = {
+  __typename: 'AuthorBlock';
+  disabled: boolean | null;
+  blockStyle: string | null;
+  blockStyleName: string | null;
+  type: BlockType;
+  authorObj: ({ __typename: 'Author' } & FullAuthorFragment) | null;
+};
+
 type BlockWithoutTeaser_BildwurfAdBlock_Fragment = {
   __typename: 'BildwurfAdBlock';
   disabled: boolean | null;
@@ -2774,6 +2794,7 @@ type BlockWithoutTeaser_YouTubeVideoBlock_Fragment = {
 };
 
 export type BlockWithoutTeaserFragment =
+  | BlockWithoutTeaser_AuthorBlock_Fragment
   | BlockWithoutTeaser_BildwurfAdBlock_Fragment
   | BlockWithoutTeaser_BreakBlock_Fragment
   | BlockWithoutTeaser_CommentBlock_Fragment
@@ -2820,6 +2841,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
         published: {
           __typename: 'ArticleRevision';
           blocks: Array<
+            | { __typename: 'AuthorBlock' }
             | { __typename: 'BildwurfAdBlock' }
             | { __typename: 'BreakBlock' }
             | { __typename: 'CommentBlock' }
@@ -2908,6 +2930,10 @@ export type FullTeaserFragment =
   | FullTeaser_EventTeaser_Fragment
   | FullTeaser_PageTeaser_Fragment;
 
+type FullBlock_AuthorBlock_Fragment = {
+  __typename: 'AuthorBlock';
+} & BlockWithoutTeaser_AuthorBlock_Fragment;
+
 type FullBlock_BildwurfAdBlock_Fragment = {
   __typename: 'BildwurfAdBlock';
 } & BlockWithoutTeaser_BildwurfAdBlock_Fragment;
@@ -2954,6 +2980,9 @@ type FullBlock_FlexBlock_Fragment = {
       static: boolean | null;
     };
     block:
+      | ({
+          __typename: 'AuthorBlock';
+        } & BlockWithoutTeaser_AuthorBlock_Fragment)
       | ({
           __typename: 'BildwurfAdBlock';
         } & BlockWithoutTeaser_BildwurfAdBlock_Fragment)
@@ -3299,6 +3328,7 @@ type FullBlock_YouTubeVideoBlock_Fragment = {
 } & BlockWithoutTeaser_YouTubeVideoBlock_Fragment;
 
 export type FullBlockFragment =
+  | FullBlock_AuthorBlock_Fragment
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_BreakBlock_Fragment
   | FullBlock_CommentBlock_Fragment
@@ -5402,6 +5432,7 @@ export type PageWithoutBlocksFragment = {
 export type FullPageRevisionFragment = {
   __typename: 'PageRevision';
   blocks: Array<
+    | ({ __typename: 'AuthorBlock' } & FullBlock_AuthorBlock_Fragment)
     | ({ __typename: 'BildwurfAdBlock' } & FullBlock_BildwurfAdBlock_Fragment)
     | ({ __typename: 'BreakBlock' } & FullBlock_BreakBlock_Fragment)
     | ({ __typename: 'CommentBlock' } & FullBlock_CommentBlock_Fragment)
@@ -12001,6 +12032,39 @@ export const BlockWithoutTeaserFragmentDoc = {
             kind: 'InlineFragment',
             typeCondition: {
               kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
               name: { kind: 'Name', value: 'CrowdfundingBlock' },
             },
             selectionSet: {
@@ -12996,6 +13060,150 @@ export const BlockWithoutTeaserFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'FullEvent' },
       typeCondition: {
         kind: 'NamedType',
@@ -13175,6 +13383,81 @@ export const BlockWithoutTeaserFragmentDoc = {
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },
@@ -17176,6 +17459,39 @@ export const FullBlockFragmentDoc = {
             kind: 'InlineFragment',
             typeCondition: {
               kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
               name: { kind: 'Name', value: 'CrowdfundingBlock' },
             },
             selectionSet: {
@@ -19176,6 +19492,39 @@ export const FullArticleRevisionFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -22414,6 +22763,39 @@ export const FullArticleFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -27122,6 +27504,225 @@ export const FullPageRevisionFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'BlockWithoutTeaser' },
       typeCondition: {
         kind: 'NamedType',
@@ -27423,6 +28024,39 @@ export const FullPageRevisionFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -28155,225 +28789,6 @@ export const FullPageRevisionFragmentDoc = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeerImage' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'PeerImage' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
-          { kind: 'Field', name: { kind: 'Name', value: 's' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'RemotePeerProfile' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'logo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'squareLogo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImageURL' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeer' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Peer' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'profile' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullAuthor' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Author' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'peer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeer' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'links' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'tags' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullTag' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'image' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },
@@ -30269,6 +30684,225 @@ export const FullPageFragmentDoc = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'BlockWithoutTeaser' },
       typeCondition: {
         kind: 'NamedType',
@@ -30570,6 +31204,39 @@ export const FullPageFragmentDoc = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -31302,225 +31969,6 @@ export const FullPageFragmentDoc = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeerImage' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'PeerImage' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
-          { kind: 'Field', name: { kind: 'Name', value: 's' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'RemotePeerProfile' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'logo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'squareLogo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImageURL' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeer' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Peer' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'profile' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullAuthor' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Author' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'peer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeer' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'links' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'tags' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullTag' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'image' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },
@@ -40476,6 +40924,39 @@ export const CreateArticleDocument = {
             kind: 'InlineFragment',
             typeCondition: {
               kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
               name: { kind: 'Name', value: 'CrowdfundingBlock' },
             },
             selectionSet: {
@@ -44080,6 +44561,39 @@ export const UpdateArticleDocument = {
             kind: 'InlineFragment',
             typeCondition: {
               kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
               name: { kind: 'Name', value: 'CrowdfundingBlock' },
             },
             selectionSet: {
@@ -47264,6 +47778,39 @@ export const PublishArticleDocument = {
             kind: 'InlineFragment',
             typeCondition: {
               kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
               name: { kind: 'Name', value: 'CrowdfundingBlock' },
             },
             selectionSet: {
@@ -50415,6 +50962,39 @@ export const UnpublishArticleDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -53660,6 +54240,39 @@ export const ArticleRevisionPreviewDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -56988,6 +57601,39 @@ export const RestoreArticleRevisionDocument = {
             kind: 'InlineFragment',
             typeCondition: {
               kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
               name: { kind: 'Name', value: 'CrowdfundingBlock' },
             },
             selectionSet: {
@@ -60139,6 +60785,39 @@ export const DiscardArticleDraftDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -63312,6 +63991,39 @@ export const DuplicateArticleDocument = {
             kind: 'InlineFragment',
             typeCondition: {
               kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
               name: { kind: 'Name', value: 'CrowdfundingBlock' },
             },
             selectionSet: {
@@ -66463,6 +67175,39 @@ export const ArticleDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -94054,6 +94799,225 @@ export const CreatePageDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'BlockWithoutTeaser' },
       typeCondition: {
         kind: 'NamedType',
@@ -94355,6 +95319,39 @@ export const CreatePageDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -95087,225 +96084,6 @@ export const CreatePageDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeerImage' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'PeerImage' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
-          { kind: 'Field', name: { kind: 'Name', value: 's' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'RemotePeerProfile' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'logo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'squareLogo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImageURL' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeer' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Peer' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'profile' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullAuthor' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Author' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'peer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeer' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'links' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'tags' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullTag' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'image' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },
@@ -97455,6 +98233,225 @@ export const UpdatePageDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'BlockWithoutTeaser' },
       typeCondition: {
         kind: 'NamedType',
@@ -97756,6 +98753,39 @@ export const UpdatePageDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -98488,225 +99518,6 @@ export const UpdatePageDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeerImage' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'PeerImage' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
-          { kind: 'Field', name: { kind: 'Name', value: 's' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'RemotePeerProfile' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'logo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'squareLogo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImageURL' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeer' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Peer' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'profile' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullAuthor' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Author' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'peer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeer' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'links' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'tags' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullTag' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'image' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },
@@ -100636,6 +101447,225 @@ export const PublishPageDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'BlockWithoutTeaser' },
       typeCondition: {
         kind: 'NamedType',
@@ -100937,6 +101967,39 @@ export const PublishPageDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -101669,225 +102732,6 @@ export const PublishPageDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeerImage' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'PeerImage' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
-          { kind: 'Field', name: { kind: 'Name', value: 's' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'RemotePeerProfile' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'logo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'squareLogo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImageURL' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeer' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Peer' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'profile' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullAuthor' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Author' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'peer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeer' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'links' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'tags' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullTag' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'image' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },
@@ -103795,6 +104639,225 @@ export const UnpublishPageDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'BlockWithoutTeaser' },
       typeCondition: {
         kind: 'NamedType',
@@ -104096,6 +105159,39 @@ export const UnpublishPageDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -104828,225 +105924,6 @@ export const UnpublishPageDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeerImage' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'PeerImage' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
-          { kind: 'Field', name: { kind: 'Name', value: 's' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'RemotePeerProfile' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'logo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'squareLogo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImageURL' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeer' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Peer' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'profile' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullAuthor' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Author' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'peer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeer' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'links' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'tags' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullTag' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'image' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },
@@ -107117,6 +107994,225 @@ export const PageRevisionPreviewDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'BlockWithoutTeaser' },
       typeCondition: {
         kind: 'NamedType',
@@ -107418,6 +108514,39 @@ export const PageRevisionPreviewDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -108150,225 +109279,6 @@ export const PageRevisionPreviewDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeerImage' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'PeerImage' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
-          { kind: 'Field', name: { kind: 'Name', value: 's' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'RemotePeerProfile' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'logo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'squareLogo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImageURL' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeer' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Peer' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'profile' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullAuthor' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Author' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'peer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeer' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'links' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'tags' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullTag' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'image' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },
@@ -110353,6 +111263,225 @@ export const RestorePageRevisionDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'BlockWithoutTeaser' },
       typeCondition: {
         kind: 'NamedType',
@@ -110654,6 +111783,39 @@ export const RestorePageRevisionDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -111386,225 +112548,6 @@ export const RestorePageRevisionDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeerImage' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'PeerImage' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
-          { kind: 'Field', name: { kind: 'Name', value: 's' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'RemotePeerProfile' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'logo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'squareLogo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImageURL' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeer' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Peer' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'profile' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullAuthor' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Author' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'peer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeer' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'links' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'tags' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullTag' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'image' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },
@@ -113515,6 +114458,225 @@ export const DiscardPageDraftDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'BlockWithoutTeaser' },
       typeCondition: {
         kind: 'NamedType',
@@ -113816,6 +114978,39 @@ export const DiscardPageDraftDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -114548,225 +115743,6 @@ export const DiscardPageDraftDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeerImage' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'PeerImage' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
-          { kind: 'Field', name: { kind: 'Name', value: 's' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'RemotePeerProfile' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'logo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'squareLogo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImageURL' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeer' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Peer' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'profile' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullAuthor' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Author' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'peer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeer' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'links' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'tags' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullTag' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'image' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },
@@ -116677,6 +117653,225 @@ export const DuplicatePageDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'BlockWithoutTeaser' },
       typeCondition: {
         kind: 'NamedType',
@@ -116978,6 +118173,39 @@ export const DuplicatePageDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -117710,225 +118938,6 @@ export const DuplicatePageDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeerImage' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'PeerImage' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
-          { kind: 'Field', name: { kind: 'Name', value: 's' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'RemotePeerProfile' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'logo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'squareLogo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImageURL' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeer' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Peer' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'profile' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullAuthor' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Author' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'peer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeer' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'links' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'tags' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullTag' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'image' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },
@@ -119839,6 +120848,225 @@ export const PageDocument = {
     },
     {
       kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeerImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PeerImage' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
+          { kind: 'Field', name: { kind: 'Name', value: 's' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'RemotePeerProfile' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'logo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'squareLogo' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImageURL' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callToActionImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeerImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPeer' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Peer' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'profile' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAuthor' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Author' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'peer' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPeer' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'links' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tags' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullTag' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'BlockWithoutTeaser' },
       typeCondition: {
         kind: 'NamedType',
@@ -120140,6 +121368,39 @@ export const PageDocument = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'FullPoll' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'InlineFragment',
+            typeCondition: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AuthorBlock' },
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'disabled' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'blockStyle' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'blockStyleName' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'authorObj' },
+                  name: { kind: 'Name', value: 'author' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FullAuthor' },
                       },
                     ],
                   },
@@ -120872,225 +122133,6 @@ export const PageDocument = {
               ],
             },
           },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeerImage' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'PeerImage' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'format' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xl' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'l' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'm' } },
-          { kind: 'Field', name: { kind: 'Name', value: 's' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxs' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xlSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'mSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'sSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xsSquare' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'xxsSquare' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'RemotePeerProfile' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'logo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'squareLogo' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'themeFontColor' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'websiteURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionText' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'callToActionURL' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImageURL' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'callToActionImage' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeerImage' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullPeer' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Peer' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'isDisabled' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'information' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hostURL' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'token' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'profile' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullRemotePeerProfile' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'FullAuthor' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Author' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'peer' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullPeer' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'links' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'tags' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullTag' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'imageID' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'image' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'FullImage' },
-                },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnArticle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeaser' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'hideOnTeam' } },
         ],
       },
     },

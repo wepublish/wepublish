@@ -227,6 +227,24 @@ export type Author = HasImage &
     url: Scalars['String']['output'];
   };
 
+export type AuthorBlock = BaseBlock &
+  HasOptionalAuthor & {
+    __typename?: 'AuthorBlock';
+    author?: Maybe<Author>;
+    authorId?: Maybe<Scalars['String']['output']>;
+    blockStyle?: Maybe<Scalars['String']['output']>;
+    blockStyleName?: Maybe<Scalars['String']['output']>;
+    disabled?: Maybe<Scalars['Boolean']['output']>;
+    type: BlockType;
+  };
+
+export type AuthorBlockInput = {
+  authorId?: InputMaybe<Scalars['String']['input']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type AuthorCreatedAction = BaseAction &
   HasAuthor & {
     __typename?: 'AuthorCreatedAction';
@@ -388,6 +406,7 @@ export type BildwurfAdBlockInput = {
 };
 
 export type BlockContent =
+  | AuthorBlock
   | BildwurfAdBlock
   | BreakBlock
   | CommentBlock
@@ -422,6 +441,7 @@ export type BlockContent =
   | YouTubeVideoBlock;
 
 export type BlockContentInput = {
+  author?: InputMaybe<AuthorBlockInput>;
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
   comment?: InputMaybe<CommentBlockInput>;
   crowdfunding?: InputMaybe<CrowdfundingBlockInput>;
@@ -465,6 +485,7 @@ export type BlockStyle = {
 };
 
 export enum BlockType {
+  Author = 'Author',
   BildwurfAd = 'BildwurfAd',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
@@ -1048,6 +1069,7 @@ export type DocumentStorageUsage = {
 };
 
 export enum EditorBlockType {
+  Author = 'Author',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
@@ -1440,6 +1462,11 @@ export type HasOneBlockContent = {
 export type HasOptionalArticle = {
   article?: Maybe<Article>;
   articleID?: Maybe<Scalars['String']['output']>;
+};
+
+export type HasOptionalAuthor = {
+  author?: Maybe<Author>;
+  authorId?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalCrowdfunding = {
@@ -7291,6 +7318,7 @@ const result: PossibleTypesResultData = {
       'UserCreatedAction',
     ],
     BaseBlock: [
+      'AuthorBlock',
       'BildwurfAdBlock',
       'BreakBlock',
       'CommentBlock',
@@ -7334,6 +7362,7 @@ const result: PossibleTypesResultData = {
     BaseToken: ['Token', 'TokenWithSecret'],
     BaseUser: ['SensitiveDataUser', 'User'],
     BlockContent: [
+      'AuthorBlock',
       'BildwurfAdBlock',
       'BreakBlock',
       'CommentBlock',
@@ -7392,6 +7421,7 @@ const result: PossibleTypesResultData = {
     HasMemberPlanLc: ['DiscountCode'],
     HasOneBlockContent: ['BlockWithAlignment'],
     HasOptionalArticle: ['ArticleTeaser'],
+    HasOptionalAuthor: ['AuthorBlock'],
     HasOptionalCrowdfunding: ['CrowdfundingBlock'],
     HasOptionalEvent: ['EventTeaser'],
     HasOptionalPage: ['PageTeaser'],
