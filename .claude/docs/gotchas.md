@@ -315,6 +315,25 @@ Pinned by `fast-string-prototype.spec.ts` and `shared-store.fast-strings.spec.ts
 
 ---
 
+### ⚠️ The newsletter renderer is shared, and three things keep it working
+
+`libs/newsletter/email` draws the Puck canvas *and* the mail. Load-bearing:
+`renderNewsletter` lives behind `@wepublish/newsletter/email/render`, outside
+the barrel, so the editor bundle never pulls in `@react-email/render`'s
+Prettier; `apps/api-example/tsconfig.app.json` sets `jsx: react-jsx`, or the
+API build fails on the lib's TSX; and `newsletter-api` runs Jest with
+`NODE_OPTIONS=--experimental-vm-modules`, because `@react-email/render` calls
+`import('react-dom/server')` even in its CJS build (*"A dynamic import callback
+was invoked without --experimental-vm-modules"*, verified 2026-10-02). Mail
+images are asked for as `format: 'jpeg'` (png/gif kept): the media server's
+default WebP is an empty frame in Outlook. `format` is deliberately not in the
+GraphQL `ImageTransformation`, so the public API cannot multiply cached variants.
+
+Pinned by `newsletter-render.service.spec.ts`, `media.service.spec.ts` and
+`novaMediaAdapter.spec.ts`; nothing guards the editor-bundle split.
+
+---
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell *why* the obvious
