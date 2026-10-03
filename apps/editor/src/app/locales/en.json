@@ -3369,6 +3369,167 @@
         "delete": "Deleted",
         "other": "Other"
       }
+    },
+    "newsletter": {
+      "blocks": {
+        "button": {
+          "href": "Target",
+          "label": "Button",
+          "text": "Label"
+        },
+        "condition": "Dynamic content (optional)",
+        "divider": {
+          "label": "Divider"
+        },
+        "footer": {
+          "label": "Footer",
+          "legal": "Legal (unsubscribe link & address)",
+          "lines": "Imprint: text",
+          "title": "Imprint: title"
+        },
+        "gutter": {
+          "article": "Article ({{size}})",
+          "intro": "Intro ({{size}})",
+          "label": "Indent",
+          "none": "None ({{size}})"
+        },
+        "heading": {
+          "label": "Title",
+          "text": "Title"
+        },
+        "image": {
+          "alt": "Alt text",
+          "caption": "Caption (optional)",
+          "href": "Links to (optional)",
+          "image": "Image",
+          "label": "Image"
+        },
+        "meta": {
+          "label": "Header row (label / date)",
+          "left": "Left",
+          "right": "Right"
+        },
+        "panel": {
+          "image": "Image on the left (optional)",
+          "label": "Info box",
+          "linkHref": "Link target (optional)",
+          "linkLabel": "Link text (optional)",
+          "title": "Title"
+        },
+        "preheader": "Preview text (shown next to the subject)",
+        "rubric": {
+          "label": "Section bar",
+          "name": "Section"
+        },
+        "teaser": {
+          "allTags": "All tags",
+          "article": "Article",
+          "big": "Large (with image)",
+          "count": "{{count}} of {{total}} articles",
+          "label": "Article teaser",
+          "pick": "Choose article …",
+          "short": "Short",
+          "tag": "Tag",
+          "variant": "Layout"
+        },
+        "text": {
+          "body": "Text",
+          "label": "Text block"
+        }
+      },
+      "categories": {
+        "articles": "Articles",
+        "content": "Content",
+        "footer": "Footer",
+        "header": "Header"
+      },
+      "condition": {
+        "always": "Always show (no condition)",
+        "evaluatedAtSend": "Mailchimp only evaluates the condition when sending. The block stays visible in the editor, the preview and the Mailchimp draft.",
+        "interests": "Interest groups",
+        "is": "is",
+        "noValue": "Without a value there is no condition — the block goes to every recipient.",
+        "not": "is not",
+        "nothingToCompare": "The Mailchimp audience has no contact fields and no interest groups of its own — there is nothing a condition could refer to.",
+        "pickGroup": "Choose group …",
+        "stored": "Stored in the document",
+        "value": "Value"
+      },
+      "delete": {
+        "body": "«{{title}}» will be deleted. A Mailchimp draft created from it is kept.",
+        "delete": "Delete",
+        "title": "Delete issue?"
+      },
+      "editor": {
+        "back": "← Overview",
+        "changesNotPushed": "Changes not pushed",
+        "createdAt": "Campaign created at {{time}}.",
+        "loading": "Loading …",
+        "notPushed": "Not pushed to Mailchimp",
+        "notSaved": "Not saved",
+        "openInMailchimp": "Open in Mailchimp",
+        "pickImage": "Choose an image from the media library ({{alt}})",
+        "preview": "Preview",
+        "publish": "To Mailchimp",
+        "publishing": "Pushing to Mailchimp …",
+        "publishingShort": "Pushing …",
+        "pushed": "Pushed to Mailchimp",
+        "save": "Save",
+        "savedAt": "Saved at {{time}}.",
+        "saving": "Saving …",
+        "unknownBlock": "Unknown block: {{type}}",
+        "updatedAt": "Campaign updated at {{time}}."
+      },
+      "list": {
+        "actions": "Actions",
+        "blocks": "Blocks",
+        "createNew": "New issue",
+        "mailchimp": "Mailchimp",
+        "modified": "Last modified",
+        "name": "Title",
+        "openDraft": "Mailchimp draft",
+        "title": "Newsletters",
+        "titlePlaceholder": "Issue title, e.g. Newsletter 21.8.26"
+      },
+      "mergeTags": {
+        "fields": "Contact fields",
+        "system": "System tags"
+      },
+      "navbar": "Newsletter",
+      "prose": {
+        "apply": "Apply",
+        "bold": "B",
+        "boldTitle": "Bold (Ctrl/Cmd+B)",
+        "hint": "Enter starts a new paragraph. Merge tags are only replaced by Mailchimp — the editor and the preview show the tag itself.",
+        "link": "Link",
+        "list": "List",
+        "listTitle": "Bulleted list",
+        "loadingTags": "Loading merge tags …",
+        "mergeTag": "Merge tag",
+        "mergeTagTitle": "Insert Mailchimp merge tag",
+        "noTag": "No merge tag found.",
+        "remove": "Remove",
+        "searchTag": "Search merge tags …"
+      },
+      "report": {
+        "clipped": "Gmail clips this issue and hides its end — imprint, unsubscribe link and address — behind «Message clipped».",
+        "heading": "Checks",
+        "measuring": "Measuring size …",
+        "missingArticles_one": "{{count}} article can no longer be loaded ({{ids}}). Mailchimp transfer is refused until the teaser is replaced or removed.",
+        "missingArticles_other": "{{count}} articles can no longer be loaded ({{ids}}). Mailchimp transfer is refused until the teasers are replaced or removed.",
+        "missingFooter": "The footer is missing {{missing}}. Mailchimp refuses to send a campaign without it.",
+        "nearLimit": "Close to the limit. Sending adds size: Mailchimp fills in every merge tag and replaces every link with a longer tracking URL.",
+        "ok": "all good",
+        "problems_one": "{{count}} problem",
+        "problems_other": "{{count}} problems",
+        "room": "{{size}} left before Gmail clips.",
+        "size": "{{size}} of {{limit}} ({{percent}} %)",
+        "sizeFailed": "The size could not be measured: {{error}}",
+        "stale": "last saved version",
+        "unsaved": "Changes since the last save are not included — saving measures again.",
+        "warnings_one": "{{count}} note",
+        "warnings_other": "{{count}} notes"
+      }
     }
   }
 }
