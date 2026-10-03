@@ -104,7 +104,8 @@ export const WebsiteAnalytics = () => {
           </Message>
         );
       },
-    });
+    }
+  );
   const {
     control,
     handleSubmit,
@@ -152,9 +153,7 @@ export const WebsiteAnalytics = () => {
           {t('websiteSettings.backToOverview')}
         </Button>
       </Link>
-
       <h3>{t('websiteSettings.analytics.google.title')}</h3>
-
       <Controller
         name="googleAnalytics.enabled"
         control={control}
@@ -191,7 +190,6 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="googleAnalytics.key"
         control={control}
@@ -218,28 +216,29 @@ export const WebsiteAnalytics = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
       <Controller
         name="googleTagManager.enabled"
         control={control}
@@ -275,7 +274,6 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="googleTagManager.key"
         control={control}
@@ -302,30 +300,30 @@ export const WebsiteAnalytics = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
       <h3>{t('websiteSettings.analytics.plausible.title')}</h3>
-
       <Controller
         name="plausible.enabled"
         control={control}
@@ -361,7 +359,6 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="plausible.key"
         control={control}
@@ -388,30 +385,30 @@ export const WebsiteAnalytics = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
       <h3>{t('websiteSettings.analytics.piwik.title')}</h3>
-
       <Controller
         name="piwik.enabled"
         control={control}
@@ -447,7 +444,6 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="piwik.key"
         control={control}
@@ -463,28 +459,29 @@ export const WebsiteAnalytics = () => {
                   <Trans i18nKey="websiteSettings.analytics.piwik.proLocator" />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
       <Box>
         <Button
           type="submit"

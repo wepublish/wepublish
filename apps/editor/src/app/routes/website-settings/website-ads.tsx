@@ -163,23 +163,6 @@ export const WebsiteAds = () => {
               label="SparkLoop ID"
               placeholder="pub_xxxxxxxxxxxx"
               error={!!error}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
-              }}
               helperText={
                 error?.message || (
                   <Trans
@@ -196,6 +179,25 @@ export const WebsiteAds = () => {
                   />
                 )
               }
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
           : <></>
         }

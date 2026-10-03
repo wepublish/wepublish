@@ -180,22 +180,24 @@ export const WebsiteMail = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      API
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        API
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>

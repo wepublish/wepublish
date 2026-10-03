@@ -345,8 +345,10 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
         {error && <FormHelperText error>{error.message}</FormHelperText>}
 
         <Box
-          display="flex"
-          gap={2}
+          sx={{
+            display: 'flex',
+            gap: 2,
+          }}
         >
           <Button
             disabled={loading}

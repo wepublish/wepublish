@@ -159,6 +159,9 @@ export function MailSendJobList({
                     variant="caption"
                     display="block"
                     style={{ color: '#8e8e93' }}
+                    sx={{
+                      display: 'block',
+                    }}
                   >
                     {t('mailJobs.progressCount', {
                       sent: job.sentCount,
@@ -389,6 +392,9 @@ function JobSummary({
           variant="caption"
           display="block"
           style={{ color: '#8e8e93', marginTop: 12 }}
+          sx={{
+            display: 'block',
+          }}
         >
           {t('mailJobs.lastActivity', {
             time: formatDateTime(job.heartbeatAt),
@@ -532,6 +538,9 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
                       variant="caption"
                       display="block"
                       style={{ color: '#8e8e93' }}
+                      sx={{
+                        display: 'block',
+                      }}
                     >
                       {entry.memberPlanName}
                     </Typography>

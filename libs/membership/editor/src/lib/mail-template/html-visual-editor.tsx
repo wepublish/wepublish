@@ -1019,7 +1019,6 @@ const HtmlVisualEditorComponent = forwardRef<
           </Tooltip>
         </ToggleButtonGroup>
       </Toolbar>
-
       <Canvas>
         <DeviceFrame sx={{ maxWidth: DEVICE_WIDTH[device] }}>
           <Frame
@@ -1031,7 +1030,6 @@ const HtmlVisualEditorComponent = forwardRef<
           />
         </DeviceFrame>
       </Canvas>
-
       <Dialog
         open={linkDialog.open}
         onClose={closeLinkDialog}
@@ -1096,7 +1094,6 @@ const HtmlVisualEditorComponent = forwardRef<
           </Button>
         </DialogActions>
       </Dialog>
-
       <Dialog
         open={imageDialog.open && !libraryOpen}
         onClose={closeImageDialog}
@@ -1187,7 +1184,6 @@ const HtmlVisualEditorComponent = forwardRef<
           </Button>
         </DialogActions>
       </Dialog>
-
       <Dialog
         open={buttonDialog.open}
         onClose={closeButtonDialog}
@@ -1234,7 +1230,9 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <Stack
               spacing={2}
-              alignItems="center"
+              sx={{
+                alignItems: 'center',
+              }}
             >
               <TextField
                 select
@@ -1287,7 +1285,6 @@ const HtmlVisualEditorComponent = forwardRef<
           </Button>
         </DialogActions>
       </Dialog>
-
       <Drawer
         open={libraryOpen}
         size="sm"

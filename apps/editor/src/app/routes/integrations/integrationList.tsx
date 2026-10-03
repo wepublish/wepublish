@@ -129,7 +129,6 @@ export function IntegrationList() {
   return (
     <Wrapper>
       <Title>{t('integrations.title')}</Title>
-
       {integrations.map(integration => (
         <PermissionControl
           key={integration.title}
@@ -140,7 +139,9 @@ export function IntegrationList() {
               <Typography
                 variant="h6"
                 component="div"
-                marginBottom={2}
+                sx={{
+                  marginBottom: 2,
+                }}
               >
                 {integration.title}
               </Typography>

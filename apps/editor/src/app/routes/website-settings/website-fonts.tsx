@@ -155,11 +155,15 @@ export const WebsiteFonts = () => {
             key={field.id}
             direction="row"
             spacing={1}
-            alignItems="center"
+            sx={{
+              alignItems: 'center',
+            }}
           >
             <Box
-              flex={1}
-              sx={{ maxWidth: 300 }}
+              sx={{
+                flex: 1,
+                maxWidth: 300,
+              }}
             >
               <Controller
                 name={`fonts.${index}`}

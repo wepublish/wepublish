@@ -58,25 +58,29 @@ export const IconPickerSelect = ({
           {...params}
           label="Select Icon"
           variant="outlined"
-          InputProps={{
-            ...params.InputProps,
-            startAdornment:
-              value && data.find(item => item.value === value) ?
-                <Box
-                  sx={{ display: 'flex', alignItems: 'center', mr: 1, ml: 1 }}
-                >
-                  {(() => {
-                    const selectedItem = data.find(
-                      item => item.value === value
-                    );
-                    if (selectedItem) {
-                      const IconComponent = selectedItem.icon;
-                      return <IconComponent size={20} />;
-                    }
-                    return null;
-                  })()}
-                </Box>
-              : null,
+          slotProps={{
+            ...params.slotProps,
+
+            input: {
+              ...params.slotProps.input,
+              startAdornment:
+                value && data.find(item => item.value === value) ?
+                  <Box
+                    sx={{ display: 'flex', alignItems: 'center', mr: 1, ml: 1 }}
+                  >
+                    {(() => {
+                      const selectedItem = data.find(
+                        item => item.value === value
+                      );
+                      if (selectedItem) {
+                        const IconComponent = selectedItem.icon;
+                        return <IconComponent size={20} />;
+                      }
+                      return null;
+                    })()}
+                  </Box>
+                : null,
+            },
           }}
         />
       )}
