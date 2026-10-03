@@ -65,30 +65,30 @@ describe('EventsImportResolver', () => {
         EventsImportResolver,
         {
           provide: EVENT_IMPORT_PROVIDER,
-          useValue: jest.fn(),
+          useValue: vi.fn(),
         },
         {
           provide: CACHE_MANAGER,
           useValue: {
-            get: jest.fn(),
-            set: jest.fn(),
+            get: vi.fn(),
+            set: vi.fn(),
           },
         },
         {
           provide: PrismaClient,
           useValue: {
             event: {
-              create: jest.fn(),
+              create: vi.fn(),
             },
             image: {
-              create: jest.fn(),
+              create: vi.fn(),
             },
           },
         },
         {
           provide: MediaAdapter,
           useValue: {
-            uploadImageFromArrayBuffer: jest.fn(),
+            uploadImageFromArrayBuffer: vi.fn(),
           },
         },
       ],
@@ -105,11 +105,11 @@ describe('EventsImportResolver', () => {
     const take = 10;
     const sort = ImportedEventSort.CREATED_AT;
 
-    jest
-      .spyOn(service, 'importedEvents')
-      .mockReturnValueOnce(Promise.resolve(mockImportableEventsDocument));
+    vi.spyOn(service, 'importedEvents').mockReturnValueOnce(
+      Promise.resolve(mockImportableEventsDocument)
+    );
 
-    expect(
+    await expect(
       resolver.importedEvents(filter, order, skip, take, sort)
     ).resolves.toEqual(mockImportableEventsDocument);
     expect(service.importedEvents).toHaveBeenCalledWith({
@@ -124,37 +124,35 @@ describe('EventsImportResolver', () => {
   test('importedEvent query should call importedEvent method of EventsImportService with the provided filter', async () => {
     const filter = { id: 'some-id', source: 'AgendaBasel' };
 
-    jest
-      .spyOn(service, 'importedEvent')
-      .mockReturnValueOnce(Promise.resolve(mockImportableEvents[0]));
+    vi.spyOn(service, 'importedEvent').mockReturnValueOnce(
+      Promise.resolve(mockImportableEvents[0])
+    );
 
-    expect(resolver.importedEvent(filter)).resolves.toEqual(
+    await expect(resolver.importedEvent(filter)).resolves.toEqual(
       mockImportableEvents[0]
     );
     expect(service.importedEvent).toHaveBeenCalledWith(filter);
   });
 
   test('importedEventsIds query should call importedEvent method of EventsImportService', async () => {
-    jest
-      .spyOn(service, 'importedEventsIds')
-      .mockReturnValueOnce(
-        Promise.resolve([mockImportableEvents[0].externalSourceId!])
-      );
+    vi.spyOn(service, 'importedEventsIds').mockReturnValueOnce(
+      Promise.resolve([mockImportableEvents[0].externalSourceId!])
+    );
 
-    expect(resolver.importedEventsIds()).resolves.toEqual([
+    await expect(resolver.importedEventsIds()).resolves.toEqual([
       mockImportableEvents[0].externalSourceId,
     ]);
     expect(service.importedEventsIds).toHaveBeenCalledWith();
   });
 
-  test('importEvent mutation should call createEventFromSource method of EventsImportService with the provided filter', () => {
+  test('importEvent mutation should call createEventFromSource method of EventsImportService with the provided filter', async () => {
     const filter = { id: 'some-id', source: 'AgendaBasel' };
 
-    jest
-      .spyOn(service, 'createEventFromSource')
-      .mockReturnValueOnce(Promise.resolve('some-id'));
+    vi.spyOn(service, 'createEventFromSource').mockReturnValueOnce(
+      Promise.resolve('some-id')
+    );
 
-    expect(resolver.importEvent(filter)).resolves.toEqual('some-id');
+    await expect(resolver.importEvent(filter)).resolves.toEqual('some-id');
     expect(service.createEventFromSource).toHaveBeenCalledWith(filter);
   });
 });

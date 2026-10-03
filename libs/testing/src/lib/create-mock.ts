@@ -19,6 +19,10 @@ export type Mocked<T> = {
 
 export type PartialMocked<T> = Partial<Mocked<T>>;
 
+// Works under both jest and vitest test runners
+const mockFn: () => jest.Mock = () =>
+  ((globalThis as any).vi ?? (globalThis as any).jest).fn();
+
 export function createMock<T>(cls: Constructor<T>): PartialMocked<T> {
   const proto = cls?.prototype || {};
   const mock: Record<string, jest.Mock> = {};
@@ -28,7 +32,7 @@ export function createMock<T>(cls: Constructor<T>): PartialMocked<T> {
       continue;
     }
 
-    mock[prop] = jest.fn().mockImplementation(() => {
+    mock[prop] = mockFn().mockImplementation(() => {
       throw new Error(
         `Method ${prop} not implemented. You need to mock this method before using it.`
       );
