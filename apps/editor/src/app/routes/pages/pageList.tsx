@@ -1,17 +1,16 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
   CommentItemType,
+  CreateCommentDocument,
+  DeletePageDocument,
+  DuplicatePageDocument,
   FullPageFragment,
   PageFilter,
   PageListDocument,
   PageListQuery,
   PageSort,
   TagType,
-  useCreateCommentMutation,
-  useDeletePageMutation,
-  useDuplicatePageMutation,
-  usePageListQuery,
-  useUnpublishPageMutation,
+  UnpublishPageDocument,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
@@ -97,11 +96,16 @@ function PageList() {
 
   const [page, setPage] = useState(1);
 
-  const [deletePage, { loading: isDeleting }] = useDeletePageMutation({});
-  const [unpublishPage, { loading: isUnpublishing }] = useUnpublishPageMutation(
+  const [deletePage, { loading: isDeleting }] = useMutation(
+    DeletePageDocument,
     {}
   );
-  const [duplicatePage, { loading: isDuplicating }] = useDuplicatePageMutation(
+  const [unpublishPage, { loading: isUnpublishing }] = useMutation(
+    UnpublishPageDocument,
+    {}
+  );
+  const [duplicatePage, { loading: isDuplicating }] = useMutation(
+    DuplicatePageDocument,
     {}
   );
 
@@ -117,7 +121,7 @@ function PageList() {
     data,
     refetch,
     loading: isLoading,
-  } = usePageListQuery({
+  } = useQuery(PageListDocument, {
     variables: pageListVariables,
   });
 
@@ -138,7 +142,7 @@ function PageList() {
     refetch(pageListVariables);
   }, [filter, page, limit, sortOrder, sortField]);
 
-  const [createComment] = useCreateCommentMutation({});
+  const [createComment] = useMutation(CreateCommentDocument, {});
 
   const dataColumns = useMemo<ListColumn<FullPageFragment>[]>(
     () => [
@@ -495,6 +499,7 @@ function PageList() {
                       cache.writeQuery<PageListQuery>({
                         query: PageListDocument,
                         data: {
+                          __typename: 'Query',
                           pages: {
                             ...query.pages,
                             nodes: query.pages.nodes.filter(
@@ -530,6 +535,7 @@ function PageList() {
                       cache.writeQuery<PageListQuery>({
                         query: PageListDocument,
                         data: {
+                          __typename: 'Query',
                           pages: {
                             ...query.pages,
                           },

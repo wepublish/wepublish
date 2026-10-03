@@ -7,7 +7,7 @@ import {
 } from '@wepublish/website/builder';
 
 export const isEventBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullEventBlockFragment => block.__typename === 'EventBlock';
 
 export const EventBlockWrapper = styled('aside')`

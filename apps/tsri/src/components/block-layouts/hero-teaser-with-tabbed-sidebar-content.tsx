@@ -18,7 +18,7 @@ import { TeaserPreTitle } from '../teasers/tsri-teaser';
 import { TsriTabbedContentType } from './tsri-base-tabbed-content';
 
 export const isHeroTeaserWithTabbedSidebarContent = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullFlexBlockFragment =>
   allPass([
     hasBlockStyle(TsriTabbedContentType.HeroTeaserWithTabbedSidebarContent),

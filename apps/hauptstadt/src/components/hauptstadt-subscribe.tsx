@@ -6,7 +6,7 @@ import {
   getMonthlyEquivalentRange,
   SubscribeButton,
 } from '@wepublish/membership/website';
-import { useSubscriptionsQuery } from '@wepublish/website/api';
+import { SubscriptionsDocument } from '@wepublish/website/api';
 import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { ascend, descend, prop, sortWith } from 'ramda';
@@ -29,7 +29,7 @@ export const HauptstadtSubscribe = (props: BuilderSubscribeBlockProps) => {
   const router = useRouter();
   const forceUpgrade = useContext(ForceUpgradeContext);
 
-  const { data } = useSubscriptionsQuery({
+  const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
     skip: !hasUser,
   });

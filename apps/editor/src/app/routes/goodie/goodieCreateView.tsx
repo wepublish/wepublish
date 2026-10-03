@@ -1,5 +1,8 @@
 import { useMutation } from '@apollo/client/react';
-import { MutationCreateGoodieArgs } from '@wepublish/editor/api';
+import {
+  CreateGoodieDocument,
+  MutationCreateGoodieArgs,
+} from '@wepublish/editor/api';
 import { CanCreateGoodie } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -37,18 +40,21 @@ const GoodieCreateView = () => {
     memberPlanIDs: [],
   });
 
-  const [createGoodie, { loading: updateLoading }] = useCreateGoodieMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.createGoodie) {
-        if (shouldClose) {
-          navigate(`./..`);
-        } else {
-          navigate(`./../edit/${data.createGoodie.id}`);
+  const [createGoodie, { loading: updateLoading }] = useMutation(
+    CreateGoodieDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.createGoodie) {
+          if (shouldClose) {
+            navigate(`./..`);
+          } else {
+            navigate(`./../edit/${data.createGoodie.id}`);
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   const loading = updateLoading;
   const onSubmit = () => createGoodie({ variables: goodie });

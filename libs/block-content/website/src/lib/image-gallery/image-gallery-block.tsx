@@ -12,7 +12,7 @@ import { ImageBlockCaption, ImageBlockSource } from '../image/image-block';
 import { Trans } from 'react-i18next';
 
 export const isImageGalleryBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullImageGalleryBlockFragment =>
   block.__typename === 'ImageGalleryBlock';
 

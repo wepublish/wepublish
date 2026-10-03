@@ -7,7 +7,7 @@ import { BuilderTwitterTweetBlockProps } from '@wepublish/website/builder';
 import { Tweet } from 'react-tweet';
 
 export const isTwitterTweetBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTwitterTweetBlockFragment =>
   block.__typename === 'TwitterTweetBlock';
 

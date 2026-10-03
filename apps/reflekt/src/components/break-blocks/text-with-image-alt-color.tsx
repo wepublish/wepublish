@@ -8,7 +8,7 @@ import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { TextWithImageBreakBlock } from './text-with-image';
 
 export const isTextWithImageAltColorBreakBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is BuilderBreakBlockProps =>
   allPass([
     isBreakBlock,

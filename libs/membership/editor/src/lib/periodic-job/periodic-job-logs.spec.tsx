@@ -3,8 +3,8 @@ import { useQuery } from '@apollo/client/react';
 import { render, screen } from '@testing-library/react';
 import type { PeriodicJob } from '@wepublish/editor/api';
 import {
-  useNotificationConfirmationsQuery,
-  usePeriodicJobLogsQuery,
+  NotificationConfirmationsDocument,
+  PeriodicJobLogsDocument,
 } from '@wepublish/editor/api';
 
 import { PeriodicJobsLog } from './periodic-job-logs';
@@ -57,14 +57,14 @@ const failedJob = (overrides: Partial<PeriodicJob> = {}) =>
   });
 
 const mockJobs = (jobs: PeriodicJob[] | undefined, loading = false) => {
-  mockedUsePeriodicJobLogsQuery.mockReturnValue({
+  setQueryResult(PeriodicJobLogsDocument, {
     data: jobs ? { periodicJobLog: jobs } : undefined,
     loading,
   });
 };
 
 const mockConfirmations = (itemIds: string[]) => {
-  mockedUseNotificationConfirmationsQuery.mockReturnValue({
+  setQueryResult(NotificationConfirmationsDocument, {
     data: {
       notificationConfirmations: itemIds.map(itemId => ({
         id: `confirmation-${itemId}`,
@@ -76,8 +76,11 @@ const mockConfirmations = (itemIds: string[]) => {
 };
 
 beforeEach(() => {
-  mockedUsePeriodicJobLogsQuery.mockReset();
-  mockedUseNotificationConfirmationsQuery.mockReset();
+  queryResults.clear();
+  mockedUseQuery.mockReset();
+  mockedUseQuery.mockImplementation(
+    (document: unknown) => queryResults.get(document) ?? { data: undefined }
+  );
   mockConfirmations([]);
 });
 

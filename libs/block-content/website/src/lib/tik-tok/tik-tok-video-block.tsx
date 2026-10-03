@@ -6,7 +6,7 @@ import {
 } from '@wepublish/website/api';
 
 export const isTikTokVideoBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTikTokVideoBlockFragment =>
   block.__typename === 'TikTokVideoBlock';
 

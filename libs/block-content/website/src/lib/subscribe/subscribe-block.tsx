@@ -16,7 +16,7 @@ import { useSubscribeBlock } from './subscribe-block.context';
 import { PaymentForm } from '@wepublish/payment/website';
 
 export const isSubscribeBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullSubscribeBlockFragment => block.__typename === 'SubscribeBlock';
 
 const lowercase = replace(/^./, toLower);
@@ -81,10 +81,15 @@ export const SubscribeBlock = ({
       ({
         loading: false,
         data: {
+          __typename: 'Query',
           memberPlans: {
+            __typename: 'PaginatedMemberPlans',
             nodes: memberPlans,
             totalCount: memberPlans.length,
             pageInfo: {
+              __typename: 'PageInfo',
+              startCursor: null,
+              endCursor: null,
               hasNextPage: false,
               hasPreviousPage: false,
             },
@@ -148,17 +153,17 @@ export const SubscribeBlock = ({
               },
             });
 
-            if (result.errors) {
-              throw result.errors;
+            if (result.error) {
+              throw result.error;
             }
           }}
           onSubscribeWithRegister={async formData => {
-            const { errors: registerErrors } = await register({
+            const { error: registerError } = await register({
               variables: formData.register,
             });
 
-            if (registerErrors) {
-              throw registerErrors;
+            if (registerError) {
+              throw registerError;
             }
 
             const selectedMemberplan = memberPlans.find(
@@ -171,8 +176,8 @@ export const SubscribeBlock = ({
               },
             });
 
-            if (result.errors) {
-              throw result.errors;
+            if (result.error) {
+              throw result.error;
             }
           }}
           onResubscribe={async formData => {
@@ -222,8 +227,8 @@ export const SubscribeBlock = ({
               },
             });
 
-            if (result.errors) {
-              throw result.errors;
+            if (result.error) {
+              throw result.error;
             }
           }}
         />

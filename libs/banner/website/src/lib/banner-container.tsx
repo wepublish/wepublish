@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import {
   BannerDocumentType,
-  usePrimaryBannerQuery,
+  PrimaryBannerDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -27,7 +27,7 @@ export function BannerContainer({
   const { hasUser } = useUser();
   const hasSubscription = useHasActiveSubscription();
 
-  const { data, loading, error } = usePrimaryBannerQuery({
+  const { data, loading, error } = useQuery(PrimaryBannerDocument, {
     skip: hasSubscription == null,
     variables: {
       documentId: documentId ?? '',

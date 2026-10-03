@@ -43,7 +43,7 @@ export function BannerDeleteModal({
 }: DeleteBannerProps) {
   const { t } = useTranslation();
 
-  const [deleteBannerMutation] = useDeleteBannerMutation({
+  const [deleteBannerMutation] = useMutation(DeleteBannerDocument, {
     onError: onErrorToast,
     onCompleted: onCompletedToast(t),
   });

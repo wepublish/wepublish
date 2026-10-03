@@ -37,7 +37,7 @@ export default function ArticleList() {
     [page]
   );
 
-  const { data } = useArticleListQuery({
+  const { data } = useQuery(ArticleListDocument, {
     fetchPolicy: 'cache-only',
     variables,
   });

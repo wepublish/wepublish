@@ -42,7 +42,7 @@ const onCompletedToast = (t: TFunction) => () => {
 export function DeletePollModal({ poll, onClose, onDelete }: DeletePollProps) {
   const { t } = useTranslation();
 
-  const [deletePollMutation] = useDeletePollMutation();
+  const [deletePollMutation] = useMutation(DeletePollDocument);
 
   /**
    * FUNCTIONS

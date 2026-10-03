@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import {
+  CreateCrowdfundingDocument,
   CreateCrowdfundingGoalInput,
   CreateCrowdfundingInput,
   CreateCrowdfundingMutation,
@@ -48,16 +49,19 @@ export const CreateCrowdfundingForm = () => {
     name: StringType().isRequired(),
   });
 
-  const [createCrowdfunding, { loading }] = useCreateCrowdfundingMutation({
-    onError: showError,
-    onCompleted: (crowdfunding: CreateCrowdfundingMutation) => {
-      if (shouldClose) {
-        navigate(closePath);
-      } else {
-        navigate(`/crowdfundings/edit/${crowdfunding.createCrowdfunding.id}`);
-      }
-    },
-  });
+  const [createCrowdfunding, { loading }] = useMutation(
+    CreateCrowdfundingDocument,
+    {
+      onError: showError,
+      onCompleted: (crowdfunding: CreateCrowdfundingMutation) => {
+        if (shouldClose) {
+          navigate(closePath);
+        } else {
+          navigate(`/crowdfundings/edit/${crowdfunding.createCrowdfunding.id}`);
+        }
+      },
+    }
+  );
 
   const onSubmit = () => {
     const processedCrowdfunding = {

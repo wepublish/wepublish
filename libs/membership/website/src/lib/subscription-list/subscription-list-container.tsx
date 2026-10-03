@@ -1,15 +1,16 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { StripeElement, StripePayment } from '@wepublish/payment/website';
 import {
-  InvoicesDocument,
-  InvoicesQuery,
-  useCancelSubscriptionMutation,
-  useExtendSubscriptionMutation,
-  useInvoicesQuery,
-  useSubscriptionsQuery,
+  CancelSubscriptionDocument,
+  CancelSubscriptionMutation,
+  CancelSubscriptionMutationVariables,
+  ExtendSubscriptionDocument,
   ExtendSubscriptionMutation,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
+  InvoicesDocument,
+  InvoicesQuery,
+  SubscriptionsDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -35,11 +36,11 @@ export function SubscriptionListContainer({
   const [stripeMemberPlan, setStripeMemberPlan] =
     useState<FullMemberPlanFragment>();
   const { SubscriptionList } = useWebsiteBuilder();
-  const { data, loading, error } = useSubscriptionsQuery();
-  const invoices = useInvoicesQuery();
+  const { data, loading, error } = useQuery(SubscriptionsDocument);
+  const invoices = useQuery(InvoicesDocument);
 
   const [cancel] = useCancelSubscriptionMutationWithCacheUpdate();
-  const [extend] = useExtendSubscriptionMutation({
+  const [extend] = useMutation(ExtendSubscriptionDocument, {
     onCompleted(data: ExtendSubscriptionMutation) {
       if (!data.extendUserSubscription?.intentSecret) {
         invoices.refetch();
@@ -126,13 +127,14 @@ const useCancelSubscriptionMutationWithCacheUpdate = (
     >,
   ]
 ) =>
-  useCancelSubscriptionMutation({
+  useMutation(CancelSubscriptionDocument, {
     ...params[0],
     update: (cache, { data }, options) => {
       const newSubscription = data?.cancelUserSubscription;
 
       if (newSubscription) {
         cache.updateQuery<InvoicesQuery>({ query: InvoicesDocument }, data => ({
+          __typename: 'Query',
           userInvoices:
             data?.userInvoices.map(invoice => {
               if (

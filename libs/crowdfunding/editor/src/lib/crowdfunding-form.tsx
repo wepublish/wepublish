@@ -2,13 +2,13 @@ import { useQuery } from '@apollo/client/react';
 import {
   CreateCrowdfundingGoalInput,
   CreateCrowdfundingInput,
-  UpdateCrowdfundingInput,
-  FullCrowdfundingFragment,
   CrowdfundingGoalType,
+  FullCrowdfundingFragment,
+  MemberPlanListDocument,
+  UpdateCrowdfundingInput,
 } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { CheckPicker, Form, Panel, SelectPicker } from 'rsuite';
-import { useMemberPlanListQuery } from '@wepublish/editor/api';
 import { CrowdfundingGoalList } from './crowdfunding-goal-list';
 import {
   CurrencyInput,
@@ -36,7 +36,7 @@ const CrowdfundingFormWrapper = styled.div`
 export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
   const { t } = useTranslation();
 
-  const { data: memberPlanData } = useMemberPlanListQuery({
+  const { data: memberPlanData } = useQuery(MemberPlanListDocument, {
     variables: { take: 50 },
     fetchPolicy: 'no-cache',
   });

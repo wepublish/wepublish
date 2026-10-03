@@ -5,6 +5,7 @@ import {
   SortOrder,
   Tag,
   TagDocument,
+  TagListDocument,
   TagQuery,
   TagQueryVariables,
   TagSort,
@@ -144,7 +145,11 @@ export function SelectTags({
    */
   const take = 50;
 
-  const { data: tagsData, refetch } = useTagListQuery({
+  const {
+    data: tagsData,
+    error: tagListError,
+    refetch,
+  } = useQuery(TagListDocument, {
     variables: {
       filter: {
         type: tagType,

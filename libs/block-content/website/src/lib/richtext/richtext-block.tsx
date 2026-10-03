@@ -9,7 +9,7 @@ import {
 } from '@wepublish/website/api';
 
 export const isRichTextBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullRichTextBlockFragment => block.__typename === 'RichTextBlock';
 
 export const RichTextBlockWrapper = styled('div')`

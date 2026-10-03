@@ -16,7 +16,7 @@ import {
   TitleBlockWrapper,
 } from '@wepublish/block-content/website';
 import { createWithTheme, useShare } from '@wepublish/ui';
-import { useCommentListQuery } from '@wepublish/website/api';
+import { CommentListDocument } from '@wepublish/website/api';
 import { BuilderArticleProps, Button } from '@wepublish/website/builder';
 import {
   BuilderArticleAuthorsProps,
@@ -149,7 +149,7 @@ export const HauptstadtArticleMeta = ({
   const {
     elements: { Link },
   } = useWebsiteBuilder();
-  const { data } = useCommentListQuery({
+  const { data } = useQuery(CommentListDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       itemId: article.id,

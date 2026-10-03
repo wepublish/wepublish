@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import {
+  CreateEventDocument,
   FullImageFragment,
   MutationCreateEventArgs,
 } from '@wepublish/editor/api';
@@ -35,7 +36,7 @@ export const EventCreateView = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [createEvent, { loading }] = useCreateEventMutation({
+  const [createEvent, { loading }] = useMutation(CreateEventDocument, {
     onError: onErrorToast,
     onCompleted: event => {
       if (shouldClose) {

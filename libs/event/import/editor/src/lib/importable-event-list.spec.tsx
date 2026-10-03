@@ -5,19 +5,13 @@ import '@testing-library/jest-dom/vitest';
 import { format } from 'date-fns';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
-  ImportedEventsIdsDocument,
   ImportEventDocument,
-} from '@wepublish/editor/api';
-import * as v2Client from '@wepublish/editor/api';
-import {
   ImportedEventListDocument,
   ImportedEventListQuery,
+  ImportedEventsIdsDocument,
 } from '@wepublish/editor/api';
-import {
-  AuthContext,
-  actWait,
-  sessionWithPermissions,
-} from '@wepublish/ui/editor';
+import * as v2Client from '@wepublish/editor/api';
+import { AuthContext, sessionWithPermissions } from '@wepublish/ui/editor';
 import { BrowserRouter } from 'react-router-dom';
 import ImportableEventListView from './importable-event-list';
 
@@ -164,11 +158,23 @@ describe('ImportableEventListView', () => {
       </AuthContext.Provider>
     );
 
-    await actWait();
+    // Apollo Client 4 delivers results a tick later than v3, and the view
+    // issues a second query, so wait for the rows AND for the table to leave
+    // its loading state — snapshotting on the rows alone is racy.
+    expect(await screen.findByText('Event 1')).toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByRole('grid')).toHaveAttribute('aria-busy', 'false')
+    );
+    // rsuite positions the table's scrollbar handle in a later layout pass;
+    // snapshotting before that lands makes the inline style flap.
+    await waitFor(() =>
+      expect(document.querySelector('.rs-table-scrollbar-handle')).toHaveStyle({
+        backfaceVisibility: 'hidden',
+      })
+    );
 
     expect(asFragment()).toMatchSnapshot();
 
-    expect(await screen.findByText('Event 1')).toBeInTheDocument();
     expect(await screen.findByText('Event 2')).toBeInTheDocument();
     expect(
       await screen.findByText(

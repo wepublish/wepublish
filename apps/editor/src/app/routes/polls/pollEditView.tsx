@@ -2,10 +2,10 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   FullPoll,
+  PollDocument,
   PollExternalVote,
   PollExternalVoteSource,
-  usePollQuery,
-  useUpdatePollMutation,
+  UpdatePollDocument,
 } from '@wepublish/editor/api';
 import { RichtextJSONDocument } from '@wepublish/richtext';
 import {
@@ -79,16 +79,25 @@ function PollEditView() {
 
   // get polls
 
-  const { data, loading: createLoading } = usePollQuery({
+  const {
+    data,
+    loading: createLoading,
+    error: pollError,
+  } = useQuery(PollDocument, {
     variables: {
       id: params.id!,
     },
-    onError: onErrorToast,
   });
+
+  useEffect(() => {
+    if (pollError) {
+      onErrorToast(pollError);
+    }
+  }, [pollError]);
 
   // updating poll
   const [updatePoll, { loading: updateLoading, data: updateData }] =
-    useUpdatePollMutation({
+    useMutation(UpdatePollDocument, {
       onError: onErrorToast,
       onCompleted: onCompletedToast,
     });

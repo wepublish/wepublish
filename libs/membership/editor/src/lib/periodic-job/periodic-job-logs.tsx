@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { PeriodicJob, usePeriodicJobLogsQuery } from '@wepublish/editor/api';
+import { PeriodicJob, PeriodicJobLogsDocument } from '@wepublish/editor/api';
 import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -70,7 +70,7 @@ export function usePeriodicJobNotifications({
 }: PeriodicJobsLogProps): ReactElement[] {
   const { t } = useTranslation();
 
-  const { data, loading } = usePeriodicJobLogsQuery({
+  const { data, loading } = useQuery(PeriodicJobLogsDocument, {
     skip,
     variables: {
       take,

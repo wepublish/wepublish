@@ -18,7 +18,7 @@ import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 import { reflektSliderControls } from './reflekt-slider-controls';
 
 export const isImageSliderSlimBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullImageGalleryBlockFragment =>
   allPass([hasBlockStyle(ReflektBlockStyles.SliderSlim), isImageGalleryBlock])(
     block

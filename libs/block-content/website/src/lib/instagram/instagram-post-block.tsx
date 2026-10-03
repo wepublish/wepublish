@@ -20,7 +20,7 @@ declare global {
 }
 
 export const isInstagramBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullInstagramPostBlockFragment =>
   block.__typename === 'InstagramPostBlock';
 

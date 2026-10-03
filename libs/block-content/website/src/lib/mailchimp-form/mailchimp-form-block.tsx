@@ -10,17 +10,17 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  AddMailchimpContactDocument,
   BlockContent,
   FullMailchimpFormBlockFragment,
   MailchimpContactStatus,
-  useAddMailchimpContactMutation,
 } from '@wepublish/website/api';
 import { BuilderMailchimpFormBlockProps } from '@wepublish/website/builder';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const isMailchimpFormBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullMailchimpFormBlockFragment =>
   block.__typename === 'MailchimpFormBlock';
 
@@ -82,7 +82,7 @@ export const MailchimpFormBlock = ({
   successUrl,
   successPage,
 }: BuilderMailchimpFormBlockProps) => {
-  const [addMailchimpContact] = useAddMailchimpContactMutation();
+  const [addMailchimpContact] = useMutation(AddMailchimpContactDocument);
   const { t } = useTranslation();
 
   const allInputs = useMemo(

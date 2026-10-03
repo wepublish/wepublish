@@ -1,10 +1,9 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeleteMemberPlanDocument,
   FullMemberPlanFragment,
   MemberPlanListDocument,
   MemberPlanListQuery,
-  useDeleteMemberPlanMutation,
-  useMemberPlanListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -50,15 +49,16 @@ function MemberPlanList() {
   const [currentMemberPlan, setCurrentMemberPlan] =
     useState<FullMemberPlanFragment>();
 
-  const { data, loading: isLoading } = useMemberPlanListQuery({
+  const { data, loading: isLoading } = useQuery(MemberPlanListDocument, {
     variables: {
       filter: filter ? { name: filter } : undefined,
       take: 50,
     },
   });
 
-  const [deleteMemberPlan, { loading: isDeleting }] =
-    useDeleteMemberPlanMutation();
+  const [deleteMemberPlan, { loading: isDeleting }] = useMutation(
+    DeleteMemberPlanDocument
+  );
 
   useEffect(() => {
     if (data?.memberPlans?.nodes) {
@@ -223,6 +223,7 @@ function MemberPlanList() {
                   cache.writeQuery<MemberPlanListQuery>({
                     query: MemberPlanListDocument,
                     data: {
+                      __typename: 'Query',
                       memberPlans: {
                         ...query.memberPlans,
                         nodes: query.memberPlans.nodes.filter(

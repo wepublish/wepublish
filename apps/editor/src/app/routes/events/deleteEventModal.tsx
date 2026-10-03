@@ -43,7 +43,7 @@ export function DeleteEventModal({
 }: DeleteEventProps) {
   const { t } = useTranslation();
 
-  const [deleteEventMutation] = useDeleteEventMutation();
+  const [deleteEventMutation] = useMutation(DeleteEventDocument);
 
   async function deleteEvent() {
     if (!event) {

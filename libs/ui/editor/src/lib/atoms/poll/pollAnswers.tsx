@@ -1,6 +1,8 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CreatePollAnswerDocument,
+  DeletePollAnswerDocument,
   FullPoll,
   PollAnswer,
   PollExternalVote,
@@ -110,8 +112,11 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
   );
   const [newAnswer, setNewAnswer] = useState<string>('');
 
-  const [createAnswerMutation, { loading }] = useCreatePollAnswerMutation({});
-  const [deleteAnswerMutation] = useDeletePollAnswerMutation();
+  const [createAnswerMutation, { loading }] = useMutation(
+    CreatePollAnswerDocument,
+    {}
+  );
+  const [deleteAnswerMutation] = useMutation(DeletePollAnswerDocument);
 
   const onErrorToast = (error: Error) => {
     toaster.push(

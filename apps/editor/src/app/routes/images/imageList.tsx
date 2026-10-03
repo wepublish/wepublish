@@ -1,12 +1,11 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeleteImageDocument,
   FullImageFragment,
   ImageListDocument,
   ImageListQuery,
   LocalStorageKey,
-  useDeleteImageMutation,
-  useImageListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -182,11 +181,14 @@ function ImageList() {
     data,
     refetch,
     loading: isLoading,
-  } = useImageListQuery({
+  } = useQuery(ImageListDocument, {
     variables: listVariables,
   });
 
-  const [deleteImage, { loading: isDeleting }] = useDeleteImageMutation({});
+  const [deleteImage, { loading: isDeleting }] = useMutation(
+    DeleteImageDocument,
+    {}
+  );
 
   const { t } = useTranslation();
 
@@ -384,6 +386,7 @@ function ImageList() {
                   cache.writeQuery<ImageListQuery>({
                     query: ImageListDocument,
                     data: {
+                      __typename: 'Query',
                       images: {
                         ...query.images,
                         nodes: query.images.nodes.filter(

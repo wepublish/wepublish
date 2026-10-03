@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import {
   WebsiteSettings,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { CanGetAISettings } from '@wepublish/permissions';
 import { PermissionControl } from '@wepublish/ui/editor';
@@ -76,7 +77,7 @@ export const WebsiteSettingsList = () => {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const { data, loading } = useWebsiteSettingsQuery();
+  const { data, loading } = useQuery(WebsiteSettingsDocument);
 
   const settings = useMemo(() => {
     if (loading || !data) {

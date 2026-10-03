@@ -22,7 +22,7 @@ import { BlueBox } from '../components/blue-box';
 import { RuckSpiegelTeaserContent } from '../custom-teasers/ruck-spiegel';
 
 export const isRuckSpiegelTeasers = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('RuckSpiegel'), isTeaserListBlock])(block);
 

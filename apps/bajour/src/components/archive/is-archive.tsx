@@ -9,6 +9,6 @@ import {
 import { allPass } from 'ramda';
 
 export const isArchive = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserGridBlockFragment =>
   allPass([hasBlockStyle('Archive'), isTeaserGridBlock])(block);

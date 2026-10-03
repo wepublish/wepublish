@@ -1,12 +1,12 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CreatePollExternalVoteSourceDocument,
+  DeletePollExternalVoteSourceDocument,
   FullPoll,
   PollAnswer,
   PollExternalVote,
   PollExternalVoteSource,
-  useCreatePollExternalVoteSourceMutation,
-  useDeletePollExternalVoteSourceMutation,
 } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -158,8 +158,9 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
   const { t } = useTranslation();
   const [newSource, setNewSource] = useState<string | undefined>(undefined);
 
-  const [createExternalVoteSource, { loading }] =
-    useCreatePollExternalVoteSourceMutation();
+  const [createExternalVoteSource, { loading }] = useMutation(
+    CreatePollExternalVoteSourceDocument
+  );
 
   useEffect(() => {
     setLoading(loading);
@@ -265,7 +266,8 @@ export function DeleteModal({
 }: DeleteModalProps) {
   const { t } = useTranslation();
 
-  const [deleteExternalVoteSource] = useDeletePollExternalVoteSourceMutation(
+  const [deleteExternalVoteSource] = useMutation(
+    DeletePollExternalVoteSourceDocument,
     {}
   );
 

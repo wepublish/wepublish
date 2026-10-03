@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import {
+  DeleteCommentDocument,
   FullCommentFragment,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
@@ -34,7 +35,7 @@ export function CommentDeleteBtn({
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const [deleteComment, { loading }] = useDeleteCommentMutation({
+  const [deleteComment, { loading }] = useMutation(DeleteCommentDocument, {
     onCompleted: () => {
       setModalOpen(false);
       if (onCommentDeleted) {

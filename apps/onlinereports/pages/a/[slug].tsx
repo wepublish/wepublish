@@ -46,7 +46,7 @@ export default function ArticleBySlugOrId() {
     elements: { H2 },
   } = useWebsiteBuilder();
 
-  const { data } = useArticleQuery({
+  const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
@@ -54,7 +54,7 @@ export default function ArticleBySlugOrId() {
     },
   });
 
-  const tags = useTagListQuery({
+  const tags = useQuery(TagListDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       filter: {

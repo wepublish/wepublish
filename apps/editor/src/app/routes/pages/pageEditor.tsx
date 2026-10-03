@@ -9,16 +9,16 @@ import {
   DialogTitle as MuiDialogTitle,
 } from '@mui/material';
 import {
+  CreateJwtForWebsiteLoginDocument,
+  CreatePageDocument,
   CreatePageMutationVariables,
-  useCreateJwtForWebsiteLoginMutation,
-  useCreatePageMutation,
-  useDiscardPageDraftMutation,
-  usePageQuery,
-  usePageRevisionListQuery,
-  usePageRevisionPreviewLazyQuery,
-  usePublishPageMutation,
-  useRestorePageRevisionMutation,
-  useUpdatePageMutation,
+  DiscardPageDraftDocument,
+  PageDocument,
+  PageRevisionListDocument,
+  PageRevisionPreviewDocument,
+  PublishPageDocument,
+  RestorePageRevisionDocument,
+  UpdatePageDocument,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import type { AggregatedValidation } from '@wepublish/ui/editor';
@@ -143,15 +143,15 @@ function PageEditor() {
   const [
     createPage,
     { data: createData, loading: isCreating, error: createError },
-  ] = useCreatePageMutation();
+  ] = useMutation(CreatePageDocument);
   const [updatePage, { loading: isUpdating, error: updateError }] =
-    useUpdatePageMutation();
+    useMutation(UpdatePageDocument);
   const [publishPage, { loading: isPublishing, error: publishError }] =
-    usePublishPageMutation({});
+    useMutation(PublishPageDocument, {});
   const [restorePageRevision, { loading: isRestoring, error: restoreError }] =
-    useRestorePageRevisionMutation({});
+    useMutation(RestorePageRevisionDocument, {});
   const [discardPageDraft, { loading: isDiscarding, error: discardError }] =
-    useDiscardPageDraftMutation({});
+    useMutation(DiscardPageDraftDocument, {});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
@@ -196,12 +196,12 @@ function PageEditor() {
     data: pageData,
     refetch,
     loading: isLoading,
-  } = usePageQuery({
+  } = useQuery(PageDocument, {
     errorPolicy: 'all',
     variables: { id: pageID! },
     skip: !pageID,
   });
-  const [createJWT] = useCreateJwtForWebsiteLoginMutation({
+  const [createJWT] = useMutation(CreateJwtForWebsiteLoginDocument, {
     errorPolicy: 'none',
     fetchPolicy: 'no-cache',
   });
@@ -211,7 +211,7 @@ function PageEditor() {
     refetch: refetchRevisions,
     fetchMore: fetchMoreRevisions,
     loading: isRevisionsLoading,
-  } = usePageRevisionListQuery({
+  } = useQuery(PageRevisionListDocument, {
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,

@@ -53,7 +53,7 @@ function PollList() {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const { data, loading, refetch } = usePollsQuery({
+  const { data, loading, refetch, error } = useQuery(PollsDocument, {
     variables: {
       take: limit,
       skip: (page - 1) * limit,

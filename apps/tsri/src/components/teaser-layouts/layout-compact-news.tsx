@@ -121,6 +121,7 @@ export const CompactNewsFooter = styled('div')`
 `;
 
 const rowAlignment = (index: number) => ({
+  __typename: 'FlexAlignment' as const,
   i: index.toString(),
   static: false,
   h: 1,

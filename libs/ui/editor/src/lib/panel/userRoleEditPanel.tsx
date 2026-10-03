@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CreateUserRoleDocument,
   FullUserRoleFragment,
   Permission,
-  useCreateUserRoleMutation,
-  usePermissionListQuery,
-  useUpdateUserRoleMutation,
-  useUserRoleQuery,
+  PermissionListDocument,
+  UpdateUserRoleDocument,
+  UserRoleDocument,
 } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -52,7 +52,7 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     data,
     loading: isLoading,
     error: loadError,
-  } = useUserRoleQuery({
+  } = useQuery(UserRoleDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
@@ -61,12 +61,12 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     data: permissionData,
     loading: isPermissionLoading,
     error: loadPermissionError,
-  } = usePermissionListQuery({});
+  } = useQuery(PermissionListDocument, {});
 
   const [createUserRole, { loading: isCreating, error: createError }] =
-    useCreateUserRoleMutation();
+    useMutation(CreateUserRoleDocument);
   const [updateUserRole, { loading: isUpdating, error: updateError }] =
-    useUpdateUserRoleMutation();
+    useMutation(UpdateUserRoleDocument);
 
   const isDisabled =
     systemRole ||

@@ -3,8 +3,8 @@ import styled from '@emotion/styled';
 import {
   Setting,
   SettingName,
-  useSettingsListQuery,
-  useUpdateSettingMutation,
+  SettingsListDocument,
+  UpdateSettingDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -116,7 +116,7 @@ function SettingList() {
     loading,
     refetch,
     error: fetchError,
-  } = useSettingsListQuery({});
+  } = useQuery(SettingsListDocument, {});
 
   const isDisabled = loading || !settingListData || !isAuthorized;
 
@@ -222,8 +222,10 @@ function SettingList() {
     settingListData?.settings.forEach(setSetting);
   }, [settingListData]);
 
-  const [updateSetting, { error: updateSettingError }] =
-    useUpdateSettingMutation({});
+  const [updateSetting, { error: updateSettingError }] = useMutation(
+    UpdateSettingDocument,
+    {}
+  );
 
   const [changedSetting, setChangedSetting] = useState(
     settingListData?.settings.filter(
@@ -472,7 +474,8 @@ function SettingList() {
                           <Toggle
                             disabled={isDisabled}
                             checked={
-                              settings[SettingName.AllowGuestCommenting].value
+                              settings[SettingName.AllowGuestCommenting]
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -503,7 +506,7 @@ function SettingList() {
                             disabled={isDisabled}
                             checked={
                               settings[SettingName.AllowGuestCommentRating]
-                                .value
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -530,7 +533,8 @@ function SettingList() {
                           <Toggle
                             disabled={isDisabled}
                             checked={
-                              settings[SettingName.AllowCommentEditing].value
+                              settings[SettingName.AllowCommentEditing]
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -593,7 +597,8 @@ function SettingList() {
                           <Toggle
                             disabled={isDisabled}
                             checked={
-                              settings[SettingName.AllowGuestPollVoting].value
+                              settings[SettingName.AllowGuestPollVoting]
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -633,7 +638,7 @@ function SettingList() {
                             disabled={isDisabled}
                             checked={
                               settings[SettingName.MakeNewSubscribersApiPublic]
-                                .value
+                                .value as boolean
                             }
                             onChange={checked => {
                               setSetting({
@@ -667,7 +672,7 @@ function SettingList() {
                             checked={
                               settings[
                                 SettingName.MakeActiveSubscribersApiPublic
-                              ].value
+                              ].value as boolean
                             }
                             onChange={checked => {
                               setSetting({
@@ -703,7 +708,7 @@ function SettingList() {
                             checked={
                               settings[
                                 SettingName.MakeRenewingSubscribersApiPublic
-                              ].value
+                              ].value as boolean
                             }
                             onChange={checked => {
                               setSetting({
@@ -737,7 +742,7 @@ function SettingList() {
                             checked={
                               settings[
                                 SettingName.MakeNewDeactivationsApiPublic
-                              ].value
+                              ].value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -769,7 +774,7 @@ function SettingList() {
                             disabled={isDisabled}
                             checked={
                               settings[SettingName.MakeExpectedRevenueApiPublic]
-                                .value
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -797,7 +802,8 @@ function SettingList() {
                           <Toggle
                             disabled={isDisabled}
                             checked={
-                              settings[SettingName.MakeRevenueApiPublic].value
+                              settings[SettingName.MakeRevenueApiPublic]
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -842,7 +848,7 @@ function SettingList() {
                               settings[
                                 SettingName
                                   .SubscriptionUpgradeBillsFullDifference
-                              ].value
+                              ].value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -1034,7 +1040,8 @@ function SettingList() {
                         <Toggle
                           disabled={isDisabled}
                           checked={
-                            settings[SettingName.NewArticlePeering].value
+                            settings[SettingName.NewArticlePeering]
+                              .value as boolean
                           }
                           onChange={checked =>
                             setSetting({
@@ -1058,7 +1065,9 @@ function SettingList() {
                         <SelectPaywall
                           disabled={isDisabled}
                           selectedPaywall={
-                            settings[SettingName.NewArticlePaywall].value
+                            settings[SettingName.NewArticlePaywall].value as
+                              | string
+                              | null
                           }
                           setSelectedPaywall={paywall =>
                             setSetting({
@@ -1090,7 +1099,7 @@ function SettingList() {
                           disabled={isDisabled}
                           checked={
                             settings[SettingName.ShowPendingWhenNotPublished]
-                              .value
+                              .value as boolean
                           }
                           onChange={checked =>
                             setSetting({
@@ -1129,8 +1138,8 @@ function SettingList() {
                   label={t(settings[setting.name].label)}
                   key={setting.name}
                 >
-                  <s>{valueText(setting.value)}</s>{' '}
-                  {valueText(settings[setting.name].value)}
+                  <s>{valueText(setting.value as boolean | string)}</s>{' '}
+                  {valueText(settings[setting.name].value as boolean | string)}
                 </DescriptionListItemWrapper>
               ))}
             </DescriptionList>

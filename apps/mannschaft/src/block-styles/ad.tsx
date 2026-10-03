@@ -19,17 +19,17 @@ const second = hasBlockStyle('2nd Teaser Ad');
 const third = hasBlockStyle('3rd Teaser Ad');
 
 export const isFirstAdTeaser = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserListBlockFragment =>
   allPass([first, isTeaserListBlock])(block);
 
 export const isSecondAdTeaser = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserListBlockFragment =>
   allPass([second, isTeaserListBlock])(block);
 
 export const isThirdAdTeaser = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserListBlockFragment =>
   allPass([third, isTeaserListBlock])(block);
 

@@ -11,7 +11,7 @@ import { css } from '@mui/material';
 import styled from '@emotion/styled';
 
 export const isTeaserSlotsBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserSlotsBlockFragment =>
   block.__typename === 'TeaserSlotsBlock';
 

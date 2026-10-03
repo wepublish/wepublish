@@ -13,7 +13,7 @@ import {
 import { ApolloProvider } from '@apollo/client/react';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { mergeDeepRight } from 'ramda';
-import possibleTypes from './graphql';
+import possibleTypes from './possible-types';
 
 import { ComponentType, createElement, memo, useMemo } from 'react';
 import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';

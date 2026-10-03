@@ -9,6 +9,6 @@ import {
 import { allPass } from 'ramda';
 
 export const isSearchSlider = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('SearchSlider'), isTeaserListBlock])(block);

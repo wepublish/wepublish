@@ -10,21 +10,21 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useMemberPlanListQuery } from '@wepublish/editor/api';
 import {
-  TinyMailTemplateFragment,
+  CreateSubscriptionFlowDocument,
+  CreateSubscriptionIntervalDocument,
+  DeleteSubscriptionFlowDocument,
+  DeleteSubscriptionIntervalDocument,
   FullMemberPlanFragment,
+  ListPaymentMethodsDocument,
+  MailTemplateDocument,
+  MemberPlanListDocument,
   SubscriptionEvent,
+  SubscriptionFlowsDocument,
   SubscriptionInterval,
-  useCreateSubscriptionFlowMutation,
-  useCreateSubscriptionIntervalMutation,
-  useDeleteSubscriptionFlowMutation,
-  useDeleteSubscriptionIntervalMutation,
-  useListPaymentMethodsQuery,
-  useMailTemplateQuery,
-  useSubscriptionFlowsQuery,
-  useUpdateSubscriptionFlowMutation,
-  useUpdateSubscriptionIntervalMutation,
+  TinyMailTemplateFragment,
+  UpdateSubscriptionFlowDocument,
+  UpdateSubscriptionIntervalDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -32,13 +32,13 @@ import {
   ListViewHeader,
   PermissionControl,
 } from '@wepublish/ui/editor';
-import { createContext, JSX, useMemo, useState } from 'react';
+import { createContext, JSX, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdOutlineClose, MdOutlineNoteAdd, MdTune } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { Loader } from 'rsuite';
 import type { Color } from 'rsuite/esm/internals/types';
-import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
+import { DEFAULT_MUTATION_OPTIONS, showErrors, useShowErrors } from '../common';
 import { EventHeadCell, EventTableCell } from '../mail-settings-layout';
 import { SystemMailSection } from '../system-mail/system-mail-section';
 import { DeleteSubscriptionFlow } from './delete-subscription-flow';
@@ -138,39 +138,59 @@ function SubscriptionFlowTable({
     data: subscriptionFlows,
     loading: loadingSubscriptionFlows,
     refetch: refetchSubscriptionFlows,
-  } = useSubscriptionFlowsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
+    error: subscriptionFlowsError,
+  } = useQuery(SubscriptionFlowsDocument, {
     variables: {
       defaultFlowOnly,
       memberPlanId,
     },
   });
+  useShowErrors(subscriptionFlowsError);
 
-  const { data: mailTemplates, loading: loadingMailTemplates } =
-    useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
-  const { data: paymentMethods } = useListPaymentMethodsQuery(
-    DEFAULT_QUERY_OPTIONS()
+  const {
+    data: mailTemplates,
+    loading: loadingMailTemplates,
+    error: mailTemplatesError,
+  } = useQuery(MailTemplateDocument);
+  const { data: paymentMethods, error: paymentMethodsError } = useQuery(
+    ListPaymentMethodsDocument
   );
+
+  useEffect(() => {
+    if (mailTemplatesError) {
+      showErrors(mailTemplatesError);
+    }
+  }, [mailTemplatesError]);
+
+  useEffect(() => {
+    if (paymentMethodsError) {
+      showErrors(paymentMethodsError);
+    }
+  }, [paymentMethodsError]);
 
   // Mutation methods are later passed to the SubscriptionClientContext, so they can reuse the same client everywhere. This makes the GraphQL cache work across all requests.
-  const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation(
+  const [createSubscriptionInterval] = useMutation(
+    CreateSubscriptionIntervalDocument,
     DEFAULT_MUTATION_OPTIONS(t)
   );
 
-  const [updateSubscriptionInterval] = useUpdateSubscriptionIntervalMutation(
+  const [updateSubscriptionInterval] = useMutation(
+    UpdateSubscriptionIntervalDocument,
     DEFAULT_MUTATION_OPTIONS(t)
   );
-  const [deleteSubscriptionInterval] = useDeleteSubscriptionIntervalMutation(
+  const [deleteSubscriptionInterval] = useMutation(
+    DeleteSubscriptionIntervalDocument,
     DEFAULT_MUTATION_OPTIONS(t)
   );
-  const [createSubscriptionFlow] = useCreateSubscriptionFlowMutation({
+  const [createSubscriptionFlow] = useMutation(CreateSubscriptionFlowDocument, {
     ...DEFAULT_MUTATION_OPTIONS(t),
     onCompleted: () => refetchSubscriptionFlows(),
   });
-  const [updateSubscriptionFlow] = useUpdateSubscriptionFlowMutation(
+  const [updateSubscriptionFlow] = useMutation(
+    UpdateSubscriptionFlowDocument,
     DEFAULT_MUTATION_OPTIONS(t)
   );
-  const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
+  const [deleteSubscriptionFlow] = useMutation(DeleteSubscriptionFlowDocument, {
     ...DEFAULT_MUTATION_OPTIONS(t),
     onCompleted: () => refetchSubscriptionFlows(),
   });
@@ -394,7 +414,7 @@ function SubscriptionFlowList() {
   const { id: memberPlanId } = useParams();
   const defaultFlowOnly = memberPlanId === 'default';
 
-  const { data: memberPlans } = useMemberPlanListQuery({
+  const { data: memberPlans } = useQuery(MemberPlanListDocument, {
     variables: { take: 100 },
     skip: defaultFlowOnly,
   });

@@ -13,8 +13,8 @@ import {
   Article,
   ArticleSort,
   FullArticleFragment,
+  FullArticleListDocument,
   SortOrder,
-  useFullArticleListQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { format } from 'date-fns';
@@ -299,7 +299,7 @@ export function SearchSlider({
     [article]
   );
 
-  const { data, fetchMore, refetch } = useFullArticleListQuery({
+  const { data, fetchMore, refetch } = useQuery(FullArticleListDocument, {
     variables: {
       take: TAKE,
       cursorId: article.id,
@@ -340,7 +340,7 @@ export function SearchSlider({
 
         return fetchMore({
           variables: {
-            cursor: sliderArticles[slideIndex].id,
+            cursorId: sliderArticles[slideIndex].id,
             order: goesBack ? SortOrder.Ascending : SortOrder.Descending,
             filter: {
               body: searchQuery,

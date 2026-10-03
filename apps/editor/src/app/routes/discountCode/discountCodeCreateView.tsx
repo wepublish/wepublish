@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import {
+  CreateDiscountCodeDocument,
   MutationCreateDiscountCodeArgs,
 } from '@wepublish/editor/api';
 import { CanCreateDiscountCode } from '@wepublish/permissions';
@@ -36,8 +37,9 @@ const DiscountCodeCreateView = () => {
   const [discountCode, setDiscountCode] =
     useState<MutationCreateDiscountCodeArgs>();
 
-  const [createDiscountCode, { loading: updateLoading }] =
-    useCreateDiscountCodeMutation({
+  const [createDiscountCode, { loading: updateLoading }] = useMutation(
+    CreateDiscountCodeDocument,
+    {
       onError: onErrorToast,
       onCompleted: data => {
         if (data.createDiscountCode) {

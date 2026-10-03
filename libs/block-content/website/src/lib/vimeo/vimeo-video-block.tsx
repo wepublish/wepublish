@@ -7,7 +7,7 @@ import { BuilderVimeoVideoBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
 
 export const isVimeoVideoBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullVimeoVideoBlockFragment =>
   block.__typename === 'VimeoVideoBlock';
 

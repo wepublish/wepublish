@@ -1,16 +1,16 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Event,
+  ImportEventDocument,
   ImportedEventFilter,
+  ImportedEventListDocument,
+  ImportedEventsIdsDocument,
   createWithV2ApiClient,
-  useImportEventMutation,
-  useImportedEventListQuery,
-  useImportedEventsIdsQuery,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Pagination, Table as RTable, toaster } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
-import { Event } from '@wepublish/editor/api';
 
 import styled from '@emotion/styled';
 import {
@@ -102,29 +102,41 @@ export default function ImportableEventListView() {
     setPage(1); // reset page to first
   };
 
-  const { data, loading: queryLoading } = useImportedEventListQuery({
+  const {
+    data,
+    loading: queryLoading,
+    error,
+  } = useQuery(ImportedEventListDocument, {
     variables: importedEventListVariables,
-    onError: onErrorToast,
   });
 
-  const [createEvent, { loading: mutationLoading }] = useImportEventMutation({
-    onCompleted: data => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.createdSuccess')}
-        </Message>
-      );
-      navigate(`/events/edit/${data.importEvent}`);
-    },
-    onError: onErrorToast,
-  });
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
 
-  const { data: ids } = useImportedEventsIdsQuery({});
+  const [createEvent, { loading: mutationLoading }] = useMutation(
+    ImportEventDocument,
+    {
+      onCompleted: data => {
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('toast.createdSuccess')}
+          </Message>
+        );
+        navigate(`/events/edit/${data.importEvent}`);
+      },
+      onError: onErrorToast,
+    }
+  );
+
+  const { data: ids } = useQuery(ImportedEventsIdsDocument, {});
   const alreadyImported = ids?.importedEventsIds;
 
   const importEvent = async (id: string, source: string) => {

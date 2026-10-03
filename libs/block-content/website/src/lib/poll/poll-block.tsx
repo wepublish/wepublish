@@ -25,7 +25,7 @@ import { H4 } from '@wepublish/ui';
 import { Trans, useTranslation } from 'react-i18next';
 
 export const isPollBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullPollBlockFragment => block.__typename === 'PollBlock';
 
 export const PollBlockWrapper = styled('article')`

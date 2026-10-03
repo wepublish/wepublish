@@ -12,7 +12,7 @@ import {
 } from '@wepublish/website/builder';
 
 export const isTeaserGridBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<BlockContent, '__typename'>>
 ): block is FullTeaserGridBlockFragment =>
   block.__typename === 'TeaserGridBlock';
 
@@ -71,6 +71,7 @@ export const alignmentForTeaserBlock = (
   const rowIndex = Math.floor(index / numColumns);
 
   return {
+    __typename: 'FlexAlignment',
     i: index.toString(),
     static: false,
     h: 1,
