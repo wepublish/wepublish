@@ -9,7 +9,10 @@ import {
   CurrencyNumberSpinner,
   MemberPlanPickerRadios,
 } from '@wepublish/membership/website';
-import { BlockContent, SubscriptionsDocument } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  SubscriptionsDocument,
+} from '@wepublish/website/api';
 import {
   BuilderMemberPlanItemProps,
   BuilderRouterContext,
@@ -44,7 +47,7 @@ const CrowdfundingGoodieContext = createContext<CrowdfundingGoodieConfig>({
 });
 
 export const isCrowdFundingSubscribe = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderSubscribeBlockProps =>
   allPass([hasBlockStyle(ReflektBlockStyles.CrowdFunding), isSubscribeBlock])(
     block

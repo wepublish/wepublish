@@ -3,12 +3,12 @@ import {
   isTeaserListBlock,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
 import { allPass } from 'ramda';
 
 export const isSearchSlider = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('SearchSlider'), isTeaserListBlock])(block);

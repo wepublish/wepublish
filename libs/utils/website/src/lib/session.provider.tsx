@@ -1,8 +1,8 @@
 import { useLazyQuery } from '@apollo/client/react';
 import {
+  FullSensitiveDataUserFragment,
+  FullSessionWithTokenWithoutUserFragment,
   MeDocument,
-  SensitiveDataUser,
-  SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import {
   AuthTokenStorageKey,
@@ -18,10 +18,12 @@ import {
 } from 'react';
 
 export const SessionProvider = memo<
-  PropsWithChildren<{ sessionToken: SessionWithTokenWithoutUser | null }>
+  PropsWithChildren<{
+    sessionToken: FullSessionWithTokenWithoutUserFragment | null;
+  }>
 >(function SessionProvider({ sessionToken, children }) {
   const [token, setToken] = useState<typeof sessionToken>(sessionToken);
-  const [user, setUser] = useState<SensitiveDataUser | null>(null);
+  const [user, setUser] = useState<FullSensitiveDataUserFragment | null>(null);
 
   const [getMe] = useLazyQuery(MeDocument, {
     fetchPolicy: 'network-only',
@@ -29,11 +31,11 @@ export const SessionProvider = memo<
 
   const fetchMe = useCallback(async () => {
     const { data } = await getMe();
-    setUser((data?.me as SensitiveDataUser) ?? null);
+    setUser((data?.me as FullSensitiveDataUserFragment) ?? null);
   }, [getMe]);
 
   const setCookieAndToken = useCallback(
-    async (newToken: SessionWithTokenWithoutUser | null) => {
+    async (newToken: FullSessionWithTokenWithoutUserFragment | null) => {
       setToken(newToken);
 
       if (newToken) {
@@ -55,7 +57,10 @@ export const SessionProvider = memo<
     const cookie = getCookie(AuthTokenStorageKey);
     const sToken =
       sessionToken ? sessionToken
-      : cookie ? (JSON.parse(cookie.toString()) as SessionWithTokenWithoutUser)
+      : cookie ?
+        (JSON.parse(
+          cookie.toString()
+        ) as FullSessionWithTokenWithoutUserFragment)
       : null;
 
     if (sToken) {

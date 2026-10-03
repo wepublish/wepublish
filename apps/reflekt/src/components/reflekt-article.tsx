@@ -21,10 +21,7 @@ import {
 import { CommentListWrapper } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
-import {
-  Article as ArticleType,
-  FullArticleFragment,
-} from '@wepublish/website/api';
+import { FullArticleFragment } from '@wepublish/website/api';
 import {
   BuilderArticleProps,
   PeerInformation,
@@ -224,7 +221,7 @@ export function ReflektArticle({
     >
       {articleGlobalStyles}
 
-      {article && <ArticleSEO article={article as unknown as ArticleType} />}
+      {article && <ArticleSEO article={article} />}
 
       {article && (
         <ArticlePropertiesContext.Provider

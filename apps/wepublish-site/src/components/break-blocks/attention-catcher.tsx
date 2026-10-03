@@ -7,13 +7,16 @@ import {
   hasBlockStyle,
   isBreakBlock,
 } from '@wepublish/block-content/website';
-import { BlockContent, FullBreakBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullBreakBlockFragment,
+} from '@wepublish/website/api';
 import { allPass } from 'ramda';
 
 import { WepBlockStyles } from '../block-styles/wep-block-styles';
 
 export const isAttentionCatcher = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle(WepBlockStyles.AttentionCatcher), isBreakBlock])(
     block

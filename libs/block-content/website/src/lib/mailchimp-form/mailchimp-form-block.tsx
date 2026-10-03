@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import {
   AddMailchimpContactDocument,
-  BlockContent,
+  FullBlockFragment,
   FullMailchimpFormBlockFragment,
   MailchimpContactStatus,
 } from '@wepublish/website/api';
@@ -20,7 +20,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const isMailchimpFormBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullMailchimpFormBlockFragment =>
   block.__typename === 'MailchimpFormBlock';
 

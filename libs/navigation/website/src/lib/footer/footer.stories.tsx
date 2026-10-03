@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/nextjs-vite';
-import { FullNavigationFragment, Navigation } from '@wepublish/website/api';
+import { FullNavigationFragment } from '@wepublish/website/api';
 import { Footer } from './footer';
 
 const navigation = {
@@ -243,7 +243,7 @@ const navigations = [
       },
     ],
   },
-] as Navigation[];
+] as FullNavigationFragment[];
 
 export default {
   component: Footer,

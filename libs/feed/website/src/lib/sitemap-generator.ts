@@ -1,7 +1,7 @@
 import { getArticleSEO } from '@wepublish/article/website';
 import {
-  Article,
-  Page,
+  FullArticleFragment,
+  FullPageFragment,
   SlimArticleFragment,
   SlimPageFragment,
 } from '@wepublish/website/api';
@@ -18,8 +18,8 @@ export type SitemapConfig = {
 export const generateSitemap =
   ({ lang = 'de', title, siteUrl }: SitemapConfig) =>
   (
-    articles: (Article | SlimArticleFragment)[],
-    pages: (Page | SlimPageFragment)[],
+    articles: (FullArticleFragment | SlimArticleFragment)[],
+    pages: (FullPageFragment | SlimPageFragment)[],
     pageUrls: string[]
   ) => {
     if (
@@ -63,7 +63,7 @@ export const generateSitemap =
 
         ${articles
           .map(article => {
-            const seo = getArticleSEO(article as Article);
+            const seo = getArticleSEO(article as FullArticleFragment);
 
             return `
             <url>

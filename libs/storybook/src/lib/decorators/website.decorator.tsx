@@ -8,8 +8,8 @@ import {
   useState,
 } from 'react';
 import {
-  SensitiveDataUser,
-  SessionWithTokenWithoutUser,
+  FullSensitiveDataUserFragment,
+  FullSessionWithTokenWithoutUserFragment,
 } from '@wepublish/website/api';
 import { SessionTokenContext } from '@wepublish/authentication/website';
 
@@ -18,11 +18,12 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { theme } from '@wepublish/ui';
 
 const SessionProvider = memo<PropsWithChildren>(({ children }) => {
-  const [token, setToken] = useState<SessionWithTokenWithoutUser | null>();
-  const [user, setUser] = useState<SensitiveDataUser | null>(null);
+  const [token, setToken] =
+    useState<FullSessionWithTokenWithoutUserFragment | null>();
+  const [user, setUser] = useState<FullSensitiveDataUserFragment | null>(null);
 
   const setTokenAndGetMe = useCallback(
-    async (newToken: SessionWithTokenWithoutUser | null) => {
+    async (newToken: FullSessionWithTokenWithoutUserFragment | null) => {
       setToken(newToken);
 
       if (newToken) {

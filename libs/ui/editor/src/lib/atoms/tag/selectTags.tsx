@@ -2,8 +2,8 @@ import { useQuery } from '@apollo/client/react';
 import { useApolloClient } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  FullTagFragment,
   SortOrder,
-  Tag,
   TagDocument,
   TagListDocument,
   TagQuery,
@@ -37,7 +37,7 @@ interface SelectTagsProps {
   disabled?: boolean;
   name?: string;
   tagType: TagType;
-  defaultTags: Pick<Tag, 'id' | 'tag'>[];
+  defaultTags: Pick<FullTagFragment, 'id' | 'tag'>[];
   selectedTags?: string[] | null;
   setSelectedTags(tags: string[]): void;
   placeholder?: string;

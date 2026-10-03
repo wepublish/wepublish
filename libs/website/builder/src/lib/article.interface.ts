@@ -2,7 +2,6 @@ import type { OperationVariables } from '@apollo/client';
 import type { useQuery } from '@apollo/client/react';
 
 import {
-  Article,
   ArticleListQuery,
   ArticleListQueryVariables,
   ArticleQuery,
@@ -22,7 +21,7 @@ export type BuilderArticleProps = PropsWithChildren<
 >;
 
 export type BuilderArticleSEOProps = {
-  article: Article;
+  article: FullArticleFragment;
 };
 
 export type BuilderArticleMetaProps = {

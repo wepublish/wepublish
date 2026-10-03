@@ -8,7 +8,7 @@ import {
   isBreakBlock,
   RichTextBlockWrapper,
 } from '@wepublish/block-content/website';
-import { BlockContent } from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import {
   BuilderBreakBlockProps,
   WebsiteBuilderProvider,
@@ -21,7 +21,7 @@ import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { ReflektBreakBlockButton } from './reflekt-break-block-button';
 
 export const isImageWithTextBreakBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderBreakBlockProps =>
   allPass([isBreakBlock, hasBlockStyle(ReflektBlockStyles.ImageWithText)])(
     block

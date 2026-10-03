@@ -8,7 +8,7 @@ import {
   isTeaserSlotsBlock,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullBreakBlockFragment,
   FullFlexBlockFragment,
   FullRichTextBlockFragment,
@@ -21,35 +21,35 @@ import { allPass, anyPass } from 'ramda';
 import { EeNewsBlockType } from './block-styles/eenews-block-styles';
 
 export const isFlexSectionBand = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullFlexBlockFragment =>
   allPass([isFlexBlock, hasBlockStyle(EeNewsBlockType.FlexBlockSectionBand)])(
     block
   );
 
 export const isTopNewsCarousel = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserSlotsBlockFragment =>
   allPass([isTeaserSlotsBlock, hasBlockStyle(EeNewsBlockType.TopNewsCarousel)])(
     block
   );
 
 export const isAktuellGrid = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserSlotsBlockFragment =>
   allPass([isTeaserSlotsBlock, hasBlockStyle(EeNewsBlockType.AktuellGrid)])(
     block
   );
 
 export const isDossierGrid = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserSlotsBlockFragment =>
   allPass([isTeaserSlotsBlock, hasBlockStyle(EeNewsBlockType.DossierGrid)])(
     block
   );
 
 export const isRelatedGrid = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserSlotsBlockFragment | FullTeaserListBlockFragment =>
   anyPass([
     allPass([isTeaserSlotsBlock, hasBlockStyle(EeNewsBlockType.RelatedGrid)]),
@@ -57,7 +57,7 @@ export const isRelatedGrid = (
   ])(block);
 
 export const isTagFilterableGrid = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserSlotsBlockFragment =>
   allPass([
     isTeaserSlotsBlock,
@@ -65,7 +65,7 @@ export const isTagFilterableGrid = (
   ])(block);
 
 export const isAuthorList = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is
   | FullTeaserSlotsBlockFragment
   | FullTeaserGridBlockFragment
@@ -77,21 +77,21 @@ export const isAuthorList = (
   ])(block);
 
 export const isArticleSupportCallout = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullBreakBlockFragment =>
   allPass([isBreakBlock, hasBlockStyle(EeNewsBlockType.ArticleSupportCallout)])(
     block
   );
 
 export const isArticleShareRow = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullBreakBlockFragment =>
   allPass([isBreakBlock, hasBlockStyle(EeNewsBlockType.ArticleShareRow)])(
     block
   );
 
 export const isRichTextLead = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullRichTextBlockFragment =>
   allPass([isRichTextBlock, hasBlockStyle(EeNewsBlockType.RichTextLead)])(
     block

@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/client/react';
-import { DeleteEventDocument, Event } from '@wepublish/editor/api';
+import { DeleteEventDocument, FullEventFragment } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
 
 type DeleteEventProps = {
-  event: Event | undefined;
+  event: FullEventFragment | undefined;
   onClose(): void;
   onDelete(): Promise<unknown>;
 };

@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { ErrorLike } from '@apollo/client';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullPollBlockFragment,
   PollVoteMutation,
   UserPollVoteQuery,
@@ -25,7 +25,7 @@ import { H4 } from '@wepublish/ui';
 import { Trans, useTranslation } from 'react-i18next';
 
 export const isPollBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullPollBlockFragment => block.__typename === 'PollBlock';
 
 export const PollBlockWrapper = styled('article')`

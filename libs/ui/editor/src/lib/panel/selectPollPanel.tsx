@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Poll, PollsDocument } from '@wepublish/editor/api';
+import { FullPollFragment, PollsDocument } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
@@ -20,7 +20,7 @@ import { PollStateIndication } from '../atoms/poll/pollStateIndication';
 import { PollBlockValue } from '../blocks/types';
 import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
 
-export function PollOpensAtView({ poll }: { poll: Poll }) {
+export function PollOpensAtView({ poll }: { poll: FullPollFragment }) {
   const now = new Date();
   const opensAt = new Date(poll.opensAt);
   const { t } = useTranslation();
@@ -34,7 +34,7 @@ export function PollOpensAtView({ poll }: { poll: Poll }) {
   return <>{t('pollList.pollWillOpenAt', { opensAt })}</>;
 }
 
-export function PollClosedAtView({ poll }: { poll: Poll }) {
+export function PollClosedAtView({ poll }: { poll: FullPollFragment }) {
   const now = new Date();
   const closedAt = poll.closedAt ? new Date(poll.closedAt) : undefined;
   const { t } = useTranslation();
@@ -127,7 +127,7 @@ export function SelectPollPanel({
           <Table.Column resizable>
             <Table.HeaderCell>{t('pollList.state')}</Table.HeaderCell>
             <Table.Cell>
-              {(rowData: RowDataType<Poll>) => (
+              {(rowData: RowDataType<FullPollFragment>) => (
                 <PollStateIndication
                   closedAt={rowData.closedAt}
                   opensAt={rowData.opensAt}
@@ -142,7 +142,7 @@ export function SelectPollPanel({
           >
             <Table.HeaderCell>{t('pollList.question')}</Table.HeaderCell>
             <Table.Cell>
-              {(rowData: RowDataType<Poll>) =>
+              {(rowData: RowDataType<FullPollFragment>) =>
                 rowData.question || t('pollList.noQuestion')
               }
             </Table.Cell>
@@ -154,8 +154,8 @@ export function SelectPollPanel({
           >
             <Table.HeaderCell>{t('pollList.opensAt')}</Table.HeaderCell>
             <Table.Cell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollOpensAtView poll={rowData as Poll} />
+              {(rowData: RowDataType<FullPollFragment>) => (
+                <PollOpensAtView poll={rowData as FullPollFragment} />
               )}
             </Table.Cell>
           </Table.Column>
@@ -166,8 +166,8 @@ export function SelectPollPanel({
           >
             <Table.HeaderCell>{t('pollList.closedAt')}</Table.HeaderCell>
             <Table.Cell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollClosedAtView poll={rowData as Poll} />
+              {(rowData: RowDataType<FullPollFragment>) => (
+                <PollClosedAtView poll={rowData as FullPollFragment} />
               )}
             </Table.Cell>
           </Table.Column>
@@ -177,7 +177,7 @@ export function SelectPollPanel({
               {t('blocks.poll.select')}
             </Table.HeaderCell>
             <Table.Cell align="center">
-              {(rowData: RowDataType<Poll>) => (
+              {(rowData: RowDataType<FullPollFragment>) => (
                 <IconButtonTooltip caption={t('blocks.poll.select')}>
                   <IconButton
                     icon={<MdAddCircle />}

@@ -1,7 +1,7 @@
 import type { Mock } from 'vitest';
 import { useQuery } from '@apollo/client/react';
 import { render, screen } from '@testing-library/react';
-import type { PeriodicJob } from '@wepublish/editor/api';
+import type { FullPeriodicJobFragment } from '@wepublish/editor/api';
 import {
   NotificationConfirmationsDocument,
   PeriodicJobLogsDocument,
@@ -35,7 +35,9 @@ const setQueryResult = (document: unknown, result: unknown) => {
 
 const now = new Date().toISOString();
 
-const job = (overrides: Partial<PeriodicJob> = {}): PeriodicJob => ({
+const job = (
+  overrides: Partial<FullPeriodicJobFragment> = {}
+): FullPeriodicJobFragment => ({
   id: 'job-1',
   createdAt: now,
   modifiedAt: now,
@@ -48,7 +50,7 @@ const job = (overrides: Partial<PeriodicJob> = {}): PeriodicJob => ({
   ...overrides,
 });
 
-const failedJob = (overrides: Partial<PeriodicJob> = {}) =>
+const failedJob = (overrides: Partial<FullPeriodicJobFragment> = {}) =>
   job({
     successfullyFinished: null,
     finishedWithError: now,
@@ -56,7 +58,10 @@ const failedJob = (overrides: Partial<PeriodicJob> = {}) =>
     ...overrides,
   });
 
-const mockJobs = (jobs: PeriodicJob[] | undefined, loading = false) => {
+const mockJobs = (
+  jobs: FullPeriodicJobFragment[] | undefined,
+  loading = false
+) => {
   setQueryResult(PeriodicJobLogsDocument, {
     data: jobs ? { periodicJobLog: jobs } : undefined,
     loading,

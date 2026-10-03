@@ -7028,6 +7028,7 @@ export type CreatePollAnswerMutation = {
     answer: string | null;
     id: string;
     pollId: string;
+    votes: number;
   };
 };
 
@@ -152381,6 +152382,7 @@ export const CreatePollAnswerDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'answer' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'pollId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'votes' } },
               ],
             },
           },

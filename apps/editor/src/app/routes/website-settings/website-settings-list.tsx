@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  WebsiteSettings,
+  FullWebsiteSettingsFragment,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { CanGetAISettings } from '@wepublish/permissions';
@@ -90,17 +90,17 @@ export const WebsiteSettingsList = () => {
       { id: 'plausible', text: 'Plausible Analytics' },
       { id: 'piwik', text: 'Piwik PRO' },
     ] as Array<{
-      id: Exclude<keyof WebsiteSettings['analytics'], '__typename'>;
+      id: Exclude<keyof FullWebsiteSettingsFragment['analytics'], '__typename'>;
       text: string;
     }>;
 
     const mailIntegrations = [{ id: 'mailchimp', text: 'Mailchimp' }] as Array<{
-      id: Exclude<keyof WebsiteSettings['mail'], '__typename'>;
+      id: Exclude<keyof FullWebsiteSettingsFragment['mail'], '__typename'>;
       text: string;
     }>;
 
     const adsIntegrations = [{ id: 'sparkLoop', text: 'SparkLoop' }] as Array<{
-      id: Exclude<keyof WebsiteSettings['ads'], '__typename'>;
+      id: Exclude<keyof FullWebsiteSettingsFragment['ads'], '__typename'>;
       text: string;
     }>;
 

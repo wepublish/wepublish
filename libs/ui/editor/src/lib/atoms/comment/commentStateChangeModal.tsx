@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import {
   ApproveCommentDocument,
   CommentRejectionReason,
-  CommentRevision,
+  CommentRevisionFragment,
   CommentState,
   FullCommentFragment,
   RejectCommentDocument,
@@ -170,7 +170,7 @@ export function CommentStateChangeModal({
   const sortedRevisions = useMemo(() => {
     const dcRevisions = [...comment.revisions];
     return dcRevisions.sort(
-      (a: CommentRevision, b: CommentRevision) =>
+      (a: CommentRevisionFragment, b: CommentRevisionFragment) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   }, [comment.revisions]);

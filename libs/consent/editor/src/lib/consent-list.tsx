@@ -12,9 +12,9 @@ import {
   TableWrapper,
 } from '@wepublish/ui/editor';
 import {
-  Consent,
   ConsentsDocument,
   DeleteConsentDocument,
+  FullConsentFragment,
 } from '@wepublish/editor/api';
 import { RowDataType } from 'rsuite-table';
 
@@ -114,7 +114,7 @@ export function ConsentList(props: ConsentListProps) {
           >
             <HeaderCell>{t('consents.name')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Consent>) => (
+              {(rowData: RowDataType<FullConsentFragment>) => (
                 <Link to={`/consents/edit/${rowData.id}`}>{rowData.name}</Link>
               )}
             </Cell>
@@ -126,7 +126,9 @@ export function ConsentList(props: ConsentListProps) {
           >
             <HeaderCell>{t('consents.slug')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Consent>) => <span>{rowData.slug}</span>}
+              {(rowData: RowDataType<FullConsentFragment>) => (
+                <span>{rowData.slug}</span>
+              )}
             </Cell>
           </Column>
 
@@ -136,7 +138,7 @@ export function ConsentList(props: ConsentListProps) {
           >
             <HeaderCell>{t('consents.defaultValue')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Consent>) => (
+              {(rowData: RowDataType<FullConsentFragment>) => (
                 <span>
                   {
                     consentValues.find(v => v.value === rowData.defaultValue)
@@ -153,7 +155,7 @@ export function ConsentList(props: ConsentListProps) {
               align={'center'}
               style={{ padding: '5px 0' }}
             >
-              {(rowData: RowDataType<Consent>) => (
+              {(rowData: RowDataType<FullConsentFragment>) => (
                 <IconButton
                   icon={<MdDelete />}
                   color="red"

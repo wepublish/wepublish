@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
-  FlexAlignment,
   FullBlockFragment,
+  FullFlexAlignmentFragment,
   FullFlexBlockFragment,
 } from '@wepublish/website/api';
 import {
@@ -20,7 +19,7 @@ export const FlexBlockWrapper = styled('div')`
   grid-column: -1 / 1;
 `;
 
-export const BlockWithAlignment = styled('div')<FlexAlignment>`
+export const BlockWithAlignment = styled('div')<FullFlexAlignmentFragment>`
   grid-column: -1 / 1;
 
   ${({ theme, w }) =>
@@ -40,7 +39,7 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
 `;
 
 export const isFlexBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullFlexBlockFragment => {
   return block.__typename === 'FlexBlock';
 };
@@ -68,7 +67,7 @@ export const FlexBlock = ({
         return (
           <BlockWithAlignment
             key={index}
-            {...(nestedBlock.alignment as FlexAlignment)}
+            {...(nestedBlock.alignment as FullFlexAlignmentFragment)}
           >
             <Renderer
               block={nestedBlock.block as FullBlockFragment}

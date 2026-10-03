@@ -1,5 +1,5 @@
 import {
-  BlockContent,
+  FullBlockFragment,
   FullSubscribeBlockFragment,
   PaymentPeriodicity,
 } from '@wepublish/website/api';
@@ -16,7 +16,7 @@ import { useSubscribeBlock } from './subscribe-block.context';
 import { PaymentForm } from '@wepublish/payment/website';
 
 export const isSubscribeBlock = (
-  block: Partial<Pick<BlockContent, '__typename'>>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullSubscribeBlockFragment => block.__typename === 'SubscribeBlock';
 
 const lowercase = replace(/^./, toLower);

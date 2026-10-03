@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Theme } from '@mui/material';
-import { FlexAlignment } from '@wepublish/website/api';
+import { FullFlexAlignmentFragment } from '@wepublish/website/api';
 import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 import { ComponentProps } from 'react';
@@ -23,11 +23,10 @@ export const teaserBlockStyleByIndex = (index: number): TsriTeaserType => {
 export const alignmentForTeaserBlock = (
   index: number,
   count?: number
-): FlexAlignment => {
+): FullFlexAlignmentFragment => {
   const alignment = {
     __typename: 'FlexAlignment' as const,
     i: index.toString(),
-    static: false,
     h: 1, // how many rows high
     w: 1, // how many columns wide
     x: 0, // starting column - 1
