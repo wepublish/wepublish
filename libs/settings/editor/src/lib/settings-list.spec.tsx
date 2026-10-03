@@ -1,4 +1,4 @@
-import { MockedProvider as MockedProviderBase } from '@apollo/client/testing';
+import { MockedProvider as MockedProviderBase } from '@apollo/client/testing/react';
 import '@testing-library/jest-dom/vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import {

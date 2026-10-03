@@ -1,3 +1,5 @@
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
+import { CombinedGraphQLErrors } from '@apollo/client';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -47,6 +49,19 @@ import { Checkbox, Form, Loader, Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 import mailChimpLogo from './assets/mailchimp.webp';
+
+/**
+ * Apollo Client 4 throws `CombinedGraphQLErrors` instead of an error carrying
+ * `graphQLErrors`, so prefer the first GraphQL message and fall back to the
+ * error's own message.
+ */
+const errorDetail = (e: unknown): string => {
+  if (CombinedGraphQLErrors.is(e)) {
+    return e.errors[0]?.message ?? e.message;
+  }
+
+  return e instanceof Error ? e.message : String(e);
+};
 
 const mergeFieldMappingSchema = z.object({
   tag: z.string().min(1),

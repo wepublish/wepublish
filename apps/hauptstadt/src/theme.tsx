@@ -327,13 +327,13 @@ const theme = createTheme(variablesTheme, {
             borderWidth: '1px',
           },
         },
-        outlinedPrimary: ({ theme }) => ({
+        outlinedPrimary: ({ theme }: { theme: Theme }) => ({
           ['&, &&:hover']: {
             color: theme.palette.primary.dark,
             borderColor: theme.palette.primary.dark,
           },
         }),
-        outlinedSecondary: ({ theme }) => ({
+        outlinedSecondary: ({ theme }: { theme: Theme }) => ({
           color: theme.palette.secondary.main,
         }),
         text: {

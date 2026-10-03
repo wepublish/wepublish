@@ -3,7 +3,7 @@ import {
   LoginWithJwtDocument,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { ApolloClient } from '@apollo/client';
+import { ApolloClient, CombinedGraphQLErrors } from '@apollo/client';
 import { setCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import { EXPIRED_JWT_MESSAGE } from './with-jwt-handler';
@@ -17,7 +17,7 @@ import { EXPIRED_JWT_MESSAGE } from './with-jwt-handler';
  */
 export async function handleJwtLogin(
   ctx: NextPageContext,
-  client: ApolloClient<unknown>,
+  client: ApolloClient,
   httpOnlyCookie?: boolean
 ): Promise<boolean> {
   if (!ctx.query.jwt) {
@@ -25,18 +25,18 @@ export async function handleJwtLogin(
   }
 
   try {
-    const { data, errors } = await client.mutate({
+    const { data, error } = await client.mutate({
       mutation: LoginWithJwtDocument,
       variables: {
-        jwt: ctx.query.jwt,
+        jwt: ctx.query.jwt.toString(),
       },
       errorPolicy: 'all',
     });
 
-    if (errors?.length || !data?.createSessionWithJWT) {
-      const totpRequired = errors?.some(e =>
-        e.message?.includes('TOTP_REQUIRED')
-      );
+    if (error || !data?.createSessionWithJWT) {
+      const totpRequired =
+        CombinedGraphQLErrors.is(error) &&
+        error.errors.some(e => e.message?.includes('TOTP_REQUIRED'));
 
       if (totpRequired) {
         // Let the client-side withJwtHandler show the TOTP prompt.

@@ -1,4 +1,5 @@
-import { QueryResult } from '@apollo/client';
+import type { OperationVariables } from '@apollo/client';
+import type { useQuery } from '@apollo/client/react';
 import { Page, PageQuery } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 
@@ -22,7 +23,10 @@ export enum PageType {
 }
 
 export type BuilderPageProps = PropsWithChildren<
-  Pick<QueryResult<PageQuery>, 'data' | 'loading' | 'error'> & {
+  Pick<
+    useQuery.Result<PageQuery, OperationVariables, 'complete' | 'empty'>,
+    'data' | 'loading' | 'error'
+  > & {
     className?: string;
   }
 >;

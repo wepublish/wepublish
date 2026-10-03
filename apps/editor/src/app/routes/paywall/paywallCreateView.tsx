@@ -1,8 +1,5 @@
-import { ApolloError } from '@apollo/client';
-import {
-  MutationCreatePaywallArgs,
-  useCreatePaywallMutation,
-} from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { MutationCreatePaywallArgs } from '@wepublish/editor/api';
 import { CanCreatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -15,7 +12,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { PaywallForm } from './paywallForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"

@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
+import { ErrorLike } from '@apollo/client';
 import {
   BlockContent,
   FullPollBlockFragment,
-  PollVoteMutationResult,
-  UserPollVoteQueryResult,
+  PollVoteMutation,
+  UserPollVoteQuery,
 } from '@wepublish/website/api';
 import {
   BuilderPollBlockProps,
@@ -59,14 +60,18 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
   const { vote, fetchUserVote, canVoteAnonymously, getAnonymousVote } =
     usePollBlock();
 
-  const [voteResult, setVoteResult] = useState<
-    Pick<PollVoteMutationResult, 'loading' | 'data' | 'error'>
-  >({
+  const [voteResult, setVoteResult] = useState<{
+    loading: boolean;
+    data?: PollVoteMutation | null;
+    error?: ErrorLike;
+  }>({
     loading: false,
   });
-  const [loggedInVote, setLoggedInVote] = useState<
-    Pick<UserPollVoteQueryResult, 'loading' | 'data' | 'error'>
-  >({
+  const [loggedInVote, setLoggedInVote] = useState<{
+    loading: boolean;
+    data?: UserPollVoteQuery;
+    error?: ErrorLike;
+  }>({
     data: undefined,
     loading: true,
   });
@@ -126,7 +131,7 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
         variables: {
           pollId: poll.id,
         },
-      }).then(setLoggedInVote);
+      }).then(result => setLoggedInVote({ ...result, loading: false }));
     }
   }, [fetchUserVote, poll, hasUser]);
 

@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   FullPoll,
@@ -52,7 +52,7 @@ function PollEditView() {
   /**
    * Handling toasts
    */
-  const onErrorToast = (error: ApolloError) => {
+  const onErrorToast = (error: Error) => {
     toaster.push(
       <Message
         type="error"

@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
@@ -1114,7 +1113,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
         {error && (
           <ApiAlert
-            error={error as ApolloError}
+            error={error as Error}
             severity="error"
           />
         )}

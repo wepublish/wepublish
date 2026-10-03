@@ -1,12 +1,11 @@
-import { ApolloError } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   MemberPlan,
   MemberPlanSort,
   SortOrder,
-  useMemberPlanListQuery,
 } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Divider as RDivider,
   Message,
@@ -44,7 +43,7 @@ export function SelectMemberPlan({
 }: SelectMemberPlanProps) {
   const [page, setPage] = useState(1);
 
-  const showErrors = (error: ApolloError): void => {
+  const showErrors = (error: Error): void => {
     toaster.push(
       <Message
         type="error"
@@ -63,8 +62,13 @@ export function SelectMemberPlan({
       order: SortOrder.Ascending,
       take: 50,
     },
-    onError: showErrors,
   });
+
+  useEffect(() => {
+    if (memberPlanListError) {
+      showErrors(memberPlanListError);
+    }
+  }, [memberPlanListError]);
 
   const availableMemberPlans = useMemo(() => {
     const nodes = memberplansData?.memberPlans?.nodes ?? [];

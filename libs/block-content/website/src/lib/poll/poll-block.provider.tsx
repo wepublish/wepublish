@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import {
   PollVoteMutation,
@@ -9,7 +10,7 @@ import {
 } from '@wepublish/website/api';
 import { PropsWithChildren, useCallback, useMemo } from 'react';
 import { PollBlockContext } from './poll-block.context';
-import { FetchResult, MutationFunctionOptions } from '@apollo/client';
+import { ApolloClient } from '@apollo/client';
 
 const getAnonymousVote = (pollId: string): string | null =>
   typeof localStorage !== 'undefined' ?
@@ -43,10 +44,12 @@ export function PollBlockProvider({ children }: PropsWithChildren) {
 
   const vote = useCallback(
     async function vote(
-      options: MutationFunctionOptions<
-        PollVoteMutation,
-        PollVoteMutationVariables
-      >,
+      options: Parameters<
+        useMutation.MutationFunction<
+          PollVoteMutation,
+          PollVoteMutationVariables
+        >
+      >[0],
       pollId: string
     ): Promise<FetchResult<PollVoteMutation> | undefined> {
       // user already voted on that poll

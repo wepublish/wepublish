@@ -11,6 +11,12 @@ const createAdTeaser = (): FullTeaserFragment => ({
   __typename: 'CustomTeaser',
   type: TeaserType.Custom,
   title: AD_RECTANGLE_TITLE,
+  preTitle: null,
+  lead: null,
+  contentUrl: null,
+  openInNewTab: null,
+  image: null,
+  properties: null,
 });
 
 export const enrichTeasersWithAds = (

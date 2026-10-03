@@ -1,11 +1,9 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   FullPoll,
   PollAnswer,
   PollExternalVote,
-  useCreatePollAnswerMutation,
-  useDeletePollAnswerMutation,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -115,7 +113,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
   const [createAnswerMutation, { loading }] = useCreatePollAnswerMutation({});
   const [deleteAnswerMutation] = useDeletePollAnswerMutation();
 
-  const onErrorToast = (error: ApolloError) => {
+  const onErrorToast = (error: Error) => {
     toaster.push(
       <Message
         type="error"

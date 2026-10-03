@@ -1,10 +1,10 @@
 import { generateFeed } from '@wepublish/feed/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { SortOrder } from '@wepublish/website/api';
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
+  SortOrder,
   getApiClient,
 } from '@wepublish/website/api';
 import { NextApiRequest } from 'next';
@@ -41,5 +41,5 @@ export const getFeed = async (req: NextApiRequest) => {
     } as ArticleListQueryVariables,
   });
 
-  return generate(data.articles.nodes ?? []);
+  return generate(data?.articles.nodes ?? []);
 };

@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import {
   Comment,
@@ -181,7 +182,12 @@ const extractAllComments = <C extends { children: C[] }>(
 
 const useAddCommentMutationWithCacheUpdate = (
   variables: CommentListQueryVariables,
-  ...params: Parameters<typeof useAddCommentMutation>
+  ...params: [
+    options?: useMutation.Options<
+      AddCommentMutation,
+      AddCommentMutationVariables
+    >,
+  ]
 ) =>
   useAddCommentMutation({
     ...params[0],

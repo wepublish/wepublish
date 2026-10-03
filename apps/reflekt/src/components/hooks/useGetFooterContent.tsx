@@ -1,4 +1,5 @@
-import { FullBlockFragment, usePageQuery } from '@wepublish/website/api';
+import { useQuery } from '@apollo/client/react';
+import { FullBlockFragment, PageDocument } from '@wepublish/website/api';
 
 export type FooterContent = {
   blocks: FullBlockFragment[];

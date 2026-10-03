@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { useWebsiteSettingsQuery } from '@wepublish/editor/api';
 import { forwardRef, memo } from 'react';

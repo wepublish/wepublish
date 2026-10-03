@@ -1,15 +1,16 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { AuthorListContainer } from '@wepublish/author/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { AuthorSort, SortOrder } from '@wepublish/website/api';
 import {
-  addClientCacheToProps,
   AuthorListDocument,
-  getApiClient,
+  AuthorSort,
   NavigationListDocument,
   PeerProfileDocument,
-  useAuthorListQuery,
+  SortOrder,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';

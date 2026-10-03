@@ -1,4 +1,5 @@
-import { FullUserFragment, useUserListQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
+import { FullUserFragment, UserListDocument } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { CheckPicker } from 'rsuite';
 

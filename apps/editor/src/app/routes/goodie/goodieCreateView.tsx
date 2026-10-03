@@ -1,8 +1,5 @@
-import { ApolloError } from '@apollo/client';
-import {
-  MutationCreateGoodieArgs,
-  useCreateGoodieMutation,
-} from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { MutationCreateGoodieArgs } from '@wepublish/editor/api';
 import { CanCreateGoodie } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -15,7 +12,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { GoodieForm } from './goodieForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"

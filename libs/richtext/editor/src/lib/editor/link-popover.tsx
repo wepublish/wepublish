@@ -329,34 +329,36 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
                   : t('richtext.link.url')
                 }
                 type={linkType === 'email' ? 'email' : 'url'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        edge="end"
-                        size="small"
-                        title={t('richtext.link.openLink')}
-                        disabled={!field.value}
-                        onClick={() => {
-                          if (!field.value) {
-                            return;
-                          }
-
-                          const url =
-                            linkType === 'email' ?
-                              `${mailTo}${field.value}`
-                            : field.value;
-
-                          window.open(url, '_blank', 'noopener,noreferrer');
-                        }}
-                      >
-                        <TbExternalLink size={18} />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
                 error={!!error}
                 helperText={error?.message}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          edge="end"
+                          size="small"
+                          title={t('richtext.link.openLink')}
+                          disabled={!field.value}
+                          onClick={() => {
+                            if (!field.value) {
+                              return;
+                            }
+
+                            const url =
+                              linkType === 'email' ?
+                                `${mailTo}${field.value}`
+                              : field.value;
+
+                            window.open(url, '_blank', 'noopener,noreferrer');
+                          }}
+                        >
+                          <TbExternalLink size={18} />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
               />
             )}
           />

@@ -1,30 +1,55 @@
+import { useMutation } from '@apollo/client/react';
 import {
-  useCreateSubscriptionFlowMutation,
-  useCreateSubscriptionIntervalMutation,
-  useDeleteSubscriptionFlowMutation,
-  useDeleteSubscriptionIntervalMutation,
-  useUpdateSubscriptionFlowMutation,
-  useUpdateSubscriptionIntervalMutation,
+  CreateSubscriptionFlowMutation,
+  CreateSubscriptionFlowMutationVariables,
+  CreateSubscriptionIntervalMutation,
+  CreateSubscriptionIntervalMutationVariables,
+  DeleteSubscriptionFlowMutation,
+  DeleteSubscriptionFlowMutationVariables,
+  DeleteSubscriptionIntervalMutation,
+  DeleteSubscriptionIntervalMutationVariables,
+  UpdateSubscriptionFlowMutation,
+  UpdateSubscriptionFlowMutationVariables,
+  UpdateSubscriptionIntervalMutation,
+  UpdateSubscriptionIntervalMutationVariables,
 } from '@wepublish/editor/api';
 import { createContext } from 'react';
 
 export const SubscriptionClientContext = createContext({
   createSubscriptionInterval: (() => {
     throw new Error('Default context must be overriden!');
-  }) as ReturnType<typeof useCreateSubscriptionIntervalMutation>[0],
+  }) as useMutation.MutationFunction<
+    CreateSubscriptionIntervalMutation,
+    CreateSubscriptionIntervalMutationVariables
+  >,
   updateSubscriptionInterval: (() => {
     throw new Error('Default context must be overriden!');
-  }) as ReturnType<typeof useUpdateSubscriptionIntervalMutation>[0],
+  }) as useMutation.MutationFunction<
+    UpdateSubscriptionIntervalMutation,
+    UpdateSubscriptionIntervalMutationVariables
+  >,
   deleteSubscriptionInterval: (() => {
     throw new Error('Default context must be overriden!');
-  }) as ReturnType<typeof useDeleteSubscriptionIntervalMutation>[0],
+  }) as useMutation.MutationFunction<
+    DeleteSubscriptionIntervalMutation,
+    DeleteSubscriptionIntervalMutationVariables
+  >,
   createSubscriptionFlow: (() => {
     throw new Error('Default context must be overriden!');
-  }) as ReturnType<typeof useCreateSubscriptionFlowMutation>[0],
+  }) as useMutation.MutationFunction<
+    CreateSubscriptionFlowMutation,
+    CreateSubscriptionFlowMutationVariables
+  >,
   updateSubscriptionFlow: (() => {
     throw new Error('Default context must be overriden!');
-  }) as ReturnType<typeof useUpdateSubscriptionFlowMutation>[0],
+  }) as useMutation.MutationFunction<
+    UpdateSubscriptionFlowMutation,
+    UpdateSubscriptionFlowMutationVariables
+  >,
   deleteSubscriptionFlow: (() => {
     throw new Error('Default context must be overriden!');
-  }) as ReturnType<typeof useDeleteSubscriptionFlowMutation>[0],
+  }) as useMutation.MutationFunction<
+    DeleteSubscriptionFlowMutation,
+    DeleteSubscriptionFlowMutationVariables
+  >,
 });

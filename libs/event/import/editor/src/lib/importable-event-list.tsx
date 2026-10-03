@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   ImportedEventFilter,
   createWithV2ApiClient,
@@ -69,7 +69,7 @@ export function EventEndsAtView({
   return <>{t('event.list.endsAtNone')}</>;
 }
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message

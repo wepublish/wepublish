@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   FullUserConsentFragment,
   MutationUpdateUserConsentArgs,
@@ -20,7 +20,7 @@ const mapApiDataToInput = (
   value: userConsent.value,
 });
 
-const onErrorToast = (error: ApolloError, slug?: string) => {
+const onErrorToast = (error: Error, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
     toaster.push(
       <Message

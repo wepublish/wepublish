@@ -1,9 +1,5 @@
-import { ApolloError } from '@apollo/client';
-import {
-  MutationCreateTagArgs,
-  TagType,
-  useCreateTagMutation,
-} from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { MutationCreateTagArgs, TagType } from '@wepublish/editor/api';
 import { CanCreateTag } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -16,7 +12,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { TagForm } from './tagForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"

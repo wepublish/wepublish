@@ -1,7 +1,6 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
   FullCommentFragment,
-  useDeleteCommentMutation,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +9,7 @@ import { Button, IconButton, Message, Modal, toaster } from 'rsuite';
 
 import { PermissionControl } from '../permissionControl';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"

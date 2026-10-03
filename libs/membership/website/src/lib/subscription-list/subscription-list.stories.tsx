@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
 import { Meta } from '@storybook/nextjs-vite';
 import { SubscriptionList } from './subscription-list';
@@ -132,9 +131,7 @@ export const WithError = {
     ...Default.args,
     data: undefined,
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
   },
 };
 
