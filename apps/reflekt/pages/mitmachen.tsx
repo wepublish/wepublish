@@ -5,7 +5,12 @@ import {
   ssrAuthLink,
   SubscribePage,
 } from '@wepublish/utils/website';
-import { getApiClient, PageDocument } from '@wepublish/website/api';
+import {
+  getApiClient,
+  PageDocument,
+  V1_CLIENT_STATE_PROP_NAME,
+} from '@wepublish/website/api';
+import { NormalizedCacheObject } from '@apollo/client';
 import { NextPageContext } from 'next';
 import { ComponentProps } from 'react';
 
@@ -39,5 +44,18 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
     }),
   ]);
 
-  return SubscribePage.getInitialProps(ctx);
+  const subscribeProps = (await SubscribePage.getInitialProps(ctx)) as {
+    [V1_CLIENT_STATE_PROP_NAME]?: NormalizedCacheObject;
+  };
+  const subscribeState = subscribeProps[V1_CLIENT_STATE_PROP_NAME] ?? {};
+  const pageState = client.cache.extract();
+
+  return {
+    ...subscribeProps,
+    [V1_CLIENT_STATE_PROP_NAME]: {
+      ...subscribeState,
+      ...pageState,
+      ROOT_QUERY: { ...subscribeState.ROOT_QUERY, ...pageState.ROOT_QUERY },
+    },
+  };
 };
