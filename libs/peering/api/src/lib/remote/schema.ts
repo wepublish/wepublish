@@ -286,6 +286,23 @@ export type Author = HasImage & HasOptionalPeerLc & {
   url: Scalars['String']['output'];
 };
 
+export type AuthorBlock = BaseBlock & HasOptionalAuthor & {
+  __typename?: 'AuthorBlock';
+  author?: Maybe<Author>;
+  authorId?: Maybe<Scalars['String']['output']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  type: BlockType;
+};
+
+export type AuthorBlockInput = {
+  authorId?: InputMaybe<Scalars['String']['input']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type AuthorCreatedAction = BaseAction & HasAuthor & {
   __typename?: 'AuthorCreatedAction';
   actionType: ActionType;
@@ -295,6 +312,8 @@ export type AuthorCreatedAction = BaseAction & HasAuthor & {
 };
 
 export type AuthorFilter = {
+  /** Keeps only authors that are credited on an article revision published by now, or only those that are not when set to false. */
+  hasArticles?: InputMaybe<Scalars['Boolean']['input']>;
   hideOnTeam?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -445,9 +464,10 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = AuthorBlock | BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
+  author?: InputMaybe<AuthorBlockInput>;
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
   blockTemplate?: InputMaybe<BlockTemplateBlockInput>;
   comment?: InputMaybe<CommentBlockInput>;
@@ -528,6 +548,7 @@ export enum BlockTemplateSort {
 }
 
 export enum BlockType {
+  Author = 'Author',
   BildwurfAd = 'BildwurfAd',
   BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
@@ -1498,6 +1519,11 @@ export type HasOneBlockContent = {
 export type HasOptionalArticle = {
   article?: Maybe<Article>;
   articleID?: Maybe<Scalars['String']['output']>;
+};
+
+export type HasOptionalAuthor = {
+  author?: Maybe<Author>;
+  authorId?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalCrowdfunding = {
@@ -8005,6 +8031,7 @@ export type YouTubeVideoBlockInput = {
       "UserCreatedAction"
     ],
     "BaseBlock": [
+      "AuthorBlock",
       "BildwurfAdBlock",
       "BlockTemplateBlock",
       "BreakBlock",
@@ -8063,6 +8090,7 @@ export type YouTubeVideoBlockInput = {
       "User"
     ],
     "BlockContent": [
+      "AuthorBlock",
       "BildwurfAdBlock",
       "BlockTemplateBlock",
       "BreakBlock",
@@ -8146,6 +8174,9 @@ export type YouTubeVideoBlockInput = {
     ],
     "HasOptionalArticle": [
       "ArticleTeaser"
+    ],
+    "HasOptionalAuthor": [
+      "AuthorBlock"
     ],
     "HasOptionalCrowdfunding": [
       "CrowdfundingBlock"

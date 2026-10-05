@@ -1,0 +1,57 @@
+{
+  "name": "bka",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/bka",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "dependsOn": [],
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/bka"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/bka"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "bka:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "bka:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "bka:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "bka:build:production"
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../{projectRoot}/vitest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

@@ -716,6 +716,10 @@
         "doubleOptInHelp": "Les nouveaux·elles abonné·e·s reçoivent d’abord un e-mail de confirmation de Mailchimp et ne sont ajouté·e·s à la liste qu’après avoir cliqué sur le lien qu’il contient.",
         "advancedStepHelp": "Affiche les conditions dans lesquelles cette étape est sautée ou affichée, p. ex. si certaines informations sont déjà disponibles.",
         "advancedInputHelp": "Affiche d’autres réglages pour ce champ, p. ex. une description sous le champ ou une valeur par défaut."
+      },
+      "author": {
+        "label": "Auteur·e",
+        "placeholder": "Sélectionner un·e auteur·e"
       }
     },
     "cancel": "Annuler",

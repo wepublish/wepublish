@@ -220,6 +220,29 @@ export const createHideOnTeamFilter = (
   return {};
 };
 
+export const createHasArticlesFilter = (
+  filter?: Partial<AuthorFilter>
+): Prisma.AuthorWhereInput => {
+  if (filter?.hasArticles != null) {
+    const publishedRevision = {
+      revision: {
+        publishedAt: {
+          lte: new Date(),
+        },
+      },
+    };
+
+    return {
+      articlesAsAuthor:
+        filter.hasArticles ?
+          { some: publishedRevision }
+        : { none: publishedRevision },
+    };
+  }
+
+  return {};
+};
+
 /**
  * Combines all author filters into a single filter
  */
@@ -233,6 +256,7 @@ export const createAuthorFilter = (
       createNameFilter(filter),
       createTagIdsFilter(filter),
       createHideOnTeamFilter(filter),
+      createHasArticlesFilter(filter),
     ],
   };
 };

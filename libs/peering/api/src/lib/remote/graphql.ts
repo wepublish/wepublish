@@ -7,6 +7,8 @@ import {RichtextJSONDocument} from '@wepublish/richtext';
 import type * as Types from './schema';
 
 import gql from 'graphql-tag';
+type ImportBlock_AuthorBlock_Fragment = { __typename: 'AuthorBlock' };
+
 type ImportBlock_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock' };
 
 type ImportBlock_BlockTemplateBlock_Fragment = { __typename: 'BlockTemplateBlock' };
@@ -74,6 +76,7 @@ type ImportBlock_VimeoVideoBlock_Fragment = { __typename: 'VimeoVideoBlock', blo
 type ImportBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', blockStyle: string | null, type: Types.BlockType, videoID: string | null };
 
 export type ImportBlockFragment =
+  | ImportBlock_AuthorBlock_Fragment
   | ImportBlock_BildwurfAdBlock_Fragment
   | ImportBlock_BlockTemplateBlock_Fragment
   | ImportBlock_BreakBlock_Fragment
@@ -130,6 +133,7 @@ export type ArticleQueryVariables = Exact<{
 
 
 export type ArticleQuery = { article: { id: string, url: string, slug: string | null, tags: Array<{ tag: string | null }>, published: { title: string | null, lead: string | null, image: { id: string, createdAt: string, modifiedAt: string, filename: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title: string | null, description: string | null, tags: Array<string>, source: string | null, link: string | null, license: string | null, url: string, xxl: string | null, xl: string | null, l: string | null, m: string | null, s: string | null, xs: string | null, xxs: string | null, xxlSquare: string | null, xlSquare: string | null, lSquare: string | null, mSquare: string | null, sSquare: string | null, xsSquare: string | null, xxsSquare: string | null } | null, blocks: Array<
+        | { __typename: 'AuthorBlock' }
         | { __typename: 'BildwurfAdBlock' }
         | { __typename: 'BlockTemplateBlock' }
         | { __typename: 'BreakBlock', blockStyle: string | null, type: Types.BlockType, text: string | null, richText: RichtextJSONDocument | null, hideButton: boolean | null, linkTarget: string | null, linkText: string | null, linkURL: string | null, image: { id: string, createdAt: string, modifiedAt: string, filename: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title: string | null, description: string | null, tags: Array<string>, source: string | null, link: string | null, license: string | null, url: string, xxl: string | null, xl: string | null, l: string | null, m: string | null, s: string | null, xs: string | null, xxs: string | null, xxlSquare: string | null, xlSquare: string | null, lSquare: string | null, mSquare: string | null, sSquare: string | null, xsSquare: string | null, xxsSquare: string | null } | null }
