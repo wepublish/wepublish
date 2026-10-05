@@ -3282,7 +3282,7 @@
     "seoChecklist": {
       "navbar": "SEO",
       "title": "Liste de contrôle SEO",
-      "description": "Des étapes pratiques pour que vos contenus soient faciles à trouver et bien présentés lorsqu'ils sont partagés. Les points avec un statut sont vérifiés automatiquement sur votre site en ligne.",
+      "description": "Des étapes pratiques pour que tes contenus soient faciles à trouver et bien présentés lorsqu'ils sont partagés. Les points avec un statut sont vérifiés automatiquement sur ton site en ligne.",
       "websiteUrl": "Site web",
       "refresh": "Vérifier à nouveau",
       "copyUrl": "Copier l'URL",
@@ -3310,11 +3310,11 @@
       "sections": {
         "searchConsole": {
           "title": "Google Search Console",
-          "description": "L'outil gratuit de Google qui montre les performances de votre site dans la recherche."
+          "description": "L'outil gratuit de Google qui montre les performances de ton site dans la recherche."
         },
         "sitemapsFeeds": {
           "title": "Sitemaps et flux",
-          "description": "Comment les moteurs de recherche et les agrégateurs trouvent vos articles."
+          "description": "Comment les moteurs de recherche et les agrégateurs trouvent tes articles."
         },
         "content": {
           "title": "Contenu",
@@ -3322,7 +3322,7 @@
         },
         "presentation": {
           "title": "Présentation et partage",
-          "description": "L'apparence de vos contenus dans les résultats de recherche, sur les réseaux sociaux et dans les messageries."
+          "description": "L'apparence de tes contenus dans les résultats de recherche, sur les réseaux sociaux et dans les messageries."
         },
         "automatic": {
           "title": "Géré par We.Publish",
@@ -3331,33 +3331,33 @@
       },
       "items": {
         "gsc-verify": {
-          "title": "Valider votre site dans Google Search Console",
-          "description": "Ajoutez votre domaine comme propriété « Domaine » et validez-le avec un enregistrement DNS. Vous obtenez ainsi les données d'indexation et de performance pour tous les sous-domaines.",
+          "title": "Valider ton site dans Google Search Console",
+          "description": "Ajoute ton domaine comme propriété « Domaine » et valide-le avec un enregistrement DNS. Tu obtiens ainsi les données d'indexation et de performance pour tous les sous-domaines.",
           "action": "Ouvrir Search Console"
         },
         "gsc-sitemap": {
           "title": "Soumettre le sitemap",
-          "description": "Sous « Sitemaps », soumettez une fois l'URL du sitemap ci-dessous. Google le consulte ensuite régulièrement pour trouver les nouveaux articles.",
+          "description": "Sous « Sitemaps », soumets une fois l'URL du sitemap ci-dessous. Google le consulte ensuite régulièrement pour trouver les nouveaux articles.",
           "action": "Ouvrir Search Console"
         },
         "gsc-pages": {
           "title": "Vérifier régulièrement le rapport d'indexation",
-          "description": "Le rapport « Pages » indique quelles pages ne sont pas indexées et pourquoi. Consultez-le chaque mois et corrigez les problèmes récurrents.",
+          "description": "Le rapport « Pages » indique quelles pages ne sont pas indexées et pourquoi. Consulte-le chaque mois et corrige les problèmes récurrents.",
           "action": "Ouvrir Search Console"
         },
         "gsc-performance": {
           "title": "Apprendre des requêtes de recherche",
-          "description": "Le rapport « Performances » montre les requêtes qui amènent vos lecteurs. Utilisez-le pour trouver les sujets et les formulations recherchés.",
+          "description": "Le rapport « Performances » montre les requêtes qui amènent tes lecteurs. Utilise-le pour trouver les sujets et les formulations recherchés.",
           "action": "Ouvrir Search Console"
         },
         "gsc-inspect": {
           "title": "Demander l'indexation des articles importants",
-          "description": "Utilisez « Inspection de l'URL » pour vérifier un article important et demander son indexation après la publication ou une mise à jour importante.",
+          "description": "Utilise « Inspection de l'URL » pour vérifier un article important et demander son indexation après la publication ou une mise à jour importante.",
           "action": "Ouvrir Search Console"
         },
         "sitemap": {
           "title": "Sitemap",
-          "description": "Le sitemap est généré automatiquement et liste vos derniers articles et pages pour les moteurs de recherche.",
+          "description": "Le sitemap est généré automatiquement et liste tes derniers articles et pages pour les moteurs de recherche.",
           "detail": "Nombre d'URL"
         },
         "news-sitemap": {
@@ -3366,19 +3366,19 @@
         },
         "feeds": {
           "title": "Flux RSS, Atom et JSON",
-          "description": "Les flux permettent aux agrégateurs, lecteurs de flux et outils de newsletter de reprendre vos articles. Communiquez l'URL RSS aux agrégateurs où vous souhaitez apparaître."
+          "description": "Les flux permettent aux agrégateurs, lecteurs de flux et outils de newsletter de reprendre tes articles. Communique l'URL RSS aux agrégateurs où tu souhaites apparaître."
         },
         "seo-titles": {
           "title": "Rédiger des titres SEO précis",
-          "description": "Placez le sujet principal en premier et restez sous environ 60 caractères. Décrivez le contenu de l'article plutôt que de simplement l'annoncer.",
+          "description": "Place le sujet principal en premier et reste sous environ 60 caractères. Décris le contenu de l'article plutôt que de simplement l'annoncer.",
           "guide": {
             "tips": {
-              "topicFirst": "Commencez par le sujet principal, les mots que les lecteurs taperaient dans Google, p. ex. un lieu, une personne ou un événement.",
-              "length": "Visez 50 à 60 caractères. Google tronque les titres plus longs, et le nom de la publication prend aussi de la place.",
-              "specific": "Soyez concret : qui, quoi, où. « Conseil de ville de Berne » fonctionne mieux que « Politique ».",
-              "noClickbait": "Dites de quoi parle l'article au lieu de simplement l'annoncer. Les lecteurs qui se sentent trompés partent vite, et Google le remarque.",
-              "unique": "Donnez à chaque article son propre titre. Les articles de suivi ont besoin d'un titre qui montre ce qui est nouveau.",
-              "siteName": "N'ajoutez pas le nom de la publication, il est ajouté automatiquement."
+              "topicFirst": "Commence par le sujet principal, les mots que les lecteurs taperaient dans Google, p. ex. un lieu, une personne ou un événement.",
+              "length": "Vise 50 à 60 caractères. Google tronque les titres plus longs, et le nom de la publication prend aussi de la place.",
+              "specific": "Sois concret : qui, quoi, où. « Conseil de ville de Berne » fonctionne mieux que « Politique ».",
+              "noClickbait": "Dis de quoi parle l'article au lieu de simplement l'annoncer. Les lecteurs qui se sentent trompés partent vite, et Google le remarque.",
+              "unique": "Donne à chaque article son propre titre. Les articles de suivi ont besoin d'un titre qui montre ce qui est nouveau.",
+              "siteName": "N'ajoute pas le nom de la publication, il est ajouté automatiquement."
             },
             "good": "Berne adopte 20 km de nouvelles pistes cyclables",
             "bad": "Vous ne croirez jamais ce que le Conseil de ville vient de décider"
@@ -3386,15 +3386,15 @@
         },
         "meta-descriptions": {
           "title": "Rédiger des méta-descriptions",
-          "description": "Résumez l'article en une ou deux phrases (environ 150 caractères). Sans description, le chapeau ou le premier paragraphe est utilisé.",
+          "description": "Résume l'article en une ou deux phrases (environ 150 caractères). Sans description, le chapeau ou le premier paragraphe est utilisé.",
           "guide": {
             "tips": {
-              "summarize": "Résumez l'information clé de l'article en une ou deux phrases complètes.",
-              "length": "Visez 120 à 158 caractères. Les descriptions plus longues sont tronquées dans Google.",
-              "addToTitle": "Ajoutez des informations absentes du titre au lieu de le répéter.",
-              "details": "Donnez des détails concrets comme des chiffres, des lieux et des dates, et écrivez à la voix active.",
-              "forPeople": "Écrivez pour des personnes, pas pour les moteurs de recherche : pas de listes de mots-clés ni de répétitions.",
-              "fallback": "Google affiche parfois son propre extrait, mais une bonne description augmente nettement les chances que la vôtre soit utilisée."
+              "summarize": "Résume l'information clé de l'article en une ou deux phrases complètes.",
+              "length": "Vise 120 à 158 caractères. Les descriptions plus longues sont tronquées dans Google.",
+              "addToTitle": "Ajoute des informations absentes du titre au lieu de le répéter.",
+              "details": "Donne des détails concrets comme des chiffres, des lieux et des dates, et écris à la voix active.",
+              "forPeople": "Écris pour des personnes, pas pour les moteurs de recherche : pas de listes de mots-clés ni de répétitions.",
+              "fallback": "Google affiche parfois son propre extrait, mais une bonne description augmente nettement les chances que la tienne soit utilisée."
             },
             "good": "Le plan prévoit 20 km de nouvelles pistes cyclables d'ici 2027 pour 12 millions de francs. Les opposants envisagent un référendum.",
             "bad": "Tout sur le plan vélo ici. Vélo, pistes cyclables, Berne, Conseil de ville, actualités."
@@ -3402,28 +3402,28 @@
         },
         "structure": {
           "title": "Structurer les textes longs",
-          "description": "Utilisez un chapeau clair, des intertitres et des paragraphes courts. Cela aide les lecteurs et les moteurs de recherche à comprendre le contenu."
+          "description": "Utilise un chapeau clair, des intertitres et des paragraphes courts. Cela aide les lecteurs et les moteurs de recherche à comprendre le contenu."
         },
         "internal-links": {
           "title": "Lier les articles connexes",
-          "description": "Liez les articles précédents et de contexte. Les liens internes aident les lecteurs à approfondir et les moteurs de recherche à trouver les contenus plus anciens."
+          "description": "Lie les articles précédents et de contexte. Les liens internes aident les lecteurs à approfondir et les moteurs de recherche à trouver les contenus plus anciens."
         },
         "stable-slugs": {
           "title": "Garder des slugs courts et stables",
-          "description": "Utilisez un slug court avec le sujet principal et ne le modifiez plus après la publication, sinon les liens et le référencement existants sont perdus."
+          "description": "Utilise un slug court avec le sujet principal et ne le modifie plus après la publication, sinon les liens et le référencement existants sont perdus."
         },
         "author-pages": {
           "title": "Soigner les pages auteur",
-          "description": "Des pages auteur avec nom, photo et courte biographie montrent qui fait votre journalisme et renforcent la confiance.",
+          "description": "Des pages auteur avec nom, photo et courte biographie montrent qui fait ton journalisme et renforcent la confiance.",
           "action": "Modifier les auteur·e·s"
         },
         "share-images": {
           "title": "Définir une image de partage pour chaque article",
-          "description": "Choisissez une image parlante au format paysage (au moins 1200 px de large). Elle s'affiche sur les réseaux sociaux, les messageries et Google Discover."
+          "description": "Choisis une image parlante au format paysage (au moins 1200 px de large). Elle s'affiche sur les réseaux sociaux, les messageries et Google Discover."
         },
         "image-descriptions": {
-          "title": "Décrire vos images",
-          "description": "La description de l'image sert de texte alternatif. Décrivez ce qui est visible : cela aide l'accessibilité et la recherche d'images.",
+          "title": "Décrire tes images",
+          "description": "La description de l'image sert de texte alternatif. Décris ce qui est visible : cela aide l'accessibilité et la recherche d'images.",
           "action": "Ouvrir la bibliothèque d'images"
         },
         "social-texts": {
@@ -3436,18 +3436,18 @@
         },
         "publication-profile": {
           "title": "Nom et logo de la publication",
-          "description": "Le nom et le logo de votre publication sont gérés dans le profil de peering et utilisés dans les aperçus et les données structurées.",
+          "description": "Le nom et le logo de ta publication sont gérés dans le profil de peering et utilisés dans les aperçus et les données structurées.",
           "detail": "Manquant",
           "action": "Modifier le profil"
         },
         "article-markup": {
           "title": "URL canoniques et données structurées",
-          "description": "Chaque article indique son URL canonique et contient des données structurées NewsArticle (JSON-LD). La vérification porte sur votre dernier article.",
+          "description": "Chaque article indique son URL canonique et contient des données structurées NewsArticle (JSON-LD). La vérification porte sur ton dernier article.",
           "detail": "Manquant"
         },
         "canonical-urls": {
           "title": "Contenus provenant d'autres sources",
-          "description": "Si un article a d'abord été publié ailleurs, indiquez l'URL canonique dans les paramètres de l'article afin que les moteurs de recherche reconnaissent l'original."
+          "description": "Si un article a d'abord été publié ailleurs, indique l'URL canonique dans les paramètres de l'article afin que les moteurs de recherche reconnaissent l'original."
         },
         "hidden-noindex": {
           "title": "Contenu masqué",
@@ -3457,11 +3457,11 @@
     },
     "seoSuggestions": {
       "title": "Suggestions SEO",
-      "description": "Générez des suggestions de métadonnées pour la recherche et les réseaux sociaux à partir du contenu. Rien n'est modifié tant que vous n'appliquez pas une suggestion.",
+      "description": "Génère des suggestions de métadonnées pour la recherche et les réseaux sociaux à partir du contenu. Rien n'est modifié tant que tu n'appliques pas une suggestion.",
       "generate": "Générer des suggestions",
       "regenerate": "Générer à nouveau",
-      "notEnoughContent": "Ajoutez d'abord un titre, un chapeau ou du contenu.",
-      "review": "Vérifiez et modifiez les suggestions avant de les appliquer. L'IA peut se tromper.",
+      "notEnoughContent": "Ajoute d'abord un titre, un chapeau ou du contenu.",
+      "review": "Vérifie et modifie les suggestions avant de les appliquer. L'IA peut se tromper.",
       "current": "Actuel",
       "empty": "(vide)",
       "apply": "Appliquer",
@@ -3535,12 +3535,12 @@
     },
     "seoAnalysis": {
       "title": "Analyse SEO",
-      "description": "Laissez l'IA examiner le contenu et les métadonnées pour trouver des possibilités d'optimisation. Rien n'est modifié.",
+      "description": "Laisse l'IA examiner le contenu et les métadonnées pour trouver des possibilités d'optimisation. Rien n'est modifié.",
       "analyze": "Analyser le contenu",
       "reanalyze": "Analyser à nouveau",
-      "notEnoughContent": "Ajoutez d'abord un titre ou du contenu.",
+      "notEnoughContent": "Ajoute d'abord un titre ou du contenu.",
       "noFindings": "Aucune possibilité d'optimisation trouvée.",
-      "disclaimer": "L'IA peut se tromper. Considérez les remarques comme des suggestions.",
+      "disclaimer": "L'IA peut se tromper. Considère les remarques comme des suggestions.",
       "stats": {
         "wordCount": "Mots",
         "headingCount": "Intertitres",
