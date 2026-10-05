@@ -43,6 +43,6 @@
     "cancelledSubscriptions": "Gekündigte Mitgliedschaften & Inaktive Spenden",
     "viewCancelledSubscriptions": "Gekündigte Mitgliedschaften & Inaktive Spenden anzeigen",
     "subscriptionsDetail": "{type, select, Donation {Spende} other {Mitgliedschaft}}",
-    "subscribeAnother": "Jetzt Crowdfunding unterstützen"
+    "subscribeAnother": "Mitgliedschaft upgraden"
   }
 }

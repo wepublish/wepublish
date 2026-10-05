@@ -82,9 +82,13 @@ export const ProfileWrapper = styled(ContentWrapper)`
 type ProfilePageProps = Omit<
   ComponentProps<typeof PersonalDataFormContainer>,
   ''
-> & { className?: string };
+> & { className?: string; subscribeAnotherUrl?: string };
 
-function ProfilePage({ className, ...props }: ProfilePageProps) {
+function ProfilePage({
+  className,
+  subscribeAnotherUrl = '/mitmachen',
+  ...props
+}: ProfilePageProps) {
   const {
     elements: { H4, Alert },
   } = useWebsiteBuilder();
@@ -204,7 +208,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
               <SubscriptionListItemContent>
                 <Button
                   LinkComponent={Link}
-                  href={'/mitmachen'}
+                  href={subscribeAnotherUrl}
                 >
                   {t('user.subscribeAnother')}
                 </Button>

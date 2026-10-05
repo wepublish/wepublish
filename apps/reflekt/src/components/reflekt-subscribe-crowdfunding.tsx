@@ -39,6 +39,7 @@ import {
 import { useFormContext } from 'react-hook-form';
 
 import { euclidCircularB, robotoMono } from '../theme';
+import { useForceUpgradeRedirect } from './hooks/use-force-upgrade-redirect';
 import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 import { StyledReflektSubscribeBlock } from './reflekt-subscribe';
 
@@ -444,6 +445,8 @@ const CrowdfundingSubscribeBlock = styled(StyledReflektSubscribeBlock)`
 export const ReflektSubscribeCrowdfunding = (
   props: BuilderSubscribeBlockProps
 ) => {
+  useForceUpgradeRedirect(props.memberPlans);
+
   const {
     query: { upgradeSubscriptionId },
   } = useContext(BuilderRouterContext);
