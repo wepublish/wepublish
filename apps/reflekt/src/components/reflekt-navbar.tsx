@@ -686,7 +686,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       hasUnpaidInvoices,
       loginBtn = { href: '/login' },
       profileBtn = { href: '/profile' },
-      subscribeBtn = { href: '/crowdfunding' },
+      subscribeBtn = { href: '/mitmachen' },
       isMenuOpen: controlledIsMenuOpen,
       onMenuToggle,
       navPaperClassName,
