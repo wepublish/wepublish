@@ -317,46 +317,49 @@ Pinned by `fast-string-prototype.spec.ts` and `shared-store.fast-strings.spec.ts
 ### ⚠️ The Sentry packages must move as one, and must stay on 11+
 
 [package.json](../../package.json) keeps `@sentry/nestjs`, `@sentry/nextjs`,
-`@sentry/react` and `@sentry/profiling-node` on the same major, and
+`@sentry/react` and `@sentry/profiling-node` on one major;
 [apps/media/package.json](../../apps/media/package.json) repeats the two it
 ships into its own image.
 
-**Why 11+.** On 10 the API died on boot, before Nest built the module graph:
+**Why 11+.** On 10 the API died on boot: `TypeError: Cannot redefine property:
+Cron`. `@nestjs/schedule` 12 is ESM only, so its decorator exports are
+non-configurable and shimmer cannot patch them. Sentry 11 dropped that
+import-in-the-middle instrumentation (getsentry/sentry-javascript#22805).
 
-```
-TypeError: Cannot redefine property: Cron
-  at SentryNestScheduleInstrumentation._wrap (@opentelemetry/instrumentation)
-```
+**Why together.** `@sentry/profiling-node` pins `@sentry/node` exactly, so a
+mixed set installs two `@sentry/node` copies with separate `__SENTRY__`
+carriers. Bumping only nestjs + profiling-node did not compile: `Type
+'Integration & { name: string; }' is not assignable to type 'Integration'` — a
+v11 integration handed to a v10 `Sentry.init`. Nothing type-checks this; bump
+all four together.
 
-`@nestjs/schedule` 12 is ESM only (`"type": "module"`, no CJS build), so
-`Cron`, `Interval` and `Timeout` arrive as non-configurable bindings that
-shimmer cannot redefine. Sentry 11 removed the import-in-the-middle
-instrumentation from `@sentry/nestjs` (getsentry/sentry-javascript#22805) in
-favour of orchestrion; verified on 2026-10-05 that the installed 11.4.0 build
-contains no reference to `@nestjs/schedule` at all.
+v11 renames: `beforeSendSpan` gets a streamed span with `attributes`, not
+`data`; `profilesSampleRate` became `profileLifecycle` +
+`profileSessionSampleRate`; `withSentryConfig` moved to `@sentry/nextjs/config`
+— a subpath export node10 `moduleResolution` cannot see, so every app needs
+`moduleResolution: bundler`.
 
-**Why together.** `@sentry/profiling-node` pins `@sentry/node` to an exact
-version, so a mixed set installs two `@sentry/node` copies with separate
-`globalThis.__SENTRY__` carriers. Bumping only nestjs + profiling-node was
-tried first and failed to compile:
+**The API boots with a warning, and it is accurate — leave it:** *"Failed to
+register diagnostics-channel injection hooks, so channel-based integrations
+will not record spans."* v11 instruments `express`, `graphql`, `@nestjs/*`,
+`pg` and Prisma via diagnostics channels injected by runtime module hooks,
+which the `@yao-pkg/pkg` binary cannot register. Errors still report; span
+detail is lost. Two fixes failed on 2026-10-05 — do not redo them:
 
-```
-Type 'Integration & { name: string; }' is not assignable to type 'Integration'.
-  Type 'Client<ClientOptions<…>>' is missing the following properties:
-  _dataCollection, _unhandledSessionStatus, getDataCollectionOptions, …
-```
+- `sentryOrchestrionWebpackPlugin` (build-time injection) builds clean and
+  injects **nothing**: `@nx/webpack` externalizes node_modules, so webpack
+  never compiles them. Its externals warning cannot fire either — it inspects
+  only string/RegExp/object externals and nx passes a function. Grep the
+  bundle for `tracingChannel` rather than trusting a clean build.
+- Bundling them instead (`externalDependencies` listing only native/Prisma/pg)
+  dies on Nest's dynamic loaders: `Can't resolve 'class-transformer/cjs/storage'`
+  plus critical-dependency warnings from `load-package.util.js`,
+  `load-adapter.js`, `optional-require.js` — the `platform-express` failure
+  below, multiplied.
 
-— `nodeProfilingIntegration()` from 11 handed to a 10 `Sentry.init`.
-
-**Load-bearing, and not type-checked anywhere:** nothing fails if someone bumps
-one Sentry package alone — npm resolves it happily and only the build breaks,
-or worse, only the carrier splits at runtime. Change all four together.
-
-Two v11 renames the config depends on: `beforeSendSpan` receives a streamed
-span carrying `attributes`, not `data` (span streaming is the v11 default), and
-`profilesSampleRate` is gone in favour of `profileLifecycle` plus
-`profileSessionSampleRate`. `withSentryConfig` also moved to
-`@sentry/nextjs/config` — every `apps/*/next.config.js` imports it from there.
+`enableRuntimeChannelInjection: false` silences the warning without restoring
+spans, so it is deliberately unset. Unverified lead: Sentry uses in-process
+`module.registerHooks()` only on Node >=24.13, which may work in a snapshot.
 
 Pinned by [libs/utils/sentry/instrumentation.nestjs.spec.ts](../../libs/utils/sentry/instrumentation.nestjs.spec.ts),
 which guards the options shape but not the versions.
@@ -370,12 +373,8 @@ static assets through an unmounted `express.static` and falls through to
 `app.use(handleRequest(indexPath))` — neither call names a path.
 
 The express 4 version used `app.get('*.*', …)` for assets and `app.use('*', …)`
-for the SPA fallback. Under express 5 (path-to-regexp 8) that throws at route
-registration, so the editor host exits before it listens:
-
-```
-PathError [TypeError]: Missing parameter name at index 1: *.*
-```
+for the SPA fallback. Under express 5 the editor host exits before it listens:
+`PathError [TypeError]: Missing parameter name at index 1: *.*`.
 
 path-to-regexp 8 requires every wildcard to be named (`/*splat`), and `'*.*'`
 has no valid spelling at all — the "has a file extension" test it stood for is
