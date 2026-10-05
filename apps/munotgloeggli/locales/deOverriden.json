@@ -2,14 +2,41 @@
   "navbar": {
     "subscribe": "Mitglied werden"
   },
+  "paywall": {
+    "subscribe": "Mitglied werden"
+  },
   "crowdfunding": {
     "goal": "{type, select, Revenue {Bereits <bold>{revenue}</bold> finanziert} other {Bereits <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {Person ist} other {Personen sind}} dabei}}"
   },
   "subscribe": {
+    "chooseSubscription": "Mitgliedschaft wählen",
     "button": {
       "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}} {productType, select, Donation {spenden} other {Mitglied werden}}",
       "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}} {productType, select, Donation {spenden} other {Mitglied werden}}",
       "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}} {productType, select, Donation {spenden} other {Mitglied werden}}"
+    },
+    "warning": {
+      "openInvoices": "Du hast bereits eine Mitgliedschaft mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem <Link href=\"/profile\">Profil</Link> anschauen.",
+      "alreadyHasSubscription": "Du hast diese Mitgliedschaft schon, bist du dir sicher? Du kannst deine Mitgliedschaften in deinem <Link href=\"/profile\">Profil</Link> anschauen."
     }
+  },
+  "subscription": {
+    "unpaid": "{type, select, Donation {Spende} other {Mitgliedschaft}} ist unbezahlt",
+    "cancel": "{type, select, Donation {Spende} other {Mitgliedschaft}} kündigen",
+    "cancelConfirmation": "{type, select, Donation {Alle offenen Rechnungen zur Spende werden storniert.} other {Die Mitgliedschaft wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offenen Rechnungen der Mitgliedschaft werden storniert.}}",
+    "extendEarly": "{type, select, Donation {Spende} other {Mitgliedschaft}} frühzeitig verlängern?",
+    "extendEarlyConfirmation": "Wir freuen uns, dass du deine {type, select, Donation {Spende} other {Mitgliedschaft}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
+    "noActiveSubscriptions": "Du hast noch keine aktive Mitgliedschaft.",
+    "subscribeNow": "Jetzt Mitglied werden."
+  },
+  "invoice": {
+    "payrexxWarning": "Wir haben vor einiger Zeit das Membersystem angepasst und deine Mitgliedschaft ist veraltet. Sie wird automatisch angepasst wenn du auf \"Jetzt Bezahlen\" drückst."
+  },
+  "user": {
+    "activeSubscriptions": "Aktive {type, select, Donation {Spenden} other {Mitgliedschaften}}",
+    "cancelledSubscriptions": "Gekündigte Mitgliedschaften & Inaktive Spenden",
+    "subscriptionsDetail": "{type, select, Donation {Spende} other {Mitgliedschaft}}",
+    "viewCancelledSubscriptions": "Gekündigte Mitgliedschaften & Inaktive Spenden anzeigen",
+    "subscribeAnother": "Andere Mitgliedschaft lösen"
   }
 }
