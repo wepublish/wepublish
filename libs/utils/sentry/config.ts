@@ -1,7 +1,11 @@
 /**
  * Shared Sentry configuration options used across all instrumentation variants.
  */
-import type { Integration, SamplingContext, SpanJSON } from '@sentry/core';
+import type {
+  Integration,
+  SamplingContext,
+  StreamedSpanJSON,
+} from '@sentry/core';
 
 const tracesSampleRate = () =>
   process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0;
@@ -12,10 +16,13 @@ export const getBaseConfig = () => ({
   sendDefaultPii: true,
   tracesSampleRate: tracesSampleRate(),
   release: process.env.APP_RELEASE_ID,
-  beforeSendSpan: (span: SpanJSON) => {
+  // Span streaming is the default in Sentry 11, so spans carry `attributes`
+  // rather than the `data` bag they had in 10.
+  beforeSendSpan: (span: StreamedSpanJSON) => {
     if (process.env.APP_NAME) {
-      span.data.app_name = process.env.APP_NAME;
+      span.attributes.app_name = process.env.APP_NAME;
     }
+
     return span;
   },
 });
