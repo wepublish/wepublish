@@ -1,5 +1,6 @@
 {
   "translation": {
+    "lastSavedAt": "Zuletzt gespeichert {{date, ccc PP pp}}",
     "preview": {
       "backToEditor": "Editor",
       "mobile": "Mobil",
@@ -85,6 +86,7 @@
         "draft": "Entwurf",
         "draftCreated": "Artikelentwurf erstellt",
         "draftSaved": "Artikelentwurf gespeichert",
+        "draftAutosaved": "Artikelentwurf automatisch gespeichert",
         "duplicate": "Duplizieren",
         "metadata": "Metadaten",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
@@ -1470,6 +1472,7 @@
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "pageDraftCreated": "Seiten Entwurf erstellt",
         "pageDraftSaved": "Seiten Entwurf gespeichert",
+        "pageDraftAutosaved": "Seitenentwurf automatisch gespeichert",
         "pageNotFound": "Seite nicht gefunden",
         "pagePending": "Seite geplant",
         "pagePublished": "Seite publiziert",

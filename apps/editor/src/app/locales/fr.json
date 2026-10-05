@@ -1,5 +1,6 @@
 {
   "translation": {
+    "lastSavedAt": "Dernier enregistrement {{date, ccc PP pp}}",
     "preview": {
       "backToEditor": "Éditeur",
       "mobile": "Mobile",
@@ -85,6 +86,7 @@
         "draft": "Brouillon",
         "draftCreated": "Projet d'article créé",
         "draftSaved": "Projet d'article sauvegardé",
+        "draftAutosaved": "Brouillon d'article enregistré automatiquement",
         "duplicate": "Dupliquer",
         "metadata": "Métadonnées",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
@@ -1461,6 +1463,7 @@
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "pageDraftCreated": "Brouillon créé",
         "pageDraftSaved": "Brouillon sauvegardé",
+        "pageDraftAutosaved": "Brouillon de page enregistré automatiquement",
         "pageNotFound": "Page non trouvée",
         "pagePending": "Page en attente",
         "pagePublished": "Page publiée",
