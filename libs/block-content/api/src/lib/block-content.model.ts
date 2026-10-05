@@ -16,6 +16,7 @@ import { ImageBlock, ImageBlockInput } from './image/image-block.model';
 import { BreakBlock, BreakBlockInput } from './break/break-block.model';
 import { EventBlock, EventBlockInput } from './event/event-block.model';
 import { CommentBlock, CommentBlockInput } from './comment/comment-block.model';
+import { AuthorBlock, AuthorBlockInput } from './author/author-block.model';
 import { PollBlock, PollBlockInput } from './poll/poll-block.model';
 import {
   ImageGalleryBlock,
@@ -122,6 +123,7 @@ export const BlockContent = createUnionType({
       EventBlock,
       CommentBlock,
       PollBlock,
+      AuthorBlock,
       CrowdfundingBlock,
       IFrameBlock,
       BildwurfAdBlock,
@@ -164,6 +166,9 @@ export const BlockContent = createUnionType({
         return BreakBlock.name;
       case BlockType.Poll:
         return PollBlock.name;
+
+      case BlockType.Author:
+        return AuthorBlock.name;
       case BlockType.Crowdfunding:
         return CrowdfundingBlock.name;
       case BlockType.Event:
@@ -240,6 +245,9 @@ export class BlockContentInput {
   [BlockType.LinkPageBreak]?: BreakBlockInput;
   @Field(() => PollBlockInput, { nullable: true })
   [BlockType.Poll]?: PollBlockInput;
+
+  @Field(() => AuthorBlockInput, { nullable: true })
+  [BlockType.Author]?: AuthorBlockInput;
   @Field(() => CrowdfundingBlockInput, { nullable: true })
   [BlockType.Crowdfunding]?: CrowdfundingBlockInput;
   @Field(() => EventBlockInput, { nullable: true })

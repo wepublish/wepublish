@@ -81,6 +81,13 @@ export class AuthorFilter {
 
   @Field({ nullable: true })
   hideOnTeam?: boolean;
+
+  @Field({
+    nullable: true,
+    description:
+      'Keeps only authors that are credited on an article revision published by now, or only those that are not when set to false.',
+  })
+  hasArticles?: boolean;
 }
 
 export enum AuthorSort {

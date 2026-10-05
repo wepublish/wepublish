@@ -3,6 +3,7 @@ import {
   BuilderButtonProps,
   BuilderIconButtonProps,
   BuilderModalProps,
+  BuilderTextFieldProps,
 } from './ui.interface';
 import { useWebsiteBuilder } from './website-builder.context';
 
@@ -28,6 +29,14 @@ export const Modal = (props: BuilderModalProps) => {
   } = useWebsiteBuilder();
 
   return <Modal {...props} />;
+};
+
+export const TextField = (props: BuilderTextFieldProps) => {
+  const {
+    elements: { TextField },
+  } = useWebsiteBuilder();
+
+  return <TextField {...props} />;
 };
 
 export const Alert = (props: BuilderAlertProps) => {

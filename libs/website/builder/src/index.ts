@@ -42,6 +42,8 @@ export * from './lib/image.components';
 export * from './lib/article.interface';
 export * from './lib/article.components';
 
+export * from './lib/author.components';
+
 export * from './lib/peer.interface';
 export * from './lib/peer.components';
 
