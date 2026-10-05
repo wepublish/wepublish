@@ -173,10 +173,14 @@ fragment FullMailchimpFormBlock on MailchimpFormBlock {
       urlParam
       defaultValue
       value
+      optionsLayout
       options {
         id
         name
         description
+        image {
+          ...FullImage
+        }
       }
     }
   }

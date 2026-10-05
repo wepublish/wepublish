@@ -43,6 +43,11 @@ import {
   BlockContent,
   FullBlockTemplateBlockFragment,
   PaymentPeriodicity,
+  MailchimpFormBlock,
+  MailchimpFormFieldConfig,
+  MailchimpFormInterestOption,
+  MailchimpFormOptionsLayout,
+  Image,
 } from '@wepublish/website/api';
 import { mockImage } from './image';
 import { mockRichText } from './richtext';
@@ -71,7 +76,7 @@ export const mockTitleBlock = ({
 });
 
 export const mockImageBlock = ({
-  image = mockImage(),
+  image = mockImage() as Image,
   linkUrl = null,
 }: Partial<ImageBlock> = {}): ImageBlock => ({
   type: BlockType.Image,
@@ -97,7 +102,7 @@ export const mockRichTextBlock = ({
 });
 
 export const mockQuoteBlock = ({
-  image = mockImage(),
+  image = mockImage() as Image,
   author = 'John Doe',
   quote = 'This is a quote that is very long so that we can make sure that linebreaks correctly happen.',
 }: Partial<QuoteBlock> = {}): QuoteBlock => ({
@@ -114,7 +119,7 @@ export const mockQuoteBlock = ({
 
 export const mockBreakBlock = ({
   hideButton = true,
-  image = mockImage(),
+  image = mockImage() as Image,
   richText = mockRichText(),
   linkTarget = '__blank',
   linkText = 'Button Text',
@@ -155,7 +160,8 @@ export const mockEventBlock = ({
     mockEvent(),
     mockEvent(),
     mockEvent(),
-  ],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ] as any[],
 }: Partial<EventBlock> = {}): EventBlock => ({
   type: BlockType.Event,
   __typename: 'EventBlock',
@@ -409,17 +415,17 @@ export const mockImageGalleryBlock = ({
   images = [
     {
       __typename: 'ImageGalleryImage',
-      image: mockImage(),
+      image: mockImage() as Maybe<Image>,
       caption: 'Foobar',
     },
     {
       __typename: 'ImageGalleryImage',
-      image: mockImage(),
+      image: mockImage() as Maybe<Image>,
       caption: 'Bazfoo',
     },
     {
       __typename: 'ImageGalleryImage',
-      image: mockImage(),
+      image: mockImage() as Maybe<Image>,
       caption: 'Foobaz',
     },
   ],
@@ -433,7 +439,7 @@ export const mockImageGalleryBlock = ({
 });
 
 export const mockPageTeaser = ({
-  image = mockImage(),
+  image = mockImage() as Maybe<Image>,
   lead = 'This is a lead',
   preTitle = 'This is a pretitle',
   title = 'This is a title',
@@ -449,7 +455,7 @@ export const mockPageTeaser = ({
 });
 
 export const mockEventTeaser = ({
-  image = mockImage(),
+  image = mockImage() as Maybe<Image>,
   lead = 'This is a lead',
   preTitle = 'This is a pretitle',
   title = 'This is a title',
@@ -465,7 +471,7 @@ export const mockEventTeaser = ({
 });
 
 export const mockArticleTeaser = ({
-  image = mockImage(),
+  image = mockImage() as Maybe<Image>,
   lead = 'This is a lead',
   preTitle = 'This is a pretitle',
   title = 'This is a title',
@@ -481,7 +487,7 @@ export const mockArticleTeaser = ({
 });
 
 export const mockCustomTeaser = ({
-  image = mockImage(),
+  image = mockImage() as Maybe<Image>,
   lead = 'This is a lead',
   preTitle = 'This is a pretitle',
   title = 'This is a title',
@@ -739,6 +745,129 @@ export const mockSubscribeBlock = ({
   goodieMinValueAppliesToUpgrade,
   hideRepeatGoodieOnUpgrade,
 });
+export const mockMailchimpFormInterestOption = ({
+  id = nanoid(),
+  name = 'Daily Briefing',
+  description = 'The most important news every morning.',
+  image = mockImage() as Maybe<Image>,
+}: Partial<MailchimpFormInterestOption> = {}): MailchimpFormInterestOption => ({
+  __typename: 'MailchimpFormInterestOption',
+  id,
+  name,
+  description,
+  image,
+  imageID: image?.id,
+});
+
+export const mockMailchimpFormFieldConfig = ({
+  inputType = 'email',
+  name = 'EMAIL',
+  label = 'Email',
+  description = null,
+  required = true,
+  urlParam = null,
+  defaultValue = null,
+  value = null,
+  optionsLayout = MailchimpFormOptionsLayout.List,
+  options = [],
+}: Partial<MailchimpFormFieldConfig> = {}): MailchimpFormFieldConfig => ({
+  __typename: 'MailchimpFormFieldConfig',
+  inputType,
+  name,
+  label,
+  description,
+  required,
+  urlParam,
+  defaultValue,
+  value,
+  optionsLayout,
+  options,
+});
+
+export const mockMailchimpFormBlock = ({
+  syncProviderId = 'sync-provider',
+  listId = 'list-daily',
+  interests = [],
+  autoFocus = false,
+  doubleOptIn = true,
+  buttonColor = null,
+  buttonFontColor = null,
+  submitButtonLabel = null,
+  successUrl = null,
+  successPage = null,
+  steps = [
+    {
+      __typename: 'MailchimpFormStep',
+      skipIfFieldsFilled: [],
+      skipIfInterestsFilled: [],
+      showIfInterestsFilled: [],
+      inputs: [mockMailchimpFormFieldConfig()],
+    },
+  ],
+}: Partial<MailchimpFormBlock> = {}): MailchimpFormBlock => ({
+  type: BlockType.MailchimpForm,
+  __typename: 'MailchimpFormBlock',
+  blockStyle: null,
+  blockStyleName: null,
+  disabled: false,
+  syncProviderId,
+  listId,
+  interests,
+  autoFocus,
+  doubleOptIn,
+  buttonColor,
+  buttonFontColor,
+  submitButtonLabel,
+  successUrl,
+  successPage,
+  steps,
+});
+
+export const mockMailchimpFormInterestsInput = (
+  input: Partial<MailchimpFormFieldConfig> = {}
+): MailchimpFormFieldConfig =>
+  mockMailchimpFormFieldConfig({
+    inputType: 'groups',
+    name: null,
+    label: 'Newsletters',
+    required: false,
+    options: [
+      mockMailchimpFormInterestOption({ id: 'interest-daily' }),
+      mockMailchimpFormInterestOption({
+        id: 'interest-weekly',
+        name: 'Weekly Culture',
+        description: 'Exhibitions, concerts and books of the week.',
+      }),
+      mockMailchimpFormInterestOption({
+        id: 'interest-local',
+        name: 'Local News',
+        description: null,
+        image: null,
+      }),
+    ],
+    ...input,
+  });
+
+export const mockInterestsMailchimpFormBlock = (
+  block: Partial<MailchimpFormBlock> = {},
+  interestsInput: Partial<MailchimpFormFieldConfig> = {}
+): MailchimpFormBlock =>
+  mockMailchimpFormBlock({
+    steps: [
+      {
+        __typename: 'MailchimpFormStep',
+        skipIfFieldsFilled: [],
+        skipIfInterestsFilled: [],
+        showIfInterestsFilled: [],
+        inputs: [
+          mockMailchimpFormFieldConfig(),
+          mockMailchimpFormInterestsInput(interestsInput),
+        ],
+      },
+    ],
+    ...block,
+  });
+
 export type MockTabbedContent = (args?: {
   blockStyle?: string;
   blocks?: BlockWithAlignment[];
@@ -820,6 +949,7 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
   __typename: 'FlexBlock',
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mockBlockTemplateBlock = ({
   templateId = '1234-1234',
   template = {

@@ -73,7 +73,10 @@ export type BlockWithoutTeaser_ListicleBlock_Fragment = { __typename: 'ListicleB
       & FullImageFragment
     ) | null }> };
 
-export type BlockWithoutTeaser_MailchimpFormBlock_Fragment = { __typename: 'MailchimpFormBlock', disabled?: boolean | null, blockStyle?: string | null, blockStyleName?: string | null, type: Types.BlockType, syncProviderId?: string | null, listId?: string | null, interests: Array<string>, autoFocus: boolean, doubleOptIn?: boolean | null, buttonColor?: string | null, buttonFontColor?: string | null, submitButtonLabel?: string | null, successUrl?: string | null, steps: Array<{ __typename?: 'MailchimpFormStep', skipIfFieldsFilled: Array<string>, skipIfInterestsFilled: Array<string>, showIfInterestsFilled: Array<string>, inputs: Array<{ __typename?: 'MailchimpFormFieldConfig', inputType?: string | null, name?: string | null, label?: string | null, description?: string | null, required?: boolean | null, urlParam?: string | null, defaultValue?: string | null, value?: string | null, options: Array<{ __typename?: 'MailchimpFormInterestOption', id: string, name: string, description?: string | null }> }> }>, successPage?: { __typename?: 'MailchimpFormSuccessPage', description?: string | null, options: Array<{ __typename?: 'MailchimpFormSuccessOption', label: string, background: string, url: string, mergeFieldName?: string | null, mergeFieldValue?: string | null }> } | null };
+export type BlockWithoutTeaser_MailchimpFormBlock_Fragment = { __typename: 'MailchimpFormBlock', disabled?: boolean | null, blockStyle?: string | null, blockStyleName?: string | null, type: Types.BlockType, syncProviderId?: string | null, listId?: string | null, interests: Array<string>, autoFocus: boolean, doubleOptIn?: boolean | null, buttonColor?: string | null, buttonFontColor?: string | null, submitButtonLabel?: string | null, successUrl?: string | null, steps: Array<{ __typename?: 'MailchimpFormStep', skipIfFieldsFilled: Array<string>, skipIfInterestsFilled: Array<string>, showIfInterestsFilled: Array<string>, inputs: Array<{ __typename?: 'MailchimpFormFieldConfig', inputType?: string | null, name?: string | null, label?: string | null, description?: string | null, required?: boolean | null, urlParam?: string | null, defaultValue?: string | null, value?: string | null, optionsLayout: Types.MailchimpFormOptionsLayout, options: Array<{ __typename?: 'MailchimpFormInterestOption', id: string, name: string, description?: string | null, image?: (
+          { __typename?: 'Image' }
+          & FullImageFragment
+        ) | null }> }> }>, successPage?: { __typename?: 'MailchimpFormSuccessPage', description?: string | null, options: Array<{ __typename?: 'MailchimpFormSuccessOption', label: string, background: string, url: string, mergeFieldName?: string | null, mergeFieldValue?: string | null }> } | null };
 
 export type BlockWithoutTeaser_PolisConversationBlock_Fragment = { __typename: 'PolisConversationBlock', disabled?: boolean | null, blockStyle?: string | null, blockStyleName?: string | null, type: Types.BlockType, conversationID?: string | null };
 
@@ -911,10 +914,14 @@ export const BlockWithoutTeaserFragmentDoc = gql`
         urlParam
         defaultValue
         value
+        optionsLayout
         options {
           id
           name
           description
+          image {
+            ...FullImage
+          }
         }
       }
     }
