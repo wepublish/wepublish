@@ -10,9 +10,12 @@ import {
   FullImageFragment,
   FullPoll,
   FullTeaserFragment,
+  MailchimpFormOptionsLayout,
+  NestedBlockTemplateBlockFragment,
   PageWithoutBlocksFragment,
   SubscribeBlock,
   SubscribeBlockField,
+  SubscribePeriodicityDisplay,
   Tag,
   TeaserInput,
   TeaserListBlockSort,
@@ -75,9 +78,11 @@ export interface SubscribeBlockValue extends BaseBlockValue {
   memberPlanIds: string[];
   memberPlanRenderSettings: SubscribeBlock['memberPlanRenderSettings'];
   fields: SubscribeBlockField[];
+  periodicityDisplay?: SubscribePeriodicityDisplay | null;
   showGoodies: boolean;
   showDiscountCodes: boolean;
   goodieMinValue?: number | null;
+  goodieMinValueAppliesToUpgrade: boolean;
   hideRepeatGoodieOnUpgrade: boolean;
 }
 
@@ -85,6 +90,7 @@ export interface MailchimpFormInterestOptionValue {
   id: string;
   name: string;
   description?: string | null;
+  image?: FullImageFragment | null;
 }
 
 export interface MailchimpFormFieldConfigValue {
@@ -96,6 +102,7 @@ export interface MailchimpFormFieldConfigValue {
   urlParam?: string | null;
   defaultValue?: string | null;
   value?: string | null;
+  optionsLayout: MailchimpFormOptionsLayout;
   options: MailchimpFormInterestOptionValue[];
 }
 
@@ -181,6 +188,10 @@ export type FlexBlockWithAlignment = {
 
 export interface FlexBlockValue extends BaseBlockValue {
   blocks: Array<FlexBlockWithAlignment>;
+}
+
+export interface BlockTemplateBlockValue extends BaseBlockValue {
+  template?: NestedBlockTemplateBlockFragment['template'];
 }
 
 export enum EmbedType {
@@ -477,6 +488,10 @@ export type FlexBlockListValue = BlockListValue<
   EditorBlockType.FlexBlock,
   FlexBlockValue
 >;
+export type BlockTemplateListValue = BlockListValue<
+  EditorBlockType.BlockTemplate,
+  BlockTemplateBlockValue
+>;
 
 export type BlockValue =
   | TitleBlockListValue
@@ -499,7 +514,8 @@ export type BlockValue =
   | CommentBlockListValue
   | EventBlockListValue
   | TeaserListBlockListValue
-  | FlexBlockListValue;
+  | FlexBlockListValue
+  | BlockTemplateListValue;
 
 export function mapBlockValueToBlockInput(
   block: BlockValue
@@ -565,9 +581,12 @@ export function mapBlockValueToBlockInput(
           memberPlanIds: block.value.memberPlanIds ?? [],
           memberPlanRenderSettings: block.value.memberPlanRenderSettings ?? [],
           fields: block.value.fields,
+          periodicityDisplay: block.value.periodicityDisplay,
           showGoodies: block.value.showGoodies,
           showDiscountCodes: block.value.showDiscountCodes,
           goodieMinValue: block.value.goodieMinValue ?? null,
+          goodieMinValueAppliesToUpgrade:
+            block.value.goodieMinValueAppliesToUpgrade,
           hideRepeatGoodieOnUpgrade: block.value.hideRepeatGoodieOnUpgrade,
         },
       };
@@ -599,11 +618,16 @@ export function mapBlockValueToBlockInput(
               urlParam: input.urlParam,
               defaultValue: input.defaultValue,
               value: input.value,
-              options: input.options.map(option => ({
-                id: option.id,
-                name: option.name,
-                description: option.description,
-              })),
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
+              options: input.options
+                .filter(option => !!option.id)
+                .map(option => ({
+                  id: option.id,
+                  name: option.name,
+                  description: option.description,
+                  imageID: option.image?.id,
+                })),
             })),
           })),
           successPage:
@@ -928,6 +952,15 @@ export function mapBlockValueToBlockInput(
 
       return { flexBlock };
     }
+    case EditorBlockType.BlockTemplate: {
+      return {
+        blockTemplate: {
+          templateId: block.value.template?.id ?? '',
+          blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
+        },
+      };
+    }
   }
 }
 
@@ -1249,8 +1282,11 @@ export function blockForQueryBlock(
           showGoodies: block.showGoodies ?? false,
           showDiscountCodes: block.showDiscountCodes ?? false,
           goodieMinValue: block.goodieMinValue ?? null,
+          goodieMinValueAppliesToUpgrade:
+            block.goodieMinValueAppliesToUpgrade ?? false,
           hideRepeatGoodieOnUpgrade: block.hideRepeatGoodieOnUpgrade ?? false,
           memberPlanIds: block.memberPlanIds ?? [],
+          periodicityDisplay: block.periodicityDisplay,
           memberPlanRenderSettings: block.memberPlanRenderSettings,
         },
       };
@@ -1284,10 +1320,13 @@ export function blockForQueryBlock(
               urlParam: input.urlParam ?? null,
               defaultValue: input.defaultValue ?? null,
               value: input.value ?? null,
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
               options: (input.options ?? []).map(option => ({
                 id: option.id,
                 name: option.name,
                 description: option.description ?? null,
+                image: option.image ?? null,
               })),
             })),
           })),
@@ -1437,6 +1476,17 @@ export function blockForQueryBlock(
                 blockForQueryBlock(block as FullBlockFragment)
               : undefined,
           })),
+        },
+      };
+
+    case 'BlockTemplateBlock':
+      return {
+        key,
+        type: EditorBlockType.BlockTemplate,
+        value: {
+          disabled: block.disabled,
+          blockStyle: block.blockStyle,
+          template: block.template,
         },
       };
 

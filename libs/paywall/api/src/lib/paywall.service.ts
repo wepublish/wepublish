@@ -127,22 +127,6 @@ export class PaywallService {
     });
   }
 
-  // @PrimeDataLoader(MemberPlanDataloader)
-  public getPaywallMemberplans(id: string) {
-    return this.prisma.memberPlan.findMany({
-      where: {
-        paywalls: {
-          some: {
-            paywallId: id,
-          },
-        },
-      },
-      include: {
-        availablePaymentMethods: true,
-      },
-    });
-  }
-
   public getPaywallBypasses(id: string) {
     return this.prisma.paywallBypass.findMany({
       where: {

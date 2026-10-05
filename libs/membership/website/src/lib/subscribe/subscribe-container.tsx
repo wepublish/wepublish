@@ -15,6 +15,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { produce } from 'immer';
+import { getMonthlyEquivalentRange } from '../formatters/format-payment-period';
 import { sortBy } from 'ramda';
 import { useMemo } from 'react';
 
@@ -51,7 +52,9 @@ export const SubscribeContainer = <
   T extends Exclude<BuilderUserFormFields, 'flair'>,
 >({
   filter = memberPlan => memberPlan,
-  sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),
+  sort = sortBy(
+    memberPlan => getMonthlyEquivalentRange(memberPlan).amountPerMonthMin
+  ),
   deactivateSubscriptionId,
   ...props
 }: SubscribeContainerProps<T>) => {

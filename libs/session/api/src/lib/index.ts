@@ -7,3 +7,4 @@ export * from './jwt.service';
 export * from './totp.model';
 export * from './totp.service';
 export * from './totp.resolver';
+export * from './impersonation';

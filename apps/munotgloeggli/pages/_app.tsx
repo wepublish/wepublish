@@ -48,6 +48,7 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import deOverriden from '../locales/deOverriden.json';
+import { MunotgloeggliCrowdfundingBlock } from '../src/components/website-builder-overwrites/blocks/crowdfunding';
 import { MunotgloeggliBaseTeaser } from '../src/components/website-builder-overwrites/blocks/teaser';
 import fontTheme from '../src/theme';
 
@@ -138,7 +139,10 @@ function CustomApp({
               elements={{ Link: NextWepublishLink }}
               date={{ format: dateFormatter }}
               meta={{ siteTitle }}
-              blocks={{ BaseTeaser: MunotgloeggliBaseTeaser }}
+              blocks={{
+                BaseTeaser: MunotgloeggliBaseTeaser,
+                Crowdfunding: MunotgloeggliCrowdfundingBlock,
+              }}
             >
               <CssBaseline />
 

@@ -1,5 +1,6 @@
 import { useApolloClient } from '@apollo/client';
 import {
+  getPreviewHost,
   setPreviewHandshakeState,
   useUser,
 } from '@wepublish/authentication/website';
@@ -16,6 +17,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const EXPIRED_JWT_MESSAGE =
   'Dieser Link ist nicht mehr gültig. Bitte hier einen neuen Link anfordern oder mit Benutzernamen und Passwort anmelden.';
@@ -83,12 +85,24 @@ export const withJwtHandler = <P extends object>(
     const client = useApolloClient();
     const [loginWithJwt] = useLoginWithJwtMutation();
     const { setToken, hasUser } = useUser();
+    const { t } = useTranslation();
 
     const [showTotpPrompt, setShowTotpPrompt] = useState(false);
     const [pendingJwt, setPendingJwt] = useState<string | null>(null);
     const [totpToken, setTotpToken] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>();
+
+    const refreshStore = useCallback(
+      () =>
+        client.refetchQueries({ include: 'active' }).catch(err => {
+          console.warn(
+            '[jwt] refreshing the store after login failed:',
+            err?.message ?? err
+          );
+        }),
+      [client]
+    );
 
     const handleJwt = useCallback(
       (jwt: string, options?: { fromPreview?: boolean }) => {
@@ -107,7 +121,7 @@ export const withJwtHandler = <P extends object>(
                 setPreviewHandshakeState('succeeded');
               }
 
-              await client.resetStore();
+              await refreshStore();
             }
           })
           .catch(err => {
@@ -130,7 +144,7 @@ export const withJwtHandler = <P extends object>(
             )}`;
           });
       },
-      [loginWithJwt, setToken, hasUser, client]
+      [loginWithJwt, setToken, hasUser, refreshStore]
     );
 
     const handleTotpSubmit = useCallback(async () => {
@@ -152,8 +166,9 @@ export const withJwtHandler = <P extends object>(
           setPendingJwt(null);
           setPreviewHandshakeState('succeeded');
 
-          await client.resetStore();
+          await refreshStore();
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(
           err?.message?.includes('TOTP_REQUIRED') ?
@@ -164,7 +179,7 @@ export const withJwtHandler = <P extends object>(
       } finally {
         setLoading(false);
       }
-    }, [pendingJwt, totpToken, loginWithJwt, setToken, client]);
+    }, [pendingJwt, totpToken, loginWithJwt, setToken, refreshStore]);
 
     const handleCancel = useCallback(() => {
       setShowTotpPrompt(false);
@@ -174,11 +189,13 @@ export const withJwtHandler = <P extends object>(
     }, []);
 
     useEffect(() => {
-      if (window.opener) {
+      const previewHost = getPreviewHost();
+
+      if (previewHost) {
         setPreviewHandshakeState('pending');
 
         const isTrustedMessage = (event: MessageEvent): boolean =>
-          event.source === window.opener;
+          event.source === previewHost;
 
         let received = false;
 
@@ -192,7 +209,7 @@ export const withJwtHandler = <P extends object>(
             received = true;
             window.removeEventListener('message', handleMessage);
             clearInterval(interval);
-            window.opener.postMessage('preview-jwt-received', '*');
+            previewHost.postMessage('preview-jwt-received', '*');
             handleJwt(jwt, { fromPreview: true });
           }
         };
@@ -201,7 +218,7 @@ export const withJwtHandler = <P extends object>(
         const MAX_ATTEMPTS = 150;
         let attempts = 0;
         const interval = setInterval(() => {
-          window.opener.postMessage('preview-jwt-ready', '*');
+          previewHost.postMessage('preview-jwt-ready', '*');
 
           if (++attempts >= MAX_ATTEMPTS) {
             clearInterval(interval);
@@ -209,7 +226,7 @@ export const withJwtHandler = <P extends object>(
             if (!received) {
               setPreviewHandshakeState('failed');
               console.warn(
-                '[preview] no JWT received from the opening window within 30s'
+                '[preview] no JWT received from the host window within 30s'
               );
             }
           }
@@ -238,11 +255,9 @@ export const withJwtHandler = <P extends object>(
         {showTotpPrompt && (
           <TotpOverlay onClick={handleCancel}>
             <TotpDialog onClick={e => e.stopPropagation()}>
-              <TotpTitle>Zwei-Faktor-Authentifizierung</TotpTitle>
+              <TotpTitle>{t('login.totp.verifyTitle')}</TotpTitle>
 
-              <TotpInfo>
-                Bitte gib den 6-stelligen Code aus deiner Authenticator-App ein.
-              </TotpInfo>
+              <TotpInfo>{t('login.totp.verifyDescription')}</TotpInfo>
 
               <TotpInput
                 value={totpToken}
@@ -270,7 +285,7 @@ export const withJwtHandler = <P extends object>(
                     cursor: 'pointer',
                   }}
                 >
-                  Abbrechen
+                  {t('user.cancel')}
                 </button>
                 <button
                   disabled={loading || !totpToken}
@@ -285,7 +300,7 @@ export const withJwtHandler = <P extends object>(
                     cursor: loading || !totpToken ? 'default' : 'pointer',
                   }}
                 >
-                  Bestätigen
+                  {t('user.confirm')}
                 </button>
               </ButtonRow>
             </TotpDialog>

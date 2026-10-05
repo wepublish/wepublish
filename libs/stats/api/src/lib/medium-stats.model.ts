@@ -1,0 +1,399 @@
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
+
+/**
+ * The contract version a medium announces, shown to operators as "an older one
+ * reports fewer figures". Raised whenever a release adds or removes a block, so
+ * that field can actually tell an updated medium from one that is behind.
+ *
+ * 2 — adds `audit`: editor actions, failures, active accounts, concentration,
+ *     impersonation, the action mix, the top errors and mutation usage.
+ */
+export const MEDIUM_STATS_SCHEMA_VERSION = 2;
+
+@ObjectType()
+export class MediumStatsWindow {
+  @Field(() => Date)
+  from!: Date;
+
+  @Field(() => Date)
+  to!: Date;
+}
+
+@ObjectType()
+export class MediumMoneyStats {
+  @Field(() => Int)
+  revenue!: number;
+
+  @Field(() => Int)
+  expectedRevenue!: number;
+
+  @Field(() => Int)
+  atRisk!: number;
+}
+
+@ObjectType()
+export class MediumDeactivationReasonCount {
+  @Field()
+  reason!: string;
+
+  @Field(() => Int)
+  count!: number;
+}
+
+@ObjectType()
+export class MediumMembershipStats {
+  @Field(() => Int)
+  activeSubscribers!: number;
+
+  @Field(() => Int)
+  newSubscribers!: number;
+
+  @Field(() => Int)
+  deactivations!: number;
+
+  @Field(() => [MediumDeactivationReasonCount])
+  deactivationsByReason!: MediumDeactivationReasonCount[];
+}
+
+/**
+ * State of the database's own migration history. A deployment that dies during
+ * a migration leaves the schema half-applied, and nothing applies the rest
+ * until someone resolves it — so this travels with the operational stats.
+ */
+@ObjectType()
+export class MediumMigrationSummary {
+  @Field(() => Int)
+  total!: number;
+
+  @Field(() => Int)
+  applied!: number;
+
+  @Field(() => Int)
+  failed!: number;
+
+  @Field(() => Int)
+  rolledBack!: number;
+
+  @Field(() => Int)
+  running!: number;
+
+  @Field(() => String, { nullable: true })
+  lastMigrationName!: string | null;
+
+  @Field(() => String, { nullable: true })
+  lastMigrationState!: string | null;
+
+  @Field(() => Date, { nullable: true })
+  lastAppliedAt!: Date | null;
+
+  @Field(() => Boolean, {
+    description:
+      'The newest migration did not complete. The schema is then in a state nobody designed.',
+  })
+  lastMigrationFailed!: boolean;
+}
+
+/**
+ * Changelog entries that ask the medium to do something. Purely informative
+ * entries are never counted here — they need nobody's attention and would
+ * otherwise turn every release into an open task.
+ */
+@ObjectType()
+export class MediumChangelogStats {
+  @Field(() => Int, {
+    description:
+      'Action-required entries that nobody has confirmed yet. Informative entries are excluded.',
+  })
+  openActions!: number;
+
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      'Release date of the longest-open action-required entry, or null when none is open.',
+  })
+  oldestOpenActionAt!: Date | null;
+}
+
+@ObjectType()
+export class MediumOperationsStats {
+  @Field(() => Date, { nullable: true })
+  lastPeriodicJobAt!: Date | null;
+
+  @Field()
+  periodicJobFailing!: boolean;
+
+  @Field(() => String, { nullable: true })
+  periodicJobError!: string | null;
+
+  @Field(() => Int)
+  periodicJobTries!: number;
+
+  @Field(() => Int)
+  imageCount!: number;
+
+  @Field(() => Float)
+  imageBytes!: number;
+
+  @Field(() => Int)
+  documentCount!: number;
+
+  @Field(() => Float)
+  documentBytes!: number;
+
+  /** Images plus documents, as uploaded. Excludes derived image variants. */
+  @Field(() => Float)
+  storageBytes!: number;
+
+  @Field(() => Int)
+  mailchimpSyncErrors!: number;
+
+  @Field(() => MediumMigrationSummary)
+  migrations!: MediumMigrationSummary;
+
+  @Field(() => MediumChangelogStats)
+  changelog!: MediumChangelogStats;
+}
+
+@ObjectType()
+export class MediumEditorialStats {
+  @Field(() => Int)
+  articlesCount!: number;
+
+  @Field(() => Int)
+  authorsCount!: number;
+
+  @Field(() => Int)
+  articlesPublished!: number;
+
+  @Field(() => Date, { nullable: true })
+  lastPublishedAt!: Date | null;
+
+  @Field(() => Int)
+  pagesCount!: number;
+
+  @Field(() => Int)
+  pagesPublished!: number;
+
+  @Field(() => Int)
+  articleRevisionsCount!: number;
+
+  @Field(() => Int)
+  pageRevisionsCount!: number;
+}
+
+@ObjectType()
+export class MediumCommunityStats {
+  @Field(() => Int)
+  commentsPublished!: number;
+
+  @Field(() => Int)
+  commentsPendingModeration!: number;
+
+  @Field(() => Int)
+  activePolls!: number;
+
+  @Field(() => Int)
+  pollVotes!: number;
+}
+
+@ObjectType()
+export class MediumMailStats {
+  /**
+   * Every individual mail handed to the provider in the window — invoices,
+   * dunning, password links and campaign mail alike.
+   *
+   * `sends` below counts something narrower: the sentCount of CAMPAIGN jobs. A
+   * medium that mails 1023 invoices and runs no newsletter reports `sends: 0`,
+   * which reads as "nothing was sent" when the opposite is true. The two are
+   * kept apart rather than merged, because "did the newsletter go out" and "how
+   * much mail did we send" are different questions.
+   */
+  @Field(() => Int)
+  total!: number;
+
+  @Field(() => Int)
+  sends!: number;
+
+  @Field(() => Int)
+  failures!: number;
+
+  @Field(() => Int)
+  bounced!: number;
+
+  @Field(() => Int)
+  rejected!: number;
+
+  @Field(() => Date, { nullable: true })
+  lastCampaignAt!: Date | null;
+}
+
+@ObjectType()
+export class MediumAccountStats {
+  @Field(() => Int)
+  usersTotal!: number;
+
+  @Field(() => Int)
+  usersWithRole!: number;
+
+  @Field(() => Int)
+  adminCount!: number;
+
+  @Field(() => Int)
+  activeSessions!: number;
+
+  @Field(() => Int)
+  usersLoggedIn!: number;
+}
+
+@ObjectType()
+export class MediumIntegrationsStats {
+  @Field(() => Int)
+  mailProviders!: number;
+
+  @Field(() => Int)
+  paymentProviders!: number;
+
+  @Field(() => Int)
+  syncProviders!: number;
+
+  @Field(() => Int)
+  analyticsProviders!: number;
+}
+
+@ObjectType()
+export class MediumNetworkStats {
+  @Field(() => Int)
+  peersTotal!: number;
+
+  @Field(() => Int)
+  peersDisabled!: number;
+}
+
+@ObjectType()
+export class MediumMutationUsage {
+  @Field()
+  mutation!: string;
+
+  @Field(() => Int)
+  count!: number;
+}
+
+@ObjectType()
+export class MediumAuditError {
+  @Field({
+    description: 'First line of the error, capped — enough to recognise it.',
+  })
+  message!: string;
+
+  @Field(() => Int)
+  count!: number;
+}
+
+@ObjectType()
+export class MediumAuditActionCount {
+  @Field({ description: 'create, update, delete or other.' })
+  action!: string;
+
+  @Field(() => Int)
+  count!: number;
+}
+
+@ObjectType()
+export class MediumAuditStats {
+  @Field(() => Boolean, {
+    description:
+      'False when this installation keeps no audit log, in which case every figure below is zero and must not be read as "nothing happened".',
+  })
+  supported!: boolean;
+
+  @Field(() => Int, {
+    description: 'Permission gated editor actions in the window.',
+  })
+  actions!: number;
+
+  @Field(() => Int, {
+    description:
+      'Of those, the ones the system refused. A rate worth acting on needs both numbers, so they travel together.',
+  })
+  failedActions!: number;
+
+  @Field(() => Int, {
+    description:
+      'Accounts that performed at least one action in the 30 days ending with the window. Deliberately NOT the window itself: a one-day window would drop to zero every weekend and the curve would be unreadable.',
+  })
+  activeEditors!: number;
+
+  @Field(() => Int, {
+    description: 'Actions performed while impersonating another account.',
+  })
+  impersonatedActions!: number;
+
+  @Field(() => Float, {
+    nullable: true,
+    description:
+      'Share of all named-account actions performed by the single busiest account. Five editors where one does 90 % looks identical to five balanced ones in activeEditors alone — this is what tells them apart. Null when nobody acted.',
+  })
+  topEditorShare!: number | null;
+
+  @Field(() => [MediumAuditActionCount], {
+    description: 'How the actions split across create, update and delete.',
+  })
+  actionsByType!: MediumAuditActionCount[];
+
+  @Field(() => [MediumAuditError], {
+    description:
+      'The errors editors ran into most often, worst first. Without this the error rate says something is wrong but never what, and the answer sits one filtered page away.',
+  })
+  topErrors!: MediumAuditError[];
+
+  @Field(() => [MediumMutationUsage], {
+    description:
+      'How often each mutation was used in the window, most used first. Shows whether a shipped feature is actually being touched.',
+  })
+  mutationUsage!: MediumMutationUsage[];
+}
+
+@ObjectType()
+export class MediumStats {
+  @Field(() => Int)
+  schemaVersion!: number;
+
+  @Field(() => Date)
+  generatedAt!: Date;
+
+  @Field(() => String, { nullable: true })
+  currency!: string | null;
+
+  @Field(() => MediumStatsWindow)
+  window!: MediumStatsWindow;
+
+  @Field(() => MediumMoneyStats)
+  money!: MediumMoneyStats;
+
+  @Field(() => MediumMembershipStats)
+  membership!: MediumMembershipStats;
+
+  @Field(() => MediumOperationsStats)
+  operations!: MediumOperationsStats;
+
+  @Field(() => MediumEditorialStats)
+  editorial!: MediumEditorialStats;
+
+  @Field(() => MediumAuditStats)
+  audit!: MediumAuditStats;
+
+  @Field(() => MediumCommunityStats)
+  community!: MediumCommunityStats;
+
+  @Field(() => MediumMailStats)
+  mail!: MediumMailStats;
+
+  @Field(() => MediumAccountStats)
+  accounts!: MediumAccountStats;
+
+  @Field(() => MediumIntegrationsStats)
+  integrations!: MediumIntegrationsStats;
+
+  @Field(() => MediumNetworkStats)
+  network!: MediumNetworkStats;
+}

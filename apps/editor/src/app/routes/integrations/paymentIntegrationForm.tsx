@@ -1,4 +1,6 @@
 import {
+  CreatePaymentProviderSettingDocument,
+  DeletePaymentProviderSettingDocument,
   PaymentMethodMollie,
   PaymentProviderSettingsDocument,
   PaymentProviderType,
@@ -74,6 +76,14 @@ export function PaymentIntegrationForm() {
       mutation={UpdatePaymentProviderSettingDocument}
       dataKey="paymentProviderSettings"
       schema={paymentSettingsSchema}
+      registry={{
+        createMutation: CreatePaymentProviderSettingDocument,
+        deleteMutation: DeletePaymentProviderSettingDocument,
+        types: Object.values(PaymentProviderType).map(value => ({
+          label: value,
+          value,
+        })),
+      }}
       getLogo={setting => {
         switch (setting.type) {
           case PaymentProviderType.Bexio:

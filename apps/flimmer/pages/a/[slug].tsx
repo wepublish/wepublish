@@ -60,7 +60,7 @@ export default function ArticleBySlugOrId() {
   return (
     <>
       <ArticleContainer {...containerProps}>
-        {data?.article?.latest.authors.map(author => (
+        {data?.article?.latest.authors.map(({ author }) => (
           <AuthorWrapper
             key={author.id}
             fullWidth

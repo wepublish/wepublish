@@ -11,10 +11,17 @@ import {
   BuilderRouterContext,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { PollBlockResult } from './poll-block-result';
 import { usePollBlock } from './poll-block.context';
 import { H4 } from '@wepublish/ui';
+import { Trans, useTranslation } from 'react-i18next';
 
 export const isPollBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -42,6 +49,12 @@ export const PollBlockMeta = styled('div')`
   color: ${({ theme }) => theme.palette.text.disabled};
 `;
 
+const subscribeToStorage = (onChange: () => void) => {
+  window.addEventListener('storage', onChange);
+
+  return () => window.removeEventListener('storage', onChange);
+};
+
 export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
   const { vote, fetchUserVote, canVoteAnonymously, getAnonymousVote } =
     usePollBlock();
@@ -67,6 +80,13 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
     blocks: { RichText },
     date,
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
+
+  const anonymousVote = useSyncExternalStore(
+    subscribeToStorage,
+    () => (poll && canVoteAnonymously ? getAnonymousVote(poll.id) : null),
+    () => null
+  );
 
   const combinedVotes = useMemo(() => {
     const total: Record<string, number> = {};
@@ -140,11 +160,11 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
   const userVote =
     voteResult?.data?.voteOnPoll?.answerId ??
     loggedInVote?.data?.userPollVote ??
-    (canVoteAnonymously ? getAnonymousVote(poll.id) : undefined);
+    anonymousVote;
   const hasVoted = !!(
     loggedInVote?.data?.userPollVote ??
     voteResult?.data?.voteOnPoll ??
-    (canVoteAnonymously && getAnonymousVote(poll.id))
+    anonymousVote
   );
 
   return (
@@ -214,20 +234,29 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
       )}
 
       <PollBlockMeta>
-        {totalVotes} Stimmen
+        {t('poll.totalVotes', { count: totalVotes })}
+
         {poll.closedAt && isOpen && (
           <>
             {' '}
-            &ndash; Schliesst am{' '}
-            <time
-              suppressHydrationWarning
-              dateTime={poll.closedAt}
-            >
-              {date.format(new Date(poll.closedAt))}
-            </time>
+            &ndash;
+            <Trans
+              i18nKey="poll.closesAt"
+              values={{
+                date: date.format(new Date(poll.closedAt)),
+              }}
+              components={{
+                time: (
+                  <time
+                    suppressHydrationWarning
+                    dateTime={poll.closedAt}
+                  />
+                ),
+              }}
+            />
           </>
         )}
-        {!isOpen && <> &ndash; Abstimmung beendet.</>}
+        {!isOpen && <> &ndash; {t('poll.closed')}</>}
       </PollBlockMeta>
     </PollBlockWrapper>
   );

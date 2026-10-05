@@ -39,11 +39,14 @@ export * from './lib/listicle/listicle-block';
 export * from './lib/event/event-block';
 export * from './lib/break/break-block';
 export * from './lib/nested-blocks/flex-block';
+export * from './lib/block-template/block-template-block';
 
 export * from './lib/block-styles/context-box/context-box';
 export * from './lib/block-styles/focus-teaser/focus-teaser';
 export * from './lib/block-styles/teaser-slider/teaser-slider';
 export * from './lib/block-styles/image-slider/image-slider';
+export * from './lib/block-styles/lightbox/lightbox';
+export * from './lib/block-styles/lightbox/is-lightbox';
 export * from './lib/block-styles/banner/banner';
 export * from './lib/block-styles/alternating/alternating-teaser';
 export * from './lib/block-styles/alternating/alternating-teaser-grid';

@@ -31,13 +31,15 @@ import {
   UnionToIntersection,
   ValueConstructor,
 } from '../utility';
-import { AddBlockInput } from './addBlockInput';
+import { AddBlockInput, MenuItem } from './addBlockInput';
 
 export const BlockStyleIconWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 10px;
   gap: 8px;
+  position: absolute;
+  left: 100%;
 `;
 
 const Icon = styled.div`
@@ -83,11 +85,14 @@ export const LeftButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: 10px;
+  position: absolute;
+  right: 100%;
 `;
 
 export const ListItem = styled.div`
   display: flex;
   width: 100%;
+  position: relative;
 `;
 
 const AddButton = styled.div`
@@ -107,6 +112,7 @@ export interface BlockProps<V = any> {
   onChange: React.Dispatch<React.SetStateAction<V>>;
   autofocus?: boolean;
   disabled?: boolean;
+  onReplace?: (blocks: BlockListValue[]) => void;
 }
 
 export type BlockConstructorFn<V = any> = (props: BlockProps<V>) => JSX.Element;
@@ -143,6 +149,7 @@ export interface BlockListItemProps<T extends string = string, V = any> {
     index: number,
     value: React.SetStateAction<BlockListValue<T, V>>
   ) => void;
+  onReplace?: (index: number, blocks: BlockListValue[]) => void;
   onDelete: (index: number) => void;
   onMoveUp?: (index: number) => void;
   onMoveDown?: (index: number) => void;
@@ -158,6 +165,7 @@ export const BlockListItem = memo(function BlockListItem({
   disabled,
   children,
   onChange,
+  onReplace,
   onDelete,
   onMoveUp,
   onMoveDown,
@@ -180,6 +188,11 @@ export const BlockListItem = memo(function BlockListItem({
     [onChange, index]
   );
 
+  const handleReplace = useCallback(
+    (blocks: BlockListValue[]) => onReplace?.(index, blocks),
+    [onReplace, index]
+  );
+
   return (
     <ListItemWrapper
       value={value}
@@ -196,11 +209,44 @@ export const BlockListItem = memo(function BlockListItem({
       {children({
         value: value.value,
         onChange: handleValueChange,
+        onReplace: onReplace && handleReplace,
         autofocus,
         disabled,
         itemId,
       })}
     </ListItemWrapper>
+  );
+});
+
+interface AddBlockButtonProps {
+  index: number;
+  menuItems: MenuItem[];
+  onAdd: (index: number, type: string) => void;
+  subtle?: boolean;
+  disabled?: boolean;
+}
+
+const AddBlockButton = memo(function AddBlockButton({
+  index,
+  menuItems,
+  onAdd,
+  subtle,
+  disabled,
+}: AddBlockButtonProps) {
+  const handleMenuItemClick = useCallback(
+    ({ id }: MenuItem) => onAdd(index, id),
+    [onAdd, index]
+  );
+
+  return (
+    <AddBlockInputWrapper>
+      <AddBlockInput
+        menuItems={menuItems}
+        onMenuItemClick={handleMenuItemClick}
+        subtle={subtle}
+        disabled={disabled}
+      />
+    </AddBlockInputWrapper>
   );
 });
 
@@ -251,6 +297,18 @@ export function BlockList<V extends BlockListValue>({
     [blockMap, onChange]
   );
 
+  const handleReplace = useCallback(
+    (itemIndex: number, blocks: BlockListValue[]) => {
+      onChange((values: any) => {
+        const valuesCopy = values.slice();
+        valuesCopy.splice(itemIndex, 1, ...blocks);
+
+        return valuesCopy;
+      });
+    },
+    [onChange]
+  );
+
   const handleRemove = useCallback(
     (itemIndex: number) => {
       onChange((value: any) =>
@@ -288,22 +346,25 @@ export function BlockList<V extends BlockListValue>({
     [handleMoveIndex]
   );
 
+  const menuItems = useMemo(
+    () =>
+      Object.entries(blockMap).map(([type, { icon, label }]) => ({
+        id: type,
+        icon,
+        label,
+      })),
+    [blockMap]
+  );
+
   function addButtonForIndex(index: number) {
     return (
-      <AddBlockInputWrapper>
-        <AddBlockInput
-          menuItems={Object.entries(blockMap).map(
-            ([type, { icon, label }]) => ({
-              id: type,
-              icon,
-              label,
-            })
-          )}
-          onMenuItemClick={({ id }: { id: string }) => handleAdd(index, id)}
-          subtle={index !== values.length || disabled}
-          disabled={disabled}
-        />
-      </AddBlockInputWrapper>
+      <AddBlockButton
+        index={index}
+        menuItems={menuItems}
+        onAdd={handleAdd}
+        subtle={index !== values.length || disabled}
+        disabled={disabled}
+      />
     );
   }
 
@@ -321,6 +382,7 @@ export function BlockList<V extends BlockListValue>({
           icon={blockDef.icon}
           onDelete={handleRemove}
           onChange={handleItemChange}
+          onReplace={handleReplace}
           onMoveUp={hasPrevIndex ? handleMoveUp : undefined}
           onMoveDown={hasNextIndex ? handleMoveDown : undefined}
           autofocus={focusIndex === index}

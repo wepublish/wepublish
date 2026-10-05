@@ -7,15 +7,26 @@ import {
 import { PaymentsService } from './payments.service';
 import { Intent, PaymentProvider } from './payment-provider/payment-provider';
 
-function fakeProvider(id: string): PaymentProvider {
+function fakeProvider(
+  id: string,
+  state: PaymentState = PaymentState.submitted
+): PaymentProvider {
   return {
     id,
     createIntent: jest.fn().mockResolvedValue({
       intentID: '999',
       intentSecret: 'secret',
       intentData: '{}',
-      state: PaymentState.submitted,
+      state,
     } as Intent),
+    checkIntentStatus: jest.fn().mockResolvedValue({
+      paymentID: 'payment-1',
+      state,
+    }),
+    updatePaymentWithIntentState: jest.fn().mockResolvedValue({
+      id: 'payment-1',
+      invoiceID: 'invoice-1',
+    }),
   } as unknown as PaymentProvider;
 }
 
@@ -30,9 +41,12 @@ describe('PaymentsService.createPaymentWithProvider', () => {
     ],
   } as any;
 
-  function setup(resolvedMethod: { id: string; paymentProviderID: string }) {
-    const stripeProvider = fakeProvider('stripe');
-    const payrexxProvider = fakeProvider('payrexx');
+  function setup(
+    resolvedMethod: { id: string; paymentProviderID: string },
+    intentState: PaymentState = PaymentState.submitted
+  ) {
+    const stripeProvider = fakeProvider('stripe', intentState);
+    const payrexxProvider = fakeProvider('payrexx', intentState);
 
     const prisma = {
       paymentMethod: {
@@ -67,14 +81,25 @@ describe('PaymentsService.createPaymentWithProvider', () => {
       },
     };
 
+    const invoicePaidNotifier = {
+      notify: jest.fn().mockResolvedValue(undefined),
+    };
+
     const service = new PaymentsService(
       prisma as any,
       {
         paymentProviders: [stripeProvider, payrexxProvider],
-      } as any
+      } as any,
+      invoicePaidNotifier as any
     );
 
-    return { service, prisma, stripeProvider, payrexxProvider };
+    return {
+      service,
+      prisma,
+      stripeProvider,
+      payrexxProvider,
+      invoicePaidNotifier,
+    };
   }
 
   it('stores the payment under the migration TARGET method, matching the provider that charges it', async () => {
@@ -158,5 +183,35 @@ describe('PaymentsService.createPaymentWithProvider', () => {
         failureURL: undefined,
       })
     );
+  });
+
+  it('notifies that the invoice is paid when the intent comes back paid', async () => {
+    const { service, invoicePaidNotifier } = setup(
+      { id: 'stripe-method', paymentProviderID: 'stripe' },
+      PaymentState.paid
+    );
+
+    await service.createPaymentWithProvider({
+      paymentMethodID: 'stripe-method',
+      invoice,
+      saveCustomer: false,
+    });
+
+    expect(invoicePaidNotifier.notify).toHaveBeenCalledWith('invoice-1');
+  });
+
+  it('does not notify when the intent still needs the user', async () => {
+    const { service, invoicePaidNotifier } = setup({
+      id: 'stripe-method',
+      paymentProviderID: 'stripe',
+    });
+
+    await service.createPaymentWithProvider({
+      paymentMethodID: 'stripe-method',
+      invoice,
+      saveCustomer: false,
+    });
+
+    expect(invoicePaidNotifier.notify).not.toHaveBeenCalled();
   });
 });

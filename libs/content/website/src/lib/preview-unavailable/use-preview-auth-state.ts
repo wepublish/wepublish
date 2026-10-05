@@ -1,6 +1,7 @@
 import {
   AuthTokenStorageKey,
   getPreviewHandshakeState,
+  getPreviewHost,
   SessionTokenContext,
   subscribeToPreviewHandshake,
 } from '@wepublish/authentication/website';
@@ -57,7 +58,7 @@ export const usePreviewAuthState = (): PreviewAuthState => {
   const canPreview = !!user && user.permissions.includes(CanPreview.id);
   const missingPermission = !!user && !canPreview;
   const editorAuthPossible =
-    !!window.opener &&
+    !!getPreviewHost() &&
     (handshake === 'pending' || handshake === 'unknown') &&
     performance.now() < HANDSHAKE_WINDOW_MS;
   const sessionAuthPossible =

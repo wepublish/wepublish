@@ -88,10 +88,14 @@ const StyledInfoBox = styled(InfoBox)`
   background-color: ${({ theme }) => theme.palette.secondary.light};
 `;
 
-const PollBlockStyled = styled(PollBlock)`
-  position: sticky;
-  top: ${({ theme }) => theme.spacing(14)};
+const StickyPoll = styled('div')`
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    position: sticky;
+    top: ${({ theme }) => theme.spacing(14)};
+  }
+`;
 
+const PollBlockStyled = styled(PollBlock)`
   button {
     text-transform: uppercase;
     border-width: 1px;
@@ -120,17 +124,19 @@ export const FdtPollBlock = ({ poll }: BuilderPollBlockProps) => {
     },
   });
 
-  const author = articleData?.article?.latest.authors[0];
+  const author = articleData?.article?.latest.authors[0]?.author;
 
   return (
     <PollBlockProvider>
       <FrageDesTagesContainer>
         <FrageDesTagesWrapper>
           <PollWrapper>
-            {articleData?.article?.latest.image && (
-              <FdtArticleImage image={articleData.article.latest.image} />
-            )}
-            <PollBlockStyled poll={poll} />
+            <StickyPoll>
+              {articleData?.article?.latest.image && (
+                <FdtArticleImage image={articleData.article.latest.image} />
+              )}
+              <PollBlockStyled poll={poll} />
+            </StickyPoll>
           </PollWrapper>
 
           <CommentsWrapper>

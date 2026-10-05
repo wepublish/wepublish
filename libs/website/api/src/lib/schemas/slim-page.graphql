@@ -1,0 +1,30 @@
+fragment SlimPageRevision on PageRevision {
+  id
+  publishedAt
+  description
+  title
+
+  image {
+    ...SlimImage
+  }
+
+  properties {
+    ...FullProperty
+  }
+}
+
+fragment SlimPage on Page {
+  id
+  publishedAt
+  modifiedAt
+  url
+  slug
+
+  tags {
+    ...FullTag
+  }
+
+  latest {
+    ...SlimPageRevision
+  }
+}
