@@ -48,7 +48,8 @@ fi
 
 echo "⚠️  WARNING: This will OVERWRITE the existing database! ($DATABASE_URL)"
 read -r -p "Type 'yes' to continue: " CONFIRM
-if [[ "${CONFIRM,,}" != "yes" ]]; then
+# No ${CONFIRM,,}: macOS ships bash 3.2, where it fails and skips the check.
+if [[ ! "$CONFIRM" =~ ^[Yy][Ee][Ss]$ ]]; then
   echo "❌ Aborted."
   exit 1
 fi
@@ -74,7 +75,7 @@ echo "✅  Unpack database dump successful"
 if ! tail -n 2 "${TMP_DIR}/database.dump" | grep -q "WEPUBLISH_DUMP_COMPLETE"; then
   echo "⚠️  Warning: dump has no completeness marker - it may be TRUNCATED, or it predates marker support."
   read -r -p "Restore anyway? Type 'yes' to continue: " CONFIRM_MARKER
-  if [[ "${CONFIRM_MARKER,,}" != "yes" ]]; then
+  if [[ ! "$CONFIRM_MARKER" =~ ^[Yy][Ee][Ss]$ ]]; then
     echo "❌ Aborted."
     rm "${TMP_DIR}/database.dump"
     exit 1
