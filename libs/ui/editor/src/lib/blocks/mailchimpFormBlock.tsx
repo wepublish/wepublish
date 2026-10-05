@@ -1,29 +1,42 @@
 import styled from '@emotion/styled';
 import {
+  MailchimpFormOptionsLayout,
   useMailchimpInterestGroupsQuery,
   useMailchimpListsQuery,
   useMailchimpMergeFieldsQuery,
   useSyncProviderSettingsQuery,
 } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAddCircle, MdDelete } from 'react-icons/md';
+import {
+  MdAddCircle,
+  MdArrowDownward,
+  MdArrowUpward,
+  MdDelete,
+} from 'react-icons/md';
 import {
   Divider,
+  Drawer,
   IconButton,
   Input,
-  InputGroup,
   InputPicker,
   Panel as RPanel,
+  Radio,
+  RadioGroup,
   SelectPicker,
   TagPicker,
   Toggle,
 } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
+import { ChooseEditImage } from '../atoms/chooseEditImage';
+import { useRegisterValidator } from '../hooks/useEditorValidation';
+import { ImageEditPanel } from '../panel/imageEditPanel';
+import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import {
   MailchimpFormBlockValue,
   MailchimpFormFieldConfigValue,
+  MailchimpFormInterestOptionValue,
   MailchimpFormStepValue,
   MailchimpFormSuccessOptionValue,
 } from './types';
@@ -64,6 +77,11 @@ const HelpText = styled('small')`
   color: #8e8e93;
 `;
 
+const ErrorText = styled('small')`
+  font-size: 11px;
+  color: var(--rs-text-error);
+`;
+
 const ItemPanel = styled(RPanel)`
   background-color: #fff;
   border: 1px solid #e5e5ea;
@@ -76,13 +94,91 @@ const ItemHeader = styled.div`
   gap: 8px;
 `;
 
+const ItemActionsWrapper = styled.div`
+  display: flex;
+  gap: 4px;
+`;
+
 const ToggleRow = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
 `;
 
+const OptionRow = styled.div`
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 12px;
+`;
+
+const OptionImageWrapper = styled.div`
+  display: grid;
+`;
+
 const INPUT_TYPES = ['text', 'email', 'hidden', 'groups'];
+
+const moveItem = <T,>(items: T[], from: number, to: number): T[] => {
+  if (to < 0 || to >= items.length) {
+    return items;
+  }
+
+  const next = [...items];
+  const [item] = next.splice(from, 1);
+  next.splice(to, 0, item);
+
+  return next;
+};
+
+const swapIndex = (index: number, a: number, b: number) =>
+  index === a ? b
+  : index === b ? a
+  : index;
+
+type ItemActionsProps = {
+  disabled?: boolean;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  onRemove: () => void;
+};
+
+function ItemActions({
+  disabled,
+  onMoveUp,
+  onMoveDown,
+  onRemove,
+}: ItemActionsProps) {
+  const { t } = useTranslation();
+
+  return (
+    <ItemActionsWrapper>
+      {onMoveUp && (
+        <IconButton
+          size="xs"
+          icon={<MdArrowUpward />}
+          aria-label={t('blocks.mailchimpForm.moveUp')}
+          disabled={disabled}
+          onClick={onMoveUp}
+        />
+      )}
+      {onMoveDown && (
+        <IconButton
+          size="xs"
+          icon={<MdArrowDownward />}
+          aria-label={t('blocks.mailchimpForm.moveDown')}
+          disabled={disabled}
+          onClick={onMoveDown}
+        />
+      )}
+      <IconButton
+        size="xs"
+        icon={<MdDelete />}
+        aria-label={t('blocks.mailchimpForm.remove')}
+        disabled={disabled}
+        onClick={onRemove}
+      />
+    </ItemActionsWrapper>
+  );
+}
 
 const emptyInput = (): MailchimpFormFieldConfigValue => ({
   inputType: 'text',
@@ -93,6 +189,7 @@ const emptyInput = (): MailchimpFormFieldConfigValue => ({
   urlParam: null,
   defaultValue: null,
   value: null,
+  optionsLayout: MailchimpFormOptionsLayout.List,
   options: [],
 });
 
@@ -102,6 +199,199 @@ const emptyStep = (): MailchimpFormStepValue => ({
   showIfInterestsFilled: [],
   inputs: [emptyInput()],
 });
+
+const hasStepConditions = (step: MailchimpFormStepValue) =>
+  !!(
+    step.skipIfFieldsFilled.length ||
+    step.skipIfInterestsFilled.length ||
+    step.showIfInterestsFilled.length
+  );
+
+const getInputErrors = (input: MailchimpFormFieldConfigValue) => {
+  const inputType = input.inputType ?? 'text';
+
+  return {
+    name: inputType !== 'groups' && !input.name,
+    label: ['text', 'email'].includes(inputType) && !input.label?.trim(),
+    options: inputType === 'groups' && !input.options.length,
+  };
+};
+
+const getMissingInterests = (input: MailchimpFormFieldConfigValue) =>
+  input.inputType === 'groups' ? input.options.map(option => !option.id) : [];
+
+const getFormErrors = (value: MailchimpFormBlockValue) => ({
+  syncProviderId: !value.syncProviderId,
+  listId: !value.listId,
+  emailInput: !value.steps.some(step =>
+    step.inputs.some(
+      input => input.inputType !== 'groups' && input.name === 'EMAIL'
+    )
+  ),
+});
+
+const countErrors = (value: MailchimpFormBlockValue) =>
+  [
+    ...Object.values(getFormErrors(value)),
+    ...value.steps.flatMap(step =>
+      step.inputs.flatMap(input => [
+        ...Object.values(getInputErrors(input)),
+        ...getMissingInterests(input),
+      ])
+    ),
+  ].filter(Boolean).length;
+
+const emptyInterestOption = (): MailchimpFormInterestOptionValue => ({
+  id: '',
+  name: '',
+  description: null,
+  image: null,
+});
+
+type MailchimpFormInterestOptionItemProps = {
+  value: MailchimpFormInterestOptionValue;
+  number: number;
+  interestOptions: { value: string; label: string }[];
+  disabled?: boolean;
+  showErrors: boolean;
+  onChange: (patch: Partial<MailchimpFormInterestOptionValue>) => void;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  onRemove: () => void;
+};
+
+function MailchimpFormInterestOptionItem({
+  value,
+  number,
+  interestOptions,
+  disabled,
+  showErrors,
+  onChange,
+  onMoveUp,
+  onMoveDown,
+  onRemove,
+}: MailchimpFormInterestOptionItemProps) {
+  const { t } = useTranslation();
+  const [isChooseModalOpen, setChooseModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+
+  const interestLabel = (id: string | null) =>
+    interestOptions.find(option => option.value === id)?.label;
+
+  return (
+    <ItemPanel bordered>
+      <ItemHeader>
+        <Heading>
+          {value.name ||
+            t('blocks.mailchimpForm.interestOptionTitle', { number })}
+        </Heading>
+        <ItemActions
+          disabled={disabled}
+          onMoveUp={onMoveUp}
+          onMoveDown={onMoveDown}
+          onRemove={onRemove}
+        />
+      </ItemHeader>
+
+      <OptionRow>
+        <Field>
+          <Label>{t('blocks.mailchimpForm.interestOptionImage')}</Label>
+          <OptionImageWrapper>
+            <ChooseEditImage
+              header=""
+              image={value.image}
+              disabled={!!disabled}
+              minHeight={120}
+              maxHeight={120}
+              openChooseModalOpen={() => setChooseModalOpen(true)}
+              openEditModalOpen={() => setEditModalOpen(true)}
+              removeImage={() => onChange({ image: null })}
+            />
+          </OptionImageWrapper>
+        </Field>
+
+        <Field>
+          <Row>
+            <Field>
+              <Label>{t('blocks.mailchimpForm.interestOption')}</Label>
+              <SelectPicker
+                block
+                cleanable={false}
+                disabled={disabled}
+                data={interestOptions}
+                value={value.id || null}
+                onChange={id =>
+                  onChange({
+                    id: id ?? '',
+                    name:
+                      !value.name || value.name === interestLabel(value.id) ?
+                        (interestLabel(id) ?? '')
+                      : value.name,
+                  })
+                }
+                placeholder={t(
+                  'blocks.mailchimpForm.interestOptionPlaceholder'
+                )}
+              />
+              {showErrors && !value.id && (
+                <ErrorText>
+                  {t('blocks.mailchimpForm.interestOptionRequired')}
+                </ErrorText>
+              )}
+            </Field>
+            <Field>
+              <Label>{t('blocks.mailchimpForm.interestOptionName')}</Label>
+              <Input
+                disabled={disabled}
+                value={value.name}
+                onChange={name => onChange({ name })}
+              />
+            </Field>
+          </Row>
+
+          <Field>
+            <Label>{t('blocks.mailchimpForm.interestOptionDescription')}</Label>
+            <Input
+              as="textarea"
+              rows={2}
+              disabled={disabled}
+              value={value.description ?? ''}
+              onChange={description => onChange({ description })}
+            />
+          </Field>
+        </Field>
+      </OptionRow>
+
+      <Drawer
+        open={isChooseModalOpen}
+        size="sm"
+        onClose={() => setChooseModalOpen(false)}
+      >
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={image => {
+            setChooseModalOpen(false);
+            onChange({ image });
+          }}
+        />
+      </Drawer>
+
+      {value.image && (
+        <Drawer
+          open={isEditModalOpen}
+          size="sm"
+          onClose={() => setEditModalOpen(false)}
+        >
+          <ImageEditPanel
+            id={value.image.id}
+            onClose={() => setEditModalOpen(false)}
+            onSave={() => setEditModalOpen(false)}
+          />
+        </Drawer>
+      )}
+    </ItemPanel>
+  );
+}
 
 const emptySuccessOption = (): MailchimpFormSuccessOptionValue => ({
   label: '',
@@ -118,10 +408,17 @@ export function MailchimpFormBlock({
 }: BlockProps<MailchimpFormBlockValue>) {
   const { t } = useTranslation();
 
-  const [advancedInputs, setAdvancedInputs] = useState<Set<string>>(new Set());
+  const [advancedSections, setAdvancedSections] = useState<Set<string>>(
+    () =>
+      new Set(
+        value.steps.flatMap((step, stepIndex) =>
+          hasStepConditions(step) ? [`step-${stepIndex}`] : []
+        )
+      )
+  );
 
   const toggleAdvanced = (key: string, enabled: boolean) =>
-    setAdvancedInputs(current => {
+    setAdvancedSections(current => {
       const next = new Set(current);
       if (enabled) {
         next.add(key);
@@ -131,8 +428,51 @@ export function MailchimpFormBlock({
       return next;
     });
 
+  const remapAdvanced = (
+    remap: (stepIndex: number, inputIndex: number) => [number, number]
+  ) =>
+    setAdvancedSections(
+      current =>
+        new Set(
+          [...current].map(key => {
+            if (key.startsWith('step-')) {
+              const [stepIndex] = remap(Number(key.slice('step-'.length)), -1);
+              return `step-${stepIndex}`;
+            }
+
+            const [stepIndex, inputIndex] = key.split('-').map(Number);
+            return remap(stepIndex, inputIndex).join('-');
+          })
+        )
+    );
+
   const update = (patch: Partial<MailchimpFormBlockValue>) =>
     onChange(current => ({ ...current, ...patch }));
+
+  const validatorId = useId();
+  const [saveAttempted, setSaveAttempted] = useState(false);
+  const formErrors = getFormErrors(value);
+  const errorCount = value.disabled ? 0 : countErrors(value);
+
+  useRegisterValidator(`mailchimp-form-${validatorId}`, () => {
+    if (!errorCount) {
+      return { ok: true };
+    }
+
+    setSaveAttempted(true);
+
+    return {
+      ok: false,
+      summary: t(
+        errorCount === 1 ?
+          'blocks.mailchimpForm.validationSummaryOne'
+        : 'blocks.mailchimpForm.validationSummaryMany',
+        { count: errorCount }
+      ),
+    };
+  });
+
+  const showErrors = saveAttempted && !value.disabled;
 
   const { data: syncData, loading: syncLoading } =
     useSyncProviderSettingsQuery();
@@ -236,6 +576,11 @@ export function MailchimpFormBlock({
               }
               placeholder={t('blocks.mailchimpForm.syncProviderPlaceholder')}
             />
+            {showErrors && formErrors.syncProviderId && (
+              <ErrorText>
+                {t('blocks.mailchimpForm.syncProviderRequired')}
+              </ErrorText>
+            )}
           </Field>
 
           <Field>
@@ -250,6 +595,9 @@ export function MailchimpFormBlock({
               onChange={listId => update({ listId })}
               placeholder={t('blocks.mailchimpForm.listPlaceholder')}
             />
+            {showErrors && formErrors.listId && (
+              <ErrorText>{t('blocks.mailchimpForm.listRequired')}</ErrorText>
+            )}
           </Field>
         </Row>
 
@@ -322,6 +670,9 @@ export function MailchimpFormBlock({
         bordered
         header={t('blocks.mailchimpForm.steps')}
       >
+        {showErrors && formErrors.emailInput && (
+          <ErrorText>{t('blocks.mailchimpForm.emailInputRequired')}</ErrorText>
+        )}
         {value.steps.map((step, stepIndex) => {
           const updateStep = (patch: Partial<MailchimpFormStepValue>) =>
             update({
@@ -329,6 +680,14 @@ export function MailchimpFormBlock({
                 i === stepIndex ? { ...s, ...patch } : s
               ),
             });
+
+          const moveStep = (to: number) => {
+            update({ steps: moveItem(value.steps, stepIndex, to) });
+            remapAdvanced((s, i) => [swapIndex(s, stepIndex, to), i]);
+          };
+
+          const stepAdvancedKey = `step-${stepIndex}`;
+          const showStepAdvanced = advancedSections.has(stepAdvancedKey);
 
           return (
             <ItemPanel
@@ -339,11 +698,17 @@ export function MailchimpFormBlock({
                 <Heading>
                   {t('blocks.mailchimpForm.step', { number: stepIndex + 1 })}
                 </Heading>
-                <IconButton
-                  size="xs"
-                  icon={<MdDelete />}
+                <ItemActions
                   disabled={disabled}
-                  onClick={() =>
+                  onMoveUp={
+                    stepIndex > 0 ? () => moveStep(stepIndex - 1) : undefined
+                  }
+                  onMoveDown={
+                    stepIndex < value.steps.length - 1 ?
+                      () => moveStep(stepIndex + 1)
+                    : undefined
+                  }
+                  onRemove={() =>
                     update({
                       steps: value.steps.filter((_, i) => i !== stepIndex),
                     })
@@ -351,56 +716,70 @@ export function MailchimpFormBlock({
                 />
               </ItemHeader>
 
-              <Field>
-                <Label>{t('blocks.mailchimpForm.skipIfFieldsFilled')}</Label>
-                <TagPicker
-                  block
-                  creatable
+              <ToggleRow>
+                <Toggle
                   disabled={disabled}
-                  data={fieldNameOptions}
-                  value={step.skipIfFieldsFilled}
-                  onChange={skipIfFieldsFilled =>
-                    updateStep({ skipIfFieldsFilled: skipIfFieldsFilled ?? [] })
-                  }
+                  checked={showStepAdvanced}
+                  onChange={enabled => toggleAdvanced(stepAdvancedKey, enabled)}
                 />
-              </Field>
+                <Label>{t('blocks.mailchimpForm.advanced')}</Label>
+              </ToggleRow>
 
-              <Row>
-                <Field>
-                  <Label>
-                    {t('blocks.mailchimpForm.skipIfInterestsFilled')}
-                  </Label>
-                  <TagPicker
-                    block
-                    creatable
-                    disabled={disabled}
-                    data={interestOptions}
-                    value={step.skipIfInterestsFilled}
-                    onChange={skipIfInterestsFilled =>
-                      updateStep({
-                        skipIfInterestsFilled: skipIfInterestsFilled ?? [],
-                      })
-                    }
-                  />
-                </Field>
-                <Field>
-                  <Label>
-                    {t('blocks.mailchimpForm.showIfInterestsFilled')}
-                  </Label>
-                  <TagPicker
-                    block
-                    creatable
-                    disabled={disabled}
-                    data={interestOptions}
-                    value={step.showIfInterestsFilled}
-                    onChange={showIfInterestsFilled =>
-                      updateStep({
-                        showIfInterestsFilled: showIfInterestsFilled ?? [],
-                      })
-                    }
-                  />
-                </Field>
-              </Row>
+              {showStepAdvanced && (
+                <>
+                  <Field>
+                    <Label>
+                      {t('blocks.mailchimpForm.skipIfFieldsFilled')}
+                    </Label>
+                    <TagPicker
+                      block
+                      creatable
+                      disabled={disabled}
+                      data={fieldNameOptions}
+                      value={step.skipIfFieldsFilled}
+                      onChange={skipIfFieldsFilled =>
+                        updateStep({
+                          skipIfFieldsFilled: skipIfFieldsFilled ?? [],
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field>
+                    <Label>
+                      {t('blocks.mailchimpForm.skipIfInterestsFilled')}
+                    </Label>
+                    <TagPicker
+                      block
+                      creatable
+                      disabled={disabled}
+                      data={interestOptions}
+                      value={step.skipIfInterestsFilled}
+                      onChange={skipIfInterestsFilled =>
+                        updateStep({
+                          skipIfInterestsFilled: skipIfInterestsFilled ?? [],
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field>
+                    <Label>
+                      {t('blocks.mailchimpForm.showIfInterestsFilled')}
+                    </Label>
+                    <TagPicker
+                      block
+                      creatable
+                      disabled={disabled}
+                      data={interestOptions}
+                      value={step.showIfInterestsFilled}
+                      onChange={showIfInterestsFilled =>
+                        updateStep({
+                          showIfInterestsFilled: showIfInterestsFilled ?? [],
+                        })
+                      }
+                    />
+                  </Field>
+                </>
+              )}
 
               <Divider>{t('blocks.mailchimpForm.inputs')}</Divider>
 
@@ -414,8 +793,19 @@ export function MailchimpFormBlock({
                     ),
                   });
 
+                const moveInput = (to: number) => {
+                  updateStep({
+                    inputs: moveItem(step.inputs, inputIndex, to),
+                  });
+                  remapAdvanced((s, i) => [
+                    s,
+                    s === stepIndex ? swapIndex(i, inputIndex, to) : i,
+                  ]);
+                };
+
                 const advancedKey = `${stepIndex}-${inputIndex}`;
-                const showAdvanced = advancedInputs.has(advancedKey);
+                const showAdvanced = advancedSections.has(advancedKey);
+                const inputErrors = getInputErrors(input);
 
                 return (
                   <ItemPanel
@@ -423,12 +813,26 @@ export function MailchimpFormBlock({
                     bordered
                   >
                     <ItemHeader>
-                      <Heading>{input.name || input.label || '—'}</Heading>
-                      <IconButton
-                        size="xs"
-                        icon={<MdDelete />}
+                      <Heading>
+                        {input.name ||
+                          input.label ||
+                          t('blocks.mailchimpForm.inputTitle', {
+                            number: inputIndex + 1,
+                          })}
+                      </Heading>
+                      <ItemActions
                         disabled={disabled}
-                        onClick={() =>
+                        onMoveUp={
+                          inputIndex > 0 ?
+                            () => moveInput(inputIndex - 1)
+                          : undefined
+                        }
+                        onMoveDown={
+                          inputIndex < step.inputs.length - 1 ?
+                            () => moveInput(inputIndex + 1)
+                          : undefined
+                        }
+                        onRemove={() =>
                           updateStep({
                             inputs: step.inputs.filter(
                               (_, i) => i !== inputIndex
@@ -448,13 +852,15 @@ export function MailchimpFormBlock({
                           disabled={disabled}
                           data={INPUT_TYPES.map(type => ({
                             value: type,
-                            label: type,
+                            label: t(`blocks.mailchimpForm.inputTypes.${type}`),
                           }))}
                           value={input.inputType ?? 'text'}
                           onChange={inputType => updateInput({ inputType })}
                         />
                         <HelpText>
-                          {t('blocks.mailchimpForm.inputTypeHelp')}
+                          {input.inputType === 'groups' ?
+                            t('blocks.mailchimpForm.inputTypeGroupsHelp')
+                          : t('blocks.mailchimpForm.inputTypeHelp')}
                         </HelpText>
                       </Field>
                       <ToggleRow>
@@ -467,8 +873,8 @@ export function MailchimpFormBlock({
                       </ToggleRow>
                     </Row>
 
-                    {input.inputType !== 'groups' && (
-                      <Row>
+                    <Row>
+                      {input.inputType !== 'groups' && (
                         <Field>
                           <Label>{t('blocks.mailchimpForm.inputName')}</Label>
                           <InputPicker
@@ -484,23 +890,35 @@ export function MailchimpFormBlock({
                               'blocks.mailchimpForm.mergeFieldPlaceholder'
                             )}
                           />
+                          {showErrors && inputErrors.name && (
+                            <ErrorText>
+                              {t('blocks.mailchimpForm.inputNameRequired')}
+                            </ErrorText>
+                          )}
                           <HelpText>
                             {t('blocks.mailchimpForm.inputNameHelp')}
                           </HelpText>
                         </Field>
-                        <Field>
-                          <Label>{t('blocks.mailchimpForm.inputLabel')}</Label>
-                          <Input
-                            disabled={disabled}
-                            value={input.label ?? ''}
-                            onChange={label => updateInput({ label })}
-                          />
-                          <HelpText>
-                            {t('blocks.mailchimpForm.inputLabelHelp')}
-                          </HelpText>
-                        </Field>
-                      </Row>
-                    )}
+                      )}
+                      <Field>
+                        <Label>{t('blocks.mailchimpForm.inputLabel')}</Label>
+                        <Input
+                          disabled={disabled}
+                          value={input.label ?? ''}
+                          onChange={label => updateInput({ label })}
+                        />
+                        {showErrors && inputErrors.label && (
+                          <ErrorText>
+                            {t('blocks.mailchimpForm.inputLabelRequired')}
+                          </ErrorText>
+                        )}
+                        <HelpText>
+                          {input.inputType === 'groups' ?
+                            t('blocks.mailchimpForm.inputLabelGroupsHelp')
+                          : t('blocks.mailchimpForm.inputLabelHelp')}
+                        </HelpText>
+                      </Field>
+                    </Row>
 
                     <ToggleRow>
                       <Toggle
@@ -577,67 +995,93 @@ export function MailchimpFormBlock({
 
                     {input.inputType === 'groups' && (
                       <Field>
+                        <Label>{t('blocks.mailchimpForm.optionsLayout')}</Label>
+                        <RadioGroup
+                          inline
+                          disabled={disabled}
+                          value={
+                            input.optionsLayout ??
+                            MailchimpFormOptionsLayout.List
+                          }
+                          onChange={optionsLayout =>
+                            updateInput({
+                              optionsLayout:
+                                optionsLayout as MailchimpFormOptionsLayout,
+                            })
+                          }
+                        >
+                          <Radio value={MailchimpFormOptionsLayout.List}>
+                            {t('blocks.mailchimpForm.optionsLayoutList')}
+                          </Radio>
+                          <Radio value={MailchimpFormOptionsLayout.Grid}>
+                            {t('blocks.mailchimpForm.optionsLayoutGrid')}
+                          </Radio>
+                        </RadioGroup>
+                      </Field>
+                    )}
+
+                    {input.inputType === 'groups' && (
+                      <Field>
                         <Label>
                           {t('blocks.mailchimpForm.interestOptions')}
                         </Label>
+                        {!value.listId && (
+                          <HelpText>
+                            {t('blocks.mailchimpForm.interestOptionsNoList')}
+                          </HelpText>
+                        )}
+                        {showErrors && inputErrors.options && (
+                          <ErrorText>
+                            {t('blocks.mailchimpForm.interestOptionsRequired')}
+                          </ErrorText>
+                        )}
                         {input.options.map((option, optionIndex) => (
-                          <Row key={optionIndex}>
-                            <SelectPicker
-                              block
-                              disabled={disabled}
-                              data={interestOptions}
-                              value={option.id || null}
-                              onChange={(id, event) => {
-                                const label = interestOptions.find(
-                                  o => o.value === id
-                                )?.label;
-                                updateInput({
-                                  options: input.options.map((o, i) =>
-                                    i === optionIndex ?
-                                      {
-                                        ...o,
-                                        id: id ?? '',
-                                        name: label ?? o.name,
-                                      }
-                                    : o
-                                  ),
-                                });
-                              }}
-                              placeholder={t(
-                                'blocks.mailchimpForm.interestOptionPlaceholder'
-                              )}
-                            />
-                            <InputGroup>
-                              <Input
-                                disabled={disabled}
-                                value={option.description ?? ''}
-                                placeholder={t(
-                                  'blocks.mailchimpForm.interestOptionDescription'
-                                )}
-                                onChange={description =>
+                          <MailchimpFormInterestOptionItem
+                            key={optionIndex}
+                            value={option}
+                            number={optionIndex + 1}
+                            showErrors={showErrors}
+                            interestOptions={interestOptions}
+                            disabled={disabled}
+                            onChange={patch =>
+                              updateInput({
+                                options: input.options.map((o, i) =>
+                                  i === optionIndex ? { ...o, ...patch } : o
+                                ),
+                              })
+                            }
+                            onMoveUp={
+                              optionIndex > 0 ?
+                                () =>
                                   updateInput({
-                                    options: input.options.map((o, i) =>
-                                      i === optionIndex ?
-                                        { ...o, description }
-                                      : o
+                                    options: moveItem(
+                                      input.options,
+                                      optionIndex,
+                                      optionIndex - 1
                                     ),
                                   })
-                                }
-                              />
-                              <InputGroup.Button
-                                disabled={disabled}
-                                onClick={() =>
+                              : undefined
+                            }
+                            onMoveDown={
+                              optionIndex < input.options.length - 1 ?
+                                () =>
                                   updateInput({
-                                    options: input.options.filter(
-                                      (_, i) => i !== optionIndex
+                                    options: moveItem(
+                                      input.options,
+                                      optionIndex,
+                                      optionIndex + 1
                                     ),
                                   })
-                                }
-                              >
-                                <MdDelete />
-                              </InputGroup.Button>
-                            </InputGroup>
-                          </Row>
+                              : undefined
+                            }
+                            onRemove={() =>
+                              updateInput({
+                                options: input.options.filter(
+                                  (_, i) => i !== optionIndex
+                                ),
+                              })
+                            }
+                          />
                         ))}
                         <IconButton
                           size="xs"
@@ -647,7 +1091,7 @@ export function MailchimpFormBlock({
                             updateInput({
                               options: [
                                 ...input.options,
-                                { id: '', name: '', description: null },
+                                emptyInterestOption(),
                               ],
                             })
                           }
@@ -746,7 +1190,12 @@ export function MailchimpFormBlock({
                   bordered
                 >
                   <ItemHeader>
-                    <Heading>{option.label || '—'}</Heading>
+                    <Heading>
+                      {option.label ||
+                        t('blocks.mailchimpForm.successOptionTitle', {
+                          number: optionIndex + 1,
+                        })}
+                    </Heading>
                     <IconButton
                       size="xs"
                       icon={<MdDelete />}

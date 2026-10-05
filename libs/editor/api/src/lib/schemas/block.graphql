@@ -325,10 +325,14 @@ fragment BlockWithoutTeaser on BlockContent {
         urlParam
         defaultValue
         value
+        optionsLayout
         options {
           id
           name
           description
+          image {
+            ...FullImage
+          }
         }
       }
     }

@@ -2239,6 +2239,7 @@ export type MailchimpFormFieldConfig = {
   label?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   options: Array<MailchimpFormInterestOption>;
+  optionsLayout: MailchimpFormOptionsLayout;
   required?: Maybe<Scalars['Boolean']>;
   urlParam?: Maybe<Scalars['String']>;
   value?: Maybe<Scalars['String']>;
@@ -2251,23 +2252,32 @@ export type MailchimpFormFieldConfigInput = {
   label?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   options?: Array<MailchimpFormInterestOptionInput>;
+  optionsLayout?: MailchimpFormOptionsLayout;
   required?: InputMaybe<Scalars['Boolean']>;
   urlParam?: InputMaybe<Scalars['String']>;
   value?: InputMaybe<Scalars['String']>;
 };
 
-export type MailchimpFormInterestOption = {
+export type MailchimpFormInterestOption = HasImage & {
   __typename?: 'MailchimpFormInterestOption';
   description?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
 };
 
 export type MailchimpFormInterestOptionInput = {
   description?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
+  imageID?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
 };
+
+export enum MailchimpFormOptionsLayout {
+  Grid = 'Grid',
+  List = 'List'
+}
 
 export type MailchimpFormStep = {
   __typename?: 'MailchimpFormStep';
@@ -2642,6 +2652,7 @@ export type MemberPlan = HasImage & {
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
   currency: Currency;
   defaultPaymentPeriodicity?: Maybe<PaymentPeriodicity>;
   description?: Maybe<Scalars['RichText']>;
@@ -2657,6 +2668,7 @@ export type MemberPlan = HasImage & {
   maxCount?: Maybe<Scalars['Int']>;
   migrateToTargetPaymentMethod?: Maybe<PaymentMethod>;
   migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   periodicityPricing: Array<PeriodicityPrice>;
   productType: ProductType;
@@ -8487,6 +8499,7 @@ export const PeerProfile = gql`
       "ImageBlock",
       "ImageGalleryImage",
       "ListicleItem",
+      "MailchimpFormInterestOption",
       "MemberPlan",
       "PageTeaser",
       "QuoteBlock"

@@ -1,5 +1,6 @@
 import {
   EditorBlockType,
+  MailchimpFormOptionsLayout,
   SubscribeBlockField,
   TeaserListBlockSort,
   TeaserSlotType,
@@ -312,6 +313,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
               urlParam: 'email',
               defaultValue: null,
               value: null,
+              optionsLayout: MailchimpFormOptionsLayout.List,
               options: [],
             },
           ],

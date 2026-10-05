@@ -10,6 +10,7 @@ import {
   FullImageFragment,
   FullPoll,
   FullTeaserFragment,
+  MailchimpFormOptionsLayout,
   NestedBlockTemplateBlockFragment,
   PageWithoutBlocksFragment,
   SubscribeBlock,
@@ -89,6 +90,7 @@ export interface MailchimpFormInterestOptionValue {
   id: string;
   name: string;
   description?: string | null;
+  image?: FullImageFragment | null;
 }
 
 export interface MailchimpFormFieldConfigValue {
@@ -100,6 +102,7 @@ export interface MailchimpFormFieldConfigValue {
   urlParam?: string | null;
   defaultValue?: string | null;
   value?: string | null;
+  optionsLayout: MailchimpFormOptionsLayout;
   options: MailchimpFormInterestOptionValue[];
 }
 
@@ -616,11 +619,16 @@ export function mapBlockValueToBlockInput(
               urlParam: input.urlParam,
               defaultValue: input.defaultValue,
               value: input.value,
-              options: input.options.map(option => ({
-                id: option.id,
-                name: option.name,
-                description: option.description,
-              })),
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
+              options: input.options
+                .filter(option => !!option.id)
+                .map(option => ({
+                  id: option.id,
+                  name: option.name,
+                  description: option.description,
+                  imageID: option.image?.id,
+                })),
             })),
           })),
           successPage:
@@ -1313,10 +1321,13 @@ export function blockForQueryBlock(
               urlParam: input.urlParam ?? null,
               defaultValue: input.defaultValue ?? null,
               value: input.value ?? null,
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
               options: (input.options ?? []).map(option => ({
                 id: option.id,
                 name: option.name,
                 description: option.description ?? null,
+                image: option.image ?? null,
               })),
             })),
           })),

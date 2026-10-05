@@ -2192,6 +2192,7 @@ type MailchimpFormFieldConfig {
   label: String
   name: String
   options: [MailchimpFormInterestOption!]!
+  optionsLayout: MailchimpFormOptionsLayout!
   required: Boolean
   urlParam: String
   value: String
@@ -2204,21 +2205,30 @@ input MailchimpFormFieldConfigInput {
   label: String
   name: String
   options: [MailchimpFormInterestOptionInput!]! = []
+  optionsLayout: MailchimpFormOptionsLayout! = List
   required: Boolean
   urlParam: String
   value: String
 }
 
-type MailchimpFormInterestOption {
+type MailchimpFormInterestOption implements HasImage {
   description: String
   id: String!
+  image: Image
+  imageID: String
   name: String!
 }
 
 input MailchimpFormInterestOptionInput {
   description: String
   id: String!
+  imageID: String
   name: String!
+}
+
+enum MailchimpFormOptionsLayout {
+  Grid
+  List
 }
 
 type MailchimpFormStep {
@@ -2600,6 +2610,7 @@ type MemberPlan implements HasImage {
   availablePaymentMethods: [AvailablePaymentMethod!]!
   confirmationPage: Page
   confirmationPageId: String
+  createdAt: DateTime!
   currency: Currency!
   defaultPaymentPeriodicity: PaymentPeriodicity
   description: RichText
@@ -2618,6 +2629,7 @@ type MemberPlan implements HasImage {
   maxCount: Int
   migrateToTargetPaymentMethod: PaymentMethod
   migrateToTargetPaymentMethodID: String
+  modifiedAt: DateTime!
   name: String!
   periodicityPricing: [PeriodicityPrice!]!
   productType: ProductType!
