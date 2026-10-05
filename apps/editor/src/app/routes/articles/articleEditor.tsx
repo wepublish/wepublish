@@ -1056,7 +1056,7 @@ function ArticleEditor() {
                   itemId={articleID}
                   value={blocks}
                   onChange={handleChange}
-                  disabled={isLoading || isDisabled || !isAuthorized}
+                  disabled={isBusy || !isAuthorized}
                   blockMap={BlockMap}
                 />
               </DocumentUrlProvider>
