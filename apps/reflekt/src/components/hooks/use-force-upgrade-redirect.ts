@@ -7,7 +7,7 @@ import {
   useSubscriptionsQuery,
 } from '@wepublish/website/api';
 import { useRouter } from 'next/router';
-import { ascend, descend, prop, sortWith } from 'ramda';
+import { ascend, prop, sortWith } from 'ramda';
 import { useContext, useEffect, useMemo } from 'react';
 
 import { ForceUpgradeContext } from '../reflekt-force-upgrade-context';
@@ -45,38 +45,31 @@ export const useForceUpgradeRedirect = (
     [data?.userSubscriptions]
   );
 
-  const canUpgradeTo = useMemo(
-    () =>
+  const subscriptionToUpgrade = useMemo(() => {
+    const subscribedPlanIds = new Set(
+      upgradeableSubscriptions.map(sub => sub.memberPlan.id)
+    );
+
+    const hasUpgradeTarget = (subscription: FullSubscriptionFragment) =>
       memberPlans.some(
         memberPlan =>
           isMemberplanUpgradeableTo(memberPlan) &&
-          upgradeableSubscriptions.every(
-            sub => sub.memberPlan.id !== memberPlan.id
-          ) &&
-          upgradeableSubscriptions.some(
-            sub =>
-              getMonthlyEquivalentRange(memberPlan).amountPerMonthMin >
-              getMonthlyEquivalentRange(sub.memberPlan).amountPerMonthMin
-          )
-      ),
-    [upgradeableSubscriptions, memberPlans]
-  );
+          !subscribedPlanIds.has(memberPlan.id) &&
+          getMonthlyEquivalentRange(memberPlan).amountPerMonthMin >
+            getMonthlyEquivalentRange(subscription.memberPlan).amountPerMonthMin
+      );
 
-  const subscriptionToUpgrade = useMemo(
-    () =>
-      sortWith(
-        [
-          descend(prop('monthlyAmount')),
-          ascend((sub: FullSubscriptionFragment) => Number(!!sub.deactivation)),
-        ],
-        upgradeableSubscriptions
-      ).at(0),
-    [upgradeableSubscriptions]
-  );
+    return sortWith(
+      [
+        ascend(prop('monthlyAmount')),
+        ascend((sub: FullSubscriptionFragment) => Number(!!sub.deactivation)),
+      ],
+      upgradeableSubscriptions.filter(hasUpgradeTarget)
+    ).at(0);
+  }, [upgradeableSubscriptions, memberPlans]);
 
   const shouldRedirect =
     forceUpgrade &&
-    canUpgradeTo &&
     !!subscriptionToUpgrade &&
     !router.query.upgradeSubscriptionId;
 
