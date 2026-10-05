@@ -1,6 +1,7 @@
 import './instrument.ts';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './nestapp/app.module';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -18,7 +19,11 @@ import { graphqlUploadExpress } from 'graphql-upload';
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
 
-  const nestApp = await NestFactory.create(AppModule, {
+  // The adapter is passed explicitly rather than left to Nest's default
+  // lookup: Nest 12 resolves it with `() => import('@nestjs/platform-express')`,
+  // a dynamic import webpack does not follow, so the package never makes it
+  // into the bundle and the pkg binary boots without an HTTP driver.
+  const nestApp = await NestFactory.create(AppModule, new ExpressAdapter(), {
     bodyParser: false,
   });
   nestApp.enableCors({
