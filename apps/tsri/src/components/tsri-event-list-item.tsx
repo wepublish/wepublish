@@ -305,6 +305,12 @@ const EventLocationWrapper = styled('div')`
   }
 `;
 
+const EventLocationIcon = styled(MdLocationOn)`
+  && {
+    margin-top: calc((1lh - 1em) / 4 + 1px);
+  }
+`;
+
 const EventLocation = styled('div')`
   grid-column: 2 / 4;
 `;
@@ -376,7 +382,7 @@ export const TsriEventListItem = ({
         <EventListItemContent>
           <EventListItemMeta>
             <EventLocationWrapper>
-              <MdLocationOn />
+              <EventLocationIcon />
               <EventLocation>
                 {location ?? EVENT_LOCATION_FALLBACK}
               </EventLocation>

@@ -34,23 +34,20 @@ export const TsriEventMeta = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(1)};
   justify-items: start;
-  font-size: 0.875rem;
-  font-weight: 700;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-size: 0.75rem;
-  }
+  ${({ theme }) => css`
+    ${theme.typography.subtitle1}
+  `}
+  font-weight: 400;
 `;
 
 const TsriEventMetaRow = styled('div')`
   display: grid;
   grid-template-columns: 20px auto;
   gap: ${({ theme }) => theme.spacing(1)};
-  align-items: start;
+  align-items: center;
 
   & svg {
     font-size: 1rem;
-    margin-top: 2px;
   }
 `;
 
@@ -132,7 +129,7 @@ export const TsriEvent = ({ data, className }: BuilderEventProps) => {
         </TsriEventMetaRow>
 
         <TsriEventMetaRow>
-          <MdLocationOn />
+          <MdLocationOn size="1.25rem" />
           <div>{event.location ?? EVENT_LOCATION_FALLBACK}</div>
         </TsriEventMetaRow>
 
