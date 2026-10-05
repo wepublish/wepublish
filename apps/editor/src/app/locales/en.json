@@ -1347,6 +1347,10 @@
     },
     "memberPlanList": {
       "action": "Actions",
+      "created": "Created",
+      "createdAt": "{{createdAt, ccc PP p}}",
+      "modified": "Last edited",
+      "modifiedAt": "{{modifiedAt, ccc PP p}}",
       "createNew": "New Memberplan",
       "deleteModalTitle": "Delete Memberplan",
       "editFlow": "Edit communication flow",
