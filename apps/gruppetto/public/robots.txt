@@ -1,6 +1,0 @@
-# Allow all crawlers
-User-agent: *
-Allow: /
-
-
-Sitemap: https://gruppetto-magazin.ch/api/sitemap
