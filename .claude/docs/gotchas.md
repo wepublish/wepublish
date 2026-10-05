@@ -366,6 +366,48 @@ which guards the options shape but not the versions.
 
 ---
 
+### ⚠️ Optional peer dependencies and the pkg binary: two different failures
+
+The API ships as a `@yao-pkg/pkg` snapshot, and libraries reach optional peers
+in two ways that both break there — with error messages that blame a missing
+install while the package is sitting in `node_modules`.
+
+**1. Dynamic require, invisible to webpack.** Nest's `loadPackage` /
+`loadAdapter` never enters the bundle, so the binary dies with
+`No driver (HTTP) has been selected ... install "@nestjs/platform-express"`.
+Fixable by naming the dependency statically so webpack emits a real
+`require(...)` — hence `new ExpressAdapter()` passed to `NestFactory.create` in
+[main.ts](../../apps/api-example/src/main.ts). Verify by grepping the built
+bundle for `require("<pkg>")`.
+
+**2. ESM resolution, which a static require does NOT fix.** Terminus checks its
+peer with `import.meta.resolve('@nestjs/axios')` and loads it with
+`await import(...)`. Neither works inside a snapshot, and no amount of
+bundling changes that — adding `HttpModule` to the health module was tried on
+2026-10-05 and the binary still aborted on boot with *The "@nestjs/axios"
+package is missing*. `@nestjs/axios` was installed and working the whole time;
+`HttpService` is used normally via DI in provider-registry, user, image and
+event-import. The fix is to not instantiate the indicator at all:
+[http-ping.health.ts](../../libs/health/api/src/lib/http-ping.health.ts)
+reimplements the ping on `HealthIndicatorService` + global `fetch`, which is
+what the terminus docs now show anyway.
+
+**Before adding any library that lazily resolves an optional peer, check which
+of the two it does** — `grep` it for `import.meta.resolve` and `await import(`
+as well as `loadPackage`. Only the first kind is bundleable.
+
+To sweep for the first kind: scan node_modules for
+`loadPackage`/`assertPackages`/`loadAdapter` string literals, keep those that
+are also in our `dependencies`, and check each against the bundle. As of
+2026-10-05 that leaves only `@apollo/subgraph` and `@apollo/gateway`,
+unreachable because the API uses `ApolloDriver`, not the federation or gateway
+drivers.
+
+**Nothing type-checks or tests either failure** — both only appear in the
+packaged binary.
+
+---
+
 ### ⚠️ Express 5 has no bare `*` route
 
 [apps/editor/src/server-app.ts](../../apps/editor/src/server-app.ts) serves
