@@ -10,7 +10,6 @@ import {
   TeaserListBlockWrapper,
   TeaserSlotsBlockWrapper,
 } from '@wepublish/block-content/website';
-import { SubscribeWrapper } from '@wepublish/membership/website';
 
 import { SidebarContentWrapper } from './break-blocks/tsri-sidebar-content';
 
@@ -29,7 +28,6 @@ export const twoColumnContentStyles = (theme: Theme) => css`
         ${TeaserListBlockWrapper},
         ${TeaserSlotsBlockWrapper},
         ${ImageGalleryBlockWrapper},
-        ${SubscribeWrapper},
         ${FlexBlockWrapper}
     ) {
     grid-column: 1 / 2;
@@ -42,7 +40,6 @@ export const twoColumnContentStyles = (theme: Theme) => css`
         ${TeaserListBlockWrapper},
         ${TeaserSlotsBlockWrapper},
         ${ImageGalleryBlockWrapper},
-        ${SubscribeWrapper},
         ${FlexBlockWrapper}
     ) {
     grid-column: -1 / 1;
