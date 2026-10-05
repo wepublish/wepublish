@@ -68,11 +68,13 @@ import {
   toaster,
 } from 'rsuite';
 
+import { LastSavedAt } from '../../lastSavedAt';
 import {
   PreviewControls,
   PreviewDevice,
   PreviewFrame,
 } from '../../previewFrame';
+import { useAutosave } from '../../useAutosave';
 
 const EditorContent = styled.div`
   display: flex;
@@ -144,6 +146,8 @@ function PageEditor() {
     { data: createData, loading: isCreating, error: createError },
   ] = useCreatePageMutation();
   const [updatePage, { loading: isUpdating, error: updateError }] =
+    useUpdatePageMutation();
+  const [autosavePage, { loading: isAutosaving, error: autosaveError }] =
     useUpdatePageMutation();
   const [publishPage, { loading: isPublishing, error: publishError }] =
     usePublishPageMutation({});
@@ -279,7 +283,7 @@ function PageEditor() {
   const { t } = useTranslation();
 
   const isNotFound = pageData && !pageData.page;
-  const isDisabled =
+  const isBusy =
     isLoading ||
     isCreating ||
     isUpdating ||
@@ -287,6 +291,8 @@ function PageEditor() {
     isRestoring ||
     isDiscarding ||
     isNotFound;
+  // Autosaving must not disable the blocks, as that would blur whatever the user is typing in.
+  const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     pageData?.page?.draft ||
       pageData?.page?.published ||
@@ -294,6 +300,8 @@ function PageEditor() {
   );
 
   const [hasChanged, setChanged] = useState(false);
+  const changeVersion = useRef(0);
+  const skipRepopulate = useRef(false);
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
 
   const previewUrl = pageData?.page?.previewUrl;
@@ -305,13 +313,14 @@ function PageEditor() {
   const handleChange = useCallback(
     (blocks: React.SetStateAction<BlockValue[]>) => {
       setBlocks(blocks);
+      changeVersion.current++;
       setChanged(true);
     },
     []
   );
 
   useEffect(() => {
-    if (pageData?.page && !hasChanged) {
+    if (pageData?.page && !hasChanged && !skipRepopulate.current) {
       const { latest, tags, hidden, slug, url } = pageData.page;
       const {
         title,
@@ -380,6 +389,7 @@ function PageEditor() {
     const error =
       createError?.message ??
       updateError?.message ??
+      autosaveError?.message ??
       publishError?.message ??
       restoreError?.message ??
       discardError?.message;
@@ -394,7 +404,14 @@ function PageEditor() {
           {error}
         </Message>
       );
-  }, [createError, updateError, publishError, restoreError, discardError]);
+  }, [
+    createError,
+    updateError,
+    autosaveError,
+    publishError,
+    restoreError,
+    discardError,
+  ]);
 
   async function handleDiscardDraft() {
     if (!pageID) {
@@ -406,6 +423,8 @@ function PageEditor() {
     });
 
     if (data) {
+      skipRepopulate.current = false;
+      markSaved();
       setChanged(false);
       await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
 
@@ -434,6 +453,8 @@ function PageEditor() {
 
       if (data) {
         // Let the page query repopulate the editor with the restored draft.
+        skipRepopulate.current = false;
+        markSaved();
         setChanged(false);
         await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
 
@@ -513,6 +534,8 @@ function PageEditor() {
     if (pageID) {
       await updatePage({ variables: { id: pageID, ...input } });
 
+      skipRepopulate.current = false;
+      markSaved();
       setChanged(false);
       toaster.push(
         <Notification
@@ -541,6 +564,43 @@ function PageEditor() {
     }
   }
 
+  async function handleAutosave() {
+    if (!pageID || !validateAll.current().ok) {
+      return;
+    }
+
+    const version = changeVersion.current;
+    const { data } = await autosavePage({
+      variables: { id: pageID, ...createInput() },
+    });
+
+    if (!data) {
+      return;
+    }
+
+    skipRepopulate.current = true;
+
+    if (version === changeVersion.current) {
+      setChanged(false);
+    }
+
+    toaster.push(
+      <Notification
+        type="success"
+        header={t('pageEditor.overview.pageDraftAutosaved')}
+        duration={2000}
+      />,
+      { placement: 'bottomEnd' }
+    );
+    await reloadRevisions();
+  }
+
+  const { markSaved } = useAutosave({
+    enabled: !isDisabled && !!pageID,
+    hasChanged,
+    onAutosave: handleAutosave,
+  });
+
   async function handlePublish(publishedAt: Date) {
     if (!runEditorValidation('publish')) {
       return;
@@ -551,6 +611,8 @@ function PageEditor() {
       });
 
       if (data) {
+        skipRepopulate.current = false;
+        markSaved();
         const { data: publishData } = await publishPage({
           variables: {
             id: pageID,
@@ -726,6 +788,8 @@ function PageEditor() {
                       </PermissionControl>
                     </PermissionControl>
                   }
+
+                  <LastSavedAt date={pageData?.page?.latest.createdAt} />
                 </CenterChildren>
               }
               rightChildren={
@@ -794,7 +858,7 @@ function PageEditor() {
                 <BlockList
                   value={blocks}
                   onChange={handleChange}
-                  disabled={isDisabled || !isAuthorized}
+                  disabled={isBusy || !isAuthorized}
                   blockMap={BlockMap}
                 />
               </DocumentUrlProvider>
@@ -816,6 +880,7 @@ function PageEditor() {
           }}
           onChange={value => {
             setMetadata(value);
+            changeVersion.current++;
             setChanged(true);
           }}
         />
