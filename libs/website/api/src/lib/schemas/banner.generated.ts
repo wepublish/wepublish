@@ -6,6 +6,7 @@ import { FullImageFragment, FullImageUrLsFragment, ImageUrLsFragment, SquareImag
 import { gql } from '@apollo/client';
 import { FullImageFragmentDoc, FullImageUrLsFragmentDoc, ImageUrLsFragmentDoc, SquareImageUrLsFragmentDoc, SlimImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, collapsible: boolean, html?: string | null, embedUrl?: string | null, delay: number, hideForMinutes: number, showOnArticles: boolean, showOnPages?: Array<(
     { __typename?: 'PageModel' }
@@ -113,13 +114,13 @@ ${FullBannerActionFragmentDoc}`;
  *   },
  * });
  */
-export function usePrimaryBannerQuery(baseOptions: Apollo.QueryHookOptions<PrimaryBannerQuery, PrimaryBannerQueryVariables>) {
+export function usePrimaryBannerQuery(baseOptions: ApolloReactHooks.QueryHookOptions<PrimaryBannerQuery, PrimaryBannerQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PrimaryBannerQuery, PrimaryBannerQueryVariables>(PrimaryBannerDocument, options);
+        return ApolloReactHooks.useQuery<PrimaryBannerQuery, PrimaryBannerQueryVariables>(PrimaryBannerDocument, options);
       }
-export function usePrimaryBannerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PrimaryBannerQuery, PrimaryBannerQueryVariables>) {
+export function usePrimaryBannerLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PrimaryBannerQuery, PrimaryBannerQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PrimaryBannerQuery, PrimaryBannerQueryVariables>(PrimaryBannerDocument, options);
+          return ApolloReactHooks.useLazyQuery<PrimaryBannerQuery, PrimaryBannerQueryVariables>(PrimaryBannerDocument, options);
         }
 export type PrimaryBannerQueryHookResult = ReturnType<typeof usePrimaryBannerQuery>;
 export type PrimaryBannerLazyQueryHookResult = ReturnType<typeof usePrimaryBannerLazyQuery>;

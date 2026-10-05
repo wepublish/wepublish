@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type ChangelogEntryFragment = { __typename?: 'ChangelogEntry', id: string, name: string, releasedAt: string, title: string, lead: string, description?: string | null, actionRequired: boolean, confirmedAt?: string | null, confirmedByUserId?: string | null };
 
@@ -77,13 +78,13 @@ export const ChangelogEntriesDocument = gql`
  *   },
  * });
  */
-export function useChangelogEntriesQuery(baseOptions?: Apollo.QueryHookOptions<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>) {
+export function useChangelogEntriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>(ChangelogEntriesDocument, options);
+        return ApolloReactHooks.useQuery<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>(ChangelogEntriesDocument, options);
       }
-export function useChangelogEntriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>) {
+export function useChangelogEntriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>(ChangelogEntriesDocument, options);
+          return ApolloReactHooks.useLazyQuery<ChangelogEntriesQuery, ChangelogEntriesQueryVariables>(ChangelogEntriesDocument, options);
         }
 export type ChangelogEntriesQueryHookResult = ReturnType<typeof useChangelogEntriesQuery>;
 export type ChangelogEntriesLazyQueryHookResult = ReturnType<typeof useChangelogEntriesLazyQuery>;
@@ -115,9 +116,9 @@ export type ConfirmChangelogEntryMutationFn = Apollo.MutationFunction<ConfirmCha
  *   },
  * });
  */
-export function useConfirmChangelogEntryMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>) {
+export function useConfirmChangelogEntryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>(ConfirmChangelogEntryDocument, options);
+        return ApolloReactHooks.useMutation<ConfirmChangelogEntryMutation, ConfirmChangelogEntryMutationVariables>(ConfirmChangelogEntryDocument, options);
       }
 export type ConfirmChangelogEntryMutationHookResult = ReturnType<typeof useConfirmChangelogEntryMutation>;
 export type ConfirmChangelogEntryMutationResult = Apollo.MutationResult<ConfirmChangelogEntryMutation>;

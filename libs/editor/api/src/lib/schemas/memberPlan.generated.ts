@@ -8,6 +8,7 @@ import { gql } from '@apollo/client';
 import { FullPaymentMethodFragmentDoc, FullPaymentProviderFragmentDoc } from './paymentMethod.generated';
 import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<Types.PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<(
     { __typename?: 'PaymentMethod' }
@@ -210,13 +211,13 @@ ${FullPaymentProviderFragmentDoc}`;
  *   },
  * });
  */
-export function useMemberPlanListQuery(baseOptions?: Apollo.QueryHookOptions<MemberPlanListQuery, MemberPlanListQueryVariables>) {
+export function useMemberPlanListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MemberPlanListQuery, MemberPlanListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanListDocument, options);
+        return ApolloReactHooks.useQuery<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanListDocument, options);
       }
-export function useMemberPlanListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MemberPlanListQuery, MemberPlanListQueryVariables>) {
+export function useMemberPlanListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MemberPlanListQuery, MemberPlanListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanListDocument, options);
+          return ApolloReactHooks.useLazyQuery<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanListDocument, options);
         }
 export type MemberPlanListQueryHookResult = ReturnType<typeof useMemberPlanListQuery>;
 export type MemberPlanListLazyQueryHookResult = ReturnType<typeof useMemberPlanListLazyQuery>;
@@ -250,13 +251,13 @@ ${FullPaymentProviderFragmentDoc}`;
  *   },
  * });
  */
-export function useMemberPlanQuery(baseOptions: Apollo.QueryHookOptions<MemberPlanQuery, MemberPlanQueryVariables>) {
+export function useMemberPlanQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MemberPlanQuery, MemberPlanQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MemberPlanQuery, MemberPlanQueryVariables>(MemberPlanDocument, options);
+        return ApolloReactHooks.useQuery<MemberPlanQuery, MemberPlanQueryVariables>(MemberPlanDocument, options);
       }
-export function useMemberPlanLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MemberPlanQuery, MemberPlanQueryVariables>) {
+export function useMemberPlanLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MemberPlanQuery, MemberPlanQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MemberPlanQuery, MemberPlanQueryVariables>(MemberPlanDocument, options);
+          return ApolloReactHooks.useLazyQuery<MemberPlanQuery, MemberPlanQueryVariables>(MemberPlanDocument, options);
         }
 export type MemberPlanQueryHookResult = ReturnType<typeof useMemberPlanQuery>;
 export type MemberPlanLazyQueryHookResult = ReturnType<typeof useMemberPlanLazyQuery>;
@@ -330,9 +331,9 @@ export type CreateMemberPlanMutationFn = Apollo.MutationFunction<CreateMemberPla
  *   },
  * });
  */
-export function useCreateMemberPlanMutation(baseOptions?: Apollo.MutationHookOptions<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>) {
+export function useCreateMemberPlanMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>(CreateMemberPlanDocument, options);
+        return ApolloReactHooks.useMutation<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>(CreateMemberPlanDocument, options);
       }
 export type CreateMemberPlanMutationHookResult = ReturnType<typeof useCreateMemberPlanMutation>;
 export type CreateMemberPlanMutationResult = Apollo.MutationResult<CreateMemberPlanMutation>;
@@ -408,9 +409,9 @@ export type UpdateMemberPlanMutationFn = Apollo.MutationFunction<UpdateMemberPla
  *   },
  * });
  */
-export function useUpdateMemberPlanMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>) {
+export function useUpdateMemberPlanMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>(UpdateMemberPlanDocument, options);
+        return ApolloReactHooks.useMutation<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>(UpdateMemberPlanDocument, options);
       }
 export type UpdateMemberPlanMutationHookResult = ReturnType<typeof useUpdateMemberPlanMutation>;
 export type UpdateMemberPlanMutationResult = Apollo.MutationResult<UpdateMemberPlanMutation>;
@@ -446,9 +447,9 @@ export type DeleteMemberPlanMutationFn = Apollo.MutationFunction<DeleteMemberPla
  *   },
  * });
  */
-export function useDeleteMemberPlanMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>) {
+export function useDeleteMemberPlanMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>(DeleteMemberPlanDocument, options);
+        return ApolloReactHooks.useMutation<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>(DeleteMemberPlanDocument, options);
       }
 export type DeleteMemberPlanMutationHookResult = ReturnType<typeof useDeleteMemberPlanMutation>;
 export type DeleteMemberPlanMutationResult = Apollo.MutationResult<DeleteMemberPlanMutation>;

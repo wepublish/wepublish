@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type OneChannelStatusQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -39,13 +40,13 @@ export const OneChannelStatusDocument = gql`
  *   },
  * });
  */
-export function useOneChannelStatusQuery(baseOptions?: Apollo.QueryHookOptions<OneChannelStatusQuery, OneChannelStatusQueryVariables>) {
+export function useOneChannelStatusQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<OneChannelStatusQuery, OneChannelStatusQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<OneChannelStatusQuery, OneChannelStatusQueryVariables>(OneChannelStatusDocument, options);
+        return ApolloReactHooks.useQuery<OneChannelStatusQuery, OneChannelStatusQueryVariables>(OneChannelStatusDocument, options);
       }
-export function useOneChannelStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OneChannelStatusQuery, OneChannelStatusQueryVariables>) {
+export function useOneChannelStatusLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<OneChannelStatusQuery, OneChannelStatusQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<OneChannelStatusQuery, OneChannelStatusQueryVariables>(OneChannelStatusDocument, options);
+          return ApolloReactHooks.useLazyQuery<OneChannelStatusQuery, OneChannelStatusQueryVariables>(OneChannelStatusDocument, options);
         }
 export type OneChannelStatusQueryHookResult = ReturnType<typeof useOneChannelStatusQuery>;
 export type OneChannelStatusLazyQueryHookResult = ReturnType<typeof useOneChannelStatusLazyQuery>;

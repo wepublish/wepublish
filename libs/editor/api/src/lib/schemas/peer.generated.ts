@@ -6,6 +6,7 @@ import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './i
 import { gql } from '@apollo/client';
 import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: (
     { __typename?: 'Image' }
@@ -209,13 +210,13 @@ ${ImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function usePeerProfileQuery(baseOptions?: Apollo.QueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
+export function usePeerProfileQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
+        return ApolloReactHooks.useQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
       }
-export function usePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
+export function usePeerProfileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
+          return ApolloReactHooks.useLazyQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
         }
 export type PeerProfileQueryHookResult = ReturnType<typeof usePeerProfileQuery>;
 export type PeerProfileLazyQueryHookResult = ReturnType<typeof usePeerProfileLazyQuery>;
@@ -245,13 +246,13 @@ ${FullPeerImageFragmentDoc}`;
  *   },
  * });
  */
-export function usePeerListQuery(baseOptions?: Apollo.QueryHookOptions<PeerListQuery, PeerListQueryVariables>) {
+export function usePeerListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PeerListQuery, PeerListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerListQuery, PeerListQueryVariables>(PeerListDocument, options);
+        return ApolloReactHooks.useQuery<PeerListQuery, PeerListQueryVariables>(PeerListDocument, options);
       }
-export function usePeerListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerListQuery, PeerListQueryVariables>) {
+export function usePeerListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PeerListQuery, PeerListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerListQuery, PeerListQueryVariables>(PeerListDocument, options);
+          return ApolloReactHooks.useLazyQuery<PeerListQuery, PeerListQueryVariables>(PeerListDocument, options);
         }
 export type PeerListQueryHookResult = ReturnType<typeof usePeerListQuery>;
 export type PeerListLazyQueryHookResult = ReturnType<typeof usePeerListLazyQuery>;
@@ -282,13 +283,13 @@ ${FullPeerImageFragmentDoc}`;
  *   },
  * });
  */
-export function usePeerQuery(baseOptions: Apollo.QueryHookOptions<PeerQuery, PeerQueryVariables>) {
+export function usePeerQuery(baseOptions: ApolloReactHooks.QueryHookOptions<PeerQuery, PeerQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
+        return ApolloReactHooks.useQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
       }
-export function usePeerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerQuery, PeerQueryVariables>) {
+export function usePeerLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PeerQuery, PeerQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
+          return ApolloReactHooks.useLazyQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
         }
 export type PeerQueryHookResult = ReturnType<typeof usePeerQuery>;
 export type PeerLazyQueryHookResult = ReturnType<typeof usePeerLazyQuery>;
@@ -332,9 +333,9 @@ export type CreatePeerMutationFn = Apollo.MutationFunction<CreatePeerMutation, C
  *   },
  * });
  */
-export function useCreatePeerMutation(baseOptions?: Apollo.MutationHookOptions<CreatePeerMutation, CreatePeerMutationVariables>) {
+export function useCreatePeerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePeerMutation, CreatePeerMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePeerMutation, CreatePeerMutationVariables>(CreatePeerDocument, options);
+        return ApolloReactHooks.useMutation<CreatePeerMutation, CreatePeerMutationVariables>(CreatePeerDocument, options);
       }
 export type CreatePeerMutationHookResult = ReturnType<typeof useCreatePeerMutation>;
 export type CreatePeerMutationResult = Apollo.MutationResult<CreatePeerMutation>;
@@ -381,9 +382,9 @@ export type UpdatePeerMutationFn = Apollo.MutationFunction<UpdatePeerMutation, U
  *   },
  * });
  */
-export function useUpdatePeerMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePeerMutation, UpdatePeerMutationVariables>) {
+export function useUpdatePeerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePeerMutation, UpdatePeerMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePeerMutation, UpdatePeerMutationVariables>(UpdatePeerDocument, options);
+        return ApolloReactHooks.useMutation<UpdatePeerMutation, UpdatePeerMutationVariables>(UpdatePeerDocument, options);
       }
 export type UpdatePeerMutationHookResult = ReturnType<typeof useUpdatePeerMutation>;
 export type UpdatePeerMutationResult = Apollo.MutationResult<UpdatePeerMutation>;
@@ -412,9 +413,9 @@ export type DeletePeerMutationFn = Apollo.MutationFunction<DeletePeerMutation, D
  *   },
  * });
  */
-export function useDeletePeerMutation(baseOptions?: Apollo.MutationHookOptions<DeletePeerMutation, DeletePeerMutationVariables>) {
+export function useDeletePeerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePeerMutation, DeletePeerMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePeerMutation, DeletePeerMutationVariables>(DeletePeerDocument, options);
+        return ApolloReactHooks.useMutation<DeletePeerMutation, DeletePeerMutationVariables>(DeletePeerDocument, options);
       }
 export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutation>;
 export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
@@ -465,9 +466,9 @@ export type UpdatePeerProfileMutationFn = Apollo.MutationFunction<UpdatePeerProf
  *   },
  * });
  */
-export function useUpdatePeerProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePeerProfileMutation, UpdatePeerProfileMutationVariables>) {
+export function useUpdatePeerProfileMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePeerProfileMutation, UpdatePeerProfileMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePeerProfileMutation, UpdatePeerProfileMutationVariables>(UpdatePeerProfileDocument, options);
+        return ApolloReactHooks.useMutation<UpdatePeerProfileMutation, UpdatePeerProfileMutationVariables>(UpdatePeerProfileDocument, options);
       }
 export type UpdatePeerProfileMutationHookResult = ReturnType<typeof useUpdatePeerProfileMutation>;
 export type UpdatePeerProfileMutationResult = Apollo.MutationResult<UpdatePeerProfileMutation>;
@@ -498,13 +499,13 @@ ${FullPeerImageFragmentDoc}`;
  *   },
  * });
  */
-export function useRemotePeerProfileQuery(baseOptions: Apollo.QueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
+export function useRemotePeerProfileQuery(baseOptions: ApolloReactHooks.QueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
+        return ApolloReactHooks.useQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
       }
-export function useRemotePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
+export function useRemotePeerProfileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
+          return ApolloReactHooks.useLazyQuery<RemotePeerProfileQuery, RemotePeerProfileQueryVariables>(RemotePeerProfileDocument, options);
         }
 export type RemotePeerProfileQueryHookResult = ReturnType<typeof useRemotePeerProfileQuery>;
 export type RemotePeerProfileLazyQueryHookResult = ReturnType<typeof useRemotePeerProfileLazyQuery>;

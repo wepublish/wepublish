@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullConsentFragment = { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string };
 
@@ -165,13 +166,13 @@ export const ConsentsDocument = gql`
  *   },
  * });
  */
-export function useConsentsQuery(baseOptions?: Apollo.QueryHookOptions<ConsentsQuery, ConsentsQueryVariables>) {
+export function useConsentsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ConsentsQuery, ConsentsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ConsentsQuery, ConsentsQueryVariables>(ConsentsDocument, options);
+        return ApolloReactHooks.useQuery<ConsentsQuery, ConsentsQueryVariables>(ConsentsDocument, options);
       }
-export function useConsentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ConsentsQuery, ConsentsQueryVariables>) {
+export function useConsentsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ConsentsQuery, ConsentsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ConsentsQuery, ConsentsQueryVariables>(ConsentsDocument, options);
+          return ApolloReactHooks.useLazyQuery<ConsentsQuery, ConsentsQueryVariables>(ConsentsDocument, options);
         }
 export type ConsentsQueryHookResult = ReturnType<typeof useConsentsQuery>;
 export type ConsentsLazyQueryHookResult = ReturnType<typeof useConsentsLazyQuery>;
@@ -200,13 +201,13 @@ export const ConsentDocument = gql`
  *   },
  * });
  */
-export function useConsentQuery(baseOptions: Apollo.QueryHookOptions<ConsentQuery, ConsentQueryVariables>) {
+export function useConsentQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ConsentQuery, ConsentQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ConsentQuery, ConsentQueryVariables>(ConsentDocument, options);
+        return ApolloReactHooks.useQuery<ConsentQuery, ConsentQueryVariables>(ConsentDocument, options);
       }
-export function useConsentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ConsentQuery, ConsentQueryVariables>) {
+export function useConsentLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ConsentQuery, ConsentQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ConsentQuery, ConsentQueryVariables>(ConsentDocument, options);
+          return ApolloReactHooks.useLazyQuery<ConsentQuery, ConsentQueryVariables>(ConsentDocument, options);
         }
 export type ConsentQueryHookResult = ReturnType<typeof useConsentQuery>;
 export type ConsentLazyQueryHookResult = ReturnType<typeof useConsentLazyQuery>;
@@ -239,9 +240,9 @@ export type CreateConsentMutationFn = Apollo.MutationFunction<CreateConsentMutat
  *   },
  * });
  */
-export function useCreateConsentMutation(baseOptions?: Apollo.MutationHookOptions<CreateConsentMutation, CreateConsentMutationVariables>) {
+export function useCreateConsentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateConsentMutation, CreateConsentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateConsentMutation, CreateConsentMutationVariables>(CreateConsentDocument, options);
+        return ApolloReactHooks.useMutation<CreateConsentMutation, CreateConsentMutationVariables>(CreateConsentDocument, options);
       }
 export type CreateConsentMutationHookResult = ReturnType<typeof useCreateConsentMutation>;
 export type CreateConsentMutationResult = Apollo.MutationResult<CreateConsentMutation>;
@@ -275,9 +276,9 @@ export type UpdateConsentMutationFn = Apollo.MutationFunction<UpdateConsentMutat
  *   },
  * });
  */
-export function useUpdateConsentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateConsentMutation, UpdateConsentMutationVariables>) {
+export function useUpdateConsentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateConsentMutation, UpdateConsentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateConsentMutation, UpdateConsentMutationVariables>(UpdateConsentDocument, options);
+        return ApolloReactHooks.useMutation<UpdateConsentMutation, UpdateConsentMutationVariables>(UpdateConsentDocument, options);
       }
 export type UpdateConsentMutationHookResult = ReturnType<typeof useUpdateConsentMutation>;
 export type UpdateConsentMutationResult = Apollo.MutationResult<UpdateConsentMutation>;
@@ -308,9 +309,9 @@ export type DeleteConsentMutationFn = Apollo.MutationFunction<DeleteConsentMutat
  *   },
  * });
  */
-export function useDeleteConsentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteConsentMutation, DeleteConsentMutationVariables>) {
+export function useDeleteConsentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteConsentMutation, DeleteConsentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteConsentMutation, DeleteConsentMutationVariables>(DeleteConsentDocument, options);
+        return ApolloReactHooks.useMutation<DeleteConsentMutation, DeleteConsentMutationVariables>(DeleteConsentDocument, options);
       }
 export type DeleteConsentMutationHookResult = ReturnType<typeof useDeleteConsentMutation>;
 export type DeleteConsentMutationResult = Apollo.MutationResult<DeleteConsentMutation>;
@@ -339,13 +340,13 @@ ${FullConsentFragmentDoc}`;
  *   },
  * });
  */
-export function useUserConsentsQuery(baseOptions?: Apollo.QueryHookOptions<UserConsentsQuery, UserConsentsQueryVariables>) {
+export function useUserConsentsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UserConsentsQuery, UserConsentsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserConsentsQuery, UserConsentsQueryVariables>(UserConsentsDocument, options);
+        return ApolloReactHooks.useQuery<UserConsentsQuery, UserConsentsQueryVariables>(UserConsentsDocument, options);
       }
-export function useUserConsentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserConsentsQuery, UserConsentsQueryVariables>) {
+export function useUserConsentsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserConsentsQuery, UserConsentsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserConsentsQuery, UserConsentsQueryVariables>(UserConsentsDocument, options);
+          return ApolloReactHooks.useLazyQuery<UserConsentsQuery, UserConsentsQueryVariables>(UserConsentsDocument, options);
         }
 export type UserConsentsQueryHookResult = ReturnType<typeof useUserConsentsQuery>;
 export type UserConsentsLazyQueryHookResult = ReturnType<typeof useUserConsentsLazyQuery>;
@@ -375,13 +376,13 @@ ${FullConsentFragmentDoc}`;
  *   },
  * });
  */
-export function useUserConsentQuery(baseOptions: Apollo.QueryHookOptions<UserConsentQuery, UserConsentQueryVariables>) {
+export function useUserConsentQuery(baseOptions: ApolloReactHooks.QueryHookOptions<UserConsentQuery, UserConsentQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserConsentQuery, UserConsentQueryVariables>(UserConsentDocument, options);
+        return ApolloReactHooks.useQuery<UserConsentQuery, UserConsentQueryVariables>(UserConsentDocument, options);
       }
-export function useUserConsentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserConsentQuery, UserConsentQueryVariables>) {
+export function useUserConsentLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserConsentQuery, UserConsentQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserConsentQuery, UserConsentQueryVariables>(UserConsentDocument, options);
+          return ApolloReactHooks.useLazyQuery<UserConsentQuery, UserConsentQueryVariables>(UserConsentDocument, options);
         }
 export type UserConsentQueryHookResult = ReturnType<typeof useUserConsentQuery>;
 export type UserConsentLazyQueryHookResult = ReturnType<typeof useUserConsentLazyQuery>;
@@ -415,9 +416,9 @@ export type CreateUserConsentMutationFn = Apollo.MutationFunction<CreateUserCons
  *   },
  * });
  */
-export function useCreateUserConsentMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserConsentMutation, CreateUserConsentMutationVariables>) {
+export function useCreateUserConsentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateUserConsentMutation, CreateUserConsentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateUserConsentMutation, CreateUserConsentMutationVariables>(CreateUserConsentDocument, options);
+        return ApolloReactHooks.useMutation<CreateUserConsentMutation, CreateUserConsentMutationVariables>(CreateUserConsentDocument, options);
       }
 export type CreateUserConsentMutationHookResult = ReturnType<typeof useCreateUserConsentMutation>;
 export type CreateUserConsentMutationResult = Apollo.MutationResult<CreateUserConsentMutation>;
@@ -450,9 +451,9 @@ export type UpdateUserConsentMutationFn = Apollo.MutationFunction<UpdateUserCons
  *   },
  * });
  */
-export function useUpdateUserConsentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserConsentMutation, UpdateUserConsentMutationVariables>) {
+export function useUpdateUserConsentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserConsentMutation, UpdateUserConsentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserConsentMutation, UpdateUserConsentMutationVariables>(UpdateUserConsentDocument, options);
+        return ApolloReactHooks.useMutation<UpdateUserConsentMutation, UpdateUserConsentMutationVariables>(UpdateUserConsentDocument, options);
       }
 export type UpdateUserConsentMutationHookResult = ReturnType<typeof useUpdateUserConsentMutation>;
 export type UpdateUserConsentMutationResult = Apollo.MutationResult<UpdateUserConsentMutation>;
@@ -484,9 +485,9 @@ export type DeleteUserConsentMutationFn = Apollo.MutationFunction<DeleteUserCons
  *   },
  * });
  */
-export function useDeleteUserConsentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserConsentMutation, DeleteUserConsentMutationVariables>) {
+export function useDeleteUserConsentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteUserConsentMutation, DeleteUserConsentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteUserConsentMutation, DeleteUserConsentMutationVariables>(DeleteUserConsentDocument, options);
+        return ApolloReactHooks.useMutation<DeleteUserConsentMutation, DeleteUserConsentMutationVariables>(DeleteUserConsentDocument, options);
       }
 export type DeleteUserConsentMutationHookResult = ReturnType<typeof useDeleteUserConsentMutation>;
 export type DeleteUserConsentMutationResult = Apollo.MutationResult<DeleteUserConsentMutation>;

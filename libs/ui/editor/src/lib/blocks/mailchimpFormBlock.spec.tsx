@@ -1,4 +1,5 @@
-import { MockedProvider, MockedResponse } from '@apollo/client/testing';
+import { MockedResponse } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import {
   act,
   fireEvent,
@@ -37,20 +38,20 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const anyVariables = {
-  variableMatcher: () => true,
-  maxUsageCount: Number.POSITIVE_INFINITY,
-};
+// Apollo Client 4 matches variables through `request.variables` (which accepts
+// a predicate) instead of the removed top-level `variableMatcher`.
+const anyVariables = () => true;
+const reusable = { maxUsageCount: Number.POSITIVE_INFINITY };
 
 const mocks: MockedResponse[] = [
   {
-    request: { query: SyncProviderSettingsDocument },
-    ...anyVariables,
+    request: { query: SyncProviderSettingsDocument, variables: anyVariables },
+    ...reusable,
     result: { data: { syncProviderSettings: [] } },
   },
   {
-    request: { query: MailchimpListsDocument },
-    ...anyVariables,
+    request: { query: MailchimpListsDocument, variables: anyVariables },
+    ...reusable,
     result: {
       data: {
         mailchimpLists: [
@@ -71,13 +72,13 @@ const mocks: MockedResponse[] = [
     },
   },
   {
-    request: { query: MailchimpMergeFieldsDocument },
-    ...anyVariables,
+    request: { query: MailchimpMergeFieldsDocument, variables: anyVariables },
+    ...reusable,
     result: { data: { mailchimpMergeFields: [] } },
   },
   {
-    request: { query: MailchimpInterestGroupsDocument },
-    ...anyVariables,
+    request: { query: MailchimpInterestGroupsDocument, variables: anyVariables },
+    ...reusable,
     result: {
       data: {
         mailchimpInterestGroups: [

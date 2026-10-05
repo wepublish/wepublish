@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullWebsiteSettingsFragment = { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, mail: { __typename?: 'WebsiteMail', mailchimp?: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } | null }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<Types.FontWeight>, style: Array<Types.FontStyle>, name: string }> };
 
@@ -92,13 +93,13 @@ export const WebsiteSettingsDocument = gql`
  *   },
  * });
  */
-export function useWebsiteSettingsQuery(baseOptions?: Apollo.QueryHookOptions<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>) {
+export function useWebsiteSettingsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>(WebsiteSettingsDocument, options);
+        return ApolloReactHooks.useQuery<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>(WebsiteSettingsDocument, options);
       }
-export function useWebsiteSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>) {
+export function useWebsiteSettingsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>(WebsiteSettingsDocument, options);
+          return ApolloReactHooks.useLazyQuery<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>(WebsiteSettingsDocument, options);
         }
 export type WebsiteSettingsQueryHookResult = ReturnType<typeof useWebsiteSettingsQuery>;
 export type WebsiteSettingsLazyQueryHookResult = ReturnType<typeof useWebsiteSettingsLazyQuery>;
@@ -139,9 +140,9 @@ export type UpdateWebsiteSettingsMutationFn = Apollo.MutationFunction<UpdateWebs
  *   },
  * });
  */
-export function useUpdateWebsiteSettingsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateWebsiteSettingsMutation, UpdateWebsiteSettingsMutationVariables>) {
+export function useUpdateWebsiteSettingsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateWebsiteSettingsMutation, UpdateWebsiteSettingsMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateWebsiteSettingsMutation, UpdateWebsiteSettingsMutationVariables>(UpdateWebsiteSettingsDocument, options);
+        return ApolloReactHooks.useMutation<UpdateWebsiteSettingsMutation, UpdateWebsiteSettingsMutationVariables>(UpdateWebsiteSettingsDocument, options);
       }
 export type UpdateWebsiteSettingsMutationHookResult = ReturnType<typeof useUpdateWebsiteSettingsMutation>;
 export type UpdateWebsiteSettingsMutationResult = Apollo.MutationResult<UpdateWebsiteSettingsMutation>;

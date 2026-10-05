@@ -32,6 +32,7 @@ import { FullCommentFragmentDoc, CommentWithoutNestingFragmentDoc, FullCalculate
 import { FullUserFragmentDoc, FullBaseUserFragmentDoc } from './user.generated';
 import { FullCrowdfundingFragmentDoc } from './crowdfunding.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPageTeaserFragment = { __typename?: 'PageTeaser', type: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: (
     { __typename?: 'Image' }
@@ -1427,9 +1428,9 @@ export type AddMailchimpContactMutationFn = Apollo.MutationFunction<AddMailchimp
  *   },
  * });
  */
-export function useAddMailchimpContactMutation(baseOptions?: Apollo.MutationHookOptions<AddMailchimpContactMutation, AddMailchimpContactMutationVariables>) {
+export function useAddMailchimpContactMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddMailchimpContactMutation, AddMailchimpContactMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddMailchimpContactMutation, AddMailchimpContactMutationVariables>(AddMailchimpContactDocument, options);
+        return ApolloReactHooks.useMutation<AddMailchimpContactMutation, AddMailchimpContactMutationVariables>(AddMailchimpContactDocument, options);
       }
 export type AddMailchimpContactMutationHookResult = ReturnType<typeof useAddMailchimpContactMutation>;
 export type AddMailchimpContactMutationResult = Apollo.MutationResult<AddMailchimpContactMutation>;

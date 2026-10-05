@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type VersionInformationQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -34,13 +35,13 @@ export const VersionInformationDocument = gql`
  *   },
  * });
  */
-export function useVersionInformationQuery(baseOptions?: Apollo.QueryHookOptions<VersionInformationQuery, VersionInformationQueryVariables>) {
+export function useVersionInformationQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<VersionInformationQuery, VersionInformationQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<VersionInformationQuery, VersionInformationQueryVariables>(VersionInformationDocument, options);
+        return ApolloReactHooks.useQuery<VersionInformationQuery, VersionInformationQueryVariables>(VersionInformationDocument, options);
       }
-export function useVersionInformationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VersionInformationQuery, VersionInformationQueryVariables>) {
+export function useVersionInformationLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<VersionInformationQuery, VersionInformationQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<VersionInformationQuery, VersionInformationQueryVariables>(VersionInformationDocument, options);
+          return ApolloReactHooks.useLazyQuery<VersionInformationQuery, VersionInformationQueryVariables>(VersionInformationDocument, options);
         }
 export type VersionInformationQueryHookResult = ReturnType<typeof useVersionInformationQuery>;
 export type VersionInformationLazyQueryHookResult = ReturnType<typeof useVersionInformationLazyQuery>;

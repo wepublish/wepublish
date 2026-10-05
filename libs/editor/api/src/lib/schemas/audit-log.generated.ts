@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullAuditLogFragment = { __typename?: 'AuditLog', id: string, createdAt: string, mutation: string, action: Types.AuditLogAction, entity?: string | null, recordId?: string | null, actorType: Types.AuditLogActorType, userId?: string | null, userEmail?: string | null, tokenName?: string | null, sessionId?: string | null, impersonatedBy?: string | null, success: boolean, errorMessage?: string | null };
 
@@ -86,13 +87,13 @@ export const AuditLogListDocument = gql`
  *   },
  * });
  */
-export function useAuditLogListQuery(baseOptions?: Apollo.QueryHookOptions<AuditLogListQuery, AuditLogListQueryVariables>) {
+export function useAuditLogListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AuditLogListQuery, AuditLogListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AuditLogListQuery, AuditLogListQueryVariables>(AuditLogListDocument, options);
+        return ApolloReactHooks.useQuery<AuditLogListQuery, AuditLogListQueryVariables>(AuditLogListDocument, options);
       }
-export function useAuditLogListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AuditLogListQuery, AuditLogListQueryVariables>) {
+export function useAuditLogListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AuditLogListQuery, AuditLogListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AuditLogListQuery, AuditLogListQueryVariables>(AuditLogListDocument, options);
+          return ApolloReactHooks.useLazyQuery<AuditLogListQuery, AuditLogListQueryVariables>(AuditLogListDocument, options);
         }
 export type AuditLogListQueryHookResult = ReturnType<typeof useAuditLogListQuery>;
 export type AuditLogListLazyQueryHookResult = ReturnType<typeof useAuditLogListLazyQuery>;

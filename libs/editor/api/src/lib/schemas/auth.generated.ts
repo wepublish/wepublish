@@ -8,6 +8,7 @@ import { gql } from '@apollo/client';
 import { FullUserRoleFragmentDoc } from './userRole.generated';
 import { FullPermissionFragmentDoc } from './permissions.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type CheckLoginOtpQueryVariables = Types.Exact<{
   email: Types.Scalars['String'];
@@ -108,13 +109,13 @@ export const CheckLoginOtpDocument = gql`
  *   },
  * });
  */
-export function useCheckLoginOtpQuery(baseOptions: Apollo.QueryHookOptions<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>) {
+export function useCheckLoginOtpQuery(baseOptions: ApolloReactHooks.QueryHookOptions<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>(CheckLoginOtpDocument, options);
+        return ApolloReactHooks.useQuery<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>(CheckLoginOtpDocument, options);
       }
-export function useCheckLoginOtpLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>) {
+export function useCheckLoginOtpLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>(CheckLoginOtpDocument, options);
+          return ApolloReactHooks.useLazyQuery<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>(CheckLoginOtpDocument, options);
         }
 export type CheckLoginOtpQueryHookResult = ReturnType<typeof useCheckLoginOtpQuery>;
 export type CheckLoginOtpLazyQueryHookResult = ReturnType<typeof useCheckLoginOtpLazyQuery>;
@@ -157,9 +158,9 @@ export type CreateSessionMutationFn = Apollo.MutationFunction<CreateSessionMutat
  *   },
  * });
  */
-export function useCreateSessionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSessionMutation, CreateSessionMutationVariables>) {
+export function useCreateSessionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSessionMutation, CreateSessionMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateSessionMutation, CreateSessionMutationVariables>(CreateSessionDocument, options);
+        return ApolloReactHooks.useMutation<CreateSessionMutation, CreateSessionMutationVariables>(CreateSessionDocument, options);
       }
 export type CreateSessionMutationHookResult = ReturnType<typeof useCreateSessionMutation>;
 export type CreateSessionMutationResult = Apollo.MutationResult<CreateSessionMutation>;
@@ -202,9 +203,9 @@ export type CreateSessionWithJwtMutationFn = Apollo.MutationFunction<CreateSessi
  *   },
  * });
  */
-export function useCreateSessionWithJwtMutation(baseOptions?: Apollo.MutationHookOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>) {
+export function useCreateSessionWithJwtMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>(CreateSessionWithJwtDocument, options);
+        return ApolloReactHooks.useMutation<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>(CreateSessionWithJwtDocument, options);
       }
 export type CreateSessionWithJwtMutationHookResult = ReturnType<typeof useCreateSessionWithJwtMutation>;
 export type CreateSessionWithJwtMutationResult = Apollo.MutationResult<CreateSessionWithJwtMutation>;
@@ -235,9 +236,9 @@ export type CreateJwtForWebsiteLoginMutationFn = Apollo.MutationFunction<CreateJ
  *   },
  * });
  */
-export function useCreateJwtForWebsiteLoginMutation(baseOptions?: Apollo.MutationHookOptions<CreateJwtForWebsiteLoginMutation, CreateJwtForWebsiteLoginMutationVariables>) {
+export function useCreateJwtForWebsiteLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateJwtForWebsiteLoginMutation, CreateJwtForWebsiteLoginMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateJwtForWebsiteLoginMutation, CreateJwtForWebsiteLoginMutationVariables>(CreateJwtForWebsiteLoginDocument, options);
+        return ApolloReactHooks.useMutation<CreateJwtForWebsiteLoginMutation, CreateJwtForWebsiteLoginMutationVariables>(CreateJwtForWebsiteLoginDocument, options);
       }
 export type CreateJwtForWebsiteLoginMutationHookResult = ReturnType<typeof useCreateJwtForWebsiteLoginMutation>;
 export type CreateJwtForWebsiteLoginMutationResult = Apollo.MutationResult<CreateJwtForWebsiteLoginMutation>;
@@ -266,9 +267,9 @@ export type SendWebsiteLoginMutationFn = Apollo.MutationFunction<SendWebsiteLogi
  *   },
  * });
  */
-export function useSendWebsiteLoginMutation(baseOptions?: Apollo.MutationHookOptions<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>) {
+export function useSendWebsiteLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>(SendWebsiteLoginDocument, options);
+        return ApolloReactHooks.useMutation<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>(SendWebsiteLoginDocument, options);
       }
 export type SendWebsiteLoginMutationHookResult = ReturnType<typeof useSendWebsiteLoginMutation>;
 export type SendWebsiteLoginMutationResult = Apollo.MutationResult<SendWebsiteLoginMutation>;
@@ -297,9 +298,9 @@ export type SendPasswordResetEmailMutationFn = Apollo.MutationFunction<SendPassw
  *   },
  * });
  */
-export function useSendPasswordResetEmailMutation(baseOptions?: Apollo.MutationHookOptions<SendPasswordResetEmailMutation, SendPasswordResetEmailMutationVariables>) {
+export function useSendPasswordResetEmailMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SendPasswordResetEmailMutation, SendPasswordResetEmailMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SendPasswordResetEmailMutation, SendPasswordResetEmailMutationVariables>(SendPasswordResetEmailDocument, options);
+        return ApolloReactHooks.useMutation<SendPasswordResetEmailMutation, SendPasswordResetEmailMutationVariables>(SendPasswordResetEmailDocument, options);
       }
 export type SendPasswordResetEmailMutationHookResult = ReturnType<typeof useSendPasswordResetEmailMutation>;
 export type SendPasswordResetEmailMutationResult = Apollo.MutationResult<SendPasswordResetEmailMutation>;
@@ -329,9 +330,9 @@ export type ResetPasswordWithTokenMutationFn = Apollo.MutationFunction<ResetPass
  *   },
  * });
  */
-export function useResetPasswordWithTokenMutation(baseOptions?: Apollo.MutationHookOptions<ResetPasswordWithTokenMutation, ResetPasswordWithTokenMutationVariables>) {
+export function useResetPasswordWithTokenMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ResetPasswordWithTokenMutation, ResetPasswordWithTokenMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ResetPasswordWithTokenMutation, ResetPasswordWithTokenMutationVariables>(ResetPasswordWithTokenDocument, options);
+        return ApolloReactHooks.useMutation<ResetPasswordWithTokenMutation, ResetPasswordWithTokenMutationVariables>(ResetPasswordWithTokenDocument, options);
       }
 export type ResetPasswordWithTokenMutationHookResult = ReturnType<typeof useResetPasswordWithTokenMutation>;
 export type ResetPasswordWithTokenMutationResult = Apollo.MutationResult<ResetPasswordWithTokenMutation>;
@@ -362,9 +363,9 @@ export type GenerateTotpSetupMutationFn = Apollo.MutationFunction<GenerateTotpSe
  *   },
  * });
  */
-export function useGenerateTotpSetupMutation(baseOptions?: Apollo.MutationHookOptions<GenerateTotpSetupMutation, GenerateTotpSetupMutationVariables>) {
+export function useGenerateTotpSetupMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<GenerateTotpSetupMutation, GenerateTotpSetupMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<GenerateTotpSetupMutation, GenerateTotpSetupMutationVariables>(GenerateTotpSetupDocument, options);
+        return ApolloReactHooks.useMutation<GenerateTotpSetupMutation, GenerateTotpSetupMutationVariables>(GenerateTotpSetupDocument, options);
       }
 export type GenerateTotpSetupMutationHookResult = ReturnType<typeof useGenerateTotpSetupMutation>;
 export type GenerateTotpSetupMutationResult = Apollo.MutationResult<GenerateTotpSetupMutation>;
@@ -393,9 +394,9 @@ export type EnableTotpMutationFn = Apollo.MutationFunction<EnableTotpMutation, E
  *   },
  * });
  */
-export function useEnableTotpMutation(baseOptions?: Apollo.MutationHookOptions<EnableTotpMutation, EnableTotpMutationVariables>) {
+export function useEnableTotpMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<EnableTotpMutation, EnableTotpMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<EnableTotpMutation, EnableTotpMutationVariables>(EnableTotpDocument, options);
+        return ApolloReactHooks.useMutation<EnableTotpMutation, EnableTotpMutationVariables>(EnableTotpDocument, options);
       }
 export type EnableTotpMutationHookResult = ReturnType<typeof useEnableTotpMutation>;
 export type EnableTotpMutationResult = Apollo.MutationResult<EnableTotpMutation>;
@@ -424,9 +425,9 @@ export type ResetUserTotpMutationFn = Apollo.MutationFunction<ResetUserTotpMutat
  *   },
  * });
  */
-export function useResetUserTotpMutation(baseOptions?: Apollo.MutationHookOptions<ResetUserTotpMutation, ResetUserTotpMutationVariables>) {
+export function useResetUserTotpMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ResetUserTotpMutation, ResetUserTotpMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ResetUserTotpMutation, ResetUserTotpMutationVariables>(ResetUserTotpDocument, options);
+        return ApolloReactHooks.useMutation<ResetUserTotpMutation, ResetUserTotpMutationVariables>(ResetUserTotpDocument, options);
       }
 export type ResetUserTotpMutationHookResult = ReturnType<typeof useResetUserTotpMutation>;
 export type ResetUserTotpMutationResult = Apollo.MutationResult<ResetUserTotpMutation>;

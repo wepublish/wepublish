@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type DailySubscriptionStatsQueryVariables = Types.Exact<{
   start: Types.Scalars['DateTime'];
@@ -111,13 +112,13 @@ export const DailySubscriptionStatsDocument = gql`
  *   },
  * });
  */
-export function useDailySubscriptionStatsQuery(baseOptions: Apollo.QueryHookOptions<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>) {
+export function useDailySubscriptionStatsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>(DailySubscriptionStatsDocument, options);
+        return ApolloReactHooks.useQuery<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>(DailySubscriptionStatsDocument, options);
       }
-export function useDailySubscriptionStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>) {
+export function useDailySubscriptionStatsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>(DailySubscriptionStatsDocument, options);
+          return ApolloReactHooks.useLazyQuery<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>(DailySubscriptionStatsDocument, options);
         }
 export type DailySubscriptionStatsQueryHookResult = ReturnType<typeof useDailySubscriptionStatsQuery>;
 export type DailySubscriptionStatsLazyQueryHookResult = ReturnType<typeof useDailySubscriptionStatsLazyQuery>;

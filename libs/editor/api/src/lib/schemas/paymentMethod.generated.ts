@@ -6,6 +6,7 @@ import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './i
 import { gql } from '@apollo/client';
 import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPaymentProviderFragment = { __typename?: 'PaymentProvider', id: string, name?: string | null };
 
@@ -133,13 +134,13 @@ export const PaymentProviderListDocument = gql`
  *   },
  * });
  */
-export function usePaymentProviderListQuery(baseOptions?: Apollo.QueryHookOptions<PaymentProviderListQuery, PaymentProviderListQueryVariables>) {
+export function usePaymentProviderListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaymentProviderListQuery, PaymentProviderListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PaymentProviderListQuery, PaymentProviderListQueryVariables>(PaymentProviderListDocument, options);
+        return ApolloReactHooks.useQuery<PaymentProviderListQuery, PaymentProviderListQueryVariables>(PaymentProviderListDocument, options);
       }
-export function usePaymentProviderListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaymentProviderListQuery, PaymentProviderListQueryVariables>) {
+export function usePaymentProviderListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaymentProviderListQuery, PaymentProviderListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PaymentProviderListQuery, PaymentProviderListQueryVariables>(PaymentProviderListDocument, options);
+          return ApolloReactHooks.useLazyQuery<PaymentProviderListQuery, PaymentProviderListQueryVariables>(PaymentProviderListDocument, options);
         }
 export type PaymentProviderListQueryHookResult = ReturnType<typeof usePaymentProviderListQuery>;
 export type PaymentProviderListLazyQueryHookResult = ReturnType<typeof usePaymentProviderListLazyQuery>;
@@ -170,13 +171,13 @@ ${ImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function usePaymentMethodListQuery(baseOptions?: Apollo.QueryHookOptions<PaymentMethodListQuery, PaymentMethodListQueryVariables>) {
+export function usePaymentMethodListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaymentMethodListQuery, PaymentMethodListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PaymentMethodListQuery, PaymentMethodListQueryVariables>(PaymentMethodListDocument, options);
+        return ApolloReactHooks.useQuery<PaymentMethodListQuery, PaymentMethodListQueryVariables>(PaymentMethodListDocument, options);
       }
-export function usePaymentMethodListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaymentMethodListQuery, PaymentMethodListQueryVariables>) {
+export function usePaymentMethodListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaymentMethodListQuery, PaymentMethodListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PaymentMethodListQuery, PaymentMethodListQueryVariables>(PaymentMethodListDocument, options);
+          return ApolloReactHooks.useLazyQuery<PaymentMethodListQuery, PaymentMethodListQueryVariables>(PaymentMethodListDocument, options);
         }
 export type PaymentMethodListQueryHookResult = ReturnType<typeof usePaymentMethodListQuery>;
 export type PaymentMethodListLazyQueryHookResult = ReturnType<typeof usePaymentMethodListLazyQuery>;
@@ -208,13 +209,13 @@ ${ImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function usePaymentMethodQuery(baseOptions: Apollo.QueryHookOptions<PaymentMethodQuery, PaymentMethodQueryVariables>) {
+export function usePaymentMethodQuery(baseOptions: ApolloReactHooks.QueryHookOptions<PaymentMethodQuery, PaymentMethodQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PaymentMethodQuery, PaymentMethodQueryVariables>(PaymentMethodDocument, options);
+        return ApolloReactHooks.useQuery<PaymentMethodQuery, PaymentMethodQueryVariables>(PaymentMethodDocument, options);
       }
-export function usePaymentMethodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaymentMethodQuery, PaymentMethodQueryVariables>) {
+export function usePaymentMethodLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaymentMethodQuery, PaymentMethodQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PaymentMethodQuery, PaymentMethodQueryVariables>(PaymentMethodDocument, options);
+          return ApolloReactHooks.useLazyQuery<PaymentMethodQuery, PaymentMethodQueryVariables>(PaymentMethodDocument, options);
         }
 export type PaymentMethodQueryHookResult = ReturnType<typeof usePaymentMethodQuery>;
 export type PaymentMethodLazyQueryHookResult = ReturnType<typeof usePaymentMethodLazyQuery>;
@@ -262,9 +263,9 @@ export type CreatePaymentMethodMutationFn = Apollo.MutationFunction<CreatePaymen
  *   },
  * });
  */
-export function useCreatePaymentMethodMutation(baseOptions?: Apollo.MutationHookOptions<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>) {
+export function useCreatePaymentMethodMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>(CreatePaymentMethodDocument, options);
+        return ApolloReactHooks.useMutation<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>(CreatePaymentMethodDocument, options);
       }
 export type CreatePaymentMethodMutationHookResult = ReturnType<typeof useCreatePaymentMethodMutation>;
 export type CreatePaymentMethodMutationResult = Apollo.MutationResult<CreatePaymentMethodMutation>;
@@ -314,9 +315,9 @@ export type UpdatePaymentMethodMutationFn = Apollo.MutationFunction<UpdatePaymen
  *   },
  * });
  */
-export function useUpdatePaymentMethodMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>) {
+export function useUpdatePaymentMethodMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>(UpdatePaymentMethodDocument, options);
+        return ApolloReactHooks.useMutation<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>(UpdatePaymentMethodDocument, options);
       }
 export type UpdatePaymentMethodMutationHookResult = ReturnType<typeof useUpdatePaymentMethodMutation>;
 export type UpdatePaymentMethodMutationResult = Apollo.MutationResult<UpdatePaymentMethodMutation>;
@@ -350,9 +351,9 @@ export type DeletePaymentMethodMutationFn = Apollo.MutationFunction<DeletePaymen
  *   },
  * });
  */
-export function useDeletePaymentMethodMutation(baseOptions?: Apollo.MutationHookOptions<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>) {
+export function useDeletePaymentMethodMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>(DeletePaymentMethodDocument, options);
+        return ApolloReactHooks.useMutation<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>(DeletePaymentMethodDocument, options);
       }
 export type DeletePaymentMethodMutationHookResult = ReturnType<typeof useDeletePaymentMethodMutation>;
 export type DeletePaymentMethodMutationResult = Apollo.MutationResult<DeletePaymentMethodMutation>;

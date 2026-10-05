@@ -8,6 +8,7 @@ import { gql } from '@apollo/client';
 import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
 import { FullPeerImageFragmentDoc, FullImageFragmentDoc, ImageUrLsFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type SlimPeerArticleRevisionFragment = { __typename?: 'PeerArticleRevision', id: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'PeerImage', id: string, url: string, license?: string | null, source?: string | null } | null };
 
@@ -119,13 +120,13 @@ ${FullPeerImageFragmentDoc}`;
  *   },
  * });
  */
-export function usePeerArticleListQuery(baseOptions?: Apollo.QueryHookOptions<PeerArticleListQuery, PeerArticleListQueryVariables>) {
+export function usePeerArticleListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PeerArticleListQuery, PeerArticleListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerArticleListQuery, PeerArticleListQueryVariables>(PeerArticleListDocument, options);
+        return ApolloReactHooks.useQuery<PeerArticleListQuery, PeerArticleListQueryVariables>(PeerArticleListDocument, options);
       }
-export function usePeerArticleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerArticleListQuery, PeerArticleListQueryVariables>) {
+export function usePeerArticleListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PeerArticleListQuery, PeerArticleListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerArticleListQuery, PeerArticleListQueryVariables>(PeerArticleListDocument, options);
+          return ApolloReactHooks.useLazyQuery<PeerArticleListQuery, PeerArticleListQueryVariables>(PeerArticleListDocument, options);
         }
 export type PeerArticleListQueryHookResult = ReturnType<typeof usePeerArticleListQuery>;
 export type PeerArticleListLazyQueryHookResult = ReturnType<typeof usePeerArticleListLazyQuery>;
@@ -158,9 +159,9 @@ export type ImportPeerArticleMutationFn = Apollo.MutationFunction<ImportPeerArti
  *   },
  * });
  */
-export function useImportPeerArticleMutation(baseOptions?: Apollo.MutationHookOptions<ImportPeerArticleMutation, ImportPeerArticleMutationVariables>) {
+export function useImportPeerArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ImportPeerArticleMutation, ImportPeerArticleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ImportPeerArticleMutation, ImportPeerArticleMutationVariables>(ImportPeerArticleDocument, options);
+        return ApolloReactHooks.useMutation<ImportPeerArticleMutation, ImportPeerArticleMutationVariables>(ImportPeerArticleDocument, options);
       }
 export type ImportPeerArticleMutationHookResult = ReturnType<typeof useImportPeerArticleMutation>;
 export type ImportPeerArticleMutationResult = Apollo.MutationResult<ImportPeerArticleMutation>;

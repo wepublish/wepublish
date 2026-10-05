@@ -6,6 +6,7 @@ import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './i
 import { gql } from '@apollo/client';
 import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullGoodieFragment = { __typename?: 'Goodie', id: string, createdAt: string, modifiedAt: string, name: string, description?: RichtextJSONDocument | null, stock?: number | null, availableStock?: number | null, active: boolean, imageID?: string | null, image?: (
     { __typename?: 'Image' }
@@ -145,13 +146,13 @@ ${ImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function useGoodieListQuery(baseOptions?: Apollo.QueryHookOptions<GoodieListQuery, GoodieListQueryVariables>) {
+export function useGoodieListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GoodieListQuery, GoodieListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GoodieListQuery, GoodieListQueryVariables>(GoodieListDocument, options);
+        return ApolloReactHooks.useQuery<GoodieListQuery, GoodieListQueryVariables>(GoodieListDocument, options);
       }
-export function useGoodieListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GoodieListQuery, GoodieListQueryVariables>) {
+export function useGoodieListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GoodieListQuery, GoodieListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GoodieListQuery, GoodieListQueryVariables>(GoodieListDocument, options);
+          return ApolloReactHooks.useLazyQuery<GoodieListQuery, GoodieListQueryVariables>(GoodieListDocument, options);
         }
 export type GoodieListQueryHookResult = ReturnType<typeof useGoodieListQuery>;
 export type GoodieListLazyQueryHookResult = ReturnType<typeof useGoodieListLazyQuery>;
@@ -182,13 +183,13 @@ ${ImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function useGoodieQuery(baseOptions: Apollo.QueryHookOptions<GoodieQuery, GoodieQueryVariables>) {
+export function useGoodieQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GoodieQuery, GoodieQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GoodieQuery, GoodieQueryVariables>(GoodieDocument, options);
+        return ApolloReactHooks.useQuery<GoodieQuery, GoodieQueryVariables>(GoodieDocument, options);
       }
-export function useGoodieLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GoodieQuery, GoodieQueryVariables>) {
+export function useGoodieLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GoodieQuery, GoodieQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GoodieQuery, GoodieQueryVariables>(GoodieDocument, options);
+          return ApolloReactHooks.useLazyQuery<GoodieQuery, GoodieQueryVariables>(GoodieDocument, options);
         }
 export type GoodieQueryHookResult = ReturnType<typeof useGoodieQuery>;
 export type GoodieLazyQueryHookResult = ReturnType<typeof useGoodieLazyQuery>;
@@ -233,9 +234,9 @@ export type CreateGoodieMutationFn = Apollo.MutationFunction<CreateGoodieMutatio
  *   },
  * });
  */
-export function useCreateGoodieMutation(baseOptions?: Apollo.MutationHookOptions<CreateGoodieMutation, CreateGoodieMutationVariables>) {
+export function useCreateGoodieMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateGoodieMutation, CreateGoodieMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateGoodieMutation, CreateGoodieMutationVariables>(CreateGoodieDocument, options);
+        return ApolloReactHooks.useMutation<CreateGoodieMutation, CreateGoodieMutationVariables>(CreateGoodieDocument, options);
       }
 export type CreateGoodieMutationHookResult = ReturnType<typeof useCreateGoodieMutation>;
 export type CreateGoodieMutationResult = Apollo.MutationResult<CreateGoodieMutation>;
@@ -282,9 +283,9 @@ export type UpdateGoodieMutationFn = Apollo.MutationFunction<UpdateGoodieMutatio
  *   },
  * });
  */
-export function useUpdateGoodieMutation(baseOptions?: Apollo.MutationHookOptions<UpdateGoodieMutation, UpdateGoodieMutationVariables>) {
+export function useUpdateGoodieMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateGoodieMutation, UpdateGoodieMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateGoodieMutation, UpdateGoodieMutationVariables>(UpdateGoodieDocument, options);
+        return ApolloReactHooks.useMutation<UpdateGoodieMutation, UpdateGoodieMutationVariables>(UpdateGoodieDocument, options);
       }
 export type UpdateGoodieMutationHookResult = ReturnType<typeof useUpdateGoodieMutation>;
 export type UpdateGoodieMutationResult = Apollo.MutationResult<UpdateGoodieMutation>;
@@ -317,9 +318,9 @@ export type DeleteGoodieMutationFn = Apollo.MutationFunction<DeleteGoodieMutatio
  *   },
  * });
  */
-export function useDeleteGoodieMutation(baseOptions?: Apollo.MutationHookOptions<DeleteGoodieMutation, DeleteGoodieMutationVariables>) {
+export function useDeleteGoodieMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteGoodieMutation, DeleteGoodieMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteGoodieMutation, DeleteGoodieMutationVariables>(DeleteGoodieDocument, options);
+        return ApolloReactHooks.useMutation<DeleteGoodieMutation, DeleteGoodieMutationVariables>(DeleteGoodieDocument, options);
       }
 export type DeleteGoodieMutationHookResult = ReturnType<typeof useDeleteGoodieMutation>;
 export type DeleteGoodieMutationResult = Apollo.MutationResult<DeleteGoodieMutation>;

@@ -36,6 +36,7 @@ import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.ge
 import { SlimPageFragmentDoc, SlimPageRevisionFragmentDoc } from './slim-page.generated';
 import { FullTrackingPixelFragmentDoc } from './tracking-pixel.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullArticleRevisionFragment = (
   { __typename?: 'ArticleRevision', canonicalUrl?: string | null, seoTitle?: string | null, seoDescription?: string | null, socialMediaDescription?: string | null, socialMediaTitle?: string | null, image?: (
@@ -364,13 +365,13 @@ ${FullAuthorFragmentDoc}`;
  *   },
  * });
  */
-export function useArticleQuery(baseOptions?: Apollo.QueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
+export function useArticleQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
+        return ApolloReactHooks.useQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
       }
-export function useArticleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
+export function useArticleLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
+          return ApolloReactHooks.useLazyQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
         }
 export type ArticleQueryHookResult = ReturnType<typeof useArticleQuery>;
 export type ArticleLazyQueryHookResult = ReturnType<typeof useArticleLazyQuery>;
@@ -430,13 +431,13 @@ ${FullPeerImageFragmentDoc}`;
  *   },
  * });
  */
-export function useArticleListQuery(baseOptions?: Apollo.QueryHookOptions<ArticleListQuery, ArticleListQueryVariables>) {
+export function useArticleListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ArticleListQuery, ArticleListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ArticleListQuery, ArticleListQueryVariables>(ArticleListDocument, options);
+        return ApolloReactHooks.useQuery<ArticleListQuery, ArticleListQueryVariables>(ArticleListDocument, options);
       }
-export function useArticleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleListQuery, ArticleListQueryVariables>) {
+export function useArticleListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ArticleListQuery, ArticleListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ArticleListQuery, ArticleListQueryVariables>(ArticleListDocument, options);
+          return ApolloReactHooks.useLazyQuery<ArticleListQuery, ArticleListQueryVariables>(ArticleListDocument, options);
         }
 export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
@@ -561,13 +562,13 @@ ${FullAuthorFragmentDoc}`;
  *   },
  * });
  */
-export function useFullArticleListQuery(baseOptions?: Apollo.QueryHookOptions<FullArticleListQuery, FullArticleListQueryVariables>) {
+export function useFullArticleListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FullArticleListQuery, FullArticleListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FullArticleListQuery, FullArticleListQueryVariables>(FullArticleListDocument, options);
+        return ApolloReactHooks.useQuery<FullArticleListQuery, FullArticleListQueryVariables>(FullArticleListDocument, options);
       }
-export function useFullArticleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FullArticleListQuery, FullArticleListQueryVariables>) {
+export function useFullArticleListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FullArticleListQuery, FullArticleListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FullArticleListQuery, FullArticleListQueryVariables>(FullArticleListDocument, options);
+          return ApolloReactHooks.useLazyQuery<FullArticleListQuery, FullArticleListQueryVariables>(FullArticleListDocument, options);
         }
 export type FullArticleListQueryHookResult = ReturnType<typeof useFullArticleListQuery>;
 export type FullArticleListLazyQueryHookResult = ReturnType<typeof useFullArticleListLazyQuery>;
@@ -673,9 +674,9 @@ export type LikeArticleMutationFn = Apollo.MutationFunction<LikeArticleMutation,
  *   },
  * });
  */
-export function useLikeArticleMutation(baseOptions?: Apollo.MutationHookOptions<LikeArticleMutation, LikeArticleMutationVariables>) {
+export function useLikeArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LikeArticleMutation, LikeArticleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LikeArticleMutation, LikeArticleMutationVariables>(LikeArticleDocument, options);
+        return ApolloReactHooks.useMutation<LikeArticleMutation, LikeArticleMutationVariables>(LikeArticleDocument, options);
       }
 export type LikeArticleMutationHookResult = ReturnType<typeof useLikeArticleMutation>;
 export type LikeArticleMutationResult = Apollo.MutationResult<LikeArticleMutation>;
@@ -781,9 +782,9 @@ export type DislikeArticleMutationFn = Apollo.MutationFunction<DislikeArticleMut
  *   },
  * });
  */
-export function useDislikeArticleMutation(baseOptions?: Apollo.MutationHookOptions<DislikeArticleMutation, DislikeArticleMutationVariables>) {
+export function useDislikeArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DislikeArticleMutation, DislikeArticleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DislikeArticleMutation, DislikeArticleMutationVariables>(DislikeArticleDocument, options);
+        return ApolloReactHooks.useMutation<DislikeArticleMutation, DislikeArticleMutationVariables>(DislikeArticleDocument, options);
       }
 export type DislikeArticleMutationHookResult = ReturnType<typeof useDislikeArticleMutation>;
 export type DislikeArticleMutationResult = Apollo.MutationResult<DislikeArticleMutation>;

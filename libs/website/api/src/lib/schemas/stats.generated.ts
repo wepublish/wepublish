@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type StatsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -36,13 +37,13 @@ export const StatsDocument = gql`
  *   },
  * });
  */
-export function useStatsQuery(baseOptions?: Apollo.QueryHookOptions<StatsQuery, StatsQueryVariables>) {
+export function useStatsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<StatsQuery, StatsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
+        return ApolloReactHooks.useQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
       }
-export function useStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StatsQuery, StatsQueryVariables>) {
+export function useStatsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<StatsQuery, StatsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
+          return ApolloReactHooks.useLazyQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
         }
 export type StatsQueryHookResult = ReturnType<typeof useStatsQuery>;
 export type StatsLazyQueryHookResult = ReturnType<typeof useStatsLazyQuery>;

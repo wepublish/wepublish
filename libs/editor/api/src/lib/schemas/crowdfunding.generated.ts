@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type CrowdfundingsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -125,13 +126,13 @@ ${FullCrowdfundingGoalWithProgressFragmentDoc}`;
  *   },
  * });
  */
-export function useCrowdfundingsQuery(baseOptions?: Apollo.QueryHookOptions<CrowdfundingsQuery, CrowdfundingsQueryVariables>) {
+export function useCrowdfundingsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CrowdfundingsQuery, CrowdfundingsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CrowdfundingsQuery, CrowdfundingsQueryVariables>(CrowdfundingsDocument, options);
+        return ApolloReactHooks.useQuery<CrowdfundingsQuery, CrowdfundingsQueryVariables>(CrowdfundingsDocument, options);
       }
-export function useCrowdfundingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CrowdfundingsQuery, CrowdfundingsQueryVariables>) {
+export function useCrowdfundingsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CrowdfundingsQuery, CrowdfundingsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CrowdfundingsQuery, CrowdfundingsQueryVariables>(CrowdfundingsDocument, options);
+          return ApolloReactHooks.useLazyQuery<CrowdfundingsQuery, CrowdfundingsQueryVariables>(CrowdfundingsDocument, options);
         }
 export type CrowdfundingsQueryHookResult = ReturnType<typeof useCrowdfundingsQuery>;
 export type CrowdfundingsLazyQueryHookResult = ReturnType<typeof useCrowdfundingsLazyQuery>;
@@ -162,13 +163,13 @@ ${FullCrowdfundingGoalWithProgressFragmentDoc}`;
  *   },
  * });
  */
-export function useCrowdfundingQuery(baseOptions: Apollo.QueryHookOptions<CrowdfundingQuery, CrowdfundingQueryVariables>) {
+export function useCrowdfundingQuery(baseOptions: ApolloReactHooks.QueryHookOptions<CrowdfundingQuery, CrowdfundingQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CrowdfundingQuery, CrowdfundingQueryVariables>(CrowdfundingDocument, options);
+        return ApolloReactHooks.useQuery<CrowdfundingQuery, CrowdfundingQueryVariables>(CrowdfundingDocument, options);
       }
-export function useCrowdfundingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CrowdfundingQuery, CrowdfundingQueryVariables>) {
+export function useCrowdfundingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CrowdfundingQuery, CrowdfundingQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CrowdfundingQuery, CrowdfundingQueryVariables>(CrowdfundingDocument, options);
+          return ApolloReactHooks.useLazyQuery<CrowdfundingQuery, CrowdfundingQueryVariables>(CrowdfundingDocument, options);
         }
 export type CrowdfundingQueryHookResult = ReturnType<typeof useCrowdfundingQuery>;
 export type CrowdfundingLazyQueryHookResult = ReturnType<typeof useCrowdfundingLazyQuery>;
@@ -201,9 +202,9 @@ export type CreateCrowdfundingMutationFn = Apollo.MutationFunction<CreateCrowdfu
  *   },
  * });
  */
-export function useCreateCrowdfundingMutation(baseOptions?: Apollo.MutationHookOptions<CreateCrowdfundingMutation, CreateCrowdfundingMutationVariables>) {
+export function useCreateCrowdfundingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateCrowdfundingMutation, CreateCrowdfundingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateCrowdfundingMutation, CreateCrowdfundingMutationVariables>(CreateCrowdfundingDocument, options);
+        return ApolloReactHooks.useMutation<CreateCrowdfundingMutation, CreateCrowdfundingMutationVariables>(CreateCrowdfundingDocument, options);
       }
 export type CreateCrowdfundingMutationHookResult = ReturnType<typeof useCreateCrowdfundingMutation>;
 export type CreateCrowdfundingMutationResult = Apollo.MutationResult<CreateCrowdfundingMutation>;
@@ -236,9 +237,9 @@ export type UpdateCrowdfundingMutationFn = Apollo.MutationFunction<UpdateCrowdfu
  *   },
  * });
  */
-export function useUpdateCrowdfundingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCrowdfundingMutation, UpdateCrowdfundingMutationVariables>) {
+export function useUpdateCrowdfundingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateCrowdfundingMutation, UpdateCrowdfundingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateCrowdfundingMutation, UpdateCrowdfundingMutationVariables>(UpdateCrowdfundingDocument, options);
+        return ApolloReactHooks.useMutation<UpdateCrowdfundingMutation, UpdateCrowdfundingMutationVariables>(UpdateCrowdfundingDocument, options);
       }
 export type UpdateCrowdfundingMutationHookResult = ReturnType<typeof useUpdateCrowdfundingMutation>;
 export type UpdateCrowdfundingMutationResult = Apollo.MutationResult<UpdateCrowdfundingMutation>;
@@ -267,9 +268,9 @@ export type DeleteCrowdfundingMutationFn = Apollo.MutationFunction<DeleteCrowdfu
  *   },
  * });
  */
-export function useDeleteCrowdfundingMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCrowdfundingMutation, DeleteCrowdfundingMutationVariables>) {
+export function useDeleteCrowdfundingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteCrowdfundingMutation, DeleteCrowdfundingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteCrowdfundingMutation, DeleteCrowdfundingMutationVariables>(DeleteCrowdfundingDocument, options);
+        return ApolloReactHooks.useMutation<DeleteCrowdfundingMutation, DeleteCrowdfundingMutationVariables>(DeleteCrowdfundingDocument, options);
       }
 export type DeleteCrowdfundingMutationHookResult = ReturnType<typeof useDeleteCrowdfundingMutation>;
 export type DeleteCrowdfundingMutationResult = Apollo.MutationResult<DeleteCrowdfundingMutation>;

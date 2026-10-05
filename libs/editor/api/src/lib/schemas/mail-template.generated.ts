@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type MailTemplateQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -138,13 +139,13 @@ ${FullMailProviderFragmentDoc}`;
  *   },
  * });
  */
-export function useMailTemplateQuery(baseOptions?: Apollo.QueryHookOptions<MailTemplateQuery, MailTemplateQueryVariables>) {
+export function useMailTemplateQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MailTemplateQuery, MailTemplateQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailTemplateQuery, MailTemplateQueryVariables>(MailTemplateDocument, options);
+        return ApolloReactHooks.useQuery<MailTemplateQuery, MailTemplateQueryVariables>(MailTemplateDocument, options);
       }
-export function useMailTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplateQuery, MailTemplateQueryVariables>) {
+export function useMailTemplateLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailTemplateQuery, MailTemplateQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailTemplateQuery, MailTemplateQueryVariables>(MailTemplateDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailTemplateQuery, MailTemplateQueryVariables>(MailTemplateDocument, options);
         }
 export type MailTemplateQueryHookResult = ReturnType<typeof useMailTemplateQuery>;
 export type MailTemplateLazyQueryHookResult = ReturnType<typeof useMailTemplateLazyQuery>;
@@ -174,13 +175,13 @@ ${TinyMailTemplateFragmentDoc}`;
  *   },
  * });
  */
-export function useMailTemplateByIdQuery(baseOptions: Apollo.QueryHookOptions<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>) {
+export function useMailTemplateByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>(MailTemplateByIdDocument, options);
+        return ApolloReactHooks.useQuery<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>(MailTemplateByIdDocument, options);
       }
-export function useMailTemplateByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>) {
+export function useMailTemplateByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>(MailTemplateByIdDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailTemplateByIdQuery, MailTemplateByIdQueryVariables>(MailTemplateByIdDocument, options);
         }
 export type MailTemplateByIdQueryHookResult = ReturnType<typeof useMailTemplateByIdQuery>;
 export type MailTemplateByIdLazyQueryHookResult = ReturnType<typeof useMailTemplateByIdLazyQuery>;
@@ -212,9 +213,9 @@ export type CreateMailTemplateMutationFn = Apollo.MutationFunction<CreateMailTem
  *   },
  * });
  */
-export function useCreateMailTemplateMutation(baseOptions?: Apollo.MutationHookOptions<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>) {
+export function useCreateMailTemplateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>(CreateMailTemplateDocument, options);
+        return ApolloReactHooks.useMutation<CreateMailTemplateMutation, CreateMailTemplateMutationVariables>(CreateMailTemplateDocument, options);
       }
 export type CreateMailTemplateMutationHookResult = ReturnType<typeof useCreateMailTemplateMutation>;
 export type CreateMailTemplateMutationResult = Apollo.MutationResult<CreateMailTemplateMutation>;
@@ -247,9 +248,9 @@ export type UpdateMailTemplateMutationFn = Apollo.MutationFunction<UpdateMailTem
  *   },
  * });
  */
-export function useUpdateMailTemplateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>) {
+export function useUpdateMailTemplateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>(UpdateMailTemplateDocument, options);
+        return ApolloReactHooks.useMutation<UpdateMailTemplateMutation, UpdateMailTemplateMutationVariables>(UpdateMailTemplateDocument, options);
       }
 export type UpdateMailTemplateMutationHookResult = ReturnType<typeof useUpdateMailTemplateMutation>;
 export type UpdateMailTemplateMutationResult = Apollo.MutationResult<UpdateMailTemplateMutation>;
@@ -278,9 +279,9 @@ export type DeleteMailTemplateMutationFn = Apollo.MutationFunction<DeleteMailTem
  *   },
  * });
  */
-export function useDeleteMailTemplateMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>) {
+export function useDeleteMailTemplateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>(DeleteMailTemplateDocument, options);
+        return ApolloReactHooks.useMutation<DeleteMailTemplateMutation, DeleteMailTemplateMutationVariables>(DeleteMailTemplateDocument, options);
       }
 export type DeleteMailTemplateMutationHookResult = ReturnType<typeof useDeleteMailTemplateMutation>;
 export type DeleteMailTemplateMutationResult = Apollo.MutationResult<DeleteMailTemplateMutation>;
@@ -308,9 +309,9 @@ export type ImportMailTemplatesFromProviderMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useImportMailTemplatesFromProviderMutation(baseOptions?: Apollo.MutationHookOptions<ImportMailTemplatesFromProviderMutation, ImportMailTemplatesFromProviderMutationVariables>) {
+export function useImportMailTemplatesFromProviderMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ImportMailTemplatesFromProviderMutation, ImportMailTemplatesFromProviderMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ImportMailTemplatesFromProviderMutation, ImportMailTemplatesFromProviderMutationVariables>(ImportMailTemplatesFromProviderDocument, options);
+        return ApolloReactHooks.useMutation<ImportMailTemplatesFromProviderMutation, ImportMailTemplatesFromProviderMutationVariables>(ImportMailTemplatesFromProviderDocument, options);
       }
 export type ImportMailTemplatesFromProviderMutationHookResult = ReturnType<typeof useImportMailTemplatesFromProviderMutation>;
 export type ImportMailTemplatesFromProviderMutationResult = Apollo.MutationResult<ImportMailTemplatesFromProviderMutation>;
@@ -340,13 +341,13 @@ export const MailTemplateSubscriptionsDocument = gql`
  *   },
  * });
  */
-export function useMailTemplateSubscriptionsQuery(baseOptions?: Apollo.QueryHookOptions<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>) {
+export function useMailTemplateSubscriptionsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>(MailTemplateSubscriptionsDocument, options);
+        return ApolloReactHooks.useQuery<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>(MailTemplateSubscriptionsDocument, options);
       }
-export function useMailTemplateSubscriptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>) {
+export function useMailTemplateSubscriptionsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>(MailTemplateSubscriptionsDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailTemplateSubscriptionsQuery, MailTemplateSubscriptionsQueryVariables>(MailTemplateSubscriptionsDocument, options);
         }
 export type MailTemplateSubscriptionsQueryHookResult = ReturnType<typeof useMailTemplateSubscriptionsQuery>;
 export type MailTemplateSubscriptionsLazyQueryHookResult = ReturnType<typeof useMailTemplateSubscriptionsLazyQuery>;
@@ -377,13 +378,13 @@ export const MailTemplatePreviewDocument = gql`
  *   },
  * });
  */
-export function useMailTemplatePreviewQuery(baseOptions: Apollo.QueryHookOptions<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>) {
+export function useMailTemplatePreviewQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>(MailTemplatePreviewDocument, options);
+        return ApolloReactHooks.useQuery<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>(MailTemplatePreviewDocument, options);
       }
-export function useMailTemplatePreviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>) {
+export function useMailTemplatePreviewLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>(MailTemplatePreviewDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>(MailTemplatePreviewDocument, options);
         }
 export type MailTemplatePreviewQueryHookResult = ReturnType<typeof useMailTemplatePreviewQuery>;
 export type MailTemplatePreviewLazyQueryHookResult = ReturnType<typeof useMailTemplatePreviewLazyQuery>;
@@ -412,9 +413,9 @@ export type SendTestMailTemplateMutationFn = Apollo.MutationFunction<SendTestMai
  *   },
  * });
  */
-export function useSendTestMailTemplateMutation(baseOptions?: Apollo.MutationHookOptions<SendTestMailTemplateMutation, SendTestMailTemplateMutationVariables>) {
+export function useSendTestMailTemplateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SendTestMailTemplateMutation, SendTestMailTemplateMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SendTestMailTemplateMutation, SendTestMailTemplateMutationVariables>(SendTestMailTemplateDocument, options);
+        return ApolloReactHooks.useMutation<SendTestMailTemplateMutation, SendTestMailTemplateMutationVariables>(SendTestMailTemplateDocument, options);
       }
 export type SendTestMailTemplateMutationHookResult = ReturnType<typeof useSendTestMailTemplateMutation>;
 export type SendTestMailTemplateMutationResult = Apollo.MutationResult<SendTestMailTemplateMutation>;

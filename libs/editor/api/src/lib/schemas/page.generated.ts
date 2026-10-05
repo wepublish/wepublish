@@ -28,6 +28,7 @@ import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.ge
 import { FullTrackingPixelFragmentDoc, FullTrackingPixelMethodFragmentDoc } from './tracking-pixel.generated';
 import { NestedBlockTemplateBlockFragmentDoc } from './block-template.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPageRevisionFragment = (
   { __typename?: 'PageRevision', blocks: Array<(
@@ -377,13 +378,13 @@ ${ImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function usePageListQuery(baseOptions?: Apollo.QueryHookOptions<PageListQuery, PageListQueryVariables>) {
+export function usePageListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PageListQuery, PageListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PageListQuery, PageListQueryVariables>(PageListDocument, options);
+        return ApolloReactHooks.useQuery<PageListQuery, PageListQueryVariables>(PageListDocument, options);
       }
-export function usePageListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageListQuery, PageListQueryVariables>) {
+export function usePageListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PageListQuery, PageListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PageListQuery, PageListQueryVariables>(PageListDocument, options);
+          return ApolloReactHooks.useLazyQuery<PageListQuery, PageListQueryVariables>(PageListDocument, options);
         }
 export type PageListQueryHookResult = ReturnType<typeof usePageListQuery>;
 export type PageListLazyQueryHookResult = ReturnType<typeof usePageListLazyQuery>;
@@ -463,9 +464,9 @@ export type CreatePageMutationFn = Apollo.MutationFunction<CreatePageMutation, C
  *   },
  * });
  */
-export function useCreatePageMutation(baseOptions?: Apollo.MutationHookOptions<CreatePageMutation, CreatePageMutationVariables>) {
+export function useCreatePageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePageMutation, CreatePageMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePageMutation, CreatePageMutationVariables>(CreatePageDocument, options);
+        return ApolloReactHooks.useMutation<CreatePageMutation, CreatePageMutationVariables>(CreatePageDocument, options);
       }
 export type CreatePageMutationHookResult = ReturnType<typeof useCreatePageMutation>;
 export type CreatePageMutationResult = Apollo.MutationResult<CreatePageMutation>;
@@ -547,9 +548,9 @@ export type UpdatePageMutationFn = Apollo.MutationFunction<UpdatePageMutation, U
  *   },
  * });
  */
-export function useUpdatePageMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePageMutation, UpdatePageMutationVariables>) {
+export function useUpdatePageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePageMutation, UpdatePageMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePageMutation, UpdatePageMutationVariables>(UpdatePageDocument, options);
+        return ApolloReactHooks.useMutation<UpdatePageMutation, UpdatePageMutationVariables>(UpdatePageDocument, options);
       }
 export type UpdatePageMutationHookResult = ReturnType<typeof useUpdatePageMutation>;
 export type UpdatePageMutationResult = Apollo.MutationResult<UpdatePageMutation>;
@@ -604,9 +605,9 @@ export type PublishPageMutationFn = Apollo.MutationFunction<PublishPageMutation,
  *   },
  * });
  */
-export function usePublishPageMutation(baseOptions?: Apollo.MutationHookOptions<PublishPageMutation, PublishPageMutationVariables>) {
+export function usePublishPageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PublishPageMutation, PublishPageMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<PublishPageMutation, PublishPageMutationVariables>(PublishPageDocument, options);
+        return ApolloReactHooks.useMutation<PublishPageMutation, PublishPageMutationVariables>(PublishPageDocument, options);
       }
 export type PublishPageMutationHookResult = ReturnType<typeof usePublishPageMutation>;
 export type PublishPageMutationResult = Apollo.MutationResult<PublishPageMutation>;
@@ -660,9 +661,9 @@ export type UnpublishPageMutationFn = Apollo.MutationFunction<UnpublishPageMutat
  *   },
  * });
  */
-export function useUnpublishPageMutation(baseOptions?: Apollo.MutationHookOptions<UnpublishPageMutation, UnpublishPageMutationVariables>) {
+export function useUnpublishPageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UnpublishPageMutation, UnpublishPageMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UnpublishPageMutation, UnpublishPageMutationVariables>(UnpublishPageDocument, options);
+        return ApolloReactHooks.useMutation<UnpublishPageMutation, UnpublishPageMutationVariables>(UnpublishPageDocument, options);
       }
 export type UnpublishPageMutationHookResult = ReturnType<typeof useUnpublishPageMutation>;
 export type UnpublishPageMutationResult = Apollo.MutationResult<UnpublishPageMutation>;
@@ -691,9 +692,9 @@ export type DeletePageMutationFn = Apollo.MutationFunction<DeletePageMutation, D
  *   },
  * });
  */
-export function useDeletePageMutation(baseOptions?: Apollo.MutationHookOptions<DeletePageMutation, DeletePageMutationVariables>) {
+export function useDeletePageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePageMutation, DeletePageMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePageMutation, DeletePageMutationVariables>(DeletePageDocument, options);
+        return ApolloReactHooks.useMutation<DeletePageMutation, DeletePageMutationVariables>(DeletePageDocument, options);
       }
 export type DeletePageMutationHookResult = ReturnType<typeof useDeletePageMutation>;
 export type DeletePageMutationResult = Apollo.MutationResult<DeletePageMutation>;
@@ -743,13 +744,13 @@ export const PageRevisionListDocument = gql`
  *   },
  * });
  */
-export function usePageRevisionListQuery(baseOptions: Apollo.QueryHookOptions<PageRevisionListQuery, PageRevisionListQueryVariables>) {
+export function usePageRevisionListQuery(baseOptions: ApolloReactHooks.QueryHookOptions<PageRevisionListQuery, PageRevisionListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PageRevisionListQuery, PageRevisionListQueryVariables>(PageRevisionListDocument, options);
+        return ApolloReactHooks.useQuery<PageRevisionListQuery, PageRevisionListQueryVariables>(PageRevisionListDocument, options);
       }
-export function usePageRevisionListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageRevisionListQuery, PageRevisionListQueryVariables>) {
+export function usePageRevisionListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PageRevisionListQuery, PageRevisionListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PageRevisionListQuery, PageRevisionListQueryVariables>(PageRevisionListDocument, options);
+          return ApolloReactHooks.useLazyQuery<PageRevisionListQuery, PageRevisionListQueryVariables>(PageRevisionListDocument, options);
         }
 export type PageRevisionListQueryHookResult = ReturnType<typeof usePageRevisionListQuery>;
 export type PageRevisionListLazyQueryHookResult = ReturnType<typeof usePageRevisionListLazyQuery>;
@@ -800,13 +801,13 @@ ${NestedBlockTemplateBlockFragmentDoc}`;
  *   },
  * });
  */
-export function usePageRevisionPreviewQuery(baseOptions: Apollo.QueryHookOptions<PageRevisionPreviewQuery, PageRevisionPreviewQueryVariables>) {
+export function usePageRevisionPreviewQuery(baseOptions: ApolloReactHooks.QueryHookOptions<PageRevisionPreviewQuery, PageRevisionPreviewQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PageRevisionPreviewQuery, PageRevisionPreviewQueryVariables>(PageRevisionPreviewDocument, options);
+        return ApolloReactHooks.useQuery<PageRevisionPreviewQuery, PageRevisionPreviewQueryVariables>(PageRevisionPreviewDocument, options);
       }
-export function usePageRevisionPreviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageRevisionPreviewQuery, PageRevisionPreviewQueryVariables>) {
+export function usePageRevisionPreviewLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PageRevisionPreviewQuery, PageRevisionPreviewQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PageRevisionPreviewQuery, PageRevisionPreviewQueryVariables>(PageRevisionPreviewDocument, options);
+          return ApolloReactHooks.useLazyQuery<PageRevisionPreviewQuery, PageRevisionPreviewQueryVariables>(PageRevisionPreviewDocument, options);
         }
 export type PageRevisionPreviewQueryHookResult = ReturnType<typeof usePageRevisionPreviewQuery>;
 export type PageRevisionPreviewLazyQueryHookResult = ReturnType<typeof usePageRevisionPreviewLazyQuery>;
@@ -861,9 +862,9 @@ export type RestorePageRevisionMutationFn = Apollo.MutationFunction<RestorePageR
  *   },
  * });
  */
-export function useRestorePageRevisionMutation(baseOptions?: Apollo.MutationHookOptions<RestorePageRevisionMutation, RestorePageRevisionMutationVariables>) {
+export function useRestorePageRevisionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RestorePageRevisionMutation, RestorePageRevisionMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RestorePageRevisionMutation, RestorePageRevisionMutationVariables>(RestorePageRevisionDocument, options);
+        return ApolloReactHooks.useMutation<RestorePageRevisionMutation, RestorePageRevisionMutationVariables>(RestorePageRevisionDocument, options);
       }
 export type RestorePageRevisionMutationHookResult = ReturnType<typeof useRestorePageRevisionMutation>;
 export type RestorePageRevisionMutationResult = Apollo.MutationResult<RestorePageRevisionMutation>;
@@ -917,9 +918,9 @@ export type DiscardPageDraftMutationFn = Apollo.MutationFunction<DiscardPageDraf
  *   },
  * });
  */
-export function useDiscardPageDraftMutation(baseOptions?: Apollo.MutationHookOptions<DiscardPageDraftMutation, DiscardPageDraftMutationVariables>) {
+export function useDiscardPageDraftMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DiscardPageDraftMutation, DiscardPageDraftMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DiscardPageDraftMutation, DiscardPageDraftMutationVariables>(DiscardPageDraftDocument, options);
+        return ApolloReactHooks.useMutation<DiscardPageDraftMutation, DiscardPageDraftMutationVariables>(DiscardPageDraftDocument, options);
       }
 export type DiscardPageDraftMutationHookResult = ReturnType<typeof useDiscardPageDraftMutation>;
 export type DiscardPageDraftMutationResult = Apollo.MutationResult<DiscardPageDraftMutation>;
@@ -973,9 +974,9 @@ export type DuplicatePageMutationFn = Apollo.MutationFunction<DuplicatePageMutat
  *   },
  * });
  */
-export function useDuplicatePageMutation(baseOptions?: Apollo.MutationHookOptions<DuplicatePageMutation, DuplicatePageMutationVariables>) {
+export function useDuplicatePageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DuplicatePageMutation, DuplicatePageMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DuplicatePageMutation, DuplicatePageMutationVariables>(DuplicatePageDocument, options);
+        return ApolloReactHooks.useMutation<DuplicatePageMutation, DuplicatePageMutationVariables>(DuplicatePageDocument, options);
       }
 export type DuplicatePageMutationHookResult = ReturnType<typeof useDuplicatePageMutation>;
 export type DuplicatePageMutationResult = Apollo.MutationResult<DuplicatePageMutation>;
@@ -1027,13 +1028,13 @@ ${NestedBlockTemplateBlockFragmentDoc}`;
  *   },
  * });
  */
-export function usePageQuery(baseOptions: Apollo.QueryHookOptions<PageQuery, PageQueryVariables>) {
+export function usePageQuery(baseOptions: ApolloReactHooks.QueryHookOptions<PageQuery, PageQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PageQuery, PageQueryVariables>(PageDocument, options);
+        return ApolloReactHooks.useQuery<PageQuery, PageQueryVariables>(PageDocument, options);
       }
-export function usePageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageQuery, PageQueryVariables>) {
+export function usePageLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PageQuery, PageQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PageQuery, PageQueryVariables>(PageDocument, options);
+          return ApolloReactHooks.useLazyQuery<PageQuery, PageQueryVariables>(PageDocument, options);
         }
 export type PageQueryHookResult = ReturnType<typeof usePageQuery>;
 export type PageLazyQueryHookResult = ReturnType<typeof usePageLazyQuery>;

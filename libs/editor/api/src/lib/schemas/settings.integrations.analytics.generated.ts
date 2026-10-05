@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type SettingsIntegrationsAnalyticsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -61,13 +62,13 @@ export const SettingsIntegrationsAnalyticsDocument = gql`
  *   },
  * });
  */
-export function useSettingsIntegrationsAnalyticsQuery(baseOptions?: Apollo.QueryHookOptions<SettingsIntegrationsAnalyticsQuery, SettingsIntegrationsAnalyticsQueryVariables>) {
+export function useSettingsIntegrationsAnalyticsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SettingsIntegrationsAnalyticsQuery, SettingsIntegrationsAnalyticsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SettingsIntegrationsAnalyticsQuery, SettingsIntegrationsAnalyticsQueryVariables>(SettingsIntegrationsAnalyticsDocument, options);
+        return ApolloReactHooks.useQuery<SettingsIntegrationsAnalyticsQuery, SettingsIntegrationsAnalyticsQueryVariables>(SettingsIntegrationsAnalyticsDocument, options);
       }
-export function useSettingsIntegrationsAnalyticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingsIntegrationsAnalyticsQuery, SettingsIntegrationsAnalyticsQueryVariables>) {
+export function useSettingsIntegrationsAnalyticsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SettingsIntegrationsAnalyticsQuery, SettingsIntegrationsAnalyticsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SettingsIntegrationsAnalyticsQuery, SettingsIntegrationsAnalyticsQueryVariables>(SettingsIntegrationsAnalyticsDocument, options);
+          return ApolloReactHooks.useLazyQuery<SettingsIntegrationsAnalyticsQuery, SettingsIntegrationsAnalyticsQueryVariables>(SettingsIntegrationsAnalyticsDocument, options);
         }
 export type SettingsIntegrationsAnalyticsQueryHookResult = ReturnType<typeof useSettingsIntegrationsAnalyticsQuery>;
 export type SettingsIntegrationsAnalyticsLazyQueryHookResult = ReturnType<typeof useSettingsIntegrationsAnalyticsLazyQuery>;
@@ -115,9 +116,9 @@ export type UpdateAnalyticsProviderSettingMutationFn = Apollo.MutationFunction<U
  *   },
  * });
  */
-export function useUpdateAnalyticsProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAnalyticsProviderSettingMutation, UpdateAnalyticsProviderSettingMutationVariables>) {
+export function useUpdateAnalyticsProviderSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateAnalyticsProviderSettingMutation, UpdateAnalyticsProviderSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateAnalyticsProviderSettingMutation, UpdateAnalyticsProviderSettingMutationVariables>(UpdateAnalyticsProviderSettingDocument, options);
+        return ApolloReactHooks.useMutation<UpdateAnalyticsProviderSettingMutation, UpdateAnalyticsProviderSettingMutationVariables>(UpdateAnalyticsProviderSettingDocument, options);
       }
 export type UpdateAnalyticsProviderSettingMutationHookResult = ReturnType<typeof useUpdateAnalyticsProviderSettingMutation>;
 export type UpdateAnalyticsProviderSettingMutationResult = Apollo.MutationResult<UpdateAnalyticsProviderSettingMutation>;
@@ -155,9 +156,9 @@ export type CreateAnalyticsProviderSettingMutationFn = Apollo.MutationFunction<C
  *   },
  * });
  */
-export function useCreateAnalyticsProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<CreateAnalyticsProviderSettingMutation, CreateAnalyticsProviderSettingMutationVariables>) {
+export function useCreateAnalyticsProviderSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateAnalyticsProviderSettingMutation, CreateAnalyticsProviderSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateAnalyticsProviderSettingMutation, CreateAnalyticsProviderSettingMutationVariables>(CreateAnalyticsProviderSettingDocument, options);
+        return ApolloReactHooks.useMutation<CreateAnalyticsProviderSettingMutation, CreateAnalyticsProviderSettingMutationVariables>(CreateAnalyticsProviderSettingDocument, options);
       }
 export type CreateAnalyticsProviderSettingMutationHookResult = ReturnType<typeof useCreateAnalyticsProviderSettingMutation>;
 export type CreateAnalyticsProviderSettingMutationResult = Apollo.MutationResult<CreateAnalyticsProviderSettingMutation>;

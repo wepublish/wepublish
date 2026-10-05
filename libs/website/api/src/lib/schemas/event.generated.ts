@@ -8,6 +8,7 @@ import { gql } from '@apollo/client';
 import { FullImageFragmentDoc, FullImageUrLsFragmentDoc, ImageUrLsFragmentDoc, SquareImageUrLsFragmentDoc, SlimImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import { FullTagFragmentDoc } from './tag.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullEventFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: RichtextJSONDocument | null, status: Types.EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, url: string, image?: (
     { __typename?: 'Image' }
@@ -111,13 +112,13 @@ ${FullTagFragmentDoc}`;
  *   },
  * });
  */
-export function useEventListQuery(baseOptions?: Apollo.QueryHookOptions<EventListQuery, EventListQueryVariables>) {
+export function useEventListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<EventListQuery, EventListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<EventListQuery, EventListQueryVariables>(EventListDocument, options);
+        return ApolloReactHooks.useQuery<EventListQuery, EventListQueryVariables>(EventListDocument, options);
       }
-export function useEventListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventListQuery, EventListQueryVariables>) {
+export function useEventListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<EventListQuery, EventListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<EventListQuery, EventListQueryVariables>(EventListDocument, options);
+          return ApolloReactHooks.useLazyQuery<EventListQuery, EventListQueryVariables>(EventListDocument, options);
         }
 export type EventListQueryHookResult = ReturnType<typeof useEventListQuery>;
 export type EventListLazyQueryHookResult = ReturnType<typeof useEventListLazyQuery>;
@@ -151,13 +152,13 @@ ${FullTagFragmentDoc}`;
  *   },
  * });
  */
-export function useEventQuery(baseOptions: Apollo.QueryHookOptions<EventQuery, EventQueryVariables>) {
+export function useEventQuery(baseOptions: ApolloReactHooks.QueryHookOptions<EventQuery, EventQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<EventQuery, EventQueryVariables>(EventDocument, options);
+        return ApolloReactHooks.useQuery<EventQuery, EventQueryVariables>(EventDocument, options);
       }
-export function useEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventQuery, EventQueryVariables>) {
+export function useEventLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<EventQuery, EventQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<EventQuery, EventQueryVariables>(EventDocument, options);
+          return ApolloReactHooks.useLazyQuery<EventQuery, EventQueryVariables>(EventDocument, options);
         }
 export type EventQueryHookResult = ReturnType<typeof useEventQuery>;
 export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>;

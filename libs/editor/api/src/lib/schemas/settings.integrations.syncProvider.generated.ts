@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type SyncProviderSettingsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -130,13 +131,13 @@ export const SyncProviderSettingsDocument = gql`
  *   },
  * });
  */
-export function useSyncProviderSettingsQuery(baseOptions?: Apollo.QueryHookOptions<SyncProviderSettingsQuery, SyncProviderSettingsQueryVariables>) {
+export function useSyncProviderSettingsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SyncProviderSettingsQuery, SyncProviderSettingsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SyncProviderSettingsQuery, SyncProviderSettingsQueryVariables>(SyncProviderSettingsDocument, options);
+        return ApolloReactHooks.useQuery<SyncProviderSettingsQuery, SyncProviderSettingsQueryVariables>(SyncProviderSettingsDocument, options);
       }
-export function useSyncProviderSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SyncProviderSettingsQuery, SyncProviderSettingsQueryVariables>) {
+export function useSyncProviderSettingsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SyncProviderSettingsQuery, SyncProviderSettingsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SyncProviderSettingsQuery, SyncProviderSettingsQueryVariables>(SyncProviderSettingsDocument, options);
+          return ApolloReactHooks.useLazyQuery<SyncProviderSettingsQuery, SyncProviderSettingsQueryVariables>(SyncProviderSettingsDocument, options);
         }
 export type SyncProviderSettingsQueryHookResult = ReturnType<typeof useSyncProviderSettingsQuery>;
 export type SyncProviderSettingsLazyQueryHookResult = ReturnType<typeof useSyncProviderSettingsLazyQuery>;
@@ -198,9 +199,9 @@ export type UpdateSyncProviderSettingMutationFn = Apollo.MutationFunction<Update
  *   },
  * });
  */
-export function useUpdateSyncProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSyncProviderSettingMutation, UpdateSyncProviderSettingMutationVariables>) {
+export function useUpdateSyncProviderSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSyncProviderSettingMutation, UpdateSyncProviderSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSyncProviderSettingMutation, UpdateSyncProviderSettingMutationVariables>(UpdateSyncProviderSettingDocument, options);
+        return ApolloReactHooks.useMutation<UpdateSyncProviderSettingMutation, UpdateSyncProviderSettingMutationVariables>(UpdateSyncProviderSettingDocument, options);
       }
 export type UpdateSyncProviderSettingMutationHookResult = ReturnType<typeof useUpdateSyncProviderSettingMutation>;
 export type UpdateSyncProviderSettingMutationResult = Apollo.MutationResult<UpdateSyncProviderSettingMutation>;
@@ -229,9 +230,9 @@ export type TriggerMailchimpSyncMutationFn = Apollo.MutationFunction<TriggerMail
  *   },
  * });
  */
-export function useTriggerMailchimpSyncMutation(baseOptions?: Apollo.MutationHookOptions<TriggerMailchimpSyncMutation, TriggerMailchimpSyncMutationVariables>) {
+export function useTriggerMailchimpSyncMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<TriggerMailchimpSyncMutation, TriggerMailchimpSyncMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<TriggerMailchimpSyncMutation, TriggerMailchimpSyncMutationVariables>(TriggerMailchimpSyncDocument, options);
+        return ApolloReactHooks.useMutation<TriggerMailchimpSyncMutation, TriggerMailchimpSyncMutationVariables>(TriggerMailchimpSyncDocument, options);
       }
 export type TriggerMailchimpSyncMutationHookResult = ReturnType<typeof useTriggerMailchimpSyncMutation>;
 export type TriggerMailchimpSyncMutationResult = Apollo.MutationResult<TriggerMailchimpSyncMutation>;
@@ -273,9 +274,9 @@ export type DryRunMailchimpSyncMutationFn = Apollo.MutationFunction<DryRunMailch
  *   },
  * });
  */
-export function useDryRunMailchimpSyncMutation(baseOptions?: Apollo.MutationHookOptions<DryRunMailchimpSyncMutation, DryRunMailchimpSyncMutationVariables>) {
+export function useDryRunMailchimpSyncMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DryRunMailchimpSyncMutation, DryRunMailchimpSyncMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DryRunMailchimpSyncMutation, DryRunMailchimpSyncMutationVariables>(DryRunMailchimpSyncDocument, options);
+        return ApolloReactHooks.useMutation<DryRunMailchimpSyncMutation, DryRunMailchimpSyncMutationVariables>(DryRunMailchimpSyncDocument, options);
       }
 export type DryRunMailchimpSyncMutationHookResult = ReturnType<typeof useDryRunMailchimpSyncMutation>;
 export type DryRunMailchimpSyncMutationResult = Apollo.MutationResult<DryRunMailchimpSyncMutation>;
@@ -306,13 +307,13 @@ export const MailchimpListsDocument = gql`
  *   },
  * });
  */
-export function useMailchimpListsQuery(baseOptions: Apollo.QueryHookOptions<MailchimpListsQuery, MailchimpListsQueryVariables>) {
+export function useMailchimpListsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailchimpListsQuery, MailchimpListsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailchimpListsQuery, MailchimpListsQueryVariables>(MailchimpListsDocument, options);
+        return ApolloReactHooks.useQuery<MailchimpListsQuery, MailchimpListsQueryVariables>(MailchimpListsDocument, options);
       }
-export function useMailchimpListsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailchimpListsQuery, MailchimpListsQueryVariables>) {
+export function useMailchimpListsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailchimpListsQuery, MailchimpListsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailchimpListsQuery, MailchimpListsQueryVariables>(MailchimpListsDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailchimpListsQuery, MailchimpListsQueryVariables>(MailchimpListsDocument, options);
         }
 export type MailchimpListsQueryHookResult = ReturnType<typeof useMailchimpListsQuery>;
 export type MailchimpListsLazyQueryHookResult = ReturnType<typeof useMailchimpListsLazyQuery>;
@@ -344,13 +345,13 @@ export const MailchimpMergeFieldsDocument = gql`
  *   },
  * });
  */
-export function useMailchimpMergeFieldsQuery(baseOptions: Apollo.QueryHookOptions<MailchimpMergeFieldsQuery, MailchimpMergeFieldsQueryVariables>) {
+export function useMailchimpMergeFieldsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailchimpMergeFieldsQuery, MailchimpMergeFieldsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailchimpMergeFieldsQuery, MailchimpMergeFieldsQueryVariables>(MailchimpMergeFieldsDocument, options);
+        return ApolloReactHooks.useQuery<MailchimpMergeFieldsQuery, MailchimpMergeFieldsQueryVariables>(MailchimpMergeFieldsDocument, options);
       }
-export function useMailchimpMergeFieldsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailchimpMergeFieldsQuery, MailchimpMergeFieldsQueryVariables>) {
+export function useMailchimpMergeFieldsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailchimpMergeFieldsQuery, MailchimpMergeFieldsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailchimpMergeFieldsQuery, MailchimpMergeFieldsQueryVariables>(MailchimpMergeFieldsDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailchimpMergeFieldsQuery, MailchimpMergeFieldsQueryVariables>(MailchimpMergeFieldsDocument, options);
         }
 export type MailchimpMergeFieldsQueryHookResult = ReturnType<typeof useMailchimpMergeFieldsQuery>;
 export type MailchimpMergeFieldsLazyQueryHookResult = ReturnType<typeof useMailchimpMergeFieldsLazyQuery>;
@@ -381,13 +382,13 @@ export const MailchimpInterestGroupsDocument = gql`
  *   },
  * });
  */
-export function useMailchimpInterestGroupsQuery(baseOptions: Apollo.QueryHookOptions<MailchimpInterestGroupsQuery, MailchimpInterestGroupsQueryVariables>) {
+export function useMailchimpInterestGroupsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailchimpInterestGroupsQuery, MailchimpInterestGroupsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailchimpInterestGroupsQuery, MailchimpInterestGroupsQueryVariables>(MailchimpInterestGroupsDocument, options);
+        return ApolloReactHooks.useQuery<MailchimpInterestGroupsQuery, MailchimpInterestGroupsQueryVariables>(MailchimpInterestGroupsDocument, options);
       }
-export function useMailchimpInterestGroupsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailchimpInterestGroupsQuery, MailchimpInterestGroupsQueryVariables>) {
+export function useMailchimpInterestGroupsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailchimpInterestGroupsQuery, MailchimpInterestGroupsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailchimpInterestGroupsQuery, MailchimpInterestGroupsQueryVariables>(MailchimpInterestGroupsDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailchimpInterestGroupsQuery, MailchimpInterestGroupsQueryVariables>(MailchimpInterestGroupsDocument, options);
         }
 export type MailchimpInterestGroupsQueryHookResult = ReturnType<typeof useMailchimpInterestGroupsQuery>;
 export type MailchimpInterestGroupsLazyQueryHookResult = ReturnType<typeof useMailchimpInterestGroupsLazyQuery>;
@@ -426,13 +427,13 @@ export const MailchimpSyncErrorsDocument = gql`
  *   },
  * });
  */
-export function useMailchimpSyncErrorsQuery(baseOptions: Apollo.QueryHookOptions<MailchimpSyncErrorsQuery, MailchimpSyncErrorsQueryVariables>) {
+export function useMailchimpSyncErrorsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailchimpSyncErrorsQuery, MailchimpSyncErrorsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailchimpSyncErrorsQuery, MailchimpSyncErrorsQueryVariables>(MailchimpSyncErrorsDocument, options);
+        return ApolloReactHooks.useQuery<MailchimpSyncErrorsQuery, MailchimpSyncErrorsQueryVariables>(MailchimpSyncErrorsDocument, options);
       }
-export function useMailchimpSyncErrorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailchimpSyncErrorsQuery, MailchimpSyncErrorsQueryVariables>) {
+export function useMailchimpSyncErrorsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailchimpSyncErrorsQuery, MailchimpSyncErrorsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailchimpSyncErrorsQuery, MailchimpSyncErrorsQueryVariables>(MailchimpSyncErrorsDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailchimpSyncErrorsQuery, MailchimpSyncErrorsQueryVariables>(MailchimpSyncErrorsDocument, options);
         }
 export type MailchimpSyncErrorsQueryHookResult = ReturnType<typeof useMailchimpSyncErrorsQuery>;
 export type MailchimpSyncErrorsLazyQueryHookResult = ReturnType<typeof useMailchimpSyncErrorsLazyQuery>;
@@ -461,9 +462,9 @@ export type DeleteMailchimpSyncErrorMutationFn = Apollo.MutationFunction<DeleteM
  *   },
  * });
  */
-export function useDeleteMailchimpSyncErrorMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMailchimpSyncErrorMutation, DeleteMailchimpSyncErrorMutationVariables>) {
+export function useDeleteMailchimpSyncErrorMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteMailchimpSyncErrorMutation, DeleteMailchimpSyncErrorMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteMailchimpSyncErrorMutation, DeleteMailchimpSyncErrorMutationVariables>(DeleteMailchimpSyncErrorDocument, options);
+        return ApolloReactHooks.useMutation<DeleteMailchimpSyncErrorMutation, DeleteMailchimpSyncErrorMutationVariables>(DeleteMailchimpSyncErrorDocument, options);
       }
 export type DeleteMailchimpSyncErrorMutationHookResult = ReturnType<typeof useDeleteMailchimpSyncErrorMutation>;
 export type DeleteMailchimpSyncErrorMutationResult = Apollo.MutationResult<DeleteMailchimpSyncErrorMutation>;
@@ -492,9 +493,9 @@ export type DeleteAllMailchimpSyncErrorsMutationFn = Apollo.MutationFunction<Del
  *   },
  * });
  */
-export function useDeleteAllMailchimpSyncErrorsMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAllMailchimpSyncErrorsMutation, DeleteAllMailchimpSyncErrorsMutationVariables>) {
+export function useDeleteAllMailchimpSyncErrorsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteAllMailchimpSyncErrorsMutation, DeleteAllMailchimpSyncErrorsMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteAllMailchimpSyncErrorsMutation, DeleteAllMailchimpSyncErrorsMutationVariables>(DeleteAllMailchimpSyncErrorsDocument, options);
+        return ApolloReactHooks.useMutation<DeleteAllMailchimpSyncErrorsMutation, DeleteAllMailchimpSyncErrorsMutationVariables>(DeleteAllMailchimpSyncErrorsDocument, options);
       }
 export type DeleteAllMailchimpSyncErrorsMutationHookResult = ReturnType<typeof useDeleteAllMailchimpSyncErrorsMutation>;
 export type DeleteAllMailchimpSyncErrorsMutationResult = Apollo.MutationResult<DeleteAllMailchimpSyncErrorsMutation>;
@@ -531,13 +532,13 @@ export const MailchimpSyncProgressDocument = gql`
  *   },
  * });
  */
-export function useMailchimpSyncProgressQuery(baseOptions: Apollo.QueryHookOptions<MailchimpSyncProgressQuery, MailchimpSyncProgressQueryVariables>) {
+export function useMailchimpSyncProgressQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailchimpSyncProgressQuery, MailchimpSyncProgressQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailchimpSyncProgressQuery, MailchimpSyncProgressQueryVariables>(MailchimpSyncProgressDocument, options);
+        return ApolloReactHooks.useQuery<MailchimpSyncProgressQuery, MailchimpSyncProgressQueryVariables>(MailchimpSyncProgressDocument, options);
       }
-export function useMailchimpSyncProgressLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailchimpSyncProgressQuery, MailchimpSyncProgressQueryVariables>) {
+export function useMailchimpSyncProgressLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailchimpSyncProgressQuery, MailchimpSyncProgressQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailchimpSyncProgressQuery, MailchimpSyncProgressQueryVariables>(MailchimpSyncProgressDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailchimpSyncProgressQuery, MailchimpSyncProgressQueryVariables>(MailchimpSyncProgressDocument, options);
         }
 export type MailchimpSyncProgressQueryHookResult = ReturnType<typeof useMailchimpSyncProgressQuery>;
 export type MailchimpSyncProgressLazyQueryHookResult = ReturnType<typeof useMailchimpSyncProgressLazyQuery>;

@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullTagFragment = { __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null };
 
@@ -69,13 +70,13 @@ export const TagDocument = gql`
  *   },
  * });
  */
-export function useTagQuery(baseOptions: Apollo.QueryHookOptions<TagQuery, TagQueryVariables>) {
+export function useTagQuery(baseOptions: ApolloReactHooks.QueryHookOptions<TagQuery, TagQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TagQuery, TagQueryVariables>(TagDocument, options);
+        return ApolloReactHooks.useQuery<TagQuery, TagQueryVariables>(TagDocument, options);
       }
-export function useTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagQuery, TagQueryVariables>) {
+export function useTagLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TagQuery, TagQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TagQuery, TagQueryVariables>(TagDocument, options);
+          return ApolloReactHooks.useLazyQuery<TagQuery, TagQueryVariables>(TagDocument, options);
         }
 export type TagQueryHookResult = ReturnType<typeof useTagQuery>;
 export type TagLazyQueryHookResult = ReturnType<typeof useTagLazyQuery>;
@@ -125,13 +126,13 @@ export const TagListDocument = gql`
  *   },
  * });
  */
-export function useTagListQuery(baseOptions?: Apollo.QueryHookOptions<TagListQuery, TagListQueryVariables>) {
+export function useTagListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TagListQuery, TagListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+        return ApolloReactHooks.useQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
       }
-export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagListQuery, TagListQueryVariables>) {
+export function useTagListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TagListQuery, TagListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+          return ApolloReactHooks.useLazyQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
         }
 export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
 export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;

@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPermissionFragment = { __typename?: 'Permission', id: string, description: string, deprecated: boolean };
 
@@ -45,13 +46,13 @@ export const PermissionListDocument = gql`
  *   },
  * });
  */
-export function usePermissionListQuery(baseOptions?: Apollo.QueryHookOptions<PermissionListQuery, PermissionListQueryVariables>) {
+export function usePermissionListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PermissionListQuery, PermissionListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, options);
+        return ApolloReactHooks.useQuery<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, options);
       }
-export function usePermissionListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PermissionListQuery, PermissionListQueryVariables>) {
+export function usePermissionListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PermissionListQuery, PermissionListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, options);
+          return ApolloReactHooks.useLazyQuery<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, options);
         }
 export type PermissionListQueryHookResult = ReturnType<typeof usePermissionListQuery>;
 export type PermissionListLazyQueryHookResult = ReturnType<typeof usePermissionListLazyQuery>;

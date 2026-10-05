@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type TrackingPixelSettingsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -75,13 +76,13 @@ export const TrackingPixelSettingsDocument = gql`
  *   },
  * });
  */
-export function useTrackingPixelSettingsQuery(baseOptions?: Apollo.QueryHookOptions<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>) {
+export function useTrackingPixelSettingsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>(TrackingPixelSettingsDocument, options);
+        return ApolloReactHooks.useQuery<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>(TrackingPixelSettingsDocument, options);
       }
-export function useTrackingPixelSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>) {
+export function useTrackingPixelSettingsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>(TrackingPixelSettingsDocument, options);
+          return ApolloReactHooks.useLazyQuery<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>(TrackingPixelSettingsDocument, options);
         }
 export type TrackingPixelSettingsQueryHookResult = ReturnType<typeof useTrackingPixelSettingsQuery>;
 export type TrackingPixelSettingsLazyQueryHookResult = ReturnType<typeof useTrackingPixelSettingsLazyQuery>;
@@ -138,9 +139,9 @@ export type UpdateTrackingPixelSettingMutationFn = Apollo.MutationFunction<Updat
  *   },
  * });
  */
-export function useUpdateTrackingPixelSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTrackingPixelSettingMutation, UpdateTrackingPixelSettingMutationVariables>) {
+export function useUpdateTrackingPixelSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTrackingPixelSettingMutation, UpdateTrackingPixelSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateTrackingPixelSettingMutation, UpdateTrackingPixelSettingMutationVariables>(UpdateTrackingPixelSettingDocument, options);
+        return ApolloReactHooks.useMutation<UpdateTrackingPixelSettingMutation, UpdateTrackingPixelSettingMutationVariables>(UpdateTrackingPixelSettingDocument, options);
       }
 export type UpdateTrackingPixelSettingMutationHookResult = ReturnType<typeof useUpdateTrackingPixelSettingMutation>;
 export type UpdateTrackingPixelSettingMutationResult = Apollo.MutationResult<UpdateTrackingPixelSettingMutation>;
@@ -179,9 +180,9 @@ export type CreateTrackingPixelSettingMutationFn = Apollo.MutationFunction<Creat
  *   },
  * });
  */
-export function useCreateTrackingPixelSettingMutation(baseOptions?: Apollo.MutationHookOptions<CreateTrackingPixelSettingMutation, CreateTrackingPixelSettingMutationVariables>) {
+export function useCreateTrackingPixelSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTrackingPixelSettingMutation, CreateTrackingPixelSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateTrackingPixelSettingMutation, CreateTrackingPixelSettingMutationVariables>(CreateTrackingPixelSettingDocument, options);
+        return ApolloReactHooks.useMutation<CreateTrackingPixelSettingMutation, CreateTrackingPixelSettingMutationVariables>(CreateTrackingPixelSettingDocument, options);
       }
 export type CreateTrackingPixelSettingMutationHookResult = ReturnType<typeof useCreateTrackingPixelSettingMutation>;
 export type CreateTrackingPixelSettingMutationResult = Apollo.MutationResult<CreateTrackingPixelSettingMutation>;
@@ -213,9 +214,9 @@ export type DeleteTrackingPixelSettingMutationFn = Apollo.MutationFunction<Delet
  *   },
  * });
  */
-export function useDeleteTrackingPixelSettingMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTrackingPixelSettingMutation, DeleteTrackingPixelSettingMutationVariables>) {
+export function useDeleteTrackingPixelSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteTrackingPixelSettingMutation, DeleteTrackingPixelSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteTrackingPixelSettingMutation, DeleteTrackingPixelSettingMutationVariables>(DeleteTrackingPixelSettingDocument, options);
+        return ApolloReactHooks.useMutation<DeleteTrackingPixelSettingMutation, DeleteTrackingPixelSettingMutationVariables>(DeleteTrackingPixelSettingDocument, options);
       }
 export type DeleteTrackingPixelSettingMutationHookResult = ReturnType<typeof useDeleteTrackingPixelSettingMutation>;
 export type DeleteTrackingPixelSettingMutationResult = Apollo.MutationResult<DeleteTrackingPixelSettingMutation>;

@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPollFragment = { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: RichtextJSONDocument | null, answers: Array<{ __typename?: 'PollAnswer', id: string, pollId: string, answer?: string | null, votes: number }>, externalVoteSources: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> }> };
 
@@ -218,9 +219,9 @@ export type CreatePollMutationFn = Apollo.MutationFunction<CreatePollMutation, C
  *   },
  * });
  */
-export function useCreatePollMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollMutation, CreatePollMutationVariables>) {
+export function useCreatePollMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePollMutation, CreatePollMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePollMutation, CreatePollMutationVariables>(CreatePollDocument, options);
+        return ApolloReactHooks.useMutation<CreatePollMutation, CreatePollMutationVariables>(CreatePollDocument, options);
       }
 export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutation>;
 export type CreatePollMutationResult = Apollo.MutationResult<CreatePollMutation>;
@@ -265,9 +266,9 @@ export type UpdatePollMutationFn = Apollo.MutationFunction<UpdatePollMutation, U
  *   },
  * });
  */
-export function useUpdatePollMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePollMutation, UpdatePollMutationVariables>) {
+export function useUpdatePollMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePollMutation, UpdatePollMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePollMutation, UpdatePollMutationVariables>(UpdatePollDocument, options);
+        return ApolloReactHooks.useMutation<UpdatePollMutation, UpdatePollMutationVariables>(UpdatePollDocument, options);
       }
 export type UpdatePollMutationHookResult = ReturnType<typeof useUpdatePollMutation>;
 export type UpdatePollMutationResult = Apollo.MutationResult<UpdatePollMutation>;
@@ -298,9 +299,9 @@ export type DeletePollMutationFn = Apollo.MutationFunction<DeletePollMutation, D
  *   },
  * });
  */
-export function useDeletePollMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollMutation, DeletePollMutationVariables>) {
+export function useDeletePollMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePollMutation, DeletePollMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePollMutation, DeletePollMutationVariables>(DeletePollDocument, options);
+        return ApolloReactHooks.useMutation<DeletePollMutation, DeletePollMutationVariables>(DeletePollDocument, options);
       }
 export type DeletePollMutationHookResult = ReturnType<typeof useDeletePollMutation>;
 export type DeletePollMutationResult = Apollo.MutationResult<DeletePollMutation>;
@@ -334,9 +335,9 @@ export type CreatePollAnswerMutationFn = Apollo.MutationFunction<CreatePollAnswe
  *   },
  * });
  */
-export function useCreatePollAnswerMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>) {
+export function useCreatePollAnswerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>(CreatePollAnswerDocument, options);
+        return ApolloReactHooks.useMutation<CreatePollAnswerMutation, CreatePollAnswerMutationVariables>(CreatePollAnswerDocument, options);
       }
 export type CreatePollAnswerMutationHookResult = ReturnType<typeof useCreatePollAnswerMutation>;
 export type CreatePollAnswerMutationResult = Apollo.MutationResult<CreatePollAnswerMutation>;
@@ -367,9 +368,9 @@ export type DeletePollAnswerMutationFn = Apollo.MutationFunction<DeletePollAnswe
  *   },
  * });
  */
-export function useDeletePollAnswerMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>) {
+export function useDeletePollAnswerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>(DeletePollAnswerDocument, options);
+        return ApolloReactHooks.useMutation<DeletePollAnswerMutation, DeletePollAnswerMutationVariables>(DeletePollAnswerDocument, options);
       }
 export type DeletePollAnswerMutationHookResult = ReturnType<typeof useDeletePollAnswerMutation>;
 export type DeletePollAnswerMutationResult = Apollo.MutationResult<DeletePollAnswerMutation>;
@@ -401,9 +402,9 @@ export type CreatePollExternalVoteSourceMutationFn = Apollo.MutationFunction<Cre
  *   },
  * });
  */
-export function useCreatePollExternalVoteSourceMutation(baseOptions?: Apollo.MutationHookOptions<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>) {
+export function useCreatePollExternalVoteSourceMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>(CreatePollExternalVoteSourceDocument, options);
+        return ApolloReactHooks.useMutation<CreatePollExternalVoteSourceMutation, CreatePollExternalVoteSourceMutationVariables>(CreatePollExternalVoteSourceDocument, options);
       }
 export type CreatePollExternalVoteSourceMutationHookResult = ReturnType<typeof useCreatePollExternalVoteSourceMutation>;
 export type CreatePollExternalVoteSourceMutationResult = Apollo.MutationResult<CreatePollExternalVoteSourceMutation>;
@@ -434,9 +435,9 @@ export type DeletePollExternalVoteSourceMutationFn = Apollo.MutationFunction<Del
  *   },
  * });
  */
-export function useDeletePollExternalVoteSourceMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>) {
+export function useDeletePollExternalVoteSourceMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>(DeletePollExternalVoteSourceDocument, options);
+        return ApolloReactHooks.useMutation<DeletePollExternalVoteSourceMutation, DeletePollExternalVoteSourceMutationVariables>(DeletePollExternalVoteSourceDocument, options);
       }
 export type DeletePollExternalVoteSourceMutationHookResult = ReturnType<typeof useDeletePollExternalVoteSourceMutation>;
 export type DeletePollExternalVoteSourceMutationResult = Apollo.MutationResult<DeletePollExternalVoteSourceMutation>;
@@ -489,13 +490,13 @@ export const PollsDocument = gql`
  *   },
  * });
  */
-export function usePollsQuery(baseOptions?: Apollo.QueryHookOptions<PollsQuery, PollsQueryVariables>) {
+export function usePollsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PollsQuery, PollsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PollsQuery, PollsQueryVariables>(PollsDocument, options);
+        return ApolloReactHooks.useQuery<PollsQuery, PollsQueryVariables>(PollsDocument, options);
       }
-export function usePollsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollsQuery, PollsQueryVariables>) {
+export function usePollsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PollsQuery, PollsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PollsQuery, PollsQueryVariables>(PollsDocument, options);
+          return ApolloReactHooks.useLazyQuery<PollsQuery, PollsQueryVariables>(PollsDocument, options);
         }
 export type PollsQueryHookResult = ReturnType<typeof usePollsQuery>;
 export type PollsLazyQueryHookResult = ReturnType<typeof usePollsLazyQuery>;
@@ -524,13 +525,13 @@ export const PollDocument = gql`
  *   },
  * });
  */
-export function usePollQuery(baseOptions: Apollo.QueryHookOptions<PollQuery, PollQueryVariables>) {
+export function usePollQuery(baseOptions: ApolloReactHooks.QueryHookOptions<PollQuery, PollQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PollQuery, PollQueryVariables>(PollDocument, options);
+        return ApolloReactHooks.useQuery<PollQuery, PollQueryVariables>(PollDocument, options);
       }
-export function usePollLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollQuery, PollQueryVariables>) {
+export function usePollLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PollQuery, PollQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PollQuery, PollQueryVariables>(PollDocument, options);
+          return ApolloReactHooks.useLazyQuery<PollQuery, PollQueryVariables>(PollDocument, options);
         }
 export type PollQueryHookResult = ReturnType<typeof usePollQuery>;
 export type PollLazyQueryHookResult = ReturnType<typeof usePollLazyQuery>;
@@ -581,13 +582,13 @@ ${FullPollVoteFragmentDoc}`;
  *   },
  * });
  */
-export function usePollVoteListQuery(baseOptions?: Apollo.QueryHookOptions<PollVoteListQuery, PollVoteListQueryVariables>) {
+export function usePollVoteListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PollVoteListQuery, PollVoteListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PollVoteListQuery, PollVoteListQueryVariables>(PollVoteListDocument, options);
+        return ApolloReactHooks.useQuery<PollVoteListQuery, PollVoteListQueryVariables>(PollVoteListDocument, options);
       }
-export function usePollVoteListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollVoteListQuery, PollVoteListQueryVariables>) {
+export function usePollVoteListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PollVoteListQuery, PollVoteListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PollVoteListQuery, PollVoteListQueryVariables>(PollVoteListDocument, options);
+          return ApolloReactHooks.useLazyQuery<PollVoteListQuery, PollVoteListQueryVariables>(PollVoteListDocument, options);
         }
 export type PollVoteListQueryHookResult = ReturnType<typeof usePollVoteListQuery>;
 export type PollVoteListLazyQueryHookResult = ReturnType<typeof usePollVoteListLazyQuery>;
@@ -618,9 +619,9 @@ export type DeletePollVotesMutationFn = Apollo.MutationFunction<DeletePollVotesM
  *   },
  * });
  */
-export function useDeletePollVotesMutation(baseOptions?: Apollo.MutationHookOptions<DeletePollVotesMutation, DeletePollVotesMutationVariables>) {
+export function useDeletePollVotesMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePollVotesMutation, DeletePollVotesMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePollVotesMutation, DeletePollVotesMutationVariables>(DeletePollVotesDocument, options);
+        return ApolloReactHooks.useMutation<DeletePollVotesMutation, DeletePollVotesMutationVariables>(DeletePollVotesDocument, options);
       }
 export type DeletePollVotesMutationHookResult = ReturnType<typeof useDeletePollVotesMutation>;
 export type DeletePollVotesMutationResult = Apollo.MutationResult<DeletePollVotesMutation>;

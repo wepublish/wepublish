@@ -6,6 +6,7 @@ import { MailTemplateRefFragment } from './subscription-flow.generated';
 import { gql } from '@apollo/client';
 import { MailTemplateRefFragmentDoc } from './subscription-flow.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type SystemMailsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -70,13 +71,13 @@ ${MailTemplateRefFragmentDoc}`;
  *   },
  * });
  */
-export function useSystemMailsQuery(baseOptions?: Apollo.QueryHookOptions<SystemMailsQuery, SystemMailsQueryVariables>) {
+export function useSystemMailsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SystemMailsQuery, SystemMailsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SystemMailsQuery, SystemMailsQueryVariables>(SystemMailsDocument, options);
+        return ApolloReactHooks.useQuery<SystemMailsQuery, SystemMailsQueryVariables>(SystemMailsDocument, options);
       }
-export function useSystemMailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SystemMailsQuery, SystemMailsQueryVariables>) {
+export function useSystemMailsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SystemMailsQuery, SystemMailsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SystemMailsQuery, SystemMailsQueryVariables>(SystemMailsDocument, options);
+          return ApolloReactHooks.useLazyQuery<SystemMailsQuery, SystemMailsQueryVariables>(SystemMailsDocument, options);
         }
 export type SystemMailsQueryHookResult = ReturnType<typeof useSystemMailsQuery>;
 export type SystemMailsLazyQueryHookResult = ReturnType<typeof useSystemMailsLazyQuery>;
@@ -109,9 +110,9 @@ export type UpdateSystemMailMutationFn = Apollo.MutationFunction<UpdateSystemMai
  *   },
  * });
  */
-export function useUpdateSystemMailMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>) {
+export function useUpdateSystemMailMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>(UpdateSystemMailDocument, options);
+        return ApolloReactHooks.useMutation<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>(UpdateSystemMailDocument, options);
       }
 export type UpdateSystemMailMutationHookResult = ReturnType<typeof useUpdateSystemMailMutation>;
 export type UpdateSystemMailMutationResult = Apollo.MutationResult<UpdateSystemMailMutation>;
@@ -140,9 +141,9 @@ export type TestSystemMailMutationFn = Apollo.MutationFunction<TestSystemMailMut
  *   },
  * });
  */
-export function useTestSystemMailMutation(baseOptions?: Apollo.MutationHookOptions<TestSystemMailMutation, TestSystemMailMutationVariables>) {
+export function useTestSystemMailMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<TestSystemMailMutation, TestSystemMailMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<TestSystemMailMutation, TestSystemMailMutationVariables>(TestSystemMailDocument, options);
+        return ApolloReactHooks.useMutation<TestSystemMailMutation, TestSystemMailMutationVariables>(TestSystemMailDocument, options);
       }
 export type TestSystemMailMutationHookResult = ReturnType<typeof useTestSystemMailMutation>;
 export type TestSystemMailMutationResult = Apollo.MutationResult<TestSystemMailMutation>;

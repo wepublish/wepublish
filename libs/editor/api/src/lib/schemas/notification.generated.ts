@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type NotificationReadFragment = { __typename?: 'NotificationRead', id: string, createdAt: string, source: Types.NotificationSource, itemId: string };
 
@@ -87,13 +88,13 @@ export const NotificationReadsDocument = gql`
  *   },
  * });
  */
-export function useNotificationReadsQuery(baseOptions?: Apollo.QueryHookOptions<NotificationReadsQuery, NotificationReadsQueryVariables>) {
+export function useNotificationReadsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<NotificationReadsQuery, NotificationReadsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NotificationReadsQuery, NotificationReadsQueryVariables>(NotificationReadsDocument, options);
+        return ApolloReactHooks.useQuery<NotificationReadsQuery, NotificationReadsQueryVariables>(NotificationReadsDocument, options);
       }
-export function useNotificationReadsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationReadsQuery, NotificationReadsQueryVariables>) {
+export function useNotificationReadsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<NotificationReadsQuery, NotificationReadsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NotificationReadsQuery, NotificationReadsQueryVariables>(NotificationReadsDocument, options);
+          return ApolloReactHooks.useLazyQuery<NotificationReadsQuery, NotificationReadsQueryVariables>(NotificationReadsDocument, options);
         }
 export type NotificationReadsQueryHookResult = ReturnType<typeof useNotificationReadsQuery>;
 export type NotificationReadsLazyQueryHookResult = ReturnType<typeof useNotificationReadsLazyQuery>;
@@ -125,9 +126,9 @@ export type MarkNotificationReadMutationFn = Apollo.MutationFunction<MarkNotific
  *   },
  * });
  */
-export function useMarkNotificationReadMutation(baseOptions?: Apollo.MutationHookOptions<MarkNotificationReadMutation, MarkNotificationReadMutationVariables>) {
+export function useMarkNotificationReadMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<MarkNotificationReadMutation, MarkNotificationReadMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<MarkNotificationReadMutation, MarkNotificationReadMutationVariables>(MarkNotificationReadDocument, options);
+        return ApolloReactHooks.useMutation<MarkNotificationReadMutation, MarkNotificationReadMutationVariables>(MarkNotificationReadDocument, options);
       }
 export type MarkNotificationReadMutationHookResult = ReturnType<typeof useMarkNotificationReadMutation>;
 export type MarkNotificationReadMutationResult = Apollo.MutationResult<MarkNotificationReadMutation>;
@@ -155,13 +156,13 @@ export const NotificationConfirmationsDocument = gql`
  *   },
  * });
  */
-export function useNotificationConfirmationsQuery(baseOptions?: Apollo.QueryHookOptions<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>) {
+export function useNotificationConfirmationsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>(NotificationConfirmationsDocument, options);
+        return ApolloReactHooks.useQuery<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>(NotificationConfirmationsDocument, options);
       }
-export function useNotificationConfirmationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>) {
+export function useNotificationConfirmationsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>(NotificationConfirmationsDocument, options);
+          return ApolloReactHooks.useLazyQuery<NotificationConfirmationsQuery, NotificationConfirmationsQueryVariables>(NotificationConfirmationsDocument, options);
         }
 export type NotificationConfirmationsQueryHookResult = ReturnType<typeof useNotificationConfirmationsQuery>;
 export type NotificationConfirmationsLazyQueryHookResult = ReturnType<typeof useNotificationConfirmationsLazyQuery>;
@@ -193,9 +194,9 @@ export type ConfirmNotificationMutationFn = Apollo.MutationFunction<ConfirmNotif
  *   },
  * });
  */
-export function useConfirmNotificationMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmNotificationMutation, ConfirmNotificationMutationVariables>) {
+export function useConfirmNotificationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ConfirmNotificationMutation, ConfirmNotificationMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ConfirmNotificationMutation, ConfirmNotificationMutationVariables>(ConfirmNotificationDocument, options);
+        return ApolloReactHooks.useMutation<ConfirmNotificationMutation, ConfirmNotificationMutationVariables>(ConfirmNotificationDocument, options);
       }
 export type ConfirmNotificationMutationHookResult = ReturnType<typeof useConfirmNotificationMutation>;
 export type ConfirmNotificationMutationResult = Apollo.MutationResult<ConfirmNotificationMutation>;

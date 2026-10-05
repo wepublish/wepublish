@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type ImportableEventRefFragment = { __typename?: 'EventFromSource', id: string, name: string, description?: RichtextJSONDocument | null, status: Types.EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, imageUrl?: string | null, startsAt: string, endsAt?: string | null };
 
@@ -106,13 +107,13 @@ export const ImportedEventListDocument = gql`
  *   },
  * });
  */
-export function useImportedEventListQuery(baseOptions?: Apollo.QueryHookOptions<ImportedEventListQuery, ImportedEventListQueryVariables>) {
+export function useImportedEventListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ImportedEventListQuery, ImportedEventListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ImportedEventListQuery, ImportedEventListQueryVariables>(ImportedEventListDocument, options);
+        return ApolloReactHooks.useQuery<ImportedEventListQuery, ImportedEventListQueryVariables>(ImportedEventListDocument, options);
       }
-export function useImportedEventListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImportedEventListQuery, ImportedEventListQueryVariables>) {
+export function useImportedEventListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ImportedEventListQuery, ImportedEventListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ImportedEventListQuery, ImportedEventListQueryVariables>(ImportedEventListDocument, options);
+          return ApolloReactHooks.useLazyQuery<ImportedEventListQuery, ImportedEventListQueryVariables>(ImportedEventListDocument, options);
         }
 export type ImportedEventListQueryHookResult = ReturnType<typeof useImportedEventListQuery>;
 export type ImportedEventListLazyQueryHookResult = ReturnType<typeof useImportedEventListLazyQuery>;
@@ -141,13 +142,13 @@ export const ImportedEventDocument = gql`
  *   },
  * });
  */
-export function useImportedEventQuery(baseOptions: Apollo.QueryHookOptions<ImportedEventQuery, ImportedEventQueryVariables>) {
+export function useImportedEventQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ImportedEventQuery, ImportedEventQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ImportedEventQuery, ImportedEventQueryVariables>(ImportedEventDocument, options);
+        return ApolloReactHooks.useQuery<ImportedEventQuery, ImportedEventQueryVariables>(ImportedEventDocument, options);
       }
-export function useImportedEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImportedEventQuery, ImportedEventQueryVariables>) {
+export function useImportedEventLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ImportedEventQuery, ImportedEventQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ImportedEventQuery, ImportedEventQueryVariables>(ImportedEventDocument, options);
+          return ApolloReactHooks.useLazyQuery<ImportedEventQuery, ImportedEventQueryVariables>(ImportedEventDocument, options);
         }
 export type ImportedEventQueryHookResult = ReturnType<typeof useImportedEventQuery>;
 export type ImportedEventLazyQueryHookResult = ReturnType<typeof useImportedEventLazyQuery>;
@@ -173,13 +174,13 @@ export const ImportedEventsIdsDocument = gql`
  *   },
  * });
  */
-export function useImportedEventsIdsQuery(baseOptions?: Apollo.QueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
+export function useImportedEventsIdsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
+        return ApolloReactHooks.useQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
       }
-export function useImportedEventsIdsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
+export function useImportedEventsIdsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
+          return ApolloReactHooks.useLazyQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
         }
 export type ImportedEventsIdsQueryHookResult = ReturnType<typeof useImportedEventsIdsQuery>;
 export type ImportedEventsIdsLazyQueryHookResult = ReturnType<typeof useImportedEventsIdsLazyQuery>;
@@ -205,13 +206,13 @@ export const EventProvidersDocument = gql`
  *   },
  * });
  */
-export function useEventProvidersQuery(baseOptions?: Apollo.QueryHookOptions<EventProvidersQuery, EventProvidersQueryVariables>) {
+export function useEventProvidersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<EventProvidersQuery, EventProvidersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<EventProvidersQuery, EventProvidersQueryVariables>(EventProvidersDocument, options);
+        return ApolloReactHooks.useQuery<EventProvidersQuery, EventProvidersQueryVariables>(EventProvidersDocument, options);
       }
-export function useEventProvidersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventProvidersQuery, EventProvidersQueryVariables>) {
+export function useEventProvidersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<EventProvidersQuery, EventProvidersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<EventProvidersQuery, EventProvidersQueryVariables>(EventProvidersDocument, options);
+          return ApolloReactHooks.useLazyQuery<EventProvidersQuery, EventProvidersQueryVariables>(EventProvidersDocument, options);
         }
 export type EventProvidersQueryHookResult = ReturnType<typeof useEventProvidersQuery>;
 export type EventProvidersLazyQueryHookResult = ReturnType<typeof useEventProvidersLazyQuery>;
@@ -241,9 +242,9 @@ export type ImportEventMutationFn = Apollo.MutationFunction<ImportEventMutation,
  *   },
  * });
  */
-export function useImportEventMutation(baseOptions?: Apollo.MutationHookOptions<ImportEventMutation, ImportEventMutationVariables>) {
+export function useImportEventMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ImportEventMutation, ImportEventMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ImportEventMutation, ImportEventMutationVariables>(ImportEventDocument, options);
+        return ApolloReactHooks.useMutation<ImportEventMutation, ImportEventMutationVariables>(ImportEventDocument, options);
       }
 export type ImportEventMutationHookResult = ReturnType<typeof useImportEventMutation>;
 export type ImportEventMutationResult = Apollo.MutationResult<ImportEventMutation>;

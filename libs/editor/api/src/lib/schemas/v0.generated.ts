@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type PromptHtmlQueryVariables = Types.Exact<{
   query: Types.Scalars['String'];
@@ -40,13 +41,13 @@ export const PromptHtmlDocument = gql`
  *   },
  * });
  */
-export function usePromptHtmlQuery(baseOptions: Apollo.QueryHookOptions<PromptHtmlQuery, PromptHtmlQueryVariables>) {
+export function usePromptHtmlQuery(baseOptions: ApolloReactHooks.QueryHookOptions<PromptHtmlQuery, PromptHtmlQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PromptHtmlQuery, PromptHtmlQueryVariables>(PromptHtmlDocument, options);
+        return ApolloReactHooks.useQuery<PromptHtmlQuery, PromptHtmlQueryVariables>(PromptHtmlDocument, options);
       }
-export function usePromptHtmlLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PromptHtmlQuery, PromptHtmlQueryVariables>) {
+export function usePromptHtmlLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PromptHtmlQuery, PromptHtmlQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PromptHtmlQuery, PromptHtmlQueryVariables>(PromptHtmlDocument, options);
+          return ApolloReactHooks.useLazyQuery<PromptHtmlQuery, PromptHtmlQueryVariables>(PromptHtmlDocument, options);
         }
 export type PromptHtmlQueryHookResult = ReturnType<typeof usePromptHtmlQuery>;
 export type PromptHtmlLazyQueryHookResult = ReturnType<typeof usePromptHtmlLazyQuery>;

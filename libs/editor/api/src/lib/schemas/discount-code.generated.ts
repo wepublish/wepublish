@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullDiscountCodeFragment = { __typename?: 'DiscountCode', id: string, createdAt: string, modifiedAt: string, code: string, discountPercent: number, usageCount: number, paidUsageCount: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } };
 
@@ -145,13 +146,13 @@ export const DiscountCodeListDocument = gql`
  *   },
  * });
  */
-export function useDiscountCodeListQuery(baseOptions?: Apollo.QueryHookOptions<DiscountCodeListQuery, DiscountCodeListQueryVariables>) {
+export function useDiscountCodeListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<DiscountCodeListQuery, DiscountCodeListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DiscountCodeListQuery, DiscountCodeListQueryVariables>(DiscountCodeListDocument, options);
+        return ApolloReactHooks.useQuery<DiscountCodeListQuery, DiscountCodeListQueryVariables>(DiscountCodeListDocument, options);
       }
-export function useDiscountCodeListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DiscountCodeListQuery, DiscountCodeListQueryVariables>) {
+export function useDiscountCodeListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<DiscountCodeListQuery, DiscountCodeListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DiscountCodeListQuery, DiscountCodeListQueryVariables>(DiscountCodeListDocument, options);
+          return ApolloReactHooks.useLazyQuery<DiscountCodeListQuery, DiscountCodeListQueryVariables>(DiscountCodeListDocument, options);
         }
 export type DiscountCodeListQueryHookResult = ReturnType<typeof useDiscountCodeListQuery>;
 export type DiscountCodeListLazyQueryHookResult = ReturnType<typeof useDiscountCodeListLazyQuery>;
@@ -180,13 +181,13 @@ export const DiscountCodeDocument = gql`
  *   },
  * });
  */
-export function useDiscountCodeQuery(baseOptions: Apollo.QueryHookOptions<DiscountCodeQuery, DiscountCodeQueryVariables>) {
+export function useDiscountCodeQuery(baseOptions: ApolloReactHooks.QueryHookOptions<DiscountCodeQuery, DiscountCodeQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DiscountCodeQuery, DiscountCodeQueryVariables>(DiscountCodeDocument, options);
+        return ApolloReactHooks.useQuery<DiscountCodeQuery, DiscountCodeQueryVariables>(DiscountCodeDocument, options);
       }
-export function useDiscountCodeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DiscountCodeQuery, DiscountCodeQueryVariables>) {
+export function useDiscountCodeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<DiscountCodeQuery, DiscountCodeQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DiscountCodeQuery, DiscountCodeQueryVariables>(DiscountCodeDocument, options);
+          return ApolloReactHooks.useLazyQuery<DiscountCodeQuery, DiscountCodeQueryVariables>(DiscountCodeDocument, options);
         }
 export type DiscountCodeQueryHookResult = ReturnType<typeof useDiscountCodeQuery>;
 export type DiscountCodeLazyQueryHookResult = ReturnType<typeof useDiscountCodeLazyQuery>;
@@ -227,9 +228,9 @@ export type CreateDiscountCodeMutationFn = Apollo.MutationFunction<CreateDiscoun
  *   },
  * });
  */
-export function useCreateDiscountCodeMutation(baseOptions?: Apollo.MutationHookOptions<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>) {
+export function useCreateDiscountCodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>(CreateDiscountCodeDocument, options);
+        return ApolloReactHooks.useMutation<CreateDiscountCodeMutation, CreateDiscountCodeMutationVariables>(CreateDiscountCodeDocument, options);
       }
 export type CreateDiscountCodeMutationHookResult = ReturnType<typeof useCreateDiscountCodeMutation>;
 export type CreateDiscountCodeMutationResult = Apollo.MutationResult<CreateDiscountCodeMutation>;
@@ -272,9 +273,9 @@ export type UpdateDiscountCodeMutationFn = Apollo.MutationFunction<UpdateDiscoun
  *   },
  * });
  */
-export function useUpdateDiscountCodeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>) {
+export function useUpdateDiscountCodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>(UpdateDiscountCodeDocument, options);
+        return ApolloReactHooks.useMutation<UpdateDiscountCodeMutation, UpdateDiscountCodeMutationVariables>(UpdateDiscountCodeDocument, options);
       }
 export type UpdateDiscountCodeMutationHookResult = ReturnType<typeof useUpdateDiscountCodeMutation>;
 export type UpdateDiscountCodeMutationResult = Apollo.MutationResult<UpdateDiscountCodeMutation>;
@@ -305,9 +306,9 @@ export type DeleteDiscountCodeMutationFn = Apollo.MutationFunction<DeleteDiscoun
  *   },
  * });
  */
-export function useDeleteDiscountCodeMutation(baseOptions?: Apollo.MutationHookOptions<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>) {
+export function useDeleteDiscountCodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>(DeleteDiscountCodeDocument, options);
+        return ApolloReactHooks.useMutation<DeleteDiscountCodeMutation, DeleteDiscountCodeMutationVariables>(DeleteDiscountCodeDocument, options);
       }
 export type DeleteDiscountCodeMutationHookResult = ReturnType<typeof useDeleteDiscountCodeMutation>;
 export type DeleteDiscountCodeMutationResult = Apollo.MutationResult<DeleteDiscountCodeMutation>;
@@ -356,13 +357,13 @@ export const DiscountCodeUsagesDocument = gql`
  *   },
  * });
  */
-export function useDiscountCodeUsagesQuery(baseOptions: Apollo.QueryHookOptions<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>) {
+export function useDiscountCodeUsagesQuery(baseOptions: ApolloReactHooks.QueryHookOptions<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>(DiscountCodeUsagesDocument, options);
+        return ApolloReactHooks.useQuery<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>(DiscountCodeUsagesDocument, options);
       }
-export function useDiscountCodeUsagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>) {
+export function useDiscountCodeUsagesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>(DiscountCodeUsagesDocument, options);
+          return ApolloReactHooks.useLazyQuery<DiscountCodeUsagesQuery, DiscountCodeUsagesQueryVariables>(DiscountCodeUsagesDocument, options);
         }
 export type DiscountCodeUsagesQueryHookResult = ReturnType<typeof useDiscountCodeUsagesQuery>;
 export type DiscountCodeUsagesLazyQueryHookResult = ReturnType<typeof useDiscountCodeUsagesLazyQuery>;

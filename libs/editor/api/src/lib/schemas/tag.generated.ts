@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullTagFragment = { __typename?: 'Tag', id: string, tag?: string | null, description?: RichtextJSONDocument | null, type: Types.TagType, main: boolean, url: string, color?: string | null };
 
@@ -104,13 +105,13 @@ export const TagDocument = gql`
  *   },
  * });
  */
-export function useTagQuery(baseOptions: Apollo.QueryHookOptions<TagQuery, TagQueryVariables>) {
+export function useTagQuery(baseOptions: ApolloReactHooks.QueryHookOptions<TagQuery, TagQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TagQuery, TagQueryVariables>(TagDocument, options);
+        return ApolloReactHooks.useQuery<TagQuery, TagQueryVariables>(TagDocument, options);
       }
-export function useTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagQuery, TagQueryVariables>) {
+export function useTagLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TagQuery, TagQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TagQuery, TagQueryVariables>(TagDocument, options);
+          return ApolloReactHooks.useLazyQuery<TagQuery, TagQueryVariables>(TagDocument, options);
         }
 export type TagQueryHookResult = ReturnType<typeof useTagQuery>;
 export type TagLazyQueryHookResult = ReturnType<typeof useTagLazyQuery>;
@@ -160,13 +161,13 @@ export const TagListDocument = gql`
  *   },
  * });
  */
-export function useTagListQuery(baseOptions?: Apollo.QueryHookOptions<TagListQuery, TagListQueryVariables>) {
+export function useTagListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TagListQuery, TagListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+        return ApolloReactHooks.useQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
       }
-export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagListQuery, TagListQueryVariables>) {
+export function useTagListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TagListQuery, TagListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+          return ApolloReactHooks.useLazyQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
         }
 export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
 export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
@@ -200,9 +201,9 @@ export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, Cre
  *   },
  * });
  */
-export function useCreateTagMutation(baseOptions?: Apollo.MutationHookOptions<CreateTagMutation, CreateTagMutationVariables>) {
+export function useCreateTagMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTagMutation, CreateTagMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument, options);
+        return ApolloReactHooks.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument, options);
       }
 export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation>;
 export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
@@ -243,9 +244,9 @@ export type UpdateTagMutationFn = Apollo.MutationFunction<UpdateTagMutation, Upd
  *   },
  * });
  */
-export function useUpdateTagMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTagMutation, UpdateTagMutationVariables>) {
+export function useUpdateTagMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTagMutation, UpdateTagMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateTagMutation, UpdateTagMutationVariables>(UpdateTagDocument, options);
+        return ApolloReactHooks.useMutation<UpdateTagMutation, UpdateTagMutationVariables>(UpdateTagDocument, options);
       }
 export type UpdateTagMutationHookResult = ReturnType<typeof useUpdateTagMutation>;
 export type UpdateTagMutationResult = Apollo.MutationResult<UpdateTagMutation>;
@@ -276,9 +277,9 @@ export type DeleteTagMutationFn = Apollo.MutationFunction<DeleteTagMutation, Del
  *   },
  * });
  */
-export function useDeleteTagMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTagMutation, DeleteTagMutationVariables>) {
+export function useDeleteTagMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteTagMutation, DeleteTagMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteTagMutation, DeleteTagMutationVariables>(DeleteTagDocument, options);
+        return ApolloReactHooks.useMutation<DeleteTagMutation, DeleteTagMutationVariables>(DeleteTagDocument, options);
       }
 export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation>;
 export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;

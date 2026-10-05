@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type ImageUrLsFragment = { __typename?: 'Image', url: string, xxxl?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null };
 
@@ -149,13 +150,13 @@ ${SquareImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function useGetImagesByTagQuery(baseOptions: Apollo.QueryHookOptions<GetImagesByTagQuery, GetImagesByTagQueryVariables>) {
+export function useGetImagesByTagQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetImagesByTagQuery, GetImagesByTagQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetImagesByTagQuery, GetImagesByTagQueryVariables>(GetImagesByTagDocument, options);
+        return ApolloReactHooks.useQuery<GetImagesByTagQuery, GetImagesByTagQueryVariables>(GetImagesByTagDocument, options);
       }
-export function useGetImagesByTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetImagesByTagQuery, GetImagesByTagQueryVariables>) {
+export function useGetImagesByTagLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetImagesByTagQuery, GetImagesByTagQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetImagesByTagQuery, GetImagesByTagQueryVariables>(GetImagesByTagDocument, options);
+          return ApolloReactHooks.useLazyQuery<GetImagesByTagQuery, GetImagesByTagQueryVariables>(GetImagesByTagDocument, options);
         }
 export type GetImagesByTagQueryHookResult = ReturnType<typeof useGetImagesByTagQuery>;
 export type GetImagesByTagLazyQueryHookResult = ReturnType<typeof useGetImagesByTagLazyQuery>;

@@ -10,6 +10,7 @@ import { FullPaymentMethodFragmentDoc, FullPaymentProviderFragmentDoc } from './
 import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import { FullAvailablePaymentMethodFragmentDoc } from './memberPlan.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type SubscriptionFlowsQueryVariables = Types.Exact<{
   defaultFlowOnly: Types.Scalars['Boolean'];
@@ -207,13 +208,13 @@ ${MailTemplateRefFragmentDoc}`;
  *   },
  * });
  */
-export function useSubscriptionFlowsQuery(baseOptions: Apollo.QueryHookOptions<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>) {
+export function useSubscriptionFlowsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>(SubscriptionFlowsDocument, options);
+        return ApolloReactHooks.useQuery<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>(SubscriptionFlowsDocument, options);
       }
-export function useSubscriptionFlowsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>) {
+export function useSubscriptionFlowsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>(SubscriptionFlowsDocument, options);
+          return ApolloReactHooks.useLazyQuery<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>(SubscriptionFlowsDocument, options);
         }
 export type SubscriptionFlowsQueryHookResult = ReturnType<typeof useSubscriptionFlowsQuery>;
 export type SubscriptionFlowsLazyQueryHookResult = ReturnType<typeof useSubscriptionFlowsLazyQuery>;
@@ -260,9 +261,9 @@ export type CreateSubscriptionFlowMutationFn = Apollo.MutationFunction<CreateSub
  *   },
  * });
  */
-export function useCreateSubscriptionFlowMutation(baseOptions?: Apollo.MutationHookOptions<CreateSubscriptionFlowMutation, CreateSubscriptionFlowMutationVariables>) {
+export function useCreateSubscriptionFlowMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSubscriptionFlowMutation, CreateSubscriptionFlowMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateSubscriptionFlowMutation, CreateSubscriptionFlowMutationVariables>(CreateSubscriptionFlowDocument, options);
+        return ApolloReactHooks.useMutation<CreateSubscriptionFlowMutation, CreateSubscriptionFlowMutationVariables>(CreateSubscriptionFlowDocument, options);
       }
 export type CreateSubscriptionFlowMutationHookResult = ReturnType<typeof useCreateSubscriptionFlowMutation>;
 export type CreateSubscriptionFlowMutationResult = Apollo.MutationResult<CreateSubscriptionFlowMutation>;
@@ -309,9 +310,9 @@ export type UpdateSubscriptionFlowMutationFn = Apollo.MutationFunction<UpdateSub
  *   },
  * });
  */
-export function useUpdateSubscriptionFlowMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionFlowMutation, UpdateSubscriptionFlowMutationVariables>) {
+export function useUpdateSubscriptionFlowMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSubscriptionFlowMutation, UpdateSubscriptionFlowMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSubscriptionFlowMutation, UpdateSubscriptionFlowMutationVariables>(UpdateSubscriptionFlowDocument, options);
+        return ApolloReactHooks.useMutation<UpdateSubscriptionFlowMutation, UpdateSubscriptionFlowMutationVariables>(UpdateSubscriptionFlowDocument, options);
       }
 export type UpdateSubscriptionFlowMutationHookResult = ReturnType<typeof useUpdateSubscriptionFlowMutation>;
 export type UpdateSubscriptionFlowMutationResult = Apollo.MutationResult<UpdateSubscriptionFlowMutation>;
@@ -350,9 +351,9 @@ export type DeleteSubscriptionFlowMutationFn = Apollo.MutationFunction<DeleteSub
  *   },
  * });
  */
-export function useDeleteSubscriptionFlowMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSubscriptionFlowMutation, DeleteSubscriptionFlowMutationVariables>) {
+export function useDeleteSubscriptionFlowMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteSubscriptionFlowMutation, DeleteSubscriptionFlowMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteSubscriptionFlowMutation, DeleteSubscriptionFlowMutationVariables>(DeleteSubscriptionFlowDocument, options);
+        return ApolloReactHooks.useMutation<DeleteSubscriptionFlowMutation, DeleteSubscriptionFlowMutationVariables>(DeleteSubscriptionFlowDocument, options);
       }
 export type DeleteSubscriptionFlowMutationHookResult = ReturnType<typeof useDeleteSubscriptionFlowMutation>;
 export type DeleteSubscriptionFlowMutationResult = Apollo.MutationResult<DeleteSubscriptionFlowMutation>;
@@ -399,9 +400,9 @@ export type CreateSubscriptionIntervalMutationFn = Apollo.MutationFunction<Creat
  *   },
  * });
  */
-export function useCreateSubscriptionIntervalMutation(baseOptions?: Apollo.MutationHookOptions<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>) {
+export function useCreateSubscriptionIntervalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>(CreateSubscriptionIntervalDocument, options);
+        return ApolloReactHooks.useMutation<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>(CreateSubscriptionIntervalDocument, options);
       }
 export type CreateSubscriptionIntervalMutationHookResult = ReturnType<typeof useCreateSubscriptionIntervalMutation>;
 export type CreateSubscriptionIntervalMutationResult = Apollo.MutationResult<CreateSubscriptionIntervalMutation>;
@@ -446,9 +447,9 @@ export type UpdateSubscriptionIntervalMutationFn = Apollo.MutationFunction<Updat
  *   },
  * });
  */
-export function useUpdateSubscriptionIntervalMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>) {
+export function useUpdateSubscriptionIntervalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>(UpdateSubscriptionIntervalDocument, options);
+        return ApolloReactHooks.useMutation<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>(UpdateSubscriptionIntervalDocument, options);
       }
 export type UpdateSubscriptionIntervalMutationHookResult = ReturnType<typeof useUpdateSubscriptionIntervalMutation>;
 export type UpdateSubscriptionIntervalMutationResult = Apollo.MutationResult<UpdateSubscriptionIntervalMutation>;
@@ -487,9 +488,9 @@ export type DeleteSubscriptionIntervalMutationFn = Apollo.MutationFunction<Delet
  *   },
  * });
  */
-export function useDeleteSubscriptionIntervalMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSubscriptionIntervalMutation, DeleteSubscriptionIntervalMutationVariables>) {
+export function useDeleteSubscriptionIntervalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteSubscriptionIntervalMutation, DeleteSubscriptionIntervalMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteSubscriptionIntervalMutation, DeleteSubscriptionIntervalMutationVariables>(DeleteSubscriptionIntervalDocument, options);
+        return ApolloReactHooks.useMutation<DeleteSubscriptionIntervalMutation, DeleteSubscriptionIntervalMutationVariables>(DeleteSubscriptionIntervalDocument, options);
       }
 export type DeleteSubscriptionIntervalMutationHookResult = ReturnType<typeof useDeleteSubscriptionIntervalMutation>;
 export type DeleteSubscriptionIntervalMutationResult = Apollo.MutationResult<DeleteSubscriptionIntervalMutation>;
@@ -520,13 +521,13 @@ ${ImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function useListPaymentMethodsQuery(baseOptions?: Apollo.QueryHookOptions<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>) {
+export function useListPaymentMethodsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>(ListPaymentMethodsDocument, options);
+        return ApolloReactHooks.useQuery<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>(ListPaymentMethodsDocument, options);
       }
-export function useListPaymentMethodsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>) {
+export function useListPaymentMethodsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>(ListPaymentMethodsDocument, options);
+          return ApolloReactHooks.useLazyQuery<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>(ListPaymentMethodsDocument, options);
         }
 export type ListPaymentMethodsQueryHookResult = ReturnType<typeof useListPaymentMethodsQuery>;
 export type ListPaymentMethodsLazyQueryHookResult = ReturnType<typeof useListPaymentMethodsLazyQuery>;

@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullToken_Token_Fragment = { __typename?: 'Token', id: string, name: string };
 
@@ -68,13 +69,13 @@ export const TokenListDocument = gql`
  *   },
  * });
  */
-export function useTokenListQuery(baseOptions?: Apollo.QueryHookOptions<TokenListQuery, TokenListQueryVariables>) {
+export function useTokenListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TokenListQuery, TokenListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TokenListQuery, TokenListQueryVariables>(TokenListDocument, options);
+        return ApolloReactHooks.useQuery<TokenListQuery, TokenListQueryVariables>(TokenListDocument, options);
       }
-export function useTokenListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TokenListQuery, TokenListQueryVariables>) {
+export function useTokenListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TokenListQuery, TokenListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TokenListQuery, TokenListQueryVariables>(TokenListDocument, options);
+          return ApolloReactHooks.useLazyQuery<TokenListQuery, TokenListQueryVariables>(TokenListDocument, options);
         }
 export type TokenListQueryHookResult = ReturnType<typeof useTokenListQuery>;
 export type TokenListLazyQueryHookResult = ReturnType<typeof useTokenListLazyQuery>;
@@ -106,9 +107,9 @@ export type CreateTokenMutationFn = Apollo.MutationFunction<CreateTokenMutation,
  *   },
  * });
  */
-export function useCreateTokenMutation(baseOptions?: Apollo.MutationHookOptions<CreateTokenMutation, CreateTokenMutationVariables>) {
+export function useCreateTokenMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTokenMutation, CreateTokenMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateTokenMutation, CreateTokenMutationVariables>(CreateTokenDocument, options);
+        return ApolloReactHooks.useMutation<CreateTokenMutation, CreateTokenMutationVariables>(CreateTokenDocument, options);
       }
 export type CreateTokenMutationHookResult = ReturnType<typeof useCreateTokenMutation>;
 export type CreateTokenMutationResult = Apollo.MutationResult<CreateTokenMutation>;
@@ -139,9 +140,9 @@ export type DeleteTokenMutationFn = Apollo.MutationFunction<DeleteTokenMutation,
  *   },
  * });
  */
-export function useDeleteTokenMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTokenMutation, DeleteTokenMutationVariables>) {
+export function useDeleteTokenMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteTokenMutation, DeleteTokenMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteTokenMutation, DeleteTokenMutationVariables>(DeleteTokenDocument, options);
+        return ApolloReactHooks.useMutation<DeleteTokenMutation, DeleteTokenMutationVariables>(DeleteTokenDocument, options);
       }
 export type DeleteTokenMutationHookResult = ReturnType<typeof useDeleteTokenMutation>;
 export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutation>;

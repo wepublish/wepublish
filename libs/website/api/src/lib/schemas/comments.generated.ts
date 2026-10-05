@@ -12,6 +12,7 @@ import { FullUserFragmentDoc, FullBaseUserFragmentDoc } from './user.generated';
 import { FullImageFragmentDoc, FullImageUrLsFragmentDoc, ImageUrLsFragmentDoc, SquareImageUrLsFragmentDoc, SlimImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import { FullPropertyFragmentDoc } from './properties.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullCommentRatingSystemAnswerFragment = { __typename?: 'CommentRatingSystemAnswer', id: string, ratingSystemId: string, answer?: string | null, type: Types.RatingSystemType };
 
@@ -284,13 +285,13 @@ ${FullRatingSystemAnswerFragmentDoc}`;
  *   },
  * });
  */
-export function useCommentListQuery(baseOptions: Apollo.QueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
+export function useCommentListQuery(baseOptions: ApolloReactHooks.QueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options);
+        return ApolloReactHooks.useQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options);
       }
-export function useCommentListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
+export function useCommentListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options);
+          return ApolloReactHooks.useLazyQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options);
         }
 export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>;
 export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>;
@@ -347,9 +348,9 @@ export type AddCommentMutationFn = Apollo.MutationFunction<AddCommentMutation, A
  *   },
  * });
  */
-export function useAddCommentMutation(baseOptions?: Apollo.MutationHookOptions<AddCommentMutation, AddCommentMutationVariables>) {
+export function useAddCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddCommentMutation, AddCommentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddCommentMutation, AddCommentMutationVariables>(AddCommentDocument, options);
+        return ApolloReactHooks.useMutation<AddCommentMutation, AddCommentMutationVariables>(AddCommentDocument, options);
       }
 export type AddCommentMutationHookResult = ReturnType<typeof useAddCommentMutation>;
 export type AddCommentMutationResult = Apollo.MutationResult<AddCommentMutation>;
@@ -396,9 +397,9 @@ export type EditCommentMutationFn = Apollo.MutationFunction<EditCommentMutation,
  *   },
  * });
  */
-export function useEditCommentMutation(baseOptions?: Apollo.MutationHookOptions<EditCommentMutation, EditCommentMutationVariables>) {
+export function useEditCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<EditCommentMutation, EditCommentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<EditCommentMutation, EditCommentMutationVariables>(EditCommentDocument, options);
+        return ApolloReactHooks.useMutation<EditCommentMutation, EditCommentMutationVariables>(EditCommentDocument, options);
       }
 export type EditCommentMutationHookResult = ReturnType<typeof useEditCommentMutation>;
 export type EditCommentMutationResult = Apollo.MutationResult<EditCommentMutation>;
@@ -444,9 +445,9 @@ export type RateCommentMutationFn = Apollo.MutationFunction<RateCommentMutation,
  *   },
  * });
  */
-export function useRateCommentMutation(baseOptions?: Apollo.MutationHookOptions<RateCommentMutation, RateCommentMutationVariables>) {
+export function useRateCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RateCommentMutation, RateCommentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RateCommentMutation, RateCommentMutationVariables>(RateCommentDocument, options);
+        return ApolloReactHooks.useMutation<RateCommentMutation, RateCommentMutationVariables>(RateCommentDocument, options);
       }
 export type RateCommentMutationHookResult = ReturnType<typeof useRateCommentMutation>;
 export type RateCommentMutationResult = Apollo.MutationResult<RateCommentMutation>;

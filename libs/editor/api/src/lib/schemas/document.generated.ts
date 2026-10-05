@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullDocumentFragment = { __typename?: 'Document', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, fileSize: number, mimeType: string, description?: string | null, url: string, thumbnailURL?: string | null };
 
@@ -107,13 +108,13 @@ export const DocumentStorageUsageDocument = gql`
  *   },
  * });
  */
-export function useDocumentStorageUsageQuery(baseOptions?: Apollo.QueryHookOptions<DocumentStorageUsageQuery, DocumentStorageUsageQueryVariables>) {
+export function useDocumentStorageUsageQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<DocumentStorageUsageQuery, DocumentStorageUsageQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DocumentStorageUsageQuery, DocumentStorageUsageQueryVariables>(DocumentStorageUsageDocument, options);
+        return ApolloReactHooks.useQuery<DocumentStorageUsageQuery, DocumentStorageUsageQueryVariables>(DocumentStorageUsageDocument, options);
       }
-export function useDocumentStorageUsageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DocumentStorageUsageQuery, DocumentStorageUsageQueryVariables>) {
+export function useDocumentStorageUsageLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<DocumentStorageUsageQuery, DocumentStorageUsageQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DocumentStorageUsageQuery, DocumentStorageUsageQueryVariables>(DocumentStorageUsageDocument, options);
+          return ApolloReactHooks.useLazyQuery<DocumentStorageUsageQuery, DocumentStorageUsageQueryVariables>(DocumentStorageUsageDocument, options);
         }
 export type DocumentStorageUsageQueryHookResult = ReturnType<typeof useDocumentStorageUsageQuery>;
 export type DocumentStorageUsageLazyQueryHookResult = ReturnType<typeof useDocumentStorageUsageLazyQuery>;
@@ -159,13 +160,13 @@ export const DocumentListDocument = gql`
  *   },
  * });
  */
-export function useDocumentListQuery(baseOptions?: Apollo.QueryHookOptions<DocumentListQuery, DocumentListQueryVariables>) {
+export function useDocumentListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<DocumentListQuery, DocumentListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DocumentListQuery, DocumentListQueryVariables>(DocumentListDocument, options);
+        return ApolloReactHooks.useQuery<DocumentListQuery, DocumentListQueryVariables>(DocumentListDocument, options);
       }
-export function useDocumentListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DocumentListQuery, DocumentListQueryVariables>) {
+export function useDocumentListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<DocumentListQuery, DocumentListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DocumentListQuery, DocumentListQueryVariables>(DocumentListDocument, options);
+          return ApolloReactHooks.useLazyQuery<DocumentListQuery, DocumentListQueryVariables>(DocumentListDocument, options);
         }
 export type DocumentListQueryHookResult = ReturnType<typeof useDocumentListQuery>;
 export type DocumentListLazyQueryHookResult = ReturnType<typeof useDocumentListLazyQuery>;
@@ -194,13 +195,13 @@ export const DocumentDocument = gql`
  *   },
  * });
  */
-export function useDocumentQuery(baseOptions: Apollo.QueryHookOptions<DocumentQuery, DocumentQueryVariables>) {
+export function useDocumentQuery(baseOptions: ApolloReactHooks.QueryHookOptions<DocumentQuery, DocumentQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DocumentQuery, DocumentQueryVariables>(DocumentDocument, options);
+        return ApolloReactHooks.useQuery<DocumentQuery, DocumentQueryVariables>(DocumentDocument, options);
       }
-export function useDocumentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DocumentQuery, DocumentQueryVariables>) {
+export function useDocumentLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<DocumentQuery, DocumentQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DocumentQuery, DocumentQueryVariables>(DocumentDocument, options);
+          return ApolloReactHooks.useLazyQuery<DocumentQuery, DocumentQueryVariables>(DocumentDocument, options);
         }
 export type DocumentQueryHookResult = ReturnType<typeof useDocumentQuery>;
 export type DocumentLazyQueryHookResult = ReturnType<typeof useDocumentLazyQuery>;
@@ -239,9 +240,9 @@ export type UploadDocumentMutationFn = Apollo.MutationFunction<UploadDocumentMut
  *   },
  * });
  */
-export function useUploadDocumentMutation(baseOptions?: Apollo.MutationHookOptions<UploadDocumentMutation, UploadDocumentMutationVariables>) {
+export function useUploadDocumentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UploadDocumentMutation, UploadDocumentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UploadDocumentMutation, UploadDocumentMutationVariables>(UploadDocumentDocument, options);
+        return ApolloReactHooks.useMutation<UploadDocumentMutation, UploadDocumentMutationVariables>(UploadDocumentDocument, options);
       }
 export type UploadDocumentMutationHookResult = ReturnType<typeof useUploadDocumentMutation>;
 export type UploadDocumentMutationResult = Apollo.MutationResult<UploadDocumentMutation>;
@@ -274,9 +275,9 @@ export type UpdateDocumentMutationFn = Apollo.MutationFunction<UpdateDocumentMut
  *   },
  * });
  */
-export function useUpdateDocumentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDocumentMutation, UpdateDocumentMutationVariables>) {
+export function useUpdateDocumentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateDocumentMutation, UpdateDocumentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateDocumentMutation, UpdateDocumentMutationVariables>(UpdateDocumentDocument, options);
+        return ApolloReactHooks.useMutation<UpdateDocumentMutation, UpdateDocumentMutationVariables>(UpdateDocumentDocument, options);
       }
 export type UpdateDocumentMutationHookResult = ReturnType<typeof useUpdateDocumentMutation>;
 export type UpdateDocumentMutationResult = Apollo.MutationResult<UpdateDocumentMutation>;
@@ -305,9 +306,9 @@ export type DeleteDocumentMutationFn = Apollo.MutationFunction<DeleteDocumentMut
  *   },
  * });
  */
-export function useDeleteDocumentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteDocumentMutation, DeleteDocumentMutationVariables>) {
+export function useDeleteDocumentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteDocumentMutation, DeleteDocumentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteDocumentMutation, DeleteDocumentMutationVariables>(DeleteDocumentDocument, options);
+        return ApolloReactHooks.useMutation<DeleteDocumentMutation, DeleteDocumentMutationVariables>(DeleteDocumentDocument, options);
       }
 export type DeleteDocumentMutationHookResult = ReturnType<typeof useDeleteDocumentMutation>;
 export type DeleteDocumentMutationResult = Apollo.MutationResult<DeleteDocumentMutation>;

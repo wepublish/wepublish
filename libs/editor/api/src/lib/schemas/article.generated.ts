@@ -28,6 +28,7 @@ import { FullTrackingPixelFragmentDoc, FullTrackingPixelMethodFragmentDoc } from
 import { PageWithoutBlocksFragmentDoc, FullPageRevisionWithoutBlocksFragmentDoc } from './page-without-blocks.generated';
 import { NestedBlockTemplateBlockFragmentDoc } from './block-template.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullArticleRevisionFragment = (
   { __typename?: 'ArticleRevision', blocks: Array<(
@@ -416,13 +417,13 @@ ${FullTrackingPixelMethodFragmentDoc}`;
  *   },
  * });
  */
-export function useArticleListQuery(baseOptions?: Apollo.QueryHookOptions<ArticleListQuery, ArticleListQueryVariables>) {
+export function useArticleListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ArticleListQuery, ArticleListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ArticleListQuery, ArticleListQueryVariables>(ArticleListDocument, options);
+        return ApolloReactHooks.useQuery<ArticleListQuery, ArticleListQueryVariables>(ArticleListDocument, options);
       }
-export function useArticleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleListQuery, ArticleListQueryVariables>) {
+export function useArticleListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ArticleListQuery, ArticleListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ArticleListQuery, ArticleListQueryVariables>(ArticleListDocument, options);
+          return ApolloReactHooks.useLazyQuery<ArticleListQuery, ArticleListQueryVariables>(ArticleListDocument, options);
         }
 export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
@@ -522,9 +523,9 @@ export type CreateArticleMutationFn = Apollo.MutationFunction<CreateArticleMutat
  *   },
  * });
  */
-export function useCreateArticleMutation(baseOptions?: Apollo.MutationHookOptions<CreateArticleMutation, CreateArticleMutationVariables>) {
+export function useCreateArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateArticleMutation, CreateArticleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateArticleMutation, CreateArticleMutationVariables>(CreateArticleDocument, options);
+        return ApolloReactHooks.useMutation<CreateArticleMutation, CreateArticleMutationVariables>(CreateArticleDocument, options);
       }
 export type CreateArticleMutationHookResult = ReturnType<typeof useCreateArticleMutation>;
 export type CreateArticleMutationResult = Apollo.MutationResult<CreateArticleMutation>;
@@ -624,9 +625,9 @@ export type UpdateArticleMutationFn = Apollo.MutationFunction<UpdateArticleMutat
  *   },
  * });
  */
-export function useUpdateArticleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateArticleMutation, UpdateArticleMutationVariables>) {
+export function useUpdateArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateArticleMutation, UpdateArticleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateArticleMutation, UpdateArticleMutationVariables>(UpdateArticleDocument, options);
+        return ApolloReactHooks.useMutation<UpdateArticleMutation, UpdateArticleMutationVariables>(UpdateArticleDocument, options);
       }
 export type UpdateArticleMutationHookResult = ReturnType<typeof useUpdateArticleMutation>;
 export type UpdateArticleMutationResult = Apollo.MutationResult<UpdateArticleMutation>;
@@ -681,9 +682,9 @@ export type PublishArticleMutationFn = Apollo.MutationFunction<PublishArticleMut
  *   },
  * });
  */
-export function usePublishArticleMutation(baseOptions?: Apollo.MutationHookOptions<PublishArticleMutation, PublishArticleMutationVariables>) {
+export function usePublishArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PublishArticleMutation, PublishArticleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<PublishArticleMutation, PublishArticleMutationVariables>(PublishArticleDocument, options);
+        return ApolloReactHooks.useMutation<PublishArticleMutation, PublishArticleMutationVariables>(PublishArticleDocument, options);
       }
 export type PublishArticleMutationHookResult = ReturnType<typeof usePublishArticleMutation>;
 export type PublishArticleMutationResult = Apollo.MutationResult<PublishArticleMutation>;
@@ -737,9 +738,9 @@ export type UnpublishArticleMutationFn = Apollo.MutationFunction<UnpublishArticl
  *   },
  * });
  */
-export function useUnpublishArticleMutation(baseOptions?: Apollo.MutationHookOptions<UnpublishArticleMutation, UnpublishArticleMutationVariables>) {
+export function useUnpublishArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UnpublishArticleMutation, UnpublishArticleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UnpublishArticleMutation, UnpublishArticleMutationVariables>(UnpublishArticleDocument, options);
+        return ApolloReactHooks.useMutation<UnpublishArticleMutation, UnpublishArticleMutationVariables>(UnpublishArticleDocument, options);
       }
 export type UnpublishArticleMutationHookResult = ReturnType<typeof useUnpublishArticleMutation>;
 export type UnpublishArticleMutationResult = Apollo.MutationResult<UnpublishArticleMutation>;
@@ -768,9 +769,9 @@ export type DeleteArticleMutationFn = Apollo.MutationFunction<DeleteArticleMutat
  *   },
  * });
  */
-export function useDeleteArticleMutation(baseOptions?: Apollo.MutationHookOptions<DeleteArticleMutation, DeleteArticleMutationVariables>) {
+export function useDeleteArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteArticleMutation, DeleteArticleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteArticleMutation, DeleteArticleMutationVariables>(DeleteArticleDocument, options);
+        return ApolloReactHooks.useMutation<DeleteArticleMutation, DeleteArticleMutationVariables>(DeleteArticleDocument, options);
       }
 export type DeleteArticleMutationHookResult = ReturnType<typeof useDeleteArticleMutation>;
 export type DeleteArticleMutationResult = Apollo.MutationResult<DeleteArticleMutation>;
@@ -820,13 +821,13 @@ export const ArticleRevisionListDocument = gql`
  *   },
  * });
  */
-export function useArticleRevisionListQuery(baseOptions: Apollo.QueryHookOptions<ArticleRevisionListQuery, ArticleRevisionListQueryVariables>) {
+export function useArticleRevisionListQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ArticleRevisionListQuery, ArticleRevisionListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ArticleRevisionListQuery, ArticleRevisionListQueryVariables>(ArticleRevisionListDocument, options);
+        return ApolloReactHooks.useQuery<ArticleRevisionListQuery, ArticleRevisionListQueryVariables>(ArticleRevisionListDocument, options);
       }
-export function useArticleRevisionListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleRevisionListQuery, ArticleRevisionListQueryVariables>) {
+export function useArticleRevisionListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ArticleRevisionListQuery, ArticleRevisionListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ArticleRevisionListQuery, ArticleRevisionListQueryVariables>(ArticleRevisionListDocument, options);
+          return ApolloReactHooks.useLazyQuery<ArticleRevisionListQuery, ArticleRevisionListQueryVariables>(ArticleRevisionListDocument, options);
         }
 export type ArticleRevisionListQueryHookResult = ReturnType<typeof useArticleRevisionListQuery>;
 export type ArticleRevisionListLazyQueryHookResult = ReturnType<typeof useArticleRevisionListLazyQuery>;
@@ -877,13 +878,13 @@ ${NestedBlockTemplateBlockFragmentDoc}`;
  *   },
  * });
  */
-export function useArticleRevisionPreviewQuery(baseOptions: Apollo.QueryHookOptions<ArticleRevisionPreviewQuery, ArticleRevisionPreviewQueryVariables>) {
+export function useArticleRevisionPreviewQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ArticleRevisionPreviewQuery, ArticleRevisionPreviewQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ArticleRevisionPreviewQuery, ArticleRevisionPreviewQueryVariables>(ArticleRevisionPreviewDocument, options);
+        return ApolloReactHooks.useQuery<ArticleRevisionPreviewQuery, ArticleRevisionPreviewQueryVariables>(ArticleRevisionPreviewDocument, options);
       }
-export function useArticleRevisionPreviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleRevisionPreviewQuery, ArticleRevisionPreviewQueryVariables>) {
+export function useArticleRevisionPreviewLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ArticleRevisionPreviewQuery, ArticleRevisionPreviewQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ArticleRevisionPreviewQuery, ArticleRevisionPreviewQueryVariables>(ArticleRevisionPreviewDocument, options);
+          return ApolloReactHooks.useLazyQuery<ArticleRevisionPreviewQuery, ArticleRevisionPreviewQueryVariables>(ArticleRevisionPreviewDocument, options);
         }
 export type ArticleRevisionPreviewQueryHookResult = ReturnType<typeof useArticleRevisionPreviewQuery>;
 export type ArticleRevisionPreviewLazyQueryHookResult = ReturnType<typeof useArticleRevisionPreviewLazyQuery>;
@@ -938,9 +939,9 @@ export type RestoreArticleRevisionMutationFn = Apollo.MutationFunction<RestoreAr
  *   },
  * });
  */
-export function useRestoreArticleRevisionMutation(baseOptions?: Apollo.MutationHookOptions<RestoreArticleRevisionMutation, RestoreArticleRevisionMutationVariables>) {
+export function useRestoreArticleRevisionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RestoreArticleRevisionMutation, RestoreArticleRevisionMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RestoreArticleRevisionMutation, RestoreArticleRevisionMutationVariables>(RestoreArticleRevisionDocument, options);
+        return ApolloReactHooks.useMutation<RestoreArticleRevisionMutation, RestoreArticleRevisionMutationVariables>(RestoreArticleRevisionDocument, options);
       }
 export type RestoreArticleRevisionMutationHookResult = ReturnType<typeof useRestoreArticleRevisionMutation>;
 export type RestoreArticleRevisionMutationResult = Apollo.MutationResult<RestoreArticleRevisionMutation>;
@@ -994,9 +995,9 @@ export type DiscardArticleDraftMutationFn = Apollo.MutationFunction<DiscardArtic
  *   },
  * });
  */
-export function useDiscardArticleDraftMutation(baseOptions?: Apollo.MutationHookOptions<DiscardArticleDraftMutation, DiscardArticleDraftMutationVariables>) {
+export function useDiscardArticleDraftMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DiscardArticleDraftMutation, DiscardArticleDraftMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DiscardArticleDraftMutation, DiscardArticleDraftMutationVariables>(DiscardArticleDraftDocument, options);
+        return ApolloReactHooks.useMutation<DiscardArticleDraftMutation, DiscardArticleDraftMutationVariables>(DiscardArticleDraftDocument, options);
       }
 export type DiscardArticleDraftMutationHookResult = ReturnType<typeof useDiscardArticleDraftMutation>;
 export type DiscardArticleDraftMutationResult = Apollo.MutationResult<DiscardArticleDraftMutation>;
@@ -1050,9 +1051,9 @@ export type DuplicateArticleMutationFn = Apollo.MutationFunction<DuplicateArticl
  *   },
  * });
  */
-export function useDuplicateArticleMutation(baseOptions?: Apollo.MutationHookOptions<DuplicateArticleMutation, DuplicateArticleMutationVariables>) {
+export function useDuplicateArticleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DuplicateArticleMutation, DuplicateArticleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DuplicateArticleMutation, DuplicateArticleMutationVariables>(DuplicateArticleDocument, options);
+        return ApolloReactHooks.useMutation<DuplicateArticleMutation, DuplicateArticleMutationVariables>(DuplicateArticleDocument, options);
       }
 export type DuplicateArticleMutationHookResult = ReturnType<typeof useDuplicateArticleMutation>;
 export type DuplicateArticleMutationResult = Apollo.MutationResult<DuplicateArticleMutation>;
@@ -1104,13 +1105,13 @@ ${NestedBlockTemplateBlockFragmentDoc}`;
  *   },
  * });
  */
-export function useArticleQuery(baseOptions: Apollo.QueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
+export function useArticleQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
+        return ApolloReactHooks.useQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
       }
-export function useArticleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
+export function useArticleLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
+          return ApolloReactHooks.useLazyQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
         }
 export type ArticleQueryHookResult = ReturnType<typeof useArticleQuery>;
 export type ArticleLazyQueryHookResult = ReturnType<typeof useArticleLazyQuery>;

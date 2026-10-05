@@ -26,6 +26,7 @@ import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.ge
 import { FullTrackingPixelFragmentDoc, FullTrackingPixelMethodFragmentDoc } from './tracking-pixel.generated';
 import { PageWithoutBlocksFragmentDoc, FullPageRevisionWithoutBlocksFragmentDoc } from './page-without-blocks.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type BlockTemplateContent_BildwurfAdBlock_Fragment = (
   { __typename?: 'BildwurfAdBlock' }
@@ -755,13 +756,13 @@ ${NestedBlockTemplateBlockFragmentDoc}`;
  *   },
  * });
  */
-export function useBlockTemplateListQuery(baseOptions?: Apollo.QueryHookOptions<BlockTemplateListQuery, BlockTemplateListQueryVariables>) {
+export function useBlockTemplateListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<BlockTemplateListQuery, BlockTemplateListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<BlockTemplateListQuery, BlockTemplateListQueryVariables>(BlockTemplateListDocument, options);
+        return ApolloReactHooks.useQuery<BlockTemplateListQuery, BlockTemplateListQueryVariables>(BlockTemplateListDocument, options);
       }
-export function useBlockTemplateListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BlockTemplateListQuery, BlockTemplateListQueryVariables>) {
+export function useBlockTemplateListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<BlockTemplateListQuery, BlockTemplateListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<BlockTemplateListQuery, BlockTemplateListQueryVariables>(BlockTemplateListDocument, options);
+          return ApolloReactHooks.useLazyQuery<BlockTemplateListQuery, BlockTemplateListQueryVariables>(BlockTemplateListDocument, options);
         }
 export type BlockTemplateListQueryHookResult = ReturnType<typeof useBlockTemplateListQuery>;
 export type BlockTemplateListLazyQueryHookResult = ReturnType<typeof useBlockTemplateListLazyQuery>;
@@ -812,13 +813,13 @@ ${NestedBlockTemplateBlockFragmentDoc}`;
  *   },
  * });
  */
-export function useBlockTemplateQuery(baseOptions: Apollo.QueryHookOptions<BlockTemplateQuery, BlockTemplateQueryVariables>) {
+export function useBlockTemplateQuery(baseOptions: ApolloReactHooks.QueryHookOptions<BlockTemplateQuery, BlockTemplateQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<BlockTemplateQuery, BlockTemplateQueryVariables>(BlockTemplateDocument, options);
+        return ApolloReactHooks.useQuery<BlockTemplateQuery, BlockTemplateQueryVariables>(BlockTemplateDocument, options);
       }
-export function useBlockTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BlockTemplateQuery, BlockTemplateQueryVariables>) {
+export function useBlockTemplateLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<BlockTemplateQuery, BlockTemplateQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<BlockTemplateQuery, BlockTemplateQueryVariables>(BlockTemplateDocument, options);
+          return ApolloReactHooks.useLazyQuery<BlockTemplateQuery, BlockTemplateQueryVariables>(BlockTemplateDocument, options);
         }
 export type BlockTemplateQueryHookResult = ReturnType<typeof useBlockTemplateQuery>;
 export type BlockTemplateLazyQueryHookResult = ReturnType<typeof useBlockTemplateLazyQuery>;
@@ -872,9 +873,9 @@ export type CreateBlockTemplateMutationFn = Apollo.MutationFunction<CreateBlockT
  *   },
  * });
  */
-export function useCreateBlockTemplateMutation(baseOptions?: Apollo.MutationHookOptions<CreateBlockTemplateMutation, CreateBlockTemplateMutationVariables>) {
+export function useCreateBlockTemplateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateBlockTemplateMutation, CreateBlockTemplateMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateBlockTemplateMutation, CreateBlockTemplateMutationVariables>(CreateBlockTemplateDocument, options);
+        return ApolloReactHooks.useMutation<CreateBlockTemplateMutation, CreateBlockTemplateMutationVariables>(CreateBlockTemplateDocument, options);
       }
 export type CreateBlockTemplateMutationHookResult = ReturnType<typeof useCreateBlockTemplateMutation>;
 export type CreateBlockTemplateMutationResult = Apollo.MutationResult<CreateBlockTemplateMutation>;
@@ -929,9 +930,9 @@ export type UpdateBlockTemplateMutationFn = Apollo.MutationFunction<UpdateBlockT
  *   },
  * });
  */
-export function useUpdateBlockTemplateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBlockTemplateMutation, UpdateBlockTemplateMutationVariables>) {
+export function useUpdateBlockTemplateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateBlockTemplateMutation, UpdateBlockTemplateMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateBlockTemplateMutation, UpdateBlockTemplateMutationVariables>(UpdateBlockTemplateDocument, options);
+        return ApolloReactHooks.useMutation<UpdateBlockTemplateMutation, UpdateBlockTemplateMutationVariables>(UpdateBlockTemplateDocument, options);
       }
 export type UpdateBlockTemplateMutationHookResult = ReturnType<typeof useUpdateBlockTemplateMutation>;
 export type UpdateBlockTemplateMutationResult = Apollo.MutationResult<UpdateBlockTemplateMutation>;
@@ -984,9 +985,9 @@ export type DeleteBlockTemplateMutationFn = Apollo.MutationFunction<DeleteBlockT
  *   },
  * });
  */
-export function useDeleteBlockTemplateMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBlockTemplateMutation, DeleteBlockTemplateMutationVariables>) {
+export function useDeleteBlockTemplateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteBlockTemplateMutation, DeleteBlockTemplateMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteBlockTemplateMutation, DeleteBlockTemplateMutationVariables>(DeleteBlockTemplateDocument, options);
+        return ApolloReactHooks.useMutation<DeleteBlockTemplateMutation, DeleteBlockTemplateMutationVariables>(DeleteBlockTemplateDocument, options);
       }
 export type DeleteBlockTemplateMutationHookResult = ReturnType<typeof useDeleteBlockTemplateMutation>;
 export type DeleteBlockTemplateMutationResult = Apollo.MutationResult<DeleteBlockTemplateMutation>;

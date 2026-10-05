@@ -18,6 +18,7 @@ import { FullPropertyFragmentDoc } from './properties.generated';
 import { SlimPaywallFragmentDoc, FullPaywallFragmentDoc } from './paywall.generated';
 import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type HotAndTrendingQueryVariables = Types.Exact<{
   take?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -66,13 +67,13 @@ ${FullPeerImageFragmentDoc}`;
  *   },
  * });
  */
-export function useHotAndTrendingQuery(baseOptions?: Apollo.QueryHookOptions<HotAndTrendingQuery, HotAndTrendingQueryVariables>) {
+export function useHotAndTrendingQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<HotAndTrendingQuery, HotAndTrendingQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HotAndTrendingQuery, HotAndTrendingQueryVariables>(HotAndTrendingDocument, options);
+        return ApolloReactHooks.useQuery<HotAndTrendingQuery, HotAndTrendingQueryVariables>(HotAndTrendingDocument, options);
       }
-export function useHotAndTrendingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HotAndTrendingQuery, HotAndTrendingQueryVariables>) {
+export function useHotAndTrendingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HotAndTrendingQuery, HotAndTrendingQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HotAndTrendingQuery, HotAndTrendingQueryVariables>(HotAndTrendingDocument, options);
+          return ApolloReactHooks.useLazyQuery<HotAndTrendingQuery, HotAndTrendingQueryVariables>(HotAndTrendingDocument, options);
         }
 export type HotAndTrendingQueryHookResult = ReturnType<typeof useHotAndTrendingQuery>;
 export type HotAndTrendingLazyQueryHookResult = ReturnType<typeof useHotAndTrendingLazyQuery>;

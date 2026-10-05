@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullMailLogFragment = { __typename?: 'MailLogModel', id: string, createdAt: string, sentDate: string, state: Types.MailLogState, type?: Types.MailLogType | null, subject?: string | null, error?: string | null, mailProviderID: string, mailSendJobId?: string | null, recipient: { __typename?: 'MailLogRecipient', id: string, email: string, name: string, firstName?: string | null }, mailTemplate: { __typename?: 'MailLogTemplate', id: string, name: string } };
 
@@ -76,9 +77,9 @@ export type SyncMailLogStatesMutationFn = Apollo.MutationFunction<SyncMailLogSta
  *   },
  * });
  */
-export function useSyncMailLogStatesMutation(baseOptions?: Apollo.MutationHookOptions<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>) {
+export function useSyncMailLogStatesMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>(SyncMailLogStatesDocument, options);
+        return ApolloReactHooks.useMutation<SyncMailLogStatesMutation, SyncMailLogStatesMutationVariables>(SyncMailLogStatesDocument, options);
       }
 export type SyncMailLogStatesMutationHookResult = ReturnType<typeof useSyncMailLogStatesMutation>;
 export type SyncMailLogStatesMutationResult = Apollo.MutationResult<SyncMailLogStatesMutation>;
@@ -118,13 +119,13 @@ export const MailLogsDocument = gql`
  *   },
  * });
  */
-export function useMailLogsQuery(baseOptions?: Apollo.QueryHookOptions<MailLogsQuery, MailLogsQueryVariables>) {
+export function useMailLogsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MailLogsQuery, MailLogsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailLogsQuery, MailLogsQueryVariables>(MailLogsDocument, options);
+        return ApolloReactHooks.useQuery<MailLogsQuery, MailLogsQueryVariables>(MailLogsDocument, options);
       }
-export function useMailLogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailLogsQuery, MailLogsQueryVariables>) {
+export function useMailLogsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailLogsQuery, MailLogsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailLogsQuery, MailLogsQueryVariables>(MailLogsDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailLogsQuery, MailLogsQueryVariables>(MailLogsDocument, options);
         }
 export type MailLogsQueryHookResult = ReturnType<typeof useMailLogsQuery>;
 export type MailLogsLazyQueryHookResult = ReturnType<typeof useMailLogsLazyQuery>;

@@ -37,6 +37,8 @@ generates:
       - typescript-react-apollo
     config:
       reactApolloVersion: 3
+      # Apollo Client 4 moved the React hooks out of the root entrypoint.
+      apolloReactHooksImportFrom: '@apollo/client/react'
       inlineFragmentTypes: combine
       dedupeFragments: true
       scalars:
@@ -88,6 +90,8 @@ generates:
       - typescript-react-apollo
     config:
       reactApolloVersion: 3
+      # Apollo Client 4 moved the React hooks out of the root entrypoint.
+      apolloReactHooksImportFrom: '@apollo/client/react'
       inlineFragmentTypes: combine
       dedupeFragments: true
       scalars:

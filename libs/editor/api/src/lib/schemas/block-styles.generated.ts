@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullBlockStyleFragment = { __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<Types.EditorBlockType> };
 
@@ -80,13 +81,13 @@ export const BlockStylesDocument = gql`
  *   },
  * });
  */
-export function useBlockStylesQuery(baseOptions?: Apollo.QueryHookOptions<BlockStylesQuery, BlockStylesQueryVariables>) {
+export function useBlockStylesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<BlockStylesQuery, BlockStylesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<BlockStylesQuery, BlockStylesQueryVariables>(BlockStylesDocument, options);
+        return ApolloReactHooks.useQuery<BlockStylesQuery, BlockStylesQueryVariables>(BlockStylesDocument, options);
       }
-export function useBlockStylesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BlockStylesQuery, BlockStylesQueryVariables>) {
+export function useBlockStylesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<BlockStylesQuery, BlockStylesQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<BlockStylesQuery, BlockStylesQueryVariables>(BlockStylesDocument, options);
+          return ApolloReactHooks.useLazyQuery<BlockStylesQuery, BlockStylesQueryVariables>(BlockStylesDocument, options);
         }
 export type BlockStylesQueryHookResult = ReturnType<typeof useBlockStylesQuery>;
 export type BlockStylesLazyQueryHookResult = ReturnType<typeof useBlockStylesLazyQuery>;
@@ -118,9 +119,9 @@ export type CreateBlockStyleMutationFn = Apollo.MutationFunction<CreateBlockStyl
  *   },
  * });
  */
-export function useCreateBlockStyleMutation(baseOptions?: Apollo.MutationHookOptions<CreateBlockStyleMutation, CreateBlockStyleMutationVariables>) {
+export function useCreateBlockStyleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateBlockStyleMutation, CreateBlockStyleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateBlockStyleMutation, CreateBlockStyleMutationVariables>(CreateBlockStyleDocument, options);
+        return ApolloReactHooks.useMutation<CreateBlockStyleMutation, CreateBlockStyleMutationVariables>(CreateBlockStyleDocument, options);
       }
 export type CreateBlockStyleMutationHookResult = ReturnType<typeof useCreateBlockStyleMutation>;
 export type CreateBlockStyleMutationResult = Apollo.MutationResult<CreateBlockStyleMutation>;
@@ -153,9 +154,9 @@ export type UpdateBlockStyleMutationFn = Apollo.MutationFunction<UpdateBlockStyl
  *   },
  * });
  */
-export function useUpdateBlockStyleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBlockStyleMutation, UpdateBlockStyleMutationVariables>) {
+export function useUpdateBlockStyleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateBlockStyleMutation, UpdateBlockStyleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateBlockStyleMutation, UpdateBlockStyleMutationVariables>(UpdateBlockStyleDocument, options);
+        return ApolloReactHooks.useMutation<UpdateBlockStyleMutation, UpdateBlockStyleMutationVariables>(UpdateBlockStyleDocument, options);
       }
 export type UpdateBlockStyleMutationHookResult = ReturnType<typeof useUpdateBlockStyleMutation>;
 export type UpdateBlockStyleMutationResult = Apollo.MutationResult<UpdateBlockStyleMutation>;
@@ -186,9 +187,9 @@ export type DeleteBlockStyleMutationFn = Apollo.MutationFunction<DeleteBlockStyl
  *   },
  * });
  */
-export function useDeleteBlockStyleMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBlockStyleMutation, DeleteBlockStyleMutationVariables>) {
+export function useDeleteBlockStyleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteBlockStyleMutation, DeleteBlockStyleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteBlockStyleMutation, DeleteBlockStyleMutationVariables>(DeleteBlockStyleDocument, options);
+        return ApolloReactHooks.useMutation<DeleteBlockStyleMutation, DeleteBlockStyleMutationVariables>(DeleteBlockStyleDocument, options);
       }
 export type DeleteBlockStyleMutationHookResult = ReturnType<typeof useDeleteBlockStyleMutation>;
 export type DeleteBlockStyleMutationResult = Apollo.MutationResult<DeleteBlockStyleMutation>;

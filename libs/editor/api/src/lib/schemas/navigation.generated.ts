@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type SlimNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string };
 
@@ -115,13 +116,13 @@ export const NavigationListDocument = gql`
  *   },
  * });
  */
-export function useNavigationListQuery(baseOptions?: Apollo.QueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
+export function useNavigationListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
+        return ApolloReactHooks.useQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
       }
-export function useNavigationListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
+export function useNavigationListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
+          return ApolloReactHooks.useLazyQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
         }
 export type NavigationListQueryHookResult = ReturnType<typeof useNavigationListQuery>;
 export type NavigationListLazyQueryHookResult = ReturnType<typeof useNavigationListLazyQuery>;
@@ -151,13 +152,13 @@ ${SlimNavigationFragmentDoc}`;
  *   },
  * });
  */
-export function useNavigationQuery(baseOptions: Apollo.QueryHookOptions<NavigationQuery, NavigationQueryVariables>) {
+export function useNavigationQuery(baseOptions: ApolloReactHooks.QueryHookOptions<NavigationQuery, NavigationQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, options);
+        return ApolloReactHooks.useQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, options);
       }
-export function useNavigationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NavigationQuery, NavigationQueryVariables>) {
+export function useNavigationLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<NavigationQuery, NavigationQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, options);
+          return ApolloReactHooks.useLazyQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, options);
         }
 export type NavigationQueryHookResult = ReturnType<typeof useNavigationQuery>;
 export type NavigationLazyQueryHookResult = ReturnType<typeof useNavigationLazyQuery>;
@@ -191,9 +192,9 @@ export type CreateNavigationMutationFn = Apollo.MutationFunction<CreateNavigatio
  *   },
  * });
  */
-export function useCreateNavigationMutation(baseOptions?: Apollo.MutationHookOptions<CreateNavigationMutation, CreateNavigationMutationVariables>) {
+export function useCreateNavigationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateNavigationMutation, CreateNavigationMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateNavigationMutation, CreateNavigationMutationVariables>(CreateNavigationDocument, options);
+        return ApolloReactHooks.useMutation<CreateNavigationMutation, CreateNavigationMutationVariables>(CreateNavigationDocument, options);
       }
 export type CreateNavigationMutationHookResult = ReturnType<typeof useCreateNavigationMutation>;
 export type CreateNavigationMutationResult = Apollo.MutationResult<CreateNavigationMutation>;
@@ -228,9 +229,9 @@ export type UpdateNavigationMutationFn = Apollo.MutationFunction<UpdateNavigatio
  *   },
  * });
  */
-export function useUpdateNavigationMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>) {
+export function useUpdateNavigationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateNavigationMutation, UpdateNavigationMutationVariables>(UpdateNavigationDocument, options);
+        return ApolloReactHooks.useMutation<UpdateNavigationMutation, UpdateNavigationMutationVariables>(UpdateNavigationDocument, options);
       }
 export type UpdateNavigationMutationHookResult = ReturnType<typeof useUpdateNavigationMutation>;
 export type UpdateNavigationMutationResult = Apollo.MutationResult<UpdateNavigationMutation>;
@@ -262,9 +263,9 @@ export type DeleteNavigationMutationFn = Apollo.MutationFunction<DeleteNavigatio
  *   },
  * });
  */
-export function useDeleteNavigationMutation(baseOptions?: Apollo.MutationHookOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>) {
+export function useDeleteNavigationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteNavigationMutation, DeleteNavigationMutationVariables>(DeleteNavigationDocument, options);
+        return ApolloReactHooks.useMutation<DeleteNavigationMutation, DeleteNavigationMutationVariables>(DeleteNavigationDocument, options);
       }
 export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavigationMutation>;
 export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;

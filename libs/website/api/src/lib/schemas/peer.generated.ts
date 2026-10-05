@@ -6,6 +6,7 @@ import { FullImageFragment, FullImageUrLsFragment, ImageUrLsFragment, SquareImag
 import { gql } from '@apollo/client';
 import { FullImageFragmentDoc, FullImageUrLsFragmentDoc, ImageUrLsFragmentDoc, SquareImageUrLsFragmentDoc, SlimImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText?: RichtextJSONDocument | null, callToActionURL: string, callToActionImageURL?: string | null, logo?: (
     { __typename?: 'Image' }
@@ -137,13 +138,13 @@ ${SquareImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function usePeerProfileQuery(baseOptions?: Apollo.QueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
+export function usePeerProfileQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
+        return ApolloReactHooks.useQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
       }
-export function usePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
+export function usePeerProfileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
+          return ApolloReactHooks.useLazyQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
         }
 export type PeerProfileQueryHookResult = ReturnType<typeof usePeerProfileQuery>;
 export type PeerProfileLazyQueryHookResult = ReturnType<typeof usePeerProfileLazyQuery>;
@@ -175,13 +176,13 @@ ${FullPeerImageFragmentDoc}`;
  *   },
  * });
  */
-export function usePeerQuery(baseOptions?: Apollo.QueryHookOptions<PeerQuery, PeerQueryVariables>) {
+export function usePeerQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PeerQuery, PeerQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
+        return ApolloReactHooks.useQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
       }
-export function usePeerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerQuery, PeerQueryVariables>) {
+export function usePeerLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PeerQuery, PeerQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
+          return ApolloReactHooks.useLazyQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
         }
 export type PeerQueryHookResult = ReturnType<typeof usePeerQuery>;
 export type PeerLazyQueryHookResult = ReturnType<typeof usePeerLazyQuery>;

@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullSettingFragment = { __typename?: 'Setting', id: string, name: Types.SettingName, value?: any | null };
 
@@ -55,13 +56,13 @@ export const SettingListDocument = gql`
  *   },
  * });
  */
-export function useSettingListQuery(baseOptions?: Apollo.QueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
+export function useSettingListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
+        return ApolloReactHooks.useQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
       }
-export function useSettingListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
+export function useSettingListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
+          return ApolloReactHooks.useLazyQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
         }
 export type SettingListQueryHookResult = ReturnType<typeof useSettingListQuery>;
 export type SettingListLazyQueryHookResult = ReturnType<typeof useSettingListLazyQuery>;
@@ -90,13 +91,13 @@ export const SettingDocument = gql`
  *   },
  * });
  */
-export function useSettingQuery(baseOptions: Apollo.QueryHookOptions<SettingQuery, SettingQueryVariables>) {
+export function useSettingQuery(baseOptions: ApolloReactHooks.QueryHookOptions<SettingQuery, SettingQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options);
+        return ApolloReactHooks.useQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options);
       }
-export function useSettingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingQuery, SettingQueryVariables>) {
+export function useSettingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SettingQuery, SettingQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options);
+          return ApolloReactHooks.useLazyQuery<SettingQuery, SettingQueryVariables>(SettingDocument, options);
         }
 export type SettingQueryHookResult = ReturnType<typeof useSettingQuery>;
 export type SettingLazyQueryHookResult = ReturnType<typeof useSettingLazyQuery>;

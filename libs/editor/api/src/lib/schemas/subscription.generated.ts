@@ -10,6 +10,7 @@ import { FullMemberPlanFragmentDoc, FullAvailablePaymentMethodFragmentDoc } from
 import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import { FullPaymentMethodFragmentDoc, FullPaymentProviderFragmentDoc } from './paymentMethod.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullSubscriptionFragment = { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, confirmed: boolean, paymentPeriodicity: Types.PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Types.Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: (
     { __typename?: 'MemberPlan' }
@@ -287,13 +288,13 @@ ${DeactivationFragmentDoc}`;
  *   },
  * });
  */
-export function useSubscriptionListQuery(baseOptions?: Apollo.QueryHookOptions<SubscriptionListQuery, SubscriptionListQueryVariables>) {
+export function useSubscriptionListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SubscriptionListQuery, SubscriptionListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SubscriptionListQuery, SubscriptionListQueryVariables>(SubscriptionListDocument, options);
+        return ApolloReactHooks.useQuery<SubscriptionListQuery, SubscriptionListQueryVariables>(SubscriptionListDocument, options);
       }
-export function useSubscriptionListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SubscriptionListQuery, SubscriptionListQueryVariables>) {
+export function useSubscriptionListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SubscriptionListQuery, SubscriptionListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SubscriptionListQuery, SubscriptionListQueryVariables>(SubscriptionListDocument, options);
+          return ApolloReactHooks.useLazyQuery<SubscriptionListQuery, SubscriptionListQueryVariables>(SubscriptionListDocument, options);
         }
 export type SubscriptionListQueryHookResult = ReturnType<typeof useSubscriptionListQuery>;
 export type SubscriptionListLazyQueryHookResult = ReturnType<typeof useSubscriptionListLazyQuery>;
@@ -334,13 +335,13 @@ ${DeactivationFragmentDoc}`;
  *   },
  * });
  */
-export function useSubscriptionQuery(baseOptions: Apollo.QueryHookOptions<SubscriptionQuery, SubscriptionQueryVariables>) {
+export function useSubscriptionQuery(baseOptions: ApolloReactHooks.QueryHookOptions<SubscriptionQuery, SubscriptionQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SubscriptionQuery, SubscriptionQueryVariables>(SubscriptionDocument, options);
+        return ApolloReactHooks.useQuery<SubscriptionQuery, SubscriptionQueryVariables>(SubscriptionDocument, options);
       }
-export function useSubscriptionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SubscriptionQuery, SubscriptionQueryVariables>) {
+export function useSubscriptionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SubscriptionQuery, SubscriptionQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SubscriptionQuery, SubscriptionQueryVariables>(SubscriptionDocument, options);
+          return ApolloReactHooks.useLazyQuery<SubscriptionQuery, SubscriptionQueryVariables>(SubscriptionDocument, options);
         }
 export type SubscriptionQueryHookResult = ReturnType<typeof useSubscriptionQuery>;
 export type SubscriptionLazyQueryHookResult = ReturnType<typeof useSubscriptionLazyQuery>;
@@ -405,13 +406,13 @@ export const SubscriptionsAsCsvDocument = gql`
  *   },
  * });
  */
-export function useSubscriptionsAsCsvQuery(baseOptions?: Apollo.QueryHookOptions<SubscriptionsAsCsvQuery, SubscriptionsAsCsvQueryVariables>) {
+export function useSubscriptionsAsCsvQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SubscriptionsAsCsvQuery, SubscriptionsAsCsvQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SubscriptionsAsCsvQuery, SubscriptionsAsCsvQueryVariables>(SubscriptionsAsCsvDocument, options);
+        return ApolloReactHooks.useQuery<SubscriptionsAsCsvQuery, SubscriptionsAsCsvQueryVariables>(SubscriptionsAsCsvDocument, options);
       }
-export function useSubscriptionsAsCsvLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SubscriptionsAsCsvQuery, SubscriptionsAsCsvQueryVariables>) {
+export function useSubscriptionsAsCsvLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SubscriptionsAsCsvQuery, SubscriptionsAsCsvQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SubscriptionsAsCsvQuery, SubscriptionsAsCsvQueryVariables>(SubscriptionsAsCsvDocument, options);
+          return ApolloReactHooks.useLazyQuery<SubscriptionsAsCsvQuery, SubscriptionsAsCsvQueryVariables>(SubscriptionsAsCsvDocument, options);
         }
 export type SubscriptionsAsCsvQueryHookResult = ReturnType<typeof useSubscriptionsAsCsvQuery>;
 export type SubscriptionsAsCsvLazyQueryHookResult = ReturnType<typeof useSubscriptionsAsCsvLazyQuery>;
@@ -469,9 +470,9 @@ export type CreateSubscriptionMutationFn = Apollo.MutationFunction<CreateSubscri
  *   },
  * });
  */
-export function useCreateSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>) {
+export function useCreateSubscriptionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>(CreateSubscriptionDocument, options);
+        return ApolloReactHooks.useMutation<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>(CreateSubscriptionDocument, options);
       }
 export type CreateSubscriptionMutationHookResult = ReturnType<typeof useCreateSubscriptionMutation>;
 export type CreateSubscriptionMutationResult = Apollo.MutationResult<CreateSubscriptionMutation>;
@@ -531,9 +532,9 @@ export type UpdateSubscriptionMutationFn = Apollo.MutationFunction<UpdateSubscri
  *   },
  * });
  */
-export function useUpdateSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>) {
+export function useUpdateSubscriptionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>(UpdateSubscriptionDocument, options);
+        return ApolloReactHooks.useMutation<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>(UpdateSubscriptionDocument, options);
       }
 export type UpdateSubscriptionMutationHookResult = ReturnType<typeof useUpdateSubscriptionMutation>;
 export type UpdateSubscriptionMutationResult = Apollo.MutationResult<UpdateSubscriptionMutation>;
@@ -572,9 +573,9 @@ export type CancelSubscriptionMutationFn = Apollo.MutationFunction<CancelSubscri
  *   },
  * });
  */
-export function useCancelSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>) {
+export function useCancelSubscriptionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>(CancelSubscriptionDocument, options);
+        return ApolloReactHooks.useMutation<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>(CancelSubscriptionDocument, options);
       }
 export type CancelSubscriptionMutationHookResult = ReturnType<typeof useCancelSubscriptionMutation>;
 export type CancelSubscriptionMutationResult = Apollo.MutationResult<CancelSubscriptionMutation>;
@@ -612,9 +613,9 @@ export type DeleteSubscriptionMutationFn = Apollo.MutationFunction<DeleteSubscri
  *   },
  * });
  */
-export function useDeleteSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>) {
+export function useDeleteSubscriptionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>(DeleteSubscriptionDocument, options);
+        return ApolloReactHooks.useMutation<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>(DeleteSubscriptionDocument, options);
       }
 export type DeleteSubscriptionMutationHookResult = ReturnType<typeof useDeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubscriptionMutation>;
@@ -652,9 +653,9 @@ export type RenewSubscriptionMutationFn = Apollo.MutationFunction<RenewSubscript
  *   },
  * });
  */
-export function useRenewSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>) {
+export function useRenewSubscriptionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>(RenewSubscriptionDocument, options);
+        return ApolloReactHooks.useMutation<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>(RenewSubscriptionDocument, options);
       }
 export type RenewSubscriptionMutationHookResult = ReturnType<typeof useRenewSubscriptionMutation>;
 export type RenewSubscriptionMutationResult = Apollo.MutationResult<RenewSubscriptionMutation>;
@@ -693,13 +694,13 @@ ${DeactivationFragmentDoc}`;
  *   },
  * });
  */
-export function useUserSubscriptionListQuery(baseOptions: Apollo.QueryHookOptions<UserSubscriptionListQuery, UserSubscriptionListQueryVariables>) {
+export function useUserSubscriptionListQuery(baseOptions: ApolloReactHooks.QueryHookOptions<UserSubscriptionListQuery, UserSubscriptionListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserSubscriptionListQuery, UserSubscriptionListQueryVariables>(UserSubscriptionListDocument, options);
+        return ApolloReactHooks.useQuery<UserSubscriptionListQuery, UserSubscriptionListQueryVariables>(UserSubscriptionListDocument, options);
       }
-export function useUserSubscriptionListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserSubscriptionListQuery, UserSubscriptionListQueryVariables>) {
+export function useUserSubscriptionListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserSubscriptionListQuery, UserSubscriptionListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserSubscriptionListQuery, UserSubscriptionListQueryVariables>(UserSubscriptionListDocument, options);
+          return ApolloReactHooks.useLazyQuery<UserSubscriptionListQuery, UserSubscriptionListQueryVariables>(UserSubscriptionListDocument, options);
         }
 export type UserSubscriptionListQueryHookResult = ReturnType<typeof useUserSubscriptionListQuery>;
 export type UserSubscriptionListLazyQueryHookResult = ReturnType<typeof useUserSubscriptionListLazyQuery>;

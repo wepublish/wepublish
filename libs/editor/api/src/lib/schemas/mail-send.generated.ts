@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullMailSendJobFragment = { __typename?: 'MailSendJobModel', id: string, createdAt: string, modifiedAt: string, status: Types.MailSendJobState, audience: Types.MailSendAudience, totalCount: number, sentCount: number, failedCount: number, sendingCount: number, resumeCount: number, startedAt?: string | null, finishedAt?: string | null, heartbeatAt?: string | null, error?: string | null, mailTemplate?: { __typename?: 'MailLogTemplate', id: string, name: string } | null };
 
@@ -159,13 +160,13 @@ export const MailSendRecipientPreviewDocument = gql`
  *   },
  * });
  */
-export function useMailSendRecipientPreviewQuery(baseOptions: Apollo.QueryHookOptions<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>) {
+export function useMailSendRecipientPreviewQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>(MailSendRecipientPreviewDocument, options);
+        return ApolloReactHooks.useQuery<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>(MailSendRecipientPreviewDocument, options);
       }
-export function useMailSendRecipientPreviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>) {
+export function useMailSendRecipientPreviewLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>(MailSendRecipientPreviewDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailSendRecipientPreviewQuery, MailSendRecipientPreviewQueryVariables>(MailSendRecipientPreviewDocument, options);
         }
 export type MailSendRecipientPreviewQueryHookResult = ReturnType<typeof useMailSendRecipientPreviewQuery>;
 export type MailSendRecipientPreviewLazyQueryHookResult = ReturnType<typeof useMailSendRecipientPreviewLazyQuery>;
@@ -209,13 +210,13 @@ export const MailSendRecipientsDocument = gql`
  *   },
  * });
  */
-export function useMailSendRecipientsQuery(baseOptions: Apollo.QueryHookOptions<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>) {
+export function useMailSendRecipientsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>(MailSendRecipientsDocument, options);
+        return ApolloReactHooks.useQuery<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>(MailSendRecipientsDocument, options);
       }
-export function useMailSendRecipientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>) {
+export function useMailSendRecipientsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>(MailSendRecipientsDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailSendRecipientsQuery, MailSendRecipientsQueryVariables>(MailSendRecipientsDocument, options);
         }
 export type MailSendRecipientsQueryHookResult = ReturnType<typeof useMailSendRecipientsQuery>;
 export type MailSendRecipientsLazyQueryHookResult = ReturnType<typeof useMailSendRecipientsLazyQuery>;
@@ -252,13 +253,13 @@ export const MailSendPreviewDocument = gql`
  *   },
  * });
  */
-export function useMailSendPreviewQuery(baseOptions: Apollo.QueryHookOptions<MailSendPreviewQuery, MailSendPreviewQueryVariables>) {
+export function useMailSendPreviewQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailSendPreviewQuery, MailSendPreviewQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailSendPreviewQuery, MailSendPreviewQueryVariables>(MailSendPreviewDocument, options);
+        return ApolloReactHooks.useQuery<MailSendPreviewQuery, MailSendPreviewQueryVariables>(MailSendPreviewDocument, options);
       }
-export function useMailSendPreviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendPreviewQuery, MailSendPreviewQueryVariables>) {
+export function useMailSendPreviewLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailSendPreviewQuery, MailSendPreviewQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailSendPreviewQuery, MailSendPreviewQueryVariables>(MailSendPreviewDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailSendPreviewQuery, MailSendPreviewQueryVariables>(MailSendPreviewDocument, options);
         }
 export type MailSendPreviewQueryHookResult = ReturnType<typeof useMailSendPreviewQuery>;
 export type MailSendPreviewLazyQueryHookResult = ReturnType<typeof useMailSendPreviewLazyQuery>;
@@ -289,13 +290,13 @@ export const MailTemplateMissingPlaceholdersDocument = gql`
  *   },
  * });
  */
-export function useMailTemplateMissingPlaceholdersQuery(baseOptions: Apollo.QueryHookOptions<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>) {
+export function useMailTemplateMissingPlaceholdersQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>(MailTemplateMissingPlaceholdersDocument, options);
+        return ApolloReactHooks.useQuery<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>(MailTemplateMissingPlaceholdersDocument, options);
       }
-export function useMailTemplateMissingPlaceholdersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>) {
+export function useMailTemplateMissingPlaceholdersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>(MailTemplateMissingPlaceholdersDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailTemplateMissingPlaceholdersQuery, MailTemplateMissingPlaceholdersQueryVariables>(MailTemplateMissingPlaceholdersDocument, options);
         }
 export type MailTemplateMissingPlaceholdersQueryHookResult = ReturnType<typeof useMailTemplateMissingPlaceholdersQuery>;
 export type MailTemplateMissingPlaceholdersLazyQueryHookResult = ReturnType<typeof useMailTemplateMissingPlaceholdersLazyQuery>;
@@ -324,13 +325,13 @@ export const MailSendJobDocument = gql`
  *   },
  * });
  */
-export function useMailSendJobQuery(baseOptions: Apollo.QueryHookOptions<MailSendJobQuery, MailSendJobQueryVariables>) {
+export function useMailSendJobQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailSendJobQuery, MailSendJobQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailSendJobQuery, MailSendJobQueryVariables>(MailSendJobDocument, options);
+        return ApolloReactHooks.useQuery<MailSendJobQuery, MailSendJobQueryVariables>(MailSendJobDocument, options);
       }
-export function useMailSendJobLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendJobQuery, MailSendJobQueryVariables>) {
+export function useMailSendJobLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailSendJobQuery, MailSendJobQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailSendJobQuery, MailSendJobQueryVariables>(MailSendJobDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailSendJobQuery, MailSendJobQueryVariables>(MailSendJobDocument, options);
         }
 export type MailSendJobQueryHookResult = ReturnType<typeof useMailSendJobQuery>;
 export type MailSendJobLazyQueryHookResult = ReturnType<typeof useMailSendJobLazyQuery>;
@@ -369,13 +370,13 @@ export const MailSendJobsDocument = gql`
  *   },
  * });
  */
-export function useMailSendJobsQuery(baseOptions?: Apollo.QueryHookOptions<MailSendJobsQuery, MailSendJobsQueryVariables>) {
+export function useMailSendJobsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MailSendJobsQuery, MailSendJobsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailSendJobsQuery, MailSendJobsQueryVariables>(MailSendJobsDocument, options);
+        return ApolloReactHooks.useQuery<MailSendJobsQuery, MailSendJobsQueryVariables>(MailSendJobsDocument, options);
       }
-export function useMailSendJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendJobsQuery, MailSendJobsQueryVariables>) {
+export function useMailSendJobsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailSendJobsQuery, MailSendJobsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailSendJobsQuery, MailSendJobsQueryVariables>(MailSendJobsDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailSendJobsQuery, MailSendJobsQueryVariables>(MailSendJobsDocument, options);
         }
 export type MailSendJobsQueryHookResult = ReturnType<typeof useMailSendJobsQuery>;
 export type MailSendJobsLazyQueryHookResult = ReturnType<typeof useMailSendJobsLazyQuery>;
@@ -427,13 +428,13 @@ export const MailSendJobRecipientsDocument = gql`
  *   },
  * });
  */
-export function useMailSendJobRecipientsQuery(baseOptions: Apollo.QueryHookOptions<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>) {
+export function useMailSendJobRecipientsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>(MailSendJobRecipientsDocument, options);
+        return ApolloReactHooks.useQuery<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>(MailSendJobRecipientsDocument, options);
       }
-export function useMailSendJobRecipientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>) {
+export function useMailSendJobRecipientsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>(MailSendJobRecipientsDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailSendJobRecipientsQuery, MailSendJobRecipientsQueryVariables>(MailSendJobRecipientsDocument, options);
         }
 export type MailSendJobRecipientsQueryHookResult = ReturnType<typeof useMailSendJobRecipientsQuery>;
 export type MailSendJobRecipientsLazyQueryHookResult = ReturnType<typeof useMailSendJobRecipientsLazyQuery>;
@@ -465,9 +466,9 @@ export type ResumeMailSendJobMutationFn = Apollo.MutationFunction<ResumeMailSend
  *   },
  * });
  */
-export function useResumeMailSendJobMutation(baseOptions?: Apollo.MutationHookOptions<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>) {
+export function useResumeMailSendJobMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>(ResumeMailSendJobDocument, options);
+        return ApolloReactHooks.useMutation<ResumeMailSendJobMutation, ResumeMailSendJobMutationVariables>(ResumeMailSendJobDocument, options);
       }
 export type ResumeMailSendJobMutationHookResult = ReturnType<typeof useResumeMailSendJobMutation>;
 export type ResumeMailSendJobMutationResult = Apollo.MutationResult<ResumeMailSendJobMutation>;
@@ -498,9 +499,9 @@ export type CancelMailSendJobMutationFn = Apollo.MutationFunction<CancelMailSend
  *   },
  * });
  */
-export function useCancelMailSendJobMutation(baseOptions?: Apollo.MutationHookOptions<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>) {
+export function useCancelMailSendJobMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>(CancelMailSendJobDocument, options);
+        return ApolloReactHooks.useMutation<CancelMailSendJobMutation, CancelMailSendJobMutationVariables>(CancelMailSendJobDocument, options);
       }
 export type CancelMailSendJobMutationHookResult = ReturnType<typeof useCancelMailSendJobMutation>;
 export type CancelMailSendJobMutationResult = Apollo.MutationResult<CancelMailSendJobMutation>;
@@ -532,9 +533,9 @@ export type SendMailTemplateToUserMutationFn = Apollo.MutationFunction<SendMailT
  *   },
  * });
  */
-export function useSendMailTemplateToUserMutation(baseOptions?: Apollo.MutationHookOptions<SendMailTemplateToUserMutation, SendMailTemplateToUserMutationVariables>) {
+export function useSendMailTemplateToUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SendMailTemplateToUserMutation, SendMailTemplateToUserMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SendMailTemplateToUserMutation, SendMailTemplateToUserMutationVariables>(SendMailTemplateToUserDocument, options);
+        return ApolloReactHooks.useMutation<SendMailTemplateToUserMutation, SendMailTemplateToUserMutationVariables>(SendMailTemplateToUserDocument, options);
       }
 export type SendMailTemplateToUserMutationHookResult = ReturnType<typeof useSendMailTemplateToUserMutation>;
 export type SendMailTemplateToUserMutationResult = Apollo.MutationResult<SendMailTemplateToUserMutation>;
@@ -565,9 +566,9 @@ export type CreateMailSendJobMutationFn = Apollo.MutationFunction<CreateMailSend
  *   },
  * });
  */
-export function useCreateMailSendJobMutation(baseOptions?: Apollo.MutationHookOptions<CreateMailSendJobMutation, CreateMailSendJobMutationVariables>) {
+export function useCreateMailSendJobMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateMailSendJobMutation, CreateMailSendJobMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateMailSendJobMutation, CreateMailSendJobMutationVariables>(CreateMailSendJobDocument, options);
+        return ApolloReactHooks.useMutation<CreateMailSendJobMutation, CreateMailSendJobMutationVariables>(CreateMailSendJobDocument, options);
       }
 export type CreateMailSendJobMutationHookResult = ReturnType<typeof useCreateMailSendJobMutation>;
 export type CreateMailSendJobMutationResult = Apollo.MutationResult<CreateMailSendJobMutation>;

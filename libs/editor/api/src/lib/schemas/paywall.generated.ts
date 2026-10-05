@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPaywallFragment = { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: RichtextJSONDocument | null, circumventDescription?: RichtextJSONDocument | null, upgradeDescription?: RichtextJSONDocument | null, upgradeCircumventDescription?: RichtextJSONDocument | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> };
 
@@ -126,13 +127,13 @@ export const PaywallListDocument = gql`
  *   },
  * });
  */
-export function usePaywallListQuery(baseOptions?: Apollo.QueryHookOptions<PaywallListQuery, PaywallListQueryVariables>) {
+export function usePaywallListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaywallListQuery, PaywallListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PaywallListQuery, PaywallListQueryVariables>(PaywallListDocument, options);
+        return ApolloReactHooks.useQuery<PaywallListQuery, PaywallListQueryVariables>(PaywallListDocument, options);
       }
-export function usePaywallListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaywallListQuery, PaywallListQueryVariables>) {
+export function usePaywallListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaywallListQuery, PaywallListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PaywallListQuery, PaywallListQueryVariables>(PaywallListDocument, options);
+          return ApolloReactHooks.useLazyQuery<PaywallListQuery, PaywallListQueryVariables>(PaywallListDocument, options);
         }
 export type PaywallListQueryHookResult = ReturnType<typeof usePaywallListQuery>;
 export type PaywallListLazyQueryHookResult = ReturnType<typeof usePaywallListLazyQuery>;
@@ -161,13 +162,13 @@ export const PaywallDocument = gql`
  *   },
  * });
  */
-export function usePaywallQuery(baseOptions: Apollo.QueryHookOptions<PaywallQuery, PaywallQueryVariables>) {
+export function usePaywallQuery(baseOptions: ApolloReactHooks.QueryHookOptions<PaywallQuery, PaywallQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PaywallQuery, PaywallQueryVariables>(PaywallDocument, options);
+        return ApolloReactHooks.useQuery<PaywallQuery, PaywallQueryVariables>(PaywallDocument, options);
       }
-export function usePaywallLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaywallQuery, PaywallQueryVariables>) {
+export function usePaywallLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaywallQuery, PaywallQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PaywallQuery, PaywallQueryVariables>(PaywallDocument, options);
+          return ApolloReactHooks.useLazyQuery<PaywallQuery, PaywallQueryVariables>(PaywallDocument, options);
         }
 export type PaywallQueryHookResult = ReturnType<typeof usePaywallQuery>;
 export type PaywallLazyQueryHookResult = ReturnType<typeof usePaywallLazyQuery>;
@@ -222,9 +223,9 @@ export type CreatePaywallMutationFn = Apollo.MutationFunction<CreatePaywallMutat
  *   },
  * });
  */
-export function useCreatePaywallMutation(baseOptions?: Apollo.MutationHookOptions<CreatePaywallMutation, CreatePaywallMutationVariables>) {
+export function useCreatePaywallMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePaywallMutation, CreatePaywallMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePaywallMutation, CreatePaywallMutationVariables>(CreatePaywallDocument, options);
+        return ApolloReactHooks.useMutation<CreatePaywallMutation, CreatePaywallMutationVariables>(CreatePaywallDocument, options);
       }
 export type CreatePaywallMutationHookResult = ReturnType<typeof useCreatePaywallMutation>;
 export type CreatePaywallMutationResult = Apollo.MutationResult<CreatePaywallMutation>;
@@ -281,9 +282,9 @@ export type UpdatePaywallMutationFn = Apollo.MutationFunction<UpdatePaywallMutat
  *   },
  * });
  */
-export function useUpdatePaywallMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePaywallMutation, UpdatePaywallMutationVariables>) {
+export function useUpdatePaywallMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePaywallMutation, UpdatePaywallMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePaywallMutation, UpdatePaywallMutationVariables>(UpdatePaywallDocument, options);
+        return ApolloReactHooks.useMutation<UpdatePaywallMutation, UpdatePaywallMutationVariables>(UpdatePaywallDocument, options);
       }
 export type UpdatePaywallMutationHookResult = ReturnType<typeof useUpdatePaywallMutation>;
 export type UpdatePaywallMutationResult = Apollo.MutationResult<UpdatePaywallMutation>;
@@ -314,9 +315,9 @@ export type DeletePaywallMutationFn = Apollo.MutationFunction<DeletePaywallMutat
  *   },
  * });
  */
-export function useDeletePaywallMutation(baseOptions?: Apollo.MutationHookOptions<DeletePaywallMutation, DeletePaywallMutationVariables>) {
+export function useDeletePaywallMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePaywallMutation, DeletePaywallMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePaywallMutation, DeletePaywallMutationVariables>(DeletePaywallDocument, options);
+        return ApolloReactHooks.useMutation<DeletePaywallMutation, DeletePaywallMutationVariables>(DeletePaywallDocument, options);
       }
 export type DeletePaywallMutationHookResult = ReturnType<typeof useDeletePaywallMutation>;
 export type DeletePaywallMutationResult = Apollo.MutationResult<DeletePaywallMutation>;

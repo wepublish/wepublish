@@ -6,6 +6,7 @@ import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './i
 import { gql } from '@apollo/client';
 import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type CommentBlockCommentFragment = { __typename?: 'Comment', id: string, state: Types.CommentState, guestUsername?: string | null, text?: RichtextJSONDocument | null, source?: string | null, itemID: string, itemType: Types.CommentItemType, featured?: boolean | null, guestUserImage?: (
     { __typename?: 'Image' }
@@ -249,9 +250,9 @@ export type ApproveCommentMutationFn = Apollo.MutationFunction<ApproveCommentMut
  *   },
  * });
  */
-export function useApproveCommentMutation(baseOptions?: Apollo.MutationHookOptions<ApproveCommentMutation, ApproveCommentMutationVariables>) {
+export function useApproveCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ApproveCommentMutation, ApproveCommentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ApproveCommentMutation, ApproveCommentMutationVariables>(ApproveCommentDocument, options);
+        return ApolloReactHooks.useMutation<ApproveCommentMutation, ApproveCommentMutationVariables>(ApproveCommentDocument, options);
       }
 export type ApproveCommentMutationHookResult = ReturnType<typeof useApproveCommentMutation>;
 export type ApproveCommentMutationResult = Apollo.MutationResult<ApproveCommentMutation>;
@@ -284,9 +285,9 @@ export type RejectCommentMutationFn = Apollo.MutationFunction<RejectCommentMutat
  *   },
  * });
  */
-export function useRejectCommentMutation(baseOptions?: Apollo.MutationHookOptions<RejectCommentMutation, RejectCommentMutationVariables>) {
+export function useRejectCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RejectCommentMutation, RejectCommentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RejectCommentMutation, RejectCommentMutationVariables>(RejectCommentDocument, options);
+        return ApolloReactHooks.useMutation<RejectCommentMutation, RejectCommentMutationVariables>(RejectCommentDocument, options);
       }
 export type RejectCommentMutationHookResult = ReturnType<typeof useRejectCommentMutation>;
 export type RejectCommentMutationResult = Apollo.MutationResult<RejectCommentMutation>;
@@ -319,9 +320,9 @@ export type RequestChangesOnCommentMutationFn = Apollo.MutationFunction<RequestC
  *   },
  * });
  */
-export function useRequestChangesOnCommentMutation(baseOptions?: Apollo.MutationHookOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>) {
+export function useRequestChangesOnCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>(RequestChangesOnCommentDocument, options);
+        return ApolloReactHooks.useMutation<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>(RequestChangesOnCommentDocument, options);
       }
 export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useRequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
@@ -376,13 +377,13 @@ ${FullParentCommentFragmentDoc}`;
  *   },
  * });
  */
-export function useCommentListQuery(baseOptions?: Apollo.QueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
+export function useCommentListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options);
+        return ApolloReactHooks.useQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options);
       }
-export function useCommentListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
+export function useCommentListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options);
+          return ApolloReactHooks.useLazyQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options);
         }
 export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>;
 export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>;
@@ -416,13 +417,13 @@ ${FullParentCommentFragmentDoc}`;
  *   },
  * });
  */
-export function useCommentQuery(baseOptions: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
+export function useCommentQuery(baseOptions: ApolloReactHooks.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, options);
+        return ApolloReactHooks.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, options);
       }
-export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
+export function useCommentLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, options);
+          return ApolloReactHooks.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, options);
         }
 export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
 export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
@@ -476,9 +477,9 @@ export type UpdateCommentMutationFn = Apollo.MutationFunction<UpdateCommentMutat
  *   },
  * });
  */
-export function useUpdateCommentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCommentMutation, UpdateCommentMutationVariables>) {
+export function useUpdateCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateCommentMutation, UpdateCommentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateCommentMutation, UpdateCommentMutationVariables>(UpdateCommentDocument, options);
+        return ApolloReactHooks.useMutation<UpdateCommentMutation, UpdateCommentMutationVariables>(UpdateCommentDocument, options);
       }
 export type UpdateCommentMutationHookResult = ReturnType<typeof useUpdateCommentMutation>;
 export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMutation>;
@@ -519,9 +520,9 @@ export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutat
  *   },
  * });
  */
-export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
+export function useCreateCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, options);
+        return ApolloReactHooks.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, options);
       }
 export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
 export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
@@ -552,9 +553,9 @@ export type DeleteCommentMutationFn = Apollo.MutationFunction<DeleteCommentMutat
  *   },
  * });
  */
-export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCommentMutation, DeleteCommentMutationVariables>) {
+export function useDeleteCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteCommentMutation, DeleteCommentMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(DeleteCommentDocument, options);
+        return ApolloReactHooks.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(DeleteCommentDocument, options);
       }
 export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
 export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;

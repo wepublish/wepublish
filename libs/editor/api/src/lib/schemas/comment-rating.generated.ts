@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullCommentRatingSystemFragment = { __typename?: 'CommentRatingSystem', id: string, name?: string | null, answers: Array<{ __typename?: 'CommentRatingSystemAnswer', id: string, type: Types.RatingSystemType, answer?: string | null, ratingSystemId: string }> };
 
@@ -75,13 +76,13 @@ export const RatingSystemDocument = gql`
  *   },
  * });
  */
-export function useRatingSystemQuery(baseOptions?: Apollo.QueryHookOptions<RatingSystemQuery, RatingSystemQueryVariables>) {
+export function useRatingSystemQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<RatingSystemQuery, RatingSystemQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RatingSystemQuery, RatingSystemQueryVariables>(RatingSystemDocument, options);
+        return ApolloReactHooks.useQuery<RatingSystemQuery, RatingSystemQueryVariables>(RatingSystemDocument, options);
       }
-export function useRatingSystemLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RatingSystemQuery, RatingSystemQueryVariables>) {
+export function useRatingSystemLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<RatingSystemQuery, RatingSystemQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RatingSystemQuery, RatingSystemQueryVariables>(RatingSystemDocument, options);
+          return ApolloReactHooks.useLazyQuery<RatingSystemQuery, RatingSystemQueryVariables>(RatingSystemDocument, options);
         }
 export type RatingSystemQueryHookResult = ReturnType<typeof useRatingSystemQuery>;
 export type RatingSystemLazyQueryHookResult = ReturnType<typeof useRatingSystemLazyQuery>;
@@ -121,9 +122,9 @@ export type UpdateRatingSystemMutationFn = Apollo.MutationFunction<UpdateRatingS
  *   },
  * });
  */
-export function useUpdateRatingSystemMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>) {
+export function useUpdateRatingSystemMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>(UpdateRatingSystemDocument, options);
+        return ApolloReactHooks.useMutation<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>(UpdateRatingSystemDocument, options);
       }
 export type UpdateRatingSystemMutationHookResult = ReturnType<typeof useUpdateRatingSystemMutation>;
 export type UpdateRatingSystemMutationResult = Apollo.MutationResult<UpdateRatingSystemMutation>;
@@ -163,9 +164,9 @@ export type CreateRatingSystemAnswerMutationFn = Apollo.MutationFunction<CreateR
  *   },
  * });
  */
-export function useCreateRatingSystemAnswerMutation(baseOptions?: Apollo.MutationHookOptions<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>) {
+export function useCreateRatingSystemAnswerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>(CreateRatingSystemAnswerDocument, options);
+        return ApolloReactHooks.useMutation<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>(CreateRatingSystemAnswerDocument, options);
       }
 export type CreateRatingSystemAnswerMutationHookResult = ReturnType<typeof useCreateRatingSystemAnswerMutation>;
 export type CreateRatingSystemAnswerMutationResult = Apollo.MutationResult<CreateRatingSystemAnswerMutation>;
@@ -196,9 +197,9 @@ export type DeleteRatingSystemAnswerMutationFn = Apollo.MutationFunction<DeleteR
  *   },
  * });
  */
-export function useDeleteRatingSystemAnswerMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>) {
+export function useDeleteRatingSystemAnswerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>(DeleteRatingSystemAnswerDocument, options);
+        return ApolloReactHooks.useMutation<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>(DeleteRatingSystemAnswerDocument, options);
       }
 export type DeleteRatingSystemAnswerMutationHookResult = ReturnType<typeof useDeleteRatingSystemAnswerMutation>;
 export type DeleteRatingSystemAnswerMutationResult = Apollo.MutationResult<DeleteRatingSystemAnswerMutation>;

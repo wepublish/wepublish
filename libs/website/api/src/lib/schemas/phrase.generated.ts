@@ -20,6 +20,7 @@ import { SlimPaywallFragmentDoc, FullPaywallFragmentDoc } from './paywall.genera
 import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
 import { SlimPageFragmentDoc, SlimPageRevisionFragmentDoc } from './slim-page.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type PhraseQueryVariables = Types.Exact<{
   query: Types.Scalars['String'];
@@ -98,13 +99,13 @@ ${SlimPageRevisionFragmentDoc}`;
  *   },
  * });
  */
-export function usePhraseQuery(baseOptions: Apollo.QueryHookOptions<PhraseQuery, PhraseQueryVariables>) {
+export function usePhraseQuery(baseOptions: ApolloReactHooks.QueryHookOptions<PhraseQuery, PhraseQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PhraseQuery, PhraseQueryVariables>(PhraseDocument, options);
+        return ApolloReactHooks.useQuery<PhraseQuery, PhraseQueryVariables>(PhraseDocument, options);
       }
-export function usePhraseLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PhraseQuery, PhraseQueryVariables>) {
+export function usePhraseLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PhraseQuery, PhraseQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PhraseQuery, PhraseQueryVariables>(PhraseDocument, options);
+          return ApolloReactHooks.useLazyQuery<PhraseQuery, PhraseQueryVariables>(PhraseDocument, options);
         }
 export type PhraseQueryHookResult = ReturnType<typeof usePhraseQuery>;
 export type PhraseLazyQueryHookResult = ReturnType<typeof usePhraseLazyQuery>;

@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPeriodicJobFragment = { __typename?: 'PeriodicJob', id: string, date: string, error?: string | null, executionTime?: string | null, finishedWithError?: string | null, modifiedAt: string, successfullyFinished?: string | null, tries: number, createdAt: string };
 
@@ -56,13 +57,13 @@ export const PeriodicJobLogsDocument = gql`
  *   },
  * });
  */
-export function usePeriodicJobLogsQuery(baseOptions?: Apollo.QueryHookOptions<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>) {
+export function usePeriodicJobLogsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>(PeriodicJobLogsDocument, options);
+        return ApolloReactHooks.useQuery<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>(PeriodicJobLogsDocument, options);
       }
-export function usePeriodicJobLogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>) {
+export function usePeriodicJobLogsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>(PeriodicJobLogsDocument, options);
+          return ApolloReactHooks.useLazyQuery<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>(PeriodicJobLogsDocument, options);
         }
 export type PeriodicJobLogsQueryHookResult = ReturnType<typeof usePeriodicJobLogsQuery>;
 export type PeriodicJobLogsLazyQueryHookResult = ReturnType<typeof usePeriodicJobLogsLazyQuery>;

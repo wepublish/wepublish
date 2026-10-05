@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type ImageUrLsFragment = { __typename?: 'Image', url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
@@ -189,13 +190,13 @@ ${ImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function useImageListQuery(baseOptions?: Apollo.QueryHookOptions<ImageListQuery, ImageListQueryVariables>) {
+export function useImageListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ImageListQuery, ImageListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ImageListQuery, ImageListQueryVariables>(ImageListDocument, options);
+        return ApolloReactHooks.useQuery<ImageListQuery, ImageListQueryVariables>(ImageListDocument, options);
       }
-export function useImageListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImageListQuery, ImageListQueryVariables>) {
+export function useImageListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ImageListQuery, ImageListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ImageListQuery, ImageListQueryVariables>(ImageListDocument, options);
+          return ApolloReactHooks.useLazyQuery<ImageListQuery, ImageListQueryVariables>(ImageListDocument, options);
         }
 export type ImageListQueryHookResult = ReturnType<typeof useImageListQuery>;
 export type ImageListLazyQueryHookResult = ReturnType<typeof useImageListLazyQuery>;
@@ -225,13 +226,13 @@ ${ImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function useImageQuery(baseOptions: Apollo.QueryHookOptions<ImageQuery, ImageQueryVariables>) {
+export function useImageQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ImageQuery, ImageQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ImageQuery, ImageQueryVariables>(ImageDocument, options);
+        return ApolloReactHooks.useQuery<ImageQuery, ImageQueryVariables>(ImageDocument, options);
       }
-export function useImageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImageQuery, ImageQueryVariables>) {
+export function useImageLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ImageQuery, ImageQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ImageQuery, ImageQueryVariables>(ImageDocument, options);
+          return ApolloReactHooks.useLazyQuery<ImageQuery, ImageQueryVariables>(ImageDocument, options);
         }
 export type ImageQueryHookResult = ReturnType<typeof useImageQuery>;
 export type ImageLazyQueryHookResult = ReturnType<typeof useImageLazyQuery>;
@@ -283,9 +284,9 @@ export type UploadImageMutationFn = Apollo.MutationFunction<UploadImageMutation,
  *   },
  * });
  */
-export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<UploadImageMutation, UploadImageMutationVariables>) {
+export function useUploadImageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UploadImageMutation, UploadImageMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument, options);
+        return ApolloReactHooks.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument, options);
       }
 export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
 export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
@@ -337,9 +338,9 @@ export type UpdateImageMutationFn = Apollo.MutationFunction<UpdateImageMutation,
  *   },
  * });
  */
-export function useUpdateImageMutation(baseOptions?: Apollo.MutationHookOptions<UpdateImageMutation, UpdateImageMutationVariables>) {
+export function useUpdateImageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateImageMutation, UpdateImageMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateImageMutation, UpdateImageMutationVariables>(UpdateImageDocument, options);
+        return ApolloReactHooks.useMutation<UpdateImageMutation, UpdateImageMutationVariables>(UpdateImageDocument, options);
       }
 export type UpdateImageMutationHookResult = ReturnType<typeof useUpdateImageMutation>;
 export type UpdateImageMutationResult = Apollo.MutationResult<UpdateImageMutation>;
@@ -368,9 +369,9 @@ export type DeleteImageMutationFn = Apollo.MutationFunction<DeleteImageMutation,
  *   },
  * });
  */
-export function useDeleteImageMutation(baseOptions?: Apollo.MutationHookOptions<DeleteImageMutation, DeleteImageMutationVariables>) {
+export function useDeleteImageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteImageMutation, DeleteImageMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteImageMutation, DeleteImageMutationVariables>(DeleteImageDocument, options);
+        return ApolloReactHooks.useMutation<DeleteImageMutation, DeleteImageMutationVariables>(DeleteImageDocument, options);
       }
 export type DeleteImageMutationHookResult = ReturnType<typeof useDeleteImageMutation>;
 export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutation>;

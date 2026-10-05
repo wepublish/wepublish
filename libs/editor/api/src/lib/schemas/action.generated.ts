@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type RecentActionsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -183,13 +184,13 @@ ${PageCreatedActionRevisionFragmentDoc}`;
  *   },
  * });
  */
-export function useRecentActionsQuery(baseOptions?: Apollo.QueryHookOptions<RecentActionsQuery, RecentActionsQueryVariables>) {
+export function useRecentActionsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<RecentActionsQuery, RecentActionsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RecentActionsQuery, RecentActionsQueryVariables>(RecentActionsDocument, options);
+        return ApolloReactHooks.useQuery<RecentActionsQuery, RecentActionsQueryVariables>(RecentActionsDocument, options);
       }
-export function useRecentActionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecentActionsQuery, RecentActionsQueryVariables>) {
+export function useRecentActionsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<RecentActionsQuery, RecentActionsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RecentActionsQuery, RecentActionsQueryVariables>(RecentActionsDocument, options);
+          return ApolloReactHooks.useLazyQuery<RecentActionsQuery, RecentActionsQueryVariables>(RecentActionsDocument, options);
         }
 export type RecentActionsQueryHookResult = ReturnType<typeof useRecentActionsQuery>;
 export type RecentActionsLazyQueryHookResult = ReturnType<typeof useRecentActionsLazyQuery>;

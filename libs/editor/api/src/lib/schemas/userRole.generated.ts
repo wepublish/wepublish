@@ -6,6 +6,7 @@ import { FullPermissionFragment } from './permissions.generated';
 import { gql } from '@apollo/client';
 import { FullPermissionFragmentDoc } from './permissions.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<(
     { __typename?: 'Permission' }
@@ -129,13 +130,13 @@ ${FullPermissionFragmentDoc}`;
  *   },
  * });
  */
-export function useUserRoleListQuery(baseOptions?: Apollo.QueryHookOptions<UserRoleListQuery, UserRoleListQueryVariables>) {
+export function useUserRoleListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UserRoleListQuery, UserRoleListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserRoleListQuery, UserRoleListQueryVariables>(UserRoleListDocument, options);
+        return ApolloReactHooks.useQuery<UserRoleListQuery, UserRoleListQueryVariables>(UserRoleListDocument, options);
       }
-export function useUserRoleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserRoleListQuery, UserRoleListQueryVariables>) {
+export function useUserRoleListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserRoleListQuery, UserRoleListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserRoleListQuery, UserRoleListQueryVariables>(UserRoleListDocument, options);
+          return ApolloReactHooks.useLazyQuery<UserRoleListQuery, UserRoleListQueryVariables>(UserRoleListDocument, options);
         }
 export type UserRoleListQueryHookResult = ReturnType<typeof useUserRoleListQuery>;
 export type UserRoleListLazyQueryHookResult = ReturnType<typeof useUserRoleListLazyQuery>;
@@ -165,13 +166,13 @@ ${FullPermissionFragmentDoc}`;
  *   },
  * });
  */
-export function useUserRoleQuery(baseOptions: Apollo.QueryHookOptions<UserRoleQuery, UserRoleQueryVariables>) {
+export function useUserRoleQuery(baseOptions: ApolloReactHooks.QueryHookOptions<UserRoleQuery, UserRoleQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserRoleQuery, UserRoleQueryVariables>(UserRoleDocument, options);
+        return ApolloReactHooks.useQuery<UserRoleQuery, UserRoleQueryVariables>(UserRoleDocument, options);
       }
-export function useUserRoleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserRoleQuery, UserRoleQueryVariables>) {
+export function useUserRoleLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserRoleQuery, UserRoleQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserRoleQuery, UserRoleQueryVariables>(UserRoleDocument, options);
+          return ApolloReactHooks.useLazyQuery<UserRoleQuery, UserRoleQueryVariables>(UserRoleDocument, options);
         }
 export type UserRoleQueryHookResult = ReturnType<typeof useUserRoleQuery>;
 export type UserRoleLazyQueryHookResult = ReturnType<typeof useUserRoleLazyQuery>;
@@ -209,9 +210,9 @@ export type CreateUserRoleMutationFn = Apollo.MutationFunction<CreateUserRoleMut
  *   },
  * });
  */
-export function useCreateUserRoleMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserRoleMutation, CreateUserRoleMutationVariables>) {
+export function useCreateUserRoleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateUserRoleMutation, CreateUserRoleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateUserRoleMutation, CreateUserRoleMutationVariables>(CreateUserRoleDocument, options);
+        return ApolloReactHooks.useMutation<CreateUserRoleMutation, CreateUserRoleMutationVariables>(CreateUserRoleDocument, options);
       }
 export type CreateUserRoleMutationHookResult = ReturnType<typeof useCreateUserRoleMutation>;
 export type CreateUserRoleMutationResult = Apollo.MutationResult<CreateUserRoleMutation>;
@@ -251,9 +252,9 @@ export type UpdateUserRoleMutationFn = Apollo.MutationFunction<UpdateUserRoleMut
  *   },
  * });
  */
-export function useUpdateUserRoleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>) {
+export function useUpdateUserRoleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>(UpdateUserRoleDocument, options);
+        return ApolloReactHooks.useMutation<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>(UpdateUserRoleDocument, options);
       }
 export type UpdateUserRoleMutationHookResult = ReturnType<typeof useUpdateUserRoleMutation>;
 export type UpdateUserRoleMutationResult = Apollo.MutationResult<UpdateUserRoleMutation>;
@@ -285,9 +286,9 @@ export type DeleteUserRoleMutationFn = Apollo.MutationFunction<DeleteUserRoleMut
  *   },
  * });
  */
-export function useDeleteUserRoleMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>) {
+export function useDeleteUserRoleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>(DeleteUserRoleDocument, options);
+        return ApolloReactHooks.useMutation<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>(DeleteUserRoleDocument, options);
       }
 export type DeleteUserRoleMutationHookResult = ReturnType<typeof useDeleteUserRoleMutation>;
 export type DeleteUserRoleMutationResult = Apollo.MutationResult<DeleteUserRoleMutation>;

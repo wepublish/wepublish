@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type PaymentProviderSettingsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -110,13 +111,13 @@ export const PaymentProviderSettingsDocument = gql`
  *   },
  * });
  */
-export function usePaymentProviderSettingsQuery(baseOptions?: Apollo.QueryHookOptions<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>) {
+export function usePaymentProviderSettingsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>(PaymentProviderSettingsDocument, options);
+        return ApolloReactHooks.useQuery<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>(PaymentProviderSettingsDocument, options);
       }
-export function usePaymentProviderSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>) {
+export function usePaymentProviderSettingsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>(PaymentProviderSettingsDocument, options);
+          return ApolloReactHooks.useLazyQuery<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>(PaymentProviderSettingsDocument, options);
         }
 export type PaymentProviderSettingsQueryHookResult = ReturnType<typeof usePaymentProviderSettingsQuery>;
 export type PaymentProviderSettingsLazyQueryHookResult = ReturnType<typeof usePaymentProviderSettingsLazyQuery>;
@@ -226,9 +227,9 @@ export type UpdatePaymentProviderSettingMutationFn = Apollo.MutationFunction<Upd
  *   },
  * });
  */
-export function useUpdatePaymentProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePaymentProviderSettingMutation, UpdatePaymentProviderSettingMutationVariables>) {
+export function useUpdatePaymentProviderSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePaymentProviderSettingMutation, UpdatePaymentProviderSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePaymentProviderSettingMutation, UpdatePaymentProviderSettingMutationVariables>(UpdatePaymentProviderSettingDocument, options);
+        return ApolloReactHooks.useMutation<UpdatePaymentProviderSettingMutation, UpdatePaymentProviderSettingMutationVariables>(UpdatePaymentProviderSettingDocument, options);
       }
 export type UpdatePaymentProviderSettingMutationHookResult = ReturnType<typeof useUpdatePaymentProviderSettingMutation>;
 export type UpdatePaymentProviderSettingMutationResult = Apollo.MutationResult<UpdatePaymentProviderSettingMutation>;
@@ -267,9 +268,9 @@ export type CreatePaymentProviderSettingMutationFn = Apollo.MutationFunction<Cre
  *   },
  * });
  */
-export function useCreatePaymentProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<CreatePaymentProviderSettingMutation, CreatePaymentProviderSettingMutationVariables>) {
+export function useCreatePaymentProviderSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePaymentProviderSettingMutation, CreatePaymentProviderSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePaymentProviderSettingMutation, CreatePaymentProviderSettingMutationVariables>(CreatePaymentProviderSettingDocument, options);
+        return ApolloReactHooks.useMutation<CreatePaymentProviderSettingMutation, CreatePaymentProviderSettingMutationVariables>(CreatePaymentProviderSettingDocument, options);
       }
 export type CreatePaymentProviderSettingMutationHookResult = ReturnType<typeof useCreatePaymentProviderSettingMutation>;
 export type CreatePaymentProviderSettingMutationResult = Apollo.MutationResult<CreatePaymentProviderSettingMutation>;
@@ -301,9 +302,9 @@ export type DeletePaymentProviderSettingMutationFn = Apollo.MutationFunction<Del
  *   },
  * });
  */
-export function useDeletePaymentProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<DeletePaymentProviderSettingMutation, DeletePaymentProviderSettingMutationVariables>) {
+export function useDeletePaymentProviderSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePaymentProviderSettingMutation, DeletePaymentProviderSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePaymentProviderSettingMutation, DeletePaymentProviderSettingMutationVariables>(DeletePaymentProviderSettingDocument, options);
+        return ApolloReactHooks.useMutation<DeletePaymentProviderSettingMutation, DeletePaymentProviderSettingMutationVariables>(DeletePaymentProviderSettingDocument, options);
       }
 export type DeletePaymentProviderSettingMutationHookResult = ReturnType<typeof useDeletePaymentProviderSettingMutation>;
 export type DeletePaymentProviderSettingMutationResult = Apollo.MutationResult<DeletePaymentProviderSettingMutation>;

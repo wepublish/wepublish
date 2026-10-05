@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename?: 'ArticleNavigationLink', label: string, article: { __typename?: 'Article', url: string } } | { __typename?: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename?: 'PageNavigationLink', label: string, page: { __typename?: 'Page', url: string } }> };
 
@@ -63,13 +64,13 @@ export const NavigationListDocument = gql`
  *   },
  * });
  */
-export function useNavigationListQuery(baseOptions?: Apollo.QueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
+export function useNavigationListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
+        return ApolloReactHooks.useQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
       }
-export function useNavigationListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
+export function useNavigationListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
+          return ApolloReactHooks.useLazyQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
         }
 export type NavigationListQueryHookResult = ReturnType<typeof useNavigationListQuery>;
 export type NavigationListLazyQueryHookResult = ReturnType<typeof useNavigationListLazyQuery>;

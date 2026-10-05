@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPollFragment = { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: RichtextJSONDocument | null, answers: Array<{ __typename?: 'PollAnswer', id: string, pollId: string, answer?: string | null, votes: number }>, externalVoteSources: Array<{ __typename?: 'PollExternalVoteSource', id: string, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> }> };
 
@@ -66,13 +67,13 @@ export const UserPollVoteDocument = gql`
  *   },
  * });
  */
-export function useUserPollVoteQuery(baseOptions: Apollo.QueryHookOptions<UserPollVoteQuery, UserPollVoteQueryVariables>) {
+export function useUserPollVoteQuery(baseOptions: ApolloReactHooks.QueryHookOptions<UserPollVoteQuery, UserPollVoteQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserPollVoteQuery, UserPollVoteQueryVariables>(UserPollVoteDocument, options);
+        return ApolloReactHooks.useQuery<UserPollVoteQuery, UserPollVoteQueryVariables>(UserPollVoteDocument, options);
       }
-export function useUserPollVoteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserPollVoteQuery, UserPollVoteQueryVariables>) {
+export function useUserPollVoteLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserPollVoteQuery, UserPollVoteQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserPollVoteQuery, UserPollVoteQueryVariables>(UserPollVoteDocument, options);
+          return ApolloReactHooks.useLazyQuery<UserPollVoteQuery, UserPollVoteQueryVariables>(UserPollVoteDocument, options);
         }
 export type UserPollVoteQueryHookResult = ReturnType<typeof useUserPollVoteQuery>;
 export type UserPollVoteLazyQueryHookResult = ReturnType<typeof useUserPollVoteLazyQuery>;
@@ -104,9 +105,9 @@ export type PollVoteMutationFn = Apollo.MutationFunction<PollVoteMutation, PollV
  *   },
  * });
  */
-export function usePollVoteMutation(baseOptions?: Apollo.MutationHookOptions<PollVoteMutation, PollVoteMutationVariables>) {
+export function usePollVoteMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PollVoteMutation, PollVoteMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<PollVoteMutation, PollVoteMutationVariables>(PollVoteDocument, options);
+        return ApolloReactHooks.useMutation<PollVoteMutation, PollVoteMutationVariables>(PollVoteDocument, options);
       }
 export type PollVoteMutationHookResult = ReturnType<typeof usePollVoteMutation>;
 export type PollVoteMutationResult = Apollo.MutationResult<PollVoteMutation>;

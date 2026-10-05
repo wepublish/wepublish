@@ -8,6 +8,7 @@ import { gql } from '@apollo/client';
 import { FullImageFragmentDoc, FullImageUrLsFragmentDoc, ImageUrLsFragmentDoc, SquareImageUrLsFragmentDoc, SlimImageFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import { FullPropertyFragmentDoc } from './properties.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPaymentProviderCustomerFragment = { __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string };
 
@@ -287,13 +288,13 @@ ${FullPaymentProviderCustomerFragmentDoc}`;
  *   },
  * });
  */
-export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+export function useMeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeQuery, MeQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        return ApolloReactHooks.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
       }
-export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+export function useMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+          return ApolloReactHooks.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
         }
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
@@ -320,13 +321,13 @@ export const CheckLoginOtpDocument = gql`
  *   },
  * });
  */
-export function useCheckLoginOtpQuery(baseOptions: Apollo.QueryHookOptions<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>) {
+export function useCheckLoginOtpQuery(baseOptions: ApolloReactHooks.QueryHookOptions<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>(CheckLoginOtpDocument, options);
+        return ApolloReactHooks.useQuery<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>(CheckLoginOtpDocument, options);
       }
-export function useCheckLoginOtpLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>) {
+export function useCheckLoginOtpLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>(CheckLoginOtpDocument, options);
+          return ApolloReactHooks.useLazyQuery<CheckLoginOtpQuery, CheckLoginOtpQueryVariables>(CheckLoginOtpDocument, options);
         }
 export type CheckLoginOtpQueryHookResult = ReturnType<typeof useCheckLoginOtpQuery>;
 export type CheckLoginOtpLazyQueryHookResult = ReturnType<typeof useCheckLoginOtpLazyQuery>;
@@ -359,9 +360,9 @@ export type LoginWithCredentialsMutationFn = Apollo.MutationFunction<LoginWithCr
  *   },
  * });
  */
-export function useLoginWithCredentialsMutation(baseOptions?: Apollo.MutationHookOptions<LoginWithCredentialsMutation, LoginWithCredentialsMutationVariables>) {
+export function useLoginWithCredentialsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginWithCredentialsMutation, LoginWithCredentialsMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LoginWithCredentialsMutation, LoginWithCredentialsMutationVariables>(LoginWithCredentialsDocument, options);
+        return ApolloReactHooks.useMutation<LoginWithCredentialsMutation, LoginWithCredentialsMutationVariables>(LoginWithCredentialsDocument, options);
       }
 export type LoginWithCredentialsMutationHookResult = ReturnType<typeof useLoginWithCredentialsMutation>;
 export type LoginWithCredentialsMutationResult = Apollo.MutationResult<LoginWithCredentialsMutation>;
@@ -390,9 +391,9 @@ export type LoginWithEmailMutationFn = Apollo.MutationFunction<LoginWithEmailMut
  *   },
  * });
  */
-export function useLoginWithEmailMutation(baseOptions?: Apollo.MutationHookOptions<LoginWithEmailMutation, LoginWithEmailMutationVariables>) {
+export function useLoginWithEmailMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginWithEmailMutation, LoginWithEmailMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LoginWithEmailMutation, LoginWithEmailMutationVariables>(LoginWithEmailDocument, options);
+        return ApolloReactHooks.useMutation<LoginWithEmailMutation, LoginWithEmailMutationVariables>(LoginWithEmailDocument, options);
       }
 export type LoginWithEmailMutationHookResult = ReturnType<typeof useLoginWithEmailMutation>;
 export type LoginWithEmailMutationResult = Apollo.MutationResult<LoginWithEmailMutation>;
@@ -424,9 +425,9 @@ export type LoginWithJwtMutationFn = Apollo.MutationFunction<LoginWithJwtMutatio
  *   },
  * });
  */
-export function useLoginWithJwtMutation(baseOptions?: Apollo.MutationHookOptions<LoginWithJwtMutation, LoginWithJwtMutationVariables>) {
+export function useLoginWithJwtMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginWithJwtMutation, LoginWithJwtMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LoginWithJwtMutation, LoginWithJwtMutationVariables>(LoginWithJwtDocument, options);
+        return ApolloReactHooks.useMutation<LoginWithJwtMutation, LoginWithJwtMutationVariables>(LoginWithJwtDocument, options);
       }
 export type LoginWithJwtMutationHookResult = ReturnType<typeof useLoginWithJwtMutation>;
 export type LoginWithJwtMutationResult = Apollo.MutationResult<LoginWithJwtMutation>;
@@ -487,9 +488,9 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *   },
  * });
  */
-export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
+export function useRegisterMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
+        return ApolloReactHooks.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
       }
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
@@ -540,9 +541,9 @@ export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, U
  *   },
  * });
  */
-export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+export function useUpdateUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+        return ApolloReactHooks.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
       }
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
@@ -582,9 +583,9 @@ export type UpdatePasswordMutationFn = Apollo.MutationFunction<UpdatePasswordMut
  *   },
  * });
  */
-export function useUpdatePasswordMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>) {
+export function useUpdatePasswordMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument, options);
+        return ApolloReactHooks.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument, options);
       }
 export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>;
 export type UpdatePasswordMutationResult = Apollo.MutationResult<UpdatePasswordMutation>;
@@ -613,9 +614,9 @@ export type RequestEmailChangeMutationFn = Apollo.MutationFunction<RequestEmailC
  *   },
  * });
  */
-export function useRequestEmailChangeMutation(baseOptions?: Apollo.MutationHookOptions<RequestEmailChangeMutation, RequestEmailChangeMutationVariables>) {
+export function useRequestEmailChangeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RequestEmailChangeMutation, RequestEmailChangeMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RequestEmailChangeMutation, RequestEmailChangeMutationVariables>(RequestEmailChangeDocument, options);
+        return ApolloReactHooks.useMutation<RequestEmailChangeMutation, RequestEmailChangeMutationVariables>(RequestEmailChangeDocument, options);
       }
 export type RequestEmailChangeMutationHookResult = ReturnType<typeof useRequestEmailChangeMutation>;
 export type RequestEmailChangeMutationResult = Apollo.MutationResult<RequestEmailChangeMutation>;
@@ -646,9 +647,9 @@ export type GenerateTotpSetupMutationFn = Apollo.MutationFunction<GenerateTotpSe
  *   },
  * });
  */
-export function useGenerateTotpSetupMutation(baseOptions?: Apollo.MutationHookOptions<GenerateTotpSetupMutation, GenerateTotpSetupMutationVariables>) {
+export function useGenerateTotpSetupMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<GenerateTotpSetupMutation, GenerateTotpSetupMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<GenerateTotpSetupMutation, GenerateTotpSetupMutationVariables>(GenerateTotpSetupDocument, options);
+        return ApolloReactHooks.useMutation<GenerateTotpSetupMutation, GenerateTotpSetupMutationVariables>(GenerateTotpSetupDocument, options);
       }
 export type GenerateTotpSetupMutationHookResult = ReturnType<typeof useGenerateTotpSetupMutation>;
 export type GenerateTotpSetupMutationResult = Apollo.MutationResult<GenerateTotpSetupMutation>;
@@ -677,9 +678,9 @@ export type EnableTotpMutationFn = Apollo.MutationFunction<EnableTotpMutation, E
  *   },
  * });
  */
-export function useEnableTotpMutation(baseOptions?: Apollo.MutationHookOptions<EnableTotpMutation, EnableTotpMutationVariables>) {
+export function useEnableTotpMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<EnableTotpMutation, EnableTotpMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<EnableTotpMutation, EnableTotpMutationVariables>(EnableTotpDocument, options);
+        return ApolloReactHooks.useMutation<EnableTotpMutation, EnableTotpMutationVariables>(EnableTotpDocument, options);
       }
 export type EnableTotpMutationHookResult = ReturnType<typeof useEnableTotpMutation>;
 export type EnableTotpMutationResult = Apollo.MutationResult<EnableTotpMutation>;
@@ -718,9 +719,9 @@ export type ConfirmEmailChangeMutationFn = Apollo.MutationFunction<ConfirmEmailC
  *   },
  * });
  */
-export function useConfirmEmailChangeMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmEmailChangeMutation, ConfirmEmailChangeMutationVariables>) {
+export function useConfirmEmailChangeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ConfirmEmailChangeMutation, ConfirmEmailChangeMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ConfirmEmailChangeMutation, ConfirmEmailChangeMutationVariables>(ConfirmEmailChangeDocument, options);
+        return ApolloReactHooks.useMutation<ConfirmEmailChangeMutation, ConfirmEmailChangeMutationVariables>(ConfirmEmailChangeDocument, options);
       }
 export type ConfirmEmailChangeMutationHookResult = ReturnType<typeof useConfirmEmailChangeMutation>;
 export type ConfirmEmailChangeMutationResult = Apollo.MutationResult<ConfirmEmailChangeMutation>;
@@ -778,9 +779,9 @@ export type UploadImageMutationFn = Apollo.MutationFunction<UploadImageMutation,
  *   },
  * });
  */
-export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<UploadImageMutation, UploadImageMutationVariables>) {
+export function useUploadImageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UploadImageMutation, UploadImageMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument, options);
+        return ApolloReactHooks.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument, options);
       }
 export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
 export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;

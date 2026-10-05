@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type SettingsIntegrationsChallengeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -50,13 +51,13 @@ export const SettingsIntegrationsChallengeDocument = gql`
  *   },
  * });
  */
-export function useSettingsIntegrationsChallengeQuery(baseOptions?: Apollo.QueryHookOptions<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>) {
+export function useSettingsIntegrationsChallengeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>(SettingsIntegrationsChallengeDocument, options);
+        return ApolloReactHooks.useQuery<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>(SettingsIntegrationsChallengeDocument, options);
       }
-export function useSettingsIntegrationsChallengeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>) {
+export function useSettingsIntegrationsChallengeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>(SettingsIntegrationsChallengeDocument, options);
+          return ApolloReactHooks.useLazyQuery<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>(SettingsIntegrationsChallengeDocument, options);
         }
 export type SettingsIntegrationsChallengeQueryHookResult = ReturnType<typeof useSettingsIntegrationsChallengeQuery>;
 export type SettingsIntegrationsChallengeLazyQueryHookResult = ReturnType<typeof useSettingsIntegrationsChallengeLazyQuery>;
@@ -102,9 +103,9 @@ export type UpdateSettingsIntegrationsChallengeMutationFn = Apollo.MutationFunct
  *   },
  * });
  */
-export function useUpdateSettingsIntegrationsChallengeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>) {
+export function useUpdateSettingsIntegrationsChallengeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>(UpdateSettingsIntegrationsChallengeDocument, options);
+        return ApolloReactHooks.useMutation<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>(UpdateSettingsIntegrationsChallengeDocument, options);
       }
 export type UpdateSettingsIntegrationsChallengeMutationHookResult = ReturnType<typeof useUpdateSettingsIntegrationsChallengeMutation>;
 export type UpdateSettingsIntegrationsChallengeMutationResult = Apollo.MutationResult<UpdateSettingsIntegrationsChallengeMutation>;

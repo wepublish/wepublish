@@ -8,6 +8,7 @@ import { gql } from '@apollo/client';
 import { SlimImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc, FullImageFragmentDoc, FullImageUrLsFragmentDoc, SquareImageUrLsFragmentDoc } from './image.generated';
 import { FullTagFragmentDoc } from './tag.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type SlimAuthorFragment = { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, url: string, hideOnArticle: boolean, hideOnTeaser: boolean, hideOnTeam: boolean, image?: (
     { __typename?: 'Image' }
@@ -115,13 +116,13 @@ ${SquareImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function useAuthorQuery(baseOptions?: Apollo.QueryHookOptions<AuthorQuery, AuthorQueryVariables>) {
+export function useAuthorQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AuthorQuery, AuthorQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AuthorQuery, AuthorQueryVariables>(AuthorDocument, options);
+        return ApolloReactHooks.useQuery<AuthorQuery, AuthorQueryVariables>(AuthorDocument, options);
       }
-export function useAuthorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AuthorQuery, AuthorQueryVariables>) {
+export function useAuthorLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AuthorQuery, AuthorQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AuthorQuery, AuthorQueryVariables>(AuthorDocument, options);
+          return ApolloReactHooks.useLazyQuery<AuthorQuery, AuthorQueryVariables>(AuthorDocument, options);
         }
 export type AuthorQueryHookResult = ReturnType<typeof useAuthorQuery>;
 export type AuthorLazyQueryHookResult = ReturnType<typeof useAuthorLazyQuery>;
@@ -176,13 +177,13 @@ ${SquareImageUrLsFragmentDoc}`;
  *   },
  * });
  */
-export function useAuthorListQuery(baseOptions?: Apollo.QueryHookOptions<AuthorListQuery, AuthorListQueryVariables>) {
+export function useAuthorListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AuthorListQuery, AuthorListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AuthorListQuery, AuthorListQueryVariables>(AuthorListDocument, options);
+        return ApolloReactHooks.useQuery<AuthorListQuery, AuthorListQueryVariables>(AuthorListDocument, options);
       }
-export function useAuthorListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AuthorListQuery, AuthorListQueryVariables>) {
+export function useAuthorListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AuthorListQuery, AuthorListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AuthorListQuery, AuthorListQueryVariables>(AuthorListDocument, options);
+          return ApolloReactHooks.useLazyQuery<AuthorListQuery, AuthorListQueryVariables>(AuthorListDocument, options);
         }
 export type AuthorListQueryHookResult = ReturnType<typeof useAuthorListQuery>;
 export type AuthorListLazyQueryHookResult = ReturnType<typeof useAuthorListLazyQuery>;

@@ -6,6 +6,7 @@ import { FullImageFragment, ImageUrLsFragment, FullPeerImageFragment } from './i
 import { gql } from '@apollo/client';
 import { FullImageFragmentDoc, ImageUrLsFragmentDoc, FullPeerImageFragmentDoc } from './image.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type BannersQueryVariables = Types.Exact<{
   take: Types.Scalars['Int'];
@@ -138,13 +139,13 @@ ${FullBannerActionFragmentDoc}`;
  *   },
  * });
  */
-export function useBannersQuery(baseOptions: Apollo.QueryHookOptions<BannersQuery, BannersQueryVariables>) {
+export function useBannersQuery(baseOptions: ApolloReactHooks.QueryHookOptions<BannersQuery, BannersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<BannersQuery, BannersQueryVariables>(BannersDocument, options);
+        return ApolloReactHooks.useQuery<BannersQuery, BannersQueryVariables>(BannersDocument, options);
       }
-export function useBannersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BannersQuery, BannersQueryVariables>) {
+export function useBannersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<BannersQuery, BannersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<BannersQuery, BannersQueryVariables>(BannersDocument, options);
+          return ApolloReactHooks.useLazyQuery<BannersQuery, BannersQueryVariables>(BannersDocument, options);
         }
 export type BannersQueryHookResult = ReturnType<typeof useBannersQuery>;
 export type BannersLazyQueryHookResult = ReturnType<typeof useBannersLazyQuery>;
@@ -177,13 +178,13 @@ ${FullBannerActionFragmentDoc}`;
  *   },
  * });
  */
-export function useBannerQuery(baseOptions: Apollo.QueryHookOptions<BannerQuery, BannerQueryVariables>) {
+export function useBannerQuery(baseOptions: ApolloReactHooks.QueryHookOptions<BannerQuery, BannerQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<BannerQuery, BannerQueryVariables>(BannerDocument, options);
+        return ApolloReactHooks.useQuery<BannerQuery, BannerQueryVariables>(BannerDocument, options);
       }
-export function useBannerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BannerQuery, BannerQueryVariables>) {
+export function useBannerLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<BannerQuery, BannerQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<BannerQuery, BannerQueryVariables>(BannerDocument, options);
+          return ApolloReactHooks.useLazyQuery<BannerQuery, BannerQueryVariables>(BannerDocument, options);
         }
 export type BannerQueryHookResult = ReturnType<typeof useBannerQuery>;
 export type BannerLazyQueryHookResult = ReturnType<typeof useBannerLazyQuery>;
@@ -218,9 +219,9 @@ export type CreateBannerMutationFn = Apollo.MutationFunction<CreateBannerMutatio
  *   },
  * });
  */
-export function useCreateBannerMutation(baseOptions?: Apollo.MutationHookOptions<CreateBannerMutation, CreateBannerMutationVariables>) {
+export function useCreateBannerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateBannerMutation, CreateBannerMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateBannerMutation, CreateBannerMutationVariables>(CreateBannerDocument, options);
+        return ApolloReactHooks.useMutation<CreateBannerMutation, CreateBannerMutationVariables>(CreateBannerDocument, options);
       }
 export type CreateBannerMutationHookResult = ReturnType<typeof useCreateBannerMutation>;
 export type CreateBannerMutationResult = Apollo.MutationResult<CreateBannerMutation>;
@@ -255,9 +256,9 @@ export type UpdateBannerMutationFn = Apollo.MutationFunction<UpdateBannerMutatio
  *   },
  * });
  */
-export function useUpdateBannerMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBannerMutation, UpdateBannerMutationVariables>) {
+export function useUpdateBannerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateBannerMutation, UpdateBannerMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateBannerMutation, UpdateBannerMutationVariables>(UpdateBannerDocument, options);
+        return ApolloReactHooks.useMutation<UpdateBannerMutation, UpdateBannerMutationVariables>(UpdateBannerDocument, options);
       }
 export type UpdateBannerMutationHookResult = ReturnType<typeof useUpdateBannerMutation>;
 export type UpdateBannerMutationResult = Apollo.MutationResult<UpdateBannerMutation>;
@@ -286,9 +287,9 @@ export type DeleteBannerMutationFn = Apollo.MutationFunction<DeleteBannerMutatio
  *   },
  * });
  */
-export function useDeleteBannerMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBannerMutation, DeleteBannerMutationVariables>) {
+export function useDeleteBannerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteBannerMutation, DeleteBannerMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteBannerMutation, DeleteBannerMutationVariables>(DeleteBannerDocument, options);
+        return ApolloReactHooks.useMutation<DeleteBannerMutation, DeleteBannerMutationVariables>(DeleteBannerDocument, options);
       }
 export type DeleteBannerMutationHookResult = ReturnType<typeof useDeleteBannerMutation>;
 export type DeleteBannerMutationResult = Apollo.MutationResult<DeleteBannerMutation>;

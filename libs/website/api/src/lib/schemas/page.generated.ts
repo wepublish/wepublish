@@ -34,6 +34,7 @@ import { SlimAuthorFragmentDoc, FullAuthorFragmentDoc } from './author.generated
 import { SlimPaywallFragmentDoc, FullPaywallFragmentDoc } from './paywall.generated';
 import { FullPeerFragmentDoc, FullRemotePeerProfileFragmentDoc } from './peer.generated';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type FullPageRevisionFragment = (
   { __typename?: 'PageRevision', socialMediaDescription?: string | null, socialMediaTitle?: string | null, image?: (
@@ -300,13 +301,13 @@ ${FullBlockTemplateBlockFragmentDoc}`;
  *   },
  * });
  */
-export function usePageQuery(baseOptions?: Apollo.QueryHookOptions<PageQuery, PageQueryVariables>) {
+export function usePageQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PageQuery, PageQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PageQuery, PageQueryVariables>(PageDocument, options);
+        return ApolloReactHooks.useQuery<PageQuery, PageQueryVariables>(PageDocument, options);
       }
-export function usePageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageQuery, PageQueryVariables>) {
+export function usePageLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PageQuery, PageQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PageQuery, PageQueryVariables>(PageDocument, options);
+          return ApolloReactHooks.useLazyQuery<PageQuery, PageQueryVariables>(PageDocument, options);
         }
 export type PageQueryHookResult = ReturnType<typeof usePageQuery>;
 export type PageLazyQueryHookResult = ReturnType<typeof usePageLazyQuery>;
@@ -361,13 +362,13 @@ ${FullPropertyFragmentDoc}`;
  *   },
  * });
  */
-export function usePageListQuery(baseOptions?: Apollo.QueryHookOptions<PageListQuery, PageListQueryVariables>) {
+export function usePageListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PageListQuery, PageListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PageListQuery, PageListQueryVariables>(PageListDocument, options);
+        return ApolloReactHooks.useQuery<PageListQuery, PageListQueryVariables>(PageListDocument, options);
       }
-export function usePageListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageListQuery, PageListQueryVariables>) {
+export function usePageListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PageListQuery, PageListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PageListQuery, PageListQueryVariables>(PageListDocument, options);
+          return ApolloReactHooks.useLazyQuery<PageListQuery, PageListQueryVariables>(PageListDocument, options);
         }
 export type PageListQueryHookResult = ReturnType<typeof usePageListQuery>;
 export type PageListLazyQueryHookResult = ReturnType<typeof usePageListLazyQuery>;

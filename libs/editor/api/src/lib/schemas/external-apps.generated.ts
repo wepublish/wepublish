@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type ExternalAppFragment = { __typename?: 'ExternalApp', createdAt: string, icon?: string | null, id: string, modifiedAt: string, name: string, description?: string | null, target: Types.ExternalAppsTarget, url: string };
 
@@ -98,13 +99,13 @@ export const ExternalAppDocument = gql`
  *   },
  * });
  */
-export function useExternalAppQuery(baseOptions: Apollo.QueryHookOptions<ExternalAppQuery, ExternalAppQueryVariables>) {
+export function useExternalAppQuery(baseOptions: ApolloReactHooks.QueryHookOptions<ExternalAppQuery, ExternalAppQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ExternalAppQuery, ExternalAppQueryVariables>(ExternalAppDocument, options);
+        return ApolloReactHooks.useQuery<ExternalAppQuery, ExternalAppQueryVariables>(ExternalAppDocument, options);
       }
-export function useExternalAppLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ExternalAppQuery, ExternalAppQueryVariables>) {
+export function useExternalAppLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ExternalAppQuery, ExternalAppQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ExternalAppQuery, ExternalAppQueryVariables>(ExternalAppDocument, options);
+          return ApolloReactHooks.useLazyQuery<ExternalAppQuery, ExternalAppQueryVariables>(ExternalAppDocument, options);
         }
 export type ExternalAppQueryHookResult = ReturnType<typeof useExternalAppQuery>;
 export type ExternalAppLazyQueryHookResult = ReturnType<typeof useExternalAppLazyQuery>;
@@ -133,13 +134,13 @@ export const ExternalAppsDocument = gql`
  *   },
  * });
  */
-export function useExternalAppsQuery(baseOptions?: Apollo.QueryHookOptions<ExternalAppsQuery, ExternalAppsQueryVariables>) {
+export function useExternalAppsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ExternalAppsQuery, ExternalAppsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ExternalAppsQuery, ExternalAppsQueryVariables>(ExternalAppsDocument, options);
+        return ApolloReactHooks.useQuery<ExternalAppsQuery, ExternalAppsQueryVariables>(ExternalAppsDocument, options);
       }
-export function useExternalAppsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ExternalAppsQuery, ExternalAppsQueryVariables>) {
+export function useExternalAppsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ExternalAppsQuery, ExternalAppsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ExternalAppsQuery, ExternalAppsQueryVariables>(ExternalAppsDocument, options);
+          return ApolloReactHooks.useLazyQuery<ExternalAppsQuery, ExternalAppsQueryVariables>(ExternalAppsDocument, options);
         }
 export type ExternalAppsQueryHookResult = ReturnType<typeof useExternalAppsQuery>;
 export type ExternalAppsLazyQueryHookResult = ReturnType<typeof useExternalAppsLazyQuery>;
@@ -170,9 +171,9 @@ export type CreateExternalAppMutationFn = Apollo.MutationFunction<CreateExternal
  *   },
  * });
  */
-export function useCreateExternalAppMutation(baseOptions?: Apollo.MutationHookOptions<CreateExternalAppMutation, CreateExternalAppMutationVariables>) {
+export function useCreateExternalAppMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateExternalAppMutation, CreateExternalAppMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateExternalAppMutation, CreateExternalAppMutationVariables>(CreateExternalAppDocument, options);
+        return ApolloReactHooks.useMutation<CreateExternalAppMutation, CreateExternalAppMutationVariables>(CreateExternalAppDocument, options);
       }
 export type CreateExternalAppMutationHookResult = ReturnType<typeof useCreateExternalAppMutation>;
 export type CreateExternalAppMutationResult = Apollo.MutationResult<CreateExternalAppMutation>;
@@ -215,9 +216,9 @@ export type UpdateExternalAppMutationFn = Apollo.MutationFunction<UpdateExternal
  *   },
  * });
  */
-export function useUpdateExternalAppMutation(baseOptions?: Apollo.MutationHookOptions<UpdateExternalAppMutation, UpdateExternalAppMutationVariables>) {
+export function useUpdateExternalAppMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateExternalAppMutation, UpdateExternalAppMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateExternalAppMutation, UpdateExternalAppMutationVariables>(UpdateExternalAppDocument, options);
+        return ApolloReactHooks.useMutation<UpdateExternalAppMutation, UpdateExternalAppMutationVariables>(UpdateExternalAppDocument, options);
       }
 export type UpdateExternalAppMutationHookResult = ReturnType<typeof useUpdateExternalAppMutation>;
 export type UpdateExternalAppMutationResult = Apollo.MutationResult<UpdateExternalAppMutation>;
@@ -248,9 +249,9 @@ export type DeleteExternalAppMutationFn = Apollo.MutationFunction<DeleteExternal
  *   },
  * });
  */
-export function useDeleteExternalAppMutation(baseOptions?: Apollo.MutationHookOptions<DeleteExternalAppMutation, DeleteExternalAppMutationVariables>) {
+export function useDeleteExternalAppMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteExternalAppMutation, DeleteExternalAppMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteExternalAppMutation, DeleteExternalAppMutationVariables>(DeleteExternalAppDocument, options);
+        return ApolloReactHooks.useMutation<DeleteExternalAppMutation, DeleteExternalAppMutationVariables>(DeleteExternalAppDocument, options);
       }
 export type DeleteExternalAppMutationHookResult = ReturnType<typeof useDeleteExternalAppMutation>;
 export type DeleteExternalAppMutationResult = Apollo.MutationResult<DeleteExternalAppMutation>;

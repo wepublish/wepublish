@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type WebsiteSettingsFragment = { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<Types.FontWeight>, style: Array<Types.FontStyle>, name: string }> };
 
@@ -92,13 +93,13 @@ export const WebsiteSettingsDocument = gql`
  *   },
  * });
  */
-export function useWebsiteSettingsQuery(baseOptions?: Apollo.QueryHookOptions<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>) {
+export function useWebsiteSettingsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>(WebsiteSettingsDocument, options);
+        return ApolloReactHooks.useQuery<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>(WebsiteSettingsDocument, options);
       }
-export function useWebsiteSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>) {
+export function useWebsiteSettingsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>(WebsiteSettingsDocument, options);
+          return ApolloReactHooks.useLazyQuery<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>(WebsiteSettingsDocument, options);
         }
 export type WebsiteSettingsQueryHookResult = ReturnType<typeof useWebsiteSettingsQuery>;
 export type WebsiteSettingsLazyQueryHookResult = ReturnType<typeof useWebsiteSettingsLazyQuery>;
@@ -126,13 +127,13 @@ export const SensitiveWebsiteSettingsDocument = gql`
  *   },
  * });
  */
-export function useSensitiveWebsiteSettingsQuery(baseOptions?: Apollo.QueryHookOptions<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>) {
+export function useSensitiveWebsiteSettingsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>(SensitiveWebsiteSettingsDocument, options);
+        return ApolloReactHooks.useQuery<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>(SensitiveWebsiteSettingsDocument, options);
       }
-export function useSensitiveWebsiteSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>) {
+export function useSensitiveWebsiteSettingsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>(SensitiveWebsiteSettingsDocument, options);
+          return ApolloReactHooks.useLazyQuery<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>(SensitiveWebsiteSettingsDocument, options);
         }
 export type SensitiveWebsiteSettingsQueryHookResult = ReturnType<typeof useSensitiveWebsiteSettingsQuery>;
 export type SensitiveWebsiteSettingsLazyQueryHookResult = ReturnType<typeof useSensitiveWebsiteSettingsLazyQuery>;

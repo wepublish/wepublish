@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type MailProviderSettingsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -70,13 +71,13 @@ export const MailProviderSettingsDocument = gql`
  *   },
  * });
  */
-export function useMailProviderSettingsQuery(baseOptions?: Apollo.QueryHookOptions<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>) {
+export function useMailProviderSettingsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>(MailProviderSettingsDocument, options);
+        return ApolloReactHooks.useQuery<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>(MailProviderSettingsDocument, options);
       }
-export function useMailProviderSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>) {
+export function useMailProviderSettingsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>(MailProviderSettingsDocument, options);
+          return ApolloReactHooks.useLazyQuery<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>(MailProviderSettingsDocument, options);
         }
 export type MailProviderSettingsQueryHookResult = ReturnType<typeof useMailProviderSettingsQuery>;
 export type MailProviderSettingsLazyQueryHookResult = ReturnType<typeof useMailProviderSettingsLazyQuery>;
@@ -152,9 +153,9 @@ export type UpdateMailProviderSettingMutationFn = Apollo.MutationFunction<Update
  *   },
  * });
  */
-export function useUpdateMailProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMailProviderSettingMutation, UpdateMailProviderSettingMutationVariables>) {
+export function useUpdateMailProviderSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateMailProviderSettingMutation, UpdateMailProviderSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateMailProviderSettingMutation, UpdateMailProviderSettingMutationVariables>(UpdateMailProviderSettingDocument, options);
+        return ApolloReactHooks.useMutation<UpdateMailProviderSettingMutation, UpdateMailProviderSettingMutationVariables>(UpdateMailProviderSettingDocument, options);
       }
 export type UpdateMailProviderSettingMutationHookResult = ReturnType<typeof useUpdateMailProviderSettingMutation>;
 export type UpdateMailProviderSettingMutationResult = Apollo.MutationResult<UpdateMailProviderSettingMutation>;

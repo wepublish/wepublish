@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type ChallengeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -37,13 +38,13 @@ export const ChallengeDocument = gql`
  *   },
  * });
  */
-export function useChallengeQuery(baseOptions?: Apollo.QueryHookOptions<ChallengeQuery, ChallengeQueryVariables>) {
+export function useChallengeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ChallengeQuery, ChallengeQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ChallengeQuery, ChallengeQueryVariables>(ChallengeDocument, options);
+        return ApolloReactHooks.useQuery<ChallengeQuery, ChallengeQueryVariables>(ChallengeDocument, options);
       }
-export function useChallengeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChallengeQuery, ChallengeQueryVariables>) {
+export function useChallengeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ChallengeQuery, ChallengeQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ChallengeQuery, ChallengeQueryVariables>(ChallengeDocument, options);
+          return ApolloReactHooks.useLazyQuery<ChallengeQuery, ChallengeQueryVariables>(ChallengeDocument, options);
         }
 export type ChallengeQueryHookResult = ReturnType<typeof useChallengeQuery>;
 export type ChallengeLazyQueryHookResult = ReturnType<typeof useChallengeLazyQuery>;

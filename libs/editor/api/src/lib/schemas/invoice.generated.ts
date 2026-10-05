@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type InvoiceFragment = { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Types.Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number, goodieId?: string | null, goodie?: { __typename?: 'Goodie', id: string, name: string } | null }> };
 
@@ -104,13 +105,13 @@ export const InvoicesDocument = gql`
  *   },
  * });
  */
-export function useInvoicesQuery(baseOptions?: Apollo.QueryHookOptions<InvoicesQuery, InvoicesQueryVariables>) {
+export function useInvoicesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<InvoicesQuery, InvoicesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<InvoicesQuery, InvoicesQueryVariables>(InvoicesDocument, options);
+        return ApolloReactHooks.useQuery<InvoicesQuery, InvoicesQueryVariables>(InvoicesDocument, options);
       }
-export function useInvoicesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<InvoicesQuery, InvoicesQueryVariables>) {
+export function useInvoicesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<InvoicesQuery, InvoicesQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<InvoicesQuery, InvoicesQueryVariables>(InvoicesDocument, options);
+          return ApolloReactHooks.useLazyQuery<InvoicesQuery, InvoicesQueryVariables>(InvoicesDocument, options);
         }
 export type InvoicesQueryHookResult = ReturnType<typeof useInvoicesQuery>;
 export type InvoicesLazyQueryHookResult = ReturnType<typeof useInvoicesLazyQuery>;
@@ -142,9 +143,9 @@ export type MarkInvoiceAsPaidMutationFn = Apollo.MutationFunction<MarkInvoiceAsP
  *   },
  * });
  */
-export function useMarkInvoiceAsPaidMutation(baseOptions?: Apollo.MutationHookOptions<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>) {
+export function useMarkInvoiceAsPaidMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>(MarkInvoiceAsPaidDocument, options);
+        return ApolloReactHooks.useMutation<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>(MarkInvoiceAsPaidDocument, options);
       }
 export type MarkInvoiceAsPaidMutationHookResult = ReturnType<typeof useMarkInvoiceAsPaidMutation>;
 export type MarkInvoiceAsPaidMutationResult = Apollo.MutationResult<MarkInvoiceAsPaidMutation>;

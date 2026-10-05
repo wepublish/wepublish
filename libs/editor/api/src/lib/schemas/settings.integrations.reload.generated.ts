@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type ReloadProvidersMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -34,9 +35,9 @@ export type ReloadProvidersMutationFn = Apollo.MutationFunction<ReloadProvidersM
  *   },
  * });
  */
-export function useReloadProvidersMutation(baseOptions?: Apollo.MutationHookOptions<ReloadProvidersMutation, ReloadProvidersMutationVariables>) {
+export function useReloadProvidersMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ReloadProvidersMutation, ReloadProvidersMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ReloadProvidersMutation, ReloadProvidersMutationVariables>(ReloadProvidersDocument, options);
+        return ApolloReactHooks.useMutation<ReloadProvidersMutation, ReloadProvidersMutationVariables>(ReloadProvidersDocument, options);
       }
 export type ReloadProvidersMutationHookResult = ReturnType<typeof useReloadProvidersMutation>;
 export type ReloadProvidersMutationResult = Apollo.MutationResult<ReloadProvidersMutation>;

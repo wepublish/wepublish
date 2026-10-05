@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type SettingsListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -53,13 +54,13 @@ export const SettingsListDocument = gql`
  *   },
  * });
  */
-export function useSettingsListQuery(baseOptions?: Apollo.QueryHookOptions<SettingsListQuery, SettingsListQueryVariables>) {
+export function useSettingsListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SettingsListQuery, SettingsListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SettingsListQuery, SettingsListQueryVariables>(SettingsListDocument, options);
+        return ApolloReactHooks.useQuery<SettingsListQuery, SettingsListQueryVariables>(SettingsListDocument, options);
       }
-export function useSettingsListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingsListQuery, SettingsListQueryVariables>) {
+export function useSettingsListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SettingsListQuery, SettingsListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SettingsListQuery, SettingsListQueryVariables>(SettingsListDocument, options);
+          return ApolloReactHooks.useLazyQuery<SettingsListQuery, SettingsListQueryVariables>(SettingsListDocument, options);
         }
 export type SettingsListQueryHookResult = ReturnType<typeof useSettingsListQuery>;
 export type SettingsListLazyQueryHookResult = ReturnType<typeof useSettingsListLazyQuery>;
@@ -92,9 +93,9 @@ export type UpdateSettingMutationFn = Apollo.MutationFunction<UpdateSettingMutat
  *   },
  * });
  */
-export function useUpdateSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingMutation, UpdateSettingMutationVariables>) {
+export function useUpdateSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSettingMutation, UpdateSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSettingMutation, UpdateSettingMutationVariables>(UpdateSettingDocument, options);
+        return ApolloReactHooks.useMutation<UpdateSettingMutation, UpdateSettingMutationVariables>(UpdateSettingDocument, options);
       }
 export type UpdateSettingMutationHookResult = ReturnType<typeof useUpdateSettingMutation>;
 export type UpdateSettingMutationResult = Apollo.MutationResult<UpdateSettingMutation>;

@@ -4,6 +4,7 @@ import * as Types from '../graphql';
 import {RichtextJSONDocument} from '@wepublish/richtext';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type SettingsIntegrationsAiQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -59,13 +60,13 @@ export const SettingsIntegrationsAiDocument = gql`
  *   },
  * });
  */
-export function useSettingsIntegrationsAiQuery(baseOptions?: Apollo.QueryHookOptions<SettingsIntegrationsAiQuery, SettingsIntegrationsAiQueryVariables>) {
+export function useSettingsIntegrationsAiQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SettingsIntegrationsAiQuery, SettingsIntegrationsAiQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SettingsIntegrationsAiQuery, SettingsIntegrationsAiQueryVariables>(SettingsIntegrationsAiDocument, options);
+        return ApolloReactHooks.useQuery<SettingsIntegrationsAiQuery, SettingsIntegrationsAiQueryVariables>(SettingsIntegrationsAiDocument, options);
       }
-export function useSettingsIntegrationsAiLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingsIntegrationsAiQuery, SettingsIntegrationsAiQueryVariables>) {
+export function useSettingsIntegrationsAiLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SettingsIntegrationsAiQuery, SettingsIntegrationsAiQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SettingsIntegrationsAiQuery, SettingsIntegrationsAiQueryVariables>(SettingsIntegrationsAiDocument, options);
+          return ApolloReactHooks.useLazyQuery<SettingsIntegrationsAiQuery, SettingsIntegrationsAiQueryVariables>(SettingsIntegrationsAiDocument, options);
         }
 export type SettingsIntegrationsAiQueryHookResult = ReturnType<typeof useSettingsIntegrationsAiQuery>;
 export type SettingsIntegrationsAiLazyQueryHookResult = ReturnType<typeof useSettingsIntegrationsAiLazyQuery>;
@@ -110,9 +111,9 @@ export type UpdateSettingsIntegrationsAiMutationFn = Apollo.MutationFunction<Upd
  *   },
  * });
  */
-export function useUpdateSettingsIntegrationsAiMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingsIntegrationsAiMutation, UpdateSettingsIntegrationsAiMutationVariables>) {
+export function useUpdateSettingsIntegrationsAiMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSettingsIntegrationsAiMutation, UpdateSettingsIntegrationsAiMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSettingsIntegrationsAiMutation, UpdateSettingsIntegrationsAiMutationVariables>(UpdateSettingsIntegrationsAiDocument, options);
+        return ApolloReactHooks.useMutation<UpdateSettingsIntegrationsAiMutation, UpdateSettingsIntegrationsAiMutationVariables>(UpdateSettingsIntegrationsAiDocument, options);
       }
 export type UpdateSettingsIntegrationsAiMutationHookResult = ReturnType<typeof useUpdateSettingsIntegrationsAiMutation>;
 export type UpdateSettingsIntegrationsAiMutationResult = Apollo.MutationResult<UpdateSettingsIntegrationsAiMutation>;
@@ -151,9 +152,9 @@ export type CreateAiSettingMutationFn = Apollo.MutationFunction<CreateAiSettingM
  *   },
  * });
  */
-export function useCreateAiSettingMutation(baseOptions?: Apollo.MutationHookOptions<CreateAiSettingMutation, CreateAiSettingMutationVariables>) {
+export function useCreateAiSettingMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateAiSettingMutation, CreateAiSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateAiSettingMutation, CreateAiSettingMutationVariables>(CreateAiSettingDocument, options);
+        return ApolloReactHooks.useMutation<CreateAiSettingMutation, CreateAiSettingMutationVariables>(CreateAiSettingDocument, options);
       }
 export type CreateAiSettingMutationHookResult = ReturnType<typeof useCreateAiSettingMutation>;
 export type CreateAiSettingMutationResult = Apollo.MutationResult<CreateAiSettingMutation>;
