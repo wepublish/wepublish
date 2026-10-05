@@ -43,7 +43,6 @@ export function ChallengeIntegrationForm() {
             label: v,
             value: v,
           })),
-          disabled: true,
         },
         {
           type: 'text',

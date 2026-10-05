@@ -87,7 +87,7 @@ export const SearchPage = ({
   } = usePhraseQuery({
     skip: !phraseQuery,
     variables: {
-      query: phraseQuery!,
+      query: phraseQuery ?? '', // skipped if undefined anyways
       take: ITEMS_PER_PAGE,
       skip: (page - 1) * ITEMS_PER_PAGE,
     },

@@ -1,10 +1,13 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  CanCreatePaymentProviderSettings,
+  CanDeletePaymentProviderSettings,
   CanGetPaymentProviderSettings,
   CanUpdatePaymentProviderSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
+  CreateSettingPaymentProviderInput,
   SettingPaymentProvider,
   UpdateSettingPaymentProviderInput,
   SettingPaymentProviderFilter,
@@ -41,16 +44,18 @@ export class PaymentProviderSettingsResolver {
     return this.paymentProviderSettingsDataloader.load(id);
   }
 
-  /** DISABLE FOR NOW
   @Permissions(CanCreatePaymentProviderSettings)
   @Mutation(returns => SettingPaymentProvider, {
     name: 'createPaymentProviderSetting',
     description: 'Creates a new payment provider setting.',
   })
-  createPaymentProviderSetting(@Args() input: CreateSettingPaymentProviderInput) {
-    return this.paymentProviderSettingsService.createPaymentProviderSetting(input);
+  createPaymentProviderSetting(
+    @Args() input: CreateSettingPaymentProviderInput
+  ) {
+    return this.paymentProviderSettingsService.createPaymentProviderSetting(
+      input
+    );
   }
- **/
 
   @Permissions(CanUpdatePaymentProviderSettings)
   @Mutation(returns => SettingPaymentProvider, {
@@ -64,7 +69,6 @@ export class PaymentProviderSettingsResolver {
       input
     );
   }
-  /** DISABLE FOR NOW
   @Permissions(CanDeletePaymentProviderSettings)
   @Mutation(returns => SettingPaymentProvider, {
     name: 'deletePaymentProviderSetting',
@@ -73,5 +77,4 @@ export class PaymentProviderSettingsResolver {
   deletePaymentProviderSetting(@Args('id') id: string) {
     return this.paymentProviderSettingsService.deletePaymentProviderSetting(id);
   }
-    **/
 }

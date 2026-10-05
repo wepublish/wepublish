@@ -26,8 +26,8 @@ export interface AddBlockInputProps {
 
 const Wrapper = styled.div`
   position: relative;
-  left: 41.5%;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
 `;
 
 export function AddBlockInput({

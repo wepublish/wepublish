@@ -9,8 +9,8 @@ import { useRouter } from 'next/router';
 import {
   ComponentType,
   createElement,
-  Fragment,
   PropsWithChildren,
+  Fragment,
 } from 'react';
 
 const AuthGuard = ({ children }: PropsWithChildren) => {
@@ -28,9 +28,11 @@ const AuthGuard = ({ children }: PropsWithChildren) => {
   }
 
   if (hasUser) {
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     return <>{children}</>;
   }
 
+  // eslint-disable-next-line react/jsx-no-useless-fragment
   return <Fragment />;
 };
 

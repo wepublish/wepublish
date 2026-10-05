@@ -8,6 +8,7 @@ npm-debug.log
 .CHANGELOG-next.md
 coverage/
 screenshots
+docs/superpowers
 
 # Nx
 tmp

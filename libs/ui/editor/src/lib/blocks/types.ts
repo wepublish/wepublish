@@ -10,6 +10,8 @@ import {
   FullImageFragment,
   FullPoll,
   FullTeaserFragment,
+  MailchimpFormOptionsLayout,
+  NestedBlockTemplateBlockFragment,
   PageWithoutBlocksFragment,
   SubscribeBlock,
   SubscribeBlockField,
@@ -88,6 +90,7 @@ export interface MailchimpFormInterestOptionValue {
   id: string;
   name: string;
   description?: string | null;
+  image?: FullImageFragment | null;
 }
 
 export interface MailchimpFormFieldConfigValue {
@@ -99,6 +102,7 @@ export interface MailchimpFormFieldConfigValue {
   urlParam?: string | null;
   defaultValue?: string | null;
   value?: string | null;
+  optionsLayout: MailchimpFormOptionsLayout;
   options: MailchimpFormInterestOptionValue[];
 }
 
@@ -184,6 +188,10 @@ export type FlexBlockWithAlignment = {
 
 export interface FlexBlockValue extends BaseBlockValue {
   blocks: Array<FlexBlockWithAlignment>;
+}
+
+export interface BlockTemplateBlockValue extends BaseBlockValue {
+  template?: NestedBlockTemplateBlockFragment['template'];
 }
 
 export enum EmbedType {
@@ -480,6 +488,10 @@ export type FlexBlockListValue = BlockListValue<
   EditorBlockType.FlexBlock,
   FlexBlockValue
 >;
+export type BlockTemplateListValue = BlockListValue<
+  EditorBlockType.BlockTemplate,
+  BlockTemplateBlockValue
+>;
 
 export type BlockValue =
   | TitleBlockListValue
@@ -502,7 +514,8 @@ export type BlockValue =
   | CommentBlockListValue
   | EventBlockListValue
   | TeaserListBlockListValue
-  | FlexBlockListValue;
+  | FlexBlockListValue
+  | BlockTemplateListValue;
 
 export function mapBlockValueToBlockInput(
   block: BlockValue
@@ -605,11 +618,16 @@ export function mapBlockValueToBlockInput(
               urlParam: input.urlParam,
               defaultValue: input.defaultValue,
               value: input.value,
-              options: input.options.map(option => ({
-                id: option.id,
-                name: option.name,
-                description: option.description,
-              })),
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
+              options: input.options
+                .filter(option => !!option.id)
+                .map(option => ({
+                  id: option.id,
+                  name: option.name,
+                  description: option.description,
+                  imageID: option.image?.id,
+                })),
             })),
           })),
           successPage:
@@ -933,6 +951,15 @@ export function mapBlockValueToBlockInput(
       };
 
       return { flexBlock };
+    }
+    case EditorBlockType.BlockTemplate: {
+      return {
+        blockTemplate: {
+          templateId: block.value.template?.id ?? '',
+          blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
+        },
+      };
     }
   }
 }
@@ -1293,10 +1320,13 @@ export function blockForQueryBlock(
               urlParam: input.urlParam ?? null,
               defaultValue: input.defaultValue ?? null,
               value: input.value ?? null,
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
               options: (input.options ?? []).map(option => ({
                 id: option.id,
                 name: option.name,
                 description: option.description ?? null,
+                image: option.image ?? null,
               })),
             })),
           })),
@@ -1446,6 +1476,17 @@ export function blockForQueryBlock(
                 blockForQueryBlock(block as FullBlockFragment)
               : undefined,
           })),
+        },
+      };
+
+    case 'BlockTemplateBlock':
+      return {
+        key,
+        type: EditorBlockType.BlockTemplate,
+        value: {
+          disabled: block.disabled,
+          blockStyle: block.blockStyle,
+          template: block.template,
         },
       };
 

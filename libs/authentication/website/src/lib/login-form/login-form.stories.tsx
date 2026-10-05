@@ -79,6 +79,7 @@ const Render = () => {
           loginWithEmail: {
             data: { sendWebsiteLogin: email },
           },
+          loginLinkCooldownSeconds: 60,
         });
       }}
       onSubmitLoginWithCredentials={() => {
@@ -275,6 +276,7 @@ export const WithCredentialsError: StoryObj = {
             loginWithEmail: {
               data: { sendWebsiteLogin: email },
             },
+            loginLinkCooldownSeconds: 60,
           });
         }}
         onSubmitLoginWithCredentials={() => {

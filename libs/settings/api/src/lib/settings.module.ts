@@ -4,6 +4,7 @@ import { PrismaModule } from '@wepublish/nest-modules';
 
 import { SettingsResolver } from './settings.resolver';
 import { SettingsService } from './settings.service';
+import { ProviderSettingsChanged } from './integrations/provider-settings-changed';
 import { GraphQLSettingValueType } from './settings.model';
 import { SettingDataloaderService } from './setting-dataloader.service';
 import { AISettingsResolver } from './integrations/ai-settings.resolver';
@@ -32,6 +33,7 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 @Module({
   imports: [PrismaModule, KvTtlCacheModule],
   providers: [
+    ProviderSettingsChanged,
     SettingsGuard,
     SettingsResolver,
     SettingsService,

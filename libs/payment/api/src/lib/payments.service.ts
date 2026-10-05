@@ -20,6 +20,7 @@ import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from './payment-method/payment-method.config';
+import { InvoicePaidNotifier } from './invoice-paid.listener';
 import { ErrorCode } from '@wepublish/errors';
 import { logger } from '@wepublish/utils/api';
 
@@ -40,7 +41,8 @@ export class PaymentsService {
   constructor(
     private prisma: PrismaClient,
     @Inject(PAYMENT_METHOD_CONFIG)
-    private config: PaymentMethodConfig
+    private config: PaymentMethodConfig,
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   getProviders() {
@@ -381,6 +383,7 @@ export class PaymentsService {
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
         });
+        await this.invoicePaidNotifier.notify(updatedPayment.invoiceID);
       }
     }
 

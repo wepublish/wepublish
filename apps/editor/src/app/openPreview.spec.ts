@@ -4,6 +4,7 @@ import {
   openPreviewWindow,
   PREVIEW_JWT_READY_MESSAGE,
   PREVIEW_JWT_RECEIVED_MESSAGE,
+  startPreviewHandshake,
 } from './openPreview';
 
 const PREVIEW_URL = 'https://example.com/a/test?preview';
@@ -139,6 +140,75 @@ describe('openPreviewWindow', () => {
     await flushPromises();
     vi.advanceTimersByTime(30_000);
 
+    expect(onSilence).not.toHaveBeenCalled();
+  });
+});
+
+describe('startPreviewHandshake', () => {
+  let frameWindow: { postMessage: ReturnType<typeof vi.fn>; closed: boolean };
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+
+    frameWindow = { postMessage: vi.fn(), closed: false };
+  });
+
+  afterEach(() => {
+    vi.runOnlyPendingTimers();
+    vi.useRealTimers();
+  });
+
+  it('answers pings from the given window', async () => {
+    const createToken = vi.fn().mockResolvedValue('token-1');
+    const cleanup = startPreviewHandshake(
+      frameWindow as unknown as Window,
+      PREVIEW_URL,
+      { createToken }
+    );
+
+    sendMessage(frameWindow, PREVIEW_JWT_READY_MESSAGE);
+    await flushPromises();
+
+    expect(frameWindow.postMessage).toHaveBeenCalledWith(
+      { previewJwt: 'token-1' },
+      'https://example.com'
+    );
+
+    cleanup();
+  });
+
+  it('ignores messages from other windows', async () => {
+    const createToken = vi.fn().mockResolvedValue('token-1');
+    const cleanup = startPreviewHandshake(
+      frameWindow as unknown as Window,
+      PREVIEW_URL,
+      { createToken }
+    );
+
+    sendMessage({ some: 'other window' }, PREVIEW_JWT_READY_MESSAGE);
+    await flushPromises();
+
+    expect(frameWindow.postMessage).not.toHaveBeenCalled();
+
+    cleanup();
+  });
+
+  it('stops answering and reporting silence after cleanup', async () => {
+    const createToken = vi.fn().mockResolvedValue('token-1');
+    const onSilence = vi.fn();
+    const cleanup = startPreviewHandshake(
+      frameWindow as unknown as Window,
+      PREVIEW_URL,
+      { createToken, onSilence }
+    );
+
+    cleanup();
+    sendMessage(frameWindow, PREVIEW_JWT_READY_MESSAGE);
+    await flushPromises();
+    vi.advanceTimersByTime(30_000);
+
+    expect(frameWindow.postMessage).not.toHaveBeenCalled();
     expect(onSilence).not.toHaveBeenCalled();
   });
 });

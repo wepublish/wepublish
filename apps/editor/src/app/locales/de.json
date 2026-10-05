@@ -1,5 +1,15 @@
 {
   "translation": {
+    "preview": {
+      "backToEditor": "Editor",
+      "mobile": "Mobil",
+      "desktop": "Desktop",
+      "tablet": "Tablet",
+      "copyUrl": "Vorschau-URL kopieren",
+      "urlCopied": "Vorschau-URL in die Zwischenablage kopiert",
+      "urlCopyFailed": "Vorschau-URL konnte nicht kopiert werden",
+      "loading": "Vorschau wird geladen …"
+    },
     "previewHandshake": {
       "popupBlocked": "Das Vorschau-Fenster wurde vom Browser blockiert. Bitte Pop-ups für den Editor erlauben und erneut versuchen.",
       "notResponding": "Das Vorschau-Fenster antwortet nicht. Die Anmeldung für die Vorschau ist möglicherweise fehlgeschlagen."
@@ -64,6 +74,9 @@
       }
     },
     "articleEditor": {
+      "validationFailedGeneric": "Speichern nicht möglich. Bitte prüfe die markierten Fehler.",
+      "saveValidationFailed": "Speichern fehlgeschlagen",
+      "publishValidationFailed": "Publizieren fehlgeschlagen",
       "overview": {
         "articlePending": "Artikel geplant",
         "articlePublished": "Artikel publiziert",
@@ -325,6 +338,14 @@
       }
     },
     "blocks": {
+      "blockTemplate": {
+        "editTemplate": "Vorlage bearbeiten",
+        "label": "Blockvorlage",
+        "select": "Blockvorlage auswählen",
+        "useContent": "Inhalt übernehmen",
+        "useContentConfirmMessage": "Der Inhalt der Vorlage wird hierher kopiert, damit Sie ihn frei bearbeiten können. Danach ist dieser Block nicht mehr mit der Vorlage verknüpft und spätere Änderungen an der Vorlage erscheinen hier nicht mehr.",
+        "useContentConfirmTitle": "Inhalt der Vorlage übernehmen?"
+      },
       "crowdfunding": {
         "edit": "Bearbeiten",
         "label": "Crowdfunding",
@@ -554,11 +575,11 @@
         "syncProviderPlaceholder": "Konto auswählen",
         "list": "Liste",
         "listPlaceholder": "Liste auswählen",
-        "interests": "Voreingestellte Interessen",
+        "interests": "Voreingestellte Interessen. Diese werden allen Abonnent:innen automatisch hinzugefügt",
         "interestsPlaceholder": "Interessen auswählen",
         "autoFocus": "Automatischer Fokus",
         "doubleOptIn": "Double-Opt-In",
-        "submitButtonLabel": "Beschriftung Absende-Button",
+        "submitButtonLabel": "Beschriftung Anmelde-Button",
         "buttonColor": "Button-Farbe",
         "buttonFontColor": "Button-Schriftfarbe",
         "mergeFieldPlaceholder": "Merge-Feld auswählen",
@@ -568,17 +589,26 @@
         "fieldValue": "Fixer Wert",
         "steps": "Schritte",
         "step": "Schritt {{number}}",
-        "skipIfFieldsFilled": "Überspringen, wenn Felder gefüllt",
-        "skipIfInterestsFilled": "Überspringen, wenn Interessen gesetzt",
-        "showIfInterestsFilled": "Nur zeigen, wenn Interessen gesetzt",
+        "skipIfFieldsFilled": "Schritt überspringen, wenn die folgenden Informationen bereits vorhanden sind",
+        "skipIfInterestsFilled": "Diesen Schritt überspringen, wenn das folgende Interesse bereits aktiviert ist",
+        "showIfInterestsFilled": "Diesen Schritt nur anzeigen, wenn das folgende Interesse aktiviert ist",
         "inputs": "Eingabefelder",
+        "inputTitle": "Eingabefeld {{number}}",
         "inputType": "Typ",
         "inputTypeHelp": "Art der Information, die in das Eingabefeld eingegeben werden kann",
+        "inputTypes": {
+          "text": "Text",
+          "email": "E-Mail",
+          "hidden": "Versteckt",
+          "groups": "Interessen-Auswahl"
+        },
+        "inputTypeGroupsHelp": "Leser:innen wählen aus, welche Interessen der ausgewählten Mailchimp-Liste sie abonnieren möchten, z. B. einzelne Newsletter. Füge unten für jedes Interesse eine Option hinzu.",
         "required": "Pflichtfeld",
         "inputName": "Name",
         "inputNameHelp": "Name des Merge-Felds, unter dem diese Information bei Mailchimp gespeichert wird",
         "inputLabel": "Beschriftung",
         "inputLabelHelp": "Beschriftung des Formularfelds",
+        "inputLabelGroupsHelp": "Überschrift über den Interessen, z. B. «Welche Newsletter möchtest du erhalten?»",
         "inputDescription": "Beschreibung",
         "inputDescriptionHelp": "Beschreibung, die unter dem Formularfeld angezeigt wird",
         "fieldUrlParamHelp": "Welcher URL-Parameter (?foo=bar) diese Information vorbelegen kann",
@@ -586,22 +616,43 @@
         "fieldValueHelp": "Fixer Wert, der verwendet wird, wenn nichts eingegeben wird",
         "advanced": "Erweitert",
         "interestOptions": "Interessen-Optionen",
+        "interestOptionsNoList": "Wähle zuerst unter Allgemein eine Liste aus, um deren Interessen zu laden.",
         "interestOptionPlaceholder": "Interesse auswählen",
+        "interestOptionRequired": "Wähle ein Interesse aus.",
+        "syncProviderRequired": "Wähle ein Mailchimp-Konto aus.",
+        "listRequired": "Wähle eine Liste aus.",
+        "emailInputRequired": "Füge ein Eingabefeld mit dem Merge-Feld E-Mail-Adresse (EMAIL) hinzu, sonst kann sich niemand anmelden.",
+        "inputNameRequired": "Wähle ein Merge-Feld aus.",
+        "inputLabelRequired": "Gib eine Beschriftung ein.",
+        "interestOptionsRequired": "Füge mindestens eine Option mit einem Interesse hinzu.",
+        "validationSummaryOne": "Newsletter-Formular: 1 Feld ist unvollständig",
+        "validationSummaryMany": "Newsletter-Formular: {{count}} Felder sind unvollständig",
         "interestOptionDescription": "Beschreibung",
         "addInterestOption": "Option hinzufügen",
+        "moveUp": "Nach oben verschieben",
+        "moveDown": "Nach unten verschieben",
+        "remove": "Entfernen",
         "addInput": "Eingabefeld hinzufügen",
         "addStep": "Schritt hinzufügen",
         "success": "Nach dem Absenden",
-        "successUrl": "Weiterleitungs-URL",
+        "successUrl": "Auf diese Website weiterleiten",
         "successUrlPlaceholder": "https://…",
-        "useSuccessPage": "Erfolgsseite statt Weiterleitung",
+        "useSuccessPage": "Erfolgsseite anzeigen, statt auf eine Website weiterzuleiten",
         "successPageDescription": "Beschreibung",
         "optionLabel": "Beschriftung",
         "optionBackground": "Hintergrundfarbe",
         "optionUrl": "URL",
         "optionMergeFieldName": "Merge-Feld Name",
         "optionMergeFieldValue": "Merge-Feld Wert",
-        "addSuccessOption": "Option hinzufügen"
+        "addSuccessOption": "Option hinzufügen",
+        "successOptionTitle": "Option {{number}}",
+        "interestOption": "Interesse",
+        "interestOptionTitle": "Interesse {{number}}",
+        "interestOptionName": "Name",
+        "interestOptionImage": "Bild (optional)",
+        "optionsLayout": "Darstellung",
+        "optionsLayoutList": "Liste",
+        "optionsLayoutGrid": "Raster mit Karten"
       }
     },
     "cancel": "Abbrechen",
@@ -771,6 +822,11 @@
       "tomorrow": "Morgen"
     },
     "delete": "Löschen",
+    "deleteBlockTemplateModal": {
+      "body": "Willst Du die Block-Vorlage \"{{name}}\" wirklich löschen?",
+      "deleteBtn": "Ja, löschen",
+      "title": "Block-Vorlage löschen?"
+    },
     "deletePollModal": {
       "body": "Willst Du die Umfrage \"{{pollQuestion}}\" wirklich löschen?",
       "deleteBtn": "Ja, löschen",
@@ -966,8 +1022,10 @@
     "invoice": {
       "areYouSure": "Bist Du sicher?",
       "canceledAt": "Storniert am",
+      "doNotSendMail": "Keine Zahlungsbestätigung an das Mitglied senden",
       "invoiceNo": "Rechnung Nr.",
       "manuallyPaidModalBody": "Die Rechnung wird als bezahlt markiert, obwohl keine Zahlung durch den oder die Benutzer:in eingegangen ist. Du solltest dein Vorhaben mit dem:r Buchführer:in besprechen.",
+      "noMailForFirstPeriod": "Es wird keine Zahlungsbestätigung versandt, da dies die erste Periode des Abos ist.",
       "paidAt": "Bezahlt am",
       "panel": {
         "invoiceHistory": "Rechnungsverlauf",
@@ -1314,7 +1372,8 @@
         "polls": "Umfrage",
         "blockStyles": "Block Styling",
         "topMenu": "Inhalts-Blöcke",
-        "crowdfundings": "Crowdfundings"
+        "crowdfundings": "Crowdfundings",
+        "blockTemplates": "Blockvorlagen"
       },
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
@@ -1355,7 +1414,8 @@
       "apps": "Apps",
       "mailSend": "E-Mail senden",
       "mailLog": "Gesendete E-Mails",
-      "communication": "Kommunikation"
+      "communication": "Kommunikation",
+      "auditLog": "Audit-Log"
     },
     "navigation": {
       "overview": {
@@ -1725,6 +1785,7 @@
     "settingList": {
       "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
       "comments": "Kommentare",
+      "sessionTtlDays": "Gültigkeitsdauer der Anmeldung",
       "days": "Tage",
       "errorTitle": "Fehler",
       "guestCommenting": "Gastkommentare erlauben",
@@ -1736,6 +1797,7 @@
       "passwordToken": "Gültigkeitsdauer Email-Passwort-Reset-Token",
       "payment": "Zahlung",
       "peering": "Peering",
+      "sessionTtlDays": "Wie lange eine Anmeldung gültig bleibt, bevor man sich neu anmelden muss. Gilt ab der nächsten Anmeldung; bestehende Sitzungen behalten ihre Laufzeit.",
       "peerToken": "Peering timeout",
       "polls": "Umfragen",
       "settings": "Einstellungen",
@@ -1756,8 +1818,10 @@
         "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
         "newArticlePeering": "Beeinflusst nicht schon erstellte Artikel",
         "newArticlePaywall": "Beeinflusst nicht schon erstellte Artikel",
-        "subscriptionUpgradeModel": "Wenn aktiviert, wird bei einem Upgrade immer die Differenz zwischen dem neuen und dem aktuellen Plan-Preis verrechnet, unabhängig davon, wie viel Zeit in der aktuellen Periode noch verbleibt. Wenn deaktiviert, wird nur das ungenutzte (anteilige) Restguthaben der aktuellen Periode angerechnet."
-      }
+        "subscriptionUpgradeModel": "Wenn aktiviert, wird bei einem Upgrade immer die Differenz zwischen dem neuen und dem aktuellen Plan-Preis verrechnet, unabhängig davon, wie viel Zeit in der aktuellen Periode noch verbleibt. Wenn deaktiviert, wird nur das ungenutzte (anteilige) Restguthaben der aktuellen Periode angerechnet.",
+        "sessionTtlDays": "Wie lange eine Anmeldung gültig bleibt, bevor man sich neu anmelden muss. Gilt ab der nächsten Anmeldung; bestehende Sitzungen behalten ihre Laufzeit."
+      },
+      "sessionTtlDays": "Gültigkeitsdauer der Anmeldung"
     },
     "automaticMails": {
       "title": "Automatische Mails",
@@ -1822,7 +1886,7 @@
         },
         "renewal_success": {
           "short": "Verlängerung hat geklappt.",
-          "description": "Geht raus, wenn ein Abo automatisch verlängert und der Betrag erfolgreich abgebucht wurde.",
+          "description": "Geht raus, sobald die Verlängerung eines Abos bezahlt ist – ob automatisch abgebucht, von der Person selbst bezahlt oder von der Redaktion manuell als bezahlt markiert. Bei der ersten Periode eines neuen Abos geht es nicht raus.",
           "example": "«Ihr Abo läuft weiter – vielen Dank.»"
         },
         "renewal_failed": {
@@ -2087,6 +2151,29 @@
       "subscriptionStartsAt": "Abo startet am {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / Nr. {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
+    },
+    "blockTemplates": {
+      "list": {
+        "title": "Blockvorlagen",
+        "newBlockTemplate": "Neue Blockvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "delete": "Löschen",
+        "info": "Blockvorlagen werden einmal erstellt und können dann in beliebig vielen Artikeln und Seiten verwendet werden. Wird eine Vorlage geändert, zeigen alle Artikel und Seiten, die sie verwenden, sofort den neuen Inhalt."
+      },
+      "edit": {
+        "title": "Blockvorlage bearbeiten",
+        "name": "Name",
+        "back": "Zurück",
+        "backToList": "Zurück zur Liste",
+        "noName": "Kein Name",
+        "delete": "Löschen",
+        "saved": "Gespeichert",
+        "new": "Neu",
+        "editing": "Bearbeiten",
+        "saveConfirmMessage": "Beim Speichern wird der Inhalt dieser Vorlage sofort in allen Artikeln und Seiten aktualisiert, die sie verwenden, auch in bereits veröffentlichten.",
+        "saveConfirmTitle": "Vorlage speichern?"
+      }
     },
     "yes": "Ja",
     "memberplanForm": {
@@ -2612,7 +2699,20 @@
           "lookbackHours": "Zeitraum (Stunden)",
           "lookbackHoursHelp": "Wie weit zurück Kampagnen durchsucht werden (Standard: 30)."
         }
-      }
+      },
+      "typeChangeTitle": "Typ wirklich wechseln?",
+      "typeChangeWarning": "Beim Wechsel des Typs wird die gesamte Konfiguration dieser Integration gelöscht, einschliesslich aller hinterlegten Zugangsdaten. Das lässt sich nicht rückgängig machen.",
+      "typeChangeConfirm": "Typ wechseln und Konfiguration löschen",
+      "deleteTitle": "Integration entfernen?",
+      "deleteWarning": "Die Integration verschwindet aus den Listen, läuft aber weiter, damit bestehende Vorgänge — etwa laufende Zahlungen — nicht abbrechen. Fügst du sie später wieder hinzu, ist die bisherige Konfiguration unverändert vorhanden.",
+      "deleteConfirm": "Entfernen",
+      "restored": "Diese Integration war bereits vorhanden und wurde unverändert wiederhergestellt.",
+      "cancel": "Abbrechen",
+      "add": "Integration hinzufügen",
+      "addType": "Typ",
+      "addId": "Kennung",
+      "addIdHelp": "Eindeutige Kennung, unter der die Integration angesprochen wird. Wird auch in Webhook-URLs verwendet und lässt sich später nicht ändern.",
+      "addIdTaken": "Diese Kennung ist bereits vergeben."
     },
     "websiteSettings": {
       "backToOverview": "Zurück zur Übersicht",
@@ -3228,6 +3328,41 @@
         "sentAt": "Gesendet am",
         "attempts": "Versuche",
         "empty": "Keine Einträge für diesen Filter."
+      }
+    },
+    "auditLogList": {
+      "overview": {
+        "title": "Audit-Log",
+        "createdAt": "Zeitpunkt",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "actor": "Akteur*in",
+        "action": "Aktion",
+        "mutation": "Mutation",
+        "record": "Datensatz",
+        "session": "Session",
+        "status": "Status",
+        "succeeded": "Erfolgreich",
+        "failed": "Fehlgeschlagen",
+        "filterBySession": "Nach dieser Session filtern",
+        "tokenActor": "API-Token: {{name}}",
+        "impersonatedActor": "{{impersonator}} als {{actor}}",
+        "unknownActor": "Unbekannt",
+        "notSupported": "Diese Installation führt kein Audit-Log. Sobald die Migration eingespielt ist, erscheinen hier die Einträge."
+      },
+      "filter": {
+        "searchPlaceholder": "Suchen (Mutation, Datensatz, E-Mail …)",
+        "action": "Aktion",
+        "entity": "Datensatztyp",
+        "session": "Session-ID",
+        "dateRange": "Zeitraum",
+        "failuresOnly": "Nur Fehlschläge",
+        "impersonatedOnly": "Nur Impersonation"
+      },
+      "action": {
+        "create": "Erstellt",
+        "update": "Geändert",
+        "delete": "Gelöscht",
+        "other": "Sonstige"
       }
     }
   }
