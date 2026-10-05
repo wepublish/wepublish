@@ -655,6 +655,10 @@
         "optionsLayout": "Darstellung",
         "optionsLayoutList": "Liste",
         "optionsLayoutGrid": "Raster mit Karten"
+      },
+      "author": {
+        "label": "Autor*in",
+        "placeholder": "Autor*in auswählen"
       }
     },
     "cancel": "Abbrechen",
@@ -2205,9 +2209,9 @@
       "periodicityPricingNoPeriodicities": "Aktiviere zuerst Zahlungsintervalle in den Zahlungseinstellungen, um intervall-spezifische Preise zu konfigurieren.",
       "periodicityPricingRequired": "Mindestens ein Zahlungsintervall benötigt einen Minimalbetrag.",
       "periodicityPricingLabel": "Marketing-Label",
-      "periodicityPricingLabelHelpText": "Optionaler Hinweis, der bei diesem Zahlungsintervall auf der Abo-Seite angezeigt wird, z.B. \u00ab2 Monate geschenkt\u00bb.",
+      "periodicityPricingLabelHelpText": "Optionaler Hinweis, der bei diesem Zahlungsintervall auf der Abo-Seite angezeigt wird, z.B. «2 Monate geschenkt».",
       "defaultPaymentPeriodicity": "Standard-Zahlungsintervall",
-      "defaultPaymentPeriodicityHelpText": "Dieses Zahlungsintervall ist auf der Abo-Seite vorausgew\u00e4hlt. Ohne Auswahl gilt das erste konfigurierte Intervall.",
+      "defaultPaymentPeriodicityHelpText": "Dieses Zahlungsintervall ist auf der Abo-Seite vorausgewählt. Ohne Auswahl gilt das erste konfigurierte Intervall.",
       "periodicityPricingDelta": "Rabatt gegenüber Monatspreis: {{delta}}",
       "periodicityPricingCustom": "Eigene Preise",
       "periodicityPricingDerived": "Aus Monatspreis",

@@ -1,4 +1,5 @@
 import {
+  BuilderBlocksProps,
   BuilderImageBlockProps,
   BuilderRichTextBlockProps,
 } from './blocks.interface';
@@ -19,4 +20,12 @@ export const ImageBlock = (props: BuilderImageBlockProps) => {
   } = useWebsiteBuilder();
 
   return <Image {...props} />;
+};
+
+export const Blocks = (props: BuilderBlocksProps) => {
+  const {
+    blocks: { Blocks },
+  } = useWebsiteBuilder();
+
+  return <Blocks {...props} />;
 };

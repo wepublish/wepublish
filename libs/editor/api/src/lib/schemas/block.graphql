@@ -106,6 +106,16 @@ fragment BlockWithoutTeaser on BlockContent {
     }
   }
 
+  ... on AuthorBlock {
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    authorObj: author {
+      ...FullAuthor
+    }
+  }
+
   ... on CrowdfundingBlock {
     disabled
     blockStyle

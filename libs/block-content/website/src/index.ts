@@ -19,6 +19,7 @@ export * from './lib/mailchimp-form/mailchimp-form-block';
 export * from './lib/subscribe/subscribe-block';
 export * from './lib/subscribe/subscribe-block.context';
 export * from './lib/subscribe/subscribe-block.provider';
+export * from './lib/author/author-block';
 export * from './lib/poll/poll-block';
 export * from './lib/poll/poll-block.context';
 export * from './lib/poll/poll-block.provider';

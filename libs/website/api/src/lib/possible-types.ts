@@ -28,6 +28,7 @@
       "UserCreatedAction"
     ],
     "BaseBlock": [
+      "AuthorBlock",
       "BildwurfAdBlock",
       "BlockTemplateBlock",
       "BreakBlock",
@@ -86,6 +87,7 @@
       "User"
     ],
     "BlockContent": [
+      "AuthorBlock",
       "BildwurfAdBlock",
       "BlockTemplateBlock",
       "BreakBlock",
@@ -169,6 +171,9 @@
     ],
     "HasOptionalArticle": [
       "ArticleTeaser"
+    ],
+    "HasOptionalAuthor": [
+      "AuthorBlock"
     ],
     "HasOptionalCrowdfunding": [
       "CrowdfundingBlock"
