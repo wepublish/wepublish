@@ -17,20 +17,21 @@ import {
   registerPaymentMethodModule,
 } from '../testing/module-registrars';
 import { SubscriptionService } from './subscription.service';
+import type { Mock } from 'vitest';
 
 describe('SubscriptionPaymentsService', () => {
   let subscriptionService: SubscriptionService;
   let prismaMock: {
     subscription: {
-      [method in keyof PrismaClient['subscription']]?: jest.Mock;
+      [method in keyof PrismaClient['subscription']]?: Mock;
     };
-    invoice: { [method in keyof PrismaClient['invoice']]?: jest.Mock };
+    invoice: { [method in keyof PrismaClient['invoice']]?: Mock };
     subscriptionPeriod: {
-      [method in keyof PrismaClient['subscriptionPeriod']]?: jest.Mock;
+      [method in keyof PrismaClient['subscriptionPeriod']]?: Mock;
     };
-    payment: { [method in keyof PrismaClient['payment']]?: jest.Mock };
+    payment: { [method in keyof PrismaClient['payment']]?: Mock };
     subscriptionDeactivation: {
-      [method in keyof PrismaClient['subscriptionDeactivation']]?: jest.Mock;
+      [method in keyof PrismaClient['subscriptionDeactivation']]?: Mock;
     };
   };
 
@@ -68,30 +69,30 @@ describe('SubscriptionPaymentsService', () => {
 
     prismaMock = {
       subscription: {
-        findMany: jest.fn(),
-        findUnique: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
-        deleteMany: jest.fn(),
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+        deleteMany: vi.fn(),
       },
       invoice: {
-        findMany: jest.fn(),
-        findUnique: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
       subscriptionPeriod: {
-        create: jest.fn(),
+        create: vi.fn(),
       },
       payment: {
-        findMany: jest.fn().mockResolvedValue([]),
-        create: jest.fn(),
+        findMany: vi.fn().mockResolvedValue([]),
+        create: vi.fn(),
       },
       subscriptionDeactivation: {
-        create: jest.fn(),
+        create: vi.fn(),
       },
     } as any;
-    (prismaMock as any).$transaction = jest
+    (prismaMock as any).$transaction = vi
       .fn()
       .mockImplementation(async (operations: any) => {
         return await Promise.all(operations);
@@ -112,7 +113,7 @@ describe('SubscriptionPaymentsService', () => {
         },
         {
           provide: InvoicePaidNotifier,
-          useValue: { notify: jest.fn().mockResolvedValue(undefined) },
+          useValue: { notify: vi.fn().mockResolvedValue(undefined) },
         },
       ],
     }).compile();
@@ -594,11 +595,11 @@ describe('SubscriptionPaymentsService', () => {
       subscriptionPeriods: [],
     };
 
-    const findPaymentProviderByPaymentMethodeId = jest
+    const findPaymentProviderByPaymentMethodeId = vi
       .fn()
       .mockResolvedValue(undefined);
     const paymentsService = {
-      findByInvoiceId: jest
+      findByInvoiceId: vi
         .fn()
         .mockResolvedValue([
           { id: 'pay-1', intentID: 'intent-1', paymentMethodID: 'unknown' },
@@ -608,7 +609,7 @@ describe('SubscriptionPaymentsService', () => {
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
       paymentsService as any,
-      { notify: jest.fn().mockResolvedValue(undefined) } as any
+      { notify: vi.fn().mockResolvedValue(undefined) } as any
     );
 
     await expect(
@@ -639,27 +640,27 @@ describe('SubscriptionPaymentsService', () => {
     ];
 
     const stripeProvider = {
-      checkIntentStatus: jest.fn().mockResolvedValue('stripe-state'),
-      updatePaymentWithIntentState: jest.fn(),
+      checkIntentStatus: vi.fn().mockResolvedValue('stripe-state'),
+      updatePaymentWithIntentState: vi.fn(),
       getName: () => 'stripe',
     };
     const payrexxProvider = {
-      checkIntentStatus: jest.fn().mockResolvedValue('payrexx-state'),
-      updatePaymentWithIntentState: jest.fn(),
+      checkIntentStatus: vi.fn().mockResolvedValue('payrexx-state'),
+      updatePaymentWithIntentState: vi.fn(),
       getName: () => 'payrexx',
     };
-    const findPaymentProviderByPaymentMethodeId = jest.fn(
+    const findPaymentProviderByPaymentMethodeId = vi.fn(
       async (paymentMethodID: string) =>
         paymentMethodID === 'stripe-method' ? stripeProvider : payrexxProvider
     );
     const paymentsService = {
-      findByInvoiceId: jest.fn().mockResolvedValue(mockPayments),
+      findByInvoiceId: vi.fn().mockResolvedValue(mockPayments),
       findPaymentProviderByPaymentMethodeId,
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
       paymentsService as any,
-      { notify: jest.fn().mockResolvedValue(undefined) } as any
+      { notify: vi.fn().mockResolvedValue(undefined) } as any
     );
 
     await subscriptionService.checkInvoiceState(mockInvoice as any);
@@ -703,15 +704,15 @@ describe('SubscriptionPaymentsService', () => {
       { id: 'pay-2', intentID: undefined, paymentMethodID: 'payrexx-method' },
     ];
 
-    const findPaymentProviderByPaymentMethodeId = jest.fn();
+    const findPaymentProviderByPaymentMethodeId = vi.fn();
     const paymentsService = {
-      findByInvoiceId: jest.fn().mockResolvedValue(mockPayments),
+      findByInvoiceId: vi.fn().mockResolvedValue(mockPayments),
       findPaymentProviderByPaymentMethodeId,
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
       paymentsService as any,
-      { notify: jest.fn().mockResolvedValue(undefined) } as any
+      { notify: vi.fn().mockResolvedValue(undefined) } as any
     );
 
     await subscriptionService.checkInvoiceState(mockInvoice as any);
@@ -731,29 +732,29 @@ describe('SubscriptionPaymentsService', () => {
       subscriptionPeriods: [],
     };
 
-    const checkIntentStatus = jest.fn().mockResolvedValue(null);
-    const updatePaymentWithIntentState = jest.fn();
+    const checkIntentStatus = vi.fn().mockResolvedValue(null);
+    const updatePaymentWithIntentState = vi.fn();
     const paymentProvider = {
       checkIntentStatus,
       updatePaymentWithIntentState,
       getName: () => 'payrexx',
     };
     const paymentsService = {
-      findByInvoiceId: jest.fn().mockResolvedValue([
+      findByInvoiceId: vi.fn().mockResolvedValue([
         {
           id: 'pay-1',
           intentID: 'intent-1',
           paymentMethodID: 'payrexx-method',
         },
       ]),
-      findPaymentProviderByPaymentMethodeId: jest
+      findPaymentProviderByPaymentMethodeId: vi
         .fn()
         .mockResolvedValue(paymentProvider),
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
       paymentsService as any,
-      { notify: jest.fn().mockResolvedValue(undefined) } as any
+      { notify: vi.fn().mockResolvedValue(undefined) } as any
     );
 
     await subscriptionService.checkInvoiceState(mockInvoice as any);
@@ -779,7 +780,7 @@ describe('SubscriptionPaymentsService', () => {
       { id: 'pay-2', intentID: '35123953', paymentMethodID: 'payrexx-method' },
     ];
 
-    const checkIntentStatus = jest
+    const checkIntentStatus = vi
       .fn()
       .mockRejectedValueOnce(
         new Error(
@@ -787,22 +788,22 @@ describe('SubscriptionPaymentsService', () => {
         )
       )
       .mockResolvedValueOnce('payrexx-state');
-    const updatePaymentWithIntentState = jest.fn();
+    const updatePaymentWithIntentState = vi.fn();
     const paymentProvider = {
       checkIntentStatus,
       updatePaymentWithIntentState,
       getName: () => 'payrexx',
     };
     const paymentsService = {
-      findByInvoiceId: jest.fn().mockResolvedValue(mockPayments),
-      findPaymentProviderByPaymentMethodeId: jest
+      findByInvoiceId: vi.fn().mockResolvedValue(mockPayments),
+      findPaymentProviderByPaymentMethodeId: vi
         .fn()
         .mockResolvedValue(paymentProvider),
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
       paymentsService as any,
-      { notify: jest.fn().mockResolvedValue(undefined) } as any
+      { notify: vi.fn().mockResolvedValue(undefined) } as any
     );
 
     await expect(
@@ -829,11 +830,11 @@ describe('SubscriptionPaymentsService', () => {
     };
 
     const paymentsService = {
-      findByInvoiceId: jest.fn().mockResolvedValue([]),
-      findPaymentProviderByPaymentMethodeId: jest.fn(),
+      findByInvoiceId: vi.fn().mockResolvedValue([]),
+      findPaymentProviderByPaymentMethodeId: vi.fn(),
     };
     const invoicePaidNotifier = {
-      notify: jest.fn().mockResolvedValue(undefined),
+      notify: vi.fn().mockResolvedValue(undefined),
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,

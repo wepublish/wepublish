@@ -342,6 +342,127 @@ than ~100 reads do not.
 Pinned by `fast-string-prototype.spec.ts` and `shared-store.fast-strings.spec.ts`
 (fresh `node --allow-natives-syntax`); a new place that loads `@keyv/redis` or
 `@redis/client` needs the same call.
+### ⚠️ The Sentry packages must move as one, and must stay on 11+
+
+[package.json](../../package.json) keeps `@sentry/nestjs`, `@sentry/nextjs`,
+`@sentry/react` and `@sentry/profiling-node` on one major;
+[apps/media/package.json](../../apps/media/package.json) repeats the two it
+ships into its own image.
+
+**Why 11+.** On 10 the API died on boot: `TypeError: Cannot redefine property:
+Cron`. `@nestjs/schedule` 12 is ESM only, so its decorator exports are
+non-configurable and shimmer cannot patch them. Sentry 11 dropped that
+import-in-the-middle instrumentation (getsentry/sentry-javascript#22805).
+
+**Why together.** `@sentry/profiling-node` pins `@sentry/node` exactly, so a
+mixed set installs two `@sentry/node` copies with separate `__SENTRY__`
+carriers. Bumping only nestjs + profiling-node did not compile: `Type
+'Integration & { name: string; }' is not assignable to type 'Integration'` — a
+v11 integration handed to a v10 `Sentry.init`. Nothing type-checks this; bump
+all four together.
+
+v11 renames: `beforeSendSpan` gets a streamed span with `attributes`, not
+`data`; `profilesSampleRate` became `profileLifecycle` +
+`profileSessionSampleRate`; `withSentryConfig` moved to `@sentry/nextjs/config`
+— a subpath export node10 `moduleResolution` cannot see, so every app needs
+`moduleResolution: bundler`.
+
+**The API boots with a warning, and it is accurate — leave it:** *"Failed to
+register diagnostics-channel injection hooks, so channel-based integrations
+will not record spans."* v11 instruments `express`, `graphql`, `@nestjs/*`,
+`pg` and Prisma via diagnostics channels injected by runtime module hooks,
+which the `@yao-pkg/pkg` binary cannot register. Errors still report; span
+detail is lost. Two fixes failed on 2026-10-05 — do not redo them:
+
+- `sentryOrchestrionWebpackPlugin` (build-time injection) builds clean and
+  injects **nothing**: `@nx/webpack` externalizes node_modules, so webpack
+  never compiles them. Its externals warning cannot fire either — it inspects
+  only string/RegExp/object externals and nx passes a function. Grep the
+  bundle for `tracingChannel` rather than trusting a clean build.
+- Bundling them instead (`externalDependencies` listing only native/Prisma/pg)
+  dies on Nest's dynamic loaders: `Can't resolve 'class-transformer/cjs/storage'`
+  plus critical-dependency warnings from `load-package.util.js`,
+  `load-adapter.js`, `optional-require.js` — the `platform-express` failure
+  below, multiplied.
+
+`enableRuntimeChannelInjection: false` silences the warning without restoring
+spans, so it is deliberately unset. Unverified lead: Sentry uses in-process
+`module.registerHooks()` only on Node >=24.13, which may work in a snapshot.
+
+Pinned by [libs/utils/sentry/instrumentation.nestjs.spec.ts](../../libs/utils/sentry/instrumentation.nestjs.spec.ts),
+which guards the options shape but not the versions.
+
+---
+
+### ⚠️ Optional peer dependencies and the pkg binary: two different failures
+
+The API ships as a `@yao-pkg/pkg` snapshot, and libraries reach optional peers
+in two ways that both break there — with error messages that blame a missing
+install while the package is sitting in `node_modules`.
+
+**1. Dynamic require, invisible to webpack.** Nest's `loadPackage` /
+`loadAdapter` never enters the bundle, so the binary dies with
+`No driver (HTTP) has been selected ... install "@nestjs/platform-express"`.
+Fixable by naming the dependency statically so webpack emits a real
+`require(...)` — hence `new ExpressAdapter()` passed to `NestFactory.create` in
+[main.ts](../../apps/api-example/src/main.ts). Verify by grepping the built
+bundle for `require("<pkg>")`.
+
+**2. ESM resolution, which a static require does NOT fix.** Terminus checks its
+peer with `import.meta.resolve('@nestjs/axios')` and loads it with
+`await import(...)`. Neither works inside a snapshot, and no amount of
+bundling changes that — adding `HttpModule` to the health module was tried on
+2026-10-05 and the binary still aborted on boot with *The "@nestjs/axios"
+package is missing*. `@nestjs/axios` was installed and working the whole time;
+`HttpService` is used normally via DI in provider-registry, user, image and
+event-import. The fix is to not instantiate the indicator at all:
+[http-ping.health.ts](../../libs/health/api/src/lib/http-ping.health.ts)
+reimplements the ping on `HealthIndicatorService` + global `fetch`, which is
+what the terminus docs now show anyway.
+
+**Before adding any library that lazily resolves an optional peer, check which
+of the two it does** — `grep` it for `import.meta.resolve` and `await import(`
+as well as `loadPackage`. Only the first kind is bundleable.
+
+Three have bitten so far: `@nestjs/platform-express`, `@nestjs/axios` and
+`@as-integrations/express5` (*The "@as-integrations/express5" package is
+missing*, from `ApolloDriver`). The last one also sat in **devDependencies**
+even though GraphQLModule needs it at runtime — a runtime peer belongs in
+`dependencies`, and a sweep that only reads `dependencies` will not see it.
+
+To sweep for the first kind: scan node_modules for
+`loadPackage`/`assertPackages`/`loadAdapter` string literals, keep those in
+`dependencies` **or `devDependencies`**, and check each against the bundle.
+Re-run it after dependency changes — it is a point-in-time check, not a
+guarantee. As of 2026-10-06 only `@apollo/subgraph` and `@apollo/gateway`
+remain unbundled, unreachable because the API uses `ApolloDriver`, not the
+federation or gateway drivers.
+
+**Nothing type-checks or tests either failure** — both only appear in the
+packaged binary.
+
+---
+
+### ⚠️ Express 5 has no bare `*` route
+
+[apps/editor/src/server-app.ts](../../apps/editor/src/server-app.ts) serves
+static assets through an unmounted `express.static` and falls through to
+`app.use(handleRequest(indexPath))` — neither call names a path.
+
+The express 4 version used `app.get('*.*', …)` for assets and `app.use('*', …)`
+for the SPA fallback. Under express 5 the editor host exits before it listens:
+`PathError [TypeError]: Missing parameter name at index 1: *.*`.
+
+path-to-regexp 8 requires every wildcard to be named (`/*splat`), and `'*.*'`
+has no valid spelling at all — the "has a file extension" test it stood for is
+not expressible as a path pattern. Routing by whether the file exists on disk
+is, and `express.static` already calls `next()` when it does not.
+
+**Load-bearing:** `index: false` on `express.static`. Without it `/` is served
+as a raw `index.html` with the immutable cache header and without the injected
+settings blob, so the editor boots with no `API_URL`.
+
+Pinned by [apps/editor/src/server-app.spec.ts](../../apps/editor/src/server-app.spec.ts)
 
 ---
 

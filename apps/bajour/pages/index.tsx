@@ -2,11 +2,11 @@ import styled from '@emotion/styled';
 import { SliderWrapper } from '@wepublish/block-content/website';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   CommentListDocument,
   CommentSort,
+  FullTeaserListBlockFragment,
   getApiClient,
   HotAndTrendingDocument,
   NavigationListDocument,
@@ -15,7 +15,7 @@ import {
   PeerProfileDocument,
   SettingListDocument,
   SortOrder,
-  TeaserListBlock,
+  addClientCacheToProps,
 } from '@wepublish/website/api';
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -101,7 +101,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const fdTTeaser = page.data?.page?.latest.blocks.find(block => {
     return isFrageDesTages(block);
-  }) as TeaserListBlock | undefined;
+  }) as FullTeaserListBlockFragment | undefined;
 
   if (fdTTeaser && fdTTeaser.teasers[0]) {
     let id: string | undefined;
@@ -133,6 +133,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props,
-    revalidate: revalidateFor(page.data?.page, page.errors),
+    revalidate: revalidateFor(page.data?.page, page.error),
   };
 };

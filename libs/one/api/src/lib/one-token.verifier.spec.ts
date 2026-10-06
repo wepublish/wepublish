@@ -44,9 +44,7 @@ describe('OneTokenVerifier', () => {
     }).export({ format: 'jwk' });
 
     const jwks = {
-      getKey: jest
-        .fn()
-        .mockImplementation(() => importJWK(jwk as JWK, 'EdDSA')),
+      getKey: vi.fn().mockImplementation(() => importJWK(jwk as JWK, 'EdDSA')),
     } as unknown as OneJwksClientService;
 
     verifier = new OneTokenVerifier(jwks, ONE_URL, HOST_URL);
@@ -102,9 +100,7 @@ describe('OneTokenVerifier', () => {
       format: 'pem',
     }).export({ format: 'jwk' });
     const jwks = {
-      getKey: jest
-        .fn()
-        .mockImplementation(() => importJWK(jwk as JWK, 'EdDSA')),
+      getKey: vi.fn().mockImplementation(() => importJWK(jwk as JWK, 'EdDSA')),
     } as unknown as OneJwksClientService;
     const unconfigured = new OneTokenVerifier(jwks, '', HOST_URL);
 

@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import {
   KvTtlCacheModule,
@@ -8,20 +9,20 @@ import { ArticleDataloaderService } from './article-dataloader.service';
 import { ArticleRevisionDataloaderService } from './article-revision-dataloader.service';
 import { ArticleService } from './article.service';
 
-jest.mock('@wepublish/block-content/api');
+vi.mock('@wepublish/block-content/api');
 
 const publishedAt = new Date('2026-01-01T00:00:00.000Z');
 
 describe('article content cache', () => {
   let kv: KvTtlCacheService;
   let prisma: {
-    $queryRaw: jest.Mock;
+    $queryRaw: Mock;
     article: {
-      findMany: jest.Mock;
-      findFirst: jest.Mock;
-      findUnique: jest.Mock;
-      update: jest.Mock;
-      count: jest.Mock;
+      findMany: Mock;
+      findFirst: Mock;
+      findUnique: Mock;
+      update: Mock;
+      count: Mock;
     };
   };
 
@@ -32,9 +33,9 @@ describe('article content cache', () => {
         {} as any,
         new PublicContentCacheInvalidator(kv),
         kv,
-        { schedule: jest.fn() } as any
+        { schedule: vi.fn() } as any
       ),
-      { __DATALOADER__ArticleDataloaderService: { prime: jest.fn() } }
+      { __DATALOADER__ArticleDataloaderService: { prime: vi.fn() } }
     );
 
   beforeEach(async () => {
@@ -43,17 +44,17 @@ describe('article content cache', () => {
     }).compile();
     kv = module.get(KvTtlCacheService);
     prisma = {
-      $queryRaw: jest.fn().mockResolvedValue([]),
+      $queryRaw: vi.fn().mockResolvedValue([]),
       article: {
-        findMany: jest.fn().mockResolvedValue([{ id: 'a1', publishedAt }]),
-        findFirst: jest.fn().mockResolvedValue({ id: 'a1', slug: 'news' }),
-        findUnique: jest
+        findMany: vi.fn().mockResolvedValue([{ id: 'a1', publishedAt }]),
+        findFirst: vi.fn().mockResolvedValue({ id: 'a1', slug: 'news' }),
+        findUnique: vi
           .fn()
           .mockResolvedValue({ id: 'a1', slug: 'news', likes: 1 }),
-        update: jest
+        update: vi
           .fn()
           .mockResolvedValue({ id: 'a1', slug: 'news', likes: 2 }),
-        count: jest.fn().mockResolvedValue(1),
+        count: vi.fn().mockResolvedValue(1),
       },
     };
   });

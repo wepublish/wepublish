@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
-import { BlockContent, FullBreakBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullBreakBlockFragment,
+} from '@wepublish/website/api';
 import { allPass } from 'ramda';
 
 import { TsriBreakBlockType } from './tsri-base-break-block';
@@ -11,7 +14,7 @@ import {
 } from './tsri-sidebar-content';
 
 export const isTsriSidebarContentAltColor = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullBreakBlockFragment => {
   const retVal = allPass([
     hasBlockStyle(TsriBreakBlockType.SidebarContentAltColor),

@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import {
@@ -9,12 +10,12 @@ import { NAVIGATION_CACHE_NAMESPACE } from './navigation-cache';
 
 describe('NavigationLinksDataloaderService', () => {
   const link = { id: 'link-1', navigationId: 'nav-1', label: 'Home' };
-  let prisma: { navigationLink: { findMany: jest.Mock } };
+  let prisma: { navigationLink: { findMany: Mock } };
   let kv: KvTtlCacheService;
 
   beforeEach(async () => {
     prisma = {
-      navigationLink: { findMany: jest.fn().mockResolvedValue([link]) },
+      navigationLink: { findMany: vi.fn().mockResolvedValue([link]) },
     };
     const module = await Test.createTestingModule({
       imports: [KvTtlCacheModule],

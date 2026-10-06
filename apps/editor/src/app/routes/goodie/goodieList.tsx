@@ -1,8 +1,9 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  Goodie,
+  DeleteGoodieDocument,
+  FullGoodieFragment,
+  GoodieListDocument,
   GoodieSort,
-  useDeleteGoodieMutation,
-  useGoodieListQuery,
 } from '@wepublish/editor/api';
 import {
   CanCreateGoodie,
@@ -44,11 +45,11 @@ function GoodieList() {
   const [sortField, setSortField] = useState<GoodieSort>();
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const [goodieToDelete, setGoodieToDelete] = useState<Goodie | undefined>(
-    undefined
-  );
+  const [goodieToDelete, setGoodieToDelete] = useState<
+    FullGoodieFragment | undefined
+  >(undefined);
 
-  const { data, loading, refetch } = useGoodieListQuery({
+  const { data, loading, refetch } = useQuery(GoodieListDocument, {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
@@ -56,7 +57,7 @@ function GoodieList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
-  const [deleteGoodie] = useDeleteGoodieMutation({
+  const [deleteGoodie] = useMutation(DeleteGoodieDocument, {
     onCompleted() {
       refetch();
     },
@@ -108,7 +109,9 @@ function GoodieList() {
             <HeaderCell>{t('goodie.overview.active')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Goodie>) => (rowData.active ? `✅` : `❌`)}
+              {(rowData: RowDataType<FullGoodieFragment>) =>
+                rowData.active ? `✅` : `❌`
+              }
             </RCell>
           </Column>
 
@@ -120,7 +123,7 @@ function GoodieList() {
             <HeaderCell>{t('goodie.overview.name')}</HeaderCell>
 
             <RCell dataKey={GoodieSort.Name}>
-              {(rowData: RowDataType<Goodie>) => (
+              {(rowData: RowDataType<FullGoodieFragment>) => (
                 <Link to={`edit/${rowData.id}`}>{rowData.name}</Link>
               )}
             </RCell>
@@ -133,7 +136,7 @@ function GoodieList() {
             <HeaderCell>{t('goodie.overview.memberPlans')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Goodie>) =>
+              {(rowData: RowDataType<FullGoodieFragment>) =>
                 rowData.memberPlans
                   .map((memberPlan: { name: string }) => memberPlan.name)
                   .join(', ')
@@ -148,7 +151,7 @@ function GoodieList() {
             <HeaderCell>{t('goodie.overview.stock')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Goodie>) =>
+              {(rowData: RowDataType<FullGoodieFragment>) =>
                 rowData.stock ?? t('goodie.overview.unlimited')
               }
             </RCell>
@@ -161,7 +164,7 @@ function GoodieList() {
             <HeaderCell>{t('goodie.overview.availableStock')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Goodie>) =>
+              {(rowData: RowDataType<FullGoodieFragment>) =>
                 rowData.availableStock ?? t('goodie.overview.unlimited')
               }
             </RCell>
@@ -175,7 +178,7 @@ function GoodieList() {
             <HeaderCell>{t('goodie.overview.createdAt')}</HeaderCell>
 
             <RCell dataKey={GoodieSort.CreatedAt}>
-              {(rowData: Goodie) =>
+              {(rowData: FullGoodieFragment) =>
                 `${new Date(rowData.createdAt).toDateString()}`
               }
             </RCell>
@@ -187,14 +190,16 @@ function GoodieList() {
           >
             <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
             <PaddedCell align={'center'}>
-              {(goodie: RowDataType<Goodie>) => (
+              {(goodie: RowDataType<FullGoodieFragment>) => (
                 <IconButton
                   icon={<MdDelete />}
                   circle
                   appearance="ghost"
                   color="red"
                   size="sm"
-                  onClick={() => setGoodieToDelete(goodie as Goodie)}
+                  onClick={() =>
+                    setGoodieToDelete(goodie as FullGoodieFragment)
+                  }
                 />
               )}
             </PaddedCell>

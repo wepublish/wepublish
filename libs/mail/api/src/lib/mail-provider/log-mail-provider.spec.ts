@@ -35,7 +35,7 @@ const sendProps = {
 describe('LogMailProvider', () => {
   it('writes the mail to the log instead of sending it', async () => {
     const provider = await makeProvider();
-    const info = jest.spyOn(provider['log'], 'info').mockImplementation();
+    const info = vi.spyOn(provider['log'], 'info').mockImplementation();
 
     await provider.sendMail(sendProps);
 
@@ -55,7 +55,7 @@ describe('LogMailProvider', () => {
 
   it('falls back to the html body when there is no plain text', async () => {
     const provider = await makeProvider();
-    const info = jest.spyOn(provider['log'], 'info').mockImplementation();
+    const info = vi.spyOn(provider['log'], 'info').mockImplementation();
 
     await provider.sendMail({ ...sendProps, message: undefined });
 
@@ -66,7 +66,7 @@ describe('LogMailProvider', () => {
 
   it('reports no message id, so nothing is polled for a delivery state', async () => {
     const provider = await makeProvider();
-    jest.spyOn(provider['log'], 'info').mockImplementation();
+    vi.spyOn(provider['log'], 'info').mockImplementation();
 
     await expect(provider.sendMail(sendProps)).resolves.toEqual({});
   });
@@ -85,7 +85,7 @@ describe('LogMailProvider', () => {
 
   it('blanks the login token in the logged body and links', async () => {
     const provider = await makeProvider();
-    const info = jest.spyOn(provider['log'], 'info').mockImplementation();
+    const info = vi.spyOn(provider['log'], 'info').mockImplementation();
 
     await provider.sendMail({
       ...sendProps,

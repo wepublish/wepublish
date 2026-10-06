@@ -19,7 +19,10 @@ Sentry.init({
     nodeProfilingIntegration(),
     Sentry.prismaIntegration(),
   ],
-  profilesSampleRate: process.env.APP_ENVIRONMENT === 'production' ? 0.05 : 1.0,
+  // `profilesSampleRate` was removed in Sentry 11.
+  profileLifecycle: 'trace',
+  profileSessionSampleRate:
+    process.env.APP_ENVIRONMENT === 'production' ? 0.05 : 1.0,
 });
 
 setCommonTags(Sentry, 'nestjs');

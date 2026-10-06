@@ -1,7 +1,7 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
+  CreatePaywallDocument,
   MutationCreatePaywallArgs,
-  useCreatePaywallMutation,
 } from '@wepublish/editor/api';
 import { CanCreatePaywall } from '@wepublish/permissions';
 import {
@@ -15,7 +15,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { PaywallForm } from './paywallForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -47,18 +47,21 @@ const PaywallCreateView = () => {
     hideContentAfter: 3,
   }));
 
-  const [createPaywall, { loading: updateLoading }] = useCreatePaywallMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.createPaywall) {
-        if (shouldClose) {
-          navigate(`./..`);
-        } else {
-          navigate(`./../edit/${data.createPaywall.id}`);
+  const [createPaywall, { loading: updateLoading }] = useMutation(
+    CreatePaywallDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.createPaywall) {
+          if (shouldClose) {
+            navigate(`./..`);
+          } else {
+            navigate(`./../edit/${data.createPaywall.id}`);
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   const loading = updateLoading;
   const onSubmit = () => createPaywall({ variables: paywall });

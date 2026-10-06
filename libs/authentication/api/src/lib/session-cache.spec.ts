@@ -6,7 +6,7 @@ import {
 
 describe('SessionCacheInvalidator', () => {
   it('clears every cached session', async () => {
-    const kv = { resetNamespace: jest.fn().mockResolvedValue(undefined) };
+    const kv = { resetNamespace: vi.fn().mockResolvedValue(undefined) };
 
     await new SessionCacheInvalidator(
       kv as unknown as KvTtlCacheService

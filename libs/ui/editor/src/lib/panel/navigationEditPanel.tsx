@@ -1,16 +1,17 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  ArticleListDocument,
   ArticleWithoutBlocksFragment,
+  CreateNavigationDocument,
   FullNavigationFragment,
+  NavigationDocument,
   NavigationLinkInput,
   NavigationLinkType,
   NavigationListDocument,
+  PageListDocument,
   PageWithoutBlocksFragment,
-  useArticleListQuery,
-  useCreateNavigationMutation,
-  useNavigationQuery,
-  usePageListQuery,
-  useUpdateNavigationMutation,
+  UpdateNavigationDocument,
 } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -81,7 +82,7 @@ function NavigationEditPanel({
     data,
     loading: isLoading,
     error: loadError,
-  } = useNavigationQuery({
+  } = useQuery(NavigationDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
@@ -90,7 +91,7 @@ function NavigationEditPanel({
     data: pageData,
     loading: isLoadingPageData,
     error: pageLoadError,
-  } = usePageListQuery({
+  } = useQuery(PageListDocument, {
     variables: { take: 50 },
   });
 
@@ -98,17 +99,17 @@ function NavigationEditPanel({
     data: articleData,
     loading: isLoadingArticleData,
     error: articleLoadError,
-  } = useArticleListQuery({
+  } = useQuery(ArticleListDocument, {
     variables: { take: 50 },
   });
 
   const [createNavigation, { loading: isCreating, error: createError }] =
-    useCreateNavigationMutation({
+    useMutation(CreateNavigationDocument, {
       refetchQueries: [getOperationNameFromDocument(NavigationListDocument)],
     });
 
   const [updateNavigation, { loading: isUpdating, error: updateError }] =
-    useUpdateNavigationMutation();
+    useMutation(UpdateNavigationDocument);
 
   const isDisabled =
     isLoading ||

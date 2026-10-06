@@ -4,21 +4,22 @@ import mailchimp from '@mailchimp/mailchimp_marketing';
 import { SyncProviderSettingsService } from '@wepublish/settings/api';
 import { createHash } from 'crypto';
 import { MailchimpContactService } from './mailchimp-contact.service';
+import type { Mock } from 'vitest';
 
-jest.mock('@mailchimp/mailchimp_marketing', () => ({
+vi.mock('@mailchimp/mailchimp_marketing', () => ({
   __esModule: true,
   default: {
-    setConfig: jest.fn(),
+    setConfig: vi.fn(),
     lists: {
-      updateListMember: jest.fn(),
+      updateListMember: vi.fn(),
     },
   },
 }));
 
 const mailchimpStub = mailchimp as unknown as {
-  setConfig: jest.Mock;
+  setConfig: Mock;
   lists: {
-    updateListMember: jest.Mock;
+    updateListMember: Mock;
   };
 };
 
@@ -40,18 +41,18 @@ const syncConfig = {
 describe('MailchimpContactService', () => {
   let service: MailchimpContactService;
   let prisma: {
-    mailchimpSyncError: { upsert: jest.Mock };
+    mailchimpSyncError: { upsert: Mock };
   };
-  let syncProviderSettingsService: { getEnabledSyncConfigs: jest.Mock };
+  let syncProviderSettingsService: { getEnabledSyncConfigs: Mock };
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     prisma = {
-      mailchimpSyncError: { upsert: jest.fn().mockResolvedValue({}) },
+      mailchimpSyncError: { upsert: vi.fn().mockResolvedValue({}) },
     };
     syncProviderSettingsService = {
-      getEnabledSyncConfigs: jest.fn().mockResolvedValue([syncConfig]),
+      getEnabledSyncConfigs: vi.fn().mockResolvedValue([syncConfig]),
     };
 
     const module: TestingModule = await Test.createTestingModule({

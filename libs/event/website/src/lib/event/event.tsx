@@ -66,6 +66,8 @@ export const Event = ({
         <Image
           css={eventImage}
           image={data.event.image}
+          caption={null}
+          linkUrl={null}
         />
       )}
 
@@ -102,9 +104,9 @@ export const Event = ({
         </EventMeta>
       )}
 
-      <Title title={data?.event.name} />
+      <Title title={data?.event.name ?? null} />
 
-      <RichText richText={data?.event.description} />
+      <RichText richText={data?.event.description ?? null} />
     </EventWrapper>
   );
 };

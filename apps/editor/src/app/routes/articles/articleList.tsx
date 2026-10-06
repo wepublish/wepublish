@@ -1,16 +1,16 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   ArticleFilter,
   ArticleListDocument,
   ArticleListQuery,
   ArticleSort,
   CommentItemType,
+  CreateCommentDocument,
+  DeleteArticleDocument,
+  DuplicateArticleDocument,
   FullArticleFragment,
   TagType,
-  useArticleListQuery,
-  useCreateCommentMutation,
-  useDeleteArticleMutation,
-  useDuplicateArticleMutation,
-  useUnpublishArticleMutation,
+  UnpublishArticleDocument,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
@@ -104,11 +104,16 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
 
   const [page, setPage] = useState(1);
 
-  const [deleteArticle, { loading: isDeleting }] = useDeleteArticleMutation({});
-  const [unpublishArticle, { loading: isUnpublishing }] =
-    useUnpublishArticleMutation();
-  const [duplicateArticle, { loading: isDuplicating }] =
-    useDuplicateArticleMutation();
+  const [deleteArticle, { loading: isDeleting }] = useMutation(
+    DeleteArticleDocument,
+    {}
+  );
+  const [unpublishArticle, { loading: isUnpublishing }] = useMutation(
+    UnpublishArticleDocument
+  );
+  const [duplicateArticle, { loading: isDuplicating }] = useMutation(
+    DuplicateArticleDocument
+  );
 
   const articleListVariables = useMemo(
     () => ({
@@ -125,10 +130,10 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     data,
     refetch,
     loading: isLoading,
-  } = useArticleListQuery({
+  } = useQuery(ArticleListDocument, {
     variables: articleListVariables,
   });
-  const [createComment] = useCreateCommentMutation();
+  const [createComment] = useMutation(CreateCommentDocument);
 
   const articles = useMemo(() => data?.articles?.nodes ?? [], [data]);
   const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null);
@@ -505,6 +510,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                       cache.writeQuery<ArticleListQuery>({
                         query: ArticleListDocument,
                         data: {
+                          __typename: 'Query',
                           articles: {
                             ...query.articles,
                             nodes: query.articles.nodes.filter(
@@ -539,6 +545,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                       cache.writeQuery<ArticleListQuery>({
                         query: ArticleListDocument,
                         data: {
+                          __typename: 'Query',
                           articles: {
                             ...query.articles,
                           },

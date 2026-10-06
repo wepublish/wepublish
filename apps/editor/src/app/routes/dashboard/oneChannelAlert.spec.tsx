@@ -1,16 +1,15 @@
 import type { Mock } from 'vitest';
+import { useQuery } from '@apollo/client/react';
 import { render, screen } from '@testing-library/react';
-import {
-  OneChannelConnectionState,
-  useOneChannelStatusQuery,
-} from '@wepublish/editor/api';
+import { OneChannelConnectionState } from '@wepublish/editor/api';
 
 import { OneChannelAlert } from './oneChannelAlert';
 
-// Partial mock: the UI library imports enums from the same module.
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
-  useOneChannelStatusQuery: vi.fn(),
+// The component calls Apollo's `useQuery` with a generated document, so the
+// mock sits at the Apollo boundary.
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: vi.fn(),
 }));
 
 vi.mock('react-i18next', () => ({
@@ -20,7 +19,7 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const mockedUseOneChannelStatusQuery = useOneChannelStatusQuery as Mock;
+const mockedUseQuery = useQuery as Mock;
 
 const mockStatus = (
   status: {
@@ -29,7 +28,7 @@ const mockStatus = (
     lastSuccessAt?: string | null;
   } | null
 ) => {
-  mockedUseOneChannelStatusQuery.mockReturnValue({
+  mockedUseQuery.mockReturnValue({
     data:
       status ?
         {

@@ -1,11 +1,12 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CheckLoginOtpDocument,
+  CreateSessionDocument,
+  EnableTotpDocument,
   FullUserRoleFragment,
+  GenerateTotpSetupDocument,
   LocalStorageKey,
-  useCheckLoginOtpLazyQuery,
-  useCreateSessionMutation,
-  useEnableTotpMutation,
-  useGenerateTotpSetupMutation,
 } from '@wepublish/editor/api';
 import {
   AuthDispatchActionType,
@@ -111,11 +112,13 @@ export function Login() {
   const authDispatch = useContext(AuthDispatchContext);
   const navigate = useNavigate();
 
-  const [checkLoginOtp] = useCheckLoginOtpLazyQuery();
-  const [authenticate, { loading }] = useCreateSessionMutation();
-  const [generateTotpSetup, { loading: loadingSetup }] =
-    useGenerateTotpSetupMutation();
-  const [enableTotp, { loading: loadingEnable }] = useEnableTotpMutation();
+  const [checkLoginOtp] = useLazyQuery(CheckLoginOtpDocument);
+  const [authenticate, { loading }] = useMutation(CreateSessionDocument);
+  const [generateTotpSetup, { loading: loadingSetup }] = useMutation(
+    GenerateTotpSetupDocument
+  );
+  const [enableTotp, { loading: loadingEnable }] =
+    useMutation(EnableTotpDocument);
 
   const { t } = useTranslation();
 

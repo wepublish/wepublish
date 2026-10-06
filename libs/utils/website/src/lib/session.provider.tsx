@@ -1,13 +1,14 @@
+import { useLazyQuery } from '@apollo/client/react';
 import {
-  SessionWithTokenWithoutUser,
-  SensitiveDataUser,
+  FullSensitiveDataUserFragment,
+  FullSessionWithTokenWithoutUserFragment,
+  MeDocument,
 } from '@wepublish/website/api';
 import {
   AuthTokenStorageKey,
   isFramed,
   SessionTokenContext,
 } from '@wepublish/authentication/website';
-import { useMeLazyQuery } from '@wepublish/website/api';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import {
   memo,
@@ -18,20 +19,24 @@ import {
 } from 'react';
 
 export const SessionProvider = memo<
-  PropsWithChildren<{ sessionToken: SessionWithTokenWithoutUser | null }>
+  PropsWithChildren<{
+    sessionToken: FullSessionWithTokenWithoutUserFragment | null;
+  }>
 >(function SessionProvider({ sessionToken, children }) {
   const [token, setToken] = useState<typeof sessionToken>(sessionToken);
-  const [user, setUser] = useState<SensitiveDataUser | null>(null);
+  const [user, setUser] = useState<FullSensitiveDataUserFragment | null>(null);
 
-  const [getMe] = useMeLazyQuery({
+  const [getMe] = useLazyQuery(MeDocument, {
     fetchPolicy: 'network-only',
-    onCompleted(data) {
-      setUser((data.me as SensitiveDataUser) ?? null);
-    },
   });
 
+  const fetchMe = useCallback(async () => {
+    const { data } = await getMe();
+    setUser((data?.me as FullSensitiveDataUserFragment) ?? null);
+  }, [getMe]);
+
   const setCookieAndToken = useCallback(
-    async (newToken: SessionWithTokenWithoutUser | null) => {
+    async (newToken: FullSessionWithTokenWithoutUserFragment | null) => {
       setToken(newToken);
 
       if (newToken) {
@@ -48,14 +53,14 @@ export const SessionProvider = memo<
           sameSite: 'strict',
           secure: process.env.NODE_ENV === 'production',
         });
-        getMe();
+        fetchMe();
       } else {
         setUser(null);
         sessionStorage.removeItem(AuthTokenStorageKey);
         deleteCookie(AuthTokenStorageKey);
       }
     },
-    [getMe]
+    [fetchMe]
   );
 
   useEffect(() => {
@@ -64,7 +69,7 @@ export const SessionProvider = memo<
       (isFramed() ? sessionStorage.getItem(AuthTokenStorageKey) : null);
     const sToken =
       sessionToken ? sessionToken
-      : stored ? (JSON.parse(stored) as SessionWithTokenWithoutUser)
+      : stored ? (JSON.parse(stored) as FullSessionWithTokenWithoutUserFragment)
       : null;
 
     if (sToken) {

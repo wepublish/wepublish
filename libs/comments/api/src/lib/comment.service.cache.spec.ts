@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { CommentItemType, CommentState } from '@prisma/client';
 import { CanCreateApprovedComment } from '@wepublish/permissions';
 import { CommentService } from './comment.service';
@@ -25,10 +26,10 @@ const readerComment = {
 
 const createPrisma = () => ({
   comment: {
-    create: jest.fn().mockResolvedValue({ id: 'comment-1' }),
-    update: jest.fn().mockResolvedValue({ id: 'comment-1' }),
-    delete: jest.fn().mockResolvedValue({ id: 'comment-1' }),
-    findUnique: jest.fn().mockResolvedValue({
+    create: vi.fn().mockResolvedValue({ id: 'comment-1' }),
+    update: vi.fn().mockResolvedValue({ id: 'comment-1' }),
+    delete: vi.fn().mockResolvedValue({ id: 'comment-1' }),
+    findUnique: vi.fn().mockResolvedValue({
       id: 'comment-1',
       userID: 'user-1',
       state: CommentState.pendingUserChanges,
@@ -36,22 +37,22 @@ const createPrisma = () => ({
     }),
   },
   article: {
-    findUnique: jest.fn().mockResolvedValue({ id: 'article-1', slug: 'one' }),
+    findUnique: vi.fn().mockResolvedValue({ id: 'article-1', slug: 'one' }),
   },
   commentRatingSystem: {
-    update: jest.fn().mockResolvedValue({ id: 'system-1', answers: [] }),
+    update: vi.fn().mockResolvedValue({ id: 'system-1', answers: [] }),
   },
   commentRatingSystemAnswer: {
-    findMany: jest.fn().mockResolvedValue([]),
-    create: jest.fn().mockResolvedValue({ id: 'answer-1' }),
-    delete: jest.fn().mockResolvedValue({ id: 'answer-1' }),
+    findMany: vi.fn().mockResolvedValue([]),
+    create: vi.fn().mockResolvedValue({ id: 'answer-1' }),
+    delete: vi.fn().mockResolvedValue({ id: 'answer-1' }),
   },
 });
 
 describe('comment cache', () => {
   let publicContentCache: {
-    invalidateComments: jest.Mock;
-    invalidateReaderComments: jest.Mock;
+    invalidateComments: Mock;
+    invalidateReaderComments: Mock;
   };
   let prisma: ReturnType<typeof createPrisma>;
   let comments: CommentService;
@@ -59,13 +60,13 @@ describe('comment cache', () => {
 
   beforeEach(() => {
     publicContentCache = {
-      invalidateComments: jest.fn().mockResolvedValue(undefined),
-      invalidateReaderComments: jest.fn().mockResolvedValue(undefined),
+      invalidateComments: vi.fn().mockResolvedValue(undefined),
+      invalidateReaderComments: vi.fn().mockResolvedValue(undefined),
     };
     prisma = createPrisma();
     comments = new CommentService(
       prisma as any,
-      { settingByName: jest.fn().mockResolvedValue({ value: 1000 }) } as any,
+      { settingByName: vi.fn().mockResolvedValue({ value: 1000 }) } as any,
       {} as any,
       publicContentCache as any,
       {} as any
@@ -74,7 +75,7 @@ describe('comment cache', () => {
       prisma as any,
       publicContentCache as any
     );
-    jest.spyOn(comments, 'getComment').mockResolvedValue({} as any);
+    vi.spyOn(comments, 'getComment').mockResolvedValue({} as any);
   });
 
   it.each<[string, () => Promise<unknown>]>([

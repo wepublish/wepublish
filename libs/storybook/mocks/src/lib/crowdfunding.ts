@@ -1,4 +1,4 @@
-import { Crowdfunding } from '@wepublish/website/api';
+import { FullCrowdfundingFragment } from '@wepublish/website/api';
 import nanoid from 'nanoid';
 
 export const mockCrowdfunding = () =>
@@ -15,4 +15,4 @@ export const mockCrowdfunding = () =>
       amount: 100000 * 100,
       progress: 73,
     },
-  }) as Crowdfunding;
+  }) as FullCrowdfundingFragment;

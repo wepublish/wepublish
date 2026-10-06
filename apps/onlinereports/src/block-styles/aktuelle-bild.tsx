@@ -19,7 +19,7 @@ import {
   TeaserWrapper,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserGridBlockFragment,
   FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
@@ -37,7 +37,7 @@ import {
 } from '../onlinereports-base-teaser';
 
 export const IsAktuelleBildTeasers = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('Aktuelle Bild'), isTeaserListBlock])(block);
 

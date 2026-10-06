@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -18,12 +19,12 @@ import {
   TextField,
 } from '@mui/material';
 import {
+  CreateExternalAppDocument,
+  DeleteExternalAppDocument,
   ExternalAppFragment,
   ExternalAppsDocument,
   ExternalAppsTarget,
-  useCreateExternalAppMutation,
-  useDeleteExternalAppMutation,
-  useUpdateExternalAppMutation,
+  UpdateExternalAppDocument,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -68,15 +69,15 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const [createExternalApp, { loading: isCreating, error: createError }] =
-    useCreateExternalAppMutation({
+    useMutation(CreateExternalAppDocument, {
       refetchQueries: [ExternalAppsDocument],
     });
 
   const [updateExternalApp, { loading: isUpdating, error: updateError }] =
-    useUpdateExternalAppMutation();
+    useMutation(UpdateExternalAppDocument);
 
   const [deleteExternalApp, { loading: isDeleting, error: deleteError }] =
-    useDeleteExternalAppMutation({
+    useMutation(DeleteExternalAppDocument, {
       refetchQueries: [ExternalAppsDocument],
     });
 
@@ -345,8 +346,10 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
         {error && <FormHelperText error>{error.message}</FormHelperText>}
 
         <Box
-          display="flex"
-          gap={2}
+          sx={{
+            display: 'flex',
+            gap: 2,
+          }}
         >
           <Button
             disabled={loading}
@@ -376,7 +379,6 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
           )}
         </Box>
       </Form>
-
       <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}

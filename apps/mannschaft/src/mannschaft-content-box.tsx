@@ -6,7 +6,7 @@ import {
   isRichTextBlock,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullIFrameBlockFragment,
   FullImageBlockFragment,
   FullRichTextBlockFragment,
@@ -48,7 +48,7 @@ const MannschaftContentBoxWrapper = styled('div')`
 `;
 
 export const isContentBoxBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is
   | FullImageBlockFragment
   | FullRichTextBlockFragment

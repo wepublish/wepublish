@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Table,
@@ -11,11 +12,11 @@ import {
 import {
   FullMailSendJobFragment,
   MailLogState,
+  MailSendJobDocument,
   MailSendJobRecipientState,
+  MailSendJobRecipientsDocument,
   MailSendJobState,
-  useMailSendJobQuery,
-  useMailSendJobRecipientsQuery,
-  useMailSendJobsQuery,
+  MailSendJobsDocument,
 } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +31,7 @@ import {
   SelectPicker,
   Stack,
 } from 'rsuite';
-import { DEFAULT_QUERY_OPTIONS } from '../common';
+import { useShowErrors } from '../common';
 import {
   formatDateTime,
   MailErrorCell,
@@ -94,11 +95,14 @@ export function MailSendJobList({
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
 
-  const { data, startPolling, stopPolling, refetch } = useMailSendJobsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
-    fetchPolicy: 'cache-and-network',
-    variables: { skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE },
-  });
+  const { data, error, startPolling, stopPolling, refetch } = useQuery(
+    MailSendJobsDocument,
+    {
+      fetchPolicy: 'cache-and-network',
+      variables: { skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE },
+    }
+  );
+  useShowErrors(error);
 
   const jobs = data?.mailSendJobs.nodes ?? [];
   const hasActiveJob = jobs.some(isActive);
@@ -157,8 +161,10 @@ export function MailSendJobList({
                   <JobProgressBar job={job} />
                   <Typography
                     variant="caption"
-                    display="block"
                     style={{ color: '#8e8e93' }}
+                    sx={{
+                      display: 'block',
+                    }}
                   >
                     {t('mailJobs.progressCount', {
                       sent: job.sentCount,
@@ -200,7 +206,6 @@ export function MailSendJobList({
           </TableBody>
         </Table>
       </TableContainer>
-
       {!jobs.length && (
         <Message
           type="info"
@@ -209,7 +214,6 @@ export function MailSendJobList({
           {t('mailJobs.empty')}
         </Message>
       )}
-
       <Pagination
         style={{ marginTop: 16 }}
         prev
@@ -221,7 +225,6 @@ export function MailSendJobList({
         activePage={page}
         onChangePage={setPage}
       />
-
       <MailSendJobDrawer
         jobId={selectedJobId}
         onClose={() => {
@@ -243,12 +246,15 @@ function MailSendJobDrawer({
 }) {
   const { t } = useTranslation();
 
-  const { data, startPolling, stopPolling, refetch } = useMailSendJobQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
-    skip: !jobId,
-    fetchPolicy: 'cache-and-network',
-    variables: { id: jobId as string },
-  });
+  const { data, error, startPolling, stopPolling, refetch } = useQuery(
+    MailSendJobDocument,
+    {
+      skip: !jobId,
+      fetchPolicy: 'cache-and-network',
+      variables: { id: jobId as string },
+    }
+  );
+  useShowErrors(error);
 
   const job = jobId ? data?.mailSendJob : null;
   const active = job ? isActive(job) : false;
@@ -324,9 +330,7 @@ function JobSummary({
           </Typography>
         )}
       </Stack>
-
       <JobProgressBar job={job} />
-
       <Stack
         spacing={12}
         wrap
@@ -359,7 +363,6 @@ function JobSummary({
           </Typography>
         </Stat>
       </Stack>
-
       {job.error && (
         <Message
           type={pending > 0 ? 'warning' : 'error'}
@@ -373,7 +376,6 @@ function JobSummary({
           </div>
         </Message>
       )}
-
       {pending > 0 && !isActive(job) && (
         <Message
           type="info"
@@ -383,19 +385,19 @@ function JobSummary({
           {t('mailJobs.unfinishedHint', { count: pending })}
         </Message>
       )}
-
       {job.status === MailSendJobState.Running && job.heartbeatAt && (
         <Typography
           variant="caption"
-          display="block"
           style={{ color: '#8e8e93', marginTop: 12 }}
+          sx={{
+            display: 'block',
+          }}
         >
           {t('mailJobs.lastActivity', {
             time: formatDateTime(job.heartbeatAt),
           })}
         </Typography>
       )}
-
       <Stack
         spacing={8}
         wrap
@@ -449,16 +451,19 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
     setPage(1);
   }, [jobId, state]);
 
-  const { data, startPolling, stopPolling } = useMailSendJobRecipientsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
-    fetchPolicy: 'cache-and-network',
-    variables: {
-      jobId,
-      state,
-      skip: (page - 1) * RECIPIENT_PAGE_SIZE,
-      take: RECIPIENT_PAGE_SIZE,
-    },
-  });
+  const { data, error, startPolling, stopPolling } = useQuery(
+    MailSendJobRecipientsDocument,
+    {
+      fetchPolicy: 'cache-and-network',
+      variables: {
+        jobId,
+        state,
+        skip: (page - 1) * RECIPIENT_PAGE_SIZE,
+        take: RECIPIENT_PAGE_SIZE,
+      },
+    }
+  );
+  useShowErrors(error);
 
   useEffect(() => {
     if (poll) {
@@ -530,8 +535,10 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
                   {entry.memberPlanName && (
                     <Typography
                       variant="caption"
-                      display="block"
                       style={{ color: '#8e8e93' }}
+                      sx={{
+                        display: 'block',
+                      }}
                     >
                       {entry.memberPlanName}
                     </Typography>
@@ -550,7 +557,6 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
           </TableBody>
         </Table>
       </TableContainer>
-
       {!entries.length && (
         <Message
           type="info"
@@ -559,7 +565,6 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
           {t('mailJobs.queue.empty')}
         </Message>
       )}
-
       <Pagination
         style={{ marginTop: 12 }}
         prev

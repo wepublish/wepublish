@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
   FullImageFragment,
-  MemberPlan,
+  FullMemberPlanFragment,
   MutationCreateGoodieArgs,
   MutationUpdateGoodieArgs,
 } from '@wepublish/editor/api';
@@ -22,7 +22,7 @@ export type GoodieFormData = (
   | MutationUpdateGoodieArgs
 ) & {
   image?: FullImageFragment | null;
-  memberPlans?: Pick<MemberPlan, 'id' | 'name'>[];
+  memberPlans?: Pick<FullMemberPlanFragment, 'id' | 'name'>[];
 };
 
 type GoodieFormProps = {

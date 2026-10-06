@@ -4,7 +4,6 @@ import {
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullImageFragment,
-  PaymentMethod,
   PaymentPeriodicity,
   ProductType,
   FullAvailablePaymentMethodFragment,
@@ -262,7 +261,7 @@ export function MemberPlanForm({
                   if (!memberPlan) {
                     return;
                   }
-                  setMemberPlan({ ...memberPlan, image: undefined });
+                  setMemberPlan({ ...memberPlan, image: null });
                 }}
               />
             </Col>
@@ -331,7 +330,8 @@ export function MemberPlanForm({
                     setMemberPlan({
                       ...memberPlan,
                       description:
-                        newDescription as RichTextBlockValue['richText'],
+                        (newDescription as RichTextBlockValue['richText']) ??
+                        null,
                     });
                   }
                 }}
@@ -350,7 +350,8 @@ export function MemberPlanForm({
                     setMemberPlan({
                       ...memberPlan,
                       shortDescription:
-                        newShortDescription as RichTextBlockValue['richText'],
+                        (newShortDescription as RichTextBlockValue['richText']) ??
+                        null,
                     });
                   }
                 }}
@@ -370,7 +371,7 @@ export function MemberPlanForm({
 
                   setMemberPlan({
                     ...memberPlan,
-                    externalReward: newexternalReward,
+                    externalReward: newexternalReward ?? null,
                   });
                 }}
               />
@@ -621,6 +622,7 @@ export function MemberPlanForm({
                 disabled={loading}
                 onChange={app => setAvailablePaymentMethods(app)}
                 defaultValue={{
+                  __typename: 'AvailablePaymentMethod',
                   forceAutoRenewal: false,
                   paymentPeriodicities: [],
                   paymentMethods: [],
@@ -695,8 +697,7 @@ export function MemberPlanForm({
                                 .map(pmID =>
                                   paymentMethods.find(pm => pm.id === pmID)
                                 )
-                                .filter(pm => pm !== undefined)
-                                .map(pm => pm as PaymentMethod),
+                                .filter(pm => pm !== undefined),
                             });
                           }}
                           block

@@ -5,7 +5,6 @@ import {
 } from '@wepublish/article/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
 import { ContentUnavailable } from '@wepublish/content/website';
-import { Article as ArticleType } from '@wepublish/website/api';
 import {
   BuilderArticleProps,
   useWebsiteBuilder,
@@ -98,7 +97,7 @@ export function OnlineReportsArticle({
   return (
     <ArticleWrapper className={className}>
       {!article && !loading && <ContentUnavailable />}
-      {article && <ArticleSEO article={article as ArticleType} />}
+      {article && <ArticleSEO article={article} />}
 
       <Blocks
         key={article?.id}

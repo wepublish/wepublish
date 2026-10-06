@@ -1,6 +1,7 @@
 import { MailLogState, PrismaClient } from '@prisma/client';
 import { MailContext } from '@wepublish/mail/api';
 import { MailLogSyncService } from './mail-log-sync.service';
+import type { Mock } from 'vitest';
 
 interface LogRow {
   id: string;
@@ -10,11 +11,11 @@ interface LogRow {
 
 const makeService = (
   logs: LogRow[],
-  getMessageStates: jest.Mock,
+  getMessageStates: Mock,
   providerPresent = true
 ) => {
-  const findMany = jest.fn(async () => logs);
-  const update = jest.fn(async (args: any) => args);
+  const findMany = vi.fn(async () => logs);
+  const update = vi.fn(async (args: any) => args);
   const prisma = { mailLog: { findMany, update } };
   const mailContext = {
     mailProvider:
@@ -35,7 +36,7 @@ const makeService = (
 
 describe('MailLogSyncService', () => {
   it('writes the state the provider reports back to the log', async () => {
-    const getMessageStates = jest.fn(async () => [
+    const getMessageStates = vi.fn(async () => [
       {
         providerMessageID: 'm1',
         state: MailLogState.delivered,
@@ -67,7 +68,7 @@ describe('MailLogSyncService', () => {
   it('only asks about mails that can still change and have a provider id', async () => {
     const { service, findMany } = makeService(
       [],
-      jest.fn(async () => [])
+      vi.fn(async () => [])
     );
 
     await service.syncOpenStates();
@@ -97,7 +98,7 @@ describe('MailLogSyncService', () => {
           mailProviderMessageID: 'm1',
         },
       ],
-      jest.fn(async () => [
+      vi.fn(async () => [
         { providerMessageID: 'm1', state: MailLogState.submitted },
       ])
     );
@@ -118,7 +119,7 @@ describe('MailLogSyncService', () => {
           mailProviderMessageID: 'm1',
         },
       ],
-      jest.fn(async () => [])
+      vi.fn(async () => [])
     );
 
     await expect(service.syncOpenStates()).resolves.toEqual({
@@ -129,7 +130,7 @@ describe('MailLogSyncService', () => {
   });
 
   it('skips the provider round trip when nothing is open', async () => {
-    const getMessageStates = jest.fn(async () => []);
+    const getMessageStates = vi.fn(async () => []);
     const { service } = makeService([], getMessageStates);
 
     await expect(service.syncOpenStates()).resolves.toEqual({
@@ -142,7 +143,7 @@ describe('MailLogSyncService', () => {
   it('is a no-op without a configured provider', async () => {
     const { service, findMany } = makeService(
       [],
-      jest.fn(async () => []),
+      vi.fn(async () => []),
       false
     );
 
@@ -156,7 +157,7 @@ describe('MailLogSyncService', () => {
   it('caps how many mails one call looks at', async () => {
     const { service, findMany } = makeService(
       [],
-      jest.fn(async () => [])
+      vi.fn(async () => [])
     );
 
     await service.syncOpenStates(10_000);

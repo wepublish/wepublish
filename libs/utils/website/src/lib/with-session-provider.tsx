@@ -1,9 +1,11 @@
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
+import { FullSessionWithTokenWithoutUserFragment } from '@wepublish/website/api';
 import { ComponentType, createElement, memo } from 'react';
 import { SessionProvider } from './session.provider';
 
 export const withSessionProvider = <
-  P extends { pageProps: { sessionToken?: SessionWithTokenWithoutUser } },
+  P extends {
+    pageProps: { sessionToken?: FullSessionWithTokenWithoutUserFragment };
+  },
 >(
   ControlledComponent: ComponentType<P>,
   Provider: typeof SessionProvider = SessionProvider

@@ -8,7 +8,7 @@ import { ImageDataloaderService } from './image-dataloader.service';
 
 describe('image content cache', () => {
   let kv: KvTtlCacheService;
-  const prisma = { image: { findMany: jest.fn() } };
+  const prisma = { image: { findMany: vi.fn() } };
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({

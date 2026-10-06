@@ -20,7 +20,7 @@ describe('SettingsService', () => {
         {
           provide: SettingDataloaderService,
           useValue: {
-            prime: jest.fn(),
+            prime: vi.fn(),
           },
         },
       ],
@@ -54,7 +54,7 @@ describe('SettingsService', () => {
       },
     ];
 
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.setting, 'findMany')
       .mockResolvedValue(mockSettings);
 
@@ -73,7 +73,7 @@ describe('SettingsService', () => {
       settingRestriction: null,
     };
 
-    jest.spyOn(prisma.setting, 'findMany').mockResolvedValue([
+    vi.spyOn(prisma.setting, 'findMany').mockResolvedValue([
       known,
       {
         ...known,
@@ -95,7 +95,7 @@ describe('SettingsService', () => {
       settingRestriction: null,
     };
 
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.setting, 'findUnique')
       .mockResolvedValue(mockSetting);
 
@@ -124,8 +124,8 @@ describe('SettingsService', () => {
       },
     };
 
-    jest.spyOn(prisma.setting, 'findUnique').mockResolvedValue(updatedSetting);
-    jest.spyOn(prisma.setting, 'update').mockResolvedValue(updatedSetting);
+    vi.spyOn(prisma.setting, 'findUnique').mockResolvedValue(updatedSetting);
+    vi.spyOn(prisma.setting, 'update').mockResolvedValue(updatedSetting);
 
     const result = await service.updateSetting(updateInput);
     expect(result).toMatchSnapshot({
@@ -146,7 +146,7 @@ describe('SettingsService', () => {
     };
 
     test('serves the settings list from the cache', async () => {
-      const findMany = jest
+      const findMany = vi
         .spyOn(prisma.setting, 'findMany')
         .mockResolvedValue([setting]);
 
@@ -158,7 +158,7 @@ describe('SettingsService', () => {
     });
 
     test('serves a setting by name from the cache', async () => {
-      const findUnique = jest
+      const findUnique = vi
         .spyOn(prisma.setting, 'findUnique')
         .mockResolvedValue(setting);
 
@@ -169,11 +169,11 @@ describe('SettingsService', () => {
     });
 
     test('loads the settings again after one was updated', async () => {
-      const findMany = jest
+      const findMany = vi
         .spyOn(prisma.setting, 'findMany')
         .mockResolvedValue([setting]);
-      jest.spyOn(prisma.setting, 'findUnique').mockResolvedValue(setting);
-      jest.spyOn(prisma.setting, 'update').mockResolvedValue(setting);
+      vi.spyOn(prisma.setting, 'findUnique').mockResolvedValue(setting);
+      vi.spyOn(prisma.setting, 'update').mockResolvedValue(setting);
 
       await service.settingsList();
       await service.updateSetting({

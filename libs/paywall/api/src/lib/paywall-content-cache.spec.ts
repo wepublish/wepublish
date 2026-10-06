@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import {
   KvTtlCacheModule,
@@ -12,12 +13,12 @@ describe('paywall cache', () => {
   let kv: KvTtlCacheService;
   const prisma = {
     paywall: {
-      findMany: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
+      findMany: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
     },
-    paywallMemberplan: { findMany: jest.fn() },
+    paywallMemberplan: { findMany: vi.fn() },
   };
 
   beforeEach(async () => {
@@ -39,7 +40,7 @@ describe('paywall cache', () => {
   });
 
   it.each<
-    [string, () => { load: (id: string) => Promise<unknown> }, jest.Mock]
+    [string, () => { load: (id: string) => Promise<unknown> }, Mock]
   >([
     [
       'a paywall',
@@ -68,12 +69,12 @@ describe('paywall cache', () => {
   });
 
   describe('writes', () => {
-    const publicContentCache = { invalidate: jest.fn() };
+    const publicContentCache = { invalidate: vi.fn() };
     const service = () =>
       Object.assign(
         new PaywallService(prisma as any, publicContentCache as any),
         {
-          __DATALOADER__PaywallDataloaderService: { prime: jest.fn() },
+          __DATALOADER__PaywallDataloaderService: { prime: vi.fn() },
         }
       );
 

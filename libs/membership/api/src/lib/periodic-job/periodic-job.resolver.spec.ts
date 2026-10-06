@@ -20,7 +20,7 @@ import { PeriodicJob } from './periodic-job.model';
   ],
   providers: [
     PeriodicJobResolver,
-    { provide: PeriodicJobService, useValue: { getJobLog: jest.fn() } },
+    { provide: PeriodicJobService, useValue: { getJobLog: vi.fn() } },
   ],
 })
 export class AppModule {}
@@ -69,7 +69,7 @@ describe('ConsentResolver', () => {
   });
 
   it('periodic jobs query', async () => {
-    const spy = jest
+    const spy = vi
       .spyOn(service, 'getJobLog')
       .mockReturnValue(Promise.resolve(mockLogs) as any);
 

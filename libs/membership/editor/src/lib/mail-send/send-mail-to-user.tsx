@@ -1,14 +1,15 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  useMailTemplateMissingPlaceholdersQuery,
-  useMailTemplateQuery,
-  useSendMailTemplateToUserMutation,
+  MailTemplateDocument,
+  MailTemplateMissingPlaceholdersDocument,
+  SendMailTemplateToUserDocument,
 } from '@wepublish/editor/api';
 import { PermissionControl } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdSend } from 'react-icons/md';
 import { Button, Message, SelectPicker, Stack, toaster } from 'rsuite';
-import { DEFAULT_QUERY_OPTIONS } from '../common';
+import { showErrors, useShowErrors } from '../common';
 
 interface SendMailToUserPanelProps {
   userId: string;
@@ -23,17 +24,26 @@ export function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
   const { t } = useTranslation();
   const [templateId, setTemplateId] = useState<string | null>(null);
 
-  const { data } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
-  const { data: missingData } = useMailTemplateMissingPlaceholdersQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
-    skip: !templateId,
-    variables: {
-      templateId: templateId as string,
-      withSubscriptionData: false,
-    },
-  });
+  const { data, error: templateError } = useQuery(MailTemplateDocument);
 
-  const [sendMail, { loading }] = useSendMailTemplateToUserMutation({
+  useEffect(() => {
+    if (templateError) {
+      showErrors(templateError);
+    }
+  }, [templateError]);
+  const { data: missingData, error: missingError } = useQuery(
+    MailTemplateMissingPlaceholdersDocument,
+    {
+      skip: !templateId,
+      variables: {
+        templateId: templateId as string,
+        withSubscriptionData: false,
+      },
+    }
+  );
+  useShowErrors(missingError);
+
+  const [sendMail, { loading }] = useMutation(SendMailTemplateToUserDocument, {
     onError: error =>
       toaster.push(
         <Message

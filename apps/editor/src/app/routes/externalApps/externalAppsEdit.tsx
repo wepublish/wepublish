@@ -1,5 +1,6 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { useExternalAppsQuery } from '@wepublish/editor/api';
+import { ExternalAppsDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 
 import { ExternalAppForm } from './externalAppForm';
@@ -28,7 +29,7 @@ const Title = styled.h3`
 
 export function ExternalApps() {
   const { t } = useTranslation();
-  const { data } = useExternalAppsQuery();
+  const { data } = useQuery(ExternalAppsDocument);
 
   return (
     <Wrapper>

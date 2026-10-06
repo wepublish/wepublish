@@ -1,10 +1,11 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   FullImageFragment,
+  ImageDocument,
   ImageListDocument,
-  useImageQuery,
-  useUpdateImageMutation,
-  useUploadImageMutation,
+  UpdateImageDocument,
+  UploadImageDocument,
 } from '@wepublish/editor/api';
 import imageCompression from 'browser-image-compression';
 import prettyBytes from 'pretty-bytes';
@@ -91,16 +92,16 @@ function ImageEditPanel({
 
   const [focalPoint, setFocalPoint] = useState<Point>();
 
-  const { data, error: loadingError } = useImageQuery({
+  const { data, error: loadingError } = useQuery(ImageDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
 
   const [updateImage, { loading: isUpdating, error: savingError }] =
-    useUpdateImageMutation();
+    useMutation(UpdateImageDocument);
 
   const [uploadImage, { loading: isUploading, error: uploadError }] =
-    useUploadImageMutation({
+    useMutation(UploadImageDocument, {
       refetchQueries: [getOperationNameFromDocument(ImageListDocument)],
     });
 

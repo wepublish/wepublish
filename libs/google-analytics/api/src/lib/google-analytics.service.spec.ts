@@ -7,34 +7,48 @@ import {
 } from './google-analytics.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import type { Mock } from 'vitest';
 
-const runReportSpy = jest.fn();
+// Held in variables rather than reached for with `requireMock`, which vitest
+// has no equivalent of. `vi.hoisted` is required: `vi.mock` is hoisted above
+// ordinary top level consts, so the factory would otherwise close over a
+// binding that is not initialised yet.
+const { BetaAnalyticsDataClient, runReportSpy } = vi.hoisted(() => {
+  const runReportSpy = vi.fn();
 
-jest.mock('@google-analytics/data', () => ({
-  BetaAnalyticsDataClient: jest.fn().mockImplementation(() => ({
-    runReport: runReportSpy,
-    close: jest.fn(),
-  })),
+  return {
+    runReportSpy,
+    BetaAnalyticsDataClient: vi.fn().mockImplementation(function () {
+      return {
+        runReport: runReportSpy,
+        close: vi.fn(),
+      };
+    }),
+  };
+});
+
+vi.mock('@google-analytics/data', () => ({
+  BetaAnalyticsDataClient,
 }));
 
 describe('GoogleAnalyticsService', () => {
   let config: GoogleAnalyticsConfig;
   let service: GoogleAnalyticsService;
   let prismaMock: {
-    article: { [method in keyof PrismaClient['article']]?: jest.Mock };
+    article: { [method in keyof PrismaClient['article']]?: Mock };
   };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   beforeEach(async () => {
@@ -49,12 +63,12 @@ describe('GoogleAnalyticsService', () => {
 
     prismaMock = {
       article: {
-        count: jest.fn(),
-        findMany: jest.fn(),
-        findUnique: jest.fn(),
-        delete: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        count: vi.fn(),
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        delete: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
     };
 
@@ -105,9 +119,6 @@ describe('GoogleAnalyticsService', () => {
   });
 
   it('should return an empty array without contacting Google when the credentials lack client_email or private_key', async () => {
-    const { BetaAnalyticsDataClient } = jest.requireMock(
-      '@google-analytics/data'
-    );
     config.credentials = { type: 'service_account', private_key: 'key' };
 
     const result = await service.getMostViewedArticles({});
@@ -117,15 +128,12 @@ describe('GoogleAnalyticsService', () => {
   });
 
   it('should not crash the api when a replaced client fails to close', async () => {
-    const { BetaAnalyticsDataClient } = jest.requireMock(
-      '@google-analytics/data'
-    );
     BetaAnalyticsDataClient.mockImplementationOnce(() => ({
       runReport: runReportSpy,
-      close: jest.fn(() => Promise.reject(new Error('stub never created'))),
+      close: vi.fn(() => Promise.reject(new Error('stub never created'))),
     }));
     runReportSpy.mockRejectedValue(new Error('gRPC timeout'));
-    const unhandled = jest.fn();
+    const unhandled = vi.fn();
     process.on('unhandledRejection', unhandled);
 
     await failingLookup();
@@ -134,11 +142,11 @@ describe('GoogleAnalyticsService', () => {
       private_key: 'private-key',
     };
     await failingLookup();
-    jest.useRealTimers();
+    vi.useRealTimers();
     await new Promise(resolve => setImmediate(resolve));
     await new Promise(resolve => setImmediate(resolve));
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
     process.off('unhandledRejection', unhandled);
 
     expect(unhandled).not.toHaveBeenCalled();
@@ -210,9 +218,6 @@ describe('GoogleAnalyticsService', () => {
   });
 
   it('should build a new client when the private key of the same account is rotated', async () => {
-    const { BetaAnalyticsDataClient } = jest.requireMock(
-      '@google-analytics/data'
-    );
     runReportSpy.mockReturnValue(viewMap('foobar'));
     prismaMock.article.findMany?.mockReturnValue([]);
 
@@ -260,7 +265,7 @@ describe('GoogleAnalyticsService', () => {
     await failingLookup();
 
     // Advance past the 5-minute cooldown
-    jest.setSystemTime(new Date('2023-01-01T00:06:00'));
+    vi.setSystemTime(new Date('2023-01-01T00:06:00'));
 
     runReportSpy.mockReturnValue(Promise.resolve([{ rows: [] }]));
     prismaMock.article.findMany?.mockReturnValue([]);
@@ -270,7 +275,7 @@ describe('GoogleAnalyticsService', () => {
     expect(result).toHaveLength(0);
 
     // Reset time for other tests
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   it('should reset consecutive failures on success', async () => {

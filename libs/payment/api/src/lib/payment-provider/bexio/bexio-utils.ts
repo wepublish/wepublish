@@ -1,6 +1,6 @@
 import { MemberPlan, PaymentState, Subscription, User } from '@prisma/client';
 import Bexio, { ContactsStatic } from 'bexio';
-import { MappedReplacer } from 'mapped-replacer/dist/types';
+import type { MappedReplacer } from 'mapped-replacer';
 
 const { ContactSearchParameters } = ContactsStatic;
 

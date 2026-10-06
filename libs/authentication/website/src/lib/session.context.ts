@@ -1,7 +1,7 @@
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import {
-  SensitiveDataUser,
-  SessionWithTokenWithoutUser,
+  FullSensitiveDataUserFragment,
+  FullSessionWithTokenWithoutUserFragment,
 } from '@wepublish/website/api';
 import { createContext, useContext } from 'react';
 
@@ -9,9 +9,9 @@ export const AuthTokenStorageKey = 'auth.token';
 
 export const SessionTokenContext = createContext<
   | [
-      SensitiveDataUser | null | undefined,
+      FullSensitiveDataUserFragment | null | undefined,
       boolean,
-      (value: SessionWithTokenWithoutUser | null) => Promise<void>,
+      (value: FullSessionWithTokenWithoutUserFragment | null) => Promise<void>,
     ]
   | null
 >(null);

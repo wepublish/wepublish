@@ -4,14 +4,14 @@ import {
   isTitleBlock,
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext, toPlaintext } from '@wepublish/richtext';
-import { Article, FullImageFragment } from '@wepublish/website/api';
+import { FullArticleFragment, FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderArticleSEOProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Fragment, useMemo } from 'react';
 
-export const getArticleSEO = (article: Article) => {
+export const getArticleSEO = (article: FullArticleFragment) => {
   const firstTitle = article.latest.blocks?.find(block => isTitleBlock(block));
   const firstRichText = article.latest.blocks?.find(block =>
     isRichTextBlock(block)
@@ -95,7 +95,7 @@ export const getArticleSEO = (article: Article) => {
         '@context': 'https://schema.org',
         '@type': 'Person',
         image:
-          (firstAuthor?.image as FullImageFragment)?.s ??
+          (firstAuthor?.image as unknown as FullImageFragment)?.s ??
           firstAuthor?.image?.url,
         jobTitle: firstAuthor?.jobTitle,
         name: firstAuthor?.name,

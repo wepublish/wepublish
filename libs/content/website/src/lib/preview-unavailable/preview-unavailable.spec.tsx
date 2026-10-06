@@ -4,7 +4,7 @@ import {
   SessionTokenContext,
   setPreviewHandshakeState,
 } from '@wepublish/authentication/website';
-import { SensitiveDataUser } from '@wepublish/website/api';
+import { FullSensitiveDataUserFragment } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { ComponentProps, PropsWithChildren, ReactNode } from 'react';
 
@@ -34,6 +34,13 @@ const renderWithTheme = (ui: ReactNode) =>
   );
 
 describe('PreviewUnavailable', () => {
+  // The handshake window is measured against performance.now(), which keeps
+  // counting across all files sharing a vitest worker - pin it so the pending
+  // state stays reachable no matter how long the suite has been running.
+  beforeEach(() => {
+    vi.spyOn(performance, 'now').mockReturnValue(0);
+  });
+
   afterEach(() => {
     window.history.replaceState(null, '', '/');
     Object.defineProperty(window, 'opener', {
@@ -43,6 +50,7 @@ describe('PreviewUnavailable', () => {
     });
     document.cookie = 'auth.token=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     setPreviewHandshakeState('unknown');
+    vi.restoreAllMocks();
   });
 
   it('renders nothing without ?preview in the url', () => {
@@ -126,7 +134,9 @@ describe('PreviewUnavailable', () => {
   it('shows the login hint directly when the user lacks the preview permission', () => {
     window.history.replaceState(null, '', '/a/foobar?preview');
     document.cookie = 'auth.token=some-token';
-    const user = { permissions: [] } as unknown as SensitiveDataUser;
+    const user = {
+      permissions: [],
+    } as unknown as FullSensitiveDataUserFragment;
 
     renderWithTheme(
       <SessionTokenContext.Provider

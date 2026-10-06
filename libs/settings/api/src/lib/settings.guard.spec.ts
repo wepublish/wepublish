@@ -33,7 +33,7 @@ describe('SettingsGuard', () => {
     reflector = module.get<Reflector>(Reflector);
     prisma = module.get<PrismaClient>(PrismaClient);
 
-    jest.spyOn(prisma.setting, 'findMany').mockImplementation((args): any => {
+    vi.spyOn(prisma.setting, 'findMany').mockImplementation((args): any => {
       const settings =
         ((args?.where?.name as Prisma.StringFilter).in as SettingName[]) ?? [];
 
@@ -53,7 +53,7 @@ describe('SettingsGuard', () => {
   });
 
   it('should return true if no settings are set', async () => {
-    const reflectorSpy = jest
+    const reflectorSpy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue([]);
     const mockContext = {
@@ -67,7 +67,7 @@ describe('SettingsGuard', () => {
   });
 
   it('should return true if the setting is set to true', async () => {
-    const spy = jest
+    const spy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue([mockTrueSetting.name]);
     const mockContext = {
@@ -81,7 +81,7 @@ describe('SettingsGuard', () => {
   });
 
   it('should return true if one of the settings is set to true', async () => {
-    const spy = jest
+    const spy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue([mockFalseSetting.name, mockTrueSetting.name]);
     const mockContext = {
@@ -95,7 +95,7 @@ describe('SettingsGuard', () => {
   });
 
   it('should return false if no settings can be found', async () => {
-    const spy = jest
+    const spy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue(['Foobar']);
 
@@ -110,7 +110,7 @@ describe('SettingsGuard', () => {
   });
 
   it('should return false if the setting is set to false', async () => {
-    const spy = jest
+    const spy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue([mockFalseSetting.name]);
 

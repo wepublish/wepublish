@@ -8,8 +8,8 @@ import {
 } from '@wepublish/authentication/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import {
+  FullSessionWithTokenWithoutUserFragment,
   getApiClient,
-  SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
@@ -26,7 +26,7 @@ const LoginWrapper = styled('div')`
   justify-self: center;
 `;
 
-type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
+type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 
 export default function Login({ sessionToken }: LoginProps) {
   const { hasUser, setToken } = useUser();
@@ -67,25 +67,26 @@ export default function Login({ sessionToken }: LoginProps) {
   return (
     <LoginWrapper>
       <H3 component="h1">Login für Abonnent*innen</H3>
-
       <Typography
         variant="h6"
-        paragraph
+        sx={{
+          marginBottom: '16px',
+        }}
       >
         «MAIL-LOGIN»: Beim ersten Login kannst du dich mit deiner bei uns
         hinterlegten E-Mail-Adresse (ohne Passwort) anmelden. Lege danach ein
         Passwort in deinem Nutzerprofil fest für zukünftiges Einloggen unter
         «LOGIN MIT PASSWORT»
       </Typography>
-
       <Typography
         variant="body1"
-        paragraph
+        sx={{
+          marginBottom: '16px',
+        }}
       >
         Du hast noch kein Abo und möchtest LGBTIQ-Journalismus unterstützen?
         <Link href={'/mitmachen'}> Hier kannst du dein Abo wählen.</Link>
       </Typography>
-
       <LoginFormContainer
         defaults={{
           email: router.query?.mail as string | undefined,

@@ -5,6 +5,7 @@ import { BlockContentInput } from '../block-content.model';
 import { BlockType } from '../block-type.model';
 import { BlockTemplateDataloaderService } from './block-template-dataloader.service';
 import { BlockTemplateService } from './block-template.service';
+import type { Mock } from 'vitest';
 
 const templateBlock = (templateId: string): BlockContentInput => ({
   [BlockType.BlockTemplate]: { templateId },
@@ -33,28 +34,28 @@ describe('BlockTemplateService', () => {
   let service: BlockTemplateService;
   let prismaMock: {
     blockTemplate: {
-      [method in keyof PrismaClient['blockTemplate']]?: jest.Mock;
+      [method in keyof PrismaClient['blockTemplate']]?: Mock;
     };
   };
   let publicContentCache: {
-    invalidate: jest.Mock;
-    invalidateArticleLayout: jest.Mock;
+    invalidate: Mock;
+    invalidateArticleLayout: Mock;
   };
 
   beforeEach(async () => {
     prismaMock = {
       blockTemplate: {
-        count: jest.fn(),
-        findMany: jest.fn().mockResolvedValue([]),
-        findUnique: jest.fn(),
-        delete: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        count: vi.fn(),
+        findMany: vi.fn().mockResolvedValue([]),
+        findUnique: vi.fn(),
+        delete: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
     };
     publicContentCache = {
-      invalidate: jest.fn(),
-      invalidateArticleLayout: jest.fn(),
+      invalidate: vi.fn(),
+      invalidateArticleLayout: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -68,7 +69,7 @@ describe('BlockTemplateService', () => {
         {
           provide: BlockTemplateDataloaderService,
           useValue: {
-            prime: jest.fn(),
+            prime: vi.fn(),
           },
         },
       ],

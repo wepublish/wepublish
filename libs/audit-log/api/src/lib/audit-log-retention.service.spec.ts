@@ -7,10 +7,11 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { AuditLogService } from './audit-log.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import type { Mock } from 'vitest';
 
 describe('AuditLogRetentionService', () => {
   let service: AuditLogRetentionService;
-  let auditLogService: { deleteOlderThan: jest.Mock };
+  let auditLogService: { deleteOlderThan: Mock };
   let configured: string | undefined;
 
   const withRetention = (value: string | undefined) => {
@@ -18,11 +19,11 @@ describe('AuditLogRetentionService', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     configured = undefined;
-    auditLogService = { deleteOlderThan: jest.fn().mockResolvedValue(0) };
+    auditLogService = { deleteOlderThan: vi.fn().mockResolvedValue(0) };
 
-    const config = { get: jest.fn(() => configured) };
+    const config = { get: vi.fn(() => configured) };
 
     service = new AuditLogRetentionService(
       auditLogService as unknown as AuditLogService,
@@ -33,10 +34,10 @@ describe('AuditLogRetentionService', () => {
 
   describe('once a night', () => {
     const night = (claimed: boolean | undefined) => {
-      const kv = { claim: jest.fn().mockResolvedValue(claimed) };
+      const kv = { claim: vi.fn().mockResolvedValue(claimed) };
       const retention = new AuditLogRetentionService(
         auditLogService as unknown as AuditLogService,
-        { get: jest.fn() } as unknown as ConfigService,
+        { get: vi.fn() } as unknown as ConfigService,
         kv as unknown as KvTtlCacheService
       );
 
