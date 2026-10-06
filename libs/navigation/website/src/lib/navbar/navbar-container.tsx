@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client/react';
 import {
   useHasRunningSubscription,
   useHasUnpaidInvoices,

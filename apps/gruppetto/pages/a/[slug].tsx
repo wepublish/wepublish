@@ -1,22 +1,22 @@
-import { useQuery } from '@apollo/client/react';
 import { CombinedGraphQLErrors } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import {
   ArticleContainer,
   ArticleListContainer,
   ArticleWrapper,
 } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
-import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
 import {
+  addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
   CommentItemType,
   CommentListDocument,
+  FullTagFragment,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  Tag,
-  addClientCacheToProps,
-  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -31,7 +31,7 @@ export default function ArticleBySlugOrId() {
     elements: { H3 },
   } = useWebsiteBuilder();
 
-  const { data } = useArticleQuery({
+  const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
@@ -121,7 +121,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         query: ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id),
+            tags: article.data.article.tags.map(
+              (tag: FullTagFragment) => tag.id
+            ),
           },
           take: 4,
         },
@@ -139,6 +141,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: revalidateFor(article.data?.article, article.errors),
+    revalidate: revalidateFor(article.data?.article, article.error),
   };
 };

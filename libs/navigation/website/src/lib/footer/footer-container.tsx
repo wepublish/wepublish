@@ -1,5 +1,4 @@
-import { useQuery } from '@apollo/client/react';
-import { NavigationListDocument } from '@wepublish/website/api';
+import { useNavigationListQuery } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
   BuilderFooterProps,

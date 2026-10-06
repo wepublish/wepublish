@@ -1,5 +1,5 @@
-import { useQuery } from '@apollo/client/react';
 import { CombinedGraphQLErrors } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   ArticleContainer,
@@ -14,17 +14,17 @@ import {
 } from '@wepublish/block-content/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ShowPaywallContext, useShowPaywall } from '@wepublish/paywall/website';
-import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
 import {
+  addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
   CommentItemType,
   CommentListDocument,
+  FullTagFragment,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  Tag,
-  addClientCacheToProps,
-  getApiClient,
 } from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -56,7 +56,7 @@ export function StandaloneArticlePage({
     elements: { H4 },
   } = useWebsiteBuilder();
 
-  const { data } = useArticleQuery({
+  const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug,
@@ -255,7 +255,7 @@ const createArticleGetStaticProps =
           query: ArticleListDocument,
           variables: {
             filter: {
-              tags: articleData.tags.map((tag: Tag) => tag.id),
+              tags: articleData.tags.map((tag: FullTagFragment) => tag.id),
             },
             take: 4,
           },
@@ -273,7 +273,7 @@ const createArticleGetStaticProps =
 
     return {
       props,
-      revalidate: revalidateFor(article.data?.article, article.errors),
+      revalidate: revalidateFor(article.data?.article, article.error),
     };
   };
 

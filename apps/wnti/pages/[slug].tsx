@@ -1,7 +1,7 @@
 import { CombinedGraphQLErrors } from '@apollo/client';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -71,6 +71,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props,
     revalidate:
-      !page.data?.page ? 1 : revalidateFor(page.data.page, page.errors),
+      !page.data?.page ? 1 : revalidateFor(page.data.page, page.error),
   };
 };

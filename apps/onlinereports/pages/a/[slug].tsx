@@ -1,26 +1,26 @@
-import { useQuery } from '@apollo/client/react';
 import { CombinedGraphQLErrors } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   ArticleContainer,
   ArticleListContainer,
 } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
-import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
 import {
+  addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
   ArticleSort,
   CommentItemType,
   CommentListDocument,
+  FullTagFragment,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
-  Tag,
   TagListDocument,
   TagType,
-  addClientCacheToProps,
-  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -46,7 +46,7 @@ export default function ArticleBySlugOrId() {
     elements: { H2 },
   } = useWebsiteBuilder();
 
-  const { data } = useArticleQuery({
+  const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
@@ -54,7 +54,7 @@ export default function ArticleBySlugOrId() {
     },
   });
 
-  const tags = useTagListQuery({
+  const tags = useQuery(TagListDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       filter: {
@@ -83,7 +83,9 @@ export default function ArticleBySlugOrId() {
               order: SortOrder.Descending,
               take: nrOfRecentArticles + 1,
               filter: {
-                tagsNotIn: tags.data.tags.nodes.map((tag: Tag) => tag.id),
+                tagsNotIn: tags.data.tags.nodes.map(
+                  (tag: FullTagFragment) => tag.id
+                ),
               },
             }}
             filter={articles =>
@@ -167,7 +169,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           filter: {
             tagsNotIn:
               tagsToExclude.data ?
-                tagsToExclude.data.tags.nodes.map((tag: Tag) => tag.id)
+                tagsToExclude.data.tags.nodes.map(
+                  (tag: FullTagFragment) => tag.id
+                )
               : [],
           },
         },
@@ -185,6 +189,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: revalidateFor(article.data?.article, article.errors),
+    revalidate: revalidateFor(article.data?.article, article.error),
   };
 };

@@ -1,5 +1,5 @@
-import { useQuery } from '@apollo/client/react';
 import { CombinedGraphQLErrors } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import {
@@ -13,24 +13,23 @@ import { ArticleAuthor } from '@wepublish/author/website';
 import { PollBlock } from '@wepublish/block-content/website';
 import { Comment } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
-import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
 import {
-  Article as ArticleType,
+  addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
   BannerDocumentType,
   CommentItemType,
   CommentListDocument,
   CommentSort,
+  FullTagFragment,
+  getApiClient,
   HotAndTrendingDocument,
   NavigationListDocument,
   PeerProfileDocument,
   PrimaryBannerDocument,
   SettingListDocument,
   SortOrder,
-  Tag,
-  addClientCacheToProps,
-  getApiClient,
 } from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
@@ -79,7 +78,7 @@ export default function ArticleBySlugOrId() {
     elements: { H5 },
   } = useWebsiteBuilder();
 
-  const { data } = useArticleQuery({
+  const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
@@ -112,7 +111,7 @@ export default function ArticleBySlugOrId() {
         {isSearchSlider && data?.article ?
           <SearchSlider
             key={data.article.id}
-            article={data.article as ArticleType}
+            article={data.article}
             includeSEO
           />
         : <>
@@ -232,7 +231,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         query: ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id),
+            tags: article.data.article.tags.map(
+              (tag: FullTagFragment) => tag.id
+            ),
           },
           take: 4,
         },
@@ -265,6 +266,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: revalidateFor(article.data?.article, article.errors),
+    revalidate: revalidateFor(article.data?.article, article.error),
   };
 };
