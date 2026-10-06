@@ -14,7 +14,7 @@ vi.mock('./feed', () => ({
 }));
 
 const SHARED_CACHE =
-  's-maxage=599, stale-while-revalidate=599, max-age=599, stale-while-revalidate=604800, stale-if-error=86400, public';
+  's-maxage=599, stale-while-revalidate=599, max-age=599, stale-if-error=86400, public';
 
 const respond = async (
   handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>

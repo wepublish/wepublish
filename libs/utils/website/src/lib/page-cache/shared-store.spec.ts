@@ -306,6 +306,20 @@ describe('shared page store', () => {
       ).resolves.toBe(false);
     });
 
+    it('tells that a page did not reach Dragonfly when storing it failed, so it stays on its pod', async () => {
+      const { dragonfly, store } = setup();
+      const shared = store();
+      await shared?.getEntry('/a/one');
+      dragonfly.failing = true;
+
+      await expect(shared?.setEntry('/a/one', entry('one'))).resolves.toBe(
+        false
+      );
+      await expect(shared?.setEntry('/a/two', entry('two'))).resolves.toBe(
+        false
+      );
+    });
+
     it('deletes a page', async () => {
       const { store } = setup();
       const shared = store();

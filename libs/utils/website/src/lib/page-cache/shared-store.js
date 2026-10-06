@@ -261,9 +261,15 @@ function createSharedStore({
         return false;
       }
 
-      await send(['SET', pageKey(path), text, 'PX', String(PAGE_TTL_MS)]);
-
-      return true;
+      return (
+        (await send([
+          'SET',
+          pageKey(path),
+          text,
+          'PX',
+          String(PAGE_TTL_MS),
+        ])) === 'OK'
+      );
     },
 
     async deleteEntry(path) {

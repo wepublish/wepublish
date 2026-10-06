@@ -17,7 +17,8 @@ through Dragonfly instead of writing them to disk.
 
 Keep the 3 h well above the hour of `revalidate`: once the Dragonfly key is
 gone, a pod drops its own stale copy too and renders the page while the visitor
-waits — except a page over 2 MB, which only ever lives on its pod.
+waits — except a page that never reached Dragonfly (over 2 MB, or Dragonfly
+failed while it was stored), which stays on its pod.
 
 `revalidateFor(content, errors)` gives article pages, pages and front pages
 60 s when they contain an enabled `PollBlock` or `CrowdfundingBlock` anywhere
