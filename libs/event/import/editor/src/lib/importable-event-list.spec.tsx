@@ -135,13 +135,24 @@ const mocks = [
 ];
 
 describe('ImportableEventListView', () => {
+  let apiClient: ApolloClient;
+
   beforeAll(() => {
-    vi.spyOn(v2Client, 'getApiClientV2').mockReturnValue(
-      new ApolloClient({
-        cache: new InMemoryCache(),
-        link: new MockLink(mocks, true, { showWarnings: false }),
-      })
-    );
+    apiClient = new ApolloClient({
+      cache: new InMemoryCache(),
+      link: new MockLink(mocks, true, { showWarnings: false }),
+    });
+
+    vi.spyOn(v2Client, 'getApiClientV2').mockReturnValue(apiClient);
+  });
+
+  afterAll(() => {
+    // The view keeps querying through this client after the last assertion
+    // resolves. Left running, those requests settle once the environment is
+    // gone and surface as an unhandled 'window is not defined' — which only
+    // showed up on CI, where the suite runs with --parallel=10.
+    apiClient.stop();
+    vi.restoreAllMocks();
   });
 
   test('renders the event list view with events', async () => {

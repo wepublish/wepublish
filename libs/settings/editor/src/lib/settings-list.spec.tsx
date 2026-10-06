@@ -114,6 +114,18 @@ describe('SettingList', () => {
       ).toBeInTheDocument()
     );
 
+    // Rendering the list is not the last state change: one effect copies the
+    // loaded settings into the reducer, a second then diffs them and empties
+    // `changedSetting`, which disables save and reset. Snapshot before those
+    // flush and the buttons are still enabled — that is the frame a fast
+    // machine caught, and why this snapshot disagreed with CI.
+    await waitFor(() => {
+      const save = baseElement.querySelector('button[type="submit"]');
+
+      expect(save).toBeTruthy();
+      expect(save).toBeDisabled();
+    });
+
     expect(baseElement).toBeTruthy();
     expect(asFragment()).toMatchSnapshot();
   });

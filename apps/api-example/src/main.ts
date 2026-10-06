@@ -1,6 +1,7 @@
 import './instrument.ts';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { preloadOptionalPackages } from './preload-optional-packages';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './nestapp/app.module';
 import { PrismaClient } from '@prisma/client';
@@ -18,6 +19,8 @@ import { graphqlUploadExpress } from 'graphql-upload';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
+
+  preloadOptionalPackages();
 
   // The adapter is passed explicitly rather than left to Nest's default
   // lookup: Nest 12 resolves it with `() => import('@nestjs/platform-express')`,

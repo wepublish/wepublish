@@ -23,10 +23,11 @@ exports[`SettingList > renders successfully 1`] = `
         <button
           class="rs-btn-icon rs-btn"
           data-appearance="default"
-          data-disabled="false"
+          data-disabled="true"
           data-placement="start"
           data-size="lg"
           data-with-text="true"
+          disabled=""
           type="reset"
         >
           <svg
@@ -58,10 +59,11 @@ exports[`SettingList > renders successfully 1`] = `
         <button
           class="rs-btn-icon rs-btn"
           data-appearance="primary"
-          data-disabled="false"
+          data-disabled="true"
           data-placement="start"
           data-size="lg"
           data-with-text="true"
+          disabled=""
           type="submit"
         >
           <svg
