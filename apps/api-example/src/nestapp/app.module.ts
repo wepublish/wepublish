@@ -5,7 +5,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
 
-import { PrismaClient } from '@prisma/client';
+import { LetterProviderType, PrismaClient } from '@prisma/client';
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
 import { ActionModule } from '@wepublish/action/api';
 import { AuditLogModule } from '@wepublish/audit-log/api';
@@ -13,6 +13,13 @@ import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
+import {
+  BaseLetterProvider,
+  CloudflarePdfRenderer,
+  FakeLetterProvider,
+  LettersModule,
+  PingenLetterProvider,
+} from '@wepublish/letter/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
@@ -175,6 +182,54 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
         };
       },
       inject: [ConfigService, PrismaClient, ProviderRegistryService],
+      global: true,
+    }),
+    LettersModule.registerAsync({
+      imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
+      useFactory: async (
+        config: ConfigService,
+        prisma: PrismaClient,
+        kv: KvTtlCacheService
+      ) => {
+        const configFile = await readConfig(
+          config.getOrThrow('CONFIG_FILE_PATH')
+        );
+        const letterProviderRaw = configFile.letterProvider;
+        let letterProvider: BaseLetterProvider;
+
+        if (letterProviderRaw?.type === 'pingen') {
+          letterProvider = new PingenLetterProvider({
+            id: letterProviderRaw.id,
+            prisma,
+            kv,
+          });
+
+          await letterProvider.initDatabaseConfiguration(
+            LetterProviderType.pingen
+          );
+        } else {
+          letterProvider = new FakeLetterProvider({
+            id: letterProviderRaw?.id ?? 'fakeLetter',
+            prisma,
+            kv,
+          });
+        }
+
+        return {
+          letterProvider,
+          pdfRenderer: new CloudflarePdfRenderer({
+            accountId:
+              letterProviderRaw?.cloudflareAccountId ??
+              config.get('CLOUDFLARE_ACCOUNT_ID') ??
+              '',
+            apiToken:
+              letterProviderRaw?.cloudflareApiToken ??
+              config.get('CLOUDFLARE_API_TOKEN') ??
+              '',
+          }),
+        };
+      },
+      inject: [ConfigService, PrismaClient, KvTtlCacheService],
       global: true,
     }),
     TrackingPixelsModule.registerAsync({

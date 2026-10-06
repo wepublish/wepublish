@@ -2,10 +2,10 @@
  * Evaluates a Prisma `where` object against a plain record.
  *
  * Test-only. It covers exactly the operators the audience filters build
- * (`AND`/`OR`, `gte`/`lte`/`lt`/`gt`/`in`, `is: null`, and the `none` relation
- * filter) so a spec can assert which recipients an audience actually includes,
- * instead of only asserting the shape of the query — the shape looks right even
- * when the semantics are wrong.
+ * (`AND`/`OR`, `gte`/`lte`/`lt`/`gt`/`in`, `contains`, `not` (also nested),
+ * `is: null`, and the `none` relation filter) so a spec can assert which
+ * recipients an audience actually includes, instead of only asserting the shape
+ * of the query — the shape looks right even when the semantics are wrong.
  *
  * It evaluates in JavaScript, which is two-valued, while Postgres is
  * three-valued: a comparison against NULL is neither true nor false there, and
@@ -25,6 +25,8 @@ const OPERATORS = new Set([
   'lt',
   'in',
   'notIn',
+  'contains',
+  'mode',
   'is',
   'isNot',
   'none',
@@ -43,6 +45,16 @@ const matchesOperators = (value: unknown, condition: Where): boolean =>
       case 'equals':
         return compare(value, expected);
       case 'not':
+        // A nested filter (`not: { contains }`) is negated like SQL does: a
+        // NULL value stays unknown and drops out.
+        if (
+          expected !== null &&
+          typeof expected === 'object' &&
+          !(expected instanceof Date)
+        ) {
+          return value != null && !matchesOperators(value, expected as Where);
+        }
+
         return !compare(value, expected);
       case 'gte':
         return value != null && (value as any) >= (expected as any);
@@ -56,6 +68,15 @@ const matchesOperators = (value: unknown, condition: Where): boolean =>
         return (expected as unknown[]).includes(value);
       case 'notIn':
         return !(expected as unknown[]).includes(value);
+      case 'contains':
+        return (
+          typeof value === 'string' &&
+          (condition['mode'] === 'insensitive' ?
+            value.toLowerCase().includes((expected as string).toLowerCase())
+          : value.includes(expected as string))
+        );
+      case 'mode':
+        return true;
       case 'is':
         return expected === null ?
             value == null
