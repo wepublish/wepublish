@@ -129,15 +129,27 @@ gets silently overwritten on the next dev boot. See
 
 ---
 
-### ⚠️ Vitest forces `TZ=UTC` globally
+### ⚠️ Vitest and Jest both force `TZ=UTC`, so local-time bugs pass every test
 
 [vitest.setup-tests.ts](../../vitest.setup-tests.ts) sets `process.env['TZ'] = 'UTC'`
 before anything else, and also silences one specific React `act(...)` warning.
+Jest's globalSetup [jest.setup.ts](../../jest.setup.ts) does the same.
 
 A test that passes locally in `Europe/Zurich` but relies on local time will
 behave differently under Vitest. Assert on explicit UTC instants, or freeze time
 (`vi.setSystemTime` / `jest.setSystemTime`) rather than depending on the ambient
-zone. Jest projects do **not** get this setup file — set the zone yourself there.
+zone.
+
+In Jest, `process.env.TZ = 'Europe/Zurich'` inside a spec changes nothing:
+the sandbox gets a copy of `process.env`. To test a real zone, set it on the
+host process (`runInThisContext('process.env')` from `vm`) in `beforeAll` and
+restore it in `afterAll`, as
+[periodic-job.timezone.spec.ts](../../libs/membership/api/src/lib/periodic-job/periodic-job.timezone.spec.ts)
+does. That spec pins the periodic job's `@db.Date` handling: a local midnight
+written to a `date` column lands on the previous day outside UTC (verified
+2026-10-06 in CEST: catch-up runs died on the unique `date`, retries found no
+row). `toDbDate`/`fromDbDate` in `periodic-job.service.ts` convert at the
+database boundary.
 
 ---
 
@@ -314,6 +326,22 @@ than ~100 reads do not.
 Pinned by `fast-string-prototype.spec.ts` and `shared-store.fast-strings.spec.ts`
 (fresh `node --allow-natives-syntax`); a new place that loads `@keyv/redis` or
 `@redis/client` needs the same call.
+
+---
+
+### ⚠️ Startup writes must be race-free: replicas boot at the same time
+
+Several API pods start together (every deploy, a new medium with 2+ pods). A
+check-then-write at boot (`findUnique` then `create`) and even Prisma's
+`upsert` (it is a read plus an insert unless Prisma can turn it into a native
+`ON CONFLICT`) let all but one pod die with P2002 on a fresh database (verified
+2026-10-06: `settings.analyticsProvider`, then `settings_name_key`).
+`GoogleAnalyticsDbConfig.initDatabaseConfiguration` and
+`reconcileProviderRegistry` therefore insert with
+`createMany({ skipDuplicates: true })` (`INSERT … ON CONFLICT DO NOTHING`).
+
+Pinned by `google-analytics-db-config.spec.ts` and the "several replicas" cases
+in `reconcile-provider-registry.spec.ts`, whose fakes race like Prisma does.
 
 ---
 
