@@ -19,18 +19,10 @@
       "executor": "@nx/eslint:lint"
     },
     "test": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
-      },
-      "configurations": {
-        "ci": {
-          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
-        },
-        "update": {
-          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
-        }
+        "jestConfig": "libs/ai/api/jest.config.ts"
       }
     }
   }

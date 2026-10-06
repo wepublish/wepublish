@@ -166,6 +166,7 @@ import {
   MdStar,
   MdStyle,
   MdTranslate,
+  MdTravelExplore,
   MdVpnKey,
 } from 'react-icons/md';
 import { Link, useLocation } from 'react-router-dom';
@@ -1239,6 +1240,19 @@ export function Base({ children }: BaseProps) {
                         icon={<MdAutoFixHigh />}
                       >
                         {t('websiteSettings.navbar')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetSettings.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/settings/seo"
+                        active={path === 'settings/seo'}
+                        icon={<MdTravelExplore />}
+                      >
+                        {t('seoChecklist.navbar')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

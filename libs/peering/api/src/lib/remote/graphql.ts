@@ -58,6 +58,21 @@ export enum AnalyticsProviderType {
   Google = 'GOOGLE'
 }
 
+export type AnalyzeSeoContentInput = {
+  body?: InputMaybe<Scalars['String']>;
+  lead?: InputMaybe<Scalars['String']>;
+  /** Language the findings should be written in, e.g. "de". */
+  locale: Scalars['String'];
+  seoDescription?: InputMaybe<Scalars['String']>;
+  seoTitle?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']>;
+  stats: SeoContentStatsInput;
+  title?: InputMaybe<Scalars['String']>;
+  type: SeoMetadataContentType;
+};
+
 export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   __typename?: 'Article';
   createdAt: Scalars['DateTime'];
@@ -1379,6 +1394,13 @@ export type FullPoll = {
   infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
+};
+
+export type GenerateSeoMetadataInput = {
+  body?: InputMaybe<Scalars['String']>;
+  lead?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+  type: SeoMetadataContentType;
 };
 
 export type Goodie = HasImage & {
@@ -3028,6 +3050,8 @@ export type Mutation = {
   updatePoll: FullPoll;
   /** Update the comment rating system. */
   updateRatingSystem: CommentRatingSystem;
+  /** Marks an SEO checklist item as done or not done and returns all completed items. */
+  updateSeoChecklistItem: Array<SeoChecklistItem>;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Updates an existing subscription. */
@@ -4409,6 +4433,12 @@ export type MutationUpdateRatingSystemArgs = {
 };
 
 
+export type MutationUpdateSeoChecklistItemArgs = {
+  completed: Scalars['Boolean'];
+  itemId: Scalars['String'];
+};
+
+
 export type MutationUpdateSettingArgs = {
   name: SettingName;
   value?: InputMaybe<Scalars['GraphQLSettingValueType']>;
@@ -5541,6 +5571,8 @@ export type Query = {
   analyticsProviderSetting: SettingAnalyticsProvider;
   /** Returns all analytics provider settings. */
   analyticsProviderSettings: Array<SettingAnalyticsProvider>;
+  /** Analyzes an article or page for SEO optimization potential using AI. */
+  analyzeSeoContent: SeoContentAnalysis;
   /** Returns an article by id or slug. */
   article: Article;
   /** Returns a single article revision including its full content. */
@@ -5636,6 +5668,8 @@ export type Query = {
   externalApp: ExternalApp;
   /** Returns all external apps. Requires authentication. */
   externalApps: Array<ExternalApp>;
+  /** Generates SEO metadata suggestions for an article or page using AI. */
+  generateSeoMetadata: SeoMetadataSuggestion;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
   /** Returns a goodie by id. */
@@ -5808,6 +5842,8 @@ export type Query = {
    *
    */
   revenue: Array<DashboardInvoice>;
+  /** Returns a checklist of the SEO setup of the website. */
+  seoChecklist: SeoChecklist;
   /**
    *
    *       Returns a single setting by name.
@@ -5900,6 +5936,11 @@ export type QueryAnalyticsProviderSettingArgs = {
 
 export type QueryAnalyticsProviderSettingsArgs = {
   filter?: InputMaybe<SettingAnalyticsProviderFilter>;
+};
+
+
+export type QueryAnalyzeSeoContentArgs = {
+  input: AnalyzeSeoContentInput;
 };
 
 
@@ -6123,6 +6164,11 @@ export type QueryExternalAppArgs = {
 
 export type QueryExternalAppsArgs = {
   filter?: InputMaybe<ExternalAppFilter>;
+};
+
+
+export type QueryGenerateSeoMetadataArgs = {
+  input: GenerateSeoMetadataInput;
 };
 
 
@@ -6752,6 +6798,101 @@ export type SensitiveDataUser = BaseUser & {
   /** Whether this user is exempt from the two-factor authentication requirement. */
   totpExempt: Scalars['Boolean'];
   userImageID?: Maybe<Scalars['String']>;
+};
+
+export type SeoCheck = {
+  __typename?: 'SeoCheck';
+  detail?: Maybe<Scalars['String']>;
+  id: SeoCheckId;
+  status: SeoCheckStatus;
+  url?: Maybe<Scalars['String']>;
+};
+
+export enum SeoCheckId {
+  ArticleMarkup = 'ArticleMarkup',
+  Feed = 'Feed',
+  NewsSitemap = 'NewsSitemap',
+  PublicationMetadata = 'PublicationMetadata',
+  Sitemap = 'Sitemap'
+}
+
+export enum SeoCheckStatus {
+  Error = 'Error',
+  Info = 'Info',
+  Ok = 'Ok',
+  Warning = 'Warning'
+}
+
+export type SeoChecklist = {
+  __typename?: 'SeoChecklist';
+  atomFeedUrl: Scalars['String'];
+  checks: Array<SeoCheck>;
+  completedItems: Array<SeoChecklistItem>;
+  jsonFeedUrl: Scalars['String'];
+  rssFeedUrl: Scalars['String'];
+  sitemapUrl: Scalars['String'];
+  websiteUrl: Scalars['String'];
+};
+
+export type SeoChecklistItem = {
+  __typename?: 'SeoChecklistItem';
+  completedAt: Scalars['DateTime'];
+  completedBy?: Maybe<Scalars['String']>;
+  itemId: Scalars['String'];
+};
+
+export type SeoContentAnalysis = {
+  __typename?: 'SeoContentAnalysis';
+  findings: Array<SeoFinding>;
+  summary: Scalars['String'];
+};
+
+export type SeoContentStatsInput = {
+  hasShareImage: Scalars['Boolean'];
+  headingCount: Scalars['Int'];
+  imageCount: Scalars['Int'];
+  imagesWithoutDescription: Scalars['Int'];
+  linkCount: Scalars['Int'];
+  wordCount: Scalars['Int'];
+};
+
+export type SeoFinding = {
+  __typename?: 'SeoFinding';
+  category: SeoFindingCategory;
+  message: Scalars['String'];
+  severity: SeoFindingSeverity;
+  suggestion?: Maybe<Scalars['String']>;
+};
+
+export enum SeoFindingCategory {
+  Content = 'Content',
+  Description = 'Description',
+  Images = 'Images',
+  Links = 'Links',
+  Readability = 'Readability',
+  Social = 'Social',
+  Structure = 'Structure',
+  Title = 'Title'
+}
+
+export enum SeoFindingSeverity {
+  High = 'High',
+  Low = 'Low',
+  Medium = 'Medium'
+}
+
+export enum SeoMetadataContentType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export type SeoMetadataSuggestion = {
+  __typename?: 'SeoMetadataSuggestion';
+  seoDescription?: Maybe<Scalars['String']>;
+  seoTitle?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
 };
 
 export type SessionWithToken = {

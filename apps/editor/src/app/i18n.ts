@@ -21,6 +21,7 @@ const dateFormatMap = new Map<string, Locale>([
 export const initI18N = () => {
   i18n.init({
     interpolation: {
+      escapeValue: false,
       format: (value, format, lng = 'en') => {
         if (isDate(value) && format !== undefined) {
           const myLocale = dateFormatMap.get(lng);

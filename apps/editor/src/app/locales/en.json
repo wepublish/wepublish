@@ -3375,6 +3375,290 @@
         "empty": "No entries for this filter."
       }
     },
+    "seoChecklist": {
+      "navbar": "SEO",
+      "title": "SEO checklist",
+      "description": "Practical steps to make your content easy to find and good-looking when shared. Items marked with a status are checked automatically against your live website.",
+      "websiteUrl": "Website",
+      "refresh": "Check again",
+      "copyUrl": "Copy URL",
+      "detail": "Details",
+      "progress": "{{done}} of {{total}} done",
+      "completedBy": "Checked by {{name}} on {{date}}",
+      "completedAt": "Checked on {{date}}",
+      "guide": {
+        "show": "How to write it",
+        "good": "Good example",
+        "bad": "Weak example"
+      },
+      "status": {
+        "Ok": "OK",
+        "Warning": "Warning",
+        "Error": "Error",
+        "Info": "Info"
+      },
+      "checkStatus": {
+        "Ok": "Verified",
+        "Warning": "Needs attention",
+        "Error": "Not working",
+        "Info": "Not available"
+      },
+      "sections": {
+        "searchConsole": {
+          "title": "Google Search Console",
+          "description": "Google's free tool to see how your website performs in search."
+        },
+        "sitemapsFeeds": {
+          "title": "Sitemaps and feeds",
+          "description": "How search engines and aggregators discover your articles."
+        },
+        "content": {
+          "title": "Content",
+          "description": "Habits that make articles easier to find and understand."
+        },
+        "presentation": {
+          "title": "Presentation and sharing",
+          "description": "How your content looks in search results, on social media and in messengers."
+        },
+        "automatic": {
+          "title": "Handled by We.Publish",
+          "description": "Technical basics that are taken care of automatically."
+        }
+      },
+      "items": {
+        "gsc-verify": {
+          "title": "Verify your website in Google Search Console",
+          "description": "Add your domain as a \"Domain\" property and verify it with a DNS record. This gives you access to indexing and performance data for all subdomains.",
+          "action": "Open Search Console"
+        },
+        "gsc-sitemap": {
+          "title": "Submit the sitemap",
+          "description": "Under \"Sitemaps\", submit the sitemap URL below once. Google then checks it regularly for new articles.",
+          "action": "Open Search Console"
+        },
+        "gsc-pages": {
+          "title": "Check the indexing report regularly",
+          "description": "The \"Pages\" report shows which pages are not indexed and why. Look at it monthly and fix recurring problems.",
+          "action": "Open Search Console"
+        },
+        "gsc-performance": {
+          "title": "Learn from search queries",
+          "description": "The \"Performance\" report shows the queries that bring readers to you. Use it to find topics and wording your readers search for.",
+          "action": "Open Search Console"
+        },
+        "gsc-inspect": {
+          "title": "Request indexing for important articles",
+          "description": "Use \"URL inspection\" to check an important article and request indexing after publishing or larger updates.",
+          "action": "Open Search Console"
+        },
+        "sitemap": {
+          "title": "Sitemap",
+          "description": "The sitemap is generated automatically and lists your latest articles and pages for search engines.",
+          "detail": "Number of URLs"
+        },
+        "news-sitemap": {
+          "title": "Google News entries",
+          "description": "Articles in the sitemap carry Google News metadata, which helps them appear in Google News and \"Top stories\"."
+        },
+        "feeds": {
+          "title": "RSS, Atom and JSON feeds",
+          "description": "Feeds let news aggregators, feed readers and newsletter tools pick up your articles. Share the RSS URL with aggregators you want to appear in."
+        },
+        "seo-titles": {
+          "title": "Write specific SEO titles",
+          "description": "Put the main topic first and stay below about 60 characters. Describe what the article is about instead of teasing.",
+          "guide": {
+            "tips": {
+              "topicFirst": "Start with the main topic, the words readers would type into Google, e.g. a place, person or event.",
+              "length": "Aim for 50–60 characters. Google cuts off longer titles, and the publication name takes up part of the space.",
+              "specific": "Be concrete: who, what, where. \"Bern city council\" works better than \"Politics\".",
+              "noClickbait": "Say what the article is about instead of teasing. Readers who feel tricked leave quickly, and Google notices.",
+              "unique": "Give every article its own title. Follow-up stories need a title that shows what is new.",
+              "siteName": "Do not add the publication name, it is appended automatically."
+            },
+            "good": "Bern city council approves 20 km of new bike lanes",
+            "bad": "You won't believe what the city council just decided"
+          }
+        },
+        "meta-descriptions": {
+          "title": "Write meta descriptions",
+          "description": "Summarize the article in one or two sentences (about 150 characters). Without one, the lead or first paragraph is used.",
+          "guide": {
+            "tips": {
+              "summarize": "Summarize the key fact of the article in one or two full sentences.",
+              "length": "Aim for 120–158 characters. Longer descriptions are cut off in Google.",
+              "addToTitle": "Add information the title does not have instead of repeating it.",
+              "details": "Use concrete details such as numbers, places and dates, and write in active voice.",
+              "forPeople": "Write for people, not search engines: no keyword lists or repeated phrases.",
+              "fallback": "Google sometimes shows its own excerpt, but a good description makes it much more likely yours is used."
+            },
+            "good": "The city council's new plan adds 20 km of bike lanes by 2027 and costs 12 million francs. Opponents are considering a referendum.",
+            "bad": "Read all about the cycling plan here. Cycling, bike lanes, Bern, city council, news."
+          }
+        },
+        "structure": {
+          "title": "Structure longer texts",
+          "description": "Use a clear lead, subheadings and short paragraphs. This helps readers and search engines understand the content."
+        },
+        "internal-links": {
+          "title": "Link related articles",
+          "description": "Link to earlier coverage and background articles. Internal links help readers go deeper and search engines find older content."
+        },
+        "stable-slugs": {
+          "title": "Keep slugs short and stable",
+          "description": "Use a short slug with the main topic and do not change it after publishing, as existing links and rankings would be lost."
+        },
+        "author-pages": {
+          "title": "Maintain author pages",
+          "description": "Author pages with name, image and a short bio show who is behind your journalism and build trust.",
+          "action": "Edit authors"
+        },
+        "share-images": {
+          "title": "Set a share image for every article",
+          "description": "Choose a meaningful image in landscape format (at least 1200 px wide). It is shown on social media, messengers and in Google Discover."
+        },
+        "image-descriptions": {
+          "title": "Describe your images",
+          "description": "The image description is used as alternative text. Describe what is visible; this helps accessibility and image search.",
+          "action": "Open image library"
+        },
+        "social-texts": {
+          "title": "Use social media texts",
+          "description": "A separate social media title and description can be more conversational than the SEO texts, without becoming clickbait."
+        },
+        "preview-before-publishing": {
+          "title": "Check the previews before publishing",
+          "description": "The \"SEO\" tab in the article settings shows how the article looks in Google, on social media and in messengers."
+        },
+        "publication-profile": {
+          "title": "Publication name and logo",
+          "description": "The name and logo of your publication are maintained in the peering profile and used in previews and structured data.",
+          "detail": "Missing",
+          "action": "Edit profile"
+        },
+        "article-markup": {
+          "title": "Canonical URLs and structured data",
+          "description": "Every article declares its canonical URL and contains NewsArticle structured data (JSON-LD). This is checked on your latest article.",
+          "detail": "Missing"
+        },
+        "canonical-urls": {
+          "title": "Content from other sources",
+          "description": "If an article was first published elsewhere, set the canonical URL in the article settings so search engines credit the original."
+        },
+        "hidden-noindex": {
+          "title": "Hidden content",
+          "description": "Hidden articles and pages are marked as noindex and left out of the sitemap, so search engines do not show them."
+        }
+      }
+    },
+    "seoSuggestions": {
+      "title": "SEO suggestions",
+      "description": "Generate suggestions for search and social media metadata based on the content. Nothing is changed until you apply a suggestion.",
+      "generate": "Generate suggestions",
+      "regenerate": "Generate again",
+      "notEnoughContent": "Add a title, lead or content first.",
+      "review": "Review and edit the suggestions before applying them. The AI may make mistakes.",
+      "current": "Current",
+      "empty": "(empty)",
+      "apply": "Apply",
+      "replace": "Replace",
+      "applied": "Applied",
+      "applyToEmpty": "Apply to empty fields",
+      "discard": "Discard",
+      "fields": {
+        "seoTitle": "SEO title",
+        "seoDescription": "SEO description",
+        "socialMediaTitle": "Social media title",
+        "socialMediaDescription": "Social media description",
+        "slug": "Slug"
+      }
+    },
+    "seoTab": {
+      "title": "SEO"
+    },
+    "seoDocumentChecklist": {
+      "title": "Checklist for this content",
+      "reasons": {
+        "seo-titles": {
+          "missing": "No SEO title set. The title is used instead.",
+          "tooLong": "The SEO title is longer than {{limit}} characters and may be cut off in Google."
+        },
+        "meta-descriptions": {
+          "missing": "No meta description set. The lead or first paragraph is used instead.",
+          "tooLong": "The meta description is longer than {{limit}} characters and may be cut off in Google."
+        },
+        "structure": {
+          "missing": "This longer text has no subheadings.",
+          "short": "Short text, subheadings are optional."
+        },
+        "internal-links": {
+          "missing": "The text contains no links.",
+          "unknown": "The content could not be checked."
+        },
+        "stable-slugs": {
+          "missing": "No slug set.",
+          "tooLong": "The slug is longer than {{limit}} characters."
+        },
+        "share-images": {
+          "missing": "No share image set and the content contains no image.",
+          "tooSmall": "The share image is narrower than {{limit}} px."
+        },
+        "image-descriptions": {
+          "missing": "{{count}} image(s) without a description.",
+          "none": "The content contains no images."
+        },
+        "social-texts": {
+          "missing": "No social media texts set. The SEO texts are used instead."
+        },
+        "preview-before-publishing": {
+          "below": "The previews are shown at the bottom of this tab."
+        }
+      }
+    },
+    "seoPreviews": {
+      "info": "Approximate previews based on the current settings. The platforms decide the final look and may shorten texts or crop images.",
+      "pageIgnoresSeoFields": "The website currently does not use the SEO title and SEO description of pages. The previews show what is actually used.",
+      "google": "Google search",
+      "googleTitleTooLong": "Longer than {{limit}} characters, Google will likely shorten it",
+      "facebook": "Facebook",
+      "linkedIn": "LinkedIn",
+      "whatsApp": "WhatsApp",
+      "discord": "Discord",
+      "xLarge": "X (Twitter) – large image card",
+      "xLargeUsed": "used by the website",
+      "xSummary": "X (Twitter) – summary card",
+      "xSummaryUnused": "for comparison, not used by the website"
+    },
+    "seoAnalysis": {
+      "title": "SEO analysis",
+      "description": "Let the AI review the content and metadata for optimization potential. Nothing is changed.",
+      "analyze": "Analyze content",
+      "reanalyze": "Analyze again",
+      "notEnoughContent": "Add a title or content first.",
+      "noFindings": "No optimization potential found.",
+      "disclaimer": "The AI may make mistakes. Use the findings as suggestions.",
+      "stats": {
+        "wordCount": "Words",
+        "headingCount": "Subheadings",
+        "linkCount": "Links",
+        "imagesWithoutDescription": "Images without description"
+      },
+      "severity": {
+        "High": "High",
+        "Medium": "Medium",
+        "Low": "Low"
+      },
+      "category": {
+        "Title": "Title",
+        "Description": "Description",
+        "Content": "Content",
+        "Structure": "Structure",
+        "Readability": "Readability",
+        "Links": "Links",
+        "Images": "Images",
+        "Social": "Social media"
+      }
+    },
     "auditLogList": {
       "overview": {
         "title": "Audit log",

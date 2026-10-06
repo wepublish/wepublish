@@ -3337,6 +3337,290 @@
         "empty": "Keine Einträge für diesen Filter."
       }
     },
+    "seoChecklist": {
+      "navbar": "SEO",
+      "title": "SEO-Checkliste",
+      "description": "Praktische Schritte, damit Ihre Inhalte gut gefunden werden und beim Teilen gut aussehen. Punkte mit Status werden automatisch gegen Ihre Live-Website geprüft.",
+      "websiteUrl": "Website",
+      "refresh": "Erneut prüfen",
+      "copyUrl": "URL kopieren",
+      "detail": "Details",
+      "progress": "{{done}} von {{total}} erledigt",
+      "completedBy": "Abgehakt von {{name}} am {{date}}",
+      "completedAt": "Abgehakt am {{date}}",
+      "guide": {
+        "show": "So gelingt es",
+        "good": "Gutes Beispiel",
+        "bad": "Schwaches Beispiel"
+      },
+      "status": {
+        "Ok": "OK",
+        "Warning": "Warnung",
+        "Error": "Fehler",
+        "Info": "Info"
+      },
+      "checkStatus": {
+        "Ok": "Geprüft",
+        "Warning": "Handlungsbedarf",
+        "Error": "Funktioniert nicht",
+        "Info": "Nicht verfügbar"
+      },
+      "sections": {
+        "searchConsole": {
+          "title": "Google Search Console",
+          "description": "Das kostenlose Tool von Google, das zeigt, wie Ihre Website in der Suche abschneidet."
+        },
+        "sitemapsFeeds": {
+          "title": "Sitemaps und Feeds",
+          "description": "Wie Suchmaschinen und Aggregatoren Ihre Artikel finden."
+        },
+        "content": {
+          "title": "Inhalte",
+          "description": "Gewohnheiten, die Artikel leichter auffindbar und verständlich machen."
+        },
+        "presentation": {
+          "title": "Darstellung und Teilen",
+          "description": "Wie Ihre Inhalte in Suchergebnissen, sozialen Medien und Messengern aussehen."
+        },
+        "automatic": {
+          "title": "Erledigt We.Publish",
+          "description": "Technische Grundlagen, um die sich We.Publish automatisch kümmert."
+        }
+      },
+      "items": {
+        "gsc-verify": {
+          "title": "Website in der Google Search Console bestätigen",
+          "description": "Fügen Sie Ihre Domain als «Domain»-Property hinzu und bestätigen Sie sie mit einem DNS-Eintrag. So erhalten Sie Indexierungs- und Leistungsdaten für alle Subdomains.",
+          "action": "Search Console öffnen"
+        },
+        "gsc-sitemap": {
+          "title": "Sitemap einreichen",
+          "description": "Reichen Sie unter «Sitemaps» einmalig die untenstehende Sitemap-URL ein. Google prüft sie danach regelmässig auf neue Artikel.",
+          "action": "Search Console öffnen"
+        },
+        "gsc-pages": {
+          "title": "Indexierungsbericht regelmässig prüfen",
+          "description": "Der Bericht «Seiten» zeigt, welche Seiten nicht indexiert sind und warum. Schauen Sie ihn monatlich an und beheben Sie wiederkehrende Probleme.",
+          "action": "Search Console öffnen"
+        },
+        "gsc-performance": {
+          "title": "Aus Suchanfragen lernen",
+          "description": "Der Bericht «Leistung» zeigt die Suchanfragen, über die Leserinnen und Leser zu Ihnen finden. Nutzen Sie ihn, um Themen und Formulierungen zu finden, nach denen gesucht wird.",
+          "action": "Search Console öffnen"
+        },
+        "gsc-inspect": {
+          "title": "Indexierung wichtiger Artikel beantragen",
+          "description": "Prüfen Sie wichtige Artikel mit der «URL-Prüfung» und beantragen Sie nach dem Publizieren oder grösseren Updates die Indexierung.",
+          "action": "Search Console öffnen"
+        },
+        "sitemap": {
+          "title": "Sitemap",
+          "description": "Die Sitemap wird automatisch erstellt und listet Ihre neuesten Artikel und Seiten für Suchmaschinen auf.",
+          "detail": "Anzahl URLs"
+        },
+        "news-sitemap": {
+          "title": "Google-News-Einträge",
+          "description": "Artikel in der Sitemap enthalten Google-News-Metadaten. Das hilft, in Google News und bei «Top-Meldungen» zu erscheinen."
+        },
+        "feeds": {
+          "title": "RSS-, Atom- und JSON-Feeds",
+          "description": "Über Feeds können News-Aggregatoren, Feedreader und Newsletter-Tools Ihre Artikel übernehmen. Geben Sie die RSS-URL an Aggregatoren weiter, in denen Sie erscheinen möchten."
+        },
+        "seo-titles": {
+          "title": "Präzise SEO-Titel schreiben",
+          "description": "Nennen Sie das Hauptthema zuerst und bleiben Sie unter etwa 60 Zeichen. Beschreiben Sie, worum es geht, statt nur anzuteasern.",
+          "guide": {
+            "tips": {
+              "topicFirst": "Beginnen Sie mit dem Hauptthema, also den Wörtern, die Leserinnen und Leser bei Google eingeben würden, z. B. ein Ort, eine Person oder ein Ereignis.",
+              "length": "Bleiben Sie bei 50–60 Zeichen. Google schneidet längere Titel ab, und der Name der Publikation braucht ebenfalls Platz.",
+              "specific": "Seien Sie konkret: wer, was, wo. «Berner Stadtrat» funktioniert besser als «Politik».",
+              "noClickbait": "Sagen Sie, worum es geht, statt nur anzuteasern. Wer sich getäuscht fühlt, springt schnell ab, und Google bemerkt das.",
+              "unique": "Geben Sie jedem Artikel einen eigenen Titel. Folgeartikel brauchen einen Titel, der zeigt, was neu ist.",
+              "siteName": "Fügen Sie den Namen der Publikation nicht hinzu, er wird automatisch angehängt."
+            },
+            "good": "Berner Stadtrat beschliesst 20 km neue Velowege",
+            "bad": "Sie werden nicht glauben, was der Stadtrat entschieden hat"
+          }
+        },
+        "meta-descriptions": {
+          "title": "Meta-Beschreibungen schreiben",
+          "description": "Fassen Sie den Artikel in ein bis zwei Sätzen zusammen (etwa 150 Zeichen). Ohne Beschreibung wird der Lead oder der erste Absatz verwendet.",
+          "guide": {
+            "tips": {
+              "summarize": "Fassen Sie die Kernaussage des Artikels in ein bis zwei ganzen Sätzen zusammen.",
+              "length": "Bleiben Sie bei 120–158 Zeichen. Längere Beschreibungen werden in Google abgeschnitten.",
+              "addToTitle": "Ergänzen Sie Informationen, die nicht im Titel stehen, statt ihn zu wiederholen.",
+              "details": "Nennen Sie konkrete Details wie Zahlen, Orte und Daten, und schreiben Sie aktiv.",
+              "forPeople": "Schreiben Sie für Menschen, nicht für Suchmaschinen: keine Stichwortlisten oder Wiederholungen.",
+              "fallback": "Google zeigt manchmal einen eigenen Ausschnitt, mit einer guten Beschreibung wird aber viel eher Ihre verwendet."
+            },
+            "good": "Das neue Velokonzept des Stadtrats sieht bis 2027 20 km neue Velowege vor und kostet 12 Millionen Franken. Die Gegner prüfen ein Referendum.",
+            "bad": "Hier lesen Sie alles zum Velokonzept. Velo, Velowege, Bern, Stadtrat, News."
+          }
+        },
+        "structure": {
+          "title": "Längere Texte strukturieren",
+          "description": "Verwenden Sie einen klaren Lead, Zwischentitel und kurze Absätze. Das hilft Leserinnen, Lesern und Suchmaschinen, den Inhalt zu verstehen."
+        },
+        "internal-links": {
+          "title": "Verwandte Artikel verlinken",
+          "description": "Verlinken Sie frühere Berichte und Hintergrundartikel. Interne Links führen Leserinnen und Leser tiefer und helfen Suchmaschinen, ältere Inhalte zu finden."
+        },
+        "stable-slugs": {
+          "title": "Slugs kurz und stabil halten",
+          "description": "Verwenden Sie einen kurzen Slug mit dem Hauptthema und ändern Sie ihn nach dem Publizieren nicht mehr, sonst gehen bestehende Links und Rankings verloren."
+        },
+        "author-pages": {
+          "title": "Autorenseiten pflegen",
+          "description": "Autorenseiten mit Name, Bild und kurzer Biografie zeigen, wer hinter Ihrem Journalismus steht, und schaffen Vertrauen.",
+          "action": "Autor:innen bearbeiten"
+        },
+        "share-images": {
+          "title": "Für jeden Artikel ein Teilen-Bild setzen",
+          "description": "Wählen Sie ein aussagekräftiges Bild im Querformat (mindestens 1200 px breit). Es wird in sozialen Medien, Messengern und in Google Discover angezeigt."
+        },
+        "image-descriptions": {
+          "title": "Bilder beschreiben",
+          "description": "Die Bildbeschreibung wird als Alternativtext verwendet. Beschreiben Sie, was zu sehen ist; das hilft der Barrierefreiheit und der Bildersuche.",
+          "action": "Bildbibliothek öffnen"
+        },
+        "social-texts": {
+          "title": "Social-Media-Texte nutzen",
+          "description": "Ein eigener Social-Media-Titel und eine eigene Beschreibung dürfen persönlicher formuliert sein als die SEO-Texte, ohne reisserisch zu werden."
+        },
+        "preview-before-publishing": {
+          "title": "Vorschauen vor dem Publizieren prüfen",
+          "description": "Der Reiter «SEO» in den Artikeleinstellungen zeigt, wie der Artikel in Google, in sozialen Medien und in Messengern aussieht."
+        },
+        "publication-profile": {
+          "title": "Name und Logo der Publikation",
+          "description": "Name und Logo Ihrer Publikation werden im Peering-Profil gepflegt und in Vorschauen und strukturierten Daten verwendet.",
+          "detail": "Fehlt",
+          "action": "Profil bearbeiten"
+        },
+        "article-markup": {
+          "title": "Kanonische URLs und strukturierte Daten",
+          "description": "Jeder Artikel gibt seine kanonische URL an und enthält strukturierte NewsArticle-Daten (JSON-LD). Geprüft wird Ihr neuester Artikel.",
+          "detail": "Fehlt"
+        },
+        "canonical-urls": {
+          "title": "Inhalte aus anderen Quellen",
+          "description": "Wurde ein Artikel zuerst anderswo publiziert, setzen Sie die kanonische URL in den Artikeleinstellungen, damit Suchmaschinen das Original anerkennen."
+        },
+        "hidden-noindex": {
+          "title": "Versteckte Inhalte",
+          "description": "Versteckte Artikel und Seiten werden als noindex markiert und nicht in die Sitemap aufgenommen, damit Suchmaschinen sie nicht anzeigen."
+        }
+      }
+    },
+    "seoSuggestions": {
+      "title": "SEO-Vorschläge",
+      "description": "Erstellen Sie anhand des Inhalts Vorschläge für Such- und Social-Media-Metadaten. Es wird nichts geändert, bis Sie einen Vorschlag übernehmen.",
+      "generate": "Vorschläge erstellen",
+      "regenerate": "Erneut erstellen",
+      "notEnoughContent": "Fügen Sie zuerst einen Titel, Lead oder Inhalt hinzu.",
+      "review": "Prüfen und bearbeiten Sie die Vorschläge, bevor Sie sie übernehmen. Die KI kann Fehler machen.",
+      "current": "Aktuell",
+      "empty": "(leer)",
+      "apply": "Übernehmen",
+      "replace": "Ersetzen",
+      "applied": "Übernommen",
+      "applyToEmpty": "In leere Felder übernehmen",
+      "discard": "Verwerfen",
+      "fields": {
+        "seoTitle": "SEO-Titel",
+        "seoDescription": "SEO-Beschreibung",
+        "socialMediaTitle": "Social-Media-Titel",
+        "socialMediaDescription": "Social-Media-Beschreibung",
+        "slug": "Slug"
+      }
+    },
+    "seoTab": {
+      "title": "SEO"
+    },
+    "seoDocumentChecklist": {
+      "title": "Checkliste für diesen Inhalt",
+      "reasons": {
+        "seo-titles": {
+          "missing": "Kein SEO-Titel gesetzt. Stattdessen wird der Titel verwendet.",
+          "tooLong": "Der SEO-Titel ist länger als {{limit}} Zeichen und wird in Google eventuell abgeschnitten."
+        },
+        "meta-descriptions": {
+          "missing": "Keine Meta-Beschreibung gesetzt. Stattdessen wird der Lead oder der erste Absatz verwendet.",
+          "tooLong": "Die Meta-Beschreibung ist länger als {{limit}} Zeichen und wird in Google eventuell abgeschnitten."
+        },
+        "structure": {
+          "missing": "Dieser längere Text hat keine Zwischentitel.",
+          "short": "Kurzer Text, Zwischentitel sind optional."
+        },
+        "internal-links": {
+          "missing": "Der Text enthält keine Links.",
+          "unknown": "Der Inhalt konnte nicht geprüft werden."
+        },
+        "stable-slugs": {
+          "missing": "Kein Slug gesetzt.",
+          "tooLong": "Der Slug ist länger als {{limit}} Zeichen."
+        },
+        "share-images": {
+          "missing": "Kein Teilen-Bild gesetzt und der Inhalt enthält kein Bild.",
+          "tooSmall": "Das Teilen-Bild ist schmaler als {{limit}} px."
+        },
+        "image-descriptions": {
+          "missing": "{{count}} Bild(er) ohne Beschreibung.",
+          "none": "Der Inhalt enthält keine Bilder."
+        },
+        "social-texts": {
+          "missing": "Keine Social-Media-Texte gesetzt. Stattdessen werden die SEO-Texte verwendet."
+        },
+        "preview-before-publishing": {
+          "below": "Die Vorschauen werden unten in diesem Tab angezeigt."
+        }
+      }
+    },
+    "seoPreviews": {
+      "info": "Ungefähre Vorschauen anhand der aktuellen Einstellungen. Die Plattformen bestimmen die endgültige Darstellung und können Texte kürzen oder Bilder zuschneiden.",
+      "pageIgnoresSeoFields": "Die Website verwendet SEO-Titel und SEO-Beschreibung von Seiten derzeit nicht. Die Vorschauen zeigen, was tatsächlich verwendet wird.",
+      "google": "Google-Suche",
+      "googleTitleTooLong": "Länger als {{limit}} Zeichen, Google kürzt ihn wahrscheinlich",
+      "facebook": "Facebook",
+      "linkedIn": "LinkedIn",
+      "whatsApp": "WhatsApp",
+      "discord": "Discord",
+      "xLarge": "X (Twitter) – Karte mit grossem Bild",
+      "xLargeUsed": "wird von der Website verwendet",
+      "xSummary": "X (Twitter) – Zusammenfassungskarte",
+      "xSummaryUnused": "zum Vergleich, wird von der Website nicht verwendet"
+    },
+    "seoAnalysis": {
+      "title": "SEO-Analyse",
+      "description": "Lassen Sie die KI Inhalt und Metadaten auf Optimierungspotenzial prüfen. Es wird nichts geändert.",
+      "analyze": "Inhalt analysieren",
+      "reanalyze": "Erneut analysieren",
+      "notEnoughContent": "Fügen Sie zuerst einen Titel oder Inhalt hinzu.",
+      "noFindings": "Kein Optimierungspotenzial gefunden.",
+      "disclaimer": "Die KI kann Fehler machen. Verstehen Sie die Hinweise als Vorschläge.",
+      "stats": {
+        "wordCount": "Wörter",
+        "headingCount": "Zwischentitel",
+        "linkCount": "Links",
+        "imagesWithoutDescription": "Bilder ohne Beschreibung"
+      },
+      "severity": {
+        "High": "Hoch",
+        "Medium": "Mittel",
+        "Low": "Niedrig"
+      },
+      "category": {
+        "Title": "Titel",
+        "Description": "Beschreibung",
+        "Content": "Inhalt",
+        "Structure": "Struktur",
+        "Readability": "Lesbarkeit",
+        "Links": "Links",
+        "Images": "Bilder",
+        "Social": "Social Media"
+      }
+    },
     "auditLogList": {
       "overview": {
         "title": "Audit-Log",
