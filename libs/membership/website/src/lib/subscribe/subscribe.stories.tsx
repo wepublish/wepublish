@@ -839,13 +839,14 @@ export const ResetPaymentOptionsOnPeriodicityChange: StoryObj<
   }),
 };
 
-// The confirmation modal renders in a portal outside the story canvas.
 export const WarningModalLinksToProfile: StoryObj<typeof Subscribe> = {
   ...LoggedIn,
   play: waitForInitialDataIsSet(async ctx => {
     await clickSubscribe(ctx);
 
     await ctx.step('Modal warnings link to the profile', async () => {
+      // The confirmation modal renders in a portal outside the story canvas.
+
       const modal = within(document.body)
         .getByText('Bist du dir sicher?')
         .closest('section') as HTMLElement;
