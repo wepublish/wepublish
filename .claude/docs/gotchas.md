@@ -150,8 +150,10 @@ media, hence `-@admin -client -script -function -memory -pubsub -scan -randomkey
 -dbsize` (verified on v2.0.0, 2026-10-01).
 
 **Load-bearing:** `docker/dragonfly/users.acl` must match `redisacl_user` in
-`application-configuration` (`modules/wepublish_app/dragonfly.tf`). Pinned by
-`kv-ttl-cache.dragonfly.spec.ts` (runs in CI against Dragonfly).
+`application-configuration` (`modules/wepublish_app/dragonfly.tf`). The command
+allowlist tests in `kv-ttl-cache-atomic-store.spec.ts` and `shared-store.spec.ts`
+pin that our code only sends `GET`/`MGET`/`SET`/`INCR`/`PEXPIRE`/`DEL`/`PING`
+under the prefix; a new command needs a look at the ACL first.
 
 ---
 

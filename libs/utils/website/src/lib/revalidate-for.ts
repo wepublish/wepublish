@@ -14,7 +14,7 @@ const hasLiveBlock = (value: unknown): boolean => {
 
   const node = value as { __typename?: unknown; disabled?: unknown };
 
-  if (node.disabled === true) {
+  if (node.disabled) {
     return false;
   }
 

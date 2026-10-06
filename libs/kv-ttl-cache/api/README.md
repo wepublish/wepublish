@@ -270,8 +270,6 @@ checks, cron queries) are not sampled (`getServerConfig().tracesSampler`).
 npx nx test kv-ttl-cache.module-api
 ```
 
-Vitest. `kv-ttl-cache.dragonfly.spec.ts` runs against a real Dragonfly when
-`REDIS_TEST_ADMIN_URL` is set (CI does; locally
-`REDIS_TEST_ADMIN_URL=redis://default:dragonfly@localhost:6379` after
-`npm run start:docker`) and is skipped otherwise. It creates its own ACL user with
-the production rules.
+Vitest, without a Dragonfly: `FakeDragonfly` (`kv-ttl-cache.testing.ts`) stands
+in for it, and `kv-ttl-cache-atomic-store.spec.ts` pins that the store only sends
+commands the production ACL allows, every key under the medium's prefix.

@@ -178,6 +178,36 @@ describe('DragonflyAtomicStore', () => {
     ]);
   });
 
+  it('sends only commands the production ACL allows, every key under the prefix of its medium', async () => {
+    const sendCommand = vi.fn(async (command: string[]) =>
+      command[0] === 'INCR' ? 1 : 'OK'
+    );
+    const store = createStore(sendCommand);
+
+    await store.ping();
+    await store.setIfAbsent('lock:nightly-job', 'token', 60_000);
+    await store.getRaw('nsv:settings');
+    await store.getManyRaw(['nsv:navigations', 'nsv:banners']);
+    await store.setRaw('val:dev:ns:navigations:v1:main', '{}', 60_000);
+    await store.incrementRaw('count:totp-failures:1', 900_000);
+    await store.delRaw('val:dev:ns:navigations:v1:main');
+
+    const commands = sendCommand.mock.calls.map(([command]) => command);
+    const keys = commands.flatMap(([name, ...args]) =>
+      name === 'PING' ? []
+      : name === 'MGET' ? args
+      : [args[0]]
+    );
+
+    expect(
+      commands.every(([name]) =>
+        ['PING', 'GET', 'MGET', 'SET', 'INCR', 'PEXPIRE', 'DEL'].includes(name)
+      )
+    ).toBe(true);
+    expect(keys.length).toBeGreaterThan(0);
+    expect(keys.every(key => key.startsWith('wepublish-demo::'))).toBe(true);
+  });
+
   it('is shared between replicas, unlike memory', () => {
     expect(createStore(vi.fn()).shared).toBe(true);
     expect(new MemoryAtomicStore().shared).toBe(false);

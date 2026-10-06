@@ -46,5 +46,5 @@ fresh or stale), only inside sampled traces, so the page hit rate shows under
 ## Running unit tests
 
 Run `nx test utils-website` to execute the unit tests via Vitest.
-`page-cache.dragonfly.spec.ts` runs against a real Dragonfly when
-`REDIS_TEST_ADMIN_URL` is set, like the one in `kv-ttl-cache/api`.
+The page cache is tested against a fake Dragonfly client; `shared-store.spec.ts`
+pins that it only sends commands the production ACL allows, under the prefix.

@@ -224,6 +224,32 @@ describe('shared page store', () => {
     });
   });
 
+  it('sends only commands the production ACL allows, every key under the prefix of its medium', async () => {
+    const { store } = setup();
+    const sent = vi.spyOn(FakeClient.prototype, 'sendCommand');
+    const pod = store();
+
+    await pod?.setEntry('/a/one', entry('one'));
+    await pod?.getEntry('/a/one');
+    await pod?.deleteEntry('/a/one');
+    await pod?.acquireLock('/a/one');
+    await pod?.releaseLock('/a/one');
+    await pod?.getVersion();
+    await pod?.getVersions(['website:layout', 'website:path:/a/one']);
+
+    const commands = sent.mock.calls.map(([command]) => command);
+    const keys = commands.flatMap(([name, ...args]) =>
+      name === 'MGET' ? args : [args[0]]
+    );
+
+    expect(
+      commands.every(([name]) => ['GET', 'MGET', 'SET', 'DEL'].includes(name))
+    ).toBe(true);
+    expect(keys.length).toBeGreaterThan(0);
+    expect(keys.every(key => key.startsWith('wep-x::'))).toBe(true);
+    sent.mockRestore();
+  });
+
   describe('pages', () => {
     it('stores pages under the key prefix and the build id for three hours', async () => {
       vi.useFakeTimers();

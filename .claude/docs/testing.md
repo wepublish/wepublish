@@ -202,7 +202,6 @@ Backend tests need these (CI sets them; mirror them locally if a test hits the D
 ```
 DATABASE_URL=postgresql://postgres:test@localhost:5432/wepublish_test?schema=public
 JWT_PRIVATE_KEY / JWT_PUBLIC_KEY   # ed25519 pair, see .github/workflows/test.yml
-REDIS_TEST_ADMIN_URL=redis://default:dragonfly@localhost:6379   # kv-ttl-cache Dragonfly spec; skipped if unset
 ```
 
 Both setup files delete `REDIS_URL`/`REDIS_KEY_PREFIX`, so tests use the
