@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,

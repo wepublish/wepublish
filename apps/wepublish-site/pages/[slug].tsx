@@ -1,6 +1,6 @@
 import { CombinedGraphQLErrors } from '@apollo/client';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,

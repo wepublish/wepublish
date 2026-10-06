@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { SliderWrapper } from '@wepublish/block-content/website';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   CommentListDocument,
   CommentSort,
@@ -16,7 +16,6 @@ import {
   SettingListDocument,
   SortOrder,
   addClientCacheToProps,
-  getApiClient,
 } from '@wepublish/website/api';
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';

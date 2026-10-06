@@ -396,12 +396,19 @@ what the terminus docs now show anyway.
 of the two it does** — `grep` it for `import.meta.resolve` and `await import(`
 as well as `loadPackage`. Only the first kind is bundleable.
 
+Three have bitten so far: `@nestjs/platform-express`, `@nestjs/axios` and
+`@as-integrations/express5` (*The "@as-integrations/express5" package is
+missing*, from `ApolloDriver`). The last one also sat in **devDependencies**
+even though GraphQLModule needs it at runtime — a runtime peer belongs in
+`dependencies`, and a sweep that only reads `dependencies` will not see it.
+
 To sweep for the first kind: scan node_modules for
-`loadPackage`/`assertPackages`/`loadAdapter` string literals, keep those that
-are also in our `dependencies`, and check each against the bundle. As of
-2026-10-05 that leaves only `@apollo/subgraph` and `@apollo/gateway`,
-unreachable because the API uses `ApolloDriver`, not the federation or gateway
-drivers.
+`loadPackage`/`assertPackages`/`loadAdapter` string literals, keep those in
+`dependencies` **or `devDependencies`**, and check each against the bundle.
+Re-run it after dependency changes — it is a point-in-time check, not a
+guarantee. As of 2026-10-06 only `@apollo/subgraph` and `@apollo/gateway`
+remain unbundled, unreachable because the API uses `ApolloDriver`, not the
+federation or gateway drivers.
 
 **Nothing type-checks or tests either failure** — both only appear in the
 packaged binary.

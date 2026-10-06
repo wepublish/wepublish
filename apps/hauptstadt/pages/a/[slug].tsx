@@ -14,7 +14,7 @@ import {
 } from '@wepublish/block-content/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ShowPaywallContext, useShowPaywall } from '@wepublish/paywall/website';
-import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   ArticleDocument,
@@ -25,7 +25,6 @@ import {
   getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  addClientCacheToProps,
 } from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';

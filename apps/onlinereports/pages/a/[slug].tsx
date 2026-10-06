@@ -6,7 +6,7 @@ import {
   ArticleListContainer,
 } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
-import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   ArticleDocument,

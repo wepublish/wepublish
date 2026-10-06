@@ -13,7 +13,7 @@ import { ArticleAuthor } from '@wepublish/author/website';
 import { PollBlock } from '@wepublish/block-content/website';
 import { Comment } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
-import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   ArticleDocument,
@@ -30,8 +30,6 @@ import {
   PrimaryBannerDocument,
   SettingListDocument,
   SortOrder,
-  addClientCacheToProps,
-  getApiClient,
 } from '@wepublish/website/api';
 import {
   BuilderArticleListProps,

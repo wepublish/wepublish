@@ -1,3 +1,10 @@
+// Imported for its side effect only: ApolloDriver reaches the express 5
+// integration through `loadPackage('@as-integrations/express5', …,
+// () => import(…))`, a dynamic import webpack does not follow, so without a
+// static reference the package never enters the bundle and the pkg binary
+// fails to start GraphQLModule with 'The "@as-integrations/express5" package
+// is missing'.
+import '@as-integrations/express5';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';

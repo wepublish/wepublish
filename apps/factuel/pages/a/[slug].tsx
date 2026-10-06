@@ -6,7 +6,7 @@ import {
   ArticleWrapper,
 } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
-import { getApiUrl,revalidateFor } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   ArticleDocument,
@@ -17,7 +17,6 @@ import {
   getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  addClientCacheToProps,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';

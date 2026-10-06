@@ -5,6 +5,7 @@ import type {
   Integration,
   SamplingContext,
   StreamedSpanJSON,
+  TracesSamplerSamplingContext,
 } from '@sentry/core';
 
 const tracesSampleRate = () =>
@@ -33,7 +34,8 @@ const isDatabaseWorkOutsideRequests = ({ name, attributes }: SamplingContext) =>
 export const getServerConfig = () => ({
   ...getBaseConfig(),
   tracesSampleRate: undefined,
-  tracesSampler: (context: SamplingContext) =>
+  // Sentry 11 moved `inheritOrSampleWith` onto its own context type.
+  tracesSampler: (context: TracesSamplerSamplingContext) =>
     isDatabaseWorkOutsideRequests(context) ? 0 : (
       context.inheritOrSampleWith(tracesSampleRate())
     ),
