@@ -3,6 +3,8 @@ import { HttpService } from '@nestjs/axios';
 import { isAxiosError } from 'axios';
 import { lastValueFrom } from 'rxjs';
 
+const REQUEST_TIMEOUT_MS = 10_000;
+
 export class GatewayClient implements ProLitterisGenerator {
   constructor(
     private memberNr: string,
@@ -24,6 +26,7 @@ export class GatewayClient implements ProLitterisGenerator {
           'Content-Type': 'application/json; charset=UTF-8',
           Authorization: `OWEN ${this.getAuthorizationHeader()}`,
         },
+        timeout: REQUEST_TIMEOUT_MS,
       })
     );
   }

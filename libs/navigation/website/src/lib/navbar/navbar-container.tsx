@@ -44,8 +44,12 @@ export function NavbarContainer({
   children,
 }: NavbarContainerProps) {
   const { Navbar } = useWebsiteBuilder();
-  const { data, loading, error } = useNavigationListQuery();
-  const { data: peerInfoData } = usePeerProfileQuery();
+  const { data, loading, error } = useNavigationListQuery({
+    fetchPolicy: 'cache-first',
+  });
+  const { data: peerInfoData } = usePeerProfileQuery({
+    fetchPolicy: 'cache-first',
+  });
   const hasUnpaidInvoices = useHasUnpaidInvoices();
   const hasRunningSubscription = useHasRunningSubscription();
 

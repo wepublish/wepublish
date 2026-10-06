@@ -1,8 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
+import {
+  KvTtlCacheService,
+  PublicContentCacheInvalidator,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
 import { TrackingPixelProvider } from './tracking-pixel-provider/tracking-pixel-provider';
 
 export const TRACKING_PIXEL_MODULE_OPTIONS = 'TRACKING_PIXEL_MODULE_OPTIONS';
+
+const CHECKED_NAMESPACE = 'tracking-pixels';
+const CHECKED_TTL_SECONDS = 24 * 60 * 60;
+const RETRY_FAILED_SECONDS = 15 * 60;
+const ADDING_CLAIM_MS = 60_000;
+const OTHER_REPLICA_WAIT_MS = 3000;
+const OTHER_REPLICA_POLL_MS = 200;
 
 export interface TrackingPixelModuleOptions {
   trackingPixelProviders: TrackingPixelProvider[];
@@ -10,10 +22,15 @@ export interface TrackingPixelModuleOptions {
 
 @Injectable()
 export class TrackingPixelService {
+  private adding = new Map<string, Promise<void>>();
+  private logger = new Logger('TrackingPixelService');
+
   constructor(
     private prisma: PrismaClient,
     @Inject(TRACKING_PIXEL_MODULE_OPTIONS)
-    private config: TrackingPixelModuleOptions
+    private config: TrackingPixelModuleOptions,
+    private kv: KvTtlCacheService,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   async getArticlePixels(
@@ -60,6 +77,97 @@ export class TrackingPixelService {
   }
 
   async addMissingArticleTrackingPixels(articleId: string) {
+    const running = this.adding.get(articleId);
+
+    if (running) {
+      return running;
+    }
+
+    const adding = this.addMissing(articleId).finally(() =>
+      this.adding.delete(articleId)
+    );
+    this.adding.set(articleId, adding);
+
+    return adding;
+  }
+
+  private async addMissing(articleId: string) {
+    const providers = this.config.trackingPixelProviders;
+
+    if (!providers.length) {
+      return;
+    }
+
+    const checkedKey = `${providers
+      .map(provider => provider.id)
+      .sort()
+      .join(',')}:${articleId}`;
+
+    if (await this.kv.getNs<boolean>(CHECKED_NAMESPACE, checkedKey)) {
+      return;
+    }
+
+    if (
+      (await this.kv.claim(`tracking-pixels:${articleId}`, ADDING_CLAIM_MS)) ===
+      false
+    ) {
+      await this.waitForOtherReplica(checkedKey);
+
+      return;
+    }
+
+    let failed = true;
+
+    try {
+      failed = await this.addPixels(articleId);
+    } catch (error) {
+      this.logger.error(
+        `Could not add the tracking pixels of article ${articleId}`,
+        error
+      );
+    } finally {
+      await this.kv.setNs(
+        CHECKED_NAMESPACE,
+        checkedKey,
+        true,
+        failed ? RETRY_FAILED_SECONDS : CHECKED_TTL_SECONDS
+      );
+    }
+  }
+
+  private async addPixels(articleId: string) {
+    const outcome = { failed: false, changed: false, added: false };
+
+    try {
+      await this.addPixelsOfProviders(articleId, outcome);
+    } finally {
+      if (outcome.changed) {
+        await this.kv.delNs(
+          contentCacheNamespace('articles'),
+          `tracking-pixels:${articleId}`
+        );
+      }
+
+      if (outcome.added) {
+        const article = await this.prisma.article.findUnique({
+          where: { id: articleId },
+          select: { slug: true },
+        });
+
+        await this.publicContentCache.invalidateArticleAnswers({
+          id: articleId,
+          slug: article?.slug,
+        });
+      }
+    }
+
+    return outcome.failed;
+  }
+
+  private async addPixelsOfProviders(
+    articleId: string,
+    outcome: { failed: boolean; changed: boolean; added: boolean }
+  ) {
     const trackingPixels = await this.prisma.articleTrackingPixels.findMany({
       where: {
         articleId,
@@ -70,15 +178,23 @@ export class TrackingPixelService {
     });
 
     for (const trackingPixelProvider of this.config.trackingPixelProviders) {
-      const matchingPixel = trackingPixels.find(
+      const pixels = trackingPixels.filter(
         tp =>
           tp.trackingPixelMethod.trackingPixelProviderID ===
           trackingPixelProvider.id
       );
+      const failedPixels = pixels.filter(tp => tp.error);
 
-      if (matchingPixel && !matchingPixel.error) {
+      if (pixels.some(tp => !tp.error)) {
+        if (failedPixels.length) {
+          outcome.changed = true;
+          await this.deletePixels(failedPixels);
+        }
+
         continue;
       }
+
+      outcome.changed = true;
 
       const trackingPixelMethod = await this.prisma.trackingPixelMethod.upsert({
         where: {
@@ -92,12 +208,8 @@ export class TrackingPixelService {
         update: {},
       });
 
-      if (matchingPixel) {
-        await this.prisma.articleTrackingPixels.delete({
-          where: {
-            id: matchingPixel.id,
-          },
-        });
+      if (failedPixels.length) {
+        await this.deletePixels(failedPixels);
       }
 
       try {
@@ -113,7 +225,9 @@ export class TrackingPixelService {
             pixelUid: trackingPixel.pixelUid,
           },
         });
+        outcome.added = true;
       } catch (error: any) {
+        outcome.failed = true;
         await this.prisma.articleTrackingPixels.create({
           data: {
             articleId,
@@ -125,5 +239,27 @@ export class TrackingPixelService {
         });
       }
     }
+  }
+
+  private async waitForOtherReplica(checkedKey: string) {
+    for (
+      let waited = 0;
+      waited < OTHER_REPLICA_WAIT_MS;
+      waited += OTHER_REPLICA_POLL_MS
+    ) {
+      await new Promise(resolve => setTimeout(resolve, OTHER_REPLICA_POLL_MS));
+
+      if (await this.kv.getNs<boolean>(CHECKED_NAMESPACE, checkedKey)) {
+        return;
+      }
+    }
+  }
+
+  private async deletePixels(pixels: Array<{ id: string }>) {
+    await this.prisma.articleTrackingPixels.deleteMany({
+      where: {
+        id: { in: pixels.map(pixel => pixel.id) },
+      },
+    });
   }
 }

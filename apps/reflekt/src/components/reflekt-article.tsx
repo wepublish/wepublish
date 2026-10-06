@@ -19,7 +19,7 @@ import {
   TeaserSlotsBlockWrapper,
 } from '@wepublish/block-content/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
-import { ContentWrapper } from '@wepublish/content/website';
+import { ContentUnavailable, ContentWrapper } from '@wepublish/content/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
 import {
   Article as ArticleType,
@@ -223,6 +223,8 @@ export function ReflektArticle({
       fadeout={article?.paywall?.fadeout}
     >
       {articleGlobalStyles}
+
+      {!article && !loading && <ContentUnavailable />}
 
       {article && <ArticleSEO article={article as unknown as ArticleType} />}
 

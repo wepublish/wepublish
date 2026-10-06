@@ -1,7 +1,7 @@
 import { SlateToPmMigrator } from './slate-to-pm-migrator';
 
 const makeMigrator = () =>
-  new SlateToPmMigrator(undefined as any, undefined as any);
+  new SlateToPmMigrator(undefined as any, undefined as any, undefined as any);
 
 const linkMarks = (doc: any): { text: string; href: string }[] => {
   const out: { text: string; href: string }[] = [];

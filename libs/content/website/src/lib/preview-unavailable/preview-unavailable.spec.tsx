@@ -10,6 +10,10 @@ import { ComponentProps, PropsWithChildren, ReactNode } from 'react';
 
 import { PreviewUnavailable } from './preview-unavailable';
 
+type BuilderElements = ComponentProps<
+  typeof WebsiteBuilderProvider
+>['elements'];
+
 const elements = {
   H5: ({ children }: PropsWithChildren<{ component?: string }>) => (
     <h5>{children}</h5>
@@ -23,7 +27,9 @@ const elements = {
 const renderWithTheme = (ui: ReactNode) =>
   render(
     <ThemeProvider theme={createTheme()}>
-      <WebsiteBuilderProvider elements={elements}>{ui}</WebsiteBuilderProvider>
+      <WebsiteBuilderProvider elements={elements as BuilderElements}>
+        {ui}
+      </WebsiteBuilderProvider>
     </ThemeProvider>
   );
 
@@ -95,6 +101,26 @@ describe('PreviewUnavailable', () => {
 
     expect(screen.getByText('Vorschau nicht verfügbar')).toBeDefined();
     expect(screen.queryByText('Vorschau wird geladen …')).toBeNull();
+  });
+
+  it('keeps showing the pending state right after the editor handshake logged in, also when scripts cannot read the session cookie', () => {
+    window.history.replaceState(null, '', '/a/foobar?preview');
+    Object.defineProperty(window, 'opener', {
+      value: window,
+      configurable: true,
+      writable: true,
+    });
+    setPreviewHandshakeState('succeeded');
+
+    renderWithTheme(
+      <SessionTokenContext.Provider
+        value={[undefined, true, vi.fn().mockResolvedValue(undefined)]}
+      >
+        <PreviewUnavailable />
+      </SessionTokenContext.Provider>
+    );
+
+    expect(screen.getByText('Vorschau wird geladen …')).toBeDefined();
   });
 
   it('shows the login hint directly when the user lacks the preview permission', () => {

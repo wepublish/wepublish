@@ -6,10 +6,19 @@ import {
   subscribeToPreviewHandshake,
 } from '@wepublish/authentication/website';
 import { CanPreview } from '@wepublish/permissions';
+import { PREVIEW_MODE_KEY } from '@wepublish/website/admin';
 import { getCookie } from 'cookies-next';
 import { useContext, useSyncExternalStore } from 'react';
 
 const noopSubscribe = () => () => undefined;
+
+const readPreviewModeStored = () => {
+  try {
+    return !!Number(window.sessionStorage.getItem(PREVIEW_MODE_KEY));
+  } catch {
+    return false;
+  }
+};
 
 const useHasMounted = () =>
   useSyncExternalStore(
@@ -31,7 +40,9 @@ const usePreviewHandshakeState = () =>
 const HANDSHAKE_WINDOW_MS = 35_000;
 
 export type PreviewAuthState = {
+  mounted: boolean;
   previewRequested: boolean;
+  previewModeStored: boolean;
   canPreview: boolean;
   editorAuthPossible: boolean;
   sessionAuthPossible: boolean;
@@ -42,10 +53,13 @@ export const usePreviewAuthState = (): PreviewAuthState => {
   const handshake = usePreviewHandshakeState();
   const sessionContext = useContext(SessionTokenContext);
   const user = sessionContext?.[0];
+  const hasToken = !!sessionContext?.[1];
 
   if (!hasMounted) {
     return {
+      mounted: false,
       previewRequested: false,
+      previewModeStored: false,
       canPreview: false,
       editorAuthPossible: false,
       sessionAuthPossible: false,
@@ -62,10 +76,12 @@ export const usePreviewAuthState = (): PreviewAuthState => {
     (handshake === 'pending' || handshake === 'unknown') &&
     performance.now() < HANDSHAKE_WINDOW_MS;
   const sessionAuthPossible =
-    !missingPermission && !!getCookie(AuthTokenStorageKey);
+    !missingPermission && (hasToken || !!getCookie(AuthTokenStorageKey));
 
   return {
+    mounted: true,
     previewRequested,
+    previewModeStored: readPreviewModeStored(),
     canPreview,
     editorAuthPossible,
     sessionAuthPossible,

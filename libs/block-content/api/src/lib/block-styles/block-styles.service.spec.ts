@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { BlockStylesDataloaderService } from './block-styles-dataloader.service';
 import { BlockStylesService } from './block-styles.service';
 
@@ -7,6 +8,10 @@ describe('BlockStylesService', () => {
   let service: BlockStylesService;
   let prismaMock: {
     blockStyle: { [method in keyof PrismaClient['blockStyle']]?: jest.Mock };
+  };
+  let publicContentCache: {
+    invalidate: jest.Mock;
+    invalidateArticleLayout: jest.Mock;
   };
 
   beforeAll(() => {
@@ -29,11 +34,19 @@ describe('BlockStylesService', () => {
         update: jest.fn(),
       },
     };
+    publicContentCache = {
+      invalidate: jest.fn(),
+      invalidateArticleLayout: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BlockStylesService,
         { provide: PrismaClient, useValue: prismaMock },
+        {
+          provide: PublicContentCacheInvalidator,
+          useValue: publicContentCache,
+        },
         {
           provide: BlockStylesDataloaderService,
           useValue: {
@@ -83,5 +96,38 @@ describe('BlockStylesService', () => {
     await service.deleteBlockStyle('1234');
 
     expect(prismaMock.blockStyle.delete?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it('should retire cached answers and article pages after an update', async () => {
+    prismaMock.blockStyle.update?.mockImplementation(async () => {
+      expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+
+      return { id: '123' };
+    });
+
+    await expect(
+      service.updateBlockStyle({ id: '123', name: 'Name', blocks: ['Event'] })
+    ).resolves.toEqual({ id: '123' });
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith();
+    expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+  });
+
+  it('should retire cached answers and article pages after a delete', async () => {
+    prismaMock.blockStyle.delete?.mockResolvedValue({ id: '1234' });
+
+    await expect(service.deleteBlockStyle('1234')).resolves.toEqual({
+      id: '1234',
+    });
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith();
+    expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+  });
+
+  it('should not retire cached answers when a block style is created', async () => {
+    await service.createBlockStyle({ name: 'Name', blocks: ['Event'] });
+
+    expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+    expect(publicContentCache.invalidateArticleLayout).not.toHaveBeenCalled();
   });
 });

@@ -1,3 +1,4 @@
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PageDataloaderService } from './page-dataloader.service';
 import { PrismaClient } from '@prisma/client';
@@ -21,6 +22,7 @@ describe('PageDataloaderService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [KvTtlCacheModule],
       providers: [
         PageDataloaderService,
         {
@@ -53,6 +55,7 @@ describe('PageDataloaderService', () => {
       });
 
       const module: TestingModule = await Test.createTestingModule({
+        imports: [KvTtlCacheModule],
         providers: [
           PageDataloaderService,
           {

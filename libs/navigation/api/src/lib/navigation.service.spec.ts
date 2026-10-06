@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { NavigationService } from './navigation.service';
 import { NavigationDataloaderService } from './navigation-dataloader.service';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 describe('NavigationService', () => {
   let service: NavigationService;
@@ -13,6 +14,7 @@ describe('NavigationService', () => {
   beforeEach(async () => {
     navigationDataloaderService = {
       load: jest.fn(),
+      prime: jest.fn(),
     };
 
     prismaMock = {
@@ -29,6 +31,7 @@ describe('NavigationService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [KvTtlCacheModule],
       providers: [
         NavigationService,
         {
@@ -72,5 +75,54 @@ describe('NavigationService', () => {
     expect(prismaMock.navigationLink.deleteMany).toHaveBeenCalled();
     expect(prismaMock.navigation.update).toHaveBeenCalled();
     expect(prismaMock.navigation.update.mock.calls[0]).toMatchSnapshot();
+  });
+
+  describe('cache', () => {
+    const navigation = {
+      id: 'nav-1',
+      key: 'main',
+      name: 'Main',
+      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+      modifiedAt: new Date('2026-01-01T00:00:00.000Z'),
+    };
+
+    beforeEach(() => {
+      prismaMock.navigation.findMany.mockResolvedValue([navigation]);
+      prismaMock.navigation.create.mockResolvedValue(navigation);
+      prismaMock.navigation.update.mockResolvedValue(navigation);
+      prismaMock.navigation.delete.mockResolvedValue(navigation);
+    });
+
+    it('serves the navigations from the cache', async () => {
+      await service.getNavigations();
+      const second = await service.getNavigations();
+
+      expect(prismaMock.navigation.findMany).toHaveBeenCalledTimes(1);
+      expect(second).toEqual([navigation]);
+    });
+
+    it.each([
+      [
+        'created',
+        () => service.createNavigation({ key: 'new', name: 'New', links: [] }),
+      ],
+      [
+        'updated',
+        () =>
+          service.updateNavigation({
+            id: 'nav-1',
+            key: 'main',
+            name: 'Main',
+            links: [],
+          }),
+      ],
+      ['deleted', () => service.deleteNavigationById('nav-1')],
+    ])('loads the navigations again after one was %s', async (_, change) => {
+      await service.getNavigations();
+      await change();
+      await service.getNavigations();
+
+      expect(prismaMock.navigation.findMany).toHaveBeenCalledTimes(2);
+    });
   });
 });

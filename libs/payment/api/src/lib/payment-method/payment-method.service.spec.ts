@@ -1,3 +1,4 @@
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentMethodService } from './payment-method.service';
 import { PaymentMethodDataloader } from './payment-method.dataloader';
@@ -29,6 +30,10 @@ describe('PaymentMethodService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PaymentMethodService,
+        {
+          provide: PublicContentCacheInvalidator,
+          useValue: { invalidate: jest.fn() },
+        },
         { provide: PaymentMethodDataloader, useValue: dataloader },
         { provide: PrismaClient, useValue: prismaMock },
       ],

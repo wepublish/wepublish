@@ -7,6 +7,7 @@ const { join } = require('path');
  **/
 const nextConfig = {
   output: 'standalone',
+  cacheHandler: join(__dirname, 'page-cache', 'page-cache-handler.js'),
   poweredByHeader: false,
   reactStrictMode: true,
   compiler: {
@@ -117,6 +118,33 @@ const nextConfig = {
         },
         {
           source: '/profile/:path*',
+          headers: [
+            {
+              key: 'cache-control',
+              value: 'no-store',
+            },
+          ],
+        },
+        {
+          source: '/login',
+          headers: [
+            {
+              key: 'cache-control',
+              value: 'no-store',
+            },
+          ],
+        },
+        {
+          source: '/mitmachen',
+          headers: [
+            {
+              key: 'cache-control',
+              value: 'no-store',
+            },
+          ],
+        },
+        {
+          source: '/api/:path*',
           headers: [
             {
               key: 'cache-control',

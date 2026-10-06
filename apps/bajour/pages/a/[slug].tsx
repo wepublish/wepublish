@@ -11,7 +11,7 @@ import { ArticleAuthor } from '@wepublish/author/website';
 import { PollBlock } from '@wepublish/block-content/website';
 import { Comment } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   Article as ArticleType,
@@ -262,6 +262,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(article.data?.article, article.errors),
   };
 };
