@@ -1198,7 +1198,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             <Paragraph gutterBottom={false}>
               <Trans
                 i18nKey="subscribe.warning.openInvoices"
-                component={{ Link: <Link /> }}
+                components={{ Link: <Link /> }}
               />
             </Paragraph>
           )}
@@ -1207,7 +1207,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             <Paragraph gutterBottom={false}>
               <Trans
                 i18nKey="subscribe.warning.alreadyHasSubscription"
-                component={{ Link: <Link /> }}
+                components={{ Link: <Link /> }}
               />
             </Paragraph>
           )}

@@ -422,6 +422,9 @@ export const Upgrade = ({
                       amountPerMonthMax={amountPerMonthMax}
                       amountPerMonthTarget={amountPerMonthTarget}
                       currency={selectedMemberPlan?.currency ?? Currency.Chf}
+                      paymentPeriodicity={
+                        subscriptionToUpgrade.paymentPeriodicity
+                      }
                       presetAmounts={getAmountPickerValues(
                         selectedLayout,
                         subscriptionToUpgrade.paymentPeriodicity
