@@ -1,4 +1,4 @@
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { act, render, waitFor } from '@testing-library/react';
 import {
   AuthTokenStorageKey,

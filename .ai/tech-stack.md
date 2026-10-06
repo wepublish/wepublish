@@ -43,13 +43,13 @@ before you start.
 
 | You are editing | Runner | Verify with |
 | --- | --- | --- |
-| `libs/*/api` (NestJS) | Jest | `npx nx test <domain>-api` |
+| `libs/*/api` (NestJS) | Vitest | `npx nx test <domain>-api` |
 | `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils` | Vitest | `npx nx test <domain>-website` |
 | `apps/<tenant>` (Next.js) | Vitest + tsc | `npx tsc -p ./apps/<app> --noEmit` |
 | `libs/api/prisma` | — | `npx prisma migrate dev --name ...` |
 
-Check for `jest.config.ts` vs `vitest.config.ts` in the project root before
-writing a test — `jest.fn()` and `vi.fn()` are not interchangeable.
+Every project runs on Vitest — use `vi.fn()` / `vi.mock()` everywhere. NestJS
+libs get their config from `createVitestConfig({nest: true})`.
 
 ## Detailed guidance
 
