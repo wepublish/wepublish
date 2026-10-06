@@ -10,6 +10,35 @@ gets refactored away by the next agent.
 
 ---
 
+### ⚠️ `ssrForceFetchDelay` must be `0` on the server, or pages render empty
+
+[libs/website/api/src/lib/client.tsx](../../libs/website/api/src/lib/client.tsx)
+sets `ssrForceFetchDelay: typeof window === 'undefined' ? 0 : 100`. Do not
+"simplify" that back to a plain `100`.
+
+Apollo schedules `prioritizeCacheValues = false` after the delay
+**unconditionally — even when `ssrMode` is true**. Once it is off, a
+server-side `useQuery` no longer downgrades `network-only` to `cache-first`,
+so it ignores the cache the prefetch just filled.
+
+Evidence: with `100`, the TanStack Start build of `apps/gruppetto` served a
+complete HTML shell (styles, fonts, `window.WEBSITE_SETTINGS` all correct) with
+**9 characters** of body text and an empty dehydrated Apollo cache. With `0`:
+15 305 characters. Verified against a live API on 2026-10-05.
+
+The pages router only ever got away with it by accident — it builds the client
+*during* the React render, so the 100 ms timer had barely started. Anything
+that pushes a Next render past 100 ms hits the same bug.
+
+**Load-bearing:** the `typeof window === 'undefined' ? 0 :` part. With
+`ssrMode: true` the delay buys nothing — `prioritizeCacheValues` already starts
+`true` — so it can only ever hurt. The browser still needs the 100 ms.
+
+`WepublishApolloProvider` re-asserts `client.prioritizeCacheValues = true`
+during server render as a second line of defence. Nothing guards this with a
+test — a regression here is silent, and shows up as blank server-rendered
+pages.
+
 ### ⚠️ Prisma helpers are deliberately absent from the `@wepublish/testing` barrel
 
 [libs/testing/src/index.ts](../../libs/testing/src/index.ts) exports `act-wait`,

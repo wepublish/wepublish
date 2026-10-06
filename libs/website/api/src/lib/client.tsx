@@ -38,10 +38,10 @@ let CACHED_CLIENT: ApolloClient;
 const isFile = (value: unknown): boolean =>
   Boolean(
     (typeof File !== 'undefined' && value instanceof File) ||
-      (typeof Blob !== 'undefined' && value instanceof Blob) ||
-      (typeof value === 'object' &&
-        value !== null &&
-        Object.values(value).some(isFile))
+    (typeof Blob !== 'undefined' && value instanceof Blob) ||
+    (typeof value === 'object' &&
+      value !== null &&
+      Object.values(value).some(isFile))
   );
 
 const SSR_FETCH_TIMEOUT_MS = Number(process.env.SSR_FETCH_TIMEOUT_MS) || 10_000;
@@ -135,7 +135,15 @@ const createApiClient = (
 
     ssrMode: typeof window === 'undefined',
     assumeImmutableResults: true,
-    ssrForceFetchDelay: 100,
+    // `ssrForceFetchDelay` schedules `prioritizeCacheValues = false` after the
+    // delay *unconditionally*, even when `ssrMode` is true. On the server that
+    // is actively harmful: a client built at the start of a request has its
+    // cache prioritisation switched off 100ms later, so by the time React
+    // renders — after the loaders' network round trips — `useQuery` no longer
+    // reads the prefetched cache and the page server-renders empty. Pages
+    // router got away with it because the client was constructed during the
+    // render itself. Only the browser needs the delay.
+    ssrForceFetchDelay: typeof window === 'undefined' ? 0 : 100,
     defaultOptions,
   });
 };

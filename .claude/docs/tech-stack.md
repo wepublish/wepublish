@@ -4,7 +4,8 @@ Align all code suggestions, architecture recommendations, and technical solution
 
 ## Frontend
 
-- **Next.js 16** with TypeScript (Pages Router, not App Router)
+- **Next.js 16** with TypeScript (Pages Router, not App Router) — all tenant sites except `gruppetto`
+- **TanStack Start 1.x** (Vite 7 + nitro 3) — `apps/gruppetto` only; see [tanstack-start-migration.md](../../docs/tanstack-start-migration.md)
 - **React 19**
 - **Material UI (MUI)** as UI component library — styling via `styled()` with tagged template literals (`@emotion/styled`)
 - **Apollo Client** for GraphQL communication (with generated hooks via GraphQL Code Generator)

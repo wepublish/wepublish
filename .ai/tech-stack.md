@@ -1,7 +1,10 @@
 # We.Publish
 
-Nx monorepo: NestJS/GraphQL API, a React admin editor, and ~20 Next.js tenant
-websites, sharing code through `libs/`. **Different parts of this repo use
+Nx monorepo: NestJS/GraphQL API, a React admin editor, and ~20 tenant
+websites, sharing code through `libs/`. All tenant sites are Next.js 16 (Pages
+Router) except `apps/gruppetto`, which runs on TanStack Start — read
+[tanstack-start-migration.md](docs/tanstack-start-migration.md) before working
+on it. **Different parts of this repo use
 different test runners and different verification commands** — read
 [repo-map.md](.claude/docs/repo-map.md) to work out which stack you are in
 before you start.
@@ -46,6 +49,7 @@ before you start.
 | `libs/*/api` (NestJS) | Jest | `npx nx test <domain>-api` |
 | `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils` | Vitest | `npx nx test <domain>-website` |
 | `apps/<tenant>` (Next.js) | Vitest + tsc | `npx tsc -p ./apps/<app> --noEmit` |
+| `apps/gruppetto` (TanStack Start) | Vitest | `npx nx run gruppetto:typecheck` |
 | `libs/api/prisma` | — | `npx prisma migrate dev --name ...` |
 
 Check for `jest.config.ts` vs `vitest.config.ts` in the project root before

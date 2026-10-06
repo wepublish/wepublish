@@ -3,6 +3,12 @@ import QRCodeStyling from 'qr-code-styling';
 import { useEffect, useMemo, useRef } from 'react';
 import markUrl from './wepublish-mark.png';
 
+// Next's image loader resolves a `.png` import to `{ src, width, height }`,
+// Vite resolves it to a plain URL string. This lib is consumed by both, so
+// normalise instead of assuming either shape.
+const markSrc: string =
+  typeof markUrl === 'string' ? markUrl : (markUrl as { src: string }).src;
+
 const Wrapper = styled('div')`
   display: flex;
   justify-content: center;
@@ -25,7 +31,7 @@ export function TotpQrCode({ uri }: { uri: string }) {
         type: 'svg',
         data: uri,
         margin: 10,
-        image: markUrl.src,
+        image: markSrc,
         qrOptions: { errorCorrectionLevel: 'H' },
         dotsOptions: { type: 'extra-rounded', color: '#000000' },
         cornersSquareOptions: { type: 'extra-rounded', color: '#000000' },

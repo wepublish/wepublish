@@ -141,6 +141,13 @@
         "libs/utils/sentry/instrumentation.nextjs.ts"
       ],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
+      "@wepublish/utils/website/core": ["libs/utils/website/src/core.ts"],
+      "@wepublish/utils/website/tanstack": [
+        "libs/utils/website/src/tanstack.ts"
+      ],
+      "@wepublish/utils/website/tanstack/server": [
+        "libs/utils/website/src/tanstack-server.ts"
+      ],
       "@wepublish/versionInformation/api": [
         "libs/versionInformation/api/src/index.ts"
       ],

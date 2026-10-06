@@ -6,6 +6,12 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "jsxImportSource": "@emotion/react",
+    // `tsconfig.base.json` still uses the legacy `node` resolution, which
+    // cannot read a package `exports` map. `@tanstack/react-start/server`
+    // (used by `src/tanstack/`) is only reachable through one, so this project
+    // needs `bundler` — the same mode the apps consuming it compile with.
+    "moduleResolution": "bundler",
+    "module": "esnext",
     "ignoreDeprecations": "6.0"
   },
   "files": [],
