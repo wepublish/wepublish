@@ -44,7 +44,6 @@ services:
       - app-tier
   mailpit:
     image: axllent/mailpit:latest
-    platform: linux/amd64
     ports:
       # SMTP endpoint (providers connect here) + web UI to read caught mails.
       - '127.0.0.1:1025:1025'
@@ -64,7 +63,6 @@ services:
       - api
   database:
     image: postgres:17
-    platform: linux/amd64
     ports:
       - '5432:5432'
     volumes:
@@ -93,7 +91,6 @@ services:
       - app-tier
   pgadmin:
     image: dpage/pgadmin4
-    platform: linux/amd64
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: 'admin@admin.com'
