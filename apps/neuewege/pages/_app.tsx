@@ -1,3 +1,4 @@
+import { ApolloProvider, NormalizedCacheObject } from '@apollo/client';
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
 import {
@@ -38,6 +39,7 @@ import {
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
+import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
@@ -45,6 +47,9 @@ import PlausibleProvider from 'next-plausible';
 import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
+
+import { AppProvider } from '../src/components/AppContext';
+import { getApolloClient } from '../src/lib/apollo';
 
 setDefaultOptions({
   locale: de,
@@ -82,9 +87,41 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
-}> & {
+type LegacyPageProps = {
+  // the legacy components' Apollo client (src/lib/apollo.js), prefetched on
+  // the server by SitePage.getInitialProps
+  apolloClient?: ReturnType<typeof getApolloClient>;
+  apolloState?: NormalizedCacheObject;
+};
+
+// Pages of the legacy site (src/components/SitePage.js, NotFoundPage.js)
+// bring their own header, overlay and footer.
+type CustomPage = NextPage & { legacyLayout?: boolean };
+
+function LegacyShell({
+  Component,
+  pageProps,
+}: {
+  Component: CustomPage;
+  pageProps: LegacyPageProps;
+}) {
+  const { apolloClient, apolloState, ...props } = pageProps;
+  const client = apolloClient ?? getApolloClient(apolloState);
+
+  return (
+    <ApolloProvider client={client}>
+      <AppProvider>
+        <Component {...props} />
+      </AppProvider>
+    </ApolloProvider>
+  );
+}
+
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: SessionWithTokenWithoutUser;
+  } & LegacyPageProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -96,7 +133,7 @@ function CustomApp({
   emotionCache,
   websiteSettings,
 }: CustomAppProps) {
-  const siteTitle = 'We.Publish';
+  const siteTitle = 'Neue Wege';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -130,8 +167,6 @@ function CustomApp({
               date={{ format: dateFormatter }}
               meta={{ siteTitle }}
             >
-              <CssBaseline />
-
               <Head>
                 <title key="title">{siteTitle}</title>
                 <meta
@@ -140,26 +175,36 @@ function CustomApp({
                 />
               </Head>
 
-              <Spacer>
-                <NavBar
-                  categorySlugs={[['categories', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
+              {(Component as CustomPage).legacyLayout ?
+                <LegacyShell
+                  Component={Component}
+                  pageProps={pageProps}
                 />
+              : <>
+                  <CssBaseline />
 
-                <main>
-                  <MainSpacer maxWidth="lg">
-                    <Component {...pageProps} />
-                  </MainSpacer>
-                </main>
+                  <Spacer>
+                    <NavBar
+                      categorySlugs={[['categories', 'about-us']]}
+                      slug="main"
+                      headerSlug="header"
+                      iconSlug="icons"
+                    />
 
-                <FooterContainer
-                  slug="footer"
-                  categorySlugs={[['categories', 'about-us']]}
-                  iconSlug="icons"
-                />
-              </Spacer>
+                    <main>
+                      <MainSpacer maxWidth="lg">
+                        <Component {...pageProps} />
+                      </MainSpacer>
+                    </main>
+
+                    <FooterContainer
+                      slug="footer"
+                      categorySlugs={[['categories', 'about-us']]}
+                      iconSlug="icons"
+                    />
+                  </Spacer>
+                </>
+              }
 
               <RoutedAdminBar />
 

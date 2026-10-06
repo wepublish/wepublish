@@ -36,6 +36,7 @@ const paymentSettingsSchema = z.object({
   payrexx_vatrate: z.string().nullish().or(z.literal('')),
   payrexx_psp: z.array(z.nativeEnum(PayrexxPsp)).nullish(),
   payrexx_pm: z.array(z.nativeEnum(PayrexxPm)).nullish(),
+  simulated_declineRenewals: z.boolean().nullish(),
 
   bexio_userId: z.coerce.number().nullish(),
   bexio_countryId: z.coerce.number().nullish(),
@@ -297,6 +298,14 @@ export function PaymentIntegrationForm() {
               label: v,
               value: v,
             })),
+          });
+        }
+
+        if (setting.type === PaymentProviderType.Simulated) {
+          fields.push({
+            name: 'simulated_declineRenewals',
+            label: t('integrations.paymentSettings.declineRenewals'),
+            type: 'checkbox',
           });
         }
 

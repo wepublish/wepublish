@@ -3,6 +3,7 @@
 const { composePlugins, withNx } = require('@nx/next');
 const { withSentryConfig } = require('@sentry/nextjs');
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config');
+const { redirects: legacyRedirects } = require('./src/lib/links.cjs');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled:
     process.env.NODE_ENV === 'production' && !!process.env.ANALYZE_BUNDLE,
@@ -14,6 +15,19 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
+  async redirects() {
+    return [...((await wepNextConfig.redirects?.()) ?? []), ...legacyRedirects];
+  },
+  async rewrites() {
+    return [
+      // we.publish links articles as /a/<slug> (feeds, sitemap, editor
+      // preview); the legacy site serves every route from /[slug]
+      {
+        source: '/a/:slug',
+        destination: '/:slug',
+      },
+    ];
+  },
 };
 
 const plugins = [

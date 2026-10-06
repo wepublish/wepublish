@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>SocialMedia</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 0 16 0 16 17 0 17"></polygon>
+    </defs>
+    <g id="SocialMedia" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Page-1-Copy" transform="translate(9.000000, 8.500000) rotate(180.000000) translate(-9.000000, -8.500000) translate(1.000000, 0.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="Clip-2"></g>
+            <path d="M8,0 C3.58924316,0 0,3.52650084 0,7.86214316 C0,12.1745907 3.55384092,15.6850336 7.93373426,15.7198258 L7.93373426,17 L9.43606037,15.862563 L10.9383865,14.7260181 L9.43606037,13.588581 L7.93373426,12.4520361 L7.93373426,13.9356108 C4.55508907,13.9008186 1.81640758,11.1905961 1.81640758,7.86214316 C1.81640758,4.51049538 4.59049132,1.78421495 8,1.78421495 C11.4095087,1.78421495 14.1835924,4.51049538 14.1835924,7.86214316 L16,7.86214316 C16,3.52650084 12.4107568,0 8,0" id="Fill-1" fill="#010000" mask="url(#mask-2)"></path>
+        </g>
+    </g>
+</svg>

@@ -7,6 +7,7 @@ import { MolliePaymentProvider } from './mollie-payment-provider';
 import { NeverChargePaymentProvider } from './never-charge-payment-provider';
 import { PayrexxPaymentProvider } from './payrexx-payment-provider';
 import { PayrexxSubscriptionPaymentProvider } from './payrexx-subscription-payment-provider';
+import { SimulatedPaymentProvider } from './simulated-payment-provider';
 import { StripeCheckoutPaymentProvider } from './stripe-checkout-payment-provider';
 import { StripePaymentProvider } from './stripe-payment-provider';
 
@@ -59,6 +60,14 @@ export const createPaymentProvider = (
       });
     case PaymentProviderType.NO_CHARGE:
       return new NeverChargePaymentProvider({ id, prisma, kv });
+    case PaymentProviderType.SIMULATED:
+      // The checkout page posts a plain html form.
+      return new SimulatedPaymentProvider({
+        id,
+        incomingRequestHandler: formBody(),
+        prisma,
+        kv,
+      });
     default:
       throw new Error(`Unknown payment provider type defined: ${type}`);
   }
