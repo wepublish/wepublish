@@ -4,6 +4,7 @@ import {
 } from '@wepublish/website/api';
 import {
   AuthTokenStorageKey,
+  isFramed,
   SessionTokenContext,
 } from '@wepublish/authentication/website';
 import { useMeLazyQuery } from '@wepublish/website/api';
@@ -34,6 +35,14 @@ export const SessionProvider = memo<
       setToken(newToken);
 
       if (newToken) {
+        // Browsers drop this SameSite=strict cookie inside a cross-site frame
+        // (the editor's preview), so a framed page keeps a per-tab copy that
+        // authLink falls back to. Top-level pages stay cookie-only, so a logout
+        // in one tab still ends the session in all of them.
+        if (isFramed()) {
+          sessionStorage.setItem(AuthTokenStorageKey, JSON.stringify(newToken));
+        }
+
         await setCookie(AuthTokenStorageKey, JSON.stringify(newToken), {
           expires: new Date(newToken.expiresAt),
           sameSite: 'strict',
@@ -42,6 +51,7 @@ export const SessionProvider = memo<
         getMe();
       } else {
         setUser(null);
+        sessionStorage.removeItem(AuthTokenStorageKey);
         deleteCookie(AuthTokenStorageKey);
       }
     },
@@ -49,10 +59,12 @@ export const SessionProvider = memo<
   );
 
   useEffect(() => {
-    const cookie = getCookie(AuthTokenStorageKey);
+    const stored =
+      getCookie(AuthTokenStorageKey)?.toString() ??
+      (isFramed() ? sessionStorage.getItem(AuthTokenStorageKey) : null);
     const sToken =
       sessionToken ? sessionToken
-      : cookie ? (JSON.parse(cookie.toString()) as SessionWithTokenWithoutUser)
+      : stored ? (JSON.parse(stored) as SessionWithTokenWithoutUser)
       : null;
 
     if (sToken) {

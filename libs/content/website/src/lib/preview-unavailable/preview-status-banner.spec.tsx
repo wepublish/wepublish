@@ -40,7 +40,13 @@ describe('PreviewStatusBanner', () => {
       configurable: true,
       writable: true,
     });
+    Object.defineProperty(window, 'parent', {
+      value: window,
+      configurable: true,
+      writable: true,
+    });
     document.cookie = 'auth.token=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    sessionStorage.clear();
     setPreviewHandshakeState('unknown');
   });
 
@@ -85,6 +91,33 @@ describe('PreviewStatusBanner', () => {
     setPreviewHandshakeState('failed');
 
     renderBanner();
+
+    expect(
+      screen.getByText(/Du siehst die veröffentlichte Version/)
+    ).toBeDefined();
+    expect(screen.queryByText('Vorschau wird geladen …')).toBeNull();
+  });
+
+  it('shows the loading state while a framed preview restores its session from sessionStorage', () => {
+    window.history.replaceState(null, '', '/a/foobar?preview');
+    Object.defineProperty(window, 'parent', {
+      value: {},
+      configurable: true,
+      writable: true,
+    });
+    sessionStorage.setItem('auth.token', '{"token":"framed-token"}');
+    setPreviewHandshakeState('failed');
+
+    renderBanner(withUser(null, false));
+
+    expect(screen.getByText('Vorschau wird geladen …')).toBeDefined();
+  });
+
+  it('ignores a sessionStorage session outside of a frame', () => {
+    window.history.replaceState(null, '', '/a/foobar?preview');
+    sessionStorage.setItem('auth.token', '{"token":"stale-token"}');
+
+    renderBanner(withUser(null, false));
 
     expect(
       screen.getByText(/Du siehst die veröffentlichte Version/)
