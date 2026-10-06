@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { userEvent, within } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import {
   mockAvailablePaymentMethod,
   mockMemberPlan,
@@ -14,6 +14,7 @@ import {
   PaymentMethod,
   PaymentPeriodicity,
   ProductType,
+  SubscribeBlockRenderLayout,
 } from '@wepublish/website/api';
 import { Upgrade } from './upgrade';
 
@@ -326,4 +327,43 @@ export const WithDiscountCoveringTheFullAmount: StoryObj<typeof Upgrade> = {
   // the leftover discount is bigger than the upgrade, so it stays at zero
   // instead of turning into a negative amount
   play: expectTexts(['CHF 0.-']),
+};
+
+// The subscription is yearly, so the monthly picker values (10/15/20) are
+// offered as yearly tiles. Picking CHF 120 a year must upgrade to 10 a month.
+export const PickerTilesInSubscriptionInterval: StoryObj<typeof Upgrade> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    onUpgrade: fn(),
+    memberPlanRenderSettings: [
+      {
+        __typename: 'SubscribeBlockMemberPlanRenderSetting',
+        memberPlanId: memberPlan2.id,
+        isDefault: true,
+        layout: {
+          __typename: 'SubscribeBlockLayoutPickerConfig',
+          type: SubscribeBlockRenderLayout.Picker,
+          showInput: true,
+          values: [1000, 1500, 2000],
+          valuesByPeriodicity: [],
+        },
+      },
+    ],
+  },
+  play: async ctx => {
+    const canvas = within(ctx.canvasElement);
+
+    await ctx.step('Pick the yearly tile for 10 a month', async () => {
+      await userEvent.click(canvas.getByText('120', { exact: true }));
+    });
+
+    await clickUpgrade(ctx);
+
+    await ctx.step('Upgrade with the monthly amount', async () => {
+      expect(ctx.args.onUpgrade).toHaveBeenCalledWith(
+        expect.objectContaining({ monthlyAmount: 1000 })
+      );
+    });
+  },
 };
