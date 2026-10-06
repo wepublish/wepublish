@@ -131,15 +131,28 @@ const nextConfig = {
     ],
   },
   // Emotion and MUI must go through a single compilation pipeline, otherwise
-  // Turbopack can resolve `@emotion/react` twice (CJS for MUI's styled engine,
-  // ESM for the app's `@emotion/styled`) and the theme context server-renders
-  // empty, e.g. `theme.breakpoints` undefined.
+  // the server loads two instances of their React contexts (the transpiled
+  // ESM copy and the external CJS copy from node_modules) and providers set on
+  // one are invisible to consumers of the other. List the *whole* family: a
+  // package left out stays external and drags in the CJS copies of everything
+  // it imports, even if those are listed. Symptoms of a gap, server vs client:
+  // - `css-` vs `mui-` class names (AppCacheProvider's cache not seen)
+  // - nested `createWithTheme` themes ignored (`<span>` instead of a mapped `<ul>`)
+  // - `theme.breakpoints` undefined
   transpilePackages: [
     'react-tweet',
     '@faker-js/faker',
     '@emotion/react',
     '@emotion/styled',
+    '@emotion/cache',
+    '@mui/material',
+    '@mui/material-nextjs',
+    '@mui/system',
+    '@mui/private-theming',
     '@mui/styled-engine',
+    '@mui/utils',
+    '@mui/x-date-pickers',
+    '@mui/x-internals',
   ],
 };
 
