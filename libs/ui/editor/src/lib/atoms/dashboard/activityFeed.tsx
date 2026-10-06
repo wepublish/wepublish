@@ -5,7 +5,7 @@ import {
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
 import { formatDistanceToNow } from 'date-fns';
-import { JSX, ReactNode, useEffect } from 'react';
+import { JSX, ReactNode, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
@@ -18,7 +18,13 @@ import {
   MdQueryStats,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Avatar, Message, Timeline as RTimeline, toaster } from 'rsuite';
+import {
+  Avatar,
+  Button,
+  Message,
+  Timeline as RTimeline,
+  toaster,
+} from 'rsuite';
 
 import { AVAILABLE_LANG } from '../../utility';
 
@@ -48,23 +54,34 @@ const ActionDetails = styled.div`
 `;
 
 const TimelineIcon = styled(Avatar)`
-  background: #fff;
+  background: var(--rs-bg-card);
   top: 0;
   left: -2px;
-  border: 2px solid #3498ff;
+  border: 2px solid var(--rs-primary-500);
   border-radius: 50%;
-  color: #3498ff;
+  color: var(--rs-primary-500);
   margin-left: -8px;
   margin-top: -8px;
   padding: 4px;
 `;
 
+const ToggleMore = styled(Button)`
+  margin-left: 22px;
+`;
+
+const COLLAPSED_ACTIONS = 3;
+
 type Action = NonNullable<RecentActionsQuery['actions']>[number];
 
 export function ActivityFeed() {
+  const { t } = useTranslation();
   const { data, error } = useRecentActionsQuery({});
+  const [expanded, setExpanded] = useState(false);
 
   const actions = data?.actions ?? [];
+  const hiddenCount = Math.max(0, actions.length - COLLAPSED_ACTIONS);
+  const visibleActions =
+    expanded ? actions : actions.slice(0, COLLAPSED_ACTIONS);
 
   useEffect(() => {
     if (error)
@@ -81,16 +98,30 @@ export function ActivityFeed() {
   }, [error]);
 
   return (
-    <Timeline>
-      {actions?.map((action: Action, i) => {
-        return (
-          <TimelineItemContainer
-            key={i}
-            action={action}
-          />
-        );
-      })}
-    </Timeline>
+    <>
+      <Timeline>
+        {visibleActions.map((action: Action, i) => {
+          return (
+            <TimelineItemContainer
+              key={i}
+              action={action}
+            />
+          );
+        })}
+      </Timeline>
+
+      {hiddenCount > 0 && (
+        <ToggleMore
+          appearance="subtle"
+          size="sm"
+          onClick={() => setExpanded(current => !current)}
+        >
+          {expanded ?
+            t('dashboard.showLess')
+          : t('dashboard.showMore', { count: hiddenCount })}
+        </ToggleMore>
+      )}
+    </>
   );
 }
 

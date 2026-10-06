@@ -36,7 +36,7 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
         gap={5}
         sx={{
           borderRadius: '6px',
-          bgcolor: '#00000008',
+          bgcolor: 'action.hover',
           p: 3,
           mb: 2,
         }}

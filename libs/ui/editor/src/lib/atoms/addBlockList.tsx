@@ -35,7 +35,7 @@ export const BlockListItem = styled('li')`
 
   &:hover {
     cursor: pointer;
-    background-color: #f5f5f5;
+    background-color: var(--rs-bg-well);
   }
 `;
 

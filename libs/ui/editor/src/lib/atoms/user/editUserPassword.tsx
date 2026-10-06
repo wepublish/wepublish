@@ -108,7 +108,6 @@ export function EditUserPassword({
             </RButton>
             <RButton
               appearance="primary"
-              color="red"
               disabled={isDisabled || !user.email || !user.active}
               onClick={() => setSendLoginModalOpen(true)}
             >

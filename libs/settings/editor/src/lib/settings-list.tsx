@@ -50,11 +50,11 @@ const Info = styled.div`
   position: relative;
   display: inline-block;
   font-size: 22px;
-  color: #3498ff;
+  color: var(--rs-primary-500);
 `;
 
 const WarningIcon = styled(MdWarning)`
-  color: darkorange;
+  color: var(--rs-state-warning);
   font-size: 32px;
   margin-left: 20px;
 `;

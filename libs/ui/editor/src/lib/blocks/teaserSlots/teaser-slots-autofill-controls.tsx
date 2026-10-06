@@ -23,7 +23,7 @@ interface TeaserSlotsContorlsProps {
 const ControlsContainer = styled(Panel)`
   margin-bottom: 16px;
   border-radius: 6px;
-  background-color: #f9fafb;
+  background-color: var(--rs-bg-well);
   padding: 12px;
 `;
 
@@ -134,7 +134,7 @@ export function TeaserSlotsAutofillControls({
                 {t('blocks.teaserSlots.teasersLoaded')}{' '}
               </span>
             </>
-          : <span style={{ color: '#6b7280' }}>
+          : <span style={{ color: 'var(--rs-text-secondary)' }}>
               {t('blocks.teaserSlots.fillManually')}
             </span>
           }

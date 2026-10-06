@@ -236,7 +236,7 @@ export function PlaceholderPicker({
           searchResults.map(renderPlaceholder)
         : <Typography
             variant="caption"
-            style={{ color: '#8e8e93' }}
+            style={{ color: 'var(--rs-text-secondary)' }}
           >
             {t('mailTemplates.noPlaceholders', 'No matching placeholders.')}
           </Typography>
@@ -254,7 +254,7 @@ export function PlaceholderPicker({
           <Typography
             variant="caption"
             display="block"
-            style={{ marginBottom: 8, color: '#8e8e93' }}
+            style={{ marginBottom: 8, color: 'var(--rs-text-secondary)' }}
           >
             {t(
               'mailTemplates.placeholderAlwaysHint',
@@ -267,14 +267,14 @@ export function PlaceholderPicker({
             style={{
               marginTop: 20,
               paddingTop: 12,
-              borderTop: '1px solid #e5e5ea',
+              borderTop: '1px solid var(--rs-border-primary)',
             }}
           >
             {!selectedContext ?
               <Typography
                 variant="caption"
                 display="block"
-                style={{ color: '#8e8e93' }}
+                style={{ color: 'var(--rs-text-secondary)' }}
               >
                 {t(
                   'mailTemplates.placeholderSelectType',
@@ -292,7 +292,10 @@ export function PlaceholderPicker({
                   <Typography
                     variant="caption"
                     display="block"
-                    style={{ marginBottom: 8, color: '#8e8e93' }}
+                    style={{
+                      marginBottom: 8,
+                      color: 'var(--rs-text-secondary)',
+                    }}
                   >
                     {t(
                       `mailTemplates.placeholderContextNotes.${selectedContext.id}`,
@@ -305,7 +308,7 @@ export function PlaceholderPicker({
                 : <Typography
                     variant="caption"
                     display="block"
-                    style={{ color: '#8e8e93' }}
+                    style={{ color: 'var(--rs-text-secondary)' }}
                   >
                     {t(
                       'mailTemplates.placeholderContextNone',

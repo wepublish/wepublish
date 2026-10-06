@@ -797,6 +797,8 @@
       "chf": "chf"
     },
     "dashboard": {
+      "showMore": "Afficher plus ({{count}} de plus)",
+      "showLess": "Afficher moins",
       "activity": "Dernière activité",
       "dashboard": "Dashboard",
       "notifications": "Notifications",
@@ -1385,6 +1387,13 @@
       "imageLibrary": "Images",
       "importableEvents": "Importable Events",
       "media": "Fichiers",
+      "menu": "Menu",
+      "colorMode": {
+        "title": "Apparence",
+        "light": "Clair",
+        "dark": "Sombre",
+        "system": "Comme le système"
+      },
       "logout": "Déconnection",
       "mailTemplates": "Modèles de courriels",
       "memberPlans": "Plans d'abonnement",
@@ -2078,6 +2087,13 @@
       "uniqueSubscriptionHelpText": "Un utilisateur ne peut souscrire qu'un seul abonnement par plan d'abonnement unique. Le renouvellement manuel par l'utilisateur n'est pas possible. Le renouvellement automatique est possible."
     },
     "userSubscriptionList": {
+      "addSubscription": "Ajouter un abonnement",
+      "subscriptionNumber": "N° {{subscriptionId}}",
+      "periodTitle": "Période {{date}}",
+      "status": {
+        "active": "Actif",
+        "expired": "Expiré"
+      },
       "aboDetails": "Détails de l'abonnement",
       "deactivationReason": {
         "InvoiceNotPaid": "Facture non payée",
@@ -2106,7 +2122,6 @@
       "subscriptionCreatedAt": "Créé le {{date}}",
       "subscriptionIsAutoRenewed": "L'abonnement sera renouvelé automatiquement",
       "subscriptionStartsAt": "L'abonnement débute le {{date}}",
-      "subscriptionTitle": "{{memberPlanName}} / N° {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante."
     },
     "blockTemplates": {
@@ -2283,6 +2298,13 @@
       "rangeNextYear": "Année prochaine"
     },
     "audience": {
+      "chart": {
+        "noActivityDay": "Aucun mouvement d'abonnement ce jour-là",
+        "noActivityMonth": "Aucun mouvement d'abonnement ce mois-ci",
+        "flowsTitle": "Entrées et sorties",
+        "net": "Solde",
+        "since": "depuis le {{date}}"
+      },
       "legend": {
         "info": {
           "totalActiveSubscriptionCount": "Abonnements actifs et payés à la date de référence.",

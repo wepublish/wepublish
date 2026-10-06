@@ -21,7 +21,7 @@ import {
 } from 'rsuite';
 
 const IconButton = styled(RIconButton)`
-  && {
+  &&:not([data-with-text]) {
     width: 36px;
     height: 36px;
   }

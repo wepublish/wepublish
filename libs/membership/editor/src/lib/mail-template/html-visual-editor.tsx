@@ -66,7 +66,7 @@ const EditorWrapper = styled(Box)`
   min-height: 480px;
   border: 1px solid ${({ theme }) => theme.palette.divider};
   border-radius: 6px;
-  background-color: #fff;
+  background-color: var(--rs-bg-card);
   overflow: hidden;
 `;
 

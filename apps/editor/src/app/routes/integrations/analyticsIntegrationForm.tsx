@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { lighten } from '@mui/material';
+import { alpha, lighten } from '@mui/material';
 import {
   AnalyticsProviderType,
   CreateAnalyticsProviderSettingDocument,
@@ -50,8 +50,15 @@ const showErrors = (error: Error): void => {
 
 const CustomDropzoneWrapper = styled.div<{ dragging: boolean; valid: boolean }>`
   aspect-ratio: 16/9;
-  border: 2px dashed ${({ theme }) => theme.palette.grey['300']};
-  background-color: ${({ theme }) => theme.palette.grey['100']};
+  border: 2px dashed
+    ${({ theme }) =>
+      theme.palette.mode === 'dark' ?
+        theme.palette.grey['700']
+      : theme.palette.grey['300']};
+  background-color: ${({ theme }) =>
+    theme.palette.mode === 'dark' ?
+      theme.palette.grey['900']
+    : theme.palette.grey['100']};
   display: grid;
   align-items: center;
   justify-content: center;
@@ -61,15 +68,23 @@ const CustomDropzoneWrapper = styled.div<{ dragging: boolean; valid: boolean }>`
   ${({ valid, theme }) =>
     valid &&
     css`
-      border-color: ${lighten(theme.palette.success.light, 0.5)};
-      background-color: ${lighten(theme.palette.success.light, 0.9)};
+      border-color: ${theme.palette.mode === 'dark' ?
+        alpha(theme.palette.success.main, 0.5)
+      : lighten(theme.palette.success.light, 0.5)};
+      background-color: ${theme.palette.mode === 'dark' ?
+        alpha(theme.palette.success.main, 0.12)
+      : lighten(theme.palette.success.light, 0.9)};
     `}
 
   ${({ dragging, theme }) =>
     dragging &&
     css`
-      border-color: ${theme.palette.grey['200']};
-      background-color: ${theme.palette.grey['50']};
+      border-color: ${theme.palette.mode === 'dark' ?
+        theme.palette.grey['600']
+      : theme.palette.grey['200']};
+      background-color: ${theme.palette.mode === 'dark' ?
+        theme.palette.grey['800']
+      : theme.palette.grey['50']};
     `}
 `;
 

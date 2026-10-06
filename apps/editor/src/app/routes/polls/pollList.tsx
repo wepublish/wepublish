@@ -161,6 +161,7 @@ function PollList() {
           </Column>
           {/* show votes */}
           <Column
+            width={180}
             resizable
             fixed="right"
           >

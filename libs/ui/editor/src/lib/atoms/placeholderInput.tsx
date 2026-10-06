@@ -11,7 +11,7 @@ const PlaceholderInputWrapper = styled.div<{
   width: 100%;
   height: 100%;
   place-items: center;
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
   max-height: ${({ maxHeight }) => `${maxHeight}px`};
   min-height: ${({ minHeight }) => `${minHeight}px`};
 `;

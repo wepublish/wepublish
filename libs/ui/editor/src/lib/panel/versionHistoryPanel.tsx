@@ -216,11 +216,11 @@ const stateMeta: Record<
   RevisionState,
   { color: 'success' | 'info' | 'warning' | 'default'; hex: string }
 > = {
-  published: { color: 'success', hex: '#2e7d32' },
-  pending: { color: 'info', hex: '#0288d1' },
-  draft: { color: 'warning', hex: '#ed6c02' },
-  superseded: { color: 'default', hex: '#78909c' },
-  archived: { color: 'default', hex: '#90a4ae' },
+  published: { color: 'success', hex: 'var(--rs-state-success)' },
+  pending: { color: 'info', hex: 'var(--rs-state-info)' },
+  draft: { color: 'warning', hex: 'var(--rs-state-warning)' },
+  superseded: { color: 'default', hex: 'var(--rs-text-secondary)' },
+  archived: { color: 'default', hex: 'var(--rs-gray-400)' },
 };
 
 const stateIcon: Record<RevisionState, ReactElement> = {

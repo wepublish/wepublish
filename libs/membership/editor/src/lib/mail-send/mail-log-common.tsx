@@ -137,7 +137,10 @@ export function MailLogStateLegend() {
           <Typography
             variant="caption"
             display="block"
-            style={{ color: '#8e8e93', whiteSpace: 'pre-line' }}
+            style={{
+              color: 'var(--rs-text-secondary)',
+              whiteSpace: 'pre-line',
+            }}
           >
             {t('mailLog.stateHelp.legendFooter')}
           </Typography>
@@ -250,7 +253,7 @@ export function MailErrorCell({ error }: { error?: string | null }) {
           <Typography
             variant="caption"
             display="block"
-            style={{ color: '#8e8e93' }}
+            style={{ color: 'var(--rs-text-secondary)' }}
           >
             {t('mailLog.errorHelp.raw')}
           </Typography>
@@ -262,7 +265,7 @@ export function MailErrorCell({ error }: { error?: string | null }) {
     >
       <span
         style={{
-          color: '#d9534f',
+          color: 'var(--rs-state-error)',
           display: 'inline-flex',
           alignItems: 'center',
           gap: 4,

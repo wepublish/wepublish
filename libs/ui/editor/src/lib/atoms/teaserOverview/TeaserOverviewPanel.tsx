@@ -55,7 +55,7 @@ const Header = styled('button', {
   gap: 8px;
   padding: 10px 16px;
   background: ${({ hasError, theme }) =>
-    hasError ? `${theme.palette.error.main}22` : '#f7f9fa'};
+    hasError ? `${theme.palette.error.main}22` : 'var(--rs-bg-well)'};
   border: none;
   border-radius: ${({ isOpen }) => (isOpen ? '7px 7px 0 0' : '7px')};
   transition:
@@ -66,7 +66,9 @@ const Header = styled('button', {
 
   &:hover {
     background: ${({ hasError, theme }) =>
-      hasError ? `${theme.palette.error.main}33` : '#eef1f3'};
+      hasError ?
+        `${theme.palette.error.main}33`
+      : 'rgb(from var(--rs-text-primary) r g b / 8%)'};
   }
 `;
 
@@ -111,7 +113,11 @@ const StickyActionBar = styled('div', {
   ${({ theme }) => css`
     font-size: ${theme.typography.caption.fontSize};
     color: ${theme.palette.primary.main}99;
-    background: #eef4fb;
+    background: color-mix(
+      in srgb,
+      var(--rs-primary-500) 10%,
+      var(--rs-bg-card)
+    );
     border: 1px solid ${theme.palette.primary.light}55;
     border-radius: 4px;
     padding: 4px 8px 4px 12px;
@@ -163,7 +169,7 @@ const FilterBar = styled('div')`
   gap: 6px;
   padding: 8px 16px;
   border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
-  background: #f7f9fa;
+  background: var(--rs-bg-well);
 `;
 
 const StickyHistoryBtnWrap = styled('span')`

@@ -122,9 +122,9 @@ function DocumentList() {
   const isOverLimit = hasLimit && usageRatio >= 1;
   const isNearLimit = hasLimit && usageRatio >= 0.95 && !isOverLimit;
   const storageColor =
-    isOverLimit ? '#d32f2f'
-    : isNearLimit ? '#f9a825'
-    : '#888';
+    isOverLimit ? 'var(--rs-state-error)'
+    : isNearLimit ? 'var(--rs-state-warning)'
+    : 'var(--rs-text-secondary)';
 
   const { t } = useTranslation();
 

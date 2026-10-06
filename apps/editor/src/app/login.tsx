@@ -46,7 +46,7 @@ const SecretCode = styled.code`
   text-align: center;
   font-size: 14px;
   padding: 8px;
-  background: #f5f5f5;
+  background: var(--rs-bg-well);
   border-radius: 4px;
   margin-bottom: 16px;
   word-break: break-all;
@@ -56,17 +56,17 @@ const TotpDescription = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 14px;
-  color: #555;
+  color: var(--rs-text-secondary);
 `;
 
 const AppLinks = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 13px;
-  color: #555;
+  color: var(--rs-text-secondary);
 
   a {
-    color: #1675e0;
+    color: var(--rs-text-link);
     text-decoration: none;
     &:hover {
       text-decoration: underline;
@@ -76,7 +76,7 @@ const AppLinks = styled.p`
 
 const ForgotPasswordLink = styled.a`
   display: block;
-  color: #1675e0;
+  color: var(--rs-text-link);
   font-size: 13px;
   cursor: pointer;
   margin-top: 8px;

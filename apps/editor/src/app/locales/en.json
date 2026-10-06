@@ -792,6 +792,8 @@
       "chf": "chf"
     },
     "dashboard": {
+      "showMore": "Show more ({{count}} more)",
+      "showLess": "Show less",
       "activity": "Latest Activity",
       "dashboard": "Dashboard",
       "notifications": "Notifications",
@@ -1396,6 +1398,13 @@
       "imageLibrary": "Images",
       "importableEvents": "Importable Events",
       "media": "Files",
+      "menu": "Menu",
+      "colorMode": {
+        "title": "Appearance",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "Match system"
+      },
       "logout": "Logout",
       "mailTemplates": "E-Mail Templates",
       "memberPlans": "Subscription Plans",
@@ -2194,6 +2203,13 @@
       "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible."
     },
     "userSubscriptionList": {
+      "addSubscription": "Add subscription",
+      "subscriptionNumber": "No. {{subscriptionId}}",
+      "periodTitle": "Period {{date}}",
+      "status": {
+        "active": "Active",
+        "expired": "Expired"
+      },
       "aboDetails": "Subscription details",
       "deactivationReason": {
         "InvoiceNotPaid": "Invoice not paid",
@@ -2222,7 +2238,6 @@
       "subscriptionCreatedAt": "Created at {{date}}",
       "subscriptionIsAutoRenewed": "Subscription will be renewed automatically",
       "subscriptionStartsAt": "Subscription starts at {{date}}",
-      "subscriptionTitle": "{{memberPlanName}} / No. {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Unexpected error: invoice not available."
     },
     "blockStyles": {
@@ -2416,6 +2431,13 @@
       "rangeNextYear": "Next Year"
     },
     "audience": {
+      "chart": {
+        "noActivityDay": "No subscription activity on this day",
+        "noActivityMonth": "No subscription activity in this month",
+        "flowsTitle": "Gains and losses",
+        "net": "Net",
+        "since": "since {{date}}"
+      },
       "legend": {
         "info": {
           "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date, or that will be paid and potentially still be active in the future.",

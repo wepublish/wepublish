@@ -543,17 +543,17 @@ const DryRunTable = styled.table`
 
   th,
   td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--rs-border-primary);
     padding: 6px 8px;
     text-align: left;
   }
 
   th {
-    background: #f5f5f5;
+    background: var(--rs-bg-well);
   }
 
   tr:nth-of-type(even) {
-    background: #fafafa;
+    background: var(--rs-bg-well);
   }
 `;
 

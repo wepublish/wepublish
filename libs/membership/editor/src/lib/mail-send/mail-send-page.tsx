@@ -425,7 +425,7 @@ function MailSendPage() {
                             variant="caption"
                             display="block"
                             style={{
-                              color: '#8e8e93',
+                              color: 'var(--rs-text-secondary)',
                               whiteSpace: 'normal',
                               lineHeight: 1.35,
                             }}
@@ -1090,7 +1090,7 @@ function TemplatePreview({
             <Typography
               variant="caption"
               display="block"
-              style={{ color: '#8e8e93', marginTop: 4 }}
+              style={{ color: 'var(--rs-text-secondary)', marginTop: 4 }}
             >
               {t('mailSend.preview.hint')}
             </Typography>

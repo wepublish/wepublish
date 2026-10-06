@@ -38,7 +38,7 @@ function ChildComments({
     <div
       style={{
         marginTop: '20px',
-        borderLeft: '1px lightgrey solid',
+        borderLeft: '1px var(--rs-border-primary) solid',
         paddingLeft: '20px',
       }}
     >

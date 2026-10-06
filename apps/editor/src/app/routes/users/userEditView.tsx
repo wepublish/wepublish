@@ -41,7 +41,6 @@ import {
   DatePicker,
   Drawer,
   Form,
-  Grid as RGrid,
   Input,
   Message,
   Panel as RPanel,
@@ -51,10 +50,6 @@ import {
   toaster,
   Toggle as RToggle,
 } from 'rsuite';
-
-const Grid = styled(RGrid)`
-  padding-right: 0px;
-`;
 
 const Toggle = styled(RToggle)`
   max-width: 70px;
@@ -75,19 +70,51 @@ const FlexRow = styled.div`
   flex-direction: row;
 `;
 
-const Panel = styled(RPanel)`
-  margin-top: 20px;
-`;
-
-const ColTextAlign = styled(Col)`
-  text-align: end;
-`;
-
-const UserFormGrid = styled(RGrid)`
+const UserFormGrid = styled.div`
   width: 100%;
-  padding-left: 0px;
   height: calc(100vh - 160px);
-  overflow-y: scroll;
+  overflow-y: auto;
+
+  @media (max-width: 899px) {
+    height: auto;
+    overflow: visible;
+  }
+`;
+
+const PageColumns = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 20px;
+  padding-bottom: 20px;
+
+  @media (max-width: 1099px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+`;
+
+const PanelStack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+`;
+
+const ProfileImage = styled.div`
+  .rs-panel {
+    border: none;
+    box-shadow: none;
+  }
+
+  .rs-panel-header {
+    padding: 0 0 6px;
+    font-size: var(--rs-font-size-sm);
+    font-weight: 400;
+  }
+
+  .rs-panel-body {
+    padding: 0;
+  }
 `;
 
 const FormGroup = styled(Form.Group)`
@@ -447,17 +474,292 @@ function UserEditView() {
           setCloseFn={setCloseAfterSave}
         />
         <UserFormGrid>
-          <Row gutter={10}>
-            <Col xs={12}>
-              <RGrid fluid>
-                {/* general user data */}
-                <RPanel
-                  bordered
-                  header={t('userCreateOrEditView.userDataTitle')}
-                >
-                  <Row>
-                    {/* profile image */}
-                    <Col xs={12}>
+          <PageColumns>
+            <PanelStack>
+              {/* general user data */}
+              <RPanel
+                bordered
+                header={t('userCreateOrEditView.userDataTitle')}
+              >
+                <Row gutter={16}>
+                  {/* active / inactive */}
+                  <Col xs={4}>
+                    <Form.Group controlId="active">
+                      <Form.Label>
+                        {t('userCreateOrEditView.active')}
+                      </Form.Label>
+                      <RToggle
+                        checked={active}
+                        disabled={isDisabled}
+                        onChange={value => setActive(value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  {/* first name */}
+                  <Col xs={10}>
+                    <Form.Group controlId="firstName">
+                      <Form.Label>
+                        {t('userCreateOrEditView.firstName')}
+                      </Form.Label>
+                      <Form.Control
+                        name="firstName"
+                        value={firstName || undefined}
+                        disabled={isDisabled}
+                        onChange={(value: string) => {
+                          setFirstName(value);
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                  {/* name */}
+                  <Col xs={10}>
+                    <Form.Group controlId="name">
+                      <Form.Label>
+                        {toggleRequiredLabel(t('userCreateOrEditView.name'))}
+                      </Form.Label>
+
+                      <Form.Control
+                        name="name"
+                        value={name || ''}
+                        disabled={isDisabled}
+                        onChange={(value: string) => {
+                          setName(value);
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                  {/* email */}
+                  <Col xs={12}>
+                    <Form.Group controlId="email">
+                      <Form.Label>
+                        {toggleRequiredLabel(t('userCreateOrEditView.email'))}
+                      </Form.Label>
+
+                      <Form.Control
+                        name="email"
+                        value={email}
+                        disabled={isDisabled}
+                        onChange={(value: string) => {
+                          setEmail(value);
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                  {/* birthday */}
+                  <Col xs={12}>
+                    <Form.Group controlId="birthday">
+                      <Form.Label>
+                        {t('userCreateOrEditView.birthday')}
+                      </Form.Label>
+                      <Form.Control
+                        name="birthday"
+                        autoComplete="birthday"
+                        block
+                        oneTap
+                        isoWeek
+                        format="dd.MM.yyyy"
+                        limitEndYear={0}
+                        value={birthday}
+                        disabled={isDisabled}
+                        onChange={value => {
+                          setBirthday(value as Date);
+                        }}
+                        accepter={DatePicker}
+                      />
+                    </Form.Group>
+                  </Col>
+                  {/* flair */}
+                  <Col xs={12}>
+                    <Form.Group controlId="flair">
+                      <Form.Label>{t('userCreateOrEditView.flair')}</Form.Label>
+                      <Form.Control
+                        name="flair"
+                        value={flair}
+                        disabled={isDisabled}
+                        onChange={(value: string) => setFlair(value)}
+                      />
+                    </Form.Group>
+                  </Col>
+
+                  {/* company */}
+                  <Col xs={12}>
+                    <Form.Group controlId="company">
+                      <Form.Label>
+                        {t('userCreateOrEditView.company')}
+                      </Form.Label>
+                      <Form.Control
+                        name="company"
+                        value={address?.company || ''}
+                        disabled={isDisabled}
+                        onChange={(value: string) =>
+                          updateAddressObject(
+                            address,
+                            setAddress,
+                            'company',
+                            value
+                          )
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+                  {/* street */}
+                  <Col xs={18}>
+                    <Form.Group controlId="streetAddress">
+                      <Form.Label>
+                        {t('userCreateOrEditView.streetAddress')}
+                      </Form.Label>
+                      <Form.Control
+                        name="streetAddress"
+                        value={address?.streetAddress || ''}
+                        disabled={isDisabled}
+                        onChange={(value: string) =>
+                          updateAddressObject(
+                            address,
+                            setAddress,
+                            'streetAddress',
+                            value
+                          )
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col xs={6}>
+                    <Form.Group controlId="streetAddressNumber">
+                      <Form.Label>
+                        {t('userCreateOrEditView.streetAddressNumber')}
+                      </Form.Label>
+                      <Form.Control
+                        name="streetAddressNumber"
+                        value={address?.streetAddressNumber || ''}
+                        disabled={isDisabled}
+                        onChange={(value: string) =>
+                          updateAddressObject(
+                            address,
+                            setAddress,
+                            'streetAddressNumber',
+                            value
+                          )
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+                  {/* street 2 */}
+                  <Col xs={18}>
+                    <Form.Group controlId="streetAddress2">
+                      <Form.Label>
+                        {t('userCreateOrEditView.streetAddress2')}
+                      </Form.Label>
+                      <Form.Control
+                        name="streetAddress2"
+                        value={address?.streetAddress2 || ''}
+                        disabled={isDisabled}
+                        onChange={(value: string) =>
+                          updateAddressObject(
+                            address,
+                            setAddress,
+                            'streetAddress2',
+                            value
+                          )
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+
+                  <Col xs={6}>
+                    <Form.Group controlId="streetAddress2Number">
+                      <Form.Label>
+                        {t('userCreateOrEditView.streetAddress2Number')}
+                      </Form.Label>
+                      <Form.Control
+                        name="streetAddress2Number"
+                        value={address?.streetAddress2Number || ''}
+                        disabled={isDisabled}
+                        onChange={(value: string) =>
+                          updateAddressObject(
+                            address,
+                            setAddress,
+                            'streetAddress2Number',
+                            value
+                          )
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+                  {/* zip */}
+                  <Col xs={8}>
+                    <Form.Group controlId="zipCode">
+                      <Form.Label>
+                        {t('userCreateOrEditView.zipCode')}
+                      </Form.Label>
+                      <Form.Control
+                        name="zipCode"
+                        value={address?.zipCode || ''}
+                        disabled={isDisabled}
+                        onChange={(value: string) =>
+                          updateAddressObject(
+                            address,
+                            setAddress,
+                            'zipCode',
+                            value
+                          )
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+                  {/* city */}
+                  <Col xs={16}>
+                    <Form.Group controlId="city">
+                      <Form.Label>{t('userCreateOrEditView.city')}</Form.Label>
+                      <Form.Control
+                        name="city"
+                        value={address?.city || ''}
+                        disabled={isDisabled}
+                        onChange={(value: string) =>
+                          updateAddressObject(
+                            address,
+                            setAddress,
+                            'city',
+                            value
+                          )
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+                  {/* country */}
+                  <Col xs={24}>
+                    <Form.Group controlId="country">
+                      <Form.Label>
+                        {t('userCreateOrEditView.country')}
+                      </Form.Label>
+
+                      <Form.Control
+                        name="country"
+                        accepter={SelectPicker}
+                        block
+                        cleanable
+                        searchable
+                        data={userCountryNames.map(item => ({
+                          label: item,
+                          value: item,
+                        }))}
+                        placeholder={address?.country ?? undefined}
+                        value={address?.country ?? ''}
+                        disabled={isDisabled}
+                        onChange={value =>
+                          updateAddressObject(
+                            address,
+                            setAddress,
+                            'country',
+                            value
+                          )
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+
+                  {/* profile image */}
+                  <Col xs={8}>
+                    <ProfileImage>
                       <ChooseEditImage
                         image={userImage}
                         disabled={false}
@@ -465,443 +767,208 @@ function UserEditView() {
                         removeImage={() => setUserImage(undefined)}
                         header={t('userCreateOrEditView.selectUserImage')}
                         maxHeight={200}
+                        minHeight={140}
                       />
+                    </ProfileImage>
+                  </Col>
+                  <Col xs={16}>
+                    <Form.Group controlId="note">
+                      <Form.Label>{t('userCreateOrEditView.note')}</Form.Label>
+
+                      <Form.Control
+                        name="note"
+                        rows={5}
+                        accepter={Textarea}
+                        value={note || ''}
+                        disabled={isDisabled}
+                        onChange={setNote}
+                      />
+
+                      <Form.Text>
+                        {t('userCreateOrEditView.noteHelpText')}
+                      </Form.Text>
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </RPanel>
+              {/* password */}
+              <RPanel
+                bordered
+                header={t('userCreateOrEditView.passwordHeader')}
+              >
+                <Row gutter={10}>
+                  <Col xs={24}>
+                    <EditUserPassword
+                      user={user}
+                      password={password}
+                      setPassword={setPassword}
+                      isDisabled={isDisabled || !canResetPassword}
+                    />
+                  </Col>
+                </Row>
+              </RPanel>
+              {/* properties */}
+              <RPanel
+                bordered
+                header={t('userCreateOrEditView.properties')}
+              >
+                <Row gutter={10}>
+                  <Col xs={24}>
+                    <Form.Group controlId="userProperties">
+                      <ListInput
+                        value={metaDataProperties}
+                        onChange={propertiesItemInput =>
+                          setMetadataProperties(propertiesItemInput)
+                        }
+                        defaultValue={{ key: '', value: '', public: true }}
+                      >
+                        {({ value, onChange }) => (
+                          <FlexRow>
+                            <InputW40
+                              placeholder={t('articleEditor.panels.key')}
+                              value={value.key}
+                              onChange={propertyKey =>
+                                onChange({ ...value, key: propertyKey })
+                              }
+                              data-testid="propertyKey"
+                            />
+                            <InputW60
+                              placeholder={t('articleEditor.panels.value')}
+                              value={value.value}
+                              onChange={propertyValue =>
+                                onChange({ ...value, value: propertyValue })
+                              }
+                              data-testid="propertyValue"
+                            />
+                            <FormGroup controlId="articleProperty">
+                              <Toggle
+                                checkedChildren={t(
+                                  'articleEditor.panels.public'
+                                )}
+                                unCheckedChildren={t(
+                                  'articleEditor.panels.private'
+                                )}
+                                checked={value.public}
+                                onChange={isPublic =>
+                                  onChange({ ...value, public: isPublic })
+                                }
+                              />
+                            </FormGroup>
+                          </FlexRow>
+                        )}
+                      </ListInput>
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </RPanel>
+              {/* roles */}
+              <RPanel
+                bordered
+                header={t('userCreateOrEditView.userRoles')}
+              >
+                <Row gutter={10}>
+                  <Col xs={24}>
+                    <Form.Group controlId="userRoles">
+                      <CheckPicker
+                        name="userRoles"
+                        block
+                        value={roles.map(role => role.id)}
+                        data={userRoles.map(userRole => ({
+                          value: userRole.id,
+                          label: userRole.name,
+                        }))}
+                        placement={'auto'}
+                        onChange={value => {
+                          setRoles(
+                            userRoles.filter(userRole =>
+                              value.includes(userRole.id)
+                            )
+                          );
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </RPanel>
+              {/* two-factor authentication */}
+              {user && canResetTotp && (
+                <RPanel
+                  bordered
+                  header={t('userCreateOrEditView.totpHeader')}
+                >
+                  <Row gutter={10}>
+                    <Col xs={24}>
+                      <p style={{ marginBottom: 12 }}>
+                        {user.totpEnabled ?
+                          t('userCreateOrEditView.totpEnabled')
+                        : user.totpExempt ?
+                          t('userCreateOrEditView.totpExemptInfo')
+                        : t('userCreateOrEditView.totpDisabled')}
+                      </p>
+                      <RButton
+                        appearance="primary"
+                        color="orange"
+                        startIcon={<MdLockReset />}
+                        disabled={!user.totpEnabled || isResettingTotp}
+                        style={{ marginBottom: 16 }}
+                        onClick={async () => {
+                          try {
+                            await resetUserTotp({
+                              variables: { userId: user.id },
+                            });
+                            toaster.push(
+                              <Message
+                                type="success"
+                                showIcon
+                                closable
+                                duration={2000}
+                              >
+                                {t('userList.overview.totpResetSuccess')}
+                              </Message>
+                            );
+                          } catch (e) {
+                            toaster.push(
+                              <Message
+                                type="error"
+                                showIcon
+                                closable
+                                duration={2000}
+                              >
+                                {t('userList.overview.totpResetError')}
+                              </Message>
+                            );
+                          }
+                        }}
+                      >
+                        {t('userList.overview.resetTotp')}
+                      </RButton>
                     </Col>
-                    {/* active / inactive */}
-                    <ColTextAlign xs={12}>
-                      <Form.Group controlId="active">
+                    <Col xs={24}>
+                      <Form.Group controlId="totpExempt">
                         <Form.Label>
-                          {t('userCreateOrEditView.active')}
+                          {t('userCreateOrEditView.totpExemptLabel')}
                         </Form.Label>
                         <RToggle
-                          checked={active}
-                          disabled={isDisabled}
-                          onChange={value => setActive(value)}
-                        />
-                      </Form.Group>
-                    </ColTextAlign>
-                  </Row>
-
-                  <Row gutter={10}>
-                    {/* first name */}
-                    <Col xs={12}>
-                      <Form.Group controlId="firstName">
-                        <Form.Label>
-                          {t('userCreateOrEditView.firstName')}
-                        </Form.Label>
-                        <Form.Control
-                          name="firstName"
-                          value={firstName || undefined}
-                          disabled={isDisabled}
-                          onChange={(value: string) => {
-                            setFirstName(value);
-                          }}
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* name */}
-                    <Col xs={12}>
-                      <Form.Group controlId="name">
-                        <Form.Label>
-                          {toggleRequiredLabel(t('userCreateOrEditView.name'))}
-                        </Form.Label>
-
-                        <Form.Control
-                          name="name"
-                          value={name || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) => {
-                            setName(value);
-                          }}
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* email */}
-                    <Col xs={12}>
-                      <Form.Group controlId="email">
-                        <Form.Label>
-                          {toggleRequiredLabel(t('userCreateOrEditView.email'))}
-                        </Form.Label>
-
-                        <Form.Control
-                          name="email"
-                          value={email}
-                          disabled={isDisabled}
-                          onChange={(value: string) => {
-                            setEmail(value);
-                          }}
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* birthday */}
-                    <Col xs={12}>
-                      <Form.Group controlId="birthday">
-                        <Form.Label>
-                          {t('userCreateOrEditView.birthday')}
-                        </Form.Label>
-                        <Form.Control
-                          name="birthday"
-                          autoComplete="birthday"
-                          block
-                          oneTap
-                          isoWeek
-                          format="dd.MM.yyyy"
-                          limitEndYear={0}
-                          value={birthday}
-                          disabled={isDisabled}
-                          onChange={value => {
-                            setBirthday(value as Date);
-                          }}
-                          accepter={DatePicker}
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* flair */}
-                    <Col xs={12}>
-                      <Form.Group controlId="flair">
-                        <Form.Label>
-                          {t('userCreateOrEditView.flair')}
-                        </Form.Label>
-                        <Form.Control
-                          name="flair"
-                          value={flair}
-                          disabled={isDisabled}
-                          onChange={(value: string) => setFlair(value)}
-                        />
-                      </Form.Group>
-                    </Col>
-
-                    {/* company */}
-                    <Col xs={12}>
-                      <Form.Group controlId="company">
-                        <Form.Label>
-                          {t('userCreateOrEditView.company')}
-                        </Form.Label>
-                        <Form.Control
-                          name="company"
-                          value={address?.company || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'company',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* street */}
-                    <Col xs={18}>
-                      <Form.Group controlId="streetAddress">
-                        <Form.Label>
-                          {t('userCreateOrEditView.streetAddress')}
-                        </Form.Label>
-                        <Form.Control
-                          name="streetAddress"
-                          value={address?.streetAddress || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'streetAddress',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col xs={6}>
-                      <Form.Group controlId="streetAddressNumber">
-                        <Form.Label>
-                          {t('userCreateOrEditView.streetAddressNumber')}
-                        </Form.Label>
-                        <Form.Control
-                          name="streetAddressNumber"
-                          value={address?.streetAddressNumber || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'streetAddressNumber',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* street 2 */}
-                    <Col xs={18}>
-                      <Form.Group controlId="streetAddress2">
-                        <Form.Label>
-                          {t('userCreateOrEditView.streetAddress2')}
-                        </Form.Label>
-                        <Form.Control
-                          name="streetAddress2"
-                          value={address?.streetAddress2 || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'streetAddress2',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-
-                    <Col xs={6}>
-                      <Form.Group controlId="streetAddress2Number">
-                        <Form.Label>
-                          {t('userCreateOrEditView.streetAddress2Number')}
-                        </Form.Label>
-                        <Form.Control
-                          name="streetAddress2Number"
-                          value={address?.streetAddress2Number || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'streetAddress2Number',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* zip */}
-                    <Col xs={8}>
-                      <Form.Group controlId="zipCode">
-                        <Form.Label>
-                          {t('userCreateOrEditView.zipCode')}
-                        </Form.Label>
-                        <Form.Control
-                          name="zipCode"
-                          value={address?.zipCode || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'zipCode',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* city */}
-                    <Col xs={16}>
-                      <Form.Group controlId="city">
-                        <Form.Label>
-                          {t('userCreateOrEditView.city')}
-                        </Form.Label>
-                        <Form.Control
-                          name="city"
-                          value={address?.city || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'city',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* country */}
-                    <Col xs={24}>
-                      <Form.Group controlId="country">
-                        <Form.Label>
-                          {t('userCreateOrEditView.country')}
-                        </Form.Label>
-
-                        <Form.Control
-                          name="country"
-                          accepter={SelectPicker}
-                          block
-                          cleanable
-                          searchable
-                          data={userCountryNames.map(item => ({
-                            label: item,
-                            value: item,
-                          }))}
-                          placeholder={address?.country ?? undefined}
-                          value={address?.country ?? ''}
-                          disabled={isDisabled}
-                          onChange={value =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'country',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-
-                    <Col xs={24}>
-                      <Form.Group controlId="note">
-                        <Form.Label>
-                          {t('userCreateOrEditView.note')}
-                        </Form.Label>
-
-                        <Form.Control
-                          name="note"
-                          rows={5}
-                          accepter={Textarea}
-                          value={note || ''}
-                          disabled={isDisabled}
-                          onChange={setNote}
-                        />
-
-                        <Form.Text>
-                          {t('userCreateOrEditView.noteHelpText')}
-                        </Form.Text>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </RPanel>
-                {/* roles */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.userRoles')}
-                >
-                  <Row gutter={10}>
-                    <Col xs={24}>
-                      <Form.Group controlId="userRoles">
-                        <Form.Label>
-                          {t('userCreateOrEditView.userRoles')}
-                        </Form.Label>
-                        <CheckPicker
-                          name="userRoles"
-                          block
-                          value={roles.map(role => role.id)}
-                          data={userRoles.map(userRole => ({
-                            value: userRole.id,
-                            label: userRole.name,
-                          }))}
-                          placement={'auto'}
-                          onChange={value => {
-                            setRoles(
-                              userRoles.filter(userRole =>
-                                value.includes(userRole.id)
+                          checked={user.totpExempt}
+                          onChange={async value => {
+                            if (
+                              value &&
+                              !window.confirm(
+                                t('userCreateOrEditView.totpExemptWarning')
                               )
-                            );
-                          }}
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </Panel>
-                {/* properties */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.properties')}
-                >
-                  <Row gutter={10}>
-                    <Col xs={24}>
-                      <Form.Group controlId="userProperties">
-                        <Form.Label>
-                          {t('articleEditor.panels.properties')}
-                        </Form.Label>
-                        <ListInput
-                          value={metaDataProperties}
-                          onChange={propertiesItemInput =>
-                            setMetadataProperties(propertiesItemInput)
-                          }
-                          defaultValue={{ key: '', value: '', public: true }}
-                        >
-                          {({ value, onChange }) => (
-                            <FlexRow>
-                              <InputW40
-                                placeholder={t('articleEditor.panels.key')}
-                                value={value.key}
-                                onChange={propertyKey =>
-                                  onChange({ ...value, key: propertyKey })
-                                }
-                                data-testid="propertyKey"
-                              />
-                              <InputW60
-                                placeholder={t('articleEditor.panels.value')}
-                                value={value.value}
-                                onChange={propertyValue =>
-                                  onChange({ ...value, value: propertyValue })
-                                }
-                                data-testid="propertyValue"
-                              />
-                              <FormGroup controlId="articleProperty">
-                                <Toggle
-                                  checkedChildren={t(
-                                    'articleEditor.panels.public'
-                                  )}
-                                  unCheckedChildren={t(
-                                    'articleEditor.panels.private'
-                                  )}
-                                  checked={value.public}
-                                  onChange={isPublic =>
-                                    onChange({ ...value, public: isPublic })
-                                  }
-                                />
-                              </FormGroup>
-                            </FlexRow>
-                          )}
-                        </ListInput>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </Panel>
-                {/* password */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.passwordHeader')}
-                >
-                  <Row gutter={10}>
-                    <Col xs={24}>
-                      <EditUserPassword
-                        user={user}
-                        password={password}
-                        setPassword={setPassword}
-                        isDisabled={isDisabled || !canResetPassword}
-                      />
-                    </Col>
-                  </Row>
-                </Panel>
-                {/* two-factor authentication */}
-                {user && canResetTotp && (
-                  <Panel
-                    bordered
-                    header={t('userCreateOrEditView.totpHeader')}
-                  >
-                    <Row gutter={10}>
-                      <Col xs={24}>
-                        <p style={{ marginBottom: 12 }}>
-                          {user.totpEnabled ?
-                            t('userCreateOrEditView.totpEnabled')
-                          : user.totpExempt ?
-                            t('userCreateOrEditView.totpExemptInfo')
-                          : t('userCreateOrEditView.totpDisabled')}
-                        </p>
-                        <RButton
-                          appearance="primary"
-                          color="orange"
-                          startIcon={<MdLockReset />}
-                          disabled={!user.totpEnabled || isResettingTotp}
-                          style={{ marginBottom: 16 }}
-                          onClick={async () => {
+                            ) {
+                              return;
+                            }
                             try {
-                              await resetUserTotp({
-                                variables: { userId: user.id },
+                              await updateUser({
+                                variables: {
+                                  id: user.id,
+                                  name: user.name,
+                                  email: user.email,
+                                  totpExempt: value,
+                                },
                               });
+                              setUser({ ...user, totpExempt: value });
                               toaster.push(
                                 <Message
                                   type="success"
@@ -909,7 +976,9 @@ function UserEditView() {
                                   closable
                                   duration={2000}
                                 >
-                                  {t('userList.overview.totpResetSuccess')}
+                                  {t(
+                                    'userCreateOrEditView.successfullyUpdatedUser'
+                                  )}
                                 </Message>
                               );
                             } catch (e) {
@@ -920,118 +989,54 @@ function UserEditView() {
                                   closable
                                   duration={2000}
                                 >
-                                  {t('userList.overview.totpResetError')}
+                                  {t('userCreateOrEditView.errorOnUpdate', {
+                                    error: e,
+                                  })}
                                 </Message>
                               );
                             }
                           }}
-                        >
-                          {t('userList.overview.resetTotp')}
-                        </RButton>
-                      </Col>
-                      <Col xs={24}>
-                        <Form.Group controlId="totpExempt">
-                          <Form.Label>
-                            {t('userCreateOrEditView.totpExemptLabel')}
-                          </Form.Label>
-                          <RToggle
-                            checked={user.totpExempt}
-                            onChange={async value => {
-                              if (
-                                value &&
-                                !window.confirm(
-                                  t('userCreateOrEditView.totpExemptWarning')
-                                )
-                              ) {
-                                return;
-                              }
-                              try {
-                                await updateUser({
-                                  variables: {
-                                    id: user.id,
-                                    name: user.name,
-                                    email: user.email,
-                                    totpExempt: value,
-                                  },
-                                });
-                                setUser({ ...user, totpExempt: value });
-                                toaster.push(
-                                  <Message
-                                    type="success"
-                                    showIcon
-                                    closable
-                                    duration={2000}
-                                  >
-                                    {t(
-                                      'userCreateOrEditView.successfullyUpdatedUser'
-                                    )}
-                                  </Message>
-                                );
-                              } catch (e) {
-                                toaster.push(
-                                  <Message
-                                    type="error"
-                                    showIcon
-                                    closable
-                                    duration={2000}
-                                  >
-                                    {t('userCreateOrEditView.errorOnUpdate', {
-                                      error: e,
-                                    })}
-                                  </Message>
-                                );
-                              }
-                            }}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                  </Panel>
-                )}
-              </RGrid>
-            </Col>
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </RPanel>
+              )}
+            </PanelStack>
             {/* subscriptions + sent-mail history + manual mail sending */}
             {(subscriptionData?.subscriptions.nodes ||
               (isEditRoute && userId)) && (
-              <Col xs={12}>
-                <Grid fluid>
-                  {subscriptionData?.subscriptions.nodes && (
+              <PanelStack>
+                {subscriptionData?.subscriptions.nodes && (
+                  <RPanel
+                    bordered
+                    header={t('userCreateOrEditView.subscriptionsHeader')}
+                  >
+                    <UserSubscriptionsList
+                      subscriptions={subscriptionData.subscriptions.nodes}
+                      userId={user?.id}
+                    />
+                  </RPanel>
+                )}
+                {isEditRoute && userId && (
+                  <>
                     <RPanel
                       bordered
-                      header={t('userCreateOrEditView.subscriptionsHeader')}
+                      header={t('userMail.logTitle')}
                     >
-                      <UserSubscriptionsList
-                        subscriptions={subscriptionData.subscriptions.nodes}
-                        userId={user?.id}
-                      />
+                      <UserMailLogPanel userId={userId} />
                     </RPanel>
-                  )}
-                  {isEditRoute && userId && (
-                    <>
-                      <RPanel
-                        bordered
-                        header={t('userMail.logTitle')}
-                        style={
-                          subscriptionData?.subscriptions.nodes ?
-                            { marginTop: 16 }
-                          : undefined
-                        }
-                      >
-                        <UserMailLogPanel userId={userId} />
-                      </RPanel>
-                      <RPanel
-                        bordered
-                        header={t('userMail.sendTitle')}
-                        style={{ marginTop: 16 }}
-                      >
-                        <SendMailToUserPanel userId={userId} />
-                      </RPanel>
-                    </>
-                  )}
-                </Grid>
-              </Col>
+                    <RPanel
+                      bordered
+                      header={t('userMail.sendTitle')}
+                    >
+                      <SendMailToUserPanel userId={userId} />
+                    </RPanel>
+                  </>
+                )}
+              </PanelStack>
             )}
-          </Row>
+          </PageColumns>
         </UserFormGrid>
       </Form>
 

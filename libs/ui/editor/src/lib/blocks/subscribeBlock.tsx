@@ -53,7 +53,7 @@ const Panel = styled(RPanel)`
   display: grid;
   padding: 0;
   overflow: hidden;
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
 
   .rs-panel-body {
     display: grid;
@@ -74,7 +74,7 @@ const Heading = styled('p')`
 const Hint = styled('p')`
   margin: 0;
   font-size: 12px;
-  color: #6c757d;
+  color: var(--rs-text-secondary);
 `;
 
 const DisplayOptionRadio = styled(Radio)`
@@ -107,7 +107,7 @@ const RadioOptionHint = styled('span')`
   font-size: 12px;
   font-weight: 400;
   line-height: 1.4;
-  color: #6c757d;
+  color: var(--rs-text-secondary);
 `;
 
 const RadioOptionNote = styled(RadioOptionHint)`
@@ -181,7 +181,7 @@ const PlanStyleName = styled('span')`
 const PlanAmounts = styled('span')`
   min-width: 150px;
   font-size: 12px;
-  color: #6c757d;
+  color: var(--rs-text-secondary);
   white-space: nowrap;
 `;
 
@@ -227,7 +227,7 @@ const PlanRowWrapper = styled('div')`
 const SettingRowContent = styled('div')`
   display: grid;
   gap: 12px;
-  background: #fff;
+  background: var(--rs-bg-card);
   border-radius: 3px;
   padding: 12px;
 `;

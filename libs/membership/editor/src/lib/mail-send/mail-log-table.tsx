@@ -78,7 +78,11 @@ function FilterField({
         <Typography
           variant="caption"
           display="block"
-          style={{ marginTop: 4, color: '#8e8e93', lineHeight: 1.35 }}
+          style={{
+            marginTop: 4,
+            color: 'var(--rs-text-secondary)',
+            lineHeight: 1.35,
+          }}
         >
           {hint}
         </Typography>
@@ -293,7 +297,7 @@ export function MailLogTable() {
                     variant="caption"
                     display="block"
                     style={{
-                      color: '#8e8e93',
+                      color: 'var(--rs-text-secondary)',
                       whiteSpace: 'normal',
                       lineHeight: 1.35,
                     }}

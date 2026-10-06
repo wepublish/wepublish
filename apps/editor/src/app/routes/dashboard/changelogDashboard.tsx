@@ -29,7 +29,7 @@ const Lead = styled.p`
 
 const EntryMeta = styled.p`
   margin-top: 12px;
-  color: gray;
+  color: var(--rs-text-secondary);
   font-size: 0.9em;
 `;
 
@@ -45,13 +45,13 @@ const EntryLead = styled.p`
 
 const EntryDate = styled.p`
   margin: 4px 0 0;
-  color: gray;
+  color: var(--rs-text-secondary);
   font-size: 0.85em;
 `;
 
 const CenteredText = styled.p`
   text-align: center;
-  color: gray;
+  color: var(--rs-text-secondary);
   padding: 12px;
 `;
 

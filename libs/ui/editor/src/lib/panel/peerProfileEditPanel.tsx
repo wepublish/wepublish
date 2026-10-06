@@ -46,7 +46,7 @@ const HiddenFontControl = styled(Control)`
 `;
 
 const BoxWrapper = styled.div`
-  border: solid 1px #cad5e4;
+  border: solid 1px var(--rs-border-primary);
   border-radius: 8px;
   padding: 12px;
   margin-top: 4px;

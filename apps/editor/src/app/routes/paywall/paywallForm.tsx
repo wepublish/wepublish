@@ -66,7 +66,7 @@ const QRCodeContainer = styled.div`
   align-items: center;
   max-width: 100%;
   height: auto;
-  border: 1px solid #ddd;
+  border: 1px solid var(--rs-border-primary);
   border-radius: 12px;
   padding: 16px;
   background: #ffffff;

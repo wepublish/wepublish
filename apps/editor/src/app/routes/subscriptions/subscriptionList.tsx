@@ -58,7 +58,7 @@ const DeactivationIcon = styled(MdInfo)<{ deactivated: boolean }>`
   margin-left: 10px;
   font-size: 16px;
   visibility: ${({ deactivated }) => (deactivated ? 'visible' : 'hidden')};
-  color: #3498ff;
+  color: var(--rs-primary-500);
 `;
 
 function mapColumFieldToGraphQLField(

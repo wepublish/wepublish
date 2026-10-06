@@ -26,7 +26,10 @@ export function Dashboard() {
     <StyledGrid fluid>
       <Row>
         {/* left column stack */}
-        <Col xs={12}>
+        <Col
+          xs={24}
+          xl={12}
+        >
           <Row gutter={12}>
             <Col xs={24}>
               {/* renders its own panel and hides it while there is nothing to show */}
@@ -75,7 +78,10 @@ export function Dashboard() {
         </Col>
 
         {/* right column stack */}
-        <Col xs={12}>
+        <Col
+          xs={24}
+          xl={12}
+        >
           <Row gutter={12}>
             <Col xs={24}>
               <RPanel

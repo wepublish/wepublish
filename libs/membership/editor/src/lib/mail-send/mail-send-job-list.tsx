@@ -55,7 +55,7 @@ const ClickableRow = styled(TableRow)`
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.03);
+    background-color: rgb(from var(--rs-text-primary) r g b / 0.03);
   }
 `;
 
@@ -64,7 +64,7 @@ const Stat = styled.div<{ tone: string }>`
   min-width: 110px;
   padding: 8px 12px;
   border-left: 3px solid ${({ tone }) => tone};
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgb(from var(--rs-text-primary) r g b / 0.02);
 `;
 
 const StatValue = styled.div`
@@ -73,10 +73,10 @@ const StatValue = styled.div`
 `;
 
 const TONE = {
-  sent: '#4caf50',
-  pending: '#8e8e93',
-  failed: '#d9534f',
-  sending: '#f5a623',
+  sent: 'var(--rs-state-success)',
+  pending: 'var(--rs-text-secondary)',
+  failed: 'var(--rs-state-error)',
+  sending: 'var(--rs-state-warning)',
 } as const;
 
 /**
@@ -158,7 +158,7 @@ export function MailSendJobList({
                   <Typography
                     variant="caption"
                     display="block"
-                    style={{ color: '#8e8e93' }}
+                    style={{ color: 'var(--rs-text-secondary)' }}
                   >
                     {t('mailJobs.progressCount', {
                       sent: job.sentCount,
@@ -388,7 +388,7 @@ function JobSummary({
         <Typography
           variant="caption"
           display="block"
-          style={{ color: '#8e8e93', marginTop: 12 }}
+          style={{ color: 'var(--rs-text-secondary)', marginTop: 12 }}
         >
           {t('mailJobs.lastActivity', {
             time: formatDateTime(job.heartbeatAt),
@@ -522,7 +522,7 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
           <TableBody>
             {entries.map(entry => (
               <TableRow key={entry.id}>
-                <TableCell style={{ color: '#8e8e93' }}>
+                <TableCell style={{ color: 'var(--rs-text-secondary)' }}>
                   {entry.position + 1}
                 </TableCell>
                 <TableCell>
@@ -531,7 +531,7 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
                     <Typography
                       variant="caption"
                       display="block"
-                      style={{ color: '#8e8e93' }}
+                      style={{ color: 'var(--rs-text-secondary)' }}
                     >
                       {entry.memberPlanName}
                     </Typography>

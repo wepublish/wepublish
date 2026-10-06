@@ -793,6 +793,8 @@
       "chf": "chf"
     },
     "dashboard": {
+      "showMore": "Mehr anzeigen ({{count}} weitere)",
+      "showLess": "Weniger anzeigen",
       "activity": "Letzte Aktivitäten",
       "dashboard": "Dashboard",
       "notifications": "Mitteilungen",
@@ -1395,6 +1397,13 @@
       "imageLibrary": "Bilder",
       "importableEvents": "Importable Events",
       "media": "Dateien",
+      "menu": "Menü",
+      "colorMode": {
+        "title": "Darstellung",
+        "light": "Hell",
+        "dark": "Dunkel",
+        "system": "Wie System"
+      },
       "logout": "Logout",
       "mailTemplates": "E-Mail-Vorlagen",
       "memberPlans": "Abo Pläne",
@@ -2128,6 +2137,13 @@
       "uniqueSubscriptionHelpText": "Ein Benutzer kann nur ein Abo pro Unique-Abo-Plan lösen. Die manuelle Verlängerung durch den Benutzer ist nicht möglich. Eine automatische Verlängerung ist möglich."
     },
     "userSubscriptionList": {
+      "addSubscription": "Abonnement hinzufügen",
+      "subscriptionNumber": "Nr. {{subscriptionId}}",
+      "periodTitle": "Periode {{date}}",
+      "status": {
+        "active": "Aktiv",
+        "expired": "Abgelaufen"
+      },
       "aboDetails": "Abo-Details",
       "deactivationReason": {
         "InvoiceNotPaid": "Rechnung nicht bezahlt",
@@ -2156,7 +2172,6 @@
       "subscriptionCreatedAt": "Erstellt {{date}}",
       "subscriptionIsAutoRenewed": "Subscription wird automatisch erneuert",
       "subscriptionStartsAt": "Abo startet am {{date}}",
-      "subscriptionTitle": "{{memberPlanName}} / Nr. {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
     },
     "blockTemplates": {
@@ -2338,6 +2353,13 @@
       "rangeNextYear": "Nächstes Jahr"
     },
     "audience": {
+      "chart": {
+        "noActivityDay": "Keine Abo-Bewegungen an diesem Tag",
+        "noActivityMonth": "Keine Abo-Bewegungen in diesem Monat",
+        "flowsTitle": "Zu- und Abgänge",
+        "net": "Saldo",
+        "since": "seit {{date}}"
+      },
       "legend": {
         "info": {
           "totalActiveSubscriptionCount": "Abos, die am Stichtag aktiv und bezahlt waren.",

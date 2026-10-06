@@ -13,7 +13,7 @@ import {
 import { useDocumentUrl } from '../../hooks/useDocumentUrl';
 
 const IconButton = styled(RIconButton)`
-  && {
+  &&:not([data-with-text]) {
     width: 28px;
     height: 28px;
   }

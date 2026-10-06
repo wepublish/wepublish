@@ -4,19 +4,43 @@ import { useTranslation } from 'react-i18next';
 import { MdInfo } from 'react-icons/md';
 import { Form as RForm, Toggle, Tooltip, Whisper } from 'rsuite';
 
-import { chartColors } from './audience-chart';
+import { useAudienceChartColors } from './audience-chart';
 import { AudienceClientFilter } from './audience-filter-params';
 
 const { Label } = RForm;
 
 export const ToggleLable = styled(Label)`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding-left: ${({ theme }) => theme.spacing(1)};
 `;
 
+const ToggleRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+
+  ${ToggleLable} {
+    flex: 0 1 auto;
+    min-width: 0;
+    padding-left: 0;
+  }
+`;
+
+const Swatch = styled.span<{ color?: string }>`
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background-color: ${({ color }) => color};
+`;
+
 const Info = styled.div`
-  margin-left: ${({ theme }) => theme.spacing(1)};
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  flex: 0 0 auto;
 `;
 
 const FilterInfo = ({
@@ -44,7 +68,7 @@ const FilterInfo = ({
   >
     <Info>
       <MdInfo
-        size={24}
+        size={18}
         color={color}
       />
     </Info>
@@ -63,6 +87,7 @@ export function AudienceFilterToggle({
   setClientFilter,
 }: AudienceFilterToggleProps) {
   const { t } = useTranslation();
+  const chartColors = useAudienceChartColors();
 
   const chartColor =
     typeof chartColors[filterKey] === 'string' ?
@@ -70,7 +95,7 @@ export function AudienceFilterToggle({
     : chartColors[filterKey][0];
 
   return (
-    <>
+    <ToggleRow>
       <Toggle
         checked={clientFilter[filterKey as keyof AudienceClientFilter]}
         onChange={(checked: boolean) =>
@@ -81,12 +106,15 @@ export function AudienceFilterToggle({
         }
       />
 
-      <ToggleLable>{t(`audience.legend.${filterKey}`)}</ToggleLable>
+      <ToggleLable>
+        <Swatch color={chartColor} />
+        {t(`audience.legend.${filterKey}`)}
+      </ToggleLable>
 
       <FilterInfo
         text={t(`audience.legend.info.${filterKey}`)}
-        color={chartColor}
+        color="var(--rs-text-secondary)"
       />
-    </>
+    </ToggleRow>
   );
 }

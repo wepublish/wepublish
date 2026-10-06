@@ -58,11 +58,17 @@ const Actions = styled('div')`
 `;
 
 const CancelButton = styled(Button)`
-  background-color: ${({ theme }) => theme.palette.grey[100]};
+  background-color: ${({ theme }) =>
+    theme.palette.mode === 'dark' ?
+      theme.palette.grey[800]
+    : theme.palette.grey[100]};
   color: ${({ theme }) => theme.palette.text.primary};
 
   &:hover {
-    background-color: ${({ theme }) => theme.palette.grey[200]};
+    background-color: ${({ theme }) =>
+      theme.palette.mode === 'dark' ?
+        theme.palette.grey[700]
+      : theme.palette.grey[200]};
   }
 `;
 

@@ -5,7 +5,7 @@ const Text = styled.div`
   margin-top: 6px;
   text-align: center;
   font-size: 12px;
-  color: #8e8e93;
+  color: var(--rs-text-secondary);
 `;
 
 export function LastSavedAt({ date }: { date?: string | null }) {

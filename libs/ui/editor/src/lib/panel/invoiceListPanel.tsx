@@ -53,7 +53,7 @@ const StatusPill = styled('span')<{ pillColor: string }>`
   background-color: ${({ pillColor }) => pillColor};
   color: white;
   font-size: 10px;
-  box-shadow: 0 0 0 2px white;
+  box-shadow: 0 0 0 2px var(--rs-bg-card);
 `;
 
 const IdButton = styled('button')`
@@ -202,18 +202,18 @@ function InvoiceListPanel({
             invoice.paidAt ?
               {
                 title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
-                color: '#22c55e',
+                color: 'var(--rs-state-success)',
                 icon: <MdDone />,
               }
             : invoice.canceledAt ?
               {
                 title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
-                color: '#ef4444',
+                color: 'var(--rs-state-error)',
                 icon: <MdClose />,
               }
             : {
                 title: t('invoice.unpaid'),
-                color: '#eab308',
+                color: 'var(--rs-state-warning)',
                 icon: <MdAccessTime />,
               };
 

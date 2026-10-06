@@ -40,7 +40,7 @@ const Preview = styled.div`
 
 const PreviewItem = styled(RPanel)`
   padding: 0;
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
 `;
 
 const PreviewLabel = styled.div`
@@ -49,8 +49,8 @@ const PreviewLabel = styled.div`
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border-bottom: 1px solid #e5e5ea;
-  color: #8e8e93;
+  border-bottom: 1px solid var(--rs-border-primary);
+  color: var(--rs-text-secondary);
 `;
 
 const PreviewBlock = styled.div`
