@@ -38,7 +38,12 @@ describe('author content cache', () => {
   });
 
   it.each<
-    [string, () => { load: (id: string) => Promise<unknown> }, Mock, string]
+    [
+      string,
+      () => { load: (id: string) => Promise<unknown> },
+      Mock,
+      string,
+    ]
   >([
     [
       'authors',

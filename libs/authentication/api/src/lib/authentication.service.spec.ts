@@ -160,9 +160,9 @@ describe('AuthenticationService', () => {
     });
 
     it('keys cached sessions by a hash of the token, never by the token itself', async () => {
-      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
-        userSession as any
-      );
+      vi
+        .spyOn(prisma.session, 'findFirst')
+        .mockResolvedValue(userSession as any);
       vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
       const cacheSpy = vi.spyOn(kv, 'getOrLoadNs');
 
@@ -177,9 +177,9 @@ describe('AuthenticationService', () => {
     });
 
     it('leaves the token out of the cached user session but still returns it', async () => {
-      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
-        userSession as any
-      );
+      vi
+        .spyOn(prisma.session, 'findFirst')
+        .mockResolvedValue(userSession as any);
       vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
       const cacheSpy = vi.spyOn(kv, 'getOrLoadNs');
 
@@ -223,9 +223,9 @@ describe('AuthenticationService', () => {
     });
 
     it('keeps user and peer sessions for 5 minutes, since every write to them clears the cache', async () => {
-      vi.spyOn(prisma.session, 'findFirst').mockResolvedValue(
-        userSession as any
-      );
+      vi
+        .spyOn(prisma.session, 'findFirst')
+        .mockResolvedValue(userSession as any);
       vi.spyOn(prisma.token, 'findFirst').mockResolvedValue({
         id: 'token-1',
         name: 'Peer',

@@ -73,7 +73,11 @@ describe('TotpService across replicas', () => {
       user: { findUnique: vi.fn(), update: vi.fn() },
     };
     const create = () =>
-      new TotpService(prisma as any, { invalidate: vi.fn() } as any, kv as any);
+      new TotpService(
+        prisma as any,
+        { invalidate: vi.fn() } as any,
+        kv as any
+      );
     const a = create();
     const b = create();
     prisma.user.findUnique.mockResolvedValue({
@@ -90,15 +94,14 @@ describe('TotpService across replicas', () => {
     beforeEach(() => {
       vi.useFakeTimers({ now: stepEnd - 1 });
       const validate = OTPAuth.TOTP.prototype.validate;
-      vi.spyOn(OTPAuth.TOTP.prototype, 'validate').mockImplementation(function (
-        this: OTPAuth.TOTP,
-        options
-      ) {
-        const delta = validate.call(this, options);
-        vi.setSystemTime(Date.now() + 2);
+      vi
+        .spyOn(OTPAuth.TOTP.prototype, 'validate')
+        .mockImplementation(function (this: OTPAuth.TOTP, options) {
+          const delta = validate.call(this, options);
+          vi.setSystemTime(Date.now() + 2);
 
-        return delta;
-      });
+          return delta;
+        });
     });
 
     afterEach(() => {

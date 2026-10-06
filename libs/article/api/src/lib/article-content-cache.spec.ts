@@ -51,7 +51,9 @@ describe('article content cache', () => {
         findUnique: vi
           .fn()
           .mockResolvedValue({ id: 'a1', slug: 'news', likes: 1 }),
-        update: vi.fn().mockResolvedValue({ id: 'a1', slug: 'news', likes: 2 }),
+        update: vi
+          .fn()
+          .mockResolvedValue({ id: 'a1', slug: 'news', likes: 2 }),
         count: vi.fn().mockResolvedValue(1),
       },
     };

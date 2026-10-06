@@ -39,7 +39,9 @@ describe('paywall cache', () => {
     }
   });
 
-  it.each<[string, () => { load: (id: string) => Promise<unknown> }, Mock]>([
+  it.each<
+    [string, () => { load: (id: string) => Promise<unknown> }, Mock]
+  >([
     [
       'a paywall',
       () => new PaywallDataloaderService(prisma as any, kv),

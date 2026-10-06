@@ -77,10 +77,7 @@ const mocks: MockedResponse[] = [
     result: { data: { mailchimpMergeFields: [] } },
   },
   {
-    request: {
-      query: MailchimpInterestGroupsDocument,
-      variables: anyVariables,
-    },
+    request: { query: MailchimpInterestGroupsDocument, variables: anyVariables },
     ...reusable,
     result: {
       data: {
