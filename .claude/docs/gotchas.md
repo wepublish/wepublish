@@ -242,6 +242,34 @@ popup, session cookie, `SHOW_PENDING_WHEN_NOT_PUBLISHED`).
 
 ---
 
+### ⚠️ The editor's preview iframe cannot keep the session cookie — it needs the sessionStorage copy
+
+[`SessionProvider`](../../libs/utils/website/src/lib/session.provider.tsx)
+keeps the website session in the `auth.token` cookie (`SameSite=strict`). In
+the editor's in-editor preview the website runs in a **cross-site** iframe
+(`editor-<medium>.wepublish.cloud` around e.g. `tsri.ch`), and browsers drop
+that cookie there. The JWT handshake then succeeds, but every following request
+goes out without a session and the banner says "Du siehst die veröffentlichte
+Version" (prod, 2026-10-06; reproduced in Chromium, Firefox and WebKit: cookie
+not stored, 0 authenticated API requests). Locally it works, because
+`localhost:3000` and `localhost:4204` are the *same site* — ports do not count.
+Reproduce with a host page on `127.0.0.1` around `localhost:4204`.
+
+A framed page therefore also writes the token to `sessionStorage`, which
+`authLink` falls back to. Making the cookie `SameSite=None` instead would loosen
+it for every page and is partitioned or blocked in some browsers. Writing
+`sessionStorage` for *top-level* pages too breaks logout: it only clears the
+browser side, so a per-tab copy would keep other tabs logged in (and in preview
+mode) after logging out in one.
+
+**Load-bearing:** the `isFramed()` checks in `session.provider.tsx` and
+`hasFramedSession()` in `use-preview-auth-state.ts`, and
+`sessionStorage.removeItem` on logout.
+
+Pinned by `session.provider.spec.tsx` and `preview-status-banner.spec.tsx`.
+
+---
+
 ### ⚠️ Next never re-renders a stale page for a prefetch, so the page lock expires early
 
 [`page-cache.js`](../../libs/utils/website/src/lib/page-cache/page-cache.js)

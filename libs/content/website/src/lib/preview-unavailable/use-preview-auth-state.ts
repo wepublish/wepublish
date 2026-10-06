@@ -2,6 +2,7 @@ import {
   AuthTokenStorageKey,
   getPreviewHandshakeState,
   getPreviewHost,
+  isFramed,
   SessionTokenContext,
   subscribeToPreviewHandshake,
 } from '@wepublish/authentication/website';
@@ -15,6 +16,14 @@ const noopSubscribe = () => () => undefined;
 const readPreviewModeStored = () => {
   try {
     return !!Number(window.sessionStorage.getItem(PREVIEW_MODE_KEY));
+  } catch {
+    return false;
+  }
+};
+
+const hasFramedSession = () => {
+  try {
+    return isFramed() && !!window.sessionStorage.getItem(AuthTokenStorageKey);
   } catch {
     return false;
   }
@@ -76,7 +85,8 @@ export const usePreviewAuthState = (): PreviewAuthState => {
     (handshake === 'pending' || handshake === 'unknown') &&
     performance.now() < HANDSHAKE_WINDOW_MS;
   const sessionAuthPossible =
-    !missingPermission && (hasToken || !!getCookie(AuthTokenStorageKey));
+    !missingPermission &&
+    (hasToken || !!getCookie(AuthTokenStorageKey) || hasFramedSession());
 
   return {
     mounted: true,
