@@ -2,9 +2,9 @@ const fs = require("fs/promises");
 require("dotenv").config();
 
 async function pullDbDump(medium) {
-  const { USERNAME, PASSWORD } = process.env;
-  if (!USERNAME || !PASSWORD) {
-    throw new Error("USERNAME and PASSWORD for files.wepublish.cloud must be set as env variables");
+  const { DUMP_USERNAME, DUMP_PASSWORD } = process.env;
+  if (!DUMP_USERNAME || !DUMP_PASSWORD) {
+    throw new Error("DUMP_USERNAME and DUMP_PASSWORD for files.wepublish.cloud must be set as env variables");
   }
 
   const url = `https://files.wepublish.cloud/${medium}.sql.gz`;
@@ -20,7 +20,7 @@ async function pullDbDump(medium) {
     if (err.code !== "ENOENT") throw err;
   }
 
-  const credentials = Buffer.from(`${USERNAME}:${PASSWORD}`).toString("base64");
+  const credentials = Buffer.from(`${DUMP_USERNAME}:${DUMP_PASSWORD}`).toString("base64");
   const res = await fetch(url, {
     headers: {
       "Authorization": `Basic ${credentials}`,

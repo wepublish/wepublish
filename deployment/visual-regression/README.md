@@ -21,7 +21,7 @@ Requires Node.js and a running Docker daemon.
 
 Copy `.env.example` to `.env` and fill in:
 
-- `USERNAME` / `PASSWORD` — credentials for `files.wepublish.cloud` (used to fetch the medium's DB dump).
+- `DUMP_USERNAME` / `DUMP_PASSWORD` — credentials for `files.wepublish.cloud` (used to fetch the medium's DB dump).
 - `JWT_PUBLIC_KEY` / `JWT_PRIVATE_KEY` — keys the API needs at startup.
 
 ## Running

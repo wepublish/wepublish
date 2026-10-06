@@ -3,6 +3,7 @@ const fs = require('fs/promises');
 const fsSync = require('fs');
 const { exec, spawn } = require('child_process');
 const { createServer } = require('node:net');
+const path = require('path');
 
 function getFreePort() {
   return new Promise((resolve, reject) => {
@@ -125,6 +126,14 @@ async function startApi(
   );
 }
 
+async function copyMissingNxHelpers(medium, workTreeDir) {
+  const src = path.join(workTreeDir, 'node_modules/@nx/next/dist/src/utils/deprecation.js');
+  const dest = path.join(workTreeDir, 'dist/apps', medium, '.nx-helpers/deprecation.js');
+  if (fsSync.existsSync(src) && !fsSync.existsSync(dest)) {
+    await fs.copyFile(src, dest);
+  }
+}
+
 async function startUi(medium, logDir, workTreeDir, port, apiPort) {
   console.log(`building ui`);
   const apiUrl = `http://localhost:${apiPort}`;
@@ -144,6 +153,7 @@ async function startUi(medium, logDir, workTreeDir, port, apiPort) {
       NX_DAEMON: false, // we don't want to be affected by daemon crashes
     },
   });
+  await copyMissingNxHelpers(medium, workTreeDir);
   console.log(`starting ui on ${port}...`);
   return spawnAndWaitFor(
     'npx',
