@@ -1599,6 +1599,7 @@ enum BlockType {
   Comment        @map("comment")
   Event          @map("event")
   FlexBlock      @map("flexBlock")
+  BlockTemplate  @map("blockTemplate")
 }
 
 model BlockStyle {
@@ -1610,6 +1611,17 @@ model BlockStyle {
   blocks BlockType[]
 
   @@map("block-content.styles")
+}
+
+model BlockTemplate {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name   String @unique
+  blocks Json
+
+  @@map("block_templates")
 }
 
 model Banner {

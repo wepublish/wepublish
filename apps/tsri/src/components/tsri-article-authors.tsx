@@ -64,7 +64,7 @@ export const TsriArticleAuthors = ({
           {authors.map((author, index) => (
             <Fragment key={author.id}>
               <AuthorChip
-                author={{ ...author, image: undefined, links: [] }}
+                author={{ ...author, image: null, links: [] }}
                 isOneOfMultipleAuthors
               />
               {index < authors.length - 1 && ', '}

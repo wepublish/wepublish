@@ -23,7 +23,7 @@ import { createReadStream } from 'fs';
 import { seed as rootSeed } from '../../../libs/api/prisma/seed';
 import { NovaMediaAdapter } from '../../../libs/api/src/lib/media/novaMediaAdapter';
 import { capitalize } from '@mui/material';
-import { NavigationLinkType } from 'libs/navigation/api/src/lib/navigation.model';
+import { NavigationLinkType } from '../../../libs/navigation/api/src/lib/navigation.model';
 import {
   TeaserGridFlexBlock,
   TeaserType,

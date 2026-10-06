@@ -1,13 +1,14 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   DateFilterComparison,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullUserFragment,
+  MemberPlanListDocument,
+  PaymentMethodListDocument,
   SubscriptionDeactivationReason,
   SubscriptionFilter,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
 } from '@wepublish/editor/api';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -76,13 +77,13 @@ export function SubscriptionListFilter({
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
-  } = usePaymentMethodListQuery({});
+  } = useQuery(PaymentMethodListDocument, {});
 
   const {
     data: memberPlanData,
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
-  } = useMemberPlanListQuery({
+  } = useQuery(MemberPlanListDocument, {
     variables: {
       take: 200,
     },

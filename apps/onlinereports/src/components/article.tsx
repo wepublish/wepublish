@@ -4,7 +4,7 @@ import {
   ArticleTrackingPixels,
 } from '@wepublish/article/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
-import { Article as ArticleType } from '@wepublish/website/api';
+import { ContentUnavailable } from '@wepublish/content/website';
 import {
   BuilderArticleProps,
   useWebsiteBuilder,
@@ -96,7 +96,8 @@ export function OnlineReportsArticle({
 
   return (
     <ArticleWrapper className={className}>
-      {article && <ArticleSEO article={article as ArticleType} />}
+      {!article && !loading && <ContentUnavailable />}
+      {article && <ArticleSEO article={article} />}
 
       <Blocks
         key={article?.id}

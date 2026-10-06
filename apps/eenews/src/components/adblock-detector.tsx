@@ -113,15 +113,19 @@ export const AdblockOverlay = () => {
       >
         <Typography
           variant="h5"
-          fontWeight={700}
           gutterBottom
+          sx={{
+            fontWeight: 700,
+          }}
         >
           Bitte deaktivieren Sie Ihren Ad-Blocker
         </Typography>
         <Typography
           variant="body1"
           gutterBottom
-          maxWidth={600}
+          sx={{
+            maxWidth: 600,
+          }}
         >
           ee-news.ch finanziert sich über Werbung und bleibt dadurch für Sie
           kostenlos. Wir haben festgestellt, dass Sie einen Ad-Blocker
@@ -130,7 +134,9 @@ export const AdblockOverlay = () => {
         <Typography
           variant="body1"
           gutterBottom
-          maxWidth={600}
+          sx={{
+            maxWidth: 600,
+          }}
         >
           Bitte deaktivieren Sie ihn für ee-news.ch und laden Sie die Seite neu
           – so unterstützen Sie unseren unabhängigen Journalismus. Vielen Dank!

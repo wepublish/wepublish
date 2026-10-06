@@ -48,12 +48,12 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
   // archived articles (/archive/…) are disallowed in robots.txt and nachtleben
   // article urls permanently redirect to /ausgang-in-bern — neither belongs
   // in the sitemap
-  const articles = (articleData.articles.nodes ?? []).filter(
+  const articles = (articleData?.articles.nodes ?? []).filter(
     (article: { tags: { tag?: string | null }[] }) =>
       !isArchived(article.tags) && !isNachtleben(article.tags)
   );
 
-  return generate(articles, pageData.pages.nodes ?? [], [
+  return generate(articles, pageData?.pages.nodes ?? [], [
     `${siteUrl}/author`,
     `${siteUrl}/event`,
     `${siteUrl}/login`,

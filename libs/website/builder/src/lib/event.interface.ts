@@ -1,4 +1,5 @@
-import { QueryResult } from '@apollo/client';
+import type { OperationVariables } from '@apollo/client';
+import type { useQuery } from '@apollo/client/react';
 import {
   EventListQuery,
   EventListQueryVariables,
@@ -7,7 +8,7 @@ import {
 } from '@wepublish/website/api';
 
 export type BuilderEventProps = Pick<
-  QueryResult<EventQuery>,
+  useQuery.Result<EventQuery, OperationVariables, 'complete' | 'empty'>,
   'data' | 'loading' | 'error'
 > & {
   className?: string;
@@ -18,7 +19,7 @@ export type BuilderEventSEOProps = {
 };
 
 export type BuilderEventListProps = Pick<
-  QueryResult<EventListQuery>,
+  useQuery.Result<EventListQuery, OperationVariables, 'complete' | 'empty'>,
   'data' | 'loading' | 'error'
 > & {
   className?: string;

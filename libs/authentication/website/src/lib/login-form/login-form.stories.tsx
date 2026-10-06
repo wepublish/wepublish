@@ -4,7 +4,6 @@ import { action } from 'storybook/actions';
 import { expect, userEvent, within } from 'storybook/test';
 import { useArgs } from 'storybook/preview-api';
 import { ComponentProps } from 'react';
-import { ApolloError } from '@apollo/client';
 
 const fillEmail: StoryObj['play'] = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement);
@@ -146,7 +145,7 @@ export const WithEmailError: StoryObj = {
           args.onSubmitLoginWithEmail();
           updateArgs({
             loginWithEmail: {
-              error: new ApolloError({ errorMessage: 'Something went wrong.' }),
+              error: new Error('Something went wrong.'),
             },
           });
         }}
@@ -283,7 +282,7 @@ export const WithCredentialsError: StoryObj = {
           args.onSubmitLoginWithCredentials();
           updateArgs({
             loginWithCredentials: {
-              error: new ApolloError({ errorMessage: 'Invalid Credentials' }),
+              error: new Error('Invalid Credentials'),
             },
           });
         }}

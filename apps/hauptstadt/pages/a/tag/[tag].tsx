@@ -1,19 +1,18 @@
+import { useQuery } from '@apollo/client/react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { TagTitleWrapper } from '@wepublish/tag/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   ArticleFilter,
   ArticleListDocument,
-  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   TagDocument,
   TagListDocument,
   TagType,
-  useArticleListQuery,
-  useTagQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { Tag } from '@wepublish/website/builder';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
@@ -53,14 +52,14 @@ function HauptstadtTagPage({
 
   const variables = { take, skip: (page - 1) * take };
 
-  const tagData = useTagQuery({
+  const tagData = useQuery(TagDocument, {
     variables: {
       tag,
       type: TagType.Article,
     },
   });
 
-  const articles = useArticleListQuery({
+  const articles = useQuery(ArticleListDocument, {
     variables: {
       ...variables,
       filter: articleFilter,
@@ -108,7 +107,7 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps = (async ({ params }) => {
-  const { tag } = params || {};
+  const tag = params!.tag!.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const tagResult = await client.query({
@@ -119,7 +118,7 @@ export const getStaticProps = (async ({ params }) => {
     },
   });
 
-  if (tagResult.error || !tagResult.data.tag) {
+  if (tagResult.error || !tagResult.data?.tag) {
     return {
       notFound: true,
       revalidate: 1,

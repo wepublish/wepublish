@@ -1,6 +1,11 @@
-import { MockedProvider, MockedResponse } from '@apollo/client/testing';
+import { ApolloClient } from '@apollo/client';
+import { MockLink } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { SessionTokenContext } from '@wepublish/authentication/website';
+import {
+  getPreviewHandshakeState,
+  SessionTokenContext,
+} from '@wepublish/authentication/website';
 import { LoginWithJwtDocument } from '@wepublish/website/api';
 import { ComponentProps } from 'react';
 
@@ -13,7 +18,7 @@ const session = {
   createdAt: new Date('2026-01-01').toISOString(),
 };
 
-const loginMock = (jwt: string): MockedResponse => ({
+const loginMock = (jwt: string): MockLink.MockedResponse => ({
   request: {
     query: LoginWithJwtDocument,
     variables: { jwt },
@@ -37,7 +42,7 @@ const renderHandler = ({
   mocks = [],
 }: {
   hasUser?: boolean;
-  mocks?: MockedResponse[];
+  mocks?: MockLink.MockedResponse[];
 } = {}) => {
   const setToken = vi.fn().mockResolvedValue(undefined);
   const contextValue = [null, hasUser, setToken] as SessionContextValue;
@@ -67,9 +72,18 @@ const setOpener = (opener: unknown) => {
   });
 };
 
+const setParent = (parent: unknown) => {
+  Object.defineProperty(window, 'parent', {
+    value: parent,
+    configurable: true,
+    writable: true,
+  });
+};
+
 describe('withJwtHandler', () => {
   afterEach(() => {
     setOpener(null);
+    setParent(window);
     window.history.replaceState(null, '', '/');
   });
 
@@ -133,6 +147,40 @@ describe('withJwtHandler', () => {
       });
     });
 
+    it('keeps the login when refreshing the store fails afterwards', async () => {
+      const refetchQueries = vi
+        .spyOn(ApolloClient.prototype, 'refetchQueries')
+        .mockImplementation(() =>
+          Object.assign(Promise.reject(new Error('Refetch failed')), {
+            queries: [],
+            results: [],
+          })
+        );
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const opener = { postMessage: vi.fn() };
+      setOpener(opener);
+
+      const { setToken } = renderHandler({
+        mocks: [loginMock('preview-token')],
+      });
+
+      sendMessage(opener, { previewJwt: 'preview-token' });
+
+      await waitFor(() => {
+        expect(refetchQueries).toHaveBeenCalledWith({ include: 'active' });
+      });
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      expect(setToken).toHaveBeenCalledWith(
+        expect.objectContaining({ token: 'session-token' })
+      );
+      expect(getPreviewHandshakeState()).toBe('succeeded');
+
+      refetchQueries.mockRestore();
+      warn.mockRestore();
+    });
+
     it('ignores tokens sent from windows other than the opener', async () => {
       const opener = { postMessage: vi.fn() };
       setOpener(opener);
@@ -150,6 +198,43 @@ describe('withJwtHandler', () => {
         '*'
       );
       expect(setToken).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('embedded in the editor (iframe handshake)', () => {
+    it('acknowledges a token from the parent frame and logs in with it', async () => {
+      window.history.replaceState(null, '', '/?preview');
+      const parent = { postMessage: vi.fn() };
+      setParent(parent);
+
+      const { setToken } = renderHandler({
+        mocks: [loginMock('preview-token')],
+      });
+
+      sendMessage(parent, { previewJwt: 'preview-token' });
+
+      expect(parent.postMessage).toHaveBeenCalledWith(
+        'preview-jwt-received',
+        '*'
+      );
+
+      await waitFor(() => {
+        expect(setToken).toHaveBeenCalledWith(
+          expect.objectContaining({ token: 'session-token' })
+        );
+      });
+    });
+
+    it('does not ping the parent frame when no preview was requested', () => {
+      vi.useFakeTimers();
+      const parent = { postMessage: vi.fn() };
+      setParent(parent);
+
+      renderHandler();
+      vi.advanceTimersByTime(1_000);
+      vi.useRealTimers();
+
+      expect(parent.postMessage).not.toHaveBeenCalled();
     });
   });
 

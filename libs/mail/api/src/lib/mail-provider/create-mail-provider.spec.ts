@@ -5,7 +5,7 @@ import { SmtpMailProvider } from './smtp-mail-provider';
 
 describe('loadMailProvider', () => {
   it('only considers providers that were not retired', async () => {
-    const findFirst = jest
+    const findFirst = vi
       .fn()
       .mockResolvedValue({ id: 'smtp', type: MailProviderType.SMTP });
 
@@ -22,7 +22,7 @@ describe('loadMailProvider', () => {
   });
 
   it('reports no provider when every one was retired', async () => {
-    const findFirst = jest.fn().mockResolvedValue(null);
+    const findFirst = vi.fn().mockResolvedValue(null);
 
     const provider = await loadMailProvider({
       prisma: { settingMailProvider: { findFirst } } as never,

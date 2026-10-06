@@ -1,8 +1,9 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  MarkNotificationReadDocument,
+  NotificationReadsDocument,
   NotificationSource,
-  useMarkNotificationReadMutation,
-  useNotificationReadsQuery,
 } from '@wepublish/editor/api';
 import { usePeriodicJobNotifications } from '@wepublish/membership/editor';
 import {
@@ -58,10 +59,10 @@ const JOB_LOG_PERMISSION = ['CAN_GET_PERIODIC_JOB_LOG'];
 export function DashboardNotifications() {
   const { t } = useTranslation();
 
-  const { data } = useNotificationReadsQuery({
+  const { data } = useQuery(NotificationReadsDocument, {
     fetchPolicy: 'cache-and-network',
   });
-  const [markNotificationRead] = useMarkNotificationReadMutation({
+  const [markNotificationRead] = useMutation(MarkNotificationReadDocument, {
     refetchQueries: ['NotificationReads'],
   });
 

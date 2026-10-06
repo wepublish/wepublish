@@ -74,7 +74,9 @@ export function RevisionContentPreview({
       fullScreen
       open={open}
       onClose={onClose}
-      TransitionComponent={Transition}
+      slots={{
+        transition: Transition,
+      }}
     >
       <AppBar
         sx={{ position: 'sticky' }}
@@ -89,7 +91,9 @@ export function RevisionContentPreview({
             {title && (
               <Typography
                 variant="body2"
-                color="text.secondary"
+                sx={{
+                  color: 'text.secondary',
+                }}
               >
                 {title}
               </Typography>
@@ -112,7 +116,6 @@ export function RevisionContentPreview({
           </IconButton>
         </Toolbar>
       </AppBar>
-
       {loading ?
         <Box
           sx={{

@@ -10,7 +10,7 @@ const providers = [
 
 const createPrisma = () => ({
   settingPaymentProvider: {
-    findMany: jest.fn(
+    findMany: vi.fn(
       async ({ where }: { where: { deletedAt: { not: null } } }) =>
         providers
           .filter(provider =>

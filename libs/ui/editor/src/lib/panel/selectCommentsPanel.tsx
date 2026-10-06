@@ -1,10 +1,10 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   CommentBlockCommentFragment,
+  CommentListDocument,
   FullCommentFragment,
   TagType,
-  useCommentListLazyQuery,
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
 import { TFunction } from 'i18next';
@@ -63,7 +63,7 @@ const PermissionControlWrapper = styled(Table.Cell)`
   padding: 6px 0;
 `;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <RMessage
@@ -110,9 +110,14 @@ export function SelectCommentPanel({
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
 
-  const [fetchComments, { data, loading }] = useCommentListLazyQuery({
-    onError: onErrorToast,
-  });
+  const [fetchComments, { data, loading, error: commentListError }] =
+    useLazyQuery(CommentListDocument);
+
+  useEffect(() => {
+    if (commentListError) {
+      onErrorToast(commentListError);
+    }
+  }, [commentListError]);
 
   const getUsername = useMemo(() => commentUsernameGenerator(t), [t]);
 
@@ -124,12 +129,12 @@ export function SelectCommentPanel({
           comments: commentFilter || [],
         },
         (data?.comments.nodes.filter(({ id }) => commentFilter?.includes(id)) ??
-          []) as CommentBlockCommentFragment[]
+          []) as unknown as CommentBlockCommentFragment[]
       );
     } else {
       onSelect(
         { item: itemId, tags: tagFilter || [] },
-        (data?.comments.nodes ?? []) as CommentBlockCommentFragment[]
+        (data?.comments.nodes ?? []) as unknown as CommentBlockCommentFragment[]
       );
     }
   };

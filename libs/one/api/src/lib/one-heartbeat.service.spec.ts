@@ -5,6 +5,7 @@ import {
   OneHeartbeatService,
   sanitiseVersion,
 } from './one-heartbeat.service';
+import type { Mock } from 'vitest';
 
 describe('sanitiseVersion', () => {
   it('accepts a git sha', () => {
@@ -36,8 +37,8 @@ describe('sanitiseVersion', () => {
 });
 
 describe('OneHeartbeatService', () => {
-  let client: { post: jest.Mock };
-  let state: { recordSuccess: jest.Mock; recordFailure: jest.Mock };
+  let client: { post: Mock };
+  let state: { recordSuccess: Mock; recordFailure: Mock };
 
   function makeService(oneURL: string) {
     return new OneHeartbeatService(
@@ -48,10 +49,10 @@ describe('OneHeartbeatService', () => {
   }
 
   beforeEach(() => {
-    client = { post: jest.fn().mockResolvedValue(undefined) };
+    client = { post: vi.fn().mockResolvedValue(undefined) };
     state = {
-      recordSuccess: jest.fn().mockResolvedValue(undefined),
-      recordFailure: jest.fn(),
+      recordSuccess: vi.fn().mockResolvedValue(undefined),
+      recordFailure: vi.fn(),
     };
   });
 
@@ -88,14 +89,14 @@ describe('OneHeartbeatService', () => {
   });
 
   it('does not send at bootstrap, because the HTTP server is not listening yet', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
 
     try {
       makeService('https://one.wepublish.ch').onApplicationBootstrap();
 
       expect(client.post).not.toHaveBeenCalled();
     } finally {
-      jest.useRealTimers();
+      vi.useRealTimers();
     }
   });
 

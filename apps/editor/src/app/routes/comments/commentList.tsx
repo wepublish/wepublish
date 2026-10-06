@@ -1,10 +1,11 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   CommentFilter,
+  CommentListDocument,
   CommentSort,
   CommentState,
   FullCommentFragment,
-  useCommentListQuery,
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
 import {
@@ -77,7 +78,7 @@ function CommentList() {
     data,
     refetch,
     loading: isLoading,
-  } = useCommentListQuery({
+  } = useQuery(CommentListDocument, {
     variables: commentListVariables,
   });
 

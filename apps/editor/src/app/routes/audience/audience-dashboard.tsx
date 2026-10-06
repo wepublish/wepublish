@@ -1,5 +1,6 @@
+import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { useDailySubscriptionStatsLazyQuery } from '@wepublish/editor/api';
+import { DailySubscriptionStatsDocument } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   ListViewContainer,
@@ -49,8 +50,10 @@ function AudienceDashboard({
 }: AudienceDashboardProps) {
   const { t } = useTranslation();
 
-  const [fetchStats, { data: rawAudienceStats, loading }] =
-    useDailySubscriptionStatsLazyQuery({});
+  const [fetchStats, { data: rawAudienceStats, loading }] = useLazyQuery(
+    DailySubscriptionStatsDocument,
+    {}
+  );
 
   const {
     audienceApiFilter,

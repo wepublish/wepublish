@@ -1,16 +1,16 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import {
+  CreateMemberPlanDocument,
   CreateMemberPlanMutationVariables,
   Currency,
   FullAvailablePaymentMethodFragment,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
-  PaymentMethod,
+  MemberPlanDocument,
+  PaymentMethodListDocument,
   PaymentPeriodicity,
   ProductType,
-  useCreateMemberPlanMutation,
-  useMemberPlanLazyQuery,
-  useUpdateMemberPlanMutation,
+  UpdateMemberPlanDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -25,9 +25,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 import { MemberPlanForm } from './memberplan-form';
-import { usePaymentMethodListQuery } from '@wepublish/editor/api';
 
-const showErrors = (error: ApolloError): void => {
+const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"
@@ -55,23 +54,38 @@ function MemberPlanEdit() {
 
   const [
     fetchMemberPlan,
-    { loading: memberPlanLoading, data: memberPlanData },
-  ] = useMemberPlanLazyQuery({
-    onError: showErrors,
-  });
+    {
+      loading: memberPlanLoading,
+      data: memberPlanData,
+      error: memberPlanError,
+    },
+  ] = useLazyQuery(MemberPlanDocument);
 
-  const { data: paymentMethodData, loading: paymentMethodLoading } =
-    usePaymentMethodListQuery({
-      onError: showErrors,
-    });
+  const {
+    data: paymentMethodData,
+    loading: paymentMethodLoading,
+    error: paymentMethodError,
+  } = useQuery(PaymentMethodListDocument);
+
+  useEffect(() => {
+    if (memberPlanError) {
+      showErrors(memberPlanError);
+    }
+  }, [memberPlanError]);
+
+  useEffect(() => {
+    if (paymentMethodError) {
+      showErrors(paymentMethodError);
+    }
+  }, [paymentMethodError]);
 
   const [updateMemberPlanMutation, { loading: memberPlanUpdating }] =
-    useUpdateMemberPlanMutation({
+    useMutation(UpdateMemberPlanDocument, {
       onError: showErrors,
     });
 
   const [createMemberPlanMutation, { loading: memberPlanCreating }] =
-    useCreateMemberPlanMutation({
+    useMutation(CreateMemberPlanDocument, {
       onError: showErrors,
     });
 
@@ -89,42 +103,49 @@ function MemberPlanEdit() {
 
   // initially set member plan and available payment methods
   useEffect(() => {
-    const initMemberPlan = memberPlanData?.memberPlan || {
-      id: 'dummy-id',
-      availablePaymentMethods: [],
-      description: undefined,
-      currency: Currency.Chf,
-      periodicityPricing: [
-        {
-          periodicity: PaymentPeriodicity.Monthly,
-          label: null,
-          amountMin: 0,
-          amountTarget: null,
-          amountMax: null,
-        },
-      ],
-      defaultPaymentPeriodicity: null,
-      image: undefined,
-      active: true,
-      tags: [],
-      slug: '',
-      name: '',
-      externalReward: undefined,
-      extendable: true,
-      maxCount: undefined,
-      productType: ProductType.Subscription,
-    };
+    const initMemberPlan: FullMemberPlanFragment =
+      memberPlanData?.memberPlan || {
+        __typename: 'MemberPlan',
+        id: 'dummy-id',
+        // Placeholders like the id: never sent, the api sets both on save.
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+        availablePaymentMethods: [],
+        description: null,
+        shortDescription: null,
+        currency: Currency.Chf,
+        periodicityPricing: [
+          {
+            __typename: 'PeriodicityPrice',
+            periodicity: PaymentPeriodicity.Monthly,
+            label: null,
+            amountMin: 0,
+            amountTarget: null,
+            amountMax: null,
+          },
+        ],
+        defaultPaymentPeriodicity: null,
+        image: null,
+        active: true,
+        tags: [],
+        slug: '',
+        name: '',
+        externalReward: null,
+        extendable: true,
+        maxCount: null,
+        migrateToTargetPaymentMethodID: null,
+        successPageId: null,
+        failPageId: null,
+        confirmationPageId: null,
+        productType: ProductType.Subscription,
+      };
 
     setMemberPlan(initMemberPlan);
     setAvailablePaymentMethods(
       (initMemberPlan?.availablePaymentMethods || []).map(
         availablePaymentMethod => ({
           id: generateID(),
-          value: {
-            ...availablePaymentMethod,
-            paymentMethods:
-              availablePaymentMethod.paymentMethods as PaymentMethod[],
-          },
+          value: availablePaymentMethod,
         })
       )
     );

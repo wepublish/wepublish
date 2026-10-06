@@ -1,12 +1,11 @@
-import { useApolloClient } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
+import { useApolloClient } from '@apollo/client/react';
 import {
+  getPreviewHost,
   setPreviewHandshakeState,
   useUser,
 } from '@wepublish/authentication/website';
-import {
-  useLoginWithJwtMutation,
-  SessionWithTokenWithoutUser,
-} from '@wepublish/website/api';
+import { LoginWithJwtDocument } from '@wepublish/website/api';
 import styled from '@emotion/styled';
 import {
   ComponentType,
@@ -82,7 +81,7 @@ export const withJwtHandler = <P extends object>(
 ) =>
   memo<P>(props => {
     const client = useApolloClient();
-    const [loginWithJwt] = useLoginWithJwtMutation();
+    const [loginWithJwt] = useMutation(LoginWithJwtDocument);
     const { setToken, hasUser } = useUser();
     const { t } = useTranslation();
 
@@ -91,6 +90,17 @@ export const withJwtHandler = <P extends object>(
     const [totpToken, setTotpToken] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>();
+
+    const refreshStore = useCallback(
+      () =>
+        client.refetchQueries({ include: 'active' }).catch(err => {
+          console.warn(
+            '[jwt] refreshing the store after login failed:',
+            err?.message ?? err
+          );
+        }),
+      [client]
+    );
 
     const handleJwt = useCallback(
       (jwt: string, options?: { fromPreview?: boolean }) => {
@@ -101,15 +111,18 @@ export const withJwtHandler = <P extends object>(
         loginWithJwt({ variables: { jwt } })
           .then(async result => {
             if (result?.data?.createSessionWithJWT) {
-              await setToken(
-                result.data.createSessionWithJWT as SessionWithTokenWithoutUser
-              );
+              await setToken({
+                __typename: 'SessionWithTokenWithoutUser',
+                token: result.data.createSessionWithJWT.token,
+                expiresAt: result.data.createSessionWithJWT.expiresAt,
+                createdAt: result.data.createSessionWithJWT.createdAt,
+              });
 
               if (options?.fromPreview) {
                 setPreviewHandshakeState('succeeded');
               }
 
-              await client.resetStore();
+              await refreshStore();
             }
           })
           .catch(err => {
@@ -132,7 +145,7 @@ export const withJwtHandler = <P extends object>(
             )}`;
           });
       },
-      [loginWithJwt, setToken, hasUser, client]
+      [loginWithJwt, setToken, hasUser, refreshStore]
     );
 
     const handleTotpSubmit = useCallback(async () => {
@@ -147,15 +160,19 @@ export const withJwtHandler = <P extends object>(
         });
 
         if (result?.data?.createSessionWithJWT) {
-          await setToken(
-            result.data.createSessionWithJWT as SessionWithTokenWithoutUser
-          );
+          await setToken({
+            __typename: 'SessionWithTokenWithoutUser',
+            token: result.data.createSessionWithJWT.token,
+            expiresAt: result.data.createSessionWithJWT.expiresAt,
+            createdAt: result.data.createSessionWithJWT.createdAt,
+          });
           setShowTotpPrompt(false);
           setPendingJwt(null);
           setPreviewHandshakeState('succeeded');
 
-          await client.resetStore();
+          await refreshStore();
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(
           err?.message?.includes('TOTP_REQUIRED') ?
@@ -166,7 +183,7 @@ export const withJwtHandler = <P extends object>(
       } finally {
         setLoading(false);
       }
-    }, [pendingJwt, totpToken, loginWithJwt, setToken, client]);
+    }, [pendingJwt, totpToken, loginWithJwt, setToken, refreshStore]);
 
     const handleCancel = useCallback(() => {
       setShowTotpPrompt(false);
@@ -176,11 +193,13 @@ export const withJwtHandler = <P extends object>(
     }, []);
 
     useEffect(() => {
-      if (window.opener) {
+      const previewHost = getPreviewHost();
+
+      if (previewHost) {
         setPreviewHandshakeState('pending');
 
         const isTrustedMessage = (event: MessageEvent): boolean =>
-          event.source === window.opener;
+          event.source === previewHost;
 
         let received = false;
 
@@ -194,7 +213,7 @@ export const withJwtHandler = <P extends object>(
             received = true;
             window.removeEventListener('message', handleMessage);
             clearInterval(interval);
-            window.opener.postMessage('preview-jwt-received', '*');
+            previewHost.postMessage('preview-jwt-received', '*');
             handleJwt(jwt, { fromPreview: true });
           }
         };
@@ -203,7 +222,7 @@ export const withJwtHandler = <P extends object>(
         const MAX_ATTEMPTS = 150;
         let attempts = 0;
         const interval = setInterval(() => {
-          window.opener.postMessage('preview-jwt-ready', '*');
+          previewHost.postMessage('preview-jwt-ready', '*');
 
           if (++attempts >= MAX_ATTEMPTS) {
             clearInterval(interval);
@@ -211,7 +230,7 @@ export const withJwtHandler = <P extends object>(
             if (!received) {
               setPreviewHandshakeState('failed');
               console.warn(
-                '[preview] no JWT received from the opening window within 30s'
+                '[preview] no JWT received from the host window within 30s'
               );
             }
           }

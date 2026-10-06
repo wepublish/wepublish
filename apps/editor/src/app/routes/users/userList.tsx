@@ -1,12 +1,12 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeleteUserDocument,
+  FullUserRoleFragment,
+  ResetUserTotpDocument,
   TinyUserFragment,
-  useDeleteUserMutation,
-  useResetUserTotpMutation,
+  TinyUserListDocument,
   UserFilter,
-  UserRole,
   UserSort,
-  useTinyUserListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -81,7 +81,7 @@ function UserList() {
     refetch,
     loading: isLoading,
     error: userListQueryError,
-  } = useTinyUserListQuery({
+  } = useQuery(TinyUserListDocument, {
     variables: {
       filter: filter || undefined,
       take: limit,
@@ -107,9 +107,13 @@ function UserList() {
     });
   }, [filter, page, limit, sortOrder, sortField, refetch]);
 
-  const [deleteUser, { loading: isDeleting }] = useDeleteUserMutation({});
-  const [resetUserTotp, { loading: isResettingTotp }] =
-    useResetUserTotpMutation();
+  const [deleteUser, { loading: isDeleting }] = useMutation(
+    DeleteUserDocument,
+    {}
+  );
+  const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
+    ResetUserTotpDocument
+  );
 
   const { t } = useTranslation();
 
@@ -184,7 +188,7 @@ function UserList() {
       setConfirmationDialogOpen(false);
       refetch();
     } catch (e) {
-      if (e instanceof ApolloError) {
+      if (e instanceof Error) {
         if (e.message.includes('Foreign key constraint')) {
           toaster.push(
             <Message
@@ -361,7 +365,9 @@ function UserList() {
             <HeaderCell>{t('userCreateOrEditView.userRoles')}</HeaderCell>
             <RCell dataKey="roles">
               {(rowData: RowDataType<TinyUserFragment>) =>
-                rowData.roles?.map((r: UserRole) => r.name).join(', ')
+                rowData.roles
+                  ?.map((r: FullUserRoleFragment) => r.name)
+                  .join(', ')
               }
             </RCell>
           </Column>

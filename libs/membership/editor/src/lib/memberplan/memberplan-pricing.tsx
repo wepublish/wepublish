@@ -130,24 +130,28 @@ export function MemberPlanPricing({
     }
 
     const equivalent = getMonthlyEquivalentRange(pricing);
-    const materialized = toMaterialize.map(entryPeriodicity => {
-      const existing = pricing.find(p => p.periodicity === entryPeriodicity);
-      const months = PAYMENT_PERIODICITY_MONTHS[entryPeriodicity];
+    const materialized: PeriodicityPriceValue[] = toMaterialize.map(
+      entryPeriodicity => {
+        const existing = pricing.find(p => p.periodicity === entryPeriodicity);
+        const months = PAYMENT_PERIODICITY_MONTHS[entryPeriodicity];
 
-      return {
-        ...existing,
-        periodicity: entryPeriodicity,
-        amountMin: Math.round(equivalent.amountPerMonthMin * months),
-        amountTarget:
-          equivalent.amountPerMonthTarget != null ?
-            Math.round(equivalent.amountPerMonthTarget * months)
-          : null,
-        amountMax:
-          equivalent.amountPerMonthMax != null ?
-            Math.round(equivalent.amountPerMonthMax * months)
-          : null,
-      };
-    });
+        return {
+          __typename: 'PeriodicityPrice',
+          ...existing,
+          periodicity: entryPeriodicity,
+          label: existing?.label ?? null,
+          amountMin: Math.round(equivalent.amountPerMonthMin * months),
+          amountTarget:
+            equivalent.amountPerMonthTarget != null ?
+              Math.round(equivalent.amountPerMonthTarget * months)
+            : null,
+          amountMax:
+            equivalent.amountPerMonthMax != null ?
+              Math.round(equivalent.amountPerMonthMax * months)
+            : null,
+        };
+      }
+    );
 
     const untouched = pricing.filter(
       entry =>
@@ -232,9 +236,10 @@ export function MemberPlanPricing({
   const ToggleWrapper = showDeriveToggle ? ToggleCol : ToggleColReserved;
   const hasOverride = override?.amountMin != null;
   const fieldsEditable = isMonthlyTab || !showDeriveToggle || hasOverride;
-  const overrideBase =
+  const overrideBase: Omit<PeriodicityPriceValue, 'periodicity'> =
     hasOverride ? override : (
       {
+        __typename: 'PeriodicityPrice',
         label: override?.label ?? null,
         amountMin: derivedMin ?? 0,
         amountTarget: derivedTarget,
@@ -253,6 +258,7 @@ export function MemberPlanPricing({
 
   function setPeriodicityLabel(label: string | null) {
     setPeriodicityPrice({
+      __typename: 'PeriodicityPrice',
       amountMin: override?.amountMin ?? null,
       amountTarget: override?.amountTarget ?? null,
       amountMax: override?.amountMax ?? null,
@@ -334,12 +340,14 @@ export function MemberPlanPricing({
                   setPeriodicityPrice(
                     enabled ?
                       {
+                        __typename: 'PeriodicityPrice',
                         label: override?.label ?? null,
                         amountMin: derivedMin ?? 0,
                         amountTarget: derivedTarget,
                         amountMax: derivedMax,
                       }
                     : {
+                        __typename: 'PeriodicityPrice',
                         label: override?.label ?? null,
                         amountMin: null,
                         amountTarget: null,
