@@ -3473,6 +3473,7 @@ export type MutationCreateSubscriptionArgs = {
   paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertyInput>;
+  skipMail?: InputMaybe<Scalars['Boolean']['input']>;
   startsAt: Scalars['DateTime']['input'];
   userID: Scalars['String']['input'];
 };
