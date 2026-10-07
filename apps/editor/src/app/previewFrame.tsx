@@ -185,7 +185,7 @@ export function PreviewControls({
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('preview.urlCopyFailed')}
         </Message>

@@ -19,6 +19,7 @@ import {
   Modal,
   toaster,
 } from 'rsuite';
+import { humanizeError } from '../../humanizeError';
 
 const IconButton = styled(RIconButton)`
   &&:not([data-with-text]) {
@@ -121,9 +122,9 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -142,7 +143,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollAnswer.answerMissing')}
         </Message>

@@ -218,7 +218,7 @@ export function Login() {
           type="error"
           showIcon
           closable
-          duration={5000}
+          duration={8000}
         >
           {error?.message || t('login.unauthorized')}
         </Message>
@@ -243,7 +243,7 @@ export function Login() {
           type="error"
           showIcon
           closable
-          duration={5000}
+          duration={8000}
         >
           {t('login.totp.setupError')}
         </Message>
@@ -292,7 +292,7 @@ export function Login() {
           type="error"
           showIcon
           closable
-          duration={5000}
+          duration={8000}
         >
           {error?.message || t('login.totp.invalidCode')}
         </Message>

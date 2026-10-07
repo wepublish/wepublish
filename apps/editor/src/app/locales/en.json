@@ -839,6 +839,14 @@
       "ignoreDeactivatedSubscriptions": "No mails will be sent to deactivated subscriptions!"
     },
     "edit": "Edit",
+    "errors": {
+      "uniqueEmail": "This email address is already in use.",
+      "uniqueField": "This value is already taken ({{field}}).",
+      "inUse": "This entry is still in use and therefore can't be deleted.",
+      "forbidden": "You don't have permission for this action.",
+      "network": "No connection to the server. Please check your internet connection and try again.",
+      "unexpected": "Something went wrong. Please try again – if the problem persists, contact support."
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",

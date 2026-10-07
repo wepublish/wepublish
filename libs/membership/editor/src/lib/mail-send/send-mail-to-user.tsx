@@ -3,7 +3,7 @@ import {
   useMailTemplateQuery,
   useSendMailTemplateToUserMutation,
 } from '@wepublish/editor/api';
-import { PermissionControl } from '@wepublish/ui/editor';
+import { humanizeError, PermissionControl } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdSend } from 'react-icons/md';
@@ -41,7 +41,7 @@ export function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
           showIcon
           closable
         >
-          {error.message}
+          {humanizeError(error)}
         </Message>
       ),
     onCompleted: () =>

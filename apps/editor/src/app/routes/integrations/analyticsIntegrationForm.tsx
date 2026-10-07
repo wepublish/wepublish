@@ -8,6 +8,7 @@ import {
   SettingsIntegrationsAnalyticsDocument,
   UpdateAnalyticsProviderSettingDocument,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { ComponentProps, forwardRef, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
@@ -41,9 +42,9 @@ const showErrors = (error: Error): void => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

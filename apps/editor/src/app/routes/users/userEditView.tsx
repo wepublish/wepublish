@@ -376,7 +376,7 @@ function UserEditView() {
             type="error"
             showIcon
             closable
-            duration={2000}
+            duration={8000}
           >
             {t('userCreateOrEditView.errorOnUpdate', { error: e })}
           </Message>
@@ -435,7 +435,7 @@ function UserEditView() {
             type="error"
             showIcon
             closable
-            duration={2000}
+            duration={8000}
           >
             {t('userCreateOrEditView.errorCreatingUser', { error: e })}
           </Message>
@@ -932,7 +932,7 @@ function UserEditView() {
                                 type="error"
                                 showIcon
                                 closable
-                                duration={2000}
+                                duration={8000}
                               >
                                 {t('userList.overview.totpResetError')}
                               </Message>
@@ -987,7 +987,7 @@ function UserEditView() {
                                   type="error"
                                   showIcon
                                   closable
-                                  duration={2000}
+                                  duration={8000}
                                 >
                                   {t('userCreateOrEditView.errorOnUpdate', {
                                     error: e,

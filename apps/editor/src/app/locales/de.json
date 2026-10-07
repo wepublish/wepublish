@@ -840,6 +840,14 @@
       "ignoreDeactivatedSubscriptions": "Mails an deaktivierte Abos werden nicht verschickt!"
     },
     "edit": "Editieren",
+    "errors": {
+      "uniqueEmail": "Diese E-Mail-Adresse wird bereits verwendet.",
+      "uniqueField": "Dieser Wert ist bereits vergeben ({{field}}).",
+      "inUse": "Dieser Eintrag wird noch verwendet und kann deshalb nicht gelöscht werden.",
+      "forbidden": "Dir fehlt die Berechtigung für diese Aktion.",
+      "network": "Keine Verbindung zum Server. Bitte prüfe deine Internetverbindung und versuche es erneut.",
+      "unexpected": "Das hat leider nicht geklappt. Bitte versuche es erneut – falls das Problem bleibt, melde dich beim Support."
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Bitte eine gültige E-Mail eingeben",
       "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",

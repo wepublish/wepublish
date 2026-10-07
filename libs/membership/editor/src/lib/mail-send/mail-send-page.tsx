@@ -16,6 +16,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
   ListViewContainer,
   ListViewHeader,
 } from '@wepublish/ui/editor';
@@ -251,7 +252,7 @@ function MailSendPage() {
           showIcon
           closable
         >
-          {error.message}
+          {humanizeError(error)}
         </Message>
       ),
     onCompleted: result => {
@@ -1096,7 +1097,7 @@ function TemplatePreview({
             </Typography>
           </div>
 
-          {error && <Message type="error">{error.message}</Message>}
+          {error && <Message type="error">{humanizeError(error)}</Message>}
 
           {preview && (
             <MailPreview

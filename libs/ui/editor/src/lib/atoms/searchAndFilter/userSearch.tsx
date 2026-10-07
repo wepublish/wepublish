@@ -1,6 +1,7 @@
 import { FullUserFragment, useUserListQuery } from '@wepublish/editor/api';
 import { useEffect, useMemo, useState } from 'react';
 import { Form, Message, SelectPicker, toaster } from 'rsuite';
+import { humanizeError } from '../../humanizeError';
 
 export interface UserSearchProps {
   user?: FullUserFragment | null;
@@ -75,7 +76,7 @@ export function UserSearch({
           showIcon
           closable
         >
-          {error.message}
+          {humanizeError(error)}
         </Message>
       );
     }

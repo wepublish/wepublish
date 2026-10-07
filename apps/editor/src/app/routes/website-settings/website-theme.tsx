@@ -13,6 +13,7 @@ import {
   useWebsiteSettingsLazyQuery,
 } from '@wepublish/editor/api';
 import { minimalTheme } from '@wepublish/ui';
+import { humanizeError } from '@wepublish/ui/editor';
 import { memo, PropsWithChildren, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -84,9 +85,9 @@ export const WebsiteTheme = memo(() => {
             type="error"
             showIcon
             closable
-            duration={3000}
+            duration={8000}
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>
         );
       },

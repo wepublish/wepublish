@@ -24,8 +24,19 @@ const graphQLError = (message: string, code?: string) =>
 describe('humanizeError', () => {
   it('explains a duplicate value instead of showing the Prisma dump', () => {
     expect(humanizeError(graphQLError(prismaUniqueEmail), t)).toBe(
-      'errors.uniqueField {"field":"errors.fields.email"}'
+      'errors.uniqueEmail'
     );
+  });
+
+  it('names the field for other duplicate values', () => {
+    expect(
+      humanizeError(
+        graphQLError(
+          'Invalid `this.prisma.page.create()` invocation: Unique constraint failed on the fields: (`slug`)'
+        ),
+        t
+      )
+    ).toBe('errors.uniqueField {"field":"slug"}');
   });
 
   it('explains a record that is still referenced elsewhere', () => {
@@ -77,6 +88,12 @@ describe('humanizeError', () => {
   it('drops the technical ApolloError prefix of plain errors', () => {
     expect(humanizeError(new Error('ApolloError: Title missing'), t)).toBe(
       'Title missing'
+    );
+  });
+
+  it('reads the message of error-like objects', () => {
+    expect(humanizeError({ message: 'Name is required' }, t)).toBe(
+      'Name is required'
     );
   });
 

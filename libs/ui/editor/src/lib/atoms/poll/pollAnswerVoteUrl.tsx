@@ -75,7 +75,7 @@ export function CopyPollAnswerVoteUrlButton({
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollAnswer.urlCopyingFailed')}
         </Message>

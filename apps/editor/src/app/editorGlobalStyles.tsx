@@ -263,6 +263,31 @@ export function EditorGlobalStyles() {
           box-shadow: var(--wep-elevated-shadow);
         }
 
+        .rs-toast-container {
+          gap: 8px;
+        }
+
+        .rs-toast-container-top-center {
+          top: auto;
+          bottom: 16px;
+          left: auto;
+          right: 16px;
+          width: auto;
+          align-items: flex-end;
+        }
+
+        .rs-toast-container .rs-toast {
+          width: max-content;
+          max-width: min(440px, calc(100vw - 32px));
+          margin: 0;
+        }
+
+        .rs-toast-container .rs-message {
+          border: 1px solid var(--wep-shell-border, var(--rs-border-primary));
+          border-radius: var(--rs-radius-lg);
+          box-shadow: var(--wep-elevated-shadow);
+        }
+
         @media (max-width: 899px) {
           :root {
             --rs-heading-h1-font-size: 1.5rem;

@@ -10,6 +10,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
   IconButton,
   IconButtonTooltip,
   ListViewActions,
@@ -124,9 +125,9 @@ const showErrors = (error: ApolloError): void => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

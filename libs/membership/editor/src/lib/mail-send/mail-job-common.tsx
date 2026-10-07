@@ -5,6 +5,7 @@ import {
   useCancelMailSendJobMutation,
   useResumeMailSendJobMutation,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdPlayArrow, MdStop } from 'react-icons/md';
@@ -108,7 +109,7 @@ export function ResumeJobButton({
           showIcon
           closable
         >
-          {error.message}
+          {humanizeError(error)}
         </Message>
       ),
     onCompleted: () => {
@@ -229,7 +230,7 @@ export function CancelJobButton({
           showIcon
           closable
         >
-          {error.message}
+          {humanizeError(error)}
         </Message>
       ),
     onCompleted: () => onDone?.(),

@@ -191,7 +191,7 @@ function UserList() {
               type="error"
               showIcon
               closable
-              duration={2000}
+              duration={8000}
             >
               {t('userCreateOrEditView.foreignKeySubscription')}
             </Message>
@@ -203,7 +203,7 @@ function UserList() {
               type="error"
               showIcon
               closable
-              duration={2000}
+              duration={8000}
             >
               {t('userCreateOrEditView.errorOnUpdate', { error: e })}
             </Message>
@@ -238,7 +238,7 @@ function UserList() {
           type="error"
           showIcon
           closable
-          duration={2000}
+          duration={8000}
         >
           {t('userList.overview.totpResetError')}
         </Message>

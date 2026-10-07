@@ -39,6 +39,7 @@ import {
   useTriggerMailchimpSyncMutation,
   useUpdateSyncProviderSettingMutation,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -512,7 +513,7 @@ export function MailchimpSyncIntegrationForm() {
   const { data, loading, error } = useSyncProviderSettingsQuery();
 
   if (loading) return <Loader center />;
-  if (error) return <Message type="error">{error.message}</Message>;
+  if (error) return <Message type="error">{humanizeError(error)}</Message>;
 
   const settings = data?.syncProviderSettings;
   if (!settings?.length) {

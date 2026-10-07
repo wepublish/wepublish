@@ -22,6 +22,7 @@ import {
 import type { Option } from 'rsuite/esm/internals/types';
 
 import { DEFAULT_MAX_TABLE_PAGES } from '../../utility';
+import { humanizeError } from '../../humanizeError';
 
 const Divider = styled(RDivider)`
   margin: '12px 0';
@@ -132,9 +133,9 @@ export function SelectTags({
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };

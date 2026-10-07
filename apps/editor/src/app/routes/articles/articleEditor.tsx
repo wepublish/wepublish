@@ -693,7 +693,7 @@ function ArticleEditor() {
         type="error"
         showIcon={false}
         closable
-        duration={5000}
+        duration={8000}
       >
         <strong>{header}</strong>
         <div>{summaries || t('articleEditor.validationFailedGeneric')}</div>

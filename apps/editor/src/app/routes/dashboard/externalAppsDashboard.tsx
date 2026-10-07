@@ -12,6 +12,7 @@ import {
   ExternalAppsTarget,
   useExternalAppsQuery,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdExtension } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -83,7 +84,7 @@ export function ExternalAppsDashboard() {
         p={3}
         color="error.main"
       >
-        {error.message}
+        {humanizeError(error)}
       </Box>
     );
   }

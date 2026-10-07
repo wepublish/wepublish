@@ -106,7 +106,7 @@ export function LoginJwt() {
             type="error"
             showIcon
             closable
-            duration={5000}
+            duration={8000}
           >
             {t('login.totp.setupError')}
           </Message>
@@ -192,7 +192,7 @@ export function LoginJwt() {
           type="error"
           showIcon
           closable
-          duration={5000}
+          duration={8000}
         >
           {message}
         </Message>

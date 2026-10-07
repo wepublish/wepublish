@@ -9,6 +9,7 @@ import {
   createCheckedPermissionComponent,
   DescriptionList,
   DescriptionListItem,
+  humanizeError,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -285,7 +286,7 @@ function SettingList() {
           header={t('settingList.errorTitle')}
           duration={2000}
         >
-          {error.message.toString()}
+          {humanizeError(error)}
         </Notification>
       );
   }, [fetchError, t, updateSettingError]);

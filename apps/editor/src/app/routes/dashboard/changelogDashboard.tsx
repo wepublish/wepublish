@@ -6,6 +6,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   ConfirmActionModal,
+  humanizeError,
   NotificationItem,
   NotificationSeverity,
   useHasPermission,
@@ -219,7 +220,7 @@ function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
             showIcon
             closable
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>
         );
       },
@@ -514,7 +515,7 @@ export function ChangelogDashboard(props: ChangelogDashboardProps) {
   }
 
   if (error) {
-    return <Message type="error">{error.message}</Message>;
+    return <Message type="error">{humanizeError(error)}</Message>;
   }
 
   if (!items.length) {

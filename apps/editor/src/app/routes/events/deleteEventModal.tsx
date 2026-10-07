@@ -4,6 +4,7 @@ import {
   EventListQuery,
   useDeleteEventMutation,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
@@ -20,9 +21,9 @@ const onErrorToast = (error: ApolloError) => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

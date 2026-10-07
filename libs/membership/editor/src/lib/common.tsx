@@ -1,6 +1,7 @@
 import { ApolloError } from '@apollo/client';
 import { TFunction } from 'i18next';
 import { Message, toaster } from 'rsuite';
+import { humanizeError } from '@wepublish/ui/editor';
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -8,9 +9,9 @@ const showErrors = (error: ApolloError): void => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

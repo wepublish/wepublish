@@ -71,6 +71,13 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   The shared `Table` from `@wepublish/ui/editor` scales `width` columns to the
   available width (`listView/fit-column-widths.ts`) and releases `fixed`
   columns under 600 px — so don't hand-tune column widths to a screen size.
+- **Editor errors shown to users go through `humanizeError(error)`** from
+  `@wepublish/ui/editor`, never raw `error.message` — it turns Prisma, network
+  and permission failures into `errors.*` translations. Error toasts use
+  `duration={8000}`. Don't rewrite messages in an Apollo link instead: consent
+  views and the user list branch on raw texts like `'Unique constraint'`.
+  i18next runs with `escapeValue: false` because React already escapes;
+  re-enabling it double-escapes (`&#x2F;`).
 
 ## React
 

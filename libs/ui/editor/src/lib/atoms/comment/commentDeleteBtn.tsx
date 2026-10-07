@@ -9,6 +9,7 @@ import { MdDelete } from 'react-icons/md';
 import { Button, IconButton, Message, Modal, toaster } from 'rsuite';
 
 import { PermissionControl } from '../permissionControl';
+import { humanizeError } from '../../humanizeError';
 
 const onErrorToast = (error: ApolloError) => {
   toaster.push(
@@ -16,9 +17,9 @@ const onErrorToast = (error: ApolloError) => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

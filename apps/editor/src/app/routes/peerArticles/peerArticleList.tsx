@@ -11,6 +11,7 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  humanizeError,
   ListFilters,
   ListViewContainer,
   ListViewHeader,
@@ -128,7 +129,7 @@ function PeerArticleList() {
             showIcon
             closable
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>,
           { duration: 0 }
         );
@@ -326,7 +327,7 @@ function PeerArticleList() {
               showIcon
               closable
             >
-              {error.message}
+              {humanizeError(error)}
             </Message>
           )}
 

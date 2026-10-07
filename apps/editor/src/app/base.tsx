@@ -184,6 +184,7 @@ import {
 
 import { ColorModePreference, useColorMode } from './colorMode';
 import { useMobileNavigation } from './mobileNavigation';
+import { onlyLatestOpen } from './sidebarMenu';
 import { Logo } from './ui/logo';
 
 export interface BaseProps {
@@ -421,6 +422,7 @@ export function Base({ children }: BaseProps) {
   const { preference: colorModePreference, setPreference: setColorMode } =
     useColorMode();
   const mobileNavigation = useMobileNavigation();
+  const [openMenus, setOpenMenus] = useState<string[]>([]);
 
   const [uiLanguage, setUILanguage] = useStickyState(
     AVAILABLE_LANG[0].id,
@@ -464,7 +466,10 @@ export function Base({ children }: BaseProps) {
           </Brand>
 
           <Sidenav
-            defaultOpenKeys={['1']}
+            openKeys={openMenus}
+            onOpenChange={keys =>
+              setOpenMenus(current => onlyLatestOpen(current, keys.map(String)))
+            }
             appearance="default"
           >
             <RSidenav.Body>
@@ -1297,6 +1302,7 @@ export function Base({ children }: BaseProps) {
                   ]}
                 >
                   <Nav.Menu
+                    eventKey={'peering'}
                     title={t('navbar.peering')}
                     icon={<MdSettingsInputAntenna />}
                   >
@@ -1342,6 +1348,7 @@ export function Base({ children }: BaseProps) {
                   ]}
                 >
                   <Nav.Menu
+                    eventKey={'settings'}
                     icon={<MdSettings />}
                     title={t('navbar.settings')}
                   >

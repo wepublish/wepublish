@@ -3,6 +3,7 @@ import { PageSort, SortOrder, usePageListQuery } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message, SelectPicker, toaster } from 'rsuite';
+import { humanizeError } from '../../humanizeError';
 
 interface SelectPageProps {
   className?: string;
@@ -31,9 +32,9 @@ export function SelectPage({
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };

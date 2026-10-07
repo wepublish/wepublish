@@ -62,7 +62,7 @@ export function SetNewPassword() {
           type="error"
           showIcon
           closable
-          duration={5000}
+          duration={8000}
         >
           {t('setNewPassword.mismatch')}
         </Message>
@@ -76,7 +76,7 @@ export function SetNewPassword() {
           type="error"
           showIcon
           closable
-          duration={5000}
+          duration={8000}
         >
           {t('setNewPassword.invalidLink')}
         </Message>
@@ -93,7 +93,7 @@ export function SetNewPassword() {
           type="error"
           showIcon
           closable
-          duration={5000}
+          duration={8000}
         >
           {error?.message || t('setNewPassword.error')}
         </Message>

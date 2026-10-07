@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { IconButton, Message, toaster } from 'rsuite';
+import { humanizeError } from '../../humanizeError';
 
 export function CreatePollBtn() {
   const [createPollMutation, { data: newPoll, loading }] =
@@ -18,9 +19,9 @@ export function CreatePollBtn() {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };

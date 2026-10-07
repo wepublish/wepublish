@@ -108,7 +108,7 @@ export function AudienceFilter({
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('audienceFilter.permalinkCopyFailed')}
         </Message>

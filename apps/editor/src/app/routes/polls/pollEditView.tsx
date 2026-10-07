@@ -10,6 +10,7 @@ import {
 import { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
   PollAnswers,
   PollExternalVotes,
   RichTextBlock,
@@ -58,9 +59,9 @@ function PollEditView() {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };

@@ -15,6 +15,7 @@ import {
   useUpdateWebsiteSettingsMutation,
   useWebsiteSettingsLazyQuery,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
@@ -98,9 +99,9 @@ export const WebsiteAnalytics = () => {
             type="error"
             showIcon
             closable
-            duration={3000}
+            duration={8000}
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>
         );
       },

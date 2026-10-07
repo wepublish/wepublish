@@ -27,6 +27,7 @@ import {
 } from 'rsuite';
 
 import { AVAILABLE_LANG } from '../../utility';
+import { humanizeError } from '../../humanizeError';
 
 const Timeline = styled(RTimeline)`
   margin-left: 10px;
@@ -92,7 +93,7 @@ export function ActivityFeed() {
           closable
           duration={0}
         >
-          {error.message}
+          {humanizeError(error)}
         </Message>
       );
   }, [error]);

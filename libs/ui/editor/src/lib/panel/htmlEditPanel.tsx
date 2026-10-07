@@ -16,6 +16,7 @@ import {
 } from 'rsuite';
 
 import { HTMLBlockValue } from '../blocks/types';
+import { humanizeError } from '../humanizeError';
 
 const Warning = styled.div``;
 
@@ -137,7 +138,7 @@ export function HtmlEditPanel({
               showIcon
               type="error"
             >
-              {error.message}
+              {humanizeError(error)}
             </Message>
           )}
 

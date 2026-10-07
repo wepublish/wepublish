@@ -13,6 +13,7 @@ import { Button, Message, SelectPicker, toaster } from 'rsuite';
 
 import { PeerAvatar } from '../atoms/peer/peerAvatar';
 import { getOperationNameFromDocument } from '../utility';
+import { humanizeError } from '../humanizeError';
 
 const ButtonWrapper = styled.div`
   margin: 10px;
@@ -38,9 +39,9 @@ const showErrors = (error: ApolloError): void => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
