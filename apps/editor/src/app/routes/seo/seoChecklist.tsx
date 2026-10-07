@@ -53,18 +53,18 @@ type SeoUrlKey = keyof Pick<
 >;
 
 export interface SeoChecklistEntry {
-  readonly id: string;
-  readonly check?: SeoCheckId;
-  readonly info?: boolean;
-  readonly urls?: SeoUrlKey[];
-  readonly link?: string;
-  readonly internalLink?: string;
-  readonly guide?: string[];
+  id: string;
+  check?: SeoCheckId;
+  info?: boolean;
+  urls?: SeoUrlKey[];
+  link?: string;
+  internalLink?: string;
+  guide?: string[];
 }
 
 export interface SeoChecklistSection {
-  readonly id: string;
-  readonly items: SeoChecklistEntry[];
+  id: string;
+  items: SeoChecklistEntry[];
 }
 
 const SEARCH_CONSOLE = 'https://search.google.com/search-console';

@@ -128,9 +128,9 @@ const PreviewSection = ({
 );
 
 export interface GooglePreviewProps {
-  readonly data: SeoPreviewData;
-  readonly siteName?: string | null;
-  readonly favicon?: FullImageFragment | null;
+  data: SeoPreviewData;
+  siteName?: string | null;
+  favicon?: FullImageFragment | null;
 }
 
 export function GooglePreview({ data, siteName, favicon }: GooglePreviewProps) {
@@ -188,7 +188,7 @@ export function GooglePreview({ data, siteName, favicon }: GooglePreviewProps) {
 }
 
 export interface SocialPreviewsProps {
-  readonly data: SeoPreviewData;
+  data: SeoPreviewData;
 }
 
 export function SocialPreviews({ data }: SocialPreviewsProps) {

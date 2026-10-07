@@ -17,9 +17,9 @@ const SeoTabWrapper = styled.div`
 `;
 
 export interface SeoTabProps {
-  readonly type: SeoContentType;
-  readonly metadata: SeoPreviewMetadata & { readonly slug?: string | null };
-  readonly seoContext?: SeoBlockContext;
+  type: SeoContentType;
+  metadata: SeoPreviewMetadata & { slug?: string | null };
+  seoContext?: SeoBlockContext;
 }
 
 export function SeoTab({ type, metadata, seoContext }: SeoTabProps) {

@@ -8,28 +8,28 @@ export enum SeoContentType {
 }
 
 export interface SeoPreviewMetadata {
-  readonly title?: string | null;
-  readonly lead?: string | null;
-  readonly seoTitle?: string | null;
-  readonly seoDescription?: string | null;
-  readonly socialMediaTitle?: string | null;
-  readonly socialMediaDescription?: string | null;
-  readonly canonicalUrl?: string | null;
-  readonly url?: string | null;
-  readonly image?: FullImageFragment | null;
-  readonly socialMediaImage?: FullImageFragment | null;
+  title?: string | null;
+  lead?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  socialMediaTitle?: string | null;
+  socialMediaDescription?: string | null;
+  canonicalUrl?: string | null;
+  url?: string | null;
+  image?: FullImageFragment | null;
+  socialMediaImage?: FullImageFragment | null;
 }
 
 export interface SeoPreviewData {
-  readonly title?: string;
-  readonly documentTitle?: string;
-  readonly description?: string;
-  readonly socialTitle?: string;
-  readonly socialDescription?: string;
-  readonly image?: FullImageFragment;
-  readonly url?: string;
-  readonly domain?: string;
-  readonly ignoredFields: ('seoTitle' | 'seoDescription')[];
+  title?: string;
+  documentTitle?: string;
+  description?: string;
+  socialTitle?: string;
+  socialDescription?: string;
+  image?: FullImageFragment;
+  url?: string;
+  domain?: string;
+  ignoredFields: ('seoTitle' | 'seoDescription')[];
 }
 
 const firstOf = (...values: (string | null | undefined)[]) =>

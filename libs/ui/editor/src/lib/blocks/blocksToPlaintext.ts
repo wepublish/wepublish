@@ -9,18 +9,18 @@ import {
 import { BlockValue } from './types';
 
 export interface SeoContentStats {
-  readonly wordCount: number;
-  readonly headingCount: number;
-  readonly linkCount: number;
-  readonly imageCount: number;
-  readonly imagesWithoutDescription: number;
+  wordCount: number;
+  headingCount: number;
+  linkCount: number;
+  imageCount: number;
+  imagesWithoutDescription: number;
 }
 
 export interface SeoBlockContext {
-  readonly firstTitle?: string;
-  readonly firstParagraph?: string;
-  readonly firstImage?: FullImageFragment;
-  readonly stats: SeoContentStats;
+  firstTitle?: string;
+  firstParagraph?: string;
+  firstImage?: FullImageFragment;
+  stats: SeoContentStats;
 }
 
 const blockTexts = (block: BlockValue): (string | null | undefined)[] => {
