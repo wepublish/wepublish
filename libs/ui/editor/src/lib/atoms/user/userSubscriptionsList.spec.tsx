@@ -88,6 +88,8 @@ describe('getSubscriptionStatus', () => {
 });
 
 describe('UserSubscriptionsList', () => {
+  afterEach(() => vi.restoreAllMocks());
+
   it('lists the newest subscription first', () => {
     renderList([
       subscription('old', 'Basis-Abo', '2023-04-23T00:00:00.000Z'),
@@ -118,6 +120,27 @@ describe('UserSubscriptionsList', () => {
       'userSubscriptionList.periodTitle 01.2024',
       'userSubscriptionList.periodTitle 01.2023',
     ]);
+  });
+
+  it('keeps the Swiss month format whatever locale data the runtime ships', () => {
+    const format = Intl.DateTimeFormat;
+    vi.spyOn(Intl, 'DateTimeFormat').mockImplementation(
+      function (locale, options) {
+        return options?.month ?
+            ({ format: () => '01/2024' } as unknown as Intl.DateTimeFormat)
+          : new format(locale, options);
+      }
+    );
+
+    renderList([
+      subscription('a', 'Basis-Abo', '2023-01-01T00:00:00.000Z', {
+        periods: [period('p-2024', '2024-01-15T00:00:00.000Z')],
+      }),
+    ]);
+
+    expect(screen.getByTestId('period-title').textContent).toBe(
+      'userSubscriptionList.periodTitle 01.2024'
+    );
   });
 
   it('labels active and expired subscriptions', () => {

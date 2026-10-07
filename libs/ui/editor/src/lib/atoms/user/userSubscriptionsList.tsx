@@ -186,11 +186,11 @@ const SCROLL_PEEK = 40;
 const formatDate = (date: string) =>
   new Intl.DateTimeFormat('de-CH').format(new Date(date));
 
-const formatPeriodMonth = (date: string) =>
-  new Intl.DateTimeFormat('de-CH', {
-    month: '2-digit',
-    year: 'numeric',
-  }).format(new Date(date));
+const formatPeriodMonth = (date: string) => {
+  const value = new Date(date);
+
+  return `${String(value.getMonth() + 1).padStart(2, '0')}.${value.getFullYear()}`;
+};
 
 const sortPeriodsByNewest = (periods: UserSubscriptionFragment['periods']) =>
   [...periods].sort(
