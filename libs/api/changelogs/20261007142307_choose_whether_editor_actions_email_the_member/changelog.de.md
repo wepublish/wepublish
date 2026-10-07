@@ -1,10 +1,10 @@
 ---
-title: Sie entscheiden jetzt, ob Ihre Aktionen das Mitglied anschreiben
-lead: Wenn Sie im Editor ein Abo erstellen, ein Abo kündigen oder einen Benutzer anlegen, können Sie jetzt wählen, ob das Mitglied die passende E-Mail erhält – wie schon beim manuellen Bezahlen einer Rechnung.
+title: Der Editor fragt jetzt, bevor eine Aktion das Mitglied anschreibt
+lead: Wenn Sie ein Abo erstellen oder kündigen, einen Benutzer anlegen oder eine Rechnung als bezahlt markieren, fragt der Editor jetzt, ob das Mitglied die passende E-Mail erhält – oder zeigt an, dass keine versandt wird, und warum.
 ---
 
-- **Abo erstellen:** «Keine Abo-Bestätigung an das Mitglied senden» unter «Erweiterte Einstellungen».
-- **Abo kündigen:** «Keine Kündigungs-E-Mail an das Mitglied senden» im Kündigungsdialog.
-- **Benutzer anlegen:** «Keine Registrierungs-E-Mail senden» neben «Aktiv».
+- Würde die Aktion eine E-Mail versenden, sehen Sie die Vorlage und den Empfänger. **«Nicht senden»** ist vorausgewählt: Enter führt die Aktion ohne E-Mail aus, **«Senden»** versendet sie.
+- Geht keine E-Mail raus – etwa weil unter «Automatische Mails» keine Vorlage zugewiesen ist oder weil für die erste Periode eines Abos keine Zahlungsbestätigung versandt wird –, sagt der Dialog das. **OK** (auch Enter) führt die Aktion aus.
+- **Esc** bricht die Aktion ab: Es wird nichts gespeichert.
 
-Die E-Mail geht nur raus, wenn ihr unter «Automatische Mails» eine Vorlage zugewiesen ist. Lassen Sie die Option aus, ändert sich nichts: Die E-Mail wird wie bisher versandt.
+Hinweis: Bisher wurden diese E-Mails ohne Nachfrage versandt. Mit Enter werden sie nicht mehr verschickt.

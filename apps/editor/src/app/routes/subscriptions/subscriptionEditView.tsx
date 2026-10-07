@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Alert } from '@mui/material';
 import {
@@ -18,6 +18,8 @@ import {
   PropertyInput,
   RenewSubscriptionDocument,
   SubscriptionDeactivationReason,
+  SubscriptionCancellationMailDocument,
+  SubscriptionCreationMailDocument,
   SubscriptionDocument,
   UpdateSubscriptionDocument,
   UserDocument,
@@ -37,6 +39,8 @@ import {
   PermissionControl,
   TableWrapper,
   toggleRequiredLabel,
+  skipMailFor,
+  useActionMailQuestion,
   useAuthorisation,
   UserSearch,
   UserSubscriptionDeactivatePanel,
@@ -132,9 +136,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] =
     useState<boolean>(false);
   const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false);
-  // creating a subscription sends the subscribe mail unless the editor opts out
-  const [doNotSendSubscribeMail, setDoNotSendSubscribeMail] =
-    useState<boolean>(false);
+  const client = useApolloClient();
+  const { askMail, actionMailDialog } = useActionMailQuestion();
   const [user, setUser] = useState<FullUserFragment | null>();
   const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>();
   const [paymentPeriodicity, setPaymentPeriodicity] =
@@ -474,13 +477,36 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           onSave?.(data.updateSubscription);
         }
       } else {
+        const { data: mailData } = await client.query({
+          query: SubscriptionCreationMailDocument,
+          variables: {
+            memberPlanID: memberPlan.id,
+            paymentMethodID: paymentMethod.id,
+            paymentPeriodicity,
+            autoRenew,
+          },
+          fetchPolicy: 'network-only',
+        });
+        const mail = mailData?.subscriptionCreationMail;
+
+        if (!mail) {
+          throw new Error('Could not look up the mail of this action');
+        }
+
+        // asked every time: whether the mail goes out, or that none will
+        const decision = await askMail({ ...mail, recipient: user.email });
+
+        if (decision === 'cancel') {
+          return;
+        }
+
         const { data } = await createSubscription({
           variables: {
             ...inputBase,
             userID: user.id,
             paymentMethodID: paymentMethod.id,
             memberPlanID: memberPlan.id,
-            skipMail: doNotSendSubscribeMail,
+            ...skipMailFor(decision),
           },
         });
 
@@ -526,21 +552,42 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     }
   }
 
+  /** @returns false when the admin cancelled, so the dialog stays open */
   async function handleDeactivation(
     date: Date,
-    reason: SubscriptionDeactivationReason,
-    skipMail: boolean
-  ) {
-    if (!id || !memberPlan || !paymentMethod || !user?.id) return;
+    reason: SubscriptionDeactivationReason
+  ): Promise<boolean> {
+    if (!id || !memberPlan || !paymentMethod || !user?.id) return true;
+
+    const { data: mailData } = await client.query({
+      query: SubscriptionCancellationMailDocument,
+      variables: { id, reason },
+      fetchPolicy: 'network-only',
+    });
+    const mail = mailData?.subscriptionCancellationMail;
+
+    if (!mail) {
+      throw new Error('Could not look up the mail of this action');
+    }
+
+    // asked every time: whether the mail goes out, or that none will
+    const decision = await askMail({ ...mail, recipient: user.email });
+
+    if (decision === 'cancel') {
+      return false;
+    }
+
     const { data } = await cancelSubscription({
       variables: {
         reason,
         cancelSubscriptionId: id,
-        skipMail,
+        ...skipMailFor(decision),
       },
     });
     if (data?.cancelSubscription) onSave?.(data.cancelSubscription);
     await reloadInvoices();
+
+    return true;
   }
 
   async function handleRenewal() {
@@ -1021,26 +1068,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </Text>
                       </Col>
                     </RowPaddingTop>
-                    {/* only creating sends a mail (the subscribe mail) */}
-                    {!id && (
-                      <RowPaddingTop>
-                        <Col xs={24}>
-                          <Toggle
-                            checked={doNotSendSubscribeMail}
-                            disabled={isDisabled}
-                            onChange={value => setDoNotSendSubscribeMail(value)}
-                          />
-                          <FormLabelMarginLeft>
-                            {t('userSubscriptionEdit.doNotSendSubscribeMail')}
-                          </FormLabelMarginLeft>
-                          <Text>
-                            {t(
-                              'userSubscriptionEdit.doNotSendSubscribeMailHelp'
-                            )}
-                          </Text>
-                        </Col>
-                      </RowPaddingTop>
-                    )}
                     <RowPaddingTop>
                       <Col xs={24}>
                         <Button
@@ -1064,7 +1091,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                   <InvoiceListPanel
                     subscriptionId={id}
                     invoices={invoices}
-                    periods={data?.subscription?.periods}
                     disabled={!!deactivation}
                     onInvoicePaid={() => reloadSubscription()}
                   />
@@ -1087,13 +1113,16 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               userEmail={user.email}
               paidUntil={paidUntil ?? undefined}
               onDeactivate={async data => {
-                await handleDeactivation(data.date, data.reason, data.skipMail);
-                setDeactivationPanelOpen(false);
+                if (await handleDeactivation(data.date, data.reason)) {
+                  setDeactivationPanelOpen(false);
+                }
               }}
               onClose={() => setDeactivationPanelOpen(false)}
             />
           </Modal>
         )}
+
+        {actionMailDialog}
 
         {/* ask user to really extend the subscripion */}
         <Modal

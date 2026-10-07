@@ -197,7 +197,7 @@ export class ImportPublicSubscriptionInput extends OmitType(
     description:
       'When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.',
   })
-  skipMail?: boolean;
+  override skipMail?: boolean;
 }
 
 @ArgsType()

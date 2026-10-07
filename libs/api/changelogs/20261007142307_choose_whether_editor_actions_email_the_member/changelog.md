@@ -1,11 +1,11 @@
 ---
-title: You now choose whether your actions email the member
-lead: When you create a subscription, cancel a subscription or create a user in the editor, you can now decide whether the member gets the matching email — just like when you mark an invoice as paid.
+title: The editor now asks before an action emails a member
+lead: When you create or cancel a subscription, create a user or mark an invoice as paid, the editor now asks whether the member gets the matching email — or tells you that none will go out, and why.
 actionRequired: false
 ---
 
-- **Create subscription:** “Do not send a subscription confirmation to the member” under “Advanced settings”.
-- **Cancel subscription:** “Do not send the cancellation email to the member” in the cancellation dialog.
-- **Create user:** “Do not send the registration email” next to “Active”.
+- If the action would send an email, you see its template and the recipient. **“Don't send”** is preselected: Enter runs the action without the email, **“Send”** sends it.
+- If no email would go out — for example because no template is assigned under “Automatic emails”, or because no payment confirmation is sent for the first period of a subscription — the dialog says so. **OK** (also Enter) runs the action.
+- **Esc** cancels the action: nothing is saved.
 
-The email is only sent if a template is assigned to it under “Automatic emails”. Nothing changes if you leave the option off: the email goes out as before.
+Note: until now these emails went out without asking. With Enter, they are no longer sent.

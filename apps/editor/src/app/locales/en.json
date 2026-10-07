@@ -1,5 +1,17 @@
 {
   "translation": {
+    "actionMail": {
+      "title": "Email the member?",
+      "question": "Send the email “{{template}}” to {{recipient}}?",
+      "send": "Send",
+      "skip": "Don't send",
+      "noMailTitle": "No email to the member",
+      "noTemplate": "No email is configured for “{{event}}”. No email will be sent to {{recipient}}.",
+      "firstPeriod": "No payment confirmation is sent for the first period of a subscription. No email will be sent to {{recipient}}.",
+      "alreadyHandled": "The payment confirmation for this invoice was already sent or suppressed. No email will be sent to {{recipient}}.",
+      "notApplicable": "No email will be sent to {{recipient}}.",
+      "ok": "OK"
+    },
     "lastSavedAt": "Last saved {{date, ccc PP pp}}",
     "preview": {
       "backToEditor": "Editor",
@@ -1027,10 +1039,8 @@
     "invoice": {
       "areYouSure": "Are you sure?",
       "canceledAt": "Cancelled at",
-      "doNotSendMail": "Do not send a payment confirmation to the member",
       "invoiceNo": "Invoice No.",
       "manuallyPaidModalBody": "The invoice is marked as paid even though no payment has been received from the user. You should discuss your intention with the accountant.",
-      "noMailForFirstPeriod": "No payment confirmation will be sent, because this is the first period of the subscription.",
       "paidAt": "Paid at",
       "panel": {
         "invoiceHistory": "Invoice history",
@@ -2094,9 +2104,7 @@
       "zipCode": "ZIP",
       "birthday": "Birthday",
       "note": "Note",
-      "noteHelpText": "Not visible to the user.",
-      "doNotSendAccountMail": "Do not send the registration email",
-      "doNotSendAccountMailHelp": "The “Registration” email is only sent if a template is assigned to it under “Automatic emails” → “Account & login”."
+      "noteHelpText": "Not visible to the user."
     },
     "userList": {
       "overview": {
@@ -2179,8 +2187,7 @@
         "title": {
           "activated": "Deactivate subscription"
         },
-        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
-        "doNotSendMail": "Do not send the cancellation email to the member"
+        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
       },
       "editTitle": "Edit Subscription",
       "memberPlanMonthlyAmount": "Minimal Monthly Amount ({{currency}})",
@@ -2194,9 +2201,7 @@
       "selectUser": "Select User",
       "startsAt": "Subscription Start",
       "uniqueSubscription": "Unique Subscription",
-      "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible.",
-      "doNotSendSubscribeMail": "Do not send a subscription confirmation to the member",
-      "doNotSendSubscribeMailHelp": "The “Subscription started” email is only sent if a template is assigned to it for this subscription under “Automatic emails”."
+      "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible."
     },
     "userSubscriptionList": {
       "aboDetails": "Subscription details",
