@@ -1,11 +1,12 @@
 'use client';
 
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import GearIcon from '@rsuite/icons/Gear';
 import {
+  TagListDocument,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,
-  useTagListQuery,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -55,7 +56,7 @@ export function TeaserSlotsAutofillControls({
   const { t } = useTranslation();
   const [configDialogOpen, setConfigDialogOpen] = useState(false);
 
-  const { data: tagsData, refetch } = useTagListQuery({
+  const { data: tagsData, refetch } = useQuery(TagListDocument, {
     skip: !config.filter?.tags?.length,
   });
 

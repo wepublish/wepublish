@@ -1,12 +1,13 @@
+import { useQuery } from '@apollo/client/react';
 import React from 'react';
 import styled from '@emotion/styled';
 import {
   CreateBannerActionInput,
   CreateBannerInput,
   FullImageFragment,
-  UpdateBannerInput,
-  usePageListQuery,
   LoginStatus,
+  PageListDocument,
+  UpdateBannerInput,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -53,7 +54,7 @@ const BannerFormContainer = styled('div')`
 export const BannerForm = (props: BannerFormProps) => {
   const { t } = useTranslation();
 
-  const { data: pageData } = usePageListQuery({
+  const { data: pageData } = useQuery(PageListDocument, {
     variables: { take: 50 },
   });
 

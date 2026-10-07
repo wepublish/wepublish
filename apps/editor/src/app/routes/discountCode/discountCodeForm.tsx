@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import {
-  MemberPlan,
+  FullMemberPlanFragment,
   MutationCreateDiscountCodeArgs,
   MutationUpdateDiscountCodeArgs,
 } from '@wepublish/editor/api';
@@ -12,7 +12,7 @@ type DiscountCodeFormData = (
   | MutationCreateDiscountCodeArgs
   | MutationUpdateDiscountCodeArgs
 ) & {
-  memberPlan?: Pick<MemberPlan, 'id' | 'name'>;
+  memberPlan?: Pick<FullMemberPlanFragment, 'id' | 'name'>;
 };
 
 type DiscountCodeFormProps = {

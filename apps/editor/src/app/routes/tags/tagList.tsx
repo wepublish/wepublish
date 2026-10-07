@@ -1,10 +1,11 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  Tag,
+  DeleteTagDocument,
+  FullTagFragment,
+  TagListDocument,
   TagListQueryVariables,
   TagType,
-  useDeleteTagMutation,
-  useTagListQuery,
 } from '@wepublish/editor/api';
 import {
   CanCreateTag,
@@ -55,7 +56,9 @@ const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function TagList({ type }: TagListProps) {
   const { t } = useTranslation();
-  const [tagToDelete, setTagToDelete] = useState<Tag | undefined>(undefined);
+  const [tagToDelete, setTagToDelete] = useState<FullTagFragment | undefined>(
+    undefined
+  );
   const [page, setPage] = useState<number>(1);
 
   const {
@@ -74,10 +77,10 @@ function TagList({ type }: TagListProps) {
     skip: (page - 1) * limit,
   } as TagListQueryVariables;
 
-  const { data, loading, refetch } = useTagListQuery({
+  const { data, loading, refetch } = useQuery(TagListDocument, {
     variables: tagListVariables,
   });
-  const [deleteTag] = useDeleteTagMutation({
+  const [deleteTag] = useMutation(DeleteTagDocument, {
     onCompleted() {
       refetch();
     },
@@ -131,9 +134,9 @@ function TagList({ type }: TagListProps) {
             <HeaderCell>{t('tags.overview.name')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Tag>) => (
+              {(rowData: RowDataType<FullTagFragment>) => (
                 <Link to={`edit/${rowData.id}`}>
-                  {rowData.tag || 'Tag ohne Namen'}
+                  {rowData.tag || 'FullTagFragment ohne Namen'}
                 </Link>
               )}
             </RCell>
@@ -146,14 +149,14 @@ function TagList({ type }: TagListProps) {
           >
             <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
             <PaddedCell align={'center'}>
-              {(tag: RowDataType<Tag>) => (
+              {(tag: RowDataType<FullTagFragment>) => (
                 <IconButton
                   icon={<MdDelete />}
                   circle
                   appearance="ghost"
                   color="red"
                   size="sm"
-                  onClick={() => setTagToDelete(tag as Tag)}
+                  onClick={() => setTagToDelete(tag as FullTagFragment)}
                 />
               )}
             </PaddedCell>

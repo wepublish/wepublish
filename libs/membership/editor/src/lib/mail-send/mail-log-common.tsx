@@ -52,28 +52,36 @@ export function MailLogStateTag({ state }: { state: MailLogState }) {
         <Popover style={{ maxWidth: 420 }}>
           <Typography
             variant="subtitle2"
-            display="block"
+            sx={{
+              display: 'block',
+            }}
           >
             {t(`mailLog.stateHelp.${state}.name`)}
           </Typography>
           <Typography
             variant="body2"
-            display="block"
             style={{ marginBottom: 8 }}
+            sx={{
+              display: 'block',
+            }}
           >
             {t(`mailLog.stateHelp.${state}.meaning`)}
           </Typography>
 
           <Typography
             variant="subtitle2"
-            display="block"
+            sx={{
+              display: 'block',
+            }}
           >
             {t('mailLog.stateHelp.nextTitle')}
           </Typography>
           <Typography
             variant="body2"
-            display="block"
             style={{ whiteSpace: 'pre-line' }}
+            sx={{
+              display: 'block',
+            }}
           >
             {t(`mailLog.stateHelp.${state}.next`)}
           </Typography>
@@ -105,15 +113,19 @@ export function MailLogStateLegend() {
         <Popover style={{ maxWidth: 520 }}>
           <Typography
             variant="subtitle2"
-            display="block"
             style={{ marginBottom: 4 }}
+            sx={{
+              display: 'block',
+            }}
           >
             {t('mailLog.stateHelp.legendTitle')}
           </Typography>
           <Typography
             variant="body2"
-            display="block"
             style={{ marginBottom: 12 }}
+            sx={{
+              display: 'block',
+            }}
           >
             {t('mailLog.stateHelp.legendIntro')}
           </Typography>
@@ -135,7 +147,9 @@ export function MailLogStateLegend() {
               </Stack>
               <Typography
                 variant="body2"
-                display="block"
+                sx={{
+                  display: 'block',
+                }}
               >
                 {t(`mailLog.stateHelp.${state}.meaning`)}
               </Typography>
@@ -144,8 +158,10 @@ export function MailLogStateLegend() {
 
           <Typography
             variant="caption"
-            display="block"
             style={{ color: '#8e8e93', whiteSpace: 'pre-line' }}
+            sx={{
+              display: 'block',
+            }}
           >
             {t('mailLog.stateHelp.legendFooter')}
           </Typography>
@@ -229,36 +245,46 @@ export function MailErrorCell({ error }: { error?: string | null }) {
         <Popover style={{ maxWidth: 420 }}>
           <Typography
             variant="subtitle2"
-            display="block"
+            sx={{
+              display: 'block',
+            }}
           >
             {t('mailLog.errorHelp.causeTitle')}
           </Typography>
           <Typography
             variant="body2"
-            display="block"
             style={{ marginBottom: 8 }}
+            sx={{
+              display: 'block',
+            }}
           >
             {t(`mailLog.errorHelp.${key}.cause`)}
           </Typography>
 
           <Typography
             variant="subtitle2"
-            display="block"
+            sx={{
+              display: 'block',
+            }}
           >
             {t('mailLog.errorHelp.fixTitle')}
           </Typography>
           <Typography
             variant="body2"
-            display="block"
             style={{ marginBottom: 8, whiteSpace: 'pre-line' }}
+            sx={{
+              display: 'block',
+            }}
           >
             {t(`mailLog.errorHelp.${key}.fix`)}
           </Typography>
 
           <Typography
             variant="caption"
-            display="block"
             style={{ color: '#8e8e93' }}
+            sx={{
+              display: 'block',
+            }}
           >
             {t('mailLog.errorHelp.raw')}
           </Typography>

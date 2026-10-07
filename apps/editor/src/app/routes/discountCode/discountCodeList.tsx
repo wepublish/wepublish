@@ -1,9 +1,10 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  DiscountCode,
+  DeleteDiscountCodeDocument,
+  DiscountCodeListDocument,
   DiscountCodesort,
-  useDeleteDiscountCodeMutation,
-  useDiscountCodeListQuery,
+  FullDiscountCodeFragment,
 } from '@wepublish/editor/api';
 import {
   CanCreateDiscountCode,
@@ -54,10 +55,10 @@ function DiscountCodeList() {
   const [page, setPage] = useState<number>(1);
 
   const [discountCodeToDelete, setDiscountCodeToDelete] = useState<
-    DiscountCode | undefined
+    FullDiscountCodeFragment | undefined
   >(undefined);
 
-  const { data, loading, refetch } = useDiscountCodeListQuery({
+  const { data, loading, refetch } = useQuery(DiscountCodeListDocument, {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
@@ -65,7 +66,7 @@ function DiscountCodeList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
-  const [deleteDiscountCode] = useDeleteDiscountCodeMutation({
+  const [deleteDiscountCode] = useMutation(DeleteDiscountCodeDocument, {
     onCompleted() {
       refetch();
     },
@@ -117,7 +118,7 @@ function DiscountCodeList() {
             <HeaderCell>{t('discountCode.overview.valid')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<DiscountCode>) =>
+              {(rowData: RowDataType<FullDiscountCodeFragment>) =>
                 (
                   new Date() > new Date(rowData.validFrom) &&
                   new Date(rowData.validTo) > new Date()
@@ -135,7 +136,7 @@ function DiscountCodeList() {
             <HeaderCell>{t('discountCode.overview.code')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<DiscountCode>) => (
+              {(rowData: RowDataType<FullDiscountCodeFragment>) => (
                 <Link to={`edit/${rowData.id}`}>
                   {rowData.code.toUpperCase()}
                 </Link>
@@ -153,7 +154,9 @@ function DiscountCodeList() {
             </HeaderCell>
 
             <RCell dataKey={DiscountCodesort.Discount}>
-              {(rowData: DiscountCode) => `${rowData.discountPercent}%`}
+              {(rowData: FullDiscountCodeFragment) =>
+                `${rowData.discountPercent}%`
+              }
             </RCell>
           </Column>
 
@@ -164,7 +167,7 @@ function DiscountCodeList() {
             <HeaderCell>{t('discountCode.overview.usage')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<DiscountCode>) => {
+              {(rowData: RowDataType<FullDiscountCodeFragment>) => {
                 const usage = t('discountCode.overview.usageValue', {
                   total: rowData.usageCount,
                   paid: rowData.paidUsageCount,
@@ -186,7 +189,9 @@ function DiscountCodeList() {
             <HeaderCell>{t('discountCode.overview.memberPlan')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<DiscountCode>) => rowData.memberPlan.name}
+              {(rowData: RowDataType<FullDiscountCodeFragment>) =>
+                rowData.memberPlan.name
+              }
             </RCell>
           </Column>
 
@@ -197,7 +202,7 @@ function DiscountCodeList() {
             <HeaderCell>{t('discountCode.overview.validFrom')}</HeaderCell>
 
             <RCell>
-              {(rowData: DiscountCode) =>
+              {(rowData: FullDiscountCodeFragment) =>
                 `${new Date(rowData.validFrom).toDateString()}`
               }
             </RCell>
@@ -210,7 +215,7 @@ function DiscountCodeList() {
             <HeaderCell>{t('discountCode.overview.validTo')}</HeaderCell>
 
             <RCell>
-              {(rowData: DiscountCode) =>
+              {(rowData: FullDiscountCodeFragment) =>
                 `${new Date(rowData.validTo).toDateString()}`
               }
             </RCell>
@@ -223,7 +228,7 @@ function DiscountCodeList() {
           >
             <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
             <PaddedCell align={'center'}>
-              {(discountCode: RowDataType<DiscountCode>) => (
+              {(discountCode: RowDataType<FullDiscountCodeFragment>) => (
                 <IconButton
                   icon={<MdDelete />}
                   circle
@@ -231,7 +236,9 @@ function DiscountCodeList() {
                   color="red"
                   size="sm"
                   onClick={() =>
-                    setDiscountCodeToDelete(discountCode as DiscountCode)
+                    setDiscountCodeToDelete(
+                      discountCode as FullDiscountCodeFragment
+                    )
                   }
                 />
               )}

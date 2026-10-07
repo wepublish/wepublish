@@ -44,6 +44,8 @@ import { getMaxTake } from '@wepublish/utils/api';
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
+export const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
+
 /**
  * Controller responsible for performing periodic jobs. A new controller
  * instance must be created for every run.
@@ -697,6 +699,12 @@ export class PeriodicJobService {
 
     if (latestRun.finishedWithError && !latestRun.successfullyFinished) {
       this.logger.warn('Last run had errors retrying....');
+      runDates.push({ isRetry: true, date: startOfDay(latestRun.date) });
+    } else if (
+      !latestRun.successfullyFinished &&
+      (latestRun.executionTime?.getTime() ?? 0) < Date.now() - NIGHT_CLAIM_MS
+    ) {
+      this.logger.warn('Last run was aborted before it finished retrying....');
       runDates.push({ isRetry: true, date: startOfDay(latestRun.date) });
     }
 

@@ -38,6 +38,7 @@ import {
 import { HealthModule } from '@wepublish/health';
 import { MediaAdapterModule } from '@wepublish/image/api';
 import {
+  GraphqlResponseCacheModule,
   KvTtlCacheModule,
   KvTtlCacheService,
 } from '@wepublish/kv-ttl-cache/api';
@@ -119,7 +120,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
           introspection:
             process.env.NODE_ENV !== 'production' &&
             configFile.general.apolloIntrospection,
-          playground: configFile.general.apolloPlayground,
+          graphiql: configFile.general.apolloPlayground,
           allowBatchedHttpRequests: true,
           inheritResolversFromInterfaces: true,
           csrfPrevention: false,
@@ -127,6 +128,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       },
     }),
     KvTtlCacheModule,
+    GraphqlResponseCacheModule,
     V0Module.registerAsync({
       imports: [PrismaModule, KvTtlCacheModule],
     }),

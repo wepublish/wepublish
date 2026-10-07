@@ -1,3 +1,4 @@
+import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { PaymentMethodService } from './payment-method.service';
 import { PaymentMethodDataloader } from './payment-method.dataloader';
 import { PaymentProviderDataloader } from './payment-provider.dataloader';
@@ -37,7 +38,7 @@ export interface PaymentMethodClientAsyncOptions
 }
 
 @Module({
-  imports: [PrismaModule],
+  imports: [GraphqlResponseCacheModule, PrismaModule],
   providers: [
     PaymentMethodService,
     PaymentMethodDataloader,

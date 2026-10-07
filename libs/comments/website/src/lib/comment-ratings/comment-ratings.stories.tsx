@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { CommentRatings } from './comment-ratings';
-import { CommentRatingSystemAnswer } from '@wepublish/website/api';
+import { FullCommentRatingSystemAnswerFragment } from '@wepublish/website/api';
 import { mockCommentRatingAnswer } from '@wepublish/storybook/mocks';
 import {
   WithCommentRatingsDecorators,
@@ -16,7 +16,7 @@ export default {
   title: 'Components/Comment Ratings',
 } as Meta;
 
-const answers: CommentRatingSystemAnswer[] = [
+const answers: FullCommentRatingSystemAnswerFragment[] = [
   mockCommentRatingAnswer({ answer: 'Foobar' }),
   mockCommentRatingAnswer({ answer: 'Barfoo' }),
   mockCommentRatingAnswer({ answer: 'Foobaz' }),

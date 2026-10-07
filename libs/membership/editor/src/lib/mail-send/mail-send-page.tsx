@@ -1,4 +1,6 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  CreateMailSendJobDocument,
   LetterAddressPosition,
   LetterDeliveryProduct,
   LetterPrintMode,
@@ -8,17 +10,16 @@ import {
   MailEmailFilter,
   MailLogState,
   MailRecipientBase,
+  MailSendJobDocument,
+  MailSendPreviewDocument,
+  MailSendRecipientPreviewDocument,
+  MailSendRecipientsDocument,
   MailSubscriptionState,
+  MailTemplateDocument,
+  MailTemplateMissingPlaceholdersDocument,
+  MemberPlanListDocument,
+  PaymentMethodListDocument,
   PaymentPeriodicity,
-  useCreateMailSendJobMutation,
-  useMailSendJobQuery,
-  useMailSendRecipientPreviewQuery,
-  useMailSendPreviewQuery,
-  useMailSendRecipientsQuery,
-  useMailTemplateMissingPlaceholdersQuery,
-  useMailTemplateQuery,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -70,7 +71,7 @@ import {
   Stack,
   toaster,
 } from 'rsuite';
-import { DEFAULT_QUERY_OPTIONS } from '../common';
+import { showErrors, useShowErrors } from '../common';
 import { mailErrorHelpKey } from './mail-log-common';
 import {
   CancelJobButton,
@@ -204,15 +205,33 @@ function MailSendPage() {
   const [jobId, setJobId] = useState<string | null>(null);
   const [step, setStep] = useState(STEP_CONTENT);
 
-  const { data: templateData, refetch: refetchTemplates } =
-    useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
-  const { data: memberPlanData } = useMemberPlanListQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
-    variables: { take: 100 },
-  });
-  const { data: paymentMethodData } = usePaymentMethodListQuery(
-    DEFAULT_QUERY_OPTIONS()
+  const {
+    data: templateData,
+    refetch: refetchTemplates,
+    error: templateError,
+  } = useQuery(MailTemplateDocument);
+  const { data: memberPlanData, error: memberPlanError } = useQuery(
+    MemberPlanListDocument,
+    {
+      variables: { take: 100 },
+    }
   );
+  useShowErrors(memberPlanError);
+  const { data: paymentMethodData, error: paymentMethodError } = useQuery(
+    PaymentMethodListDocument
+  );
+
+  useEffect(() => {
+    if (templateError) {
+      showErrors(templateError);
+    }
+  }, [templateError]);
+
+  useEffect(() => {
+    if (paymentMethodError) {
+      showErrors(paymentMethodError);
+    }
+  }, [paymentMethodError]);
 
   const isSubscriptionBase = base === MailRecipientBase.HasSubscription;
   const isWinBackBase = base === MailRecipientBase.EndedSubscription;
@@ -277,37 +296,43 @@ function MailSendPage() {
     hasReplaced,
   ]);
 
-  const { data: previewData, loading: previewLoading } =
-    useMailSendRecipientPreviewQuery({
-      ...DEFAULT_QUERY_OPTIONS(),
-      variables: { audience, channel },
-    });
-
-  const [createJob, { loading: creating }] = useCreateMailSendJobMutation({
-    onError: error =>
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {error.message}
-        </Message>
-      ),
-    onCompleted: result => {
-      setJobId(result.createMailSendJob.id);
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('mailSend.started')}
-        </Message>
-      );
-    },
+  const {
+    data: previewData,
+    loading: previewLoading,
+    error: previewError,
+  } = useQuery(MailSendRecipientPreviewDocument, {
+    variables: { audience, channel },
   });
+  useShowErrors(previewError);
+
+  const [createJob, { loading: creating }] = useMutation(
+    CreateMailSendJobDocument,
+    {
+      onError: error =>
+        toaster.push(
+          <Message
+            type="error"
+            showIcon
+            closable
+          >
+            {error.message}
+          </Message>
+        ),
+      onCompleted: result => {
+        setJobId(result.createMailSendJob.id);
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('mailSend.started')}
+          </Message>
+        );
+      },
+    }
+  );
 
   // Messages, not people: for a mail one person can match through several
   // subscriptions and receives one each. A letter send is already collapsed to
@@ -325,15 +350,18 @@ function MailSendPage() {
   // Warn (never block) when the template uses placeholders that this audience
   // won't fill. `withSubscriptionData` mirrors whether the audience carries a
   // subscription per recipient.
-  const { data: missingData, refetch: refetchMissing } =
-    useMailTemplateMissingPlaceholdersQuery({
-      ...DEFAULT_QUERY_OPTIONS(),
-      skip: !templateId,
-      variables: {
-        templateId: templateId as string,
-        withSubscriptionData: allowsSubscriptionTemplates,
-      },
-    });
+  const {
+    data: missingData,
+    refetch: refetchMissing,
+    error: missingError,
+  } = useQuery(MailTemplateMissingPlaceholdersDocument, {
+    skip: !templateId,
+    variables: {
+      templateId: templateId as string,
+      withSubscriptionData: allowsSubscriptionTemplates,
+    },
+  });
+  useShowErrors(missingError);
   // The query is skipped without a template, but Apollo can still hand back the
   // previously selected template's result — so gate on the template as well.
   const missing =
@@ -527,11 +555,13 @@ function MailSendPage() {
                           <div>{t(`mailSend.base.${option}`)}</div>
                           <Typography
                             variant="caption"
-                            display="block"
                             style={{
                               color: '#8e8e93',
                               whiteSpace: 'normal',
                               lineHeight: 1.35,
+                            }}
+                            sx={{
+                              display: 'block',
                             }}
                           >
                             {t(`mailSend.base.${option}Hint`)}
@@ -947,7 +977,6 @@ function MailSendPage() {
           </Box>
         )}
       </Box>
-
       <RecipientListModal
         open={recipientsOpen}
         onClose={() => setRecipientsOpen(false)}
@@ -955,7 +984,6 @@ function MailSendPage() {
         channel={channel}
         totalCount={count}
       />
-
       <Modal
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
@@ -1105,8 +1133,10 @@ function StepNav({
     <MuiStack
       direction="row"
       spacing={1.5}
-      justifyContent="flex-end"
-      sx={{ marginTop: 2 }}
+      sx={{
+        justifyContent: 'flex-end',
+        marginTop: 2,
+      }}
     >
       {onBack && (
         <MuiButton
@@ -1180,9 +1210,7 @@ function ChannelPanel({
         <>
           <MuiStack
             direction="row"
-            flexWrap="wrap"
-            gap={2}
-            sx={{ marginTop: 2 }}
+            sx={{ flexWrap: 'wrap', gap: 2, marginTop: 2 }}
           >
             <PrintOption
               label={t('mailSend.print.addressPosition.label')}
@@ -1278,15 +1306,17 @@ function TemplatePreview({
     setRecipientId(null);
   }, [audience, channel]);
 
-  const { data: recipientData } = useMailSendRecipientsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
-    variables: { audience, channel, take: RECIPIENTS_PAGE_SIZE },
-  });
+  const { data: recipientData, error: recipientsError } = useQuery(
+    MailSendRecipientsDocument,
+    {
+      variables: { audience, channel, take: RECIPIENTS_PAGE_SIZE },
+    }
+  );
+  useShowErrors(recipientsError);
 
   const isLetter = channel === MailChannel.Letter;
 
-  const { data, loading, error, refetch } = useMailSendPreviewQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
+  const { data, loading, error, refetch } = useQuery(MailSendPreviewDocument, {
     skip: recipientCount === 0,
     variables: {
       input: {
@@ -1298,6 +1328,7 @@ function TemplatePreview({
       },
     },
   });
+  useShowErrors(error);
 
   // The mail is composed by the API from the stored template, so an edit made in
   // the other tab only shows up once this query runs again.
@@ -1356,8 +1387,10 @@ function TemplatePreview({
             </div>
             <Typography
               variant="caption"
-              display="block"
               style={{ color: '#8e8e93', marginTop: 4 }}
+              sx={{
+                display: 'block',
+              }}
             >
               {t('mailSend.preview.hint')}
             </Typography>
@@ -1415,8 +1448,7 @@ function RecipientListModal({
     setPage(1);
   }, [audience, channel]);
 
-  const { data, loading } = useMailSendRecipientsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
+  const { data, loading, error } = useQuery(MailSendRecipientsDocument, {
     skip: !open,
     variables: {
       audience,
@@ -1425,6 +1457,7 @@ function RecipientListModal({
       take: RECIPIENTS_PAGE_SIZE,
     },
   });
+  useShowErrors(error);
 
   const recipients = data?.mailSendRecipients.nodes ?? [];
   // Only a letter needs an address; for a mail the column would be noise.
@@ -1532,10 +1565,13 @@ function RecipientListModal({
 /** Polls a running send job and shows live progress. */
 function JobProgress({ jobId }: { jobId: string }) {
   const { t } = useTranslation();
-  const { data, startPolling, stopPolling, refetch } = useMailSendJobQuery({
-    variables: { id: jobId },
-    fetchPolicy: 'network-only',
-  });
+  const { data, startPolling, stopPolling, refetch } = useQuery(
+    MailSendJobDocument,
+    {
+      variables: { id: jobId },
+      fetchPolicy: 'network-only',
+    }
+  );
 
   const job = data?.mailSendJob;
   const active = job ? isActive(job) : true;

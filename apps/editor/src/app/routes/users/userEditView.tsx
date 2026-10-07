@@ -1,15 +1,16 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CreateUserDocument,
   FullImageFragment,
   FullUserFragment,
   FullUserRoleFragment,
-  useCreateUserMutation,
+  ResetUserTotpDocument,
+  UpdateUserDocument,
   UserAddress,
-  useResetUserTotpMutation,
-  useUpdateUserMutation,
-  useUserQuery,
-  useUserRoleListQuery,
-  useUserSubscriptionListQuery,
+  UserDocument,
+  UserRoleListDocument,
+  UserSubscriptionListDocument,
 } from '@wepublish/editor/api';
 import {
   ChooseEditImage,
@@ -160,7 +161,7 @@ function UserEditView() {
     ListValue<UserProperty>[]
   >([]);
 
-  const { data: subscriptionData } = useUserSubscriptionListQuery({
+  const { data: subscriptionData } = useQuery(UserSubscriptionListDocument, {
     skip: !userId,
     variables: {
       userId: userId!,
@@ -169,12 +170,14 @@ function UserEditView() {
 
   // getting user id from url param
   const [id] = useState<string | undefined>(isEditRoute ? userId : undefined);
-  const { data: userRoleData, loading: isUserRoleLoading } =
-    useUserRoleListQuery({
+  const { data: userRoleData, loading: isUserRoleLoading } = useQuery(
+    UserRoleListDocument,
+    {
       variables: {
         take: 200,
       },
-    });
+    }
+  );
 
   /**
    * fetch user from api
@@ -183,7 +186,7 @@ function UserEditView() {
     data,
     loading: isLoading,
     error: loadError,
-  } = useUserQuery({
+  } = useQuery(UserDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
@@ -233,8 +236,14 @@ function UserEditView() {
     }
   }, [userRoleData?.userRoles]);
 
-  const [createUser, { loading: isCreating }] = useCreateUserMutation({});
-  const [updateUser, { loading: isUpdating }] = useUpdateUserMutation({});
+  const [createUser, { loading: isCreating }] = useMutation(
+    CreateUserDocument,
+    {}
+  );
+  const [updateUser, { loading: isUpdating }] = useMutation(
+    UpdateUserDocument,
+    {}
+  );
 
   const isDisabled =
     isLoading ||
@@ -245,8 +254,9 @@ function UserEditView() {
   const canResetPassword = useAuthorisation('CAN_RESET_USER_PASSWORD');
   const canResetTotp = useAuthorisation('CAN_RESET_USER_TOTP');
 
-  const [resetUserTotp, { loading: isResettingTotp }] =
-    useResetUserTotpMutation();
+  const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
+    ResetUserTotpDocument
+  );
 
   /**
    * Function to update address object
@@ -272,6 +282,7 @@ function UserEditView() {
     let addressCopy = Object.assign({}, address);
     if (!address) {
       addressCopy = {
+        __typename: 'UserAddress',
         company: '',
         streetAddress: '',
         streetAddressNumber: '',

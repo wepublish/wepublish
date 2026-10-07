@@ -1,7 +1,7 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
+  CreateUserConsentDocument,
   MutationCreateUserConsentArgs,
-  useCreateUserConsentMutation,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { UserConsentForm } from './user-consent-form';
 
-const onErrorToast = (error: ApolloError, slug?: string) => {
+const onErrorToast = (error: Error, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
     toaster.push(
       <Message
@@ -50,26 +50,29 @@ export const UserConsentCreateView = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [createUserConsent, { loading }] = useCreateUserConsentMutation({
-    onError: error => onErrorToast(error, userConsent.userId),
-    onCompleted: consent => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.createdSuccess')}
-        </Message>
-      );
-      if (shouldClose) {
-        navigate(closePath);
-      } else {
-        navigate(`/userConsents/edit/${consent.createUserConsent?.id}`);
-      }
-    },
-  });
+  const [createUserConsent, { loading }] = useMutation(
+    CreateUserConsentDocument,
+    {
+      onError: error => onErrorToast(error, userConsent.userId),
+      onCompleted: consent => {
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('toast.createdSuccess')}
+          </Message>
+        );
+        if (shouldClose) {
+          navigate(closePath);
+        } else {
+          navigate(`/userConsents/edit/${consent.createUserConsent?.id}`);
+        }
+      },
+    }
+  );
 
   const onSubmit = () => {
     createUserConsent({

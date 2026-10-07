@@ -3,12 +3,13 @@ import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import express from 'express';
 import { InvoiceWithItems } from './payment-provider';
 import { SimulatedPaymentProvider } from './simulated-payment-provider';
+import type { Mock } from 'vitest';
 
 describe('SimulatedPaymentProvider', () => {
   const env = process.env;
   let provider: SimulatedPaymentProvider;
   let kv: ReturnType<typeof createKvMock>;
-  let findUnique: jest.Mock;
+  let findUnique: Mock;
 
   const invoice = {
     currency: Currency.CHF,
@@ -31,7 +32,7 @@ describe('SimulatedPaymentProvider', () => {
     process.env = { ...env, HOST_URL: 'https://api.example.com' };
     kv = createKvMock();
     await setConfig(false);
-    findUnique = jest
+    findUnique = vi
       .fn()
       .mockResolvedValue({ id: 'payment-1', invoiceID: 'invoice-1' });
 
@@ -39,7 +40,7 @@ describe('SimulatedPaymentProvider', () => {
       id: 'simulated',
       prisma: {
         payment: { findUnique },
-        invoice: { findUnique: jest.fn().mockResolvedValue(invoice) },
+        invoice: { findUnique: vi.fn().mockResolvedValue(invoice) },
       } as unknown as PrismaClient,
       kv,
     });

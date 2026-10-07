@@ -1,5 +1,16 @@
 {
   "translation": {
+    "lastSavedAt": "Last saved {{date, ccc PP pp}}",
+    "preview": {
+      "backToEditor": "Editor",
+      "mobile": "Mobile",
+      "desktop": "Desktop",
+      "tablet": "Tablet",
+      "copyUrl": "Copy preview URL",
+      "urlCopied": "Preview URL copied to clipboard",
+      "urlCopyFailed": "Preview URL could not be copied",
+      "loading": "Loading preview …"
+    },
     "previewHandshake": {
       "popupBlocked": "The preview window was blocked by the browser. Please allow pop-ups for the editor and try again.",
       "notResponding": "The preview window is not responding. The preview login may have failed."
@@ -64,6 +75,9 @@
       }
     },
     "articleEditor": {
+      "validationFailedGeneric": "Cannot save. Please fix the highlighted errors.",
+      "saveValidationFailed": "Saving failed",
+      "publishValidationFailed": "Publishing failed",
       "overview": {
         "articlePending": "Article Pending",
         "articlePublished": "Article Published",
@@ -72,6 +86,7 @@
         "draft": "Draft",
         "draftCreated": "Article Draft Created",
         "draftSaved": "Article Draft Saved",
+        "draftAutosaved": "Article Draft Autosaved",
         "duplicate": "Duplicate",
         "metadata": "Metadata",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
@@ -322,6 +337,14 @@
       }
     },
     "blocks": {
+      "blockTemplate": {
+        "editTemplate": "Edit template",
+        "label": "Block Template",
+        "select": "Select a block template",
+        "useContent": "Use content",
+        "useContentConfirmMessage": "The template's content will be copied here, so you can edit it freely. From then on, this block is no longer linked to the template, and later changes to the template won't show up here.",
+        "useContentConfirmTitle": "Use template content?"
+      },
       "crowdfunding": {
         "crowdfundingName": "Crowdfunding {{name}}",
         "edit": "Edit",
@@ -552,11 +575,11 @@
         "syncProviderPlaceholder": "Select account",
         "list": "List",
         "listPlaceholder": "Select list",
-        "interests": "Preset interests",
+        "interests": "Preset interests. These are automatically added for every subscriber",
         "interestsPlaceholder": "Select interests",
         "autoFocus": "Autofocus",
         "doubleOptIn": "Double opt-in",
-        "submitButtonLabel": "Submit button label",
+        "submitButtonLabel": "Registration button label",
         "buttonColor": "Button color",
         "buttonFontColor": "Button font color",
         "mergeFieldPlaceholder": "Select merge field",
@@ -566,17 +589,26 @@
         "fieldValue": "Fixed value",
         "steps": "Steps",
         "step": "Step {{number}}",
-        "skipIfFieldsFilled": "Skip if fields filled",
-        "skipIfInterestsFilled": "Skip if interests set",
-        "showIfInterestsFilled": "Show only if interests set",
+        "skipIfFieldsFilled": "Skip step if the following information is already present",
+        "skipIfInterestsFilled": "Skip this step if the following interest is already enabled",
+        "showIfInterestsFilled": "Show this step only if the following interest is enabled",
         "inputs": "Inputs",
+        "inputTitle": "Input {{number}}",
         "inputType": "Type",
         "inputTypeHelp": "Type of information that can be typed into the input field",
+        "inputTypes": {
+          "text": "Text",
+          "email": "Email",
+          "hidden": "Hidden",
+          "groups": "Interest selection"
+        },
+        "inputTypeGroupsHelp": "Lets readers choose which interests of the selected Mailchimp list they want to subscribe to, e.g. individual newsletters. Add one option per interest below.",
         "required": "Required",
         "inputName": "Name",
         "inputNameHelp": "Name of the merge field, where this info is stored on Mailchimp",
         "inputLabel": "Label",
         "inputLabelHelp": "Label of the form input",
+        "inputLabelGroupsHelp": "Heading shown above the interests, e.g. “Which newsletters would you like to receive?”",
         "inputDescription": "Description",
         "inputDescriptionHelp": "Description displayed below the form field",
         "fieldUrlParamHelp": "Which URL-Param (?foo=bar) is able to pre-set this information",
@@ -584,22 +616,43 @@
         "fieldValueHelp": "Fixed value to be used if nothing is entered",
         "advanced": "Advanced",
         "interestOptions": "Interest options",
+        "interestOptionsNoList": "Select a list under General first to load its interests.",
         "interestOptionPlaceholder": "Select interest",
+        "interestOptionRequired": "Select an interest.",
+        "syncProviderRequired": "Select a Mailchimp account.",
+        "listRequired": "Select a list.",
+        "emailInputRequired": "Add an input with the merge field Email address (EMAIL), otherwise nobody can subscribe.",
+        "inputNameRequired": "Select a merge field.",
+        "inputLabelRequired": "Enter a label.",
+        "interestOptionsRequired": "Add at least one option with an interest.",
+        "validationSummaryOne": "Newsletter form: 1 field is incomplete",
+        "validationSummaryMany": "Newsletter form: {{count}} fields are incomplete",
         "interestOptionDescription": "Description",
         "addInterestOption": "Add option",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "remove": "Remove",
         "addInput": "Add input",
         "addStep": "Add step",
         "success": "After submit",
-        "successUrl": "Redirect URL",
+        "successUrl": "Redirect to this website",
         "successUrlPlaceholder": "https://…",
-        "useSuccessPage": "Success page instead of redirect",
+        "useSuccessPage": "Display a success page instead of redirecting to a website",
         "successPageDescription": "Description",
         "optionLabel": "Label",
         "optionBackground": "Background color",
         "optionUrl": "URL",
         "optionMergeFieldName": "Merge field name",
         "optionMergeFieldValue": "Merge field value",
-        "addSuccessOption": "Add option"
+        "addSuccessOption": "Add option",
+        "successOptionTitle": "Option {{number}}",
+        "interestOption": "Interest",
+        "interestOptionTitle": "Interest {{number}}",
+        "interestOptionName": "Name",
+        "interestOptionImage": "Image (optional)",
+        "optionsLayout": "Display as",
+        "optionsLayoutList": "List",
+        "optionsLayoutGrid": "Grid with cards"
       }
     },
     "cancel": "Cancel",
@@ -770,6 +823,11 @@
       "tomorrow": "Tomorrow"
     },
     "delete": "Delete",
+    "deleteBlockTemplateModal": {
+      "body": "Do you really want to delete the block template \"{{name}}\"?",
+      "deleteBtn": "Yes, delete",
+      "title": "Delete Block Template?"
+    },
     "deletePollModal": {
       "body": "Do you really want to delete the poll \"{{pollQuestion}}\"?",
       "deleteBtn": "Yes, delete",
@@ -1321,7 +1379,8 @@
         "polls": "Polls",
         "blockStyles": "Block Styling",
         "topMenu": "Content Blocks",
-        "crowdfundings": "Crowdfundings"
+        "crowdfundings": "Crowdfundings",
+        "blockTemplates": "Block Templates"
       },
       "commentRating": "Rating System",
       "comments": "Comments",
@@ -1414,6 +1473,7 @@
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "pageDraftCreated": "Page Draft Created",
         "pageDraftSaved": "Page Draft Saved",
+        "pageDraftAutosaved": "Page Draft Autosaved",
         "pageNotFound": "Page Not Found",
         "pagePending": "Page Pending",
         "pagePublished": "Page Published",
@@ -1427,6 +1487,7 @@
         "unpublished": "Unpublished"
       },
       "panels": {
+        "chooseBlock": "Choose Block",
         "close": "Close",
         "confirm": "Confirm",
         "createdAt": "{{createdAt, ccc PP p}}",
@@ -2190,6 +2251,29 @@
       "areYouSure": "Are you sure?",
       "areYouSureBody": "The style \"{{ blockStyle }}\" will be deleted permanently and can not be reversed.",
       "areYouSureConfirmation": "Delete style"
+    },
+    "blockTemplates": {
+      "list": {
+        "title": "Block Templates",
+        "newBlockTemplate": "New Block Template",
+        "name": "Name",
+        "noName": "No name",
+        "delete": "Delete",
+        "info": "Block templates are defined once and can then be used in any number of articles and pages. When you update a template, all articles and pages using it show the new content right away."
+      },
+      "edit": {
+        "title": "Edit Block Template",
+        "name": "Name",
+        "back": "Back",
+        "backToList": "Back to list",
+        "noName": "No name",
+        "delete": "Delete",
+        "saved": "Saved",
+        "new": "New",
+        "editing": "Editing",
+        "saveConfirmMessage": "Saving updates this template's content right away in every article and page that uses it, including published ones.",
+        "saveConfirmTitle": "Save template?"
+      }
     },
     "yes": "Yes",
     "memberplanForm": {

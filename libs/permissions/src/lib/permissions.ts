@@ -900,6 +900,28 @@ export const CanGetAudienceStats: Permission = {
 };
 
 /**
+ * Block Templates
+ */
+
+export const CanCreateBlockTemplate: Permission = {
+  id: 'CAN_CREATE_BLOCK_TEMPLATE',
+  description: 'Allows to create a block template',
+  deprecated: false,
+};
+
+export const CanUpdateBlockTemplate: Permission = {
+  id: 'CAN_UPDATE_BLOCK_TEMPLATE',
+  description: 'Allows to update a block template',
+  deprecated: false,
+};
+
+export const CanDeleteBlockTemplate: Permission = {
+  id: 'CAN_DELETE_BLOCK_TEMPLATE',
+  description: 'Allows to delete a block template',
+  deprecated: false,
+};
+
+/**
  * Paywall
  */
 export const CanCreatePaywall: Permission = {
@@ -1352,6 +1374,9 @@ export const AllPermissions: Permission[] = [
   CanCreateBlockStyle,
   CanUpdateBlockStyle,
   CanDeleteBlockStyle,
+  CanCreateBlockTemplate,
+  CanUpdateBlockTemplate,
+  CanDeleteBlockTemplate,
   CanCreatePaywall,
   CanUpdatePaywall,
   CanDeletePaywall,
@@ -1465,6 +1490,9 @@ export const EditorPermissions: Permission[] = [
   CanGetMailLogs,
   CanGetPeriodicJobLog,
   CanCreateApprovedComment,
+  CanCreateBlockTemplate,
+  CanUpdateBlockTemplate,
+  CanDeleteBlockTemplate,
   CanPreview,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,

@@ -8,7 +8,7 @@ import {
   CommentHeader,
   CommentName,
 } from '@wepublish/comments/website';
-import { Tag } from '@wepublish/website/api';
+import { FullTagFragment } from '@wepublish/website/api';
 import { BuilderCommentProps } from '@wepublish/website/builder';
 
 const bajourTags = {
@@ -34,10 +34,10 @@ export const BajourComment = (props: BuilderCommentProps) => {
   const theme = useTheme();
 
   const highlightSourceTag = tags.some(
-    (tag: Tag) => tag.tag === bajourTags.QuelleHervorheben
+    (tag: FullTagFragment) => tag.tag === bajourTags.QuelleHervorheben
   );
   const moderationTag = tags.some(
-    (tag: Tag) => tag.tag === bajourTags.Moderation
+    (tag: FullTagFragment) => tag.tag === bajourTags.Moderation
   );
 
   const commentStyles =

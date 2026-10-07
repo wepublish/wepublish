@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { Button } from '@mui/material';
 import { DocumentNode } from 'graphql';
 import { useState } from 'react';

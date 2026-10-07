@@ -15,16 +15,18 @@ import {
   PingenLetterProvider,
   RawBodyRequest,
 } from './pingen-letter-provider';
+import type { Mock } from 'vitest';
 
-jest.mock('pingen2-sdk-js', () => {
-  const actual = jest.requireActual('pingen2-sdk-js');
+vi.mock('pingen2-sdk-js', async () => {
+  const actual =
+    await vi.importActual<typeof import('pingen2-sdk-js')>('pingen2-sdk-js');
 
   return {
     ...actual,
-    OAuth: jest.fn(),
-    ApiRequestor: jest.fn(),
-    Letters: jest.fn(),
-    FileUpload: jest.fn(),
+    OAuth: vi.fn(),
+    ApiRequestor: vi.fn(),
+    Letters: vi.fn(),
+    FileUpload: vi.fn(),
   };
 });
 
@@ -67,25 +69,25 @@ function pingenResponse(body: unknown, statusCode = 200) {
 }
 
 const lettersMock = {
-  create: jest.fn(),
-  send: jest.fn(),
-  cancel: jest.fn(),
-  getDetails: jest.fn(),
+  create: vi.fn(),
+  send: vi.fn(),
+  cancel: vi.fn(),
+  getDetails: vi.fn(),
 };
 
 const fileUploadMock = {
-  requestFileUpload: jest.fn(),
+  requestFileUpload: vi.fn(),
 };
 
 const oauthMock = {
-  getAccessToken: jest.fn(),
-  invalidate: jest.fn(),
+  getAccessToken: vi.fn(),
+  invalidate: vi.fn(),
 };
 
 function createProvider() {
   const kv = {
-    getOrLoadNs: jest.fn(),
-    delNs: jest.fn(),
+    getOrLoadNs: vi.fn(),
+    delNs: vi.fn(),
   } as unknown as KvTtlCacheService;
 
   const provider = new PingenLetterProvider({
@@ -94,7 +96,7 @@ function createProvider() {
     kv,
   });
 
-  jest.spyOn(provider, 'getConfig').mockResolvedValue(config);
+  vi.spyOn(provider, 'getConfig').mockResolvedValue(config);
 
   return provider;
 }
@@ -113,13 +115,19 @@ function webhookRequest(body: unknown, signingKey = 'signing-key') {
 
 describe('PingenLetterProvider', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
-    (OAuth as unknown as jest.Mock).mockImplementation(() => oauthMock);
-    (Letters as unknown as jest.Mock).mockImplementation(() => lettersMock);
-    (FileUpload as unknown as jest.Mock).mockImplementation(
-      () => fileUploadMock
-    );
+    // The provider calls these with `new`; Vitest only allows that for a
+    // `function` implementation, not an arrow function.
+    (OAuth as unknown as Mock).mockImplementation(function () {
+      return oauthMock;
+    });
+    (Letters as unknown as Mock).mockImplementation(function () {
+      return lettersMock;
+    });
+    (FileUpload as unknown as Mock).mockImplementation(function () {
+      return fileUploadMock;
+    });
 
     oauthMock.getAccessToken.mockResolvedValue('token-1');
   });
@@ -127,7 +135,7 @@ describe('PingenLetterProvider', () => {
   describe('sendLetter', () => {
     it('uploads the file and creates the letter', async () => {
       const provider = createProvider();
-      const fetchMock = jest.fn().mockResolvedValue({ ok: true, status: 200 });
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200 });
       global.fetch = fetchMock as unknown as typeof fetch;
 
       fileUploadMock.requestFileUpload.mockResolvedValue({
@@ -204,7 +212,7 @@ describe('PingenLetterProvider', () => {
 
     it('falls back to the configured auto send', async () => {
       const provider = createProvider();
-      global.fetch = jest.fn().mockResolvedValue({
+      global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         status: 200,
       }) as unknown as typeof fetch;
@@ -232,7 +240,7 @@ describe('PingenLetterProvider', () => {
 
     it('does not create a letter when the upload fails', async () => {
       const provider = createProvider();
-      global.fetch = jest.fn().mockResolvedValue({
+      global.fetch = vi.fn().mockResolvedValue({
         ok: false,
         status: 403,
       }) as unknown as typeof fetch;

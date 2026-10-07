@@ -1,9 +1,10 @@
+import { useMutation } from '@apollo/client/react';
 import { Typography } from '@mui/material';
 import {
+  CancelMailSendJobDocument,
   FullMailSendJobFragment,
   MailSendJobState,
-  useCancelMailSendJobMutation,
-  useResumeMailSendJobMutation,
+  ResumeMailSendJobDocument,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -100,7 +101,7 @@ export function ResumeJobButton({
   const [open, setOpen] = useState(false);
   const [retryUnfinished, setRetryUnfinished] = useState(false);
 
-  const [resume, { loading }] = useResumeMailSendJobMutation({
+  const [resume, { loading }] = useMutation(ResumeMailSendJobDocument, {
     onError: error =>
       toaster.push(
         <Message
@@ -143,7 +144,6 @@ export function ResumeJobButton({
       >
         {t('mailJobs.resume')}
       </Button>
-
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -165,8 +165,10 @@ export function ResumeJobButton({
               </Checkbox>
               <Typography
                 variant="caption"
-                display="block"
                 style={{ color: '#8e8e93', lineHeight: 1.35, marginLeft: 34 }}
+                sx={{
+                  display: 'block',
+                }}
               >
                 {t('mailJobs.retryUnfinishedHint')}
               </Typography>
@@ -217,7 +219,7 @@ export function CancelJobButton({
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
-  const [cancel, { loading }] = useCancelMailSendJobMutation({
+  const [cancel, { loading }] = useMutation(CancelMailSendJobDocument, {
     onError: error =>
       toaster.push(
         <Message

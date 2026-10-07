@@ -2,6 +2,7 @@ import {
   FullImageGalleryBlockFragment,
   FullBreakBlockFragment,
   FullTitleBlockFragment,
+  FullBlockTemplateBlockFragment,
   FullFlexBlockFragment,
   FullBildwurfAdBlockFragment,
   FullCrowdfundingBlockFragment,
@@ -51,9 +52,21 @@ export type BlockProps = {
   className?: string;
 };
 
-type WithBlockProps<T> = Omit<T, 'type'> & BlockProps;
+/**
+ * The regenerated types mark nullable fields as required (`avoidOptionals`);
+ * block components were written against the old optional (`?:`) shape, so
+ * make every nullable field (and `__typename`) optional again.
+ */
+type OptionalBlockKeys<T> =
+  | Extract<keyof T, '__typename'>
+  | { [K in keyof T]: null extends T[K] ? K : never }[keyof T];
+type WithBlockProps<T> = Omit<T, 'type' | OptionalBlockKeys<T>> &
+  Partial<Pick<T, OptionalBlockKeys<T>>> &
+  BlockProps;
 
 export type BuilderFlexBlockProps = WithBlockProps<FullFlexBlockFragment>;
+export type BuilderBlockTemplateBlockProps =
+  WithBlockProps<FullBlockTemplateBlockFragment>;
 export type BuilderTitleBlockProps = WithBlockProps<FullTitleBlockFragment>;
 export type BuilderBreakBlockProps = WithBlockProps<FullBreakBlockFragment>;
 export type BuilderImageBlockProps = WithBlockProps<FullImageBlockFragment>;

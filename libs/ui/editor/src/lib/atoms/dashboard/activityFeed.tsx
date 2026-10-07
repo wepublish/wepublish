@@ -1,7 +1,8 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  RecentActionsDocument,
   RecentActionsQuery,
-  useRecentActionsQuery,
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
 import { formatDistanceToNow } from 'date-fns';
@@ -62,7 +63,7 @@ const TimelineIcon = styled(Avatar)`
 type Action = NonNullable<RecentActionsQuery['actions']>[number];
 
 export function ActivityFeed() {
-  const { data, error } = useRecentActionsQuery({});
+  const { data, error } = useQuery(RecentActionsDocument, {});
 
   const actions = data?.actions ?? [];
 

@@ -5,17 +5,18 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { DashboardInvoiceResolver } from './dashboard-invoice.resolver';
 import { DashboardInvoiceService } from './dashboard-invoice.service';
+import type { Mocked } from 'vitest';
 
 describe('DashboardInvoiceResolver', () => {
   let app: INestApplication;
-  let dashboardInvoiceService: jest.Mocked<
+  let dashboardInvoiceService: Mocked<
     Pick<DashboardInvoiceService, 'revenue' | 'expectedRevenue'>
   >;
 
   beforeEach(async () => {
     dashboardInvoiceService = {
-      revenue: jest.fn(),
-      expectedRevenue: jest.fn(),
+      revenue: vi.fn(),
+      expectedRevenue: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({

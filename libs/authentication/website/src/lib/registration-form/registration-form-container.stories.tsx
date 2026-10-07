@@ -7,7 +7,6 @@ import {
 } from '@wepublish/website/api';
 import { RegistrationFormContainer } from './registration-form-container';
 import * as registrationFormStories from './registration-form.stories';
-import { ApolloError } from '@apollo/client';
 import { useUser } from '../session.context';
 
 export default {
@@ -106,9 +105,7 @@ export const WithChallengeError: StoryObj = {
             query: ChallengeDocument,
           },
           result: {
-            errors: [
-              new ApolloError({ errorMessage: 'Something went wrong.' }),
-            ],
+            errors: [new Error('Something went wrong.')],
           },
         },
         {
@@ -144,9 +141,7 @@ export const WithRegisterError: StoryObj = {
             variables: registerVariables,
           },
           result: {
-            errors: [
-              new ApolloError({ errorMessage: 'Email already in use.' }),
-            ],
+            errors: [new Error('Email already in use.')],
           },
         },
         {

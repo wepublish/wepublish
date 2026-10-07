@@ -11,17 +11,17 @@ describe('InvoiceService.checkInvoiceStatus', () => {
   it('notifies that the invoice is paid after checking its payments', async () => {
     const prisma = {
       invoice: {
-        findUnique: jest.fn().mockResolvedValue({
+        findUnique: vi.fn().mockResolvedValue({
           id: 'inv-2',
           subscription: { id: 'sub-1', userID: 'user-1' },
         }),
       },
-      payment: { findMany: jest.fn().mockResolvedValue([]) },
-      paymentMethod: { findMany: jest.fn().mockResolvedValue([]) },
+      payment: { findMany: vi.fn().mockResolvedValue([]) },
+      paymentMethod: { findMany: vi.fn().mockResolvedValue([]) },
     };
 
     const invoicePaidNotifier = {
-      notify: jest.fn().mockResolvedValue(undefined),
+      notify: vi.fn().mockResolvedValue(undefined),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -29,7 +29,7 @@ describe('InvoiceService.checkInvoiceStatus', () => {
         InvoiceService,
         { provide: PrismaClient, useValue: prisma },
         { provide: PAYMENT_METHOD_CONFIG, useValue: { paymentProviders: [] } },
-        { provide: InvoiceDataloader, useValue: { prime: jest.fn() } },
+        { provide: InvoiceDataloader, useValue: { prime: vi.fn() } },
         { provide: InvoicePaidNotifier, useValue: invoicePaidNotifier },
       ],
     }).compile();
@@ -45,26 +45,26 @@ describe('InvoiceService.checkInvoiceStatus', () => {
 async function setup() {
   const prisma = {
     invoice: {
-      findUnique: jest.fn().mockResolvedValue({
+      findUnique: vi.fn().mockResolvedValue({
         id: 'inv-2',
         subscriptionID: 'sub-1',
         subscriptionPeriods: [
           { id: 'period-2', endsAt: new Date('2027-08-01T00:00:00.000Z') },
         ],
       }),
-      update: jest.fn().mockImplementation(async ({ data }: any) => ({
+      update: vi.fn().mockImplementation(async ({ data }: any) => ({
         id: 'inv-2',
         items: [],
         ...data,
       })),
     },
     subscription: {
-      update: jest.fn().mockResolvedValue({ id: 'sub-1' }),
+      update: vi.fn().mockResolvedValue({ id: 'sub-1' }),
     },
   };
 
   const invoicePaidNotifier = {
-    notify: jest.fn().mockResolvedValue(undefined),
+    notify: vi.fn().mockResolvedValue(undefined),
   };
 
   const module: TestingModule = await Test.createTestingModule({
@@ -72,7 +72,7 @@ async function setup() {
       InvoiceService,
       { provide: PrismaClient, useValue: prisma },
       { provide: PAYMENT_METHOD_CONFIG, useValue: { paymentProviders: [] } },
-      { provide: InvoiceDataloader, useValue: { prime: jest.fn() } },
+      { provide: InvoiceDataloader, useValue: { prime: vi.fn() } },
       { provide: InvoicePaidNotifier, useValue: invoicePaidNotifier },
     ],
   }).compile();

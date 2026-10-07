@@ -3,7 +3,7 @@ import {
   selectTeaserLead,
   TeaserWrapper,
 } from '@wepublish/block-content/website';
-import { ArticleTeaser } from '@wepublish/website/api';
+import { FullArticleTeaserFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
   useWebsiteBuilder,
@@ -15,7 +15,7 @@ import { BlueBox } from '../components/blue-box';
 export const isRuckSpiegelTeaser = allPass([
   ({ teaser }: BuilderTeaserProps) => teaser?.__typename === 'ArticleTeaser',
   ({ teaser }: BuilderTeaserProps) =>
-    !!(teaser as ArticleTeaser).article?.tags
+    !!(teaser as FullArticleTeaserFragment).article?.tags
       .map(t => t.tag)
       .includes('RückSpiegel'),
 ]);

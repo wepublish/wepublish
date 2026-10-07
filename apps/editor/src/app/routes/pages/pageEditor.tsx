@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Button as MuiButton,
@@ -8,16 +9,16 @@ import {
   DialogTitle as MuiDialogTitle,
 } from '@mui/material';
 import {
+  CreateJwtForWebsiteLoginDocument,
+  CreatePageDocument,
   CreatePageMutationVariables,
-  useCreateJwtForWebsiteLoginMutation,
-  useCreatePageMutation,
-  useDiscardPageDraftMutation,
-  usePageQuery,
-  usePageRevisionListQuery,
-  usePageRevisionPreviewLazyQuery,
-  usePublishPageMutation,
-  useRestorePageRevisionMutation,
-  useUpdatePageMutation,
+  DiscardPageDraftDocument,
+  PageDocument,
+  PageRevisionListDocument,
+  PageRevisionPreviewDocument,
+  PublishPageDocument,
+  RestorePageRevisionDocument,
+  UpdatePageDocument,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import type { AggregatedValidation } from '@wepublish/ui/editor';
@@ -49,6 +50,7 @@ import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
   MdDeleteOutline,
+  MdEdit,
   MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
@@ -67,12 +69,22 @@ import {
   toaster,
 } from 'rsuite';
 
-import { openPreviewWindow } from '../../openPreview';
+import { LastSavedAt } from '../../lastSavedAt';
+import {
+  PreviewControls,
+  PreviewDevice,
+  PreviewFrame,
+} from '../../previewFrame';
+import { useAutosave } from '../../useAutosave';
 
 const EditorContent = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+
+  &[hidden] {
+    display: none;
+  }
 `;
 
 const TeaserOverviewWrapper = styled.div`
@@ -87,6 +99,15 @@ const IconButtonMargins = styled(RIconButton)`
 
 const IconButtonMTop = styled(RIconButton)`
   margin-top: 4px;
+`;
+
+const PreviewControlsMarginTop = styled(PreviewControls)`
+  margin-top: 4px;
+`;
+
+const PreviewActions = styled.div`
+  display: flex;
+  gap: 10px;
 `;
 
 const IconButton = styled(RIconButton)`
@@ -124,15 +145,17 @@ function PageEditor() {
   const [
     createPage,
     { data: createData, loading: isCreating, error: createError },
-  ] = useCreatePageMutation();
+  ] = useMutation(CreatePageDocument);
   const [updatePage, { loading: isUpdating, error: updateError }] =
-    useUpdatePageMutation();
+    useMutation(UpdatePageDocument);
+  const [autosavePage, { loading: isAutosaving, error: autosaveError }] =
+    useMutation(UpdatePageDocument);
   const [publishPage, { loading: isPublishing, error: publishError }] =
-    usePublishPageMutation({});
+    useMutation(PublishPageDocument, {});
   const [restorePageRevision, { loading: isRestoring, error: restoreError }] =
-    useRestorePageRevisionMutation({});
+    useMutation(RestorePageRevisionDocument, {});
   const [discardPageDraft, { loading: isDiscarding, error: discardError }] =
-    useDiscardPageDraftMutation({});
+    useMutation(DiscardPageDraftDocument, {});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
@@ -147,6 +170,8 @@ function PageEditor() {
   const [restoringRevisionId, setRestoringRevisionId] = useState<string | null>(
     null
   );
+  const [isPreviewOpen, setPreviewOpen] = useState(false);
+  const [previewDevice, setPreviewDevice] = useState<PreviewDevice>('desktop');
 
   const [publishedAt, setPublishedAt] = useState<Date>();
   const [metadata, setMetadata] = useState<PageMetadata>({
@@ -175,12 +200,12 @@ function PageEditor() {
     data: pageData,
     refetch,
     loading: isLoading,
-  } = usePageQuery({
+  } = useQuery(PageDocument, {
     errorPolicy: 'all',
     variables: { id: pageID! },
     skip: !pageID,
   });
-  const [createJWT] = useCreateJwtForWebsiteLoginMutation({
+  const [createJWT] = useMutation(CreateJwtForWebsiteLoginDocument, {
     errorPolicy: 'none',
     fetchPolicy: 'no-cache',
   });
@@ -190,7 +215,7 @@ function PageEditor() {
     refetch: refetchRevisions,
     fetchMore: fetchMoreRevisions,
     loading: isRevisionsLoading,
-  } = usePageRevisionListQuery({
+  } = useQuery(PageRevisionListDocument, {
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
@@ -244,7 +269,7 @@ function PageEditor() {
   const [
     loadRevisionPreview,
     { data: previewData, loading: isPreviewLoading },
-  ] = usePageRevisionPreviewLazyQuery({ errorPolicy: 'all' });
+  ] = useLazyQuery(PageRevisionPreviewDocument, { errorPolicy: 'all' });
 
   function handlePreviewRevision(revisionId: string) {
     setPreviewRevisionId(revisionId);
@@ -259,7 +284,7 @@ function PageEditor() {
   const { t } = useTranslation();
 
   const isNotFound = pageData && !pageData.page;
-  const isDisabled =
+  const isBusy =
     isLoading ||
     isCreating ||
     isUpdating ||
@@ -267,6 +292,8 @@ function PageEditor() {
     isRestoring ||
     isDiscarding ||
     isNotFound;
+  // Autosaving must not disable the blocks, as that would blur whatever the user is typing in.
+  const isDisabled = isBusy || isAutosaving;
   const canPreview = Boolean(
     pageData?.page?.draft ||
       pageData?.page?.published ||
@@ -274,20 +301,27 @@ function PageEditor() {
   );
 
   const [hasChanged, setChanged] = useState(false);
+  const changeVersion = useRef(0);
+  const skipRepopulate = useRef(false);
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
+
+  const previewUrl = pageData?.page?.previewUrl;
+  const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
+  const showPreview = isPreviewOpen && !isPreviewDisabled;
 
   const isAuthorized = useAuthorisation('CAN_CREATE_PAGE');
 
   const handleChange = useCallback(
     (blocks: React.SetStateAction<BlockValue[]>) => {
       setBlocks(blocks);
+      changeVersion.current++;
       setChanged(true);
     },
     []
   );
 
   useEffect(() => {
-    if (pageData?.page && !hasChanged) {
+    if (pageData?.page && !hasChanged && !skipRepopulate.current) {
       const { latest, tags, hidden, slug, url } = pageData.page;
       const {
         title,
@@ -356,6 +390,7 @@ function PageEditor() {
     const error =
       createError?.message ??
       updateError?.message ??
+      autosaveError?.message ??
       publishError?.message ??
       restoreError?.message ??
       discardError?.message;
@@ -370,7 +405,14 @@ function PageEditor() {
           {error}
         </Message>
       );
-  }, [createError, updateError, publishError, restoreError, discardError]);
+  }, [
+    createError,
+    updateError,
+    autosaveError,
+    publishError,
+    restoreError,
+    discardError,
+  ]);
 
   async function handleDiscardDraft() {
     if (!pageID) {
@@ -382,6 +424,8 @@ function PageEditor() {
     });
 
     if (data) {
+      skipRepopulate.current = false;
+      markSaved();
       setChanged(false);
       await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
 
@@ -410,6 +454,8 @@ function PageEditor() {
 
       if (data) {
         // Let the page query repopulate the editor with the restored draft.
+        skipRepopulate.current = false;
+        markSaved();
         setChanged(false);
         await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
 
@@ -489,6 +535,8 @@ function PageEditor() {
     if (pageID) {
       await updatePage({ variables: { id: pageID, ...input } });
 
+      skipRepopulate.current = false;
+      markSaved();
       setChanged(false);
       toaster.push(
         <Notification
@@ -517,6 +565,43 @@ function PageEditor() {
     }
   }
 
+  async function handleAutosave() {
+    if (!pageID || !validateAll.current().ok) {
+      return;
+    }
+
+    const version = changeVersion.current;
+    const { data } = await autosavePage({
+      variables: { id: pageID, ...createInput() },
+    });
+
+    if (!data) {
+      return;
+    }
+
+    skipRepopulate.current = true;
+
+    if (version === changeVersion.current) {
+      setChanged(false);
+    }
+
+    toaster.push(
+      <Notification
+        type="success"
+        header={t('pageEditor.overview.pageDraftAutosaved')}
+        duration={2000}
+      />,
+      { placement: 'bottomEnd' }
+    );
+    await reloadRevisions();
+  }
+
+  const { markSaved } = useAutosave({
+    enabled: !isDisabled && !!pageID,
+    hasChanged,
+    onAutosave: handleAutosave,
+  });
+
   async function handlePublish(publishedAt: Date) {
     if (!runEditorValidation('publish')) {
       return;
@@ -527,6 +612,8 @@ function PageEditor() {
       });
 
       if (data) {
+        skipRepopulate.current = false;
+        markSaved();
         const { data: publishData } = await publishPage({
           variables: {
             id: pageID,
@@ -581,12 +668,12 @@ function PageEditor() {
         </Legend>
 
         <EditorTemplate
+          maxWidth={showPreview ? '80vw' : undefined}
           navigationChildren={
             <NavigationBar
               leftChildren={
                 <Link to="/pages">
                   <IconButtonMargins
-                    className="actionButton"
                     size="lg"
                     icon={<MdKeyboardBackspace />}
                     onClick={e => {
@@ -601,7 +688,6 @@ function PageEditor() {
                 <CenterChildren>
                   <RIconButton
                     icon={<MdIntegrationInstructions />}
-                    className="actionButton"
                     size="lg"
                     disabled={isDisabled}
                     onClick={() => setMetaDrawerOpen(true)}
@@ -615,7 +701,6 @@ function PageEditor() {
                         qualifyingPermissions={['CAN_GET_PAGE']}
                       >
                         <IconButton
-                          className="actionButton"
                           icon={<MdHistory />}
                           size="lg"
                           disabled={isDisabled}
@@ -636,7 +721,6 @@ function PageEditor() {
                           qualifyingPermissions={['CAN_CREATE_PAGE']}
                         >
                           <IconButton
-                            className="actionButton"
                             icon={<MdDeleteOutline />}
                             size="lg"
                             disabled={isDisabled}
@@ -654,7 +738,6 @@ function PageEditor() {
                       qualifyingPermissions={['CAN_CREATE_PAGE']}
                     >
                       <IconButton
-                        className="actionButton"
                         size="lg"
                         icon={<MdSave />}
                         disabled={isDisabled}
@@ -668,7 +751,6 @@ function PageEditor() {
                     >
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
-                          className="actionButton"
                           size="lg"
                           icon={<MdSave />}
                           disabled={isDisabled}
@@ -691,7 +773,6 @@ function PageEditor() {
                           }
                         >
                           <IconButton
-                            className="actionButton"
                             size="lg"
                             icon={<MdCloudUpload />}
                             disabled={isDisabled}
@@ -708,58 +789,64 @@ function PageEditor() {
                       </PermissionControl>
                     </PermissionControl>
                   }
+
+                  <LastSavedAt date={pageData?.page?.latest.createdAt} />
                 </CenterChildren>
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <IconButtonMTop
-                    className="actionButton"
-                    disabled={hasChanged || !id || !canPreview}
-                    size="lg"
-                    icon={<MdRemoveRedEye />}
-                    onClick={() => {
-                      const result = openPreviewWindow(
-                        pageData!.page.previewUrl,
-                        {
-                          createToken: async () => {
-                            const { data: jwtData } = await createJWT();
+                  <PreviewActions>
+                    {showPreview && previewUrl && (
+                      <PreviewControlsMarginTop
+                        device={previewDevice}
+                        onDeviceChange={setPreviewDevice}
+                        previewUrl={previewUrl}
+                      />
+                    )}
 
-                            return jwtData?.createJWTForWebsiteLogin?.token;
-                          },
-                          onSilence: () =>
-                            toaster.push(
-                              <Message
-                                type="warning"
-                                showIcon
-                                closable
-                              >
-                                {t('previewHandshake.notResponding')}
-                              </Message>
-                            ),
-                        }
-                      );
-
-                      if (result === 'popup-blocked') {
-                        toaster.push(
-                          <Message
-                            type="warning"
-                            showIcon
-                            closable
-                          >
-                            {t('previewHandshake.popupBlocked')}
-                          </Message>
-                        );
-                      }
-                    }}
-                  >
-                    {t('pageEditor.overview.preview')}
-                  </IconButtonMTop>
+                    <IconButtonMTop
+                      className="actionButton"
+                      disabled={isPreviewDisabled}
+                      size="lg"
+                      icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
+                      onClick={() => setPreviewOpen(!showPreview)}
+                    >
+                      {showPreview ?
+                        t('preview.backToEditor')
+                      : t('pageEditor.overview.preview')}
+                    </IconButtonMTop>
+                  </PreviewActions>
                 </PermissionControl>
               }
             />
           }
         >
-          <EditorContent>
+          {showPreview && previewUrl && (
+            <PreviewFrame
+              key={pageData?.page?.latest.id}
+              previewUrl={previewUrl}
+              device={previewDevice}
+              title={t('pageEditor.overview.preview')}
+              createToken={async () => {
+                const { data: jwtData } = await createJWT();
+
+                return jwtData?.createJWTForWebsiteLogin?.token;
+              }}
+              onSilence={() =>
+                toaster.push(
+                  <Message
+                    type="warning"
+                    showIcon
+                    closable
+                  >
+                    {t('previewHandshake.notResponding')}
+                  </Message>
+                )
+              }
+            />
+          )}
+
+          <EditorContent hidden={showPreview}>
             <EditorValidationProvider runAllRef={validateAll}>
               <TeaserOverviewWrapper>
                 <TeaserOverviewPanel
@@ -772,7 +859,7 @@ function PageEditor() {
                 <BlockList
                   value={blocks}
                   onChange={handleChange}
-                  disabled={isDisabled || !isAuthorized}
+                  disabled={isBusy || !isAuthorized}
                   blockMap={BlockMap}
                 />
               </DocumentUrlProvider>
@@ -794,6 +881,7 @@ function PageEditor() {
           }}
           onChange={value => {
             setMetadata(value);
+            changeVersion.current++;
             setChanged(true);
           }}
         />

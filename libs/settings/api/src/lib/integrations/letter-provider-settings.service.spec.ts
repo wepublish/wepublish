@@ -5,6 +5,7 @@ import { PrismaModule } from '@wepublish/nest-modules';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import { LetterProviderSettingsDataloaderService } from './letter-provider-settings-dataloader.service';
 import { LetterProviderSettingsService } from './letter-provider-settings.service';
+import type { Mock } from 'vitest';
 
 const existing = {
   id: 'pingen',
@@ -25,20 +26,20 @@ const existing = {
 describe('LetterProviderSettingsService', () => {
   let service: LetterProviderSettingsService;
   let prisma: PrismaClient;
-  let notify: jest.Mock;
+  let notify: Mock;
 
   beforeEach(async () => {
-    notify = jest.fn();
+    notify = vi.fn();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule],
       providers: [
         LetterProviderSettingsService,
-        { provide: KvTtlCacheService, useValue: { resetNamespace: jest.fn() } },
+        { provide: KvTtlCacheService, useValue: { resetNamespace: vi.fn() } },
         { provide: ProviderSettingsChanged, useValue: { notify } },
         {
           provide: LetterProviderSettingsDataloaderService,
-          useValue: { prime: jest.fn() },
+          useValue: { prime: vi.fn() },
         },
       ],
     }).compile();
@@ -49,13 +50,13 @@ describe('LetterProviderSettingsService', () => {
     );
   });
 
-  afterEach(() => jest.restoreAllMocks());
+  afterEach(() => vi.restoreAllMocks());
 
   test('switching type clears the configuration and resets the defaults', async () => {
-    jest
-      .spyOn(prisma.settingLetterProvider, 'findUnique')
-      .mockResolvedValue(existing);
-    const update = jest
+    vi.spyOn(prisma.settingLetterProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    const update = vi
       .spyOn(prisma.settingLetterProvider, 'update')
       .mockResolvedValue(existing);
 
@@ -77,10 +78,10 @@ describe('LetterProviderSettingsService', () => {
   });
 
   test('leaves the configuration alone when the type stays the same', async () => {
-    jest
-      .spyOn(prisma.settingLetterProvider, 'findUnique')
-      .mockResolvedValue(existing);
-    const update = jest
+    vi.spyOn(prisma.settingLetterProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    const update = vi
       .spyOn(prisma.settingLetterProvider, 'update')
       .mockResolvedValue(existing);
 
@@ -98,10 +99,10 @@ describe('LetterProviderSettingsService', () => {
   });
 
   test('refuses to delete the only letter provider', async () => {
-    jest
-      .spyOn(prisma.settingLetterProvider, 'findUnique')
-      .mockResolvedValue(existing);
-    jest.spyOn(prisma.settingLetterProvider, 'count').mockResolvedValue(1);
+    vi.spyOn(prisma.settingLetterProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    vi.spyOn(prisma.settingLetterProvider, 'count').mockResolvedValue(1);
 
     await expect(service.deleteLetterProviderSetting('pingen')).rejects.toThrow(
       'is the only one configured'

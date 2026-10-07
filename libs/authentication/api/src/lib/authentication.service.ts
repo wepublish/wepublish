@@ -3,12 +3,51 @@ import { PrismaClient } from '@prisma/client';
 import { AuthSessionType, AuthSession } from './auth-session';
 import { unselectPassword } from './unselect-password';
 import { addPredefinedPermissions } from '@wepublish/permissions/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  SESSION_CACHE_NAMESPACE,
+  SESSION_CACHE_TTL_SECONDS,
+  sessionCacheKey,
+} from './session-cache';
+
+const withoutToken = <T extends { token: string }>(
+  session: T | null
+): Omit<T, 'token'> | null =>
+  session &&
+  (Object.fromEntries(
+    Object.entries(session).filter(([key]) => key !== 'token')
+  ) as Omit<T, 'token'>);
 
 @Injectable()
 export class AuthenticationService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
   public async getUserSession(token: string): Promise<AuthSession | null> {
+    const session = await this.kv.getOrLoadNs(
+      SESSION_CACHE_NAMESPACE,
+      sessionCacheKey('user', token),
+      async () => withoutToken(await this.loadUserSession(token)),
+      SESSION_CACHE_TTL_SECONDS
+    );
+
+    return session && ({ ...session, token } as AuthSession);
+  }
+
+  public async getPeerSession(token: string): Promise<AuthSession | null> {
+    const session = await this.kv.getOrLoadNs(
+      SESSION_CACHE_NAMESPACE,
+      sessionCacheKey('peer', token),
+      async () => withoutToken(await this.loadPeerSession(token)),
+      SESSION_CACHE_TTL_SECONDS
+    );
+
+    return session && ({ ...session, token } as AuthSession);
+  }
+
+  private async loadUserSession(token: string): Promise<AuthSession | null> {
     const session = await this.prisma.session.findFirst({
       where: {
         token,
@@ -44,7 +83,7 @@ export class AuthenticationService {
     return null;
   }
 
-  public async getPeerSession(token: string): Promise<AuthSession | null> {
+  private async loadPeerSession(token: string): Promise<AuthSession | null> {
     const tokenMatch = await this.prisma.token.findFirst({
       where: {
         token,
@@ -78,7 +117,7 @@ export class AuthenticationService {
     }
 
     if (session.type === AuthSessionType.User) {
-      return session.expiresAt > new Date();
+      return session.expiresAt > new Date() && session.user?.active === true;
     }
 
     return true;

@@ -5,15 +5,13 @@ import { FakeLetterProvider } from './fake-letter-provider';
 function createProvider(config: SettingLetterProvider | null) {
   const prisma = {
     settingLetterProvider: {
-      findUnique: jest.fn().mockResolvedValue(config),
-      update: jest.fn().mockResolvedValue(config),
+      findUnique: vi.fn().mockResolvedValue(config),
+      update: vi.fn().mockResolvedValue(config),
     },
   } as unknown as PrismaClient;
 
   const kv = {
-    getOrLoadNs: jest.fn((_ns, _key, loader: () => Promise<unknown>) =>
-      loader()
-    ),
+    getOrLoadNs: vi.fn((_ns, _key, loader: () => Promise<unknown>) => loader()),
   } as unknown as KvTtlCacheService;
 
   return {

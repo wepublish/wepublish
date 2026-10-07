@@ -21,6 +21,30 @@
 - Multi-stage Dockerfile for all production builds (API, editor, website, media, migration, storybook)
 - **MinIO** as S3-compatible object storage for media in local dev
 
+## Dragonfly (shared cache)
+
+`dragonfly01.wepublish.cloud:6379` (TLS, internal CA `/wepublish/ca.crt`)
+serves all media. Terraform in `application-configuration` creates a user
+`wepublish-<app>-<env>` per medium and sets `REDIS_URL`, `REDIS_KEY_PREFIX` and
+`NODE_EXTRA_CA_CERTS` on api and website pods; media are separated by key
+prefix ([gotchas.md](gotchas.md)), mirrored locally by `docker/dragonfly/users.acl`.
+In production the api refuses `redis://` and verifies Dragonfly against the CA.
+It holds page data, articles/pages/authors/images and anonymous GraphQL
+answers — never sessions or integration settings. Run it with
+`--cache_mode=true`: when full it otherwise rejects writes, cache resets
+included. Give it headroom all the same: full, it evicts keys, the locks and
+counters below among them (`evicted_keys` in `INFO stats` should stay 0).
+With Dragonfly configured but unreachable the nightly job does not run (without
+`REDIS_URL` the database keeps it to one replica), and the UptimeRobot check
+(`/health`, `monitoring.tf`) turns red; pod probes ignore it.
+Cross-replica locks (`lock:*`: jobs, migrator ticks, tracking pixels, used TOTP
+codes) and counters (`count:*`: TOTP failures) live there as well.
+Websites share their rendered ISR pages there too (Next `cacheHandler`, nothing
+written to disk; [utils-website README](../../libs/utils/website/README.md)):
+publishing rebuilds front page and pages through `website:pages`, but an
+article page only when that article or the layout changed. 404s are never
+cached, not even by Cloudflare.
+
 ## Migration flow
 
 The migration container (and `npm run migrate` locally) runs three steps in order:
