@@ -137,14 +137,6 @@ export const SEO_CHECKLIST: SeoChecklistSection[] = [
       },
     ],
   },
-  {
-    id: 'automatic',
-    items: [
-      { id: 'article-markup', check: SeoCheckId.ArticleMarkup },
-      { id: 'canonical-urls', info: true },
-      { id: 'hidden-noindex', info: true },
-    ],
-  },
 ];
 
 export const isEntryDone = (

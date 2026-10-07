@@ -28,8 +28,6 @@ export interface SeoDocumentChecklistProps {
   metadata: {
     seoTitle?: string | null;
     seoDescription?: string | null;
-    socialMediaTitle?: string | null;
-    socialMediaDescription?: string | null;
     slug?: string | null;
   };
   stats?: SeoContentStats;
@@ -103,11 +101,6 @@ export const getSeoDocumentChecks = ({
       count: stats.imagesWithoutDescription,
     })
   : ok('image-descriptions'),
-  metadata.socialMediaTitle?.trim() || metadata.socialMediaDescription?.trim() ?
-    ok('social-texts')
-  : info('social-texts', 'missing'),
-
-  info('preview-before-publishing', 'below'),
 ];
 
 const Items = styled.ul`

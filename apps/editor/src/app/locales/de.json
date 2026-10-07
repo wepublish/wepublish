@@ -3378,10 +3378,6 @@
         "presentation": {
           "title": "Darstellung und Teilen",
           "description": "Wie deine Inhalte in Suchergebnissen, sozialen Medien und Messengern aussehen."
-        },
-        "automatic": {
-          "title": "Erledigt We.Publish",
-          "description": "Technische Grundlagen, um die sich We.Publish automatisch kümmert."
         }
       },
       "items": {
@@ -3494,19 +3490,6 @@
           "description": "Name und Logo deiner Publikation werden im Peering-Profil gepflegt und in Vorschauen und strukturierten Daten verwendet.",
           "detail": "Fehlt",
           "action": "Profil bearbeiten"
-        },
-        "article-markup": {
-          "title": "Kanonische URLs und strukturierte Daten",
-          "description": "Jeder Artikel gibt seine kanonische URL an und enthält strukturierte NewsArticle-Daten (JSON-LD). Geprüft wird dein neuester Artikel.",
-          "detail": "Fehlt"
-        },
-        "canonical-urls": {
-          "title": "Inhalte aus anderen Quellen",
-          "description": "Wurde ein Artikel zuerst anderswo publiziert, setze die kanonische URL in den Artikeleinstellungen, damit Suchmaschinen das Original anerkennen."
-        },
-        "hidden-noindex": {
-          "title": "Versteckte Inhalte",
-          "description": "Versteckte Artikel und Seiten werden als noindex markiert und nicht in die Sitemap aufgenommen, damit Suchmaschinen sie nicht anzeigen."
         }
       }
     },
@@ -3543,12 +3526,6 @@
         "image-descriptions": {
           "missing": "{{count}} Bild(er) ohne Beschreibung.",
           "none": "Der Inhalt enthält keine Bilder."
-        },
-        "social-texts": {
-          "missing": "Keine Social-Media-Texte gesetzt. Stattdessen werden die SEO-Texte verwendet."
-        },
-        "preview-before-publishing": {
-          "below": "Die Vorschauen werden unten in diesem Tab angezeigt."
         }
       }
     },

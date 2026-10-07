@@ -110,6 +110,12 @@ describe('SeoChecklist', () => {
     }
   });
 
+  test('does not list what We.Publish handles automatically', () => {
+    renderChecklist();
+
+    expect(screen.queryByTestId('seo-section-automatic')).toBe(null);
+  });
+
   test('shows the saved progress of manual items', () => {
     renderChecklist();
 

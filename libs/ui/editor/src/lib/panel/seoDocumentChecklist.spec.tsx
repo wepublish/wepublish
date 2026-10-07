@@ -30,8 +30,6 @@ const complete = {
   metadata: {
     seoTitle: 'Stadtrat beschliesst Velokonzept',
     seoDescription: 'Der Stadtrat hat ein neues Velokonzept verabschiedet.',
-    socialMediaTitle: 'Neues Velokonzept',
-    socialMediaDescription: undefined,
     slug: 'velokonzept',
   },
   stats,
@@ -47,14 +45,16 @@ describe('getSeoDocumentChecks', () => {
   test('passes a well prepared document', () => {
     const checks = getSeoDocumentChecks(complete);
 
-    expect(
-      checks
-        .filter(check => check.id !== 'preview-before-publishing')
-        .every(check => check.status === SeoCheckStatus.Ok)
-    ).toBe(true);
-    expect(statusOf(checks, 'preview-before-publishing')?.status).toBe(
-      SeoCheckStatus.Info
+    expect(checks.every(check => check.status === SeoCheckStatus.Ok)).toBe(
+      true
     );
+  });
+
+  test('leaves social texts and previews to their own tabs', () => {
+    const ids = getSeoDocumentChecks(complete).map(check => check.id);
+
+    expect(ids).not.toContain('social-texts');
+    expect(ids).not.toContain('preview-before-publishing');
   });
 
   test('warns about missing and too long texts', () => {
@@ -79,7 +79,6 @@ describe('getSeoDocumentChecks', () => {
       status: SeoCheckStatus.Warning,
       reason: 'missing',
     });
-    expect(statusOf(checks, 'social-texts')?.status).toBe(SeoCheckStatus.Info);
   });
 
   test('checks the content structure, links and images', () => {
@@ -158,6 +157,6 @@ describe('SeoDocumentChecklist', () => {
         'seoDocumentChecklist.reasons.meta-descriptions.missing'
       )
     ).toBeTruthy();
-    expect(screen.getByText('seoChecklist.progress:8/9')).toBeTruthy();
+    expect(screen.getByText('seoChecklist.progress:6/7')).toBeTruthy();
   });
 });

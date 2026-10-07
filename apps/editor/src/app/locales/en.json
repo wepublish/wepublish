@@ -3416,10 +3416,6 @@
         "presentation": {
           "title": "Presentation and sharing",
           "description": "How your content looks in search results, on social media and in messengers."
-        },
-        "automatic": {
-          "title": "Handled by We.Publish",
-          "description": "Technical basics that are taken care of automatically."
         }
       },
       "items": {
@@ -3532,19 +3528,6 @@
           "description": "The name and logo of your publication are maintained in the peering profile and used in previews and structured data.",
           "detail": "Missing",
           "action": "Edit profile"
-        },
-        "article-markup": {
-          "title": "Canonical URLs and structured data",
-          "description": "Every article declares its canonical URL and contains NewsArticle structured data (JSON-LD). This is checked on your latest article.",
-          "detail": "Missing"
-        },
-        "canonical-urls": {
-          "title": "Content from other sources",
-          "description": "If an article was first published elsewhere, set the canonical URL in the article settings so search engines credit the original."
-        },
-        "hidden-noindex": {
-          "title": "Hidden content",
-          "description": "Hidden articles and pages are marked as noindex and left out of the sitemap, so search engines do not show them."
         }
       }
     },
@@ -3581,12 +3564,6 @@
         "image-descriptions": {
           "missing": "{{count}} image(s) without a description.",
           "none": "The content contains no images."
-        },
-        "social-texts": {
-          "missing": "No social media texts set. The SEO texts are used instead."
-        },
-        "preview-before-publishing": {
-          "below": "The previews are shown at the bottom of this tab."
         }
       }
     },

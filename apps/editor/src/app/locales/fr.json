@@ -3323,10 +3323,6 @@
         "presentation": {
           "title": "Présentation et partage",
           "description": "L'apparence de tes contenus dans les résultats de recherche, sur les réseaux sociaux et dans les messageries."
-        },
-        "automatic": {
-          "title": "Géré par We.Publish",
-          "description": "Les bases techniques prises en charge automatiquement."
         }
       },
       "items": {
@@ -3439,19 +3435,6 @@
           "description": "Le nom et le logo de ta publication sont gérés dans le profil de peering et utilisés dans les aperçus et les données structurées.",
           "detail": "Manquant",
           "action": "Modifier le profil"
-        },
-        "article-markup": {
-          "title": "URL canoniques et données structurées",
-          "description": "Chaque article indique son URL canonique et contient des données structurées NewsArticle (JSON-LD). La vérification porte sur ton dernier article.",
-          "detail": "Manquant"
-        },
-        "canonical-urls": {
-          "title": "Contenus provenant d'autres sources",
-          "description": "Si un article a d'abord été publié ailleurs, indique l'URL canonique dans les paramètres de l'article afin que les moteurs de recherche reconnaissent l'original."
-        },
-        "hidden-noindex": {
-          "title": "Contenu masqué",
-          "description": "Les articles et pages masqués sont marqués noindex et exclus du sitemap, afin que les moteurs de recherche ne les affichent pas."
         }
       }
     },
@@ -3488,12 +3471,6 @@
         "image-descriptions": {
           "missing": "{{count}} image(s) sans description.",
           "none": "Le contenu ne contient aucune image."
-        },
-        "social-texts": {
-          "missing": "Aucun texte pour les réseaux sociaux. Les textes SEO sont utilisés à la place."
-        },
-        "preview-before-publishing": {
-          "below": "Les aperçus sont affichés en bas de cet onglet."
         }
       }
     },

@@ -39,8 +39,6 @@ export function SeoTab({ type, metadata, seoContext }: SeoTabProps) {
         metadata={{
           seoTitle: metadata.seoTitle,
           seoDescription: metadata.seoDescription,
-          socialMediaTitle: metadata.socialMediaTitle,
-          socialMediaDescription: metadata.socialMediaDescription,
           slug: metadata.slug,
         }}
         stats={seoContext?.stats}
