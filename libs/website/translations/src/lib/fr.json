@@ -24,7 +24,8 @@
     },
     "meta": {
       "seperator": " | "
-    }
+    },
+    "ariaLabel": "{hasTitle, select, true {{title}. } other {}}{hasLead, select, true {{lead}. } other {}}{hasAuthors, select, true {Par {authors}} other {}}"
   },
   "subscribe": {
     "memberplan": {

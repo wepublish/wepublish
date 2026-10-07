@@ -1,8 +1,16 @@
-import { render } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
+
+import { render, screen } from '@testing-library/react';
 import { FullTeaserFragment } from '@wepublish/website/api';
+import {
+  mockArticle,
+  mockArticleRevision,
+  mockArticleRevisionAuthor,
+  mockArticleTeaser,
+  mockAuthor,
+} from '@wepublish/storybook/mocks';
 
 import {
-  joinAuthorNames,
   selectTeaserAuthors,
   selectTeaserAuthorsWithRole,
 } from './base-teaser';
@@ -108,14 +116,66 @@ describe('Teaser', () => {
     });
   });
 
-  describe('joinAuthorNames', () => {
-    it.each([
-      [[], ''],
-      [['A'], 'A'],
-      [['A', 'B'], 'A und B'],
-      [['A', 'B', 'C'], 'A, B und C'],
-    ])('joins %j into "%s"', (authors, expected) => {
-      expect(joinAuthorNames(authors, ', ', ' und ')).toBe(expected);
+  describe('aria-label', () => {
+    const { Default: ArticleTeaser } = articleStoriesCmp;
+
+    const teaserWith = ({
+      title,
+      lead,
+      authors,
+    }: {
+      title?: string | null;
+      lead?: string | null;
+      authors?: string[];
+    }) =>
+      mockArticleTeaser({
+        title,
+        lead,
+        article: mockArticle({
+          latest: mockArticleRevision({
+            blocks: [],
+            lead: null,
+            authors: (authors ?? []).map(name =>
+              mockArticleRevisionAuthor({
+                author: { ...mockAuthor(), name },
+              })
+            ),
+          }),
+        }),
+      });
+
+    it('should contain the title, the lead and the authors', () => {
+      render(
+        <ArticleTeaser
+          teaser={teaserWith({
+            title: 'Teaser Title',
+            lead: 'Teaser Lead',
+            authors: ['Jane Doe', 'John Doe'],
+          })}
+        />
+      );
+
+      expect(
+        screen.getByRole('link', {
+          name: 'Teaser Title. Teaser Lead. Von Jane Doe, John Doe',
+        })
+      ).toBeInTheDocument();
+    });
+
+    it('should omit the parts the teaser does not have', () => {
+      render(
+        <ArticleTeaser
+          teaser={teaserWith({
+            title: 'Teaser Title',
+            lead: null,
+            authors: [],
+          })}
+        />
+      );
+
+      expect(
+        screen.getByRole('link', { name: 'Teaser Title.' })
+      ).toBeInTheDocument();
     });
   });
 });
