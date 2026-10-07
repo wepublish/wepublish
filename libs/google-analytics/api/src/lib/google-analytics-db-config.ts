@@ -18,13 +18,9 @@ export class GoogleAnalyticsDbConfig {
    * Initialize the database record if it doesn't exist
    */
   async initDatabaseConfiguration(): Promise<void> {
-    const existing = await this.prisma.settingAnalyticsProvider.findUnique({
-      where: { id: this.id },
-    });
-
-    if (!existing) {
-      await this.prisma.settingAnalyticsProvider.create({
-        data: {
+    await this.prisma.settingAnalyticsProvider.createMany({
+      data: [
+        {
           id: this.id,
           type: AnalyticsProviderType.GOOGLE,
           name: 'Google Analytics',
@@ -32,8 +28,9 @@ export class GoogleAnalyticsDbConfig {
           property: null,
           articlePrefix: '',
         },
-      });
-    }
+      ],
+      skipDuplicates: true,
+    });
   }
 
   private async loadGoogleAnalytics(): Promise<GoogleAnalyticsConfig> {

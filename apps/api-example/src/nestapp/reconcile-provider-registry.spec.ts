@@ -34,6 +34,9 @@ const matches = (row: Row, where: Where = {}) =>
     return value === condition;
   });
 
+const uniqueViolation = () =>
+  Object.assign(new Error('Unique constraint failed'), { code: 'P2002' });
+
 const table = (key: string, initial: Row[] = []) => {
   const data = new Map<unknown, Row>(
     initial.map(row => [row[key], { deletedAt: null, ...row }])
@@ -54,11 +57,53 @@ const table = (key: string, initial: Row[] = []) => {
       update: Row;
     }) => {
       const existing = data.get(where[key]);
+      await Promise.resolve();
+
+      if (!existing && data.has(where[key])) {
+        throw uniqueViolation();
+      }
+
       const next =
         existing ? { ...existing, ...update } : { deletedAt: null, ...create };
 
       data.set(where[key], next);
       return next;
+    },
+    createMany: async ({
+      data: rows,
+      skipDuplicates,
+    }: {
+      data: Row[];
+      skipDuplicates?: boolean;
+    }) => {
+      let count = 0;
+
+      for (const row of rows) {
+        if (data.has(row[key])) {
+          if (!skipDuplicates) {
+            throw uniqueViolation();
+          }
+
+          continue;
+        }
+
+        data.set(row[key], { deletedAt: null, ...row });
+        count++;
+      }
+
+      return { count };
+    },
+    update: async ({ where, data: patch }: { where: Where; data: Row }) => {
+      const existing = data.get(where[key]);
+
+      if (!existing) {
+        throw Object.assign(new Error('Record to update not found'), {
+          code: 'P2025',
+        });
+      }
+
+      Object.assign(existing, patch);
+      return existing;
     },
     updateMany: async ({ where, data: patch }: { where: Where; data: Row }) => {
       const hits = [...data.values()].filter(row => matches(row, where));
@@ -136,6 +181,60 @@ describe('reconcileProviderRegistry', () => {
       'mollie',
       'stripe',
     ]);
+  });
+
+  it('reconciles once when several replicas start at the same time', async () => {
+    const db = createDb();
+    const path = writeConfig(`general:
+  apolloPlayground: true
+  apolloIntrospection: true
+  urlAdapter: default
+  sessionTTLDays: 30
+mediaServer:
+  quality: 1
+paymentProviders:
+  - type: stripe
+    id: stripe
+  - type: mollie
+    id: mollie
+syncProviders:
+  - type: mailchimp
+    id: mailchimp
+`);
+
+    await expect(
+      Promise.all([
+        reconcile(db, path),
+        reconcile(db, path),
+        reconcile(db, path),
+      ])
+    ).resolves.toBeDefined();
+
+    expect(active(db.settingPaymentProvider.rows())).toEqual([
+      'mollie',
+      'stripe',
+    ]);
+    expect(active(db.settingSyncProvider.rows())).toEqual(['mailchimp']);
+    expect(db.setting.get('sessionTtlDays')).toMatchObject({ value: 30 });
+    expect(db.setting.get(PROVIDER_REGISTRY_RECONCILED)).toMatchObject({
+      value: true,
+    });
+  });
+
+  it('marks a fresh install reconciled when several replicas start without a config file', async () => {
+    const db = createDb();
+
+    await expect(
+      Promise.all([
+        reconcile(db, undefined),
+        reconcile(db, undefined),
+        reconcile(db, undefined),
+      ])
+    ).resolves.toBeDefined();
+
+    expect(db.setting.get(PROVIDER_REGISTRY_RECONCILED)).toMatchObject({
+      value: true,
+    });
   });
 
   it('marks the registry reconciled when there is no config file', async () => {
