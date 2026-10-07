@@ -71,6 +71,16 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   The shared `Table` from `@wepublish/ui/editor` scales `width` columns to the
   available width (`listView/fit-column-widths.ts`) and releases `fixed`
   columns under 600 px — so don't hand-tune column widths to a screen size.
+  List pages use that `Table`, not rsuite's, or columns don't fill the width.
+- **Drawers scroll only `Drawer.Body`.** `editorGlobalStyles.tsx` turns every
+  ancestor of `Drawer.Header` + `Drawer.Body` into a flex column (also through
+  `<Form>` and its `.rs-form-stack`). Don't give the body a fixed height or set
+  `overflow` on `.rs-drawer-dialog` — rsuite's `calc(100% - 76px)` broke with
+  our 77 px header and `overflow: scroll` drew empty scrollbars.
+- **Icon-only actions are `<IconButton circle size="sm" …>`** — delete adds
+  `appearance="ghost" color="red"`. A global rule renders them borderless with a
+  coloured icon; add `data-on-media` when the button sits on an image so it
+  keeps a solid background.
 - **Editor errors shown to users go through `humanizeError(error)`** from
   `@wepublish/ui/editor`, never raw `error.message` — it turns Prisma, network
   and permission failures into `errors.*` translations. Error toasts use

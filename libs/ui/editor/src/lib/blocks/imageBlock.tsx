@@ -75,6 +75,7 @@ export function ImageBlock({
                     icon={<MdBuild />}
                     circle
                     appearance="subtle"
+                    data-on-media
                   />
                 )}
               >

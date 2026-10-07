@@ -8,11 +8,12 @@ import {
   IconButton,
   TableWrapper,
   PaddedCell,
+  Table,
 } from '@wepublish/ui/editor';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { IconButton as RIconButton, Table as RTable, Table } from 'rsuite';
+import { IconButton as RIconButton, Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 import {
   CrowdfundingsDocument,
@@ -71,8 +72,8 @@ function CrowdfundingList() {
           </Column>
 
           <Column
-            resizable
-            width={75}
+            width={100}
+            resizable={false}
             fixed="right"
           >
             <HeaderCell align={'center'}>

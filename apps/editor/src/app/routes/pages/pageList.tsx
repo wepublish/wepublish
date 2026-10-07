@@ -149,7 +149,8 @@ function PageList() {
       {
         id: 'states',
         label: t('pages.overview.states'),
-        width: 125,
+        width: 190,
+        resizable: false,
         alwaysVisible: true,
         render: page => {
           const states: State[] = [];

@@ -19,6 +19,7 @@ interface FilterBodyProps {
   subscriptionFlow?: SubscriptionFlowFragment;
   createNewFlow?: boolean;
   paymentMethods: ListPaymentMethodsQuery | undefined;
+  actionColSpan?: number;
 }
 
 export function FilterBody({
@@ -26,6 +27,7 @@ export function FilterBody({
   memberPlan,
   createNewFlow,
   paymentMethods,
+  actionColSpan,
 }: FilterBodyProps) {
   const { t } = useTranslation();
   const canUpdateSubscriptionFlow = useAuthorisation(
@@ -164,7 +166,7 @@ export function FilterBody({
       </TableCell>
 
       {createNewFlow && (
-        <TableCell>
+        <TableCell colSpan={actionColSpan}>
           <IconButton
             icon={<MdAdd />}
             color={'green'}

@@ -12,10 +12,10 @@ export const EventTableCell = styled(TableCell)`
   vertical-align: top;
 `;
 
-export const DarkTableCell = styled(TableCell)`
-  background-color: ${({ theme }) => theme.palette.common.black};
-  color: ${({ theme }) => theme.palette.common.white};
-  border-right: 1px solid ${({ theme }) => theme.palette.common.white};
+export const BandTableCell = styled(TableCell)`
+  background-color: rgb(from var(--rs-text-primary) r g b / 6%);
+  color: var(--rs-text-primary);
+  border-right: 1px solid var(--rs-border-primary);
 `;
 
 const SectionBandContent = styled('span')`
@@ -114,7 +114,7 @@ interface SectionBandCellProps extends InfoTooltipProps {
 }
 
 /**
- * Black band spanning a group of columns. Names a section of automatic mails and
+ * Band spanning a group of columns. Names a section of automatic mails and
  * explains what it is good for.
  */
 export function SectionBandCell({
@@ -125,7 +125,7 @@ export function SectionBandCell({
   colSpan,
 }: SectionBandCellProps) {
   return (
-    <DarkTableCell
+    <BandTableCell
       align="center"
       colSpan={colSpan}
     >
@@ -138,7 +138,7 @@ export function SectionBandCell({
           example={example}
         />
       </SectionBandContent>
-    </DarkTableCell>
+    </BandTableCell>
   );
 }
 

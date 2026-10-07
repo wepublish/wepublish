@@ -21,4 +21,17 @@ describe('createEditorTheme', () => {
 
     expect(theme.typography.fontFamily).toMatch(/^'Inter'/);
   });
+
+  it.each(['light', 'dark'] as const)(
+    'draws %s table grid lines in the rsuite border colour',
+    mode => {
+      const theme = createEditorTheme(mode);
+
+      expect(theme.components?.MuiTableCell?.styleOverrides?.root).toEqual(
+        expect.objectContaining({
+          borderBottomColor: 'var(--rs-border-primary)',
+        })
+      );
+    }
+  );
 });

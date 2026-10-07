@@ -95,5 +95,12 @@ export const createEditorTheme = (mode: ColorMode) =>
           },
         },
       },
+      MuiTableCell: {
+        styleOverrides: {
+          root: {
+            borderBottomColor: 'var(--rs-border-primary)',
+          },
+        },
+      },
     },
   });

@@ -67,73 +67,80 @@ const ButtonGroup = styled(RButtonGroup)`
 `;
 
 const GridImg = styled.img`
-  height: 140px;
-  width: auto;
   display: block;
-  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  object-fit: cover;
+  overflow: hidden;
+  color: var(--rs-text-secondary);
+  font-size: 12px;
+  text-align: center;
+  transition: transform 0.2s ease;
 `;
 
 const ImgDesc = styled.p`
   position: absolute;
-  bottom: 10px;
-  width: 100%;
-  text-align: center;
+  inset-inline: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 8px 10px;
+  overflow: hidden;
+  color: #fff;
   font-size: 12px;
-  text-shadow: 1px 1px var(--rs-bg-card);
-  display: inline-block;
-  background: var(--rs-bg-card);
-  padding: 2px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
+
 const GridIcon = styled(IconButton)`
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 8px;
+  right: 8px;
 `;
 
 const GridView = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  row-gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
   margin: 20px 0;
 `;
 
 const ImageWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 20%;
-  height: 150px;
-  @media (max-width: 1080px) {
-    width: 25%;
-  }
-  @media (max-width: 900px) {
-    width: 50%;
-  }
-  @media (max-width: 600px) {
-    width: 100%;
-  }
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--rs-border-primary);
+  border-radius: var(--wep-radius-md, 8px);
+  background-color: var(--rs-bg-well);
 `;
 
 const Overlay = styled.div`
   position: absolute;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  z-index: 1;
   opacity: 0;
+  background: linear-gradient(to top, rgb(0 0 0 / 60%), transparent 50%);
+  transition: opacity 0.2s ease;
 `;
 
 const OverlayContainer = styled.div`
-  position: relative;
+  position: absolute;
+  inset: 0;
+
   & a {
+    display: block;
+    height: 100%;
     color: unset;
   }
-  &:hover {
+
+  &:hover,
+  &:focus-within {
     & img {
-      height: 145px;
-      transition: 0.2s ease;
+      transform: scale(1.04);
     }
+
     ${Overlay} {
-      opacity: 0.8;
+      opacity: 1;
     }
   }
 `;
@@ -151,7 +158,7 @@ function ImageList() {
 
   const { filter, setFilter, limit, setLimit } = useListViewState<string>(
     'images',
-    { defaultFilter: '' }
+    { defaultFilter: '', defaultLimit: 50 }
   );
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
@@ -450,6 +457,8 @@ const ImageGridView = ({
                     circle
                     size="md"
                     appearance="default"
+                    color="red"
+                    data-on-media
                     onClick={event => {
                       event.preventDefault();
                       setCurrentImage(image);
@@ -458,7 +467,10 @@ const ImageGridView = ({
                   />
                   {image?.title && <ImgDesc>{image?.title}</ImgDesc>}
                 </Overlay>
-                <GridImg src={image?.squareURL || ''} />
+                <GridImg
+                  src={image?.squareURL || ''}
+                  alt={image?.title || image?.filename || ''}
+                />
               </Link>
             </OverlayContainer>
           </ImageWrapper>

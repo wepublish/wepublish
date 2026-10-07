@@ -19,6 +19,7 @@ type ColumnProps = {
   flexGrow?: number;
   minWidth?: number;
   fixed?: boolean | 'left' | 'right';
+  resizable?: boolean;
 };
 
 type ColumnElement = ReactElement<ColumnProps>;
@@ -64,8 +65,8 @@ const mapColumns = (
     return child;
   });
 
-const isScalable = ({ fixed, flexGrow }: ColumnProps) =>
-  !fixed && flexGrow == null;
+const isScalable = ({ fixed, flexGrow, resizable }: ColumnProps) =>
+  !fixed && flexGrow == null && resizable !== false;
 
 const reservedWidth = ({ flexGrow, minWidth, width }: ColumnProps) =>
   flexGrow != null ? (minWidth ?? 0) : (width ?? DEFAULT_WIDTH);

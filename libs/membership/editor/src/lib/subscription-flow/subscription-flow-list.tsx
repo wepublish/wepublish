@@ -28,8 +28,6 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
-  ListViewContainer,
-  ListViewHeader,
   PermissionControl,
 } from '@wepublish/ui/editor';
 import { createContext, JSX, useEffect, useMemo, useState } from 'react';
@@ -37,7 +35,6 @@ import { useTranslation } from 'react-i18next';
 import { MdOutlineClose, MdOutlineNoteAdd, MdTune } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { Loader } from 'rsuite';
-import type { Color } from 'rsuite/esm/internals/types';
 import { DEFAULT_MUTATION_OPTIONS, showErrors, useShowErrors } from '../common';
 import { EventHeadCell, EventTableCell } from '../mail-settings-layout';
 import { SystemMailSection } from '../system-mail/system-mail-section';
@@ -96,9 +93,29 @@ export function isNonUserEvent(
   return NON_USER_ACTION_EVENTS.includes(event as NonUserActionEvents);
 }
 
+const PageIntro = styled.div`
+  display: grid;
+  gap: 6px;
+  max-width: 880px;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+  }
+`;
+
+const FlowTableContainer = styled(TableContainer)`
+  flex: 1 1 0;
+  min-height: 320px;
+  max-width: 100%;
+  margin-top: 16px;
+  overflow: auto;
+`;
+
 export interface IntervalColoring {
-  bg: Color;
-  fg: Color | string;
+  accent: string;
 }
 
 const eventIcons: Record<string, JSX.Element> = {
@@ -107,8 +124,8 @@ const eventIcons: Record<string, JSX.Element> = {
 };
 
 const eventColors: Record<string, IntervalColoring> = {
-  [SubscriptionEvent.InvoiceCreation]: { bg: 'green', fg: 'white' },
-  [SubscriptionEvent.DeactivationUnpaid]: { bg: 'orange', fg: 'white' },
+  [SubscriptionEvent.InvoiceCreation]: { accent: 'var(--rs-green-500)' },
+  [SubscriptionEvent.DeactivationUnpaid]: { accent: 'var(--rs-orange-500)' },
 };
 
 export interface DecoratedSubscriptionInterval<
@@ -287,7 +304,7 @@ function SubscriptionFlowTable({
   }
 
   return (
-    <TableContainer style={{ marginTop: '16px', maxWidth: '100%' }}>
+    <FlowTableContainer>
       <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
         <SubscriptionClientContext.Provider
           value={{
@@ -338,7 +355,10 @@ function SubscriptionFlowTable({
             <TableBody>
               {subscriptionFlows.subscriptionFlows.map(subscriptionFlow => (
                 <SplitTableRow key={subscriptionFlow.id}>
-                  <DndContext onDragEnd={event => intervalDragEnd(event)}>
+                  <DndContext
+                    onDragEnd={event => intervalDragEnd(event)}
+                    accessibility={{ container: document.body }}
+                  >
                     {memberPlan && !defaultFlowOnly && (
                       <FilterBody
                         memberPlan={memberPlan}
@@ -385,6 +405,7 @@ function SubscriptionFlowTable({
                         memberPlan={memberPlan}
                         createNewFlow
                         paymentMethods={paymentMethods}
+                        actionColSpan={userActionCount + nonUserActionCount + 1}
                       />
                     )}
                   </SplitTableRow>
@@ -394,7 +415,7 @@ function SubscriptionFlowTable({
           </Table>
         </SubscriptionClientContext.Provider>
       </MailTemplatesContext.Provider>
-    </TableContainer>
+    </FlowTableContainer>
   );
 }
 
@@ -428,23 +449,24 @@ function SubscriptionFlowList() {
 
   return (
     <>
-      <ListViewContainer>
-        <ListViewHeader>
-          <h2>
-            <MdTune style={{ marginRight: '4px' }} />
+      <PageIntro>
+        <h2>
+          <MdTune />
 
-            {defaultFlowOnly ?
-              t('automaticMails.title')
-            : `«${memberPlan?.name || ''}»`}
-          </h2>
+          {defaultFlowOnly ?
+            t('automaticMails.title')
+          : `«${memberPlan?.name || ''}»`}
+        </h2>
 
-          <Typography variant="subtitle1">
-            {defaultFlowOnly ?
-              t('automaticMails.intro')
-            : t('subscriptionFlow.settingsDescription')}
-          </Typography>
-        </ListViewHeader>
-      </ListViewContainer>
+        <Typography
+          variant="body1"
+          color="textSecondary"
+        >
+          {defaultFlowOnly ?
+            t('automaticMails.intro')
+          : t('subscriptionFlow.settingsDescription')}
+        </Typography>
+      </PageIntro>
 
       {defaultFlowOnly && <SystemMailSection />}
 

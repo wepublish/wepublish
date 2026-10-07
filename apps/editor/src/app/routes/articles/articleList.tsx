@@ -151,7 +151,8 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
       {
         id: 'states',
         label: t('articles.overview.states'),
-        width: 125,
+        width: 190,
+        resizable: false,
         alwaysVisible: true,
         render: article => {
           const states: State[] = [];

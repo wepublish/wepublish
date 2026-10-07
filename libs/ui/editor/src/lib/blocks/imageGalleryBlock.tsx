@@ -169,6 +169,7 @@ export function ImageGalleryBlock({
                     icon={<MdBuild />}
                     circle
                     appearance="subtle"
+                    data-on-media
                   />
                 )}
               >

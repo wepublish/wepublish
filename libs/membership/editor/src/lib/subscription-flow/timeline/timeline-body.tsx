@@ -71,7 +71,14 @@ export function TimelineBody({
               <TableCellBottom
                 key={`day-${day}`}
                 align="center"
-                style={day === 0 ? { backgroundColor: 'lightyellow' } : {}}
+                style={
+                  day === 0 ?
+                    {
+                      backgroundColor:
+                        'rgb(from var(--rs-text-primary) r g b / 5%)',
+                    }
+                  : {}
+                }
               >
                 <DroppableSubscriptionInterval dayIndex={day ?? 0}>
                   <DraggableSubscriptionInterval
@@ -91,11 +98,19 @@ export function TimelineBody({
             <TableCellBottom
               key={`day-${day}`}
               align="center"
-              style={day === 0 ? { backgroundColor: 'lightyellow' } : {}}
+              style={
+                day === 0 ?
+                  {
+                    backgroundColor:
+                      'rgb(from var(--rs-text-primary) r g b / 5%)',
+                  }
+                : {}
+              }
             >
               <DroppableSubscriptionInterval dayIndex={day ?? 0}>
                 {currentIntervals.map(currentInterval => (
                   <DraggableSubscriptionInterval
+                    key={currentInterval.object.id}
                     subscriptionInterval={currentInterval}
                     subscriptionFlow={subscriptionFlow}
                     mailTemplates={mailTemplates}

@@ -42,10 +42,36 @@ const IconButton = styled(RIconButton)`
   margin-right: 12px;
 `;
 
-const AnswerGrid = styled(Stack)`
-  margin-bottom: 12px;
+const AnswerList = styled.div`
+  display: grid;
   gap: 12px;
-  flex-wrap: wrap;
+  width: 100%;
+  max-width: 880px;
+`;
+
+const AnswerRow = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--rs-border-primary);
+  border-radius: var(--wep-radius-md, 8px);
+  background-color: var(--rs-bg-card);
+
+  && .rs-form-control-wrapper,
+  && .rs-picker,
+  && .rs-picker-toggle {
+    width: 100%;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    > :first-child {
+      grid-column: 1 / -1;
+    }
+  }
 `;
 
 const Loader = styled(RLoader)`
@@ -183,6 +209,7 @@ function CommentRatingEditView() {
           <ListViewActions>
             <IconButton
               appearance="primary"
+              icon={<MdAdd />}
               onClick={() => {
                 addAnswer({
                   variables: {
@@ -192,7 +219,6 @@ function CommentRatingEditView() {
                 });
               }}
             >
-              <MdAdd />
               {t('comments.ratingEdit.newAnswer')}
             </IconButton>
 
@@ -305,9 +331,9 @@ export function RatingAnswers({
   const { t } = useTranslation();
 
   return (
-    <div>
+    <AnswerList>
       {answers?.map(answer => (
-        <AnswerGrid key={answer.id}>
+        <AnswerRow key={answer.id}>
           <Form.Control
             name={`answer-${answer.id}`}
             placeholder={t('comments.ratingEdit.placeholder')}
@@ -339,9 +365,9 @@ export function RatingAnswers({
               onClick={() => onDeleteAnswer(answer.id)}
             />
           </IconButtonTooltip>
-        </AnswerGrid>
+        </AnswerRow>
       ))}
-    </div>
+    </AnswerList>
   );
 }
 

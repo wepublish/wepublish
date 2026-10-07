@@ -55,7 +55,11 @@ export function TimelineHead({ days, intervals }: FlowHeadProps) {
         <TableCell
           key={`day-${day}`}
           align="center"
-          style={day === 0 ? { backgroundColor: 'lightyellow' } : {}}
+          style={
+            day === 0 ?
+              { backgroundColor: 'rgb(from var(--rs-text-primary) r g b / 5%)' }
+            : {}
+          }
         >
           {t('subscriptionFlow.dayWithNumber', { day })}
           {/* show badge on zero day */}

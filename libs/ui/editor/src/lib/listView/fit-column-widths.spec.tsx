@@ -139,6 +139,27 @@ describe('fitColumnWidths', () => {
     expect(widthsOf(fitted)).toEqual([138, 220]);
   });
 
+  it('keeps columns that cannot be resized at their exact width', () => {
+    const columns = [
+      <Column
+        key="states"
+        width={190}
+        resizable={false}
+      />,
+      <Column
+        key="a"
+        width={200}
+      />,
+      <Column
+        key="b"
+        width={200}
+      />,
+    ];
+
+    expect(widthsOf(fitColumnWidths(columns, 400))).toEqual([190, 105, 105]);
+    expect(widthsOf(fitColumnWidths(columns, 800))).toEqual([190, 305, 305]);
+  });
+
   it('leaves the columns untouched before the table has been measured', () => {
     const columns = [
       <Column

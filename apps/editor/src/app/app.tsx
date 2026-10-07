@@ -278,10 +278,6 @@ export function App() {
           .rs-drawer-header {
             width: 100%;
           }
-
-          .rs-drawer-dialog {
-            overflow: scroll;
-          }
         `}
       />
       <EditorGlobalStyles />

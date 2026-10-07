@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
 import {
   Table,
   TableBody,
@@ -40,6 +41,21 @@ import {
 } from 'rsuite';
 import { DEFAULT_MUTATION_OPTIONS, showErrors } from '../common';
 import { mailTypeLabel } from './mail-placeholders';
+
+const StatusTag = styled(Tag)`
+  white-space: nowrap;
+
+  .rs-tag-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  svg {
+    flex-shrink: 0;
+    color: var(--wep-state-draft-text, var(--rs-state-warning));
+  }
+`;
 
 function MailTemplateList() {
   const { t } = useTranslation();
@@ -109,9 +125,10 @@ function MailTemplateList() {
             <Button
               appearance="ghost"
               loading={importing}
+              startIcon={<MdCloudDownload />}
               onClick={() => setImportOpen(true)}
             >
-              <MdCloudDownload /> {t('mailTemplates.importFromProvider')}
+              {t('mailTemplates.importFromProvider')}
             </Button>
           </PermissionControl>
 
@@ -121,9 +138,9 @@ function MailTemplateList() {
           >
             <Button
               appearance="primary"
+              startIcon={<MdAdd />}
               onClick={() => navigate('/mailtemplates/create')}
             >
-              <MdAdd />
               {t('mailTemplates.create')}
             </Button>
           </PermissionControl>
@@ -165,10 +182,10 @@ function MailTemplateList() {
                 <TableCell>
                   {template.status === 'ok' ?
                     <MdCheck />
-                  : <Tag color="yellow">
-                      <MdWarning />{' '}
+                  : <StatusTag>
+                      <MdWarning />
                       {t(`mailTemplates.statuses.${template.status}`)}
-                    </Tag>
+                    </StatusTag>
                   }
                 </TableCell>
                 <TableCell>
@@ -179,6 +196,8 @@ function MailTemplateList() {
                     >
                       <IconButton
                         icon={<MdEdit />}
+                        circle
+                        size="sm"
                         onClick={() =>
                           navigate(`/mailtemplates/edit/${template.id}`)
                         }
@@ -190,8 +209,10 @@ function MailTemplateList() {
                     >
                       <IconButton
                         icon={<MdDelete />}
+                        circle
+                        size="sm"
+                        appearance="ghost"
                         color="red"
-                        appearance="primary"
                         onClick={() => setDeleteId(template.id)}
                       />
                     </PermissionControl>
