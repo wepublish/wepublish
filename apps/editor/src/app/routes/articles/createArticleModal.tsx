@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
 import { ArticleTemplateListDocument } from '@wepublish/editor/api';
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdContentCopy, MdNoteAdd, MdSearch } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +43,8 @@ const NoResults = styled.p`
   text-align: center;
 `;
 
+const SEARCH_THRESHOLD = 5;
+
 type CreateArticleModalProps = {
   open: boolean;
   onClose(): void;
@@ -51,8 +53,6 @@ type CreateArticleModalProps = {
 export function CreateArticleModal({ open, onClose }: CreateArticleModalProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const optionsRef = useRef<HTMLDivElement>(null);
-  const [isOverflowing, setOverflowing] = useState(false);
   const [search, setSearch] = useState('');
   const [hasBeenOpened, setHasBeenOpened] = useState(open);
 
@@ -66,24 +66,15 @@ export function CreateArticleModal({ open, onClose }: CreateArticleModalProps) {
     fetchPolicy: 'cache-and-network',
   });
 
-  const templates = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    const nodes = data?.articleTemplates.nodes ?? [];
-
-    return query ?
-        nodes.filter(({ blockTemplate }) =>
-          blockTemplate.name.toLowerCase().includes(query)
-        )
-      : nodes;
-  }, [data, search]);
-
-  useLayoutEffect(() => {
-    const options = optionsRef.current;
-
-    if (options && options.scrollHeight > options.clientHeight) {
-      setOverflowing(true);
-    }
-  }, [open, templates]);
+  const nodes = data?.articleTemplates.nodes ?? [];
+  const showSearch = nodes.length > SEARCH_THRESHOLD;
+  const query = search.trim().toLowerCase();
+  const templates =
+    query ?
+      nodes.filter(({ blockTemplate }) =>
+        blockTemplate.name.toLowerCase().includes(query)
+      )
+    : nodes;
 
   const create = (templateId?: string) => {
     onClose();
@@ -116,7 +107,7 @@ export function CreateArticleModal({ open, onClose }: CreateArticleModalProps) {
             {t('articles.createModal.blankArticle')}
           </BlankOption>
 
-          {(isOverflowing || search) && (
+          {showSearch && (
             <Search size="sm">
               <InputGroup.Addon>
                 <MdSearch />
@@ -129,7 +120,7 @@ export function CreateArticleModal({ open, onClose }: CreateArticleModalProps) {
             </Search>
           )}
 
-          <Options ref={optionsRef}>
+          <Options>
             {templates.map(({ id, blockTemplate }) => (
               <Option
                 key={id}

@@ -36,6 +36,19 @@ const articleTemplate = (id: string, name: string) => ({
   blockTemplate: { __typename: 'BlockTemplate', id: `block-${id}`, name },
 });
 
+const mockTemplates = (count: number) =>
+  useArticleTemplateListQuery.mockReturnValue({
+    data: {
+      articleTemplates: {
+        nodes: Array.from({ length: count }, (_, index) =>
+          articleTemplate(`template-${index + 1}`, `Template ${index + 1}`)
+        ),
+        totalCount: count,
+      },
+    },
+    loading: false,
+  });
+
 function CurrentLocation() {
   const { pathname, search } = useLocation();
 
@@ -121,56 +134,20 @@ describe('CreateArticleModal', () => {
     );
   });
 
-  it('should not show a search bar if all templates fit', async () => {
+  it('should not show a search bar for up to 5 templates', async () => {
+    mockTemplates(5);
     renderModal();
 
-    await screen.findByRole('button', { name: /News/ });
+    await screen.findByRole('button', { name: /Template 5/ });
 
     expect(
       screen.queryByPlaceholderText('articles.createModal.search')
     ).not.toBeInTheDocument();
   });
 
-  describe('with more templates than fit', () => {
-    let scrollHeight: PropertyDescriptor | undefined;
-    let clientHeight: PropertyDescriptor | undefined;
-
+  describe('with more than 5 templates', () => {
     beforeEach(() => {
-      scrollHeight = Object.getOwnPropertyDescriptor(
-        HTMLElement.prototype,
-        'scrollHeight'
-      );
-      clientHeight = Object.getOwnPropertyDescriptor(
-        HTMLElement.prototype,
-        'clientHeight'
-      );
-
-      Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {
-        configurable: true,
-        get: () => 1000,
-      });
-      Object.defineProperty(HTMLElement.prototype, 'clientHeight', {
-        configurable: true,
-        get: () => 300,
-      });
-    });
-
-    afterEach(() => {
-      if (scrollHeight) {
-        Object.defineProperty(
-          HTMLElement.prototype,
-          'scrollHeight',
-          scrollHeight
-        );
-      }
-
-      if (clientHeight) {
-        Object.defineProperty(
-          HTMLElement.prototype,
-          'clientHeight',
-          clientHeight
-        );
-      }
+      mockTemplates(6);
     });
 
     it('should filter the templates by name', async () => {
@@ -180,13 +157,13 @@ describe('CreateArticleModal', () => {
         'articles.createModal.search'
       );
 
-      fireEvent.change(search, { target: { value: 'inter' } });
+      fireEvent.change(search, { target: { value: 'template 6' } });
 
       expect(
-        screen.queryByRole('button', { name: /News/ })
+        screen.queryByRole('button', { name: /Template 1/ })
       ).not.toBeInTheDocument();
       expect(
-        screen.getByRole('button', { name: /Interview/ })
+        screen.getByRole('button', { name: /Template 6/ })
       ).toBeInTheDocument();
       expect(
         screen.getByRole('button', {
@@ -202,10 +179,6 @@ describe('CreateArticleModal', () => {
         'articles.createModal.search'
       );
 
-      Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {
-        configurable: true,
-        get: () => 100,
-      });
       fireEvent.change(search, { target: { value: 'nothing matches' } });
 
       expect(
