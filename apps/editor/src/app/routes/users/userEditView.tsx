@@ -126,6 +126,8 @@ function UserEditView() {
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null);
   const [password, setPassword] = useState('');
   const [active, setActive] = useState(true);
+  // creating a user sends the registration mail unless the editor opts out
+  const [doNotSendAccountMail, setDoNotSendAccountMail] = useState(false);
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([]);
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
   const [address, setAddress] = useState<UserAddress | null>(null);
@@ -389,6 +391,7 @@ function UserEditView() {
             address,
             userImageID: userImage?.id || null,
             password,
+            skipMail: doNotSendAccountMail,
           },
         });
         const newUser = data?.createUser;
@@ -490,6 +493,22 @@ function UserEditView() {
                           onChange={value => setActive(value)}
                         />
                       </Form.Group>
+                      {/* only creating sends a mail (the registration mail) */}
+                      {!userId && (
+                        <Form.Group controlId="doNotSendAccountMail">
+                          <Form.Label>
+                            {t('userCreateOrEditView.doNotSendAccountMail')}
+                          </Form.Label>
+                          <RToggle
+                            checked={doNotSendAccountMail}
+                            disabled={isDisabled}
+                            onChange={value => setDoNotSendAccountMail(value)}
+                          />
+                          <Form.HelpText>
+                            {t('userCreateOrEditView.doNotSendAccountMailHelp')}
+                          </Form.HelpText>
+                        </Form.Group>
+                      )}
                     </ColTextAlign>
                   </Row>
 

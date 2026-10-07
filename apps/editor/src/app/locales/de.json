@@ -2028,7 +2028,9 @@
       "zipCode": "PLZ",
       "birthday": "Geburtstag",
       "note": "Notiz",
-      "noteHelpText": "Nicht für den Nutzer sichtbar."
+      "noteHelpText": "Nicht für den Nutzer sichtbar.",
+      "doNotSendAccountMail": "Keine Registrierungs-E-Mail senden",
+      "doNotSendAccountMailHelp": "Die E-Mail «Registrierung» geht nur raus, wenn ihr unter «Automatische Mails» → «Konto & Login» eine Vorlage zugewiesen ist."
     },
     "userList": {
       "overview": {
@@ -2111,7 +2113,8 @@
         "title": {
           "activated": "Abonnement deaktivieren"
         },
-        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
+        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert",
+        "doNotSendMail": "Keine Kündigungs-E-Mail an das Mitglied senden"
       },
       "editTitle": "Abonnement bearbeiten",
       "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",
@@ -2125,7 +2128,9 @@
       "selectUser": "Benutzer:in wählen",
       "startsAt": "Abonnements-Beginn",
       "uniqueSubscription": "Unique-Abo",
-      "uniqueSubscriptionHelpText": "Ein Benutzer kann nur ein Abo pro Unique-Abo-Plan lösen. Die manuelle Verlängerung durch den Benutzer ist nicht möglich. Eine automatische Verlängerung ist möglich."
+      "uniqueSubscriptionHelpText": "Ein Benutzer kann nur ein Abo pro Unique-Abo-Plan lösen. Die manuelle Verlängerung durch den Benutzer ist nicht möglich. Eine automatische Verlängerung ist möglich.",
+      "doNotSendSubscribeMail": "Keine Abo-Bestätigung an das Mitglied senden",
+      "doNotSendSubscribeMailHelp": "Die E-Mail «Abo abgeschlossen» geht nur raus, wenn ihr unter «Automatische Mails» für dieses Abo eine Vorlage zugewiesen ist."
     },
     "userSubscriptionList": {
       "aboDetails": "Abo-Details",

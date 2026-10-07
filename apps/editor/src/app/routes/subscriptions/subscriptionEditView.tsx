@@ -132,6 +132,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] =
     useState<boolean>(false);
   const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false);
+  // creating a subscription sends the subscribe mail unless the editor opts out
+  const [doNotSendSubscribeMail, setDoNotSendSubscribeMail] =
+    useState<boolean>(false);
   const [user, setUser] = useState<FullUserFragment | null>();
   const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>();
   const [paymentPeriodicity, setPaymentPeriodicity] =
@@ -477,6 +480,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
             userID: user.id,
             paymentMethodID: paymentMethod.id,
             memberPlanID: memberPlan.id,
+            skipMail: doNotSendSubscribeMail,
           },
         });
 
@@ -524,13 +528,15 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
   async function handleDeactivation(
     date: Date,
-    reason: SubscriptionDeactivationReason
+    reason: SubscriptionDeactivationReason,
+    skipMail: boolean
   ) {
     if (!id || !memberPlan || !paymentMethod || !user?.id) return;
     const { data } = await cancelSubscription({
       variables: {
         reason,
         cancelSubscriptionId: id,
+        skipMail,
       },
     });
     if (data?.cancelSubscription) onSave?.(data.cancelSubscription);
@@ -1015,6 +1021,26 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </Text>
                       </Col>
                     </RowPaddingTop>
+                    {/* only creating sends a mail (the subscribe mail) */}
+                    {!id && (
+                      <RowPaddingTop>
+                        <Col xs={24}>
+                          <Toggle
+                            checked={doNotSendSubscribeMail}
+                            disabled={isDisabled}
+                            onChange={value => setDoNotSendSubscribeMail(value)}
+                          />
+                          <FormLabelMarginLeft>
+                            {t('userSubscriptionEdit.doNotSendSubscribeMail')}
+                          </FormLabelMarginLeft>
+                          <Text>
+                            {t(
+                              'userSubscriptionEdit.doNotSendSubscribeMailHelp'
+                            )}
+                          </Text>
+                        </Col>
+                      </RowPaddingTop>
+                    )}
                     <RowPaddingTop>
                       <Col xs={24}>
                         <Button
@@ -1061,7 +1087,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               userEmail={user.email}
               paidUntil={paidUntil ?? undefined}
               onDeactivate={async data => {
-                await handleDeactivation(data.date, data.reason);
+                await handleDeactivation(data.date, data.reason, data.skipMail);
                 setDeactivationPanelOpen(false);
               }}
               onClose={() => setDeactivationPanelOpen(false)}

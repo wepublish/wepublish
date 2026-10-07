@@ -1978,7 +1978,9 @@
       "zipCode": "Code Postal",
       "birthday": "Birthday",
       "note": "Note",
-      "noteHelpText": "Non visible pour l'utilisateur."
+      "noteHelpText": "Non visible pour l'utilisateur.",
+      "doNotSendAccountMail": "Ne pas envoyer l'e-mail d'inscription",
+      "doNotSendAccountMailHelp": "L'e-mail « Inscription » n'est envoyé que si un modèle lui est attribué sous « E-mails automatiques » → « Compte et connexion »."
     },
     "userList": {
       "overview": {
@@ -2061,7 +2063,8 @@
         "title": {
           "activated": "Désactiver l'abonnement"
         },
-        "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}"
+        "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}",
+        "doNotSendMail": "Ne pas envoyer l'e-mail de résiliation au membre"
       },
       "editTitle": "Modifier l'abonnement",
       "memberPlanMonthlyAmount": "Montant mensuel minimum ({{currency}})",
@@ -2075,7 +2078,9 @@
       "selectUser": "Sélectionner l'utilisateur·trice",
       "startsAt": "Début de l'abonnement",
       "uniqueSubscription": "Abonnement unique",
-      "uniqueSubscriptionHelpText": "Un utilisateur ne peut souscrire qu'un seul abonnement par plan d'abonnement unique. Le renouvellement manuel par l'utilisateur n'est pas possible. Le renouvellement automatique est possible."
+      "uniqueSubscriptionHelpText": "Un utilisateur ne peut souscrire qu'un seul abonnement par plan d'abonnement unique. Le renouvellement manuel par l'utilisateur n'est pas possible. Le renouvellement automatique est possible.",
+      "doNotSendSubscribeMail": "Ne pas envoyer de confirmation d'abonnement au membre",
+      "doNotSendSubscribeMailHelp": "L'e-mail « Abonnement conclu » n'est envoyé que si un modèle lui est attribué pour cet abonnement sous « E-mails automatiques »."
     },
     "userSubscriptionList": {
       "aboDetails": "Détails de l'abonnement",

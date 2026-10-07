@@ -177,6 +177,13 @@ export class CreatePublicSubscriptionInput extends PickType(
   override memberPlanID!: string;
   @Field()
   override paymentMethodID!: string;
+
+  @Field(() => Boolean, {
+    nullable: true,
+    description:
+      'When true, suppress the subscribe mail to the user, e.g. when an editor creates the subscription and chose not to mail the reader.',
+  })
+  skipMail?: boolean;
 }
 
 @ArgsType()
@@ -195,7 +202,8 @@ export class ImportPublicSubscriptionInput extends OmitType(
 
 @ArgsType()
 export class UpdatePublicSubscriptionInput extends PartialType(
-  CreatePublicSubscriptionInput,
+  // updating sends no subscribe mail, and the input is written to the subscription
+  OmitType(CreatePublicSubscriptionInput, ['skipMail'] as const, ArgsType),
   ArgsType
 ) {
   @Field()
@@ -214,7 +222,7 @@ export class CancelPublicSubscriptionInput extends PickType(
   @Field(() => Boolean, {
     nullable: true,
     description:
-      'When true, suppress the subscription-deactivation mail. Useful for bulk migrations of already-cancelled subscriptions.',
+      'When true, suppress the subscription-deactivation mail, e.g. when an editor chose not to mail the reader, or for bulk migrations of already-cancelled subscriptions.',
   })
   skipMail?: boolean;
 }

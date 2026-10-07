@@ -2094,7 +2094,9 @@
       "zipCode": "ZIP",
       "birthday": "Birthday",
       "note": "Note",
-      "noteHelpText": "Not visible to the user."
+      "noteHelpText": "Not visible to the user.",
+      "doNotSendAccountMail": "Do not send the registration email",
+      "doNotSendAccountMailHelp": "The “Registration” email is only sent if a template is assigned to it under “Automatic emails” → “Account & login”."
     },
     "userList": {
       "overview": {
@@ -2177,7 +2179,8 @@
         "title": {
           "activated": "Deactivate subscription"
         },
-        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
+        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
+        "doNotSendMail": "Do not send the cancellation email to the member"
       },
       "editTitle": "Edit Subscription",
       "memberPlanMonthlyAmount": "Minimal Monthly Amount ({{currency}})",
@@ -2191,7 +2194,9 @@
       "selectUser": "Select User",
       "startsAt": "Subscription Start",
       "uniqueSubscription": "Unique Subscription",
-      "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible."
+      "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible.",
+      "doNotSendSubscribeMail": "Do not send a subscription confirmation to the member",
+      "doNotSendSubscribeMailHelp": "The “Subscription started” email is only sent if a template is assigned to it for this subscription under “Automatic emails”."
     },
     "userSubscriptionList": {
       "aboDetails": "Subscription details",

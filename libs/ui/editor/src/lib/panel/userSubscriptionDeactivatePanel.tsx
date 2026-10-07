@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
+  Checkbox,
   DatePicker,
   Form as RForm,
   Message,
@@ -22,6 +23,8 @@ const Form = styled(RForm)`
 export interface DeactivateSubscription {
   date: Date;
   reason: SubscriptionDeactivationReason;
+  /** The editor chose not to send the deactivation mail to the subscriber. */
+  skipMail: boolean;
 }
 
 export interface SubscriptionDeactivatePanelProps {
@@ -47,6 +50,7 @@ function UserSubscriptionDeactivatePanel({
   );
   const [deactivationReason, setDeactivationReason] =
     useState<SubscriptionDeactivationReason | null>(null);
+  const [doNotSendMail, setDoNotSendMail] = useState(false);
 
   return (
     <>
@@ -118,6 +122,12 @@ function UserSubscriptionDeactivatePanel({
                 onChange={value => setDeactivationReason(value)}
               />
             </Group>
+            <Checkbox
+              checked={doNotSendMail}
+              onChange={(value, checked) => setDoNotSendMail(checked)}
+            >
+              {t('userSubscriptionEdit.deactivation.doNotSendMail')}
+            </Checkbox>
             <Message
               showIcon
               type="info"
@@ -136,6 +146,7 @@ function UserSubscriptionDeactivatePanel({
             onDeactivate({
               date: deactivationDate!,
               reason: deactivationReason!,
+              skipMail: doNotSendMail,
             })
           }
         >
