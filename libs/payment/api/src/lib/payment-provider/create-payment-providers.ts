@@ -1,5 +1,7 @@
+import { Logger } from '@nestjs/common';
 import { PaymentProviderType, PrismaClient } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { isSimulatedPaymentAllowed } from '@wepublish/utils/api';
 import bodyParser from 'body-parser';
 import { PaymentProvider } from './payment-provider';
 import { BexioPaymentProvider } from './bexio/bexio-payment-provider';
@@ -7,6 +9,7 @@ import { MolliePaymentProvider } from './mollie-payment-provider';
 import { NeverChargePaymentProvider } from './never-charge-payment-provider';
 import { PayrexxPaymentProvider } from './payrexx-payment-provider';
 import { PayrexxSubscriptionPaymentProvider } from './payrexx-subscription-payment-provider';
+import { SimulatedPaymentProvider } from './simulated-payment-provider';
 import { StripeCheckoutPaymentProvider } from './stripe-checkout-payment-provider';
 import { StripePaymentProvider } from './stripe-payment-provider';
 
@@ -59,6 +62,14 @@ export const createPaymentProvider = (
       });
     case PaymentProviderType.NO_CHARGE:
       return new NeverChargePaymentProvider({ id, prisma, kv });
+    case PaymentProviderType.SIMULATED:
+      // The checkout page posts a plain html form.
+      return new SimulatedPaymentProvider({
+        id,
+        incomingRequestHandler: formBody(),
+        prisma,
+        kv,
+      });
     default:
       throw new Error(`Unknown payment provider type defined: ${type}`);
   }
@@ -71,5 +82,21 @@ export const loadPaymentProviders = async (
     orderBy: { id: 'asc' },
   });
 
-  return rows.map(row => createPaymentProvider(row.id, row.type, deps));
+  // A simulated provider lets anyone "pay" without money moving, so it never
+  // runs on production, even if a row got there (dump, seed, direct insert).
+  const allowSimulated = isSimulatedPaymentAllowed();
+
+  return rows
+    .filter(row => {
+      if (row.type !== PaymentProviderType.SIMULATED || allowSimulated) {
+        return true;
+      }
+
+      new Logger('PaymentProviders').warn(
+        `Skipping simulated payment provider "${row.id}": not allowed on production`
+      );
+
+      return false;
+    })
+    .map(row => createPaymentProvider(row.id, row.type, deps));
 };

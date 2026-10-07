@@ -3392,6 +3392,7 @@ export type MutationCreatePaymentProviderSettingArgs = {
   payrexx_pm?: InputMaybe<Array<PayrexxPm>>;
   payrexx_psp?: InputMaybe<Array<PayrexxPsp>>;
   payrexx_vatrate?: InputMaybe<Scalars['String']['input']>;
+  simulated_declineRenewals?: InputMaybe<Scalars['Boolean']['input']>;
   stripe_methods?: InputMaybe<Array<StripePaymentMethod>>;
   type: PaymentProviderType;
   webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
@@ -4341,6 +4342,7 @@ export type MutationUpdatePaymentProviderSettingArgs = {
   payrexx_pm?: InputMaybe<Array<PayrexxPm>>;
   payrexx_psp?: InputMaybe<Array<PayrexxPsp>>;
   payrexx_vatrate?: InputMaybe<Scalars['String']['input']>;
+  simulated_declineRenewals?: InputMaybe<Scalars['Boolean']['input']>;
   stripe_methods?: InputMaybe<Array<StripePaymentMethod>>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5058,6 +5060,7 @@ export enum PaymentProviderType {
   NoCharge = 'NO_CHARGE',
   Payrexx = 'PAYREXX',
   PayrexxSubscription = 'PAYREXX_SUBSCRIPTION',
+  Simulated = 'SIMULATED',
   Stripe = 'STRIPE',
   StripeCheckout = 'STRIPE_CHECKOUT'
 }
@@ -6919,6 +6922,7 @@ export type SettingPaymentProvider = SettingProvider & {
   payrexx_pm?: Maybe<Array<PayrexxPm>>;
   payrexx_psp?: Maybe<Array<PayrexxPsp>>;
   payrexx_vatrate?: Maybe<Scalars['String']['output']>;
+  simulated_declineRenewals?: Maybe<Scalars['Boolean']['output']>;
   stripe_methods?: Maybe<Array<StripePaymentMethod>>;
   type: PaymentProviderType;
 };
