@@ -16,12 +16,23 @@ async function takeScreenshotOfPanel(playwrightPage) {
   return await panel.screenshot();
 }
 
+async function activateFirstTabs(playwrightPage) {
+  const tablists = await playwrightPage.getByRole('tablist').all();
+  for (const tablist of tablists) {
+    const firstTab = tablist.getByRole('tab').first();
+    await firstTab.click();
+    await firstTab.and(playwrightPage.locator('[aria-selected="true"]')).waitFor();
+  }
+  await playwrightPage.evaluate(() => window.scrollTo(0, 0));
+}
+
 async function takeLandingPageScreenshots(context, baseUrl) {
   const playwrightPage = await context.newPage();
   const screenshots = [];
   try {
     await visitPage(playwrightPage, baseUrl);
     try {
+      await activateFirstTabs(playwrightPage);
       const initialScreenshot = await playwrightPage.screenshot({ fullPage: true });
       screenshots.push({ key: 'initial', screenshotBuffer: initialScreenshot });
     } catch (e) {
