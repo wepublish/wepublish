@@ -53,6 +53,7 @@ describe('ActionMailResolver', () => {
   it('looks up the mail of a subscription about to be created', async () => {
     const { resolver, service } = setup();
     const draft = {
+      userID: 'user-1',
       memberPlanID: 'plan-1',
       paymentMethodID: 'pm-1',
       paymentPeriodicity: PaymentPeriodicity.monthly,

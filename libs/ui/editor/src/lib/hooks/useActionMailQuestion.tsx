@@ -20,7 +20,7 @@ export interface ActionMailQuestion {
   /** Set when the action sends no mail. */
   noMailReason?: ActionMailNoMailReason | null;
   /** Who would get the mail, e.g. the member's email address. */
-  recipient: string;
+  recipient?: string | null;
 }
 
 const USER_EVENTS = [
@@ -84,7 +84,7 @@ export function useActionMailQuestion(): {
 
   // React renders the values as text and escapes them already.
   const values = (extra: Record<string, string> = {}) => ({
-    recipient: question?.recipient ?? '',
+    recipient: question?.recipient || t('actionMail.theMember'),
     ...extra,
     interpolation: { escapeValue: false },
   });

@@ -16,6 +16,13 @@ export class ActionMail {
   })
   event!: string;
 
+  @Field({
+    nullable: true,
+    description:
+      'The address the mail would go to; null while the user does not exist yet (createUser).',
+  })
+  recipientEmail?: string;
+
   @Field({ nullable: true, description: 'Set when a mail would be sent.' })
   mailTemplateId?: string;
 
@@ -31,6 +38,9 @@ export class ActionMail {
 
 @ArgsType()
 export class SubscriptionCreationMailArgs {
+  @Field()
+  userID!: string;
+
   @Field()
   memberPlanID!: string;
 

@@ -10,7 +10,8 @@
       "firstPeriod": "Für die erste Periode eines Abos wird keine Zahlungsbestätigung versandt. An {{recipient}} wird keine E-Mail gesendet.",
       "alreadyHandled": "Die Zahlungsbestätigung für diese Rechnung wurde bereits versandt oder unterdrückt. An {{recipient}} wird keine E-Mail gesendet.",
       "notApplicable": "An {{recipient}} wird keine E-Mail gesendet.",
-      "ok": "OK"
+      "ok": "OK",
+      "theMember": "das Mitglied"
     },
     "lastSavedAt": "Zuletzt gespeichert {{date, ccc PP pp}}",
     "preview": {

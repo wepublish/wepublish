@@ -480,6 +480,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
         const { data: mailData } = await client.query({
           query: SubscriptionCreationMailDocument,
           variables: {
+            userID: user.id,
             memberPlanID: memberPlan.id,
             paymentMethodID: paymentMethod.id,
             paymentPeriodicity,
@@ -494,7 +495,11 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
         }
 
         // asked every time: whether the mail goes out, or that none will
-        const decision = await askMail({ ...mail, recipient: user.email });
+        const decision = await askMail({
+          ...mail,
+          // the address the mail goes to, from the API; the view's user may lack it
+          recipient: mail.recipientEmail ?? user.email,
+        });
 
         if (decision === 'cancel') {
           return;
@@ -571,7 +576,11 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     }
 
     // asked every time: whether the mail goes out, or that none will
-    const decision = await askMail({ ...mail, recipient: user.email });
+    const decision = await askMail({
+      ...mail,
+      // the address the mail goes to, from the API; the view's user may lack it
+      recipient: mail.recipientEmail ?? user.email,
+    });
 
     if (decision === 'cancel') {
       return false;

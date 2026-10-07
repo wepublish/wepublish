@@ -10,7 +10,8 @@
       "firstPeriod": "No payment confirmation is sent for the first period of a subscription. No email will be sent to {{recipient}}.",
       "alreadyHandled": "The payment confirmation for this invoice was already sent or suppressed. No email will be sent to {{recipient}}.",
       "notApplicable": "No email will be sent to {{recipient}}.",
-      "ok": "OK"
+      "ok": "OK",
+      "theMember": "the member"
     },
     "lastSavedAt": "Last saved {{date, ccc PP pp}}",
     "preview": {

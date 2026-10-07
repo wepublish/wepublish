@@ -19,12 +19,15 @@ import { ActionMailNoMailReason } from './action-mail-reason';
 /** The mail an action would send (template), or why it sends none (reason). */
 export type ActionMail = {
   event: SubscriptionEvent | UserEvent;
+  /** The address the mail goes to, once the user exists. */
+  recipientEmail?: string;
 } & (
   | { mailTemplateId: string; mailTemplateName: string }
   | { noMailReason: ActionMailNoMailReason }
 );
 
 export type SubscriptionDraft = {
+  userID: string;
   memberPlanID: string;
   paymentMethodID: string;
   paymentPeriodicity: PaymentPeriodicity;
@@ -32,9 +35,10 @@ export type SubscriptionDraft = {
 };
 
 /**
- * Which mail an admin action in the editor would send to the user, so the
- * editor can ask the admin whether it goes out before running the action.
- * Each lookup uses the same rules as the code that sends the mail.
+ * Which mail an admin action in the editor would send to the user, and to
+ * which address, so the editor can ask the admin whether it goes out before
+ * running the action. Each lookup uses the same rules as the code that sends
+ * the mail.
  */
 @Injectable()
 export class ActionMailService {
@@ -50,12 +54,18 @@ export class ActionMailService {
 
   /** The subscribe mail of `MemberContext.createSubscription`. */
   async forSubscriptionCreation(draft: SubscriptionDraft): Promise<ActionMail> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: draft.userID },
+      select: { email: true },
+    });
+
     return this.named(
       SubscriptionEvent.SUBSCRIBE,
       await this.subscriptionEventDictionary.getSubsciptionTemplateIdentifier(
-        draft as Subscription,
+        draft as unknown as Subscription,
         SubscriptionEvent.SUBSCRIBE
-      )
+      ),
+      user?.email
     );
   }
 
@@ -66,6 +76,7 @@ export class ActionMailService {
   ): Promise<ActionMail> {
     const subscription = await this.prisma.subscription.findUnique({
       where: { id: subscriptionId },
+      include: { user: { select: { email: true } } },
     });
 
     if (!subscription) {
@@ -84,11 +95,15 @@ export class ActionMailService {
       await this.subscriptionEventDictionary.getSubsciptionTemplateIdentifier(
         subscription,
         event
-      )
+      ),
+      subscription.user?.email
     );
   }
 
-  /** The registration mail of `UserService.createUser`. */
+  /**
+   * The registration mail of `UserService.createUser`. The user does not
+   * exist yet, so the editor knows the address from its form.
+   */
   async forAccountCreation(): Promise<ActionMail> {
     return this.named(
       UserEvent.ACCOUNT_CREATION,
@@ -103,15 +118,32 @@ export class ActionMailService {
   async forInvoicePayment(invoiceId: string): Promise<ActionMail> {
     const mail: PaymentMail =
       await this.renewalSuccessMail.templateForPayment(invoiceId);
+    // it goes to the subscriber, as in RenewalSuccessMailService
+    const invoice = await this.prisma.invoice.findUnique({
+      where: { id: invoiceId },
+      select: {
+        subscription: { select: { user: { select: { email: true } } } },
+      },
+    });
+    const recipientEmail = invoice?.subscription?.user?.email;
 
     return 'mailTemplateId' in mail ?
-        this.named(SubscriptionEvent.RENEWAL_SUCCESS, mail.mailTemplateId)
-      : { event: SubscriptionEvent.RENEWAL_SUCCESS, ...mail };
+        this.named(
+          SubscriptionEvent.RENEWAL_SUCCESS,
+          mail.mailTemplateId,
+          recipientEmail
+        )
+      : {
+          event: SubscriptionEvent.RENEWAL_SUCCESS,
+          ...(recipientEmail && { recipientEmail }),
+          ...mail,
+        };
   }
 
   private async named(
     event: SubscriptionEvent | UserEvent,
-    mailTemplateId: string | null | undefined
+    mailTemplateId: string | null | undefined,
+    recipientEmail?: string | null
   ): Promise<ActionMail> {
     const template =
       mailTemplateId ?
@@ -120,9 +152,19 @@ export class ActionMailService {
           select: { id: true, name: true },
         })
       : null;
+    const recipient = recipientEmail ? { recipientEmail } : {};
 
     return template ?
-        { event, mailTemplateId: template.id, mailTemplateName: template.name }
-      : { event, noMailReason: ActionMailNoMailReason.noTemplate };
+        {
+          event,
+          ...recipient,
+          mailTemplateId: template.id,
+          mailTemplateName: template.name,
+        }
+      : {
+          event,
+          ...recipient,
+          noMailReason: ActionMailNoMailReason.noTemplate,
+        };
   }
 }

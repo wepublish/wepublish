@@ -252,7 +252,10 @@ function InvoiceListPanel({
     }
 
     // asked every time: whether the mail goes out, or that none will
-    const decision = await askMail({ ...mail, recipient: invoice.mail });
+    const decision = await askMail({
+      ...mail,
+      recipient: mail.recipientEmail ?? invoice.mail,
+    });
 
     if (decision === 'cancel') {
       return;

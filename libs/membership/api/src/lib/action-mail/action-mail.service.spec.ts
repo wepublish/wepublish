@@ -28,6 +28,7 @@ const setup = ({
     paymentMethodID: 'pm-1',
     paymentPeriodicity: PaymentPeriodicity.yearly,
     autoRenew: true,
+    user: { email: 'anna@example.com' },
   } as unknown,
   flowTemplate = 'mt-subscribe' as string | null,
   accountTemplate = 'mt-account' as string | null,
@@ -37,6 +38,16 @@ const setup = ({
 } = {}) => {
   const prisma = {
     subscription: { findUnique: vi.fn().mockResolvedValue(subscription) },
+    user: {
+      findUnique: vi.fn().mockResolvedValue({ email: 'ben@example.com' }),
+    },
+    invoice: {
+      findUnique: vi
+        .fn()
+        .mockResolvedValue({
+          subscription: { user: { email: 'cleo@example.com' } },
+        }),
+    },
     mailTemplate: {
       findUnique: vi.fn(async ({ where: { id } }: { where: { id: string } }) =>
         templates[id] ? { id, name: templates[id] } : null
@@ -67,12 +78,13 @@ const setup = ({
     renewalSuccessMail as unknown as RenewalSuccessMailService
   );
 
-  return { service, lookup, mailContext, renewalSuccessMail };
+  return { service, lookup, mailContext, renewalSuccessMail, prisma };
 };
 
 afterEach(() => vi.restoreAllMocks());
 
 const draft = {
+  userID: 'user-2',
   memberPlanID: 'plan-1',
   paymentMethodID: 'pm-1',
   paymentPeriodicity: PaymentPeriodicity.yearly,
@@ -88,6 +100,7 @@ describe('ActionMailService', () => {
         event: SubscriptionEvent.SUBSCRIBE,
         mailTemplateId: 'mt-subscribe',
         mailTemplateName: 'Abo abgeschlossen',
+        recipientEmail: 'ben@example.com',
       });
       expect(lookup).toHaveBeenCalledWith(
         expect.objectContaining(draft),
@@ -101,6 +114,7 @@ describe('ActionMailService', () => {
       await expect(service.forSubscriptionCreation(draft)).resolves.toEqual({
         event: SubscriptionEvent.SUBSCRIBE,
         noMailReason: ActionMailNoMailReason.noTemplate,
+        recipientEmail: 'ben@example.com',
       });
     });
   });
@@ -118,6 +132,7 @@ describe('ActionMailService', () => {
         event: SubscriptionEvent.DEACTIVATION_BY_USER,
         mailTemplateId: 'mt-deactivated',
         mailTemplateName: 'Abo gekündigt',
+        recipientEmail: 'anna@example.com',
       });
     });
 
@@ -134,6 +149,7 @@ describe('ActionMailService', () => {
         event: SubscriptionEvent.DEACTIVATION_UNPAID,
         mailTemplateId: 'mt-unpaid',
         mailTemplateName: 'Deaktivierung wegen unbezahlter Rechnung',
+        recipientEmail: 'anna@example.com',
       });
     });
 
@@ -164,6 +180,15 @@ describe('ActionMailService', () => {
       );
     });
 
+    // the user does not exist yet: the editor knows the address from its form
+    it('knows no recipient for an account that does not exist yet', async () => {
+      const { service } = setup();
+
+      expect(
+        (await service.forAccountCreation()) as { recipientEmail?: string }
+      ).not.toHaveProperty('recipientEmail');
+    });
+
     it('says so without a registration template', async () => {
       const { service } = setup({ accountTemplate: null });
 
@@ -182,6 +207,7 @@ describe('ActionMailService', () => {
         event: SubscriptionEvent.RENEWAL_SUCCESS,
         mailTemplateId: 'mt-renewal',
         mailTemplateName: 'Zahlung erhalten',
+        recipientEmail: 'cleo@example.com',
       });
       expect(renewalSuccessMail.templateForPayment).toHaveBeenCalledWith(
         'inv-1'
@@ -197,6 +223,7 @@ describe('ActionMailService', () => {
       await expect(service.forInvoicePayment('inv-1')).resolves.toEqual({
         event: SubscriptionEvent.RENEWAL_SUCCESS,
         noMailReason: ActionMailNoMailReason.firstPeriod,
+        recipientEmail: 'cleo@example.com',
       });
     });
   });

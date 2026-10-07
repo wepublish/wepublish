@@ -109,6 +109,13 @@ describe('useActionMailQuestion', () => {
     });
   });
 
+  // no address known (e.g. not loaded): never leave a gap in the sentence
+  it('names "the member" when no address is known', async () => {
+    const { dialog } = await ask({ ...withTemplate, recipient: undefined });
+
+    expect(dialog.textContent).toContain('actionMail.theMember');
+  });
+
   describe('when the action would send no mail', () => {
     it('says that no mail is configured for the event', async () => {
       const { dialog } = await ask(withoutTemplate);
