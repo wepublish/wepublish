@@ -7,6 +7,8 @@ const { buildPostgresImg, createPostgresContainer, startPostgresContainer, getDb
 const { startProject, teardownProcesses, getFreePort } = require("./processes.js");
 const path = require('path');
 const { createContainer, startContainer, attachContainer, buildImage, removeContainer, waitContainer } = require("./docker-api.js");
+const { canRunInCheckout, installDependencies } = require("./workspace-setup.js");
+const { startElapsedTimer } = require("./elapsed-timer.js");
 
 function createScreenshotContainerConfig(
   medium,
@@ -71,11 +73,6 @@ async function deleteAndCreateFolders(paths) {
   return Promise.all(paths.map(deleteAndCreateFolder));
 }
 
-async function npmInstall(cwd) {
-  console.log(`run npm install in ${cwd} `);
-  await exec("npm install", { cwd });
-}
-
 async function migrateDatabase(dbConnectionString, cwd, logDir) {
   const { stdout, stderr } = await exec("npx prisma migrate deploy ", {
     env: {
@@ -86,16 +83,15 @@ async function migrateDatabase(dbConnectionString, cwd, logDir) {
   await fs.writeFile(path.join(logDir, "prisma-migrate.err.log"), stderr);
 }
 
-function setupSide(medium, label, commitHash, dir, apiPort, uiPort, postgresImgPromise, logPath) {
+function setupSide(medium, label, commitHash, root, dir, apiPort, uiPort, postgresImgPromise, logPath) {
   const dbPromise = postgresImgPromise
     .then(() => createPostgresContainer(medium, label))
     .then(startPostgresContainer)
     .then(waitUntilPostgresIsReady)
     .then(getDbConnectionString);
-  const codePromise = createWorkTree(commitHash, dir).then(() => {
-    console.log(`running npm install in '${label}' work tree`);
-    return npmInstall(dir);
-  });
+  const codePromise = dir === root
+    ? Promise.resolve()
+    : createWorkTree(commitHash, dir).then(() => installDependencies(root, dir, commitHash));
   const runningPromise = Promise.all([dbPromise, codePromise])
     .then(([{ dbConnectionString }]) => {
       console.log(`running database migration for ${label}`);
@@ -111,6 +107,7 @@ async function main(medium, baselineCommitHash, currentCommitHash) {
       "Missing required environment variables.\n" +
       "Required: MEDIUM, BASELINE_COMMIT_HASH, CURRENT_COMMIT_HASH"
     );
+    elapsedTimer.stop();
     process.exit(1);
   }
 
@@ -123,7 +120,9 @@ async function main(medium, baselineCommitHash, currentCommitHash) {
   const artifactsPath = `${medium}/artifacts`;
   const root = await getProjectRootDir();
   const baselineDir = path.resolve(`${root}/../wp-baseline`);
-  const currentDir = path.resolve(`${root}/../wp-current`);
+  const currentDir = await canRunInCheckout(root, currentCommitHash)
+    ? root
+    : path.resolve(`${root}/../wp-current`);
   console.log(`starting visual regression tool for ${medium}. baseline is ${baselineCommitHash}, compare against ${currentCommitHash}`);
   await deleteAndCreateFolders([logPathCurrent, logPathBaseline, artifactsPath]);
   const screenshotContainerPromise = buildImage(`${medium}-screenshots`, ".", `${medium}-scripts/Dockerfile`, `${medium}/logs`).then(() =>
@@ -131,9 +130,9 @@ async function main(medium, baselineCommitHash, currentCommitHash) {
   const postgresImgPromise = pullDbDump(medium)
     .then(() => buildPostgresImg(medium, `${medium}/logs`));
   const { dbPromise: baselineDbPromise, runningPromise: baselineRunningPromise } =
-    setupSide(medium, "baseline", baselineCommitHash, baselineDir, apiPortBaseline, uiPortBaseline, postgresImgPromise, logPathBaseline);
+    setupSide(medium, "baseline", baselineCommitHash, root, baselineDir, apiPortBaseline, uiPortBaseline, postgresImgPromise, logPathBaseline);
   const { dbPromise: currentDbPromise, runningPromise: currentRunningPromise } =
-    setupSide(medium, "current", currentCommitHash, currentDir, apiPortCurrent, uiPortCurrent, postgresImgPromise, logPathCurrent);
+    setupSide(medium, "current", currentCommitHash, root, currentDir, apiPortCurrent, uiPortCurrent, postgresImgPromise, logPathCurrent);
   const [
     containerIdScreenshots,
     { containerId: containerIdDbBaseline },
@@ -161,4 +160,6 @@ async function main(medium, baselineCommitHash, currentCommitHash) {
   }
 }
 
-main(process.env.MEDIUM, process.env.BASELINE_COMMIT_HASH, process.env.CURRENT_COMMIT_HASH);
+const elapsedTimer = startElapsedTimer();
+main(process.env.MEDIUM, process.env.BASELINE_COMMIT_HASH, process.env.CURRENT_COMMIT_HASH)
+  .finally(() => elapsedTimer.stop());

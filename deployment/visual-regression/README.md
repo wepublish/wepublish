@@ -7,7 +7,9 @@ taking screenshots across several browsers/devices, and producing an HTML diff r
 
 For a given medium, baseline commit, and current commit, the tool runs the following in parallel:
 
-1. **Worktrees** — checks out both commits into sibling worktrees (`../wp-baseline`, `../wp-current`) and runs `npm install` in each.
+1. **Worktrees** — checks out both commits into sibling worktrees (`../wp-baseline`, `../wp-current`) and runs `npm install` in each. Two shortcuts skip part of this, each only after checking it is safe and falling back to the full path otherwise (see `workspace-setup.js`):
+   - If the current commit is what this checkout is on, with a clean tree and a completed `npm install` (the usual case in the GitHub action), it runs from the checkout itself.
+   - If a commit's `package.json` and `package-lock.json` match this checkout's, its worktree gets a hard-linked copy of the checkout's `node_modules` with a freshly generated Prisma client, instead of an `npm install`.
 2. **Databases** — downloads the latest medium dump from `files.wepublish.cloud` (cached via `ETag` / `Last-Modified`) and seeds two throwaway Postgres containers, one per commit. The containers are created from scratch on every run and torn down at the end, so each run starts from a clean, identical state.
 3. **Screenshot image** — builds the medium-specific Docker image containing the playwright scripts, which are executed on headless browsers.
 
@@ -31,6 +33,7 @@ Invoke `test.js` with the medium and the two commits you want to compare:
 - `MEDIUM` — the medium to test (must match a `<medium>-scripts/` folder, e.g. `hauptstadt`, `tsri`).
 - `BASELINE_COMMIT_HASH` — the reference commit assumed to be correct.
 - `CURRENT_COMMIT_HASH` — the commit under test.
+- `VISUAL_REGRESSION_NO_SHORTCUTS=1` (optional) — always use separate worktrees and `npm install`, skipping both shortcuts above.
 
 Example:
 
