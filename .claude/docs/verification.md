@@ -53,7 +53,7 @@ Nx project names are `<domain>-<layer>`. List them with `npx nx show projects`.
 ```bash
 npm run lint            # all projects
 npm run test            # all projects, serial — many minutes
-npm run test-backend    # Jest/NestJS projects
+npm run test-backend    # NestJS/backend projects
 npm run test-website    # *website* projects
 ```
 
@@ -68,7 +68,7 @@ still a broken change.
 | Workflow | Command | Covers |
 | --- | --- | --- |
 | `lint.yml` | `npm run lint` | ESLint, all projects |
-| `test.yml` | `npm run test-backend -- --configuration=ci` | Jest/NestJS + coverage, with Postgres 17 |
+| `test.yml` | `npm run test-backend -- --configuration=ci` | Vitest backend/NestJS + coverage, with Postgres 17 |
 | `website-tests.yml` | `npm run test-website -- --configuration=ci` | Vitest website projects + coverage |
 | `website-typecheck.yml` | `bash ./tools/typecheck-websites.sh` | `tsc --noEmit` per app |
 

@@ -1,31 +1,29 @@
 # Testing
 
-**This is a monorepo with two test runners.** Which one you use is decided by the
-project you are touching, never by preference. Get this wrong and the test file
-will not run at all.
+**Every project runs on Vitest** — backend and frontend alike. Jest is gone from
+the workspace: there are no `jest.config.ts` files left, and `jest.fn()` /
+`jest.mock()` do not exist. Use `vi.fn()` and `vi.mock()` everywhere.
 
-| Project pattern | Runner | Globals | Config file |
-| --- | --- | --- | --- |
-| `libs/*/api` (NestJS), `libs/nest-modules`, `libs/permissions`, `libs/user`, `libs/testing` | **Jest 30** | `jest.fn()`, `jest.mock()` | `jest.config.ts` |
-| `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils`, `libs/richtext`, `libs/errors`, `apps/<tenant>` | **Vitest** | `vi.fn()`, `vi.mock()` | `vitest.config.ts` |
+Each project has a `vitest.config.ts` that delegates to the root
+`vitest.shared.ts`:
 
-Exceptions that look like backend but are Vitest: `libs/document/api`,
-`libs/richtext/api`, `libs/media-transform-guard/api`, `libs/kv-ttl-cache/api`.
+| Project pattern | `createVitestConfig` options |
+| --- | --- |
+| `libs/*/api`, `libs/nest-modules`, `libs/permissions`, `libs/testing` (NestJS) | `environment: 'node'`, `react: false`, `nest: true` |
+| `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils`, `apps/<tenant>` | `environment: 'jsdom'` (default), `react: true` |
 
-**Always check for `jest.config.ts` vs `vitest.config.ts` in the project root
-before writing a test.** NestJS stays on Jest until its next major release —
-do not "helpfully" migrate a Jest project to Vitest, and never give a NestJS lib
-a `vitest.config.ts`. Vitest transpiles with esbuild, which does not emit
-`design:paramtypes` decorator metadata, so Nest constructor injection (e.g.
+NestJS projects **must** pass `nest: true`. It switches the transform to swc
+(es2021 + `decoratorMetadata`) and loads `vitest.setup-nest.ts`. Without it,
+esbuild drops `design:paramtypes`, so Nest constructor injection (e.g.
 `constructor(private prisma: PrismaClient)`) silently resolves to `undefined` in
 `Test.createTestingModule`, and code-first GraphQL fields without an explicit
-type function fail. When setting up a new NestJS lib, copy the Jest setup from
-`libs/consent/api` (`jest.config.ts`, the `project.json` test target and
+type function fail. When setting up a new NestJS lib, copy the setup from
+`libs/consent/api` (`vitest.config.ts`, the `project.json` test target and
 `tsconfig.spec.json`).
 
 `libs/block-content/api` and `libs/image/api` are in `.nxignore` (load-bearing:
 circular imports), so neither `nx test` nor CI runs their specs — run
-`npx jest -c libs/<lib>/api/jest.config.ts` yourself.
+`npx vitest run --config libs/<lib>/api/vitest.config.ts` yourself.
 
 ## Test-driven development is mandatory
 
@@ -85,7 +83,7 @@ instead of silently returning `undefined`.
 
 ## Per-technology patterns
 
-### NestJS API libs (Jest)
+### NestJS API libs (Vitest, `nest: true`)
 
 Use `Test.createTestingModule` and inject hand-rolled Prisma mocks typed against
 the real client. Freeze time with fake timers when the code under test stamps
@@ -94,21 +92,22 @@ dates.
 ```ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
+import { Mock } from 'vitest';
 
 describe('ArticleService', () => {
   let service: ArticleService;
   let prismaMock: {
-    article: { [m in keyof PrismaClient['article']]?: jest.Mock };
+    article: { [m in keyof PrismaClient['article']]?: Mock };
   };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
-  afterAll(() => jest.useRealTimers());
+  afterAll(() => vi.useRealTimers());
 
   beforeEach(async () => {
-    prismaMock = { article: { findMany: jest.fn(), create: jest.fn() } };
+    prismaMock = { article: { findMany: vi.fn(), create: vi.fn() } };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -122,7 +121,7 @@ describe('ArticleService', () => {
 });
 ```
 
-Mocks are **not** auto-cleared between tests — add `jest.clearAllMocks()` to
+Mocks are **not** auto-cleared between tests — add `vi.clearAllMocks()` to
 `beforeEach` whenever a mock outlives a single test.
 
 Cover resolvers, services, guards and permission checks. Permission and paywall

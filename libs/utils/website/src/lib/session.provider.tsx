@@ -31,8 +31,12 @@ export const SessionProvider = memo<
   });
 
   const fetchMe = useCallback(async () => {
-    const { data } = await getMe();
-    setUser((data?.me as FullSensitiveDataUserFragment) ?? null);
+    try {
+      const { data } = await getMe();
+      setUser((data?.me as FullSensitiveDataUserFragment) ?? null);
+    } catch {
+      setUser(null);
+    }
   }, [getMe]);
 
   const setCookieAndToken = useCallback(

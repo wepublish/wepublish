@@ -30,20 +30,23 @@ website and editor test bundle. Do not "complete" the barrel file.
 
 ---
 
-### ⚠️ NestJS stays on Jest — this is not an oversight
+### ⚠️ NestJS runs on Vitest, but only with `nest: true`
 
-Most of the workspace moved to Vitest in `a42088205`, whose message states the
-intent plainly: *"swap most from jest to vitest. **nestjs left on jest until new
-major release**"*. So `libs/*/api` keep `jest.config.ts` and `jest.fn()`, while
-everything else uses `vitest.config.ts` and `vi.fn()`.
+Jest is fully removed — every project runs Vitest. NestJS projects must build
+their config with `createVitestConfig({nest: true, environment: 'node', react:
+false})`, which swaps esbuild for `unplugin-swc` (`decoratorMetadata`,
+`legacyDecorator`, target **es2021**, `useDefineForClassFields: false`). Without
+it Nest DI gets no `design:paramtypes` and injected constructor params resolve
+to `undefined`; with a native es2022 target, class fields like
+`private readonly x = this.injectedParam.y` break instead.
 
-`eslint.config.mjs` encodes the same split for spec files — it injects Jest
-globals everywhere *and* `vi` as readonly, with the comment *"The backend
-(NestJS) projects run on jest, everything else on vitest."*
+Conversion traps that still bite when writing Nest specs: arrow-function mock
+implementations cannot be `new`-ed (use `function`), `vi.mock('mod')` does not
+automock class methods (write an explicit factory), partial mocks need
+`async importOriginal => ({...await importOriginal(), ...})`, and
+`vi.importActual` must be awaited.
 
-**Do not migrate a `libs/*/api` project to Vitest** as drive-by cleanup. Check
-which config file the project has before writing a test — see
-[testing.md](testing.md).
+See [testing.md](testing.md).
 
 ---
 
@@ -136,8 +139,7 @@ before anything else, and also silences one specific React `act(...)` warning.
 
 A test that passes locally in `Europe/Zurich` but relies on local time will
 behave differently under Vitest. Assert on explicit UTC instants, or freeze time
-(`vi.setSystemTime` / `jest.setSystemTime`) rather than depending on the ambient
-zone. Jest projects do **not** get this setup file — set the zone yourself there.
+with `vi.setSystemTime` rather than depending on the ambient zone.
 
 ---
 
@@ -194,8 +196,8 @@ a new write path needs its own test.
 ### ⚠️ nx loads `.env` into every task, tests included
 
 `.env` sets `REDIS_URL` and nx passes it into tests (verified 2026-10-01), so
-`jest.setup.ts` and `vitest.setup-tests.ts` delete it. Pinned for Vitest by
-`kv-ttl-cache.module.spec.ts`; nothing guards the Jest side. The built api
+`vitest.setup-tests.ts` and `vitest.setup-nest.ts` delete it (along with
+`REDIS_KEY_PREFIX`). Pinned by `kv-ttl-cache.module.spec.ts`. The built api
 loads `.env` too (`ConfigModule.forRoot()`), so to run it without Dragonfly set
 `REDIS_URL=` (empty) instead of unsetting it.
 
