@@ -8,6 +8,32 @@ enum AIProviderType {
 
 union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
 
+"""
+The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action.
+"""
+type ActionMail {
+  """
+  The SubscriptionEvent or UserEvent of the mail, e.g. SUBSCRIBE or ACCOUNT_CREATION.
+  """
+  event: String!
+
+  """Set when a mail would be sent."""
+  mailTemplateId: String
+
+  """Set when a mail would be sent."""
+  mailTemplateName: String
+
+  """Set when no mail would be sent."""
+  noMailReason: ActionMailNoMailReason
+}
+
+enum ActionMailNoMailReason {
+  alreadyHandled
+  firstPeriod
+  noTemplate
+  notApplicable
+}
+
 enum ActionType {
   ArticleCreated
   AuthorCreated
@@ -4174,6 +4200,9 @@ type PublicSubscriptionConnection {
 }
 
 type Query {
+  """The mail createUser would send, or why it sends none."""
+  accountCreationMail: ActionMail!
+
   """Returns latest actions"""
   actions: [Action!]!
 
@@ -4435,6 +4464,11 @@ type Query {
   """Returns a invoice by id."""
   invoice(id: String!): Invoice!
 
+  """
+  The mail markInvoiceAsPaid would send for this invoice, or why it sends none.
+  """
+  invoicePaymentMail(invoiceId: String!): ActionMail!
+
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
@@ -4625,6 +4659,16 @@ type Query {
 
   """Returns a subscription by id."""
   subscription(id: String!): PublicSubscription!
+
+  """
+  The mail cancelSubscription would send for this subscription and reason, or why it sends none.
+  """
+  subscriptionCancellationMail(id: String!, reason: SubscriptionDeactivationReason!): ActionMail!
+
+  """
+  The mail createSubscription would send for a subscription with these settings, or why it sends none.
+  """
+  subscriptionCreationMail(autoRenew: Boolean!, memberPlanID: String!, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!): ActionMail!
 
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!

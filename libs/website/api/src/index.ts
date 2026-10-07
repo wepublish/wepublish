@@ -7,6 +7,7 @@ export * from './lib/gql/graphql';
 
 export type {
   Action,
+  ActionMail,
   AllowedSettingVals,
   Article,
   ArticleCreatedAction,
@@ -556,6 +557,7 @@ export type {
   QueryImportedEventArgs,
   QueryImportedEventsArgs,
   QueryInvoiceArgs,
+  QueryInvoicePaymentMailArgs,
   QueryInvoicesArgs,
   QueryMailLogsArgs,
   QueryMailProviderSettingArgs,
@@ -608,6 +610,8 @@ export type {
   QuerySettingByIdArgs,
   QuerySettingsArgs,
   QuerySubscriptionArgs,
+  QuerySubscriptionCancellationMailArgs,
+  QuerySubscriptionCreationMailArgs,
   QuerySubscriptionFlowsArgs,
   QuerySubscriptionsArgs,
   QuerySubscriptionsAsCsvArgs,
@@ -738,6 +742,7 @@ export type {
 } from './lib/schema-types';
 
 export {
+  ActionMailNoMailReason,
   ActionType,
   AiProviderType,
   AnalyticsProviderType,
