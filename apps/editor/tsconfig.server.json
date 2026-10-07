@@ -6,5 +6,5 @@
     "types": ["node"],
     "moduleResolution": "node"
   },
-  "include": ["src/main.server.ts", "server.ts"]
+  "include": ["src/main.server.ts", "src/server-app.ts", "server.ts"]
 }

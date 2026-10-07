@@ -21,10 +21,7 @@ import {
 import { CommentListWrapper } from '@wepublish/comments/website';
 import { ContentUnavailable, ContentWrapper } from '@wepublish/content/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
-import {
-  Article as ArticleType,
-  FullBlockFragment,
-} from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import {
   BuilderArticleProps,
   PeerInformation,
@@ -165,7 +162,7 @@ export function WepArticle({
 
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
-  const article = data?.article as ArticleType | undefined;
+  const article = data?.article;
 
   return (
     <ArticleWrapper

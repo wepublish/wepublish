@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { PrismaClient } from '@prisma/client';
 import {
   SessionCacheInvalidator,
@@ -11,10 +12,10 @@ import { SessionService } from './session.service';
 
 describe('session cache after authentication changes', () => {
   const originalSecret = process.env['APP_SECRET_KEY'];
-  let sessionCache: { invalidate: jest.Mock };
+  let sessionCache: { invalidate: Mock };
   let prisma: {
-    user: { findUnique: jest.Mock; update: jest.Mock };
-    session: { delete: jest.Mock; deleteMany: jest.Mock };
+    user: { findUnique: Mock; update: Mock };
+    session: { delete: Mock; deleteMany: Mock };
   };
 
   beforeAll(() => {
@@ -26,17 +27,17 @@ describe('session cache after authentication changes', () => {
   });
 
   beforeEach(() => {
-    sessionCache = { invalidate: jest.fn().mockResolvedValue(undefined) };
+    sessionCache = { invalidate: vi.fn().mockResolvedValue(undefined) };
     prisma = {
       user: {
-        findUnique: jest
+        findUnique: vi
           .fn()
           .mockResolvedValue({ id: 'user-1', totpEnabled: false }),
-        update: jest.fn().mockResolvedValue({ id: 'user-1' }),
+        update: vi.fn().mockResolvedValue({ id: 'user-1' }),
       },
       session: {
-        delete: jest.fn().mockResolvedValue({ id: 'session-1' }),
-        deleteMany: jest.fn().mockResolvedValue({ count: 2 }),
+        delete: vi.fn().mockResolvedValue({ id: 'session-1' }),
+        deleteMany: vi.fn().mockResolvedValue({ count: 2 }),
       },
     };
   });

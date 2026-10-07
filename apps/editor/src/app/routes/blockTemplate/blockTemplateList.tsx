@@ -1,7 +1,7 @@
-import { ApolloError } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import {
   BlockTemplate,
-  useBlockTemplateListQuery,
+  BlockTemplateListDocument,
 } from '@wepublish/editor/api';
 import {
   CanCreateBlockTemplate,
@@ -38,7 +38,7 @@ import { DeleteBlockTemplateModal } from './deleteBlockTemplateModal';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message
@@ -61,13 +61,21 @@ function BlockTemplateList() {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const { data, loading, refetch } = useBlockTemplateListQuery({
-    variables: {
-      take: limit,
-      skip: (page - 1) * limit,
-    },
-    onError: onErrorToast,
-  });
+  const { data, loading, refetch, error } = useQuery(
+    BlockTemplateListDocument,
+    {
+      variables: {
+        take: limit,
+        skip: (page - 1) * limit,
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
 
   /**
    * Refetch data

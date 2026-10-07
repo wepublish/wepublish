@@ -1,10 +1,11 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   MailchimpFormOptionsLayout,
-  useMailchimpInterestGroupsQuery,
-  useMailchimpListsQuery,
-  useMailchimpMergeFieldsQuery,
-  useSyncProviderSettingsQuery,
+  MailchimpInterestGroupsDocument,
+  MailchimpListsDocument,
+  MailchimpMergeFieldsDocument,
+  SyncProviderSettingsDocument,
 } from '@wepublish/editor/api';
 import { useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -474,8 +475,9 @@ export function MailchimpFormBlock({
 
   const showErrors = saveAttempted && !value.disabled;
 
-  const { data: syncData, loading: syncLoading } =
-    useSyncProviderSettingsQuery();
+  const { data: syncData, loading: syncLoading } = useQuery(
+    SyncProviderSettingsDocument
+  );
 
   const providerOptions = useMemo(
     () =>
@@ -486,10 +488,13 @@ export function MailchimpFormBlock({
     [syncData?.syncProviderSettings]
   );
 
-  const { data: listsData, loading: listsLoading } = useMailchimpListsQuery({
-    skip: !value.syncProviderId,
-    variables: { configId: value.syncProviderId ?? '' },
-  });
+  const { data: listsData, loading: listsLoading } = useQuery(
+    MailchimpListsDocument,
+    {
+      skip: !value.syncProviderId,
+      variables: { configId: value.syncProviderId ?? '' },
+    }
+  );
 
   const listOptions = useMemo(
     () =>
@@ -500,7 +505,7 @@ export function MailchimpFormBlock({
     [listsData?.mailchimpLists]
   );
 
-  const { data: interestData } = useMailchimpInterestGroupsQuery({
+  const { data: interestData } = useQuery(MailchimpInterestGroupsDocument, {
     skip: !value.syncProviderId || !value.listId,
     variables: {
       configId: value.syncProviderId ?? '',
@@ -517,14 +522,16 @@ export function MailchimpFormBlock({
     [interestData?.mailchimpInterestGroups]
   );
 
-  const { data: mergeFieldData, loading: mergeFieldsLoading } =
-    useMailchimpMergeFieldsQuery({
+  const { data: mergeFieldData, loading: mergeFieldsLoading } = useQuery(
+    MailchimpMergeFieldsDocument,
+    {
       skip: !value.syncProviderId || !value.listId,
       variables: {
         configId: value.syncProviderId ?? '',
         listId: value.listId ?? '',
       },
-    });
+    }
+  );
 
   const mergeFieldOptions = useMemo(() => {
     const fields = (mergeFieldData?.mailchimpMergeFields ?? [])

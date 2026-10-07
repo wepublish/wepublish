@@ -1,18 +1,18 @@
 import { ArticleWrapper } from '@wepublish/article/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
   ArticleSort,
   CommentListDocument,
-  getApiClient,
+  FullTagFragment,
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
-  Tag,
   TagListDocument,
   TagType,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -64,7 +64,7 @@ export const getStaticProps: GetStaticProps<AusgangInBernProps> = async () => {
     }),
   ]);
 
-  const tags: Tag[] = tagList.data?.tags?.nodes ?? [];
+  const tags: FullTagFragment[] = tagList.data?.tags?.nodes ?? [];
   const nachtlebenTag = tags.find(
     ({ tag }) => tag?.toLowerCase() === TAG_NACHTLEBEN
   );
@@ -107,7 +107,9 @@ export const getStaticProps: GetStaticProps<AusgangInBernProps> = async () => {
           query: ArticleListDocument,
           variables: {
             filter: {
-              tags: article.data.article.tags.map((tag: Tag) => tag.id),
+              tags: article.data.article.tags.map(
+                (tag: FullTagFragment) => tag.id
+              ),
             },
             take: 4,
           },

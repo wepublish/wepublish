@@ -1,5 +1,6 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { usePollQuery } from '@wepublish/editor/api';
+import { PollDocument } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
@@ -70,7 +71,7 @@ export const PollBlock = ({
   const { t } = useTranslation();
   const buildVoteUrl = usePollAnswerVoteUrl();
 
-  const { data } = usePollQuery({
+  const { data } = useQuery(PollDocument, {
     variables: { id: poll?.id as string },
     skip: !poll?.id,
   });

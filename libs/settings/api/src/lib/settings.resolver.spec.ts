@@ -57,7 +57,7 @@ const updateSettingMutation = `
   }
 `;
 
-const mockSettingFindMany = jest.fn().mockResolvedValue([
+const mockSettingFindMany = vi.fn().mockResolvedValue([
   {
     id: '123',
     name: 'allowCommentEditing',
@@ -88,7 +88,7 @@ const mockSettingFindMany = jest.fn().mockResolvedValue([
   },
 ]);
 
-const mockSettingFindUnique = jest.fn().mockResolvedValue({
+const mockSettingFindUnique = vi.fn().mockResolvedValue({
   id: '123',
   name: 'allowCommentEditing',
   value: true,
@@ -103,7 +103,7 @@ const mockSettingFindUnique = jest.fn().mockResolvedValue({
   },
 });
 
-const mockSettingUpdate = jest.fn().mockResolvedValue({
+const mockSettingUpdate = vi.fn().mockResolvedValue({
   id: '123',
   name: 'allowCommentEditing',
   value: true,
@@ -118,10 +118,10 @@ const mockSettingUpdate = jest.fn().mockResolvedValue({
   },
 });
 
-jest.mock('@prisma/client', () => {
+vi.mock('@prisma/client', async importOriginal => {
   return {
-    ...jest.requireActual('@prisma/client'),
-    PrismaClient: jest.fn().mockImplementation(() => {
+    ...(await importOriginal<typeof import('@prisma/client')>()),
+    PrismaClient: vi.fn().mockImplementation(function () {
       return {
         setting: {
           findMany: mockSettingFindMany,
@@ -152,7 +152,7 @@ jest.mock('@prisma/client', () => {
       provide: SettingDataloaderService,
       useValue: {
         load: () => mockSettingFindUnique,
-        prime: jest.fn(),
+        prime: vi.fn(),
       },
     },
   ],

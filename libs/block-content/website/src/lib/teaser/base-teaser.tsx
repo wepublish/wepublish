@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { Chip, css, SxProps, Typography } from '@mui/material';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
-import { FlexAlignment, FullTeaserFragment } from '@wepublish/website/api';
+import {
+  FullFlexAlignmentFragment,
+  FullTeaserFragment,
+} from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
   Image,
@@ -240,7 +243,7 @@ export const selectTeaserTags = (teaser: FullTeaserFragment) => {
   return [];
 };
 
-export const TeaserWrapper = styled('article')<FlexAlignment>`
+export const TeaserWrapper = styled('article')<FullFlexAlignmentFragment>`
   display: grid;
 
   ${({ theme, w }) =>

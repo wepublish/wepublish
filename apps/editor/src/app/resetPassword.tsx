@@ -1,5 +1,6 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { useSendPasswordResetEmailMutation } from '@wepublish/editor/api';
+import { SendPasswordResetEmailDocument } from '@wepublish/editor/api';
 import { LoginTemplate } from '@wepublish/ui/editor';
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +44,9 @@ export function ResetPassword() {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
 
-  const [sendPasswordReset, { loading }] = useSendPasswordResetEmailMutation();
+  const [sendPasswordReset, { loading }] = useMutation(
+    SendPasswordResetEmailDocument
+  );
 
   useEffect(() => {
     emailInputRef.current?.focus();

@@ -1,5 +1,6 @@
-import { QueryResult } from '@apollo/client';
-import { Page, PageQuery } from '@wepublish/website/api';
+import type { OperationVariables } from '@apollo/client';
+import type { useQuery } from '@apollo/client/react';
+import { FullPageFragment, PageQuery } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 
 export enum PageType {
@@ -22,11 +23,14 @@ export enum PageType {
 }
 
 export type BuilderPageProps = PropsWithChildren<
-  Pick<QueryResult<PageQuery>, 'data' | 'loading' | 'error'> & {
+  Pick<
+    useQuery.Result<PageQuery, OperationVariables, 'complete' | 'empty'>,
+    'data' | 'loading' | 'error'
+  > & {
     className?: string;
   }
 >;
 
 export type BuilderPageSEOProps = {
-  page: Page;
+  page: FullPageFragment;
 };

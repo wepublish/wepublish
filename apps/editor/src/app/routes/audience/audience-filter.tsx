@@ -1,5 +1,6 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { useMemberPlanListQuery } from '@wepublish/editor/api';
+import { MemberPlanListDocument } from '@wepublish/editor/api';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdInfo, MdLink } from 'react-icons/md';
@@ -116,7 +117,7 @@ export function AudienceFilter({
     }
   };
 
-  const { data: memberPlans } = useMemberPlanListQuery({
+  const { data: memberPlans } = useQuery(MemberPlanListDocument, {
     variables: { take: 100 },
   });
 

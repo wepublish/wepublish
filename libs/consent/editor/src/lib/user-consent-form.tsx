@@ -1,11 +1,12 @@
-import { ApolloError } from '@apollo/client';
-import { useUserListQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
 import {
+  ConsentsDocument,
   MutationCreateUserConsentArgs,
   MutationUpdateUserConsentArgs,
-  useConsentsQuery,
+  UserListDocument,
 } from '@wepublish/editor/api';
 import { humanizeError } from '@wepublish/ui/editor';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Checkbox,
@@ -27,7 +28,7 @@ type UserConsentFormProps = {
   onChange: (changes: Partial<UserConsentFormData>) => void;
 };
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -58,15 +59,23 @@ export const UserConsentForm = ({
     },
   ];
 
-  const { loading: loadingUsers, data: userData } = useUserListQuery({
+  const { loading: loadingUsers, data: userData } = useQuery(UserListDocument, {
     variables: {
       take: 100,
     },
   });
 
-  const { loading: loadingConsents, data: consentsData } = useConsentsQuery({
-    onError: onErrorToast,
-  });
+  const {
+    loading: loadingConsents,
+    data: consentsData,
+    error: consentsError,
+  } = useQuery(ConsentsDocument);
+
+  useEffect(() => {
+    if (consentsError) {
+      onErrorToast(consentsError);
+    }
+  }, [consentsError]);
 
   const consentsValues =
     consentsData?.consents?.map(c => ({

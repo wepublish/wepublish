@@ -1,12 +1,12 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  BlockStyle,
+  BlockStylesDocument,
+  CreateBlockStyleDocument,
+  DeleteBlockStyleDocument,
   EditorBlockType,
-  useBlockStylesQuery,
-  useCreateBlockStyleMutation,
-  useDeleteBlockStyleMutation,
-  useUpdateBlockStyleMutation,
+  FullBlockStyleFragment,
+  UpdateBlockStyleDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -20,7 +20,7 @@ import {
   TableWrapper,
 } from '@wepublish/ui/editor';
 import { equals } from 'ramda';
-import { memo, useCallback, useReducer, useState } from 'react';
+import { memo, useCallback, useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSave } from 'react-icons/md';
 import {
@@ -67,16 +67,19 @@ enum BlockStyleListActionType {
 }
 
 type BlockStyleListActions =
-  | { type: BlockStyleListActionType.Set; payload: Record<string, BlockStyle> }
-  | { type: BlockStyleListActionType.Create; payload: BlockStyle }
+  | {
+      type: BlockStyleListActionType.Set;
+      payload: Record<string, FullBlockStyleFragment>;
+    }
+  | { type: BlockStyleListActionType.Create; payload: FullBlockStyleFragment }
   | {
       type: BlockStyleListActionType.Update;
-      payload: BlockStyle;
+      payload: FullBlockStyleFragment;
     }
   | { type: BlockStyleListActionType.Delete; payload: { id: string } };
 
 const mapBlockStyleToFormValue = (
-  blockStyles: BlockStyle[] | null | undefined
+  blockStyles: FullBlockStyleFragment[] | null | undefined
 ) =>
   blockStyles?.reduce(
     (obj, node) => {
@@ -84,11 +87,11 @@ const mapBlockStyleToFormValue = (
 
       return obj;
     },
-    {} as Record<string, BlockStyle>
+    {} as Record<string, FullBlockStyleFragment>
   ) ?? {};
 
 const blockStyleFormValueReducer = (
-  state: Record<string, BlockStyle>,
+  state: Record<string, FullBlockStyleFragment>,
   action: BlockStyleListActions
 ): typeof state => {
   switch (action.type) {
@@ -119,7 +122,7 @@ const blockStyleFormValueReducer = (
   return state;
 };
 
-const showErrors = (error: ApolloError): void => {
+const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"
@@ -148,26 +151,29 @@ const BlockStyleList = memo(() => {
 
   const hasEmptyStyle = Object.values(apiValue).some(style => !style.name);
 
-  const { loading } = useBlockStylesQuery({
-    onError: showErrors,
-    onCompleted(newData) {
+  const { loading, data, error } = useQuery(BlockStylesDocument);
+
+  useEffect(() => {
+    if (error) {
+      showErrors(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (data) {
       dispatchApiValue({
         type: BlockStyleListActionType.Set,
-        payload: mapBlockStyleToFormValue(newData.blockStyles),
+        payload: mapBlockStyleToFormValue(data.blockStyles),
       });
 
       dispatchFormValue({
         type: BlockStyleListActionType.Set,
-        payload: mapBlockStyleToFormValue(newData.blockStyles),
+        payload: mapBlockStyleToFormValue(data.blockStyles),
       });
-    },
-  });
+    }
+  }, [data]);
 
-  const [createBlockStyle] = useCreateBlockStyleMutation({
-    variables: {
-      blocks: [],
-      name: '',
-    },
+  const [createBlockStyle] = useMutation(CreateBlockStyleDocument, {
     onError: showErrors,
     onCompleted(createdBlockStyle) {
       if (!createdBlockStyle.createBlockStyle) {
@@ -186,7 +192,7 @@ const BlockStyleList = memo(() => {
     },
   });
 
-  const [updateBlockStyle] = useUpdateBlockStyleMutation({
+  const [updateBlockStyle] = useMutation(UpdateBlockStyleDocument, {
     onError: showErrors,
     onCompleted(updatedBlockStyle) {
       if (!updatedBlockStyle.updateBlockStyle) {
@@ -205,7 +211,7 @@ const BlockStyleList = memo(() => {
     },
   });
 
-  const [deleteBlockStyle] = useDeleteBlockStyleMutation({
+  const [deleteBlockStyle] = useMutation(DeleteBlockStyleDocument, {
     onError: showErrors,
     onCompleted(deletedBlockStyle) {
       if (!deletedBlockStyle.deleteBlockStyle) {
@@ -252,7 +258,14 @@ const BlockStyleList = memo(() => {
               appearance="primary"
               data-testid="create"
               icon={<MdAdd />}
-              onClick={() => createBlockStyle()}
+              onClick={() =>
+                createBlockStyle({
+                  variables: {
+                    blocks: [],
+                    name: '',
+                  },
+                })
+              }
               disabled={hasEmptyStyle}
             >
               {t('blockStyles.createBlockStyle')}

@@ -89,22 +89,22 @@ async function setup(options: SetupOptions = {}) {
     subscriptionFlow: {
       findMany:
         flowsReject ?
-          jest.fn().mockRejectedValue(new Error('database is down'))
-        : jest.fn().mockResolvedValue(createFlows(mailTemplate)),
+          vi.fn().mockRejectedValue(new Error('database is down'))
+        : vi.fn().mockResolvedValue(createFlows(mailTemplate)),
     },
     invoice: {
       findUnique:
         findUniqueRejects ?
-          jest.fn().mockRejectedValue(new Error('connection pool timeout'))
-        : jest.fn().mockResolvedValue(invoice),
-      updateMany: jest.fn().mockResolvedValue({ count: claimCount }),
+          vi.fn().mockRejectedValue(new Error('connection pool timeout'))
+        : vi.fn().mockResolvedValue(invoice),
+      updateMany: vi.fn().mockResolvedValue({ count: claimCount }),
     },
     subscriptionPeriod: {
-      count: jest.fn().mockResolvedValue(earlierPeriods),
+      count: vi.fn().mockResolvedValue(earlierPeriods),
     },
   };
 
-  const mailContext = { sendMail: jest.fn().mockResolvedValue(undefined) };
+  const mailContext = { sendMail: vi.fn().mockResolvedValue(undefined) };
 
   const module: TestingModule = await Test.createTestingModule({
     providers: [

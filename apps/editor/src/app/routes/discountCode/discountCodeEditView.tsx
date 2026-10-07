@@ -1,9 +1,9 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DiscountCodeDocument,
   FullDiscountCodeFragment,
   MutationUpdateDiscountCodeArgs,
-  useDiscountCodeQuery,
-  useUpdateDiscountCodeMutation,
+  UpdateDiscountCodeDocument,
 } from '@wepublish/editor/api';
 import { CanUpdateDiscountCode } from '@wepublish/permissions';
 import {
@@ -11,14 +11,14 @@ import {
   humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { DiscountCodeForm } from './discountCodeForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -46,18 +46,31 @@ const DiscountCodeEditView = () => {
   const [discountCode, setDiscountCode] =
     useState<MutationUpdateDiscountCodeArgs>();
 
-  const { loading: dataLoading } = useDiscountCodeQuery({
+  const {
+    loading: dataLoading,
+    data,
+    error,
+  } = useQuery(DiscountCodeDocument, {
     variables: {
       id: id as string,
     },
-    onError: onErrorToast,
-    onCompleted: data => {
-      setDiscountCode(mapApiDataToInput(data.discountCode));
-    },
   });
 
-  const [updateDiscountCode, { loading: updateLoading }] =
-    useUpdateDiscountCodeMutation({
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (data) {
+      setDiscountCode(mapApiDataToInput(data.discountCode));
+    }
+  }, [data]);
+
+  const [updateDiscountCode, { loading: updateLoading }] = useMutation(
+    UpdateDiscountCodeDocument,
+    {
       onError: onErrorToast,
       onCompleted: data => {
         if (data.updateDiscountCode) {
@@ -68,10 +81,11 @@ const DiscountCodeEditView = () => {
           }
         }
       },
-    });
+    }
+  );
 
   const loading = dataLoading || updateLoading;
-  const onSubmit = () => updateDiscountCode({ variables: discountCode });
+  const onSubmit = () => updateDiscountCode({ variables: discountCode! });
 
   const { StringType, DateType, NumberType } = Schema.Types;
   const validationModel = Schema.Model({

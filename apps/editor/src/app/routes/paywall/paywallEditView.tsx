@@ -1,9 +1,9 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   FullPaywallFragment,
   MutationUpdatePaywallArgs,
-  usePaywallListQuery,
-  useUpdatePaywallMutation,
+  PaywallListDocument,
+  UpdatePaywallDocument,
 } from '@wepublish/editor/api';
 import { CanUpdatePaywall } from '@wepublish/permissions';
 import {
@@ -11,14 +11,14 @@ import {
   humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { PaywallForm } from './paywallForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -53,32 +53,42 @@ const PaywallEditView = () => {
     }
   >();
 
-  const { loading: dataLoading } = usePaywallListQuery({
-    onError: onErrorToast,
-    onCompleted: data => {
+  const { loading: dataLoading, data, error } = useQuery(PaywallListDocument);
+
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (data) {
       const paywallToEdit = data.paywalls.find(paywall => paywall.id === id);
 
       if (paywallToEdit) {
         setPaywall(mapApiDataToInput(paywallToEdit));
       }
-    },
-  });
+    }
+  }, [data, id]);
 
-  const [updatePaywall, { loading: updateLoading }] = useUpdatePaywallMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.updatePaywall) {
-        if (shouldClose) {
-          navigate(closePath);
-        } else {
-          setPaywall(mapApiDataToInput(data.updatePaywall));
+  const [updatePaywall, { loading: updateLoading }] = useMutation(
+    UpdatePaywallDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.updatePaywall) {
+          if (shouldClose) {
+            navigate(closePath);
+          } else {
+            setPaywall(mapApiDataToInput(data.updatePaywall));
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   const loading = dataLoading || updateLoading;
-  const onSubmit = () => updatePaywall({ variables: paywall });
+  const onSubmit = () => updatePaywall({ variables: paywall! });
 
   const { StringType, BooleanType, ArrayType } = Schema.Types;
   const validationModel = Schema.Model({

@@ -7,6 +7,7 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { StatsResolver } from './stats.resolver';
 import { StatsService } from './stats.service';
+import type { Mock } from 'vitest';
 
 @Module({
   imports: [
@@ -34,13 +35,13 @@ const statsQuery = `
 
 describe('StatsResolver', () => {
   let app: INestApplication;
-  let statsServiceMock: { [method in keyof StatsService]?: jest.Mock };
+  let statsServiceMock: { [method in keyof StatsService]?: Mock };
 
   beforeEach(async () => {
     statsServiceMock = {
-      getArticlesCount: jest.fn(),
-      getAuthorsCount: jest.fn(),
-      getFirstArticleDate: jest.fn(),
+      getArticlesCount: vi.fn(),
+      getAuthorsCount: vi.fn(),
+      getFirstArticleDate: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -60,7 +61,7 @@ describe('StatsResolver', () => {
         },
         {
           provide: PrismaClient,
-          useValue: jest.fn(),
+          useValue: vi.fn(),
         },
       ],
     }).compile();

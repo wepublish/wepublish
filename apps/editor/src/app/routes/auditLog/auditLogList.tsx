@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
+import { useQuery } from '@apollo/client/react';
 import {
   AuditLogAction,
   AuditLogActorType,
   AuditLogFilter,
   AuditLogSort,
   FullAuditLogFragment,
+  AuditLogListDocument,
   SortOrder,
-  useAuditLogListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -87,7 +88,7 @@ function AuditLogList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [auditLogs, setAuditLogs] = useState<FullAuditLogFragment[]>([]);
 
-  const { data, loading: isLoading } = useAuditLogListQuery({
+  const { data, loading: isLoading } = useQuery(AuditLogListDocument, {
     variables: {
       filter,
       take: limit,

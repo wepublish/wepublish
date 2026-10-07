@@ -3,13 +3,13 @@ import { EventsImportService } from './events-import.service';
 describe('EventsImportService cache', () => {
   it('clears cached answers after importing an event', async () => {
     const publicContentCache = {
-      invalidate: jest.fn().mockResolvedValue(undefined),
+      invalidate: vi.fn().mockResolvedValue(undefined),
     };
     const service = new EventsImportService(
       [
         {
           name: 'agenda-basel',
-          createEvent: jest.fn().mockResolvedValue('event-1'),
+          createEvent: vi.fn().mockResolvedValue('event-1'),
         } as any,
       ],
       {} as any,

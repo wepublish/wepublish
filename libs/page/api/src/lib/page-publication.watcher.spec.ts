@@ -1,22 +1,23 @@
+import type { Mock } from 'vitest';
 import { PagePublicationWatcher } from './page-publication.watcher';
 
 describe('PagePublicationWatcher', () => {
   const now = new Date('2026-10-01T10:00:00.000Z');
   let prisma: {
-    page: { findMany: jest.Mock };
-    pageRevision: { findMany: jest.Mock };
+    page: { findMany: Mock };
+    pageRevision: { findMany: Mock };
   };
-  let publicContentCache: { invalidate: jest.Mock };
+  let publicContentCache: { invalidate: Mock };
   let watcher: PagePublicationWatcher;
 
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(now);
+    vi.useFakeTimers();
+    vi.setSystemTime(now);
     prisma = {
-      page: { findMany: jest.fn().mockResolvedValue([]) },
-      pageRevision: { findMany: jest.fn().mockResolvedValue([]) },
+      page: { findMany: vi.fn().mockResolvedValue([]) },
+      pageRevision: { findMany: vi.fn().mockResolvedValue([]) },
     };
-    publicContentCache = { invalidate: jest.fn().mockResolvedValue(undefined) };
+    publicContentCache = { invalidate: vi.fn().mockResolvedValue(undefined) };
     watcher = new PagePublicationWatcher(
       prisma as any,
       publicContentCache as any
@@ -25,7 +26,7 @@ describe('PagePublicationWatcher', () => {
 
   afterEach(() => {
     watcher.onModuleDestroy();
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('clears cached pages and answers when a scheduled page goes live', async () => {
@@ -34,10 +35,10 @@ describe('PagePublicationWatcher', () => {
     ]);
 
     await watcher.scheduleUpcoming();
-    await jest.advanceTimersByTimeAsync(20_000);
+    await vi.advanceTimersByTimeAsync(20_000);
     expect(publicContentCache.invalidate).not.toHaveBeenCalled();
 
-    await jest.advanceTimersByTimeAsync(15_000);
+    await vi.advanceTimersByTimeAsync(15_000);
     expect(publicContentCache.invalidate).toHaveBeenCalledWith('pages');
   });
 
@@ -47,7 +48,7 @@ describe('PagePublicationWatcher', () => {
     ]);
 
     await watcher.scheduleUpcoming();
-    await jest.advanceTimersByTimeAsync(15_000);
+    await vi.advanceTimersByTimeAsync(15_000);
 
     expect(publicContentCache.invalidate).toHaveBeenCalledWith('pages');
   });
@@ -86,12 +87,12 @@ describe('PagePublicationWatcher', () => {
       );
 
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       prisma.page.findMany.mockRejectedValueOnce(new Error('connection lost'));
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(5_000);
+      await vi.advanceTimersByTimeAsync(5_000);
 
       expect(publicContentCache.invalidate).toHaveBeenCalledWith('pages');
     });
@@ -102,9 +103,9 @@ describe('PagePublicationWatcher', () => {
       );
 
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(75_000);
+      await vi.advanceTimersByTimeAsync(75_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(5_000);
+      await vi.advanceTimersByTimeAsync(5_000);
 
       expect(publicContentCache.invalidate).toHaveBeenCalledWith('pages');
     });
@@ -115,14 +116,14 @@ describe('PagePublicationWatcher', () => {
       );
 
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       prisma.page.findMany.mockRejectedValueOnce(new Error('connection lost'));
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
 
       expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
     });

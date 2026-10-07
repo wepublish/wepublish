@@ -1,5 +1,5 @@
-import { ApolloError } from '@apollo/client';
-import { useCreatePollMutation } from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { CreatePollDocument } from '@wepublish/editor/api';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
@@ -9,11 +9,11 @@ import { humanizeError } from '../../humanizeError';
 
 export function CreatePollBtn() {
   const [createPollMutation, { data: newPoll, loading }] =
-    useCreatePollMutation();
+    useMutation(CreatePollDocument);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const onErrorToast = (error: ApolloError) => {
+  const onErrorToast = (error: Error) => {
     toaster.push(
       <Message
         type="error"

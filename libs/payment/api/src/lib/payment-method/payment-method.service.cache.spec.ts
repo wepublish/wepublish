@@ -1,20 +1,20 @@
 import { PaymentMethodService } from './payment-method.service';
 
 describe('PaymentMethodService cache', () => {
-  const publicContentCache = { invalidate: jest.fn() };
+  const publicContentCache = { invalidate: vi.fn() };
   const paymentMethod = { id: 'method-1' };
   const service = Object.assign(
     new PaymentMethodService(
       {
         paymentMethod: {
-          create: jest.fn().mockResolvedValue(paymentMethod),
-          update: jest.fn().mockResolvedValue(paymentMethod),
-          delete: jest.fn().mockResolvedValue(paymentMethod),
+          create: vi.fn().mockResolvedValue(paymentMethod),
+          update: vi.fn().mockResolvedValue(paymentMethod),
+          delete: vi.fn().mockResolvedValue(paymentMethod),
         },
       } as any,
       publicContentCache as any
     ),
-    { __DATALOADER__PaymentMethodDataloader: { prime: jest.fn() } }
+    { __DATALOADER__PaymentMethodDataloader: { prime: vi.fn() } }
   );
 
   beforeEach(() => {

@@ -323,7 +323,9 @@ export function VersionHistory({
             <Typography variant="h6">{t('versionHistory.title')}</Typography>
             <Typography
               variant="body2"
-              color="text.secondary"
+              sx={{
+                color: 'text.secondary',
+              }}
             >
               {t('versionHistory.subtitle', {
                 count: totalCount ?? revisions.length,
@@ -383,7 +385,6 @@ export function VersionHistory({
                       <Dot dotColor={meta.hex}>{stateIcon[state]}</Dot>
                       <Connector className="timeline-connector" />
                     </Rail>
-
                     <Card isCurrent={isCurrent}>
                       <CardTopRow>
                         <Chip
@@ -396,8 +397,10 @@ export function VersionHistory({
                         <Tooltip title={formatDate(revision.createdAt)}>
                           <Typography
                             variant="caption"
-                            color="text.secondary"
-                            sx={{ whiteSpace: 'nowrap' }}
+                            sx={{
+                              color: 'text.secondary',
+                              whiteSpace: 'nowrap',
+                            }}
                           >
                             {formatRelative(revision.createdAt)}
                           </Typography>
@@ -411,8 +414,8 @@ export function VersionHistory({
                       {revision.subtitle && (
                         <Typography
                           variant="caption"
-                          color="text.secondary"
                           sx={{
+                            color: 'text.secondary',
                             display: '-webkit-box',
                             WebkitLineClamp: 2,
                             WebkitBoxOrient: 'vertical',
@@ -425,9 +428,11 @@ export function VersionHistory({
 
                       <Typography
                         variant="caption"
-                        color="text.secondary"
                         component="div"
-                        sx={{ mt: 0.5 }}
+                        sx={{
+                          color: 'text.secondary',
+                          mt: 0.5,
+                        }}
                       >
                         {t('versionHistory.created', {
                           date: formatDate(revision.createdAt),
@@ -465,8 +470,8 @@ export function VersionHistory({
 
                         <Typography
                           variant="caption"
-                          color="text.secondary"
                           sx={{
+                            color: 'text.secondary',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
@@ -553,7 +558,9 @@ export function VersionHistory({
               {totalCount != null && (
                 <Typography
                   variant="caption"
-                  color="text.secondary"
+                  sx={{
+                    color: 'text.secondary',
+                  }}
                 >
                   {t('versionHistory.showing', {
                     count: revisions.length,
@@ -565,7 +572,6 @@ export function VersionHistory({
           )}
         </ScrollArea>
       </DrawerContent>
-
       <Dialog
         open={!!pendingRestore}
         onClose={() => setPendingRestore(null)}

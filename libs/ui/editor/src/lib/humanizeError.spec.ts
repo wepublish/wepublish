@@ -1,5 +1,4 @@
-import { ApolloError } from '@apollo/client';
-import { GraphQLError } from 'graphql';
+import { CombinedGraphQLErrors, ServerError } from '@apollo/client';
 
 import { humanizeError } from './humanizeError';
 
@@ -15,10 +14,14 @@ Invalid \`this.prisma.user.update()\` invocation in
 Unique constraint failed on the fields: (\`email\`)`;
 
 const graphQLError = (message: string, code?: string) =>
-  new ApolloError({
-    graphQLErrors: [
-      new GraphQLError(message, { extensions: code ? { code } : {} }),
-    ],
+  new CombinedGraphQLErrors({
+    errors: [{ message, extensions: code ? { code } : {} }],
+  });
+
+const serverError = (status: number) =>
+  new ServerError('Response not successful', {
+    response: new Response(null, { status }),
+    bodyText: '',
   });
 
 describe('humanizeError', () => {
@@ -68,12 +71,9 @@ describe('humanizeError', () => {
   });
 
   it('reports a missing connection to the server', () => {
-    expect(
-      humanizeError(
-        new ApolloError({ networkError: new TypeError('Failed to fetch') }),
-        t
-      )
-    ).toBe('errors.network');
+    expect(humanizeError(new TypeError('Failed to fetch'), t)).toBe(
+      'errors.network'
+    );
   });
 
   it('keeps readable messages from the API', () => {
@@ -85,10 +85,13 @@ describe('humanizeError', () => {
     ).toBe('The slug is already taken by another page.');
   });
 
-  it('drops the technical ApolloError prefix of plain errors', () => {
-    expect(humanizeError(new Error('ApolloError: Title missing'), t)).toBe(
-      'Title missing'
-    );
+  it('reports a rejected session as missing permission', () => {
+    expect(humanizeError(serverError(401), t)).toBe('errors.forbidden');
+    expect(humanizeError(serverError(403), t)).toBe('errors.forbidden');
+  });
+
+  it('hides other server failures behind a generic message', () => {
+    expect(humanizeError(serverError(502), t)).toBe('errors.unexpected');
   });
 
   it('reads the message of error-like objects', () => {

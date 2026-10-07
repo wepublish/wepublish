@@ -1,10 +1,11 @@
+import { useQuery } from '@apollo/client/react';
 import {
   useHasRunningSubscription,
   useHasUnpaidInvoices,
 } from '@wepublish/membership/website';
 import {
-  useNavigationListQuery,
-  usePeerProfileQuery,
+  NavigationListDocument,
+  PeerProfileDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -44,10 +45,10 @@ export function NavbarContainer({
   children,
 }: NavbarContainerProps) {
   const { Navbar } = useWebsiteBuilder();
-  const { data, loading, error } = useNavigationListQuery({
+  const { data, loading, error } = useQuery(NavigationListDocument, {
     fetchPolicy: 'cache-first',
   });
-  const { data: peerInfoData } = usePeerProfileQuery({
+  const { data: peerInfoData } = useQuery(PeerProfileDocument, {
     fetchPolicy: 'cache-first',
   });
   const hasUnpaidInvoices = useHasUnpaidInvoices();

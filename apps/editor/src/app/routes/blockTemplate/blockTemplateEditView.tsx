@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  BlockTemplateDocument,
+  CreateBlockTemplateDocument,
   CreateBlockTemplateMutationVariables,
   FullBlockFragment,
-  useBlockTemplateQuery,
-  useCreateBlockTemplateMutation,
-  useUpdateBlockTemplateMutation,
+  UpdateBlockTemplateDocument,
 } from '@wepublish/editor/api';
 import {
   CanCreateBlockTemplate,
@@ -74,9 +75,9 @@ function BlockTemplateEditView() {
   const [
     createBlockTemplate,
     { data: createData, loading: isCreating, error: createError },
-  ] = useCreateBlockTemplateMutation();
+  ] = useMutation(CreateBlockTemplateDocument);
   const [updateBlockTemplate, { loading: isUpdating, error: updateError }] =
-    useUpdateBlockTemplateMutation();
+    useMutation(UpdateBlockTemplateDocument);
 
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
 
@@ -85,7 +86,7 @@ function BlockTemplateEditView() {
     data: blockTemplateData,
     refetch,
     loading: isLoading,
-  } = useBlockTemplateQuery({
+  } = useQuery(BlockTemplateDocument, {
     errorPolicy: 'all',
     variables: { id: blockTemplateId },
     skip: !blockTemplateId,

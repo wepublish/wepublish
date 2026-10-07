@@ -8,8 +8,8 @@ describe('DashboardSubscriptionService', () => {
   let prisma: PrismaClient;
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   beforeEach(async () => {
@@ -70,7 +70,7 @@ describe('DashboardSubscriptionService', () => {
     ]);
     const start = new Date('2023-01-01');
     const end = new Date('2023-02-01');
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.subscription, 'findMany')
       .mockReturnValue(mockValue as any);
 
@@ -134,7 +134,7 @@ describe('DashboardSubscriptionService', () => {
         memberPlan: { name: 'foo' },
       },
     ]);
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.subscription, 'findMany')
       .mockReturnValue(mockValue as any);
 
@@ -162,7 +162,7 @@ describe('DashboardSubscriptionService', () => {
     ]);
     const start = new Date('2023-01-01');
     const end = new Date('2023-02-01');
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.subscription, 'findMany')
       .mockReturnValue(mockValue as any);
 
@@ -198,7 +198,7 @@ describe('DashboardSubscriptionService', () => {
     ]);
     const start = new Date('2023-01-01');
     const end = new Date('2023-02-01');
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.subscription, 'findMany')
       .mockReturnValue(mockValue as any);
 

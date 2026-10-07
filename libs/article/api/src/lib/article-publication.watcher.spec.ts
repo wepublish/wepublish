@@ -1,27 +1,28 @@
+import type { Mock } from 'vitest';
 import { ArticlePublicationWatcher } from './article-publication.watcher';
 
 describe('ArticlePublicationWatcher', () => {
   const now = new Date('2026-10-01T10:00:00.000Z');
   let prisma: {
-    article: { findMany: jest.Mock };
-    articleRevision: { findMany: jest.Mock };
+    article: { findMany: Mock };
+    articleRevision: { findMany: Mock };
   };
   let publicContentCache: {
-    invalidate: jest.Mock;
-    invalidateArticlePages: jest.Mock;
+    invalidate: Mock;
+    invalidateArticlePages: Mock;
   };
   let watcher: ArticlePublicationWatcher;
 
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(now);
+    vi.useFakeTimers();
+    vi.setSystemTime(now);
     prisma = {
-      article: { findMany: jest.fn().mockResolvedValue([]) },
-      articleRevision: { findMany: jest.fn().mockResolvedValue([]) },
+      article: { findMany: vi.fn().mockResolvedValue([]) },
+      articleRevision: { findMany: vi.fn().mockResolvedValue([]) },
     };
     publicContentCache = {
-      invalidate: jest.fn().mockResolvedValue(undefined),
-      invalidateArticlePages: jest.fn().mockResolvedValue(undefined),
+      invalidate: vi.fn().mockResolvedValue(undefined),
+      invalidateArticlePages: vi.fn().mockResolvedValue(undefined),
     };
     watcher = new ArticlePublicationWatcher(
       prisma as any,
@@ -31,7 +32,7 @@ describe('ArticlePublicationWatcher', () => {
 
   afterEach(() => {
     watcher.onModuleDestroy();
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('clears cached articles and answers when a scheduled article goes live', async () => {
@@ -40,10 +41,10 @@ describe('ArticlePublicationWatcher', () => {
     ]);
 
     await watcher.scheduleUpcoming();
-    await jest.advanceTimersByTimeAsync(20_000);
+    await vi.advanceTimersByTimeAsync(20_000);
     expect(publicContentCache.invalidate).not.toHaveBeenCalled();
 
-    await jest.advanceTimersByTimeAsync(15_000);
+    await vi.advanceTimersByTimeAsync(15_000);
     expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
   });
 
@@ -53,7 +54,7 @@ describe('ArticlePublicationWatcher', () => {
     ]);
 
     await watcher.scheduleUpcoming();
-    await jest.advanceTimersByTimeAsync(15_000);
+    await vi.advanceTimersByTimeAsync(15_000);
 
     expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
   });
@@ -72,7 +73,7 @@ describe('ArticlePublicationWatcher', () => {
     );
 
     await watcher.scheduleUpcoming();
-    await jest.advanceTimersByTimeAsync(15_000);
+    await vi.advanceTimersByTimeAsync(15_000);
 
     expect(prisma.article.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: { publishedAt } })
@@ -108,10 +109,10 @@ describe('ArticlePublicationWatcher', () => {
     );
 
     watcher.schedule(publishedAt);
-    await jest.advanceTimersByTimeAsync(19_000);
+    await vi.advanceTimersByTimeAsync(19_000);
     expect(publicContentCache.invalidateArticlePages).not.toHaveBeenCalled();
 
-    await jest.advanceTimersByTimeAsync(4_000);
+    await vi.advanceTimersByTimeAsync(4_000);
     expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
     expect(publicContentCache.invalidateArticlePages).toHaveBeenCalledWith(
       expect.objectContaining({ id: '1', slug: 'one' })
@@ -124,7 +125,7 @@ describe('ArticlePublicationWatcher', () => {
 
     watcher.schedule(publishedAt);
     await watcher.scheduleUpcoming();
-    await jest.advanceTimersByTimeAsync(25_000);
+    await vi.advanceTimersByTimeAsync(25_000);
 
     expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
   });
@@ -132,7 +133,7 @@ describe('ArticlePublicationWatcher', () => {
   it('leaves publications in the past and more than a day ahead to the minute check', async () => {
     watcher.schedule(new Date('2026-10-01T09:59:00.000Z'));
     watcher.schedule(new Date('2026-10-02T10:00:01.000Z'));
-    await jest.advanceTimersByTimeAsync(25 * 60 * 60 * 1000);
+    await vi.advanceTimersByTimeAsync(25 * 60 * 60 * 1000);
 
     expect(prisma.article.findMany).not.toHaveBeenCalled();
     expect(publicContentCache.invalidate).not.toHaveBeenCalled();
@@ -162,14 +163,14 @@ describe('ArticlePublicationWatcher', () => {
       );
 
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       prisma.article.findMany.mockRejectedValueOnce(
         new Error('connection lost')
       );
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(5_000);
+      await vi.advanceTimersByTimeAsync(5_000);
 
       expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
       expect(publicContentCache.invalidateArticlePages).toHaveBeenCalledWith(
@@ -183,9 +184,9 @@ describe('ArticlePublicationWatcher', () => {
       );
 
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(75_000);
+      await vi.advanceTimersByTimeAsync(75_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(5_000);
+      await vi.advanceTimersByTimeAsync(5_000);
 
       expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
     });
@@ -196,16 +197,16 @@ describe('ArticlePublicationWatcher', () => {
       );
 
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       prisma.article.findMany.mockRejectedValueOnce(
         new Error('connection lost')
       );
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
 
       expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
     });
@@ -216,9 +217,9 @@ describe('ArticlePublicationWatcher', () => {
       );
 
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(10_000);
+      await vi.advanceTimersByTimeAsync(10_000);
 
       expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
     });

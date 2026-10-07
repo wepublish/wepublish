@@ -1,8 +1,5 @@
-import { ApolloError } from '@apollo/client';
-import {
-  CommentItemType,
-  useCreateCommentMutation,
-} from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { CommentItemType, CreateCommentDocument } from '@wepublish/editor/api';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
@@ -46,7 +43,7 @@ export function CreateCommentBtn({
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const onError = (error: ApolloError) => {
+  const onError = (error: Error) => {
     toaster.push(
       <Message
         type="error"
@@ -59,7 +56,7 @@ export function CreateCommentBtn({
     );
   };
 
-  const [createComment] = useCreateCommentMutation({
+  const [createComment] = useMutation(CreateCommentDocument, {
     onError,
   });
 

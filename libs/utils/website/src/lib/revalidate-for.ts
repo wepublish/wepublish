@@ -1,3 +1,5 @@
+import { CombinedGraphQLErrors } from '@apollo/client';
+
 export const LIVE_REVALIDATE_SECONDS = 60;
 export const REVALIDATE_SECONDS = 60 * 60;
 
@@ -48,14 +50,32 @@ const isServerError = (error: unknown) => {
   );
 };
 
-export const revalidateFor = (
-  content: unknown,
-  errors?: readonly unknown[]
-) => {
+// Apollo Client 4 hands back a single `error` rather than an `errors` array,
+// and wraps the individual GraphQL errors in `CombinedGraphQLErrors`. The
+// checks below look at each GraphQL error's own message and extensions, so the
+// wrapper has to be unwrapped first.
+const toErrorList = (errors: unknown): readonly unknown[] => {
+  if (!errors) {
+    return [];
+  }
+
+  if (Array.isArray(errors)) {
+    return errors;
+  }
+
+  if (CombinedGraphQLErrors.is(errors)) {
+    return errors.errors;
+  }
+
+  return [errors];
+};
+
+export const revalidateFor = (content: unknown, errors?: unknown) => {
+  const errorList = toErrorList(errors);
   const serverErrors =
     content || process.env.NEXT_PHASE === 'phase-production-build' ?
       []
-    : (errors ?? []).filter(isServerError);
+    : errorList.filter(isServerError);
 
   if (serverErrors.length) {
     throw new Error(
@@ -65,7 +85,7 @@ export const revalidateFor = (
     );
   }
 
-  return !content || errors?.length || hasLiveBlock(content) ?
+  return !content || errorList.length || hasLiveBlock(content) ?
       LIVE_REVALIDATE_SECONDS
     : REVALIDATE_SECONDS;
 };

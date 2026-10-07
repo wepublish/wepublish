@@ -1,5 +1,5 @@
-import { ApolloError } from '@apollo/client';
-import { Poll, usePollsQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
+import { FullPollFragment, PollsDocument } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   CreatePollBtn,
@@ -33,7 +33,7 @@ import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message
@@ -50,17 +50,24 @@ const onErrorToast = (error: ApolloError) => {
 
 function PollList() {
   const { t } = useTranslation();
-  const [pollDelete, setPollDelete] = useState<Poll | undefined>(undefined);
+  const [pollDelete, setPollDelete] = useState<FullPollFragment | undefined>(
+    undefined
+  );
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const { data, loading, refetch } = usePollsQuery({
+  const { data, loading, refetch, error } = useQuery(PollsDocument, {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
     },
-    onError: onErrorToast,
   });
+
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
 
   /**
    * Refetch data
@@ -95,7 +102,7 @@ function PollList() {
           <Column width={50}>
             <HeaderCell>{t('pollList.state')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
+              {(rowData: RowDataType<FullPollFragment>) => (
                 <PollStateIndication
                   closedAt={rowData.closedAt}
                   opensAt={rowData.opensAt}
@@ -110,7 +117,7 @@ function PollList() {
           >
             <HeaderCell>{t('pollList.question')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
+              {(rowData: RowDataType<FullPollFragment>) => (
                 <Link to={`/polls/edit/${rowData.id}`}>
                   {rowData.question || t('pollList.noQuestion')}
                 </Link>
@@ -124,8 +131,8 @@ function PollList() {
           >
             <HeaderCell>{t('pollList.opensAt')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollOpensAtView poll={rowData as Poll} />
+              {(rowData: RowDataType<FullPollFragment>) => (
+                <PollOpensAtView poll={rowData as FullPollFragment} />
               )}
             </RCell>
           </Column>
@@ -136,8 +143,8 @@ function PollList() {
           >
             <HeaderCell>{t('pollList.closedAt')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollClosedAtView poll={rowData as Poll} />
+              {(rowData: RowDataType<FullPollFragment>) => (
+                <PollClosedAtView poll={rowData as FullPollFragment} />
               )}
             </RCell>
           </Column>
@@ -148,14 +155,14 @@ function PollList() {
           >
             <HeaderCell align={'center'}>{t('pollList.delete')}</HeaderCell>
             <PaddedCell align={'center'}>
-              {(poll: RowDataType<Poll>) => (
+              {(poll: RowDataType<FullPollFragment>) => (
                 <IconButton
                   icon={<MdDelete />}
                   circle
                   appearance="ghost"
                   color="red"
                   size="sm"
-                  onClick={() => setPollDelete(poll as Poll)}
+                  onClick={() => setPollDelete(poll as FullPollFragment)}
                 />
               )}
             </PaddedCell>
@@ -168,7 +175,7 @@ function PollList() {
           >
             <HeaderCell align={'center'}>{t('pollList.showVotes')}</HeaderCell>
             <PaddedCell align={'center'}>
-              {(poll: RowDataType<Poll>) => (
+              {(poll: RowDataType<FullPollFragment>) => (
                 <Button
                   appearance={'primary'}
                   href={`/polls/votes/${poll?.id}`}

@@ -1,12 +1,12 @@
-import { ApolloError } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  MemberPlan,
+  FullMemberPlanFragment,
+  MemberPlanListDocument,
   MemberPlanSort,
   SortOrder,
-  useMemberPlanListQuery,
 } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Divider as RDivider,
@@ -32,7 +32,7 @@ interface SelectMemberPlansProps {
   className?: string;
   disabled?: boolean;
   name?: string;
-  defaultMemberPlans: Pick<MemberPlan, 'id' | 'name'>[];
+  defaultMemberPlans: Pick<FullMemberPlanFragment, 'id' | 'name'>[];
   selectedMemberPlans?: string[] | null;
   setSelectedMemberPlans(memberplans: string[]): void;
 }
@@ -58,7 +58,7 @@ export function SelectMemberPlans({
    * Error handling
    * @param error
    */
-  const showErrors = (error: ApolloError): void => {
+  const showErrors = (error: Error): void => {
     toaster.push(
       <Message
         type="error"
@@ -71,14 +71,23 @@ export function SelectMemberPlans({
     );
   };
 
-  const { data: memberplansData, refetch } = useMemberPlanListQuery({
+  const {
+    data: memberplansData,
+    error: memberPlanListError,
+    refetch,
+  } = useQuery(MemberPlanListDocument, {
     variables: {
       sort: MemberPlanSort.CreatedAt,
       order: SortOrder.Ascending,
       take: 50,
     },
-    onError: showErrors,
   });
+
+  useEffect(() => {
+    if (memberPlanListError) {
+      showErrors(memberPlanListError);
+    }
+  }, [memberPlanListError]);
 
   /**
    * Prepare available memberplans

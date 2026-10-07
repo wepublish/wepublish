@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import {
@@ -8,10 +9,15 @@ import { PeerProfileService } from './peer-profile.service';
 import { PeerDataloaderService } from './peer-dataloader.service';
 import { REMOTE_PEER_PROFILE_CACHE_NAMESPACE } from './peer-profile-cache';
 
-const request = jest.fn();
+// `vi.mock` is hoisted above ordinary top level consts, so the spy the factory
+// closes over has to be hoisted with it.
+const { request } = vi.hoisted(() => ({ request: vi.fn() }));
 
-jest.mock('graphql-request', () => ({
-  GraphQLClient: jest.fn().mockImplementation(() => ({ request })),
+vi.mock('graphql-request', () => ({
+  // Must be a `function`: vitest cannot `new` an arrow implementation.
+  GraphQLClient: vi.fn().mockImplementation(function () {
+    return { request };
+  }),
 }));
 
 describe('PeerProfileService', () => {
@@ -21,9 +27,9 @@ describe('PeerProfileService', () => {
   let kv: KvTtlCacheService;
   let prisma: {
     peerProfile: {
-      findFirst: jest.Mock;
-      update: jest.Mock;
-      create: jest.Mock;
+      findFirst: Mock;
+      update: Mock;
+      create: Mock;
     };
   };
 
@@ -39,9 +45,9 @@ describe('PeerProfileService', () => {
     });
     prisma = {
       peerProfile: {
-        findFirst: jest.fn().mockResolvedValue(localProfile),
-        update: jest.fn().mockResolvedValue(localProfile),
-        create: jest.fn().mockResolvedValue(localProfile),
+        findFirst: vi.fn().mockResolvedValue(localProfile),
+        update: vi.fn().mockResolvedValue(localProfile),
+        create: vi.fn().mockResolvedValue(localProfile),
       },
     };
 
@@ -124,7 +130,7 @@ describe('PeerProfileService', () => {
 
   it('keeps the token out of the cache key', async () => {
     process.env['NODE_ENV'] = 'production';
-    const getOrLoadNs = jest.spyOn(kv, 'getOrLoadNs');
+    const getOrLoadNs = vi.spyOn(kv, 'getOrLoadNs');
 
     await service.getRemotePeerProfile('https://peer.example', 'secret-token');
 

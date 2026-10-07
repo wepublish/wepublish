@@ -1,8 +1,7 @@
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
-  Crowdfunding,
-  CrowdfundingsQuery,
-  useDeleteCrowdfundingMutation,
+  DeleteCrowdfundingDocument,
+  FullCrowdfundingFragment,
 } from '@wepublish/editor/api';
 import { humanizeError } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
@@ -11,12 +10,12 @@ import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
 
 type DeleteCrowdfundingProps = {
-  crowdfunding: Crowdfunding | undefined;
+  crowdfunding: FullCrowdfundingFragment | undefined;
   onClose(): void;
-  onDelete(): Promise<ApolloQueryResult<CrowdfundingsQuery>>;
+  onDelete(): Promise<unknown>;
 };
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -49,7 +48,7 @@ export function CrowdfundingDeleteModal({
 }: DeleteCrowdfundingProps) {
   const { t } = useTranslation();
 
-  const [deleteCrowdfundingMutation] = useDeleteCrowdfundingMutation({
+  const [deleteCrowdfundingMutation] = useMutation(DeleteCrowdfundingDocument, {
     onError: onErrorToast,
     onCompleted: onCompletedToast(t),
   });

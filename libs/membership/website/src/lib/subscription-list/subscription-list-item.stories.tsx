@@ -9,7 +9,6 @@ import { SubscriptionListItem } from './subscription-list-item';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { action } from 'storybook/actions';
 import { userEvent, within } from 'storybook/test';
-import { ApolloError } from '@apollo/client';
 import { mockMemberPlan } from '@wepublish/storybook/mocks';
 
 export default {
@@ -238,9 +237,7 @@ export const WithCancelError: StoryObj = {
     cancel: (...args: unknown[]) => {
       action('cancel')(args);
 
-      throw new ApolloError({
-        errorMessage: 'Foobar',
-      });
+      throw new Error('Foobar');
     },
   },
   play: clickCancel,
@@ -268,9 +265,7 @@ export const WithExtendError: StoryObj = {
     extend: (...args: unknown[]) => {
       action('extend')(args);
 
-      throw new ApolloError({
-        errorMessage: 'Foobar',
-      });
+      throw new Error('Foobar');
     },
   },
   play: clickExtend,

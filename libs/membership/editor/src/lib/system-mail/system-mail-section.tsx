@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Table,
@@ -8,26 +9,26 @@ import {
   TableRow,
 } from '@mui/material';
 import {
-  useMailTemplateQuery,
+  MailTemplateDocument,
+  SystemMailsDocument,
+  TestSystemMailDocument,
+  UpdateSystemMailDocument,
   UserEvent,
-  useSystemMailsQuery,
-  useTestSystemMailMutation,
-  useUpdateSystemMailMutation,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   PermissionControl,
   useAuthorisation,
 } from '@wepublish/ui/editor';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdManageAccounts, MdUnsubscribe } from 'react-icons/md';
 import { RiTestTubeLine } from 'react-icons/ri';
 import { Button, SelectPicker } from 'rsuite';
 import {
   DEFAULT_MUTATION_OPTIONS,
-  DEFAULT_QUERY_OPTIONS,
   MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE,
+  showErrors,
 } from '../common';
 import {
   EventHeadCell,
@@ -63,12 +64,28 @@ const CellStack = styled('div')`
 function SystemMailSection() {
   const { t } = useTranslation();
 
-  const { data: systemMails } = useSystemMailsQuery(DEFAULT_QUERY_OPTIONS());
-  const { data: mailTemplates } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
-  const [updateSystemMail] = useUpdateSystemMailMutation(
+  const { data: systemMails, error: systemMailsError } =
+    useQuery(SystemMailsDocument);
+  const { data: mailTemplates, error: mailTemplatesError } =
+    useQuery(MailTemplateDocument);
+
+  useEffect(() => {
+    if (systemMailsError) {
+      showErrors(systemMailsError);
+    }
+  }, [systemMailsError]);
+
+  useEffect(() => {
+    if (mailTemplatesError) {
+      showErrors(mailTemplatesError);
+    }
+  }, [mailTemplatesError]);
+  const [updateSystemMail] = useMutation(
+    UpdateSystemMailDocument,
     DEFAULT_MUTATION_OPTIONS(t)
   );
-  const [testSystemMail] = useTestSystemMailMutation(
+  const [testSystemMail] = useMutation(
+    TestSystemMailDocument,
     MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE(t('systemMails.testSent'))
   );
 

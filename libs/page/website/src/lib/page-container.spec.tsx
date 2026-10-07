@@ -1,4 +1,4 @@
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { composeStories } from '@storybook/react';
 import { render } from '@testing-library/react';
 import * as stories from './page-container.stories';

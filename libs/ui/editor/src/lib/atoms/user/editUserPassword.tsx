@@ -1,7 +1,8 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   FullUserFragment,
-  useSendWebsiteLoginMutation,
+  SendWebsiteLoginDocument,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,7 +45,7 @@ export function EditUserPassword({
     useState<boolean>(false);
   const [sendLoginModalOpen, setSendLoginModalOpen] = useState<boolean>(false);
 
-  const [sendWebsiteLogin] = useSendWebsiteLoginMutation();
+  const [sendWebsiteLogin] = useMutation(SendWebsiteLoginDocument);
 
   async function sendLoginLink() {
     if (!user) {

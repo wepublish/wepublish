@@ -52,16 +52,17 @@ export default function BriefingPage(props: BriefingPageProps) {
           content={props.headerBackgroundImage}
         />
       </Head>
-
       <header
         className="header"
         style={{ backgroundImage: `url(${props.headerBackgroundImage})` }}
       >
         <Box
-          display={'flex'}
-          flexDirection={'column'}
-          gap={2}
           className="header__content"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+          }}
         >
           <h1 className="header__title">{props.title}</h1>
           <h2 className="header__subtitle">{props.subtitle}</h2>

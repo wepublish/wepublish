@@ -1,3 +1,4 @@
+import { NormalizedCacheObject } from '@apollo/client';
 import { DocumentContext } from 'next/document';
 import {
   FontStyle,
@@ -5,8 +6,8 @@ import {
   PublicEnv,
   WebsiteSettingsDocument,
   WebsiteSettingsFragment,
+  getApiClient,
 } from '@wepublish/website/api';
-import { getApiClient } from '@wepublish/website/api';
 import {
   DocumentHeadTagsProps,
   documentGetInitialProps as muiDocumentGetInitialProps,
@@ -111,9 +112,9 @@ export const documentGetInitialProps = async (
     ...(getPublicEnv?.() ?? {}),
   };
 
-  const websiteSettings = client.cache.extract()['ROOT_QUERY']?.[
-    'websiteSettings'
-  ] as WebsiteSettingsFragment | undefined;
+  const websiteSettings = (client.cache.extract() as NormalizedCacheObject)[
+    'ROOT_QUERY'
+  ]?.['websiteSettings'] as WebsiteSettingsFragment | undefined;
 
   const originalRenderPage = ctx.renderPage;
   ctx.renderPage = options => {

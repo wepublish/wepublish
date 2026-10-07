@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import PlusIcon from '@rsuite/icons/Plus';
 import TrashIcon from '@rsuite/icons/Trash';
 import {
-  MemberPlan,
+  FullMemberPlanFragment,
   MutationCreatePaywallArgs,
   MutationUpdatePaywallArgs,
 } from '@wepublish/editor/api';
@@ -37,7 +37,7 @@ type PaywallFormData = (
   | MutationCreatePaywallArgs
   | MutationUpdatePaywallArgs
 ) & {
-  memberPlans?: Pick<MemberPlan, 'id' | 'name'>[];
+  memberPlans?: Pick<FullMemberPlanFragment, 'id' | 'name'>[];
   bypasses?: PaywallBypass[];
 };
 

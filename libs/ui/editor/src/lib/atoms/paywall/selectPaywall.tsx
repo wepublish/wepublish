@@ -1,6 +1,6 @@
-import { ApolloError } from '@apollo/client';
-import { usePaywallListQuery } from '@wepublish/editor/api';
-import { useMemo } from 'react';
+import { useQuery } from '@apollo/client/react';
+import { PaywallListDocument } from '@wepublish/editor/api';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message, SelectPicker, toaster } from 'rsuite';
 import { humanizeError } from '../../humanizeError';
@@ -18,7 +18,7 @@ interface SelectPaywallsProps {
  * Error handling
  * @param error
  */
-const showErrors = (error: ApolloError): void => {
+const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"
@@ -41,9 +41,14 @@ export function SelectPaywall({
 }: SelectPaywallsProps) {
   const { t } = useTranslation();
 
-  const { data: paywallsData } = usePaywallListQuery({
-    onError: showErrors,
-  });
+  const { data: paywallsData, error: paywallListError } =
+    useQuery(PaywallListDocument);
+
+  useEffect(() => {
+    if (paywallListError) {
+      showErrors(paywallListError);
+    }
+  }, [paywallListError]);
 
   /**
    * Prepare available paywalls

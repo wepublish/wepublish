@@ -1,16 +1,17 @@
+import type { Mock } from 'vitest';
 import { EventScheduleWatcher } from './event-schedule.watcher';
 
 describe('EventScheduleWatcher', () => {
   const now = new Date('2026-10-01T10:00:00.000Z');
-  let prisma: { event: { findMany: jest.Mock } };
-  let publicContentCache: { invalidate: jest.Mock };
+  let prisma: { event: { findMany: Mock } };
+  let publicContentCache: { invalidate: Mock };
   let watcher: EventScheduleWatcher;
 
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(now);
-    prisma = { event: { findMany: jest.fn().mockResolvedValue([]) } };
-    publicContentCache = { invalidate: jest.fn().mockResolvedValue(undefined) };
+    vi.useFakeTimers();
+    vi.setSystemTime(now);
+    prisma = { event: { findMany: vi.fn().mockResolvedValue([]) } };
+    publicContentCache = { invalidate: vi.fn().mockResolvedValue(undefined) };
     watcher = new EventScheduleWatcher(
       prisma as any,
       publicContentCache as any
@@ -19,7 +20,7 @@ describe('EventScheduleWatcher', () => {
 
   afterEach(() => {
     watcher.onModuleDestroy();
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it.each([
@@ -38,10 +39,10 @@ describe('EventScheduleWatcher', () => {
     prisma.event.findMany.mockResolvedValue([event]);
 
     await watcher.scheduleUpcoming();
-    await jest.advanceTimersByTimeAsync(15_000);
+    await vi.advanceTimersByTimeAsync(15_000);
     expect(publicContentCache.invalidate).not.toHaveBeenCalled();
 
-    await jest.advanceTimersByTimeAsync(10_000);
+    await vi.advanceTimersByTimeAsync(10_000);
     expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
   });
 
@@ -89,14 +90,14 @@ describe('EventScheduleWatcher', () => {
         prisma.event.findMany.mockImplementation(scheduled(event));
 
         await watcher.scheduleUpcoming();
-        await jest.advanceTimersByTimeAsync(60_000);
+        await vi.advanceTimersByTimeAsync(60_000);
         prisma.event.findMany.mockRejectedValueOnce(
           new Error('connection lost')
         );
         await watcher.scheduleUpcoming();
-        await jest.advanceTimersByTimeAsync(60_000);
+        await vi.advanceTimersByTimeAsync(60_000);
         await watcher.scheduleUpcoming();
-        await jest.advanceTimersByTimeAsync(5_000);
+        await vi.advanceTimersByTimeAsync(5_000);
 
         expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
       }
@@ -111,9 +112,9 @@ describe('EventScheduleWatcher', () => {
       );
 
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(75_000);
+      await vi.advanceTimersByTimeAsync(75_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(5_000);
+      await vi.advanceTimersByTimeAsync(5_000);
 
       expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
     });
@@ -127,14 +128,14 @@ describe('EventScheduleWatcher', () => {
       );
 
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       prisma.event.findMany.mockRejectedValueOnce(new Error('connection lost'));
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
       await watcher.scheduleUpcoming();
-      await jest.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(60_000);
 
       expect(publicContentCache.invalidate).toHaveBeenCalledTimes(1);
     });

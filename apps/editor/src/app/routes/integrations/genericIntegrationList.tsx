@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { SettingProvider } from '@wepublish/editor/api';
 import { humanizeError } from '@wepublish/ui/editor';
@@ -73,7 +73,7 @@ export function GenericIntegrationList<
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState('');
 
-  const { data, loading, error } = useQuery(query, {});
+  const { data, loading, error } = useQuery<Record<string, unknown>>(query, {});
 
   const settings = data?.[dataKey] as TSetting[] | undefined;
 

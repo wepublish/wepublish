@@ -1,11 +1,11 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeletePeerDocument,
   PeerListDocument,
   PeerListQuery,
-  useDeletePeerMutation,
-  usePeerListQuery,
-  usePeerProfileQuery,
-  useUpdatePeerMutation,
+  PeerProfileDocument,
+  UpdatePeerDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -100,18 +100,24 @@ function PeerList() {
     data: peerInfoData,
     loading: isPeerInfoLoading,
     error: peerInfoError,
-  } = usePeerProfileQuery({});
+  } = useQuery(PeerProfileDocument, {});
 
   const {
     data: peerListData,
     loading: isPeerListLoading,
     error: peerListError,
-  } = usePeerListQuery({
+  } = useQuery(PeerListDocument, {
     errorPolicy: 'ignore',
   });
 
-  const [deletePeer, { loading: isDeleting }] = useDeletePeerMutation({});
-  const [updatePeer, { loading: isUpdating }] = useUpdatePeerMutation({});
+  const [deletePeer, { loading: isDeleting }] = useMutation(
+    DeletePeerDocument,
+    {}
+  );
+  const [updatePeer, { loading: isUpdating }] = useMutation(
+    UpdatePeerDocument,
+    {}
+  );
 
   const { t } = useTranslation();
 
@@ -390,6 +396,7 @@ function PeerList() {
                   cache.writeQuery<PeerListQuery>({
                     query: PeerListDocument,
                     data: {
+                      __typename: 'Query',
                       peers: query.peers?.filter(
                         peer => peer.id !== currentPeer.id
                       ),

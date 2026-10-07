@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
@@ -13,7 +12,8 @@ import {
 import { ApiAlert } from '@wepublish/errors/website';
 import {
   Currency,
-  PaymentMethod,
+  FullMemberPlanFragment,
+  FullPaymentMethodFragment,
   PaymentPeriodicity,
   ProductType,
   RegisterMutationVariables,
@@ -21,7 +21,6 @@ import {
   SubscribeMutationVariables,
   SubscribePeriodicityDisplay,
   UserAddressInput,
-  FullMemberPlanFragment,
 } from '@wepublish/website/api';
 import {
   BuilderSubscribeProps,
@@ -434,7 +433,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     () =>
       (availablePaymentMethodsForPeriodicity.flatMap(
         ({ paymentMethods }) => paymentMethods
-      ) as PaymentMethod[]) ?? [],
+      ) as FullPaymentMethodFragment[]) ?? [],
     [availablePaymentMethodsForPeriodicity]
   );
 
@@ -1114,7 +1113,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
         {error && (
           <ApiAlert
-            error={error as ApolloError}
+            error={error as Error}
             severity="error"
           />
         )}

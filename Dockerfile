@@ -270,12 +270,17 @@ COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci --no-audit --no-fund
+# This stage installs only `apps/media/package.json`, so the workspace-wide Nx
+# inference plugins declared in nx.json (eslint/vite/vitest) are not on disk and
+# nx aborts before it builds anything. `media:build` is an explicit
+# @nx/webpack:webpack target that needs none of them, so drop them here.
+RUN node -e "const fs=require('fs');const nx=JSON.parse(fs.readFileSync('nx.json','utf8'));delete nx.plugins;fs.writeFileSync('nx.json',JSON.stringify(nx,null,2));"
 RUN npx nx build media --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/media && \
     { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media || echo "sentry sourcemaps upload failed, continuing build"; } && \
     mkdir -p /poppler-dist/bin /poppler-dist/lib && \
     cp /usr/bin/pdftoppm /poppler-dist/bin/ && \
-    ldd /usr/bin/pdftoppm | awk '/=>/ {print $3}' | xargs -I{} cp -L {} /poppler-dist/lib/ 2>/dev/null || true
+    { ldd /usr/bin/pdftoppm | awk '/=>/ {print $3}' | xargs -I{} cp -L {} /poppler-dist/lib/ 2>/dev/null || true; }
 
 FROM ${PLAIN_BUILD_IMAGE} AS media-setup
 WORKDIR /wepublish

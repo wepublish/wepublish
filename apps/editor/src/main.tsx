@@ -1,6 +1,6 @@
 import './polyfills';
 
-import { ApolloProvider } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import * as Sentry from '@sentry/react';
 import { getApiClientV2, getSettings } from '@wepublish/editor/api';

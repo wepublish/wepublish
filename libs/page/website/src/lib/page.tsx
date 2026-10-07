@@ -4,7 +4,6 @@ import {
   PreviewStatusBanner,
   ContentUnavailable,
 } from '@wepublish/content/website';
-import { Page as PageType } from '@wepublish/website/api';
 import {
   BuilderPageProps,
   useWebsiteBuilder,
@@ -29,7 +28,7 @@ export function Page({
       {!data?.page && !loading && <ContentUnavailable />}
       {data?.page && <PreviewStatusBanner />}
 
-      {data?.page && <PageSEO page={data.page as PageType} />}
+      {data?.page && <PageSEO page={data.page} />}
 
       {data?.page && (
         <Blocks

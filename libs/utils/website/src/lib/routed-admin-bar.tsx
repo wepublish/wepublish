@@ -1,4 +1,4 @@
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import { CanPreview } from '@wepublish/permissions';
 import { useSessionStorage } from '@wepublish/ui';

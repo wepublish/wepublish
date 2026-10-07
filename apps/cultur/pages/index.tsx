@@ -6,9 +6,9 @@ import { captureException } from '@sentry/react';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import {
-  revalidateFor,
   DailyBriefingContext,
   getApiUrl,
+  revalidateFor,
 } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
@@ -96,6 +96,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props,
-    revalidate: revalidateFor(page.data?.page, page.errors),
+    revalidate: revalidateFor(page.data?.page, page.error),
   };
 };

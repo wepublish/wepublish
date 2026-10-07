@@ -3,14 +3,15 @@ import {
   AUDIT_LOG_LIST_LIMIT,
   MediumAuditLogService,
 } from './medium-audit-log.service';
+import type { Mock } from 'vitest';
 
 describe('MediumAuditLogService', () => {
   let service: MediumAuditLogService;
-  let auditLogService: { getAuditLogsSafe: jest.Mock };
+  let auditLogService: { getAuditLogsSafe: Mock };
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    auditLogService = { getAuditLogsSafe: jest.fn() };
+    vi.clearAllMocks();
+    auditLogService = { getAuditLogsSafe: vi.fn() };
     service = new MediumAuditLogService(
       auditLogService as unknown as AuditLogService
     );

@@ -6,7 +6,7 @@ const sharedDragonfly = () => {
   const counts = new Map<string, number>();
 
   return {
-    claim: jest.fn(async (name: string) => {
+    claim: vi.fn(async (name: string) => {
       if (locks.has(name)) {
         return false;
       }
@@ -15,24 +15,24 @@ const sharedDragonfly = () => {
 
       return true;
     }),
-    increment: jest.fn(async (name: string) => {
+    increment: vi.fn(async (name: string) => {
       const count = (counts.get(name) ?? 0) + 1;
       counts.set(name, count);
 
       return count;
     }),
-    count: jest.fn(async (name: string) => counts.get(name) ?? 0),
-    forgetCount: jest.fn(async (name: string) => {
+    count: vi.fn(async (name: string) => counts.get(name) ?? 0),
+    forgetCount: vi.fn(async (name: string) => {
       counts.delete(name);
     }),
   };
 };
 
 const noDragonfly = () => ({
-  claim: jest.fn(async () => undefined),
-  increment: jest.fn(async () => undefined),
-  count: jest.fn(async () => undefined),
-  forgetCount: jest.fn(async () => undefined),
+  claim: vi.fn(async () => undefined),
+  increment: vi.fn(async () => undefined),
+  count: vi.fn(async () => undefined),
+  forgetCount: vi.fn(async () => undefined),
 });
 
 describe('TotpService across replicas', () => {
@@ -70,14 +70,10 @@ describe('TotpService across replicas', () => {
 
   const replicas = (kv: object) => {
     const prisma = {
-      user: { findUnique: jest.fn(), update: jest.fn() },
+      user: { findUnique: vi.fn(), update: vi.fn() },
     };
     const create = () =>
-      new TotpService(
-        prisma as any,
-        { invalidate: jest.fn() } as any,
-        kv as any
-      );
+      new TotpService(prisma as any, { invalidate: vi.fn() } as any, kv as any);
     const a = create();
     const b = create();
     prisma.user.findUnique.mockResolvedValue({
@@ -92,21 +88,22 @@ describe('TotpService across replicas', () => {
     const stepEnd = Math.ceil(Date.now() / 30_000) * 30_000 + 30_000;
 
     beforeEach(() => {
-      jest.useFakeTimers({ now: stepEnd - 1 });
+      vi.useFakeTimers({ now: stepEnd - 1 });
       const validate = OTPAuth.TOTP.prototype.validate;
-      jest
-        .spyOn(OTPAuth.TOTP.prototype, 'validate')
-        .mockImplementation(function (this: OTPAuth.TOTP, options) {
-          const delta = validate.call(this, options);
-          jest.setSystemTime(Date.now() + 2);
+      vi.spyOn(OTPAuth.TOTP.prototype, 'validate').mockImplementation(function (
+        this: OTPAuth.TOTP,
+        options
+      ) {
+        const delta = validate.call(this, options);
+        vi.setSystemTime(Date.now() + 2);
 
-          return delta;
-        });
+        return delta;
+      });
     });
 
     afterEach(() => {
-      jest.restoreAllMocks();
-      jest.useRealTimers();
+      vi.restoreAllMocks();
+      vi.useRealTimers();
     });
 
     it('refuses the same code again, even when the next time step started while checking it', async () => {
@@ -121,7 +118,7 @@ describe('TotpService across replicas', () => {
   });
 
   it('forgets failed codes on a replica without Dragonfly after fifteen minutes without one', async () => {
-    jest.useFakeTimers({ now: new Date('2026-10-02T10:00:00.000Z') });
+    vi.useFakeTimers({ now: new Date('2026-10-02T10:00:00.000Z') });
     const { a } = replicas(noDragonfly());
 
     try {
@@ -131,13 +128,13 @@ describe('TotpService across replicas', () => {
         );
       }
 
-      jest.setSystemTime(new Date('2026-10-02T10:16:00.000Z'));
+      vi.setSystemTime(new Date('2026-10-02T10:16:00.000Z'));
 
       await expect(a.verifyUserTotp('user-1', wrongCode())).rejects.toThrow(
         'Invalid verification code'
       );
     } finally {
-      jest.useRealTimers();
+      vi.useRealTimers();
     }
   });
 

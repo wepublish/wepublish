@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
@@ -9,8 +10,8 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  useWebsiteSettingsQuery,
-  WebsiteSettings,
+  FullWebsiteSettingsFragment,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { CanGetAISettings } from '@wepublish/permissions';
 import { PermissionControl } from '@wepublish/ui/editor';
@@ -76,7 +77,7 @@ export const WebsiteSettingsList = () => {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const { data, loading } = useWebsiteSettingsQuery();
+  const { data, loading } = useQuery(WebsiteSettingsDocument);
 
   const settings = useMemo(() => {
     if (loading || !data) {
@@ -89,17 +90,17 @@ export const WebsiteSettingsList = () => {
       { id: 'plausible', text: 'Plausible Analytics' },
       { id: 'piwik', text: 'Piwik PRO' },
     ] as Array<{
-      id: Exclude<keyof WebsiteSettings['analytics'], '__typename'>;
+      id: Exclude<keyof FullWebsiteSettingsFragment['analytics'], '__typename'>;
       text: string;
     }>;
 
     const mailIntegrations = [{ id: 'mailchimp', text: 'Mailchimp' }] as Array<{
-      id: Exclude<keyof WebsiteSettings['mail'], '__typename'>;
+      id: Exclude<keyof FullWebsiteSettingsFragment['mail'], '__typename'>;
       text: string;
     }>;
 
     const adsIntegrations = [{ id: 'sparkLoop', text: 'SparkLoop' }] as Array<{
-      id: Exclude<keyof WebsiteSettings['ads'], '__typename'>;
+      id: Exclude<keyof FullWebsiteSettingsFragment['ads'], '__typename'>;
       text: string;
     }>;
 
@@ -204,7 +205,6 @@ export const WebsiteSettingsList = () => {
   return (
     <WebsiteSettingsListWrapper>
       <Title>{t('websiteSettings.list.title')}</Title>
-
       {settings.map(category => (
         <PermissionControl
           key={category.title}
@@ -218,7 +218,9 @@ export const WebsiteSettingsList = () => {
               <Typography
                 variant="h6"
                 component={CardTitle}
-                marginBottom={2}
+                sx={{
+                  marginBottom: 2,
+                }}
               >
                 {category.icon}
                 {category.title}
@@ -236,7 +238,13 @@ export const WebsiteSettingsList = () => {
               ))}
 
               {!!category.faulyIntegrations.length &&
-                !!category.enabledIntegrations.length && <Box pt={1} />}
+                !!category.enabledIntegrations.length && (
+                  <Box
+                    sx={{
+                      pt: 1,
+                    }}
+                  />
+                )}
 
               {category.enabledIntegrations.map((integration, index) => (
                 <Typography
@@ -250,7 +258,13 @@ export const WebsiteSettingsList = () => {
               ))}
 
               {!!category.enabledIntegrations.length &&
-                !!category.disabledIntegrations.length && <Box pt={1} />}
+                !!category.disabledIntegrations.length && (
+                  <Box
+                    sx={{
+                      pt: 1,
+                    }}
+                  />
+                )}
 
               {category.disabledIntegrations.map((integration, index) => (
                 <Typography

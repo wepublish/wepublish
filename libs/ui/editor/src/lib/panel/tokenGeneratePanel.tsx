@@ -1,8 +1,6 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import {
-  TokenListDocument,
-  useCreateTokenMutation,
-} from '@wepublish/editor/api';
+import { CreateTokenDocument, TokenListDocument } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,6 +14,7 @@ import {
 
 import { createCheckedPermissionComponent } from '../atoms';
 import { getOperationNameFromDocument } from '../utility';
+import { humanizeError } from '../humanizeError';
 
 const Message = styled(RMessage)`
   margin-top: 5px;
@@ -29,7 +28,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
   const [name, setName] = useState('');
 
   const [createToken, { data, loading: isCreating, error: createError }] =
-    useCreateTokenMutation({
+    useMutation(CreateTokenDocument, {
       refetchQueries: [getOperationNameFromDocument(TokenListDocument)],
     });
 
@@ -48,7 +47,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
           closable
           duration={0}
         >
-          {createError.message}
+          {humanizeError(createError)}
         </RMessage>
       );
   }, [createError]);

@@ -1,3 +1,5 @@
+import { CombinedGraphQLErrors } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import {
@@ -11,16 +13,16 @@ import { ArticleAuthor } from '@wepublish/author/website';
 import { PollBlock } from '@wepublish/block-content/website';
 import { Comment } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
-import { revalidateFor, getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
-  Article as ArticleType,
   ArticleDocument,
   ArticleListDocument,
   BannerDocumentType,
   CommentItemType,
   CommentListDocument,
   CommentSort,
+  FullTagFragment,
   getApiClient,
   HotAndTrendingDocument,
   NavigationListDocument,
@@ -28,8 +30,6 @@ import {
   PrimaryBannerDocument,
   SettingListDocument,
   SortOrder,
-  Tag,
-  useArticleQuery,
 } from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
@@ -78,7 +78,7 @@ export default function ArticleBySlugOrId() {
     elements: { H5 },
   } = useWebsiteBuilder();
 
-  const { data } = useArticleQuery({
+  const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
@@ -111,7 +111,7 @@ export default function ArticleBySlugOrId() {
         {isSearchSlider && data?.article ?
           <SearchSlider
             key={data.article.id}
-            article={data.article as ArticleType}
+            article={data.article}
             includeSEO
           />
         : <>
@@ -185,7 +185,8 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { id, slug } = params || {};
+  const id = params?.id?.toString();
+  const slug = params?.slug?.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
@@ -213,9 +214,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }),
   ]);
 
-  const is404 = article.errors?.find(
-    ({ extensions }) => extensions?.status === 404
-  );
+  const is404 =
+    CombinedGraphQLErrors.is(article.error) &&
+    article.error.errors.find(({ extensions }) => extensions?.status === 404);
 
   if (is404) {
     return {
@@ -230,7 +231,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         query: ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id),
+            tags: article.data.article.tags.map(
+              (tag: FullTagFragment) => tag.id
+            ),
           },
           take: 4,
         },
@@ -249,10 +252,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       client.query({
         query: PrimaryBannerDocument,
         variables: {
-          document: {
-            type: BannerDocumentType.Article,
-            id: article.data.article.id,
-          },
+          documentType: BannerDocumentType.Article,
+          documentId: article.data.article.id,
+          loggedIn: false,
+          hasSubscription: false,
+          hasPaywallBypass: false,
         },
       }),
     ]);
@@ -262,6 +266,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: revalidateFor(article.data?.article, article.errors),
+    revalidate: revalidateFor(article.data?.article, article.error),
   };
 };

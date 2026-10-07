@@ -1,20 +1,20 @@
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
-import { Poll, PollsQuery, useDeletePollMutation } from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { DeletePollDocument, FullPollFragment } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
 import { humanizeError } from '../../humanizeError';
 
 interface DeletePollProps {
-  poll?: Poll;
+  poll?: FullPollFragment;
   onClose(): void;
-  onDelete(): Promise<ApolloQueryResult<PollsQuery>>;
+  onDelete(): Promise<unknown>;
 }
 
 /**
  * Error handling
  */
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -43,7 +43,7 @@ const onCompletedToast = (t: TFunction) => () => {
 export function DeletePollModal({ poll, onClose, onDelete }: DeletePollProps) {
   const { t } = useTranslation();
 
-  const [deletePollMutation] = useDeletePollMutation();
+  const [deletePollMutation] = useMutation(DeletePollDocument);
 
   /**
    * FUNCTIONS

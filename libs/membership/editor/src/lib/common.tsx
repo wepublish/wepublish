@@ -1,9 +1,9 @@
-import { ApolloError } from '@apollo/client';
 import { TFunction } from 'i18next';
+import { useEffect } from 'react';
 import { Message, toaster } from 'rsuite';
 import { humanizeError } from '@wepublish/ui/editor';
 
-const showErrors = (error: ApolloError): void => {
+export const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"
@@ -47,18 +47,19 @@ export const DEFAULT_MUTATION_OPTIONS = (t: TFunction) => {
  */
 export const MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE = (message: string) => {
   return {
-    ...DEFAULT_QUERY_OPTIONS(),
+    onError: showErrors,
     onCompleted: () => showSuccessToast(message),
   };
 };
 
 /**
- * Default options for the GraphQL client. Displays errors.
- * @param client the graphql client to make the request with
- * @returns QueryHookOptions for the GraphQL client
+ * Toasts query errors. Apollo Client 4 removed `onError` from the query
+ * hooks, so pass the hook result's `error` here instead.
  */
-export const DEFAULT_QUERY_OPTIONS = () => {
-  return {
-    onError: showErrors,
-  };
+export const useShowErrors = (error: Error | undefined): void => {
+  useEffect(() => {
+    if (error) {
+      showErrors(error);
+    }
+  }, [error]);
 };

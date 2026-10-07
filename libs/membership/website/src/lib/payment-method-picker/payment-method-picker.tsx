@@ -7,6 +7,7 @@ import {
   useRadioGroup,
 } from '@mui/material';
 import styled from '@emotion/styled';
+import { FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderPaymentMethodPickerProps,
   useWebsiteBuilder,
@@ -117,7 +118,7 @@ export const PaymentMethodPicker = forwardRef<
               <PaymentRadio aria-label={`${method.description} ${method.name}`}>
                 {method.image && (
                   <Image
-                    image={method.image}
+                    image={method.image as unknown as FullImageFragment}
                     css={icon}
                   />
                 )}

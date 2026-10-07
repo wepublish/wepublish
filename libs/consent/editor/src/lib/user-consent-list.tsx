@@ -1,4 +1,5 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
+import { useEffect } from 'react';
 import { IconButton, Message, Table as RTable, toaster } from 'rsuite';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -12,15 +13,15 @@ import {
   TableWrapper,
 } from '@wepublish/ui/editor';
 import {
-  useUserConsentsQuery,
-  useDeleteUserConsentMutation,
-  UserConsent,
+  DeleteUserConsentDocument,
+  FullUserConsentFragment,
+  UserConsentsDocument,
 } from '@wepublish/editor/api';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell } = RTable;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -50,11 +51,15 @@ const consentValues = [
 export function UserConsentList(props: UserConsentListProps) {
   const { t } = useTranslation();
 
-  const { loading, data, refetch } = useUserConsentsQuery({
-    onError: onErrorToast,
-  });
+  const { loading, data, refetch, error } = useQuery(UserConsentsDocument);
 
-  const [deleteUserConsent] = useDeleteUserConsentMutation({
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
+
+  const [deleteUserConsent] = useMutation(DeleteUserConsentDocument, {
     onError: onErrorToast,
     onCompleted: () => {
       toaster.push(
@@ -110,7 +115,7 @@ export function UserConsentList(props: UserConsentListProps) {
           >
             <HeaderCell>{t('userConsents.user')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<UserConsent>) => (
+              {(rowData: RowDataType<FullUserConsentFragment>) => (
                 <Link to={`/userConsents/edit/${rowData.id}`}>
                   {(rowData.user.firstName || '') + ' ' + rowData.user.name}
                 </Link>
@@ -124,7 +129,7 @@ export function UserConsentList(props: UserConsentListProps) {
           >
             <HeaderCell>{t('userConsents.consentName')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<UserConsent>) => (
+              {(rowData: RowDataType<FullUserConsentFragment>) => (
                 <span>{rowData.consent.name}</span>
               )}
             </Cell>
@@ -136,7 +141,7 @@ export function UserConsentList(props: UserConsentListProps) {
           >
             <HeaderCell>{t('userConsents.consentSlug')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<UserConsent>) => (
+              {(rowData: RowDataType<FullUserConsentFragment>) => (
                 <span>{rowData.consent.slug}</span>
               )}
             </Cell>
@@ -148,7 +153,7 @@ export function UserConsentList(props: UserConsentListProps) {
           >
             <HeaderCell>{t('userConsents.value')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<UserConsent>) => (
+              {(rowData: RowDataType<FullUserConsentFragment>) => (
                 <span>
                   {consentValues.find(v => v.value === rowData.value)?.label}
                 </span>
@@ -162,7 +167,7 @@ export function UserConsentList(props: UserConsentListProps) {
               align={'center'}
               style={{ padding: '5px 0' }}
             >
-              {(rowData: RowDataType<UserConsent>) => (
+              {(rowData: RowDataType<FullUserConsentFragment>) => (
                 <IconButton
                   icon={<MdDelete />}
                   color="red"

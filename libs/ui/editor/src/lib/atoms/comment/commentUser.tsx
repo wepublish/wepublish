@@ -37,7 +37,9 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
 
   function setImage(guestUserImage: FullImageFragment | undefined) {
     setComment(oldComment =>
-      oldComment ? { ...oldComment, guestUserImage } : oldComment
+      oldComment ?
+        { ...oldComment, guestUserImage: guestUserImage ?? null }
+      : oldComment
     );
   }
 

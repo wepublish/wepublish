@@ -1,13 +1,14 @@
+import type { MockedResult } from './mocked-result';
 import {
   CommentRatingContextProps,
   CommentRatingContext,
 } from '@wepublish/comments/website';
-import { RateCommentMutationResult } from '@wepublish/website/api';
+import { RateCommentMutation } from '@wepublish/website/api';
 import { ComponentType } from 'react';
 import { action } from 'storybook/actions';
 
 type CommentRatingsDecoratorProps = Partial<{
-  rateResult: Pick<RateCommentMutationResult, 'data' | 'error'>;
+  rateResult: MockedResult<RateCommentMutation>;
   anonymousRateResult: CommentRatingContextProps['getAnonymousRate'];
   canRateAnonymously: boolean;
 }>;

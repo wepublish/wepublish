@@ -96,7 +96,7 @@ const matches = (
 
 const createPrisma = ({ comments, ratings }: Fixture) => ({
   comment: {
-    findMany: jest.fn(async ({ where }: { where: Record<string, any> }) =>
+    findMany: vi.fn(async ({ where }: { where: Record<string, any> }) =>
       comments
         .filter(candidate => matches(candidate, where))
         .map(candidate => ({
@@ -106,13 +106,13 @@ const createPrisma = ({ comments, ratings }: Fixture) => ({
           ),
         }))
     ),
-    findUnique: jest.fn(
+    findUnique: vi.fn(
       async ({ where }: { where: { id: string } }) =>
         comments.find(({ id }) => id === where.id) ?? null
     ),
   },
   commentRating: {
-    findMany: jest.fn(
+    findMany: vi.fn(
       async ({
         where,
       }: {
@@ -127,7 +127,7 @@ const createPrisma = ({ comments, ratings }: Fixture) => ({
             )
         )
     ),
-    upsert: jest.fn(async ({ create }: { create: Record<string, any> }) => {
+    upsert: vi.fn(async ({ create }: { create: Record<string, any> }) => {
       ratings.push({
         ...rating('rating-new', create['commentId'], create['userId'], 5),
         value: create['value'],
@@ -137,8 +137,8 @@ const createPrisma = ({ comments, ratings }: Fixture) => ({
     }),
   },
   commentRatingSystemAnswer: {
-    findMany: jest.fn(async () => [answer]),
-    findUnique: jest.fn(async () => answer),
+    findMany: vi.fn(async () => [answer]),
+    findUnique: vi.fn(async () => answer),
   },
 });
 
@@ -162,7 +162,7 @@ describe('commentsForItem cache', () => {
   const service = () =>
     new CommentService(
       prisma as any,
-      { settingByName: jest.fn().mockResolvedValue({ value: true }) } as any,
+      { settingByName: vi.fn().mockResolvedValue({ value: true }) } as any,
       {} as any,
       new PublicContentCacheInvalidator(kv),
       kv
@@ -265,7 +265,7 @@ describe('commentsForItem cache', () => {
   });
 
   it("keeps raters' ids and fingerprints out of the cache", async () => {
-    const cacheSpy = jest.spyOn(kv, 'getOrLoadNs');
+    const cacheSpy = vi.spyOn(kv, 'getOrLoadNs');
 
     await service().getPublicCommentsForItem(args(), 'reader-1');
     const cached = JSON.stringify(await cacheSpy.mock.calls[0][2]());
@@ -339,8 +339,8 @@ describe('commentsForItem resolver', () => {
 
   it('serves readers the cached public comments', async () => {
     const commentService = {
-      getPublicCommentsForItem: jest.fn().mockResolvedValue([]),
-      getCommentsForItem: jest.fn(),
+      getPublicCommentsForItem: vi.fn().mockResolvedValue([]),
+      getCommentsForItem: vi.fn(),
     };
 
     await resolver(commentService).commentsForItem(args(), {
@@ -358,8 +358,8 @@ describe('commentsForItem resolver', () => {
 
   it('serves editors every comment straight from the database', async () => {
     const commentService = {
-      getPublicCommentsForItem: jest.fn(),
-      getCommentsForItem: jest.fn().mockResolvedValue([]),
+      getPublicCommentsForItem: vi.fn(),
+      getCommentsForItem: vi.fn().mockResolvedValue([]),
     };
 
     await resolver(commentService).commentsForItem(args(), {

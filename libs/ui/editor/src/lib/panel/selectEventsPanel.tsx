@@ -1,8 +1,8 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import {
+  EventListDocument,
   FullEventFragment,
   TagType,
-  useEventListLazyQuery,
 } from '@wepublish/editor/api';
 import { useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +29,7 @@ import { EventBlockValue } from '../blocks/types';
 import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
 import { humanizeError } from '../humanizeError';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message
@@ -68,9 +68,14 @@ export function SelectEventPanel({
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
 
-  const [fetchEvents, { data, loading }] = useEventListLazyQuery({
-    onError: onErrorToast,
-  });
+  const [fetchEvents, { data, loading, error: eventListError }] =
+    useLazyQuery(EventListDocument);
+
+  useEffect(() => {
+    if (eventListError) {
+      onErrorToast(eventListError);
+    }
+  }, [eventListError]);
 
   const saveSelection = () => {
     if (allowCherryPicking) {

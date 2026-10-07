@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect, userEvent, within } from 'storybook/test';
@@ -14,7 +13,7 @@ import { wait } from '@wepublish/testing';
 import {
   Currency,
   FullMemberPlanFragment,
-  PaymentMethod,
+  FullPaymentMethodFragment,
   PaymentPeriodicity,
   ProductType,
   SubscribeBlockRenderLayout,
@@ -334,7 +333,7 @@ const changeMemberPlan =
   };
 
 const changePaymentMethod =
-  (paymentMethod: PaymentMethod): NonNullable<StoryObj['play']> =>
+  (paymentMethod: FullPaymentMethodFragment): NonNullable<StoryObj['play']> =>
   async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -607,7 +606,7 @@ export const WithChallengeError: StoryObj<typeof Subscribe> = {
   args: {
     ...LoggedOut.args,
     challenge: {
-      error: new ApolloError({ errorMessage: 'Something went wrong.' }),
+      error: new Error('Something went wrong.'),
       data: undefined,
       loading: false,
     },
@@ -654,9 +653,7 @@ export const WithRegisterError: StoryObj<typeof Subscribe> = {
     onSubscribeWithRegister: (...args: unknown[]) => {
       action('onSubscribeWithRegister')(args);
 
-      throw new ApolloError({
-        errorMessage: 'Email already in use.',
-      });
+      throw new Error('Email already in use.');
     },
   },
   play: Filled.play,
@@ -669,9 +666,7 @@ export const WithSubscribeError: StoryObj<typeof Subscribe> = {
     onSubscribe: (...args: unknown[]) => {
       action('onSubscribe')(args);
 
-      throw new ApolloError({
-        errorMessage: 'Something went wrong.',
-      });
+      throw new Error('Something went wrong.');
     },
   },
   play: waitForInitialDataIsSet(async ctx => {

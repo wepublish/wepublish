@@ -1,8 +1,7 @@
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
   BlockTemplate,
-  BlockTemplateListQuery,
-  useDeleteBlockTemplateMutation,
+  DeleteBlockTemplateDocument,
 } from '@wepublish/editor/api';
 import { humanizeError } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
@@ -12,10 +11,10 @@ import { Button, Message, Modal, toaster } from 'rsuite';
 type DeleteBlockTemplateModalProps = {
   blockTemplate: BlockTemplate | undefined;
   onClose(): void;
-  onDelete(): Promise<ApolloQueryResult<BlockTemplateListQuery>>;
+  onDelete(): Promise<unknown>;
 };
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -48,10 +47,13 @@ export function DeleteBlockTemplateModal({
 }: DeleteBlockTemplateModalProps) {
   const { t } = useTranslation();
 
-  const [deleteBlockTemplateMutation] = useDeleteBlockTemplateMutation({
-    onError: onErrorToast,
-    onCompleted: onCompletedToast(t),
-  });
+  const [deleteBlockTemplateMutation] = useMutation(
+    DeleteBlockTemplateDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: onCompletedToast(t),
+    }
+  );
 
   async function deleteBlockTemplate() {
     if (!blockTemplate) {

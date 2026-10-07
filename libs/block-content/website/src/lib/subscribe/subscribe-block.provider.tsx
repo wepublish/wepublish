@@ -1,37 +1,38 @@
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { useRegister, useUser } from '@wepublish/authentication/website';
 
 import { PropsWithChildren } from 'react';
 import { SubscribeBlockContext } from './subscribe-block.context';
 import {
-  useSubscriptionsQuery,
-  useInvoicesQuery,
-  useUpgradeSubscriptionInfoLazyQuery,
-  useResubscribeMutation,
-  useCreateSubscriptionInfoLazyQuery,
+  CreateSubscriptionInfoDocument,
+  InvoicesDocument,
+  ResubscribeDocument,
+  SubscriptionsDocument,
+  UpgradeSubscriptionInfoDocument,
 } from '@wepublish/website/api';
 import { useSubscribe, useUpgrade } from '@wepublish/payment/website';
 
 export function SubscribeBlockProvider({ children }: PropsWithChildren) {
   const { hasUser } = useUser();
 
-  const userSubscriptions = useSubscriptionsQuery({
+  const userSubscriptions = useQuery(SubscriptionsDocument, {
     skip: !hasUser,
   });
-  const userInvoices = useInvoicesQuery({
+  const userInvoices = useQuery(InvoicesDocument, {
     skip: !hasUser,
   });
   const [subscribe, subscribeRedirectPages, subscribeStripeClientSecret] =
     useSubscribe();
   const [upgrade, upgradeRedirectPages, upgradeStripeClientSecret] =
     useUpgrade();
-  const upgradeInfo = useUpgradeSubscriptionInfoLazyQuery({
+  const upgradeInfo = useLazyQuery(UpgradeSubscriptionInfoDocument, {
     fetchPolicy: 'cache-first',
   });
-  const subscribeInfo = useCreateSubscriptionInfoLazyQuery({
+  const subscribeInfo = useLazyQuery(CreateSubscriptionInfoDocument, {
     fetchPolicy: 'cache-first',
   });
   const { register, challenge } = useRegister();
-  const resubscribe = useResubscribeMutation();
+  const resubscribe = useMutation(ResubscribeDocument);
 
   return (
     <SubscribeBlockContext.Provider

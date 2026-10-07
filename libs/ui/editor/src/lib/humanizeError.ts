@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client';
+import { CombinedGraphQLErrors, ServerError } from '@apollo/client';
 import i18next from 'i18next';
 
 type Translate = (key: string, options?: Record<string, unknown>) => string;
@@ -8,11 +8,12 @@ const FOREIGN_KEY_CONSTRAINT = /Foreign key constraint/i;
 const DATABASE_INTERNALS = /Invalid `[^`]+` invocation|prisma/i;
 const NETWORK_FAILURE = /Failed to fetch|NetworkError|Load failed/i;
 const ACCESS_DENIED_CODES = ['FORBIDDEN', 'UNAUTHENTICATED'];
+const ACCESS_DENIED_STATUS = [401, 403];
 
 const defaultTranslate: Translate = (key, options) => i18next.t(key, options);
 
 function explain(message: string, t: Translate) {
-  const text = message.replace(/^ApolloError:\s*/, '').trim();
+  const text = message.trim();
   const unique = text.match(UNIQUE_CONSTRAINT);
 
   if (unique) {
@@ -44,18 +45,20 @@ export function humanizeError(
   error: unknown,
   t: Translate = defaultTranslate
 ): string {
-  if (error instanceof ApolloError) {
-    const [first] = error.graphQLErrors;
-
-    if (!first && error.networkError) {
-      return t('errors.network');
-    }
+  if (CombinedGraphQLErrors.is(error)) {
+    const [first] = error.errors;
 
     if (first && ACCESS_DENIED_CODES.includes(String(first.extensions?.code))) {
       return t('errors.forbidden');
     }
 
     return explain(first?.message ?? error.message, t);
+  }
+
+  if (ServerError.is(error)) {
+    return ACCESS_DENIED_STATUS.includes(error.statusCode) ?
+        t('errors.forbidden')
+      : t('errors.unexpected');
   }
 
   if (error instanceof Error) {

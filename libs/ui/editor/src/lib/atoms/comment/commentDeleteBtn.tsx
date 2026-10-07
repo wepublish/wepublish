@@ -1,7 +1,7 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
+  DeleteCommentDocument,
   FullCommentFragment,
-  useDeleteCommentMutation,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ import { Button, IconButton, Message, Modal, toaster } from 'rsuite';
 import { PermissionControl } from '../permissionControl';
 import { humanizeError } from '../../humanizeError';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
@@ -36,7 +36,7 @@ export function CommentDeleteBtn({
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const [deleteComment, { loading }] = useDeleteCommentMutation({
+  const [deleteComment, { loading }] = useMutation(DeleteCommentDocument, {
     onCompleted: () => {
       setModalOpen(false);
       if (onCommentDeleted) {

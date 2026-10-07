@@ -1,9 +1,9 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeleteTokenDocument,
   FullTokenFragment,
   TokenListDocument,
-  useDeleteTokenMutation,
-  useTokenListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -60,10 +60,10 @@ function TokenList() {
     data: tokenListData,
     loading: isTokenListLoading,
     error: tokenListError,
-  } = useTokenListQuery({});
+  } = useQuery(TokenListDocument, {});
 
   const [deleteToken, { loading: isDeleting, error: deleteTokenError }] =
-    useDeleteTokenMutation({
+    useMutation(DeleteTokenDocument, {
       refetchQueries: [getOperationNameFromDocument(TokenListDocument)],
     });
 

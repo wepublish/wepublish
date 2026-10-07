@@ -1,8 +1,9 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  BlockStyle,
+  BlockStylesDocument,
   EditorBlockType,
-  useBlockStylesQuery,
+  FullBlockStyleFragment,
 } from '@wepublish/editor/api';
 import nanoid from 'nanoid';
 import React, {
@@ -442,8 +443,8 @@ interface ListItemWrapperProps {
   onMoveUp?: () => void;
   onMoveDown?: () => void;
   onStyleChange?: (
-    blockStyleName?: BlockStyle['name'],
-    blockStyle?: BlockStyle['id']
+    blockStyleName?: FullBlockStyleFragment['name'],
+    blockStyle?: FullBlockStyleFragment['id']
   ) => void;
 }
 
@@ -459,7 +460,7 @@ function ListItemWrapper({
   onStyleChange,
 }: ListItemWrapperProps) {
   const { t } = useTranslation();
-  const { data } = useBlockStylesQuery();
+  const { data } = useQuery(BlockStylesDocument);
 
   const stylesForBlock = useMemo(
     () =>
