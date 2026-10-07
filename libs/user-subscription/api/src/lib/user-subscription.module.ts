@@ -9,6 +9,7 @@ import {
   GoodieModule,
   MemberContextModule,
   DiscountCodeModule,
+  SubscriptionModule,
 } from '@wepublish/membership/api';
 
 @Module({
@@ -21,6 +22,7 @@ import {
     MemberContextModule,
     DiscountCodeModule,
     GoodieModule,
+    SubscriptionModule,
   ],
   providers: [UserSubscriptionService, UserSubscriptionResolver],
 })

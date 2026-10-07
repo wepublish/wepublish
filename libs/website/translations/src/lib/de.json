@@ -128,6 +128,12 @@
     "autoRenew": "Wird automatisch {periodicityTimeline} erneuert",
     "validFor": "Gültig für {subscriptionDuration}",
     "cancelProduct": "{productName} wirklich kündigen?",
+    "reactivate": "{type, select, Donation {Spende} other {Abo}} reaktivieren",
+    "reactivateProduct": "{productName} wirklich reaktivieren?",
+    "revertUpgrade": "Upgrade rückgängig machen",
+    "revertUpgradeTitle": "Upgrade wirklich rückgängig machen?",
+    "revertUpgradeConfirmation": "{type, select, Donation {Die neue Spende wird samt offener Rechnung entfernt und die bisherige Spende läuft normal weiter.} other {Das neue Abo wird samt offener Rechnung entfernt und dein bisheriges Abo läuft normal weiter.}}",
+    "reactivateConfirmation": "{type, select, Donation {Die Spende läuft wieder normal weiter.} other {Die Kündigung wird aufgehoben und das Abo läuft wieder normal weiter. Ist die Laufzeit bereits abgelaufen, erhältst du eine neue Rechnung.}}",
     "afterFirstPaymentPeriod": {
       "monthly": "dem ersten Monat",
       "quarterly": "den ersten 3 Monaten",

@@ -8071,6 +8071,7 @@ export type FullSubscriptionFragment = {
   startsAt: string;
   paidUntil: string | null;
   extendable: boolean;
+  canRevertUpgrade: boolean;
   currency: Currency;
   user: {
     __typename: 'User';
@@ -8239,6 +8240,17 @@ export type CancelSubscriptionMutationVariables = Exact<{
 export type CancelSubscriptionMutation = {
   __typename: 'Mutation';
   cancelSubscription: {
+    __typename: 'PublicSubscription';
+  } & FullSubscriptionFragment;
+};
+
+export type RevertSubscriptionUpgradeMutationVariables = Exact<{
+  id: string;
+}>;
+
+export type RevertSubscriptionUpgradeMutation = {
+  __typename: 'Mutation';
+  revertSubscriptionUpgrade: {
     __typename: 'PublicSubscription';
   } & FullSubscriptionFragment;
 };
@@ -44518,6 +44530,7 @@ export const FullSubscriptionFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canRevertUpgrade' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
           {
             kind: 'Field',
@@ -45481,6 +45494,7 @@ export const UserSubscriptionFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canRevertUpgrade' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
           {
             kind: 'Field',
@@ -162722,6 +162736,7 @@ export const SubscriptionDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canRevertUpgrade' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
           {
             kind: 'Field',
@@ -163865,6 +163880,7 @@ export const CreateSubscriptionDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canRevertUpgrade' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
           {
             kind: 'Field',
@@ -164610,6 +164626,7 @@ export const UpdateSubscriptionDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canRevertUpgrade' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
           {
             kind: 'Field',
@@ -165202,6 +165219,7 @@ export const CancelSubscriptionDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canRevertUpgrade' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
           {
             kind: 'Field',
@@ -165221,6 +165239,574 @@ export const CancelSubscriptionDocument = {
 } as unknown as DocumentNode<
   CancelSubscriptionMutation,
   CancelSubscriptionMutationVariables
+>;
+export const RevertSubscriptionUpgradeDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RevertSubscriptionUpgrade' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'revertSubscriptionUpgrade' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullSubscription' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ImageURLs' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Image' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'largeURL' },
+            name: { kind: 'Name', value: 'transformURL' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'width' },
+                      value: { kind: 'IntValue', value: '500' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'mediumURL' },
+            name: { kind: 'Name', value: 'transformURL' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'width' },
+                      value: { kind: 'IntValue', value: '300' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'thumbURL' },
+            name: { kind: 'Name', value: 'transformURL' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'width' },
+                      value: { kind: 'IntValue', value: '280' },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'height' },
+                      value: { kind: 'IntValue', value: '200' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'squareURL' },
+            name: { kind: 'Name', value: 'transformURL' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'width' },
+                      value: { kind: 'IntValue', value: '100' },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'height' },
+                      value: { kind: 'IntValue', value: '100' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'previewURL' },
+            name: { kind: 'Name', value: 'transformURL' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'width' },
+                      value: { kind: 'IntValue', value: '400' },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'height' },
+                      value: { kind: 'IntValue', value: '200' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'column1URL' },
+            name: { kind: 'Name', value: 'transformURL' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'width' },
+                      value: { kind: 'IntValue', value: '800' },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'height' },
+                      value: { kind: 'IntValue', value: '300' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'column6URL' },
+            name: { kind: 'Name', value: 'transformURL' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'width' },
+                      value: { kind: 'IntValue', value: '260' },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'height' },
+                      value: { kind: 'IntValue', value: '300' },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullImage' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Image' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'filename' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extension' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'fileSize' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'source' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'license' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointX' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'focalPointY' } },
+          {
+            kind: 'FragmentSpread',
+            name: { kind: 'Name', value: 'ImageURLs' },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPaymentProvider' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PaymentProvider' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullPaymentMethod' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PaymentMethod' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'gracePeriod' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'paymentProvider' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPaymentProvider' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'active' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullAvailablePaymentMethod' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AvailablePaymentMethod' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'paymentMethods' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPaymentMethod' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'paymentPeriodicities' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'forceAutoRenewal' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullMemberPlan' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'MemberPlan' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shortDescription' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'active' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'productType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'externalReward' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'maxCount' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'migrateToTargetPaymentMethodID' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'periodicityPricing' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'periodicity' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'amountMin' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'amountTarget' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'amountMax' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'defaultPaymentPeriodicity' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'successPageId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'failPageId' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'confirmationPageId' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'image' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullImage' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'availablePaymentMethods' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullAvailablePaymentMethod' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'Deactivation' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'SubscriptionDeactivation' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'date' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'reason' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FullSubscription' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'PublicSubscription' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'modifiedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'confirmed' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'user' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'memberPlan' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullMemberPlan' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'paymentPeriodicity' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'monthlyAmount' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'autoRenew' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'startsAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'paidUntil' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'properties' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'public' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'paymentMethod' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'FullPaymentMethod' },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deactivation' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'Deactivation' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canRevertUpgrade' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'goodie' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  RevertSubscriptionUpgradeMutation,
+  RevertSubscriptionUpgradeMutationVariables
 >;
 export const ReactivateSubscriptionDocument = {
   kind: 'Document',
@@ -165769,6 +166355,7 @@ export const ReactivateSubscriptionDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canRevertUpgrade' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
           {
             kind: 'Field',
@@ -166336,6 +166923,7 @@ export const DeleteSubscriptionDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canRevertUpgrade' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
           {
             kind: 'Field',
@@ -166903,6 +167491,7 @@ export const RenewSubscriptionDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canRevertUpgrade' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
           {
             kind: 'Field',
@@ -167501,6 +168090,7 @@ export const UserSubscriptionListDocument = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'extendable' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'canRevertUpgrade' } },
           { kind: 'Field', name: { kind: 'Name', value: 'currency' } },
           {
             kind: 'Field',

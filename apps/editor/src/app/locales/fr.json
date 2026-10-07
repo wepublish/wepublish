@@ -2065,6 +2065,12 @@
         },
         "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}"
       },
+      "revertUpgrade": {
+        "title": "Annuler le changement",
+        "modalTitle": "Annuler le changement ?",
+        "modalMessage": "Le nouvel abonnement et ses factures sont supprimés et l’abonnement remplacé se poursuit normalement. Cela n’est possible que tant que le nouvel abonnement n’a pas été payé.",
+        "confirm": "Annuler le changement"
+      },
       "reactivation": {
         "deactivatedSince": "Désactivé depuis le {{date, ccc PP p}} · Motif : {{reason}}",
         "deactivatedOn": "Désactivation le {{date, ccc PP p}} · Motif : {{reason}}",

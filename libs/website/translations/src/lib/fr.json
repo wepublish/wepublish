@@ -125,6 +125,12 @@
     "autoRenew": "Sera renouvelé automatiquement {periodicityTimeline}",
     "validFor": "Valable {subscriptionDuration}",
     "cancelProduct": "Voulez-vous vraiment résilier {productName} ?",
+    "reactivate": "Réactiver {type, select, Donation {le don} other {l’abonnement}}",
+    "reactivateProduct": "Réactiver vraiment {productName} ?",
+    "revertUpgrade": "Annuler le changement",
+    "revertUpgradeTitle": "Vraiment annuler le changement ?",
+    "revertUpgradeConfirmation": "{type, select, Donation {Le nouveau don et sa facture ouverte sont supprimés, le don précédent se poursuit normalement.} other {Le nouvel abonnement et sa facture ouverte sont supprimés, ton abonnement précédent se poursuit normalement.}}",
+    "reactivateConfirmation": "{type, select, Donation {Le don se poursuit normalement.} other {La résiliation est annulée et l’abonnement se poursuit normalement. Si la période est déjà écoulée, tu recevras une nouvelle facture.}}",
     "afterFirstPaymentPeriod": {
       "monthly": "le premier mois",
       "quarterly": "les trois premiers mois",

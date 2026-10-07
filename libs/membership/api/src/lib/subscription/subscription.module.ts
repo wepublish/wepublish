@@ -37,6 +37,6 @@ import { InvoiceModule } from '../invoice/invoice.module';
     PublicSubscriptionResolver,
     SubscriptionService,
   ],
-  exports: [SubscriptionDataloader],
+  exports: [SubscriptionDataloader, SubscriptionService],
 })
 export class SubscriptionModule {}
