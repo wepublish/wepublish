@@ -2594,6 +2594,7 @@
         "psp": "Zahlungsdienstleister (PSPs)",
         "type": "Typ",
         "vatRate": "Mehrwertsteuersatz",
+        "declineRenewals": "Verlängerungen ablehnen (fehlgeschlagene wiederkehrende Zahlungen simulieren)",
         "webhookEndpointSecret": "Webhook Endpoint Secret",
         "bexioUserId": "Bexio Benutzer ID",
         "bexioCountryId": "Bexio Länder ID",

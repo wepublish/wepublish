@@ -1,5 +1,6 @@
 import {
   CreatePaymentProviderSettingDocument,
+  getSettings,
   DeletePaymentProviderSettingDocument,
   PaymentMethodMollie,
   PaymentProviderSettingsDocument,
@@ -20,6 +21,15 @@ import stripeLogo from './assets/stripe.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 
+// Mirrors the API's `isSimulatedPaymentAllowed`, which also refuses to create
+// the simulated provider on production; this only keeps it out of the picker.
+export const creatablePaymentProviderTypes = (appEnvironment?: string) =>
+  Object.values(PaymentProviderType).filter(
+    type =>
+      type !== PaymentProviderType.Simulated ||
+      (!!appEnvironment && appEnvironment !== 'production')
+  );
+
 const paymentSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
   type: z.nativeEnum(PaymentProviderType).nullish(),
@@ -36,6 +46,7 @@ const paymentSettingsSchema = z.object({
   payrexx_vatrate: z.string().nullish().or(z.literal('')),
   payrexx_psp: z.array(z.nativeEnum(PayrexxPsp)).nullish(),
   payrexx_pm: z.array(z.nativeEnum(PayrexxPm)).nullish(),
+  simulated_declineRenewals: z.boolean().nullish(),
 
   bexio_userId: z.coerce.number().nullish(),
   bexio_countryId: z.coerce.number().nullish(),
@@ -79,10 +90,12 @@ export function PaymentIntegrationForm() {
       registry={{
         createMutation: CreatePaymentProviderSettingDocument,
         deleteMutation: DeletePaymentProviderSettingDocument,
-        types: Object.values(PaymentProviderType).map(value => ({
-          label: value,
-          value,
-        })),
+        types: creatablePaymentProviderTypes(getSettings().appEnvironment).map(
+          value => ({
+            label: value,
+            value,
+          })
+        ),
       }}
       getLogo={setting => {
         switch (setting.type) {
@@ -297,6 +310,14 @@ export function PaymentIntegrationForm() {
               label: v,
               value: v,
             })),
+          });
+        }
+
+        if (setting.type === PaymentProviderType.Simulated) {
+          fields.push({
+            name: 'simulated_declineRenewals',
+            label: t('integrations.paymentSettings.declineRenewals'),
+            type: 'checkbox',
           });
         }
 
