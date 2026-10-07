@@ -49,9 +49,18 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
     }
 
     case 'heading': {
+      const headingProps = {
+        id: element.attrs.id ?? undefined,
+        style:
+          element.attrs.textAlign ?
+            { textAlign: element.attrs.textAlign }
+          : undefined,
+      };
+
       if (element.attrs.level === 1) {
         return (
           <H1
+            {...headingProps}
             gutterBottom
             css={lastChildNoGutter}
           >
@@ -63,6 +72,7 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
       if (element.attrs.level === 2) {
         return (
           <H2
+            {...headingProps}
             gutterBottom
             css={lastChildNoGutter}
           >
@@ -74,6 +84,7 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
       if (element.attrs.level === 3) {
         return (
           <H3
+            {...headingProps}
             component="h2"
             gutterBottom
             css={lastChildNoGutter}
@@ -86,6 +97,7 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
       if (element.attrs.level === 4) {
         return (
           <H4
+            {...headingProps}
             component="h3"
             gutterBottom
             css={lastChildNoGutter}
@@ -98,6 +110,7 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
       if (element.attrs.level === 5) {
         return (
           <H5
+            {...headingProps}
             component="h4"
             gutterBottom
             css={lastChildNoGutter}
@@ -110,6 +123,7 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
       if (element.attrs.level === 6) {
         return (
           <H6
+            {...headingProps}
             component="h5"
             gutterBottom
             css={lastChildNoGutter}
@@ -123,7 +137,18 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
     }
 
     case 'paragraph': {
-      return <Paragraph css={lastChildNoGutter}>{children}</Paragraph>;
+      return (
+        <Paragraph
+          css={lastChildNoGutter}
+          style={
+            element.attrs.textAlign ?
+              { textAlign: element.attrs.textAlign }
+            : undefined
+          }
+        >
+          {children}
+        </Paragraph>
+      );
     }
 
     case 'text': {
