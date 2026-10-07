@@ -182,6 +182,7 @@
     "changeEmail": "Modifier l'adresse e-mail",
     "newEmail": "Nouvelle adresse e-mail",
     "password": "Mot de passe",
+    "passwordChangeWarning": "À remplir uniquement si vous souhaitez modifier le mot de passe. Sinon, laissez ce champ vide.",
     "passwordRepeat": "Répéter le mot de passe",
     "requestEmailChange": "Demander la modification",
     "emailChangeRequested": "Un e-mail de confirmation a été envoyé à votre adresse e-mail actuelle. Cliquez sur le lien dans l'e-mail pour confirmer la modification.",

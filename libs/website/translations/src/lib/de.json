@@ -185,6 +185,7 @@
     "changeEmail": "E-Mail-Adresse ändern",
     "newEmail": "Neue E-Mail-Adresse",
     "password": "Passwort",
+    "passwordChangeWarning": "Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.",
     "passwordRepeat": "Passwort wiederholen",
     "requestEmailChange": "Änderung beantragen",
     "emailChangeRequested": "Eine Bestätigungs-E-Mail wurde an deine aktuelle E-Mail-Adresse gesendet. Bitte klicke auf den Link in der E-Mail, um die Änderung zu bestätigen.",
