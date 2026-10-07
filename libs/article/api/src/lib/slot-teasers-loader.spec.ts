@@ -1,4 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+// entering the article <-> block-content import cycle from the article side,
+// the way the api app does, leaves ArticleService undefined inside
+// slot-teasers-loader unless it is injected through a forwardRef
+import './article.service';
 import {
   SlotTeasersLoader,
   BlockType,
