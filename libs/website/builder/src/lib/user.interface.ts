@@ -1,7 +1,10 @@
 import {
   FullImageFragment,
   FullSensitiveDataUserFragment,
+  FullUserNewsletterGroupFragment,
+  MailchimpFormOptionsLayout,
   RegisterMutationVariables,
+  UpdateUserNewslettersInput,
   UpdatePasswordMutationVariables,
   UpdateUserMutationVariables,
 } from '@wepublish/website/api';
@@ -63,4 +66,11 @@ export type BuilderPersonalDataFormProps<
   ) => Promise<void>;
   onImageUpload: (image: ChangeEvent<HTMLInputElement> | null) => Promise<void>;
   onRequestEmailChange?: (newEmail: string) => Promise<void>;
+};
+
+export type BuilderUserNewslettersProps = {
+  groups: FullUserNewsletterGroupFragment[];
+  layout?: MailchimpFormOptionsLayout;
+  className?: string;
+  onSave: (input: UpdateUserNewslettersInput) => Promise<void>;
 };

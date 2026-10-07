@@ -180,6 +180,11 @@
     "payNow": "Jetzt Bezahlen"
   },
   "user": {
+    "newsletters": {
+      "title": "Newsletter",
+      "save": "Speichern",
+      "saveSuccess": "Deine Newsletter-Auswahl wurde gespeichert. Für neue Newsletter erhältst du eventuell eine E-Mail zur Bestätigung."
+    },
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",
     "email": "E-Mail",
     "changeEmail": "E-Mail-Adresse ändern",

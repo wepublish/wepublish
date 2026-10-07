@@ -14,6 +14,7 @@ import {
 import {
   PersonalDataFormContainer,
   TotpSetupContainer,
+  UserNewslettersContainer,
 } from '@wepublish/user/website';
 import {
   ConfirmEmailChangeDocument,
@@ -22,6 +23,7 @@ import {
   NavigationListDocument,
   ProductType,
   SubscriptionsDocument,
+  UserNewslettersDocument,
   addClientCacheToProps,
   getApiClient,
 } from '@wepublish/website/api';
@@ -228,6 +230,8 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
         <PersonalDataFormContainer {...props} />
 
         <TotpSetupContainer />
+
+        <UserNewslettersContainer />
       </ProfileWrapper>
     </>
   );
@@ -265,6 +269,12 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
       client.query({
         query: SubscriptionsDocument,
       }),
+      // Mailchimp being down should not take the profile page with it.
+      client
+        .query({
+          query: UserNewslettersDocument,
+        })
+        .catch(() => undefined),
     ]);
   }
 

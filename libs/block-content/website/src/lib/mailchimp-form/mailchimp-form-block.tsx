@@ -11,6 +11,7 @@ import {
 import {
   AddMailchimpContactDocument,
   FullBlockFragment,
+  FullImageFragment,
   FullMailchimpFormBlockFragment,
   MailchimpContactStatus,
   MailchimpFormOptionsLayout,
@@ -122,16 +123,22 @@ export const MailchimpFormOptionCardCheckbox = styled(Checkbox)`
 `;
 
 type Step = FullMailchimpFormBlockFragment['steps'][number];
-type InterestOption = Step['inputs'][number]['options'][number];
 
-type MailchimpFormOptionSelectionProps = {
-  options: InterestOption[];
+export type MailchimpFormOption = {
+  id: string;
+  name: string;
+  description?: string | null;
+  image?: FullImageFragment | null;
+};
+
+export type MailchimpFormOptionSelectionProps = {
+  options: MailchimpFormOption[];
   layout: MailchimpFormOptionsLayout;
   selected: string[];
   onChange: (id: string, checked: boolean) => void;
 };
 
-const MailchimpFormOptionSelection = ({
+export const MailchimpFormOptionSelection = ({
   options,
   layout,
   selected,

@@ -12,6 +12,19 @@
 - Mailgun
 - Mailchimp
 
+## Mailchimp audience (sync provider)
+
+`SettingSyncProvider` (type `MAILCHIMP`) holds the API key and list; the daily
+sync lives in `libs/membership/api/src/lib/mailchimp-sync`. Its `newsletters`
+(`SettingSyncProviderNewsletter` rows, edited in the editor's sync integration
+form) are the interests readers toggle on `/profile` through
+`userNewsletters` / `updateUserNewsletters`
+(`libs/membership/api/src/lib/mailchimp-newsletter`). Only configured interests
+can be changed; new members are added as `pending` (double opt-in). An interest
+that is also in the sync's interest-group mappings gets flipped by the sync
+whenever a matching subscription starts or ends, regardless of the reader's
+choice.
+
 ## Analytics Provider
 
 - Google Analytics

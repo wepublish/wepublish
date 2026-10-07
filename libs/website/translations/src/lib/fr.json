@@ -177,6 +177,11 @@
     "payNow": "Payer maintenant"
   },
   "user": {
+    "newsletters": {
+      "title": "Newsletters",
+      "save": "Enregistrer",
+      "saveSuccess": "Ton choix de newsletters a été enregistré. Pour les nouvelles newsletters, tu recevras peut-être un e-mail de confirmation."
+    },
     "changeEmailRequest": "Cliquez ici pour modifier votre adresse e-mail",
     "email": "E-Mail",
     "changeEmail": "Modifier l'adresse e-mail",

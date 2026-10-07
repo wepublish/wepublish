@@ -14,6 +14,15 @@ query SyncProviderSettings {
     mailchimp_extensions
     lastSyncAt
     lastSyncError
+    newsletters {
+      id
+      interestId
+      name
+      description
+      image {
+        ...FullImage
+      }
+    }
   }
 }
 
@@ -27,6 +36,7 @@ mutation UpdateSyncProviderSetting(
   $mailchimp_interestGroupMappings: [JSONObject!]
   $mailchimp_defaultInterestGroupIds: [String!]
   $mailchimp_extensions: JSONObject
+  $newsletters: [SettingSyncProviderNewsletterInput!]
 ) {
   updateSyncProviderSetting(
     id: $id
@@ -38,6 +48,7 @@ mutation UpdateSyncProviderSetting(
     mailchimp_interestGroupMappings: $mailchimp_interestGroupMappings
     mailchimp_defaultInterestGroupIds: $mailchimp_defaultInterestGroupIds
     mailchimp_extensions: $mailchimp_extensions
+    newsletters: $newsletters
   ) {
     id
     createdAt
@@ -53,6 +64,15 @@ mutation UpdateSyncProviderSetting(
     mailchimp_extensions
     lastSyncAt
     lastSyncError
+    newsletters {
+      id
+      interestId
+      name
+      description
+      image {
+        ...FullImage
+      }
+    }
   }
 }
 

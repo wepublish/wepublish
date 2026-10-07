@@ -26,7 +26,7 @@
       "options": {
         "buildTarget": "tsri:build",
         "dev": true,
-        "port": 4204
+        "port": 4200
       },
       "configurations": {
         "development": {

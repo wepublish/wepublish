@@ -242,7 +242,7 @@ const countErrors = (value: MailchimpFormBlockValue) =>
     ),
   ].filter(Boolean).length;
 
-const emptyInterestOption = (): MailchimpFormInterestOptionValue => ({
+export const emptyInterestOption = (): MailchimpFormInterestOptionValue => ({
   id: '',
   name: '',
   description: null,
@@ -261,7 +261,7 @@ type MailchimpFormInterestOptionItemProps = {
   onRemove: () => void;
 };
 
-function MailchimpFormInterestOptionItem({
+export function MailchimpFormInterestOptionItem({
   value,
   number,
   interestOptions,

@@ -130,7 +130,11 @@ import {
   TextToIcon,
   UnorderedList,
 } from '@wepublish/ui';
-import { ImageUpload, PersonalDataForm } from '@wepublish/user/website';
+import {
+  ImageUpload,
+  PersonalDataForm,
+  UserNewsletters,
+} from '@wepublish/user/website';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, getDefaultOptions, Locale } from 'date-fns';
 import { memo, PropsWithChildren } from 'react';
@@ -238,6 +242,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}
         PersonalDataForm={PersonalDataForm}
+        UserNewsletters={UserNewsletters}
         UserForm={UserForm}
         SubscriptionList={SubscriptionList}
         SubscriptionListItem={SubscriptionListItem}
