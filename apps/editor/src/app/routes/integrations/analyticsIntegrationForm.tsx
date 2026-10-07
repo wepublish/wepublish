@@ -64,6 +64,7 @@ const CustomDropzoneWrapper = styled.div<{ dragging: boolean; valid: boolean }>`
   align-items: center;
   justify-content: center;
   text-align: center;
+  border-radius: var(--rs-radius-md);
   cursor: pointer;
 
   ${({ valid, theme }) =>
@@ -111,7 +112,9 @@ const CustomDropzone = forwardRef<
         }
       };
       reader.onerror = () => {
-        showErrors(new Error('Error happened while reading file'));
+        showErrors(
+          new Error(t('integrations.analyticsSettings.readFileError'))
+        );
       };
       reader.readAsText(acceptedFile);
     },
@@ -167,18 +170,21 @@ export function AnalyticsIntegrationForm() {
         {
           name: 'articlePrefix',
           label: t('integrations.analyticsSettings.articlePrefix'),
+          info: t('integrations.analyticsSettings.articlePrefixInfo'),
           type: 'text',
           autoComplete: 'one-time-code',
         },
         {
           name: 'property',
           label: t('integrations.analyticsSettings.property'),
+          info: t('integrations.analyticsSettings.propertyInfo'),
           type: 'text',
           autoComplete: 'one-time-code',
         },
         {
           name: 'credentials',
           label: t('integrations.analyticsSettings.credentials'),
+          info: t('integrations.analyticsSettings.credentialsInfo'),
           type: 'custom',
           render: CustomDropzone,
         },

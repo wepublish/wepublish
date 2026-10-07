@@ -24,7 +24,7 @@ const FileDropInputWrapper = styled.div<{
   padding-bottom: 20px;
   padding-left: 20px;
   padding-right: 20px;
-  border-radius: 3px;
+  border-radius: var(--rs-radius-md);
   border-style: dashed;
   border-width: 3px;
   position: relative;

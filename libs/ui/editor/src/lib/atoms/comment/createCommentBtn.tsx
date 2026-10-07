@@ -81,6 +81,7 @@ export function CreateCommentBtn({
       return (
         <IconButton
           style={{ marginLeft: '10px' }}
+          aria-label={t('replyCommentBtn.tooltip')}
           icon={icon || <MdReply />}
           size={size}
           circle={circle}

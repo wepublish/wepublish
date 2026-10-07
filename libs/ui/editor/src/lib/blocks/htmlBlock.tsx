@@ -66,7 +66,10 @@ export const HTMLBlock = ({
         bodyFill
         bordered
       >
-        <PlaceholderInput onAddClick={() => setHtmlDialogOpen(true)}>
+        <PlaceholderInput
+          onAddClick={() => setHtmlDialogOpen(true)}
+          addLabel={t('blocks.html.edit')}
+        >
           {!isEmpty && (
             <Wrapper>
               <IconWrapper>

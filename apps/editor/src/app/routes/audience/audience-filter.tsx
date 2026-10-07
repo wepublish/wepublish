@@ -1,16 +1,16 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { MemberPlanListDocument } from '@wepublish/editor/api';
+import { InfoTrigger } from '@wepublish/ui/editor';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdInfo, MdLink } from 'react-icons/md';
+import { MdLink } from 'react-icons/md';
 import type { DateRangePickerProps } from 'rsuite';
 import {
   Button,
   Col,
   DateRangePicker,
   Grid,
-  IconButton,
   Message,
   Panel,
   Popover as RPopover,
@@ -30,7 +30,7 @@ import {
   preDefinedDates,
   TimeResolution,
 } from './audience-filter-params';
-import { AudienceFilterToggle, ToggleLable } from './audience-filter-toggle';
+import { AudienceFilterToggle } from './audience-filter-toggle';
 
 type RangeType = NonNullable<DateRangePickerProps['ranges']>[number];
 
@@ -230,20 +230,20 @@ export function AudienceFilter({
             <ToggleContainer>
               <Toggle
                 checked={componentFilter.chart}
+                label={t('audienceFilter.chart')}
                 onChange={chart =>
                   setComponentFilter({ ...componentFilter, chart })
                 }
-              />{' '}
-              <ToggleLable>{t('audienceFilter.chart')}</ToggleLable>
+              />
             </ToggleContainer>
             <ToggleContainer>
               <Toggle
                 checked={componentFilter.table}
+                label={t('audienceFilter.table')}
                 onChange={table =>
                   setComponentFilter({ ...componentFilter, table })
                 }
-              />{' '}
-              <ToggleLable>{t('audienceFilter.table')}</ToggleLable>
+              />
             </ToggleContainer>
 
             <ActionContainer>
@@ -267,10 +267,7 @@ export function AudienceFilter({
                   </HelpPopover>
                 }
               >
-                <IconButton
-                  icon={<MdInfo size={20} />}
-                  circle
-                  size="sm"
+                <InfoTrigger
                   aria-label={t('audienceFilter.permalinkHelpLabel')}
                 />
               </Whisper>

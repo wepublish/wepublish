@@ -13,6 +13,7 @@ import {
   createCheckedPermissionComponent,
   humanizeError,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -56,7 +57,7 @@ const AnswerRow = styled.div`
   gap: 12px;
   padding: 12px 16px;
   border: 1px solid var(--rs-border-primary);
-  border-radius: var(--wep-radius-md, 8px);
+  border-radius: var(--rs-radius-md);
   background-color: var(--rs-bg-card);
 
   && .rs-form-control-wrapper,
@@ -75,7 +76,7 @@ const AnswerRow = styled.div`
 `;
 
 const Loader = styled(RLoader)`
-  margin: 30px;
+  margin: 32px;
 `;
 
 const P = styled.p`
@@ -203,6 +204,7 @@ function CommentRatingEditView() {
       <ListViewContainer>
         <ListViewHeader>
           <h2>{t('comments.ratingEdit.title')}</h2>
+          <InfoTooltip text={t('comments.ratingEdit.info')} />
         </ListViewHeader>
 
         {ratingSystem && (
@@ -357,6 +359,7 @@ export function RatingAnswers({
 
           <IconButtonTooltip caption={t('delete')}>
             <RIconButton
+              aria-label={t('delete')}
               icon={<MdDelete />}
               circle
               size="sm"

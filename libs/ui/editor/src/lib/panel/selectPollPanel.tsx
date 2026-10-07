@@ -10,7 +10,7 @@ import {
   IconButton,
   Message,
   Pagination,
-  Table,
+  Table as RTable,
   toaster,
 } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
@@ -20,6 +20,7 @@ import { PollStateIndication } from '../atoms/poll/pollStateIndication';
 import { PollBlockValue } from '../blocks/types';
 import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
 import { humanizeError } from '../humanizeError';
+import { Table } from '../listView/list-view';
 
 export function PollOpensAtView({ poll }: { poll: FullPollFragment }) {
   const now = new Date();
@@ -125,66 +126,68 @@ export function SelectPollPanel({
             rowData?.id === selectedPoll?.id ? 'highlighted-row' : ''
           }
         >
-          <Table.Column resizable>
-            <Table.HeaderCell>{t('pollList.state')}</Table.HeaderCell>
-            <Table.Cell>
+          <RTable.Column resizable>
+            <RTable.HeaderCell>{t('pollList.state')}</RTable.HeaderCell>
+            <RTable.Cell>
               {(rowData: RowDataType<FullPollFragment>) => (
                 <PollStateIndication
                   closedAt={rowData.closedAt}
                   opensAt={rowData.opensAt}
                 />
               )}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column
+          <RTable.Column
             resizable
             width={200}
           >
-            <Table.HeaderCell>{t('pollList.question')}</Table.HeaderCell>
-            <Table.Cell>
+            <RTable.HeaderCell>{t('pollList.question')}</RTable.HeaderCell>
+            <RTable.Cell>
               {(rowData: RowDataType<FullPollFragment>) =>
                 rowData.question || t('pollList.noQuestion')
               }
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column
+          <RTable.Column
             width={250}
             resizable
           >
-            <Table.HeaderCell>{t('pollList.opensAt')}</Table.HeaderCell>
-            <Table.Cell>
+            <RTable.HeaderCell>{t('pollList.opensAt')}</RTable.HeaderCell>
+            <RTable.Cell>
               {(rowData: RowDataType<FullPollFragment>) => (
                 <PollOpensAtView poll={rowData as FullPollFragment} />
               )}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column
+          <RTable.Column
             width={250}
             resizable
           >
-            <Table.HeaderCell>{t('pollList.closedAt')}</Table.HeaderCell>
-            <Table.Cell>
+            <RTable.HeaderCell>{t('pollList.closedAt')}</RTable.HeaderCell>
+            <RTable.Cell>
               {(rowData: RowDataType<FullPollFragment>) => (
                 <PollClosedAtView poll={rowData as FullPollFragment} />
               )}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column width={125}>
-            <Table.HeaderCell align="center">
-              {t('blocks.poll.select')}
-            </Table.HeaderCell>
-            <Table.Cell align="center">
+          <RTable.Column
+            width={100}
+            align="center"
+            fixed="right"
+          >
+            <RTable.HeaderCell align="center">{t('action')}</RTable.HeaderCell>
+            <RTable.Cell align="center">
               {(rowData: RowDataType<FullPollFragment>) => (
                 <IconButtonTooltip caption={t('blocks.poll.select')}>
                   <IconButton
+                    aria-label={t('blocks.poll.select')}
                     icon={<MdAddCircle />}
-                    appearance="primary"
                     circle
-                    size="xs"
+                    size="sm"
                     onClick={() => {
                       onSelect({ id: rowData.id, question: rowData.question });
                       onClose();
@@ -192,8 +195,8 @@ export function SelectPollPanel({
                   />
                 </IconButtonTooltip>
               )}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
         </Table>
 
         <Pagination

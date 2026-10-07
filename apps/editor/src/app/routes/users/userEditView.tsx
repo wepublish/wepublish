@@ -18,6 +18,7 @@ import {
   EditUserPassword,
   generateID,
   ImageSelectPanel,
+  InfoTooltip,
   ListInput,
   ListValue,
   SingleViewTitle,
@@ -49,26 +50,18 @@ import {
   Schema,
   SelectPicker,
   toaster,
-  Toggle as RToggle,
+  Toggle,
 } from 'rsuite';
 
-const Toggle = styled(RToggle)`
-  max-width: 70px;
-  min-width: 70px;
-`;
+const PropertyRow = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) auto;
+  align-items: center;
+  gap: 8px;
 
-const InputW60 = styled(Input)`
-  width: 60%;
-`;
-
-const InputW40 = styled(Input)`
-  width: 40%;
-  margin-right: 10px;
-`;
-
-const FlexRow = styled.div`
-  display: flex;
-  flex-direction: row;
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 `;
 
 const UserFormGrid = styled.div`
@@ -119,6 +112,7 @@ const ProfileImage = styled.div`
 `;
 
 const FormGroup = styled(Form.Group)`
+  flex-shrink: 0;
   padding-top: 6px;
   padding-left: 8px;
 `;
@@ -494,20 +488,25 @@ function UserEditView() {
               >
                 <Row gutter={16}>
                   {/* active / inactive */}
-                  <Col xs={4}>
+                  <Col xs={24}>
                     <Form.Group controlId="active">
-                      <Form.Label>
-                        {t('userCreateOrEditView.active')}
-                      </Form.Label>
-                      <RToggle
+                      <Toggle
                         checked={active}
                         disabled={isDisabled}
+                        label={
+                          <>
+                            {t('userCreateOrEditView.active')}{' '}
+                            <InfoTooltip
+                              text={t('userCreateOrEditView.activeInfo')}
+                            />
+                          </>
+                        }
                         onChange={value => setActive(value)}
                       />
                     </Form.Group>
                   </Col>
                   {/* first name */}
-                  <Col xs={10}>
+                  <Col xs={12}>
                     <Form.Group controlId="firstName">
                       <Form.Label>
                         {t('userCreateOrEditView.firstName')}
@@ -523,7 +522,7 @@ function UserEditView() {
                     </Form.Group>
                   </Col>
                   {/* name */}
-                  <Col xs={10}>
+                  <Col xs={12}>
                     <Form.Group controlId="name">
                       <Form.Label>
                         {toggleRequiredLabel(t('userCreateOrEditView.name'))}
@@ -582,7 +581,12 @@ function UserEditView() {
                   {/* flair */}
                   <Col xs={12}>
                     <Form.Group controlId="flair">
-                      <Form.Label>{t('userCreateOrEditView.flair')}</Form.Label>
+                      <Form.Label>
+                        {t('userCreateOrEditView.flair')}{' '}
+                        <InfoTooltip
+                          text={t('userCreateOrEditView.flairInfo')}
+                        />
+                      </Form.Label>
                       <Form.Control
                         name="flair"
                         value={flair}
@@ -821,7 +825,14 @@ function UserEditView() {
               {/* properties */}
               <RPanel
                 bordered
-                header={t('userCreateOrEditView.properties')}
+                header={
+                  <>
+                    {t('userCreateOrEditView.properties')}{' '}
+                    <InfoTooltip
+                      text={t('userCreateOrEditView.propertiesInfo')}
+                    />
+                  </>
+                }
               >
                 <Row gutter={10}>
                   <Col xs={24}>
@@ -834,8 +845,8 @@ function UserEditView() {
                         defaultValue={{ key: '', value: '', public: true }}
                       >
                         {({ value, onChange }) => (
-                          <FlexRow>
-                            <InputW40
+                          <PropertyRow>
+                            <Input
                               placeholder={t('articleEditor.panels.key')}
                               value={value.key}
                               onChange={propertyKey =>
@@ -843,7 +854,7 @@ function UserEditView() {
                               }
                               data-testid="propertyKey"
                             />
-                            <InputW60
+                            <Input
                               placeholder={t('articleEditor.panels.value')}
                               value={value.value}
                               onChange={propertyValue =>
@@ -851,21 +862,14 @@ function UserEditView() {
                               }
                               data-testid="propertyValue"
                             />
-                            <FormGroup controlId="articleProperty">
-                              <Toggle
-                                checkedChildren={t(
-                                  'articleEditor.panels.public'
-                                )}
-                                unCheckedChildren={t(
-                                  'articleEditor.panels.private'
-                                )}
-                                checked={value.public}
-                                onChange={isPublic =>
-                                  onChange({ ...value, public: isPublic })
-                                }
-                              />
-                            </FormGroup>
-                          </FlexRow>
+                            <Toggle
+                              label={t('articleEditor.panels.public')}
+                              checked={value.public}
+                              onChange={isPublic =>
+                                onChange({ ...value, public: isPublic })
+                              }
+                            />
+                          </PropertyRow>
                         )}
                       </ListInput>
                     </Form.Group>
@@ -875,7 +879,14 @@ function UserEditView() {
               {/* roles */}
               <RPanel
                 bordered
-                header={t('userCreateOrEditView.userRoles')}
+                header={
+                  <>
+                    {t('userCreateOrEditView.userRoles')}{' '}
+                    <InfoTooltip
+                      text={t('userCreateOrEditView.userRolesInfo')}
+                    />
+                  </>
+                }
               >
                 <Row gutter={10}>
                   <Col xs={24}>
@@ -956,11 +967,9 @@ function UserEditView() {
                     </Col>
                     <Col xs={24}>
                       <Form.Group controlId="totpExempt">
-                        <Form.Label>
-                          {t('userCreateOrEditView.totpExemptLabel')}
-                        </Form.Label>
-                        <RToggle
+                        <Toggle
                           checked={user.totpExempt}
+                          label={t('userCreateOrEditView.totpExemptLabel')}
                           onChange={async value => {
                             if (
                               value &&

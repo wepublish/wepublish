@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
+import { useTranslation } from 'react-i18next';
 import { MdChevronLeft } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { Button, Loader as RLoader } from 'rsuite';
+
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 
 const ChevronLeft = styled(MdChevronLeft)`
   font-size: 48px;
@@ -27,11 +30,11 @@ const Grid = styled.div`
 `;
 
 const Loader = styled(RLoader)`
-  margin-right: 5px;
+  margin-right: 4px;
 `;
 
 const SaveButton = styled(Button)`
-  margin-right: 10px;
+  margin-right: 8px;
 `;
 
 const PaddedCol = styled.div`
@@ -72,6 +75,8 @@ export function SingleViewTitle({
   closePath,
   setCloseFn,
 }: SingleViewTitleProps) {
+  const { t } = useTranslation();
+
   function titleView() {
     if (loading) {
       return (
@@ -88,9 +93,14 @@ export function SingleViewTitle({
   return (
     <Grid>
       <PaddedCol>
-        <FlexLink to={closePath}>
-          <ChevronLeft />
-        </FlexLink>
+        <IconButtonTooltip caption={t('back')}>
+          <FlexLink
+            to={closePath}
+            aria-label={t('back')}
+          >
+            <ChevronLeft />
+          </FlexLink>
+        </IconButtonTooltip>
 
         <Heading>{titleView()}</Heading>
       </PaddedCol>

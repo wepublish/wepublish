@@ -18,6 +18,7 @@ import {
 import {
   createCheckedPermissionComponent,
   humanizeError,
+  InfoTooltip,
   ListViewContainer,
   ListViewHeader,
 } from '@wepublish/ui/editor';
@@ -577,7 +578,8 @@ function MailSendPage() {
 
                       <Form.Group>
                         <Form.ControlLabel>
-                          {t('mailSend.state.label')}
+                          {t('mailSend.state.label')}{' '}
+                          <InfoTooltip text={t('mailSend.stateHelp')} />
                         </Form.ControlLabel>
                         <SelectPicker
                           block
@@ -595,7 +597,8 @@ function MailSendPage() {
 
                       <Form.Group>
                         <Form.ControlLabel>
-                          {t('mailSend.autoRenew')}
+                          {t('mailSend.autoRenew')}{' '}
+                          <InfoTooltip text={t('mailSend.autoRenewHelp')} />
                         </Form.ControlLabel>
                         <SelectPicker
                           block
@@ -634,7 +637,9 @@ function MailSendPage() {
                           block
                           data={Object.values(PaymentPeriodicity).map(
                             value => ({
-                              label: value,
+                              label: t(
+                                `memberPlanList.paymentPeriodicity.${value}`
+                              ),
                               value,
                             })
                           )}

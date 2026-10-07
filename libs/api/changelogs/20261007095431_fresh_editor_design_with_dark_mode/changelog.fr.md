@@ -22,3 +22,19 @@ Les abonnements sont listés du plus récent au plus ancien, chacun marqué « A
 **Tableau de bord**
 
 La liste « Dernière activité » a été supprimée.
+
+**E-mails automatiques**
+
+La page est divisée en blocs : « Événements d'abonnement » et « Compte et connexion » sont côte à côte, l'un sous l'autre sur smartphone. La chronologie se lit de haut en bas, un jour par ligne. Sur la page d'un plan d'abonnement, chaque flux a son propre bloc.
+
+- **Plusieurs e-mails par jour :** « Ajouter un e-mail » ajoute d'autres e-mails à un jour.
+- **Retirer un e-mail :** la corbeille à côté d'un e-mail le retire. Si le jour reste vide, il disparaît aussi.
+- **Nombres d'abonnements corrects :** un flux ne compte que les abonnements de son propre plan. Le flux par défaut compte les abonnements du plan qu'aucun autre flux ne couvre – il affichait toujours 0 auparavant.
+
+**Plus clair et plus cohérent**
+
+- **Des explications partout :** un petit (i) à côté des champs et des réglages explique leur effet. Les boutons qui n'affichent qu'une icône indiquent leur fonction au survol.
+- **Une utilisation homogène :** les interrupteurs portent leur libellé à droite, les listes partagent la même colonne « Actions », et les cartes et champs ont partout les mêmes coins arrondis.
+- **Nouvel en-tête dans l'éditeur d'articles et de pages :** statut et dernier enregistrement à gauche, « Enregistrer » et « Publier » mis en avant à droite. L'en-tête reste visible pendant le défilement.
+- **Page Réseau :** les articles et les médias sont présentés dans deux cartes claires.
+- **Configurer les intégrations :** l’e-mail, le captcha et la synchronisation Mailchimp peuvent désormais être configurés dans l’éditeur s’ils n’existent pas encore. Il y en a toujours exactement un de chaque – il peut être modifié mais pas supprimé.

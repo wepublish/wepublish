@@ -102,5 +102,12 @@ export const createEditorTheme = (mode: ColorMode) =>
           },
         },
       },
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            borderRadius: 'var(--rs-radius-lg)',
+          },
+        },
+      },
     },
   });

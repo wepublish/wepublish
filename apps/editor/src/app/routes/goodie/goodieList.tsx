@@ -15,6 +15,8 @@ import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   IconButton,
+  IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -161,7 +163,10 @@ function GoodieList() {
             width={120}
             resizable
           >
-            <HeaderCell>{t('goodie.overview.availableStock')}</HeaderCell>
+            <HeaderCell>
+              {t('goodie.overview.availableStock')}{' '}
+              <InfoTooltip text={t('goodie.overview.availableStockInfo')} />
+            </HeaderCell>
 
             <RCell>
               {(rowData: RowDataType<FullGoodieFragment>) =>
@@ -185,22 +190,26 @@ function GoodieList() {
           </Column>
 
           <Column
+            width={100}
+            align="center"
             fixed="right"
-            width={50}
           >
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell>
               {(goodie: RowDataType<FullGoodieFragment>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() =>
-                    setGoodieToDelete(goodie as FullGoodieFragment)
-                  }
-                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    aria-label={t('delete')}
+                    onClick={() =>
+                      setGoodieToDelete(goodie as FullGoodieFragment)
+                    }
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

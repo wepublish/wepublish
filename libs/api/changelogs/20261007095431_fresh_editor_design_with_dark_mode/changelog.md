@@ -23,3 +23,19 @@ Subscriptions are listed with the newest first, each marked "Active" or "Expired
 **Dashboard**
 
 The "Latest Activity" list has been removed.
+
+**Automatic emails**
+
+The page is split into blocks: "Subscription events" and "Account & login" sit side by side, stacked on phones. The timeline runs top to bottom, one day per row. On a subscription plan's page, every flow has its own block.
+
+- **Several emails per day:** "Add email" adds more emails to a day.
+- **Remove an email:** The bin next to an email removes it. If the day is left empty, it disappears too.
+- **Correct subscription counts:** A flow only counts the subscriptions of its own plan. The default flow counts the plan's subscriptions that no other flow covers – it used to always show 0.
+
+**Easier to understand, more consistent**
+
+- **Explanations everywhere:** a small (i) next to fields and settings explains what they do. Buttons that only show an icon reveal their purpose on hover.
+- **Consistent controls:** toggles carry their label on the right, lists share the same «Actions» column, and cards and fields have the same rounded corners everywhere.
+- **New header in the article and page editor:** status and last save on the left, «Save» and «Publish» highlighted on the right. The header stays visible while you scroll.
+- **Network page:** articles and media sit in two tidy cards.
+- **Set up integrations:** mail, captcha and Mailchimp sync can now be set up in the editor when none exists yet. There is always exactly one of each – it can be changed but not deleted.

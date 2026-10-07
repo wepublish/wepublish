@@ -231,7 +231,10 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
   };
 
   return (
-    <Card variant="outlined">
+    <Card
+      variant="outlined"
+      sx={{ borderRadius: 'var(--rs-radius-lg)' }}
+    >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="name"
@@ -292,7 +295,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
                       key={target}
                       value={target}
                     >
-                      {target}
+                      {target === ExternalAppsTarget.Iframe ?
+                        t('externalAppForm.targetIframe')
+                      : t('externalAppForm.targetBlank')}
                     </MenuItem>
                   ))}
                 </Select>

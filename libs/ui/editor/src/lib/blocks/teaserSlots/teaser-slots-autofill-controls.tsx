@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Panel, Tag, Toggle } from 'rsuite';
 
+import { InfoTooltip } from '../../atoms/infoTooltip';
 import { TeaserSlotsAutofillDialog } from './teaser-slots-autofill-dialog';
 
 interface TeaserSlotsContorlsProps {
@@ -23,7 +24,7 @@ interface TeaserSlotsContorlsProps {
 
 const ControlsContainer = styled(Panel)`
   margin-bottom: 16px;
-  border-radius: 6px;
+  border-radius: var(--rs-radius-lg);
   background-color: var(--rs-bg-well);
   padding: 12px;
 `;
@@ -31,11 +32,13 @@ const ControlsContainer = styled(Panel)`
 const ControlsSection = styled('div')`
   align-items: center;
   display: flex;
-  gap: 15px;
+  gap: 16px;
 `;
 
-const ControlsLabel = styled.span`
-  margin-right: 8px;
+const ToggleRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const SummarySection = styled.div``;
@@ -89,29 +92,29 @@ export function TeaserSlotsAutofillControls({
   return (
     <ControlsContainer bordered>
       <ControlsSection>
-        <div>
-          <ControlsLabel>{t('blocks.teaserSlots.autoLoading')}</ControlsLabel>
+        <ToggleRow>
           <Toggle
             checked={config.enabled}
             onChange={handleToggleChange}
-            size="md"
+            label={
+              <>
+                {t('blocks.teaserSlots.autoLoadingToggle')}{' '}
+                <InfoTooltip text={t('blocks.teaserSlots.autoLoadingHelp')} />
+              </>
+            }
           />
-          <ControlsLabel style={{ marginLeft: '8px' }}>
-            {config.enabled ? 'Enabled' : 'Disabled'}
-          </ControlsLabel>
 
           {config.enabled && (
             <Button
               appearance="ghost"
               size="sm"
               onClick={() => setConfigDialogOpen(true)}
-              style={{ marginLeft: '8px' }}
             >
               <GearIcon style={{ marginRight: '4px' }} />
               {t('blocks.teaserSlots.configure')}
             </Button>
           )}
-        </div>
+        </ToggleRow>
         <SummarySection>
           {config.enabled ?
             <>

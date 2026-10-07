@@ -18,6 +18,7 @@ import {
   MailSendJobState,
   MailSendJobsDocument,
 } from '@wepublish/editor/api';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdMail, MdOutlineChevronRight } from 'react-icons/md';
@@ -65,6 +66,7 @@ const Stat = styled.div<{ tone: string }>`
   min-width: 110px;
   padding: 8px 12px;
   border-left: 3px solid ${({ tone }) => tone};
+  border-radius: var(--rs-radius-md);
   background-color: rgb(from var(--rs-text-primary) r g b / 0.02);
 `;
 
@@ -139,8 +141,8 @@ export function MailSendJobList({
               <TableCell width="24%">
                 <strong>{t('mailJobs.progress')}</strong>
               </TableCell>
-              <TableCell align="right">
-                <strong>{t('mailJobs.actions')}</strong>
+              <TableCell align="center">
+                <strong>{t('action')}</strong>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -176,10 +178,10 @@ export function MailSendJobList({
                       })}`}
                   </Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
                   <Stack
                     spacing={8}
-                    justifyContent="flex-end"
+                    justifyContent="center"
                   >
                     {canResume(job) && (
                       <ResumeJobButton
@@ -517,7 +519,8 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
                 <strong>{t('mailJobs.queue.sentAt')}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t('mailJobs.queue.attempts')}</strong>
+                <strong>{t('mailJobs.queue.attempts')}</strong>{' '}
+                <InfoTooltip text={t('mailJobs.queue.attemptsHelp')} />
               </TableCell>
               <TableCell>
                 <strong>{t('mailLog.error')}</strong>

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import {
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -37,7 +38,12 @@ export function Dashboard() {
       <DashboardNotifications />
 
       <RPanel
-        header={<h2>{t('dashboard.externalApps')}</h2>}
+        header={
+          <h2>
+            {t('dashboard.externalApps')}{' '}
+            <InfoTooltip text={t('dashboard.externalAppsInfo')} />
+          </h2>
+        }
         bordered
       >
         <ExternalAppsDashboard />
@@ -75,7 +81,10 @@ export function Dashboard() {
         header={
           <ListViewContainer>
             <ListViewHeader>
-              <h2>{t('dashboard.networkContent')}</h2>
+              <h2>
+                {t('dashboard.networkContent')}{' '}
+                <InfoTooltip text={t('dashboard.networkContentInfo')} />
+              </h2>
             </ListViewHeader>
 
             <ListViewActions>

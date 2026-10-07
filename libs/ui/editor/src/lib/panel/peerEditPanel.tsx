@@ -30,6 +30,7 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '../atoms';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { RichTextBlock, RichTextBlockValue } from '../blocks';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 
@@ -62,9 +63,10 @@ const ThemeColor = styled.div`
 const ThemeColorBox = styled.div<{ themeColor: string }>`
   width: 30px;
   height: 20px;
-  padding: 5px;
-  margin-left: 5px;
+  padding: 4px;
+  margin-left: 4px;
   border: 1px solid var(--rs-border-primary);
+  border-radius: var(--rs-radius-sm);
   background-color: ${({ themeColor }) => themeColor};
 `;
 
@@ -297,7 +299,10 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
               </Group>
 
               <Group controlId="url">
-                <Label>{toggleRequiredLabel(t('peerList.panels.URL'))}</Label>
+                <Label>
+                  {toggleRequiredLabel(t('peerList.panels.URL'))}{' '}
+                  <InfoTooltip text={t('peerList.panels.urlInfo')} />
+                </Label>
                 <Control
                   value={urlString}
                   name="url"
@@ -309,7 +314,8 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
 
               <Group controlId="token">
                 <Label>
-                  {toggleRequiredLabel(t('peerList.panels.token'), !id)}
+                  {toggleRequiredLabel(t('peerList.panels.token'), !id)}{' '}
+                  <InfoTooltip text={t('peerList.panels.tokenInfo')} />
                 </Label>
 
                 <Control

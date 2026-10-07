@@ -15,7 +15,7 @@ import {
   WebsiteRemoteFontInput,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
+import { humanizeError, IconButtonTooltip } from '@wepublish/ui/editor';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdAdd, MdArrowBack, MdDelete } from 'react-icons/md';
@@ -179,13 +179,16 @@ export const WebsiteFonts = () => {
               />
             </Box>
 
-            <IconButton
-              onClick={() => remove(index)}
-              size="small"
-              color="error"
-            >
-              <MdDelete />
-            </IconButton>
+            <IconButtonTooltip caption={t('delete')}>
+              <IconButton
+                onClick={() => remove(index)}
+                size="small"
+                color="error"
+                aria-label={t('delete')}
+              >
+                <MdDelete />
+              </IconButton>
+            </IconButtonTooltip>
           </Stack>
         ))}
       </Stack>

@@ -13,6 +13,7 @@ import {
 import { Drawer, Dropdown, IconButton } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { PlaceholderInput } from '../atoms/placeholderInput';
 import { TypographicTextArea } from '../atoms/typographicTextArea';
 import { GalleryListEditPanel } from '../panel/galleryListEditPanel';
@@ -54,11 +55,11 @@ const IsNew = styled.p`
 `;
 
 const LeftArrow = styled(IconButton)`
-  margin-right: 5px;
+  margin-right: 4px;
 `;
 
 const RightArrow = styled(IconButton)`
-  margin-right: 10px;
+  margin-right: 8px;
 `;
 
 export function ImageGalleryBlock({
@@ -121,41 +122,64 @@ export function ImageGalleryBlock({
     <>
       <Block>
         <EditIconWrapper>
-          <IconButton
-            icon={<MdEdit />}
-            onClick={() => setGalleryListEditModalOpen(true)}
-            disabled={disabled}
-          />
+          <IconButtonTooltip
+            caption={t('blocks.imageGallery.panels.editGallery')}
+          >
+            <IconButton
+              aria-label={t('blocks.imageGallery.panels.editGallery')}
+              icon={<MdEdit />}
+              onClick={() => setGalleryListEditModalOpen(true)}
+              disabled={disabled}
+            />
+          </IconButtonTooltip>
         </EditIconWrapper>
         <IsNewWrapper>
           <IsNew>
             {index + 1} / {Math.max(index + 1, value.images.length)}{' '}
-            {isNewIndex ? '(New)' : ''}
+            {isNewIndex ? t('blocks.imageGallery.overview.new') : ''}
           </IsNew>
         </IsNewWrapper>
         <LeftArrowWrapper>
-          <LeftArrow
-            icon={<MdArrowLeft />}
-            onClick={() => setIndex(index => index - 1)}
-            disabled={disabled || !hasPrevious}
-          />
-          <RightArrow
-            icon={<MdArrowRight />}
-            onClick={() => setIndex(index => index + 1)}
-            disabled={disabled || !hasNext}
-          />
-          <IconButton
-            icon={<MdAddCircle />}
-            onClick={() => setIndex(value.images.length)}
-            disabled={disabled || isNewIndex}
-          />
+          <IconButtonTooltip
+            caption={t('blocks.imageGallery.overview.previousImage')}
+          >
+            <LeftArrow
+              aria-label={t('blocks.imageGallery.overview.previousImage')}
+              icon={<MdArrowLeft />}
+              onClick={() => setIndex(index => index - 1)}
+              disabled={disabled || !hasPrevious}
+            />
+          </IconButtonTooltip>
+          <IconButtonTooltip
+            caption={t('blocks.imageGallery.overview.nextImage')}
+          >
+            <RightArrow
+              aria-label={t('blocks.imageGallery.overview.nextImage')}
+              icon={<MdArrowRight />}
+              onClick={() => setIndex(index => index + 1)}
+              disabled={disabled || !hasNext}
+            />
+          </IconButtonTooltip>
+          <IconButtonTooltip
+            caption={t('blocks.imageGallery.overview.addImage')}
+          >
+            <IconButton
+              aria-label={t('blocks.imageGallery.overview.addImage')}
+              icon={<MdAddCircle />}
+              onClick={() => setIndex(value.images.length)}
+              disabled={disabled || isNewIndex}
+            />
+          </IconButtonTooltip>
         </LeftArrowWrapper>
       </Block>
       <Panel
         bordered
         bodyFill
       >
-        <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
+        <PlaceholderInput
+          onAddClick={() => setChooseModalOpen(true)}
+          addLabel={t('blocks.image.overview.chooseImage')}
+        >
           {image && (
             <ImagePanel image={image}>
               <Dropdown
@@ -170,6 +194,8 @@ export function ImageGalleryBlock({
                     circle
                     appearance="subtle"
                     data-on-media
+                    title={t('chooseEditImage.imageOptions')}
+                    aria-label={t('chooseEditImage.imageOptions')}
                   />
                 )}
               >

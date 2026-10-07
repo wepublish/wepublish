@@ -100,6 +100,7 @@ export function CopyPollAnswerVoteUrlButton({
       }
     >
       <IconButton
+        aria-label={t('pollAnswer.copyVoteUrl')}
         icon={<MdContentCopy />}
         circle
         size="xs"

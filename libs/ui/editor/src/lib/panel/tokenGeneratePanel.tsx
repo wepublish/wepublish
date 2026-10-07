@@ -17,7 +17,7 @@ import { getOperationNameFromDocument } from '../utility';
 import { humanizeError } from '../humanizeError';
 
 const Message = styled(RMessage)`
-  margin-top: 5px;
+  margin-top: 4px;
 `;
 
 export interface TokenGeneratePanelProps {

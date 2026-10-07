@@ -33,7 +33,8 @@ const NavigationChildren = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
-  width: 100%;
+  margin: calc(-1 * var(--wep-page-padding-top, 0px))
+    calc(-1 * var(--wep-page-padding-x, 0px)) 0;
 `;
 
 const EditorTemplateWrapper = styled.div`

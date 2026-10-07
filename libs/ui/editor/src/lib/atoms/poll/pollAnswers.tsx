@@ -18,6 +18,7 @@ import {
   toaster,
 } from 'rsuite';
 import { humanizeError } from '../../humanizeError';
+import { IconButtonTooltip } from '../iconButtonTooltip';
 
 type PollAnswerFragment = FullPollFragment['answers'][number];
 type PollExternalVoteFragment =
@@ -267,17 +268,20 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
             />
           </Badge>
 
-          <IconButton
-            icon={<MdDelete />}
-            circle
-            size="sm"
-            appearance="ghost"
-            color="red"
-            onClick={() => {
-              setAnswerToDelete(answer);
-              setModalOpen(true);
-            }}
-          />
+          <IconButtonTooltip caption={t('delete')}>
+            <IconButton
+              aria-label={t('delete')}
+              icon={<MdDelete />}
+              circle
+              size="sm"
+              appearance="ghost"
+              color="red"
+              onClick={() => {
+                setAnswerToDelete(answer);
+                setModalOpen(true);
+              }}
+            />
+          </IconButtonTooltip>
         </Grid>
       ))}
 

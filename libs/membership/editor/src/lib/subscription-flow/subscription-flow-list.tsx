@@ -1,15 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  tableCellClasses,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Typography } from '@mui/material';
 import {
   CreateSubscriptionFlowDocument,
   CreateSubscriptionIntervalDocument,
@@ -20,6 +10,7 @@ import {
   MailTemplateDocument,
   MemberPlanListDocument,
   SubscriptionEvent,
+  SubscriptionFlowFragment,
   SubscriptionFlowsDocument,
   SubscriptionIntervalFragment,
   TinyMailTemplateFragment,
@@ -30,23 +21,22 @@ import {
   createCheckedPermissionComponent,
   PermissionControl,
 } from '@wepublish/ui/editor';
-import { createContext, JSX, useEffect, useMemo, useState } from 'react';
+import { createContext, JSX, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdOutlineClose, MdOutlineNoteAdd, MdTune } from 'react-icons/md';
+import {
+  MdAddCircleOutline,
+  MdAltRoute,
+  MdCelebration,
+  MdTune,
+} from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { Loader } from 'rsuite';
 import { DEFAULT_MUTATION_OPTIONS, showErrors, useShowErrors } from '../common';
-import { EventHeadCell, EventTableCell } from '../mail-settings-layout';
+import { MailBlock, MailBlocks } from '../mail-settings-layout';
 import { SystemMailSection } from '../system-mail/system-mail-section';
-import { DeleteSubscriptionFlow } from './delete-subscription-flow';
-import { EventsBody } from './events/events-body';
-import { EventsHead } from './events/events-head';
-import { FilterBody } from './filter/filter-body';
-import { FilterHead } from './filter/filter-head';
+import { FlowFilters } from './filter/flow-filters';
+import { FlowBlock } from './flow-block';
 import { SubscriptionClientContext } from './graphql-client-context';
-import { SubscriptionFlowHeadline } from './subscription-flow-headline';
-import { TimelineBody } from './timeline/timeline-body';
-import { TimelineHead } from './timeline/timeline-head';
 import styled from '@emotion/styled';
 
 export const MailTemplatesContext = createContext<TinyMailTemplateFragment[]>(
@@ -106,27 +96,9 @@ const PageIntro = styled.div`
   }
 `;
 
-const FlowTableContainer = styled(TableContainer)`
-  flex: 1 1 0;
-  min-height: 320px;
-  max-width: 100%;
-  margin-top: 16px;
-  overflow: auto;
-`;
-
 export interface IntervalColoring {
   accent: string;
 }
-
-const eventIcons: Record<string, JSX.Element> = {
-  [SubscriptionEvent.InvoiceCreation]: <MdOutlineNoteAdd size={16} />,
-  [SubscriptionEvent.DeactivationUnpaid]: <MdOutlineClose size={16} />,
-};
-
-const eventColors: Record<string, IntervalColoring> = {
-  [SubscriptionEvent.InvoiceCreation]: { accent: 'var(--rs-green-500)' },
-  [SubscriptionEvent.DeactivationUnpaid]: { accent: 'var(--rs-orange-500)' },
-};
 
 export interface DecoratedSubscriptionInterval<
   T extends SubscriptionIntervalFragment,
@@ -138,20 +110,19 @@ export interface DecoratedSubscriptionInterval<
   color: IntervalColoring;
 }
 
-interface SubscriptionFlowTableProps {
+interface SubscriptionFlowBlocksProps {
   memberPlanId?: string;
   defaultFlowOnly: boolean;
   memberPlan?: FullMemberPlanFragment;
 }
 
-function SubscriptionFlowTable({
+function SubscriptionFlowBlocks({
   memberPlanId,
   defaultFlowOnly,
   memberPlan,
-}: SubscriptionFlowTableProps) {
+}: SubscriptionFlowBlocksProps) {
   const { t } = useTranslation();
-
-  const [newDay, setNewDay] = useState<number | undefined>(undefined);
+  const countedMemberPlanId = defaultFlowOnly ? undefined : memberPlanId;
 
   const {
     data: subscriptionFlows,
@@ -161,7 +132,7 @@ function SubscriptionFlowTable({
   } = useQuery(SubscriptionFlowsDocument, {
     variables: {
       defaultFlowOnly,
-      memberPlanId,
+      memberPlanId: countedMemberPlanId,
     },
   });
   useShowErrors(subscriptionFlowsError);
@@ -188,18 +159,22 @@ function SubscriptionFlowTable({
   }, [paymentMethodsError]);
 
   // Mutation methods are later passed to the SubscriptionClientContext, so they can reuse the same client everywhere. This makes the GraphQL cache work across all requests.
+  const mutationOptions = {
+    ...DEFAULT_MUTATION_OPTIONS(t),
+    variables: { memberPlanId: countedMemberPlanId },
+  };
+
   const [createSubscriptionInterval] = useMutation(
     CreateSubscriptionIntervalDocument,
-    DEFAULT_MUTATION_OPTIONS(t)
+    mutationOptions
   );
-
   const [updateSubscriptionInterval] = useMutation(
     UpdateSubscriptionIntervalDocument,
-    DEFAULT_MUTATION_OPTIONS(t)
+    mutationOptions
   );
   const [deleteSubscriptionInterval] = useMutation(
     DeleteSubscriptionIntervalDocument,
-    DEFAULT_MUTATION_OPTIONS(t)
+    mutationOptions
   );
   const [createSubscriptionFlow] = useMutation(CreateSubscriptionFlowDocument, {
     ...DEFAULT_MUTATION_OPTIONS(t),
@@ -207,27 +182,12 @@ function SubscriptionFlowTable({
   });
   const [updateSubscriptionFlow] = useMutation(
     UpdateSubscriptionFlowDocument,
-    DEFAULT_MUTATION_OPTIONS(t)
+    mutationOptions
   );
   const [deleteSubscriptionFlow] = useMutation(DeleteSubscriptionFlowDocument, {
-    ...DEFAULT_MUTATION_OPTIONS(t),
+    ...mutationOptions,
     onCompleted: () => refetchSubscriptionFlows(),
   });
-
-  async function intervalDragEnd(dragEvent: DragEndEvent) {
-    const interval: DecoratedSubscriptionInterval<NonUserActionInterval> =
-      dragEvent.active.data.current
-        ?.decoratedSubscriptionInterval as DecoratedSubscriptionInterval<NonUserActionInterval>;
-    const daysAwayFromEnding = dragEvent.over?.data.current?.dayIndex;
-
-    await updateSubscriptionInterval({
-      variables: {
-        id: interval.object.id,
-        daysAwayFromEnding,
-        mailTemplateId: interval.object.mailTemplate?.id,
-      },
-    });
-  }
 
   const loading = useMemo(
     () => loadingSubscriptionFlows || loadingMailTemplates,
@@ -248,183 +208,139 @@ function SubscriptionFlowTable({
     });
   }, [t]);
 
-  const intervals: SubscriptionIntervalFragment[] = useMemo(() => {
-    if (!subscriptionFlows) {
-      return [];
-    }
-
-    let intervals: SubscriptionIntervalFragment[] = [];
-    for (const flow of subscriptionFlows.subscriptionFlows) {
-      intervals = intervals.concat(flow.intervals);
-    }
-
-    return intervals;
-  }, [subscriptionFlows]);
-
-  const days = useMemo(() => {
-    // Take existing intervals, maybe insert new day, drop all empty days, always show zero day and sort ascending
-    const days = intervals
-      .map(i => i.daysAwayFromEnding)
-      .concat([newDay ?? null, 0])
-      .filter((interval): interval is number => interval != null)
-      .sort((a, b) => a - b);
-
-    return days.filter((value, index, array) => array.indexOf(value) === index);
-  }, [intervals, newDay]);
-
-  // Add a separation border after every table section (filters | user actions | timeline | actions)
-  const filterCount = defaultFlowOnly ? 0 : 4;
-  const userActionCount = userActionEvents.length;
-  const nonUserActionCount = days.length;
-
-  const SplitTableRow = styled(TableRow)(({ theme }) => ({
-    [`.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.action.hover,
-    },
-
-    [`.${tableCellClasses.head}:nth-of-type(${filterCount}), .${
-      tableCellClasses.head
-    }:nth-of-type(${filterCount + userActionCount}), .${tableCellClasses.head}:nth-of-type(${
-      filterCount + userActionCount + nonUserActionCount
-    })`]: {
-      borderRight: `1px solid ${theme.palette.divider}`,
-    },
-
-    [`.${tableCellClasses.body}:nth-of-type(${filterCount}), .${
-      tableCellClasses.body
-    }:nth-of-type(${filterCount + userActionCount}), .${tableCellClasses.body}:nth-of-type(${
-      filterCount + userActionCount + nonUserActionCount
-    })`]: {
-      borderRight: `1px solid ${theme.palette.divider}`,
-    },
-  }));
+  const knownFlowIds = useRef<Set<string>>(undefined);
 
   if (loading || !subscriptionFlows) {
     return <Loader center />;
   }
 
+  knownFlowIds.current ??= new Set(
+    subscriptionFlows.subscriptionFlows.map(flow => flow.id)
+  );
+
+  const isNewFlow = (flow: SubscriptionFlowFragment) =>
+    !knownFlowIds.current?.has(flow.id);
+
+  const filterSummary = (flow: SubscriptionFlowFragment) =>
+    [
+      flow.paymentMethods.map(paymentMethod => paymentMethod.name).join(', '),
+      flow.periodicities
+        .map(periodicity =>
+          t(`memberPlanList.paymentPeriodicity.${periodicity}`)
+        )
+        .join(', '),
+      flow.autoRenewal
+        .map(autoRenewal => t(`subscriptionFlow.booleanFilter.${autoRenewal}`))
+        .join(', '),
+    ]
+      .filter(Boolean)
+      .join(' · ');
+
+  let flowNumber = 0;
+
   return (
-    <FlowTableContainer>
-      <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
-        <SubscriptionClientContext.Provider
-          value={{
-            createSubscriptionInterval,
-            updateSubscriptionInterval,
-            deleteSubscriptionInterval,
-            createSubscriptionFlow,
-            updateSubscriptionFlow,
-            deleteSubscriptionFlow,
-          }}
-        >
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <SubscriptionFlowHeadline
-                  defaultFlowOnly={defaultFlowOnly}
-                  userActionCount={userActionCount}
-                  filterCount={filterCount}
-                  nonUserActionCount={nonUserActionCount}
-                />
-              </TableRow>
+    <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
+      <SubscriptionClientContext.Provider
+        value={{
+          createSubscriptionInterval,
+          updateSubscriptionInterval,
+          deleteSubscriptionInterval,
+          createSubscriptionFlow,
+          updateSubscriptionFlow,
+          deleteSubscriptionFlow,
+        }}
+      >
+        {subscriptionFlows.subscriptionFlows.map(subscriptionFlow => {
+          if (defaultFlowOnly) {
+            return (
+              <FlowBlock
+                key={subscriptionFlow.id}
+                subscriptionFlow={subscriptionFlow}
+                userActionEvents={userActionEvents}
+                title={t('subscriptionFlow.subscriptionEvents')}
+                icon={<MdCelebration size={20} />}
+                description={t(
+                  'subscriptionFlow.subscriptionEventsDescription'
+                )}
+                example={t('subscriptionFlow.subscriptionEventsExample')}
+              />
+            );
+          }
 
-              <SplitTableRow>
-                {!defaultFlowOnly && <FilterHead />}
+          if (subscriptionFlow.default) {
+            return (
+              <FlowBlock
+                key={subscriptionFlow.id}
+                subscriptionFlow={subscriptionFlow}
+                userActionEvents={userActionEvents}
+                title={t('subscriptionFlow.defaultFlow')}
+                icon={<MdAltRoute size={20} />}
+                description={t('subscriptionFlow.defaultFlowDescription')}
+                showAffected
+                groupEvents
+                collapsible
+                defaultExpanded={isNewFlow(subscriptionFlow)}
+              />
+            );
+          }
 
-                {userActionEvents.map(userActionEvent => (
-                  <EventTableCell
-                    key={userActionEvent.subscriptionEventKey}
-                    align="center"
-                  >
-                    <EventHeadCell
-                      title={userActionEvent.title}
-                      hint={userActionEvent.hint}
-                      description={userActionEvent.description}
-                      example={userActionEvent.example}
-                    />
-                  </EventTableCell>
-                ))}
+          flowNumber += 1;
 
-                <TimelineHead
-                  days={days}
-                  intervals={intervals}
-                />
-                <EventsHead setNewDay={setNewDay} />
-              </SplitTableRow>
-            </TableHead>
+          return (
+            <FlowBlock
+              key={subscriptionFlow.id}
+              subscriptionFlow={subscriptionFlow}
+              userActionEvents={userActionEvents}
+              title={t('subscriptionFlow.flowNumber', { number: flowNumber })}
+              icon={<MdAltRoute size={20} />}
+              summary={filterSummary(subscriptionFlow)}
+              collapsible
+              defaultExpanded={isNewFlow(subscriptionFlow)}
+              filters={
+                memberPlan && (
+                  <FlowFilters
+                    memberPlan={memberPlan}
+                    subscriptionFlow={subscriptionFlow}
+                    paymentMethods={paymentMethods}
+                  />
+                )
+              }
+              showAffected
+              groupEvents
+            />
+          );
+        })}
 
-            <TableBody>
-              {subscriptionFlows.subscriptionFlows.map(subscriptionFlow => (
-                <SplitTableRow key={subscriptionFlow.id}>
-                  <DndContext
-                    onDragEnd={event => intervalDragEnd(event)}
-                    accessibility={{ container: document.body }}
-                  >
-                    {memberPlan && !defaultFlowOnly && (
-                      <FilterBody
-                        memberPlan={memberPlan}
-                        subscriptionFlow={subscriptionFlow}
-                        paymentMethods={paymentMethods}
-                      />
-                    )}
-
-                    <EventsBody
-                      subscriptionFlow={subscriptionFlow}
-                      userActionEvents={userActionEvents}
-                      eventIcons={eventIcons}
-                      eventColors={eventColors}
-                    />
-
-                    <TimelineBody
-                      subscriptionFlow={subscriptionFlow}
-                      days={days}
-                      eventIcons={eventIcons}
-                      eventColors={eventColors}
-                    />
-
-                    <TableCell align="center">
-                      {!subscriptionFlow.default && (
-                        <DeleteSubscriptionFlow
-                          subscriptionFlow={subscriptionFlow}
-                        />
-                      )}
-                    </TableCell>
-                  </DndContext>
-                </SplitTableRow>
-              ))}
-            </TableBody>
-
-            {!defaultFlowOnly && (
-              <PermissionControl
-                showRejectionMessage={false}
-                qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION_FLOW']}
-              >
-                <TableBody>
-                  <SplitTableRow>
-                    {memberPlan && (
-                      <FilterBody
-                        memberPlan={memberPlan}
-                        createNewFlow
-                        paymentMethods={paymentMethods}
-                        actionColSpan={userActionCount + nonUserActionCount + 1}
-                      />
-                    )}
-                  </SplitTableRow>
-                </TableBody>
-              </PermissionControl>
-            )}
-          </Table>
-        </SubscriptionClientContext.Provider>
-      </MailTemplatesContext.Provider>
-    </FlowTableContainer>
+        {!defaultFlowOnly && memberPlan && (
+          <PermissionControl
+            showRejectionMessage={false}
+            qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION_FLOW']}
+          >
+            <MailBlock
+              title={t('subscriptionFlow.newFlow')}
+              icon={<MdAddCircleOutline size={20} />}
+              description={t('subscriptionFlow.filtersDescription')}
+              example={t('subscriptionFlow.filtersExample')}
+            >
+              <FlowFilters
+                memberPlan={memberPlan}
+                createNewFlow
+                paymentMethods={paymentMethods}
+              />
+            </MailBlock>
+          </PermissionControl>
+        )}
+      </SubscriptionClientContext.Provider>
+    </MailTemplatesContext.Provider>
   );
 }
 
-const CheckedSubscriptionFlowTable = createCheckedPermissionComponent([
+const CheckedSubscriptionFlowBlocks = createCheckedPermissionComponent([
   'CAN_GET_SUBSCRIPTION_FLOWS',
   'CAN_UPDATE_SUBSCRIPTION_FLOW',
   'CAN_CREATE_SUBSCRIPTION_FLOW',
   'CAN_DELETE_SUBSCRIPTION_FLOW',
-])(SubscriptionFlowTable);
+])(SubscriptionFlowBlocks);
 
 /**
  * All mails the system sends on its own: the account mails and, per member plan,
@@ -468,13 +384,15 @@ function SubscriptionFlowList() {
         </Typography>
       </PageIntro>
 
-      {defaultFlowOnly && <SystemMailSection />}
+      <MailBlocks split={defaultFlowOnly}>
+        <CheckedSubscriptionFlowBlocks
+          memberPlanId={memberPlanId}
+          defaultFlowOnly={defaultFlowOnly}
+          memberPlan={memberPlan}
+        />
 
-      <CheckedSubscriptionFlowTable
-        memberPlanId={memberPlanId}
-        defaultFlowOnly={defaultFlowOnly}
-        memberPlan={memberPlan}
-      />
+        {defaultFlowOnly && <SystemMailSection />}
+      </MailBlocks>
     </>
   );
 }

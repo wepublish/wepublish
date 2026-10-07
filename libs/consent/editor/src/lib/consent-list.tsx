@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   humanizeError,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -18,17 +19,6 @@ import {
   FullConsentFragment,
 } from '@wepublish/editor/api';
 import { RowDataType } from 'rsuite-table';
-
-const consentValues = [
-  {
-    value: true,
-    label: 'Accepted',
-  },
-  {
-    value: false,
-    label: 'Rejected',
-  },
-];
 
 const { Column, HeaderCell, Cell } = RTable;
 
@@ -141,30 +131,36 @@ export function ConsentList(props: ConsentListProps) {
             <Cell>
               {(rowData: RowDataType<FullConsentFragment>) => (
                 <span>
-                  {
-                    consentValues.find(v => v.value === rowData.defaultValue)
-                      ?.label
-                  }
+                  {rowData.defaultValue ?
+                    t('consents.accepted')
+                  : t('consents.rejected')}
                 </span>
               )}
             </Cell>
           </Column>
 
-          <Column width={75}>
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
+          <Column
+            width={100}
+            align="center"
+            fixed="right"
+          >
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <Cell
-              align={'center'}
-              style={{ padding: '5px 0' }}
+              align="center"
+              style={{ padding: '6px 0' }}
             >
               {(rowData: RowDataType<FullConsentFragment>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  color="red"
-                  appearance="ghost"
-                  circle
-                  size="sm"
-                  onClick={() => onDeleteConsent(rowData.id)}
-                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    icon={<MdDelete />}
+                    color="red"
+                    appearance="ghost"
+                    circle
+                    size="sm"
+                    onClick={() => onDeleteConsent(rowData.id)}
+                  />
+                </IconButtonTooltip>
               )}
             </Cell>
           </Column>

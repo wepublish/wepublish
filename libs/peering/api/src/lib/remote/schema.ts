@@ -2608,6 +2608,8 @@ export type Mutation = {
   createBlockStyle: BlockStyle;
   /** Creates a new block template. */
   createBlockTemplate: BlockTemplate;
+  /** Sets up the challenge provider. Only possible while none is configured. */
+  createChallengeProviderSetting: SettingChallengeProvider;
   /** Creates a comment for any user */
   createComment: Comment;
   /**
@@ -2633,6 +2635,8 @@ export type Mutation = {
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Sets up the mail provider. Only possible while none is configured. */
+  createMailProviderSetting: SettingMailProvider;
   /** Start a background job sending a template to a filtered audience */
   createMailSendJob: MailSendJobModel;
   /** Create a new mail template */
@@ -2671,6 +2675,8 @@ export type Mutation = {
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Sets up the sync provider. Only possible while none is configured. */
+  createSyncProviderSetting: SettingSyncProvider;
   /** Creates a new tag. */
   createTag: Tag;
   /** Creates a token and returns it's secret once. */
@@ -3112,6 +3118,15 @@ export type MutationCreateBlockTemplateArgs = {
 };
 
 
+export type MutationCreateChallengeProviderSettingArgs = {
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  secret?: InputMaybe<Scalars['String']['input']>;
+  siteKey?: InputMaybe<Scalars['String']['input']>;
+  type: ChallengeProviderType;
+};
+
+
 export type MutationCreateCommentArgs = {
   itemID: Scalars['String']['input'];
   itemType: CommentItemType;
@@ -3194,6 +3209,25 @@ export type MutationCreateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']['input']>;
   scheduledDeactivationAt: Scalars['DateTime']['input'];
   subscriptionID?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateMailProviderSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']['input']>;
+  fromAddress?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  mailchimp_baseURL?: InputMaybe<Scalars['String']['input']>;
+  mailgun_baseDomain?: InputMaybe<Scalars['String']['input']>;
+  mailgun_mailDomain?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  replyToAddress?: InputMaybe<Scalars['String']['input']>;
+  slack_webhookURL?: InputMaybe<Scalars['String']['input']>;
+  smtp_host?: InputMaybe<Scalars['String']['input']>;
+  smtp_port?: InputMaybe<Scalars['Int']['input']>;
+  smtp_secure?: InputMaybe<Scalars['Boolean']['input']>;
+  smtp_user?: InputMaybe<Scalars['String']['input']>;
+  type: MailProviderType;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3402,6 +3436,20 @@ export type MutationCreateSubscriptionIntervalArgs = {
   event: SubscriptionEvent;
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
   subscriptionFlowId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateSyncProviderSettingArgs = {
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['String']['input'];
+  mailchimp_apiKey?: InputMaybe<Scalars['String']['input']>;
+  mailchimp_defaultInterestGroupIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  mailchimp_extensions?: InputMaybe<Scalars['JSONObject']['input']>;
+  mailchimp_interestGroupMappings?: InputMaybe<Array<Scalars['JSONObject']['input']>>;
+  mailchimp_listId?: InputMaybe<Scalars['String']['input']>;
+  mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']['input']>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  type: SyncProviderType;
 };
 
 
@@ -7128,6 +7176,11 @@ export type SubscriptionFlowModel = {
   numberOfSubscriptions: Scalars['Int']['output'];
   paymentMethods: Array<PaymentMethod>;
   periodicities: Array<PaymentPeriodicity>;
+};
+
+
+export type SubscriptionFlowModelNumberOfSubscriptionsArgs = {
+  memberPlanId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SubscriptionInterval = {

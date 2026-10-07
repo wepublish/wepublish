@@ -16,6 +16,7 @@ import {
 } from 'rsuite';
 
 import { BlockMapType, BlockProps } from '../atoms/blockList';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { ConfirmActionModal } from '../atoms/notification/confirmActionModal';
 import { BlockMap } from './blockMap';
 import { blockForQueryBlock, BlockTemplateBlockValue } from './types';
@@ -117,13 +118,16 @@ export const BlockTemplateBlock = ({
         />
 
         <ButtonToolbar>
-          <IconButton
-            icon={<MdRefresh />}
-            onClick={event => {
-              refetch();
-              event.preventDefault();
-            }}
-          />
+          <IconButtonTooltip caption={t('blocks.blockTemplate.reload')}>
+            <IconButton
+              aria-label={t('blocks.blockTemplate.reload')}
+              icon={<MdRefresh />}
+              onClick={event => {
+                refetch();
+                event.preventDefault();
+              }}
+            />
+          </IconButtonTooltip>
           <IconButton
             icon={<MdEdit />}
             disabled={!selectedTemplate}

@@ -13,8 +13,8 @@ export enum InfoColor {
 }
 
 const Message = styled.div<{ backgroundColor: InfoColor }>`
-  border-radius: 8px;
-  padding: 0px 6px;
+  border-radius: var(--rs-radius-md);
+  padding: 0px 8px;
   background-color: ${({ backgroundColor }) => backgroundColor};
 `;
 

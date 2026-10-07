@@ -17,6 +17,7 @@ import {
   SyncMailLogStatesDocument,
 } from '@wepublish/editor/api';
 import styled from '@emotion/styled';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFilterList, MdSync } from 'react-icons/md';
@@ -58,10 +59,12 @@ const FilterGrid = styled.div`
 
 function FilterField({
   label,
+  info,
   hint,
   children,
 }: {
   label: string;
+  info?: string;
   hint?: string;
   children: ReactNode;
 }) {
@@ -75,6 +78,12 @@ function FilterField({
         }}
       >
         {label}
+        {info && (
+          <>
+            {' '}
+            <InfoTooltip text={info} />
+          </>
+        )}
       </Typography>
       {children}
       {hint && (
@@ -255,16 +264,19 @@ export function MailLogTable() {
                 appearance="ghost"
                 loading={syncing}
                 onClick={runSync}
-                title={t('mailLog.sync.hint')}
               >
                 <MdSync /> {t('mailLog.sync.action')}
               </Button>
+              <InfoTooltip text={t('mailLog.sync.hint')} />
             </Stack>
           </Stack>
         }
       >
         <FilterGrid>
-          <FilterField label={t('mailLog.filter.job')}>
+          <FilterField
+            label={t('mailLog.filter.job')}
+            info={t('mailLog.filter.jobHelp')}
+          >
             <SelectPicker
               block
               data={jobOptions}

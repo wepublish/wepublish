@@ -85,7 +85,7 @@ export function EditUserPassword({
           closable
           duration={8000}
         >
-          {t('userList.panel.sendWebsiteLoginFailureMessage', { error })}
+          {t('userCreateOrEditView.sendWebsiteLoginFailureMessage', { error })}
         </Message>
       );
     }

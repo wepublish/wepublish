@@ -180,7 +180,7 @@ const Card = styled.div<{ isCurrent: boolean }>`
   border: 1px solid
     ${({ isCurrent, theme }) =>
       isCurrent ? theme.palette.primary.main : theme.palette.divider};
-  border-radius: 8px;
+  border-radius: var(--rs-radius-md);
   padding: 12px 14px;
   background: ${({ theme }) => theme.palette.background.paper};
   transition: border-color 0.15s;
@@ -334,7 +334,10 @@ export function VersionHistory({
           </Box>
 
           <Tooltip title={t('versionHistory.close')}>
-            <IconButton onClick={onClose}>
+            <IconButton
+              aria-label={t('versionHistory.close')}
+              onClick={onClose}
+            >
               <MdClose />
             </IconButton>
           </Tooltip>

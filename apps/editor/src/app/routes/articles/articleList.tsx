@@ -315,7 +315,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('articles.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <IconButtonCell>
               {(rowData: RowDataType<FullArticleFragment>) => (
                 <>
@@ -326,6 +326,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                       caption={t('articleEditor.overview.unpublish')}
                     >
                       <IconButton
+                        aria-label={t('articleEditor.overview.unpublish')}
                         icon={<MdUnpublished />}
                         circle
                         disabled={!(rowData.published || rowData.pending)}
@@ -346,6 +347,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                       caption={t('articleEditor.overview.duplicate')}
                     >
                       <IconButton
+                        aria-label={t('articleEditor.overview.duplicate')}
                         icon={<MdContentCopy />}
                         circle
                         size="sm"
@@ -365,6 +367,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                       caption={t('articleEditor.overview.createComment')}
                     >
                       <IconButton
+                        aria-label={t('articleEditor.overview.createComment')}
                         icon={<MdComment />}
                         circle
                         size="sm"
@@ -390,6 +393,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                   >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
+                        aria-label={t('delete')}
                         icon={<MdDelete />}
                         circle
                         size="sm"

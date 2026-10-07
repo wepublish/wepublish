@@ -60,7 +60,7 @@ export const StatusBadge = styled.div<StatusBadgeProps>`
   font-size: 0.75em;
   font-weight: 600;
   text-align: center;
-  border-radius: 15px;
+  border-radius: 999px;
   padding: 2px 8px;
   background-color: ${props => StateColor[statusOf(props.states)]};
   color: ${props => `var(--wep-state-${statusOf(props.states)}-text, inherit)`};
@@ -85,7 +85,7 @@ export const IconButton = styled(RIconButton)`
 `;
 
 const StyledTable = styled(RTable)`
-  height: 100% !important;
+  ${({ autoHeight }) => (autoHeight ? '' : 'height: 100% !important;')}
 `;
 
 export function Table({

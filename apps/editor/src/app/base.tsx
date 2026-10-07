@@ -388,8 +388,10 @@ const MobileBrand = styled(Brand)`
 `;
 
 const ChildrenContainer = styled(Container)`
+  --wep-page-padding-top: 32px;
+  --wep-page-padding-x: 32px;
   margin: 8px 8px 8px 0;
-  padding: 32px 32px 40px;
+  padding: var(--wep-page-padding-top) var(--wep-page-padding-x) 40px;
   overflow-y: auto;
   max-width: 100%;
   background-color: var(--wep-content-bg);
@@ -398,8 +400,10 @@ const ChildrenContainer = styled(Container)`
   box-shadow: var(--wep-surface-shadow);
 
   ${mobile} {
+    --wep-page-padding-top: 20px;
+    --wep-page-padding-x: 16px;
     margin: 0;
-    padding: 20px 16px 32px;
+    padding: var(--wep-page-padding-top) var(--wep-page-padding-x) 32px;
     border: none;
     border-radius: 0;
     box-shadow: none;

@@ -22,3 +22,19 @@ Abos stehen mit dem neusten zuerst, jeweils mit «Aktiv» oder «Abgelaufen» ma
 **Dashboard**
 
 Die Liste «Letzte Aktivitäten» wurde entfernt.
+
+**Automatische Mails**
+
+Die Seite ist in Blöcke aufgeteilt: «Abo-Ereignisse» und «Konto & Login» stehen nebeneinander, auf dem Smartphone untereinander. Die Zeitleiste läuft von oben nach unten, ein Tag pro Zeile. Auf der Seite eines Abo-Plans hat jeder Ablauf seinen eigenen Block.
+
+- **Mehrere Mails pro Tag:** Mit «Mail hinzufügen» erfasst du an einem Tag weitere Mails.
+- **Mail entfernen:** Der Papierkorb neben einer Mail entfernt sie. Bleibt der Tag leer, verschwindet er gleich mit.
+- **Richtige Abo-Zahlen:** Ein Ablauf zählt nur noch die Abos seines Abo-Plans. Der Standard-Ablauf zählt die Abos des Plans, die kein anderer Ablauf abdeckt – bisher stand dort immer 0.
+
+**Verständlicher und einheitlicher**
+
+- **Erklärungen überall:** Ein kleines (i) neben Feldern und Einstellungen erklärt, was sie bewirken. Buttons, die nur ein Symbol zeigen, verraten beim Darüberfahren ihre Funktion.
+- **Einheitliche Bedienung:** Schalter tragen ihre Beschriftung rechts, Listen haben eine gleich aufgebaute Spalte «Aktionen», Karten und Felder haben überall dieselben runden Ecken.
+- **Neuer Kopfbereich im Artikel- und Seiten-Editor:** Status und letzte Speicherung links, «Speichern» und «Publizieren» rechts hervorgehoben. Der Kopf bleibt beim Scrollen sichtbar.
+- **Netzwerk-Seite:** Artikel und Medien stehen in zwei aufgeräumten Karten.
+- **Integrationen einrichten:** Mail, Captcha und Mailchimp-Sync lassen sich jetzt im Editor einrichten, wenn noch keine vorhanden ist. Es gibt jeweils genau eine – sie kann angepasst, aber nicht gelöscht werden.

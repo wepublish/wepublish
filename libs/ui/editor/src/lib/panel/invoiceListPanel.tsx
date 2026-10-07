@@ -26,6 +26,7 @@ import { RowDataType } from 'rsuite/esm/Table';
 import { createCheckedPermissionComponent } from '../atoms';
 import { ColumnConfigurator } from '../listView/column-configurator';
 import { ListColumn, renderListColumns } from '../listView/list-columns';
+import { Table } from '../listView/list-view';
 import { useColumnConfig } from '../listView/use-column-config';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -316,15 +317,19 @@ function InvoiceListPanel({
       bordered
       header={panelHeader}
     >
-      <RTable
+      <Table
         autoHeight
         wordWrap="break-word"
         data={invoices}
       >
         {renderListColumns(columns, isVisible)}
 
-        <Column width={160}>
-          <HeaderCell>{t('invoice.table.action')}</HeaderCell>
+        <Column
+          width={160}
+          align="center"
+          fixed="right"
+        >
+          <HeaderCell align="center">{t('action')}</HeaderCell>
           <RCell>
             {(rowData: RowDataType<InvoiceFragment>) =>
               !rowData.paidAt && !rowData.canceledAt ?
@@ -340,7 +345,7 @@ function InvoiceListPanel({
             }
           </RCell>
         </Column>
-      </RTable>
+      </Table>
 
       <Modal
         open={!!invoiceToPay}

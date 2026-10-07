@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -561,7 +562,12 @@ export function AudienceChart({
         <ChartCard>
           <CardHead>
             <div>
-              <CardTitle>{label('totalActiveSubscriptionCount')}</CardTitle>
+              <CardTitle>
+                {label('totalActiveSubscriptionCount')}{' '}
+                <InfoTooltip
+                  text={t('audience.legend.info.totalActiveSubscriptionCount')}
+                />
+              </CardTitle>
               <HeroValue>{formatNumber(trend.latest)}</HeroValue>
               <Delta direction={direction}>
                 {trend.delta > 0 ? '+' : ''}
@@ -660,7 +666,10 @@ export function AudienceChart({
       {flows.length > 0 && (
         <ChartCard>
           <CardHead>
-            <CardTitle>{t('audience.chart.flowsTitle')}</CardTitle>
+            <CardTitle>
+              {t('audience.chart.flowsTitle')}{' '}
+              <InfoTooltip text={t('audience.chart.flowsInfo')} />
+            </CardTitle>
             <LegendList>
               {flows.map(series => (
                 <li key={series.key}>

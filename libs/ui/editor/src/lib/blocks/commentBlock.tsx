@@ -56,7 +56,10 @@ export const CommentBlock = ({
         bodyFill
         bordered
       >
-        <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
+        <PlaceholderInput
+          onAddClick={() => setIsDialogOpen(true)}
+          addLabel={t('blocks.comment.chooseComments')}
+        >
           {!isEmpty && (
             <Wrapper>
               <IconWrapper>

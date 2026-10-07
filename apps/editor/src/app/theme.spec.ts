@@ -34,4 +34,12 @@ describe('createEditorTheme', () => {
       );
     }
   );
+
+  it('rounds cards like the rsuite panels', () => {
+    const theme = createEditorTheme('light');
+
+    expect(theme.components?.MuiCard?.styleOverrides?.root).toEqual(
+      expect.objectContaining({ borderRadius: 'var(--rs-radius-lg)' })
+    );
+  });
 });

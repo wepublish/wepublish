@@ -65,7 +65,10 @@ export function EmbedBlock({
         bordered
         isEmpty={isEmpty}
       >
-        <PlaceholderInput onAddClick={() => setEmbedDialogOpen(true)}>
+        <PlaceholderInput
+          onAddClick={() => setEmbedDialogOpen(true)}
+          addLabel={t('blocks.embeds.overview.editEmbed')}
+        >
           {!isEmpty && (
             <Wrapper>
               <IconWrapper>

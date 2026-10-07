@@ -402,11 +402,11 @@ function UserList() {
             </RCell>
           </Column>
           <Column
-            width={140}
+            width={180}
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('userList.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<TinyUserFragment>) => (
                 <>
@@ -420,6 +420,7 @@ function UserList() {
                         circle
                         size="sm"
                         icon={<MdPassword />}
+                        aria-label={t('userList.overview.resetPassword')}
                         onClick={e => {
                           setCurrentUser(rowData as TinyUserFragment);
                           setIsResetUserPasswordOpen(true);
@@ -437,6 +438,7 @@ function UserList() {
                         circle
                         size="sm"
                         icon={<MdLockReset />}
+                        aria-label={t('userList.overview.resetTotp')}
                         disabled={!(rowData as TinyUserFragment).totpEnabled}
                         onClick={() => {
                           setCurrentUser(rowData as TinyUserFragment);
@@ -455,6 +457,7 @@ function UserList() {
                         appearance="ghost"
                         color="red"
                         icon={<MdDelete />}
+                        aria-label={t('delete')}
                         onClick={() => {
                           setConfirmationDialogOpen(true);
                           setCurrentUser(rowData as TinyUserFragment);

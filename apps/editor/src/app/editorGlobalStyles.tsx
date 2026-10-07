@@ -232,6 +232,8 @@ export function EditorGlobalStyles() {
             [data-appearance='ghost'],
             [data-appearance='subtle']
           ) {
+          justify-content: center;
+          padding-inline: 0;
           background-color: transparent;
           border-color: transparent;
           color: var(--rs-text-secondary);
@@ -295,6 +297,10 @@ export function EditorGlobalStyles() {
           background-color: var(--rs-bg-card);
         }
 
+        .rs-table {
+          border-radius: var(--rs-radius-lg);
+        }
+
         .rs-table-cell-header .rs-table-cell-content {
           font-weight: 600;
           letter-spacing: 0.01em;
@@ -309,6 +315,12 @@ export function EditorGlobalStyles() {
         .rs-dropdown-menu,
         .rs-picker-popup {
           box-shadow: var(--wep-elevated-shadow);
+        }
+
+        .rs-tooltip,
+        .rs-popover,
+        .rs-picker-popup {
+          z-index: 1400;
         }
 
         .rs-toast-container {
@@ -328,6 +340,14 @@ export function EditorGlobalStyles() {
           width: max-content;
           max-width: min(440px, calc(100vw - 32px));
           margin: 0;
+        }
+
+        .rs-message {
+          border-radius: var(--rs-radius-md);
+        }
+
+        .rs-message-container {
+          border-radius: inherit;
         }
 
         .rs-toast-container .rs-message {

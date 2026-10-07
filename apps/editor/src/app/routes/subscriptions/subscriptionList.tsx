@@ -16,6 +16,7 @@ import {
   ExportSubscriptions,
   IconButton,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewFilterArea,
@@ -32,7 +33,7 @@ import {
 } from '@wepublish/ui/editor';
 import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete, MdInfo } from 'react-icons/md';
+import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import {
   Button,
@@ -47,19 +48,14 @@ import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
-const Info = styled.div`
-  position: relative;
-`;
-
 const Actions = styled(ListViewActions)`
   grid-column: 3;
 `;
 
-const DeactivationIcon = styled(MdInfo)<{ deactivated: boolean }>`
-  margin-left: 10px;
-  font-size: 16px;
-  visibility: ${({ deactivated }) => (deactivated ? 'visible' : 'hidden')};
-  color: var(--rs-primary-500);
+const DeactivationInfo = styled.span`
+  display: inline-flex;
+  margin-left: 4px;
+  vertical-align: middle;
 `;
 
 function mapColumFieldToGraphQLField(
@@ -246,9 +242,17 @@ function SubscriptionList() {
             <HeaderCell>{t('subscriptionList.overview.memberPlan')}</HeaderCell>
             <RCell dataKey={'subscription'}>
               {(rowData: RowDataType<TinySubscriptionFragment>) => (
-                <Link to={`/subscriptions/edit/${rowData.id}`}>
-                  {rowData.memberPlan.name}
-                </Link>
+                <>
+                  <Link to={`/subscriptions/edit/${rowData.id}`}>
+                    {rowData.memberPlan.name}
+                  </Link>
+
+                  {rowData.deactivation && (
+                    <DeactivationInfo>
+                      <InfoTooltip text={t('deactivated')} />
+                    </DeactivationInfo>
+                  )}
+                </>
               )}
             </RCell>
           </Column>
@@ -272,33 +276,26 @@ function SubscriptionList() {
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<TinySubscriptionFragment>) => (
-                <>
-                  <IconButtonTooltip caption={t('delete')}>
-                    <IconButton
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      color="red"
-                      icon={<MdDelete />}
-                      onClick={e => {
-                        e.preventDefault();
-                        setCurrentSubscription(
-                          rowData as TinySubscriptionFragment
-                        );
-                        setConfirmationDialogOpen(true);
-                      }}
-                    />
-                  </IconButtonTooltip>
-
-                  <IconButtonTooltip caption={t('deactivated')}>
-                    <Info>
-                      <DeactivationIcon deactivated={rowData.deactivation} />
-                    </Info>
-                  </IconButtonTooltip>
-                </>
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    circle
+                    size="sm"
+                    appearance="ghost"
+                    color="red"
+                    icon={<MdDelete />}
+                    aria-label={t('delete')}
+                    onClick={e => {
+                      e.preventDefault();
+                      setCurrentSubscription(
+                        rowData as TinySubscriptionFragment
+                      );
+                      setConfirmationDialogOpen(true);
+                    }}
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

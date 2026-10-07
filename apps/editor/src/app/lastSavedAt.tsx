@@ -1,9 +1,7 @@
 import styled from '@emotion/styled';
 import { useTranslation } from 'react-i18next';
 
-const Text = styled.div`
-  margin-top: 6px;
-  text-align: center;
+const Text = styled.span`
   font-size: 12px;
   color: var(--rs-text-secondary);
 `;

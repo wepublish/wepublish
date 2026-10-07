@@ -31,6 +31,8 @@ import {
 
 import { BlockProps } from '../atoms/blockList';
 import { ChooseEditImage } from '../atoms/chooseEditImage';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { useRegisterValidator } from '../hooks/useEditorValidation';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
@@ -153,30 +155,36 @@ function ItemActions({
   return (
     <ItemActionsWrapper>
       {onMoveUp && (
-        <IconButton
-          size="xs"
-          icon={<MdArrowUpward />}
-          aria-label={t('blocks.mailchimpForm.moveUp')}
-          disabled={disabled}
-          onClick={onMoveUp}
-        />
+        <IconButtonTooltip caption={t('blocks.mailchimpForm.moveUp')}>
+          <IconButton
+            size="xs"
+            icon={<MdArrowUpward />}
+            aria-label={t('blocks.mailchimpForm.moveUp')}
+            disabled={disabled}
+            onClick={onMoveUp}
+          />
+        </IconButtonTooltip>
       )}
       {onMoveDown && (
+        <IconButtonTooltip caption={t('blocks.mailchimpForm.moveDown')}>
+          <IconButton
+            size="xs"
+            icon={<MdArrowDownward />}
+            aria-label={t('blocks.mailchimpForm.moveDown')}
+            disabled={disabled}
+            onClick={onMoveDown}
+          />
+        </IconButtonTooltip>
+      )}
+      <IconButtonTooltip caption={t('blocks.mailchimpForm.remove')}>
         <IconButton
           size="xs"
-          icon={<MdArrowDownward />}
-          aria-label={t('blocks.mailchimpForm.moveDown')}
+          icon={<MdDelete />}
+          aria-label={t('blocks.mailchimpForm.remove')}
           disabled={disabled}
-          onClick={onMoveDown}
+          onClick={onRemove}
         />
-      )}
-      <IconButton
-        size="xs"
-        icon={<MdDelete />}
-        aria-label={t('blocks.mailchimpForm.remove')}
-        disabled={disabled}
-        onClick={onRemove}
-      />
+      </IconButtonTooltip>
     </ItemActionsWrapper>
   );
 }
@@ -627,8 +635,13 @@ export function MailchimpFormBlock({
               disabled={disabled}
               checked={value.autoFocus}
               onChange={autoFocus => update({ autoFocus })}
+              label={
+                <>
+                  {t('blocks.mailchimpForm.autoFocus')}{' '}
+                  <InfoTooltip text={t('blocks.mailchimpForm.autoFocusHelp')} />
+                </>
+              }
             />
-            <Label>{t('blocks.mailchimpForm.autoFocus')}</Label>
           </ToggleRow>
 
           <ToggleRow>
@@ -636,8 +649,15 @@ export function MailchimpFormBlock({
               disabled={disabled}
               checked={value.doubleOptIn ?? false}
               onChange={doubleOptIn => update({ doubleOptIn })}
+              label={
+                <>
+                  {t('blocks.mailchimpForm.doubleOptIn')}{' '}
+                  <InfoTooltip
+                    text={t('blocks.mailchimpForm.doubleOptInHelp')}
+                  />
+                </>
+              }
             />
-            <Label>{t('blocks.mailchimpForm.doubleOptIn')}</Label>
           </ToggleRow>
         </Row>
 
@@ -728,8 +748,15 @@ export function MailchimpFormBlock({
                   disabled={disabled}
                   checked={showStepAdvanced}
                   onChange={enabled => toggleAdvanced(stepAdvancedKey, enabled)}
+                  label={
+                    <>
+                      {t('blocks.mailchimpForm.advanced')}{' '}
+                      <InfoTooltip
+                        text={t('blocks.mailchimpForm.advancedStepHelp')}
+                      />
+                    </>
+                  }
                 />
-                <Label>{t('blocks.mailchimpForm.advanced')}</Label>
               </ToggleRow>
 
               {showStepAdvanced && (
@@ -875,8 +902,8 @@ export function MailchimpFormBlock({
                           disabled={disabled}
                           checked={input.required ?? false}
                           onChange={required => updateInput({ required })}
+                          label={t('blocks.mailchimpForm.required')}
                         />
-                        <Label>{t('blocks.mailchimpForm.required')}</Label>
                       </ToggleRow>
                     </Row>
 
@@ -934,8 +961,15 @@ export function MailchimpFormBlock({
                         onChange={enabled =>
                           toggleAdvanced(advancedKey, enabled)
                         }
+                        label={
+                          <>
+                            {t('blocks.mailchimpForm.advanced')}{' '}
+                            <InfoTooltip
+                              text={t('blocks.mailchimpForm.advancedInputHelp')}
+                            />
+                          </>
+                        }
                       />
-                      <Label>{t('blocks.mailchimpForm.advanced')}</Label>
                     </ToggleRow>
 
                     {showAdvanced && (
@@ -1157,8 +1191,8 @@ export function MailchimpFormBlock({
                 successUrl: enabled ? null : value.successUrl,
               })
             }
+            label={t('blocks.mailchimpForm.useSuccessPage')}
           />
-          <Label>{t('blocks.mailchimpForm.useSuccessPage')}</Label>
         </ToggleRow>
 
         {value.successPage && (
@@ -1203,21 +1237,26 @@ export function MailchimpFormBlock({
                           number: optionIndex + 1,
                         })}
                     </Heading>
-                    <IconButton
-                      size="xs"
-                      icon={<MdDelete />}
-                      disabled={disabled}
-                      onClick={() =>
-                        update({
-                          successPage: {
-                            ...value.successPage!,
-                            options: value.successPage!.options.filter(
-                              (_, i) => i !== optionIndex
-                            ),
-                          },
-                        })
-                      }
-                    />
+                    <IconButtonTooltip
+                      caption={t('blocks.mailchimpForm.remove')}
+                    >
+                      <IconButton
+                        size="xs"
+                        icon={<MdDelete />}
+                        aria-label={t('blocks.mailchimpForm.remove')}
+                        disabled={disabled}
+                        onClick={() =>
+                          update({
+                            successPage: {
+                              ...value.successPage!,
+                              options: value.successPage!.options.filter(
+                                (_, i) => i !== optionIndex
+                              ),
+                            },
+                          })
+                        }
+                      />
+                    </IconButtonTooltip>
                   </ItemHeader>
                   <Row>
                     <Field>

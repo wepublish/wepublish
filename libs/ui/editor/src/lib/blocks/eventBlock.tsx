@@ -56,6 +56,7 @@ const EventPreview = ({ event }: { event: FullEventFragment }) => (
         style={{
           width: '100%',
           height: 'auto',
+          borderRadius: 'var(--rs-radius-md)',
         }}
       />
 
@@ -103,7 +104,10 @@ export const EventBlock = ({
           display: 'grid',
         }}
       >
-        <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
+        <PlaceholderInput
+          onAddClick={() => setIsDialogOpen(true)}
+          addLabel={t('blocks.event.chooseEvents')}
+        >
           {!isEmpty && (
             <div
               style={{

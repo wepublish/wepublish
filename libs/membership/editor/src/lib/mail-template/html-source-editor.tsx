@@ -19,7 +19,7 @@ const Wrapper = styled(Box)`
   height: 100%;
   min-height: 400px;
   border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: 6px;
+  border-radius: var(--rs-radius-md);
   overflow: hidden;
   background-color: var(--rs-bg-card);
 

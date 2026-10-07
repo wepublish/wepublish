@@ -29,6 +29,8 @@ const TeaserGrid = styled.div`
 const TeaserWrapper = styled('article')`
   position: relative;
   min-height: 250px;
+  overflow: hidden;
+  border-radius: var(--rs-radius-md);
   background-color: var(--rs-bg-well);
 `;
 

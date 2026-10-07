@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
 import { MailTemplateContext } from '@wepublish/editor/api';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Tooltip, Whisper } from 'rsuite';
@@ -214,7 +215,8 @@ export function PlaceholderPicker({
 
   return (
     <div style={{ paddingRight: 4 }}>
-      <strong>{t('mailTemplates.placeholders')}</strong>
+      <strong>{t('mailTemplates.placeholders')}</strong>{' '}
+      <InfoTooltip text={t('mailTemplates.placeholdersInfo')} />
       <Typography
         variant="caption"
         style={{ marginBottom: 8 }}

@@ -1,9 +1,10 @@
 import { Typography } from '@mui/material';
 import { MailLogState, MailLogType } from '@wepublish/editor/api';
+import { InfoTrigger } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MdHelpOutline } from 'react-icons/md';
-import { IconButton, Popover, Stack, Tag, Whisper } from 'rsuite';
+import { Popover, Stack, Tag, Whisper } from 'rsuite';
 
 const STATE_COLORS: Record<MailLogState, 'green' | 'yellow' | 'red' | 'blue'> =
   {
@@ -163,12 +164,7 @@ export function MailLogStateLegend() {
         </Popover>
       }
     >
-      <IconButton
-        size="xs"
-        appearance="subtle"
-        icon={<MdHelpOutline />}
-        aria-label={t('mailLog.stateHelp.legendTitle')}
-      />
+      <InfoTrigger aria-label={t('mailLog.stateHelp.legendTitle')} />
     </Whisper>
   );
 }

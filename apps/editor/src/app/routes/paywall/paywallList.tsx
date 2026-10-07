@@ -12,6 +12,7 @@ import {
 import {
   createCheckedPermissionComponent,
   IconButton,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -120,23 +121,26 @@ function PaywallList() {
           </Column>
 
           <Column
-            resizable
+            width={100}
+            align="center"
             fixed="right"
-            width={75}
           >
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell>
               {(paywall: RowDataType<FullPaywallFragment>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() =>
-                    setPaywallToDelete(paywall as FullPaywallFragment)
-                  }
-                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    aria-label={t('delete')}
+                    onClick={() =>
+                      setPaywallToDelete(paywall as FullPaywallFragment)
+                    }
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

@@ -7,6 +7,8 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   DeletePollModal,
   humanizeError,
+  IconButton,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -19,16 +21,9 @@ import {
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdHowToVote } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton,
-  Message,
-  Pagination,
-  Table as RTable,
-  toaster,
-} from 'rsuite';
+import { Message, Pagination, Table as RTable, toaster } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -148,40 +143,36 @@ function PollList() {
               )}
             </RCell>
           </Column>
-          {/* delete */}
           <Column
-            resizable
+            width={140}
+            align="center"
             fixed="right"
           >
-            <HeaderCell align={'center'}>{t('pollList.delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell align="center">
               {(poll: RowDataType<FullPollFragment>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() => setPollDelete(poll as FullPollFragment)}
-                />
-              )}
-            </PaddedCell>
-          </Column>
-          {/* show votes */}
-          <Column
-            width={180}
-            resizable
-            fixed="right"
-          >
-            <HeaderCell align={'center'}>{t('pollList.showVotes')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(poll: RowDataType<FullPollFragment>) => (
-                <Button
-                  appearance={'primary'}
-                  href={`/polls/votes/${poll?.id}`}
-                >
-                  {t('pollList.showVotes')}
-                </Button>
+                <>
+                  <IconButtonTooltip caption={t('pollList.showVotes')}>
+                    <IconButton
+                      aria-label={t('pollList.showVotes')}
+                      icon={<MdHowToVote />}
+                      circle
+                      size="sm"
+                      href={`/polls/votes/${poll?.id}`}
+                    />
+                  </IconButtonTooltip>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      aria-label={t('delete')}
+                      icon={<MdDelete />}
+                      circle
+                      appearance="ghost"
+                      color="red"
+                      size="sm"
+                      onClick={() => setPollDelete(poll as FullPollFragment)}
+                    />
+                  </IconButtonTooltip>
+                </>
               )}
             </PaddedCell>
           </Column>

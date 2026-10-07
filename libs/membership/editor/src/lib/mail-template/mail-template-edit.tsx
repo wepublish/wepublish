@@ -15,6 +15,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  InfoTooltip,
   ListViewContainer,
   ListViewHeader,
 } from '@wepublish/ui/editor';
@@ -395,7 +396,8 @@ function MailTemplateEdit() {
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
               <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
                 <Form.ControlLabel>
-                  {t('mailTemplates.edit.mailType')} *
+                  {t('mailTemplates.edit.mailType')} *{' '}
+                  <InfoTooltip text={t('mailTemplates.edit.purposeHint')} />
                 </Form.ControlLabel>
                 <SelectPicker
                   block
@@ -435,15 +437,6 @@ function MailTemplateEdit() {
                     </div>
                   )}
                 />
-                <Typography
-                  variant="caption"
-                  style={{ marginTop: 4, color: 'var(--rs-text-secondary)' }}
-                  sx={{
-                    display: 'block',
-                  }}
-                >
-                  {t('mailTemplates.edit.purposeHint')}
-                </Typography>
               </Form.Group>
               <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
                 <Form.ControlLabel>{t('mailTemplates.name')}</Form.ControlLabel>
@@ -454,7 +447,8 @@ function MailTemplateEdit() {
               </Form.Group>
               <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
                 <Form.ControlLabel>
-                  {t('mailTemplates.description')}
+                  {t('mailTemplates.description')}{' '}
+                  <InfoTooltip text={t('mailTemplates.edit.descriptionHelp')} />
                 </Form.ControlLabel>
                 <Input
                   value={description}
@@ -490,7 +484,10 @@ function MailTemplateEdit() {
           >
             <div style={{ flex: 1, minWidth: 200 }}>
               <Form.ControlLabel>
-                {t('mailTemplates.edit.sampleSubscription')}
+                {t('mailTemplates.edit.sampleSubscription')}{' '}
+                <InfoTooltip
+                  text={t('mailTemplates.edit.sampleSubscriptionHelp')}
+                />
               </Form.ControlLabel>
               <SelectPicker
                 block
@@ -583,26 +580,32 @@ function MailTemplateEdit() {
             alignItems="center"
             style={{ marginBottom: 8 }}
           >
-            <ButtonGroup size="sm">
-              <Button
-                appearance={bodyMode === 'visual' ? 'primary' : 'default'}
-                onClick={() => switchMode('visual')}
-              >
-                {t('mailTemplates.wysiwyg')}
-              </Button>
-              <Button
-                appearance={bodyMode === 'html' ? 'primary' : 'default'}
-                onClick={() => switchMode('html')}
-              >
-                {t('mailTemplates.rawHtml')}
-              </Button>
-              <Button
-                appearance={bodyMode === 'text' ? 'primary' : 'default'}
-                onClick={() => switchMode('text')}
-              >
-                {t('mailTemplates.textContent')}
-              </Button>
-            </ButtonGroup>
+            <Stack
+              spacing={8}
+              alignItems="center"
+            >
+              <ButtonGroup size="sm">
+                <Button
+                  appearance={bodyMode === 'visual' ? 'primary' : 'default'}
+                  onClick={() => switchMode('visual')}
+                >
+                  {t('mailTemplates.wysiwyg')}
+                </Button>
+                <Button
+                  appearance={bodyMode === 'html' ? 'primary' : 'default'}
+                  onClick={() => switchMode('html')}
+                >
+                  {t('mailTemplates.rawHtml')}
+                </Button>
+                <Button
+                  appearance={bodyMode === 'text' ? 'primary' : 'default'}
+                  onClick={() => switchMode('text')}
+                >
+                  {t('mailTemplates.textContent')}
+                </Button>
+              </ButtonGroup>
+              <InfoTooltip text={t('mailTemplates.edit.bodyModeHelp')} />
+            </Stack>
 
             <Stack
               spacing={16}
@@ -613,10 +616,12 @@ function MailTemplateEdit() {
                 alignItems="center"
               >
                 <Form.ControlLabel style={{ margin: 0 }}>
-                  {t('mailTemplates.edit.background', 'Background')}
+                  {t('mailTemplates.edit.background', 'Background')}{' '}
+                  <InfoTooltip text={t('mailTemplates.edit.backgroundHelp')} />
                 </Form.ControlLabel>
                 <MailColorPicker
                   value={backgroundColor}
+                  label={t('mailTemplates.edit.background', 'Background')}
                   size={28}
                   onChange={color => applyShell({ backgroundColor: color })}
                 />
@@ -626,7 +631,10 @@ function MailTemplateEdit() {
                 alignItems="center"
               >
                 <Form.ControlLabel style={{ margin: 0 }}>
-                  {t('mailTemplates.edit.contentWidth', 'Width (px)')}
+                  {t('mailTemplates.edit.contentWidth', 'Width (px)')}{' '}
+                  <InfoTooltip
+                    text={t('mailTemplates.edit.contentWidthHelp')}
+                  />
                 </Form.ControlLabel>
                 <InputNumber
                   size="sm"

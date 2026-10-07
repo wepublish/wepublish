@@ -90,7 +90,10 @@ export const PollBlock = ({
         bodyFill
         bordered
       >
-        <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
+        <PlaceholderInput
+          onAddClick={() => setIsDialogOpen(true)}
+          addLabel={t('blocks.poll.choosePoll')}
+        >
           {poll && (
             <Poll>
               <IconWrapper>

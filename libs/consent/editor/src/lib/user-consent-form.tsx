@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
 import {
   ConsentsDocument,
   MutationCreateUserConsentArgs,
@@ -9,13 +10,13 @@ import { humanizeError } from '@wepublish/ui/editor';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Checkbox,
   Form,
   Loader,
   Message,
   Panel,
   SelectPicker,
   toaster,
+  Toggle,
 } from 'rsuite';
 
 type UserConsentFormData = Partial<
@@ -27,6 +28,21 @@ type UserConsentFormProps = {
   userConsent: UserConsentFormData;
   onChange: (changes: Partial<UserConsentFormData>) => void;
 };
+
+const FormCard = styled(Panel)`
+  width: 100%;
+  max-width: 640px;
+  overflow: initial;
+`;
+
+const Fields = styled.div`
+  display: grid;
+  gap: 20px;
+
+  .rs-form-group {
+    margin-bottom: 0;
+  }
+`;
 
 const onErrorToast = (error: Error) => {
   toaster.push(
@@ -47,17 +63,6 @@ export const UserConsentForm = ({
   isEdit,
 }: UserConsentFormProps) => {
   const { t } = useTranslation();
-
-  const consentValues = [
-    {
-      value: true,
-      label: 'Accepted',
-    },
-    {
-      value: false,
-      label: 'Rejected',
-    },
-  ];
 
   const { loading: loadingUsers, data: userData } = useQuery(UserListDocument, {
     variables: {
@@ -94,63 +99,40 @@ export const UserConsentForm = ({
   }
 
   return (
-    <div
-      style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}
-    >
-      <Panel
-        bordered
-        style={{ overflow: 'initial' }}
-      >
-        <Form.Group controlId="name">
+    <FormCard bordered>
+      <Fields>
+        <Form.Group controlId="userId">
           <Form.Label>{t('dashboard.user')}</Form.Label>
           <SelectPicker
             key="userId"
             placeholder={t('dashboard.user')}
             block
             disabled={isEdit}
-            data={userValues || []}
-            value={
-              userData?.users.nodes.find(c => c.id === userConsent.userId)?.id
-            }
-            onChange={value =>
-              onChange({
-                userId: userValues.find(v => v.value === value)?.value,
-              })
-            }
+            data={userValues}
+            value={userConsent.userId ?? null}
+            onChange={value => onChange({ userId: value ?? undefined })}
           />
         </Form.Group>
 
-        <Form.Group controlId="slug">
+        <Form.Group controlId="consentId">
           <Form.Label>{t('consents.consent')}</Form.Label>
           <SelectPicker
             key="consentId"
             placeholder={t('consents.consent')}
             block
             disabled={isEdit}
-            data={consentsValues || []}
-            value={
-              consentsData?.consents.find(c => c.id === userConsent.userId)?.id
-            }
-            onChange={value =>
-              onChange({
-                consentId: consentsValues.find(v => v.value === value)?.value,
-              })
-            }
+            data={consentsValues}
+            value={userConsent.consentId ?? null}
+            onChange={value => onChange({ consentId: value ?? undefined })}
           />
         </Form.Group>
 
-        <Form.Group controlId="value">
-          <Form.Label>{t('userConsents.value')}</Form.Label>
-          <Checkbox
-            checked={userConsent.value}
-            onChange={(_, checked) => {
-              onChange({ value: checked });
-            }}
-          >
-            {consentValues.find(v => v.value === userConsent.value)?.label}
-          </Checkbox>
-        </Form.Group>
-      </Panel>
-    </div>
+        <Toggle
+          checked={!!userConsent.value}
+          label={t('consents.accepted')}
+          onChange={value => onChange({ value })}
+        />
+      </Fields>
+    </FormCard>
   );
 };

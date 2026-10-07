@@ -61,9 +61,10 @@ const Img = styled.img`
   width: auto;
   display: block;
   margin: 0 auto;
+  border-radius: var(--rs-radius-md);
 `;
 const ButtonGroup = styled(RButtonGroup)`
-  margin-top: 10px;
+  margin-top: 12px;
 `;
 
 const GridImg = styled.img`
@@ -84,7 +85,7 @@ const ImgDesc = styled.p`
   inset-inline: 0;
   bottom: 0;
   margin: 0;
-  padding: 8px 10px;
+  padding: 8px 12px;
   overflow: hidden;
   color: #fff;
   font-size: 12px;
@@ -110,7 +111,7 @@ const ImageWrapper = styled.div`
   aspect-ratio: 1;
   overflow: hidden;
   border: 1px solid var(--rs-border-primary);
-  border-radius: var(--wep-radius-md, 8px);
+  border-radius: var(--rs-radius-md);
   background-color: var(--rs-bg-well);
 `;
 
@@ -260,30 +261,38 @@ function ImageList() {
       </ListViewContainer>
 
       <ButtonGroup size="lg">
-        <RIconButton
-          active={layout === ImageListLayout.Grid}
-          onClick={() => {
-            setLayout(ImageListLayout.Grid);
-            localStorage.setItem(
-              LocalStorageKey.ImageListLayout,
-              ImageListLayout.Grid
-            );
-          }}
-          appearance={layout === ImageListLayout.Grid ? 'ghost' : 'default'}
-          icon={<MdViewModule />}
-        />
-        <RIconButton
-          onClick={() => {
-            setLayout(ImageListLayout.List);
-            localStorage.setItem(
-              LocalStorageKey.ImageListLayout,
-              ImageListLayout.List
-            );
-          }}
-          appearance={layout === ImageListLayout.List ? 'ghost' : 'default'}
-          active={layout === ImageListLayout.List}
-          icon={<MdViewList />}
-        />
+        <IconButtonTooltip caption={t('images.overview.gridView')}>
+          <RIconButton
+            aria-label={t('images.overview.gridView')}
+            aria-pressed={layout === ImageListLayout.Grid}
+            active={layout === ImageListLayout.Grid}
+            onClick={() => {
+              setLayout(ImageListLayout.Grid);
+              localStorage.setItem(
+                LocalStorageKey.ImageListLayout,
+                ImageListLayout.Grid
+              );
+            }}
+            appearance={layout === ImageListLayout.Grid ? 'ghost' : 'default'}
+            icon={<MdViewModule />}
+          />
+        </IconButtonTooltip>
+        <IconButtonTooltip caption={t('images.overview.listView')}>
+          <RIconButton
+            aria-label={t('images.overview.listView')}
+            aria-pressed={layout === ImageListLayout.List}
+            onClick={() => {
+              setLayout(ImageListLayout.List);
+              localStorage.setItem(
+                LocalStorageKey.ImageListLayout,
+                ImageListLayout.List
+              );
+            }}
+            appearance={layout === ImageListLayout.List ? 'ghost' : 'default'}
+            active={layout === ImageListLayout.List}
+            icon={<MdViewList />}
+          />
+        </IconButtonTooltip>
       </ButtonGroup>
 
       <TableWrapper>
@@ -444,6 +453,8 @@ const ImageGridView = ({
   setCurrentImage,
   setConfirmationDialogOpen,
 }: ImageGridViewProps) => {
+  const { t } = useTranslation();
+
   return (
     <GridView>
       {images.map(image => {
@@ -452,19 +463,22 @@ const ImageGridView = ({
             <OverlayContainer>
               <Link to={`/images/edit/${image.id}`}>
                 <Overlay>
-                  <GridIcon
-                    icon={<MdDelete />}
-                    circle
-                    size="md"
-                    appearance="default"
-                    color="red"
-                    data-on-media
-                    onClick={event => {
-                      event.preventDefault();
-                      setCurrentImage(image);
-                      setConfirmationDialogOpen(true);
-                    }}
-                  />
+                  <IconButtonTooltip caption={t('delete')}>
+                    <GridIcon
+                      aria-label={t('delete')}
+                      icon={<MdDelete />}
+                      circle
+                      size="md"
+                      appearance="default"
+                      color="red"
+                      data-on-media
+                      onClick={event => {
+                        event.preventDefault();
+                        setCurrentImage(image);
+                        setConfirmationDialogOpen(true);
+                      }}
+                    />
+                  </IconButtonTooltip>
                   {image?.title && <ImgDesc>{image?.title}</ImgDesc>}
                 </Overlay>
                 <GridImg
@@ -557,12 +571,11 @@ const ImageListView = ({
       </Column>
 
       <Column
-        width={100}
+        width={140}
         align="center"
-        resizable
         fixed="right"
       >
-        <HeaderCell>{t('images.overview.actions')}</HeaderCell>
+        <HeaderCell align="center">{t('action')}</HeaderCell>
         <PaddedCell>
           {(rowData: RowDataType<FullImageFragment>) => (
             <>
@@ -570,6 +583,7 @@ const ImageListView = ({
                 <IconButtonTooltip caption={t('images.overview.edit')}>
                   <Link to={`/images/edit/${rowData.id}`}>
                     <IconButton
+                      aria-label={t('images.overview.edit')}
                       icon={<MdEdit />}
                       circle
                       size="sm"
@@ -580,6 +594,7 @@ const ImageListView = ({
               <PermissionControl qualifyingPermissions={['CAN_DELETE_IMAGE']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
+                    aria-label={t('delete')}
                     icon={<MdDelete />}
                     circle
                     size="sm"

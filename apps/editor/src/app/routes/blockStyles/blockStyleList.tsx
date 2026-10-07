@@ -13,6 +13,7 @@ import {
   humanizeError,
   IconButton,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -56,7 +57,7 @@ const FlexWrapper = styled.div`
 `;
 
 const Loader = styled(RLoader)`
-  margin: 30px;
+  margin: 32px;
 `;
 
 enum BlockStyleListActionType {
@@ -249,6 +250,7 @@ const BlockStyleList = memo(() => {
       <ListViewContainer>
         <ListViewHeader>
           <h2>{t('blockStyles.title')}</h2>
+          <InfoTooltip text={t('blockStyles.info')} />
         </ListViewHeader>
 
         <PermissionControl qualifyingPermissions={['CAN_CREATE_BLOCK_STYLE']}>
@@ -306,6 +308,7 @@ const BlockStyleList = memo(() => {
                   <CheckPicker
                     name={`blocks:${blockstyleId}`}
                     block
+                    placeholder={t('blockStyles.blockTypesPlaceholder')}
                     value={inputValue.blocks}
                     data={Object.values(EditorBlockType).map(blockType => ({
                       value: blockType,
@@ -330,6 +333,7 @@ const BlockStyleList = memo(() => {
                   >
                     <IconButtonTooltip caption={t('save')}>
                       <IconButton
+                        aria-label={t('save')}
                         type="submit"
                         circle
                         size="sm"
@@ -349,6 +353,7 @@ const BlockStyleList = memo(() => {
                   >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
+                        aria-label={t('delete')}
                         color="red"
                         appearance="ghost"
                         circle

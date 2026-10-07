@@ -18,7 +18,7 @@ interface TeaserSlotsDialogProps {
 
 const StyledModal = styled(Modal)`
   .rs-modal-content {
-    border-radius: 8px;
+    border-radius: var(--rs-radius-lg);
   }
 `;
 
@@ -77,14 +77,14 @@ export function TeaserSlotsAutofillDialog({
     >
       <Modal.Header>
         <Modal.Title>
-          {localConfig.enabled ?
-            'Enable & Configure Auto-loading'
-          : 'Configure Auto-loading'}
+          {!localConfig.enabled ?
+            t('blocks.teaserSlots.dialogTitleEnable')
+          : t('blocks.teaserSlots.dialogTitleConfigure')}
         </Modal.Title>
         <Description>
           {!localConfig.enabled ?
-            'Enable and configure how teasers are automatically loaded into the grid.'
-          : 'Configure how teasers are loaded and displayed in the grid.'}
+            t('blocks.teaserSlots.dialogDescriptionEnable')
+          : t('blocks.teaserSlots.dialogDescriptionConfigure')}
         </Description>
       </Modal.Header>
 
@@ -110,7 +110,9 @@ export function TeaserSlotsAutofillDialog({
             appearance="primary"
             onClick={handleSave}
           >
-            {!localConfig.enabled ? 'Enable & Save' : 'Save Configuration'}
+            {!localConfig.enabled ?
+              t('blocks.teaserSlots.enableAndSave')
+            : t('blocks.teaserSlots.saveConfiguration')}
           </Button>
         </FooterContainer>
       </Modal.Footer>

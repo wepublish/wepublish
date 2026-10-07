@@ -27,7 +27,7 @@ const AudienceChartWrapper = styled('div')`
 `;
 
 const AudienceTableExportWrapper = styled('div')`
-  margin-left: 5px;
+  margin-left: 4px;
 `;
 
 const TableWrapperStyled = styled(TableWrapper)`

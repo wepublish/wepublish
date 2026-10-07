@@ -151,8 +151,8 @@ const Panel = styled(RPanel, {
 const NestedBlockEditPanel = styled('div')`
   margin: 0 -25px;
   box-shadow: 1px 0 11px 4px rgb(from var(--rs-primary-500) r g b / 0.25);
-  border-radius: 0.3rem;
-  padding: 5px;
+  border-radius: var(--rs-radius-lg);
+  padding: 4px;
 
   ${ListItem} {
     display: grid;
@@ -192,7 +192,10 @@ export function FlexItem({
       bodyFill
       showGrabCursor={showGrabCursor}
     >
-      <PlaceholderInput onAddClick={onChoose}>
+      <PlaceholderInput
+        onAddClick={onChoose}
+        addLabel={i18next.t('blocks.flexBlock.chooseNestedBlock')}
+      >
         {block && (
           <Block>
             <ContentForFlexBlock block={block} />
@@ -202,6 +205,7 @@ export function FlexItem({
                 caption={i18next.t('blocks.flexBlock.chooseNestedBlock')}
               >
                 <IconButton
+                  aria-label={i18next.t('blocks.flexBlock.chooseNestedBlock')}
                   icon={<MdArticle />}
                   onClick={onChoose}
                 />
@@ -211,6 +215,7 @@ export function FlexItem({
                 caption={i18next.t('blocks.flexBlock.editNestedBlock')}
               >
                 <IconButton
+                  aria-label={i18next.t('blocks.flexBlock.editNestedBlock')}
                   icon={<MdEdit />}
                   onClick={onEdit}
                 />
@@ -220,6 +225,7 @@ export function FlexItem({
                 caption={i18next.t('blocks.flexBlock.deleteNestedBlock')}
               >
                 <IconButton
+                  aria-label={i18next.t('blocks.flexBlock.deleteNestedBlock')}
                   icon={<MdDelete />}
                   onClick={onRemove}
                 />
@@ -531,6 +537,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
     <>
       <IconButtonTooltip caption={t('blocks.flexBlock.addNestedBlock')}>
         <RIconButton
+          aria-label={t('blocks.flexBlock.addNestedBlock')}
           icon={<MdAddBox />}
           appearance="primary"
           circle
@@ -581,6 +588,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
                   caption={t('blocks.flexBlock.removeNestedBlock')}
                 >
                   <ToolbarButton
+                    aria-label={t('blocks.flexBlock.removeNestedBlock')}
                     disabled={block.alignment.static as unknown as boolean}
                     block
                     appearance="subtle"
@@ -600,6 +608,11 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
                 <ToolbarButton
                   block
                   appearance="subtle"
+                  aria-label={
+                    !block.alignment.static ?
+                      t('blocks.flexBlock.lockNestedBlock')
+                    : t('blocks.flexBlock.unlockNestedBlock')
+                  }
                   icon={block.alignment.static ? <MdLockOpen /> : <MdLock />}
                   onClick={() => handlePinNestedBlock(block.alignment.i)}
                 />

@@ -15,7 +15,7 @@ import { getOperationNameFromDocument } from '../utility';
 import { humanizeError } from '../humanizeError';
 
 const ButtonWrapper = styled.div`
-  margin: 10px;
+  margin: 8px;
 `;
 
 export interface AuthorSelectPickerProps {

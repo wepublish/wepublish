@@ -3,6 +3,7 @@ import { BannersDocument, FullBannerFragment } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   IconButton,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -113,20 +114,26 @@ function BannerList() {
             </RCell>
           </Column>
           <Column
-            resizable
+            width={100}
+            align="center"
             fixed="right"
           >
-            <HeaderCell align={'center'}>{t('banner.list.delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell align="center">
               {(banner: RowDataType<FullBannerFragment>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() => setBannerDelete(banner as FullBannerFragment)}
-                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    onClick={() =>
+                      setBannerDelete(banner as FullBannerFragment)
+                    }
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

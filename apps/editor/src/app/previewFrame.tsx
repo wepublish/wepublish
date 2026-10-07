@@ -147,7 +147,7 @@ const devices: { device: PreviewDevice; Icon: IconType }[] = [
 
 const PreviewControlsWrapper = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 4px;
 `;
 
 export type PreviewControlsProps = {
@@ -199,7 +199,6 @@ export function PreviewControls({
         {devices.map(({ device: option, Icon }) => (
           <IconButton
             key={option}
-            size="lg"
             icon={<Icon />}
             appearance={option === device ? 'primary' : 'default'}
             active={option === device}
@@ -212,7 +211,6 @@ export function PreviewControls({
       </ButtonGroup>
 
       <IconButton
-        size="lg"
         icon={<MdContentCopy />}
         title={t('preview.copyUrl')}
         aria-label={t('preview.copyUrl')}

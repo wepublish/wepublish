@@ -14,6 +14,8 @@ import {
   MailTemplateDocument,
 } from '@wepublish/editor/api';
 import {
+  IconButtonTooltip,
+  InfoTooltip,
   ListViewContainer,
   ListViewHeader,
   PermissionControl,
@@ -155,7 +157,8 @@ function MailTemplateList() {
                 <strong>{t('mailTemplates.name')}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t('mailTemplates.edit.mailType')}</strong>
+                <strong>{t('mailTemplates.edit.mailType')}</strong>{' '}
+                <InfoTooltip text={t('mailTemplates.edit.purposeHint')} />
               </TableCell>
               <TableCell>
                 <strong>{t('mailTemplates.description')}</strong>
@@ -164,9 +167,12 @@ function MailTemplateList() {
                 <strong>{t('mailTemplates.subject')}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t('mailTemplates.status')}</strong>
+                <strong>{t('mailTemplates.status')}</strong>{' '}
+                <InfoTooltip text={t('mailTemplates.statusHelp')} />
               </TableCell>
-              <TableCell />
+              <TableCell align="center">
+                <strong>{t('action')}</strong>
+              </TableCell>
             </TableRow>
           </TableHead>
 
@@ -188,33 +194,42 @@ function MailTemplateList() {
                     </StatusTag>
                   }
                 </TableCell>
-                <TableCell>
-                  <Stack spacing={8}>
+                <TableCell align="center">
+                  <Stack
+                    spacing={8}
+                    justifyContent="center"
+                  >
                     <PermissionControl
                       showRejectionMessage={false}
                       qualifyingPermissions={['CAN_UPDATE_MAIL-TEMPLATES']}
                     >
-                      <IconButton
-                        icon={<MdEdit />}
-                        circle
-                        size="sm"
-                        onClick={() =>
-                          navigate(`/mailtemplates/edit/${template.id}`)
-                        }
-                      />
+                      <IconButtonTooltip caption={t('edit')}>
+                        <IconButton
+                          icon={<MdEdit />}
+                          circle
+                          size="sm"
+                          aria-label={t('edit')}
+                          onClick={() =>
+                            navigate(`/mailtemplates/edit/${template.id}`)
+                          }
+                        />
+                      </IconButtonTooltip>
                     </PermissionControl>
                     <PermissionControl
                       showRejectionMessage={false}
                       qualifyingPermissions={['CAN_DELETE_MAIL-TEMPLATES']}
                     >
-                      <IconButton
-                        icon={<MdDelete />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
-                        onClick={() => setDeleteId(template.id)}
-                      />
+                      <IconButtonTooltip caption={t('delete')}>
+                        <IconButton
+                          icon={<MdDelete />}
+                          circle
+                          size="sm"
+                          appearance="ghost"
+                          color="red"
+                          aria-label={t('delete')}
+                          onClick={() => setDeleteId(template.id)}
+                        />
+                      </IconButtonTooltip>
                     </PermissionControl>
                   </Stack>
                 </TableCell>

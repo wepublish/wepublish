@@ -5,19 +5,22 @@ import {
   SubscriptionEvent,
   SubscriptionFlowFragment,
 } from '@wepublish/editor/api';
-import { useMemo } from 'react';
-import { MdDragIndicator } from 'react-icons/md';
+import { useContext, useMemo } from 'react';
+import { MdDelete, MdDragIndicator } from 'react-icons/md';
+import { IconButton } from 'rsuite';
+import { SubscriptionClientContext } from './graphql-client-context';
 import { MailTemplateSelect } from './mail-template-select';
 import { DecoratedSubscriptionInterval } from './subscription-flow-list';
 
 import { Tooltip } from '@mui/material';
-import { useAuthorisation } from '@wepublish/ui/editor';
+import { PermissionControl, useAuthorisation } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 
 const DraggableContainer = styled.div<{ accent?: string }>`
-  margin: 4px 3px;
+  container-type: inline-size;
   position: relative;
-  min-width: 150px;
+  min-width: 0;
+  max-width: 640px;
 
   ${({ accent }) =>
     accent &&
@@ -25,9 +28,27 @@ const DraggableContainer = styled.div<{ accent?: string }>`
       --interval-accent: ${accent};
       overflow: hidden;
       border: 1px solid var(--rs-border-primary);
-      border-radius: var(--wep-radius-md, 8px);
+      border-radius: var(--rs-radius-md);
       background: var(--rs-bg-card);
       box-shadow: inset 3px 0 0 var(--interval-accent);
+    `}
+`;
+
+const Entry = styled.div<{ split: boolean }>`
+  display: grid;
+
+  ${({ split }) =>
+    split ?
+      `
+      @container (min-width: 460px) {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      }
+    `
+    : `
+      grid-auto-flow: column;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: center;
+      gap: 4px;
     `}
 `;
 
@@ -63,6 +84,8 @@ const DragHandle = styled.span`
 `;
 
 const SelectWrapper = styled.div<{ padded: boolean }>`
+  align-self: center;
+  min-width: 0;
   padding: ${({ padded }) => (padded ? '6px' : 0)};
 `;
 
@@ -72,6 +95,7 @@ interface DraggableSubscriptionIntervalProps {
   event?: SubscriptionEvent;
   mailTemplates: TinyMailTemplateFragment[];
   subscriptionFlow: SubscriptionFlowFragment;
+  onRemove?: () => void;
 }
 
 export function DraggableSubscriptionInterval({
@@ -80,11 +104,13 @@ export function DraggableSubscriptionInterval({
   event,
   mailTemplates,
   subscriptionFlow,
+  onRemove,
 }: DraggableSubscriptionIntervalProps) {
   const { t } = useTranslation();
   const canUpdateSubscriptionFlow = useAuthorisation(
     'CAN_UPDATE_SUBSCRIPTION_FLOW'
   );
+  const client = useContext(SubscriptionClientContext);
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `draggable-${subscriptionInterval?.object?.id}`,
@@ -100,6 +126,9 @@ export function DraggableSubscriptionInterval({
     return transform && !isCustom ?
         {
           transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+          zIndex: 10,
+          boxShadow:
+            'inset 3px 0 0 var(--interval-accent), var(--wep-elevated-shadow)',
         }
       : undefined;
   }, [isCustom, transform]);
@@ -112,31 +141,55 @@ export function DraggableSubscriptionInterval({
         style={draggableStyle}
         accent={isCustom ? undefined : subscriptionInterval?.color?.accent}
       >
-        {subscriptionInterval && !isCustom && (
-          <EventTag>
-            {canUpdateSubscriptionFlow && (
-              <DragHandle
-                ref={setNodeRef}
-                {...listeners}
-                {...attributes}
-              >
-                <MdDragIndicator size={18} />
-              </DragHandle>
-            )}
-            {subscriptionInterval.icon}
-            {subscriptionInterval.title}
-          </EventTag>
-        )}
+        <Entry split={!!subscriptionInterval && !isCustom}>
+          {subscriptionInterval && !isCustom && (
+            <EventTag>
+              {canUpdateSubscriptionFlow && (
+                <DragHandle
+                  ref={setNodeRef}
+                  {...listeners}
+                  {...attributes}
+                >
+                  <MdDragIndicator size={18} />
+                </DragHandle>
+              )}
+              {subscriptionInterval.icon}
+              {subscriptionInterval.title}
+            </EventTag>
+          )}
 
-        <SelectWrapper padded={!!subscriptionInterval && !isCustom}>
-          <MailTemplateSelect
-            mailTemplates={mailTemplates}
-            subscriptionInterval={subscriptionInterval}
-            subscriptionFlow={subscriptionFlow}
-            event={event || subscriptionInterval?.object?.event}
-            newDaysAwayFromEnding={newDaysAwayFromEnding}
-          />
-        </SelectWrapper>
+          <SelectWrapper padded={!!subscriptionInterval && !isCustom}>
+            <MailTemplateSelect
+              mailTemplates={mailTemplates}
+              subscriptionInterval={subscriptionInterval}
+              subscriptionFlow={subscriptionFlow}
+              event={event || subscriptionInterval?.object?.event}
+              newDaysAwayFromEnding={newDaysAwayFromEnding}
+            />
+          </SelectWrapper>
+
+          {(subscriptionInterval ? isCustom : !!onRemove) && (
+            <PermissionControl
+              qualifyingPermissions={['CAN_UPDATE_SUBSCRIPTION_FLOW']}
+            >
+              <IconButton
+                icon={<MdDelete />}
+                size="sm"
+                circle
+                appearance="ghost"
+                color="red"
+                aria-label={t('subscriptionFlow.deleteMail')}
+                onClick={() =>
+                  subscriptionInterval ?
+                    client.deleteSubscriptionInterval({
+                      variables: { id: subscriptionInterval.object.id },
+                    })
+                  : onRemove?.()
+                }
+              />
+            </PermissionControl>
+          )}
+        </Entry>
       </DraggableContainer>
     </Tooltip>
   );

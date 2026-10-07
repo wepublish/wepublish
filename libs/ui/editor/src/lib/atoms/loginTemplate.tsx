@@ -65,7 +65,7 @@ const Content = styled.div`
   padding: 40px;
   background-color: var(--rs-bg-card);
   border: 1px solid var(--wep-shell-border, var(--rs-border-primary));
-  border-radius: 16px;
+  border-radius: var(--rs-radius-lg);
   box-shadow: var(--wep-elevated-shadow, 0 2px 4px 0 rgba(0, 0, 0, 0.2));
 
   .rs-btn[type='submit'] {

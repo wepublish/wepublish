@@ -1,34 +1,58 @@
-import { TableCell } from '@mui/material';
+import styled from '@emotion/styled';
 import {
+  CreateSubscriptionFlowMutationVariables,
+  FullMemberPlanFragment,
   ListPaymentMethodsQuery,
   PaymentPeriodicity,
-  CreateSubscriptionFlowMutationVariables,
-  UpdateSubscriptionFlowMutationVariables,
   SubscriptionFlowFragment,
-  FullMemberPlanFragment,
+  UpdateSubscriptionFlowMutationVariables,
 } from '@wepublish/editor/api';
 import { useAuthorisation } from '@wepublish/ui/editor';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
-import { Badge, CheckPicker, IconButton } from 'rsuite';
+import { Button, CheckPicker } from 'rsuite';
 import { SubscriptionClientContext } from '../graphql-client-context';
 
-interface FilterBodyProps {
+const FilterGrid = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px 16px;
+  padding: 12px 20px 16px;
+`;
+
+const Field = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+`;
+
+const FieldLabel = styled('span')`
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rs-text-primary);
+`;
+
+const CreateAction = styled('div')`
+  display: flex;
+  justify-content: flex-end;
+  grid-column: 1 / -1;
+`;
+
+interface FlowFiltersProps {
   memberPlan: FullMemberPlanFragment;
   subscriptionFlow?: SubscriptionFlowFragment;
   createNewFlow?: boolean;
   paymentMethods: ListPaymentMethodsQuery | undefined;
-  actionColSpan?: number;
 }
 
-export function FilterBody({
+export function FlowFilters({
   subscriptionFlow,
   memberPlan,
   createNewFlow,
   paymentMethods,
-  actionColSpan,
-}: FilterBodyProps) {
+}: FlowFiltersProps) {
   const { t } = useTranslation();
   const canUpdateSubscriptionFlow = useAuthorisation(
     'CAN_UPDATE_SUBSCRIPTION_FLOW'
@@ -94,32 +118,13 @@ export function FilterBody({
   }
 
   return (
-    <>
-      <TableCell align="center">
-        {subscriptionFlow && (
-          <>
-            <Badge
-              color={subscriptionFlow?.numberOfSubscriptions ? 'green' : 'red'}
-              content={
-                <div style={{ whiteSpace: 'nowrap', fontSize: '13px' }}>
-                  {t('subscriptionFlow.subscriptionsAffected', {
-                    numberOfSubscriptions:
-                      subscriptionFlow?.numberOfSubscriptions,
-                  })}
-                </div>
-              }
-            />
+    <FilterGrid>
+      {paymentMethods?.paymentMethods && (
+        <Field>
+          <FieldLabel>{t('subscriptionFlow.paymentMethod')}</FieldLabel>
 
-            <div style={{ marginTop: '5px' }}>
-              {!subscriptionFlow?.default && memberPlan.name}
-            </div>
-          </>
-        )}
-      </TableCell>
-
-      <TableCell align="center">
-        {paymentMethods && paymentMethods.paymentMethods && (
           <CheckPicker
+            block
             data={paymentMethods.paymentMethods.map(method => ({
               label: method.name,
               value: method.id,
@@ -134,13 +139,16 @@ export function FilterBody({
             defaultValue={subscriptionFlow?.paymentMethods.map(m => m.id)}
             onChange={v => createOrUpdateFlow({ paymentMethodIds: v })}
           />
-        )}
-      </TableCell>
+        </Field>
+      )}
 
-      <TableCell align="center">
+      <Field>
+        <FieldLabel>{t('subscriptionFlow.periodicity')}</FieldLabel>
+
         <CheckPicker
+          block
           data={Object.values(PaymentPeriodicity).map(item => ({
-            label: item,
+            label: t(`memberPlanList.paymentPeriodicity.${item}`),
             value: item,
           }))}
           disabled={subscriptionFlow?.default || !canUpdateSubscriptionFlow}
@@ -149,10 +157,13 @@ export function FilterBody({
           defaultValue={subscriptionFlow?.periodicities || []}
           onChange={v => createOrUpdateFlow({ periodicities: v })}
         />
-      </TableCell>
+      </Field>
 
-      <TableCell align="center">
+      <Field>
+        <FieldLabel>{t('subscriptionFlow.autoRenewal')}</FieldLabel>
+
         <CheckPicker
+          block
           data={[true, false].map(item => ({
             label: t(`subscriptionFlow.booleanFilter.${item}`),
             value: item,
@@ -163,20 +174,20 @@ export function FilterBody({
           defaultValue={subscriptionFlow?.autoRenewal || []}
           onChange={v => createOrUpdateFlow({ autoRenewal: v })}
         />
-      </TableCell>
+      </Field>
 
       {createNewFlow && (
-        <TableCell colSpan={actionColSpan}>
-          <IconButton
-            icon={<MdAdd />}
-            color={'green'}
-            appearance={'primary'}
+        <CreateAction>
+          <Button
+            appearance="primary"
+            color="green"
+            startIcon={<MdAdd />}
             onClick={saveNewFlow}
           >
             {t('subscriptionFlow.addNew')}
-          </IconButton>
-        </TableCell>
+          </Button>
+        </CreateAction>
       )}
-    </>
+    </FilterGrid>
   );
 }

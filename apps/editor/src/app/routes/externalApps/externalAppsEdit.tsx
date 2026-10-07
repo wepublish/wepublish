@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { ExternalAppsDocument } from '@wepublish/editor/api';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 
 import { ExternalAppForm } from './externalAppForm';
@@ -22,7 +23,10 @@ export function ExternalApps() {
 
   return (
     <Wrapper>
-      <Title>{t('externalApps.apps')}</Title>
+      <Title>
+        {t('externalApps.apps')}{' '}
+        <InfoTooltip text={t('externalApps.appsInfo')} />
+      </Title>
 
       {data?.externalApps?.map(app => (
         <ExternalAppForm

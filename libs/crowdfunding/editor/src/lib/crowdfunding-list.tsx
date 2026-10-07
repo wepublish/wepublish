@@ -6,6 +6,7 @@ import {
   ListViewHeader,
   createCheckedPermissionComponent,
   IconButton,
+  IconButtonTooltip,
   TableWrapper,
   PaddedCell,
   Table,
@@ -65,7 +66,7 @@ function CrowdfundingList() {
             <RCell>
               {(rowData: RowDataType<FullCrowdfundingFragment>) => (
                 <Link to={`/crowdfundings/edit/${rowData.id}`}>
-                  {rowData.name || 'FullCrowdfundingFragment ohne Namen'}
+                  {rowData.name || t('crowdfunding.list.unnamed')}
                 </Link>
               )}
             </RCell>
@@ -73,27 +74,29 @@ function CrowdfundingList() {
 
           <Column
             width={100}
+            align="center"
             resizable={false}
             fixed="right"
           >
-            <HeaderCell align={'center'}>
-              {t('crowdfunding.list.delete')}
-            </HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
 
-            <PaddedCell align={'center'}>
+            <PaddedCell align="center">
               {(crowdfunding: RowDataType<FullCrowdfundingFragment>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() =>
-                    setCrowdfundingDelete(
-                      crowdfunding as FullCrowdfundingFragment
-                    )
-                  }
-                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    onClick={() =>
+                      setCrowdfundingDelete(
+                        crowdfunding as FullCrowdfundingFragment
+                      )
+                    }
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

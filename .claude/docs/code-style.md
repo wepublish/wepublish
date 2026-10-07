@@ -81,6 +81,17 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   `appearance="ghost" color="red"`. A global rule renders them borderless with a
   coloured icon; add `data-on-media` when the button sits on an image so it
   keeps a solid background.
+- **Help and labels:** icon-only buttons get `IconButtonTooltip` + `aria-label`;
+  non-obvious fields get `<InfoTooltip text={t('…')} />` after the label (never
+  filled `MdInfo`). List action columns use `t('action')`, centred, `fixed="right"`.
+  Toggles carry their label on the right via `<Toggle label={…} />` — no
+  `checkedChildren`, no separate «on/off» text. Radii: `var(--rs-radius-md)` for
+  controls and inner boxes, `var(--rs-radius-lg)` for cards and panels.
+- **Document editors use `EditorHeader`** (`@wepublish/ui/editor`) inside
+  `EditorTemplate`: status chip + last-saved on the left, `EditorHeaderButton`s
+  on the right (secondary subtle, Save/Publish primary). Labels collapse to
+  icons by container width (`collapse="md" | "sm" | false`). The bar bleeds to
+  the content card's edges through `--wep-page-padding-*` set in `base.tsx`.
 - **Editor errors shown to users go through `humanizeError(error)`** from
   `@wepublish/ui/editor`, never raw `error.message` — it turns Prisma, network
   and permission failures into `errors.*` translations. Error toasts use
@@ -101,6 +112,10 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   components are tested. See [testing.md](testing.md).
 - Forms use React Hook Form with Zod resolvers. Icons come from React Icons.
   User-facing strings go through react-i18next — never hardcode copy.
+- **Editor copy** lives in `apps/editor/src/app/locales/{en,de,fr}.json`; add
+  every key to all three. German is Swiss Standard German (no «ß») and says
+  lowercase «du»; French says «vous». `locales.spec.ts` fails when a literal
+  `t('…')` key is missing or the three catalogs drift apart.
 
 ## Nest
 

@@ -11,6 +11,7 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -128,7 +129,10 @@ function DiscountCodeUsageView() {
             resizable
             align="right"
           >
-            <HeaderCell>{t('discountCode.usage.amount')}</HeaderCell>
+            <HeaderCell>
+              {t('discountCode.usage.amount')}{' '}
+              <InfoTooltip text={t('discountCode.usage.amountInfo')} />
+            </HeaderCell>
 
             <RCell>
               {(rowData: RowDataType<Usage>) =>

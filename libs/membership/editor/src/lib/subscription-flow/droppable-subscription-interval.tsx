@@ -1,5 +1,4 @@
 import { useDroppable } from '@dnd-kit/core';
-import { css } from '@mui/material';
 import styled from '@emotion/styled';
 import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,35 +7,37 @@ type DropContainerSubscriptionIntervalProps = PropsWithChildren<{
   dayIndex: number;
 }>;
 
-const Draggable = styled('div')<{ active?: boolean; hover?: boolean }>`
-  transition: border 600ms ease-in-out;
-  border: 2px dashed transparent;
-  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  min-height: 50px;
-
-  ${({ active }) =>
-    active &&
-    css`
-      border: 2px dashed var(--rs-border-primary);
-    `}
-
-  ${({ hover }) =>
-    hover &&
-    css`
-      background-color: var(--rs-bg-well);
-    `}
+const DropArea = styled('div')<{ active?: boolean; hover?: boolean }>`
+  position: relative;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: -6px;
+  padding: 4px;
+  border: 2px dashed
+    ${({ active, hover }) =>
+      hover ? 'var(--rs-primary-500)'
+      : active ? 'var(--rs-border-primary)'
+      : 'transparent'};
+  border-radius: var(--rs-radius-md);
+  background-color: ${({ hover }) =>
+    hover ? 'var(--rs-bg-well)' : 'transparent'};
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
 `;
 
-const DropHere = styled('span')<{ show?: boolean }>`
-  ${({ show }) =>
-    !show &&
-    css`
-      visibility: hidden;
-    `}
+const DropHere = styled('span')`
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  padding: 0 6px;
+  background-color: var(--rs-bg-card);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--rs-primary-500);
+  pointer-events: none;
 `;
 
 export function DroppableSubscriptionInterval({
@@ -52,14 +53,14 @@ export function DroppableSubscriptionInterval({
   });
 
   return (
-    <Draggable
+    <DropArea
       ref={setNodeRef}
       hover={isOver}
       active={!!active}
     >
-      <DropHere show={!!active}>{t('subscriptionFlow.dropHere')}</DropHere>
+      {isOver && <DropHere>{t('subscriptionFlow.dropHere')}</DropHere>}
 
       {children}
-    </Draggable>
+    </DropArea>
   );
 }

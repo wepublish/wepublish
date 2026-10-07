@@ -2606,6 +2606,11 @@ type Mutation {
   """Creates a new block template."""
   createBlockTemplate(blocks: [BlockContentInput!]!, name: String!): BlockTemplate!
 
+  """
+  Sets up the challenge provider. Only possible while none is configured.
+  """
+  createChallengeProviderSetting(id: String!, name: String, secret: String, siteKey: String, type: ChallengeProviderType!): SettingChallengeProvider!
+
   """Creates a comment for any user"""
   createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, publish: Boolean = false, tagIds: [String!], text: RichText): Comment!
 
@@ -2638,6 +2643,9 @@ type Mutation {
 
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
+
+  """Sets up the mail provider. Only possible while none is configured."""
+  createMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType!, webhookEndpointSecret: String): SettingMailProvider!
 
   """Start a background job sending a template to a filtered audience"""
   createMailSendJob(input: MailSendJobInput!): MailSendJobModel!
@@ -2696,6 +2704,9 @@ type Mutation {
 
   """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+
+  """Sets up the sync provider. Only possible while none is configured."""
+  createSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String, type: SyncProviderType!): SettingSyncProvider!
 
   """Creates a new tag."""
   createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
@@ -5183,7 +5194,7 @@ type SubscriptionFlowModel {
   id: String!
   intervals: [SubscriptionInterval!]!
   memberPlan: MemberPlan
-  numberOfSubscriptions: Int!
+  numberOfSubscriptions(memberPlanId: String): Int!
   paymentMethods: [PaymentMethod!]!
   periodicities: [PaymentPeriodicity!]!
 }

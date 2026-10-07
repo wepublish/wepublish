@@ -149,14 +149,14 @@ export const WebsiteTheme = memo(() => {
         <Tabs
           value={activeTab}
           onChange={handleChange}
-          aria-label="Theme tabs"
+          aria-label={t('websiteSettings.theme.tabs')}
         >
           <Tab
-            label="Palette"
+            label={t('websiteSettings.theme.paletteTab')}
             {...a11yProps(0)}
           />
           <Tab
-            label="Typography"
+            label={t('websiteSettings.theme.typographyTab')}
             {...a11yProps(1)}
           />
         </Tabs>
