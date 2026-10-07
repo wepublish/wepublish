@@ -35,3 +35,5 @@ export * from './lib/payment-amount/payment-amount-picker/currency-number-spinne
 export * from './lib/has-unpaid-invoices';
 export * from './lib/has-active-subscription';
 export * from './lib/has-running-subscription';
+
+export * from './lib/subscription-state';
