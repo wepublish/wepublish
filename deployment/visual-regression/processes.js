@@ -106,7 +106,8 @@ async function startApi(
   dbConnectionString,
   logDir,
   workTreeDir,
-  port
+  port,
+  websiteUrl
 ) {
   console.log(`starting api on ${port}...`);
   return spawnAndWaitFor(
@@ -120,6 +121,8 @@ async function startApi(
       MEDIA_SERVER_URL: mediaServerUrl,
       DATABASE_URL: dbConnectionString,
       PORT: port,
+      // overrides the `.env` default of :4200 that article URLs are built from
+      WEBSITE_URL: websiteUrl,
       NX_DAEMON: false, // we don't want to be affected by daemon crashes
     },
     workTreeDir
@@ -134,11 +137,11 @@ async function copyMissingNxHelpers(medium, workTreeDir) {
   }
 }
 
-async function startUi(medium, logDir, workTreeDir, port, apiPort) {
+async function startUi(medium, logDir, workTreeDir, port, apiPort, websiteUrl) {
   console.log(`building ui`);
   const apiUrl = `http://localhost:${apiPort}`;
 
-  await execAsync(`npx nx build ${medium} --verbose`, {
+  await execAsync(`npx nx build ${medium} --skip-nx-cache --verbose`, {
     cwd: workTreeDir,
     env: {
       ...process.env,
@@ -150,6 +153,7 @@ async function startUi(medium, logDir, workTreeDir, port, apiPort) {
        * must be retried.
        */
       API_URL: apiUrl,
+      WEBSITE_URL: websiteUrl,
       NX_DAEMON: false, // we don't want to be affected by daemon crashes
     },
   });
@@ -162,6 +166,7 @@ async function startUi(medium, logDir, workTreeDir, port, apiPort) {
     `${logDir}/ui`,
     {
       API_URL: apiUrl,
+      WEBSITE_URL: websiteUrl,
       NX_DAEMON: false, // we don't want to be affected by daemon crashes
     },
     workTreeDir
@@ -188,6 +193,7 @@ async function startProject(
     killPortIfOccupied(uiPort),
   ]);
   const mediaServerUrl = `https://media-${medium}.wepublish.cloud`;
+  const websiteUrl = `http://localhost:${uiPort}`;
 
   return Promise.all([
     startApi(
@@ -197,9 +203,10 @@ async function startProject(
       dbConnectionString,
       logDir,
       workTreeDir,
-      apiPort
+      apiPort,
+      websiteUrl
     ),
-    startUi(medium, logDir, workTreeDir, uiPort, apiPort),
+    startUi(medium, logDir, workTreeDir, uiPort, apiPort, websiteUrl),
   ]);
 }
 

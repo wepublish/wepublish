@@ -16,6 +16,18 @@ async function takeScreenshotOfPanel(playwrightPage) {
   return await panel.screenshot();
 }
 
+async function takeScreenshotOfFirstArticle(playwrightPage, baseUrl) {
+  const teaser = playwrightPage
+    .locator('article article')
+    .filter({ has: playwrightPage.locator('a[href]') })
+    .first();
+  const href = await teaser.locator('a[href]').first().getAttribute('href');
+  const { pathname, search } = new URL(href, baseUrl);
+  const articleUrl = new URL(`${pathname}${search}`, baseUrl).toString();
+  await visitPage(playwrightPage, articleUrl);
+  return await playwrightPage.screenshot({ fullPage: true });
+}
+
 async function activateFirstTabs(playwrightPage) {
   const tablists = await playwrightPage.getByRole('tablist').all();
   for (const tablist of tablists) {
@@ -45,6 +57,13 @@ async function takeLandingPageScreenshots(context, baseUrl) {
     } catch (e) {
       screenshots.push({ key: 'kolumnen', screenshotBuffer: null });
       console.error(`error has happened when taking 'kolumnen' screenshot: ${e}`);
+    }
+    try {
+      const articleScreenshot = await takeScreenshotOfFirstArticle(playwrightPage, baseUrl);
+      screenshots.push({ key: 'article', screenshotBuffer: articleScreenshot });
+    } catch (e) {
+      screenshots.push({ key: 'article', screenshotBuffer: null });
+      console.error(`error has happened when taking 'article' screenshot: ${e}`);
     }
   } finally {
     await playwrightPage.close();
