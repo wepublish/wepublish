@@ -39,8 +39,11 @@ With Dragonfly configured but unreachable the nightly job does not run (without
 (`/health`, `monitoring.tf`) turns red; pod probes ignore it.
 Cross-replica locks (`lock:*`: jobs, migrator ticks, tracking pixels, used TOTP
 codes) and counters (`count:*`: TOTP failures) live there as well.
-Websites share their rendered ISR pages there too (Next `cacheHandler`, nothing
-written to disk; [utils-website README](../../libs/utils/website/README.md)):
+Websites share their rendered ISR pages there too (nothing written to disk;
+[utils-website README](../../libs/utils/website/README.md)) — Next through
+`cacheHandler`, gruppetto through `withPageCache` in its TanStack `server.ts`,
+both over the same `libs/utils/website/src/lib/page-cache/` core and the same
+keys:
 publishing rebuilds front page and pages through `website:pages`, but an
 article page only when that article or the layout changed. 404s are never
 cached, not even by Cloudflare.

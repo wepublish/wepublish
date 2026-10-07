@@ -26,7 +26,6 @@ import { Route as ASlugRouteImport } from './routes/a/$slug';
 import { Route as ApiAtomFeedRouteImport } from './routes/api/atom-feed';
 import { Route as ApiHealthRouteImport } from './routes/api/health';
 import { Route as ApiJsonFeedRouteImport } from './routes/api/json-feed';
-import { Route as ApiRevalidateRouteImport } from './routes/api/revalidate';
 import { Route as ApiRssFeedRouteImport } from './routes/api/rss-feed';
 import { Route as ApiSitemapRouteImport } from './routes/api/sitemap';
 import { Route as AuthorIndexRouteImport } from './routes/author/index';
@@ -126,11 +125,6 @@ const ApiJsonFeedRoute = ApiJsonFeedRouteImport.update({
   path: '/api/json-feed',
   getParentRoute: () => rootRouteImport,
 } as any);
-const ApiRevalidateRoute = ApiRevalidateRouteImport.update({
-  id: '/api/revalidate',
-  path: '/api/revalidate',
-  getParentRoute: () => rootRouteImport,
-} as any);
 const ApiRssFeedRoute = ApiRssFeedRouteImport.update({
   id: '/api/rss-feed',
   path: '/api/rss-feed',
@@ -216,7 +210,6 @@ export interface FileRoutesByFullPath {
   '/api/atom-feed': typeof ApiAtomFeedRoute;
   '/api/health': typeof ApiHealthRoute;
   '/api/json-feed': typeof ApiJsonFeedRoute;
-  '/api/revalidate': typeof ApiRevalidateRoute;
   '/api/rss-feed': typeof ApiRssFeedRoute;
   '/api/sitemap': typeof ApiSitemapRoute;
   '/author/$slug': typeof AuthorSlugRoute;
@@ -249,7 +242,6 @@ export interface FileRoutesByTo {
   '/api/atom-feed': typeof ApiAtomFeedRoute;
   '/api/health': typeof ApiHealthRoute;
   '/api/json-feed': typeof ApiJsonFeedRoute;
-  '/api/revalidate': typeof ApiRevalidateRoute;
   '/api/rss-feed': typeof ApiRssFeedRoute;
   '/api/sitemap': typeof ApiSitemapRoute;
   '/author/$slug': typeof AuthorSlugRoute;
@@ -283,7 +275,6 @@ export interface FileRoutesById {
   '/api/atom-feed': typeof ApiAtomFeedRoute;
   '/api/health': typeof ApiHealthRoute;
   '/api/json-feed': typeof ApiJsonFeedRoute;
-  '/api/revalidate': typeof ApiRevalidateRoute;
   '/api/rss-feed': typeof ApiRssFeedRoute;
   '/api/sitemap': typeof ApiSitemapRoute;
   '/author/$slug': typeof AuthorSlugRoute;
@@ -318,7 +309,6 @@ export interface FileRouteTypes {
     | '/api/atom-feed'
     | '/api/health'
     | '/api/json-feed'
-    | '/api/revalidate'
     | '/api/rss-feed'
     | '/api/sitemap'
     | '/author/$slug'
@@ -351,7 +341,6 @@ export interface FileRouteTypes {
     | '/api/atom-feed'
     | '/api/health'
     | '/api/json-feed'
-    | '/api/revalidate'
     | '/api/rss-feed'
     | '/api/sitemap'
     | '/author/$slug'
@@ -384,7 +373,6 @@ export interface FileRouteTypes {
     | '/api/atom-feed'
     | '/api/health'
     | '/api/json-feed'
-    | '/api/revalidate'
     | '/api/rss-feed'
     | '/api/sitemap'
     | '/author/$slug'
@@ -418,7 +406,6 @@ export interface RootRouteChildren {
   ApiAtomFeedRoute: typeof ApiAtomFeedRoute;
   ApiHealthRoute: typeof ApiHealthRoute;
   ApiJsonFeedRoute: typeof ApiJsonFeedRoute;
-  ApiRevalidateRoute: typeof ApiRevalidateRoute;
   ApiRssFeedRoute: typeof ApiRssFeedRoute;
   ApiSitemapRoute: typeof ApiSitemapRoute;
   AuthorSlugRoute: typeof AuthorSlugRoute;
@@ -556,13 +543,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiJsonFeedRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    '/api/revalidate': {
-      id: '/api/revalidate';
-      path: '/api/revalidate';
-      fullPath: '/api/revalidate';
-      preLoaderRoute: typeof ApiRevalidateRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
     '/api/rss-feed': {
       id: '/api/rss-feed';
       path: '/api/rss-feed';
@@ -674,7 +654,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAtomFeedRoute: ApiAtomFeedRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiJsonFeedRoute: ApiJsonFeedRoute,
-  ApiRevalidateRoute: ApiRevalidateRoute,
   ApiRssFeedRoute: ApiRssFeedRoute,
   ApiSitemapRoute: ApiSitemapRoute,
   AuthorSlugRoute: AuthorSlugRoute,

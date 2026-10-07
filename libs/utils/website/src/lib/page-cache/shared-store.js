@@ -168,10 +168,16 @@ function createSharedStore({
     connecting ??= (async () => {
       drop();
 
-      const candidate = createClient(options);
-      candidate.on('error', () => undefined);
+      // Constructing the client has to be inside the try as well: a bundler
+      // that hands `require('@keyv/redis')` back as the default export rather
+      // than the namespace makes this throw, and the page cache must degrade
+      // to this pod only rather than take the request down with it.
+      let candidate;
 
       try {
+        candidate = createClient(options);
+        candidate.on('error', () => undefined);
+
         await timeout(candidate.connect(), CONNECTION_TIMEOUT_MS, 'connection');
         client = candidate;
 

@@ -87,7 +87,8 @@ apps/gruppetto/
   project.json             ← nx:run-commands around vite, instead of @nx/next
   index.d.ts               ← *.svg is a string here, not StaticImageData
   src/
-    start.ts               ← request middleware: the ISR replacement
+    server.ts              ← server entry: the shared page cache (ISR)
+    start.ts               ← request middleware: the CDN cache headers
     router.tsx             ← createRouter + Apollo wiring
     routeTree.gen.ts       ← GENERATED, never edit
     app.tsx                ← what pages/_app.tsx rendered
@@ -294,7 +295,7 @@ Feeds and sitemaps moved to conventional paths, with 301s from the old ones:
 | `/api/atom-feed` | `/atom.xml` |
 | `/api/json-feed` | `/feed.json` |
 | `/api/health` | **unchanged** — it is the k8s probe path in `helm/charts/wepublish-website/templates/website.yaml` |
-| `/api/revalidate` | kept as a stub, see [§5](#5-ssr-ssg-and-isr--what-you-really-get) |
+| `/api/revalidate` | **removed** — invalidation is version-driven, see [§5](#5-ssr-ssg-and-isr--what-you-really-get) |
 
 The legacy paths must keep resolving: they are in already-crawled
 `<link rel="alternate">` tags and, more importantly, in every existing
@@ -305,10 +306,18 @@ A literal dot in a route path is escaped with `[.]` in the filename:
 `src/routes/sitemap[.]xml.ts` → `/sitemap.xml`. Without the brackets, `.` is
 the path separator and you would get `/sitemap/xml`.
 
-### Step 5 — cache headers
+### Step 5 — caching
 
-Create `src/start.ts` with a request middleware (see
-[§5](#5-ssr-ssg-and-isr--what-you-really-get)).
+Two files, both covered in [§5](#5-ssr-ssg-and-isr--what-you-really-get):
+
+- `src/start.ts` — a request middleware that applies the CDN `cache-control`
+  policy by path. This is also what decides what the page cache may store.
+- `src/server.ts` — the server entry, wrapped in `withPageCache` so the origin
+  keeps its own shared copy of every rendered document.
+
+`src/server.ts` also needs the two `build.commonjsOptions` entries in
+`vite.config.mts` — see
+[Pitfall 14](#pitfall-14-the-page-cache-is-commonjs-and-its-redis-client-is-esm).
 
 ### Step 6 — verify
 
@@ -366,62 +375,113 @@ This is not a regression: the Next app's `paths: []` + `fallback: 'blocking'`
 meant **nothing was prerendered at build time either**. Everything was
 render-on-demand plus caching, which is exactly what we have now.
 
-### ISR ❌ — this is the one real semantic gap
+### ISR ✅ — the shared page cache, ported
 
-TanStack Start has **no incremental static regeneration**. There is no
-server-side page cache, so:
+TanStack Start has no `next.config.js#cacheHandler`. What it has instead is
+`src/server.ts`, a plain fetch handler wrapping the whole request — which turns
+out to be strictly more control, because the cache check runs **before** the
+router boots, so a hit never instantiates it.
 
-- `getStaticProps({ revalidate: 60 })` has no equivalent.
-- `res.revalidate(path)` (the editor's publish webhook) has no equivalent.
-  `/api/revalidate` is kept as a stub that returns
-  `{ revalidated: false, reason: 'TanStack Start has no ISR…' }` with a 200 so
-  the webhook does not error — and so the gap is discoverable at runtime.
+So the cache itself was not rewritten. `libs/utils/website/src/lib/page-cache/`
+— the two-tier LRU, the namespace-version checks, the render lock, the
+Dragonfly client — is the exact code the 19 Next tenants run, and the
+invalidation protocol the api writes (`nsv:website:pages`,
+`nsv:website:path:<path>`, `website:heartbeat`; see `libs/kv-ttl-cache/api`) is
+untouched. One publish invalidates a TanStack tenant and a Next tenant through
+the same key.
 
-**The replacement** is render-on-demand behind a CDN that honours
-`stale-while-revalidate`: the first request after the window expires is served
-stale from the edge while the origin re-renders. Same user-visible behaviour,
-same origin load profile.
-
-Next applied cache headers *by path* in `next.config.js#headers()` and the
-per-page `revalidate` only ever used two values (60 and 1), so a single
-path-based request middleware reproduces all of it in one place:
+Only the adapter is new:
 
 ```ts
-// src/start.ts
-const cacheHeaders = createMiddleware({ type: 'request' }).server(
-  async ({ next, request }) => {
-    const result = await next();
-    const { pathname } = new URL(request.url);
+// apps/gruppetto/src/server.ts
+import handler, { createServerEntry } from '@tanstack/react-start/server-entry';
+import { withPageCache } from '@wepublish/utils/website/tanstack/server';
 
-    if (result.response.headers.has('cache-control')) return result;      // route decided
-    if (result.response.status >= 400) {                                   // was revalidate: 1
-      result.response.headers.set('cache-control', ISR_1);
-      return result;
-    }
-    const rule = CACHE_RULES.find(([p]) => p.test(pathname));
-    result.response.headers.set('cache-control', rule ? rule[1] : ISR_60);
-    return result;
-  }
-);
+export default createServerEntry({
+  fetch: withPageCache(handler.fetch),
+});
 ```
 
-Resulting policy (measured against the running server):
+`withPageCache` (`libs/utils/website/src/tanstack/page-cache.ts`) does three
+things on top of the shared core:
+
+1. **Decides what is a document.** GET, `text/html`, not `/api`, `/_serverFn`
+   or `/_build`, no dot in the path. The cache key is `pathname + search`.
+2. **Fires the background render.** Next's contract was that `get()` returns
+   `lastModified: 1` and *Next* schedules the re-render that calls `set()`.
+   Nobody does that here, so the adapter serves the stale copy and renders
+   again itself. The `startRender` backoff, the shared lock and the grace
+   window in `page-cache.js` already assume exactly one re-render per stale
+   hit, so supplying that trigger was the whole port.
+3. **Stores off the response, not a path list.** A response is stored only if
+   its own `cache-control` names an `s-maxage`, is not `no-store`/`private`,
+   sets no cookie and is a 200. A 404 is stored as a *deletion*, exactly as
+   under Next.
+
+Point 3 is why there is no second path list: `CACHE_RULES` in `src/start.ts`
+stays the single source of truth. Mark a route `no-store` there and it stops
+being stored here too.
+
+> ⚠ The corollary cuts both ways. A user-specific route that is **missing**
+> from `CACHE_RULES` gets the 59s default, and its HTML is then shared between
+> visitors. That was already true of the CDN policy; the blast radius is now
+> Dragonfly as well.
+
+The CDN policy from `src/start.ts` is unchanged and still does the outer layer
+of the job — the page cache is the origin-side tier behind it:
 
 | Path | `cache-control` |
 | --- | --- |
 | everything else | `public, max-age=59, s-maxage=60, stale-while-revalidate=604800, stale-if-error=86400` |
-| any 4xx/5xx | `public, max-age=0, s-maxage=1, stale-if-error=86400` |
+| any 4xx/5xx | `no-store` |
 | `/profile*`, `/login`, `/signup`, `/search`, `/_serverFn/*` | `no-store` |
 | `/_build/*` | `public, max-age=31536000, immutable` |
 | `/sitemap.xml` | `s-maxage=599, stale-while-revalidate=604800, …` |
 | `/rss.xml`, `/atom.xml`, `/feed.json` | `public, max-age=599, s-maxage=599, stale-if-error=86400` |
 
-**If you add a route, add it to `CACHE_RULES`** — otherwise it silently gets
-the 59s default, which is wrong for anything user-specific.
+**If you add a route, add it to `CACHE_RULES`.**
 
 > ⚠ Static files in `public/` are served by nitro *before* the middleware, so
-> they do not get these headers. Next set them via `headers()`. Low impact
-> (only `robots.txt` and `favicon.ico`), but worth knowing.
+> they get neither these headers nor the page cache. Low impact (only
+> `robots.txt` and `favicon.ico`), but worth knowing.
+
+#### Turning it on
+
+It is a no-op — pod-local LRU only, no Dragonfly — unless all three are set:
+
+| Variable | Why |
+| --- | --- |
+| `REDIS_URL` | Dragonfly. `rediss://` is required in production, with `NODE_EXTRA_CA_CERTS` pointing at the internal CA. |
+| `REDIS_KEY_PREFIX` | the medium's ACL prefix; without it the store refuses to share |
+| `APP_RELEASE_ID` | scopes every key to one build, so a deploy never serves the previous build's HTML against new asset URLs. This is the Start equivalent of Next's `BUILD_ID` file. |
+
+Prerendering (`PRERENDER=1`) deliberately bypasses the shared store: those
+renders are build artefacts, not traffic.
+
+Verify it across two pods, which is the only test that proves the shared tier
+rather than the pod-local one:
+
+```bash
+podman compose up -d dragonfly
+nx build gruppetto
+# two pods, same APP_RELEASE_ID, same prefix
+PORT=4298 APP_RELEASE_ID=t1 REDIS_KEY_PREFIX=wepublish-local \
+  REDIS_URL=redis://wepublish-local:wepublish-local@localhost:6379/0 \
+  node dist/apps/gruppetto/.output/server/index.mjs &
+# … and the same on 4299. Render on one, then ask the other:
+curl -sI -H 'accept: text/html' localhost:4298/mitmachen | grep x-page-cache
+```
+
+`x-page-cache: HIT` on the pod that never rendered the page is the proof.
+`STALE` means it served the old copy and is re-rendering behind you.
+
+#### What is still missing
+
+`res.revalidate(path)` has no equivalent and `/api/revalidate` is **gone**, not
+stubbed. It is not needed: the api bumps `nsv:website:path:<path>` on publish
+and every pod notices within two seconds, which is what actually invalidated
+pages under Next too. There is no targeted purge endpoint; if a page is ever
+visibly stuck, the lever is a CDN purge.
 
 ---
 
@@ -660,6 +720,69 @@ stage does too.
 - **`lodash`** is CJS; `import { escape } from 'lodash'` fails in Vite's dev
   SSR runner. It is in `ssr.noExternal`.
 
+### Pitfall 14: the page cache is CommonJS and its redis client is ESM
+
+Wiring `withPageCache` into `src/server.ts` costs **two** entries in
+`build.commonjsOptions`, and both fail in ways that do not look like a build
+problem.
+
+**1. The page cache core is CommonJS source.**
+`libs/utils/website/src/lib/page-cache/*.js` is plain CJS on purpose: Next
+`require()`s `page-cache-handler.js` at runtime from that source path, via
+`next.config.js#cacheHandler`, outside any bundler. Vite only runs the CJS
+interop over `node_modules`, so importing it from TypeScript dies at build
+time with:
+
+```
+"createSharedStore" is not exported by ".../page-cache/shared-store.js"
+```
+
+Note that `vitest` has no such problem — it transforms the file fine, so the
+unit tests pass and only `nx build` fails. Fix:
+
+```ts
+build: {
+  commonjsOptions: {
+    // `include` replaces the default, so node_modules has to be re-listed.
+    include: [/node_modules/, /libs\/utils\/website\/src\/lib\/page-cache\//],
+  },
+},
+```
+
+**2. `@keyv/redis` is an ESM-only package required from that CommonJS.**
+`shared-store.js` does `require('@keyv/redis').createClient`. Rollup assumes
+every *external* is CommonJS and emits `import require$$1 from '@keyv/redis'`
+— the default export, which is the `KeyvRedis` class. `createClient` is a
+**named** export, so it is `undefined`.
+
+This one does not fail the build. It fails at runtime, once per request, and
+the page cache degrades to pod-local with a line in the log:
+
+```
+[page-cache] Dragonfly unavailable, caching pages on this pod only …:
+require$$1.createClient is not a function
+```
+
+Which means: unless you check, it looks like it works. Fix:
+
+```ts
+esmExternals: ['@keyv/redis'],
+requireReturnsDefault: (id: string) =>
+  id === '@keyv/redis' ? 'namespace' : false,
+```
+
+Confirm by grepping the output — `import * as redis from "@keyv/redis"` is
+right, `import require$$1 from "@keyv/redis"` is wrong:
+
+```bash
+grep -n 'keyv/redis' dist/apps/gruppetto/.output/server/chunks/build/server.mjs
+```
+
+`@keyv/redis` also has to be in `ssr.external` and nitro's `externals.external`
+— it reaches a native `.node` binary through `@node-rs/xxhash`, which rollup
+cannot parse at all. Same treatment as `i18n-iso-countries`
+([Pitfall 10](#pitfall-10-i18n-iso-countries-breaks-the-bundled-server)).
+
 ---
 
 ## 7. Deployment
@@ -692,7 +815,9 @@ fi
 No caller workflow changes; migrating the next tenant needs no CI edit at all.
 
 The helm chart is unchanged: the container still listens on `PORT` and still
-answers `/api/health`.
+answers `/api/health`. The page cache needs `REDIS_URL`, `REDIS_KEY_PREFIX`
+and `APP_RELEASE_ID` in `website.env` — the same three the Next tenants
+already get, with `APP_RELEASE_ID` standing in for Next's `BUILD_ID`.
 
 ---
 
@@ -722,6 +847,12 @@ Then check, with the server running:
 - [ ] no spurious redirects from `validateSearch` defaults (`/event`,
       `/search?q=x` must stay put)
 - [ ] `cache-control` matches the table in [§5](#5-ssr-ssg-and-isr--what-you-really-get)
+- [ ] the page cache shares across pods: with `REDIS_URL`,
+      `REDIS_KEY_PREFIX` and `APP_RELEASE_ID` set the same way on two
+      instances, a path rendered on one answers `x-page-cache: HIT` on the
+      other's **first** request (see
+      [§5](#turning-it-on)) — and the log has no
+      `[page-cache] Dragonfly unavailable` line
 - [ ] the HTML contains real content with JS disabled (SSR), including
       `<style data-emotion>` tags
 - [ ] no server code in the client bundle:
@@ -750,9 +881,11 @@ Honest list of what is **not** done or not verified.
    `SENTRY_*` build args, so the plumbing is there — only the SDK wiring is
    missing. **This should block a production cutover.**
 
-2. **On-demand revalidation.** `/api/revalidate` is a stub. Editors pressing
-   "publish" will not see the change until the 60 s CDN window lapses. If that
-   is unacceptable, wire the webhook to the CDN's purge API instead.
+2. **On-demand revalidation.** `/api/revalidate` is gone and nothing replaced
+   it. The origin page cache invalidates itself from the api's namespace
+   versions within two seconds of a publish, so the remaining delay is the CDN
+   window, not the origin. If that is unacceptable, wire the publish webhook to
+   the CDN's purge API.
 
 ### Not verified (no way to test here)
 

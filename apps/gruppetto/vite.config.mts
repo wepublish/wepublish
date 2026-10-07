@@ -73,6 +73,30 @@ export default defineConfig(({ mode }) => {
     root: projectRoot,
     cacheDir: join(workspaceRoot, 'node_modules/.vite/gruppetto'),
 
+    build: {
+      commonjsOptions: {
+        // `libs/utils/website/src/lib/page-cache/*.js` is CommonJS on
+        // purpose: Next `require()`s `page-cache-handler.js` at runtime from
+        // that source path, outside any bundler, so it cannot be ESM. Vite
+        // only runs the CJS interop over `node_modules`, so workspace source
+        // has to be opted in by hand — without this the server build dies
+        // with `"createSharedStore" is not exported by shared-store.js`.
+        // Re-listing `/node_modules/` is required: `include` replaces the
+        // default rather than extending it.
+        include: [/node_modules/, /libs\/utils\/website\/src\/lib\/page-cache\//],
+        // `shared-store.js` does `require('@keyv/redis').createClient`.
+        // Rollup assumes every external is CommonJS and emits a default
+        // import, which for this ESM-only package is the `KeyvRedis` class —
+        // `.createClient` is then undefined and the shared cache silently
+        // falls back to pod-local. These two options say "this one external
+        // is ESM, hand the require its namespace". Scoped to `@keyv/redis`
+        // so the rest of the build keeps rollup's defaults.
+        esmExternals: ['@keyv/redis'],
+        requireReturnsDefault: (id: string) =>
+          id === '@keyv/redis' ? 'namespace' : false,
+      },
+    },
+
     server: {
       port: 4202,
       // The workspace root has to be allowed, otherwise Vite refuses to serve
@@ -152,7 +176,10 @@ export default defineConfig(({ mode }) => {
       // "Could not dynamically require ./langs/br.json" on the first request.
       // Keeping it external makes node resolve it normally; nitro traces it
       // into `.output/server/node_modules`.
-      external: ['i18n-iso-countries'],
+      // `@keyv/redis` (the page cache's Dragonfly client) reaches a native
+      // `.node` binary through `@node-rs/xxhash`, which rollup cannot parse.
+      // External, nitro traces it into `.output/server/node_modules`.
+      external: ['i18n-iso-countries', '@keyv/redis'],
     },
 
     plugins: [
@@ -202,7 +229,8 @@ export default defineConfig(({ mode }) => {
             // "Could not dynamically require ./langs/br.json" the first time
             // the server handles a request. Keeping it external makes nitro
             // trace it into `.output/server/node_modules` instead.
-            external: ['i18n-iso-countries'],
+            // `@keyv/redis` likewise: see `ssr.external` above.
+            external: ['i18n-iso-countries', '@keyv/redis'],
           },
         },
       }),

@@ -241,6 +241,28 @@ must drop `name` in `duplicate()` — the worker's `CLIENT SETNAME` is denied by
 
 ---
 
+### ⚠️ Two bundler flags stand between gruppetto and a shared page cache
+
+`apps/gruppetto`'s `build.commonjsOptions` carries `include` (the page cache
+core is CommonJS *source*, which Vite otherwise refuses to interop) and
+`esmExternals` + `requireReturnsDefault` for `@keyv/redis` (an ESM-only
+package `require`d from that CommonJS). Drop the first and `nx build` fails
+loudly. Drop the second and **nothing fails** — the build is green, the tests
+are green, and the site quietly caches per-pod only, logging
+`[page-cache] Dragonfly unavailable … require$$1.createClient is not a
+function` once every five seconds.
+
+`vitest` transforms the CJS source happily, so no unit test can catch either.
+The check is the built output:
+
+```bash
+grep -n 'keyv/redis' dist/apps/gruppetto/.output/server/chunks/build/server.mjs
+# import * as redis from "@keyv/redis";   ← right
+# import require$$1 from "@keyv/redis";   ← wrong, shared cache is dead
+```
+
+Full write-up: [tanstack-start-migration.md §6 Pitfall 14](../../docs/tanstack-start-migration.md#pitfall-14-the-page-cache-is-commonjs-and-its-redis-client-is-esm).
+
 ### ⚠️ The page cache hands Next a fake `lastModified`
 
 `page-cache.js` returns "now" for a fresh page and `1` for a stale one. Next

@@ -6,4 +6,5 @@
  * route handler. Importing it from a component trips TanStack's import
  * protection at build time.
  */
+export * from './tanstack/page-cache';
 export * from './tanstack/ssr';

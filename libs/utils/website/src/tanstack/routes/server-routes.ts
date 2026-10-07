@@ -61,33 +61,6 @@ export const legacyRedirectHandler = (to: string) =>
   });
 
 /**
- * `pages/api/revalidate.ts`.
- *
- * TanStack Start has no ISR, so there is no server-side page cache to purge —
- * `res.revalidate(path)` has no equivalent. Pages render per request and are
- * cached by the CDN, so an editorial "publish now" has to purge the CDN.
- *
- * Kept so the API's publish webhook still gets a 200 instead of erroring, and
- * so the gap is discoverable at runtime rather than silently absent.
- */
-export const revalidateStubHandler = ({ request }: { request: Request }) => {
-  const { searchParams } = new URL(request.url);
-
-  if (searchParams.get('secret') !== process.env.REVALIDATE_TOKEN) {
-    return Response.json({ message: 'Invalid token' }, { status: 401 });
-  }
-
-  return Response.json(
-    {
-      revalidated: false,
-      reason: 'TanStack Start has no ISR. Purge the CDN for this path instead.',
-      path: searchParams.get('path'),
-    },
-    { headers: { 'cache-control': 'no-store' } }
-  );
-};
-
-/**
  * `pages/api/sitemap.ts`, now served from `/sitemap.xml`.
  *
  * `getSitemap` stays in the app: the title and the list of extra static URLs
@@ -130,6 +103,10 @@ export const feedHandler = async (
     headers: {
       'content-type': FEED_CONTENT_TYPE[format],
       'cache-control': FEED_CACHE_CONTROL,
+      // Cloudflare ignores `cache-control` once `cdn-cache-control` is
+      // present on any route, so a feed without it would fall back to the
+      // origin policy. The Next endpoints set both.
+      'cdn-cache-control': FEED_CACHE_CONTROL,
     },
   });
 };

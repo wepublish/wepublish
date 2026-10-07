@@ -439,6 +439,30 @@ describe('shared page store', () => {
   });
 
   describe('connection', () => {
+    it('answers undefined when the client cannot even be constructed', async () => {
+      const dragonfly = new FakeDragonfly();
+      const errors: string[] = [];
+      const shared = createSharedStore({
+        env: {
+          REDIS_URL: 'redis://wep-x:secret@localhost:6379/0',
+          REDIS_KEY_PREFIX: 'wep-x',
+        },
+        buildId: 'build-1',
+        createClient: () => {
+          throw new TypeError('createClient is not a function');
+        },
+        logger: { error: (message: string) => errors.push(message) },
+      });
+
+      await expect(shared?.getVersion()).resolves.toBeUndefined();
+      await expect(shared?.getEntry('/a/one')).resolves.toBeUndefined();
+      // The lock is granted while Dragonfly is unreachable: with no way to
+      // coordinate, every pod has to stay free to regenerate on its own.
+      await expect(shared?.acquireLock('/a/one')).resolves.toBe(true);
+      expect(errors[0]).toContain('createClient is not a function');
+      expect(dragonfly.clients).toHaveLength(0);
+    });
+
     it('waits for the connection before its first commands', async () => {
       const { dragonfly, errors, store } = setup();
       dragonfly.connectDelayMs = 5;
