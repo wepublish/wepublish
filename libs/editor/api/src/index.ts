@@ -288,6 +288,7 @@ export type {
   MutationPublishArticleArgs,
   MutationPublishPageArgs,
   MutationRateCommentArgs,
+  MutationReactivateSubscriptionArgs,
   MutationRegisterMemberArgs,
   MutationRejectCommentArgs,
   MutationRenewSubscriptionArgs,

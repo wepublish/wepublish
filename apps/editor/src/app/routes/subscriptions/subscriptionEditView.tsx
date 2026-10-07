@@ -16,6 +16,7 @@ import {
   PaymentMethodListDocument,
   PaymentPeriodicity,
   PropertyInput,
+  ReactivateSubscriptionDocument,
   RenewSubscriptionDocument,
   SubscriptionDeactivationReason,
   SubscriptionDocument,
@@ -24,18 +25,18 @@ import {
 } from '@wepublish/editor/api';
 import {
   ALL_PAYMENT_PERIODICITIES,
-  getMonthlyEquivalentRange,
-  PAYMENT_PERIODICITY_MONTHS,
   createCheckedPermissionComponent,
   CurrencyInput,
   DescriptionList,
   DescriptionListItem,
+  getMonthlyEquivalentRange,
   IconButtonTooltip,
   InfoTooltip,
   InvoiceListPanel,
   ListViewActions,
   ListViewContainer as ListViewContainerDefault,
   ListViewHeader,
+  PAYMENT_PERIODICITY_MONTHS,
   PermissionControl,
   TableWrapper,
   toggleRequiredLabel,
@@ -50,6 +51,7 @@ import {
   MdCheck,
   MdChevronLeft,
   MdOpenInNew,
+  MdRestartAlt,
   MdUnpublished,
 } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -69,6 +71,8 @@ import {
   toaster,
   Toggle,
 } from 'rsuite';
+
+import { ReactivateSubscriptionModal } from './reactivateSubscriptionModal';
 
 const { Group, Label, Control, Text } = RForm;
 
@@ -128,6 +132,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const isAuthorized = useAuthorisation('CAN_CREATE_SUBSCRIPTION');
 
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] =
+    useState<boolean>(false);
+  const [isReactivationModalOpen, setReactivationModalOpen] =
     useState<boolean>(false);
   const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false);
   const [user, setUser] = useState<FullUserFragment | null>();
@@ -296,6 +302,10 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [renewSubscription, { error: renewalError }] = useMutation(
     RenewSubscriptionDocument
   );
+  const [
+    reactivateSubscription,
+    { loading: isReactivating, error: reactivationError },
+  ] = useMutation(ReactivateSubscriptionDocument);
 
   /**
    * fetch edited user from api
@@ -333,7 +343,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
       paymentMethodLoadError?.message ??
       loadErrorInvoices?.message ??
       cancelError?.message ??
-      renewalError?.message;
+      renewalError?.message ??
+      reactivationError?.message;
     if (error)
       toaster.push(
         <Message
@@ -351,6 +362,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     loadErrorInvoices,
     cancelError,
     renewalError,
+    reactivationError,
   ]);
 
   /**
@@ -535,6 +547,25 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     await reloadInvoices();
   }
 
+  async function handleReactivation() {
+    if (!id) return;
+
+    setReactivationModalOpen(false);
+
+    try {
+      const { data } = await reactivateSubscription({
+        variables: { id },
+      });
+
+      if (data?.reactivateSubscription) onSave?.(data.reactivateSubscription);
+    } catch (e) {
+      /* error is handled in the mutation definition */
+    }
+
+    // reactivating may create a new invoice and period
+    await Promise.all([reloadSubscription(), reloadInvoices()]);
+  }
+
   async function handleRenewal() {
     if (!id) return;
 
@@ -621,7 +652,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
             <PermissionControl
               qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}
             >
-              {showInvoiceHistory() && (
+              {showInvoiceHistory() && !deactivation && (
                 <IconButtonMarginRight
                   appearance="ghost"
                   disabled={isDisabled || isDeactivated}
@@ -629,6 +660,18 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                 >
                   <MdUnpublished />
                   {t('userSubscriptionEdit.deactivation.title.activated')}
+                </IconButtonMarginRight>
+              )}
+              {showInvoiceHistory() && deactivation && (
+                <IconButtonMarginRight
+                  appearance="ghost"
+                  color="green"
+                  data-testid="reactivateSubscription"
+                  disabled={isDisabled || isReactivating}
+                  onClick={() => setReactivationModalOpen(true)}
+                >
+                  <MdRestartAlt />
+                  {t('userSubscriptionEdit.reactivation.title')}
                 </IconButtonMarginRight>
               )}
               <ButtonMarginRight
@@ -1072,6 +1115,21 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
             />
           </Modal>
         )}
+
+        {/* ask user to really reactivate the subscription */}
+        <ReactivateSubscriptionModal
+          open={isReactivationModalOpen}
+          loading={isReactivating}
+          userName={user?.name || user?.email}
+          memberPlanName={memberPlan?.name}
+          monthlyAmount={monthlyAmount}
+          paymentPeriodicity={paymentPeriodicity}
+          currency={currency}
+          paidUntil={paidUntil}
+          deactivation={deactivation}
+          onClose={() => setReactivationModalOpen(false)}
+          onConfirm={() => handleReactivation()}
+        />
 
         {/* ask user to really extend the subscripion */}
         <Modal
