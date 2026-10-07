@@ -2910,6 +2910,10 @@ export type Mutation = {
   publishPage: Page;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
   rateComment: Comment;
+  /** Reactivates a deactivated subscription. */
+  reactivateSubscription: PublicSubscription;
+  /** Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created. */
+  reactivateUserSubscription: PublicSubscription;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
   /** Rejects a comment */
@@ -2934,6 +2938,10 @@ export type Mutation = {
   restorePageRevision: Page;
   /** Continue a send job that stopped early. Recipients already sent are skipped. */
   resumeMailSendJob: MailSendJobModel;
+  /** Undoes an upgrade of a subscription as long as the new subscription has not been paid for. */
+  revertSubscriptionUpgrade: PublicSubscription;
+  /** Undoes an upgrade of one of the authenticated user's own subscriptions as long as the new subscription has not been paid for. The replacement subscription is removed and the original one continues. */
+  revertUserSubscriptionUpgrade: PublicSubscription;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean']['output'];
   revokeImpersonationSessions: Scalars['Int']['output'];
@@ -3893,6 +3901,16 @@ export type MutationRateCommentArgs = {
 };
 
 
+export type MutationReactivateSubscriptionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationReactivateUserSubscriptionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationRegisterMemberArgs = {
   address?: InputMaybe<UserAddressInput>;
   birthday?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3959,6 +3977,16 @@ export type MutationRestorePageRevisionArgs = {
 export type MutationResumeMailSendJobArgs = {
   id: Scalars['String']['input'];
   retryUnfinished?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationRevertSubscriptionUpgradeArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationRevertUserSubscriptionUpgradeArgs = {
+  subscriptionId: Scalars['String']['input'];
 };
 
 
@@ -5486,6 +5514,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   __typename: 'PublicSubscription';
   autoRenew: Scalars['Boolean']['output'];
   canExtend: Scalars['Boolean']['output'];
+  /** Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet. */
+  canRevertUpgrade: Scalars['Boolean']['output'];
   confirmed: Scalars['Boolean']['output'];
   createdAt: Scalars['DateTime']['output'];
   currency: Currency;

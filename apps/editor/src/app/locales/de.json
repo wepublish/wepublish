@@ -823,6 +823,7 @@
       "today": "Heute",
       "tomorrow": "Morgen"
     },
+    "deactivated": "Deaktiviert",
     "delete": "Löschen",
     "deleteBlockTemplateModal": {
       "body": "Willst Du die Block-Vorlage \"{{name}}\" wirklich löschen?",
@@ -1929,6 +1930,7 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
         "newSubscription": "Neue Subscription",
+        "reactivate": "Reaktivieren",
         "subscription": "Subscription"
       },
       "panels": {
@@ -2093,8 +2095,8 @@
           "activated": "Deaktivieren"
         },
         "date": "Deaktivierung",
-        "help": "Deaktivierte Abonnements können bis zum \"bezahlt bis\"-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert auch wenn die automatische Erneuerung gewählt ist. Einmal deaktiviert, kann das Abo nicht reaktiviert werden.",
-        "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Grund: {{reason}}. Allenfalls kann ein neues Abo gelöst werden.",
+        "help": "Deaktivierte Abonnements können bis zum \"bezahlt bis\"-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert auch wenn die automatische Erneuerung gewählt ist. Eine Deaktivierung kann im Editor wieder aufgehoben werden.",
+        "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Grund: {{reason}}. Es kann reaktiviert werden oder es kann ein neues Abo gelöst werden.",
         "cancellation": "Stornierungsdatum",
         "modalMessage": {
           "activated": "Willst du das Abonnement von \"{{userName}}\" deaktiviern mit der Emailadresse \"{{userEmail}}\"?"
@@ -2112,6 +2114,22 @@
           "activated": "Abonnement deaktivieren"
         },
         "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
+      },
+      "revertUpgrade": {
+        "title": "Upgrade rückgängig",
+        "modalTitle": "Upgrade rückgängig machen?",
+        "modalMessage": "Das neue Abo wird samt seinen Rechnungen gelöscht und das ersetzte Abo läuft normal weiter. Das geht nur, solange das neue Abo nicht bezahlt wurde.",
+        "confirm": "Rückgängig machen"
+      },
+      "reactivation": {
+        "deactivatedSince": "Deaktiviert seit {{date, ccc PP p}} · Grund: {{reason}}",
+        "deactivatedOn": "Deaktivierung am {{date, ccc PP p}} · Grund: {{reason}}",
+        "date": "{{date, ccc PP p}}",
+        "hint": "Mit dem Reaktivieren wird diese Deaktivierung entfernt. Ist die Laufzeit bereits abgelaufen, wird eine neue Rechnung erstellt.",
+        "title": "Abo reaktivieren",
+        "modalTitle": "Abonnement reaktivieren?",
+        "modalMessage": "Willst du die Deaktivierung des Abonnements von \"{{userName}}\" aufheben? Das Abo läuft danach normal weiter.",
+        "confirm": "Reaktivieren"
       },
       "editTitle": "Abonnement bearbeiten",
       "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",

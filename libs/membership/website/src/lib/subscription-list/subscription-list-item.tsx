@@ -89,6 +89,9 @@ export function SubscriptionListItem({
   extendable,
   url,
   cancel,
+  reactivate,
+  revertUpgrade,
+  canRevertUpgrade,
   canExtend,
   externalReward,
   extend,
@@ -113,6 +116,8 @@ export function SubscriptionListItem({
   );
 
   const [confirmCancel, setConfirmCancel] = useState(false);
+  const [confirmReactivate, setConfirmReactivate] = useState(false);
+  const [confirmRevertUpgrade, setConfirmRevertUpgrade] = useState(false);
   const [confirmExtend, setConfirmExtend] = useState<boolean>(false);
 
   return (
@@ -261,6 +266,30 @@ export function SubscriptionListItem({
 
         {error && <Alert severity="error">{error.message}</Alert>}
 
+        {canRevertUpgrade && revertUpgrade && (
+          <SubscriptionListItemActions>
+            <Button
+              onClick={() => setConfirmRevertUpgrade(true)}
+              disabled={loading}
+            >
+              {t('subscription.revertUpgrade')}
+            </Button>
+          </SubscriptionListItemActions>
+        )}
+
+        {deactivation && !canRevertUpgrade && reactivate && (
+          <SubscriptionListItemActions>
+            <Button
+              onClick={() => setConfirmReactivate(true)}
+              disabled={loading}
+            >
+              {t('subscription.reactivate', {
+                type: productType,
+              })}
+            </Button>
+          </SubscriptionListItemActions>
+        )}
+
         {!deactivation && (
           <SubscriptionListItemActions>
             {(extendable || !paidUntil) && (
@@ -308,6 +337,50 @@ export function SubscriptionListItem({
 
         <Paragraph gutterBottom={false}>
           {t('subscription.cancelConfirmation', {
+            type: productType,
+          })}
+        </Paragraph>
+      </Modal>
+
+      <Modal
+        open={confirmRevertUpgrade}
+        onSubmit={async () => {
+          setConfirmRevertUpgrade(false);
+          await callAction(revertUpgrade)();
+        }}
+        onCancel={() => setConfirmRevertUpgrade(false)}
+        submitText={t('subscription.revertUpgrade')}
+        cancelText={t('user.cancel')}
+      >
+        <H5 component="h1">{t('subscription.revertUpgradeTitle')}</H5>
+
+        <Paragraph gutterBottom={false}>
+          {t('subscription.revertUpgradeConfirmation', {
+            type: productType,
+          })}
+        </Paragraph>
+      </Modal>
+
+      <Modal
+        open={confirmReactivate}
+        onSubmit={async () => {
+          setConfirmReactivate(false);
+          await callAction(reactivate)();
+        }}
+        onCancel={() => setConfirmReactivate(false)}
+        submitText={t('subscription.reactivate', {
+          type: productType,
+        })}
+        cancelText={t('user.cancel')}
+      >
+        <H5 component="h1">
+          {t('subscription.reactivateProduct', {
+            productName: productType,
+          })}
+        </H5>
+
+        <Paragraph gutterBottom={false}>
+          {t('subscription.reactivateConfirmation', {
             type: productType,
           })}
         </Paragraph>

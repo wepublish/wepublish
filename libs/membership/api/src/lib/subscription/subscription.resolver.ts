@@ -116,6 +116,14 @@ export class PublicSubscriptionResolver {
     return this.service.cancelSubscription(input);
   }
 
+  @Permissions(CanCreateSubscription)
+  @Mutation(returns => PublicSubscription, {
+    description: `Reactivates a deactivated subscription.`,
+  })
+  public reactivateSubscription(@Args('id') id: string) {
+    return this.service.reactivateSubscription(id);
+  }
+
   @Permissions(CanDeleteSubscription)
   @Mutation(returns => PublicSubscription, {
     description: `Deletes an existing subscription.`,
@@ -201,6 +209,32 @@ export class PublicSubscriptionResolver {
       !unpaidAndUncanceledInvoice &&
       // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
       paymentMethod?.slug !== 'payrexx-subscription'
+    );
+  }
+
+  @ResolveField(() => Boolean, {
+    description: `Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet.`,
+  })
+  async canRevertUpgrade(@Parent() subscription: Subscription) {
+    const replacements = await this.prisma.subscription.findMany({
+      where: {
+        replacesSubscriptionID: subscription.id,
+      },
+      include: {
+        invoices: {
+          where: {
+            paidAt: {
+              not: null,
+            },
+          },
+          take: 1,
+        },
+      },
+    });
+
+    return (
+      replacements.length > 0 &&
+      replacements.every(replacement => !replacement.invoices.length)
     );
   }
 
