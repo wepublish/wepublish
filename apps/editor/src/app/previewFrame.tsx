@@ -76,7 +76,7 @@ const LoaderOverlay = styled.div`
   gap: 16px;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgb(from var(--rs-bg-card) r g b / 80%);
 `;
 
 const LoaderTitle = styled.h3`
@@ -185,7 +185,7 @@ export function PreviewControls({
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('preview.urlCopyFailed')}
         </Message>

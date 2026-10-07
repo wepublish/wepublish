@@ -11,6 +11,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
   IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
@@ -63,9 +64,9 @@ const showErrors = (error: Error): void => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

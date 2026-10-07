@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { SettingProvider } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
 import { useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
@@ -99,7 +100,7 @@ export function GenericIntegrationList<
   }
 
   if (error) {
-    return <Message type="error">{error.message}</Message>;
+    return <Message type="error">{humanizeError(error)}</Message>;
   }
 
   const addButton = registry && (

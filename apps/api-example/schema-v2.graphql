@@ -6,19 +6,6 @@ enum AIProviderType {
   V0
 }
 
-union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
-
-enum ActionType {
-  ArticleCreated
-  AuthorCreated
-  CommentCreated
-  EventCreated
-  PageCreated
-  PollStarted
-  SubscriptionCreated
-  UserCreated
-}
-
 type AllowedSettingVals {
   boolChoice: Boolean
   stringChoice: [String!]
@@ -51,13 +38,6 @@ type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   tags: [Tag!]!
   trackingPixels: [TrackingPixel!]!
   url: String!
-}
-
-type ArticleCreatedAction implements BaseAction & HasArticleLc {
-  actionType: ActionType!
-  article: Article!
-  articleId: String!
-  date: DateTime!
 }
 
 input ArticleFilter {
@@ -234,13 +214,6 @@ type Author implements HasImage & HasOptionalPeerLc {
   url: String!
 }
 
-type AuthorCreatedAction implements BaseAction & HasAuthor {
-  actionType: ActionType!
-  author: Author!
-  authorId: String!
-  date: DateTime!
-}
-
 input AuthorFilter {
   hideOnTeam: Boolean
   name: String
@@ -313,11 +286,6 @@ enum BannerActionRole {
 enum BannerDocumentType {
   ARTICLE
   PAGE
-}
-
-interface BaseAction {
-  actionType: ActionType!
-  date: DateTime!
 }
 
 interface BaseBlock {
@@ -658,13 +626,6 @@ input CommentBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: CommentBlockFilterInput!
-}
-
-type CommentCreatedAction implements BaseAction & HasComment {
-  actionType: ActionType!
-  comment: Comment!
-  commentId: String!
-  date: DateTime!
 }
 
 input CommentFilter {
@@ -1101,13 +1062,6 @@ input EventBlockInput {
   filter: EventBlockFilterInput!
 }
 
-type EventCreatedAction implements BaseAction & HasEventLc {
-  actionType: ActionType!
-  date: DateTime!
-  event: Event!
-  eventId: String!
-}
-
 input EventFilter {
   from: DateTime
   location: String
@@ -1357,28 +1311,8 @@ interface HasArticle {
   articleID: String!
 }
 
-interface HasArticleLc {
-  article: Article!
-  articleId: String!
-}
-
-interface HasAuthor {
-  author: Author!
-  authorId: String!
-}
-
 interface HasBlockContent {
   blocks: [BlockContent!]!
-}
-
-interface HasComment {
-  comment: Comment!
-  commentId: String!
-}
-
-interface HasEventLc {
-  event: Event!
-  eventId: String!
 }
 
 interface HasImage {
@@ -1460,34 +1394,14 @@ interface HasPage {
   pageID: String!
 }
 
-interface HasPageLc {
-  page: Page!
-  pageId: String!
-}
-
 interface HasPaymentMethod {
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
 }
 
-interface HasPoll {
-  poll: FullPoll!
-  pollId: String!
-}
-
-interface HasSubscriptionLc {
-  subscription: PublicSubscription!
-  subscriptionId: String!
-}
-
 interface HasUser {
   user: User!
   userID: String!
-}
-
-interface HasUserLc {
-  user: User!
-  userId: String!
 }
 
 type IFrameBlock implements BaseBlock {
@@ -3394,13 +3308,6 @@ type Page {
   url: String!
 }
 
-type PageCreatedAction implements BaseAction & HasPageLc {
-  actionType: ActionType!
-  date: DateTime!
-  page: Page!
-  pageId: String!
-}
-
 input PageFilter {
   description: String
   draft: Boolean
@@ -4092,13 +3999,6 @@ enum PollSort {
   OpensAt
 }
 
-type PollStartedAction implements BaseAction & HasPoll {
-  actionType: ActionType!
-  date: DateTime!
-  poll: FullPoll!
-  pollId: String!
-}
-
 type PollVote {
   answer: PollAnswerInVote!
   answerId: String!
@@ -4181,9 +4081,6 @@ type PublicSubscriptionConnection {
 }
 
 type Query {
-  """Returns latest actions"""
-  actions: [Action!]!
-
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
@@ -5255,13 +5152,6 @@ enum SubscribePeriodicityDisplay {
   Toggle
 }
 
-type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
-  actionType: ActionType!
-  date: DateTime!
-  subscription: PublicSubscription!
-  subscriptionId: String!
-}
-
 type SubscriptionDeactivation {
   date: DateTime!
   reason: SubscriptionDeactivationReason!
@@ -5726,13 +5616,6 @@ type UserConsent {
   modifiedAt: DateTime!
   user: User!
   value: Boolean!
-}
-
-type UserCreatedAction implements BaseAction & HasUserLc {
-  actionType: ActionType!
-  date: DateTime!
-  user: User!
-  userId: String!
 }
 
 enum UserEvent {

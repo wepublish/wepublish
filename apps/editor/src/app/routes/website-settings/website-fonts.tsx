@@ -15,6 +15,7 @@ import {
   WebsiteRemoteFontInput,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdAdd, MdArrowBack, MdDelete } from 'react-icons/md';
@@ -76,7 +77,7 @@ export const WebsiteFonts = () => {
             showIcon
             closable
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>,
           { duration: 3000 }
         );

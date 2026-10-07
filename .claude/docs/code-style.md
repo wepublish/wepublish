@@ -55,6 +55,29 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
 
 - Comments inside a template literal are one of the few legitimate uses of
   comments in this codebase — a `nth-child` selector rule usually needs one.
+- **Editor UI: no hard-coded colours.** The editor has a dark mode (follows the
+  OS, overridable in the sidebar; `apps/editor/src/app/colorMode.tsx`). rsuite's
+  `CustomProvider theme` swaps every `--rs-*` variable, MUI gets
+  `createEditorTheme(mode)`. Use `var(--rs-bg-card)`, `--rs-bg-well`,
+  `--rs-bg-overlay`, `--rs-text-primary`/`-secondary`, `--rs-border-primary`,
+  `--rs-state-*` in Emotion, palette paths in MUI `sx`. Editor-specific tokens
+  (`--wep-shell-*`, `--wep-state-*`, …) live in
+  `apps/editor/src/app/editorGlobalStyles.tsx`. `--rs-gray-*` and `--rs-primary-50`
+  stay light in dark mode — don't use them for surfaces. Keep the MUI palette as
+  real hex (code runs `lighten()`/alpha math on it). Fixed colours are only for
+  user data (picked colours, defaults), email content and QR codes.
+- **Editor layout is responsive.** Below 900 px the sidebar becomes a drawer;
+  at ≤ 640 px rsuite `Col`s stack (global rule in `editorGlobalStyles.tsx`).
+  The shared `Table` from `@wepublish/ui/editor` scales `width` columns to the
+  available width (`listView/fit-column-widths.ts`) and releases `fixed`
+  columns under 600 px — so don't hand-tune column widths to a screen size.
+- **Editor errors shown to users go through `humanizeError(error)`** from
+  `@wepublish/ui/editor`, never raw `error.message` — it turns Prisma, network
+  and permission failures into `errors.*` translations. Error toasts use
+  `duration={8000}`. Don't rewrite messages in an Apollo link instead: consent
+  views and the user list branch on raw texts like `'Unique constraint'`.
+  i18next runs with `escapeValue: false` because React already escapes;
+  re-enabling it double-escapes (`&#x2F;`).
 
 ## React
 

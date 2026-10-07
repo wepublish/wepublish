@@ -54,7 +54,7 @@ export function EditUserPassword({
           type="error"
           showIcon
           closable
-          duration={2000}
+          duration={8000}
         >
           {t('createOrUpdateUserPassword.unexpectedErrorNoUserFound')}
         </Message>
@@ -83,7 +83,7 @@ export function EditUserPassword({
           type="error"
           showIcon
           closable
-          duration={2000}
+          duration={8000}
         >
           {t('userList.panel.sendWebsiteLoginFailureMessage', { error })}
         </Message>
@@ -109,7 +109,6 @@ export function EditUserPassword({
             </RButton>
             <RButton
               appearance="primary"
-              color="red"
               disabled={isDisabled || !user.email || !user.active}
               onClick={() => setSendLoginModalOpen(true)}
             >

@@ -7,6 +7,10 @@ const Children = styled('div', {
   display: flex;
   width: 80%;
   max-width: ${({ maxWidth }) => maxWidth};
+
+  @media (max-width: 899px) {
+    width: 100%;
+  }
 `;
 
 const ChildrenWrapper = styled.div`
@@ -18,6 +22,10 @@ const ChildrenWrapper = styled.div`
   padding-bottom: 60px;
   padding-left: 40px;
   padding-right: 40px;
+
+  @media (max-width: 899px) {
+    padding: 16px 12px 40px;
+  }
 `;
 
 const NavigationChildren = styled.div`

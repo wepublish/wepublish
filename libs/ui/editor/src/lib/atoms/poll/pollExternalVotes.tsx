@@ -24,6 +24,7 @@ import {
 } from 'rsuite';
 import FormControl from 'rsuite/FormControl';
 import { RowDataType } from 'rsuite-table';
+import { humanizeError } from '../../humanizeError';
 
 const Row = styled(RRow)`
   margin-top: 20px;
@@ -174,9 +175,9 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -188,7 +189,7 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
           showIcon
           type="error"
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollExternalVotes.emptySource')}
         </Message>
@@ -201,7 +202,7 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
           showIcon
           type="error"
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollExternalVotes.noPollAvailable')}
         </Message>

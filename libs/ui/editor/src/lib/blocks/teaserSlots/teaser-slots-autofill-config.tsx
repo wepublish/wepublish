@@ -31,7 +31,7 @@ const FormGroup = styled(Form.Group)`
 
 const HelpText = styled('div')`
   font-size: 12px;
-  color: #6b7280;
+  color: var(--rs-text-secondary);
   margin-top: 4px;
 `;
 

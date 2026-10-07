@@ -40,6 +40,7 @@ import {
   TriggerMailchimpSyncDocument,
   UpdateSyncProviderSettingDocument,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -526,7 +527,7 @@ export function MailchimpSyncIntegrationForm() {
   const { data, loading, error } = useQuery(SyncProviderSettingsDocument);
 
   if (loading) return <Loader center />;
-  if (error) return <Message type="error">{error.message}</Message>;
+  if (error) return <Message type="error">{humanizeError(error)}</Message>;
 
   const settings = data?.syncProviderSettings;
   if (!settings?.length) {
@@ -557,17 +558,17 @@ const DryRunTable = styled.table`
 
   th,
   td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--rs-border-primary);
     padding: 6px 8px;
     text-align: left;
   }
 
   th {
-    background: #f5f5f5;
+    background: var(--rs-bg-well);
   }
 
   tr:nth-of-type(even) {
-    background: #fafafa;
+    background: var(--rs-bg-well);
   }
 `;
 

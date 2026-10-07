@@ -19,6 +19,7 @@ import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { PollStateIndication } from '../atoms/poll/pollStateIndication';
 import { PollBlockValue } from '../blocks/types';
 import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
+import { humanizeError } from '../humanizeError';
 
 export function PollOpensAtView({ poll }: { poll: FullPollFragment }) {
   const now = new Date();
@@ -58,9 +59,9 @@ const onErrorToast = (error: Error) => {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </Message>
     );
   }

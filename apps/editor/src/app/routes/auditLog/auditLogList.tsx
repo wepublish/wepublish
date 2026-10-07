@@ -57,7 +57,7 @@ const Monospace = styled.span`
 `;
 
 const Muted = styled.span`
-  color: #97969b;
+  color: var(--rs-text-secondary);
 `;
 
 const Truncate = styled.span`

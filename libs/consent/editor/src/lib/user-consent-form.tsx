@@ -5,6 +5,7 @@ import {
   MutationUpdateUserConsentArgs,
   UserListDocument,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -33,9 +34,9 @@ const onErrorToast = (error: Error) => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

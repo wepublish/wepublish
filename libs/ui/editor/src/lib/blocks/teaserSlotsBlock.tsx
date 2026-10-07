@@ -68,8 +68,8 @@ const Teaser = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  border: 2px dashed #ccc;
-  background: #fcfcfc;
+  border: 2px dashed var(--rs-border-primary);
+  background: var(--rs-bg-well);
 `;
 
 const TeaserWrapper = styled('div', {
@@ -88,7 +88,7 @@ export const TeaserToolbar = styled.div`
   display: flex;
   align-items: center;
   gap: 3px;
-  background-color: #fff;
+  background-color: var(--rs-bg-overlay);
   padding: 5px;
   border-radius: 3px;
   font-size: 0.875rem;
@@ -101,7 +101,7 @@ export const SlotToolbar = styled.div`
   display: flex;
   align-items: center;
   gap: 3px;
-  background-color: #fff;
+  background-color: var(--rs-bg-overlay);
   padding: 5px;
   border-radius: 3px;
   font-size: 0.875rem;

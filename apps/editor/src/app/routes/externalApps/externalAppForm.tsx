@@ -133,7 +133,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             type="error"
             showIcon
             closable
-            duration={3000}
+            duration={8000}
           >
             {err.message ||
               t('externalAppForm.errorDelete', {
@@ -179,7 +179,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
               type="error"
               showIcon
               closable
-              duration={3000}
+              duration={8000}
             >
               {err.message ||
                 t('externalAppForm.errorUpdate', {
@@ -224,7 +224,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
               type="error"
               showIcon
               closable
-              duration={3000}
+              duration={8000}
             >
               {err.message ||
                 t('externalAppForm.errorCreate', {

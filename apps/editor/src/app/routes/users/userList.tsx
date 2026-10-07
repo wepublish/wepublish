@@ -14,6 +14,7 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   DescriptionList,
   DescriptionListItem,
+  humanizeError,
   IconButton,
   IconButtonTooltip,
   ListFilters,
@@ -127,7 +128,7 @@ function UserList() {
   }, [data?.users]);
 
   if (userListQueryError) {
-    return <div>{userListQueryError.message}</div>;
+    return <div>{humanizeError(userListQueryError)}</div>;
   }
 
   /**
@@ -195,7 +196,7 @@ function UserList() {
               type="error"
               showIcon
               closable
-              duration={2000}
+              duration={8000}
             >
               {t('userCreateOrEditView.foreignKeySubscription')}
             </Message>
@@ -207,7 +208,7 @@ function UserList() {
               type="error"
               showIcon
               closable
-              duration={2000}
+              duration={8000}
             >
               {t('userCreateOrEditView.errorOnUpdate', { error: e })}
             </Message>
@@ -242,7 +243,7 @@ function UserList() {
           type="error"
           showIcon
           closable
-          duration={2000}
+          duration={8000}
         >
           {t('userList.overview.totpResetError')}
         </Message>

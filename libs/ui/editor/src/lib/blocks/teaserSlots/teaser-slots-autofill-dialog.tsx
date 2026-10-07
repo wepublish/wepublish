@@ -23,7 +23,7 @@ const StyledModal = styled(Modal)`
 `;
 
 const Description = styled('p')`
-  color: #6b7280;
+  color: var(--rs-text-secondary);
   margin-top: 8px;
   margin-bottom: 16px;
 `;

@@ -56,7 +56,7 @@ const ClickableRow = styled(TableRow)`
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.03);
+    background-color: rgb(from var(--rs-text-primary) r g b / 0.03);
   }
 `;
 
@@ -65,7 +65,7 @@ const Stat = styled.div<{ tone: string }>`
   min-width: 110px;
   padding: 8px 12px;
   border-left: 3px solid ${({ tone }) => tone};
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgb(from var(--rs-text-primary) r g b / 0.02);
 `;
 
 const StatValue = styled.div`
@@ -74,10 +74,10 @@ const StatValue = styled.div`
 `;
 
 const TONE = {
-  sent: '#4caf50',
-  pending: '#8e8e93',
-  failed: '#d9534f',
-  sending: '#f5a623',
+  sent: 'var(--rs-state-success)',
+  pending: 'var(--rs-text-secondary)',
+  failed: 'var(--rs-state-error)',
+  sending: 'var(--rs-state-warning)',
 } as const;
 
 /**
@@ -161,7 +161,7 @@ export function MailSendJobList({
                   <JobProgressBar job={job} />
                   <Typography
                     variant="caption"
-                    style={{ color: '#8e8e93' }}
+                    style={{ color: 'var(--rs-text-secondary)' }}
                     sx={{
                       display: 'block',
                     }}
@@ -388,7 +388,7 @@ function JobSummary({
       {job.status === MailSendJobState.Running && job.heartbeatAt && (
         <Typography
           variant="caption"
-          style={{ color: '#8e8e93', marginTop: 12 }}
+          style={{ color: 'var(--rs-text-secondary)', marginTop: 12 }}
           sx={{
             display: 'block',
           }}
@@ -527,7 +527,7 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
           <TableBody>
             {entries.map(entry => (
               <TableRow key={entry.id}>
-                <TableCell style={{ color: '#8e8e93' }}>
+                <TableCell style={{ color: 'var(--rs-text-secondary)' }}>
                   {entry.position + 1}
                 </TableCell>
                 <TableCell>
@@ -535,7 +535,7 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
                   {entry.memberPlanName && (
                     <Typography
                       variant="caption"
-                      style={{ color: '#8e8e93' }}
+                      style={{ color: 'var(--rs-text-secondary)' }}
                       sx={{
                         display: 'block',
                       }}

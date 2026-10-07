@@ -34,6 +34,19 @@ const Form = styled(RForm)`
   .rs-form-group {
     width: initial;
   }
+
+  @media (max-width: 640px) {
+    .rs-form-group:not(:has(.rs-toggle)) {
+      width: 100%;
+      margin-right: 0 !important;
+
+      .rs-input,
+      .rs-picker,
+      .rs-input-group {
+        width: 100%;
+      }
+    }
+  }
 `;
 
 const CloseIcon = styled(MdClose)`

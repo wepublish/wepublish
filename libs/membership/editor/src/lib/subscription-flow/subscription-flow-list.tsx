@@ -270,7 +270,7 @@ function SubscriptionFlowTable({
     }:nth-of-type(${filterCount + userActionCount}), .${tableCellClasses.head}:nth-of-type(${
       filterCount + userActionCount + nonUserActionCount
     })`]: {
-      borderRight: `1px solid #000`,
+      borderRight: `1px solid ${theme.palette.divider}`,
     },
 
     [`.${tableCellClasses.body}:nth-of-type(${filterCount}), .${
@@ -278,7 +278,7 @@ function SubscriptionFlowTable({
     }:nth-of-type(${filterCount + userActionCount}), .${tableCellClasses.body}:nth-of-type(${
       filterCount + userActionCount + nonUserActionCount
     })`]: {
-      borderRight: `1px solid #000`,
+      borderRight: `1px solid ${theme.palette.divider}`,
     },
   }));
 

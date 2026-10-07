@@ -17,6 +17,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
   ListViewContainer,
   ListViewHeader,
 } from '@wepublish/ui/editor';
@@ -275,7 +276,7 @@ function MailSendPage() {
             showIcon
             closable
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>
         ),
       onCompleted: result => {
@@ -451,7 +452,7 @@ function MailSendPage() {
                           <Typography
                             variant="caption"
                             style={{
-                              color: '#8e8e93',
+                              color: 'var(--rs-text-secondary)',
                               whiteSpace: 'normal',
                               lineHeight: 1.35,
                             }}
@@ -1121,7 +1122,7 @@ function TemplatePreview({
             </div>
             <Typography
               variant="caption"
-              style={{ color: '#8e8e93', marginTop: 4 }}
+              style={{ color: 'var(--rs-text-secondary)', marginTop: 4 }}
               sx={{
                 display: 'block',
               }}
@@ -1130,7 +1131,7 @@ function TemplatePreview({
             </Typography>
           </div>
 
-          {error && <Message type="error">{error.message}</Message>}
+          {error && <Message type="error">{humanizeError(error)}</Message>}
 
           {preview && (
             <MailPreview

@@ -21,7 +21,7 @@ const Wrapper = styled(Box)`
   border: 1px solid ${({ theme }) => theme.palette.divider};
   border-radius: 6px;
   overflow: hidden;
-  background-color: #fff;
+  background-color: var(--rs-bg-card);
 
   /* The @uiw root div must fill the wrapper so .cm-editor's 100% height
      resolves and the scroller scrolls instead of overflowing. */

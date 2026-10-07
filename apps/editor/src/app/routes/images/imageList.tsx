@@ -79,9 +79,9 @@ const ImgDesc = styled.p`
   width: 100%;
   text-align: center;
   font-size: 12px;
-  text-shadow: 1px 1px white;
+  text-shadow: 1px 1px var(--rs-bg-card);
   display: inline-block;
-  background: white;
+  background: var(--rs-bg-card);
   padding: 2px;
 `;
 const GridIcon = styled(IconButton)`

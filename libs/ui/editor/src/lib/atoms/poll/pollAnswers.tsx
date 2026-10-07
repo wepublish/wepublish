@@ -17,13 +17,14 @@ import {
   Modal,
   toaster,
 } from 'rsuite';
+import { humanizeError } from '../../humanizeError';
 
 type PollAnswerFragment = FullPollFragment['answers'][number];
 type PollExternalVoteFragment =
   FullPollFragment['externalVoteSources'][number]['voteAmounts'][number];
 
 const IconButton = styled(RIconButton)`
-  && {
+  &&:not([data-with-text]) {
     width: 36px;
     height: 36px;
   }
@@ -132,9 +133,9 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -153,7 +154,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollAnswer.answerMissing')}
         </Message>

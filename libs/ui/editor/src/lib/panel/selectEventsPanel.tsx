@@ -27,6 +27,7 @@ import { PermissionControl } from '../atoms/permissionControl';
 import { SelectTags } from '../atoms/tag/selectTags';
 import { EventBlockValue } from '../blocks/types';
 import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
+import { humanizeError } from '../humanizeError';
 
 const onErrorToast = (error: Error) => {
   if (error?.message) {
@@ -35,9 +36,9 @@ const onErrorToast = (error: Error) => {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </Message>
     );
   }

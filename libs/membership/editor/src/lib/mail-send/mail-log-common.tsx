@@ -150,7 +150,10 @@ export function MailLogStateLegend() {
 
           <Typography
             variant="caption"
-            style={{ color: '#8e8e93', whiteSpace: 'pre-line' }}
+            style={{
+              color: 'var(--rs-text-secondary)',
+              whiteSpace: 'pre-line',
+            }}
             sx={{
               display: 'block',
             }}
@@ -273,7 +276,7 @@ export function MailErrorCell({ error }: { error?: string | null }) {
 
           <Typography
             variant="caption"
-            style={{ color: '#8e8e93' }}
+            style={{ color: 'var(--rs-text-secondary)' }}
             sx={{
               display: 'block',
             }}
@@ -288,7 +291,7 @@ export function MailErrorCell({ error }: { error?: string | null }) {
     >
       <span
         style={{
-          color: '#d9534f',
+          color: 'var(--rs-state-error)',
           display: 'inline-flex',
           alignItems: 'center',
           gap: 4,

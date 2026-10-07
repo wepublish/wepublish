@@ -10,7 +10,7 @@ type DropContainerSubscriptionIntervalProps = PropsWithChildren<{
 
 const Draggable = styled('div')<{ active?: boolean; hover?: boolean }>`
   transition: border 600ms ease-in-out;
-  border: 2px dashed ${({ theme }) => theme.palette.common.white};
+  border: 2px dashed transparent;
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
   display: flex;
   flex-direction: column;
@@ -21,13 +21,13 @@ const Draggable = styled('div')<{ active?: boolean; hover?: boolean }>`
   ${({ active }) =>
     active &&
     css`
-      border: 2px dashed lightgrey;
+      border: 2px dashed var(--rs-border-primary);
     `}
 
   ${({ hover }) =>
     hover &&
     css`
-      backgroundcolor: #eee;
+      background-color: var(--rs-bg-well);
     `}
 `;
 

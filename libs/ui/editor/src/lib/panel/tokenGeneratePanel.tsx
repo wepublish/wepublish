@@ -14,6 +14,7 @@ import {
 
 import { createCheckedPermissionComponent } from '../atoms';
 import { getOperationNameFromDocument } from '../utility';
+import { humanizeError } from '../humanizeError';
 
 const Message = styled(RMessage)`
   margin-top: 5px;
@@ -46,7 +47,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
           closable
           duration={0}
         >
-          {createError.message}
+          {humanizeError(createError)}
         </RMessage>
       );
   }, [createError]);

@@ -61,7 +61,7 @@ const Actions = styled(ListViewActions)`
 const DeactivationIcon = styled(MdInfo)`
   margin-right: 6px;
   font-size: 16px;
-  color: #3498ff;
+  color: var(--rs-primary-500);
 `;
 
 function mapColumFieldToGraphQLField(

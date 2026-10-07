@@ -17,7 +17,7 @@ const Panel = styled(RPanel, {
   height: ${({ isEmpty }) => (isEmpty ? '200px' : undefined)};
   padding: 0;
   overflow: hidden;
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
 `;
 
 const Wrapper = styled.div`

@@ -29,6 +29,7 @@ import { RowDataType } from 'rsuite-table';
 import { IconButtonTooltip, PermissionControl, SelectTags } from '../atoms';
 import { CommentBlockValue } from '../blocks/types';
 import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
+import { humanizeError } from '../humanizeError';
 
 const CheckboxWrapper = styled.div`
   height: 46px;
@@ -70,9 +71,9 @@ const onErrorToast = (error: Error) => {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </RMessage>
     );
   }

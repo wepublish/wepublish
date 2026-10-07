@@ -49,7 +49,7 @@ const MarginTop = styled.div`
 `;
 
 const Avatar = styled(RAvatar)`
-  border: solid 2px #3498ff;
+  border: solid 2px var(--rs-primary-500);
 `;
 
 const AvatarWrapper = styled.div`
@@ -57,7 +57,7 @@ const AvatarWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
-  border: solid 2px #3498ff;
+  border: solid 2px var(--rs-primary-500);
   padding: 10px;
   border-radius: 5px;
   margin: 1rem 0 2rem 0;

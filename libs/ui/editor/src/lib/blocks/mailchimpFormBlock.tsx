@@ -43,7 +43,7 @@ import {
 } from './types';
 
 const Panel = styled(RPanel)`
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
   margin-bottom: 12px;
 
   .rs-panel-body {
@@ -70,12 +70,12 @@ const Field = styled.div`
 
 const Label = styled('label')`
   font-size: 12px;
-  color: #6c757d;
+  color: var(--rs-text-secondary);
 `;
 
 const HelpText = styled('small')`
   font-size: 11px;
-  color: #8e8e93;
+  color: var(--rs-text-secondary);
 `;
 
 const ErrorText = styled('small')`
@@ -84,8 +84,8 @@ const ErrorText = styled('small')`
 `;
 
 const ItemPanel = styled(RPanel)`
-  background-color: #fff;
-  border: 1px solid #e5e5ea;
+  background-color: var(--rs-bg-card);
+  border: 1px solid var(--rs-border-primary);
 `;
 
 const ItemHeader = styled.div`

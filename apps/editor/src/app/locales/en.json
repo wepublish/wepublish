@@ -792,19 +792,10 @@
       "chf": "chf"
     },
     "dashboard": {
-      "activity": "Latest Activity",
       "dashboard": "Dashboard",
       "notifications": "Notifications",
       "showAllNotifications": "Show all",
       "greeting": "Hello, {{name}}!",
-      "newArticle": "New <0>article</0> added",
-      "newAuthor": "New <0>author</0> added",
-      "newComment": "New <0>comment</0> added",
-      "newEvent": "New <0>event</0> added",
-      "newPage": "New <0>page</0> added",
-      "newPoll": "New <0>poll</0> opened",
-      "newSubscription": "New <0>subscription</0> created",
-      "newUser": "New <0>user</0> added",
       "noData": "No current subscriber data",
       "user": "User",
       "yearlySubscribers": "New subscribers over past year",
@@ -838,6 +829,14 @@
       "ignoreDeactivatedSubscriptions": "No mails will be sent to deactivated subscriptions!"
     },
     "edit": "Edit",
+    "errors": {
+      "uniqueEmail": "This email address is already in use.",
+      "uniqueField": "This value is already taken ({{field}}).",
+      "inUse": "This entry is still in use and therefore can't be deleted.",
+      "forbidden": "You don't have permission for this action.",
+      "network": "No connection to the server. Please check your internet connection and try again.",
+      "unexpected": "Something went wrong. Please try again – if the problem persists, contact support."
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
@@ -1397,6 +1396,13 @@
       "imageLibrary": "Images",
       "importableEvents": "Importable Events",
       "media": "Files",
+      "menu": "Menu",
+      "colorMode": {
+        "title": "Appearance",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "Match system"
+      },
       "logout": "Logout",
       "mailTemplates": "E-Mail Templates",
       "memberPlans": "Subscription Plans",
@@ -2212,6 +2218,13 @@
       "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible."
     },
     "userSubscriptionList": {
+      "addSubscription": "Add subscription",
+      "subscriptionNumber": "No. {{subscriptionId}}",
+      "periodTitle": "Period {{date}}",
+      "status": {
+        "active": "Active",
+        "expired": "Expired"
+      },
       "aboDetails": "Subscription details",
       "deactivationReason": {
         "InvoiceNotPaid": "Invoice not paid",
@@ -2240,7 +2253,6 @@
       "subscriptionCreatedAt": "Created at {{date}}",
       "subscriptionIsAutoRenewed": "Subscription will be renewed automatically",
       "subscriptionStartsAt": "Subscription starts at {{date}}",
-      "subscriptionTitle": "{{memberPlanName}} / No. {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Unexpected error: invoice not available."
     },
     "blockStyles": {
@@ -2434,6 +2446,13 @@
       "rangeNextYear": "Next Year"
     },
     "audience": {
+      "chart": {
+        "noActivityDay": "No subscription activity on this day",
+        "noActivityMonth": "No subscription activity in this month",
+        "flowsTitle": "Gains and losses",
+        "net": "Net",
+        "since": "since {{date}}"
+      },
       "legend": {
         "info": {
           "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date, or that will be paid and potentially still be active in the future.",

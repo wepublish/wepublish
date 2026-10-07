@@ -65,7 +65,7 @@ const Block = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.025);
+  background-color: rgb(from var(--rs-text-primary) r g b / 0.025);
   display: grid;
   grid-template-rows: auto min-content;
 `;
@@ -82,7 +82,7 @@ const GridLayoutStyled = styled(GridLayout)`
 
   & .react-grid-item[data-is-editing='true'] {
     ${Block} {
-      background-color: rgba(52, 152, 255, 0.25);
+      background-color: rgb(from var(--rs-primary-500) r g b / 0.25);
     }
   }
 `;
@@ -118,7 +118,7 @@ const ToolbarButton = styled(RIconButton)`
   justify-content: center;
   align-items: center;
   pointer-events: all;
-  background-color: #eeeeee;
+  background-color: var(--rs-bg-well);
 
   & svg {
     display: block;
@@ -150,7 +150,7 @@ const Panel = styled(RPanel, {
 
 const NestedBlockEditPanel = styled('div')`
   margin: 0 -25px;
-  box-shadow: 1px 0 11px 4px rgba(52, 152, 255, 0.25);
+  box-shadow: 1px 0 11px 4px rgb(from var(--rs-primary-500) r g b / 0.25);
   border-radius: 0.3rem;
   padding: 5px;
 

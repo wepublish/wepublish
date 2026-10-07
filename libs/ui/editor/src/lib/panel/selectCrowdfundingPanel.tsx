@@ -12,6 +12,7 @@ import { RowDataType } from 'rsuite-table';
 
 import { IconButtonTooltip } from '../atoms';
 import { CrowdfundingBlockValue } from '../blocks';
+import { humanizeError } from '../humanizeError';
 
 const DrawerBody = styled(Drawer.Body)`
   padding: 24px;
@@ -24,9 +25,9 @@ const onErrorToast = (error: Error) => {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </Message>
     );
   }

@@ -6,6 +6,7 @@ import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   DeletePollModal,
+  humanizeError,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -39,9 +40,9 @@ const onErrorToast = (error: Error) => {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </Message>
     );
   }
@@ -168,6 +169,7 @@ function PollList() {
           </Column>
           {/* show votes */}
           <Column
+            width={180}
             resizable
             fixed="right"
           >

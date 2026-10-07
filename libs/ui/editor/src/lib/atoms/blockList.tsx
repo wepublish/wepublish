@@ -41,6 +41,13 @@ export const BlockStyleIconWrapper = styled.div`
   gap: 8px;
   position: absolute;
   left: 100%;
+
+  @media (max-width: 899px) {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    margin: 8px 0 0;
+  }
 `;
 
 const Icon = styled.div`
@@ -66,6 +73,10 @@ export const PanelWrapper = styled.div<{ disabled?: boolean }>`
   display: flex;
   width: 100%;
 
+  @media (max-width: 899px) {
+    flex-direction: column;
+  }
+
   ${({ disabled }) => disabled && `& > * > * {opacity: 0.3;}`}
 `;
 
@@ -88,12 +99,29 @@ export const LeftButtonsWrapper = styled.div`
   margin-right: 10px;
   position: absolute;
   right: 100%;
+
+  @media (max-width: 899px) {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 8px;
+
+    > * {
+      margin: 0 !important;
+      flex-grow: 0 !important;
+    }
+  }
 `;
 
 export const ListItem = styled.div`
   display: flex;
   width: 100%;
   position: relative;
+
+  @media (max-width: 899px) {
+    flex-direction: column;
+  }
 `;
 
 const AddButton = styled.div`

@@ -5,6 +5,10 @@ import { Button, Loader as RLoader } from 'rsuite';
 
 const ChevronLeft = styled(MdChevronLeft)`
   font-size: 48px;
+
+  @media (max-width: 640px) {
+    font-size: 32px;
+  }
 `;
 
 const Grid = styled.div`
@@ -15,6 +19,11 @@ const Grid = styled.div`
   justify-items: start;
   gap: 40px;
   margin-bottom: 20px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
 `;
 
 const Loader = styled(RLoader)`
@@ -39,8 +48,9 @@ const FlexLink = styled(Link)`
 `;
 
 const Heading = styled.h1`
-  font-size: 36px;
-  line-height: 50px;
+  font-size: var(--rs-heading-h1-font-size, 36px);
+  line-height: var(--rs-heading-h1-line-height, 50px);
+  overflow-wrap: anywhere;
 `;
 
 interface SingleViewTitleProps {

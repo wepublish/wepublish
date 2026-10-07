@@ -5,6 +5,7 @@ import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
+  humanizeError,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -37,9 +38,9 @@ const onErrorToast = (error: Error) => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

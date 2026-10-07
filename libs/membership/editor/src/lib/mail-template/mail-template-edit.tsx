@@ -383,13 +383,13 @@ function MailTemplateEdit() {
           position: 'sticky',
           top: 0,
           zIndex: 10,
-          background: '#fff',
+          background: 'var(--rs-body)',
         }}
       >
         <Panel
           bordered
           header={t('mailTemplates.edit.details', 'Details')}
-          style={{ flex: 1, minWidth: 360, background: '#fff' }}
+          style={{ flex: 1, minWidth: 360, background: 'var(--rs-bg-card)' }}
         >
           <Form fluid>
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
@@ -422,7 +422,7 @@ function MailTemplateEdit() {
                       <Typography
                         variant="caption"
                         style={{
-                          color: '#8e8e93',
+                          color: 'var(--rs-text-secondary)',
                           whiteSpace: 'normal',
                           lineHeight: 1.35,
                         }}
@@ -437,7 +437,7 @@ function MailTemplateEdit() {
                 />
                 <Typography
                   variant="caption"
-                  style={{ marginTop: 4, color: '#8e8e93' }}
+                  style={{ marginTop: 4, color: 'var(--rs-text-secondary)' }}
                   sx={{
                     display: 'block',
                   }}
@@ -478,7 +478,7 @@ function MailTemplateEdit() {
         <Panel
           bordered
           header={t('mailTemplates.edit.previewAndTest')}
-          style={{ flex: 1, minWidth: 360, background: '#fff' }}
+          style={{ flex: 1, minWidth: 360, background: 'var(--rs-bg-card)' }}
         >
           <div
             style={{
@@ -529,7 +529,7 @@ function MailTemplateEdit() {
 
           <Typography
             variant="caption"
-            style={{ marginTop: 8, color: '#8e8e93' }}
+            style={{ marginTop: 8, color: 'var(--rs-text-secondary)' }}
             sx={{
               display: 'block',
             }}
@@ -677,7 +677,7 @@ function MailTemplateEdit() {
               >
                 <Typography
                   variant="caption"
-                  style={{ marginBottom: 6, color: '#8e8e93' }}
+                  style={{ marginBottom: 6, color: 'var(--rs-text-secondary)' }}
                   sx={{
                     display: 'block',
                   }}

@@ -35,7 +35,7 @@ const EventPreview = ({ event }: { event: FullEventFragment }) => (
     key={event.id}
     bordered
     style={{
-      background: '#fff',
+      background: 'var(--rs-bg-card)',
       display: 'grid',
       alignItems: 'center',
     }}
@@ -99,7 +99,7 @@ export const EventBlock = ({
         style={{
           minHeight: 150,
           overflow: 'hidden',
-          backgroundColor: '#f7f9fa',
+          backgroundColor: 'var(--rs-bg-well)',
           display: 'grid',
         }}
       >

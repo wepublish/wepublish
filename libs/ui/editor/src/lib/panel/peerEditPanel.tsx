@@ -64,7 +64,7 @@ const ThemeColorBox = styled.div<{ themeColor: string }>`
   height: 20px;
   padding: 5px;
   margin-left: 5px;
-  border: 1px solid #575757;
+  border: 1px solid var(--rs-border-primary);
   background-color: ${({ themeColor }) => themeColor};
 `;
 
