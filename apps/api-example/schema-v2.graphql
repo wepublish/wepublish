@@ -3034,6 +3034,9 @@ type Mutation {
   """
   rateComment(answerId: String!, commentId: String!, value: Int!): Comment!
 
+  """Reactivates a deactivated subscription."""
+  reactivateSubscription(id: String!): PublicSubscription!
+
   """
   This mutation registers a new member by providing name, email, and other required information.
   """
