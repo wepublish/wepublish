@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { MailChannel, PrismaClient } from '@prisma/client';
 import { UserSession } from '@wepublish/authentication/api';
 import { MailSendResolver } from './mail-send.resolver';
 import { MailSendJobService } from './mail-send-job.service';
@@ -101,6 +101,38 @@ describe('MailSendResolver', () => {
       withoutAddressCount: 3,
       allowsSubscriptionTemplates: true,
     });
+  });
+
+  it('mailSendRecipients lists through the preview order', async () => {
+    // The preview puts the people a letter would skip first; the plain page
+    // is the send order and must stay untouched.
+    const recipientService = {
+      count: jest.fn(async () => 1),
+      resolvePage: jest.fn(),
+      resolvePreviewPage: jest.fn(async () => [
+        { user: { id: 'u1', email: 'a@b.ch', name: 'A', address: null } },
+      ]),
+    };
+
+    const result = await makeResolver(
+      {},
+      {},
+      recipientService
+    ).mailSendRecipients(
+      { base: MailRecipientBase.allUsers },
+      0,
+      50,
+      MailChannel.letter
+    );
+
+    expect(recipientService.resolvePreviewPage).toHaveBeenCalledWith(
+      { base: MailRecipientBase.allUsers },
+      0,
+      51,
+      MailChannel.letter
+    );
+    expect(recipientService.resolvePage).not.toHaveBeenCalled();
+    expect(result.nodes[0]).toMatchObject({ userId: 'u1', hasAddress: false });
   });
 
   it('sendMailTemplateToUser delegates and attaches the template', async () => {

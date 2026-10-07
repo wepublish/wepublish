@@ -17,3 +17,5 @@ The container automatically runs the following services:
 * PostgreSQL database, accessible over port 5432
 * PGAdmin, accessible on http://localhost:8000
 * MinIO, accessible on http://localhost:9001
+* Mailpit (caught mails), accessible on http://localhost:8025
+* Gotenberg (letter pdf renderer), reachable from the container as http://gotenberg:3000

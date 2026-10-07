@@ -427,6 +427,129 @@ describe('MailSendRecipientService', () => {
       expect(prisma.subscription.count).not.toHaveBeenCalled();
     });
   });
+
+  describe('resolvePreviewPage (missing addresses first)', () => {
+    it('pages through the people without an address before the rest', async () => {
+      const prisma = {
+        user: {
+          count: jest.fn(async () => 3),
+          findMany: jest.fn(async (args: any) =>
+            args.skip === 2 ? [{ id: 'missing-3' }] : [{ id: 'ok-1' }]
+          ),
+        },
+      };
+
+      const recipients = await makeService(prisma).resolvePreviewPage(
+        { base: MailRecipientBase.allUsers },
+        2,
+        3,
+        MailChannel.letter
+      );
+
+      expect(recipients.map(({ user }) => user.id)).toEqual([
+        'missing-3',
+        'ok-1',
+      ]);
+
+      const calls = (prisma.user.findMany as jest.Mock).mock.calls.map(
+        ([args]) => args
+      );
+      expect(calls).toHaveLength(2);
+      expect(calls[0]).toMatchObject({ skip: 2, take: 3 });
+      expect(calls[1]).toMatchObject({ skip: 0, take: 2 });
+    });
+
+    it('skips the missing ones entirely once the page is past them', async () => {
+      const prisma = {
+        user: {
+          count: jest.fn(async () => 3),
+          findMany: jest.fn(async () => [{ id: 'ok-3' }]),
+        },
+      };
+
+      await makeService(prisma).resolvePreviewPage(
+        { base: MailRecipientBase.allUsers },
+        5,
+        10,
+        MailChannel.letter
+      );
+
+      const calls = (prisma.user.findMany as jest.Mock).mock.calls;
+      expect(calls).toHaveLength(1);
+      expect(calls[0][0]).toMatchObject({ skip: 2, take: 10 });
+    });
+
+    it('puts every user on exactly one side of the split', async () => {
+      const prisma = {
+        user: {
+          count: jest.fn(async () => 1),
+          findMany: jest.fn(async () => []),
+        },
+      };
+
+      await makeService(prisma).resolvePreviewPage(
+        { base: MailRecipientBase.allUsers },
+        0,
+        10,
+        MailChannel.letter
+      );
+
+      const [[missing], [present]] = (prisma.user.findMany as jest.Mock).mock
+        .calls;
+      const full = {
+        streetAddress: 'Hauptstrasse 1',
+        streetAddress2: null,
+        zipCode: '8000',
+        city: 'Zürich',
+        country: 'CH',
+      };
+      const users = {
+        full: { address: full },
+        street2Only: {
+          address: { ...full, streetAddress: '', streetAddress2: 'Postfach' },
+        },
+        noAddress: { address: null },
+        noZip: { address: { ...full, zipCode: null } },
+        emptyCity: { address: { ...full, city: '' } },
+        noStreet: { address: { ...full, streetAddress: null } },
+      };
+
+      for (const [name, user] of Object.entries(users)) {
+        const isMissing = matches(user, missing.where);
+        expect([name, isMissing, matches(user, present.where)]).toEqual([
+          name,
+          isMissing,
+          !isMissing,
+        ]);
+      }
+
+      expect(matches(users.full, missing.where)).toBe(false);
+      expect(matches(users.street2Only, missing.where)).toBe(false);
+      expect(matches(users.noAddress, missing.where)).toBe(true);
+      expect(matches(users.noZip, missing.where)).toBe(true);
+      expect(matches(users.emptyCity, missing.where)).toBe(true);
+      expect(matches(users.noStreet, missing.where)).toBe(true);
+    });
+
+    it('keeps the plain order for a mail', async () => {
+      const prisma = {
+        user: {
+          count: jest.fn(),
+          findMany: jest.fn(async () => [{ id: 'u1' }]),
+        },
+      };
+
+      await makeService(prisma).resolvePreviewPage(
+        { base: MailRecipientBase.allUsers },
+        0,
+        10,
+        MailChannel.mail
+      );
+
+      expect(prisma.user.count).not.toHaveBeenCalled();
+      expect(prisma.user.findMany).toHaveBeenCalledTimes(1);
+    });
+  });
 });
 
 /**

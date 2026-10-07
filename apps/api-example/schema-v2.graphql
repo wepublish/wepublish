@@ -2132,6 +2132,11 @@ input MailTemplateInput {
   textContent: String
 }
 
+type MailTemplateLetterPreviewModel {
+  """The rendered letter as a base64 encoded pdf."""
+  pdf: String!
+}
+
 type MailTemplateModel {
   context: MailTemplateContext
   description: String
@@ -4481,6 +4486,11 @@ type Query {
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
+  """
+  Whether a letter integration is configured, so letters can be previewed and sent
+  """
+  letterChannelAvailable: Boolean!
+
   """Returns a single letter provider setting by id."""
   letterProviderSetting(id: String!): SettingLetterProvider!
 
@@ -4518,6 +4528,9 @@ type Query {
 
   """Return a single mail template, including its html and text body."""
   mailTemplate(id: String!): MailTemplateModel
+
+  """Render a draft mail template as the letter a send would print"""
+  mailTemplateLetterPreview(input: MailTemplatePreviewInput!): MailTemplateLetterPreviewModel!
 
   """
   Placeholders a template uses that would render empty for the given send (empty = none missing)

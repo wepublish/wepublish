@@ -192,3 +192,27 @@ describe('LetterContext.sendLetter', () => {
     ).rejects.toThrow('has no address');
   });
 });
+
+describe('LetterContext.isConfigured', () => {
+  // The registry hands in proxies that answer `in` with false while nothing is
+  // loaded, so an empty object behaves like an unconfigured integration.
+  const unconfigured = {} as never;
+
+  it('is configured with a letter provider and a pdf renderer', () => {
+    expect(createContext().context.isConfigured()).toBe(true);
+  });
+
+  it('is not configured without a letter provider', () => {
+    const { context } = createContext();
+    context.letterProvider = unconfigured;
+
+    expect(context.isConfigured()).toBe(false);
+  });
+
+  it('is not configured without a pdf renderer', () => {
+    const { context } = createContext();
+    context.pdfRenderer = unconfigured;
+
+    expect(context.isConfigured()).toBe(false);
+  });
+});

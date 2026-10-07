@@ -53,4 +53,16 @@ describe('createSwappableProvider', () => {
 
     expect(() => provider.greet('world')).toThrow('No greeter is configured.');
   });
+
+  // `LetterContext.isConfigured` relies on this to ask without throwing.
+  test('answers `in` for prototype methods only while something is configured', () => {
+    let current: Greeter | null = null;
+    const provider = createSwappableProvider<Greeter>('greeter', () => current);
+
+    expect('greet' in provider).toBe(false);
+
+    current = new Greeter('Hello');
+
+    expect('greet' in provider).toBe(true);
+  });
 });

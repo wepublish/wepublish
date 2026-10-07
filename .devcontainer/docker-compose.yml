@@ -64,6 +64,12 @@ services:
     networks:
       - default
 
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    # Pdf renderer for letters; the app reaches it via GOTENBERG_URL=http://gotenberg:3000.
+    networks:
+      - default
+
 volumes:
   database_data:
   storage_data:

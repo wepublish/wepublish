@@ -84,6 +84,15 @@ export class LetterContext {
     this.pdfRenderer = props.pdfRenderer;
   }
 
+  /**
+   * Whether letters can be sent at all: a vendor to post them and a renderer to
+   * print them. The registry's swappable providers answer `in` with false while
+   * no integration is loaded, so this is safe to ask without one.
+   */
+  isConfigured(): boolean {
+    return 'sendLetter' in this.letterProvider && 'render' in this.pdfRenderer;
+  }
+
   /** Render a template as the pdf that would be printed. */
   async renderLetter({
     template,

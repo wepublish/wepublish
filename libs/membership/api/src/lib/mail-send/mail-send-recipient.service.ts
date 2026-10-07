@@ -84,6 +84,28 @@ const WITHOUT_ADDRESS: Prisma.UserWhereInput = {
   ],
 };
 
+/** A field that holds a value — the complement of {@link blank}. */
+const filled = (field: keyof Prisma.UserAddressWhereInput) => ({
+  AND: [{ [field]: { not: null } }, { [field]: { not: '' } }],
+});
+
+/**
+ * The exact complement of {@link WITHOUT_ADDRESS}, spelled out rather than
+ * negated: `NOT` over nullable columns drops the NULL rows in Postgres.
+ */
+const WITH_ADDRESS: Prisma.UserWhereInput = {
+  address: {
+    is: {
+      AND: [
+        filled('zipCode'),
+        filled('city'),
+        filled('country'),
+        { OR: [filled('streetAddress'), filled('streetAddress2')] },
+      ],
+    },
+  },
+};
+
 const withUser = (
   where: Prisma.UserWhereInput,
   email: Prisma.UserWhereInput | null
@@ -394,6 +416,50 @@ export class MailSendRecipientService {
   }
 
   /**
+   * A page of recipients for the editor's preview. For a letter, the people a
+   * send would skip for lack of an address come first, so they can be fixed
+   * before sending; everyone else keeps the order of {@link resolvePage}. Uses
+   * the same database-side check as {@link countWithoutAddress}, so an address
+   * that is present but unusable sorts with the rest.
+   */
+  async resolvePreviewPage(
+    audience: MailAudienceInput,
+    skip: number,
+    take: number,
+    channel?: MailChannel | null
+  ): Promise<MailRecipient[]> {
+    if (!this.oncePerUser(channel)) {
+      return this.resolvePage(audience, skip, take, channel);
+    }
+
+    const [email, missingCount] = await Promise.all([
+      this.buildEmailWhere(audience),
+      this.countWithoutAddress(audience, channel),
+    ]);
+
+    const missing =
+      skip < missingCount ?
+        await this.resolveUserPage(audience, email, skip, take, WITHOUT_ADDRESS)
+      : [];
+    const rest = take - missing.length;
+
+    if (rest <= 0) {
+      return missing;
+    }
+
+    return [
+      ...missing,
+      ...(await this.resolveUserPage(
+        audience,
+        email,
+        Math.max(0, skip - missingCount),
+        rest,
+        WITH_ADDRESS
+      )),
+    ];
+  }
+
+  /**
    * One recipient per person, in the same order the audience would otherwise
    * produce. Subscription-based audiences still bind a subscription — the
    * first one that matches — so the letter can name the plan.
@@ -402,7 +468,8 @@ export class MailSendRecipientService {
     audience: MailAudienceInput,
     email: Prisma.UserWhereInput | null,
     skip: number,
-    take: number
+    take: number,
+    narrow?: Prisma.UserWhereInput
   ): Promise<MailRecipient[]> {
     const include: Prisma.UserInclude = {
       ...userInclude,
@@ -410,7 +477,12 @@ export class MailSendRecipientService {
     };
 
     const users = (await this.prisma.user.findMany({
-      where: withUser(this.buildUserWhere(audience), email),
+      where: withUser(
+        narrow ?
+          { AND: [this.buildUserWhere(audience), narrow] }
+        : this.buildUserWhere(audience),
+        email
+      ),
       include,
       skip,
       take,

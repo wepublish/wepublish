@@ -1,12 +1,18 @@
 import { BadRequestException } from '@nestjs/common';
 import { MailContext } from '@wepublish/mail/api';
+import { LetterContext } from '@wepublish/letter/api';
 import { PrismaClient } from '@prisma/client';
 import { MailTemplateService } from './mail-template.service';
 
-const makeService = (prisma: any, mailContext: any = {}) =>
+const makeService = (
+  prisma: any,
+  mailContext: any = {},
+  letterContext: any = {}
+) =>
   new MailTemplateService(
     prisma as PrismaClient,
-    mailContext as unknown as MailContext
+    mailContext as unknown as MailContext,
+    letterContext as unknown as LetterContext
   );
 
 describe('MailTemplateService', () => {
@@ -182,6 +188,130 @@ describe('MailTemplateService', () => {
 
       expect(result.subject).toBe('Hi Jane — Jahres-Abo');
       expect(result.html).toContain('CHF 10.00');
+    });
+  });
+
+  describe('isLetterChannelAvailable', () => {
+    it.each([true, false])(
+      'reports whether letters are configured (%s)',
+      configured => {
+        const service = makeService({}, {}, { isConfigured: () => configured });
+
+        expect(service.isLetterChannelAvailable()).toBe(configured);
+      }
+    );
+  });
+
+  describe('previewLetter', () => {
+    const renderLetter = () =>
+      jest.fn(async () => Buffer.from('%PDF-1.4 letter'));
+
+    it('renders the draft with sample data and a sample address', async () => {
+      const render = renderLetter();
+      const service = makeService({}, {}, { renderLetter: render });
+
+      const result = await service.previewLetter({
+        contextId: 'renewal',
+        subscriptionId: null,
+        html: '<p>{{optional_subscription_memberPlan_name}}</p>',
+      });
+
+      expect(Buffer.from(result.pdf, 'base64').toString()).toBe(
+        '%PDF-1.4 letter'
+      );
+      expect(render).toHaveBeenCalledWith(
+        expect.objectContaining({
+          template: {
+            htmlContent: '<p>{{optional_subscription_memberPlan_name}}</p>',
+          },
+          addressPosition: 'left',
+          data: expect.objectContaining({
+            user: expect.objectContaining({ firstName: 'Jane' }),
+            optional: expect.objectContaining({
+              subscription: expect.objectContaining({ id: expect.any(String) }),
+            }),
+          }),
+          recipient: expect.objectContaining({
+            name: 'Jane Doe',
+            zip: expect.any(String),
+            city: expect.any(String),
+            country: 'CH',
+          }),
+        })
+      );
+    });
+
+    it("addresses the letter to the chosen subscription's user", async () => {
+      const render = renderLetter();
+      const user = {
+        id: 'u1',
+        firstName: 'Max',
+        name: 'Muster',
+        address: {
+          company: null,
+          streetAddress: 'Bahnhofstrasse',
+          streetAddressNumber: '1',
+          streetAddress2: null,
+          streetAddress2Number: null,
+          zipCode: '3000',
+          city: 'Bern',
+          country: 'Schweiz',
+        },
+      };
+      const prisma = {
+        subscription: {
+          findUnique: jest.fn(async () => ({ id: 's1', user })),
+        },
+        invoice: { findFirst: jest.fn(async () => null) },
+      };
+      const service = makeService(prisma, {}, { renderLetter: render });
+
+      await service.previewLetter({
+        contextId: 'subscription',
+        subscriptionId: 's1',
+        html: '<p>Hallo</p>',
+      });
+
+      expect(prisma.subscription.findUnique).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: expect.objectContaining({
+            user: { include: { address: true } },
+          }),
+        })
+      );
+      expect(render).toHaveBeenCalledWith(
+        expect.objectContaining({
+          recipient: expect.objectContaining({
+            name: 'Max Muster',
+            street: 'Bahnhofstrasse',
+            city: 'Bern',
+            country: 'CH',
+          }),
+        })
+      );
+    });
+
+    it('refuses a subscription whose user has no usable address', async () => {
+      const render = renderLetter();
+      const prisma = {
+        subscription: {
+          findUnique: jest.fn(async () => ({
+            id: 's1',
+            user: { id: 'u1', email: 'max@example.com', address: null },
+          })),
+        },
+        invoice: { findFirst: jest.fn(async () => null) },
+      };
+      const service = makeService(prisma, {}, { renderLetter: render });
+
+      await expect(
+        service.previewLetter({
+          contextId: 'subscription',
+          subscriptionId: 's1',
+          html: '<p>Hallo</p>',
+        })
+      ).rejects.toThrow(BadRequestException);
+      expect(render).not.toHaveBeenCalled();
     });
   });
 

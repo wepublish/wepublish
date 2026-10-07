@@ -17,6 +17,7 @@ import {
   useMailSendRecipientsQuery,
   useMailTemplateMissingPlaceholdersQuery,
   useMailTemplateQuery,
+  useLetterChannelAvailableQuery,
   useMemberPlanListQuery,
   usePaymentMethodListQuery,
 } from '@wepublish/editor/api';
@@ -206,6 +207,12 @@ function MailSendPage() {
 
   const { data: templateData, refetch: refetchTemplates } =
     useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
+  // Without a letter integration every send is a mail, so there is no channel
+  // to choose and nothing to say about it.
+  const { data: letterChannelData } = useLetterChannelAvailableQuery(
+    DEFAULT_QUERY_OPTIONS()
+  );
+  const letterAvailable = !!letterChannelData?.letterChannelAvailable;
   const { data: memberPlanData } = useMemberPlanListQuery({
     ...DEFAULT_QUERY_OPTIONS(),
     variables: { take: 100 },
@@ -484,12 +491,14 @@ function MailSendPage() {
                 </div>
               </Panel>
 
-              <ChannelPanel
-                channel={channel}
-                onChannelChange={setChannel}
-                print={print}
-                onPrintChange={setPrint}
-              />
+              {letterAvailable && (
+                <ChannelPanel
+                  channel={channel}
+                  onChannelChange={setChannel}
+                  print={print}
+                  onPrintChange={setPrint}
+                />
+              )}
 
               <StepNav
                 onNext={() => setStep(STEP_AUDIENCE)}
@@ -892,16 +901,18 @@ function MailSendPage() {
                   <strong>{t('mailSend.template')}:</strong>
                   <span>{templateName ?? '—'}</span>
                 </Stack>
-                <Stack
-                  spacing={8}
-                  alignItems="center"
-                  style={{ marginTop: 8 }}
-                >
-                  <strong>{t('mailSend.channel.label')}:</strong>
-                  <span>
-                    {t(`mailSend.channel.${isLetter ? 'letter' : 'mail'}`)}
-                  </span>
-                </Stack>
+                {letterAvailable && (
+                  <Stack
+                    spacing={8}
+                    alignItems="center"
+                    style={{ marginTop: 8 }}
+                  >
+                    <strong>{t('mailSend.channel.label')}:</strong>
+                    <span>
+                      {t(`mailSend.channel.${isLetter ? 'letter' : 'mail'}`)}
+                    </span>
+                  </Stack>
+                )}
               </Panel>
 
               {recipientSummary({

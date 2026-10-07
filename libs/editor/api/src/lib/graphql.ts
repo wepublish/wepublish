@@ -2156,6 +2156,12 @@ export type MailTemplateInput = {
   textContent?: InputMaybe<Scalars['String']>;
 };
 
+export type MailTemplateLetterPreviewModel = {
+  __typename?: 'MailTemplateLetterPreviewModel';
+  /** The rendered letter as a base64 encoded pdf. */
+  pdf: Scalars['String'];
+};
+
 export type MailTemplateModel = {
   __typename?: 'MailTemplateModel';
   context?: Maybe<MailTemplateContext>;
@@ -5749,6 +5755,8 @@ export type Query = {
   invoice: Invoice;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Whether a letter integration is configured, so letters can be previewed and sent */
+  letterChannelAvailable: Scalars['Boolean'];
   /** Returns a single letter provider setting by id. */
   letterProviderSetting: SettingLetterProvider;
   /** Returns all letter provider settings. */
@@ -5773,6 +5781,8 @@ export type Query = {
   mailSendRecipients: PaginatedMailSendRecipient;
   /** Return a single mail template, including its html and text body. */
   mailTemplate?: Maybe<MailTemplateModel>;
+  /** Render a draft mail template as the letter a send would print */
+  mailTemplateLetterPreview: MailTemplateLetterPreviewModel;
   /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
   mailTemplateMissingPlaceholders: Array<Scalars['String']>;
   /** Render a draft mail template with a mail type's sample data */
@@ -6334,6 +6344,11 @@ export type QueryMailSendRecipientsArgs = {
 
 export type QueryMailTemplateArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryMailTemplateLetterPreviewArgs = {
+  input: MailTemplatePreviewInput;
 };
 
 

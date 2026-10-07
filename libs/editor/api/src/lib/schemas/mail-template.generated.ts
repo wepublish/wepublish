@@ -73,6 +73,18 @@ export type MailTemplatePreviewQueryVariables = Types.Exact<{
 
 export type MailTemplatePreviewQuery = { __typename?: 'Query', mailTemplatePreview: { __typename?: 'MailTemplatePreviewModel', subject: string, html: string, text?: string | null } };
 
+export type LetterChannelAvailableQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type LetterChannelAvailableQuery = { __typename?: 'Query', letterChannelAvailable: boolean };
+
+export type MailTemplateLetterPreviewQueryVariables = Types.Exact<{
+  input: Types.MailTemplatePreviewInput;
+}>;
+
+
+export type MailTemplateLetterPreviewQuery = { __typename?: 'Query', mailTemplateLetterPreview: { __typename?: 'MailTemplateLetterPreviewModel', pdf: string } };
+
 export type SendTestMailTemplateMutationVariables = Types.Exact<{
   input: Types.SendTestMailTemplateInput;
 }>;
@@ -388,6 +400,73 @@ export function useMailTemplatePreviewLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type MailTemplatePreviewQueryHookResult = ReturnType<typeof useMailTemplatePreviewQuery>;
 export type MailTemplatePreviewLazyQueryHookResult = ReturnType<typeof useMailTemplatePreviewLazyQuery>;
 export type MailTemplatePreviewQueryResult = Apollo.QueryResult<MailTemplatePreviewQuery, MailTemplatePreviewQueryVariables>;
+export const LetterChannelAvailableDocument = gql`
+    query LetterChannelAvailable {
+  letterChannelAvailable
+}
+    `;
+
+/**
+ * __useLetterChannelAvailableQuery__
+ *
+ * To run a query within a React component, call `useLetterChannelAvailableQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLetterChannelAvailableQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLetterChannelAvailableQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLetterChannelAvailableQuery(baseOptions?: Apollo.QueryHookOptions<LetterChannelAvailableQuery, LetterChannelAvailableQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LetterChannelAvailableQuery, LetterChannelAvailableQueryVariables>(LetterChannelAvailableDocument, options);
+      }
+export function useLetterChannelAvailableLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LetterChannelAvailableQuery, LetterChannelAvailableQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LetterChannelAvailableQuery, LetterChannelAvailableQueryVariables>(LetterChannelAvailableDocument, options);
+        }
+export type LetterChannelAvailableQueryHookResult = ReturnType<typeof useLetterChannelAvailableQuery>;
+export type LetterChannelAvailableLazyQueryHookResult = ReturnType<typeof useLetterChannelAvailableLazyQuery>;
+export type LetterChannelAvailableQueryResult = Apollo.QueryResult<LetterChannelAvailableQuery, LetterChannelAvailableQueryVariables>;
+export const MailTemplateLetterPreviewDocument = gql`
+    query MailTemplateLetterPreview($input: MailTemplatePreviewInput!) {
+  mailTemplateLetterPreview(input: $input) {
+    pdf
+  }
+}
+    `;
+
+/**
+ * __useMailTemplateLetterPreviewQuery__
+ *
+ * To run a query within a React component, call `useMailTemplateLetterPreviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailTemplateLetterPreviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailTemplateLetterPreviewQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useMailTemplateLetterPreviewQuery(baseOptions: Apollo.QueryHookOptions<MailTemplateLetterPreviewQuery, MailTemplateLetterPreviewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailTemplateLetterPreviewQuery, MailTemplateLetterPreviewQueryVariables>(MailTemplateLetterPreviewDocument, options);
+      }
+export function useMailTemplateLetterPreviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplateLetterPreviewQuery, MailTemplateLetterPreviewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailTemplateLetterPreviewQuery, MailTemplateLetterPreviewQueryVariables>(MailTemplateLetterPreviewDocument, options);
+        }
+export type MailTemplateLetterPreviewQueryHookResult = ReturnType<typeof useMailTemplateLetterPreviewQuery>;
+export type MailTemplateLetterPreviewLazyQueryHookResult = ReturnType<typeof useMailTemplateLetterPreviewLazyQuery>;
+export type MailTemplateLetterPreviewQueryResult = Apollo.QueryResult<MailTemplateLetterPreviewQuery, MailTemplateLetterPreviewQueryVariables>;
 export const SendTestMailTemplateDocument = gql`
     mutation SendTestMailTemplate($input: SendTestMailTemplateInput!) {
   sendTestMailTemplate(input: $input)
