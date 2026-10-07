@@ -54,6 +54,8 @@ import { Login } from './login';
 import { LoginJwt } from './loginJwt';
 import { LoginImpersonate } from './loginImpersonate';
 import { ResetPassword } from './resetPassword';
+import { ArticleTemplateEditView } from './routes/articleTemplate/articleTemplateEditView';
+import { ArticleTemplateList } from './routes/articleTemplate/articleTemplateList';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
 import { AudienceDashboard } from './routes/audience/audience-dashboard';
@@ -372,6 +374,22 @@ export function App() {
             <Route
               path="articles/create"
               element={<ArticleEditor />}
+            />
+            <Route
+              path="articles/templates"
+              element={
+                <Base>
+                  <ArticleTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/templates/create"
+              element={<ArticleTemplateEditView />}
+            />
+            <Route
+              path="articles/templates/edit/:id"
+              element={<ArticleTemplateEditView />}
             />
             <Route
               path="articles/edit/:id"

@@ -159,6 +159,74 @@ input ArticleTeaserInput {
   title: String
 }
 
+type ArticleTemplate {
+  """The content (name and blocks) of the article template."""
+  blockTemplate: BlockTemplate!
+  blockTemplateId: String!
+  createdAt: DateTime!
+  id: String!
+  metadata: ArticleTemplateMetadata!
+  modifiedAt: DateTime!
+}
+
+input ArticleTemplateFilter {
+  name: String
+}
+
+type ArticleTemplateMetadata {
+  authors: [ArticleRevisionAuthor!]!
+  breaking: Boolean!
+  canonicalUrl: String
+  disableComments: Boolean!
+  hidden: Boolean!
+  hideAuthor: Boolean!
+  image: Image
+  imageID: String
+  lead: String
+  paywallId: String
+  preTitle: String
+  properties: [Property!]!
+  seoDescription: String
+  seoTitle: String
+  shared: Boolean!
+  socialMediaAuthors: [Author!]!
+  socialMediaDescription: String
+  socialMediaImage: Image
+  socialMediaImageID: String
+  socialMediaTitle: String
+  tags: [Tag!]!
+  title: String
+}
+
+input ArticleTemplateMetadataInput {
+  authors: [ArticleRevisionAuthorInput!]!
+  breaking: Boolean!
+  canonicalUrl: String
+  disableComments: Boolean!
+  hidden: Boolean!
+  hideAuthor: Boolean!
+  imageID: String
+  lead: String
+  paywallId: String
+  preTitle: String
+  properties: [PropertyInput!]!
+  seoDescription: String
+  seoTitle: String
+  shared: Boolean!
+  socialMediaAuthorIds: [String!]!
+  socialMediaDescription: String
+  socialMediaImageID: String
+  socialMediaTitle: String
+  tagIds: [String!]!
+  title: String
+}
+
+enum ArticleTemplateSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
 type AuditLog {
   action: AuditLogAction!
   actorType: AuditLogActorType!
@@ -2682,6 +2750,9 @@ type Mutation {
   """Creates an article."""
   createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
+  """Creates a new article template."""
+  createArticleTemplate(blocks: [BlockContentInput!]!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
+
   """Creates a new author."""
   createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
   createBanner(input: CreateBannerInput!): Banner!
@@ -2834,6 +2905,9 @@ type Mutation {
 
   """Deletes an article."""
   deleteArticle(id: String!): String!
+
+  """Deletes an existing article template."""
+  deleteArticleTemplate(id: String!): ArticleTemplate!
 
   """Deletes an existing author."""
   deleteAuthor(id: String!): Author!
@@ -3132,6 +3206,9 @@ type Mutation {
 
   """Updates an article."""
   updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+
+  """Updates an existing article template."""
+  updateArticleTemplate(blocks: [BlockContentInput!]!, id: String!, metadata: ArticleTemplateMetadataInput!, name: String!): ArticleTemplate!
 
   """Updates an existing author."""
   updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
@@ -3473,6 +3550,12 @@ input PageTeaserInput {
 
 type PaginatedArticleRevisions {
   nodes: [ArticleRevision!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedArticleTemplate {
+  nodes: [ArticleTemplate!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -4186,6 +4269,24 @@ type Query {
   Returns a paginated list of revisions (version history) for an article.
   """
   articleRevisions(articleId: String!, cursorId: String, filter: ArticleRevisionFilter, order: SortOrder = Descending, skip: Int = 0, take: Int = 10): PaginatedArticleRevisions!
+
+  """Returns a single article template by ID."""
+  articleTemplate(id: String!): ArticleTemplate!
+
+  """Returns a paginated list of article templates."""
+  articleTemplates(
+    """Cursor for pagination"""
+    cursorId: String
+    filter: ArticleTemplateFilter
+    order: SortOrder = Ascending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+    sort: ArticleTemplateSort! = Name
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedArticleTemplate!
 
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!

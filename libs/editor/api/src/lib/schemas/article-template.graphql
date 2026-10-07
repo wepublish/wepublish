@@ -1,0 +1,137 @@
+fragment ArticleTemplateMetadata on ArticleTemplateMetadata {
+  preTitle
+  title
+  lead
+  seoTitle
+  seoDescription
+  canonicalUrl
+  breaking
+  hideAuthor
+  shared
+  hidden
+  disableComments
+  paywallId
+  socialMediaTitle
+  socialMediaDescription
+
+  tags {
+    id
+    tag
+  }
+
+  authors {
+    role
+
+    author {
+      ...FullAuthor
+    }
+  }
+
+  socialMediaAuthors {
+    ...FullAuthor
+  }
+
+  image {
+    ...FullImage
+  }
+
+  socialMediaImage {
+    ...FullImage
+  }
+
+  properties {
+    key
+    value
+    public
+  }
+}
+
+fragment FullArticleTemplate on ArticleTemplate {
+  id
+  createdAt
+  modifiedAt
+
+  blockTemplate {
+    ...FullBlockTemplate
+  }
+
+  metadata {
+    ...ArticleTemplateMetadata
+  }
+}
+
+query ArticleTemplateList(
+  $filter: ArticleTemplateFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleTemplateSort
+) {
+  articleTemplates(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      id
+      createdAt
+      modifiedAt
+
+      blockTemplate {
+        id
+        name
+      }
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query ArticleTemplate($id: String!) {
+  articleTemplate(id: $id) {
+    ...FullArticleTemplate
+  }
+}
+
+mutation CreateArticleTemplate(
+  $name: String!
+  $blocks: [BlockContentInput!]!
+  $metadata: ArticleTemplateMetadataInput!
+) {
+  createArticleTemplate(name: $name, blocks: $blocks, metadata: $metadata) {
+    ...FullArticleTemplate
+  }
+}
+
+mutation UpdateArticleTemplate(
+  $id: String!
+  $name: String!
+  $blocks: [BlockContentInput!]!
+  $metadata: ArticleTemplateMetadataInput!
+) {
+  updateArticleTemplate(
+    id: $id
+    name: $name
+    blocks: $blocks
+    metadata: $metadata
+  ) {
+    ...FullArticleTemplate
+  }
+}
+
+mutation DeleteArticleTemplate($id: String!) {
+  deleteArticleTemplate(id: $id) {
+    id
+  }
+}

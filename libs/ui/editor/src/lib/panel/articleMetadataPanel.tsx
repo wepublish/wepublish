@@ -14,6 +14,7 @@ import {
   MdAutoFixHigh,
   MdComment,
   MdListAlt,
+  MdNoteAdd,
   MdSettings,
   MdShare,
   MdTrackChanges,
@@ -136,8 +137,10 @@ export interface ArticleMetadataPanelProps {
   readonly peerId: string | null | undefined;
   readonly value: ArticleMetadata;
   readonly infoData: InfoData;
+  readonly isTemplate?: boolean;
 
   onClose?(): void;
+  onCreateTemplate?(): void;
   onChange?(value: ArticleMetadata): void;
 }
 
@@ -146,7 +149,9 @@ function ArticleMetadataPanel({
   peerId,
   value,
   infoData,
+  isTemplate,
   onClose,
+  onCreateTemplate,
   onChange,
 }: ArticleMetadataPanelProps) {
   const {
@@ -305,26 +310,29 @@ function ArticleMetadataPanel({
       case MetaDataType.General:
         return (
           <RForm.Stack fluid>
-            <PaddingBottom>
-              {t('articleEditor.panels.totalCharCount', {
-                totalCharCount: infoData.charCount,
-              })}
-            </PaddingBottom>
-
-            <Group>
-              <Label>
-                {t('articleEditor.panels.likeCount', { likeCount: likes })}
-              </Label>
-              <Control
-                accepter={NumberInput}
-                name="likes"
-                className="likes"
-                value={likes}
-                onChange={(likes: string | number) =>
-                  onChange?.({ ...value, likes: +likes })
-                }
-              />
-            </Group>
+            {!isTemplate && (
+              <PaddingBottom>
+                {t('articleEditor.panels.totalCharCount', {
+                  totalCharCount: infoData.charCount,
+                })}
+              </PaddingBottom>
+            )}
+            {!isTemplate && (
+              <Group>
+                <Label>
+                  {t('articleEditor.panels.likeCount', { likeCount: likes })}
+                </Label>
+                <Control
+                  accepter={NumberInput}
+                  name="likes"
+                  className="likes"
+                  value={likes}
+                  onChange={(likes: string | number) =>
+                    onChange?.({ ...value, likes: +likes })
+                  }
+                />
+              </Group>
+            )}
 
             <DeferredTextField
               name="pre-title"
@@ -392,47 +400,53 @@ function ArticleMetadataPanel({
               }
             />
 
-            <DeferredTextField
-              controlId="articleSlug"
-              name="slug"
-              className="slug"
-              label={t('articleEditor.panels.slug')}
-              value={slug}
-              onChange={slug => onChange?.({ ...value, slug })}
-              onCommit={slug =>
-                onChange?.({ ...value, slug: slug ? slugify(slug) : null })
-              }
-              action={
-                <Whisper
-                  placement="top"
-                  trigger="hover"
-                  speaker={
-                    <Tooltip>
-                      {t('articleEditor.panels.slugifySeoTitle')}
-                    </Tooltip>
-                  }
-                >
-                  <IconButton
-                    icon={<MdAutoFixHigh />}
-                    onClick={() => {
-                      onChange?.({ ...value, title, slug: slugify(seoTitle) });
-                    }}
-                  />
-                </Whisper>
-              }
-              helpText={
-                <>
-                  {t('articleEditor.panels.dontChangeSlug')}{' '}
-                  <a
-                    href="https://wepublish.ch/just-another-page-2/"
-                    target="_blank"
-                    rel="noreferrer"
+            {!isTemplate && (
+              <DeferredTextField
+                controlId="articleSlug"
+                name="slug"
+                className="slug"
+                label={t('articleEditor.panels.slug')}
+                value={slug}
+                onChange={slug => onChange?.({ ...value, slug })}
+                onCommit={slug =>
+                  onChange?.({ ...value, slug: slug ? slugify(slug) : null })
+                }
+                action={
+                  <Whisper
+                    placement="top"
+                    trigger="hover"
+                    speaker={
+                      <Tooltip>
+                        {t('articleEditor.panels.slugifySeoTitle')}
+                      </Tooltip>
+                    }
                   >
-                    {t('articleEditor.panels.slugGuide')}
-                  </a>
-                </>
-              }
-            />
+                    <IconButton
+                      icon={<MdAutoFixHigh />}
+                      onClick={() => {
+                        onChange?.({
+                          ...value,
+                          title,
+                          slug: slugify(seoTitle),
+                        });
+                      }}
+                    />
+                  </Whisper>
+                }
+                helpText={
+                  <>
+                    {t('articleEditor.panels.dontChangeSlug')}{' '}
+                    <a
+                      href="https://wepublish.ch/just-another-page-2/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {t('articleEditor.panels.slugGuide')}
+                    </a>
+                  </>
+                }
+              />
+            )}
 
             <Group controlId="articleAuthors">
               <Label>{t('articleEditor.panels.authors')}</Label>
@@ -560,6 +574,20 @@ function ArticleMetadataPanel({
                 removeImage={() => onChange?.({ ...value, image: undefined })}
               />
             </Group>
+
+            {onCreateTemplate && !isTemplate && (
+              <PermissionControl
+                qualifyingPermissions={['CAN_CREATE_ARTICLE_TEMPLATE']}
+              >
+                <IconButton
+                  appearance="ghost"
+                  icon={<MdNoteAdd />}
+                  onClick={onCreateTemplate}
+                >
+                  {t('articleEditor.panels.createTemplate')}
+                </IconButton>
+              </PermissionControl>
+            )}
           </RForm.Stack>
         );
       case MetaDataType.Properties:
@@ -687,18 +715,20 @@ function ArticleMetadataPanel({
               {t('articleEditor.panels.comments')}
             </Item>
           )}
-          <Badge
-            content={
-              !!trackingPixels?.find(trackingPixel => !!trackingPixel?.error)
-            }
-          >
-            <Item
-              eventKey={MetaDataType.Tracking}
-              icon={<MdTrackChanges />}
+          {!isTemplate && (
+            <Badge
+              content={
+                !!trackingPixels?.find(trackingPixel => !!trackingPixel?.error)
+              }
             >
-              {t('articleEditor.panels.tracking')}
-            </Item>
-          </Badge>
+              <Item
+                eventKey={MetaDataType.Tracking}
+                icon={<MdTrackChanges />}
+              >
+                {t('articleEditor.panels.tracking')}
+              </Item>
+            </Badge>
+          )}
         </Nav>
         {currentContent()}
       </Drawer.Body>

@@ -79,6 +79,7 @@
       "saveValidationFailed": "Speichern fehlgeschlagen",
       "publishValidationFailed": "Publizieren fehlgeschlagen",
       "overview": {
+        "loadingTemplate": "Vorlage wird geladen…",
         "articlePending": "Artikel geplant",
         "articlePublished": "Artikel publiziert",
         "back": "Zurück",
@@ -104,6 +105,7 @@
         "warningLabel": "Warnung"
       },
       "panels": {
+        "createTemplate": "Vorlage aus Artikel erstellen",
         "firstPublishedAtDate": "Erstpublikation am {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Artikel wurde noch nicht publiziert",
         "addSlug": "Bitte Slug erfassen",
@@ -216,6 +218,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "Neuer Artikel",
+        "blankArticle": "Leerer Artikel",
+        "search": "Vorlagen durchsuchen",
+        "noResults": "Keine Vorlagen gefunden"
+      },
       "overview": {
         "action": "Aktion",
         "articles": "Artikel",
@@ -1381,6 +1389,7 @@
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Blockvorlagen"
       },
+      "articleTemplates": "Artikelvorlagen",
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
       "commentTags": "Tags",
@@ -2158,6 +2167,33 @@
       "subscriptionStartsAt": "Abo startet am {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / Nr. {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
+    },
+    "articleTemplates": {
+      "list": {
+        "action": "Aktion",
+        "copy": "Kopieren",
+        "title": "Artikelvorlagen",
+        "newArticleTemplate": "Neue Artikelvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "info": "Artikelvorlagen legen den Inhalt und die Metadaten fest, mit denen ein neuer Artikel beginnt. Änderungen an einer Vorlage wirken sich nicht auf bereits daraus erstellte Artikel aus."
+      },
+      "edit": {
+        "loadingTemplate": "Vorlage wird geladen…",
+        "loadingArticle": "Artikel wird geladen…",
+        "copyName": "{{name}} (Kopie)",
+        "name": "Name",
+        "backToList": "Zurück zur Liste",
+        "metadata": "Metadaten",
+        "saved": "Gespeichert",
+        "created": "Erstellt",
+        "new": "Neu",
+        "editing": "In Bearbeitung"
+      },
+      "delete": {
+        "title": "Artikelvorlage löschen?",
+        "body": "Möchtest du die Artikelvorlage \"{{name}}\" wirklich löschen? Daraus erstellte Artikel sind nicht betroffen."
+      }
     },
     "blockTemplates": {
       "list": {

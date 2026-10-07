@@ -1621,7 +1621,21 @@ model BlockTemplate {
   name   String @unique
   blocks Json
 
+  articleTemplate ArticleTemplate?
+
   @@map("block_templates")
+}
+
+model ArticleTemplate {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  blockTemplateId String        @unique
+  blockTemplate   BlockTemplate @relation(fields: [blockTemplateId], references: [id], onDelete: Cascade)
+  metadata        Json
+
+  @@map("article_templates")
 }
 
 model Banner {

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import {
   CanCreateArticle,
+  CanCreateArticleTemplate,
   CanCreateAuthor,
   CanCreateBanner,
   CanCreateBlockStyle,
@@ -26,6 +27,7 @@ import {
   CanCreateUser,
   CanCreateUserRole,
   CanDeleteArticle,
+  CanDeleteArticleTemplate,
   CanDeleteAuthor,
   CanDeleteBanner,
   CanDeleteBlockStyle,
@@ -101,6 +103,7 @@ import {
   CanPublishPage,
   CanSendMailTemplates,
   CanTakeActionOnComment,
+  CanUpdateArticleTemplate,
   CanUpdateBlockStyle,
   CanUpdateBlockTemplate,
   CanUpdateCommentRatingSystem,
@@ -148,6 +151,7 @@ import {
   MdMail,
   MdMoney,
   MdMultilineChart,
+  MdNoteAdd,
   MdNotificationsNone,
   MdOutgoingMail,
   MdOutlineGridView,
@@ -358,6 +362,23 @@ export function Base({ children }: BaseProps) {
                         active={path === 'articles'}
                       >
                         {t('navbar.articles')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanCreateArticleTemplate.id,
+                        CanUpdateArticleTemplate.id,
+                        CanDeleteArticleTemplate.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/articles/templates"
+                        icon={<MdNoteAdd />}
+                        active={path === 'articles/templates'}
+                      >
+                        {t('navbar.articleTemplates')}
                       </Nav.Item>
                     </PermissionControl>
 

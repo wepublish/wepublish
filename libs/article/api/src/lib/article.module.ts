@@ -15,9 +15,17 @@ import {
   HasOptionalArticleLcResolver,
   HasOptionalArticleResolver,
 } from './has-article/has-article.resolver';
-import { BlockContentModule } from '@wepublish/block-content/api';
+import {
+  BlockContentModule,
+  BlockTemplateModule,
+} from '@wepublish/block-content/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { TagModule } from '@wepublish/tag/api';
+import {
+  ArticleTemplateMetadataResolver,
+  ArticleTemplateResolver,
+} from './article-template/article-template.resolver';
+import { ArticleTemplateService } from './article-template/article-template.service';
 
 @Module({
   imports: [
@@ -28,6 +36,7 @@ import { TagModule } from '@wepublish/tag/api';
     SettingModule,
     TagModule,
     forwardRef(() => BlockContentModule),
+    forwardRef(() => BlockTemplateModule),
   ],
   providers: [
     ArticlePublicationWatcher,
@@ -36,6 +45,9 @@ import { TagModule } from '@wepublish/tag/api';
     ArticleService,
     ArticleResolver,
     ArticleRevisionResolver,
+    ArticleTemplateService,
+    ArticleTemplateResolver,
+    ArticleTemplateMetadataResolver,
 
     HasArticleResolver,
     HasArticleLcResolver,

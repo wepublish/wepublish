@@ -79,6 +79,7 @@
       "saveValidationFailed": "Échec de l'enregistrement",
       "publishValidationFailed": "Échec de la publication",
       "overview": {
+        "loadingTemplate": "Chargement du modèle…",
         "articlePending": "Article en attente",
         "articlePublished": "Article publié",
         "back": "Retour",
@@ -104,6 +105,7 @@
         "warningLabel": "Attention"
       },
       "panels": {
+        "createTemplate": "Créer un modèle à partir de l'article",
         "firstPublishedAtDate": "Première publication le {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "L'article n'est pas encore publié",
         "addSlug": "Veuillez ajouter un slug",
@@ -219,6 +221,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "Nouvel article",
+        "blankArticle": "Article vide",
+        "search": "Rechercher des modèles",
+        "noResults": "Aucun modèle trouvé"
+      },
       "overview": {
         "action": "Action",
         "articles": "Articles",
@@ -360,6 +368,7 @@
         "open": "Ouvrir",
         "blockTemplates": "Modèles de blocs"
       },
+      "articleTemplates": "Modèles d'articles",
       "comment": {
         "cherryPick": "Select specific comments",
         "comments": "{{count}} Comment",
@@ -2108,6 +2117,33 @@
       "subscriptionStartsAt": "L'abonnement débute le {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / N° {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante."
+    },
+    "articleTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copier",
+        "title": "Modèles d'articles",
+        "newArticleTemplate": "Nouveau modèle d'article",
+        "name": "Nom",
+        "noName": "Sans nom",
+        "info": "Les modèles d'articles définissent le contenu et les métadonnées avec lesquels un nouvel article commence. Modifier un modèle n'affecte pas les articles déjà créés à partir de celui-ci."
+      },
+      "edit": {
+        "loadingTemplate": "Chargement du modèle…",
+        "loadingArticle": "Chargement de l'article…",
+        "copyName": "{{name}} (copie)",
+        "name": "Nom",
+        "backToList": "Retour à la liste",
+        "metadata": "Métadonnées",
+        "saved": "Enregistré",
+        "created": "Créé",
+        "new": "Nouveau",
+        "editing": "En cours d'édition"
+      },
+      "delete": {
+        "title": "Supprimer le modèle d'article ?",
+        "body": "Voulez-vous vraiment supprimer le modèle d'article « {{name}} » ? Les articles créés à partir de celui-ci ne sont pas affectés."
+      }
     },
     "blockTemplates": {
       "list": {
