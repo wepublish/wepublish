@@ -44,6 +44,8 @@ export type ActionMail = {
   mailTemplateName?: Maybe<Scalars['String']['output']>;
   /** Set when no mail would be sent. */
   noMailReason?: Maybe<ActionMailNoMailReason>;
+  /** The address the mail would go to; null while the user does not exist yet (createUser). */
+  recipientEmail?: Maybe<Scalars['String']['output']>;
 };
 
 export enum ActionMailNoMailReason {
@@ -6562,6 +6564,7 @@ export type QuerySubscriptionCreationMailArgs = {
   memberPlanID: Scalars['String']['input'];
   paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
+  userID: Scalars['String']['input'];
 };
 
 
