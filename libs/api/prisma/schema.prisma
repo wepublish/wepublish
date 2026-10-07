@@ -1596,6 +1596,7 @@ enum BlockType {
   MailchimpForm  @map("mailchimpForm")
   Crowdfunding   @map("crowdfunding")
   Poll           @map("poll")
+  Author         @map("author")
   Comment        @map("comment")
   Event          @map("event")
   FlexBlock      @map("flexBlock")

@@ -264,6 +264,23 @@ export type Author = HasImage & HasOptionalPeerLc & {
   url: Scalars['String']['output'];
 };
 
+export type AuthorBlock = BaseBlock & HasOptionalAuthor & {
+  __typename?: 'AuthorBlock';
+  author?: Maybe<Author>;
+  authorId?: Maybe<Scalars['String']['output']>;
+  blockStyle?: Maybe<Scalars['String']['output']>;
+  blockStyleName?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['Boolean']['output']>;
+  type: BlockType;
+};
+
+export type AuthorBlockInput = {
+  authorId?: InputMaybe<Scalars['String']['input']>;
+  blockStyle?: InputMaybe<Scalars['String']['input']>;
+  blockStyleName?: InputMaybe<Scalars['String']['input']>;
+  disabled?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type AuthorCreatedAction = BaseAction & HasAuthor & {
   __typename?: 'AuthorCreatedAction';
   actionType: ActionType;
@@ -423,9 +440,10 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = AuthorBlock | BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
+  author?: InputMaybe<AuthorBlockInput>;
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
   blockTemplate?: InputMaybe<BlockTemplateBlockInput>;
   comment?: InputMaybe<CommentBlockInput>;
@@ -506,6 +524,7 @@ export enum BlockTemplateSort {
 }
 
 export enum BlockType {
+  Author = 'Author',
   BildwurfAd = 'BildwurfAd',
   BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
@@ -1086,6 +1105,7 @@ export type DocumentStorageUsage = {
 };
 
 export enum EditorBlockType {
+  Author = 'Author',
   BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
@@ -1476,6 +1496,11 @@ export type HasOneBlockContent = {
 export type HasOptionalArticle = {
   article?: Maybe<Article>;
   articleID?: Maybe<Scalars['String']['output']>;
+};
+
+export type HasOptionalAuthor = {
+  author?: Maybe<Author>;
+  authorId?: Maybe<Scalars['String']['output']>;
 };
 
 export type HasOptionalCrowdfunding = {

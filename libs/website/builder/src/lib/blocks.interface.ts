@@ -14,6 +14,7 @@ import {
   FullInstagramPostBlockFragment,
   FullListicleBlockFragment,
   FullPolisConversationBlockFragment,
+  FullAuthorBlockFragment,
   FullPollBlockFragment,
   FullQuoteBlockFragment,
   FullRichTextBlockFragment,
@@ -102,6 +103,7 @@ export type BuilderTikTokVideoBlockProps =
 export type BuilderBildwurfAdBlockProps =
   WithBlockProps<FullBildwurfAdBlockFragment>;
 export type BuilderIFrameBlockProps = WithBlockProps<FullIFrameBlockFragment>;
+export type BuilderAuthorBlockProps = WithBlockProps<FullAuthorBlockFragment>;
 export type BuilderPollBlockProps = WithBlockProps<FullPollBlockFragment>;
 export type BuilderCrowdfundingBlockProps =
   WithBlockProps<FullCrowdfundingBlockFragment>;

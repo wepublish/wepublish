@@ -234,6 +234,22 @@ type Author implements HasImage & HasOptionalPeerLc {
   url: String!
 }
 
+type AuthorBlock implements BaseBlock & HasOptionalAuthor {
+  author: Author
+  authorId: String
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  type: BlockType!
+}
+
+input AuthorBlockInput {
+  authorId: String
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+}
+
 type AuthorCreatedAction implements BaseAction & HasAuthor {
   actionType: ActionType!
   author: Author!
@@ -387,9 +403,10 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = AuthorBlock | BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
+  author: AuthorBlockInput
   bildwurfAd: BildwurfAdBlockInput
   blockTemplate: BlockTemplateBlockInput
   comment: CommentBlockInput
@@ -467,6 +484,7 @@ enum BlockTemplateSort {
 }
 
 enum BlockType {
+  Author
   BildwurfAd
   BlockTemplate
   Comment
@@ -1032,6 +1050,7 @@ type DocumentStorageUsage {
 }
 
 enum EditorBlockType {
+  Author
   BlockTemplate
   Comment
   Crowdfunding
@@ -1408,6 +1427,11 @@ interface HasOneBlockContent {
 interface HasOptionalArticle {
   article: Article
   articleID: String
+}
+
+interface HasOptionalAuthor {
+  author: Author
+  authorId: String
 }
 
 interface HasOptionalCrowdfunding {
