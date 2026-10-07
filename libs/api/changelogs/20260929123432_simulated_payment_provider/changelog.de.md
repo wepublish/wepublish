@@ -13,4 +13,4 @@ Auf der Bezahlseite bestimmen drei Schaltflächen, was passiert:
 
 Ist der Anbieter so eingestellt, dass er automatisch abbucht, werden Verlängerungen sofort als bezahlt verbucht. Aktivieren Sie **Verlängerungen ablehnen**, damit sie stattdessen fehlschlagen — so sehen Sie, was Ihr Publikum und Ihr Team erhalten, wenn eine wiederkehrende Zahlung scheitert.
 
-Es fliesst kein echtes Geld, und wer die Bezahlseite öffnet, kann eine Zahlung als bezahlt markieren. Verwenden Sie den Anbieter deshalb nur auf Test- und Demo-Seiten, nie auf Ihrer Live-Seite.
+Es fliesst kein echtes Geld, und wer die Bezahlseite öffnet, kann eine Zahlung als bezahlt markieren. Deshalb steht der Anbieter nur auf Test- und Demo-Seiten zur Verfügung: Auf Ihrer Live-Seite wird er nicht angeboten und lässt sich nicht einrichten.

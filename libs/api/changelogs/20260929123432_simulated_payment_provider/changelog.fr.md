@@ -13,4 +13,4 @@ Sur la page de paiement, trois boutons déterminent la suite :
 
 Si le prestataire est réglé pour prélever automatiquement, les renouvellements sont enregistrés comme payés immédiatement. Cochez **Refuser les renouvellements** pour qu'ils échouent à la place : vous verrez ainsi ce que reçoivent votre lectorat et votre équipe lorsqu'un paiement récurrent ne passe pas.
 
-Aucun argent ne circule, et toute personne qui ouvre la page de paiement peut marquer un paiement comme payé. Réservez donc ce prestataire aux sites de test et de démonstration, jamais à votre site en production.
+Aucun argent ne circule, et toute personne qui ouvre la page de paiement peut marquer un paiement comme payé. C'est pourquoi ce prestataire n'est disponible que sur les sites de test et de démonstration : sur votre site en production, il n'est pas proposé et ne peut pas être configuré.
