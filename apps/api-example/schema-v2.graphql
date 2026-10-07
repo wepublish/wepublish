@@ -2963,6 +2963,11 @@ type Mutation {
   reactivateSubscription(id: String!): PublicSubscription!
 
   """
+  Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created.
+  """
+  reactivateUserSubscription(id: String!): PublicSubscription!
+
+  """
   This mutation registers a new member by providing name, email, and other required information.
   """
   registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, flair: String, name: String!, password: String): Registration!
@@ -3009,6 +3014,16 @@ type Mutation {
   Continue a send job that stopped early. Recipients already sent are skipped.
   """
   resumeMailSendJob(id: String!, retryUnfinished: Boolean): MailSendJobModel!
+
+  """
+  Undoes an upgrade of a subscription as long as the new subscription has not been paid for.
+  """
+  revertSubscriptionUpgrade(id: String!): PublicSubscription!
+
+  """
+  Undoes an upgrade of one of the authenticated user's own subscriptions as long as the new subscription has not been paid for. The replacement subscription is removed and the original one continues.
+  """
+  revertUserSubscriptionUpgrade(subscriptionId: String!): PublicSubscription!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -4041,6 +4056,11 @@ input PropertyInput {
 type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
+
+  """
+  Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet.
+  """
+  canRevertUpgrade: Boolean!
   confirmed: Boolean!
   createdAt: DateTime!
   currency: Currency!

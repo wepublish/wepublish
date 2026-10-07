@@ -4,6 +4,7 @@ import {
   MemberPlanListDocument,
   PaymentMethodListDocument,
   ReactivateSubscriptionDocument,
+  RevertSubscriptionUpgradeDocument,
   SubscriptionDocument,
 } from '@wepublish/editor/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -76,7 +77,8 @@ const paymentMethod = {
   gracePeriod: 0,
 };
 
-const subscription = (deactivation: unknown) => ({
+const subscription = (deactivation: unknown, canRevertUpgrade = false) => ({
+  canRevertUpgrade,
   id: 'subscription-1',
   createdAt: '2026-01-02T10:00:00.000Z',
   modifiedAt: '2026-01-02T10:00:00.000Z',
@@ -102,7 +104,7 @@ const subscription = (deactivation: unknown) => ({
   periods: [],
 });
 
-const mockQueries = (deactivation: unknown) => {
+const mockQueries = (deactivation: unknown, canRevertUpgrade = false) => {
   // The results have to be referentially stable, the view reacts to them in effects.
   const refetch = vi.fn();
   const results = new Map<unknown, unknown>([
@@ -111,7 +113,9 @@ const mockQueries = (deactivation: unknown) => {
       {
         loading: false,
         refetch,
-        data: { subscription: subscription(deactivation) },
+        data: {
+          subscription: subscription(deactivation, canRevertUpgrade),
+        },
       },
     ],
     [
@@ -153,6 +157,7 @@ const renderEditView = () =>
 beforeEach(() => {
   mockedUseQuery.mockReset();
   mutationFor(ReactivateSubscriptionDocument).mockClear();
+  mutationFor(RevertSubscriptionUpgradeDocument).mockClear();
 });
 
 describe('SubscriptionEditView', () => {
@@ -182,6 +187,38 @@ describe('SubscriptionEditView', () => {
     );
 
     expect(reactivate).toHaveBeenCalledWith({
+      variables: { id: 'subscription-1' },
+    });
+  });
+
+  it('offers no upgrade revert when the upgrade has been paid', async () => {
+    mockQueries({ date: '2026-02-01T10:00:00.000Z', reason: 'none' }, false);
+    renderEditView();
+
+    expect(await screen.findByTestId('reactivateSubscription')).toBeTruthy();
+    expect(screen.queryByTestId('revertSubscriptionUpgrade')).toBeNull();
+  });
+
+  it('reverts an unpaid upgrade after confirmation', async () => {
+    mockQueries(
+      {
+        date: '2026-02-01T10:00:00.000Z',
+        reason: 'userReplacedSubscription',
+      },
+      true
+    );
+    renderEditView();
+
+    fireEvent.click(await screen.findByTestId('revertSubscriptionUpgrade'));
+
+    const revert = mutationFor(RevertSubscriptionUpgradeDocument);
+    expect(revert).not.toHaveBeenCalled();
+
+    fireEvent.click(
+      await screen.findByText('userSubscriptionEdit.revertUpgrade.confirm')
+    );
+
+    expect(revert).toHaveBeenCalledWith({
       variables: { id: 'subscription-1' },
     });
   });

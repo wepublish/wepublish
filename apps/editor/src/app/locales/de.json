@@ -2227,6 +2227,12 @@
         },
         "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
       },
+      "revertUpgrade": {
+        "title": "Upgrade rückgängig",
+        "modalTitle": "Upgrade rückgängig machen?",
+        "modalMessage": "Das neue Abo wird samt seinen Rechnungen gelöscht und das ersetzte Abo läuft normal weiter. Das geht nur, solange das neue Abo nicht bezahlt wurde.",
+        "confirm": "Rückgängig machen"
+      },
       "reactivation": {
         "deactivatedSince": "Deaktiviert seit {{date, ccc PP p}} · Grund: {{reason}}",
         "deactivatedOn": "Deaktivierung am {{date, ccc PP p}} · Grund: {{reason}}",

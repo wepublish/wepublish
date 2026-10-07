@@ -123,6 +123,7 @@ fragment FullSubscription on PublicSubscription {
   }
 
   canExtend
+  canRevertUpgrade
   isActive
 }
 
@@ -292,6 +293,18 @@ mutation PaySubscription(
 
 mutation CancelSubscription($subscriptionId: String!) {
   cancelUserSubscription(id: $subscriptionId) {
+    ...FullSubscription
+  }
+}
+
+mutation ReactivateSubscription($subscriptionId: String!) {
+  reactivateUserSubscription(id: $subscriptionId) {
+    ...FullSubscription
+  }
+}
+
+mutation RevertSubscriptionUpgrade($subscriptionId: String!) {
+  revertUserSubscriptionUpgrade(subscriptionId: $subscriptionId) {
     ...FullSubscription
   }
 }

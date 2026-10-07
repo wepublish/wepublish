@@ -18,6 +18,7 @@ import {
   PropertyInput,
   ReactivateSubscriptionDocument,
   RenewSubscriptionDocument,
+  RevertSubscriptionUpgradeDocument,
   SubscriptionDeactivationReason,
   SubscriptionDocument,
   UpdateSubscriptionDocument,
@@ -52,6 +53,7 @@ import {
   MdChevronLeft,
   MdOpenInNew,
   MdRestartAlt,
+  MdUndo,
   MdUnpublished,
 } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -134,6 +136,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] =
     useState<boolean>(false);
   const [isReactivationModalOpen, setReactivationModalOpen] =
+    useState<boolean>(false);
+  const [isRevertUpgradeModalOpen, setRevertUpgradeModalOpen] =
     useState<boolean>(false);
   const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false);
   const [user, setUser] = useState<FullUserFragment | null>();
@@ -306,6 +310,10 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     reactivateSubscription,
     { loading: isReactivating, error: reactivationError },
   ] = useMutation(ReactivateSubscriptionDocument);
+  const [
+    revertSubscriptionUpgrade,
+    { loading: isRevertingUpgrade, error: revertUpgradeError },
+  ] = useMutation(RevertSubscriptionUpgradeDocument);
 
   /**
    * fetch edited user from api
@@ -344,7 +352,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
       loadErrorInvoices?.message ??
       cancelError?.message ??
       renewalError?.message ??
-      reactivationError?.message;
+      reactivationError?.message ??
+      revertUpgradeError?.message;
     if (error)
       toaster.push(
         <Message
@@ -363,6 +372,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     cancelError,
     renewalError,
     reactivationError,
+    revertUpgradeError,
   ]);
 
   /**
@@ -566,6 +576,27 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     await Promise.all([reloadSubscription(), reloadInvoices()]);
   }
 
+  async function handleRevertUpgrade() {
+    if (!id) return;
+
+    setRevertUpgradeModalOpen(false);
+
+    try {
+      const { data } = await revertSubscriptionUpgrade({
+        variables: { id },
+      });
+
+      if (data?.revertSubscriptionUpgrade) {
+        onSave?.(data.revertSubscriptionUpgrade);
+      }
+    } catch (e) {
+      /* error is handled in the mutation definition */
+    }
+
+    // the replacement subscription and its invoice are gone now
+    await Promise.all([reloadSubscription(), reloadInvoices()]);
+  }
+
   async function handleRenewal() {
     if (!id) return;
 
@@ -662,18 +693,31 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                   {t('userSubscriptionEdit.deactivation.title.activated')}
                 </IconButtonMarginRight>
               )}
-              {showInvoiceHistory() && deactivation && (
+              {showInvoiceHistory() && data?.subscription?.canRevertUpgrade && (
                 <IconButtonMarginRight
                   appearance="ghost"
-                  color="green"
-                  data-testid="reactivateSubscription"
-                  disabled={isDisabled || isReactivating}
-                  onClick={() => setReactivationModalOpen(true)}
+                  data-testid="revertSubscriptionUpgrade"
+                  disabled={isDisabled || isRevertingUpgrade}
+                  onClick={() => setRevertUpgradeModalOpen(true)}
                 >
-                  <MdRestartAlt />
-                  {t('userSubscriptionEdit.reactivation.title')}
+                  <MdUndo />
+                  {t('userSubscriptionEdit.revertUpgrade.title')}
                 </IconButtonMarginRight>
               )}
+              {showInvoiceHistory() &&
+                deactivation &&
+                !data?.subscription?.canRevertUpgrade && (
+                  <IconButtonMarginRight
+                    appearance="ghost"
+                    color="green"
+                    data-testid="reactivateSubscription"
+                    disabled={isDisabled || isReactivating}
+                    onClick={() => setReactivationModalOpen(true)}
+                  >
+                    <MdRestartAlt />
+                    {t('userSubscriptionEdit.reactivation.title')}
+                  </IconButtonMarginRight>
+                )}
               <ButtonMarginRight
                 appearance="primary"
                 disabled={isDisabled || isDeactivated}
@@ -1130,6 +1174,41 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           onClose={() => setReactivationModalOpen(false)}
           onConfirm={() => handleReactivation()}
         />
+
+        {/* ask user to really revert the upgrade */}
+        <Modal
+          open={isRevertUpgradeModalOpen}
+          size="sm"
+          backdrop="static"
+          onClose={() => setRevertUpgradeModalOpen(false)}
+        >
+          <Modal.Header>
+            <Modal.Title>
+              {t('userSubscriptionEdit.revertUpgrade.modalTitle')}
+            </Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            {t('userSubscriptionEdit.revertUpgrade.modalMessage')}
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button
+              appearance="primary"
+              disabled={isRevertingUpgrade}
+              onClick={() => handleRevertUpgrade()}
+            >
+              {t('userSubscriptionEdit.revertUpgrade.confirm')}
+            </Button>
+
+            <Button
+              appearance="subtle"
+              onClick={() => setRevertUpgradeModalOpen(false)}
+            >
+              {t('cancel')}
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
         {/* ask user to really extend the subscripion */}
         <Modal

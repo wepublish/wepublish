@@ -10,6 +10,8 @@ import {
   FullSubscriptionFragment,
   InvoicesDocument,
   InvoicesQuery,
+  ReactivateSubscriptionDocument,
+  RevertSubscriptionUpgradeDocument,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 import {
@@ -40,6 +42,17 @@ export function SubscriptionListContainer({
   const invoices = useQuery(InvoicesDocument);
 
   const [cancel] = useCancelSubscriptionMutationWithCacheUpdate();
+  const [revertUpgrade] = useMutation(RevertSubscriptionUpgradeDocument, {
+    onCompleted() {
+      invoices.refetch();
+    },
+    refetchQueries: [SubscriptionsDocument],
+  });
+  const [reactivate] = useMutation(ReactivateSubscriptionDocument, {
+    onCompleted() {
+      invoices.refetch();
+    },
+  });
   const [extend] = useMutation(ExtendSubscriptionDocument, {
     onCompleted(data: ExtendSubscriptionMutation) {
       if (!data.extendUserSubscription?.intentSecret) {
@@ -95,6 +108,20 @@ export function SubscriptionListContainer({
         className={className}
         onCancel={async subscriptionId => {
           await cancel({
+            variables: {
+              subscriptionId,
+            },
+          });
+        }}
+        onReactivate={async subscriptionId => {
+          await reactivate({
+            variables: {
+              subscriptionId,
+            },
+          });
+        }}
+        onRevertUpgrade={async subscriptionId => {
+          await revertUpgrade({
             variables: {
               subscriptionId,
             },
