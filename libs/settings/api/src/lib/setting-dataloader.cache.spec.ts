@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import {
@@ -17,11 +18,11 @@ describe('SettingDataloaderService', () => {
     modifiedAt: new Date('2020-02-01T00:00:00.000Z'),
     settingRestriction: null,
   };
-  let prisma: { setting: { findMany: jest.Mock } };
+  let prisma: { setting: { findMany: Mock } };
   let kv: KvTtlCacheService;
 
   beforeEach(async () => {
-    prisma = { setting: { findMany: jest.fn().mockResolvedValue([setting]) } };
+    prisma = { setting: { findMany: vi.fn().mockResolvedValue([setting]) } };
     const module = await Test.createTestingModule({
       imports: [KvTtlCacheModule],
     }).compile();

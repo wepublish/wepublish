@@ -6,7 +6,7 @@ import {
 describe('InvoicePaidNotifier', () => {
   it('forwards the invoice id to the listener', async () => {
     const listener: InvoicePaidListener = {
-      onInvoicePaid: jest.fn().mockResolvedValue(undefined),
+      onInvoicePaid: vi.fn().mockResolvedValue(undefined),
     };
 
     await new InvoicePaidNotifier(listener).notify('invoice-1');
@@ -22,7 +22,7 @@ describe('InvoicePaidNotifier', () => {
 
   it('swallows a failing listener so the payment path is unaffected', async () => {
     const listener: InvoicePaidListener = {
-      onInvoicePaid: jest.fn().mockRejectedValue(new Error('template missing')),
+      onInvoicePaid: vi.fn().mockRejectedValue(new Error('template missing')),
     };
 
     await expect(

@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
 import { useArgs, useReducer } from 'storybook/preview-api';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
@@ -16,7 +15,7 @@ import {
   Challenge,
   CommentAuthorType,
   CommentListQuery,
-  SensitiveDataUser,
+  FullSensitiveDataUserFragment,
 } from '@wepublish/website/api';
 import { ComponentProps } from 'react';
 import { LoggedInFilled } from '../comment-editor/comment-editor.stories';
@@ -112,7 +111,9 @@ export const Commenting: StoryObj = {
   },
   decorators: [
     WithCommentRatingsDecorators({}),
-    WithUserDecorator((verifiedUserComment.user as SensitiveDataUser) ?? null),
+    WithUserDecorator(
+      (verifiedUserComment.user as FullSensitiveDataUserFragment) ?? null
+    ),
   ],
 };
 
@@ -129,9 +130,7 @@ export const CommentingWithError: StoryObj = {
   args: {
     ...Commenting.args,
     add: {
-      error: new ApolloError({
-        errorMessage: 'Something went wrong.',
-      }),
+      error: new Error('Something went wrong.'),
     },
   },
   play: async ctx => {
@@ -148,7 +147,9 @@ export const Editing: StoryObj = {
   },
   decorators: [
     WithCommentRatingsDecorators({}),
-    WithUserDecorator((verifiedUserComment.user as SensitiveDataUser) ?? null),
+    WithUserDecorator(
+      (verifiedUserComment.user as FullSensitiveDataUserFragment) ?? null
+    ),
   ],
 };
 
@@ -157,9 +158,7 @@ export const EditingWithError: StoryObj = {
   args: {
     ...Editing.args,
     edit: {
-      error: new ApolloError({
-        errorMessage: 'Something went wrong.',
-      }),
+      error: new Error('Something went wrong.'),
     },
   },
   play: async ctx => {

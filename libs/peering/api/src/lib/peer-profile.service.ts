@@ -9,10 +9,10 @@ import { createSafeHostUrl } from './create-safe-host-url';
 import { GraphQLClient } from 'graphql-request';
 import { createHash } from 'crypto';
 import {
-  PeerProfile as RemoteGqlPeerProfile,
+  PeerProfileDocument as RemoteGqlPeerProfileDocument,
   PeerProfileQuery,
   PeerProfileQueryVariables,
-} from './remote/graphql';
+} from './remote';
 import { PeerDataloaderService } from './peer-dataloader.service';
 import { PEER_USER_AGENT } from '@wepublish/authentication/api';
 import {
@@ -84,7 +84,7 @@ export class PeerProfileService {
     const profile = await client.request<
       PeerProfileQuery,
       PeerProfileQueryVariables
-    >(RemoteGqlPeerProfile);
+    >(RemoteGqlPeerProfileDocument);
 
     const updatedProfile = {
       ...profile.peerProfile,

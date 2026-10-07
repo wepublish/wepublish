@@ -557,7 +557,7 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
           <div
             class="rs-table-scrollbar-handle"
             role="button"
-            style="height: 42.857142857142854%; min-height: 14px;"
+            style="height: 42.857142857142854%; min-height: 14px; transform: translate3d(0px,0px,0); backface-visibility: hidden;"
             tabindex="-1"
           />
         </div>

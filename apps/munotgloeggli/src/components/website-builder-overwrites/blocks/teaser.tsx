@@ -9,10 +9,10 @@ export const MunotgloeggliBaseTeaser = (props: BuilderTeaserProps) => {
       ...teaser,
       page: {
         ...teaser.page,
-        publishedAt: undefined,
+        publishedAt: null,
         latest: {
           ...teaser.page.latest,
-          publishedAt: undefined,
+          publishedAt: null,
         },
       },
     } as typeof teaser;

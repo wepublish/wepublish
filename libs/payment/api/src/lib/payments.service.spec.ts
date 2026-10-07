@@ -13,17 +13,17 @@ function fakeProvider(
 ): PaymentProvider {
   return {
     id,
-    createIntent: jest.fn().mockResolvedValue({
+    createIntent: vi.fn().mockResolvedValue({
       intentID: '999',
       intentSecret: 'secret',
       intentData: '{}',
       state,
     } as Intent),
-    checkIntentStatus: jest.fn().mockResolvedValue({
+    checkIntentStatus: vi.fn().mockResolvedValue({
       paymentID: 'payment-1',
       state,
     }),
-    updatePaymentWithIntentState: jest.fn().mockResolvedValue({
+    updatePaymentWithIntentState: vi.fn().mockResolvedValue({
       id: 'payment-1',
       invoiceID: 'invoice-1',
     }),
@@ -50,12 +50,12 @@ describe('PaymentsService.createPaymentWithProvider', () => {
 
     const prisma = {
       paymentMethod: {
-        findUnique: jest
+        findUnique: vi
           .fn()
           .mockResolvedValue({ ...resolvedMethod, active: true }),
       },
       subscription: {
-        update: jest.fn().mockResolvedValue({
+        update: vi.fn().mockResolvedValue({
           id: 'sub-1',
           monthlyAmount: 500,
           currency: Currency.CHF,
@@ -67,22 +67,22 @@ describe('PaymentsService.createPaymentWithProvider', () => {
         }),
       },
       payment: {
-        create: jest.fn().mockImplementation(async ({ data }: any) => ({
+        create: vi.fn().mockImplementation(async ({ data }: any) => ({
           id: 'payment-1',
           ...data,
         })),
-        update: jest.fn().mockImplementation(async ({ data }: any) => ({
+        update: vi.fn().mockImplementation(async ({ data }: any) => ({
           id: 'payment-1',
           ...data,
         })),
       },
       paymentProviderCustomer: {
-        findFirst: jest.fn().mockResolvedValue(null),
+        findFirst: vi.fn().mockResolvedValue(null),
       },
     };
 
     const invoicePaidNotifier = {
-      notify: jest.fn().mockResolvedValue(undefined),
+      notify: vi.fn().mockResolvedValue(undefined),
     };
 
     const service = new PaymentsService(

@@ -186,7 +186,7 @@ export class ImportPeerArticleService {
     const { article } = await client.request<
       remote.ArticleQuery,
       remote.ArticleQueryVariables
-    >(remote.Article, {
+    >(remote.ArticleDocument, {
       id: articleId,
     });
 

@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
@@ -7,9 +8,9 @@ describe('WebsiteSettingsService', () => {
   let service: WebsiteSettingsService;
   let prisma: {
     websiteSettings: {
-      findFirst: jest.Mock;
-      findFirstOrThrow: jest.Mock;
-      update: jest.Mock;
+      findFirst: Mock;
+      findFirstOrThrow: Mock;
+      update: Mock;
     };
   };
 
@@ -17,9 +18,9 @@ describe('WebsiteSettingsService', () => {
     const settings = { id: 'settings-1', analyticsGAEnabled: false };
     prisma = {
       websiteSettings: {
-        findFirst: jest.fn().mockResolvedValue(settings),
-        findFirstOrThrow: jest.fn().mockResolvedValue(settings),
-        update: jest.fn().mockResolvedValue(settings),
+        findFirst: vi.fn().mockResolvedValue(settings),
+        findFirstOrThrow: vi.fn().mockResolvedValue(settings),
+        update: vi.fn().mockResolvedValue(settings),
       },
     };
 

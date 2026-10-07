@@ -1,11 +1,12 @@
 import { OneChannelStateService } from './one-channel-state.service';
 import { OneChannelConnectionState } from './one-channel-status.model';
 import { OneChannelStatusResolver } from './one-channel-status.resolver';
+import type { Mock } from 'vitest';
 
 describe('OneChannelStatusResolver', () => {
   const attemptedAt = new Date('2026-09-16T12:05:00.000Z');
   const succeededAt = new Date('2026-09-16T12:00:00.000Z');
-  let state: { getState: jest.Mock };
+  let state: { getState: Mock };
 
   function makeResolver(oneURL: string) {
     return new OneChannelStatusResolver(
@@ -16,7 +17,7 @@ describe('OneChannelStatusResolver', () => {
 
   beforeEach(() => {
     state = {
-      getState: jest.fn().mockResolvedValue({
+      getState: vi.fn().mockResolvedValue({
         lastSuccessAt: succeededAt,
         lastAttemptAt: succeededAt,
         lastError: null,
@@ -80,11 +81,11 @@ describe('OneChannelStatusResolver', () => {
     }
 
     beforeEach(() => {
-      jest.useFakeTimers().setSystemTime(now);
+      vi.useFakeTimers().setSystemTime(now);
     });
 
     afterEach(() => {
-      jest.useRealTimers();
+      vi.useRealTimers();
     });
 
     it('stays false while the connector is not configured', async () => {

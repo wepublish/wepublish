@@ -12,7 +12,7 @@ import {
 } from '@wepublish/block-content/website';
 import {} from '@wepublish/block-content/website';
 import {
-  FlexAlignment,
+  FullFlexAlignmentFragment,
   FullImageFragment,
   FullTeaserFragment,
 } from '@wepublish/website/api';
@@ -42,7 +42,7 @@ export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
   }
 };
 
-export const TeaserWrapper = styled('div')<FlexAlignment>`
+export const TeaserWrapper = styled('div')<FullFlexAlignmentFragment>`
   aspect-ratio: 16 / 9;
   background-color: transparent;
   cursor: pointer;

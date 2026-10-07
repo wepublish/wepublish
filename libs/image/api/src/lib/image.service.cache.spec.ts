@@ -2,18 +2,18 @@ import { ImageService } from './image.service';
 import { ImageUploadService } from './image-upload.service';
 
 describe('image cache', () => {
-  const publicContentCache = { invalidate: jest.fn() };
+  const publicContentCache = { invalidate: vi.fn() };
   const image = { id: 'image-1' };
   const prisma = {
     image: {
-      create: jest.fn().mockResolvedValue(image),
-      update: jest.fn().mockResolvedValue(image),
-      delete: jest.fn().mockResolvedValue(image),
+      create: vi.fn().mockResolvedValue(image),
+      update: vi.fn().mockResolvedValue(image),
+      delete: vi.fn().mockResolvedValue(image),
     },
   } as any;
   const mediaAdapter = {
-    uploadImage: jest.fn().mockResolvedValue({ id: 'image-2' }),
-    deleteImage: jest.fn().mockResolvedValue(undefined),
+    uploadImage: vi.fn().mockResolvedValue({ id: 'image-2' }),
+    deleteImage: vi.fn().mockResolvedValue(undefined),
   } as any;
   const upload = new ImageUploadService(
     prisma,
@@ -24,10 +24,10 @@ describe('image cache', () => {
 
   beforeEach(() => {
     Object.assign(images, {
-      __DATALOADER__ImageDataloaderService: { prime: jest.fn() },
+      __DATALOADER__ImageDataloaderService: { prime: vi.fn() },
     });
     Object.assign(upload, {
-      __DATALOADER__ImageDataloaderService: { prime: jest.fn() },
+      __DATALOADER__ImageDataloaderService: { prime: vi.fn() },
     });
     publicContentCache.invalidate.mockReset().mockResolvedValue(undefined);
   });

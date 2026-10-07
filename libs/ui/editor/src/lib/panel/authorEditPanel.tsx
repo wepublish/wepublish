@@ -1,14 +1,15 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  AuthorDocument,
   AuthorLink,
   AuthorListDocument,
+  CreateAuthorDocument,
   FullAuthorFragment,
   FullImageFragment,
   Maybe,
   TagType,
-  useAuthorQuery,
-  useCreateAuthorMutation,
-  useUpdateAuthorMutation,
+  UpdateAuthorDocument,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
 import React, { useEffect, useState } from 'react';
@@ -64,6 +65,12 @@ const Label = styled(RLabel)`
   padding-top: 16px;
 `;
 
+const emptyAuthorLink: AuthorLink = {
+  __typename: 'AuthorLink',
+  title: '',
+  url: '',
+};
+
 export interface AuthorEditPanelProps {
   id?: string;
 
@@ -88,7 +95,10 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     undefined
   );
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
-    { id: generateID(), value: { title: '', url: '' } },
+    {
+      id: generateID(),
+      value: emptyAuthorLink,
+    },
   ]);
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
@@ -100,18 +110,18 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     data,
     loading: isLoading,
     error: loadError,
-  } = useAuthorQuery({
+  } = useQuery(AuthorDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
 
   const [createAuthor, { loading: isCreating, error: createError }] =
-    useCreateAuthorMutation({
+    useMutation(CreateAuthorDocument, {
       refetchQueries: [getOperationNameFromDocument(AuthorListDocument)],
     });
 
   const [updateAuthor, { loading: isUpdating, error: updateError }] =
-    useUpdateAuthorMutation({});
+    useMutation(UpdateAuthorDocument, {});
 
   const isDisabled =
     isLoading ||
@@ -138,6 +148,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
           data.author.links.map(link => ({
             id: generateID(),
             value: {
+              __typename: 'AuthorLink',
               title: link.title,
               url: link.url,
             },
@@ -307,7 +318,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
                 onChange={links => {
                   setLinks(links);
                 }}
-                defaultValue={{ title: '', url: '' }}
+                defaultValue={emptyAuthorLink}
               >
                 {({ value, onChange }) => (
                   <Controls>

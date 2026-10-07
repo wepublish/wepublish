@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import {
@@ -6,7 +7,7 @@ import {
   selectTeaserTitle,
   selectTeaserUrl,
 } from '@wepublish/block-content/website';
-import { useStatsQuery } from '@wepublish/website/api';
+import { StatsDocument } from '@wepublish/website/api';
 import {
   BuilderTeaserGridBlockProps,
   useWebsiteBuilder,
@@ -14,7 +15,7 @@ import {
 import { differenceInYears } from 'date-fns';
 import { useState } from 'react';
 
-import { ReactComponent as Logo } from '../../logo.svg';
+import { Logo } from '../../logo';
 import { ArchiveSlider } from './archive-slider';
 
 export const ArchiveWrapper = styled('div')``;
@@ -197,7 +198,7 @@ const LinkWrapper = styled('div')`
 `;
 
 export const Archive = ({ teasers }: BuilderTeaserGridBlockProps) => {
-  const { data } = useStatsQuery();
+  const { data } = useQuery(StatsDocument);
   const [currentTeaser, setCurrentTeaser] = useState(teasers[2]);
 
   const title = currentTeaser && selectTeaserTitle(currentTeaser);

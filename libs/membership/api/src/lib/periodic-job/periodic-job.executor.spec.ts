@@ -3,7 +3,7 @@ import { PeriodicJobExecutor } from './periodic-job.executor';
 
 describe('PeriodicJobExecutor', () => {
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   const setup = (
@@ -12,25 +12,25 @@ describe('PeriodicJobExecutor', () => {
   ) => {
     const ran: string[] = [];
     const periodicJobs = {
-      execute: jest.fn(async () => {
+      execute: vi.fn(async () => {
         ran.push('periodic jobs');
       }),
-      concurrentExecute: jest.fn(async () => {
+      concurrentExecute: vi.fn(async () => {
         ran.push('periodic jobs guarded by the database');
       }),
     };
     const mailchimpSync = {
-      executeAllSync: jest.fn(async () => {
+      executeAllSync: vi.fn(async () => {
         ran.push('mailchimp sync');
       }),
     };
     const kv = {
-      claim: jest.fn().mockResolvedValue(claimed),
-      dragonflyStatus: jest.fn().mockResolvedValue(dragonfly),
+      claim: vi.fn().mockResolvedValue(claimed),
+      dragonflyStatus: vi.fn().mockResolvedValue(dragonfly),
     };
     const executor = new PeriodicJobExecutor(
       periodicJobs as any,
-      { resolve: jest.fn().mockResolvedValue(mailchimpSync) } as any,
+      { resolve: vi.fn().mockResolvedValue(mailchimpSync) } as any,
       kv as any
     );
 
@@ -54,7 +54,7 @@ describe('PeriodicJobExecutor', () => {
   });
 
   it('runs nothing and reports it when Dragonfly is configured but cannot tell who claimed the night', async () => {
-    const failed = jest
+    const failed = vi
       .spyOn(Logger.prototype, 'error')
       .mockImplementation(() => undefined);
     const { executor, ran } = setup(undefined, 'unreachable');
@@ -66,7 +66,7 @@ describe('PeriodicJobExecutor', () => {
   });
 
   it('runs the night guarded by the database, as before Dragonfly, when no Dragonfly is configured', async () => {
-    const failed = jest
+    const failed = vi
       .spyOn(Logger.prototype, 'error')
       .mockImplementation(() => undefined);
     const { executor, ran, kv } = setup(undefined, 'not-configured');
@@ -82,7 +82,7 @@ describe('PeriodicJobExecutor', () => {
   });
 
   it('still runs the Mailchimp sync when the database guarded run fails', async () => {
-    jest.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+    vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
     const { executor, ran, periodicJobs } = setup(undefined, 'not-configured');
     periodicJobs.concurrentExecute.mockRejectedValue(
       new Error('database down')

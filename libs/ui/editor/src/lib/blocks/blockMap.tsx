@@ -359,7 +359,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       blocks: [
         {
-          alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
+          alignment: {
+            __typename: 'FlexAlignment',
+            i: nanoid(),
+            x: 0,
+            y: 0,
+            w: 3,
+            h: 6,
+          },
           block: null,
         },
       ],

@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
@@ -11,8 +12,8 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -39,9 +40,10 @@ const mailSchema = z.object({
 
 export const WebsiteMail = () => {
   const { t } = useTranslation();
-  const [loadSettings] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings] = useLazyQuery(WebsiteSettingsDocument);
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
         toaster.push(
           <Message
@@ -66,7 +68,8 @@ export const WebsiteMail = () => {
           </Message>
         );
       },
-    });
+    }
+  );
 
   const {
     control,
@@ -115,9 +118,7 @@ export const WebsiteMail = () => {
           {t('websiteSettings.backToOverview')}
         </Button>
       </Link>
-
       <h3>{t('websiteSettings.mail.mailchimp.title')}</h3>
-
       <Controller
         name="mailchimp.enabled"
         control={control}
@@ -153,7 +154,6 @@ export const WebsiteMail = () => {
           </div>
         )}
       />
-
       <Controller
         name="mailchimp.key"
         control={control}
@@ -180,28 +180,29 @@ export const WebsiteMail = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      API
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        API
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
       <Box>
         <Button
           type="submit"

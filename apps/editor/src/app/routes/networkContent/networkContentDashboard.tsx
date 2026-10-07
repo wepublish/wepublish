@@ -1,5 +1,6 @@
+import { useMutation } from '@apollo/client/react';
 import { CircularProgress, Typography } from '@mui/material';
-import { useImportPeerArticleMutation } from '@wepublish/editor/api';
+import { ImportPeerArticleDocument } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -45,13 +46,15 @@ export default function NetworkContentDashboard() {
     null
   );
 
-  const [importPeerArticle, { loading: importing }] =
-    useImportPeerArticleMutation({
+  const [importPeerArticle, { loading: importing }] = useMutation(
+    ImportPeerArticleDocument,
+    {
       onCompleted(data) {
         setArticleToImport(undefined);
         navigate(`/articles/edit/${data.importPeerArticle.id}`);
       },
-    });
+    }
+  );
 
   const handleConfirmImport = () => {
     if (!articleToImport) return;

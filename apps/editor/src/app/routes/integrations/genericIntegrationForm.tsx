@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -207,7 +207,9 @@ export function SingleGenericIntegrationForm<
             <Typography
               variant="h5"
               component={HeaderWrapper}
-              marginBottom={2}
+              sx={{
+                marginBottom: 2,
+              }}
             >
               {setting.name || setting.type}
 

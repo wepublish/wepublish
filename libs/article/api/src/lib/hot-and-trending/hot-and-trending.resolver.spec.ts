@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
@@ -69,10 +70,10 @@ describe('HotAndTrendingResolver', () => {
 
 describe('HotAndTrendingResolver anonymous answers', () => {
   let app: INestApplication;
-  let getMostViewedArticles: jest.Mock;
+  let getMostViewedArticles: Mock;
 
   beforeEach(async () => {
-    getMostViewedArticles = jest.fn();
+    getMostViewedArticles = vi.fn();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [

@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import {
   KvTtlCacheModule,
@@ -8,20 +9,20 @@ import { PageDataloaderService } from './page-dataloader.service';
 import { PageRevisionDataloaderService } from './page-revision-dataloader.service';
 import { PageService } from './page.service';
 
-jest.mock('@wepublish/block-content/api');
+vi.mock('@wepublish/block-content/api');
 
 const publishedAt = new Date('2026-01-01T00:00:00.000Z');
 
 describe('page content cache', () => {
   let kv: KvTtlCacheService;
   let prisma: {
-    page: { findMany: jest.Mock; findFirst: jest.Mock; count: jest.Mock };
+    page: { findMany: Mock; findFirst: Mock; count: Mock };
   };
 
   const pageService = () =>
     Object.assign(
       new PageService(prisma as any, new PublicContentCacheInvalidator(kv), kv),
-      { __DATALOADER__PageDataloaderService: { prime: jest.fn() } }
+      { __DATALOADER__PageDataloaderService: { prime: vi.fn() } }
     );
 
   beforeEach(async () => {
@@ -31,9 +32,9 @@ describe('page content cache', () => {
     kv = module.get(KvTtlCacheService);
     prisma = {
       page: {
-        findMany: jest.fn().mockResolvedValue([{ id: 'p1', publishedAt }]),
-        findFirst: jest.fn().mockResolvedValue({ id: 'p1', slug: 'about' }),
-        count: jest.fn().mockResolvedValue(1),
+        findMany: vi.fn().mockResolvedValue([{ id: 'p1', publishedAt }]),
+        findFirst: vi.fn().mockResolvedValue({ id: 'p1', slug: 'about' }),
+        count: vi.fn().mockResolvedValue(1),
       },
     };
   });

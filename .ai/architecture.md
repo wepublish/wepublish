@@ -36,8 +36,9 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 
 **The editor is client-rendered — there is no SSR.** `nx build editor` produces
 two bundles: `browser` (the Vite client bundle) and `server`. The server is a
-small Express host ([apps/editor/server.ts](apps/editor/server.ts)) that serves
-the static browser bundle and, in `src/main.server.ts`, splices a
+small Express host ([apps/editor/server.ts](apps/editor/server.ts), whose app is
+built in [src/server-app.ts](apps/editor/src/server-app.ts)) that serves the
+static browser bundle and, in `src/main.server.ts`, splices a
 `<script type="application/json">` settings blob into `index.html` before
 `</head>` — that is how runtime env (`API_URL`, `SENTRY_DSN`, `APP_NAME`) reaches
 the client. It does not render React. Do not mistake `server.ts` for SSR, and do

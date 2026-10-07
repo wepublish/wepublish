@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import {
   KvTtlCacheModule,
@@ -13,10 +14,10 @@ describe('author content cache', () => {
   let kv: KvTtlCacheService;
   const author = { id: 'author-1', name: 'Anna' };
   const prisma = {
-    author: { findMany: jest.fn() },
-    articleRevisionAuthor: { findMany: jest.fn() },
-    articleRevisionSocialMediaAuthor: { findMany: jest.fn() },
-    authorsLinks: { findMany: jest.fn() },
+    author: { findMany: vi.fn() },
+    articleRevisionAuthor: { findMany: vi.fn() },
+    articleRevisionSocialMediaAuthor: { findMany: vi.fn() },
+    authorsLinks: { findMany: vi.fn() },
   };
 
   beforeEach(async () => {
@@ -40,7 +41,7 @@ describe('author content cache', () => {
     [
       string,
       () => { load: (id: string) => Promise<unknown> },
-      jest.Mock,
+      Mock,
       string,
     ]
   >([

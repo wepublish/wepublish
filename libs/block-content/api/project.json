@@ -20,10 +20,11 @@
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@nx/vitest:test",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/block-content/api/jest.config.ts"
+        "configFile": "{projectRoot}/vitest.config.ts",
+        "watch": false
       }
     }
   }

@@ -22,51 +22,12 @@ const nextConfig = {
     API_URL: process.env.API_URL || '',
     SENTRY_DSN: process.env.SENTRY_DSN || undefined,
   },
-  webpack(config, { webpack }) {
-    /**
-     * SVGR support, previously provided by the removed `nx.svgr` option
-     * @see https://nx.dev/technologies/react/next/recipes/next-config-setup
-     */
-    config.module.rules.push({
-      test: /\.svg$/,
-      issuer: { not: /\.(css|scss|sass)$/ },
-      resourceQuery: {
-        not: [/url/],
-      },
-      use: [
-        {
-          loader: require.resolve('@svgr/webpack'),
-          options: {
-            svgo: false,
-            titleProp: true,
-            ref: true,
-          },
-        },
-        {
-          loader: require.resolve('url-loader'),
-          options: {
-            limit: 10000,
-            name: '[name].[hash:7].[ext]',
-          },
-        },
-      ],
-    });
-
-    /**
-     * Tells Apollo turn run in production mode
-     * @see https://www.apollographql.com/docs/react/development-testing/reducing-bundle-size
-     */
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'globalThis.__DEV__': false,
-      })
-    );
-
-    if (process.env.ANALYZE_BUNDLE_CONCAT === 'false') {
-      config.optimization.concatenateModules = false;
-    }
-
-    return config;
+  turbopack: {
+    // SVGs are imported as URLs only; the one SVG that was used as a React
+    // component is now a .tsx component, so no SVGR loader is needed. Apollo's
+    // `globalThis.__DEV__` define is likewise gone: Apollo Client 4 selects its
+    // dev/production build through package export conditions.
+    root: join(__dirname, '../../../../../'),
   },
   async redirects() {
     return [
@@ -169,7 +130,30 @@ const nextConfig = {
       '**/node_modules/uglify-js',
     ],
   },
-  transpilePackages: ['react-tweet', '@faker-js/faker'],
+  // Emotion and MUI must go through a single compilation pipeline, otherwise
+  // the server loads two instances of their React contexts (the transpiled
+  // ESM copy and the external CJS copy from node_modules) and providers set on
+  // one are invisible to consumers of the other. List the *whole* family: a
+  // package left out stays external and drags in the CJS copies of everything
+  // it imports, even if those are listed. Symptoms of a gap, server vs client:
+  // - `css-` vs `mui-` class names (AppCacheProvider's cache not seen)
+  // - nested `createWithTheme` themes ignored (`<span>` instead of a mapped `<ul>`)
+  // - `theme.breakpoints` undefined
+  transpilePackages: [
+    'react-tweet',
+    '@faker-js/faker',
+    '@emotion/react',
+    '@emotion/styled',
+    '@emotion/cache',
+    '@mui/material',
+    '@mui/material-nextjs',
+    '@mui/system',
+    '@mui/private-theming',
+    '@mui/styled-engine',
+    '@mui/utils',
+    '@mui/x-date-pickers',
+    '@mui/x-internals',
+  ],
 };
 
 module.exports = nextConfig;

@@ -11,8 +11,7 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/flimmer",
-        "webpack": true
+        "outputPath": "dist/apps/flimmer"
       },
       "configurations": {
         "development": {
@@ -27,8 +26,7 @@
       "options": {
         "buildTarget": "flimmer:build",
         "dev": true,
-        "port": 4204,
-        "webpack": true
+        "port": 4204
       },
       "configurations": {
         "development": {
@@ -48,18 +46,8 @@
       }
     },
     "test": {
-      "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
-      },
-      "configurations": {
-        "ci": {
-          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
-        },
-        "update": {
-          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
-        }
+        "config": "../../{projectRoot}/vitest.config.ts"
       }
     },
     "lint": {

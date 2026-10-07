@@ -5,11 +5,11 @@ import {
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
 import {
+  FullImageBlockFragment,
   FullImageFragment,
-  ImageBlock,
-  Page,
-  RichTextBlock,
-  TitleBlock,
+  FullPageFragment,
+  FullRichTextBlockFragment,
+  FullTitleBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderPageSEOProps,
@@ -17,15 +17,15 @@ import {
 } from '@wepublish/website/builder';
 import { useMemo } from 'react';
 
-export const getPageSEO = (page: Page) => {
-  const firstTitle = page.latest.blocks?.find((block): block is TitleBlock =>
-    isTitleBlock(block)
+export const getPageSEO = (page: FullPageFragment) => {
+  const firstTitle = page.latest.blocks?.find(
+    (block): block is FullTitleBlockFragment => isTitleBlock(block)
   );
   const firstRichText = page.latest.blocks?.find(
-    (block): block is RichTextBlock => isRichTextBlock(block)
+    (block): block is FullRichTextBlockFragment => isRichTextBlock(block)
   );
   const firstImageBlock = page.latest.blocks?.find(
-    (block): block is ImageBlock => isImageBlock(block)
+    (block): block is FullImageBlockFragment => isImageBlock(block)
   );
 
   const socialMediaDescription =

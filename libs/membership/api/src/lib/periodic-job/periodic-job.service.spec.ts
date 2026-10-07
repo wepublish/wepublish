@@ -19,7 +19,7 @@ import {
 
 const createMockPrisma = () => ({
   subscriptionFlow: {
-    findMany: jest.fn().mockResolvedValue([
+    findMany: vi.fn().mockResolvedValue([
       {
         id: 'default-flow',
         default: true,
@@ -87,16 +87,16 @@ const createMockPrisma = () => ({
         ],
       },
     ]),
-    findFirst: jest.fn(),
+    findFirst: vi.fn(),
   },
   subscriptionInterval: {
-    create: jest.fn(),
-    deleteMany: jest.fn(),
+    create: vi.fn(),
+    deleteMany: vi.fn(),
   },
   periodicJob: {
-    findFirst: jest.fn().mockResolvedValue(null),
-    findMany: jest.fn().mockResolvedValue([]),
-    create: jest.fn().mockImplementation(({ data }) => ({
+    findFirst: vi.fn().mockResolvedValue(null),
+    findMany: vi.fn().mockResolvedValue([]),
+    create: vi.fn().mockImplementation(({ data }) => ({
       id: 'job-1',
       date: data.date,
       executionTime: data.executionTime || new Date(),
@@ -105,36 +105,36 @@ const createMockPrisma = () => ({
       tries: data.tries || 1,
       error: data.error || null,
     })),
-    update: jest.fn().mockImplementation(({ data }) => ({
+    update: vi.fn().mockImplementation(({ data }) => ({
       id: 'job-1',
       ...data,
     })),
-    updateMany: jest.fn(),
+    updateMany: vi.fn(),
   },
   subscription: {
-    findMany: jest.fn().mockResolvedValue([]),
-    findUnique: jest.fn(),
-    update: jest.fn(),
+    findMany: vi.fn().mockResolvedValue([]),
+    findUnique: vi.fn(),
+    update: vi.fn(),
   },
   invoice: {
-    findMany: jest.fn().mockResolvedValue([]),
-    create: jest.fn(),
+    findMany: vi.fn().mockResolvedValue([]),
+    create: vi.fn(),
   },
   mailLog: {
-    findMany: jest.fn().mockResolvedValue([]),
-    create: jest.fn().mockResolvedValue({}),
-    count: jest.fn().mockResolvedValue(0),
+    findMany: vi.fn().mockResolvedValue([]),
+    create: vi.fn().mockResolvedValue({}),
+    count: vi.fn().mockResolvedValue(0),
   },
   memberPlan: {
-    create: jest.fn(),
+    create: vi.fn(),
   },
   paymentMethod: {
-    create: jest.fn(),
+    create: vi.fn(),
   },
   subscriptionDeactivation: {
-    findMany: jest.fn().mockResolvedValue([]),
+    findMany: vi.fn().mockResolvedValue([]),
   },
-  $transaction: jest.fn().mockImplementation(async (operations: any) => {
+  $transaction: vi.fn().mockImplementation(async (operations: any) => {
     if (Array.isArray(operations)) {
       return Promise.all(operations);
     }
@@ -143,39 +143,39 @@ const createMockPrisma = () => ({
 });
 
 const createMockSubscriptionController = () => ({
-  findAllOpenInvoices: jest.fn().mockResolvedValue([]),
-  getActiveSubscriptionsWithoutInvoice: jest.fn().mockResolvedValue([]),
-  findUnpaidDueInvoices: jest.fn().mockResolvedValue([]),
-  findUnpaidScheduledForDeactivationInvoices: jest.fn().mockResolvedValue([]),
-  findActiveExpiredNotAutoRenewSubscriptions: jest.fn().mockResolvedValue([]),
-  createInvoice: jest.fn(),
-  chargeInvoice: jest.fn(),
-  deactivateSubscription: jest.fn(),
-  checkInvoiceState: jest.fn(),
+  findAllOpenInvoices: vi.fn().mockResolvedValue([]),
+  getActiveSubscriptionsWithoutInvoice: vi.fn().mockResolvedValue([]),
+  findUnpaidDueInvoices: vi.fn().mockResolvedValue([]),
+  findUnpaidScheduledForDeactivationInvoices: vi.fn().mockResolvedValue([]),
+  findActiveExpiredNotAutoRenewSubscriptions: vi.fn().mockResolvedValue([]),
+  createInvoice: vi.fn(),
+  chargeInvoice: vi.fn(),
+  deactivateSubscription: vi.fn(),
+  checkInvoiceState: vi.fn(),
 });
 
 const createMockMailContext = () => ({
   mailProvider: {
     id: 'fakeMail',
-    sendMail: jest.fn().mockResolvedValue(undefined),
-    getTemplateUrl: jest.fn(),
-    getTemplates: jest.fn(),
+    sendMail: vi.fn().mockResolvedValue(undefined),
+    getTemplateUrl: vi.fn(),
+    getTemplates: vi.fn(),
     name: 'FakeMail',
-    sendRemoteTemplateMail: jest.fn().mockResolvedValue(undefined),
+    sendRemoteTemplateMail: vi.fn().mockResolvedValue(undefined),
   },
   prisma: null,
   kv: null,
-  jwtGenerator: jest.fn().mockResolvedValue('test-jwt-token'),
-  sendComposedMail: jest.fn().mockResolvedValue({ subject: 'Test subject' }),
+  jwtGenerator: vi.fn().mockResolvedValue('test-jwt-token'),
+  sendComposedMail: vi.fn().mockResolvedValue({ subject: 'Test subject' }),
 });
 
 const createMockPaymentsService = () => ({
-  findPaymentProviderByPaymentMethodeId: jest.fn().mockResolvedValue(null),
-  getProviders: jest.fn().mockReturnValue([]),
+  findPaymentProviderByPaymentMethodeId: vi.fn().mockResolvedValue(null),
+  getProviders: vi.fn().mockReturnValue([]),
 });
 
 const createMockInvoicePaidNotifier = () => ({
-  notify: jest.fn().mockResolvedValue(undefined),
+  notify: vi.fn().mockResolvedValue(undefined),
 });
 
 describe('PeriodicJobService', () => {

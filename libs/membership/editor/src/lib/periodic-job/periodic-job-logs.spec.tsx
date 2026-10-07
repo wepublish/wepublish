@@ -1,19 +1,20 @@
 import type { Mock } from 'vitest';
+import { useQuery } from '@apollo/client/react';
 import { render, screen } from '@testing-library/react';
-import type { PeriodicJob } from '@wepublish/editor/api';
+import type { FullPeriodicJobFragment } from '@wepublish/editor/api';
 import {
-  useNotificationConfirmationsQuery,
-  usePeriodicJobLogsQuery,
+  NotificationConfirmationsDocument,
+  PeriodicJobLogsDocument,
 } from '@wepublish/editor/api';
 
 import { PeriodicJobsLog } from './periodic-job-logs';
 
-// Partial mock: the UI library imports enums from the same module.
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
-  usePeriodicJobLogsQuery: vi.fn(),
-  useNotificationConfirmationsQuery: vi.fn(),
-  useConfirmNotificationMutation: () => [vi.fn(), { loading: false }],
+// The component calls Apollo's `useQuery` with a generated document, so the
+// mock sits at the Apollo boundary and dispatches on the document it is given.
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: vi.fn(),
+  useMutation: () => [vi.fn(), { loading: false }],
 }));
 
 vi.mock('react-i18next', () => ({
@@ -23,13 +24,20 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const mockedUsePeriodicJobLogsQuery = usePeriodicJobLogsQuery as Mock;
-const mockedUseNotificationConfirmationsQuery =
-  useNotificationConfirmationsQuery as Mock;
+const mockedUseQuery = useQuery as Mock;
+
+// Results keyed by the document each query is issued with.
+const queryResults = new Map<unknown, unknown>();
+
+const setQueryResult = (document: unknown, result: unknown) => {
+  queryResults.set(document, result);
+};
 
 const now = new Date().toISOString();
 
-const job = (overrides: Partial<PeriodicJob> = {}): PeriodicJob => ({
+const job = (
+  overrides: Partial<FullPeriodicJobFragment> = {}
+): FullPeriodicJobFragment => ({
   id: 'job-1',
   createdAt: now,
   modifiedAt: now,
@@ -42,7 +50,7 @@ const job = (overrides: Partial<PeriodicJob> = {}): PeriodicJob => ({
   ...overrides,
 });
 
-const failedJob = (overrides: Partial<PeriodicJob> = {}) =>
+const failedJob = (overrides: Partial<FullPeriodicJobFragment> = {}) =>
   job({
     successfullyFinished: null,
     finishedWithError: now,
@@ -50,15 +58,18 @@ const failedJob = (overrides: Partial<PeriodicJob> = {}) =>
     ...overrides,
   });
 
-const mockJobs = (jobs: PeriodicJob[] | undefined, loading = false) => {
-  mockedUsePeriodicJobLogsQuery.mockReturnValue({
+const mockJobs = (
+  jobs: FullPeriodicJobFragment[] | undefined,
+  loading = false
+) => {
+  setQueryResult(PeriodicJobLogsDocument, {
     data: jobs ? { periodicJobLog: jobs } : undefined,
     loading,
   });
 };
 
 const mockConfirmations = (itemIds: string[]) => {
-  mockedUseNotificationConfirmationsQuery.mockReturnValue({
+  setQueryResult(NotificationConfirmationsDocument, {
     data: {
       notificationConfirmations: itemIds.map(itemId => ({
         id: `confirmation-${itemId}`,
@@ -70,8 +81,11 @@ const mockConfirmations = (itemIds: string[]) => {
 };
 
 beforeEach(() => {
-  mockedUsePeriodicJobLogsQuery.mockReset();
-  mockedUseNotificationConfirmationsQuery.mockReset();
+  queryResults.clear();
+  mockedUseQuery.mockReset();
+  mockedUseQuery.mockImplementation(
+    (document: unknown) => queryResults.get(document) ?? { data: undefined }
+  );
   mockConfirmations([]);
 });
 

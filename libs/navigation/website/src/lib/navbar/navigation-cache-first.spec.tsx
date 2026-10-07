@@ -1,10 +1,10 @@
 import {
   ApolloClient,
   ApolloLink,
-  ApolloProvider,
   InMemoryCache,
   Observable,
 } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 import { render, waitFor } from '@testing-library/react';
 import { SessionTokenContext } from '@wepublish/authentication/website';
 import {

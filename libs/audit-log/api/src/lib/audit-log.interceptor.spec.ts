@@ -7,6 +7,7 @@ import { firstValueFrom, of, throwError } from 'rxjs';
 import { AUDIT_LOG_METADATA_KEY } from './audit-log.decorator';
 import { AuditLogInterceptor, describeActor } from './audit-log.interceptor';
 import { AuditLogService } from './audit-log.service';
+import type { Mock } from 'vitest';
 
 const CanDoSomething = {
   id: 'CAN_DO_SOMETHING',
@@ -43,7 +44,7 @@ const createContext = ({
 }: ContextOverrides = {}) =>
   ({
     getType: () => type,
-    getHandler: () => jest.fn(),
+    getHandler: () => vi.fn(),
     getClass: () => class {},
     getArgs: () => [
       undefined,
@@ -104,21 +105,21 @@ describe('describeActor', () => {
 describe('AuditLogInterceptor', () => {
   let interceptor: AuditLogInterceptor;
   let reflector: Reflector;
-  let auditLogService: { record: jest.Mock };
+  let auditLogService: { record: Mock };
 
   const permitted = (key: string) =>
     key === PERMISSIONS_METADATA_KEY ? [CanDoSomething] : [];
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    auditLogService = { record: jest.fn().mockResolvedValue(undefined) };
+    vi.clearAllMocks();
+    auditLogService = { record: vi.fn().mockResolvedValue(undefined) };
     reflector = new Reflector();
-    jest
-      .spyOn(reflector, 'getAllAndMerge')
-      .mockImplementation(permitted as never);
-    jest
-      .spyOn(reflector, 'getAllAndOverride')
-      .mockReturnValue(undefined as never);
+    vi.spyOn(reflector, 'getAllAndMerge').mockImplementation(
+      permitted as never
+    );
+    vi.spyOn(reflector, 'getAllAndOverride').mockReturnValue(
+      undefined as never
+    );
 
     interceptor = new AuditLogInterceptor(
       reflector,
@@ -148,7 +149,7 @@ describe('AuditLogInterceptor', () => {
   });
 
   it('does not record a mutation without permission metadata', async () => {
-    jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([] as never);
+    vi.spyOn(reflector, 'getAllAndMerge').mockReturnValue([] as never);
 
     await run(createContext());
 
@@ -168,13 +169,12 @@ describe('AuditLogInterceptor', () => {
   });
 
   it('honours an explicit skip', async () => {
-    jest
-      .spyOn(reflector, 'getAllAndOverride')
-      .mockImplementation((key: unknown) =>
+    vi.spyOn(reflector, 'getAllAndOverride').mockImplementation(
+      (key: unknown) =>
         key === AUDIT_LOG_METADATA_KEY ?
           ({ skip: true } as never)
         : (undefined as never)
-      );
+    );
 
     await run(createContext());
 
@@ -182,13 +182,12 @@ describe('AuditLogInterceptor', () => {
   });
 
   it('honours an entity and action override', async () => {
-    jest
-      .spyOn(reflector, 'getAllAndOverride')
-      .mockImplementation((key: unknown) =>
+    vi.spyOn(reflector, 'getAllAndOverride').mockImplementation(
+      (key: unknown) =>
         key === AUDIT_LOG_METADATA_KEY ?
           ({ entity: 'Paywall', action: AuditLogAction.delete } as never)
         : (undefined as never)
-      );
+    );
 
     await run(createContext({ fieldName: 'sendSomething' }));
 

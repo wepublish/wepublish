@@ -4,9 +4,11 @@ import {
   Kind,
   SelectionSetNode,
 } from 'graphql';
-import { ArticleDocument } from './article.generated';
-import { BlockTemplateDocument } from './block-template.generated';
-import { PageDocument } from './page.generated';
+import {
+  ArticleDocument,
+  BlockTemplateDocument,
+  PageDocument,
+} from '../gql/graphql';
 
 type BlockSelection = Record<string, string[]>;
 

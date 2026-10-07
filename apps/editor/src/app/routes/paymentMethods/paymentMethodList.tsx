@@ -1,7 +1,8 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeletePaymentMethodDocument,
   FullPaymentMethodFragment,
-  useDeletePaymentMethodMutation,
-  usePaymentMethodListQuery,
+  PaymentMethodListDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -63,10 +64,15 @@ function PaymentMethodList() {
   const [currentPaymentMethod, setCurrentPaymentMethod] =
     useState<FullPaymentMethodFragment>();
 
-  const { data, loading: isLoading, refetch } = usePaymentMethodListQuery({});
+  const {
+    data,
+    loading: isLoading,
+    refetch,
+  } = useQuery(PaymentMethodListDocument, {});
 
-  const [deletePaymentMethod, { loading: isDeleting }] =
-    useDeletePaymentMethodMutation();
+  const [deletePaymentMethod, { loading: isDeleting }] = useMutation(
+    DeletePaymentMethodDocument
+  );
 
   useEffect(() => {
     if (isCreateRoute) {

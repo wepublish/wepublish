@@ -1,8 +1,10 @@
+import { useQuery } from '@apollo/client/react';
 import {
   FullPollVoteFragment,
   FullPollVoteWithAnswerFragment,
-  PollQueryResult,
-  PollVoteListQueryResult,
+  PollQuery,
+  PollQueryVariables,
+  PollVoteListQuery,
   PollVoteListQueryVariables,
 } from '@wepublish/editor/api';
 import {
@@ -25,8 +27,16 @@ const { Column, HeaderCell, Cell: RCell } = RTable;
 
 type PollVotesListProps = {
   listQueryState: QueryState<PollVoteListQueryVariables>;
-  listQuery: PollVoteListQueryResult;
-  pollQuery: PollQueryResult;
+  listQuery: useQuery.Result<
+    PollVoteListQuery,
+    PollVoteListQueryVariables,
+    'complete' | 'streaming' | 'empty'
+  >;
+  pollQuery: useQuery.Result<
+    PollQuery,
+    PollQueryVariables,
+    'complete' | 'streaming' | 'empty'
+  >;
   deleteItems: (ids: string[]) => Promise<void>;
 };
 
@@ -48,7 +58,10 @@ export function PollVoteList({
   const { t } = useTranslation();
 
   const ids = useMemo(
-    () => listQuery?.data?.pollVotes?.nodes?.map(n => n.id),
+    () =>
+      listQuery?.data?.pollVotes?.nodes
+        ?.map(n => n.id)
+        .filter((id): id is string => id !== undefined),
     [listQuery?.data?.pollVotes?.nodes]
   );
   const { selectedItems, allSelected, someSelected, toggleItem, toggleAll } =
@@ -79,7 +92,7 @@ export function PollVoteList({
         <Table
           fillHeight
           loading={listQuery.loading}
-          data={listQuery?.data?.pollVotes.nodes}
+          data={listQuery?.data?.pollVotes?.nodes}
           sortColumn={sortField ?? 'createdAt'}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {

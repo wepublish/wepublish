@@ -1,9 +1,9 @@
 import {
   EventStatus,
   FullImageFragment,
+  FullTagFragment,
   MutationCreateEventArgs,
   MutationUpdateEventArgs,
-  Tag,
   TagType,
 } from '@wepublish/editor/api';
 import {
@@ -22,7 +22,7 @@ import { Drawer, Form, Panel, SelectPicker } from 'rsuite';
 
 type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
   image?: FullImageFragment | null;
-  tags?: Pick<Tag, 'id' | 'tag'>[];
+  tags?: Pick<FullTagFragment, 'id' | 'tag'>[];
   externalSourceName?: string;
 };
 

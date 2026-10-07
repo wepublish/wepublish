@@ -1,6 +1,9 @@
 import { Theme, Typography, css, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
-import { BlockContent, FullBreakBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullBreakBlockFragment,
+} from '@wepublish/website/api';
 import {
   BuilderBreakBlockProps,
   Button,
@@ -10,7 +13,7 @@ import {
 } from '@wepublish/website/builder';
 
 export const isBreakBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullBreakBlockFragment => block.__typename === 'BreakBlock';
 
 export const BreakBlockWrapper = styled('div')`

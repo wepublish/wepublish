@@ -1,14 +1,14 @@
 import { AuthorService } from './author.service';
 
 describe('AuthorService cache', () => {
-  const publicContentCache = { invalidate: jest.fn() };
+  const publicContentCache = { invalidate: vi.fn() };
   const author = { id: 'author-1' };
   const service = new AuthorService(
     {
       author: {
-        create: jest.fn().mockResolvedValue(author),
-        update: jest.fn().mockResolvedValue(author),
-        delete: jest.fn().mockResolvedValue(author),
+        create: vi.fn().mockResolvedValue(author),
+        update: vi.fn().mockResolvedValue(author),
+        delete: vi.fn().mockResolvedValue(author),
       },
     } as any,
     publicContentCache as any
@@ -16,7 +16,7 @@ describe('AuthorService cache', () => {
 
   beforeEach(() => {
     Object.assign(service, {
-      __DATALOADER__AuthorDataloaderService: { prime: jest.fn() },
+      __DATALOADER__AuthorDataloaderService: { prime: vi.fn() },
     });
     publicContentCache.invalidate.mockReset().mockResolvedValue(undefined);
   });

@@ -1,4 +1,5 @@
-import { revalidateFor } from './revalidate-for';
+import { CombinedGraphQLErrors } from '@apollo/client';
+import { LIVE_REVALIDATE_SECONDS, revalidateFor } from './revalidate-for';
 
 const article = (blocks: unknown[]) => ({
   __typename: 'Article',
@@ -215,5 +216,39 @@ describe('revalidateFor when the api fails', () => {
     vi.stubEnv('NEXT_PHASE', 'phase-production-build');
 
     expect(revalidateFor(null, [poolTimeout])).toBe(60);
+  });
+});
+
+describe('apollo client 4 error shapes', () => {
+  it('treats a single server error like a one element list', () => {
+    expect(() => revalidateFor(null, new Error('boom'))).toThrow(
+      /The api failed to answer/
+    );
+  });
+
+  it('unwraps the graphql errors out of CombinedGraphQLErrors', () => {
+    const combined = new CombinedGraphQLErrors({
+      errors: [
+        {
+          message: 'Cannot return null for non-nullable field Query.page.',
+        },
+      ],
+    });
+
+    expect(revalidateFor(null, combined)).toBe(LIVE_REVALIDATE_SECONDS);
+  });
+
+  it('still throws for a server error inside CombinedGraphQLErrors', () => {
+    const combined = new CombinedGraphQLErrors({
+      errors: [{ message: 'connect ECONNREFUSED' }],
+    });
+
+    expect(() => revalidateFor(null, combined)).toThrow(
+      /The api failed to answer/
+    );
+  });
+
+  it('is unaffected when there is no error', () => {
+    expect(revalidateFor(null, undefined)).toBe(LIVE_REVALIDATE_SECONDS);
   });
 });

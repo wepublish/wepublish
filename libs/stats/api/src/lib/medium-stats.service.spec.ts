@@ -9,6 +9,7 @@ import {
   summariseErrorMessage,
   summariseErrors,
 } from './medium-stats.service';
+import type { Mock } from 'vitest';
 
 describe('resolveWindow', () => {
   const now = new Date('2026-09-16T12:00:00.000Z');
@@ -55,110 +56,110 @@ describe('sumInvoiceAmounts', () => {
 });
 
 type PrismaStub = {
-  payment: { findMany: jest.Mock };
-  invoiceItem: { findMany: jest.Mock };
-  invoice: { findFirst: jest.Mock };
-  userRole: { findFirst: jest.Mock };
-  user: { count: jest.Mock };
-  mailSendJob: { aggregate: jest.Mock; findFirst: jest.Mock };
-  mailchimpSyncError: { count: jest.Mock };
-  page: { count: jest.Mock };
-  pageRevision: { count: jest.Mock };
-  session: { count: jest.Mock; findMany: jest.Mock };
-  peer: { count: jest.Mock };
-  settingMailProvider: { count: jest.Mock };
-  settingPaymentProvider: { count: jest.Mock };
-  settingSyncProvider: { count: jest.Mock };
-  settingAnalyticsProvider: { count: jest.Mock };
-  mailLog: { count: jest.Mock };
-  periodicJob: { findFirst: jest.Mock };
+  payment: { findMany: Mock };
+  invoiceItem: { findMany: Mock };
+  invoice: { findFirst: Mock };
+  userRole: { findFirst: Mock };
+  user: { count: Mock };
+  mailSendJob: { aggregate: Mock; findFirst: Mock };
+  mailchimpSyncError: { count: Mock };
+  page: { count: Mock };
+  pageRevision: { count: Mock };
+  session: { count: Mock; findMany: Mock };
+  peer: { count: Mock };
+  settingMailProvider: { count: Mock };
+  settingPaymentProvider: { count: Mock };
+  settingSyncProvider: { count: Mock };
+  settingAnalyticsProvider: { count: Mock };
+  mailLog: { count: Mock };
+  periodicJob: { findFirst: Mock };
   changelogEntry: {
-    count: jest.Mock;
-    findFirst: jest.Mock;
-    findMany: jest.Mock;
+    count: Mock;
+    findFirst: Mock;
+    findMany: Mock;
   };
-  image: { aggregate: jest.Mock };
-  document: { aggregate: jest.Mock };
-  subscription: { count: jest.Mock };
+  image: { aggregate: Mock };
+  document: { aggregate: Mock };
+  subscription: { count: Mock };
   auditLog: {
-    count: jest.Mock;
-    findMany: jest.Mock;
-    groupBy: jest.Mock;
+    count: Mock;
+    findMany: Mock;
+    groupBy: Mock;
   };
-  subscriptionDeactivation: { groupBy: jest.Mock };
-  article: { count: jest.Mock };
-  articleRevision: { findFirst: jest.Mock; count: jest.Mock };
-  author: { count: jest.Mock };
-  comment: { count: jest.Mock };
-  poll: { count: jest.Mock };
-  pollVote: { count: jest.Mock };
+  subscriptionDeactivation: { groupBy: Mock };
+  article: { count: Mock };
+  articleRevision: { findFirst: Mock; count: Mock };
+  author: { count: Mock };
+  comment: { count: Mock };
+  poll: { count: Mock };
+  pollVote: { count: Mock };
 };
 
 function makePrisma(): PrismaStub {
   return {
-    payment: { findMany: jest.fn().mockResolvedValue([]) },
-    invoiceItem: { findMany: jest.fn().mockResolvedValue([]) },
-    userRole: { findFirst: jest.fn().mockResolvedValue(null) },
-    user: { count: jest.fn().mockResolvedValue(0) },
+    payment: { findMany: vi.fn().mockResolvedValue([]) },
+    invoiceItem: { findMany: vi.fn().mockResolvedValue([]) },
+    userRole: { findFirst: vi.fn().mockResolvedValue(null) },
+    user: { count: vi.fn().mockResolvedValue(0) },
     mailSendJob: {
-      aggregate: jest
+      aggregate: vi
         .fn()
         .mockResolvedValue({ _sum: { sentCount: null, failedCount: null } }),
-      findFirst: jest.fn().mockResolvedValue(null),
+      findFirst: vi.fn().mockResolvedValue(null),
     },
-    mailLog: { count: jest.fn().mockResolvedValue(0) },
-    periodicJob: { findFirst: jest.fn().mockResolvedValue(null) },
+    mailLog: { count: vi.fn().mockResolvedValue(0) },
+    periodicJob: { findFirst: vi.fn().mockResolvedValue(null) },
     changelogEntry: {
-      count: jest.fn().mockResolvedValue(0),
-      findFirst: jest.fn().mockResolvedValue(null),
-      findMany: jest.fn().mockResolvedValue([]),
+      count: vi.fn().mockResolvedValue(0),
+      findFirst: vi.fn().mockResolvedValue(null),
+      findMany: vi.fn().mockResolvedValue([]),
     },
     image: {
-      aggregate: jest
+      aggregate: vi
         .fn()
         .mockResolvedValue({ _count: { _all: 0 }, _sum: { fileSize: null } }),
     },
     document: {
-      aggregate: jest
+      aggregate: vi
         .fn()
         .mockResolvedValue({ _count: { _all: 0 }, _sum: { fileSize: null } }),
     },
-    invoice: { findFirst: jest.fn().mockResolvedValue(null) },
-    subscription: { count: jest.fn().mockResolvedValue(0) },
+    invoice: { findFirst: vi.fn().mockResolvedValue(null) },
+    subscription: { count: vi.fn().mockResolvedValue(0) },
     auditLog: {
-      count: jest.fn().mockResolvedValue(0),
-      findMany: jest.fn().mockResolvedValue([]),
-      groupBy: jest.fn().mockResolvedValue([]),
+      count: vi.fn().mockResolvedValue(0),
+      findMany: vi.fn().mockResolvedValue([]),
+      groupBy: vi.fn().mockResolvedValue([]),
     },
-    subscriptionDeactivation: { groupBy: jest.fn().mockResolvedValue([]) },
-    article: { count: jest.fn().mockResolvedValue(0) },
+    subscriptionDeactivation: { groupBy: vi.fn().mockResolvedValue([]) },
+    article: { count: vi.fn().mockResolvedValue(0) },
     articleRevision: {
-      findFirst: jest.fn().mockResolvedValue(null),
-      count: jest.fn().mockResolvedValue(0),
+      findFirst: vi.fn().mockResolvedValue(null),
+      count: vi.fn().mockResolvedValue(0),
     },
-    author: { count: jest.fn().mockResolvedValue(0) },
-    comment: { count: jest.fn().mockResolvedValue(0) },
-    poll: { count: jest.fn().mockResolvedValue(0) },
-    pollVote: { count: jest.fn().mockResolvedValue(0) },
-    mailchimpSyncError: { count: jest.fn().mockResolvedValue(0) },
-    page: { count: jest.fn().mockResolvedValue(0) },
-    pageRevision: { count: jest.fn().mockResolvedValue(0) },
+    author: { count: vi.fn().mockResolvedValue(0) },
+    comment: { count: vi.fn().mockResolvedValue(0) },
+    poll: { count: vi.fn().mockResolvedValue(0) },
+    pollVote: { count: vi.fn().mockResolvedValue(0) },
+    mailchimpSyncError: { count: vi.fn().mockResolvedValue(0) },
+    page: { count: vi.fn().mockResolvedValue(0) },
+    pageRevision: { count: vi.fn().mockResolvedValue(0) },
     session: {
-      count: jest.fn().mockResolvedValue(0),
-      findMany: jest.fn().mockResolvedValue([]),
+      count: vi.fn().mockResolvedValue(0),
+      findMany: vi.fn().mockResolvedValue([]),
     },
-    peer: { count: jest.fn().mockResolvedValue(0) },
-    settingMailProvider: { count: jest.fn().mockResolvedValue(0) },
-    settingPaymentProvider: { count: jest.fn().mockResolvedValue(0) },
-    settingSyncProvider: { count: jest.fn().mockResolvedValue(0) },
-    settingAnalyticsProvider: { count: jest.fn().mockResolvedValue(0) },
+    peer: { count: vi.fn().mockResolvedValue(0) },
+    settingMailProvider: { count: vi.fn().mockResolvedValue(0) },
+    settingPaymentProvider: { count: vi.fn().mockResolvedValue(0) },
+    settingSyncProvider: { count: vi.fn().mockResolvedValue(0) },
+    settingAnalyticsProvider: { count: vi.fn().mockResolvedValue(0) },
   };
 }
 
 function makeService(prisma: PrismaStub): MediumStatsService {
   const dashboardInvoice = {
-    revenue: jest.fn().mockResolvedValue([]),
-    expectedRevenue: jest.fn().mockResolvedValue([]),
+    revenue: vi.fn().mockResolvedValue([]),
+    expectedRevenue: vi.fn().mockResolvedValue([]),
   } as unknown as DashboardInvoiceService;
 
   return new MediumStatsService(
@@ -393,7 +394,7 @@ describe('MediumStatsService new groups', () => {
   it('counts pages and revisions alongside articles', async () => {
     const prisma = makePrisma();
     prisma.page.count.mockResolvedValueOnce(12).mockResolvedValueOnce(3);
-    prisma.articleRevision.count = jest.fn().mockResolvedValue(500);
+    prisma.articleRevision.count = vi.fn().mockResolvedValue(500);
     prisma.pageRevision.count.mockResolvedValue(60);
 
     const stats = await makeService(prisma).getMediumStats();
@@ -512,7 +513,7 @@ describe('MediumStatsService.listChangelogActions', () => {
 
   it('lists informative entries too, flagged as no task', async () => {
     const prisma = makePrisma();
-    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+    prisma.changelogEntry.findMany = vi.fn().mockResolvedValue([
       {
         id: 'i1',
         name: '20260916080000_news',
@@ -534,7 +535,7 @@ describe('MediumStatsService.listChangelogActions', () => {
 
   it('maps the confirming user to a name and an email', async () => {
     const prisma = makePrisma();
-    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+    prisma.changelogEntry.findMany = vi.fn().mockResolvedValue([
       {
         id: 'e1',
         name: '20260916080000_entry',
@@ -566,7 +567,7 @@ describe('MediumStatsService.listChangelogActions', () => {
 
   it('reports an open action with no one attached', async () => {
     const prisma = makePrisma();
-    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+    prisma.changelogEntry.findMany = vi.fn().mockResolvedValue([
       {
         id: 'e2',
         name: '20260916080000_open',
@@ -587,7 +588,7 @@ describe('MediumStatsService.listChangelogActions', () => {
 
   it('falls back to the last name when no first name is set', async () => {
     const prisma = makePrisma();
-    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+    prisma.changelogEntry.findMany = vi.fn().mockResolvedValue([
       {
         id: 'e3',
         name: '20260916080000_entry',
@@ -606,7 +607,7 @@ describe('MediumStatsService.listChangelogActions', () => {
 
   it('answers empty when the changelog table is missing', async () => {
     const prisma = makePrisma();
-    prisma.changelogEntry.findMany = jest
+    prisma.changelogEntry.findMany = vi
       .fn()
       .mockRejectedValue(new Error('no such table'));
 

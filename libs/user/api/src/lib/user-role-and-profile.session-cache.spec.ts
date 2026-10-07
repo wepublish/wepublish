@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient, User } from '@prisma/client';
 import { SessionCacheInvalidator } from '@wepublish/authentication/api';
@@ -9,23 +10,23 @@ import { ProfileService } from './profile.service';
 
 const prisma = {
   userRole: {
-    update: jest.fn().mockResolvedValue({ id: 'editor' }),
-    delete: jest.fn().mockResolvedValue({ id: 'editor' }),
+    update: vi.fn().mockResolvedValue({ id: 'editor' }),
+    delete: vi.fn().mockResolvedValue({ id: 'editor' }),
   },
   user: {
-    update: jest.fn().mockResolvedValue({ id: 'user-1' }),
+    update: vi.fn().mockResolvedValue({ id: 'user-1' }),
   },
 } as unknown as PrismaClient;
 
 const publicContentCache = {
-  invalidateComments: jest.fn().mockResolvedValue(undefined),
+  invalidateComments: vi.fn().mockResolvedValue(undefined),
 } as unknown as PublicContentCacheInvalidator;
 
 describe('session cache after role and profile changes', () => {
-  let sessionCache: { invalidate: jest.Mock };
+  let sessionCache: { invalidate: Mock };
 
   beforeEach(() => {
-    sessionCache = { invalidate: jest.fn().mockResolvedValue(undefined) };
+    sessionCache = { invalidate: vi.fn().mockResolvedValue(undefined) };
   });
 
   const roles = async () =>
@@ -35,7 +36,7 @@ describe('session cache after role and profile changes', () => {
           UserRoleService,
           { provide: PrismaClient, useValue: prisma },
           { provide: SessionCacheInvalidator, useValue: sessionCache },
-          { provide: UserRoleDataloader, useValue: { prime: jest.fn() } },
+          { provide: UserRoleDataloader, useValue: { prime: vi.fn() } },
         ],
       }).compile()
     ).get(UserRoleService);
@@ -75,9 +76,9 @@ describe('session cache after role and profile changes', () => {
     'treats a %s profile image as a profile image, so it does not rebuild public content',
     async (_, user, upload) => {
       const imageService = {
-        replaceImage: jest.fn().mockResolvedValue({ id: 'image-2' }),
-        uploadImage: jest.fn().mockResolvedValue({ id: 'image-2' }),
-        deleteImage: jest.fn().mockResolvedValue('image-1'),
+        replaceImage: vi.fn().mockResolvedValue({ id: 'image-2' }),
+        uploadImage: vi.fn().mockResolvedValue({ id: 'image-2' }),
+        deleteImage: vi.fn().mockResolvedValue('image-1'),
       };
       const profile = new ProfileService(
         prisma,

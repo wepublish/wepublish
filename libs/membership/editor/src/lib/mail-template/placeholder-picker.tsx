@@ -217,12 +217,13 @@ export function PlaceholderPicker({
       <strong>{t('mailTemplates.placeholders')}</strong>
       <Typography
         variant="caption"
-        display="block"
         style={{ marginBottom: 8 }}
+        sx={{
+          display: 'block',
+        }}
       >
         {t('mailTemplates.placeholdersHint')}
       </Typography>
-
       <Input
         size="sm"
         placeholder={t('mailTemplates.searchPlaceholders', 'Search…')}
@@ -230,7 +231,6 @@ export function PlaceholderPicker({
         onChange={setSearch}
         style={{ marginBottom: 12 }}
       />
-
       {searchResults ?
         searchResults.length ?
           searchResults.map(renderPlaceholder)
@@ -253,8 +253,10 @@ export function PlaceholderPicker({
           </Typography>
           <Typography
             variant="caption"
-            display="block"
             style={{ marginBottom: 8, color: '#8e8e93' }}
+            sx={{
+              display: 'block',
+            }}
           >
             {t(
               'mailTemplates.placeholderAlwaysHint',
@@ -273,8 +275,10 @@ export function PlaceholderPicker({
             {!selectedContext ?
               <Typography
                 variant="caption"
-                display="block"
                 style={{ color: '#8e8e93' }}
+                sx={{
+                  display: 'block',
+                }}
               >
                 {t(
                   'mailTemplates.placeholderSelectType',
@@ -291,8 +295,10 @@ export function PlaceholderPicker({
                 {selectedContext.note && (
                   <Typography
                     variant="caption"
-                    display="block"
                     style={{ marginBottom: 8, color: '#8e8e93' }}
+                    sx={{
+                      display: 'block',
+                    }}
                   >
                     {t(
                       `mailTemplates.placeholderContextNotes.${selectedContext.id}`,
@@ -304,8 +310,10 @@ export function PlaceholderPicker({
                   selectedContext.placeholders.map(renderPlaceholder)
                 : <Typography
                     variant="caption"
-                    display="block"
                     style={{ color: '#8e8e93' }}
+                    sx={{
+                      display: 'block',
+                    }}
                   >
                     {t(
                       'mailTemplates.placeholderContextNone',

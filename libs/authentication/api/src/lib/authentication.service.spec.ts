@@ -27,7 +27,7 @@ describe('AuthenticationService', () => {
   });
 
   it('should return a token session', async () => {
-    const tokenSpy = jest.spyOn(prisma.token, 'findFirst').mockReturnValue(
+    const tokenSpy = vi.spyOn(prisma.token, 'findFirst').mockReturnValue(
       Promise.resolve({
         id: '1234-1234',
         name: 'Foo Token',
@@ -35,7 +35,7 @@ describe('AuthenticationService', () => {
         roleIDs: ['1234', '12345'],
       }) as any
     );
-    const userRoleSpy = jest
+    const userRoleSpy = vi
       .spyOn(prisma.userRole, 'findMany')
       .mockReturnValue(Promise.resolve([]) as any);
 
@@ -46,7 +46,7 @@ describe('AuthenticationService', () => {
   });
 
   it('should return a user session', async () => {
-    const sessionSpy = jest.spyOn(prisma.session, 'findFirst').mockReturnValue(
+    const sessionSpy = vi.spyOn(prisma.session, 'findFirst').mockReturnValue(
       Promise.resolve({
         userID: '12345',
         user: {
@@ -54,7 +54,7 @@ describe('AuthenticationService', () => {
         },
       }) as any
     );
-    const userRoleSpy = jest
+    const userRoleSpy = vi
       .spyOn(prisma.userRole, 'findMany')
       .mockReturnValue(Promise.resolve([]) as any);
 
@@ -65,12 +65,12 @@ describe('AuthenticationService', () => {
   });
 
   it("should return null if user can't be found", async () => {
-    const sessionSpy = jest.spyOn(prisma.session, 'findFirst').mockReturnValue(
+    const sessionSpy = vi.spyOn(prisma.session, 'findFirst').mockReturnValue(
       Promise.resolve({
         userID: '12345',
       }) as any
     );
-    const userRoleSpy = jest
+    const userRoleSpy = vi
       .spyOn(prisma.userRole, 'findMany')
       .mockReturnValue(Promise.resolve([]) as any);
 
@@ -144,10 +144,10 @@ describe('AuthenticationService', () => {
     };
 
     it('reuses a cached user session instead of querying again', async () => {
-      const sessionSpy = jest
+      const sessionSpy = vi
         .spyOn(prisma.session, 'findFirst')
         .mockResolvedValue(userSession as any);
-      jest.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
 
       const first = await service.getUserSession('secret-token');
       const second = await service.getUserSession('secret-token');
@@ -160,11 +160,11 @@ describe('AuthenticationService', () => {
     });
 
     it('keys cached sessions by a hash of the token, never by the token itself', async () => {
-      jest
+      vi
         .spyOn(prisma.session, 'findFirst')
         .mockResolvedValue(userSession as any);
-      jest.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
-      const cacheSpy = jest.spyOn(kv, 'getOrLoadNs');
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      const cacheSpy = vi.spyOn(kv, 'getOrLoadNs');
 
       await service.getUserSession('secret-token');
 
@@ -177,11 +177,11 @@ describe('AuthenticationService', () => {
     });
 
     it('leaves the token out of the cached user session but still returns it', async () => {
-      jest
+      vi
         .spyOn(prisma.session, 'findFirst')
         .mockResolvedValue(userSession as any);
-      jest.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
-      const cacheSpy = jest.spyOn(kv, 'getOrLoadNs');
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      const cacheSpy = vi.spyOn(kv, 'getOrLoadNs');
 
       const session = await service.getUserSession('secret-token');
       const cached = await cacheSpy.mock.calls[0][2]();
@@ -191,14 +191,14 @@ describe('AuthenticationService', () => {
     });
 
     it('leaves the token out of the cached peer session but still returns it', async () => {
-      jest.spyOn(prisma.token, 'findFirst').mockResolvedValue({
+      vi.spyOn(prisma.token, 'findFirst').mockResolvedValue({
         id: 'token-1',
         name: 'Peer',
         token: 'secret-token',
         roleIDs: [],
       } as any);
-      jest.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
-      const cacheSpy = jest.spyOn(kv, 'getOrLoadNs');
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      const cacheSpy = vi.spyOn(kv, 'getOrLoadNs');
 
       const session = await service.getPeerSession('secret-token');
       const cached = await cacheSpy.mock.calls[0][2]();
@@ -208,14 +208,14 @@ describe('AuthenticationService', () => {
     });
 
     it('caches peer sessions apart from user sessions', async () => {
-      jest.spyOn(prisma.token, 'findFirst').mockResolvedValue({
+      vi.spyOn(prisma.token, 'findFirst').mockResolvedValue({
         id: 'token-1',
         name: 'Peer',
         token: 'secret-token',
         roleIDs: [],
       } as any);
-      jest.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
-      const cacheSpy = jest.spyOn(kv, 'getOrLoadNs');
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      const cacheSpy = vi.spyOn(kv, 'getOrLoadNs');
 
       await service.getPeerSession('secret-token');
 
@@ -223,17 +223,17 @@ describe('AuthenticationService', () => {
     });
 
     it('keeps user and peer sessions for 5 minutes, since every write to them clears the cache', async () => {
-      jest
+      vi
         .spyOn(prisma.session, 'findFirst')
         .mockResolvedValue(userSession as any);
-      jest.spyOn(prisma.token, 'findFirst').mockResolvedValue({
+      vi.spyOn(prisma.token, 'findFirst').mockResolvedValue({
         id: 'token-1',
         name: 'Peer',
         token: 'peer-token',
         roleIDs: [],
       } as any);
-      jest.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
-      const cacheSpy = jest.spyOn(kv, 'getOrLoadNs');
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      const cacheSpy = vi.spyOn(kv, 'getOrLoadNs');
 
       await service.getUserSession('secret-token');
       await service.getPeerSession('peer-token');
@@ -242,7 +242,7 @@ describe('AuthenticationService', () => {
     });
 
     it('does not cache unknown tokens', async () => {
-      const sessionSpy = jest
+      const sessionSpy = vi
         .spyOn(prisma.session, 'findFirst')
         .mockResolvedValue(null);
 
@@ -253,10 +253,10 @@ describe('AuthenticationService', () => {
     });
 
     it('loads the session again after the cache was cleared', async () => {
-      const sessionSpy = jest
+      const sessionSpy = vi
         .spyOn(prisma.session, 'findFirst')
         .mockResolvedValue(userSession as any);
-      jest.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
 
       await service.getUserSession('secret-token');
       await new Promise(resolve => setTimeout(resolve, 2));

@@ -1,5 +1,10 @@
 import { InMemoryCacheConfig } from '@apollo/client';
-import { BlockContent } from './graphql';
+
+/**
+ * Cache merge payload, not an operation result — codegen only emits schema
+ * types that operations actually select, so the shape is declared locally.
+ */
+type MergedBlock = { disabled?: boolean | null };
 
 export const omitDisabledBlocks: Exclude<
   InMemoryCacheConfig['typePolicies'],
@@ -8,7 +13,7 @@ export const omitDisabledBlocks: Exclude<
   PageRevision: {
     fields: {
       blocks: {
-        merge: (_, blocks: BlockContent[]) => {
+        merge: (_, blocks: MergedBlock[]) => {
           return blocks.filter(block => !block.disabled);
         },
       },
@@ -17,7 +22,7 @@ export const omitDisabledBlocks: Exclude<
   ArticleRevision: {
     fields: {
       blocks: {
-        merge: (_, blocks: BlockContent[]) => {
+        merge: (_, blocks: MergedBlock[]) => {
           return blocks.filter(block => !block.disabled);
         },
       },
@@ -26,7 +31,7 @@ export const omitDisabledBlocks: Exclude<
   BlockTemplate: {
     fields: {
       blocks: {
-        merge: (_, blocks: BlockContent[]) => {
+        merge: (_, blocks: MergedBlock[]) => {
           return blocks.filter(block => !block.disabled);
         },
       },

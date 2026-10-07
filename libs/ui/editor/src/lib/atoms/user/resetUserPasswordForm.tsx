@@ -1,4 +1,5 @@
-import { useResetUserPasswordMutation } from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { ResetUserPasswordDocument } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Notification, Schema, toaster } from 'rsuite';
@@ -17,7 +18,7 @@ export function ResetUserPasswordForm({
   const [password, setPassword] = useState('');
 
   const [resetUserPassword, { loading: isUpdating, error: updateError }] =
-    useResetUserPasswordMutation();
+    useMutation(ResetUserPasswordDocument);
 
   const isDisabled = isUpdating;
 
