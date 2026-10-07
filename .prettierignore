@@ -3,13 +3,24 @@ static/
 .nx/
 .next/
 
-libs/editor/api/src/lib/graphql.ts
-libs/editor/api/src/lib/schemas/index.ts
-*.generated.ts
+# GraphQL codegen output (codegen.yml and its afterAllFileWrite hook
+# tools/generateApiIndex.js). Regenerate it, never format it: the pre-commit
+# hook (pretty-quick --staged) would rewrite it, and every later
+# `npm run generate-api` would then show a diff of the whole file.
+libs/editor/api/src/lib/gql/
+libs/editor/api/src/lib/schema-types.ts
+libs/editor/api/src/lib/possible-types.ts
+libs/editor/api/src/index.ts
+libs/website/api/src/lib/gql/
+libs/website/api/src/lib/schema-types.ts
+libs/website/api/src/lib/possible-types.ts
+libs/website/api/src/index.ts
+libs/peering/api/src/lib/remote/schema.ts
+libs/peering/api/src/lib/remote/graphql.ts
+libs/testing/src/graphql/schema-public.ts
+libs/testing/src/graphql/graphql-public.ts
+
 libs/api/__tests__/api/private/index.ts
 libs/api/__tests__/api/public/index.ts
-libs/website/api/src/lib/graphql.ts
-libs/peering/api/src/lib/remote/graphql.ts
-libs/testing/src/graphql/graphql-public.ts
 
 apps/**/*/next-env.d.ts
