@@ -1048,7 +1048,7 @@
       "goToLogin": "Zum Login"
     },
     "mailTemplates": {
-      "availableTemplates": "Verfügbare E-Mail-Templates",
+      "availableTemplates": "Sendungsvorlagen",
       "cancel": "Abbrechen",
       "content": "Inhalt",
       "create": "Template erstellen",
@@ -1250,7 +1250,7 @@
         "subscription": "Rund um das Abo selbst: neu abgeschlossen, bestätigt oder deaktiviert. Zusätzlich verfügbar: Abo-Stammdaten wie Betrag und Laufzeit.",
         "renewal": "Automatische Verlängerung – erfolgreich oder fehlgeschlagen. Zusätzlich verfügbar: Plan- und Zahlungsmethoden-Name sowie die Rechnungsdaten.",
         "invoiceCreation": "Sobald eine neue Rechnung erstellt wurde. Zusätzlich verfügbar: die Rechnung und das zugehörige Abo.",
-        "custom": "Frei verschickbare Mail an Abonnent:innen, z. B. ein Newsletter über «E-Mail senden». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
+        "custom": "Frei verschickbare Mail an Abonnent:innen, z. B. ein Newsletter über «Manuelle Sendungen». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
         "customNoSubscription": "Frei verschickbare Mail an Personen ohne Abo, z. B. eine Einladung oder Reaktivierung. Verfügbar sind nur die Empfänger-Felder – Abo-Platzhalter bleiben leer."
       }
     },
@@ -1335,7 +1335,7 @@
       "importableEvents": "Importable Events",
       "media": "Dateien",
       "logout": "Logout",
-      "mailTemplates": "E-Mail-Vorlagen",
+      "mailTemplates": "Sendungsvorlagen",
       "memberPlans": "Abo Pläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
@@ -1347,7 +1347,7 @@
       "settings": "Einstellungen",
       "subscriptionPlans": "Abo Pläne",
       "subscriptions": "Abonnements",
-      "subscriptionSettings": "Automatische Mails",
+      "subscriptionSettings": "Automatische E-Mails",
       "tokens": "Tokens",
       "userConsents": "User-Konsens",
       "userRoles": "Userrollen",
@@ -1357,8 +1357,8 @@
       "audienceDashboard": "Dashboard",
       "integrations": "Integrationen",
       "apps": "Apps",
-      "mailSend": "E-Mail senden",
-      "mailLog": "Gesendete E-Mails",
+      "mailSend": "Manuelle Sendungen",
+      "mailLog": "Abgeschlossene Sendungen",
       "communication": "Kommunikation",
       "auditLog": "Audit-Log"
     },
@@ -1769,7 +1769,7 @@
       "sessionTtlDays": "Gültigkeitsdauer der Anmeldung"
     },
     "automaticMails": {
-      "title": "Automatische Mails",
+      "title": "Automatische E-Mails",
       "intro": "Hier legen Sie fest, welche E-Mail-Vorlage bei welchem Ereignis automatisch verschickt wird. Wählen Sie pro Ereignis eine Vorlage – oder lassen Sie das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
       "example": "Beispiel: {{example}}"
     },
@@ -2985,8 +2985,8 @@
       "summary": {
         "title": "Zusammenfassung"
       },
-      "title": "E-Mail senden",
-      "template": "E-Mail-Vorlage",
+      "title": "Manuelle Sendungen",
+      "template": "Sendungsvorlage",
       "selectTemplate": "Vorlage auswählen",
       "audience": {
         "title": "Empfänger"
@@ -3128,7 +3128,7 @@
       }
     },
     "mailLog": {
-      "title": "Gesendete E-Mails",
+      "title": "Abgeschlossene Sendungen",
       "empty": "Keine E-Mails gefunden.",
       "sentDate": "Datum",
       "template": "Vorlage",
@@ -3156,10 +3156,10 @@
       },
       "error": "Fehler",
       "typeDescriptions": {
-        "manual": "Von Hand über «E-Mail senden» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
-        "subscriptionFlow": "Zeitgesteuert aus «Automatische Mails», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
+        "manual": "Von Hand über «Manuelle Sendungen» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
+        "subscriptionFlow": "Zeitgesteuert aus «Automatische E-Mails», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
         "userFlow": "Sofort ausgelöst durch eine konkrete Aktion oder ein Ereignis. Beispiele: Login-Link angefordert, E-Mail-Adresse geändert, Verlängerung der Zahlung fehlgeschlagen.",
-        "systemMail": "Konto-Mails, konfiguriert unter «Automatische Mails» im Abschnitt «Konto & Login». Beispiele: Willkommensmail nach Registrierung, Passwort zurücksetzen."
+        "systemMail": "Konto-Mails, konfiguriert unter «Automatische E-Mails» im Abschnitt «Konto & Login». Beispiele: Willkommensmail nach Registrierung, Passwort zurücksetzen."
       },
       "errorHelp": {
         "causeTitle": "Was ist passiert?",
@@ -3198,8 +3198,8 @@
           "fix": "Richte unter Einstellungen › Integrationen › Mail einen Anbieter ein (SMTP, Mailgun, Mailchimp oder Slack)."
         },
         "templateMissing": {
-          "cause": "Die verwendete E-Mail-Vorlage existiert nicht mehr.",
-          "fix": "Wähle unter «E-Mail-Vorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
+          "cause": "Die verwendete Sendungsvorlage existiert nicht mehr.",
+          "fix": "Wähle unter «Sendungsvorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
         },
         "generic": {
           "cause": "Der Mailserver hat den Versand mit der unten stehenden Meldung abgelehnt.",
@@ -3274,7 +3274,7 @@
     },
     "userMail": {
       "sendTitle": "E-Mail senden",
-      "logTitle": "Gesendete E-Mails",
+      "logTitle": "Abgeschlossene Sendungen",
       "customOnlyHint": "An einen einzelnen Benutzer können nur benutzerdefinierte Vorlagen gesendet werden.",
       "selectTemplate": "Vorlage auswählen",
       "send": "Senden",

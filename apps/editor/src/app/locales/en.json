@@ -1052,7 +1052,7 @@
     },
     "name": "Name",
     "mailTemplates": {
-      "availableTemplates": "Available templates",
+      "availableTemplates": "Mailing templates",
       "cancel": "Cancel",
       "content": "Content",
       "create": "Create template",
@@ -1254,7 +1254,7 @@
         "subscription": "Around the subscription itself: newly taken out, confirmed or deactivated. Additionally available: subscription data such as amount and term.",
         "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
         "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
-        "custom": "A mail you send freely to subscribers, e.g. a newsletter via «Send email». Additionally available: the subscription and the latest invoices.",
+        "custom": "A mail you send freely to subscribers, e.g. a newsletter via «Manual mailings». Additionally available: the subscription and the latest invoices.",
         "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty."
       }
     },
@@ -1336,7 +1336,7 @@
       "importableEvents": "Importable Events",
       "media": "Files",
       "logout": "Logout",
-      "mailTemplates": "E-Mail Templates",
+      "mailTemplates": "Mailing templates",
       "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
       "pages": "Pages",
@@ -1358,8 +1358,8 @@
       "audienceDashboard": "Dashboard",
       "integrations": "Integrations",
       "apps": "Apps",
-      "mailSend": "Send email",
-      "mailLog": "Sent emails",
+      "mailSend": "Manual mailings",
+      "mailLog": "Completed mailings",
       "communication": "Communication",
       "auditLog": "Audit log"
     },
@@ -3022,8 +3022,8 @@
       "summary": {
         "title": "Summary"
       },
-      "title": "Send email",
-      "template": "Mail template",
+      "title": "Manual mailings",
+      "template": "Mailing template",
       "selectTemplate": "Select template",
       "audience": {
         "title": "Audience"
@@ -3165,7 +3165,7 @@
       }
     },
     "mailLog": {
-      "title": "Sent emails",
+      "title": "Completed mailings",
       "empty": "No emails found.",
       "sentDate": "Date",
       "template": "Template",
@@ -3193,7 +3193,7 @@
       },
       "error": "Error",
       "typeDescriptions": {
-        "manual": "Sent by hand via «Send email» or «Send test». Example: a newsletter to all subscribers.",
+        "manual": "Sent by hand via «Manual mailings» or «Send test». Example: a newsletter to all subscribers.",
         "subscriptionFlow": "Time-based, from «Automatic emails», scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
         "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
         "systemMail": "Account mails, configured under «Automatic emails» in the «Account & login» section. Examples: welcome mail after registration, password reset."
@@ -3235,8 +3235,8 @@
           "fix": "Set up a provider under Settings › Integrations › Mail (SMTP, Mailgun, Mailchimp or Slack)."
         },
         "templateMissing": {
-          "cause": "The mail template used here no longer exists.",
-          "fix": "Pick an existing template under «Mail templates» or create it again, then start the send once more."
+          "cause": "The mailing template used here no longer exists.",
+          "fix": "Pick an existing template under «Mailing templates» or create it again, then start the send once more."
         },
         "generic": {
           "cause": "The mail server rejected the send with the message below.",
@@ -3311,7 +3311,7 @@
     },
     "userMail": {
       "sendTitle": "Send email",
-      "logTitle": "Sent emails",
+      "logTitle": "Completed mailings",
       "customOnlyHint": "Only custom templates can be sent to a single user.",
       "selectTemplate": "Select template",
       "send": "Send",
