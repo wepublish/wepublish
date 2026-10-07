@@ -23,6 +23,12 @@
 - Mailgun
 - Mailchimp
 
+Mail, challenge (captcha) and Mailchimp sync run with exactly one provider
+each: the runtime uses the first non-deleted row. Their `create*Setting`
+mutations only succeed while none exists (the editor then shows «Einrichten»),
+and there is no delete mutation, so a medium never ends up without one. Change
+type or credentials on the existing row instead.
+
 ## Analytics Provider
 
 - Google Analytics

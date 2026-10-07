@@ -40,8 +40,7 @@ const plan = {
   availablePaymentMethods: [],
 };
 
-const lastVariables = () =>
-  mockedUseQuery.mock.calls.at(-1)?.[1]?.variables;
+const lastVariables = () => mockedUseQuery.mock.calls.at(-1)?.[1]?.variables;
 
 const renderList = () =>
   render(

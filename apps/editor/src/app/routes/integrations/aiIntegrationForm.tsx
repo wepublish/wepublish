@@ -38,12 +38,14 @@ export function AIIntegrationForm() {
         {
           name: 'apiKey',
           label: t('integrations.aiSettings.apiKey'),
+          info: t('integrations.aiSettings.apiKeyInfo'),
           type: 'password',
           autoComplete: 'one-time-code',
         },
         {
           name: 'systemPrompt',
           label: t('integrations.aiSettings.systemPrompt'),
+          info: t('integrations.aiSettings.systemPromptInfo'),
           type: 'textarea',
           rows: 5,
         },

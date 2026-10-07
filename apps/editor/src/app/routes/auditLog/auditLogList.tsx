@@ -14,6 +14,7 @@ import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewContainer,
   ListViewHeader,
   Table,
@@ -57,7 +58,7 @@ const Monospace = styled.span`
 `;
 
 const Muted = styled.span`
-  color: #97969b;
+  color: var(--rs-text-secondary);
 `;
 
 const Truncate = styled.span`
@@ -165,7 +166,10 @@ function AuditLogList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('auditLogList.overview.title')}</h2>
+          <h2>
+            {t('auditLogList.overview.title')}{' '}
+            <InfoTooltip text={t('auditLogList.overview.titleInfo')} />
+          </h2>
         </ListViewHeader>
 
         <FilterBar>
@@ -238,7 +242,8 @@ function AuditLogList() {
               updateFilter({ impersonatedOnly: checked || undefined })
             }
           >
-            {t('auditLogList.filter.impersonatedOnly')}
+            {t('auditLogList.filter.impersonatedOnly')}{' '}
+            <InfoTooltip text={t('auditLogList.filter.impersonatedOnlyInfo')} />
           </Checkbox>
         </FilterBar>
       </ListViewContainer>
@@ -303,7 +308,10 @@ function AuditLogList() {
             align="left"
             resizable
           >
-            <HeaderCell>{t('auditLogList.overview.mutation')}</HeaderCell>
+            <HeaderCell>
+              {t('auditLogList.overview.mutation')}{' '}
+              <InfoTooltip text={t('auditLogList.overview.mutationInfo')} />
+            </HeaderCell>
             <RCell>
               {({ mutation }: RowDataType<FullAuditLogFragment>) => (
                 <Truncate title={mutation}>{mutation}</Truncate>
@@ -341,7 +349,10 @@ function AuditLogList() {
             align="left"
             resizable
           >
-            <HeaderCell>{t('auditLogList.overview.session')}</HeaderCell>
+            <HeaderCell>
+              {t('auditLogList.overview.session')}{' '}
+              <InfoTooltip text={t('auditLogList.overview.sessionInfo')} />
+            </HeaderCell>
             <RCell>
               {({ sessionId }: RowDataType<FullAuditLogFragment>) =>
                 sessionId ?

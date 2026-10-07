@@ -46,10 +46,23 @@ const Form = styled(RForm)`
   .rs-form-group {
     width: initial;
   }
+
+  @media (max-width: 640px) {
+    .rs-form-group:not(:has(.rs-toggle)) {
+      width: 100%;
+      margin-right: 0 !important;
+
+      .rs-input,
+      .rs-picker,
+      .rs-input-group {
+        width: 100%;
+      }
+    }
+  }
 `;
 
 const CloseIcon = styled(MdClose)`
-  margin-right: 5px;
+  margin-right: 4px;
 `;
 
 const SelectPicker = styled(RSelectPicker)`
@@ -61,7 +74,6 @@ const CheckPicker = styled(RCheckPicker)`
 `;
 
 const Toggle = styled(RToggle)`
-  display: inline-block;
   margin-top: 6px;
 `;
 
@@ -74,9 +86,9 @@ const WideInput = styled(Input)`
 `;
 
 const formInputStyle = {
-  marginRight: '15px',
+  marginRight: '16px',
   marginTop: '0',
-  marginBottom: '10px',
+  marginBottom: '12px',
 };
 
 type Field =
@@ -513,8 +525,7 @@ export function ListViewFilters({
             defaultChecked={!!filter.draft}
             checked={!!filter.draft}
             onChange={value => updateFilter({ draft: value || null })}
-            checkedChildren={t('filterableList.filter.isDraft')}
-            unCheckedChildren={t('filterableList.filter.isDraft')}
+            label={t('filterableList.filter.isDraft')}
           />
         </Group>
       )}
@@ -525,8 +536,7 @@ export function ListViewFilters({
             defaultChecked={!!filter.pending}
             checked={!!filter.pending}
             onChange={value => updateFilter({ pending: value || null })}
-            checkedChildren={t('filterableList.filter.isPending')}
-            unCheckedChildren={t('filterableList.filter.isPending')}
+            label={t('filterableList.filter.isPending')}
           />
         </Group>
       )}
@@ -537,8 +547,7 @@ export function ListViewFilters({
             defaultChecked={!!filter.published}
             checked={!!filter.published}
             onChange={value => updateFilter({ published: value || null })}
-            checkedChildren={t('filterableList.filter.isPublished')}
-            unCheckedChildren={t('filterableList.filter.isPublished')}
+            label={t('filterableList.filter.isPublished')}
           />
         </Group>
       )}
@@ -642,17 +651,8 @@ export function ListViewFilters({
             defaultChecked={!!filter.includeHidden}
             checked={!!filter.includeHidden}
             onChange={value => updateFilter({ includeHidden: value || null })}
-            checkedChildren={
-              tagType === TagType.Article ?
-                t('filterableList.filter.includeHiddenArticles')
-              : tagType === TagType.Page ?
-                t('filterableList.filter.includeHiddenPages')
-              : t('filterableList.filter.includeHiddenArticles')
-            }
-            unCheckedChildren={
-              tagType === TagType.Article ?
-                t('filterableList.filter.includeHiddenArticles')
-              : tagType === TagType.Page ?
+            label={
+              tagType === TagType.Page ?
                 t('filterableList.filter.includeHiddenPages')
               : t('filterableList.filter.includeHiddenArticles')
             }

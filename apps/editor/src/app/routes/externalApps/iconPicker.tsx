@@ -1,5 +1,6 @@
 import { Autocomplete, Box, TextField } from '@mui/material';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ICON_REGISTRY } from './iconRegistry';
 
@@ -20,6 +21,7 @@ export const IconPickerSelect = ({
   onChange,
   iconRegistry = ICON_REGISTRY,
 }: IconPickerProps) => {
+  const { t } = useTranslation();
   const data = useMemo<IconPickerItem[]>(
     () =>
       Object.entries(iconRegistry).map(([iconKey, iconData]) => ({
@@ -56,7 +58,7 @@ export const IconPickerSelect = ({
       renderInput={params => (
         <TextField
           {...params}
-          label="Select Icon"
+          label={t('externalAppForm.selectIcon')}
           variant="outlined"
           slotProps={{
             ...params.slotProps,

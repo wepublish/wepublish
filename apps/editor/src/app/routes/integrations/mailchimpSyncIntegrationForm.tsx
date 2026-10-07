@@ -14,16 +14,15 @@ import {
   CardContent,
   Chip,
   CircularProgress,
-  FormControlLabel,
   IconButton,
   LinearProgress,
   MenuItem,
   Select,
-  Switch,
   TextField,
   Typography,
 } from '@mui/material';
 import {
+  CreateSyncProviderSettingDocument,
   DeleteAllMailchimpSyncErrorsDocument,
   DeleteMailchimpSyncErrorDocument,
   DryRunMailchimpSyncDocument,
@@ -36,18 +35,25 @@ import {
   MemberPlanListDocument,
   PaymentMethodListDocument,
   SyncProviderSettingsDocument,
+  SyncProviderType,
   SyncProviderSettingsQuery,
   TriggerMailchimpSyncDocument,
   UpdateSyncProviderSettingDocument,
 } from '@wepublish/editor/api';
+import {
+  humanizeError,
+  IconButtonTooltip,
+  InfoTooltip,
+} from '@wepublish/ui/editor';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdExpandMore, MdSync } from 'react-icons/md';
-import { Checkbox, Form, Loader, Message, toaster } from 'rsuite';
+import { Checkbox, Form, Loader, Message, toaster, Toggle } from 'rsuite';
 import { z } from 'zod';
 
 import mailChimpLogo from './assets/mailchimp.webp';
+import { CreateFixedIntegrationButton } from './integrationRegistryActions';
 
 /**
  * Apollo Client 4 throws `CombinedGraphQLErrors` instead of an error carrying
@@ -123,13 +129,14 @@ type SyncProviderFormValues = z.infer<typeof syncProviderSchema>;
 
 const SyncCard = styled(Card)`
   margin-bottom: 20px;
+  border-radius: var(--rs-radius-lg);
 `;
 
 const HeaderWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
 `;
 
 const HeaderLogo = styled.img`
@@ -521,17 +528,36 @@ function MergeFieldExpressionEditor({
   );
 }
 
+const SetupToolbar = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+`;
+
 export function MailchimpSyncIntegrationForm() {
   const { t } = useTranslation();
   const { data, loading, error } = useQuery(SyncProviderSettingsDocument);
 
   if (loading) return <Loader center />;
-  if (error) return <Message type="error">{error.message}</Message>;
+  if (error) return <Message type="error">{humanizeError(error)}</Message>;
 
   const settings = data?.syncProviderSettings;
   if (!settings?.length) {
     return (
-      <Message type="warning">{t('integrations.noSettingsFound')}</Message>
+      <>
+        <Message type="warning">{t('integrations.setUpHint')}</Message>
+
+        <SetupToolbar>
+          <CreateFixedIntegrationButton
+            id="mailchimp-sync"
+            type={SyncProviderType.Mailchimp}
+            name="Mailchimp"
+            mutation={CreateSyncProviderSettingDocument}
+            refetchQuery={SyncProviderSettingsDocument}
+            label={t('integrations.setUp')}
+          />
+        </SetupToolbar>
+      </>
     );
   }
 
@@ -552,22 +578,35 @@ type DryRunResultData = DryRunMailchimpSyncMutation['dryRunMailchimpSync'];
 const DryRunTable = styled.table`
   width: 100%;
   border-collapse: collapse;
-  margin-top: 12px;
   font-size: 13px;
 
   th,
   td {
-    border: 1px solid #ddd;
-    padding: 6px 8px;
+    border-right: 1px solid var(--rs-border-primary);
+    border-bottom: 1px solid var(--rs-border-primary);
+    padding: 8px;
     text-align: left;
   }
 
+  th:last-child,
+  td:last-child {
+    border-right: 0;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
   th {
-    background: #f5f5f5;
+    background: var(--rs-bg-well);
+  }
+
+  .action {
+    text-align: center;
   }
 
   tr:nth-of-type(even) {
-    background: #fafafa;
+    background: var(--rs-bg-well);
   }
 `;
 
@@ -582,13 +621,15 @@ const MergeFieldColumn = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 `;
 
 const DryRunWrapper = styled.div`
   margin-top: 16px;
   max-height: 400px;
   overflow: auto;
+  border: 1px solid var(--rs-border-primary);
+  border-radius: var(--rs-radius-md);
 `;
 
 function SyncProviderSettingCard({
@@ -953,7 +994,10 @@ function SyncProviderSettingCard({
                   onChange={(_, c) => onChange(c)}
                   {...rest}
                 >
-                  {t('integrations.mailchimpSyncSettings.enabled')}
+                  {t('integrations.mailchimpSyncSettings.enabled')}{' '}
+                  <InfoTooltip
+                    text={t('integrations.mailchimpSyncSettings.enabledInfo')}
+                  />
                 </Checkbox>
               )}
             />
@@ -978,7 +1022,10 @@ function SyncProviderSettingCard({
           {/* API Key */}
           <Form.Group controlId={`apiKey-${setting.id}`}>
             <Form.ControlLabel>
-              {t('integrations.mailchimpSyncSettings.apiKey')}
+              {t('integrations.mailchimpSyncSettings.apiKey')}{' '}
+              <InfoTooltip
+                text={t('integrations.mailchimpSyncSettings.apiKeyInfo')}
+              />
             </Form.ControlLabel>
             <Controller
               name="mailchimp_apiKey"
@@ -999,7 +1046,10 @@ function SyncProviderSettingCard({
           {/* List ID */}
           <Form.Group controlId={`listId-${setting.id}`}>
             <Form.ControlLabel>
-              {t('integrations.mailchimpSyncSettings.listId')}
+              {t('integrations.mailchimpSyncSettings.listId')}{' '}
+              <InfoTooltip
+                text={t('integrations.mailchimpSyncSettings.listIdInfo')}
+              />
             </Form.ControlLabel>
             <Controller
               name="mailchimp_listId"
@@ -1118,13 +1168,16 @@ function SyncProviderSettingCard({
                   />
                 )}
               />
-              <IconButton
-                size="small"
-                onClick={() => removeMergeField(index)}
-                color="error"
-              >
-                <MdDelete />
-              </IconButton>
+              <IconButtonTooltip caption={t('delete')}>
+                <IconButton
+                  size="small"
+                  onClick={() => removeMergeField(index)}
+                  color="error"
+                  aria-label={t('delete')}
+                >
+                  <MdDelete />
+                </IconButton>
+              </IconButtonTooltip>
             </MappingRow>
           ))}
 
@@ -1209,13 +1262,16 @@ function SyncProviderSettingCard({
                   />
                 )}
               />
-              <IconButton
-                size="small"
-                onClick={() => removeInterestGroup(index)}
-                color="error"
-              >
-                <MdDelete />
-              </IconButton>
+              <IconButtonTooltip caption={t('delete')}>
+                <IconButton
+                  size="small"
+                  onClick={() => removeInterestGroup(index)}
+                  color="error"
+                  aria-label={t('delete')}
+                >
+                  <MdDelete />
+                </IconButton>
+              </IconButtonTooltip>
             </MappingRow>
           ))}
 
@@ -1310,13 +1366,9 @@ function SyncProviderSettingCard({
                 name="mailchimp_extensions.click-tracking.enabled"
                 control={control}
                 render={({ field: { value, onChange } }) => (
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={!!value}
-                        onChange={(_, c) => onChange(c)}
-                      />
-                    }
+                  <Toggle
+                    checked={!!value}
+                    onChange={checked => onChange(checked)}
                     label={t(
                       'integrations.mailchimpSyncSettings.clickTracking.enabled'
                     )}
@@ -1557,6 +1609,10 @@ function SyncProviderSettingCard({
           >
             {t('integrations.mailchimpSyncSettings.dryRun')}
           </Button>
+
+          <InfoTooltip
+            text={t('integrations.mailchimpSyncSettings.dryRunInfo')}
+          />
         </CardActions>
 
         {syncing && (
@@ -1856,7 +1912,7 @@ function SyncProviderSettingCard({
                       <th>
                         {t('integrations.mailchimpSyncSettings.errorDate')}
                       </th>
-                      <th />
+                      <th className="action">{t('action')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1871,17 +1927,22 @@ function SyncProviderSettingCard({
                             timeStyle: 'short',
                           }).format(new Date(err.createdAt))}
                         </td>
-                        <td>
-                          <IconButton
-                            size="small"
-                            color="error"
-                            onClick={async () => {
-                              await deleteError({ variables: { id: err.id } });
-                              refetchErrors();
-                            }}
-                          >
-                            <MdDelete />
-                          </IconButton>
+                        <td className="action">
+                          <IconButtonTooltip caption={t('delete')}>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              aria-label={t('delete')}
+                              onClick={async () => {
+                                await deleteError({
+                                  variables: { id: err.id },
+                                });
+                                refetchErrors();
+                              }}
+                            >
+                              <MdDelete />
+                            </IconButton>
+                          </IconButtonTooltip>
                         </td>
                       </tr>
                     ))}

@@ -3,6 +3,7 @@ import {
   DeleteCrowdfundingDocument,
   FullCrowdfundingFragment,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,9 +21,9 @@ const onErrorToast = (error: Error) => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

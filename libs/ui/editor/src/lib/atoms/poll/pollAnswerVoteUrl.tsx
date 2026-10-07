@@ -14,7 +14,7 @@ import {
 import { useDocumentUrl } from '../../hooks/useDocumentUrl';
 
 const IconButton = styled(RIconButton)`
-  && {
+  &&:not([data-with-text]) {
     width: 28px;
     height: 28px;
   }
@@ -76,7 +76,7 @@ export function CopyPollAnswerVoteUrlButton({
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollAnswer.urlCopyingFailed')}
         </Message>
@@ -100,6 +100,7 @@ export function CopyPollAnswerVoteUrlButton({
       }
     >
       <IconButton
+        aria-label={t('pollAnswer.copyVoteUrl')}
         icon={<MdContentCopy />}
         circle
         size="xs"

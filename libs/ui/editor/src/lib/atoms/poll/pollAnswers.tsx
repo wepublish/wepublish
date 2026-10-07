@@ -17,13 +17,15 @@ import {
   Modal,
   toaster,
 } from 'rsuite';
+import { humanizeError } from '../../humanizeError';
+import { IconButtonTooltip } from '../iconButtonTooltip';
 
 type PollAnswerFragment = FullPollFragment['answers'][number];
 type PollExternalVoteFragment =
   FullPollFragment['externalVoteSources'][number]['voteAmounts'][number];
 
 const IconButton = styled(RIconButton)`
-  && {
+  &&:not([data-with-text]) {
     width: 36px;
     height: 36px;
   }
@@ -132,9 +134,9 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -153,7 +155,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollAnswer.answerMissing')}
         </Message>
@@ -266,17 +268,20 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
             />
           </Badge>
 
-          <IconButton
-            icon={<MdDelete />}
-            circle
-            size="sm"
-            appearance="ghost"
-            color="red"
-            onClick={() => {
-              setAnswerToDelete(answer);
-              setModalOpen(true);
-            }}
-          />
+          <IconButtonTooltip caption={t('delete')}>
+            <IconButton
+              aria-label={t('delete')}
+              icon={<MdDelete />}
+              circle
+              size="sm"
+              appearance="ghost"
+              color="red"
+              onClick={() => {
+                setAnswerToDelete(answer);
+                setModalOpen(true);
+              }}
+            />
+          </IconButtonTooltip>
         </Grid>
       ))}
 

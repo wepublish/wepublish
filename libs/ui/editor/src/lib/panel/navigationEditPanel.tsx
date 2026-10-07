@@ -33,6 +33,7 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '../atoms';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { generateID, getOperationNameFromDocument } from '../utility';
 
 const SelectPicker = styled(RSelectPicker)`
@@ -72,10 +73,18 @@ function NavigationEditPanel({
   const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([]);
   const [articles, setArticles] = useState<ArticleWithoutBlocksFragment[]>([]);
 
+  const { t } = useTranslation();
+
   const linkTypes = [
-    { label: 'Article', value: 'ArticleNavigationLink' },
-    { label: 'Page', value: 'PageNavigationLink' },
-    { label: 'External Link', value: 'ExternalNavigationLink' },
+    {
+      label: t('navigation.panels.linkTypeArticle'),
+      value: 'ArticleNavigationLink',
+    },
+    { label: t('navigation.panels.linkTypePage'), value: 'PageNavigationLink' },
+    {
+      label: t('navigation.panels.linkTypeExternal'),
+      value: 'ExternalNavigationLink',
+    },
   ];
 
   const {
@@ -121,8 +130,6 @@ function NavigationEditPanel({
     isLoadingArticleData ||
     articleLoadError !== undefined ||
     !isAuthorized;
-
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (data?.navigation) {
@@ -287,7 +294,10 @@ function NavigationEditPanel({
               </Form.Group>
 
               <Form.Group controlId="navigationKey">
-                <Form.Label>{t('navigation.panels.key')}</Form.Label>
+                <Form.Label>
+                  {t('navigation.panels.key')}{' '}
+                  <InfoTooltip text={t('navigation.panels.keyInfo')} />
+                </Form.Label>
 
                 <Form.Control
                   name="key"

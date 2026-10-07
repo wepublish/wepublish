@@ -147,10 +147,10 @@ export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
 ];
 
 export enum StateColor {
-  pending = '#f8def2',
-  published = '#e1f8de',
-  draft = '#f8efde',
-  none = 'white',
+  pending = 'var(--wep-state-pending)',
+  published = 'var(--wep-state-published)',
+  draft = 'var(--wep-state-draft)',
+  none = 'var(--wep-state-none)',
 }
 
 export function flattenDOMTokenList(list: DOMTokenList) {

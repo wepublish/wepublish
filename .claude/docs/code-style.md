@@ -55,6 +55,50 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
 
 - Comments inside a template literal are one of the few legitimate uses of
   comments in this codebase — a `nth-child` selector rule usually needs one.
+- **Editor UI: no hard-coded colours.** The editor has a dark mode (follows the
+  OS, overridable in the sidebar; `apps/editor/src/app/colorMode.tsx`). rsuite's
+  `CustomProvider theme` swaps every `--rs-*` variable, MUI gets
+  `createEditorTheme(mode)`. Use `var(--rs-bg-card)`, `--rs-bg-well`,
+  `--rs-bg-overlay`, `--rs-text-primary`/`-secondary`, `--rs-border-primary`,
+  `--rs-state-*` in Emotion, palette paths in MUI `sx`. Editor-specific tokens
+  (`--wep-shell-*`, `--wep-state-*`, …) live in
+  `apps/editor/src/app/editorGlobalStyles.tsx`. `--rs-gray-*` and `--rs-primary-50`
+  stay light in dark mode — don't use them for surfaces. Keep the MUI palette as
+  real hex (code runs `lighten()`/alpha math on it). Fixed colours are only for
+  user data (picked colours, defaults), email content and QR codes.
+- **Editor layout is responsive.** Below 900 px the sidebar becomes a drawer;
+  at ≤ 640 px rsuite `Col`s stack (global rule in `editorGlobalStyles.tsx`).
+  The shared `Table` from `@wepublish/ui/editor` scales `width` columns to the
+  available width (`listView/fit-column-widths.ts`) and releases `fixed`
+  columns under 600 px — so don't hand-tune column widths to a screen size.
+  List pages use that `Table`, not rsuite's, or columns don't fill the width.
+- **Drawers scroll only `Drawer.Body`.** `editorGlobalStyles.tsx` turns every
+  ancestor of `Drawer.Header` + `Drawer.Body` into a flex column (also through
+  `<Form>` and its `.rs-form-stack`). Don't give the body a fixed height or set
+  `overflow` on `.rs-drawer-dialog` — rsuite's `calc(100% - 76px)` broke with
+  our 77 px header and `overflow: scroll` drew empty scrollbars.
+- **Icon-only actions are `<IconButton circle size="sm" …>`** — delete adds
+  `appearance="ghost" color="red"`. A global rule renders them borderless with a
+  coloured icon; add `data-on-media` when the button sits on an image so it
+  keeps a solid background.
+- **Help and labels:** icon-only buttons get `IconButtonTooltip` + `aria-label`;
+  non-obvious fields get `<InfoTooltip text={t('…')} />` after the label (never
+  filled `MdInfo`). List action columns use `t('action')`, centred, `fixed="right"`.
+  Toggles carry their label on the right via `<Toggle label={…} />` — no
+  `checkedChildren`, no separate «on/off» text. Radii: `var(--rs-radius-md)` for
+  controls and inner boxes, `var(--rs-radius-lg)` for cards and panels.
+- **Document editors use `EditorHeader`** (`@wepublish/ui/editor`) inside
+  `EditorTemplate`: status chip + last-saved on the left, `EditorHeaderButton`s
+  on the right (secondary subtle, Save/Publish primary). Labels collapse to
+  icons by container width (`collapse="md" | "sm" | false`). The bar bleeds to
+  the content card's edges through `--wep-page-padding-*` set in `base.tsx`.
+- **Editor errors shown to users go through `humanizeError(error)`** from
+  `@wepublish/ui/editor`, never raw `error.message` — it turns Prisma, network
+  and permission failures into `errors.*` translations. Error toasts use
+  `duration={8000}`. Don't rewrite messages in an Apollo link instead: consent
+  views and the user list branch on raw texts like `'Unique constraint'`.
+  i18next runs with `escapeValue: false` because React already escapes;
+  re-enabling it double-escapes (`&#x2F;`).
 
 ## React
 
@@ -68,6 +112,10 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   components are tested. See [testing.md](testing.md).
 - Forms use React Hook Form with Zod resolvers. Icons come from React Icons.
   User-facing strings go through react-i18next — never hardcode copy.
+- **Editor copy** lives in `apps/editor/src/app/locales/{en,de,fr}.json`; add
+  every key to all three. German is Swiss Standard German (no «ß») and says
+  lowercase «du»; French says «vous». `locales.spec.ts` fails when a literal
+  `t('…')` key is missing or the three catalogs drift apart.
 
 ## Nest
 

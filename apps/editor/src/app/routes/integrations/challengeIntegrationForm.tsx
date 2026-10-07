@@ -1,5 +1,6 @@
 import {
   ChallengeProviderType,
+  CreateSettingsIntegrationsChallengeDocument,
   SettingChallengeProvider,
   SettingsIntegrationsChallengeDocument,
   UpdateSettingsIntegrationsChallengeDocument,
@@ -28,6 +29,13 @@ export function ChallengeIntegrationForm() {
       query={SettingsIntegrationsChallengeDocument}
       mutation={UpdateSettingsIntegrationsChallengeDocument}
       dataKey="challengeProviderSettings"
+      setup={{
+        createMutation: CreateSettingsIntegrationsChallengeDocument,
+        types: Object.values(ChallengeProviderType).map(type => ({
+          label: type,
+          value: type,
+        })),
+      }}
       schema={challengeSettingsSchema}
       getLogo={setting =>
         setting.type === ChallengeProviderType.Hcaptcha ?
@@ -38,6 +46,7 @@ export function ChallengeIntegrationForm() {
         {
           name: 'type',
           label: t('integrations.challengeSettings.type'),
+          info: t('integrations.challengeSettings.typeInfo'),
           type: 'select',
           options: Object.values(ChallengeProviderType).map(v => ({
             label: v,
@@ -53,12 +62,14 @@ export function ChallengeIntegrationForm() {
           type: 'text',
           name: 'siteKey',
           label: t('integrations.challengeSettings.siteKey'),
+          info: t('integrations.challengeSettings.siteKeyInfo'),
           placeholder: t('integrations.placeholderSecret'),
           autoComplete: 'one-time-code',
         },
         {
           name: 'secret',
           label: t('integrations.challengeSettings.secret'),
+          info: t('integrations.challengeSettings.secretInfo'),
           type: 'password',
           placeholder: t('integrations.placeholderSecret'),
           autoComplete: 'one-time-code',

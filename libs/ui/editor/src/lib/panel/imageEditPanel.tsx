@@ -26,6 +26,7 @@ import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
 import { Point } from '../atoms/draggable';
 import { FocalPointInput } from '../atoms/focalPointInput';
 import { ImageMetaData } from '../atoms/imageMetaData';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import {
   createCheckedPermissionComponent,
   PermissionControl,
@@ -337,7 +338,14 @@ function ImageEditPanel({
       <Drawer.Body>
         {!isLoading && (
           <>
-            <Panel>
+            <Panel
+              header={
+                <>
+                  {t('images.panels.focalPoint')}{' '}
+                  <InfoTooltip text={t('images.panels.focalPointInfo')} />
+                </>
+              }
+            >
               {imageURL && imageWidth && imageHeight && (
                 <FocalPointInput
                   imageURL={imageURL}
@@ -384,10 +392,6 @@ function ImageEditPanel({
                   {prettyBytes(fileSize)}
                 </DescriptionListItem>
 
-                <DescriptionListItem label={t('images.panels.fileSize')}>
-                  {prettyBytes(fileSize)}
-                </DescriptionListItem>
-
                 {originalImageURL && (
                   <DescriptionListItem label={t('images.panels.link')}>
                     <a
@@ -425,7 +429,10 @@ function ImageEditPanel({
                 </Group>
 
                 <Group controlId="imageDescription">
-                  <Label>{t('images.panels.description')}</Label>
+                  <Label>
+                    {t('images.panels.description')}{' '}
+                    <InfoTooltip text={t('images.panels.descriptionInfo')} />
+                  </Label>
                   <Control
                     name="description"
                     value={description}
@@ -436,7 +443,10 @@ function ImageEditPanel({
 
                 {imageBlock && (
                   <Group controlId="imageLinkUrl">
-                    <Label>{t('images.panels.linkUrl')}</Label>
+                    <Label>
+                      {t('images.panels.linkUrl')}{' '}
+                      <InfoTooltip text={t('images.panels.linkUrlInfo')} />
+                    </Label>
                     <Control
                       name="linkUrl"
                       value={imageBlock.linkUrl}

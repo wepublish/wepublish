@@ -3,6 +3,7 @@ import { PaywallListDocument } from '@wepublish/editor/api';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message, SelectPicker, toaster } from 'rsuite';
+import { humanizeError } from '../../humanizeError';
 
 interface SelectPaywallsProps {
   className?: string;
@@ -23,9 +24,9 @@ const showErrors = (error: Error): void => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
