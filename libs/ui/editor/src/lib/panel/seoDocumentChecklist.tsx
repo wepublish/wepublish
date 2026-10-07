@@ -6,29 +6,34 @@ import { Form, Panel } from 'rsuite';
 
 import { SeoContentStats } from '../blocks/blocksToPlaintext';
 import { GOOGLE_DESCRIPTION_LIMIT, GOOGLE_TITLE_LIMIT } from './seoPreviews';
-import { SEO_SUGGESTION_LIMITS } from './seoSuggestions';
 
 const MIN_WORDS_FOR_HEADINGS = 300;
 const MIN_SHARE_IMAGE_WIDTH = 1200;
+const SLUG_LIMIT = 100;
 
-export interface SeoDocumentCheck {
-  readonly id: string;
-  readonly status: SeoCheckStatus;
-  readonly reason?: string;
-  readonly count?: number;
-  readonly limit?: number;
+interface SeoDocumentCheckValues {
+  count?: number;
+  limit?: number;
 }
 
+export type SeoDocumentCheck =
+  | { id: string; status: SeoCheckStatus.Ok }
+  | ({
+      id: string;
+      status: Exclude<SeoCheckStatus, SeoCheckStatus.Ok>;
+      reason: string;
+    } & SeoDocumentCheckValues);
+
 export interface SeoDocumentChecklistProps {
-  readonly metadata: {
-    readonly seoTitle?: string | null;
-    readonly seoDescription?: string | null;
-    readonly socialMediaTitle?: string | null;
-    readonly socialMediaDescription?: string | null;
-    readonly slug?: string | null;
+  metadata: {
+    seoTitle?: string | null;
+    seoDescription?: string | null;
+    socialMediaTitle?: string | null;
+    socialMediaDescription?: string | null;
+    slug?: string | null;
   };
-  readonly stats?: SeoContentStats;
-  readonly shareImage?: Pick<FullImageFragment, 'width'> | null;
+  stats?: SeoContentStats;
+  shareImage?: Pick<FullImageFragment, 'width'> | null;
 }
 
 const ok = (id: string): SeoDocumentCheck => ({
@@ -39,7 +44,7 @@ const ok = (id: string): SeoDocumentCheck => ({
 const warning = (
   id: string,
   reason: string,
-  values?: Pick<SeoDocumentCheck, 'count' | 'limit'>
+  values?: SeoDocumentCheckValues
 ): SeoDocumentCheck => ({
   id,
   status: SeoCheckStatus.Warning,
@@ -80,14 +85,18 @@ export const getSeoDocumentChecks = ({
     info('structure', 'short')
   : stats.headingCount ? ok('structure')
   : warning('structure', 'missing'),
+
   !stats ? info('internal-links', 'unknown')
   : stats.linkCount ? ok('internal-links')
   : warning('internal-links', 'missing'),
-  checkText('stable-slugs', metadata.slug, SEO_SUGGESTION_LIMITS.slug),
+
+  checkText('stable-slugs', metadata.slug, SLUG_LIMIT),
+
   !shareImage ? warning('share-images', 'missing')
   : shareImage.width < MIN_SHARE_IMAGE_WIDTH ?
     warning('share-images', 'tooSmall', { limit: MIN_SHARE_IMAGE_WIDTH })
   : ok('share-images'),
+
   !stats?.imageCount ? info('image-descriptions', 'none')
   : stats.imagesWithoutDescription ?
     warning('image-descriptions', 'missing', {
@@ -97,6 +106,7 @@ export const getSeoDocumentChecks = ({
   metadata.socialMediaTitle?.trim() || metadata.socialMediaDescription?.trim() ?
     ok('social-texts')
   : info('social-texts', 'missing'),
+
   info('preview-before-publishing', 'below'),
 ];
 
@@ -178,7 +188,7 @@ export function SeoDocumentChecklist(props: SeoDocumentChecklistProps) {
             <div>
               <ItemTitle>{t(`seoChecklist.items.${check.id}.title`)}</ItemTitle>
               <Form.Text>
-                {check.reason ?
+                {check.status !== SeoCheckStatus.Ok ?
                   t(
                     `seoDocumentChecklist.reasons.${check.id}.${check.reason}`,
                     {

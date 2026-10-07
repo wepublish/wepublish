@@ -58,21 +58,6 @@ export enum AnalyticsProviderType {
   Google = 'GOOGLE'
 }
 
-export type AnalyzeSeoContentInput = {
-  body?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  /** Language the findings should be written in, e.g. "de". */
-  locale: Scalars['String'];
-  seoDescription?: InputMaybe<Scalars['String']>;
-  seoTitle?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  socialMediaDescription?: InputMaybe<Scalars['String']>;
-  socialMediaTitle?: InputMaybe<Scalars['String']>;
-  stats: SeoContentStatsInput;
-  title?: InputMaybe<Scalars['String']>;
-  type: SeoMetadataContentType;
-};
-
 export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   __typename?: 'Article';
   createdAt: Scalars['DateTime'];
@@ -1394,13 +1379,6 @@ export type FullPoll = {
   infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
-};
-
-export type GenerateSeoMetadataInput = {
-  body?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-  type: SeoMetadataContentType;
 };
 
 export type Goodie = HasImage & {
@@ -5571,8 +5549,6 @@ export type Query = {
   analyticsProviderSetting: SettingAnalyticsProvider;
   /** Returns all analytics provider settings. */
   analyticsProviderSettings: Array<SettingAnalyticsProvider>;
-  /** Analyzes an article or page for SEO optimization potential using AI. */
-  analyzeSeoContent: SeoContentAnalysis;
   /** Returns an article by id or slug. */
   article: Article;
   /** Returns a single article revision including its full content. */
@@ -5668,8 +5644,6 @@ export type Query = {
   externalApp: ExternalApp;
   /** Returns all external apps. Requires authentication. */
   externalApps: Array<ExternalApp>;
-  /** Generates SEO metadata suggestions for an article or page using AI. */
-  generateSeoMetadata: SeoMetadataSuggestion;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
   /** Returns a goodie by id. */
@@ -5939,11 +5913,6 @@ export type QueryAnalyticsProviderSettingsArgs = {
 };
 
 
-export type QueryAnalyzeSeoContentArgs = {
-  input: AnalyzeSeoContentInput;
-};
-
-
 export type QueryArticleArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
@@ -6164,11 +6133,6 @@ export type QueryExternalAppArgs = {
 
 export type QueryExternalAppsArgs = {
   filter?: InputMaybe<ExternalAppFilter>;
-};
-
-
-export type QueryGenerateSeoMetadataArgs = {
-  input: GenerateSeoMetadataInput;
 };
 
 
@@ -6839,60 +6803,6 @@ export type SeoChecklistItem = {
   completedAt: Scalars['DateTime'];
   completedBy?: Maybe<Scalars['String']>;
   itemId: Scalars['String'];
-};
-
-export type SeoContentAnalysis = {
-  __typename?: 'SeoContentAnalysis';
-  findings: Array<SeoFinding>;
-  summary: Scalars['String'];
-};
-
-export type SeoContentStatsInput = {
-  hasShareImage: Scalars['Boolean'];
-  headingCount: Scalars['Int'];
-  imageCount: Scalars['Int'];
-  imagesWithoutDescription: Scalars['Int'];
-  linkCount: Scalars['Int'];
-  wordCount: Scalars['Int'];
-};
-
-export type SeoFinding = {
-  __typename?: 'SeoFinding';
-  category: SeoFindingCategory;
-  message: Scalars['String'];
-  severity: SeoFindingSeverity;
-  suggestion?: Maybe<Scalars['String']>;
-};
-
-export enum SeoFindingCategory {
-  Content = 'Content',
-  Description = 'Description',
-  Images = 'Images',
-  Links = 'Links',
-  Readability = 'Readability',
-  Social = 'Social',
-  Structure = 'Structure',
-  Title = 'Title'
-}
-
-export enum SeoFindingSeverity {
-  High = 'High',
-  Low = 'Low',
-  Medium = 'Medium'
-}
-
-export enum SeoMetadataContentType {
-  Article = 'Article',
-  Page = 'Page'
-}
-
-export type SeoMetadataSuggestion = {
-  __typename?: 'SeoMetadataSuggestion';
-  seoDescription?: Maybe<Scalars['String']>;
-  seoTitle?: Maybe<Scalars['String']>;
-  slug?: Maybe<Scalars['String']>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
 };
 
 export type SessionWithToken = {

@@ -1,9 +1,6 @@
-import {
-  FullImageFragment,
-  SeoMetadataContentType,
-} from '@wepublish/editor/api';
+import { FullImageFragment } from '@wepublish/editor/api';
 
-import { getDomain, getSeoPreviewData } from './seoPreviewData';
+import { getDomain, getSeoPreviewData, SeoContentType } from './seoPreviewData';
 
 const image = (id: string) => ({ id }) as unknown as FullImageFragment;
 
@@ -12,7 +9,7 @@ describe('getSeoPreviewData', () => {
     test('prefers the SEO and social media fields like the website', () => {
       expect(
         getSeoPreviewData(
-          SeoMetadataContentType.Article,
+          SeoContentType.Article,
           {
             title: 'Title',
             lead: 'Lead',
@@ -42,7 +39,7 @@ describe('getSeoPreviewData', () => {
 
     test('falls back to title, lead and block content', () => {
       const data = getSeoPreviewData(
-        SeoMetadataContentType.Article,
+        SeoContentType.Article,
         { title: ' ', lead: '', seoTitle: '', url: 'https://example.com/a/x' },
         {
           firstTitle: 'Block title',
@@ -64,7 +61,7 @@ describe('getSeoPreviewData', () => {
     test('uses the canonical url when set', () => {
       expect(
         getSeoPreviewData(
-          SeoMetadataContentType.Article,
+          SeoContentType.Article,
           {
             url: 'https://example.com/a/x',
             canonicalUrl: 'https://original.org/story',
@@ -82,7 +79,7 @@ describe('getSeoPreviewData', () => {
     test('ignores the SEO fields like the website and reports it', () => {
       expect(
         getSeoPreviewData(
-          SeoMetadataContentType.Page,
+          SeoContentType.Page,
           {
             title: 'Page title',
             lead: 'Page description',
@@ -103,7 +100,7 @@ describe('getSeoPreviewData', () => {
     test('uses the social media description as description', () => {
       expect(
         getSeoPreviewData(
-          SeoMetadataContentType.Page,
+          SeoContentType.Page,
           { lead: 'Page description', socialMediaDescription: 'Social' },
           {}
         )

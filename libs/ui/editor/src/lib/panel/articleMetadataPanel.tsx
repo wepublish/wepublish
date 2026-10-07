@@ -4,7 +4,6 @@ import {
   FullAuthorFragment,
   FullImageFragment,
   FullTrackingPixelFragment,
-  SeoMetadataContentType,
   Tag,
   TagType,
 } from '@wepublish/editor/api';
@@ -54,6 +53,8 @@ import { ArticleAuthor, ArticleAuthorList } from './articleAuthorList';
 import { AuthorCheckPicker } from './authorCheckPicker';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
+import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
+import { SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';
 
 const { Item } = RNav;
@@ -242,6 +243,20 @@ function ArticleMetadataPanel({
     return hasError ? errorMessage : undefined;
   }, [canonicalUrl, t]);
 
+  const seoMetadata = {
+    title,
+    lead,
+    seoTitle,
+    seoDescription,
+    socialMediaTitle,
+    socialMediaDescription,
+    canonicalUrl,
+    url: value.url,
+    image,
+    socialMediaImage,
+    slug,
+  };
+
   function currentContent() {
     switch (activeKey) {
       case MetaDataType.SocialMedia:
@@ -307,6 +322,14 @@ function ArticleMetadataPanel({
                 }
               />
             </Group>
+
+            <SocialPreviews
+              data={getSeoPreviewData(
+                SeoContentType.Article,
+                seoMetadata,
+                seoContext ?? {}
+              )}
+            />
           </RForm.Stack>
         );
       case MetaDataType.General:
@@ -572,23 +595,9 @@ function ArticleMetadataPanel({
       case MetaDataType.Seo:
         return (
           <SeoTab
-            type={SeoMetadataContentType.Article}
-            metadata={{
-              title,
-              lead,
-              seoTitle,
-              seoDescription,
-              socialMediaTitle,
-              socialMediaDescription,
-              canonicalUrl,
-              url: value.url,
-              image,
-              socialMediaImage,
-              slug,
-            }}
+            type={SeoContentType.Article}
+            metadata={seoMetadata}
             seoContext={seoContext}
-            disabled={!isAuthorized}
-            onApply={suggestions => onChange?.({ ...value, ...suggestions })}
           />
         );
       case MetaDataType.Properties:

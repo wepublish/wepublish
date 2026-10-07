@@ -1,6 +1,6 @@
 import { EditorBlockType, FullImageFragment } from '@wepublish/editor/api';
 
-import { blocksToPlaintext, getSeoBlockContext } from './blocksToPlaintext';
+import { getSeoBlockContext } from './blocksToPlaintext';
 import { BlockValue } from './types';
 
 const paragraph = (text: string) => ({
@@ -8,13 +8,13 @@ const paragraph = (text: string) => ({
   content: [{ type: 'text', text }],
 });
 
-describe('blocksToPlaintext', () => {
-  test('extracts text from content blocks and separates paragraphs', () => {
+describe('getSeoBlockContext', () => {
+  test('counts the words of all text content without merging paragraphs', () => {
     const blocks = [
       {
         key: '1',
         type: EditorBlockType.Title,
-        value: { preTitle: '', title: 'Title', lead: 'Lead' },
+        value: { preTitle: 'Pre', title: 'Title', lead: 'Lead' },
       },
       {
         key: '2',
@@ -33,6 +33,20 @@ describe('blocksToPlaintext', () => {
       },
       {
         key: '4',
+        type: EditorBlockType.Listicle,
+        value: {
+          items: [
+            {
+              value: {
+                title: 'Item',
+                richText: { type: 'doc', content: [paragraph('Text')] },
+              },
+            },
+          ],
+        },
+      },
+      {
+        key: '5',
         type: EditorBlockType.RichText,
         value: {
           disabled: true,
@@ -40,19 +54,13 @@ describe('blocksToPlaintext', () => {
         },
       },
       {
-        key: '5',
+        key: '6',
         type: EditorBlockType.HTML,
         value: { html: '<p>Ignored</p>' },
       },
     ] as unknown as BlockValue[];
 
-    expect(blocksToPlaintext(blocks)).toBe(
-      'Title\nLead\nFirst.\nSecond.\nQuote\nAuthor'
-    );
-  });
-
-  test('returns an empty string without blocks', () => {
-    expect(blocksToPlaintext([])).toBe('');
+    expect(getSeoBlockContext(blocks).stats.wordCount).toBe(9);
   });
 });
 
@@ -128,15 +136,12 @@ describe('getSeoBlockContext', () => {
         imagesWithoutDescription: 1,
       },
     });
-    expect(context.body).toBe(
-      'Title\nLead\nFirst paragraph.\nSubheading\na link'
-    );
+    expect(context).not.toHaveProperty('body');
     expect(context.stats.wordCount).toBe(7);
   });
 
   test('handles empty content', () => {
     expect(getSeoBlockContext([])).toEqual({
-      body: '',
       firstTitle: undefined,
       firstParagraph: undefined,
       firstImage: undefined,

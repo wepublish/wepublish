@@ -13,20 +13,6 @@ export type PromptHtmlQueryVariables = Types.Exact<{
 
 export type PromptHtmlQuery = { __typename?: 'Query', promptHTML: { __typename?: 'Chat', chatId: string, message: string } };
 
-export type GenerateSeoMetadataQueryVariables = Types.Exact<{
-  input: Types.GenerateSeoMetadataInput;
-}>;
-
-
-export type GenerateSeoMetadataQuery = { __typename?: 'Query', generateSeoMetadata: { __typename?: 'SeoMetadataSuggestion', seoTitle?: string | null, seoDescription?: string | null, socialMediaTitle?: string | null, socialMediaDescription?: string | null, slug?: string | null } };
-
-export type AnalyzeSeoContentQueryVariables = Types.Exact<{
-  input: Types.AnalyzeSeoContentInput;
-}>;
-
-
-export type AnalyzeSeoContentQuery = { __typename?: 'Query', analyzeSeoContent: { __typename?: 'SeoContentAnalysis', summary: string, findings: Array<{ __typename?: 'SeoFinding', severity: Types.SeoFindingSeverity, category: Types.SeoFindingCategory, message: string, suggestion?: string | null }> } };
-
 
 export const PromptHtmlDocument = gql`
     query PromptHTML($query: String!, $chatId: String) {
@@ -65,83 +51,3 @@ export function usePromptHtmlLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type PromptHtmlQueryHookResult = ReturnType<typeof usePromptHtmlQuery>;
 export type PromptHtmlLazyQueryHookResult = ReturnType<typeof usePromptHtmlLazyQuery>;
 export type PromptHtmlQueryResult = Apollo.QueryResult<PromptHtmlQuery, PromptHtmlQueryVariables>;
-export const GenerateSeoMetadataDocument = gql`
-    query GenerateSeoMetadata($input: GenerateSeoMetadataInput!) {
-  generateSeoMetadata(input: $input) {
-    seoTitle
-    seoDescription
-    socialMediaTitle
-    socialMediaDescription
-    slug
-  }
-}
-    `;
-
-/**
- * __useGenerateSeoMetadataQuery__
- *
- * To run a query within a React component, call `useGenerateSeoMetadataQuery` and pass it any options that fit your needs.
- * When your component renders, `useGenerateSeoMetadataQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGenerateSeoMetadataQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGenerateSeoMetadataQuery(baseOptions: Apollo.QueryHookOptions<GenerateSeoMetadataQuery, GenerateSeoMetadataQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GenerateSeoMetadataQuery, GenerateSeoMetadataQueryVariables>(GenerateSeoMetadataDocument, options);
-      }
-export function useGenerateSeoMetadataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GenerateSeoMetadataQuery, GenerateSeoMetadataQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GenerateSeoMetadataQuery, GenerateSeoMetadataQueryVariables>(GenerateSeoMetadataDocument, options);
-        }
-export type GenerateSeoMetadataQueryHookResult = ReturnType<typeof useGenerateSeoMetadataQuery>;
-export type GenerateSeoMetadataLazyQueryHookResult = ReturnType<typeof useGenerateSeoMetadataLazyQuery>;
-export type GenerateSeoMetadataQueryResult = Apollo.QueryResult<GenerateSeoMetadataQuery, GenerateSeoMetadataQueryVariables>;
-export const AnalyzeSeoContentDocument = gql`
-    query AnalyzeSeoContent($input: AnalyzeSeoContentInput!) {
-  analyzeSeoContent(input: $input) {
-    summary
-    findings {
-      severity
-      category
-      message
-      suggestion
-    }
-  }
-}
-    `;
-
-/**
- * __useAnalyzeSeoContentQuery__
- *
- * To run a query within a React component, call `useAnalyzeSeoContentQuery` and pass it any options that fit your needs.
- * When your component renders, `useAnalyzeSeoContentQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAnalyzeSeoContentQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useAnalyzeSeoContentQuery(baseOptions: Apollo.QueryHookOptions<AnalyzeSeoContentQuery, AnalyzeSeoContentQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AnalyzeSeoContentQuery, AnalyzeSeoContentQueryVariables>(AnalyzeSeoContentDocument, options);
-      }
-export function useAnalyzeSeoContentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AnalyzeSeoContentQuery, AnalyzeSeoContentQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AnalyzeSeoContentQuery, AnalyzeSeoContentQueryVariables>(AnalyzeSeoContentDocument, options);
-        }
-export type AnalyzeSeoContentQueryHookResult = ReturnType<typeof useAnalyzeSeoContentQuery>;
-export type AnalyzeSeoContentLazyQueryHookResult = ReturnType<typeof useAnalyzeSeoContentLazyQuery>;
-export type AnalyzeSeoContentQueryResult = Apollo.QueryResult<AnalyzeSeoContentQuery, AnalyzeSeoContentQueryVariables>;

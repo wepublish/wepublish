@@ -3548,28 +3548,6 @@
         }
       }
     },
-    "seoSuggestions": {
-      "title": "SEO suggestions",
-      "description": "Generate suggestions for search and social media metadata based on the content. Nothing is changed until you apply a suggestion.",
-      "generate": "Generate suggestions",
-      "regenerate": "Generate again",
-      "notEnoughContent": "Add a title, lead or content first.",
-      "review": "Review and edit the suggestions before applying them. The AI may make mistakes.",
-      "current": "Current",
-      "empty": "(empty)",
-      "apply": "Apply",
-      "replace": "Replace",
-      "applied": "Applied",
-      "applyToEmpty": "Apply to empty fields",
-      "discard": "Discard",
-      "fields": {
-        "seoTitle": "SEO title",
-        "seoDescription": "SEO description",
-        "socialMediaTitle": "Social media title",
-        "socialMediaDescription": "Social media description",
-        "slug": "Slug"
-      }
-    },
     "seoTab": {
       "title": "SEO"
     },
@@ -3628,32 +3606,12 @@
     },
     "seoAnalysis": {
       "title": "SEO analysis",
-      "description": "Let the AI review the content and metadata for optimization potential. Nothing is changed.",
-      "analyze": "Analyze content",
-      "reanalyze": "Analyze again",
-      "notEnoughContent": "Add a title or content first.",
-      "noFindings": "No optimization potential found.",
-      "disclaimer": "The AI may make mistakes. Use the findings as suggestions.",
+      "description": "Key figures of the content that matter for search engines.",
       "stats": {
         "wordCount": "Words",
         "headingCount": "Subheadings",
         "linkCount": "Links",
         "imagesWithoutDescription": "Images without description"
-      },
-      "severity": {
-        "High": "High",
-        "Medium": "Medium",
-        "Low": "Low"
-      },
-      "category": {
-        "Title": "Title",
-        "Description": "Description",
-        "Content": "Content",
-        "Structure": "Structure",
-        "Readability": "Readability",
-        "Links": "Links",
-        "Images": "Images",
-        "Social": "Social media"
       }
     },
     "auditLogList": {

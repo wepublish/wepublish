@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import { FullImageFragment } from '@wepublish/editor/api';
 
 import { SeoPreviewData } from './seoPreviewData';
-import { SeoPreviews } from './seoPreviews';
+import { GooglePreview, SocialPreviews } from './seoPreviews';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -29,10 +29,10 @@ const data: SeoPreviewData = {
   ignoredFields: [],
 };
 
-describe('SeoPreviews', () => {
+describe('GooglePreview', () => {
   test('renders google with the document title and description', () => {
     render(
-      <SeoPreviews
+      <GooglePreview
         data={data}
         siteName="Example News"
       />
@@ -45,8 +45,25 @@ describe('SeoPreviews', () => {
     expect(google.getByText('Example News')).toBeTruthy();
   });
 
+  test('warns about long google titles and ignored page fields', () => {
+    render(
+      <GooglePreview
+        data={{
+          ...data,
+          documentTitle: 'x'.repeat(61),
+          ignoredFields: ['seoTitle'],
+        }}
+      />
+    );
+
+    expect(screen.getByText('seoPreviews.googleTitleTooLong')).toBeTruthy();
+    expect(screen.getByText('seoPreviews.pageIgnoresSeoFields')).toBeTruthy();
+  });
+});
+
+describe('SocialPreviews', () => {
   test('renders the social previews with social texts and image', () => {
-    render(<SeoPreviews data={data} />);
+    render(<SocialPreviews data={data} />);
 
     for (const id of [
       'facebook',
@@ -76,30 +93,15 @@ describe('SeoPreviews', () => {
   });
 
   test('marks which x card the website uses', () => {
-    render(<SeoPreviews data={data} />);
+    render(<SocialPreviews data={data} />);
 
     expect(screen.getByText('seoPreviews.xLargeUsed')).toBeTruthy();
     expect(screen.getByText('seoPreviews.xSummaryUnused')).toBeTruthy();
   });
 
   test('shows placeholders without an image', () => {
-    render(<SeoPreviews data={{ ...data, image: undefined }} />);
+    render(<SocialPreviews data={{ ...data, image: undefined }} />);
 
     expect(screen.getAllByText('No image').length).toBe(5);
-  });
-
-  test('warns about long google titles and ignored page fields', () => {
-    render(
-      <SeoPreviews
-        data={{
-          ...data,
-          documentTitle: 'x'.repeat(61),
-          ignoredFields: ['seoTitle'],
-        }}
-      />
-    );
-
-    expect(screen.getByText('seoPreviews.googleTitleTooLong')).toBeTruthy();
-    expect(screen.getByText('seoPreviews.pageIgnoresSeoFields')).toBeTruthy();
   });
 });

@@ -1,9 +1,11 @@
-import {
-  FullImageFragment,
-  SeoMetadataContentType,
-} from '@wepublish/editor/api';
+import { FullImageFragment } from '@wepublish/editor/api';
 
 import { SeoBlockContext } from '../blocks/blocksToPlaintext';
+
+export enum SeoContentType {
+  Article = 'article',
+  Page = 'page',
+}
 
 export interface SeoPreviewMetadata {
   readonly title?: string | null;
@@ -46,7 +48,7 @@ export const getDomain = (url: string | null | undefined) => {
 };
 
 export const getSeoPreviewData = (
-  type: SeoMetadataContentType,
+  type: SeoContentType,
   metadata: SeoPreviewMetadata,
   context: Partial<
     Pick<SeoBlockContext, 'firstTitle' | 'firstParagraph' | 'firstImage'>
@@ -60,7 +62,7 @@ export const getSeoPreviewData = (
     undefined;
 
   const preview =
-    type === SeoMetadataContentType.Article ?
+    type === SeoContentType.Article ?
       {
         title: firstOf(
           metadata.seoTitle,

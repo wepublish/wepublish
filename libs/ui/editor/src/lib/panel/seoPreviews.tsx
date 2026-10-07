@@ -127,36 +127,21 @@ const PreviewSection = ({
   </Preview>
 );
 
-export interface SeoPreviewsProps {
+export interface GooglePreviewProps {
   readonly data: SeoPreviewData;
   readonly siteName?: string | null;
   readonly favicon?: FullImageFragment | null;
 }
 
-export function SeoPreviews({ data, siteName, favicon }: SeoPreviewsProps) {
+export function GooglePreview({ data, siteName, favicon }: GooglePreviewProps) {
   const { t } = useTranslation();
 
   const domain = data.domain ?? '';
   const path = data.url?.replace(/^https?:\/\/[^/]+/, '').replace(/\//g, ' › ');
   const faviconSrc = favicon?.squareURL ?? favicon?.url;
 
-  const social = {
-    url: data.url ?? '',
-    title: data.socialTitle ?? null,
-    description: data.socialDescription ?? null,
-    image: toOgImage(data.image),
-    disableLink: true,
-  };
-
   return (
     <Previews>
-      <Message
-        showIcon
-        type="info"
-      >
-        {t('seoPreviews.info')}
-      </Message>
-
       {!!data.ignoredFields.length && (
         <Message
           showIcon
@@ -198,6 +183,33 @@ export function SeoPreviews({ data, siteName, favicon }: SeoPreviewsProps) {
           </GoogleDescription>
         </Google>
       </PreviewSection>
+    </Previews>
+  );
+}
+
+export interface SocialPreviewsProps {
+  readonly data: SeoPreviewData;
+}
+
+export function SocialPreviews({ data }: SocialPreviewsProps) {
+  const { t } = useTranslation();
+
+  const social = {
+    url: data.url ?? '',
+    title: data.socialTitle ?? null,
+    description: data.socialDescription ?? null,
+    image: toOgImage(data.image),
+    disableLink: true,
+  };
+
+  return (
+    <Previews>
+      <Message
+        showIcon
+        type="info"
+      >
+        {t('seoPreviews.info')}
+      </Message>
 
       <PreviewSection title={t('seoPreviews.facebook')}>
         <SocialCard

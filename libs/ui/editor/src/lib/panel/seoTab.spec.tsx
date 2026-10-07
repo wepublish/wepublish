@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { SeoMetadataContentType } from '@wepublish/editor/api';
 
+import { SeoContentType } from './seoPreviewData';
 import { SeoTab } from './seoTab';
 
 vi.mock('@wepublish/editor/api', async importOriginal => ({
@@ -9,11 +9,8 @@ vi.mock('@wepublish/editor/api', async importOriginal => ({
 }));
 
 vi.mock('./seoPreviews', () => ({
-  SeoPreviews: () => <div data-testid="seo-previews" />,
-}));
-
-vi.mock('./seoSuggestions', () => ({
-  SeoSuggestions: () => <div data-testid="seo-suggestions" />,
+  GooglePreview: () => <div data-testid="google-preview" />,
+  SocialPreviews: () => <div data-testid="social-previews" />,
 }));
 
 vi.mock('./seoAnalysis', () => ({
@@ -25,20 +22,18 @@ vi.mock('./seoDocumentChecklist', () => ({
 }));
 
 describe('SeoTab', () => {
-  test('shows the checklist first and the previews last', () => {
+  test('shows the checklist first and the google preview last', () => {
     render(
       <SeoTab
-        type={SeoMetadataContentType.Article}
+        type={SeoContentType.Article}
         metadata={{ title: 'Title' }}
-        onApply={vi.fn()}
       />
     );
 
     const order = [
       'seo-document-checklist',
-      'seo-suggestions',
       'seo-analysis',
-      'seo-previews',
+      'google-preview',
     ].map(id => screen.getByTestId(id));
 
     for (let i = 1; i < order.length; i++) {
@@ -47,5 +42,16 @@ describe('SeoTab', () => {
           Node.DOCUMENT_POSITION_FOLLOWING
       ).toBeTruthy();
     }
+  });
+
+  test('leaves the social previews to the social media tab', () => {
+    render(
+      <SeoTab
+        type={SeoContentType.Article}
+        metadata={{ title: 'Title' }}
+      />
+    );
+
+    expect(screen.queryByTestId('social-previews')).toBe(null);
   });
 });

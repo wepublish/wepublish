@@ -15,6 +15,11 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('./seoTab', () => ({ SeoTab: () => null }));
 
+vi.mock('./seoPreviews', async importOriginal => ({
+  ...(await importOriginal<typeof import('./seoPreviews')>()),
+  SocialPreviews: () => <div data-testid="social-previews" />,
+}));
+
 const renderPanel = (panel: JSX.Element) =>
   render(
     <MockedProvider>
@@ -88,5 +93,15 @@ describe.each([
 
     expect(onSave).toHaveBeenCalledTimes(1);
     expect(onClose).not.toHaveBeenCalled();
+  });
+
+  test('shows the social previews in the social media tab', () => {
+    renderPanel(panel(vi.fn(), vi.fn()));
+
+    expect(screen.queryByTestId('social-previews')).toBe(null);
+
+    fireEvent.click(screen.getByText('articleEditor.panels.socialMedia'));
+
+    expect(screen.getByTestId('social-previews')).toBeTruthy();
   });
 });

@@ -1,6 +1,7 @@
 import { EditorBlockType, FullImageFragment } from '@wepublish/editor/api';
 import {
   firstParagraphToPlaintext,
+  RichtextElements,
   RichtextJSONDocument,
   toPlaintext,
 } from '@wepublish/richtext';
@@ -16,49 +17,27 @@ export interface SeoContentStats {
 }
 
 export interface SeoBlockContext {
-  readonly body: string;
   readonly firstTitle?: string;
   readonly firstParagraph?: string;
   readonly firstImage?: FullImageFragment;
   readonly stats: SeoContentStats;
 }
 
-const richTextToPlaintext = (
-  richText: RichtextJSONDocument | null | undefined
-) =>
-  (richText?.content ?? [])
-    .map(node => toPlaintext([node])?.trim())
-    .filter(Boolean)
-    .join('\n');
-
-const blockToPlaintext = (block: BlockValue): string[] => {
-  if (block.value?.disabled) {
-    return [];
-  }
-
+const blockTexts = (block: BlockValue): (string | null | undefined)[] => {
   switch (block.type) {
     case EditorBlockType.Title:
       return [block.value.preTitle, block.value.title, block.value.lead];
-    case EditorBlockType.RichText:
-      return [richTextToPlaintext(block.value.richText)];
     case EditorBlockType.Quote:
       return [block.value.quote, block.value.author];
     case EditorBlockType.Listicle:
-      return block.value.items.flatMap(({ value }) => [
-        value.title ?? '',
-        richTextToPlaintext(value.richText),
-      ]);
+      return block.value.items.map(({ value }) => value.title);
     default:
       return [];
   }
 };
 
-export const blocksToPlaintext = (blocks: BlockValue[]) =>
-  blocks
-    .flatMap(blockToPlaintext)
-    .map(text => text?.trim())
-    .filter(Boolean)
-    .join('\n');
+const countWords = (texts: (string | null | undefined)[]) =>
+  texts.join(' ').split(/\s+/).filter(Boolean).length;
 
 type RichtextNode = {
   type?: string;
@@ -105,7 +84,6 @@ const images = (block: BlockValue): FullImageFragment[] => {
 
 export const getSeoBlockContext = (blocks: BlockValue[]): SeoBlockContext => {
   const enabledBlocks = blocks.filter(block => !block.value?.disabled);
-  const body = blocksToPlaintext(enabledBlocks);
   const documents = enabledBlocks.flatMap(richTexts);
   const contentNodes = documents.flatMap(
     document => (document.content ?? []) as RichtextNode[]
@@ -123,7 +101,6 @@ export const getSeoBlockContext = (blocks: BlockValue[]): SeoBlockContext => {
   );
 
   return {
-    body,
     firstTitle:
       firstTitleBlock?.type === EditorBlockType.Title ?
         firstTitleBlock.value.title || undefined
@@ -139,7 +116,11 @@ export const getSeoBlockContext = (blocks: BlockValue[]): SeoBlockContext => {
         (firstImageBlock.value.image ?? undefined)
       : undefined,
     stats: {
-      wordCount: body.split(/\s+/).filter(Boolean).length,
+      wordCount: countWords([
+        ...enabledBlocks.flatMap(blockTexts),
+        // per node, as toPlaintext joins sibling paragraphs without a separator
+        ...contentNodes.map(node => toPlaintext([node as RichtextElements])),
+      ]),
       headingCount: countNodes(contentNodes, node =>
         node.type === 'heading' ? 1 : 0
       ),

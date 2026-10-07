@@ -40,5 +40,4 @@ export * from './seoAnalysis';
 export * from './seoDocumentChecklist';
 export * from './seoPreviewData';
 export * from './seoPreviews';
-export * from './seoSuggestions';
 export * from './seoTab';

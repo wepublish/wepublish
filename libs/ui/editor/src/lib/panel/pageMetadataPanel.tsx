@@ -1,10 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  FullImageFragment,
-  SeoMetadataContentType,
-  Tag,
-  TagType,
-} from '@wepublish/editor/api';
+import { FullImageFragment, Tag, TagType } from '@wepublish/editor/api';
 import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -39,6 +34,8 @@ import { MetaDataType, SeoBlockContext } from '../blocks';
 import { generateID, isFunctionalUpdate } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
+import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
+import { SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';
 
 const Nav = styled(RNav)`
@@ -188,6 +185,19 @@ function PageMetadataPanel({
     }
   }
 
+  const seoMetadata = {
+    title,
+    lead: description,
+    seoTitle,
+    seoDescription,
+    socialMediaTitle,
+    socialMediaDescription,
+    url: value.url,
+    image,
+    socialMediaImage,
+    slug,
+  };
+
   function currentContent() {
     switch (activeKey) {
       case MetaDataType.SocialMedia:
@@ -242,6 +252,14 @@ function PageMetadataPanel({
                 }
               />
             </Form.Group>
+
+            <SocialPreviews
+              data={getSeoPreviewData(
+                SeoContentType.Page,
+                seoMetadata,
+                seoContext ?? {}
+              )}
+            />
           </Form.Stack>
         );
       case MetaDataType.General:
@@ -342,22 +360,9 @@ function PageMetadataPanel({
       case MetaDataType.Seo:
         return (
           <SeoTab
-            type={SeoMetadataContentType.Page}
-            metadata={{
-              title,
-              lead: description,
-              seoTitle,
-              seoDescription,
-              socialMediaTitle,
-              socialMediaDescription,
-              url: value.url,
-              image,
-              socialMediaImage,
-              slug,
-            }}
+            type={SeoContentType.Page}
+            metadata={seoMetadata}
             seoContext={seoContext}
-            disabled={!isAuthorized}
-            onApply={suggestions => onChange?.({ ...value, ...suggestions })}
           />
         );
       case MetaDataType.Properties:

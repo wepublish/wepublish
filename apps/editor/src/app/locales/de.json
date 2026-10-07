@@ -3510,28 +3510,6 @@
         }
       }
     },
-    "seoSuggestions": {
-      "title": "SEO-Vorschläge",
-      "description": "Erstelle anhand des Inhalts Vorschläge für Such- und Social-Media-Metadaten. Es wird nichts geändert, bis du einen Vorschlag übernimmst.",
-      "generate": "Vorschläge erstellen",
-      "regenerate": "Erneut erstellen",
-      "notEnoughContent": "Füge zuerst einen Titel, Lead oder Inhalt hinzu.",
-      "review": "Prüfe und bearbeite die Vorschläge, bevor du sie übernimmst. Die KI kann Fehler machen.",
-      "current": "Aktuell",
-      "empty": "(leer)",
-      "apply": "Übernehmen",
-      "replace": "Ersetzen",
-      "applied": "Übernommen",
-      "applyToEmpty": "In leere Felder übernehmen",
-      "discard": "Verwerfen",
-      "fields": {
-        "seoTitle": "SEO-Titel",
-        "seoDescription": "SEO-Beschreibung",
-        "socialMediaTitle": "Social-Media-Titel",
-        "socialMediaDescription": "Social-Media-Beschreibung",
-        "slug": "Slug"
-      }
-    },
     "seoTab": {
       "title": "SEO"
     },
@@ -3590,32 +3568,12 @@
     },
     "seoAnalysis": {
       "title": "SEO-Analyse",
-      "description": "Lass die KI Inhalt und Metadaten auf Optimierungspotenzial prüfen. Es wird nichts geändert.",
-      "analyze": "Inhalt analysieren",
-      "reanalyze": "Erneut analysieren",
-      "notEnoughContent": "Füge zuerst einen Titel oder Inhalt hinzu.",
-      "noFindings": "Kein Optimierungspotenzial gefunden.",
-      "disclaimer": "Die KI kann Fehler machen. Versteh die Hinweise als Vorschläge.",
+      "description": "Kennzahlen zum Inhalt, die für Suchmaschinen wichtig sind.",
       "stats": {
         "wordCount": "Wörter",
         "headingCount": "Zwischentitel",
         "linkCount": "Links",
         "imagesWithoutDescription": "Bilder ohne Beschreibung"
-      },
-      "severity": {
-        "High": "Hoch",
-        "Medium": "Mittel",
-        "Low": "Niedrig"
-      },
-      "category": {
-        "Title": "Titel",
-        "Description": "Beschreibung",
-        "Content": "Inhalt",
-        "Structure": "Struktur",
-        "Readability": "Lesbarkeit",
-        "Links": "Links",
-        "Images": "Bilder",
-        "Social": "Social Media"
       }
     },
     "auditLogList": {
