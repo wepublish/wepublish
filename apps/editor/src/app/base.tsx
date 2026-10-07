@@ -4,9 +4,11 @@ import {
   CanCreateAuthor,
   CanCreateBanner,
   CanCreateBlockStyle,
+  CanCreateBlockTemplate,
   CanCreateCommentRatingSystem,
   CanCreateConsent,
   CanCreateCrowdfunding,
+  CanCreateDiscountCode,
   CanCreateDocument,
   CanCreateExternalApp,
   CanCreateGoodie,
@@ -23,11 +25,11 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanCreateDiscountCode,
   CanDeleteArticle,
   CanDeleteAuthor,
   CanDeleteBanner,
   CanDeleteBlockStyle,
+  CanDeleteBlockTemplate,
   CanDeleteCommentRatingSystem,
   CanDeleteConsent,
   CanDeleteDocument,
@@ -66,7 +68,6 @@ import {
   CanGetMailLogs,
   CanGetMailProviderSettings,
   CanGetMailTemplates,
-  CanSendMailTemplates,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetNavigation,
@@ -81,6 +82,7 @@ import {
   CanGetPeerArticles,
   CanGetPeers,
   CanGetPoll,
+  CanGetAuditLogs,
   CanGetSettings,
   CanGetSubscription,
   CanGetSubscriptionFlows,
@@ -97,21 +99,23 @@ import {
   CanPreview,
   CanPublishArticle,
   CanPublishPage,
-  CanUpdateMailTemplates,
+  CanSendMailTemplates,
   CanTakeActionOnComment,
   CanUpdateBlockStyle,
+  CanUpdateBlockTemplate,
   CanUpdateCommentRatingSystem,
   CanUpdateComments,
   CanUpdateConsent,
   CanUpdateCrowdfunding,
+  CanUpdateDiscountCode,
   CanUpdateEvent,
   CanUpdateExternalApp,
   CanUpdateGoodie,
+  CanUpdateMailTemplates,
   CanUpdatePaywall,
   CanUpdateSettings,
   CanUpdateSystemMails,
   CanUpdateTag,
-  CanUpdateDiscountCode,
   CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
 import { PermissionControl, Version } from '@wepublish/ui/editor';
@@ -127,6 +131,7 @@ import {
   MdBookOnline,
   MdCardGiftcard,
   MdChat,
+  MdContentCopy,
   MdCountertops,
   MdCreditCard,
   MdDashboard,
@@ -143,8 +148,8 @@ import {
   MdMail,
   MdMoney,
   MdMultilineChart,
+  MdNotificationsNone,
   MdOutgoingMail,
-  MdSend,
   MdOutlineGridView,
   MdPayment,
   MdPersonAddAlt1,
@@ -153,6 +158,8 @@ import {
   MdPower,
   MdQueryStats,
   MdSell,
+  MdSend,
+  MdHistory,
   MdSettings,
   MdSettingsInputAntenna,
   MdSignpost,
@@ -170,8 +177,6 @@ import {
   Sidebar as RSidebar,
   Sidenav as RSidenav,
 } from 'rsuite';
-
-import { OneMessages } from './oneMessages/oneMessages';
 
 export interface BaseProps {
   children?: ReactNode;
@@ -287,6 +292,15 @@ export function Base({ children }: BaseProps) {
                     active={path === 'dashboard' || path === ''}
                   >
                     {t('navbar.dashboard')}
+                  </Nav.Item>
+
+                  <Nav.Item
+                    as={NavLink}
+                    href="/notifications"
+                    icon={<MdNotificationsNone />}
+                    active={path === 'notifications'}
+                  >
+                    {t('navbar.notifications')}
                   </Nav.Item>
 
                   <PermissionControl
@@ -528,6 +542,22 @@ export function Base({ children }: BaseProps) {
                         icon={<MdStyle />}
                       >
                         {t('navbar.blocks.blockStyles')}
+                      </Nav.Item>
+                    </PermissionControl>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanCreateBlockTemplate.id,
+                        CanUpdateBlockTemplate.id,
+                        CanDeleteBlockTemplate.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/block-content/templates"
+                        active={path === 'block-content/templates'}
+                        icon={<MdContentCopy />}
+                      >
+                        {t('navbar.blocks.blockTemplates')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>
@@ -1119,12 +1149,27 @@ export function Base({ children }: BaseProps) {
                     CanGetUserRole.id,
                     CanCreateUserRole.id,
                     CanDeleteUserRole.id,
+                    CanGetAuditLogs.id,
                   ]}
                 >
                   <Nav.Menu
                     icon={<MdSettings />}
                     title={t('navbar.settings')}
                   >
+                    {/* AUDIT LOG */}
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetAuditLogs.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/audit-log"
+                        active={path === 'audit-log'}
+                        icon={<MdHistory />}
+                      >
+                        {t('navbar.auditLog')}
+                      </Nav.Item>
+                    </PermissionControl>
+
                     {/* DIVERSE SETTINGS */}
                     <PermissionControl
                       qualifyingPermissions={[
@@ -1198,7 +1243,6 @@ export function Base({ children }: BaseProps) {
                     </PermissionControl>
                   </Nav.Menu>
                 </PermissionControl>
-                <Version />
               </Navigation>
             </RSidenav.Body>
           </Sidenav>
@@ -1260,11 +1304,10 @@ export function Base({ children }: BaseProps) {
               </Nav.Menu>
             </Nav>
           </Navbar>
+
+          <Version />
         </Sidebar>
-        <ChildrenContainer>
-          <OneMessages />
-          {children}
-        </ChildrenContainer>
+        <ChildrenContainer>{children}</ChildrenContainer>
       </Container>
     </Wrapper>
   );

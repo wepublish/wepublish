@@ -15,7 +15,7 @@ import {
   UserSession,
 } from '@wepublish/authentication/api';
 import { WebsiteSettingsService } from './website-settings.service';
-import { WebsiteSettings as PWebsiteSettings } from '@prisma/client';
+import type { WebsiteSettings as PWebsiteSettings } from '@prisma/client';
 import {
   WebsiteSettings,
   UpdateWebsiteSettingsInput,

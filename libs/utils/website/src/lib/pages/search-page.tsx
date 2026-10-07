@@ -1,19 +1,18 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CircularProgress } from '@mui/material';
 import { articleToTeaser } from '@wepublish/article/website';
 import {
-  addClientCacheToProps,
   FullArticleTeaserFragment,
-  getApiClient,
+  FullPageTeaserFragment,
   NavigationListDocument,
-  Page,
-  PageTeaser,
   PeerProfileDocument,
   PhraseDocument,
   PhraseQuery,
   TeaserType,
-  usePhraseQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
@@ -25,6 +24,7 @@ import { z } from 'zod';
 import { PageWrapper } from '@wepublish/page/website';
 
 import { getApiUrl } from '../api-url';
+import { useTranslation } from 'react-i18next';
 
 const SearchForm = styled('form')`
   display: grid;
@@ -35,7 +35,9 @@ const SearchForm = styled('form')`
 
 const SearchPageWrapper = styled(PageWrapper)``;
 
-const pageToTeaser = (page: Page): PageTeaser => ({
+const pageToTeaser = (
+  page: FullPageTeaserFragment['page']
+): FullPageTeaserFragment => ({
   __typename: 'PageTeaser',
   type: TeaserType.Page,
   page,
@@ -62,6 +64,7 @@ export const SearchPage = ({
     blocks: { TeaserGrid },
     elements: { IconButton, TextField, Pagination, Alert, H3, H4 },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   const router = useRouter();
   const { page, q: phraseQuery } = searchPageSchema.parse(
@@ -82,10 +85,10 @@ export const SearchPage = ({
     data: phraseData,
     loading,
     error,
-  } = usePhraseQuery({
+  } = useQuery(PhraseDocument, {
     skip: !phraseQuery,
     variables: {
-      query: phraseQuery!,
+      query: phraseQuery ?? '', // skipped if undefined anyways
       take: ITEMS_PER_PAGE,
       skip: (page - 1) * ITEMS_PER_PAGE,
     },
@@ -106,7 +109,7 @@ export const SearchPage = ({
       articleToTeaser(node as FullArticleTeaserFragment['article'])
     );
     const pageTeasers = phraseData.phrase.pages.nodes.map(node =>
-      pageToTeaser(node as Page)
+      pageToTeaser(node as FullPageTeaserFragment['page'])
     );
 
     return [...articleTeasers, ...pageTeasers];
@@ -119,7 +122,7 @@ export const SearchPage = ({
       fullWidth
       className={className}
     >
-      <H3 component="h1">Suche</H3>
+      <H3 component="h1">{t('search.search')}</H3>
 
       <SearchForm
         onSubmit={handleSubmit(({ q }) =>
@@ -137,7 +140,7 @@ export const SearchPage = ({
               type="search"
               autoComplete="search"
               fullWidth
-              placeholder="Suche nach Artikeln und Seiten"
+              placeholder={t('search.searchPlaceholder')}
               {...field}
             />
           )}
@@ -145,13 +148,13 @@ export const SearchPage = ({
 
         <IconButton
           type="submit"
-          aria-label="Suchen"
+          aria-label={t('search.search')}
         >
           <MdSearch size={28} />
         </IconButton>
       </SearchForm>
 
-      {phraseQuery && <H4 component="h2">Suchergebnisse</H4>}
+      {phraseQuery && <H4 component="h2">{t('search.searchResults')}</H4>}
 
       {loading && (
         <CircularProgress
@@ -161,7 +164,7 @@ export const SearchPage = ({
       )}
       {error && <Alert severity="error">{error.message}</Alert>}
       {noResultsFound && (
-        <Alert severity="info">Keine Suchergebnisse gefunden</Alert>
+        <Alert severity="info">{t('search.noResultsFound')}</Alert>
       )}
 
       <TeaserGrid

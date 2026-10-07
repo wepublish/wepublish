@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PageRevisionDataloaderService load should load many 1`] = `
+exports[`PageRevisionDataloaderService > load > should load many 1`] = `
 [
   [
     {
@@ -34,7 +34,7 @@ exports[`PageRevisionDataloaderService load should load many 1`] = `
 ]
 `;
 
-exports[`PageRevisionDataloaderService load should load one 1`] = `
+exports[`PageRevisionDataloaderService > load > should load one 1`] = `
 [
   [
     {
@@ -67,7 +67,7 @@ exports[`PageRevisionDataloaderService load should load one 1`] = `
 ]
 `;
 
-exports[`PageRevisionDataloaderService should prime 1`] = `
+exports[`PageRevisionDataloaderService > should prime 1`] = `
 [
   "123",
   {},

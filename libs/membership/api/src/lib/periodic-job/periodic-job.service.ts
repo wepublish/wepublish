@@ -24,7 +24,7 @@ import {
   mailLogType,
   MailProviderRecipientError,
 } from '@wepublish/mail/api';
-import { PaymentsService } from '@wepublish/payment/api';
+import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
 import {
   add,
   addDays,
@@ -44,6 +44,8 @@ import { getMaxTake } from '@wepublish/utils/api';
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
+export const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
+
 /**
  * Controller responsible for performing periodic jobs. A new controller
  * instance must be created for every run.
@@ -61,7 +63,8 @@ export class PeriodicJobService {
     private prismaService: PrismaClient,
     private mailContext: MailContext,
     private subscriptionController: SubscriptionService,
-    private payments: PaymentsService
+    private payments: PaymentsService,
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   getJobLog(take: number, skip?: number) {
@@ -432,25 +435,33 @@ export class PeriodicJobService {
       eventsRenewal
     );
 
-    if (mailAction.action) {
-      const user = Object.assign({}, invoiceToCharge.subscription.user);
-      const { subscription, items, subscriptionPeriods, ...invoice } =
-        invoiceToCharge;
-
-      await this.sendTemplateMail(
-        mailAction.action,
-        user,
-        periodicJobRunObject.isRetry,
-        {
-          errorCode: mailAction.errorCode,
-          invoice,
-          subscriptionPeriods,
-          items,
-          subscription,
-        },
-        periodicJobRunObject.date
-      );
+    if (!mailAction.action) {
+      return;
     }
+
+    if (mailAction.action.type === SubscriptionEvent.RENEWAL_SUCCESS) {
+      await this.invoicePaidNotifier.notify(invoiceToCharge.id);
+
+      return;
+    }
+
+    const user = Object.assign({}, invoiceToCharge.subscription.user);
+    const { subscription, items, subscriptionPeriods, ...invoice } =
+      invoiceToCharge;
+
+    await this.sendTemplateMail(
+      mailAction.action,
+      user,
+      periodicJobRunObject.isRetry,
+      {
+        errorCode: mailAction.errorCode,
+        invoice,
+        subscriptionPeriods,
+        items,
+        subscription,
+      },
+      periodicJobRunObject.date
+    );
   }
 
   private async checkInvoiceState(
@@ -667,6 +678,12 @@ export class PeriodicJobService {
 
     if (latestRun.finishedWithError && !latestRun.successfullyFinished) {
       this.logger.warn('Last run had errors retrying....');
+      runDates.push({ isRetry: true, date: startOfDay(latestRun.date) });
+    } else if (
+      !latestRun.successfullyFinished &&
+      (latestRun.executionTime?.getTime() ?? 0) < Date.now() - NIGHT_CLAIM_MS
+    ) {
+      this.logger.warn('Last run was aborted before it finished retrying....');
       runDates.push({ isRetry: true, date: startOfDay(latestRun.date) });
     }
 

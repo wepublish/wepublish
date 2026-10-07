@@ -1,24 +1,26 @@
-import { LazyQueryExecFunction, QueryResult } from '@apollo/client';
+import type { OperationVariables } from '@apollo/client';
+import type { useLazyQuery, useQuery } from '@apollo/client/react';
 import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
+  CreateSubscriptionInfoQuery,
+  CreateSubscriptionInfoQueryVariables,
+  Currency,
   FullGoodieFragment,
-  FullSubscribeBlockFragment,
   FullInvoiceFragment,
   FullMemberPlanFragment,
+  FullPaymentMethodFragment,
+  FullSubscribeBlockFragment,
   FullSubscriptionFragment,
   InvoicesQuery,
   MemberPlanListQuery,
-  PaymentMethod,
   PaymentPeriodicity,
   RegisterMutationVariables,
   SubscribeMutationVariables,
+  SubscribePeriodicityDisplay,
   SubscriptionsQuery,
-  Currency,
   UpgradeMutationVariables,
   UpgradeSubscriptionInfoQuery,
-  CreateSubscriptionInfoQuery,
-  CreateSubscriptionInfoQueryVariables,
 } from '@wepublish/website/api';
 import { BuilderRegistrationFormProps } from './authentication.interface';
 import { BuilderUserFormFields } from './user.interface';
@@ -37,11 +39,14 @@ export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
 };
 
 export type BuilderSubscriptionListProps = Pick<
-  QueryResult<SubscriptionsQuery>,
+  useQuery.Result<SubscriptionsQuery, OperationVariables, 'complete' | 'empty'>,
   'data' | 'loading' | 'error'
 > & {
   className?: string;
-  invoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>;
+  invoices: Pick<
+    useQuery.Result<InvoicesQuery, OperationVariables, 'complete' | 'empty'>,
+    'data' | 'loading' | 'error'
+  >;
   subscribeUrl: string;
   onCancel?: (subscriptionId: string) => Promise<void>;
   onExtend?: (subscriptionId: string) => Promise<void>;
@@ -57,7 +62,7 @@ export type BuilderInvoiceListItemProps = FullInvoiceFragment & {
 };
 
 export type BuilderInvoiceListProps = Pick<
-  QueryResult<InvoicesQuery>,
+  useQuery.Result<InvoicesQuery, OperationVariables, 'complete' | 'empty'>,
   'data' | 'loading' | 'error'
 > & {
   className?: string;
@@ -79,23 +84,58 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
+  paymentPeriodicity?: PaymentPeriodicity;
+  requiredPeriodicity?: PaymentPeriodicity;
+  memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
+  amount?: number;
+  onAmountChange?: (monthlyAmount: number) => void;
 };
 
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
   | 'slug'
-  | 'amountPerMonthMin'
-  | 'amountPerMonthMax'
+  | 'periodicityPricing'
   | 'currency'
   | 'extendable'
   | 'shortDescription'
   | 'tags'
   | 'goodies'
 > &
-  RadioProps & { className?: string };
+  Partial<
+    Pick<
+      FullMemberPlanFragment,
+      'availablePaymentMethods' | 'defaultPaymentPeriodicity'
+    >
+  > &
+  Omit<RadioProps, 'ref'> & { className?: string } & {
+    slug: string;
+    paymentPeriodicity?: PaymentPeriodicity;
+    showPeriodicity?: boolean;
+    amountLayout?: BuilderMemberPlanLayout;
+    amount?: number;
+    onAmountChange?: (monthlyAmount: number) => void;
+  };
+
+export type MemberPlanOffer = {
+  memberPlanId: string;
+  paymentPeriodicity: PaymentPeriodicity;
+};
+
+export type BuilderMemberPlanOfferPickerProps = {
+  memberPlans: FullMemberPlanFragment[];
+  className?: string;
+  onChange: (offer: MemberPlanOffer) => void;
+  name?: string;
+  value?: Partial<MemberPlanOffer>;
+  memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
+  amount?: number;
+  onAmountChange?: (monthlyAmount: number) => void;
+};
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
+  variant?: 'select' | 'toggle';
+  memberPlan?: FullMemberPlanFragment | null;
   className?: string;
   onChange: (periodicitiy: PaymentPeriodicity) => void;
   name?: string;
@@ -103,7 +143,7 @@ export type BuilderPeriodicityPickerProps = {
 };
 
 export type BuilderPaymentMethodPickerProps = {
-  paymentMethods: PaymentMethod[] | undefined;
+  paymentMethods: FullPaymentMethodFragment[] | undefined;
   className?: string;
   onChange: (paymentMethodId: string) => void;
   name?: string;
@@ -122,6 +162,7 @@ export type BuilderPaymentAmountSliderProps = {
   amountPerMonthMin: number;
   amountPerMonthMax?: number;
   amountPerMonthTarget: number | undefined;
+  paymentPeriodicity?: PaymentPeriodicity;
   currency: Currency;
   donate: boolean;
   onChange: (amount: number) => void;
@@ -145,6 +186,7 @@ export type BuilderPaymentAmountPickerProps = {
   className?: string;
   presetAmounts?: number[];
   showInput?: boolean;
+  paymentPeriodicity?: PaymentPeriodicity;
 };
 
 export type BuilderSubscribeProps<
@@ -153,14 +195,28 @@ export type BuilderSubscribeProps<
     'flair'
   >,
 > = {
-  challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>;
-  userSubscriptions: Pick<
-    QueryResult<SubscriptionsQuery>,
+  challenge: Pick<
+    useQuery.Result<ChallengeQuery, OperationVariables, 'complete' | 'empty'>,
     'data' | 'loading' | 'error'
   >;
-  userInvoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>;
+  userSubscriptions: Pick<
+    useQuery.Result<
+      SubscriptionsQuery,
+      OperationVariables,
+      'complete' | 'empty'
+    >,
+    'data' | 'loading' | 'error'
+  >;
+  userInvoices: Pick<
+    useQuery.Result<InvoicesQuery, OperationVariables, 'complete' | 'empty'>,
+    'data' | 'loading' | 'error'
+  >;
   memberPlans: Pick<
-    QueryResult<MemberPlanListQuery>,
+    useQuery.Result<
+      MemberPlanListQuery,
+      OperationVariables,
+      'complete' | 'empty'
+    >,
     'data' | 'loading' | 'error'
   >;
   memberPlanRenderSettings?: BuilderMemberPlanRenderSetting[];
@@ -168,7 +224,11 @@ export type BuilderSubscribeProps<
   showDiscountCodes?: boolean;
   goodieMinValue?: number | null;
   subscribeInfo: Pick<
-    QueryResult<CreateSubscriptionInfoQuery>,
+    useQuery.Result<
+      CreateSubscriptionInfoQuery,
+      OperationVariables,
+      'complete' | 'empty' | 'streaming'
+    >,
     'data' | 'loading' | 'error'
   >;
   className?: string;
@@ -182,17 +242,19 @@ export type BuilderSubscribeProps<
   onResubscribe?: (
     data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
   ) => Promise<void>;
-  fetchSubscribeInfo: LazyQueryExecFunction<
+  fetchSubscribeInfo: useLazyQuery.ExecFunction<
     CreateSubscriptionInfoQuery,
     CreateSubscriptionInfoQueryVariables
   >;
   defaults?: Partial<{
     memberPlanSlug: string | null;
+    paymentPeriodicity: PaymentPeriodicity | null;
     email: string;
     name: string;
     firstName: string;
     discountCode: string;
   }>;
+  periodicityDisplay?: SubscribePeriodicityDisplay | null;
   deactivateSubscriptionId?: string;
   termsOfServiceUrl?: string;
   transactionFee?: (monthlyAmount: number) => number;
@@ -206,11 +268,19 @@ export type BuilderSubscribeProps<
 
 export type BuilderUpgradeProps = {
   memberPlans: Pick<
-    QueryResult<MemberPlanListQuery>,
+    useQuery.Result<
+      MemberPlanListQuery,
+      OperationVariables,
+      'complete' | 'empty'
+    >,
     'data' | 'loading' | 'error'
   >;
   upgradeInfo: Pick<
-    QueryResult<UpgradeSubscriptionInfoQuery>,
+    useQuery.Result<
+      UpgradeSubscriptionInfoQuery,
+      OperationVariables,
+      'complete' | 'empty' | 'streaming'
+    >,
     'data' | 'loading' | 'error'
   >;
   subscriptionToUpgrade: FullSubscriptionFragment;
@@ -218,6 +288,7 @@ export type BuilderUpgradeProps = {
   showGoodies?: boolean;
   showDiscountCodes?: boolean;
   goodieMinValue?: number | null;
+  goodieMinValueAppliesToUpgrade?: boolean;
   hideRepeatGoodieOnUpgrade?: boolean;
   className?: string;
   onUpgrade?: (

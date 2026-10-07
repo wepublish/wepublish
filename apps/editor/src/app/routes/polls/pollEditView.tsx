@@ -1,11 +1,11 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  FullPoll,
+  FullPollFragment,
+  PollDocument,
   PollExternalVote,
-  PollExternalVoteSource,
-  usePollQuery,
-  useUpdatePollMutation,
+  PollExternalVoteSourceFragment,
+  UpdatePollDocument,
 } from '@wepublish/editor/api';
 import { RichtextJSONDocument } from '@wepublish/richtext';
 import {
@@ -45,14 +45,14 @@ const DateItem = styled.div``;
 function PollEditView() {
   const params = useParams();
   const navigate = useNavigate();
-  const [poll, setPoll] = useState<FullPoll | undefined>(undefined);
+  const [poll, setPoll] = useState<FullPollFragment | undefined>(undefined);
   const [close, setClose] = useState<boolean>(false);
   const closePath = '/polls';
 
   /**
    * Handling toasts
    */
-  const onErrorToast = (error: ApolloError) => {
+  const onErrorToast = (error: Error) => {
     toaster.push(
       <Message
         type="error"
@@ -79,16 +79,25 @@ function PollEditView() {
 
   // get polls
 
-  const { data, loading: createLoading } = usePollQuery({
+  const {
+    data,
+    loading: createLoading,
+    error: pollError,
+  } = useQuery(PollDocument, {
     variables: {
       id: params.id!,
     },
-    onError: onErrorToast,
   });
+
+  useEffect(() => {
+    if (pollError) {
+      onErrorToast(pollError);
+    }
+  }, [pollError]);
 
   // updating poll
   const [updatePoll, { loading: updateLoading, data: updateData }] =
-    useUpdatePollMutation({
+    useMutation(UpdatePollDocument, {
       onError: onErrorToast,
       onCompleted: onCompletedToast,
     });
@@ -129,7 +138,7 @@ function PollEditView() {
     const closedAt =
       poll.closedAt ? new Date(poll.closedAt).toISOString() : null;
     const externalSources = poll.externalVoteSources?.map(
-      (voteSource: PollExternalVoteSource) => ({
+      (voteSource: PollExternalVoteSourceFragment) => ({
         ...voteSource,
         __typename: undefined,
         voteAmounts: voteSource.voteAmounts?.map(
@@ -162,6 +171,28 @@ function PollEditView() {
       navigate(closePath);
     }
   }
+
+  const updateOpensAt = (opensAt: Date | null) => {
+    if (!poll) {
+      return;
+    }
+
+    setPoll({
+      ...poll,
+      opensAt: opensAt?.toISOString() || new Date().toISOString(),
+    });
+  };
+
+  const updateClosedAt = (closedAt: Date | null) => {
+    if (!poll) {
+      return;
+    }
+
+    setPoll({
+      ...poll,
+      closedAt: closedAt?.toISOString() ?? null,
+    });
+  };
 
   return (
     <Form
@@ -209,17 +240,8 @@ function PollEditView() {
                 <DatePicker
                   value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
                   format="yyyy-MM-dd HH:mm"
-                  onChange={(opensAt: Date | null) => {
-                    if (!poll) {
-                      return;
-                    }
-
-                    setPoll({
-                      ...poll,
-                      opensAt:
-                        opensAt?.toISOString() || new Date().toISOString(),
-                    });
-                  }}
+                  onSelect={updateOpensAt}
+                  onChange={updateOpensAt}
                 />
               </DateItem>
 
@@ -229,16 +251,8 @@ function PollEditView() {
                 <DatePicker
                   value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
                   format="yyyy-MM-dd HH:mm"
-                  onChange={(closedAt: Date | null) => {
-                    if (!poll) {
-                      return;
-                    }
-
-                    setPoll({
-                      ...poll,
-                      closedAt: closedAt?.toISOString(),
-                    });
-                  }}
+                  onSelect={updateClosedAt}
+                  onChange={updateClosedAt}
                 />
               </DateItem>
             </DatesWrapper>
@@ -251,7 +265,7 @@ function PollEditView() {
         >
           <PollAnswers
             poll={poll}
-            onPollChange={(poll: FullPoll) => {
+            onPollChange={(poll: FullPollFragment) => {
               setPoll(poll);
             }}
           />
@@ -281,7 +295,7 @@ function PollEditView() {
         >
           <PollExternalVotes
             poll={poll}
-            onPollChange={(poll: FullPoll) => {
+            onPollChange={(poll: FullPollFragment) => {
               setPoll(poll);
             }}
           />

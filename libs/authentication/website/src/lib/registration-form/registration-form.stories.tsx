@@ -1,7 +1,6 @@
 import { action } from 'storybook/actions';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { RegistrationForm } from './registration-form';
-import { ApolloError } from '@apollo/client';
 import { CaptchaType, Challenge } from '@wepublish/website/api';
 import { userEvent, within } from 'storybook/test';
 import { ComponentProps } from 'react';
@@ -400,7 +399,7 @@ export const WithChallengeError: StoryObj = {
   args: {
     ...Default.args,
     challenge: {
-      error: new ApolloError({ errorMessage: 'Something went wrong.' }),
+      error: new Error('Something went wrong.'),
     },
   },
 };
@@ -420,7 +419,7 @@ export const WithRegisterError: StoryObj = {
   args: {
     ...Default.args,
     register: {
-      error: new ApolloError({ errorMessage: 'Email already in use.' }),
+      error: new Error('Email already in use.'),
     },
   },
 };

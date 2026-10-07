@@ -13,9 +13,13 @@ import {
 import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
 import { MemberContextService } from '../legacy/member-context.service';
 import { GoodieService } from '../goodie/goodie.service';
-import { PaymentsService } from '@wepublish/payment/api';
+import {
+  isPaymentMethodRetired,
+  PaymentsService,
+} from '@wepublish/payment/api';
 import { DiscountCodeService } from '../discountCode/discountCode.service';
 import { calculateAmountForPeriodicity } from '../legacy/member-context';
+import { SettingName, SettingsService } from '@wepublish/settings/api';
 
 const roundUpTo5Cents = (amount: number) =>
   (Math.ceil((amount / 100) * 20) / 20) * 100;
@@ -40,6 +44,9 @@ const leftoverSubscriptionPeriodAmount = (periods: SubscriptionPeriod[]) => {
   return discountAmount;
 };
 
+const fullSubscriptionPeriodAmount = (periods: SubscriptionPeriod[]) =>
+  periods.reduce((total, period) => total + period.amount, 0);
+
 @Injectable()
 export class UpgradeSubscriptionService {
   constructor(
@@ -47,8 +54,25 @@ export class UpgradeSubscriptionService {
     private memberContext: MemberContextService,
     private goodieService: GoodieService,
     private payments: PaymentsService,
-    private discountCodeservice: DiscountCodeService
+    private discountCodeservice: DiscountCodeService,
+    private settingsService: SettingsService
   ) {}
+
+  private async resolvePeriodCreditCalculator() {
+    try {
+      const setting = await this.settingsService.settingByName(
+        SettingName.SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE
+      );
+
+      if (setting?.value === true) {
+        return fullSubscriptionPeriodAmount;
+      }
+    } catch {
+      return leftoverSubscriptionPeriodAmount;
+    }
+
+    return leftoverSubscriptionPeriodAmount;
+  }
 
   private async validateForUpgrade({
     memberPlanId,
@@ -118,6 +142,21 @@ export class UpgradeSubscriptionService {
       );
     }
 
+    if (paymentMethodId) {
+      const paymentMethod = await this.prisma.paymentMethod.findUnique({
+        where: { id: paymentMethodId },
+      });
+
+      if (
+        paymentMethod &&
+        (await isPaymentMethodRetired(this.prisma, paymentMethod))
+      ) {
+        throw new BadRequestException(
+          `PaymentMethod ${paymentMethodId} is no longer offered`
+        );
+      }
+    }
+
     const paymentMethods =
       paymentMethodId ?
         newMemberplan.availablePaymentMethods.filter(av =>
@@ -182,9 +221,10 @@ export class UpgradeSubscriptionService {
         userId,
       });
 
+    const calculatePeriodCredit = await this.resolvePeriodCreditCalculator();
     const leftoverDiscount =
       oldSubscriptionPeriods.length ?
-        leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
+        calculatePeriodCredit(oldSubscriptionPeriods)
       : 0;
 
     let discountCodeId: string | undefined = undefined;
@@ -293,9 +333,10 @@ export class UpgradeSubscriptionService {
       userId,
     });
 
+    const calculatePeriodCredit = await this.resolvePeriodCreditCalculator();
     const discountAmount =
       oldSubscriptionPeriods.length ?
-        leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
+        calculatePeriodCredit(oldSubscriptionPeriods)
       : 0;
 
     if (!discountCode) {

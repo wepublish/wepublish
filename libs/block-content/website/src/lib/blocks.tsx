@@ -5,6 +5,7 @@ import {
   BuilderCommentBlockProps,
   BuilderCrowdfundingBlockProps,
   BuilderEventBlockProps,
+  BuilderBlockTemplateBlockProps,
   BuilderFlexBlockProps,
   BuilderHTMLBlockProps,
   BuilderMailchimpFormBlockProps,
@@ -17,6 +18,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { isFlexBlock } from './nested-blocks/flex-block';
+import { isBlockTemplateBlock } from './block-template/block-template-block';
 import { isHtmlBlock } from './html/html-block';
 import { isSubscribeBlock } from './subscribe/subscribe-block';
 import { isMailchimpFormBlock } from './mailchimp-form/mailchimp-form-block';
@@ -49,6 +51,7 @@ import { memo } from 'react';
 import { isTeaserListBlock } from './teaser/teaser-list-block';
 import { isTeaserSliderBlockStyle } from './block-styles/teaser-slider/teaser-slider';
 import { isImageSliderBlockStyle } from './block-styles/image-slider/image-slider';
+import { isLightboxBlockStyle } from './block-styles/lightbox/is-lightbox';
 import { isFocusTeaserBlockStyle } from './block-styles/focus-teaser/focus-teaser';
 import { isContextBoxBlockStyle } from './block-styles/context-box/context-box';
 import { isBannerBlockStyle } from './block-styles/banner/banner';
@@ -87,6 +90,15 @@ export const BlockRenderer = memo(
     }
 
     const blockStylesCond = cond([
+      [
+        isLightboxBlockStyle,
+        block => (
+          <blockStyles.Lightbox
+            {...block}
+            className={className}
+          />
+        ),
+      ],
       [
         isImageSliderBlockStyle,
         block => (
@@ -456,6 +468,14 @@ export const BlockRenderer = memo(
             <blocks.FlexBlock
               {...(block as BuilderFlexBlockProps)}
               className={className}
+            />
+          ),
+        ],
+        [
+          isBlockTemplateBlock,
+          block => (
+            <blocks.BlockTemplate
+              {...(block as BuilderBlockTemplateBlockProps)}
             />
           ),
         ],

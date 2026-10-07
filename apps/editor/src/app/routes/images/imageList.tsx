@@ -1,11 +1,11 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeleteImageDocument,
   FullImageFragment,
   ImageListDocument,
   ImageListQuery,
   LocalStorageKey,
-  useDeleteImageMutation,
-  useImageListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -23,6 +23,7 @@ import {
   PermissionControl,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -148,13 +149,15 @@ function ImageList() {
 
   const [images, setImages] = useState<FullImageFragment[]>([]);
 
-  const [filter, setFilter] = useState('');
+  const { filter, setFilter, limit, setLimit } = useListViewState<string>(
+    'images',
+    { defaultFilter: '' }
+  );
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState<FullImageFragment>();
 
   const [activePage, setActivePage] = useState(1);
-  const [limit, setLimit] = useState(DEFAULT_TABLE_PAGE_SIZES[0]);
 
   const [isUploadModalOpen, setUploadModalOpen] = useState(isUploadRoute);
   const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute);
@@ -178,11 +181,14 @@ function ImageList() {
     data,
     refetch,
     loading: isLoading,
-  } = useImageListQuery({
+  } = useQuery(ImageListDocument, {
     variables: listVariables,
   });
 
-  const [deleteImage, { loading: isDeleting }] = useDeleteImageMutation({});
+  const [deleteImage, { loading: isDeleting }] = useMutation(
+    DeleteImageDocument,
+    {}
+  );
 
   const { t } = useTranslation();
 
@@ -234,7 +240,10 @@ function ImageList() {
           <InputGroup>
             <Input
               value={filter}
-              onChange={value => setFilter(value)}
+              onChange={value => {
+                setFilter(value);
+                setActivePage(1);
+              }}
             />
             <InputGroup.Addon>
               <MdSearch />
@@ -299,7 +308,10 @@ function ImageList() {
           total={data?.images.totalCount ?? 0}
           activePage={activePage}
           onChangePage={page => setActivePage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setActivePage(1);
+          }}
         />
       </TableWrapper>
 
@@ -374,6 +386,7 @@ function ImageList() {
                   cache.writeQuery<ImageListQuery>({
                     query: ImageListDocument,
                     data: {
+                      __typename: 'Query',
                       images: {
                         ...query.images,
                         nodes: query.images.nodes.filter(

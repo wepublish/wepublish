@@ -112,11 +112,16 @@ fragment FullSubscribeBlock on SubscribeBlock {
   disabled
   blockStyle: blockStyleName
   memberPlanIds
+  periodicityDisplay
   memberPlanRenderSettings {
     isDefault
     memberPlanId
     layout {
       type
+
+      ... on SubscribeBlockLayoutNoneConfig {
+        showInput
+      }
 
       ... on SubscribeBlockLayoutSliderConfig {
         showInput
@@ -125,6 +130,10 @@ fragment FullSubscribeBlock on SubscribeBlock {
       ... on SubscribeBlockLayoutPickerConfig {
         showInput
         values
+        valuesByPeriodicity {
+          periodicity
+          values
+        }
       }
     }
   }
@@ -135,6 +144,7 @@ fragment FullSubscribeBlock on SubscribeBlock {
   showGoodies
   showDiscountCodes
   goodieMinValue
+  goodieMinValueAppliesToUpgrade
   hideRepeatGoodieOnUpgrade
 }
 
@@ -163,10 +173,14 @@ fragment FullMailchimpFormBlock on MailchimpFormBlock {
       urlParam
       defaultValue
       value
+      optionsLayout
       options {
         id
         name
         description
+        image {
+          ...FullImage
+        }
       }
     }
   }
@@ -448,6 +462,10 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle: blockStyleName
   }
 
+  ... on BlockTemplateBlock {
+    blockStyle: blockStyleName
+  }
+
   ... on UnknownBlock {
     blockStyle: blockStyleName
   }
@@ -570,6 +588,42 @@ fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
   }
 }
 
+fragment FullBlockTemplateBlock on BlockTemplateBlock {
+  disabled
+  blockStyle: blockStyleName
+  type
+  templateId
+
+  template {
+    id
+    name
+
+    blocks {
+      ...BlockWithoutTeaser
+
+      ... on TeaserGridFlexBlock {
+        ...FullTeaserGridFlexBlock
+      }
+
+      ... on TeaserGridBlock {
+        ...FullTeaserGridBlock
+      }
+
+      ... on TeaserListBlock {
+        ...FullTeaserListBlock
+      }
+
+      ... on TeaserSlotsBlock {
+        ...FullTeaserSlotsBlock
+      }
+
+      ... on FlexBlock {
+        ...FullFlexBlock
+      }
+    }
+  }
+}
+
 fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
@@ -591,6 +645,10 @@ fragment FullBlock on BlockContent {
 
   ... on FlexBlock {
     ...FullFlexBlock
+  }
+
+  ... on BlockTemplateBlock {
+    ...FullBlockTemplateBlock
   }
 }
 

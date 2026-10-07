@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   Table,
   TableBody,
@@ -7,9 +8,9 @@ import {
   TableRow,
 } from '@mui/material';
 import {
-  useDeleteMailTemplateMutation,
-  useImportMailTemplatesFromProviderMutation,
-  useMailTemplateQuery,
+  DeleteMailTemplateDocument,
+  ImportMailTemplatesFromProviderDocument,
+  MailTemplateDocument,
 } from '@wepublish/editor/api';
 import {
   ListViewContainer,
@@ -17,7 +18,7 @@ import {
   PermissionControl,
   createCheckedPermissionComponent,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdd,
@@ -37,23 +38,31 @@ import {
   Tag,
   toaster,
 } from 'rsuite';
-import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
+import { DEFAULT_MUTATION_OPTIONS, showErrors } from '../common';
 import { mailTypeLabel } from './mail-placeholders';
 
 function MailTemplateList() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { data: queryData } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
-  const [deleteMailTemplate] = useDeleteMailTemplateMutation({
+  const { data: queryData, error: queryError } = useQuery(MailTemplateDocument);
+
+  useEffect(() => {
+    if (queryError) {
+      showErrors(queryError);
+    }
+  }, [queryError]);
+  const [deleteMailTemplate] = useMutation(DeleteMailTemplateDocument, {
     ...DEFAULT_MUTATION_OPTIONS(t),
     refetchQueries: ['MailTemplate'],
   });
-  const [importFromProvider, { loading: importing }] =
-    useImportMailTemplatesFromProviderMutation({
+  const [importFromProvider, { loading: importing }] = useMutation(
+    ImportMailTemplatesFromProviderDocument,
+    {
       ...DEFAULT_MUTATION_OPTIONS(t),
       refetchQueries: ['MailTemplate'],
-    });
+    }
+  );
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [importOpen, setImportOpen] = useState(false);

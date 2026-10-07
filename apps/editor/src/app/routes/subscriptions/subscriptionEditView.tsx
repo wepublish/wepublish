@@ -1,7 +1,9 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Alert } from '@mui/material';
 import {
+  CancelSubscriptionDocument,
+  CreateSubscriptionDocument,
   Currency,
   DeactivationFragment,
   FullMemberPlanFragment,
@@ -9,21 +11,21 @@ import {
   FullSubscriptionFragment,
   FullUserFragment,
   InvoiceFragment,
+  InvoicesDocument,
+  MemberPlanListDocument,
+  PaymentMethodListDocument,
   PaymentPeriodicity,
   PropertyInput,
+  RenewSubscriptionDocument,
   SubscriptionDeactivationReason,
-  useCancelSubscriptionMutation,
-  useCreateSubscriptionMutation,
-  useInvoicesQuery,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
-  useRenewSubscriptionMutation,
-  useSubscriptionQuery,
-  useUpdateSubscriptionMutation,
-  useUserQuery,
+  SubscriptionDocument,
+  UpdateSubscriptionDocument,
+  UserDocument,
 } from '@wepublish/editor/api';
 import {
   ALL_PAYMENT_PERIODICITIES,
+  getMonthlyEquivalentRange,
+  PAYMENT_PERIODICITY_MONTHS,
   createCheckedPermissionComponent,
   CurrencyInput,
   DescriptionList,
@@ -157,12 +159,33 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
   const [extendModal, setExtendModal] = useState<boolean>(false);
 
+  const periodicityMonths = PAYMENT_PERIODICITY_MONTHS[paymentPeriodicity];
+  const periodAmount = Math.round(monthlyAmount * periodicityMonths);
+  const periodMinAmount = useMemo(() => {
+    if (!memberPlan) {
+      return 0;
+    }
+
+    const override = memberPlan.periodicityPricing?.find(
+      price =>
+        price.periodicity === paymentPeriodicity && price.amountMin != null
+    );
+
+    return (
+      override?.amountMin ??
+      Math.round(
+        getMonthlyEquivalentRange(memberPlan.periodicityPricing)
+          .amountPerMonthMin * periodicityMonths
+      )
+    );
+  }, [memberPlan, paymentPeriodicity, periodicityMonths]);
+
   const {
     data,
     loading: isLoading,
     error: loadError,
     refetch: reloadSubscription,
-  } = useSubscriptionQuery({
+  } = useQuery(SubscriptionDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
@@ -172,7 +195,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     loading: isLoadingInvoices,
     error: loadErrorInvoices,
     refetch: reloadInvoices,
-  } = useInvoicesQuery({
+  } = useQuery(InvoicesDocument, {
     variables: {
       take: 100,
       filter: {
@@ -251,7 +274,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     data: memberPlanData,
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
-  } = useMemberPlanListQuery({
+  } = useQuery(MemberPlanListDocument, {
     variables: {
       take: 100, // TODO: Pagination
     },
@@ -261,22 +284,25 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
-  } = usePaymentMethodListQuery({});
+  } = useQuery(PaymentMethodListDocument, {});
 
-  const [updateSubscription, { loading: isUpdating }] =
-    useUpdateSubscriptionMutation();
+  const [updateSubscription, { loading: isUpdating }] = useMutation(
+    UpdateSubscriptionDocument
+  );
   const [cancelSubscription, { loading: isCancel, error: cancelError }] =
-    useCancelSubscriptionMutation();
+    useMutation(CancelSubscriptionDocument);
 
-  const [createSubscription, { loading: isCreating }] =
-    useCreateSubscriptionMutation();
-  const [renewSubscription, { error: renewalError }] =
-    useRenewSubscriptionMutation();
+  const [createSubscription, { loading: isCreating }] = useMutation(
+    CreateSubscriptionDocument
+  );
+  const [renewSubscription, { error: renewalError }] = useMutation(
+    RenewSubscriptionDocument
+  );
 
   /**
    * fetch edited user from api
    */
-  const { data: editedUserData } = useUserQuery({
+  const { data: editedUserData } = useQuery(UserDocument, {
     variables: { id: editedUserId! },
     skip: editedUserId === undefined,
   });
@@ -489,7 +515,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           showIcon
           closable
         >
-          {t('toast.updateError', { error: (e as ApolloError)?.message })}
+          {t('toast.updateError', { error: (e as Error)?.message })}
         </Message>,
         { duration: 6000 }
       );
@@ -539,9 +565,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     monthlyAmount: NumberType()
       .isRequired(t('errorMessages.noAmountErrorMessage'))
       .min(
-        (memberPlan?.amountPerMonthMin || 0) / 100,
+        periodMinAmount,
         t(`errorMessages.minimalAmountPerMonth`, {
-          amount: (memberPlan?.amountPerMonthMin || 0) / 100,
+          amount: (periodMinAmount / 100).toFixed(2),
           currency: memberPlan?.currency,
         })
       ),
@@ -573,7 +599,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           user: user?.name,
           paymentMethod: paymentMethod?.name,
           paymentPeriodicity,
-          monthlyAmount,
+          monthlyAmount: periodAmount,
         }}
       >
         <ListViewContainer>
@@ -724,8 +750,17 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                   mp => mp.id === value
                                 );
                                 if (!foundMemberPlan) return;
+                                const planPeriodMin =
+                                  foundMemberPlan.periodicityPricing?.find(
+                                    price =>
+                                      price.periodicity === paymentPeriodicity
+                                  )?.amountMin;
                                 setMonthlyAmount(
-                                  foundMemberPlan.amountPerMonthMin
+                                  planPeriodMin != null ?
+                                    planPeriodMin / periodicityMonths
+                                  : getMonthlyEquivalentRange(
+                                      foundMemberPlan.periodicityPricing
+                                    ).amountPerMonthMin
                                 );
                                 setCurrency(foundMemberPlan.currency);
                                 return foundMemberPlan;
@@ -745,9 +780,11 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                     }
                                   )}
                                 >
-                                  {(memberPlan.amountPerMonthMin / 100).toFixed(
-                                    2
-                                  )}
+                                  {(
+                                    getMonthlyEquivalentRange(
+                                      memberPlan.periodicityPricing
+                                    ).amountPerMonthMin / 100
+                                  ).toFixed(2)}
                                 </DescriptionListItem>
                               </DescriptionList>
                             </Text>
@@ -785,20 +822,22 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             accepter={SelectPicker}
                           />
                         </Col>
-                        {/* monthly amount */}
+                        {/* amount per period */}
                         <Col xs={12}>
                           <Label>
                             {toggleRequiredLabel(
-                              t('userSubscriptionEdit.monthlyAmount')
+                              t('userSubscriptionEdit.periodAmount')
                             )}
                           </Label>
 
                           <CurrencyInput
                             name="monthlyAmount"
                             currency={currency}
-                            centAmount={monthlyAmount}
+                            centAmount={periodAmount}
                             onChange={centAmount => {
-                              setMonthlyAmount(Math.round(centAmount || 0));
+                              setMonthlyAmount(
+                                Math.round(centAmount || 0) / periodicityMonths
+                              );
                             }}
                             disabled={
                               isDisabled ||
@@ -806,6 +845,18 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                               isDeactivated
                             }
                           />
+                          {paymentPeriodicity !==
+                            PaymentPeriodicity.Monthly && (
+                            <Text>
+                              {t(
+                                'userSubscriptionEdit.monthlyAmountEquivalent',
+                                {
+                                  currency,
+                                  amount: (monthlyAmount / 100).toFixed(2),
+                                }
+                              )}
+                            </Text>
+                          )}
                         </Col>
                       </RowPaddingTop>
                       <RowPaddingTop>
@@ -847,6 +898,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                           <Label>{t('userSubscriptionEdit.startsAt')}</Label>
                           <DatePicker
                             block
+                            oneTap
                             cleanable={false}
                             value={startsAt}
                             disabled={
@@ -986,6 +1038,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                   <InvoiceListPanel
                     subscriptionId={id}
                     invoices={invoices}
+                    periods={data?.subscription?.periods}
                     disabled={!!deactivation}
                     onInvoicePaid={() => reloadSubscription()}
                   />

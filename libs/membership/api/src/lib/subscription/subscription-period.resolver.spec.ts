@@ -13,7 +13,7 @@ describe('SubscriptionPeriodResolver', () => {
     it('reports whether the period invoice is paid', async () => {
       const prisma = {
         invoice: {
-          findMany: jest.fn(async () => [
+          findMany: vi.fn(async () => [
             { id: 'paid-invoice', paidAt: new Date() },
             { id: 'open-invoice', paidAt: null },
           ]),
@@ -39,7 +39,7 @@ describe('SubscriptionPeriodResolver', () => {
       }));
       const prisma = {
         invoice: {
-          findMany: jest.fn(async () =>
+          findMany: vi.fn(async () =>
             periods.map(period => ({
               id: period.invoiceID,
               paidAt: new Date(),
@@ -60,7 +60,7 @@ describe('SubscriptionPeriodResolver', () => {
 
     it('reports false when the period has no invoice', async () => {
       const prisma = {
-        invoice: { findMany: jest.fn(async () => []) },
+        invoice: { findMany: vi.fn(async () => []) },
       };
 
       const result = await makeResolver(prisma).isPaid({

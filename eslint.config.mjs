@@ -100,6 +100,15 @@ export default [
     },
   },
   {
-    ignores: ['**/__generated__/**', '**/*/seed.ts'],
+    ignores: [
+      '**/__generated__/**',
+      '**/*/seed.ts',
+      // graphql-codegen output
+      '**/*.generated.ts',
+      'libs/editor/api/src/lib/gql/**',
+      'libs/website/api/src/lib/gql/**',
+      'libs/peering/api/src/lib/remote/graphql.ts',
+      'libs/testing/src/graphql/graphql-public.ts',
+    ],
   },
 ];

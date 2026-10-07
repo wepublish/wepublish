@@ -1,7 +1,6 @@
 import { css, SerializedStyles, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { GlobalStyles } from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   ArticleListWrapper,
   ArticleTrackingPixels,
@@ -12,6 +11,7 @@ import {
   HtmlBlockWrapper,
   ImageBlockWrapper,
   ImageGalleryBlockWrapper,
+  LightboxWrapper,
   SliderWrapper,
   TeaserGridBlockWrapper,
   TeaserGridFlexBlockWrapper,
@@ -19,12 +19,9 @@ import {
   TeaserSlotsBlockWrapper,
 } from '@wepublish/block-content/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
-import { ContentWrapper } from '@wepublish/content/website';
+import { ContentUnavailable, ContentWrapper } from '@wepublish/content/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
-import {
-  Article as ArticleType,
-  FullArticleFragment,
-} from '@wepublish/website/api';
+import { FullArticleFragment } from '@wepublish/website/api';
 import {
   BuilderArticleProps,
   PeerInformation,
@@ -47,9 +44,11 @@ import { TeaserSlotsCreditsWrapper } from './teaser-layouts/teaser-slots-credits
 import { TeaserSlotsTopicWrapper } from './teaser-layouts/teaser-slots-topic';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
-  main > .MuiContainer-root {
-    max-width: initial;
-    padding: 0;
+  ${theme.breakpoints.up('md')} {
+    main > .MuiContainer-root {
+      max-width: initial;
+      padding: 0;
+    }
   }
 `;
 
@@ -127,6 +126,7 @@ export const ArticleWrapper = styled(ContentWrapper)<{
     &
       > :is(
         ${SliderWrapper},
+          ${LightboxWrapper},
           ${EventBlockWrapper},
           ${BreakBlockWrapper},
           ${CollapsibleContentWrapper},
@@ -210,8 +210,6 @@ export function ReflektArticle({
     blocks: { Blocks },
   } = useWebsiteBuilder();
 
-  const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
-
   const article = data?.article as FullArticleFragment | undefined;
 
   return (
@@ -221,9 +219,11 @@ export function ReflektArticle({
       hideContentAfter={article?.paywall?.hideContentAfter}
       fadeout={article?.paywall?.fadeout}
     >
-      {isDesktop && articleGlobalStyles}
+      {articleGlobalStyles}
 
-      {article && <ArticleSEO article={article as unknown as ArticleType} />}
+      {!article && !loading && <ContentUnavailable />}
+
+      {article && <ArticleSEO article={article} />}
 
       {article && (
         <ArticlePropertiesContext.Provider

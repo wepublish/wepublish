@@ -1,36 +1,37 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StatsService } from './stats.service';
 import { PrismaClient } from '@prisma/client';
+import type { Mock } from 'vitest';
 
 describe('StatsService', () => {
   let service: StatsService;
   let prismaMock: {
-    author: { [method in keyof PrismaClient['author']]?: jest.Mock };
-    article: { [method in keyof PrismaClient['article']]?: jest.Mock };
+    author: { [method in keyof PrismaClient['author']]?: Mock };
+    article: { [method in keyof PrismaClient['article']]?: Mock };
     articleRevision: {
-      [method in keyof PrismaClient['articleRevision']]?: jest.Mock;
+      [method in keyof PrismaClient['articleRevision']]?: Mock;
     };
   };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   beforeEach(async () => {
     prismaMock = {
       author: {
-        count: jest.fn(),
+        count: vi.fn(),
       },
       article: {
-        count: jest.fn(),
+        count: vi.fn(),
       },
       articleRevision: {
-        findFirst: jest.fn(),
+        findFirst: vi.fn(),
       },
     };
 

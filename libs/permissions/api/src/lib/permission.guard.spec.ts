@@ -5,13 +5,13 @@ import { PERMISSIONS_METADATA_KEY } from './permission.decorator';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Permission } from '@wepublish/permissions';
 
-jest.mock('@nestjs/graphql', () => {
-  const original = jest.requireActual('@nestjs/graphql');
+vi.mock('@nestjs/graphql', async () => {
+  const original = await vi.importActual('@nestjs/graphql');
 
   return {
     ...original,
     GqlExecutionContext: {
-      create: jest.fn(),
+      create: vi.fn(),
     },
   };
 });
@@ -35,8 +35,8 @@ describe('PermissionsGuard', () => {
     guard = module.get<PermissionsGuard>(PermissionsGuard);
     reflector = module.get<Reflector>(Reflector);
 
-    const mockedCreate = jest.fn().mockImplementation(() => ({
-      getContext: jest.fn().mockReturnValue({
+    const mockedCreate = vi.fn().mockImplementation(() => ({
+      getContext: vi.fn().mockReturnValue({
         req: {
           user: {
             roles: [{ permissionIDs: [mockPermission.id] }],
@@ -49,7 +49,7 @@ describe('PermissionsGuard', () => {
   });
 
   it('should return false if no permissions are set', () => {
-    const spy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([]);
+    const spy = vi.spyOn(reflector, 'getAllAndMerge').mockReturnValue([]);
     const mockContext = {
       getHandler: () => ({}),
       getClass: () => ({}),
@@ -61,7 +61,7 @@ describe('PermissionsGuard', () => {
   });
 
   it('should return true if the user has the required permissions', () => {
-    const spy = jest
+    const spy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue([mockPermission]);
     const mockContext = {
@@ -75,8 +75,8 @@ describe('PermissionsGuard', () => {
   });
 
   it('should return false if the user is not logged in', () => {
-    const mockedCreate = jest.fn().mockImplementation(() => ({
-      getContext: jest.fn().mockReturnValue({
+    const mockedCreate = vi.fn().mockImplementation(() => ({
+      getContext: vi.fn().mockReturnValue({
         req: {
           user: undefined,
         },
@@ -84,7 +84,7 @@ describe('PermissionsGuard', () => {
     }));
     GqlExecutionContext.create = mockedCreate;
 
-    const spy = jest
+    const spy = vi
       .spyOn(reflector, 'getAllAndMerge')
       .mockReturnValue([mockPermission]);
 
@@ -99,7 +99,7 @@ describe('PermissionsGuard', () => {
   });
 
   it('should return false if the user does not have the required permissions', () => {
-    const spy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([
+    const spy = vi.spyOn(reflector, 'getAllAndMerge').mockReturnValue([
       {
         id: 'Bar',
         description: 'Barfoo',

@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -12,7 +12,7 @@ import {
 import { SettingProvider } from '@wepublish/editor/api';
 import { Textarea } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
-import { ComponentType, useMemo } from 'react';
+import { ComponentType, ReactNode, useMemo, useState } from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -20,6 +20,7 @@ import {
   CheckPicker,
   Form,
   Message,
+  Modal,
   SelectPicker,
   toaster,
 } from 'rsuite';
@@ -115,6 +116,8 @@ export interface GenericIntegrationFormProps<
     | FieldDefinition<TFormValues>[]
     | ((setting: TSetting) => FieldDefinition<TFormValues>[]);
   getLogo?: (setting: TSetting) => string | undefined;
+
+  renderActions?: (setting: TSetting) => ReactNode;
 }
 
 export function SingleGenericIntegrationForm<
@@ -126,6 +129,7 @@ export function SingleGenericIntegrationForm<
   mutation,
   fields,
   getLogo,
+  renderActions,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
 
@@ -151,7 +155,11 @@ export function SingleGenericIntegrationForm<
     reValidateMode: 'onChange',
   });
 
-  const onSubmit = handleSubmit(async formData => {
+  const [pendingTypeChange, setPendingTypeChange] = useState<z.infer<
+    typeof schema
+  > | null>(null);
+
+  const save = async (formData: z.infer<typeof schema>) => {
     try {
       await updateSettings({
         variables: {
@@ -170,6 +178,17 @@ export function SingleGenericIntegrationForm<
 
       console.error(e);
     }
+  };
+
+  const onSubmit = handleSubmit(async formData => {
+    const nextType = (formData as { type?: string }).type;
+
+    if (nextType && setting.type && nextType !== setting.type) {
+      setPendingTypeChange(formData);
+      return;
+    }
+
+    await save(formData);
   });
 
   const logo = getLogo?.(setting);
@@ -188,7 +207,9 @@ export function SingleGenericIntegrationForm<
             <Typography
               variant="h5"
               component={HeaderWrapper}
-              marginBottom={2}
+              sx={{
+                marginBottom: 2,
+              }}
             >
               {setting.name || setting.type}
 
@@ -319,9 +340,47 @@ export function SingleGenericIntegrationForm<
 
               {t('save')}
             </Button>
+
+            {renderActions?.(setting)}
           </CardActions>
         </Card>
       </Form.Stack>
+
+      <Modal
+        open={!!pendingTypeChange}
+        onClose={() => setPendingTypeChange(null)}
+      >
+        <Modal.Header>
+          <Modal.Title>{t('integrations.typeChangeTitle')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>{t('integrations.typeChangeWarning')}</Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            variant="text"
+            onClick={() => setPendingTypeChange(null)}
+          >
+            {t('integrations.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
+            disabled={updating}
+            onClick={async () => {
+              const formData = pendingTypeChange;
+              setPendingTypeChange(null);
+
+              if (formData) {
+                await save(formData);
+              }
+            }}
+          >
+            {t('integrations.typeChangeConfirm')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Form>
   );
 }

@@ -297,6 +297,24 @@ const getContentHintForFlexBlockNestedBlock = (block: BlockListValue) => {
     }
     return text;
   }
+  if (block.type === 'Crowdfunding') {
+    const name = block.value?.crowdfunding?.name;
+    if (!name) {
+      return 'Crowdfunding';
+    }
+    if (name.length > 25) {
+      return name.slice(0, 25) + '...';
+    }
+    return name;
+  }
+
+  if (block.type === 'Crowdfunding') {
+    return block.value?.crowdfunding?.name || 'Crowdfunding';
+  }
+
+  if (block.type === 'LinkPageBreak') {
+    return block.value?.text || 'Break';
+  }
 
   return 'unknown block value';
 };
@@ -384,12 +402,12 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   const handleAddNestedBlock = () => {
     const newBlock: FlexBlockWithAlignment = {
       alignment: {
+        __typename: 'FlexAlignment',
         i: nanoid(),
         x: 0,
         y: 0,
         w: 4,
         h: 4,
-        static: false,
       },
       block: null,
     };
@@ -405,9 +423,10 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   };
 
   const handleLayoutChange = (layout: FlexAlignment[]) => {
-    const newBlocks = layout.map(v => ({
+    const newBlocks: FlexBlockWithAlignment[] = layout.map(v => ({
       block: blocks.find(block => v.i === block.alignment.i)?.block,
       alignment: {
+        __typename: 'FlexAlignment',
         i: v.i,
         x: v.x,
         y: v.y,
@@ -421,21 +440,24 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   };
 
   const handlePinNestedBlock = (index: string) => {
-    const newBlocks = blocks.map(({ block, alignment }) => {
-      return alignment.i === index ?
-          {
-            block,
-            alignment: {
-              i: alignment.i,
-              x: alignment.x,
-              y: alignment.y,
-              w: alignment.w,
-              h: alignment.h,
-              static: !alignment.static,
-            },
-          }
-        : { block, alignment };
-    });
+    const newBlocks: FlexBlockWithAlignment[] = blocks.map(
+      ({ block, alignment }) => {
+        return alignment.i === index ?
+            {
+              block,
+              alignment: {
+                __typename: 'FlexAlignment',
+                i: alignment.i,
+                x: alignment.x,
+                y: alignment.y,
+                w: alignment.w,
+                h: alignment.h,
+                static: !alignment.static,
+              },
+            }
+          : { block, alignment };
+      }
+    );
 
     onChange({ ...value, blocks: newBlocks });
   };

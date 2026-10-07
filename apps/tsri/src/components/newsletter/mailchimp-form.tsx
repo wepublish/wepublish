@@ -132,16 +132,20 @@ export default function MailchimpSubscribeForm(
           css={formStyles}
         >
           <Box
-            maxWidth="sm"
-            display={'flex'}
-            flexDirection={'column'}
-            gap={2}
+            sx={{
+              maxWidth: 'sm',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+            }}
           >
             {popText ?
               <Typography
                 variant="body1"
-                paragraph
                 component={PopTextComponent}
+                sx={{
+                  marginBottom: '16px',
+                }}
               >
                 {popText}
               </Typography>
@@ -178,10 +182,12 @@ export default function MailchimpSubscribeForm(
             />
 
             <Box
-              display={'flex'}
-              flexDirection={'row'}
-              alignItems={'end'}
-              alignSelf={'end'}
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'end',
+                alignSelf: 'end',
+              }}
             >
               <Button
                 type="submit"

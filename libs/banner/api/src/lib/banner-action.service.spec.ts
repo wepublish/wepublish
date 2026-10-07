@@ -46,11 +46,11 @@ describe('BannerActionService', () => {
           provide: PrismaClient,
           useValue: {
             bannerAction: {
-              findUnique: jest.fn(),
-              findMany: jest.fn(),
-              create: jest.fn(),
-              update: jest.fn(),
-              delete: jest.fn(),
+              findUnique: vi.fn(),
+              findMany: vi.fn(),
+              create: vi.fn(),
+              update: vi.fn(),
+              delete: vi.fn(),
             },
           },
         },
@@ -67,14 +67,14 @@ describe('BannerActionService', () => {
 
   describe('findOne', () => {
     it('should return a banner action', async () => {
-      jest
-        .spyOn(prisma.bannerAction, 'findUnique')
-        .mockResolvedValue(bannerAction);
+      vi.spyOn(prisma.bannerAction, 'findUnique').mockResolvedValue(
+        bannerAction
+      );
       expect(await service.findOne('1')).toEqual(bannerAction);
     });
 
     it('should return null if banner action not found', async () => {
-      jest.spyOn(prisma.bannerAction, 'findUnique').mockResolvedValue(null);
+      vi.spyOn(prisma.bannerAction, 'findUnique').mockResolvedValue(null);
       expect(await service.findOne('1')).toBeNull();
     });
   });
@@ -82,9 +82,9 @@ describe('BannerActionService', () => {
   describe('findAll', () => {
     it('should return an array of banner actions', async () => {
       const bannerActions = [bannerAction];
-      jest
-        .spyOn(prisma.bannerAction, 'findMany')
-        .mockResolvedValue(bannerActions);
+      vi.spyOn(prisma.bannerAction, 'findMany').mockResolvedValue(
+        bannerActions
+      );
       expect(await service.findAll({ bannerId: '1' })).toEqual(bannerActions);
     });
   });
@@ -97,7 +97,7 @@ describe('BannerActionService', () => {
         style: 'outline',
         role: BannerActionRole.OTHER,
       };
-      jest.spyOn(prisma.bannerAction, 'create').mockResolvedValue(bannerAction);
+      vi.spyOn(prisma.bannerAction, 'create').mockResolvedValue(bannerAction);
       expect(await service.create(banner, createBannerActionInput)).toEqual(
         bannerAction
       );
@@ -114,9 +114,9 @@ describe('BannerActionService', () => {
         style: 'outline',
         role: BannerActionRole.OTHER,
       };
-      jest
-        .spyOn(prisma.bannerAction, 'update')
-        .mockResolvedValue(updatedBannerAction);
+      vi.spyOn(prisma.bannerAction, 'update').mockResolvedValue(
+        updatedBannerAction
+      );
       expect(await service.update(updateBannerActionInput)).toEqual(
         updatedBannerAction
       );
@@ -125,7 +125,7 @@ describe('BannerActionService', () => {
 
   describe('delete', () => {
     it('should delete a banner action', async () => {
-      jest.spyOn(prisma.bannerAction, 'delete').mockResolvedValue(bannerAction);
+      vi.spyOn(prisma.bannerAction, 'delete').mockResolvedValue(bannerAction);
       expect(await service.delete('1')).toBeUndefined();
     });
   });

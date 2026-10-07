@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 
 import { ConsentCreateView } from './consent-create-view';
 import { BrowserRouter } from 'react-router-dom';

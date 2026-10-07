@@ -5,16 +5,20 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/mail/api",
+        "tsConfig": "libs/mail/api/tsconfig.lib.json",
+        "packageJson": "libs/mail/api/package.json",
+        "main": "libs/mail/api/src/index.ts",
+        "rootDir": "."
+      }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/mail/api/jest.config.ts",
-        "passWithNoTests": true
+        "config": "../../../{projectRoot}/vitest.config.ts"
       }
     }
   }

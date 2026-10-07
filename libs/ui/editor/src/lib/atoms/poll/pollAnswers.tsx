@@ -1,11 +1,9 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  FullPoll,
-  PollAnswer,
-  PollExternalVote,
-  useCreatePollAnswerMutation,
-  useDeletePollAnswerMutation,
+  CreatePollAnswerDocument,
+  DeletePollAnswerDocument,
+  FullPollFragment,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +17,10 @@ import {
   Modal,
   toaster,
 } from 'rsuite';
+
+type PollAnswerFragment = FullPollFragment['answers'][number];
+type PollExternalVoteFragment =
+  FullPollFragment['externalVoteSources'][number]['voteAmounts'][number];
 
 const IconButton = styled(RIconButton)`
   && {
@@ -47,7 +49,10 @@ const Hint = styled(Form.HelpText)`
   }
 `;
 
-function getTotalUserVotesByAnswerId(poll: FullPoll, answerId: string): number {
+function getTotalUserVotesByAnswerId(
+  poll: FullPollFragment,
+  answerId: string
+): number {
   const answers = poll?.answers;
   if (!answers) {
     return 0;
@@ -60,7 +65,7 @@ function getTotalUserVotesByAnswerId(poll: FullPoll, answerId: string): number {
 }
 
 function getTotalExternalVotesByAnswerId(
-  poll: FullPoll,
+  poll: FullPollFragment,
   answerId: string
 ): number {
   const externalVoteSources = poll?.externalVoteSources;
@@ -79,7 +84,7 @@ function getTotalExternalVotesByAnswerId(
 
 function getTotalExternalVoteSourcesByAnswerId(
   answerId: string,
-  pollExternalVotes?: PollExternalVote[] | null
+  pollExternalVotes?: PollExternalVoteFragment[] | null
 ): number {
   if (!pollExternalVotes) {
     return 0;
@@ -92,7 +97,10 @@ function getTotalExternalVoteSourcesByAnswerId(
   );
 }
 
-function getTotalVotesByAnswerId(poll: FullPoll, answerId: string): number {
+function getTotalVotesByAnswerId(
+  poll: FullPollFragment,
+  answerId: string
+): number {
   return (
     getTotalUserVotesByAnswerId(poll, answerId) +
     getTotalExternalVotesByAnswerId(poll, answerId)
@@ -100,22 +108,25 @@ function getTotalVotesByAnswerId(poll: FullPoll, answerId: string): number {
 }
 
 interface PollAnswersProps {
-  poll?: FullPoll;
-  onPollChange(poll: FullPoll): void;
+  poll?: FullPollFragment;
+  onPollChange(poll: FullPollFragment): void;
 }
 
 export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [answerToDelete, setAnswerToDelete] = useState<PollAnswer | undefined>(
-    undefined
-  );
+  const [answerToDelete, setAnswerToDelete] = useState<
+    PollAnswerFragment | undefined
+  >(undefined);
   const [newAnswer, setNewAnswer] = useState<string>('');
 
-  const [createAnswerMutation, { loading }] = useCreatePollAnswerMutation({});
-  const [deleteAnswerMutation] = useDeletePollAnswerMutation();
+  const [createAnswerMutation, { loading }] = useMutation(
+    CreatePollAnswerDocument,
+    {}
+  );
+  const [deleteAnswerMutation] = useMutation(DeletePollAnswerDocument);
 
-  const onErrorToast = (error: ApolloError) => {
+  const onErrorToast = (error: Error) => {
     toaster.push(
       <Message
         type="error"
@@ -161,7 +172,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
 
     if (savedAnswer) {
       const updatedPoll = { ...poll };
-      updatedPoll.answers?.push(savedAnswer as PollAnswer);
+      updatedPoll.answers?.push(savedAnswer);
       onPollChange(updatedPoll);
     }
 
@@ -185,7 +196,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     const updatedPoll = {
       ...poll,
       answers: poll?.answers ? [...poll.answers] : [],
-    } as FullPoll | undefined;
+    } as FullPollFragment | undefined;
 
     // delete answer
     const deletedAnswer = answer?.data?.deletePollAnswer;
@@ -206,7 +217,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     // delete external vote sources
     updatedPoll.externalVoteSources?.forEach(tmpSource => {
       tmpSource.voteAmounts = tmpSource.voteAmounts?.filter(
-        (tmpVoteAmount: PollExternalVote) =>
+        (tmpVoteAmount: PollExternalVoteFragment) =>
           tmpVoteAmount.answerId !== deletedAnswer.id
       );
     });
@@ -214,7 +225,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     onPollChange(updatedPoll);
   }
 
-  async function updateAnswer(updatedAnswer: PollAnswer) {
+  async function updateAnswer(updatedAnswer: PollAnswerFragment) {
     if (!poll) {
       return;
     }

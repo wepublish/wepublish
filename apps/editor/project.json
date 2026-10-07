@@ -7,6 +7,7 @@
   "targets": {
     "build": {
       "executor": "nx:run-commands",
+      "dependsOn": [],
       "options": {
         "commands": [
           {
@@ -19,33 +20,30 @@
         "parallel": false
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "tsc --noEmit -p apps/editor/tsconfig.app.json",
+          "tsc --noEmit -p apps/editor/tsconfig.server.json"
+        ],
+        "parallel": false
+      }
     },
     "test": {
-      "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
-      },
-      "configurations": {
-        "ci": {
-          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
-        },
-        "update": {
-          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
-        }
+        "config": "../../{projectRoot}/vitest.config.ts"
       }
     },
     "browser": {
-      "executor": "@nx/vite:build",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{projectRoot}/{options.outDir}",
+        "{workspaceRoot}/dist/apps/editor/browser"
+      ],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/editor/browser",
-        "configFile": "apps/editor/vite.config.ts",
-        "generatePackageJson": false
+        "config": "./vite.config.ts",
+        "outDir": "../../dist/apps/editor/browser"
       },
       "configurations": {
         "development": {
@@ -76,18 +74,10 @@
       }
     },
     "serve": {
-      "executor": "@nx/vite:dev-server",
       "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "editor:browser"
-      },
       "configurations": {
-        "development": {
-          "buildTarget": "editor:browser:development"
-        },
-        "production": {
-          "buildTarget": "editor:browser:production"
-        }
+        "development": {},
+        "production": {}
       }
     }
   }

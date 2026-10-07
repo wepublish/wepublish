@@ -8,7 +8,7 @@ import {
   SliderInnerContainer,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullImageGalleryBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderBlockStyleProps } from '@wepublish/website/builder';
@@ -18,7 +18,7 @@ import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 import { reflektSliderControls } from './reflekt-slider-controls';
 
 export const isImageSliderSlimBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullImageGalleryBlockFragment =>
   allPass([hasBlockStyle(ReflektBlockStyles.SliderSlim), isImageGalleryBlock])(
     block

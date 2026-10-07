@@ -1,8 +1,32 @@
 {
   "translation": {
+    "lastSavedAt": "Dernier enregistrement {{date, ccc PP pp}}",
+    "preview": {
+      "backToEditor": "Éditeur",
+      "mobile": "Mobile",
+      "desktop": "Bureau",
+      "tablet": "Tablette",
+      "copyUrl": "Copier l'URL d'aperçu",
+      "urlCopied": "URL d'aperçu copiée dans le presse-papiers",
+      "urlCopyFailed": "L'URL d'aperçu n'a pas pu être copiée",
+      "loading": "Chargement de l'aperçu …"
+    },
     "previewHandshake": {
       "popupBlocked": "La fenêtre d'aperçu a été bloquée par le navigateur. Veuillez autoriser les pop-ups pour l'éditeur et réessayer.",
       "notResponding": "La fenêtre d'aperçu ne répond pas. La connexion à l'aperçu a peut-être échoué."
+    },
+    "oneChannel": {
+      "connected": "Connecteur We.Publish : connecté",
+      "failing": "Connecteur We.Publish : connexion perturbée",
+      "notConfigured": "Connecteur We.Publish : non configuré",
+      "notConfiguredHint": "Cette instance n'envoie aucune donnée à We.Publish.",
+      "lastSuccess": "Dernier contact réussi : {{value}}",
+      "lastSuccessNever": "Dernier contact réussi : jamais",
+      "lastAttemptFailed": "Dernière tentative : {{value}} – échec : {{error}}",
+      "label": "Connecteur We.Publish",
+      "outageTitle": "Le connecteur We.Publish ne répond pas",
+      "outageText": "Aucun contact réussi depuis {{value}}. Les statistiques et les messages ne sont actuellement pas échangés avec We.Publish.",
+      "outageTextNever": "Il n’y a jamais eu de contact réussi. Veuillez vérifier l’URL et les accès du connecteur."
     },
     "oneMessages": {
       "header": "Messages de l'équipe We.Publish",
@@ -51,6 +75,9 @@
       }
     },
     "articleEditor": {
+      "validationFailedGeneric": "Impossible de sauvegarder. Corrigez les erreurs signalées.",
+      "saveValidationFailed": "Échec de l'enregistrement",
+      "publishValidationFailed": "Échec de la publication",
       "overview": {
         "articlePending": "Article en attente",
         "articlePublished": "Article publié",
@@ -59,6 +86,7 @@
         "draft": "Brouillon",
         "draftCreated": "Projet d'article créé",
         "draftSaved": "Projet d'article sauvegardé",
+        "draftAutosaved": "Brouillon d'article enregistré automatiquement",
         "duplicate": "Dupliquer",
         "metadata": "Métadonnées",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
@@ -86,6 +114,7 @@
         "articlePreviewLinkDesc": "Le lien de prévisualisation montre toujours les dernières modifications apportées à la version préliminaire de l'article. Le lien de prévisualisation cesse de fonctionner après la publication de l'article.",
         "articlePreviewLinkField": "Lien de prévisualisation",
         "articlePreviewLinkHours": "Période de validité du lien",
+        "authorRole": "Rôle (p.ex. Texte, Images)",
         "authors": "Auteurs/Autrices",
         "back": "Retour",
         "breakingNews": "Breaking News",
@@ -148,6 +177,7 @@
         "publishDate": "Date de publication",
         "published": "Publié",
         "removeTeaser": "Retirer le teaser",
+        "selectAuthor": "Choisir un auteur/une autrice",
         "seoTitle": "Titre de référencement",
         "seoTitleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement seo. <2>Guide du référencement</2>",
         "seoDescription": "Description de référencement (SEO)",
@@ -197,6 +227,7 @@
         "newArticle": "Nouvel article",
         "notPublished": "Pas encore publié",
         "pending": "En attente",
+        "preTitle": "Pré-titre",
         "publicationDate": "Date de publication",
         "published": "Publié",
         "states": "Statut",
@@ -312,13 +343,22 @@
       }
     },
     "blocks": {
+      "blockTemplate": {
+        "editTemplate": "Modifier le modèle",
+        "label": "Modèle de bloc",
+        "select": "Sélectionner un modèle de bloc",
+        "useContent": "Utiliser le contenu",
+        "useContentConfirmMessage": "Le contenu du modèle sera copié ici afin que vous puissiez le modifier librement. Ce bloc ne sera ensuite plus lié au modèle et les modifications ultérieures du modèle n'apparaîtront plus ici.",
+        "useContentConfirmTitle": "Utiliser le contenu du modèle ?"
+      },
       "crowdfunding": {
         "edit": "Modifier",
         "label": "Crowdfunding",
         "title": "Sélectionner le crowdfunding",
         "name": "Nom du crowdfunding",
         "select": "Sélectionner",
-        "open": "Ouvrir"
+        "open": "Ouvrir",
+        "blockTemplates": "Modèles de blocs"
       },
       "comment": {
         "cherryPick": "Select specific comments",
@@ -412,6 +452,15 @@
         "selectMemberPlansSelectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
         "selectFields": "Champs de saisie utilisateur",
         "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
+        "periodicityDisplay": "Affichage des intervalles de paiement",
+        "periodicityDisplayDropdown": "Champ de sélection",
+        "periodicityDisplayOfferCards": "Une carte par intervalle",
+        "periodicityDisplayToggle": "Commutateur",
+        "periodicityDisplayDropdownHint": "Tous les prix sont affichés mensuellement – cartes, montant et montants proposés. L’intervalle se choisit plus bas avec le mode de paiement et détermine uniquement la fréquence de facturation.",
+        "periodicityDisplayOfferCardsHint": "Chaque offre comme carte distincte (plan × intervalle) avec son prix exact – idéal pour un ou deux plans.",
+        "periodicityDisplayToggleHint": "L’intervalle se choisit en haut comme première étape ; les cartes affichent le prix de cet intervalle.",
+        "periodicityDisplayDropdownIgnoredRows_one": "Remarque : le plan « {{plans}} » a des prix configurés pour des intervalles de paiement qui sont ignorés en mode « Champ de sélection ».",
+        "periodicityDisplayDropdownIgnoredRows_other": "Remarque : les plans « {{plans}} » ont des prix configurés pour des intervalles de paiement qui sont ignorés en mode « Champ de sélection ».",
         "goodiesHeading": "Goodies",
         "discountCodesHeading": "Codes de réduction",
         "showGoodies": "Afficher la sélection de goodies",
@@ -419,6 +468,7 @@
         "goodieMinValue": {
           "label": "Montant minimum du goodie :"
         },
+        "goodieMinValueAppliesToUpgrade": "Appliquer ce montant minimum aussi aux upgrades",
         "hideRepeatGoodieOnUpgrade": "Lors de l’upgrade : pas de nouveau goodie",
         "FirstName": "Prénom",
         "Birthday": "Date de naissance",
@@ -434,8 +484,14 @@
         },
         "renderStylesHeading": "Ordre et affichage des plans d’abonnement",
         "amountTileValues": {
-          "hint": "Montants des tuiles (en francs). Laisser vide pour les valeurs par défaut : 10, 15, 20.",
+          "hint": "Montants des tuiles par intervalle de paiement (en francs). Laisser vide pour les valeurs par défaut.",
+          "hintMonthly": "Montants des tuiles (en francs, par mois). Laisser vide pour les valeurs par défaut.",
           "placeholder": "p.ex. 10 15 20"
+        },
+        "fixedAmountHint": "Montant fixe : aucun champ de montant n’est affiché. Le montant cible du plan est facturé – si aucun n’est défini, le montant minimum. Les visiteurs ne peuvent donc pas payer davantage.",
+        "showInCardAmountInput": {
+          "label": "Saisie libre du montant dans la carte",
+          "title": "Au lieu d’un champ de montant séparé, chaque carte d’abonnement reçoit un champ dans lequel les visiteurs définissent eux-mêmes leur montant."
         },
         "showAmountInput": {
           "label": "Saisie libre du montant",
@@ -446,7 +502,7 @@
           "Narrow": "Étroit (2 tuiles par ligne)",
           "Wide": "Large (1 tuile par ligne, grandes tuiles)"
         },
-        "planAmountsTitle": "Montant minimum / cible / maximum par mois (en francs)",
+        "planAmountsTitle": "Montant minimum / cible / maximum",
         "defaultPlanTitle": "Sélectionné par défaut — ce plan est présélectionné après le chargement de la page.",
         "defaultPlanLabel": "Par défaut"
       },
@@ -525,11 +581,11 @@
         "syncProviderPlaceholder": "Choisir un compte",
         "list": "Liste",
         "listPlaceholder": "Choisir une liste",
-        "interests": "Intérêts prédéfinis",
+        "interests": "Intérêts prédéfinis. Ils sont ajoutés automatiquement pour chaque abonné",
         "interestsPlaceholder": "Choisir des intérêts",
         "autoFocus": "Focus automatique",
         "doubleOptIn": "Double opt-in",
-        "submitButtonLabel": "Libellé du bouton d'envoi",
+        "submitButtonLabel": "Libellé du bouton d'inscription",
         "buttonColor": "Couleur du bouton",
         "buttonFontColor": "Couleur du texte du bouton",
         "mergeFieldPlaceholder": "Sélectionner un champ de fusion",
@@ -539,17 +595,26 @@
         "fieldValue": "Valeur fixe",
         "steps": "Étapes",
         "step": "Étape {{number}}",
-        "skipIfFieldsFilled": "Ignorer si champs remplis",
-        "skipIfInterestsFilled": "Ignorer si intérêts définis",
-        "showIfInterestsFilled": "Afficher seulement si intérêts définis",
+        "skipIfFieldsFilled": "Ignorer l'étape si les informations suivantes sont déjà présentes",
+        "skipIfInterestsFilled": "Ignorer cette étape si l'intérêt suivant est déjà activé",
+        "showIfInterestsFilled": "Afficher cette étape uniquement si l'intérêt suivant est activé",
         "inputs": "Champs de saisie",
+        "inputTitle": "Champ {{number}}",
         "inputType": "Type",
         "inputTypeHelp": "Type d'information pouvant être saisie dans le champ",
+        "inputTypes": {
+          "text": "Texte",
+          "email": "E-mail",
+          "hidden": "Masqué",
+          "groups": "Sélection d'intérêts"
+        },
+        "inputTypeGroupsHelp": "Permet aux lecteurs de choisir les intérêts de la liste Mailchimp sélectionnée auxquels ils souhaitent s'abonner, p. ex. des newsletters individuelles. Ajoutez ci-dessous une option par intérêt.",
         "required": "Obligatoire",
         "inputName": "Nom",
         "inputNameHelp": "Nom du merge field où cette information est stockée sur Mailchimp",
         "inputLabel": "Libellé",
         "inputLabelHelp": "Libellé du champ de formulaire",
+        "inputLabelGroupsHelp": "Titre affiché au-dessus des intérêts, p. ex. « Quelles newsletters souhaitez-vous recevoir ? »",
         "inputDescription": "Description",
         "inputDescriptionHelp": "Description affichée sous le champ de formulaire",
         "fieldUrlParamHelp": "Quel paramètre URL (?foo=bar) permet de préremplir cette information",
@@ -557,25 +622,56 @@
         "fieldValueHelp": "Valeur fixe à utiliser si rien n'est saisi",
         "advanced": "Avancé",
         "interestOptions": "Options d'intérêt",
+        "interestOptionsNoList": "Sélectionnez d'abord une liste sous Général pour charger ses intérêts.",
         "interestOptionPlaceholder": "Choisir un intérêt",
+        "interestOptionRequired": "Sélectionnez un intérêt.",
+        "syncProviderRequired": "Sélectionnez un compte Mailchimp.",
+        "listRequired": "Sélectionnez une liste.",
+        "emailInputRequired": "Ajoutez un champ avec le merge field Adresse e-mail (EMAIL), sinon personne ne peut s'inscrire.",
+        "inputNameRequired": "Sélectionnez un merge field.",
+        "inputLabelRequired": "Saisissez un libellé.",
+        "interestOptionsRequired": "Ajoutez au moins une option avec un intérêt.",
+        "validationSummaryOne": "Formulaire newsletter : 1 champ est incomplet",
+        "validationSummaryMany": "Formulaire newsletter : {{count}} champs sont incomplets",
         "interestOptionDescription": "Description",
         "addInterestOption": "Ajouter une option",
+        "moveUp": "Monter",
+        "moveDown": "Descendre",
+        "remove": "Supprimer",
         "addInput": "Ajouter un champ",
         "addStep": "Ajouter une étape",
         "success": "Après l'envoi",
-        "successUrl": "URL de redirection",
+        "successUrl": "Rediriger vers ce site web",
         "successUrlPlaceholder": "https://…",
-        "useSuccessPage": "Page de succès au lieu d'une redirection",
+        "useSuccessPage": "Afficher une page de succès au lieu de rediriger vers un site web",
         "successPageDescription": "Description",
         "optionLabel": "Libellé",
         "optionBackground": "Couleur de fond",
         "optionUrl": "URL",
         "optionMergeFieldName": "Nom du merge field",
         "optionMergeFieldValue": "Valeur du merge field",
-        "addSuccessOption": "Ajouter une option"
+        "addSuccessOption": "Ajouter une option",
+        "successOptionTitle": "Option {{number}}",
+        "interestOption": "Intérêt",
+        "interestOptionTitle": "Intérêt {{number}}",
+        "interestOptionName": "Nom",
+        "interestOptionImage": "Image (facultative)",
+        "optionsLayout": "Affichage",
+        "optionsLayoutList": "Liste",
+        "optionsLayoutGrid": "Grille de cartes"
       }
     },
     "cancel": "Annuler",
+    "changelog": {
+      "whatsNew": "Quoi de neuf",
+      "actionRequired": "Action requise",
+      "done": "Effectué",
+      "details": "Détails",
+      "releasedAt": "Publié le {{date, PP}}",
+      "completedAt": "Effectué le {{date, PP}}",
+      "noEntries": "Aucune entrée de changelog pour l'instant.",
+      "allCaughtUp": "Aucune entrée de changelog non lue."
+    },
     "chooseEditImage": {
       "chooseImage": "Choisir une image",
       "editImage": "Modifier l'image",
@@ -703,6 +799,8 @@
     "dashboard": {
       "activity": "Dernière activité",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
+      "showAllNotifications": "Tout afficher",
       "greeting": "Salut, {{name}}!",
       "newArticle": "Nouvel <0>article</0> créé",
       "newAuthor": "Nouvel <0>auteur</0> ajouté",
@@ -730,6 +828,11 @@
       "tomorrow": "Demain"
     },
     "delete": "Supprimer",
+    "deleteBlockTemplateModal": {
+      "body": "Veux-tu vraiment supprimer le modèle de bloc \"{{name}}\"?",
+      "deleteBtn": "Oui, supprimer",
+      "title": "Supprimer le modèle de bloc?"
+    },
     "deletePollModal": {
       "body": "Veux-tu vraiment supprimer le sondage \"{{pollQuestion}}\"?",
       "deleteBtn": "Oui, supprimer",
@@ -815,6 +918,7 @@
         "providers": "Fournisseurs",
         "publicationDate": "Date de publication",
         "reset": "Réinitialiser les filtres",
+        "slug": "Filtrer par slug",
         "title": "Filtrer par titre",
         "includeHiddenArticles": "Inclure cachés",
         "includeHiddenPages": "Inclure cachés"
@@ -924,8 +1028,10 @@
     "invoice": {
       "areYouSure": "Êtes-vous sûr·e ?",
       "canceledAt": "Annulé le",
+      "doNotSendMail": "Ne pas envoyer de confirmation de paiement au membre",
       "invoiceNo": "Facture n°",
       "manuallyPaidModalBody": "La facture est marquée comme payée, bien qu'aucun paiement n'ait été effectué par l'utilisateur·trice. Veuillez vous adresser au comptable pour discuter de ce cas de figure.",
+      "noMailForFirstPeriod": "Aucune confirmation de paiement ne sera envoyée, car il s'agit de la première période de l'abonnement.",
       "paidAt": "Payée le",
       "panel": {
         "invoiceHistory": "Historique de facturation",
@@ -978,6 +1084,11 @@
         "invalidCode": "Code de vérification invalide. Veuillez réessayer.",
         "setupError": "Échec de la configuration 2FA. Veuillez réessayer.",
         "setupSuccess": "L'authentification à deux facteurs a été activée avec succès."
+      },
+      "impersonate": {
+        "pending": "Connexion en tant qu'utilisateur …",
+        "failed": "La connexion a échoué. Le lien a expiré ou a déjà été utilisé.",
+        "notAGrant": "Ce lien n'est pas un lien d'usurpation valide."
       }
     },
     "resetPassword": {
@@ -1218,7 +1329,7 @@
       "createMemberPlanHeader": "Créer un plan membre",
       "description": "Description",
       "shortDescription": "Brève description",
-      "editPaymentSetting": "Modifier les paramètres de paiement",
+      "editPaymentSetting": "Modifier les modes de paiement & périodicités",
       "forceAutoRenewal": "Forcer le renouvellement automatique",
       "loadingTitle": "Chargement",
       "name": "Nom",
@@ -1237,6 +1348,10 @@
     },
     "memberPlanList": {
       "action": "Actions",
+      "created": "Créé",
+      "createdAt": "{{createdAt, ccc PP p}}",
+      "modified": "Dernière modification",
+      "modifiedAt": "{{modifiedAt, ccc PP p}}",
       "createNew": "Nouveau plan membre",
       "deleteModalTitle": "Supprimer le plan membre",
       "name": "Nom",
@@ -1263,6 +1378,7 @@
       "pageTags": "Tags",
       "consents": "Consentement",
       "dashboard": "Dashboard",
+      "notifications": "Notifications",
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
@@ -1295,7 +1411,8 @@
       "apps": "Apps",
       "mailSend": "Envoyer un e-mail",
       "mailLog": "E-mails envoyés",
-      "communication": "Communication"
+      "communication": "Communication",
+      "auditLog": "Journal d'audit"
     },
     "navigation": {
       "overview": {
@@ -1320,6 +1437,19 @@
         "url": "URL"
       }
     },
+    "notifications": {
+      "noTeamMessages": "Aucun message de l'équipe We.Publish pour le moment.",
+      "sourceTeam": "We.Publish Team",
+      "sourceChangelog": "Changelog",
+      "sourceJobLogs": "Job logs",
+      "markAsRead": "Marquer comme lu",
+      "markAsDone": "Marquer comme effectué",
+      "confirmTitle": "Marquer comme effectué ?",
+      "confirmMessage": "Vous confirmez ainsi pour toute votre équipe que « {{title}} » a été effectué. L'avis disparaîtra du tableau de bord.",
+      "confirmSuccess": "Merci ! La tâche a été marquée comme effectuée.",
+      "loadMore": "Afficher plus",
+      "sourceConnector": "We.Publish Connector"
+    },
     "no": "Non",
     "pageEditor": {
       "validationFailedHeader": "Validation échouée",
@@ -1333,6 +1463,7 @@
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "pageDraftCreated": "Brouillon créé",
         "pageDraftSaved": "Brouillon sauvegardé",
+        "pageDraftAutosaved": "Brouillon de page enregistré automatiquement",
         "pageNotFound": "Page non trouvée",
         "pagePending": "Page en attente",
         "pagePublished": "Page publiée",
@@ -1346,6 +1477,7 @@
         "unpublished": "Non publié"
       },
       "panels": {
+        "chooseBlock": "Choisir le bloc",
         "close": "Fermer",
         "confirm": "Confirmer",
         "createdAt": "{{createdAt, ccc PP p}}",
@@ -1400,6 +1532,7 @@
         "pending": "En attente",
         "publicationDate": "Date de publication",
         "published": "Publié",
+        "slug": "Slug",
         "states": "Statut",
         "title": "Titre",
         "untitled": "Sans titre",
@@ -1632,6 +1765,8 @@
       "settings": "Paramètres",
       "successMessage": "Paramètres mis à jour avec succès !",
       "successTitle": "Enregistré",
+      "subscriptionPlans": "Plans d'abonnement",
+      "subscriptionUpgradeModel": "Lors d'une mise à niveau, facturer la différence de prix complète (au lieu du crédit restant au prorata)",
       "warnings": {
         "askOperators": "Attention : la modification d'un ou de plusieurs des paramètres peut entraîner la rupture de la page ou avoir d'autres conséquences imprévisibles. En cas de doute, il est conseillé de consulter les opérateurs. Dans le cas contraire, vous pouvez continuer.",
         "guestCommenting": "Autoriser les commentaires des utilisateurs·trices non authentifiés·e·s.",
@@ -1640,8 +1775,11 @@
         "invoiceReminders": "Nombre de rappels de paiement par facture Délai entre les rappels de paiement — jours",
         "loginMinutes": "Durée de validité du token de connexion par email — minutes.",
         "passwordToken": "Durée de validité du token pour la réinitialisation du mot de passe par email — minutes.",
-        "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes"
-      }
+        "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes",
+        "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu'elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
+        "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée."
+      },
+      "sessionTtlDays": "Durée de validité de la connexion"
     },
     "automaticMails": {
       "title": "E-mails automatiques",
@@ -1706,7 +1844,7 @@
         },
         "renewal_success": {
           "short": "Le renouvellement a fonctionné.",
-          "description": "Part lorsqu’un abonnement est renouvelé automatiquement et que le montant a été encaissé avec succès.",
+          "description": "Part dès que le renouvellement d’un abonnement est payé – que le montant ait été encaissé automatiquement, payé par la personne elle-même ou marqué comme payé manuellement par la rédaction. Ne part pas pour la première période d’un nouvel abonnement.",
           "example": "« Votre abonnement continue – merci beaucoup. »"
         },
         "renewal_failed": {
@@ -1849,6 +1987,14 @@
         "createdAt": "Créé",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "firstName": "Prénom",
+        "subscriptionStatus": {
+          "Active": "Actif",
+          "Deactivated": "Désactivé",
+          "Planned": "Planifié",
+          "Unpaid": "Non payé",
+          "Expired": "Expiré"
+        },
+        "subscriptionWithStatus": "{{name}} – {{status}}",
         "modifiedAt": "Dernière modification",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Nom",
@@ -1920,6 +2066,8 @@
       "editTitle": "Modifier l'abonnement",
       "memberPlanMonthlyAmount": "Montant mensuel minimum ({{currency}})",
       "monthlyAmount": "Montant mensuel",
+      "monthlyAmountEquivalent": "Correspond à {{currency}} {{amount}} par mois",
+      "periodAmount": "Montant par intervalle de paiement",
       "paidUntil": "Payé jusqu'à",
       "paymentMethod": "Mode de paiement",
       "renewNow": "Prolonger maintenant",
@@ -1961,6 +2109,29 @@
       "subscriptionTitle": "{{memberPlanName}} / N° {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante."
     },
+    "blockTemplates": {
+      "list": {
+        "title": "Modèles de blocs",
+        "newBlockTemplate": "Nouveau modèle de bloc",
+        "name": "Nom",
+        "noName": "Pas de nom",
+        "delete": "Supprimer",
+        "info": "Les modèles de blocs sont définis une seule fois et peuvent ensuite être utilisés dans autant d'articles et de pages que vous le souhaitez. Lorsqu'un modèle est modifié, tous les articles et pages qui l'utilisent affichent immédiatement le nouveau contenu."
+      },
+      "edit": {
+        "title": "Modifier le modèle de bloc",
+        "name": "Nom",
+        "back": "Retour",
+        "backToList": "Retour à la liste",
+        "noName": "Pas de nom",
+        "delete": "Supprimer",
+        "saved": "Enregistré",
+        "new": "Nouveau",
+        "editing": "Modification",
+        "saveConfirmMessage": "L'enregistrement met immédiatement à jour le contenu de ce modèle dans tous les articles et pages qui l'utilisent, y compris ceux déjà publiés.",
+        "saveConfirmTitle": "Enregistrer le modèle ?"
+      }
+    },
     "yes": "Oui",
     "memberplanForm": {
       "trialSubscription": "Réglages avancés",
@@ -1976,13 +2147,35 @@
       "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela.",
       "migratePMTitle": "Migrer les abonnements vers le mode de paiement cible",
       "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée.",
+      "periodicityPricing": "Prix par intervalle de paiement activé",
+      "periodicityPricingHelpText": "Définis des prix exacts (min / cible / max) par intervalle de paiement. Sans prix personnalisés, le montant est extrapolé à partir du prix mensuel. Le rabais par rapport au prix mensuel extrapolé est calculé automatiquement.",
+      "periodicityPricingHelpTextNoMonthly": "Définis pour chaque intervalle de paiement activé le prix de la période entière : montant minimal (à payer au minimum), montant cible (préréglage dans le formulaire de paiement) et, en option, montant maximal.",
+      "periodicityPricingNoPeriodicities": "Active d'abord des intervalles de paiement dans les paramètres de paiement pour configurer des prix spécifiques aux intervalles.",
+      "periodicityPricingRequired": "Au moins un intervalle de paiement nécessite un montant minimal.",
+      "periodicityPricingLabel": "Label marketing",
+      "periodicityPricingLabelHelpText": "Note facultative affich\u00e9e pour cet intervalle de paiement sur la page d\u2019abonnement, p.ex. \u00ab2 mois offerts\u00bb.",
+      "defaultPaymentPeriodicity": "Intervalle de paiement par d\u00e9faut",
+      "defaultPaymentPeriodicityHelpText": "Cet intervalle de paiement est pr\u00e9s\u00e9lectionn\u00e9 sur la page d\u2019abonnement. Sans s\u00e9lection, le premier intervalle configur\u00e9 est utilis\u00e9.",
+      "periodicityPricingDelta": "Rabais par rapport au prix mensuel : {{delta}}",
+      "periodicityPricingCustom": "Prix personnalisés",
+      "periodicityPricingDerived": "À partir du prix mensuel",
+      "periodicityPricingMinHelpText": "Le montant minimum est le prix effectif de l'abonnement qui doit être payé au minimum. Les utilisateur·trice·s peuvent toutefois payer volontairement davantage lors de la souscription.",
+      "periodicityPricingTargetHelpText": "Le montant cible définit le prix d'abonnement souhaité que les utilisateur·trice·s devraient payer. Il doit se situer entre le montant minimum et maximum et définit typiquement la valeur par défaut dans le formulaire de paiement.",
+      "periodicityPricingMaxHelpText": "Le montant maximum est le montant le plus élevé que les utilisateur·trice·s peuvent payer lors de la souscription.",
+      "periodicityPricingMin": "Montant minimal par période",
+      "periodicityPricingTarget": "Montant cible par période",
+      "periodicityPricingMax": "Montant maximal par période",
+      "redirectionsTitle": "Redirections",
       "confirmationPage": "Redirection vers la page en cas d'utilisateur existant (retargeting)",
       "confirmationPageHelptext": "Si l'identifiant de l'utilisateur est connu lors de la souscription d'un abonnement, la personne reçoit un e-mail pour payer l'abonnement. Cela pourrait être signalé sur cette page.",
       "productType": "Type de produit",
       "productTypeHelpText": "Choisissez si le plan doit être proposé comme abonnement ou don. ",
       "productTypeSubscription": "Abonnement",
       "productTypeDonation": "Don",
-      "amountPerMonthMaxHelpText": "Le montant maximum par mois qu'un utilisateur peut payer pour ce plan d'abonnement."
+      "amountPerMonthMaxHelpText": "Le montant maximum par mois qu'un utilisateur peut payer pour ce plan d'abonnement.",
+      "amountPerMonthTarget": "Montant cible / mois",
+      "amountPerMonthMinHelpText": "Le montant mensuel minimum est le prix effectif de l'abonnement qui doit être payé au minimum. Les utilisateur·trice·s peuvent toutefois payer volontairement davantage lors de la souscription.",
+      "amountPerMonthTargetHelpText": "Le montant mensuel cible définit le prix d'abonnement souhaité que les utilisateur·trice·s devraient payer. Il doit être supérieur au montant minimum et définit typiquement la valeur par défaut dans le formulaire de paiement."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",
@@ -2385,7 +2578,7 @@
         "apiKey": "Clé API Mailchimp",
         "listId": "ID de liste/audience Mailchimp",
         "mergeFieldMappings": "Correspondances des champs de fusion",
-        "mergeFieldHelp": "Détermine quelle valeur est écrite dans un champ de fusion Mailchimp. Combinez plusieurs expressions avec | (OU) – le premier résultat gagne.\n\nExpressions disponibles :\n• user.firstName / user.name – prénom ou nom\n• slug:contains:valeur – \"1\" si le slug d'abonnement contient \"valeur\"\n• slug:contains_any:v1,v2 – \"1\" si l'une des valeurs est contenue\n• slug:equals:valeur – \"1\" en cas de correspondance exacte\n• active_abo – \"1\" actif, \"-1\" expiré, vide si aucun abonnement\n• active_abo_with_payment:slug:jours – comme active_abo, mais aussi \"1\" si la dernière méthode de paiement est \"slug\" et l'abonnement a expiré dans les derniers \"jours\" jours\n• retarget:jours – \"1\" si l'abonnement a expiré dans les derniers \"jours\" jours\n• static:valeur – retourne toujours \"valeur\"",
+        "mergeFieldHelp": "Détermine quelle valeur est écrite dans un champ de fusion Mailchimp. Combinez plusieurs expressions avec | (OU) – le premier résultat gagne.\n\nExpressions disponibles :\n• user.firstName / user.name – prénom ou nom\n• slug:contains:valeur – \"1\" si le slug d'abonnement contient \"valeur\"\n• slug:contains_any:v1,v2 – \"1\" si l'une des valeurs est contenue\n• slug:equals:valeur – \"1\" en cas de correspondance exacte\n• active_abo – \"1\" actif, \"-1\" expiré, vide si aucun abonnement\n• active_abo_with_payment:slug:jours – comme active_abo, mais aussi \"1\" si la dernière méthode de paiement est \"slug\" et l'abonnement a expiré dans les derniers \"jours\" jours\n• retarget:jours – \"1\" si l'abonnement a expiré dans les derniers \"jours\" jours, \"-1\" pour tout autre ancien abonné, vide si aucun abonnement\n• static:valeur – retourne toujours \"valeur\"",
         "mergeFieldTag": "Tag du champ de fusion (ex. FNAME)",
         "mergeFieldExpression": "Expression (ex. user.firstName)",
         "addMergeField": "Ajouter un champ de fusion",
@@ -2458,7 +2651,20 @@
           "lookbackHours": "Période (heures)",
           "lookbackHoursHelp": "Jusqu'où analyser les campagnes (par défaut : 30)."
         }
-      }
+      },
+      "typeChangeTitle": "Changer vraiment le type ?",
+      "typeChangeWarning": "Changer le type supprime toute la configuration de cette intégration, y compris les identifiants enregistrés. Cette action est irréversible.",
+      "typeChangeConfirm": "Changer le type et supprimer la configuration",
+      "deleteTitle": "Retirer l’intégration ?",
+      "deleteWarning": "L’intégration disparaît des listes mais continue de fonctionner, afin de ne pas interrompre ce qui est en cours — un paiement en traitement, par exemple. Si vous la rajoutez plus tard, sa configuration est toujours là, inchangée.",
+      "deleteConfirm": "Retirer",
+      "restored": "Cette intégration existait déjà et a été restaurée telle quelle.",
+      "cancel": "Annuler",
+      "add": "Ajouter une intégration",
+      "addType": "Type",
+      "addId": "Identifiant",
+      "addIdHelp": "L’identifiant unique sous lequel l’intégration est appelée. Il figure aussi dans les URL de webhook et ne peut plus être modifié ensuite.",
+      "addIdTaken": "Cet identifiant est déjà utilisé."
     },
     "websiteSettings": {
       "backToOverview": "Retour à la vue d’ensemble",
@@ -2874,7 +3080,18 @@
         "loading": "Chargement de l’aperçu …",
         "noRecipients": "Aucun destinataire — ajustez d’abord le groupe."
       },
-      "recipientsCountPerPerson": "{{count}} e-mails à {{people}} personnes"
+      "recipientsCountPerPerson": "{{count}} e-mails à {{people}} personnes",
+      "endsAtHint": "Date de résiliation, sinon la date jusqu'à laquelle l'abonnement est payé.",
+      "isPaid": "Payé (actuellement couvert)",
+      "isPaidHint": "Les délais de grâce ne sont pas pris en compte.",
+      "isCanceled": "Résilié",
+      "isCanceledHint": "Inclut aussi les résiliations qui ne prennent effet que plus tard.",
+      "hasReplacedSubscription": "A remplacé un autre abonnement (p. ex. surclassement)",
+      "hasReplacedSubscriptionHint": "Inclut aussi les déclassements et les changements de plan ; les modifications manuelles ou importées ne sont pas détectées.",
+      "startsAt": "Début de l'abonnement",
+      "endsAt": "Fin de l'abonnement",
+      "from": "À partir du",
+      "to": "Jusqu'au"
     },
     "mailLog": {
       "title": "E-mails envoyés",
@@ -3063,6 +3280,41 @@
         "sentAt": "Envoyé le",
         "attempts": "Tentatives",
         "empty": "Aucune entrée pour ce filtre."
+      }
+    },
+    "auditLogList": {
+      "overview": {
+        "title": "Journal d'audit",
+        "createdAt": "Horodatage",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "actor": "Acteur·rice",
+        "action": "Action",
+        "mutation": "Mutation",
+        "record": "Enregistrement",
+        "session": "Session",
+        "status": "Statut",
+        "succeeded": "Réussi",
+        "failed": "Échoué",
+        "filterBySession": "Filtrer par cette session",
+        "tokenActor": "Jeton API : {{name}}",
+        "impersonatedActor": "{{impersonator}} en tant que {{actor}}",
+        "unknownActor": "Inconnu",
+        "notSupported": "Cette installation ne tient pas de journal d'audit. Les entrées apparaîtront une fois la migration appliquée."
+      },
+      "filter": {
+        "searchPlaceholder": "Rechercher (mutation, enregistrement, e-mail …)",
+        "action": "Action",
+        "entity": "Type d'enregistrement",
+        "session": "ID de session",
+        "dateRange": "Période",
+        "failuresOnly": "Échecs uniquement",
+        "impersonatedOnly": "Usurpation uniquement"
+      },
+      "action": {
+        "create": "Créé",
+        "update": "Modifié",
+        "delete": "Supprimé",
+        "other": "Autre"
       }
     }
   }

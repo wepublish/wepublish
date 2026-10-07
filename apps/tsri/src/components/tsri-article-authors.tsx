@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { css, Typography } from '@mui/material';
+import { selectArticleAuthors } from '@wepublish/article/website';
 import {
   BuilderArticleAuthorsProps,
   useWebsiteBuilder,
@@ -31,8 +32,7 @@ export const TsriArticleAuthors = ({
     }
   >;
   const hideAuthor = !!article?.latest.hideAuthor;
-  const authors =
-    article?.latest.authors.filter(author => !author.hideOnArticle) || [];
+  const authors = selectArticleAuthors(article).map(({ author }) => author);
 
   if (!authors.length && !article?.publishedAt) {
     return;
@@ -64,7 +64,7 @@ export const TsriArticleAuthors = ({
           {authors.map((author, index) => (
             <Fragment key={author.id}>
               <AuthorChip
-                author={{ ...author, image: undefined, links: [] }}
+                author={{ ...author, image: null, links: [] }}
                 isOneOfMultipleAuthors
               />
               {index < authors.length - 1 && ', '}

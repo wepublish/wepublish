@@ -1,11 +1,11 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeleteDocumentDocument,
   DocumentListDocument,
   DocumentListQuery,
+  DocumentStorageUsageDocument,
   FullDocumentFragment,
-  useDeleteDocumentMutation,
-  useDocumentListQuery,
-  useDocumentStorageUsageQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -23,6 +23,7 @@ import {
   PermissionControl,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
@@ -70,14 +71,16 @@ function DocumentList() {
 
   const [documents, setDocuments] = useState<FullDocumentFragment[]>([]);
 
-  const [filter, setFilter] = useState('');
+  const { filter, setFilter, limit, setLimit } = useListViewState<string>(
+    'documents',
+    { defaultFilter: '' }
+  );
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentDocument, setCurrentDocument] =
     useState<FullDocumentFragment>();
 
   const [activePage, setActivePage] = useState(1);
-  const [limit, setLimit] = useState(DEFAULT_TABLE_PAGE_SIZES[0]);
 
   const [isUploadModalOpen, setUploadModalOpen] = useState(isUploadRoute);
   const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute);
@@ -96,11 +99,12 @@ function DocumentList() {
     data,
     refetch,
     loading: isLoading,
-  } = useDocumentListQuery({
+  } = useQuery(DocumentListDocument, {
     variables: listVariables,
   });
 
-  const [deleteDocument, { loading: isDeleting }] = useDeleteDocumentMutation(
+  const [deleteDocument, { loading: isDeleting }] = useMutation(
+    DeleteDocumentDocument,
     {}
   );
 
@@ -108,7 +112,7 @@ function DocumentList() {
     data: storageData,
     error: storageError,
     refetch: refetchStorage,
-  } = useDocumentStorageUsageQuery();
+  } = useQuery(DocumentStorageUsageDocument);
   if (storageError) {
     console.error('DocumentStorageUsage query error:', storageError);
   }
@@ -182,7 +186,10 @@ function DocumentList() {
           <InputGroup>
             <Input
               value={filter}
-              onChange={value => setFilter(value)}
+              onChange={value => {
+                setFilter(value);
+                setActivePage(1);
+              }}
             />
             <InputGroup.Addon>
               <MdSearch />
@@ -386,7 +393,10 @@ function DocumentList() {
           total={data?.documents.totalCount ?? 0}
           activePage={activePage}
           onChangePage={page => setActivePage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setActivePage(1);
+          }}
         />
       </TableWrapper>
 
@@ -462,6 +472,7 @@ function DocumentList() {
                   cache.writeQuery<DocumentListQuery>({
                     query: DocumentListDocument,
                     data: {
+                      __typename: 'Query',
                       documents: {
                         ...query.documents,
                         nodes: query.documents.nodes.filter(

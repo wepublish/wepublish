@@ -5,23 +5,27 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/website/translations",
+        "tsConfig": "libs/website/translations/tsconfig.lib.json",
+        "packageJson": "libs/website/translations/package.json",
+        "main": "libs/website/translations/src/index.ts",
+        "rootDir": ".",
+        "assets": [
+          {
+            "input": "libs/website/translations/src/lib",
+            "glob": "*.json",
+            "output": "."
+          }
+        ]
+      }
     },
     "test": {
-      "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
-      },
-      "configurations": {
-        "ci": {
-          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
-        },
-        "update": {
-          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
-        }
+        "config": "../../../{projectRoot}/vitest.config.ts"
       }
     }
   }

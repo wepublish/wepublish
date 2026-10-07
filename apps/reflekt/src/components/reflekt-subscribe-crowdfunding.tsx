@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Radio, useRadioGroup } from '@mui/material';
 import {
@@ -8,13 +9,17 @@ import {
   CurrencyNumberSpinner,
   MemberPlanPickerRadios,
 } from '@wepublish/membership/website';
-import { BlockContent, useSubscriptionsQuery } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  SubscriptionsDocument,
+} from '@wepublish/website/api';
 import {
   BuilderMemberPlanItemProps,
   BuilderRouterContext,
   BuilderSubscribeBlockProps,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
+import { getMonthlyEquivalentRange } from '@wepublish/membership/website';
 import { allPass } from 'ramda';
 import {
   createContext,
@@ -42,7 +47,7 @@ const CrowdfundingGoodieContext = createContext<CrowdfundingGoodieConfig>({
 });
 
 export const isCrowdFundingSubscribe = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderSubscribeBlockProps =>
   allPass([hasBlockStyle(ReflektBlockStyles.CrowdFunding), isSubscribeBlock])(
     block
@@ -259,8 +264,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     name,
     slug,
     shortDescription,
-    amountPerMonthMax,
-    amountPerMonthMin,
+    periodicityPricing,
     currency,
     extendable,
     goodies,
@@ -269,6 +273,9 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   },
   ref
 ) {
+  const { amountPerMonthMin } = getMonthlyEquivalentRange({
+    periodicityPricing,
+  });
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const radioInputRef = useRef<HTMLInputElement>(null);
@@ -318,7 +325,6 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
         src={hasGoodie ? '/with_goodie.png' : '/no_goodie.png'}
         alt=""
       />
-
       <ItemCard>
         <ItemAmountArea>
           {hasFreePricing && (
@@ -375,7 +381,11 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
           name={name}
           disableRipple={true}
           {...props}
-          inputRef={radioInputRef}
+          slotProps={{
+            input: {
+              ref: radioInputRef,
+            },
+          }}
         />
       </ItemCard>
     </ItemWrapper>
@@ -397,25 +407,33 @@ export const ReflektSubscribeCrowdfunding = (
     query: { upgradeSubscriptionId },
   } = useContext(BuilderRouterContext);
 
-  const { data } = useSubscriptionsQuery({
+  const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
     skip: !upgradeSubscriptionId,
   });
 
+  const upgradeSubscription = useMemo(
+    () =>
+      data?.userSubscriptions.find(
+        sub => sub.isActive && sub.id === upgradeSubscriptionId
+      ),
+    [data?.userSubscriptions, upgradeSubscriptionId]
+  );
+
   // On the upgrade flow the goodie threshold applies to the on-top delta
   // (new amount − current subscription amount), matching the core Upgrade.
   // In the plain subscribe flow there is no baseline, so it stays 0.
-  const baselineMonthlyAmount = useMemo(() => {
-    const subscription = data?.userSubscriptions.find(
-      sub => sub.isActive && sub.id === upgradeSubscriptionId
-    );
+  const baselineMonthlyAmount = upgradeSubscription?.monthlyAmount ?? 0;
 
-    return subscription?.monthlyAmount ?? 0;
-  }, [data?.userSubscriptions, upgradeSubscriptionId]);
+  const goodieMinValueApplies =
+    !upgradeSubscription || (props.goodieMinValueAppliesToUpgrade ?? false);
 
   const value = useMemo(
-    () => ({ goodieMinValue: props.goodieMinValue, baselineMonthlyAmount }),
-    [baselineMonthlyAmount, props.goodieMinValue]
+    () => ({
+      goodieMinValue: goodieMinValueApplies ? props.goodieMinValue : null,
+      baselineMonthlyAmount,
+    }),
+    [goodieMinValueApplies, props.goodieMinValue, baselineMonthlyAmount]
   );
 
   return (

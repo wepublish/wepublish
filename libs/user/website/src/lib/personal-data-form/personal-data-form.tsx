@@ -154,7 +154,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
           })
         )
       ).refine(data => data.password === data.passwordRepeated, {
-        message: 'Passwörter stimmen nicht überein.',
+        message: t('user.form.passwordsDoNotMatch'),
         path: ['passwordRepeated'],
       }),
     [fieldsToDisplay, schema]
@@ -227,8 +227,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                     css={passwordNoteStyles(theme)}
                     gutterBottom={false}
                   >
-                    Nur ausfüllen, wenn Sie das Passwort ändern möchten.
-                    Ansonsten leer lassen.
+                    {t('user.passwordChangeWarning')}
                   </Paragraph>
 
                   <TextField
@@ -237,23 +236,25 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                     type={showPassword ? 'text' : 'password'}
                     fullWidth
                     autoComplete="new-password"
-                    label={'Passwort'}
+                    label={t('user.password')}
                     error={!!error}
                     helperText={error?.message}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={togglePassword}
-                            onMouseDown={event => event.preventDefault()}
-                            edge="end"
-                          >
-                            {showPassword ?
-                              <MdVisibilityOff />
-                            : <MdVisibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
+                    slotProps={{
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={togglePassword}
+                              onMouseDown={event => event.preventDefault()}
+                              edge="end"
+                            >
+                              {showPassword ?
+                                <MdVisibilityOff />
+                              : <MdVisibility />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      },
                     }}
                   />
                 </>
@@ -270,23 +271,25 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                   type={showRepeatPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   fullWidth
-                  label={'Passwort wiederholen'}
+                  label={t('user.passwordRepeat')}
                   error={!!error}
                   helperText={error?.message}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={toggleRepeatPassword}
-                          onMouseDown={event => event.preventDefault()}
-                          edge="end"
-                        >
-                          {showRepeatPassword ?
-                            <MdVisibilityOff />
-                          : <MdVisibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={toggleRepeatPassword}
+                            onMouseDown={event => event.preventDefault()}
+                            edge="end"
+                          >
+                            {showRepeatPassword ?
+                              <MdVisibilityOff />
+                            : <MdVisibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
                   }}
                 />
               )}
@@ -359,16 +362,14 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
       </PersonalDataInputForm>
 
       {error && <Alert severity="error">{error.message}</Alert>}
-      {success && (
-        <Alert severity="success">Änderungen erfolgreich gespeichert!</Alert>
-      )}
+      {success && <Alert severity="success">{t('user.saveSuccess')}</Alert>}
 
       <Button
         css={buttonStyles}
         disabled={loading}
         type="submit"
       >
-        Speichern
+        {t('user.save')}
       </Button>
     </PersonalDataFormWrapper>
   );

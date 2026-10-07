@@ -1,3 +1,5 @@
+import { CombinedGraphQLErrors } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   ArticleContainer as AricleContainerDefault,
@@ -8,17 +10,17 @@ import { ArticleListWrapper } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { H2 } from '@wepublish/ui';
-import { getApiUrl } from '@wepublish/utils/website';
-import { CommentItemType, Tag } from '@wepublish/website/api';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
+  CommentItemType,
   CommentListDocument,
+  FullTagFragment,
   getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  useArticleQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -75,7 +77,7 @@ export default function ArticleBySlugOrId() {
     query: { slug, id },
   } = useRouter();
 
-  const { data } = useArticleQuery({
+  const { data } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
@@ -92,11 +94,13 @@ export default function ArticleBySlugOrId() {
 
   return (
     <>
-      <TsriAdHeader authors={data?.article?.latest.authors} />
+      <TsriAdHeader
+        authors={data?.article?.latest.authors.map(({ author }) => author)}
+      />
 
       <ArticleContainer {...containerProps}>
         {!data?.article?.latest.hideAuthor &&
-          data?.article?.latest.authors.map(author => (
+          data?.article?.latest.authors.map(({ author }) => (
             <AfterArticleAuthorWrapper
               key={author.id}
               fullWidth
@@ -154,7 +158,8 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { id, slug } = params || {};
+  const id = params?.id?.toString();
+  const slug = params?.slug?.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
@@ -173,9 +178,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }),
   ]);
 
-  const is404 = article.errors?.find(
-    ({ extensions }) => extensions?.status === 404
-  );
+  const is404 =
+    CombinedGraphQLErrors.is(article.error) &&
+    article.error.errors.find(({ extensions }) => extensions?.status === 404);
 
   if (is404) {
     return {
@@ -190,7 +195,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         query: ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id),
+            tags: article.data.article.tags.map(
+              (tag: FullTagFragment) => tag.id
+            ),
           },
           take: 7,
         },
@@ -208,6 +215,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(article.data?.article, article.error),
   };
 };

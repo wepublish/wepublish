@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`UserConsentResolver create user consent mutation 1`] = `
+exports[`UserConsentResolver > create user consent mutation 1`] = `
 [
   [
     {
@@ -12,7 +12,7 @@ exports[`UserConsentResolver create user consent mutation 1`] = `
 ]
 `;
 
-exports[`UserConsentResolver create user consent mutation 2`] = `
+exports[`UserConsentResolver > create user consent mutation 2`] = `
 {
   "data": {
     "createUserConsent": {
@@ -23,7 +23,7 @@ exports[`UserConsentResolver create user consent mutation 2`] = `
 }
 `;
 
-exports[`UserConsentResolver delete user consent mutation 1`] = `
+exports[`UserConsentResolver > delete user consent mutation 1`] = `
 [
   [
     "userConsentId",
@@ -47,7 +47,7 @@ exports[`UserConsentResolver delete user consent mutation 1`] = `
 ]
 `;
 
-exports[`UserConsentResolver delete user consent mutation 2`] = `
+exports[`UserConsentResolver > delete user consent mutation 2`] = `
 {
   "data": {
     "deleteUserConsent": {
@@ -57,7 +57,7 @@ exports[`UserConsentResolver delete user consent mutation 2`] = `
 }
 `;
 
-exports[`UserConsentResolver update user consent mutation 1`] = `
+exports[`UserConsentResolver > update user consent mutation 1`] = `
 [
   [
     "userConsentId",
@@ -82,7 +82,7 @@ exports[`UserConsentResolver update user consent mutation 1`] = `
 ]
 `;
 
-exports[`UserConsentResolver update user consent mutation 2`] = `
+exports[`UserConsentResolver > update user consent mutation 2`] = `
 {
   "data": {
     "updateUserConsent": {
@@ -104,7 +104,7 @@ exports[`UserConsentResolver update user consent mutation 2`] = `
 }
 `;
 
-exports[`UserConsentResolver user consent query 1`] = `
+exports[`UserConsentResolver > user consent query 1`] = `
 {
   "data": {
     "userConsent": {

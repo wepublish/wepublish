@@ -1,22 +1,24 @@
+import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   ArticleFilter,
   DateFilterComparison,
   EventFilter,
+  EventProvidersDocument,
   FullAuthorFragment,
   FullUserRoleFragment,
+  ImportedEventFilter,
   InputMaybe,
   PageFilter,
   PeerArticleFilter,
+  PeerListDocument,
   PollAnswer,
+  PollDocument,
   PollVoteFilter,
   Scalars,
   TagType,
-  useEventProvidersLazyQuery,
-  usePeerListLazyQuery,
-  usePollLazyQuery,
   UserFilter,
-  useUserRoleListLazyQuery,
+  UserRoleListDocument,
 } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -82,6 +84,7 @@ type Field =
   | 'preTitle'
   | 'lead'
   | 'description'
+  | 'slug'
   | 'draft'
   | 'published'
   | 'pending'
@@ -100,9 +103,9 @@ type Field =
   | 'tags';
 
 export type ImportableEventFilter = {
-  startsAt?: InputMaybe<Scalars['String']>;
-  endsAt?: InputMaybe<Scalars['String']>;
-  providers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  startsAt?: InputMaybe<Scalars['String']['input']>;
+  endsAt?: InputMaybe<Scalars['String']['input']>;
+  providers?: ImportedEventFilter['providers'];
 };
 
 type Filter = ArticleFilter &
@@ -136,19 +139,20 @@ export function ListViewFilters({
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
   const [answers, setAnswers] = useState<PollAnswer[]>([]);
 
-  const [providersFetch, { data: providersData }] = useEventProvidersLazyQuery(
+  const [providersFetch, { data: providersData }] = useLazyQuery(
+    EventProvidersDocument,
     {}
   );
 
-  const [userRoleFetch, { data: userRoleData }] = useUserRoleListLazyQuery({
-    variables: {
-      take: 200,
-    },
-  });
+  const [userRoleFetch, { data: userRoleData }] =
+    useLazyQuery(UserRoleListDocument);
 
-  const [peerListFetch, { data: peerListData }] = usePeerListLazyQuery({});
+  const [peerListFetch, { data: peerListData }] = useLazyQuery(
+    PeerListDocument,
+    {}
+  );
 
-  const [pollFetch, { data: pollData }] = usePollLazyQuery({});
+  const [pollFetch, { data: pollData }] = useLazyQuery(PollDocument, {});
 
   // check whether or not we need to get some data based on which filters are required
   const isAnswerFilter = fields.includes('answerIds');
@@ -165,7 +169,11 @@ export function ListViewFilters({
 
   useEffect(() => {
     if (isUserRoleFilter) {
-      userRoleFetch();
+      userRoleFetch({
+        variables: {
+          take: 200,
+        },
+      });
     }
   }, [isUserRoleFilter, userRoleFetch]);
 
@@ -380,6 +388,16 @@ export function ListViewFilters({
             value={filter.description || ''}
             placeholder={t('filterableList.filter.description')}
             onChange={value => updateFilter({ description: value })}
+          />
+        </Group>
+      )}
+
+      {fields.includes('slug') && (
+        <Group style={formInputStyle}>
+          <Input
+            value={filter.slug || ''}
+            placeholder={t('filterableList.filter.slug')}
+            onChange={value => updateFilter({ slug: value })}
           />
         </Group>
       )}

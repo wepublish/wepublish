@@ -7,11 +7,11 @@
   "targets": {
     "build": {
       "executor": "@nx/next:build",
+      "dependsOn": [],
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/mannschaft",
-        "webpack": true
+        "outputPath": "dist/apps/mannschaft"
       },
       "configurations": {
         "development": {
@@ -26,8 +26,7 @@
       "options": {
         "buildTarget": "mannschaft:build",
         "dev": true,
-        "port": 4205,
-        "webpack": true
+        "port": 4205
       },
       "configurations": {
         "development": {
@@ -47,18 +46,8 @@
       }
     },
     "test": {
-      "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
-      },
-      "configurations": {
-        "ci": {
-          "command": "vitest run --passWithNoTests --coverage --config {projectRoot}/vitest.config.ts"
-        },
-        "update": {
-          "command": "vitest run --passWithNoTests --update --config {projectRoot}/vitest.config.ts"
-        }
+        "config": "../../{projectRoot}/vitest.config.ts"
       }
     },
     "lint": {

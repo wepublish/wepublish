@@ -5,14 +5,19 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "lint": {
-      "executor": "@nx/eslint:lint"
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/page/api",
+        "tsConfig": "libs/page/api/tsconfig.lib.json",
+        "main": "libs/page/api/src/index.ts",
+        "rootDir": "."
+      }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/page/api/jest.config.ts"
+        "config": "../../../{projectRoot}/vitest.config.ts"
       }
     }
   }

@@ -1,18 +1,18 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   ArticleFilter,
+  ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
   EventFilter,
+  EventListDocument,
   PageFilter,
-  PageInfo,
+  PageListDocument,
   PageListQueryVariables,
   PageSort,
   SortOrder,
   TeaserType,
-  useArticleListQuery,
-  useEventListQuery,
-  usePageListQuery,
 } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -183,7 +183,7 @@ export function TeaserSelectPanel({
     fetchMore: fetchMoreEvents,
     error: eventListError,
     loading: isEventListLoading,
-  } = useEventListQuery({
+  } = useQuery(EventListDocument, {
     variables: eventVariables,
   });
 
@@ -210,7 +210,7 @@ export function TeaserSelectPanel({
     fetchMore: fetchMoreArticles,
     error: articleListError,
     loading: isArticleListLoading,
-  } = useArticleListQuery({
+  } = useQuery(ArticleListDocument, {
     variables: listVariables,
   });
 
@@ -219,7 +219,7 @@ export function TeaserSelectPanel({
     fetchMore: fetchMorePages,
     error: pageListError,
     loading: isPageListLoading,
-  } = usePageListQuery({
+  } = useQuery(PageListDocument, {
     variables: pageListVariables,
   });
 
@@ -256,6 +256,7 @@ export function TeaserSelectPanel({
         if (!fetchMoreResult) return prev;
 
         return {
+          __typename: 'Query',
           articles: {
             ...fetchMoreResult.articles,
             nodes: [...prev.articles.nodes, ...fetchMoreResult.articles.nodes],
@@ -268,13 +269,14 @@ export function TeaserSelectPanel({
   function loadMorePages() {
     fetchMorePages({
       variables: {
-        ...listVariables,
+        ...pageListVariables,
         cursor: pageListData?.pages.pageInfo.endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
 
         return {
+          __typename: 'Query',
           pages: {
             ...fetchMoreResult.pages,
             nodes: [...prev.pages.nodes, ...fetchMoreResult.pages.nodes],
@@ -291,19 +293,18 @@ export function TeaserSelectPanel({
         cursorId: eventListData?.events?.pageInfo.endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) {
+        if (!fetchMoreResult?.events) {
           return prev;
         }
 
         return {
+          __typename: 'Query',
           events: {
             ...fetchMoreResult.events,
             nodes: [
               ...(prev.events?.nodes || []),
-              ...(fetchMoreResult.events?.nodes || []),
+              ...fetchMoreResult.events.nodes,
             ],
-            totalCount: fetchMoreResult.events?.totalCount as number,
-            pageInfo: fetchMoreResult.events?.pageInfo as PageInfo,
           },
         };
       },

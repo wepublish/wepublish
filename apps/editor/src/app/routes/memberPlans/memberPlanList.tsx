@@ -1,9 +1,10 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeleteMemberPlanDocument,
   FullMemberPlanFragment,
   MemberPlanListDocument,
   MemberPlanListQuery,
-  useDeleteMemberPlanMutation,
-  useMemberPlanListQuery,
+  MemberPlanSort,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -15,12 +16,14 @@ import {
   ListViewContainer,
   ListViewFilterArea,
   ListViewHeader,
+  mapTableSortTypeToGraphQLSortOrder,
   PaddedCell,
   PermissionControl,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -36,6 +39,19 @@ import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
+function mapColumnFieldToGraphQLField(
+  columnField: string
+): MemberPlanSort | null {
+  switch (columnField) {
+    case 'createdAt':
+      return MemberPlanSort.CreatedAt;
+    case 'modifiedAt':
+      return MemberPlanSort.ModifiedAt;
+    default:
+      return null;
+  }
+}
+
 const hasBrokenPaymentProvider = (memberPlan: FullMemberPlanFragment) =>
   memberPlan.availablePaymentMethods.every(({ paymentMethods }) =>
     paymentMethods.every(({ paymentProvider }) => Boolean(paymentProvider))
@@ -49,15 +65,28 @@ function MemberPlanList() {
   const [currentMemberPlan, setCurrentMemberPlan] =
     useState<FullMemberPlanFragment>();
 
-  const { data, loading: isLoading } = useMemberPlanListQuery({
-    variables: {
-      filter: filter ? { name: filter } : undefined,
-      take: 50,
-    },
+  const { sortField, sortOrder, setSort } = useListViewState('memberPlans', {
+    defaultSortField: 'modifiedAt',
+    defaultSortOrder: 'desc',
   });
 
-  const [deleteMemberPlan, { loading: isDeleting }] =
-    useDeleteMemberPlanMutation();
+  const variables = useMemo(
+    () => ({
+      filter: filter ? { name: filter } : undefined,
+      take: 50,
+      sort: mapColumnFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    }),
+    [filter, sortField, sortOrder]
+  );
+
+  const { data, loading: isLoading } = useQuery(MemberPlanListDocument, {
+    variables,
+  });
+
+  const [deleteMemberPlan, { loading: isDeleting }] = useMutation(
+    DeleteMemberPlanDocument
+  );
 
   useEffect(() => {
     if (data?.memberPlans?.nodes) {
@@ -104,6 +133,11 @@ function MemberPlanList() {
           fillHeight
           loading={isLoading}
           data={memberPlans}
+          sortColumn={sortField}
+          sortType={sortOrder}
+          onSortColumn={(sortColumn, sortType) =>
+            setSort(sortColumn, sortType ?? 'asc')
+          }
         >
           <Column
             width={40}
@@ -131,6 +165,38 @@ function MemberPlanList() {
                   {rowData.name || t('untitled')}
                 </Link>
               )}
+            </RCell>
+          </Column>
+
+          <Column
+            width={200}
+            align="left"
+            resizable
+            sortable
+          >
+            <HeaderCell>{t('memberPlanList.created')}</HeaderCell>
+            <RCell dataKey="createdAt">
+              {(rowData: RowDataType<FullMemberPlanFragment>) =>
+                t('memberPlanList.createdAt', {
+                  createdAt: new Date(rowData.createdAt),
+                })
+              }
+            </RCell>
+          </Column>
+
+          <Column
+            width={200}
+            align="left"
+            resizable
+            sortable
+          >
+            <HeaderCell>{t('memberPlanList.modified')}</HeaderCell>
+            <RCell dataKey="modifiedAt">
+              {(rowData: RowDataType<FullMemberPlanFragment>) =>
+                t('memberPlanList.modifiedAt', {
+                  modifiedAt: new Date(rowData.modifiedAt),
+                })
+              }
             </RCell>
           </Column>
 
@@ -222,6 +288,7 @@ function MemberPlanList() {
                   cache.writeQuery<MemberPlanListQuery>({
                     query: MemberPlanListDocument,
                     data: {
+                      __typename: 'Query',
                       memberPlans: {
                         ...query.memberPlans,
                         nodes: query.memberPlans.nodes.filter(

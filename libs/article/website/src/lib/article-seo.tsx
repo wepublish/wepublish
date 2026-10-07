@@ -4,14 +4,14 @@ import {
   isTitleBlock,
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext, toPlaintext } from '@wepublish/richtext';
-import { Article, FullImageFragment } from '@wepublish/website/api';
+import { FullArticleFragment, FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderArticleSEOProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Fragment, useMemo } from 'react';
 
-export const getArticleSEO = (article: Article) => {
+export const getArticleSEO = (article: FullArticleFragment) => {
   const firstTitle = article.latest.blocks?.find(block => isTitleBlock(block));
   const firstRichText = article.latest.blocks?.find(block =>
     isRichTextBlock(block)
@@ -57,9 +57,9 @@ export const getArticleSEO = (article: Article) => {
     article.latest.title ||
     firstTitle?.title;
   const headline = firstTitle?.title || article.latest.title;
-  const url = article.latest.canonicalUrl ?? article.url;
+  const url = article.latest.canonicalUrl || article.url;
 
-  const firstAuthor = article.latest.authors.at(0);
+  const firstAuthor = article.latest.authors.at(0)?.author;
 
   return {
     type: 'article',
@@ -72,7 +72,7 @@ export const getArticleSEO = (article: Article) => {
     tags: article.tags,
     updatedAt: article.latest.publishedAt,
     publishedAt: article.publishedAt,
-    authors: article.latest.authors ?? [],
+    authors: article.latest.authors.map(({ author }) => author),
     schema: {
       '@context': 'http://schema.org',
       '@type': 'NewsArticle',
@@ -95,7 +95,7 @@ export const getArticleSEO = (article: Article) => {
         '@context': 'https://schema.org',
         '@type': 'Person',
         image:
-          (firstAuthor?.image as FullImageFragment)?.s ??
+          (firstAuthor?.image as unknown as FullImageFragment)?.s ??
           firstAuthor?.image?.url,
         jobTitle: firstAuthor?.jobTitle,
         name: firstAuthor?.name,

@@ -1,5 +1,7 @@
 export * from './lib/membership.module';
 export * from './lib/dashboard/dashboard.module';
+export * from './lib/dashboard/invoices/dashboard-invoice.service';
+export * from './lib/dashboard/subscriptions/dashboard-subscription.service';
 export * from './lib/subscription-event-dictionary/subscription-event-dictionary';
 export * from './lib/periodic-job/periodic-job.service';
 export * from './lib/subscription/subscription.service';
@@ -36,3 +38,5 @@ export * from './lib/discountCode/discountCode.model';
 export * from './lib/discountCode/discountCode.dataloader';
 export * from './lib/discountCode/discountCode.module';
 export * from './lib/discountCode/discountCode.service';
+
+export * from './lib/renewal-mail/renewal-mail.module';

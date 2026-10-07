@@ -9,7 +9,7 @@ import { MdAdminPanelSettings, MdPreview } from 'react-icons/md';
 import { PREVIEW_MODE_KEY } from './preview-link';
 import { CanPreview } from '@wepublish/permissions';
 import { ComponentProps, memo, useEffect, useMemo } from 'react';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { useSessionStorage } from '@wepublish/ui';
 import styled from '@emotion/styled';
 
@@ -48,7 +48,7 @@ export const AdminBar = memo(() => {
             color={isPreview ? theme.palette.primary.main : undefined}
           />
         ),
-        tooltipTitle: isPreview ? 'Disable Preview' : 'Activate Preview',
+        title: isPreview ? 'Disable Preview' : 'Activate Preview',
         onClick: () => setIsPreview(!isPreview),
       });
     }

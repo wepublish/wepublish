@@ -1,15 +1,16 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import {
+  CreateMemberPlanDocument,
   CreateMemberPlanMutationVariables,
   Currency,
   FullAvailablePaymentMethodFragment,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
-  PaymentMethod,
+  MemberPlanDocument,
+  PaymentMethodListDocument,
+  PaymentPeriodicity,
   ProductType,
-  useCreateMemberPlanMutation,
-  useMemberPlanLazyQuery,
-  useUpdateMemberPlanMutation,
+  UpdateMemberPlanDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -24,9 +25,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 import { MemberPlanForm } from './memberplan-form';
-import { usePaymentMethodListQuery } from '@wepublish/editor/api';
 
-const showErrors = (error: ApolloError): void => {
+const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"
@@ -54,23 +54,38 @@ function MemberPlanEdit() {
 
   const [
     fetchMemberPlan,
-    { loading: memberPlanLoading, data: memberPlanData },
-  ] = useMemberPlanLazyQuery({
-    onError: showErrors,
-  });
+    {
+      loading: memberPlanLoading,
+      data: memberPlanData,
+      error: memberPlanError,
+    },
+  ] = useLazyQuery(MemberPlanDocument);
 
-  const { data: paymentMethodData, loading: paymentMethodLoading } =
-    usePaymentMethodListQuery({
-      onError: showErrors,
-    });
+  const {
+    data: paymentMethodData,
+    loading: paymentMethodLoading,
+    error: paymentMethodError,
+  } = useQuery(PaymentMethodListDocument);
+
+  useEffect(() => {
+    if (memberPlanError) {
+      showErrors(memberPlanError);
+    }
+  }, [memberPlanError]);
+
+  useEffect(() => {
+    if (paymentMethodError) {
+      showErrors(paymentMethodError);
+    }
+  }, [paymentMethodError]);
 
   const [updateMemberPlanMutation, { loading: memberPlanUpdating }] =
-    useUpdateMemberPlanMutation({
+    useMutation(UpdateMemberPlanDocument, {
       onError: showErrors,
     });
 
   const [createMemberPlanMutation, { loading: memberPlanCreating }] =
-    useCreateMemberPlanMutation({
+    useMutation(CreateMemberPlanDocument, {
       onError: showErrors,
     });
 
@@ -88,35 +103,49 @@ function MemberPlanEdit() {
 
   // initially set member plan and available payment methods
   useEffect(() => {
-    const initMemberPlan = memberPlanData?.memberPlan || {
-      id: 'dummy-id',
-      availablePaymentMethods: [],
-      description: undefined,
-      currency: Currency.Chf,
-      amountPerMonthMin: 0,
-      amountPerMonthMax: null,
-      amountPerMonthTarget: null,
-      image: undefined,
-      active: true,
-      tags: [],
-      slug: '',
-      name: '',
-      externalReward: undefined,
-      extendable: true,
-      maxCount: undefined,
-      productType: ProductType.Subscription,
-    };
+    const initMemberPlan: FullMemberPlanFragment =
+      memberPlanData?.memberPlan || {
+        __typename: 'MemberPlan',
+        id: 'dummy-id',
+        // Placeholders like the id: never sent, the api sets both on save.
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+        availablePaymentMethods: [],
+        description: null,
+        shortDescription: null,
+        currency: Currency.Chf,
+        periodicityPricing: [
+          {
+            __typename: 'PeriodicityPrice',
+            periodicity: PaymentPeriodicity.Monthly,
+            label: null,
+            amountMin: 0,
+            amountTarget: null,
+            amountMax: null,
+          },
+        ],
+        defaultPaymentPeriodicity: null,
+        image: null,
+        active: true,
+        tags: [],
+        slug: '',
+        name: '',
+        externalReward: null,
+        extendable: true,
+        maxCount: null,
+        migrateToTargetPaymentMethodID: null,
+        successPageId: null,
+        failPageId: null,
+        confirmationPageId: null,
+        productType: ProductType.Subscription,
+      };
 
     setMemberPlan(initMemberPlan);
     setAvailablePaymentMethods(
       (initMemberPlan?.availablePaymentMethods || []).map(
         availablePaymentMethod => ({
           id: generateID(),
-          value: {
-            ...availablePaymentMethod,
-            paymentMethods:
-              availablePaymentMethod.paymentMethods as PaymentMethod[],
-          },
+          value: availablePaymentMethod,
         })
       )
     );
@@ -156,19 +185,6 @@ function MemberPlanEdit() {
     slug: Schema.Types.StringType().isRequired(
       t('memberPlanEdit.slugRequired')
     ),
-    amountPerMonthMin: Schema.Types.NumberType()
-      .isRequired(t('memberPlanEdit.amountPerMonthMinRequired'))
-      .min(0, t('memberPlanEdit.amountPerMonthMinZero')),
-
-    amountPerMonthMax: Schema.Types.NumberType().min(
-      (memberPlan?.amountPerMonthMin || 0) / 100,
-      t('memberPlanEdit.maxPriceMustBeGreaterThanMin')
-    ),
-
-    amountPerMonthTarget: Schema.Types.NumberType().min(
-      ((memberPlan?.amountPerMonthMin || 0) + 1) / 100,
-      t('memberPlanEdit.targetPriceMustBeGreaterThanMin')
-    ),
     currency: Schema.Types.StringType().isRequired(
       t('memberPlanEdit.currencyRequired')
     ),
@@ -176,6 +192,71 @@ function MemberPlanEdit() {
 
   async function saveMemberPlan() {
     if (!memberPlan) {
+      return;
+    }
+
+    const prunedPricing = (memberPlan.periodicityPricing ?? []).filter(
+      price =>
+        availablePaymentMethods.some(({ value }) =>
+          value.paymentPeriodicities.includes(price.periodicity)
+        ) &&
+        (price.label != null || price.amountMin != null)
+    );
+
+    const pricedMonthlyRow = (memberPlan.periodicityPricing ?? []).find(
+      price =>
+        price.periodicity === PaymentPeriodicity.Monthly &&
+        price.amountMin != null
+    );
+
+    const periodicityPricing =
+      (
+        !prunedPricing.some(price => price.amountMin != null) &&
+        pricedMonthlyRow
+      ) ?
+        [
+          ...prunedPricing.filter(
+            price => price.periodicity !== PaymentPeriodicity.Monthly
+          ),
+          pricedMonthlyRow,
+        ]
+      : prunedPricing;
+
+    const hasInvalidRow = periodicityPricing.some(
+      price =>
+        price.amountMin != null &&
+        ((price.amountTarget != null &&
+          (price.amountTarget < price.amountMin ||
+            (price.amountMax != null &&
+              price.amountTarget > price.amountMax))) ||
+          (price.amountMax != null && price.amountMax < price.amountMin))
+    );
+
+    if (!periodicityPricing.some(price => price.amountMin != null)) {
+      toaster.push(
+        <Message
+          type="error"
+          showIcon
+          closable
+        >
+          {t('memberplanForm.periodicityPricingRequired')}
+        </Message>
+      );
+
+      return;
+    }
+
+    if (hasInvalidRow) {
+      toaster.push(
+        <Message
+          type="error"
+          showIcon
+          closable
+        >
+          {t('memberPlanEdit.targetPriceMustBeGreaterThanMin')}
+        </Message>
+      );
+
       return;
     }
 
@@ -193,9 +274,26 @@ function MemberPlanEdit() {
         paymentMethodIDs: value.paymentMethods.map(pm => pm.id),
       })),
       currency: memberPlan.currency,
-      amountPerMonthMin: memberPlan.amountPerMonthMin,
-      amountPerMonthMax: memberPlan.amountPerMonthMax,
-      amountPerMonthTarget: memberPlan.amountPerMonthTarget,
+      periodicityPricing: periodicityPricing.map(
+        ({ periodicity, label, amountMin, amountTarget, amountMax }) => ({
+          periodicity,
+          label,
+          amountMin,
+          amountTarget,
+          amountMax,
+        })
+      ),
+      defaultPaymentPeriodicity:
+        (
+          memberPlan.defaultPaymentPeriodicity &&
+          availablePaymentMethods.some(({ value }) =>
+            value.paymentPeriodicities.includes(
+              memberPlan.defaultPaymentPeriodicity as PaymentPeriodicity
+            )
+          )
+        ) ?
+          memberPlan.defaultPaymentPeriodicity
+        : null,
       extendable: memberPlan.extendable,
       externalReward: memberPlan.externalReward,
       maxCount: memberPlan.maxCount,
@@ -257,8 +355,6 @@ function MemberPlanEdit() {
         formValue={{
           name: memberPlan?.name,
           slug: memberPlan?.slug,
-          amountPerMonthMin: memberPlan?.amountPerMonthMin,
-          amountPerMonthMax: memberPlan?.amountPerMonthMax,
           currency: memberPlan?.currency,
         }}
       >

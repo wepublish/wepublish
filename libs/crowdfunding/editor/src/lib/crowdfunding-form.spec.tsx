@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { render, screen } from '@testing-library/react';
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { Form } from 'rsuite';
 import { CrowdfundingGoalType } from '@wepublish/editor/api';
 import { CrowdfundingForm } from './crowdfunding-form';

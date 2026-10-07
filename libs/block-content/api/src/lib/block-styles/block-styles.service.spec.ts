@@ -1,33 +1,43 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { BlockStylesDataloaderService } from './block-styles-dataloader.service';
 import { BlockStylesService } from './block-styles.service';
+import type { Mock } from 'vitest';
 
 describe('BlockStylesService', () => {
   let service: BlockStylesService;
   let prismaMock: {
-    blockStyle: { [method in keyof PrismaClient['blockStyle']]?: jest.Mock };
+    blockStyle: { [method in keyof PrismaClient['blockStyle']]?: Mock };
+  };
+  let publicContentCache: {
+    invalidate: Mock;
+    invalidateArticleLayout: Mock;
   };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   beforeEach(async () => {
     prismaMock = {
       blockStyle: {
-        count: jest.fn(),
-        findMany: jest.fn(),
-        findUnique: jest.fn(),
-        delete: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        count: vi.fn(),
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        delete: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
+    };
+    publicContentCache = {
+      invalidate: vi.fn(),
+      invalidateArticleLayout: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -35,9 +45,13 @@ describe('BlockStylesService', () => {
         BlockStylesService,
         { provide: PrismaClient, useValue: prismaMock },
         {
+          provide: PublicContentCacheInvalidator,
+          useValue: publicContentCache,
+        },
+        {
           provide: BlockStylesDataloaderService,
           useValue: {
-            prime: jest.fn(),
+            prime: vi.fn(),
           },
         },
       ],
@@ -83,5 +97,38 @@ describe('BlockStylesService', () => {
     await service.deleteBlockStyle('1234');
 
     expect(prismaMock.blockStyle.delete?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it('should retire cached answers and article pages after an update', async () => {
+    prismaMock.blockStyle.update?.mockImplementation(async () => {
+      expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+
+      return { id: '123' };
+    });
+
+    await expect(
+      service.updateBlockStyle({ id: '123', name: 'Name', blocks: ['Event'] })
+    ).resolves.toEqual({ id: '123' });
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith();
+    expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+  });
+
+  it('should retire cached answers and article pages after a delete', async () => {
+    prismaMock.blockStyle.delete?.mockResolvedValue({ id: '1234' });
+
+    await expect(service.deleteBlockStyle('1234')).resolves.toEqual({
+      id: '1234',
+    });
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith();
+    expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+  });
+
+  it('should not retire cached answers when a block style is created', async () => {
+    await service.createBlockStyle({ name: 'Name', blocks: ['Event'] });
+
+    expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+    expect(publicContentCache.invalidateArticleLayout).not.toHaveBeenCalled();
   });
 });

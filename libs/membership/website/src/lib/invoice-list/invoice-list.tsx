@@ -4,6 +4,7 @@ import {
   BuilderInvoiceListProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { useTranslation } from 'react-i18next';
 import {
   InvoiceListItemContent,
   InvoiceListItemWrapper,
@@ -42,6 +43,7 @@ export const InvoiceList = ({
     InvoiceListItem,
     elements: { Alert },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   return (
     <InvoiceListWrapper className={className}>
@@ -50,7 +52,7 @@ export const InvoiceList = ({
       {!loading && !error && !data?.userInvoices?.length && (
         <InvoiceListItemWrapper>
           <InvoiceListItemContent>
-            <strong>Keine offenen Rechnungen</strong>
+            <strong>{t('invoice.noOpenInvoices')}</strong>
           </InvoiceListItemContent>
         </InvoiceListItemWrapper>
       )}

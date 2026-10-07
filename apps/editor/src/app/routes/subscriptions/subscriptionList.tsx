@@ -1,10 +1,11 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeleteSubscriptionDocument,
   SubscriptionFilter,
+  SubscriptionListDocument,
   SubscriptionSort,
   TinySubscriptionFragment,
-  useDeleteSubscriptionMutation,
-  useSubscriptionListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -27,6 +28,7 @@ import {
   Table,
   TableWrapper,
   useAuthorisation,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -99,15 +101,15 @@ export const NewSubscriptionButton = ({
 };
 
 function SubscriptionList() {
-  const [filter, setFilter] = useState({} as SubscriptionFilter);
+  const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
+    useListViewState<SubscriptionFilter>('subscriptions', {
+      defaultSortField: 'createdAt',
+    });
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentSubscription, setCurrentSubscription] =
     useState<TinySubscriptionFragment>();
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortField, setSortField] = useState('createdAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [subscriptions, setSubscriptions] = useState<
     TinySubscriptionFragment[]
   >([]);
@@ -123,7 +125,7 @@ function SubscriptionList() {
     data,
     refetch,
     loading: isLoading,
-  } = useSubscriptionListQuery({
+  } = useQuery(SubscriptionListDocument, {
     variables: {
       filter,
       take: limit,
@@ -143,8 +145,9 @@ function SubscriptionList() {
     });
   }, [filter, page, limit, sortOrder, sortField]);
 
-  const [deleteSubscription, { loading: isDeleting }] =
-    useDeleteSubscriptionMutation();
+  const [deleteSubscription, { loading: isDeleting }] = useMutation(
+    DeleteSubscriptionDocument
+  );
 
   const { t } = useTranslation();
 
@@ -188,7 +191,10 @@ function SubscriptionList() {
           <SubscriptionListFilter
             filter={filter}
             isLoading={isLoading}
-            onSetFilter={filter => setFilter(filter)}
+            onSetFilter={filter => {
+              setFilter(filter);
+              setPage(1);
+            }}
           />
         </ListViewFilterArea>
       </ListViewContainer>
@@ -201,8 +207,8 @@ function SubscriptionList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn: string, sortType?: SortType) => {
-            setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
           <Column
@@ -312,7 +318,10 @@ function SubscriptionList() {
           total={data?.subscriptions.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
 

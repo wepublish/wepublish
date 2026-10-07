@@ -1,0 +1,24 @@
+{
+  "name": "one-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/one/api/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/one/api",
+        "tsConfig": "libs/one/api/tsconfig.lib.json",
+        "main": "libs/one/api/src/index.ts",
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}

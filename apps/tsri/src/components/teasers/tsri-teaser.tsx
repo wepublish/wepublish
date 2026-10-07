@@ -11,7 +11,10 @@ import {
   selectTeaserUrl,
 } from '@wepublish/block-content/website';
 import {} from '@wepublish/block-content/website';
-import { FlexAlignment, FullTeaserFragment } from '@wepublish/website/api';
+import {
+  FullFlexAlignmentFragment,
+  FullTeaserFragment,
+} from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
   Image,
@@ -31,9 +34,9 @@ export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
         return null;
       }
 
-      return teaser.article?.latest.authors.filter(
-        author => !author.hideOnTeaser
-      );
+      return teaser.article?.latest.authors
+        .filter(({ author }) => !author.hideOnTeaser)
+        .map(({ author }) => author);
     }
 
     case 'EventTeaser':
@@ -42,7 +45,7 @@ export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
   }
 };
 
-export const TeaserWrapper = styled('div')<FlexAlignment>`
+export const TeaserWrapper = styled('div')<FullFlexAlignmentFragment>`
   list-style: none;
   aspect-ratio: 16/9;
   overflow: hidden;

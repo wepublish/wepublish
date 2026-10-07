@@ -11,6 +11,7 @@ import {
   EventBlockWrapper,
   ImageBlockWrapper,
   ImageGalleryBlockWrapper,
+  LightboxWrapper,
   SliderWrapper,
   TeaserGridBlockWrapper,
   TeaserGridFlexBlockWrapper,
@@ -18,12 +19,9 @@ import {
   TeaserSlotsBlockWrapper,
 } from '@wepublish/block-content/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
-import { ContentWrapper } from '@wepublish/content/website';
+import { ContentUnavailable, ContentWrapper } from '@wepublish/content/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
-import {
-  Article as ArticleType,
-  FullBlockFragment,
-} from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import {
   BuilderArticleProps,
   PeerInformation,
@@ -82,7 +80,13 @@ export const ArticleWrapper = styled(ContentWrapper)<{
       margin-right: ${({ theme }) => theme.spacing(4)};
     }
 
-    & > :is(${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper},) {
+    &
+      > :is(
+        ${SliderWrapper},
+          ${LightboxWrapper},
+          ${EventBlockWrapper},
+          ${BreakBlockWrapper},
+      ) {
       grid-column: 2/14;
       margin-left: 0;
       margin-right: 0;
@@ -158,7 +162,7 @@ export function WepArticle({
 
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
-  const article = data?.article as ArticleType | undefined;
+  const article = data?.article;
 
   return (
     <ArticleWrapper
@@ -168,6 +172,8 @@ export function WepArticle({
       fadeout={article?.paywall?.fadeout}
     >
       {isDesktop && articleGlobalStyles}
+
+      {!article && !loading && <ContentUnavailable />}
 
       {article && <ArticleSEO article={article} />}
 

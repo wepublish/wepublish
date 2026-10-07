@@ -1,6 +1,7 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
   InvoiceListContainer,
@@ -15,15 +16,14 @@ import {
   TotpSetupContainer,
 } from '@wepublish/user/website';
 import {
-  addClientCacheToProps,
-  getApiClient,
+  ConfirmEmailChangeDocument,
+  InvoicesDocument,
   MeDocument,
   NavigationListDocument,
-  InvoicesDocument,
-  SubscriptionsDocument,
   ProductType,
-  useConfirmEmailChangeMutation,
-  useSubscriptionsQuery,
+  SubscriptionsDocument,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { NextPage, NextPageContext } from 'next';
@@ -92,7 +92,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
   const router = useRouter();
   const client = useApolloClient();
   const [confirmEmailChange, { data: confirmData, error: confirmError }] =
-    useConfirmEmailChangeMutation();
+    useMutation(ConfirmEmailChangeDocument);
 
   useEffect(() => {
     const newEmail = router.query.confirmEmailChange as string | undefined;
@@ -112,9 +112,9 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
           });
         });
     }
-  }, [router.query.confirmEmailChange, confirmEmailChange, router]);
+  }, [router.query.confirmEmailChange, confirmEmailChange, router, client]);
 
-  const { data: subscriptonData } = useSubscriptionsQuery({
+  const { data: subscriptonData } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
   });
 
@@ -145,7 +145,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
       <SubscriptionsWrapper className={className}>
         {hasUnpaidInvoices && (
           <SubscriptionListWrapper>
-            <H4 component={'h1'}>Offene Rechnungen</H4>
+            <H4 component={'h1'}>{t('invoice.openInvoices')}</H4>
 
             <UnpaidInvoiceListContainer
               filter={invoices =>
@@ -223,7 +223,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
       </SubscriptionsWrapper>
 
       <ProfileWrapper className={className}>
-        <H4 component={'h1'}>Profil</H4>
+        <H4 component={'h1'}>{t('navbar.profile')}</H4>
 
         <PersonalDataFormContainer {...props} />
 

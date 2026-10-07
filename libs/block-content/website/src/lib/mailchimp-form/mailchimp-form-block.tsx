@@ -1,24 +1,29 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Alert,
   Button,
   Checkbox,
   CircularProgress,
-  FormControlLabel,
   TextField,
   Typography,
 } from '@mui/material';
 import {
-  BlockContent,
+  AddMailchimpContactDocument,
+  FullBlockFragment,
   FullMailchimpFormBlockFragment,
   MailchimpContactStatus,
-  useAddMailchimpContactMutation,
+  MailchimpFormOptionsLayout,
 } from '@wepublish/website/api';
-import { BuilderMailchimpFormBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderMailchimpFormBlockProps,
+  Image,
+} from '@wepublish/website/builder';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const isMailchimpFormBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullMailchimpFormBlockFragment =>
   block.__typename === 'MailchimpFormBlock';
 
@@ -46,7 +51,149 @@ const Options = styled('div')`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
+export const MailchimpFormOptions = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+export const MailchimpFormOptionItem = styled('label')`
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(2)};
+  cursor: pointer;
+`;
+
+export const MailchimpFormOptionItemImage = styled(Image)`
+  width: 64px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+`;
+
+export const MailchimpFormOptionGrid = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
+
+export const MailchimpFormOptionCard = styled('label')<{ isSelected: boolean }>`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid
+    ${({ theme, isSelected }) =>
+      isSelected ? theme.palette.primary.main : theme.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  background-color: ${({ theme }) => theme.palette.background.paper};
+
+  &:focus-within {
+    outline: 2px solid ${({ theme }) => theme.palette.primary.main};
+    outline-offset: 2px;
+  }
+`;
+
+export const MailchimpFormOptionCardImage = styled(Image)`
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+`;
+
+export const MailchimpFormOptionCardContent = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  padding: ${({ theme }) => theme.spacing(2)};
+  padding-right: ${({ theme }) => theme.spacing(6)};
+`;
+
+export const MailchimpFormOptionCardCheckbox = styled(Checkbox)`
+  position: absolute;
+  top: ${({ theme }) => theme.spacing(1)};
+  right: ${({ theme }) => theme.spacing(1)};
+  background-color: ${({ theme }) => theme.palette.background.paper};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.palette.background.paper};
+  }
+`;
+
 type Step = FullMailchimpFormBlockFragment['steps'][number];
+type InterestOption = Step['inputs'][number]['options'][number];
+
+type MailchimpFormOptionSelectionProps = {
+  options: InterestOption[];
+  layout: MailchimpFormOptionsLayout;
+  selected: string[];
+  onChange: (id: string, checked: boolean) => void;
+};
+
+const MailchimpFormOptionSelection = ({
+  options,
+  layout,
+  selected,
+  onChange,
+}: MailchimpFormOptionSelectionProps) => {
+  if (layout === MailchimpFormOptionsLayout.Grid) {
+    return (
+      <MailchimpFormOptionGrid>
+        {options.map(option => {
+          const isSelected = selected.includes(option.id);
+
+          return (
+            <MailchimpFormOptionCard
+              key={option.id}
+              isSelected={isSelected}
+            >
+              {option.image && (
+                <MailchimpFormOptionCardImage image={option.image} />
+              )}
+
+              <MailchimpFormOptionCardContent>
+                <Typography variant="subtitle1">{option.name}</Typography>
+                {option.description && (
+                  <Typography variant="body2">{option.description}</Typography>
+                )}
+              </MailchimpFormOptionCardContent>
+
+              <MailchimpFormOptionCardCheckbox
+                checked={isSelected}
+                onChange={event => onChange(option.id, event.target.checked)}
+              />
+            </MailchimpFormOptionCard>
+          );
+        })}
+      </MailchimpFormOptionGrid>
+    );
+  }
+
+  return (
+    <MailchimpFormOptions>
+      {options.map(option => (
+        <MailchimpFormOptionItem key={option.id}>
+          <Checkbox
+            checked={selected.includes(option.id)}
+            onChange={event => onChange(option.id, event.target.checked)}
+          />
+
+          {option.image ?
+            <MailchimpFormOptionItemImage image={option.image} />
+          : <span />}
+
+          <div>
+            <Typography variant="subtitle1">{option.name}</Typography>
+            {option.description && (
+              <Typography variant="body2">{option.description}</Typography>
+            )}
+          </div>
+        </MailchimpFormOptionItem>
+      ))}
+    </MailchimpFormOptions>
+  );
+};
 
 const getQueryParam = (name?: string | null): string | null => {
   if (!name || typeof window === 'undefined') {
@@ -80,7 +227,8 @@ export const MailchimpFormBlock = ({
   successUrl,
   successPage,
 }: BuilderMailchimpFormBlockProps) => {
-  const [addMailchimpContact] = useAddMailchimpContactMutation();
+  const [addMailchimpContact] = useMutation(AddMailchimpContactDocument);
+  const { t } = useTranslation();
 
   const allInputs = useMemo(
     () => steps.flatMap(step => step.inputs).filter(input => !!input.name),
@@ -204,6 +352,19 @@ export const MailchimpFormBlock = ({
       return;
     }
 
+    const hasMissingInterests = steps[currentStep].inputs.some(
+      input =>
+        input.inputType === 'groups' &&
+        input.required &&
+        !input.options.some(option => interests.includes(option.id))
+    );
+
+    if (hasMissingInterests) {
+      setError(t('newsletter.noInterestSelected'));
+
+      return;
+    }
+
     setError(null);
     setIsSubmitting(true);
 
@@ -221,21 +382,23 @@ export const MailchimpFormBlock = ({
         })
     );
 
+    const interestsInput = Object.fromEntries(
+      allInterests.map(interest => [interest, true])
+    );
+
     try {
       const result = await addMailchimpContact({
         variables: {
           input: {
             syncProviderId,
-            listId,
             email: formData['EMAIL'],
             status:
               doubleOptIn ?
                 MailchimpContactStatus.Pending
               : MailchimpContactStatus.Subscribed,
+            listId,
             mergeFields,
-            interests: Object.fromEntries(
-              allInterests.map(interest => [interest, true])
-            ),
+            interests: interestsInput,
           },
         },
       });
@@ -311,20 +474,12 @@ export const MailchimpFormBlock = ({
                 {input.description && (
                   <Typography variant="body2">{input.description}</Typography>
                 )}
-                {input.options.map(option => (
-                  <FormControlLabel
-                    key={option.id}
-                    control={
-                      <Checkbox
-                        checked={interests.includes(option.id)}
-                        onChange={event =>
-                          handleInterestChange(option.id, event.target.checked)
-                        }
-                      />
-                    }
-                    label={option.name}
-                  />
-                ))}
+                <MailchimpFormOptionSelection
+                  options={input.options}
+                  layout={input.optionsLayout}
+                  selected={interests}
+                  onChange={handleInterestChange}
+                />
               </div>
             );
           }
@@ -355,7 +510,7 @@ export const MailchimpFormBlock = ({
               disabled={isSubmitting}
               onClick={goBack}
             >
-              Zurück
+              {t('newsletter.back')}
             </Button>
           )}
 
@@ -370,7 +525,9 @@ export const MailchimpFormBlock = ({
             }}
             endIcon={isSubmitting ? <CircularProgress size={16} /> : undefined}
           >
-            {isLastStep ? submitButtonLabel || 'Abschliessen' : 'Weiter'}
+            {isLastStep ?
+              submitButtonLabel || t('newsletter.submit')
+            : t('newsletter.next')}
           </Button>
         </Actions>
       </Form>

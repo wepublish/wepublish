@@ -23,8 +23,15 @@ import {
   CreateSubscriptionWithConfirmationArgs,
   ExtendSubscriptionArgs,
 } from './subscription.model';
-import { PaymentsService } from '@wepublish/payment/api';
-import { logger } from '@wepublish/utils/api';
+import {
+  isPaymentMethodRetired,
+  PaymentsService,
+} from '@wepublish/payment/api';
+import {
+  calculatePeriodAmount,
+  getPeriodPriceRange,
+  logger,
+} from '@wepublish/utils/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import {
   calculateAmountForPeriodicity,
@@ -75,12 +82,13 @@ export class UserSubscriptionService {
           memberPlan.id
         );
 
-      discount =
+      discount = Math.round(
         calculateAmountForPeriodicity(
           args.monthlyAmount,
           args.paymentPeriodicity
         ) *
-        (discountCodeObj.discountPercent / 100);
+          (discountCodeObj.discountPercent / 100)
+      );
       discountCodeId = discountCodeObj.id;
     }
 
@@ -414,8 +422,22 @@ export class UserSubscriptionService {
     }
 
     if (
+      paymentMethod.id !== subscription.paymentMethodID &&
+      (await isPaymentMethodRetired(this.prisma, paymentMethod))
+    ) {
+      throw new BadRequestException(
+        `PaymentMethod ${paymentMethod.id} is no longer offered`
+      );
+    }
+
+    const effectivePeriodicity =
+      (paymentPeriodicity as PaymentPeriodicity | undefined) ??
+      subscription.paymentPeriodicity;
+
+    if (
       !monthlyAmount ||
-      (monthlyAmount as number) < memberPlan.amountPerMonthMin
+      calculatePeriodAmount(monthlyAmount as number, effectivePeriodicity) <
+        getPeriodPriceRange(memberPlan, effectivePeriodicity).amountMin
     )
       throw new BadRequestException(`Monthly amount is not enough`);
 
@@ -573,7 +595,16 @@ export class UserSubscriptionService {
       );
     }
 
-    if (monthlyAmount < memberPlan.amountPerMonthMin) {
+    if (await isPaymentMethodRetired(this.prisma, paymentMethod)) {
+      throw new BadRequestException(
+        `PaymentMethod ${paymentMethod.id} is no longer offered`
+      );
+    }
+
+    if (
+      calculatePeriodAmount(monthlyAmount, paymentPeriodicity) <
+      getPeriodPriceRange(memberPlan, paymentPeriodicity).amountMin
+    ) {
       throw new BadRequestException(`Monthly amount not enough`);
     }
 

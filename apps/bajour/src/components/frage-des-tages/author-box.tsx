@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { FullAuthorFragment } from '@wepublish/website/api';
+import { FullAuthorFragment, SlimAuthorFragment } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { memo } from 'react';
 import { MdPerson } from 'react-icons/md';
 
 interface AuthorBoxProps {
-  author: FullAuthorFragment;
+  author: FullAuthorFragment | SlimAuthorFragment;
   className?: string;
 }
 

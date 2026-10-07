@@ -1,4 +1,10 @@
 import {
+  CONTENT_CACHE_TTL_SECONDS,
+  KvTtlCacheService,
+  PublicContentCacheInvalidator,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
+import {
   BadRequestException,
   Injectable,
   NotFoundException,
@@ -24,10 +30,23 @@ import { mapBlockUnionMap } from '@wepublish/block-content/api';
 
 @Injectable()
 export class PageService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private publicContentCache: PublicContentCacheInvalidator,
+    private kv: KvTtlCacheService
+  ) {}
 
   @PrimeDataLoader(PageDataloaderService)
   async getPageBySlug(slug: string) {
+    return this.kv.getOrLoadNs(
+      contentCacheNamespace('pages'),
+      `slug:${slug.toLowerCase()}`,
+      () => this.loadPageBySlug(slug),
+      CONTENT_CACHE_TTL_SECONDS
+    );
+  }
+
+  private loadPageBySlug(slug: string) {
     return this.prisma.page.findFirst({
       where: {
         slug: {
@@ -42,7 +61,16 @@ export class PageService {
   }
 
   @PrimeDataLoader(PageDataloaderService)
-  async getPages({
+  async getPages(args: PageListArgs) {
+    return this.kv.getOrLoadNs(
+      contentCacheNamespace('pages'),
+      `list:${JSON.stringify(args)}`,
+      () => this.loadPages(args),
+      CONTENT_CACHE_TTL_SECONDS
+    );
+  }
+
+  private async loadPages({
     filter,
     cursorId,
     sort = PageSort.PublishedAt,
@@ -91,7 +119,7 @@ export class PageService {
     { slug, hidden, tagIds, properties, blocks, ...revision }: CreatePageInput,
     userId: string | null | undefined
   ) {
-    return this.prisma.page.create({
+    const result = await this.prisma.page.create({
       data: {
         slug,
         hidden,
@@ -113,6 +141,9 @@ export class PageService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('pages');
+
+    return result;
   }
 
   @PrimeDataLoader(PageDataloaderService)
@@ -139,7 +170,7 @@ export class PageService {
       throw new NotFoundException(`Page with id ${id} not found`);
     }
 
-    return this.prisma.page.update({
+    const result = await this.prisma.page.update({
       where: { id },
       data: {
         slug,
@@ -177,6 +208,13 @@ export class PageService {
         },
       },
     });
+    if (page.publishedAt) {
+      await this.publicContentCache.invalidate('pages');
+    } else {
+      await this.publicContentCache.invalidateDraft('pages');
+    }
+
+    return result;
   }
 
   async deletePage(id: string) {
@@ -188,11 +226,16 @@ export class PageService {
       throw new NotFoundException(`Page with id ${id} not found`);
     }
 
-    return this.prisma.page.delete({
+    const deleted = await this.prisma.page.delete({
       where: {
         id,
       },
     });
+    await this.publicContentCache.invalidate('pages');
+    await this.publicContentCache.invalidateArticleLayout();
+    await this.publicContentCache.invalidateNavigations();
+
+    return deleted;
   }
 
   @PrimeDataLoader(PageDataloaderService)
@@ -237,7 +280,7 @@ export class PageService {
         (page.publishedAt ?? publishedAt)
       );
 
-    return this.prisma.page.update({
+    const published = await this.prisma.page.update({
       where: {
         id,
       },
@@ -256,6 +299,11 @@ export class PageService {
         },
       },
     });
+    await this.publicContentCache.invalidate('pages');
+    this.publicContentCache.invalidateAt(publishedAt, 'pages');
+    this.publicContentCache.invalidateAt(pagePublishedAt, 'pages');
+
+    return published;
   }
 
   @PrimeDataLoader(PageDataloaderService)
@@ -310,6 +358,9 @@ export class PageService {
       });
     }
 
+    await this.publicContentCache.invalidate('pages');
+    await this.publicContentCache.invalidateArticleLayout();
+
     return updatedPage;
   }
 
@@ -345,7 +396,7 @@ export class PageService {
       },
     ] = page.revisions;
 
-    return this.prisma.page.create({
+    const result = await this.prisma.page.create({
       data: {
         hidden: page.hidden,
         tags: {
@@ -366,6 +417,9 @@ export class PageService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('pages');
+
+    return result;
   }
 
   /**
@@ -421,6 +475,8 @@ export class PageService {
       where: { id: draft.id },
       data: { archivedAt: new Date() },
     });
+
+    await this.publicContentCache.invalidateDraft('pages');
 
     return page;
   }
@@ -520,7 +576,7 @@ export class PageService {
       ...content
     } = revision;
 
-    return this.prisma.page.update({
+    const result = await this.prisma.page.update({
       where: { id: pageId },
       data: {
         modifiedAt: new Date(),
@@ -543,6 +599,9 @@ export class PageService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('pages');
+
+    return result;
   }
 
   async performPageFullTextSearch(searchQuery: string): Promise<string[]> {
@@ -779,6 +838,21 @@ const createTagsFilter = (
   return {};
 };
 
+const createSlugFilter = (
+  filter: Partial<PageFilter>
+): Prisma.PageWhereInput => {
+  if (filter?.slug) {
+    return {
+      slug: {
+        contains: filter.slug,
+        mode: 'insensitive',
+      },
+    };
+  }
+
+  return {};
+};
+
 const createHiddenFilter = (
   filter: Partial<PageFilter>
 ): Prisma.PageWhereInput => {
@@ -799,6 +873,7 @@ export const createPageFilter = (
     createPublicationDateFromFilter(filter),
     createPublicationDateToFilter(filter),
     createDescriptionFilter(filter),
+    createSlugFilter(filter),
     createTagsFilter(filter),
     createHiddenFilter(filter),
     {

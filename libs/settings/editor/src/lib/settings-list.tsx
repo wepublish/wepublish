@@ -1,9 +1,10 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Setting,
   SettingName,
-  useSettingsListQuery,
-  useUpdateSettingMutation,
+  SettingsListDocument,
+  UpdateSettingDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -115,7 +116,7 @@ function SettingList() {
     loading,
     refetch,
     error: fetchError,
-  } = useSettingsListQuery({});
+  } = useQuery(SettingsListDocument, {});
 
   const isDisabled = loading || !settingListData || !isAuthorized;
 
@@ -134,6 +135,11 @@ function SettingList() {
       value: false,
       name: SettingName.AllowGuestCommentRating,
       label: 'settingList.allowGuestCommentRating',
+    },
+    [SettingName.SessionTtlDays]: {
+      value: 7,
+      name: SettingName.SessionTtlDays,
+      label: 'settingList.sessionTtlDays',
     },
     [SettingName.SendLoginJwtExpiresMin]: {
       value: 0,
@@ -205,14 +211,21 @@ function SettingList() {
       name: SettingName.NewArticlePeering,
       label: 'settingList.newArticlePeering',
     },
+    [SettingName.SubscriptionUpgradeBillsFullDifference]: {
+      value: false,
+      name: SettingName.SubscriptionUpgradeBillsFullDifference,
+      label: 'settingList.subscriptionUpgradeModel',
+    },
   } as Record<SettingName, SettingWithLabel>);
 
   useEffect(() => {
     settingListData?.settings.forEach(setSetting);
   }, [settingListData]);
 
-  const [updateSetting, { error: updateSettingError }] =
-    useUpdateSettingMutation({});
+  const [updateSetting, { error: updateSettingError }] = useMutation(
+    UpdateSettingDocument,
+    {}
+  );
 
   const [changedSetting, setChangedSetting] = useState(
     settingListData?.settings.filter(
@@ -283,6 +296,21 @@ function SettingList() {
   const { NumberType } = Schema.Types;
 
   const validationModel = Schema.Model({
+    [SettingName.SessionTtlDays]: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        settings[SettingName.SessionTtlDays].settingRestriction?.minValue ?? 1,
+        settings[SettingName.SessionTtlDays].settingRestriction?.maxValue ??
+          365,
+        t('errorMessages.invalidRange', {
+          min:
+            settings[SettingName.SessionTtlDays].settingRestriction?.minValue ??
+            1,
+          max:
+            settings[SettingName.SessionTtlDays].settingRestriction?.maxValue ??
+            365,
+        })
+      ),
     [SettingName.SendLoginJwtExpiresMin]: NumberType()
       .isRequired(t('errorMessages.required'))
       .range(
@@ -396,7 +424,6 @@ function SettingList() {
                 <IconButton
                   icon={<MdCancel />}
                   onClick={() => handleCancel()}
-                  className="actionButton"
                   type="reset"
                   size="lg"
                   appearance="default"
@@ -407,7 +434,6 @@ function SettingList() {
                 {/* save btn */}
                 <IconButton
                   icon={<MdSave />}
-                  className="actionButton"
                   type="submit"
                   size="lg"
                   appearance="primary"
@@ -448,7 +474,8 @@ function SettingList() {
                           <Toggle
                             disabled={isDisabled}
                             checked={
-                              settings[SettingName.AllowGuestCommenting].value
+                              settings[SettingName.AllowGuestCommenting]
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -479,7 +506,7 @@ function SettingList() {
                             disabled={isDisabled}
                             checked={
                               settings[SettingName.AllowGuestCommentRating]
-                                .value
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -506,7 +533,8 @@ function SettingList() {
                           <Toggle
                             disabled={isDisabled}
                             checked={
-                              settings[SettingName.AllowCommentEditing].value
+                              settings[SettingName.AllowCommentEditing]
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -569,7 +597,8 @@ function SettingList() {
                           <Toggle
                             disabled={isDisabled}
                             checked={
-                              settings[SettingName.AllowGuestPollVoting].value
+                              settings[SettingName.AllowGuestPollVoting]
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -609,7 +638,7 @@ function SettingList() {
                             disabled={isDisabled}
                             checked={
                               settings[SettingName.MakeNewSubscribersApiPublic]
-                                .value
+                                .value as boolean
                             }
                             onChange={checked => {
                               setSetting({
@@ -643,7 +672,7 @@ function SettingList() {
                             checked={
                               settings[
                                 SettingName.MakeActiveSubscribersApiPublic
-                              ].value
+                              ].value as boolean
                             }
                             onChange={checked => {
                               setSetting({
@@ -679,7 +708,7 @@ function SettingList() {
                             checked={
                               settings[
                                 SettingName.MakeRenewingSubscribersApiPublic
-                              ].value
+                              ].value as boolean
                             }
                             onChange={checked => {
                               setSetting({
@@ -713,7 +742,7 @@ function SettingList() {
                             checked={
                               settings[
                                 SettingName.MakeNewDeactivationsApiPublic
-                              ].value
+                              ].value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -745,7 +774,7 @@ function SettingList() {
                             disabled={isDisabled}
                             checked={
                               settings[SettingName.MakeExpectedRevenueApiPublic]
-                                .value
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
@@ -773,11 +802,60 @@ function SettingList() {
                           <Toggle
                             disabled={isDisabled}
                             checked={
-                              settings[SettingName.MakeRevenueApiPublic].value
+                              settings[SettingName.MakeRevenueApiPublic]
+                                .value as boolean
                             }
                             onChange={checked =>
                               setSetting({
                                 ...settings[SettingName.MakeRevenueApiPublic],
+                                value: checked,
+                              })
+                            }
+                          />
+                        </Form.Group>
+                      </Form.Stack>
+                    </Panel>
+                  </Col>
+
+                  <Col xs={24}>
+                    <Panel
+                      bordered
+                      header={t('settingList.subscriptionPlans')}
+                    >
+                      <Form.Stack fluid>
+                        <Form.Group
+                          controlId={
+                            SettingName.SubscriptionUpgradeBillsFullDifference
+                          }
+                        >
+                          <Form.Label>
+                            {t(
+                              settings[
+                                SettingName
+                                  .SubscriptionUpgradeBillsFullDifference
+                              ].label
+                            )}
+                            <SettingInfo
+                              text={t(
+                                'settingList.warnings.subscriptionUpgradeModel'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <Toggle
+                            disabled={isDisabled}
+                            checked={
+                              settings[
+                                SettingName
+                                  .SubscriptionUpgradeBillsFullDifference
+                              ].value as boolean
+                            }
+                            onChange={checked =>
+                              setSetting({
+                                ...settings[
+                                  SettingName
+                                    .SubscriptionUpgradeBillsFullDifference
+                                ],
                                 value: checked,
                               })
                             }
@@ -799,6 +877,32 @@ function SettingList() {
                       header={t('settingList.login')}
                     >
                       <Form.Stack fluid>
+                        <Form.Group controlId={SettingName.SessionTtlDays}>
+                          <Form.Label>
+                            {t(settings[SettingName.SessionTtlDays].label)}
+                            <SettingInfo
+                              text={t('settingList.warnings.sessionTtlDays')}
+                            />
+                          </Form.Label>
+
+                          <InputGroup>
+                            <FormControl
+                              name={SettingName.SessionTtlDays}
+                              accepter={NumberInput}
+                              value={settings[SettingName.SessionTtlDays].value}
+                              onChange={(value: string) => {
+                                setSetting({
+                                  ...settings[SettingName.SessionTtlDays],
+                                  value: +value,
+                                });
+                              }}
+                            />
+                            <InputGroupAddon>
+                              {t('settingList.days')}
+                            </InputGroupAddon>
+                          </InputGroup>
+                        </Form.Group>
+
                         <Form.Group
                           controlId={SettingName.SendLoginJwtExpiresMin}
                         >
@@ -936,7 +1040,8 @@ function SettingList() {
                         <Toggle
                           disabled={isDisabled}
                           checked={
-                            settings[SettingName.NewArticlePeering].value
+                            settings[SettingName.NewArticlePeering]
+                              .value as boolean
                           }
                           onChange={checked =>
                             setSetting({
@@ -960,7 +1065,9 @@ function SettingList() {
                         <SelectPaywall
                           disabled={isDisabled}
                           selectedPaywall={
-                            settings[SettingName.NewArticlePaywall].value
+                            settings[SettingName.NewArticlePaywall].value as
+                              | string
+                              | null
                           }
                           setSelectedPaywall={paywall =>
                             setSetting({
@@ -992,7 +1099,7 @@ function SettingList() {
                           disabled={isDisabled}
                           checked={
                             settings[SettingName.ShowPendingWhenNotPublished]
-                              .value
+                              .value as boolean
                           }
                           onChange={checked =>
                             setSetting({
@@ -1031,8 +1138,8 @@ function SettingList() {
                   label={t(settings[setting.name].label)}
                   key={setting.name}
                 >
-                  <s>{valueText(setting.value)}</s>{' '}
-                  {valueText(settings[setting.name].value)}
+                  <s>{valueText(setting.value as boolean | string)}</s>{' '}
+                  {valueText(settings[setting.name].value as boolean | string)}
                 </DescriptionListItemWrapper>
               ))}
             </DescriptionList>
