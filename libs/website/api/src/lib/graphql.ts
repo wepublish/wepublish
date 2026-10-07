@@ -34,19 +34,6 @@ export enum AiProviderType {
   V0 = 'V0'
 }
 
-export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
-
-export enum ActionType {
-  ArticleCreated = 'ArticleCreated',
-  AuthorCreated = 'AuthorCreated',
-  CommentCreated = 'CommentCreated',
-  EventCreated = 'EventCreated',
-  PageCreated = 'PageCreated',
-  PollStarted = 'PollStarted',
-  SubscriptionCreated = 'SubscriptionCreated',
-  UserCreated = 'UserCreated'
-}
-
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
   boolChoice?: Maybe<Scalars['Boolean']>;
@@ -81,14 +68,6 @@ export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   tags: Array<Tag>;
   trackingPixels: Array<TrackingPixel>;
   url: Scalars['String'];
-};
-
-export type ArticleCreatedAction = BaseAction & HasArticleLc & {
-  __typename?: 'ArticleCreatedAction';
-  actionType: ActionType;
-  article: Article;
-  articleId: Scalars['String'];
-  date: Scalars['DateTime'];
 };
 
 export type ArticleFilter = {
@@ -267,14 +246,6 @@ export type Author = HasImage & HasOptionalPeerLc & {
   url: Scalars['String'];
 };
 
-export type AuthorCreatedAction = BaseAction & HasAuthor & {
-  __typename?: 'AuthorCreatedAction';
-  actionType: ActionType;
-  author: Author;
-  authorId: Scalars['String'];
-  date: Scalars['DateTime'];
-};
-
 export type AuthorFilter = {
   hideOnTeam?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
@@ -352,11 +323,6 @@ export enum BannerDocumentType {
   Article = 'ARTICLE',
   Page = 'PAGE'
 }
-
-export type BaseAction = {
-  actionType: ActionType;
-  date: Scalars['DateTime'];
-};
 
 export type BaseBlock = {
   blockStyle?: Maybe<Scalars['String']>;
@@ -706,14 +672,6 @@ export type CommentBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
   filter: CommentBlockFilterInput;
-};
-
-export type CommentCreatedAction = BaseAction & HasComment & {
-  __typename?: 'CommentCreatedAction';
-  actionType: ActionType;
-  comment: Comment;
-  commentId: Scalars['String'];
-  date: Scalars['DateTime'];
 };
 
 export type CommentFilter = {
@@ -1161,14 +1119,6 @@ export type EventBlockInput = {
   filter: EventBlockFilterInput;
 };
 
-export type EventCreatedAction = BaseAction & HasEventLc & {
-  __typename?: 'EventCreatedAction';
-  actionType: ActionType;
-  date: Scalars['DateTime'];
-  event: Event;
-  eventId: Scalars['String'];
-};
-
 export type EventFilter = {
   from?: InputMaybe<Scalars['DateTime']>;
   location?: InputMaybe<Scalars['String']>;
@@ -1428,28 +1378,8 @@ export type HasArticle = {
   articleID: Scalars['String'];
 };
 
-export type HasArticleLc = {
-  article: Article;
-  articleId: Scalars['String'];
-};
-
-export type HasAuthor = {
-  author: Author;
-  authorId: Scalars['String'];
-};
-
 export type HasBlockContent = {
   blocks: Array<BlockContent>;
-};
-
-export type HasComment = {
-  comment: Comment;
-  commentId: Scalars['String'];
-};
-
-export type HasEventLc = {
-  event: Event;
-  eventId: Scalars['String'];
 };
 
 export type HasImage = {
@@ -1531,34 +1461,14 @@ export type HasPage = {
   pageID: Scalars['String'];
 };
 
-export type HasPageLc = {
-  page: Page;
-  pageId: Scalars['String'];
-};
-
 export type HasPaymentMethod = {
   paymentMethod: PaymentMethod;
   paymentMethodID: Scalars['String'];
 };
 
-export type HasPoll = {
-  poll: FullPoll;
-  pollId: Scalars['String'];
-};
-
-export type HasSubscriptionLc = {
-  subscription: PublicSubscription;
-  subscriptionId: Scalars['String'];
-};
-
 export type HasUser = {
   user: User;
   userID: Scalars['String'];
-};
-
-export type HasUserLc = {
-  user: User;
-  userId: Scalars['String'];
 };
 
 export type IFrameBlock = BaseBlock & {
@@ -4684,14 +4594,6 @@ export type Page = {
   url: Scalars['String'];
 };
 
-export type PageCreatedAction = BaseAction & HasPageLc & {
-  __typename?: 'PageCreatedAction';
-  actionType: ActionType;
-  date: Scalars['DateTime'];
-  page: Page;
-  pageId: Scalars['String'];
-};
-
 export type PageFilter = {
   description?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
@@ -5433,14 +5335,6 @@ export enum PollSort {
   OpensAt = 'OpensAt'
 }
 
-export type PollStartedAction = BaseAction & HasPoll & {
-  __typename?: 'PollStartedAction';
-  actionType: ActionType;
-  date: Scalars['DateTime'];
-  poll: FullPoll;
-  pollId: Scalars['String'];
-};
-
 export type PollVote = {
   __typename?: 'PollVote';
   answer: PollAnswerInVote;
@@ -5523,8 +5417,6 @@ export type PublicSubscriptionConnection = {
 
 export type Query = {
   __typename?: 'Query';
-  /** Returns latest actions */
-  actions: Array<Action>;
   /**
    *
    *       Returns all active subscribers.
@@ -7178,14 +7070,6 @@ export enum SubscribePeriodicityDisplay {
   Toggle = 'Toggle'
 }
 
-export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {
-  __typename?: 'SubscriptionCreatedAction';
-  actionType: ActionType;
-  date: Scalars['DateTime'];
-  subscription: PublicSubscription;
-  subscriptionId: Scalars['String'];
-};
-
 export type SubscriptionDeactivation = {
   __typename?: 'SubscriptionDeactivation';
   date: Scalars['DateTime'];
@@ -7674,14 +7558,6 @@ export type UserConsent = {
   value: Scalars['Boolean'];
 };
 
-export type UserCreatedAction = BaseAction & HasUserLc & {
-  __typename?: 'UserCreatedAction';
-  actionType: ActionType;
-  date: Scalars['DateTime'];
-  user: User;
-  userId: Scalars['String'];
-};
-
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   EmailChange = 'EMAIL_CHANGE',
@@ -7841,26 +7717,6 @@ export type YouTubeVideoBlockInput = {
       }
       const result: PossibleTypesResultData = {
   "possibleTypes": {
-    "Action": [
-      "ArticleCreatedAction",
-      "AuthorCreatedAction",
-      "CommentCreatedAction",
-      "EventCreatedAction",
-      "PageCreatedAction",
-      "PollStartedAction",
-      "SubscriptionCreatedAction",
-      "UserCreatedAction"
-    ],
-    "BaseAction": [
-      "ArticleCreatedAction",
-      "AuthorCreatedAction",
-      "CommentCreatedAction",
-      "EventCreatedAction",
-      "PageCreatedAction",
-      "PollStartedAction",
-      "SubscriptionCreatedAction",
-      "UserCreatedAction"
-    ],
     "BaseBlock": [
       "BildwurfAdBlock",
       "BlockTemplateBlock",
@@ -7957,22 +7813,10 @@ export type YouTubeVideoBlockInput = {
     "HasArticle": [
       "ArticleNavigationLink"
     ],
-    "HasArticleLc": [
-      "ArticleCreatedAction"
-    ],
-    "HasAuthor": [
-      "AuthorCreatedAction"
-    ],
     "HasBlockContent": [
       "ArticleRevision",
       "BlockTemplate",
       "PageRevision"
-    ],
-    "HasComment": [
-      "CommentCreatedAction"
-    ],
-    "HasEventLc": [
-      "EventCreatedAction"
     ],
     "HasImage": [
       "ArticleTeaser",
@@ -8038,24 +7882,12 @@ export type YouTubeVideoBlockInput = {
     "HasPage": [
       "PageNavigationLink"
     ],
-    "HasPageLc": [
-      "PageCreatedAction"
-    ],
     "HasPaymentMethod": [
       "Payment",
       "PublicSubscription"
     ],
-    "HasPoll": [
-      "PollStartedAction"
-    ],
-    "HasSubscriptionLc": [
-      "SubscriptionCreatedAction"
-    ],
     "HasUser": [
       "PublicSubscription"
-    ],
-    "HasUserLc": [
-      "UserCreatedAction"
     ],
     "SettingProvider": [
       "SettingAIProvider",

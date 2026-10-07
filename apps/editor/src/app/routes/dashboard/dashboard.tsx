@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import {
-  ActivityFeed,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -8,118 +7,93 @@ import {
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Button, Col, Grid, Panel as RPanel, Row } from 'rsuite';
+import { Button, Panel as RPanel } from 'rsuite';
 
 import { AudienceDashboard } from '../audience/audience-dashboard';
 import NetworkContentDashboard from '../networkContent/networkContentDashboard';
 import { DashboardNotifications } from './dashboardNotifications';
 import { ExternalAppsDashboard } from './externalAppsDashboard';
 
-const StyledGrid = styled(Grid)`
-  width: 100%;
+const DashboardColumns = styled.div`
+  column-count: 2;
+  column-gap: 20px;
+
+  > * {
+    break-inside: avoid;
+    margin: 0 0 20px;
+  }
+
+  @media (max-width: 1199px) {
+    column-count: 1;
+  }
 `;
 
 export function Dashboard() {
   const { t } = useTranslation();
 
   return (
-    <StyledGrid fluid>
-      <Row>
-        {/* left column stack */}
-        <Col
-          xs={24}
-          xl={12}
-        >
-          <Row gutter={12}>
-            <Col xs={24}>
-              {/* renders its own panel and hides it while there is nothing to show */}
-              <DashboardNotifications />
-            </Col>
+    <DashboardColumns>
+      {/* renders its own panel and hides it while there is nothing to show */}
+      <DashboardNotifications />
 
-            <Col xs={24}>
-              <RPanel
-                header={<h2>{t('dashboard.externalApps')}</h2>}
-                bordered
-              >
-                <ExternalAppsDashboard />
-              </RPanel>
-            </Col>
+      <RPanel
+        header={<h2>{t('dashboard.externalApps')}</h2>}
+        bordered
+      >
+        <ExternalAppsDashboard />
+      </RPanel>
 
-            <Col xs={24}>
-              <RPanel
-                header={
-                  <ListViewContainer>
-                    <ListViewHeader>
-                      <h2>{t('dashboard.audience')}</h2>
-                    </ListViewHeader>
+      <RPanel
+        header={
+          <ListViewContainer>
+            <ListViewHeader>
+              <h2>{t('dashboard.audience')}</h2>
+            </ListViewHeader>
 
-                    <ListViewActions>
-                      <Link to="/audience/dashboard">
-                        <Button
-                          appearance="primary"
-                          endIcon={<MdChevronRight />}
-                        >
-                          {t('dashboard.goToAudienceDashboard')}
-                        </Button>
-                      </Link>
-                    </ListViewActions>
-                  </ListViewContainer>
-                }
-                bordered
-              >
-                <AudienceDashboard
-                  hideHeader
-                  hideFilter
-                  initialDateRange="lastWeek"
-                />
-              </RPanel>
-            </Col>
-          </Row>
-        </Col>
+            <ListViewActions>
+              <Link to="/audience/dashboard">
+                <Button
+                  appearance="primary"
+                  endIcon={<MdChevronRight />}
+                >
+                  {t('dashboard.goToAudienceDashboard')}
+                </Button>
+              </Link>
+            </ListViewActions>
+          </ListViewContainer>
+        }
+        bordered
+      >
+        <AudienceDashboard
+          hideHeader
+          hideFilter
+          initialDateRange="lastWeek"
+        />
+      </RPanel>
 
-        {/* right column stack */}
-        <Col
-          xs={24}
-          xl={12}
-        >
-          <Row gutter={12}>
-            <Col xs={24}>
-              <RPanel
-                header={
-                  <ListViewContainer>
-                    <ListViewHeader>
-                      <h2>{t('dashboard.networkContent')}</h2>
-                    </ListViewHeader>
+      <RPanel
+        header={
+          <ListViewContainer>
+            <ListViewHeader>
+              <h2>{t('dashboard.networkContent')}</h2>
+            </ListViewHeader>
 
-                    <ListViewActions>
-                      <Link to="/network">
-                        <Button
-                          appearance="primary"
-                          endIcon={<MdChevronRight />}
-                        >
-                          {t('dashboard.goToNetwork')}
-                        </Button>
-                      </Link>
-                    </ListViewActions>
-                  </ListViewContainer>
-                }
-                bordered
-              >
-                <NetworkContentDashboard />
-              </RPanel>
-            </Col>
-
-            <Col xs={24}>
-              <RPanel
-                header={<h2>{t('dashboard.activity')}</h2>}
-                bordered
-              >
-                <ActivityFeed />
-              </RPanel>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </StyledGrid>
+            <ListViewActions>
+              <Link to="/network">
+                <Button
+                  appearance="primary"
+                  endIcon={<MdChevronRight />}
+                >
+                  {t('dashboard.goToNetwork')}
+                </Button>
+              </Link>
+            </ListViewActions>
+          </ListViewContainer>
+        }
+        bordered
+      >
+        <NetworkContentDashboard />
+      </RPanel>
+    </DashboardColumns>
   );
 }

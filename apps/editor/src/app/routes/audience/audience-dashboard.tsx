@@ -23,7 +23,6 @@ const AudienceChartWrapper = styled('div')`
   padding-top: ${({ theme }) => theme.spacing(2)};
   height: 100%;
   width: 100%;
-  min-height: 40vh;
 `;
 
 const AudienceTableExportWrapper = styled('div')`
