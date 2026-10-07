@@ -134,8 +134,8 @@ jobs:
           MEDIUM: ${{ matrix.medium }}
           BASELINE_COMMIT_HASH: ${{ needs.prepare.outputs.baseline }}
           CURRENT_COMMIT_HASH: ${{ needs.prepare.outputs.current }}
-          USERNAME: # todo
-          PASSWORD: # todo
+          DUMP_USERNAME: # todo
+          DUMP_PASSWORD: # todo
           JWT_PUBLIC_KEY: |
             -----BEGIN PUBLIC KEY-----
             MCowBQYDK2VwAyEA93mjXbSful1W9nAVHuYHdRfgKEF+pvkwm4/5P27J4RA=
