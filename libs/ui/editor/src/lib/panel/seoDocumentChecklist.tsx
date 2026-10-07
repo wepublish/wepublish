@@ -95,8 +95,7 @@ export const getSeoDocumentChecks = ({
     warning('share-images', 'tooSmall', { limit: MIN_SHARE_IMAGE_WIDTH })
   : ok('share-images'),
 
-  !stats?.imageCount ? info('image-descriptions', 'none')
-  : stats.imagesWithoutDescription ?
+  stats?.imagesWithoutDescription ?
     warning('image-descriptions', 'missing', {
       count: stats.imagesWithoutDescription,
     })
