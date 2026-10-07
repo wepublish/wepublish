@@ -12,8 +12,11 @@
   `/payment-webhooks/<providerId>`, where Pay / Decline / Cancel post back
   through the normal webhook path. With `offSessionPayments`, renewals are
   charged straight away — or declined when "Decline renewals"
-  (`simulated_declineRenewals`) is ticked, to test failed recurring payments. For dev, review apps and tests; it has no guard, so
-  never configure it on a production deployment.
+  (`simulated_declineRenewals`) is ticked, to test failed recurring payments.
+  Guarded by `isSimulatedPaymentAllowed()` (`@wepublish/utils/api`): only when
+  `APP_ENVIRONMENT` is set and not `production` (unset counts as production —
+  `NODE_ENV` is `production` on review too). Otherwise the API refuses to
+  create it and skips existing rows when loading providers; the editor hides it.
 
 ## Email Provider
 

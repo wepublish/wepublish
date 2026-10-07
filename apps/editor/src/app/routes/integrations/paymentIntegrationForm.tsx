@@ -1,5 +1,6 @@
 import {
   CreatePaymentProviderSettingDocument,
+  getSettings,
   DeletePaymentProviderSettingDocument,
   PaymentMethodMollie,
   PaymentProviderSettingsDocument,
@@ -19,6 +20,15 @@ import payrexxLogo from './assets/payrexx.webp';
 import stripeLogo from './assets/stripe.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+
+// Mirrors the API's `isSimulatedPaymentAllowed`, which also refuses to create
+// the simulated provider on production; this only keeps it out of the picker.
+export const creatablePaymentProviderTypes = (appEnvironment?: string) =>
+  Object.values(PaymentProviderType).filter(
+    type =>
+      type !== PaymentProviderType.Simulated ||
+      (!!appEnvironment && appEnvironment !== 'production')
+  );
 
 const paymentSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
@@ -80,10 +90,12 @@ export function PaymentIntegrationForm() {
       registry={{
         createMutation: CreatePaymentProviderSettingDocument,
         deleteMutation: DeletePaymentProviderSettingDocument,
-        types: Object.values(PaymentProviderType).map(value => ({
-          label: value,
-          value,
-        })),
+        types: creatablePaymentProviderTypes(getSettings().appEnvironment).map(
+          value => ({
+            label: value,
+            value,
+          })
+        ),
       }}
       getLogo={setting => {
         switch (setting.type) {
