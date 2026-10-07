@@ -46,6 +46,11 @@ fragment TinySubscription on PublicSubscription {
   createdAt
   modifiedAt
 
+  monthlyAmount
+  paymentPeriodicity
+  currency
+  paidUntil
+
   user {
     id
     name
@@ -223,6 +228,12 @@ mutation CancelSubscription(
     reason: $reason
     skipMail: $skipMail
   ) {
+    ...FullSubscription
+  }
+}
+
+mutation ReactivateSubscription($id: String!) {
+  reactivateSubscription(id: $id) {
     ...FullSubscription
   }
 }

@@ -244,6 +244,47 @@ export class SubscriptionService {
     });
   }
 
+  @PrimeDataLoader(SubscriptionDataloader)
+  async reactivateSubscription(id: string) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { id },
+      include: {
+        deactivation: true,
+        periods: true,
+      },
+    });
+
+    if (!subscription) {
+      throw new NotFoundException(`Subscription with id ${id} was not found.`);
+    }
+
+    if (!subscription.deactivation) {
+      throw new BadRequestException('Subscription is not deactivated');
+    }
+
+    await this.prisma.subscriptionDeactivation.delete({
+      where: { subscriptionID: id },
+    });
+
+    const reactivatedSubscription = {
+      ...subscription,
+      deactivation: null,
+    };
+
+    // Deactivating cancels the open invoices, so a subscription whose period
+    // has run out needs a new invoice to be payable again.
+    const isPaid =
+      subscription.paidUntil && subscription.paidUntil > new Date();
+
+    if (!isPaid) {
+      await this.memberContext.renewSubscriptionForUser({
+        subscription: reactivatedSubscription as SubscriptionWithRelations,
+      });
+    }
+
+    return reactivatedSubscription;
+  }
+
   async deleteSubscription(id: string) {
     return this.prisma.subscription.delete({
       where: {

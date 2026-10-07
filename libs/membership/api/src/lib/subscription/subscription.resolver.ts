@@ -116,6 +116,14 @@ export class PublicSubscriptionResolver {
     return this.service.cancelSubscription(input);
   }
 
+  @Permissions(CanCreateSubscription)
+  @Mutation(returns => PublicSubscription, {
+    description: `Reactivates a deactivated subscription.`,
+  })
+  public reactivateSubscription(@Args('id') id: string) {
+    return this.service.reactivateSubscription(id);
+  }
+
   @Permissions(CanDeleteSubscription)
   @Mutation(returns => PublicSubscription, {
     description: `Deletes an existing subscription.`,

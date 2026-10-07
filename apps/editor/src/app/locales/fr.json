@@ -893,6 +893,7 @@
       "today": "Aujourd’hui",
       "tomorrow": "Demain"
     },
+    "deactivated": "Désactivé",
     "delete": "Supprimer",
     "deleteBlockTemplateModal": {
       "body": "Voulez-vous vraiment supprimer le modèle de bloc « {{name}} » ?",
@@ -2108,6 +2109,7 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Nom",
         "newSubscription": "Nouvel abonnement",
+        "reactivate": "Réactiver",
         "subscription": "Abonnement"
       },
       "panels": {
@@ -2280,9 +2282,9 @@
           "activated": "Désactiver"
         },
         "date": "Date de désactivation",
-        "help": "Les abonnements désactivés peuvent encore être utilisés jusqu’à la date « payée jusqu’à ». Mais ils ne seront pas renouvelés automatiquement, même si l’option de renouvellement automatique est activée. Une fois désactivé, l’abonnement ne peut pas être réactivé.",
+        "help": "Les abonnements désactivés peuvent encore être utilisés jusqu’à la date « payée jusqu’à ». Mais ils ne seront pas renouvelés automatiquement, même si l’option de renouvellement automatique est activée. Une désactivation peut être annulée dans l’éditeur.",
         "cancellation": "Date d’annulation",
-        "isDeactivated": "L’abonnement est désactivé depuis {{date, ccc PP p}} et ne peut plus être modifié. Raison : {{reason}}. Le cas échéant, un nouvel abonnement peut être souscrit.",
+        "isDeactivated": "L’abonnement est désactivé depuis {{date, ccc PP p}} et ne peut plus être modifié. Raison : {{reason}}. Il peut être réactivé ou un nouvel abonnement peut être souscrit.",
         "modalMessage": {
           "activated": "Voulez-vous désactiver l’abonnement de « {{userName}} » avec l’adresse e-mail « {{userEmail}} » ?"
         },
@@ -2299,6 +2301,16 @@
           "activated": "Désactiver l’abonnement"
         },
         "willBeDeactivated": "L’abonnement sera désactivé le {{date, ccc PP p}}"
+      },
+      "reactivation": {
+        "deactivatedSince": "Désactivé depuis le {{date, ccc PP p}} · Motif : {{reason}}",
+        "deactivatedOn": "Désactivation le {{date, ccc PP p}} · Motif : {{reason}}",
+        "date": "{{date, ccc PP p}}",
+        "hint": "La réactivation supprime cette désactivation. Si la période est déjà écoulée, une nouvelle facture est créée.",
+        "title": "Réactiver l’abonnement",
+        "modalTitle": "Réactiver l’abonnement ?",
+        "modalMessage": "Voulez-vous annuler la désactivation de l’abonnement de « {{userName}} » ? L’abonnement se poursuivra normalement.",
+        "confirm": "Réactiver"
       },
       "editTitle": "Modifier l’abonnement",
       "memberPlanMonthlyAmount": "Montant mensuel minimum ({{currency}})",

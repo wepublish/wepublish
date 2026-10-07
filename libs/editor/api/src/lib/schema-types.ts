@@ -2848,6 +2848,8 @@ export type Mutation = {
   publishPage: Page;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
   rateComment: Comment;
+  /** Reactivates a deactivated subscription. */
+  reactivateSubscription: PublicSubscription;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
   /** Rejects a comment */
@@ -3874,6 +3876,11 @@ export type MutationRateCommentArgs = {
   answerId: Scalars['String']['input'];
   commentId: Scalars['String']['input'];
   value: Scalars['Int']['input'];
+};
+
+
+export type MutationReactivateSubscriptionArgs = {
+  id: Scalars['String']['input'];
 };
 
 
