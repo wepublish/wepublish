@@ -12,12 +12,12 @@ const uniqueViolation = () =>
 class AnalyticsProviderTable {
   rows = new Map<string, Row>();
 
-  findUnique = jest.fn(
+  findUnique = vi.fn(
     async ({ where }: { where: { id: string } }) =>
       this.rows.get(where.id) ?? null
   );
 
-  create = jest.fn(async ({ data }: { data: Row }) => {
+  create = vi.fn(async ({ data }: { data: Row }) => {
     if (this.rows.has(data.id)) {
       throw uniqueViolation();
     }
@@ -27,7 +27,7 @@ class AnalyticsProviderTable {
     return data;
   });
 
-  createMany = jest.fn(
+  createMany = vi.fn(
     async ({
       data,
       skipDuplicates,

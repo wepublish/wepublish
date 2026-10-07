@@ -94,7 +94,7 @@ describe('PeriodicJobService outside UTC', () => {
   });
 
   const start = async (now: string) => {
-    jest.setSystemTime(new Date(now));
+    vi.setSystemTime(new Date(now));
     const runs = await service['getOutstandingRuns'](new Date());
 
     for (const run of runs) {
@@ -111,7 +111,7 @@ describe('PeriodicJobService outside UTC', () => {
   };
 
   beforeEach(() => {
-    jest.useFakeTimers({ doNotFake: ['nextTick', 'setImmediate'] });
+    vi.useFakeTimers({ toFake: ['Date'] });
     jobs = new PeriodicJobTable();
     service = new PeriodicJobService(
       { periodicJob: jobs } as unknown as PrismaClient,
@@ -123,7 +123,7 @@ describe('PeriodicJobService outside UTC', () => {
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('runs on Zurich time', () => {

@@ -132,21 +132,19 @@ gets silently overwritten on the next dev boot. See
 
 ---
 
-### ⚠️ Vitest and Jest both force `TZ=UTC`, so local-time bugs pass every test
+### ⚠️ Vitest forces `TZ=UTC`, so local-time bugs pass every test
 
 [vitest.setup-tests.ts](../../vitest.setup-tests.ts) sets `process.env['TZ'] = 'UTC'`
 before anything else, and also silences one specific React `act(...)` warning.
-Jest's globalSetup [jest.setup.ts](../../jest.setup.ts) does the same.
 
 A test that passes locally in `Europe/Zurich` but relies on local time will
 behave differently under Vitest. Assert on explicit UTC instants, or freeze time
-(`vi.setSystemTime` / `jest.setSystemTime`) rather than depending on the ambient
-zone.
+(`vi.setSystemTime` with `vi.useFakeTimers({ toFake: ['Date'] })`) rather than
+depending on the ambient zone. Specs carried over from Jest fail with
+`jest is not defined` — use `vi.*`.
 
-In Jest, `process.env.TZ = 'Europe/Zurich'` inside a spec changes nothing:
-the sandbox gets a copy of `process.env`. To test a real zone, set it on the
-host process (`runInThisContext('process.env')` from `vm`) in `beforeAll` and
-restore it in `afterAll`, as
+To test a real zone, set `TZ` on the host process (`runInThisContext('process.env')`
+from `vm`) in `beforeAll` and restore it in `afterAll`, as
 [periodic-job.timezone.spec.ts](../../libs/membership/api/src/lib/periodic-job/periodic-job.timezone.spec.ts)
 does. That spec pins the periodic job's `@db.Date` handling: a local midnight
 written to a `date` column lands on the previous day outside UTC (verified
