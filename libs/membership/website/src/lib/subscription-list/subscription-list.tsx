@@ -20,6 +20,8 @@ export const SubscriptionList = ({
   error,
   invoices,
   onCancel,
+  onReactivate,
+  onRevertUpgrade,
   onExtend,
   className,
   subscribeUrl,
@@ -51,6 +53,16 @@ export const SubscriptionList = ({
           {...subscription}
           extend={async () => await onExtend?.(subscription.id)}
           cancel={async () => await onCancel?.(subscription.id)}
+          reactivate={
+            onReactivate ?
+              async () => await onReactivate(subscription.id)
+            : undefined
+          }
+          revertUpgrade={
+            onRevertUpgrade ?
+              async () => await onRevertUpgrade(subscription.id)
+            : undefined
+          }
         />
       ))}
     </SubscriptionListWrapper>

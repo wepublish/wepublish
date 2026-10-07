@@ -212,6 +212,32 @@ export class PublicSubscriptionResolver {
     );
   }
 
+  @ResolveField(() => Boolean, {
+    description: `Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet.`,
+  })
+  async canRevertUpgrade(@Parent() subscription: Subscription) {
+    const replacements = await this.prisma.subscription.findMany({
+      where: {
+        replacesSubscriptionID: subscription.id,
+      },
+      include: {
+        invoices: {
+          where: {
+            paidAt: {
+              not: null,
+            },
+          },
+          take: 1,
+        },
+      },
+    });
+
+    return (
+      replacements.length > 0 &&
+      replacements.every(replacement => !replacement.invoices.length)
+    );
+  }
+
   @ResolveField(() => String, { nullable: true })
   async isActive(@Parent() parent: PSubscription) {
     const paymentMethod = await this.paymentMethodDataloader.load(

@@ -3010,6 +3010,11 @@ type Mutation {
   reactivateSubscription(id: String!): PublicSubscription!
 
   """
+  Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created.
+  """
+  reactivateUserSubscription(id: String!): PublicSubscription!
+
+  """
   This mutation registers a new member by providing name, email, and other required information.
   """
   registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, flair: String, name: String!, password: String): Registration!
@@ -3061,6 +3066,16 @@ type Mutation {
   Retries the failed periodic job and then catches up every run up to today. Answers once the failed run is taken over; the runs go on in the background. Refused while a run is going on.
   """
   retryPeriodicJob: PeriodicJob!
+
+  """
+  Undoes an upgrade of a subscription as long as the new subscription has not been paid for.
+  """
+  revertSubscriptionUpgrade(id: String!): PublicSubscription!
+
+  """
+  Undoes an upgrade of one of the authenticated user's own subscriptions as long as the new subscription has not been paid for. The replacement subscription is removed and the original one continues.
+  """
+  revertUserSubscriptionUpgrade(subscriptionId: String!): PublicSubscription!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -4094,6 +4109,11 @@ input PropertyInput {
 type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
+
+  """
+  Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet.
+  """
+  canRevertUpgrade: Boolean!
   confirmed: Boolean!
   createdAt: DateTime!
   currency: Currency!

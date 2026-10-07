@@ -2350,6 +2350,12 @@
         },
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
       },
+      "revertUpgrade": {
+        "title": "Undo upgrade",
+        "modalTitle": "Undo the upgrade?",
+        "modalMessage": "The new subscription and its invoices are deleted and the replaced subscription continues as before. This only works as long as the new subscription has not been paid.",
+        "confirm": "Undo upgrade"
+      },
       "reactivation": {
         "deactivatedSince": "Deactivated since {{date, ccc PP p}} · Reason: {{reason}}",
         "deactivatedOn": "Deactivation on {{date, ccc PP p}} · Reason: {{reason}}",
