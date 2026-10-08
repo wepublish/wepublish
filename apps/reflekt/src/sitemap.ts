@@ -1,12 +1,10 @@
 import { generateSitemap } from '@wepublish/feed/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  Article,
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
   getApiClient,
-  Page,
   PageListDocument,
   PageListQueryVariables,
   PageSort,
@@ -64,9 +62,10 @@ const siteUrlFromRequest = (req: NextApiRequest) => {
 };
 
 export const getSitemap = async (req: NextApiRequest): Promise<string> => {
-  const siteUrl = (
-    process.env.WEBSITE_URL || siteUrlFromRequest(req)
-  ).replace(/\/$/, '');
+  const siteUrl = (process.env.WEBSITE_URL || siteUrlFromRequest(req)).replace(
+    /\/$/,
+    ''
+  );
 
   const generate = generateSitemap({
     siteUrl,
@@ -79,7 +78,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
   });
 
   const [articles, pages] = await Promise.all([
-    fetchUpToSitemapLimit<Article>(async (take, skip) => {
+    fetchUpToSitemapLimit(async (take, skip) => {
       const { data } = await client.query({
         query: ArticleListDocument,
         variables: {
@@ -92,7 +91,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
 
       return data?.articles;
     }),
-    fetchUpToSitemapLimit<Page>(async (take, skip) => {
+    fetchUpToSitemapLimit(async (take, skip) => {
       const { data } = await client.query({
         query: PageListDocument,
         variables: {

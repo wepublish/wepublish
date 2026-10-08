@@ -23,9 +23,9 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithApiClient,
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
+  createWithApiClient,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
@@ -63,6 +63,7 @@ import {
 import { ReflektLoginForm } from '../src/components/reflekt-login-form';
 import { ReflektMemberPlanPicker } from '../src/components/reflekt-memberplan-picker';
 import { ReflektMemberPlanItem } from '../src/components/reflekt-memberplan-picker-item';
+import { ReflektUpgrade } from '../src/components/reflekt-upgrade';
 import { ReflektModal } from '../src/components/reflekt-modal';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
 import { ReflektPage } from '../src/components/reflekt-page';
@@ -113,7 +114,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
   : format(date, 'dd. MMMM yyyy');
 
 export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
+  sessionToken?: FullSessionWithTokenWithoutUserFragment;
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
@@ -161,6 +162,7 @@ function CustomApp({
               AuthorListItem={ReflektAuthorListItem}
               Banner={ReflektBanner}
               Subscribe={ReflektSubscribeForm}
+              Upgrade={ReflektUpgrade}
               GoodiePicker={ReflektGoodiePicker}
               MemberPlanPicker={ReflektMemberPlanPicker}
               MemberPlanItem={ReflektMemberPlanItem}

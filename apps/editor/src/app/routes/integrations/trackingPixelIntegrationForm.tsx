@@ -1,4 +1,6 @@
 import {
+  CreateTrackingPixelSettingDocument,
+  DeleteTrackingPixelSettingDocument,
   SettingTrackingPixelProvider,
   TrackingPixelProviderType,
   TrackingPixelSettingsDocument,
@@ -37,6 +39,14 @@ export function TrackingPixelIntegrationForm() {
       mutation={UpdateTrackingPixelSettingDocument}
       dataKey="trackingPixelSettings"
       schema={trackingPixelSettingsSchema}
+      registry={{
+        createMutation: CreateTrackingPixelSettingDocument,
+        deleteMutation: DeleteTrackingPixelSettingDocument,
+        types: Object.values(TrackingPixelProviderType).map(value => ({
+          label: value,
+          value,
+        })),
+      }}
       getLogo={setting => {
         switch (setting.type) {
           case TrackingPixelProviderType.Prolitteris:
@@ -69,15 +79,20 @@ export function TrackingPixelIntegrationForm() {
             type: 'text',
             name: 'prolitteris_memberNr',
             label: t('integrations.trackingPixelSettings.prolitterisMemberNr'),
+            info: t(
+              'integrations.trackingPixelSettings.prolitterisMemberNrInfo'
+            ),
           });
           commonFields.push({
             type: 'text',
             name: 'prolitteris_username',
             label: t('integrations.trackingPixelSettings.prolitterisUsername'),
+            info: t('integrations.trackingPixelSettings.prolitterisLoginInfo'),
           });
           commonFields.push({
             name: 'prolitteris_password',
             label: t('integrations.trackingPixelSettings.prolitterisPassword'),
+            info: t('integrations.trackingPixelSettings.prolitterisLoginInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
           });
@@ -86,12 +101,18 @@ export function TrackingPixelIntegrationForm() {
             label: t(
               'integrations.trackingPixelSettings.prolitterisOnlyPaidContentAccess'
             ),
+            info: t(
+              'integrations.trackingPixelSettings.prolitterisOnlyPaidContentAccessInfo'
+            ),
             type: 'checkbox',
           });
           commonFields.push({
             name: 'prolitteris_usePublisherInternalKey',
             label: t(
               'integrations.trackingPixelSettings.prolitterisUsePublisherInternalKey'
+            ),
+            info: t(
+              'integrations.trackingPixelSettings.prolitterisUsePublisherInternalKeyInfo'
             ),
             type: 'checkbox',
           });
@@ -100,6 +121,9 @@ export function TrackingPixelIntegrationForm() {
             name: 'prolitteris_publisherInternalKeyDomain',
             label: t(
               'integrations.trackingPixelSettings.prolitterisPublisherInternalKeyDomain'
+            ),
+            info: t(
+              'integrations.trackingPixelSettings.prolitterisPublisherInternalKeyDomainInfo'
             ),
           });
         }

@@ -18,6 +18,7 @@ import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import { InvoiceWithItems, PaymentProvider } from '@wepublish/payment/api';
 import {
+  calculatePeriodAmount,
   logger,
   ONE_DAY_IN_MILLISECONDS,
   ONE_MONTH_IN_MILLISECONDS,
@@ -123,20 +124,7 @@ export function calculateAmountForPeriodicity(
   monthlyAmount: number,
   periodicity: PaymentPeriodicity
 ): number {
-  switch (periodicity) {
-    case PaymentPeriodicity.monthly:
-      return monthlyAmount;
-    case PaymentPeriodicity.quarterly:
-      return monthlyAmount * 3;
-    case PaymentPeriodicity.biannual:
-      return monthlyAmount * 6;
-    case PaymentPeriodicity.yearly:
-      return monthlyAmount * 12;
-    case PaymentPeriodicity.biennial:
-      return monthlyAmount * 24;
-    case PaymentPeriodicity.lifetime:
-      return monthlyAmount * 1200;
-  }
+  return calculatePeriodAmount(monthlyAmount, periodicity);
 }
 
 export class MemberContext implements MemberContextInterface {
@@ -653,7 +641,7 @@ export class MemberContext implements MemberContextInterface {
       input?.autoRenew === false
     ) {
       throw new Error(
-        `It is not possible to update the subscription with payment provider "${paymentProvider.getName()}".`
+        `It is not possible to update the subscription with payment provider "${await paymentProvider.getName()}".`
       );
     }
 
@@ -661,7 +649,7 @@ export class MemberContext implements MemberContextInterface {
     if (input.monthlyAmount !== originalSubscription.monthlyAmount) {
       await paymentProvider.updateRemoteSubscriptionAmount({
         subscription: originalSubscription,
-        newAmount: parseInt(`${input.monthlyAmount}`, 10),
+        newAmount: Number(input.monthlyAmount),
       });
     }
   }
@@ -782,6 +770,7 @@ export class MemberContext implements MemberContextInterface {
     discount,
     discountCodeId,
     goodieId,
+    skipMail,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -797,6 +786,8 @@ export class MemberContext implements MemberContextInterface {
     discount?: number;
     discountCodeId?: string;
     goodieId?: string;
+    /** Set when an editor creates the subscription and chose not to mail the reader. */
+    skipMail?: boolean;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -875,17 +866,17 @@ export class MemberContext implements MemberContextInterface {
       throw new InternalServerErrorException();
     }
 
-    // Send subscribe mail
-
-    const subscriptionEvent =
-      needsConfirmation ?
-        SubscriptionEvent.CONFIRM_SUBSCRIPTION
-      : SubscriptionEvent.SUBSCRIBE;
-    await this.sendMailForSubscriptionEvent(
-      subscriptionEvent,
-      subscription,
-      {}
-    );
+    if (!skipMail) {
+      const subscriptionEvent =
+        needsConfirmation ?
+          SubscriptionEvent.CONFIRM_SUBSCRIPTION
+        : SubscriptionEvent.SUBSCRIBE;
+      await this.sendMailForSubscriptionEvent(
+        subscriptionEvent,
+        subscription,
+        {}
+      );
+    }
 
     return {
       subscription,
@@ -1036,6 +1027,11 @@ export class MemberContext implements MemberContextInterface {
         throw new InternalServerErrorException();
       }
 
+      const periodAmount = calculateAmountForPeriodicity(
+        monthlyAmount,
+        paymentPeriodicity
+      );
+
       const invoice = await this.prisma.invoice.create({
         data: {
           currency: memberPlan.currency,
@@ -1048,7 +1044,7 @@ export class MemberContext implements MemberContextInterface {
             create: {
               name: 'Membership',
               description: `From ${startsAt.toISOString()} to ${endsAt.toISOString()}`,
-              amount: monthlyAmount,
+              amount: periodAmount,
               quantity: 1,
             },
           },
@@ -1065,7 +1061,7 @@ export class MemberContext implements MemberContextInterface {
           periods: {
             create: {
               startsAt,
-              amount: monthlyAmount,
+              amount: periodAmount,
               endsAt,
               paymentPeriodicity,
               invoiceID: invoice.id,

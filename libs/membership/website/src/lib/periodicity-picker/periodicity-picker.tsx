@@ -1,4 +1,11 @@
-import { FormControl, InputLabel, Select } from '@mui/material';
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  ToggleButton,
+  ToggleButtonGroup,
+  lighten,
+} from '@mui/material';
 import styled from '@emotion/styled';
 import { PaymentPeriodicity } from '@wepublish/website/api';
 import { BuilderPeriodicityPickerProps } from '@wepublish/website/builder';
@@ -10,11 +17,27 @@ export const PeriodicityPickerWrapper = styled(FormControl)`
   display: grid;
 `;
 
+export const PeriodicityToggleGroup = styled(ToggleButtonGroup)`
+  justify-self: center;
+
+  .MuiToggleButton-root.Mui-selected {
+    color: inherit;
+    border-color: ${({ theme }) => theme.palette.primary.main};
+    background-color: ${({ theme }) =>
+      lighten(theme.palette.primary.main, 0.85)};
+
+    &:hover {
+      background-color: ${({ theme }) =>
+        lighten(theme.palette.primary.main, 0.75)};
+    }
+  }
+`;
+
 export const PeriodicityPicker = forwardRef<
   HTMLButtonElement,
   BuilderPeriodicityPickerProps
 >(function PeriodicityPicker(
-  { periodicities, onChange, value, className, name },
+  { periodicities, onChange, value, className, name, variant = 'select' },
   ref
 ) {
   const { t } = useTranslation();
@@ -29,6 +52,30 @@ export const PeriodicityPicker = forwardRef<
 
   if (!show) {
     return null;
+  }
+
+  if (variant === 'toggle') {
+    return (
+      <PeriodicityToggleGroup
+        className={className}
+        exclusive
+        value={value ?? ''}
+        onChange={(_event, periodicity) => {
+          if (periodicity) {
+            onChange(periodicity as PaymentPeriodicity);
+          }
+        }}
+      >
+        {periodicities.map(period => (
+          <ToggleButton
+            key={period}
+            value={period}
+          >
+            {formatRenewalPeriod(period)}
+          </ToggleButton>
+        ))}
+      </PeriodicityToggleGroup>
+    );
   }
 
   return (

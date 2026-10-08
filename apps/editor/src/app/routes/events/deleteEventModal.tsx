@@ -1,28 +1,25 @@
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
-import {
-  Event,
-  EventListQuery,
-  useDeleteEventMutation,
-} from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { DeleteEventDocument, FullEventFragment } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
 
 type DeleteEventProps = {
-  event: Event | undefined;
+  event: FullEventFragment | undefined;
   onClose(): void;
-  onDelete(): Promise<ApolloQueryResult<EventListQuery>>;
+  onDelete(): Promise<unknown>;
 };
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -47,7 +44,7 @@ export function DeleteEventModal({
 }: DeleteEventProps) {
   const { t } = useTranslation();
 
-  const [deleteEventMutation] = useDeleteEventMutation();
+  const [deleteEventMutation] = useMutation(DeleteEventDocument);
 
   async function deleteEvent() {
     if (!event) {

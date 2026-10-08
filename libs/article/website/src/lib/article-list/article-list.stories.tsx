@@ -1,6 +1,5 @@
 import { Meta } from '@storybook/nextjs-vite';
 import { ArticleList } from './article-list';
-import { ApolloError } from '@apollo/client';
 import { mockArticle, mockArticleRevision } from '@wepublish/storybook/mocks';
 
 export default {
@@ -53,9 +52,7 @@ export const WithError = {
   args: {
     data: undefined,
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Article list error',
-    }),
+    error: new Error('Article list error'),
   },
 };
 

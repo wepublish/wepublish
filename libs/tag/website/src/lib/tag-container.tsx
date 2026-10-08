@@ -1,7 +1,8 @@
+import { useQuery } from '@apollo/client/react';
 import {
+  ArticleListDocument,
+  TagDocument,
   TagQueryVariables,
-  useArticleListQuery,
-  useTagQuery,
 } from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
@@ -20,14 +21,14 @@ export function TagContainer({
   variables,
   onVariablesChange,
 }: TagContainerProps) {
-  const tagData = useTagQuery({
+  const tagData = useQuery(TagDocument, {
     variables: {
       tag,
       type,
     },
   });
 
-  const articles = useArticleListQuery({
+  const articles = useQuery(ArticleListDocument, {
     skip: !tagData.data?.tag?.id,
     variables: {
       ...variables,

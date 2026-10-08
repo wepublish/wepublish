@@ -3,9 +3,6 @@
 exports[`ImageDataloaderService load should load many 1`] = `
 [
   {
-    "include": {
-      "focalPoint": true,
-    },
     "where": {
       "id": {
         "in": [
@@ -21,9 +18,6 @@ exports[`ImageDataloaderService load should load many 1`] = `
 exports[`ImageDataloaderService load should load one 1`] = `
 [
   {
-    "include": {
-      "focalPoint": true,
-    },
     "where": {
       "id": {
         "in": [

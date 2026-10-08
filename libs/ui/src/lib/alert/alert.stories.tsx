@@ -7,7 +7,11 @@ export default {
   component: AlertCmp,
   title: 'UI/Alert',
   render: () => (
-    <Stack gap={1}>
+    <Stack
+      sx={{
+        gap: 1,
+      }}
+    >
       <AlertCmp severity="error">Error</AlertCmp>
       <AlertCmp severity="warning">Warning</AlertCmp>
       <AlertCmp severity="info">Info</AlertCmp>

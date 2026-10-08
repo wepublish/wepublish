@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Button, Drawer, Form, Radio, RadioGroup, Toggle } from 'rsuite';
 
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { LinkPageBreakBlockValue } from '../blocks/types';
 
 export interface LinkPageBreakEditPanelProps {
@@ -39,7 +40,8 @@ export function LinkPageBreakEditPanel({
           <Form.Stack fluid>
             <Form.Group controlId="linkUrlLabel">
               <Form.Label>
-                {t('linkPageBreakEditPanel.link.urlLabel')}
+                {t('linkPageBreakEditPanel.link.urlLabel')}{' '}
+                <InfoTooltip text={t('linkPageBreakEditPanel.link.urlInfo')} />
               </Form.Label>
 
               <Form.Control
@@ -89,12 +91,10 @@ export function LinkPageBreakEditPanel({
             </Form.Group>
 
             <Form.Group controlId="linkHideToggle">
-              <Form.Label>
-                {t('linkPageBreakEditPanel.link.hideToggleLabel')}
-              </Form.Label>
               <Toggle
                 onChange={hideButton => onChange?.({ ...value, hideButton })}
                 checked={hideButton}
+                label={t('linkPageBreakEditPanel.link.hideToggleLabel')}
               />
               <Form.Text>
                 {t('linkPageBreakEditPanel.link.hideToogleDescription')}

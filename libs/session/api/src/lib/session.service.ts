@@ -11,14 +11,18 @@ import {
 } from './impersonation';
 import { UserAuthenticationService } from './user-authentication.service';
 import { JwtAuthenticationService } from './jwt-authentication.service';
-import { unselectPassword, UserSession } from '@wepublish/authentication/api';
+import {
+  SessionCacheInvalidator,
+  unselectPassword,
+  UserSession,
+} from '@wepublish/authentication/api';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { Validator } from './validator';
 import { UserService } from '@wepublish/user/api';
 import {
-  FIFTEEN_MINUTES_IN_MILLISECONDS,
   logger,
+  ONE_MINUTE_IN_MILLISECONDS,
   USER_PROPERTY_LAST_LOGIN_LINK_SEND,
 } from '@wepublish/utils/api';
 import { JwtService } from './jwt.service';
@@ -41,8 +45,21 @@ export class SessionService {
     private jwtService: JwtService,
     private settingsService: SettingsService,
     private mailContext: MailContext,
-    private totpService: TotpService
+    private totpService: TotpService,
+    private sessionCache: SessionCacheInvalidator
   ) {}
+
+  private async sessionTtlMs(): Promise<number> {
+    const days = await this.settingsService
+      .settingByName(SettingName.SESSION_TTL_DAYS)
+      .catch(() => null);
+
+    const value = Number(days?.value);
+
+    return Number.isFinite(value) && value > 0 ?
+        value * 24 * 60 * 60 * 1000
+      : this.sessionTTL;
+  }
 
   /**
    * Checks if a given email requires TOTP during login.
@@ -145,11 +162,14 @@ export class SessionService {
       return false;
     }
 
-    return !!(await this.prisma.session.delete({
+    const revoked = await this.prisma.session.delete({
       where: {
         token: session.token,
       },
-    }));
+    });
+    await this.sessionCache.invalidate();
+
+    return !!revoked;
   }
 
   async createImpersonationGrant({
@@ -254,6 +274,7 @@ export class SessionService {
         ...(ids?.length ? { id: { in: ids } } : {}),
       },
     });
+    await this.sessionCache.invalidate();
 
     return count;
   }
@@ -269,7 +290,7 @@ export class SessionService {
     const token = nanoid(IDAlphabet, 64);
 
     const expiresAt = new Date(
-      Date.now() + (options?.ttlMs ?? this.sessionTTL)
+      Date.now() + (options?.ttlMs ?? (await this.sessionTtlMs()))
     );
 
     const [{ createdAt }] = await Promise.all([
@@ -323,10 +344,10 @@ export class SessionService {
     if (
       lastSendTimeStamp &&
       parseInt(lastSendTimeStamp.value) >
-        Date.now() - FIFTEEN_MINUTES_IN_MILLISECONDS
+        Date.now() - ONE_MINUTE_IN_MILLISECONDS
     ) {
       logger('mutation.public').warn(
-        'User with ID %s requested Login Link multiple times in 15 min time window',
+        'User with ID %s requested Login Link multiple times in one minute time window',
         user.id
       );
 

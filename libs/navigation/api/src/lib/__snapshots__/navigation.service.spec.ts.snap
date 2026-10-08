@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`NavigationService should create a navigation 1`] = `
+exports[`NavigationService > should create a navigation 1`] = `
 [
   {
     "data": {
@@ -16,7 +16,7 @@ exports[`NavigationService should create a navigation 1`] = `
 ]
 `;
 
-exports[`NavigationService should delete a navigation by id 1`] = `
+exports[`NavigationService > should delete a navigation by id 1`] = `
 [
   {
     "where": {
@@ -26,7 +26,7 @@ exports[`NavigationService should delete a navigation by id 1`] = `
 ]
 `;
 
-exports[`NavigationService should get all navigations 1`] = `
+exports[`NavigationService > should get all navigations 1`] = `
 [
   {
     "orderBy": {
@@ -36,7 +36,7 @@ exports[`NavigationService should get all navigations 1`] = `
 ]
 `;
 
-exports[`NavigationService should update a navigation 1`] = `
+exports[`NavigationService > should update a navigation 1`] = `
 [
   {
     "data": {

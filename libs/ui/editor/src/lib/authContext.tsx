@@ -1,7 +1,8 @@
+import { useQuery } from '@apollo/client/react';
 import {
   FullUserRoleFragment,
   LocalStorageKey,
-  useMeQuery,
+  MeDocument,
 } from '@wepublish/editor/api';
 import {
   createContext,
@@ -71,13 +72,17 @@ export interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { data, loading, refetch, error } = useMeQuery();
+  const { data, loading, refetch, error } = useQuery(MeDocument);
   const [state, dispatch] = useReducer(authReducer, {});
 
   const isPageActive = usePageVisibility();
 
   // when it gets active, fetch the Me query again to know if user still logged in.
   useEffect(() => {
+    if (!isPageActive) {
+      return;
+    }
+
     refetch().catch(() => {
       dispatch({
         type: AuthDispatchActionType.Logout,
@@ -104,7 +109,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [data, error, loading]);
 
-  return loading ? null : (
+  // only the very first load may hide the editor: a refetch flips `loading`
+  // too, and unmounting the tree there would remount (and refetch) everything
+  return loading && !data ? null : (
       <AuthDispatchContext.Provider value={dispatch}>
         {<AuthContext.Provider value={state}>{children}</AuthContext.Provider>}
       </AuthDispatchContext.Provider>

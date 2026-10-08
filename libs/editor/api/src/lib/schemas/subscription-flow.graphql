@@ -25,6 +25,7 @@ mutation CreateSubscriptionFlow(
 
 mutation UpdateSubscriptionFlow(
   $id: String!
+  $memberPlanId: String
   $paymentMethodIds: [String!]!
   $periodicities: [PaymentPeriodicity!]!
   $autoRenewal: [Boolean!]!
@@ -39,7 +40,7 @@ mutation UpdateSubscriptionFlow(
   }
 }
 
-mutation DeleteSubscriptionFlow($id: String!) {
+mutation DeleteSubscriptionFlow($id: String!, $memberPlanId: String) {
   deleteSubscriptionFlow(id: $id) {
     ...SubscriptionFlow
   }
@@ -47,6 +48,7 @@ mutation DeleteSubscriptionFlow($id: String!) {
 
 mutation CreateSubscriptionInterval(
   $subscriptionFlowId: String!
+  $memberPlanId: String
   $daysAwayFromEnding: Int
   $mailTemplateId: String
   $event: SubscriptionEvent!
@@ -63,6 +65,7 @@ mutation CreateSubscriptionInterval(
 
 mutation UpdateSubscriptionInterval(
   $id: String!
+  $memberPlanId: String
   $daysAwayFromEnding: Int
   $mailTemplateId: String
 ) {
@@ -75,7 +78,7 @@ mutation UpdateSubscriptionInterval(
   }
 }
 
-mutation DeleteSubscriptionInterval($id: String!) {
+mutation DeleteSubscriptionInterval($id: String!, $memberPlanId: String) {
   deleteSubscriptionInterval(id: $id) {
     ...SubscriptionFlow
   }
@@ -101,7 +104,7 @@ fragment SubscriptionFlow on SubscriptionFlowModel {
   intervals {
     ...SubscriptionInterval
   }
-  numberOfSubscriptions
+  numberOfSubscriptions(memberPlanId: $memberPlanId)
 }
 
 fragment SubscriptionInterval on SubscriptionInterval {
@@ -122,8 +125,6 @@ fragment MemberPlanRef on MemberPlan {
   id
   name
   productType
-  amountPerMonthMin
-  amountPerMonthMax
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
   }

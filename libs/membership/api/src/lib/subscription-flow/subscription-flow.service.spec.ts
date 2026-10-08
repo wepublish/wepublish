@@ -6,22 +6,23 @@ import {
 } from '@prisma/client';
 import { SubscriptionFlowService } from './subscription-flow.service';
 import { BadRequestException } from '@nestjs/common';
+import type { Mock } from 'vitest';
 
 describe('SubscriptionFlowService', () => {
   let service: SubscriptionFlowService;
   let prismaMock: {
     subscriptionFlow: {
-      [method in keyof PrismaClient['subscriptionFlow']]?: jest.Mock;
+      [method in keyof PrismaClient['subscriptionFlow']]?: Mock;
     };
     subscriptionInterval: {
-      [method in keyof PrismaClient['subscriptionInterval']]?: jest.Mock;
+      [method in keyof PrismaClient['subscriptionInterval']]?: Mock;
     };
-    memberPlan: { [method in keyof PrismaClient['memberPlan']]?: jest.Mock };
+    memberPlan: { [method in keyof PrismaClient['memberPlan']]?: Mock };
     paymentMethod: {
-      [method in keyof PrismaClient['paymentMethod']]?: jest.Mock;
+      [method in keyof PrismaClient['paymentMethod']]?: Mock;
     };
     mailTemplate: {
-      [method in keyof PrismaClient['mailTemplate']]?: jest.Mock;
+      [method in keyof PrismaClient['mailTemplate']]?: Mock;
     };
   };
 
@@ -31,7 +32,6 @@ describe('SubscriptionFlowService', () => {
     slug: 'test-plan',
     description: 'Test Description',
     active: true,
-    amountPerMonthMin: 1000,
     availablePaymentMethods: [],
     createdAt: new Date(),
     modifiedAt: new Date(),
@@ -61,35 +61,35 @@ describe('SubscriptionFlowService', () => {
   beforeEach(async () => {
     prismaMock = {
       subscriptionFlow: {
-        findMany: jest.fn(),
-        findFirst: jest.fn(),
-        findUnique: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
-        count: jest.fn(),
+        findMany: vi.fn(),
+        findFirst: vi.fn(),
+        findUnique: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+        count: vi.fn(),
       },
       subscriptionInterval: {
-        findFirst: jest.fn(),
-        findUnique: jest.fn(),
-        findMany: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
+        findFirst: vi.fn(),
+        findUnique: vi.fn(),
+        findMany: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
       },
       memberPlan: {
-        findUnique: jest.fn(),
+        findUnique: vi.fn(),
       },
       paymentMethod: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
       mailTemplate: {
-        findUnique: jest.fn(),
+        findUnique: vi.fn(),
       },
     } as any;
 
     // Add transaction method separately
-    (prismaMock as any).$transaction = jest.fn();
+    (prismaMock as any).$transaction = vi.fn();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [

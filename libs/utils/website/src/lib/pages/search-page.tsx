@@ -1,19 +1,18 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CircularProgress } from '@mui/material';
 import { articleToTeaser } from '@wepublish/article/website';
 import {
-  addClientCacheToProps,
   FullArticleTeaserFragment,
-  getApiClient,
+  FullPageTeaserFragment,
   NavigationListDocument,
-  Page,
-  PageTeaser,
   PeerProfileDocument,
   PhraseDocument,
   PhraseQuery,
   TeaserType,
-  usePhraseQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
@@ -36,7 +35,9 @@ const SearchForm = styled('form')`
 
 const SearchPageWrapper = styled(PageWrapper)``;
 
-const pageToTeaser = (page: Page): PageTeaser => ({
+const pageToTeaser = (
+  page: FullPageTeaserFragment['page']
+): FullPageTeaserFragment => ({
   __typename: 'PageTeaser',
   type: TeaserType.Page,
   page,
@@ -84,10 +85,10 @@ export const SearchPage = ({
     data: phraseData,
     loading,
     error,
-  } = usePhraseQuery({
+  } = useQuery(PhraseDocument, {
     skip: !phraseQuery,
     variables: {
-      query: phraseQuery!,
+      query: phraseQuery ?? '', // skipped if undefined anyways
       take: ITEMS_PER_PAGE,
       skip: (page - 1) * ITEMS_PER_PAGE,
     },
@@ -108,7 +109,7 @@ export const SearchPage = ({
       articleToTeaser(node as FullArticleTeaserFragment['article'])
     );
     const pageTeasers = phraseData.phrase.pages.nodes.map(node =>
-      pageToTeaser(node as Page)
+      pageToTeaser(node as FullPageTeaserFragment['page'])
     );
 
     return [...articleTeasers, ...pageTeasers];

@@ -34,10 +34,10 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
+  createWithApiClient,
 } from '@wepublish/website/api';
-import { createWithApiClient } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -113,7 +113,7 @@ const NavBar = styled(NavbarContainer)`
 `;
 
 export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
+  sessionToken?: FullSessionWithTokenWithoutUserFragment;
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;

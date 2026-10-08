@@ -1,3 +1,4 @@
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArticleService, createArticleFilter } from './article.service';
 import { Article, PrismaClient, TaggedArticles } from '@prisma/client';
@@ -7,78 +8,110 @@ import { ArticleSort } from './article.model';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
+import { ArticlePublicationWatcher } from './article-publication.watcher';
+import type { Mock } from 'vitest';
 
-jest.mock('@wepublish/block-content/api');
+vi.mock('@wepublish/block-content/api');
 
 describe('ArticleService', () => {
   let service: ArticleService;
   let prismaMock: {
-    $queryRaw: jest.Mock;
+    $queryRaw: Mock;
     articleTrackingPixels: {
-      [method in keyof PrismaClient['articleTrackingPixels']]?: jest.Mock;
+      [method in keyof PrismaClient['articleTrackingPixels']]?: Mock;
     };
-    article: { [method in keyof PrismaClient['article']]?: jest.Mock };
+    article: { [method in keyof PrismaClient['article']]?: Mock };
     articleRevision: {
-      [method in keyof PrismaClient['articleRevision']]?: jest.Mock;
+      [method in keyof PrismaClient['articleRevision']]?: Mock;
     };
     taggedArticles: {
-      [method in keyof PrismaClient['taggedArticles']]?: jest.Mock;
+      [method in keyof PrismaClient['taggedArticles']]?: Mock;
     };
   };
-  let trackingPixelMock: { [method in keyof TrackingPixelService]?: jest.Mock };
+  let trackingPixelMock: { [method in keyof TrackingPixelService]?: Mock };
+  let publicContentCache: {
+    invalidate: Mock;
+    invalidateDraft: Mock;
+    invalidateAt: Mock;
+    invalidateNavigations: Mock;
+    invalidateArticlePages: Mock;
+    invalidateArticleLayout: Mock;
+  };
+  let publicationWatcher: { schedule: Mock };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2023-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   beforeEach(async () => {
     prismaMock = {
-      $queryRaw: jest.fn(),
+      $queryRaw: vi.fn(),
       article: {
-        count: jest.fn(),
-        findMany: jest.fn(),
-        findFirst: jest.fn(),
-        findUnique: jest.fn(),
-        delete: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        count: vi.fn(),
+        findMany: vi.fn(),
+        findFirst: vi.fn(),
+        findUnique: vi.fn(),
+        delete: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
       articleRevision: {
-        updateMany: jest.fn(),
-        update: jest.fn(),
-        findUnique: jest.fn(),
-        findFirst: jest.fn(),
-        findMany: jest.fn(),
-        count: jest.fn(),
+        updateMany: vi.fn(),
+        update: vi.fn(),
+        findUnique: vi.fn(),
+        findFirst: vi.fn(),
+        findMany: vi.fn(),
+        count: vi.fn(),
       },
       articleTrackingPixels: {
-        createMany: jest.fn(),
-        findMany: jest.fn(),
+        createMany: vi.fn(),
+        findMany: vi.fn(),
       },
       taggedArticles: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
     };
 
+    publicContentCache = {
+      invalidate: vi.fn().mockResolvedValue(undefined),
+      invalidateDraft: vi.fn().mockResolvedValue(undefined),
+      invalidateAt: vi.fn(),
+      invalidateNavigations: vi.fn().mockResolvedValue(undefined),
+      invalidateArticlePages: vi.fn().mockResolvedValue(undefined),
+      invalidateArticleLayout: vi.fn().mockResolvedValue(undefined),
+    };
+
+    publicationWatcher = { schedule: vi.fn() };
+
     trackingPixelMock = {
-      addMissingArticleTrackingPixels: jest.fn(),
-      getArticlePixels: jest.fn(),
+      addMissingArticleTrackingPixels: vi.fn(),
+      getArticlePixels: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [KvTtlCacheModule],
       providers: [
         ArticleService,
         { provide: PrismaClient, useValue: prismaMock },
         { provide: TrackingPixelService, useValue: trackingPixelMock },
         {
+          provide: PublicContentCacheInvalidator,
+          useValue: publicContentCache,
+        },
+        {
+          provide: ArticlePublicationWatcher,
+          useValue: publicationWatcher,
+        },
+        {
           provide: ArticleDataloaderService,
           useValue: {
-            prime: jest.fn(),
+            prime: vi.fn(),
           },
         },
       ],
@@ -89,7 +122,7 @@ describe('ArticleService', () => {
 
   it('should query an article by slug', async () => {
     prismaMock.article.findFirst?.mockResolvedValue({});
-    await service.getArticleBySlug('1234');
+    await service.getArticleBySlug('Some-Slug');
 
     expect(prismaMock.article.findFirst?.mock.calls[0]).toMatchSnapshot();
   });
@@ -322,7 +355,7 @@ describe('ArticleService', () => {
       prismaMock.articleTrackingPixels.createMany?.mock.calls[0]
     ).toMatchSnapshot();
     // make sure mapBlockUnionMap is called
-    expect((mapBlockUnionMap as jest.Mock).mock.calls[0]).toMatchSnapshot();
+    expect((mapBlockUnionMap as Mock).mock.calls[0]).toMatchSnapshot();
   });
 
   it('should not create tracking pixels for peer articles', async () => {
@@ -349,6 +382,69 @@ describe('ArticleService', () => {
 
     expect(prismaMock.articleTrackingPixels.createMany).not.toHaveBeenCalled();
   });
+
+  it('should lowercase the slug when creating an article', async () => {
+    prismaMock.article.create?.mockResolvedValue({
+      id: '1234',
+    } as Partial<Article>);
+
+    await service.createArticle(
+      {
+        slug: 'Some-Slug',
+        breaking: false,
+        disableComments: false,
+        hidden: false,
+        hideAuthor: false,
+        shared: false,
+        properties: [],
+        socialMediaAuthorIds: [],
+        tagIds: [],
+        authors: [],
+        blocks: [],
+      },
+      '1234'
+    );
+
+    expect(prismaMock.article.create?.mock.calls[0][0].data.slug).toBe(
+      'some-slug'
+    );
+  });
+
+  it.each([
+    ['Some-Slug', 'some-slug'],
+    [null, null],
+    [undefined, undefined],
+  ])(
+    'should normalize the slug %p to %p when updating an article',
+    async (slug, expected) => {
+      prismaMock.article.findUnique?.mockResolvedValue({
+        id: '123',
+        tags: [],
+      });
+
+      await service.updateArticle(
+        {
+          id: '123',
+          slug: slug as string | undefined,
+          breaking: false,
+          disableComments: false,
+          hidden: false,
+          hideAuthor: false,
+          shared: false,
+          properties: [],
+          socialMediaAuthorIds: [],
+          tagIds: [],
+          authors: [],
+          blocks: [],
+        },
+        '1234'
+      );
+
+      expect(prismaMock.article.update?.mock.calls[0][0].data.slug).toBe(
+        expected
+      );
+    }
+  );
 
   it('should update an article', async () => {
     prismaMock.article.findUnique?.mockResolvedValue({
@@ -389,7 +485,7 @@ describe('ArticleService', () => {
     expect(prismaMock.article.findUnique?.mock.calls[0]).toMatchSnapshot();
     expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot();
     // make sure mapBlockUnionMap is called
-    expect((mapBlockUnionMap as jest.Mock).mock.calls[0]).toMatchSnapshot();
+    expect((mapBlockUnionMap as Mock).mock.calls[0]).toMatchSnapshot();
   });
 
   it('should delete an article', async () => {
@@ -496,6 +592,242 @@ describe('ArticleService', () => {
 
     expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot();
     expect(prismaMock.articleRevision.update?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it.each([
+    [
+      'publishing',
+      () => service.publishArticle('1234', new Date('2025-01-01')),
+    ],
+    ['unpublishing', () => service.unpublishArticle('1234')],
+    ['deleting', () => service.deleteArticle('1234')],
+  ])('clears cached graphql answers after %s a article', async (_, change) => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      revisions: [{ id: '1234-1234' }],
+    });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234', revisions: [] });
+
+    await change();
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
+  });
+
+  it.each([
+    [
+      'publishing',
+      () => service.publishArticle('1234', new Date('2025-01-01')),
+    ],
+    ['unpublishing', () => service.unpublishArticle('1234')],
+    ['deleting', () => service.deleteArticle('1234')],
+  ])(
+    'tells the websites the article page changed after %s a article',
+    async (_, change) => {
+      prismaMock.article.findUnique?.mockResolvedValue({
+        id: '1234',
+        slug: 'one',
+        revisions: [{ id: '1234-1234' }],
+      });
+      prismaMock.article.update?.mockResolvedValue({
+        id: '1234',
+        slug: 'one',
+        revisions: [],
+      });
+
+      await change();
+
+      expect(publicContentCache.invalidateArticlePages).toHaveBeenCalledWith(
+        expect.objectContaining({ id: '1234', slug: 'one' })
+      );
+    }
+  );
+
+  it.each([
+    ['unpublishing', () => service.unpublishArticle('1234')],
+    ['deleting', () => service.deleteArticle('1234')],
+  ])(
+    'tells the websites to rebuild every article page after %s a article, since other articles show its teaser',
+    async (_, change) => {
+      prismaMock.article.findUnique?.mockResolvedValue({
+        id: '1234',
+        slug: 'one',
+        revisions: [{ id: '1234-1234' }],
+      });
+      prismaMock.article.update?.mockResolvedValue({
+        id: '1234',
+        slug: 'one',
+        revisions: [],
+      });
+
+      await change();
+
+      expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+    }
+  );
+
+  it('leaves the other article pages alone after publishing a article', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      slug: 'one',
+      revisions: [{ id: '1234-1234' }],
+    });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234', slug: 'one' });
+
+    await service.publishArticle('1234', new Date('2025-01-01'));
+
+    expect(publicContentCache.invalidateArticleLayout).not.toHaveBeenCalled();
+  });
+
+  it('tells the websites about the old and the new slug after updating a published article', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      slug: 'old',
+      publishedAt: new Date('2022-01-01'),
+      tags: [],
+    });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234', slug: 'new' });
+
+    await service.updateArticle(
+      {
+        id: '1234',
+        slug: 'new',
+        tagIds: [],
+        authors: [],
+        socialMediaAuthorIds: [],
+        blocks: [],
+      } as any,
+      '1'
+    );
+
+    expect(publicContentCache.invalidateArticlePages).toHaveBeenCalledWith(
+      expect.objectContaining({ id: '1234', slug: 'old' }),
+      expect.objectContaining({ id: '1234', slug: 'new' })
+    );
+  });
+
+  it('schedules a clear for the moment a article goes live', async () => {
+    const publishedAt = new Date('2023-01-01T00:00:20.000Z');
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      revisions: [{ id: '1234-1234' }],
+    });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234' });
+
+    await service.publishArticle('1234', publishedAt);
+
+    expect(publicationWatcher.schedule).toHaveBeenCalledWith(publishedAt);
+  });
+
+  it('schedules a clear for the moment a new revision of a published article goes live', async () => {
+    const publishedAt = new Date('2023-01-01T00:00:20.000Z');
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      slug: 'news',
+      publishedAt: new Date('2022-06-01'),
+      revisions: [{ id: '1234-1234' }],
+    });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234' });
+
+    await service.publishArticle('1234', publishedAt);
+
+    expect(publicationWatcher.schedule).toHaveBeenCalledWith(publishedAt);
+  });
+
+  it('clears cached navigations after deleting a article', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({ id: '1234' });
+
+    await service.deleteArticle('1234');
+
+    expect(publicContentCache.invalidateNavigations).toHaveBeenCalled();
+  });
+
+  it('clears cached answers after updating a published article', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      publishedAt: new Date('2022-01-01'),
+      tags: [],
+    });
+
+    await service.updateArticle(
+      {
+        id: '1234',
+        tagIds: [],
+        authors: [],
+        socialMediaAuthorIds: [],
+        blocks: [],
+      } as any,
+      '1'
+    );
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith('articles');
+  });
+
+  it.each([
+    [
+      'creating an article',
+      () =>
+        service.createArticle(
+          {
+            tagIds: [],
+            authors: [],
+            socialMediaAuthorIds: [],
+            blocks: [],
+          } as any,
+          '1'
+        ),
+    ],
+    [
+      'updating an unpublished article',
+      () =>
+        service.updateArticle(
+          {
+            id: '1234',
+            tagIds: [],
+            authors: [],
+            socialMediaAuthorIds: [],
+            blocks: [],
+          } as any,
+          '1'
+        ),
+    ],
+    ['duplicating an article', () => service.duplicateArticle('1234', '1')],
+    [
+      'restoring an article revision',
+      () => service.restoreArticleRevision('1234', 'revision-1', '1'),
+    ],
+    ['discarding an article draft', () => service.discardArticleDraft('1234')],
+  ])('clears only cached articles after %s', async (_, change) => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      publishedAt: null,
+      tags: [],
+      revisions: [
+        {
+          id: 'revision-1',
+          properties: [],
+          authors: [],
+          socialMediaAuthors: [],
+        },
+      ],
+    });
+    prismaMock.article.create?.mockResolvedValue({ id: '1234' });
+    prismaMock.article.update?.mockResolvedValue({ id: '1234' });
+    prismaMock.articleRevision.findUnique?.mockResolvedValue({
+      id: 'revision-1',
+      articleId: '1234',
+      properties: [],
+      authors: [],
+      socialMediaAuthors: [],
+    });
+    prismaMock.articleRevision.findFirst?.mockResolvedValue({
+      id: 'revision-2',
+    });
+
+    await change();
+
+    expect(publicContentCache.invalidateDraft).toHaveBeenCalledWith('articles');
+    expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+    expect(publicContentCache.invalidateArticlePages).not.toHaveBeenCalled();
   });
 
   it('should like an article', async () => {

@@ -1,10 +1,8 @@
-import { LazyQueryExecFunction } from '@apollo/client';
+import type { useLazyQuery } from '@apollo/client/react';
 import {
   DailySubscriptionStatsQuery,
-  Exact,
-  InputMaybe,
+  DailySubscriptionStatsQueryVariables,
   LocalStorageKey,
-  Scalars,
 } from '@wepublish/editor/api';
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
@@ -26,13 +24,9 @@ import {
 } from './audience-filter-params';
 
 interface UseAudienceFilterProps {
-  fetchStats: LazyQueryExecFunction<
+  fetchStats: useLazyQuery.ExecFunction<
     DailySubscriptionStatsQuery,
-    Exact<{
-      start: Scalars['DateTime'];
-      end?: InputMaybe<Scalars['DateTime']>;
-      memberPlanIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
-    }>
+    DailySubscriptionStatsQueryVariables
   >;
   initialDateRange?: DateRangePresetKey;
   persist?: boolean;
@@ -103,14 +97,6 @@ export function useAudienceFilter({
         return action;
       }
 
-      fetchStats({
-        variables: {
-          start: dateRange[0].toISOString(),
-          end: dateRange[1].toISOString(),
-          memberPlanIds,
-        },
-        fetchPolicy: 'cache-first',
-      });
       return {
         dateRange,
         memberPlanIds,
@@ -122,9 +108,23 @@ export function useAudienceFilter({
     }
   );
 
+  // Reducers run during render, and Apollo Client 4 throws when a lazy query
+  // is executed in that phase, so the fetch has to live in an effect.
+  const { dateRange, memberPlanIds } = audienceApiFilter;
+
   useEffect(() => {
-    setAudienceApiFilter({});
-  }, [setAudienceApiFilter]);
+    if (!dateRange || dateRange.length < 2) {
+      return;
+    }
+
+    fetchStats({
+      variables: {
+        start: dateRange[0].toISOString(),
+        end: dateRange[1].toISOString(),
+        memberPlanIds,
+      },
+    });
+  }, [dateRange, memberPlanIds, fetchStats]);
 
   const filterState = useMemo<AudienceFilterState>(
     () => ({

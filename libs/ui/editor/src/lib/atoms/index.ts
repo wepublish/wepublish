@@ -1,7 +1,8 @@
 // directories
 export * from './comment';
-export * from './dashboard';
 export * from './memberPlan/selectMemberPlan';
+export * from './notification/confirmActionModal';
+export * from './notification/notificationItem';
 export * from './memberPlan/selectMemberPlans';
 export * from './paywall/selectPaywall';
 export * from './poll';
@@ -21,11 +22,13 @@ export * from './deferredTextField';
 export * from './descriptionList';
 export * from './descriptionListwithMessage';
 export * from './draggable';
+export * from './editorHeader';
 export * from './editorTemplate';
 export * from './fileDropInput';
 export * from './focalPointInput';
 export * from './helpers';
 export * from './iconButtonTooltip';
+export * from './infoTooltip';
 export * from './imageMetaData';
 export * from './infoMessage';
 export * from './listInput';

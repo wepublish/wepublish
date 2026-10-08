@@ -22,7 +22,14 @@ import {
 } from '@wepublish/utils/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
+import {
+  CONTENT_CACHE_TTL_SECONDS,
+  KvTtlCacheService,
+  PublicContentCacheInvalidator,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
 import { uniqBy } from 'ramda';
+import { ArticlePublicationWatcher } from './article-publication.watcher';
 
 export const mapArticleRevisionAuthors = (
   authors: { authorId: string; role?: string | null }[]
@@ -39,17 +46,26 @@ export const mapArticleRevisionAuthors = (
 export class ArticleService {
   constructor(
     private prisma: PrismaClient,
-    private trackingPixelService: TrackingPixelService
+    private trackingPixelService: TrackingPixelService,
+    private publicContentCache: PublicContentCacheInvalidator,
+    private kv: KvTtlCacheService,
+    private publicationWatcher: ArticlePublicationWatcher
   ) {}
 
   @PrimeDataLoader(ArticleDataloaderService)
   async getArticleBySlug(slug: string) {
+    return this.kv.getOrLoadNs(
+      contentCacheNamespace('articles'),
+      `slug:${slug.toLowerCase()}`,
+      () => this.loadArticleBySlug(slug),
+      CONTENT_CACHE_TTL_SECONDS
+    );
+  }
+
+  private loadArticleBySlug(slug: string) {
     return this.prisma.article.findFirst({
       where: {
-        slug: {
-          equals: slug,
-          mode: 'insensitive',
-        },
+        slug: slug.toLowerCase(),
       },
       orderBy: {
         publishedAt: 'asc', // there might be an unpublished article with the same slug
@@ -58,7 +74,20 @@ export class ArticleService {
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
-  async getArticles({
+  async getArticles(args: ArticleListArgs) {
+    if (args.filter?.body) {
+      return this.loadArticles(args);
+    }
+
+    return this.kv.getOrLoadNs(
+      contentCacheNamespace('articles'),
+      `list:${JSON.stringify(args)}`,
+      () => this.loadArticles(args),
+      CONTENT_CACHE_TTL_SECONDS
+    );
+  }
+
+  private async loadArticles({
     filter,
     cursorId,
     sort = ArticleSort.PublishedAt,
@@ -133,7 +162,7 @@ export class ArticleService {
       data: {
         paywallId,
         likes,
-        slug,
+        slug: slug && slug.toLowerCase(),
         shared,
         hidden,
         disableComments,
@@ -175,6 +204,8 @@ export class ArticleService {
       });
     }
 
+    await this.publicContentCache.invalidateDraft('articles');
+
     return article;
   }
 
@@ -210,11 +241,11 @@ export class ArticleService {
 
     const mappedBlocks = blocks.map(mapBlockUnionMap);
 
-    return this.prisma.article.update({
+    const result = await this.prisma.article.update({
       where: { id },
       data: {
         likes,
-        slug,
+        slug: slug && slug.toLowerCase(),
         paywallId,
         shared,
         hidden,
@@ -262,6 +293,14 @@ export class ArticleService {
         },
       },
     });
+    if (article.publishedAt) {
+      await this.publicContentCache.invalidate('articles');
+      await this.publicContentCache.invalidateArticlePages(article, result);
+    } else {
+      await this.publicContentCache.invalidateDraft('articles');
+    }
+
+    return result;
   }
 
   async deleteArticle(id: string) {
@@ -273,11 +312,17 @@ export class ArticleService {
       throw new NotFoundException(`Article with id ${id} not found`);
     }
 
-    return this.prisma.article.delete({
+    const deleted = await this.prisma.article.delete({
       where: {
         id,
       },
     });
+    await this.publicContentCache.invalidate('articles');
+    await this.publicContentCache.invalidateArticlePages(article);
+    await this.publicContentCache.invalidateArticleLayout();
+    await this.publicContentCache.invalidateNavigations();
+
+    return deleted;
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -322,7 +367,7 @@ export class ArticleService {
         (article.publishedAt ?? publishedAt)
       );
 
-    return this.prisma.article.update({
+    const published = await this.prisma.article.update({
       where: {
         id,
       },
@@ -341,6 +386,12 @@ export class ArticleService {
         },
       },
     });
+    await this.publicContentCache.invalidate('articles');
+    await this.publicContentCache.invalidateArticlePages(article);
+    this.publicationWatcher.schedule(publishedAt);
+    this.publicationWatcher.schedule(articlePublishedAt);
+
+    return published;
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -395,6 +446,10 @@ export class ArticleService {
       });
     }
 
+    await this.publicContentCache.invalidate('articles');
+    await this.publicContentCache.invalidateArticlePages(article);
+    await this.publicContentCache.invalidateArticleLayout();
+
     return updatedArticle;
   }
 
@@ -437,7 +492,7 @@ export class ArticleService {
       },
     ] = article.revisions;
 
-    return this.prisma.article.create({
+    const result = await this.prisma.article.create({
       data: {
         paywallId: article.paywallId,
         shared: article.shared,
@@ -471,6 +526,9 @@ export class ArticleService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('articles');
+
+    return result;
   }
 
   /**
@@ -574,7 +632,7 @@ export class ArticleService {
       ...content
     } = revision;
 
-    return this.prisma.article.update({
+    const result = await this.prisma.article.update({
       where: { id: articleId },
       data: {
         modifiedAt: new Date(),
@@ -607,6 +665,9 @@ export class ArticleService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('articles');
+
+    return result;
   }
 
   /**
@@ -663,12 +724,14 @@ export class ArticleService {
       data: { archivedAt: new Date() },
     });
 
+    await this.publicContentCache.invalidateDraft('articles');
+
     return article;
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
   async likeArticle(id: string) {
-    return this.prisma.article.update({
+    const article = await this.prisma.article.update({
       where: {
         id,
       },
@@ -678,6 +741,9 @@ export class ArticleService {
         },
       },
     });
+    await this.forgetArticle(id, article?.slug);
+
+    return article;
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -692,7 +758,7 @@ export class ArticleService {
       return article;
     }
 
-    return this.prisma.article.update({
+    const disliked = await this.prisma.article.update({
       where: {
         id,
       },
@@ -702,6 +768,21 @@ export class ArticleService {
         },
       },
     });
+    await this.forgetArticle(id, disliked?.slug);
+
+    return disliked;
+  }
+
+  private async forgetArticle(id: string, slug?: string | null) {
+    await Promise.all([
+      this.kv.delNs(contentCacheNamespace('articles'), `id:${id}`),
+      slug ?
+        this.kv.delNs(
+          contentCacheNamespace('articles'),
+          `slug:${slug.toLowerCase()}`
+        )
+      : undefined,
+    ]);
   }
 
   async performFullTextSearch(searchQuery: string): Promise<string[]> {

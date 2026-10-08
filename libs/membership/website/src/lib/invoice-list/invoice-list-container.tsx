@@ -1,12 +1,13 @@
+import { useLazyQuery, useQuery } from '@apollo/client/react';
 import {
   PaymentForm,
   usePayInvoice,
   useSubscribe,
 } from '@wepublish/payment/website';
 import {
+  CheckInvoiceStatusDocument,
   FullInvoiceFragment,
-  useCheckInvoiceStatusLazyQuery,
-  useInvoicesQuery,
+  InvoicesDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -14,7 +15,7 @@ import {
 } from '@wepublish/website/builder';
 import { produce } from 'immer';
 import { anyPass } from 'ramda';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { isPayrexxSubscription } from './invoice-list';
 
 const isInNeedOfMigration = anyPass([
@@ -43,27 +44,24 @@ export function InvoiceListContainer({
   className,
 }: InvoiceListContainerProps) {
   const { InvoiceList } = useWebsiteBuilder();
-  const [checkInvoice, { loading: loadingCheckInvoice }] =
-    useCheckInvoiceStatusLazyQuery();
-  const {
-    data,
-    loading: loadingInvoices,
-    error,
-  } = useInvoicesQuery({
-    onCompleted(data) {
-      for (const { id, paidAt, canceledAt } of data.userInvoices) {
-        if (paidAt || canceledAt || typeof window === 'undefined') {
-          continue;
-        }
+  const [checkInvoice, { loading: loadingCheckInvoice }] = useLazyQuery(
+    CheckInvoiceStatusDocument
+  );
+  const { data, loading: loadingInvoices, error } = useQuery(InvoicesDocument);
 
-        checkInvoice({
-          variables: {
-            id,
-          },
-        });
+  useEffect(() => {
+    for (const { id, paidAt, canceledAt } of data?.userInvoices ?? []) {
+      if (paidAt || canceledAt || typeof window === 'undefined' || !id) {
+        continue;
       }
-    },
-  });
+
+      checkInvoice({
+        variables: {
+          id,
+        },
+      });
+    }
+  }, [data, checkInvoice]);
 
   const [pay, redirectPages1, stripeClientSecret1] = usePayInvoice();
   const [migrate, redirectPages2, stripeClientSecret2] = useSubscribe();

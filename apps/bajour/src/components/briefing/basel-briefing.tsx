@@ -20,7 +20,27 @@ export type BaselBriefingProps = Omit<
   teasers?: CustomTeaser[];
 };
 
+const nullImageMeta = {
+  __typename: 'Image' as const,
+  title: null,
+  description: null,
+  source: null,
+  link: null,
+  license: null,
+  xxxl: null,
+  xxl: null,
+  xxxlSquare: null,
+  xxlSquare: null,
+  xlSquare: null,
+  lSquare: null,
+  mSquare: null,
+  sSquare: null,
+  xsSquare: null,
+  xxsSquare: null,
+};
+
 const baselBg = {
+  ...nullImageMeta,
   id: '1234',
   height: 500,
   width: 500,
@@ -36,6 +56,7 @@ const baselBg = {
 } satisfies FullImageFragment;
 
 const fcbBg = {
+  ...nullImageMeta,
   id: '1234',
   height: 500,
   width: 500,
@@ -51,6 +72,7 @@ const fcbBg = {
 } satisfies FullImageFragment;
 
 const fasnachtBg = {
+  ...nullImageMeta,
   id: '1234',
   height: 500,
   width: 500,
@@ -66,6 +88,7 @@ const fasnachtBg = {
 } satisfies FullImageFragment;
 
 const escBg = {
+  ...nullImageMeta,
   id: '1234',
   height: 500,
   width: 500,
@@ -429,7 +452,9 @@ export const BaselBriefing = ({ teasers, blockStyle }: BaselBriefingProps) => {
           <TeaserContentInterior>
             {briefingDynamicValues.authorAvatar && (
               <Avatar
-                image={briefingDynamicValues.authorAvatar}
+                image={
+                  briefingDynamicValues.authorAvatar as unknown as FullImageFragment
+                }
                 square
               />
             )}

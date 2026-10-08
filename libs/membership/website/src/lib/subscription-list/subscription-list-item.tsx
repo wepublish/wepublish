@@ -16,10 +16,7 @@ import {
   MdTimelapse,
 } from 'react-icons/md';
 import { formatCurrency } from '../formatters/format-currency';
-import {
-  formatPaymentPeriod,
-  formatPaymentTimeline,
-} from '../formatters/format-payment-period';
+import { calculatePeriodAmount } from '../formatters/format-payment-period';
 import { Modal } from '@wepublish/website/builder';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -108,8 +105,12 @@ export function SubscriptionListItem({
   const [error, setError] = useState<Error>();
   const callAction = useAsyncAction(setLoading, setError);
 
-  const periodicityTimeline = formatPaymentTimeline(paymentPeriodicity);
-  const subscriptionDuration = formatPaymentPeriod(paymentPeriodicity);
+  const periodicityTimeline = t(
+    `subscription.paymentTimeline.${paymentPeriodicity || 'yearly'}`
+  );
+  const subscriptionDuration = t(
+    `subscription.paymentPeriod.${paymentPeriodicity || 'yearly'}`
+  );
 
   const [confirmCancel, setConfirmCancel] = useState(false);
   const [confirmExtend, setConfirmExtend] = useState<boolean>(false);
@@ -148,7 +149,7 @@ export function SubscriptionListItem({
             <SubscriptionListItemMetaItem>
               <MdOutlinePayments />
               <span>
-                Bezahlt bis{' '}
+                {t('subscription.paidUntil')}{' '}
                 <time
                   suppressHydrationWarning
                   dateTime={paidUntil}
@@ -164,7 +165,7 @@ export function SubscriptionListItem({
               <SubscriptionListItemMetaItem>
                 <MdCancel />
                 <span>
-                  Gekündigt am{' '}
+                  {t('subscription.cancelledOn')}{' '}
                   <time
                     suppressHydrationWarning
                     dateTime={deactivation.date}
@@ -220,8 +221,13 @@ export function SubscriptionListItem({
           <SubscriptionListItemMetaItem>
             <MdAttachMoney />
             {t('subscription.costs', {
-              amount: formatCurrency(monthlyAmount / 100, currency, locale),
+              amount: formatCurrency(
+                calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
+                currency,
+                locale
+              ),
               extendable,
+              periodicity: paymentPeriodicity,
             })}
           </SubscriptionListItemMetaItem>
 
@@ -292,6 +298,7 @@ export function SubscriptionListItem({
         submitText={t('subscription.cancel', {
           type: productType,
         })}
+        cancelText={t('user.cancel')}
       >
         <H5 component="h1">
           {t('subscription.cancelProduct', {
@@ -316,6 +323,7 @@ export function SubscriptionListItem({
         submitText={t('subscription.extendBy', {
           subscriptionDuration,
         })}
+        cancelText={t('user.cancel')}
       >
         <H5 component="h1">
           {t('subscription.extendEarly', {

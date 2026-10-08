@@ -1,12 +1,12 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeleteUserDocument,
+  FullUserRoleFragment,
+  ResetUserTotpDocument,
   TinyUserFragment,
-  useDeleteUserMutation,
-  useResetUserTotpMutation,
+  TinyUserListDocument,
   UserFilter,
-  UserRole,
   UserSort,
-  useTinyUserListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -14,6 +14,7 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   DescriptionList,
   DescriptionListItem,
+  humanizeError,
   IconButton,
   IconButtonTooltip,
   ListFilters,
@@ -26,6 +27,7 @@ import {
   ResetUserPasswordForm,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,6 +41,8 @@ import {
   Pagination,
   Table as RTable,
   toaster,
+  Tooltip,
+  Whisper,
 } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
@@ -54,13 +58,16 @@ function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
       return UserSort.Name;
     case 'firstName':
       return UserSort.FirstName;
+    case 'subscriptionCount':
+      return UserSort.SubscriptionCount;
     default:
       return null;
   }
 }
 
 function UserList() {
-  const [filter, setFilter] = useState<UserFilter>({});
+  const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
+    useListViewState<UserFilter>('users', { defaultSortField: 'createdAt' });
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
@@ -68,9 +75,6 @@ function UserList() {
   const [currentUser, setCurrentUser] = useState<TinyUserFragment>();
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortField, setSortField] = useState('createdAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [users, setUsers] = useState<TinyUserFragment[]>([]);
 
   const {
@@ -78,7 +82,7 @@ function UserList() {
     refetch,
     loading: isLoading,
     error: userListQueryError,
-  } = useTinyUserListQuery({
+  } = useQuery(TinyUserListDocument, {
     variables: {
       filter: filter || undefined,
       take: limit,
@@ -90,6 +94,7 @@ function UserList() {
 
   const updateFilter = (filter: UserFilter) => {
     setFilter(filter);
+    setPage(1);
     refetch();
   };
 
@@ -103,23 +108,27 @@ function UserList() {
     });
   }, [filter, page, limit, sortOrder, sortField, refetch]);
 
-  const [deleteUser, { loading: isDeleting }] = useDeleteUserMutation({});
-  const [resetUserTotp, { loading: isResettingTotp }] =
-    useResetUserTotpMutation();
+  const [deleteUser, { loading: isDeleting }] = useMutation(
+    DeleteUserDocument,
+    {}
+  );
+  const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
+    ResetUserTotpDocument
+  );
 
   const { t } = useTranslation();
 
   useEffect(() => {
     if (data?.users?.nodes) {
       setUsers(data.users.nodes);
-      if (data.users.totalCount + 9 < page * limit) {
+      if (Math.ceil(data.users.totalCount / limit) < page) {
         setPage(1);
       }
     }
   }, [data?.users]);
 
   if (userListQueryError) {
-    return <div>{userListQueryError.message}</div>;
+    return <div>{humanizeError(userListQueryError)}</div>;
   }
 
   /**
@@ -145,6 +154,21 @@ function UserList() {
     return <>{t('userList.overview.noSubscriptions')}</>;
   }
 
+  function getSubscriptionTooltip(user: TinyUserFragment) {
+    return (
+      <Tooltip>
+        {user.subscriptionOverview.map(({ id, memberPlanName, status }) => (
+          <div key={id}>
+            {t('userList.overview.subscriptionWithStatus', {
+              name: memberPlanName,
+              status: t(`userList.overview.subscriptionStatus.${status}`),
+            })}
+          </div>
+        ))}
+      </Tooltip>
+    );
+  }
+
   const handleDeleteUser = async () => {
     if (!currentUser) return;
 
@@ -165,14 +189,14 @@ function UserList() {
       setConfirmationDialogOpen(false);
       refetch();
     } catch (e) {
-      if (e instanceof ApolloError) {
+      if (e instanceof Error) {
         if (e.message.includes('Foreign key constraint')) {
           toaster.push(
             <Message
               type="error"
               showIcon
               closable
-              duration={2000}
+              duration={8000}
             >
               {t('userCreateOrEditView.foreignKeySubscription')}
             </Message>
@@ -184,7 +208,7 @@ function UserList() {
               type="error"
               showIcon
               closable
-              duration={2000}
+              duration={8000}
             >
               {t('userCreateOrEditView.errorOnUpdate', { error: e })}
             </Message>
@@ -219,7 +243,7 @@ function UserList() {
           type="error"
           showIcon
           closable
-          duration={2000}
+          duration={8000}
         >
           {t('userList.overview.totpResetError')}
         </Message>
@@ -262,8 +286,8 @@ function UserList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType!);
-            setSortField(sortColumn);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
           <Column
@@ -342,7 +366,9 @@ function UserList() {
             <HeaderCell>{t('userCreateOrEditView.userRoles')}</HeaderCell>
             <RCell dataKey="roles">
               {(rowData: RowDataType<TinyUserFragment>) =>
-                rowData.roles?.map((r: UserRole) => r.name).join(', ')
+                rowData.roles
+                  ?.map((r: FullUserRoleFragment) => r.name)
+                  .join(', ')
               }
             </RCell>
           </Column>
@@ -351,22 +377,36 @@ function UserList() {
             width={200}
             align="left"
             resizable
+            sortable
           >
             <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<TinyUserFragment>) => (
-                <div>
-                  {getSubscriptionCellView(rowData as TinyUserFragment)}
-                </div>
-              )}
+            <RCell dataKey="subscriptionCount">
+              {(rowData: RowDataType<TinyUserFragment>) => {
+                const user = rowData as TinyUserFragment;
+                const cell = <div>{getSubscriptionCellView(user)}</div>;
+
+                if (!user.subscriptionOverview.length) {
+                  return cell;
+                }
+
+                return (
+                  <Whisper
+                    placement="top"
+                    trigger="hover"
+                    speaker={getSubscriptionTooltip(user)}
+                  >
+                    {cell}
+                  </Whisper>
+                );
+              }}
             </RCell>
           </Column>
           <Column
-            width={140}
+            width={180}
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('userList.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<TinyUserFragment>) => (
                 <>
@@ -380,6 +420,7 @@ function UserList() {
                         circle
                         size="sm"
                         icon={<MdPassword />}
+                        aria-label={t('userList.overview.resetPassword')}
                         onClick={e => {
                           setCurrentUser(rowData as TinyUserFragment);
                           setIsResetUserPasswordOpen(true);
@@ -397,6 +438,7 @@ function UserList() {
                         circle
                         size="sm"
                         icon={<MdLockReset />}
+                        aria-label={t('userList.overview.resetTotp')}
                         disabled={!(rowData as TinyUserFragment).totpEnabled}
                         onClick={() => {
                           setCurrentUser(rowData as TinyUserFragment);
@@ -415,6 +457,7 @@ function UserList() {
                         appearance="ghost"
                         color="red"
                         icon={<MdDelete />}
+                        aria-label={t('delete')}
                         onClick={() => {
                           setConfirmationDialogOpen(true);
                           setCurrentUser(rowData as TinyUserFragment);
@@ -442,7 +485,10 @@ function UserList() {
           total={data?.users.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
 

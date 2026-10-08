@@ -1,9 +1,16 @@
+import { useMutation } from '@apollo/client/react';
 import {
   FullMemberPlanFragment,
   FullPaymentFragment,
-  usePayInvoiceMutation,
-  useSubscribeMutation,
-  useUpgradeMutation,
+  PayInvoiceDocument,
+  PayInvoiceMutation,
+  PayInvoiceMutationVariables,
+  SubscribeDocument,
+  SubscribeMutation,
+  SubscribeMutationVariables,
+  UpgradeDocument,
+  UpgradeMutation,
+  UpgradeMutationVariables,
 } from '@wepublish/website/api';
 import { useCallback, useState } from 'react';
 import { RedirectPages } from './payment-form';
@@ -18,12 +25,17 @@ const relativeToAbsolute = (url: string) => {
 };
 
 export const useSubscribe = (
-  ...params: Parameters<typeof useSubscribeMutation>
+  ...params: [
+    options?: useMutation.Options<
+      SubscribeMutation,
+      SubscribeMutationVariables
+    >,
+  ]
 ) => {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [redirectPages, setRedirectPages] = useState<RedirectPages>();
 
-  const [result] = useSubscribeMutation({
+  const [result] = useMutation(SubscribeDocument, {
     ...params[0],
   });
 
@@ -46,14 +58,15 @@ export const useSubscribe = (
 
       return result({
         ...callbackParams[0],
-        variables:
-          callbackParams[0]?.variables ?
-            {
+        ...(callbackParams[0]?.variables ?
+          {
+            variables: {
               ...callbackParams[0].variables,
               successURL: successUrl,
               failureURL: failUrl,
-            }
-          : undefined,
+            },
+          }
+        : {}),
         onCompleted: data => {
           callbackParams[0]?.onCompleted?.(data);
           handlePayment({
@@ -74,12 +87,14 @@ export const useSubscribe = (
 };
 
 export const useUpgrade = (
-  ...params: Parameters<typeof useUpgradeMutation>
+  ...params: [
+    options?: useMutation.Options<UpgradeMutation, UpgradeMutationVariables>,
+  ]
 ) => {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [redirectPages, setRedirectPages] = useState<RedirectPages>();
 
-  const [result] = useUpgradeMutation({
+  const [result] = useMutation(UpgradeDocument, {
     ...params[0],
   });
 
@@ -102,14 +117,15 @@ export const useUpgrade = (
 
       return result({
         ...callbackParams[0],
-        variables:
-          callbackParams[0]?.variables ?
-            {
+        ...(callbackParams[0]?.variables ?
+          {
+            variables: {
               ...callbackParams[0].variables,
               successURL: successUrl,
               failureURL: failUrl,
-            }
-          : undefined,
+            },
+          }
+        : {}),
         onCompleted: data => {
           callbackParams[0]?.onCompleted?.(data);
           handlePayment({
@@ -130,12 +146,17 @@ export const useUpgrade = (
 };
 
 export const usePayInvoice = (
-  ...params: Parameters<typeof usePayInvoiceMutation>
+  ...params: [
+    options?: useMutation.Options<
+      PayInvoiceMutation,
+      PayInvoiceMutationVariables
+    >,
+  ]
 ) => {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [redirectPages, setRedirectPages] = useState<RedirectPages>();
 
-  const [result] = usePayInvoiceMutation({
+  const [result] = useMutation(PayInvoiceDocument, {
     ...params[0],
   });
 
@@ -156,14 +177,15 @@ export const usePayInvoice = (
 
       return result({
         ...callbackParams[0],
-        variables:
-          callbackParams[0]?.variables ?
-            {
+        ...(callbackParams[0]?.variables ?
+          {
+            variables: {
               ...callbackParams[0].variables,
               successURL: successUrl,
               failureURL: failUrl,
-            }
-          : undefined,
+            },
+          }
+        : {}),
         onCompleted: data => {
           callbackParams[0]?.onCompleted?.(data);
           handlePayment({

@@ -6,6 +6,7 @@ import {
 import {
   Comment,
   CommentAuthorType,
+  CommentItemType,
   CommentRating,
   CommentRatingOverride,
   CommentRatingSystemAnswer,
@@ -26,6 +27,12 @@ import {
   NotAuthorisedError,
 } from '@wepublish/api';
 import { ChallengeService } from '@wepublish/challenge/api';
+import {
+  CONTENT_CACHE_TTL_SECONDS,
+  KvTtlCacheService,
+  PUBLIC_COMMENTS_NAMESPACE,
+  PublicContentCacheInvalidator,
+} from '@wepublish/kv-ttl-cache/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { UserSession } from '@wepublish/authentication/api';
 import { CalculatedRating } from './rating-system/rating-system.model';
@@ -55,10 +62,30 @@ export type CommentWithRequiredRelations = Comment & {
   revisions: CommentsRevisions[];
 };
 
-export type DecoratedComment = CommentWithRequiredRelations & {
-  children: DecoratedComment[];
+export type RatedComment = CommentWithRequiredRelations & {
   calculatedRatings: CalculatedRating[];
 };
+
+export type DecoratedComment = RatedComment & {
+  children: DecoratedComment[];
+};
+
+const commentRelations = {
+  revisions: {
+    orderBy: {
+      createdAt: 'asc',
+    },
+  },
+  overriddenRatings: true,
+  ratings: {
+    include: {
+      answer: true,
+    },
+  },
+} satisfies Prisma.CommentInclude;
+
+const commentsForItemKey = (itemType: CommentItemType, itemId: string) =>
+  `items:${itemType}:${itemId}`;
 
 const calculateRating = (
   answers: CommentRatingSystemAnswer[],
@@ -108,6 +135,12 @@ const sortCommentsByRating = (
   });
 };
 
+const sortCommentsChronologically = (comments: DecoratedComment[]) => {
+  return [...comments].sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  );
+};
+
 const sortComments = (
   comments: DecoratedComment[],
   sort: CommentSort,
@@ -138,9 +171,17 @@ const findCommentById = (
   return undefined;
 };
 
-const decorateComments = (
+const rateComments = (
   comments: CommentWithRequiredRelations[],
-  ratingSystemAnswers: CommentRatingSystemAnswer[],
+  ratingSystemAnswers: CommentRatingSystemAnswer[]
+): RatedComment[] =>
+  comments.map(comment => ({
+    ...comment,
+    calculatedRatings: calculateRating(ratingSystemAnswers, comment.ratings),
+  }));
+
+const nestComments = (
+  comments: RatedComment[],
   { sort, order }: { sort: CommentSort; order: SortOrder }
 ) => {
   const groupedComments = groupBy(
@@ -148,24 +189,21 @@ const decorateComments = (
     comments
   );
 
-  const decorate = (
-    comment: CommentWithRequiredRelations
-  ): DecoratedComment => ({
+  const nest = (comment: RatedComment): DecoratedComment => ({
     ...comment,
-    calculatedRatings: calculateRating(ratingSystemAnswers, comment.ratings),
-    children: sortComments(
-      (groupedComments[comment.id] ?? []).map(decorate),
-      sort,
-      order
+    children: sortCommentsChronologically(
+      (groupedComments[comment.id] ?? []).map(nest)
     ),
   });
 
-  return sortComments(
-    (groupedComments['null'] ?? []).map(decorate),
-    sort,
-    order
-  );
+  return sortComments((groupedComments['null'] ?? []).map(nest), sort, order);
 };
+
+const decorateComments = (
+  comments: CommentWithRequiredRelations[],
+  ratingSystemAnswers: CommentRatingSystemAnswer[],
+  options: { sort: CommentSort; order: SortOrder }
+) => nestComments(rateComments(comments, ratingSystemAnswers), options);
 
 const decorateAdminComments = (
   comments: CommentWithRequiredRelations[],
@@ -183,7 +221,9 @@ export class CommentService {
   constructor(
     private prisma: PrismaClient,
     private settingsService: SettingsService,
-    private challengeService: ChallengeService
+    private challengeService: ChallengeService,
+    private publicContentCache: PublicContentCacheInvalidator,
+    private kv: KvTtlCacheService
   ) {}
 
   async getAdminCommennts({
@@ -283,6 +323,102 @@ export class CommentService {
     return decorateComments(comments, ratingSystemAnswers, { sort, order });
   }
 
+  public async getPublicCommentsForItem(
+    {
+      itemId,
+      itemType,
+      order = SortOrder.Ascending,
+      sort = CommentSort.Rating,
+    }: CommentsForItemArgs,
+    userId?: string
+  ) {
+    const [approved, own, ownRatings] = await Promise.all([
+      this.kv.getOrLoadNs(
+        PUBLIC_COMMENTS_NAMESPACE,
+        commentsForItemKey(itemType, itemId),
+        () => this.loadApprovedComments(itemId, itemType),
+        CONTENT_CACHE_TTL_SECONDS
+      ),
+      userId ? this.loadOwnComments(itemId, itemType, userId) : [],
+      userId ?
+        this.prisma.commentRating.findMany({
+          where: {
+            userId,
+            comment: {
+              itemID: itemId,
+              itemType,
+            },
+          },
+          include: {
+            answer: true,
+          },
+        })
+      : [],
+    ]);
+    const ownRatingsOf = groupBy(({ commentId }) => commentId, ownRatings);
+    const ownIds = new Set(own.map(({ id }) => id));
+
+    return nestComments(
+      [
+        ...approved
+          .filter(({ id }) => !ownIds.has(id))
+          .map(comment => ({
+            ...comment,
+            ratings: ownRatingsOf[comment.id] ?? [],
+          })),
+        ...own,
+      ],
+      { sort, order }
+    );
+  }
+
+  private async loadApprovedComments(
+    itemID: string,
+    itemType: CommentItemType
+  ): Promise<RatedComment[]> {
+    const [comments, ratingSystemAnswers] = await Promise.all([
+      this.prisma.comment.findMany({
+        where: {
+          itemID,
+          itemType,
+          state: CommentState.approved,
+        },
+        include: commentRelations,
+      }),
+      this.prisma.commentRatingSystemAnswer.findMany(),
+    ]);
+
+    return rateComments(comments, ratingSystemAnswers).map(comment => ({
+      ...comment,
+      revisions: comment.revisions.slice(-1),
+      ratings: [],
+    }));
+  }
+
+  private async loadOwnComments(
+    itemID: string,
+    itemType: CommentItemType,
+    userID: string
+  ): Promise<RatedComment[]> {
+    const comments = await this.prisma.comment.findMany({
+      where: {
+        itemID,
+        itemType,
+        userID,
+      },
+      include: commentRelations,
+    });
+
+    if (!comments.length) {
+      return [];
+    }
+
+    return rateComments(
+      comments,
+      await this.prisma.commentRatingSystemAnswer.findMany()
+    );
+  }
+
   public async getComment(commentId: string) {
     const target = await this.prisma.comment.findUnique({
       where: { id: commentId },
@@ -328,12 +464,13 @@ export class CommentService {
     text,
     lead,
     tagIds,
+    publish,
     ...input
   }: CreateCommentInput) {
     const comment = await this.prisma.comment.create({
       data: {
         ...input,
-        state: CommentState.approved,
+        state: publish ? CommentState.approved : CommentState.pendingApproval,
         authorType: CommentAuthorType.team,
         revisions: {
           create: {
@@ -348,6 +485,10 @@ export class CommentService {
         },
       },
     });
+    await this.publicContentCache.invalidateComments(
+      !!tagIds?.length,
+      ...(publish ? await this.commentedArticles(comment) : [])
+    );
 
     return this.getComment(comment.id);
   }
@@ -438,28 +579,58 @@ export class CommentService {
         },
       },
     });
+    await this.publicContentCache.invalidateComments(
+      true,
+      ...(await this.commentedArticles(comment))
+    );
 
     return this.getComment(comment.id);
   }
 
-  deleteComment(id: string) {
-    return this.prisma.comment.delete({
+  async deleteComment(id: string) {
+    const deleted = await this.prisma.comment.delete({
       where: {
         id,
       },
     });
+    await this.publicContentCache.invalidateComments(
+      true,
+      ...(await this.commentedArticles(deleted))
+    );
+
+    return deleted;
   }
 
   async takeActionOnComment(
     id: string,
     input: Pick<Comment, 'state' | 'rejectionReason'>
   ) {
-    await this.prisma.comment.update({
+    const comment = await this.prisma.comment.update({
       where: { id },
       data: input,
     });
+    await this.publicContentCache.invalidateComments(
+      input.state !== CommentState.approved,
+      ...(await this.commentedArticles(comment))
+    );
 
     return this.getComment(id);
+  }
+
+  private async commentedArticles({
+    itemID,
+    itemType,
+  }: Pick<Comment, 'itemID' | 'itemType'>) {
+    if (itemType !== CommentItemType.article) {
+      return [];
+    }
+
+    const article = await this.prisma.article.findUnique({
+      where: { id: itemID },
+      select: { id: true, slug: true },
+    });
+
+    return article ? [article] : [];
   }
 
   async addUserComment(
@@ -531,6 +702,13 @@ export class CommentService {
       },
     });
 
+    if (comment.state === CommentState.approved) {
+      await this.publicContentCache.invalidateReaderComments(
+        false,
+        ...(await this.commentedArticles(comment))
+      );
+    }
+
     return this.getComment(comment.id);
   }
 
@@ -586,6 +764,14 @@ export class CommentService {
           : CommentState.pendingApproval,
       },
     });
+    const wasPublic = comment.state === CommentState.approved;
+
+    if (wasPublic || updatedComment.state === CommentState.approved) {
+      await this.publicContentCache.invalidateReaderComments(
+        wasPublic,
+        ...(await this.commentedArticles(comment))
+      );
+    }
 
     return this.getComment(updatedComment.id);
   }
@@ -638,6 +824,18 @@ export class CommentService {
         fingerprint,
       },
     });
+
+    const rated = await this.prisma.comment.findUnique({
+      where: { id: commentId },
+      select: { itemID: true, itemType: true },
+    });
+
+    if (rated) {
+      await this.kv.delNs(
+        PUBLIC_COMMENTS_NAMESPACE,
+        commentsForItemKey(rated.itemType, rated.itemID)
+      );
+    }
 
     return this.getComment(commentId);
   }

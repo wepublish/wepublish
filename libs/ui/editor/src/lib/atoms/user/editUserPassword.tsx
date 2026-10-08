@@ -1,7 +1,8 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   FullUserFragment,
-  useSendWebsiteLoginMutation,
+  SendWebsiteLoginDocument,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,7 +45,7 @@ export function EditUserPassword({
     useState<boolean>(false);
   const [sendLoginModalOpen, setSendLoginModalOpen] = useState<boolean>(false);
 
-  const [sendWebsiteLogin] = useSendWebsiteLoginMutation();
+  const [sendWebsiteLogin] = useMutation(SendWebsiteLoginDocument);
 
   async function sendLoginLink() {
     if (!user) {
@@ -53,7 +54,7 @@ export function EditUserPassword({
           type="error"
           showIcon
           closable
-          duration={2000}
+          duration={8000}
         >
           {t('createOrUpdateUserPassword.unexpectedErrorNoUserFound')}
         </Message>
@@ -82,9 +83,9 @@ export function EditUserPassword({
           type="error"
           showIcon
           closable
-          duration={2000}
+          duration={8000}
         >
-          {t('userList.panel.sendWebsiteLoginFailureMessage', { error })}
+          {t('userCreateOrEditView.sendWebsiteLoginFailureMessage', { error })}
         </Message>
       );
     }
@@ -108,7 +109,6 @@ export function EditUserPassword({
             </RButton>
             <RButton
               appearance="primary"
-              color="red"
               disabled={isDisabled || !user.email || !user.active}
               onClick={() => setSendLoginModalOpen(true)}
             >

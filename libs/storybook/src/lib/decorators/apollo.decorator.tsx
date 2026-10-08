@@ -1,14 +1,12 @@
-import {
-  MockedProvider as DefaultMockedProvider,
-  MockedResponse,
-} from '@apollo/client/testing';
+import { MockLink } from '@apollo/client/testing';
+import { MockedProvider as DefaultMockedProvider } from '@apollo/client/testing/react';
 import { Decorator } from '@storybook/react';
 import { print } from 'graphql';
 import { useEffect } from 'react';
 import { addons } from 'storybook/internal/preview-api';
 import { ApolloClientAddonState, EVENTS } from 'storybook-addon-apollo-client';
 
-const getMockName = (mockedResponse: MockedResponse) => {
+const getMockName = (mockedResponse: MockLink.MockedResponse) => {
   if (mockedResponse.request.operationName) {
     return mockedResponse.request.operationName;
   }
@@ -33,7 +31,7 @@ function stringifyOrUndefined(value: unknown) {
 }
 
 function createResultFromMocks(
-  mocks: MockedResponse[],
+  mocks: MockLink.MockedResponse[],
   activeIndex: number
 ): ApolloClientAddonState {
   const mock = mocks[activeIndex];

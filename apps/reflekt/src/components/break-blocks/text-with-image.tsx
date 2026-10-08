@@ -4,7 +4,7 @@ import {
   hasBlockStyle,
   isBreakBlock,
 } from '@wepublish/block-content/website';
-import { BlockContent } from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
@@ -12,7 +12,7 @@ import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { ImageWithTextBreakBlock } from './image-with-text';
 
 export const isTextWithImageBreakBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderBreakBlockProps =>
   allPass([isBreakBlock, hasBlockStyle(ReflektBlockStyles.TextWithImage)])(
     block

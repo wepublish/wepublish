@@ -1,24 +1,25 @@
+import { useQuery } from '@apollo/client/react';
 import {
-  ArticleRevision,
-  Event,
-  PageRevision,
-  Tag,
+  ArticleDocument,
+  EventDocument,
+  FullArticleRevisionFragment,
+  FullEventFragment,
+  FullPageRevisionFragment,
+  FullTagFragment,
+  PageDocument,
+  PhraseDocument,
+  TagDocument,
   TagType,
-  useArticleQuery,
-  useEventQuery,
-  usePageQuery,
-  usePhraseQuery,
-  useTagQuery,
 } from '@wepublish/website/api';
 import { PageType } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 
 export type PageTypeBasedProps = {
-  Page?: Pick<PageRevision, 'title'>;
-  Article?: Pick<ArticleRevision, 'preTitle'>;
-  ArticleList?: Pick<Tag, 'tag'>;
-  Event?: Pick<Event, 'name'>;
+  Page?: Pick<FullPageRevisionFragment, 'title'>;
+  Article?: Pick<FullArticleRevisionFragment, 'preTitle'>;
+  ArticleList?: Pick<FullTagFragment, 'tag'>;
+  Event?: Pick<FullEventFragment, 'name'>;
   Search?: {
     phrase: string;
     totalCount: number;
@@ -30,16 +31,19 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
   const router = useRouter();
   const { slug, id, tag, q: phraseQuery } = router.query;
 
-  const { data: articleData, loading: articleLoading } = useArticleQuery({
-    skip: (!slug && !id) || !router.asPath.startsWith('/a'),
-    fetchPolicy: 'cache-only',
-    variables: {
-      slug: (slug as string) || undefined,
-      id: (id as string) || undefined,
-    },
-  });
+  const { data: articleData, loading: articleLoading } = useQuery(
+    ArticleDocument,
+    {
+      skip: (!slug && !id) || !router.asPath.startsWith('/a'),
+      fetchPolicy: 'cache-only',
+      variables: {
+        slug: (slug as string) || undefined,
+        id: (id as string) || undefined,
+      },
+    }
+  );
 
-  const { data: tagData, loading: tagLoading } = useTagQuery({
+  const { data: tagData, loading: tagLoading } = useQuery(TagDocument, {
     skip: !tag || !router.asPath.startsWith('/a/tag'),
     fetchPolicy: 'cache-only',
     variables: {
@@ -48,7 +52,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
     },
   });
 
-  const { data: pageData, loading: pageLoading } = usePageQuery({
+  const { data: pageData, loading: pageLoading } = useQuery(PageDocument, {
     skip: !slug && !id,
     fetchPolicy: 'cache-only',
     variables: {
@@ -57,7 +61,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
     },
   });
 
-  const { data: eventData, loading: eventLoading } = useEventQuery({
+  const { data: eventData, loading: eventLoading } = useQuery(EventDocument, {
     skip: !id || !router.asPath.startsWith('/event'),
     fetchPolicy: 'cache-only',
     variables: {
@@ -65,12 +69,15 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
     },
   });
 
-  const { data: searchData, loading: searchLoading } = usePhraseQuery({
-    skip: !phraseQuery,
-    variables: {
-      query: phraseQuery! as string,
-    },
-  });
+  const { data: searchData, loading: searchLoading } = useQuery(
+    PhraseDocument,
+    {
+      skip: !phraseQuery,
+      variables: {
+        query: phraseQuery! as string,
+      },
+    }
+  );
 
   const pageTypeBasedProps = useMemo<PageTypeBasedProps>(() => {
     if (tag && !tagLoading && tagData?.tag?.tag) {

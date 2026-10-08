@@ -55,6 +55,7 @@ import {
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderFlexBlockProps,
+  BuilderBlockTemplateBlockProps,
   BuilderTeaserListBlockProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
@@ -90,6 +91,7 @@ import {
   BuilderInvoiceListProps,
   BuilderMemberPlanItemProps,
   BuilderGoodiePickerProps,
+  BuilderMemberPlanOfferPickerProps,
   BuilderMemberPlanPickerProps,
   BuilderPaymentAmountSliderProps,
   BuilderPaymentMethodPickerProps,
@@ -184,6 +186,7 @@ export type WebsiteBuilderProps = {
   GoodiePicker: ComponentType<BuilderGoodiePickerProps>;
   MemberPlanPicker: ComponentType<BuilderMemberPlanPickerProps>;
   MemberPlanItem: ComponentType<BuilderMemberPlanItemProps>;
+  MemberPlanOfferPicker: ComponentType<BuilderMemberPlanOfferPickerProps>;
   PaymentAmountSlider: ComponentType<BuilderPaymentAmountSliderProps>;
   PaymentAmountPicker: ComponentType<BuilderPaymentAmountPickerProps>;
   PaymentMethodPicker: ComponentType<BuilderPaymentMethodPickerProps>;
@@ -254,6 +257,7 @@ export type WebsiteBuilderProps = {
     Crowdfunding: ComponentType<BuilderCrowdfundingBlockProps>;
     Listicle: ComponentType<BuilderListicleBlockProps>;
     FlexBlock: ComponentType<BuilderFlexBlockProps>;
+    BlockTemplate: ComponentType<BuilderBlockTemplateBlockProps>;
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>;
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>;
     TeaserList: ComponentType<BuilderTeaserListBlockProps>;
@@ -298,6 +302,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   GoodiePicker: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
+  MemberPlanOfferPicker: NoComponent,
   PaymentAmountSlider: NoComponent,
   PaymentAmountPicker: NoComponent,
   PaymentMethodPicker: NoComponent,
@@ -404,6 +409,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     Teaser: NoComponent,
     Break: NoComponent,
     FlexBlock: NoComponent,
+    BlockTemplate: NoComponent,
   },
 
   blockStyles: {

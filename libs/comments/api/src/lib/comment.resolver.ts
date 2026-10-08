@@ -36,7 +36,7 @@ import {
   CommentRating,
   OverriddenRating,
 } from './rating-system/rating-system.model';
-import { forwardRef, Inject } from '@nestjs/common';
+import { ForbiddenException, forwardRef, Inject } from '@nestjs/common';
 import {
   CanDeleteComments,
   CanGetComments,
@@ -85,18 +85,13 @@ export class CommentResolver {
     @Args() input: CommentsForItemArgs,
     @CurrentUser() session: UserSession | null
   ) {
-    const publicFilter = {
-      OR: [
-        session?.user.id ? { userID: session?.user.id } : {},
-        { state: CommentState.approved },
-      ],
-    };
+    if (hasPermission(CanGetComments, session?.roles ?? [])) {
+      return this.commentService.getCommentsForItem(input);
+    }
 
-    return this.commentService.getCommentsForItem(
+    return this.commentService.getPublicCommentsForItem(
       input,
-      !hasPermission(CanGetComments, session?.roles ?? []) ? publicFilter : (
-        undefined
-      )
+      session?.user?.id
     );
   }
 
@@ -126,7 +121,19 @@ export class CommentResolver {
   @Mutation(() => Comment, {
     description: `Creates a comment for any user`,
   })
-  async createComment(@Args() input: CreateCommentInput) {
+  async createComment(
+    @Args() input: CreateCommentInput,
+    @CurrentUser() session: UserSession | null
+  ) {
+    if (
+      input.publish &&
+      !hasPermission(CanTakeActionOnComment, session?.roles ?? [])
+    ) {
+      throw new ForbiddenException(
+        'You are not allowed to publish comments without approval'
+      );
+    }
+
     return this.commentService.createAdminComment(input);
   }
 

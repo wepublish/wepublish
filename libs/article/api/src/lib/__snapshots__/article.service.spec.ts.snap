@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ArticleService should create an article 1`] = `
+exports[`ArticleService > should create an article 1`] = `
 [
   {
     "data": {
@@ -74,7 +74,7 @@ exports[`ArticleService should create an article 1`] = `
 ]
 `;
 
-exports[`ArticleService should create an article 2`] = `
+exports[`ArticleService > should create an article 2`] = `
 [
   {
     "data": undefined,
@@ -82,7 +82,7 @@ exports[`ArticleService should create an article 2`] = `
 ]
 `;
 
-exports[`ArticleService should create an article 3`] = `
+exports[`ArticleService > should create an article 3`] = `
 [
   {
     "title": {
@@ -102,7 +102,7 @@ exports[`ArticleService should create an article 3`] = `
 ]
 `;
 
-exports[`ArticleService should delete an article 1`] = `
+exports[`ArticleService > should delete an article 1`] = `
 [
   {
     "where": {
@@ -112,7 +112,7 @@ exports[`ArticleService should delete an article 1`] = `
 ]
 `;
 
-exports[`ArticleService should dislike an article 1`] = `
+exports[`ArticleService > should dislike an article 1`] = `
 [
   {
     "data": {
@@ -127,7 +127,7 @@ exports[`ArticleService should dislike an article 1`] = `
 ]
 `;
 
-exports[`ArticleService should like an article 1`] = `
+exports[`ArticleService > should like an article 1`] = `
 [
   {
     "data": {
@@ -142,7 +142,7 @@ exports[`ArticleService should like an article 1`] = `
 ]
 `;
 
-exports[`ArticleService should not override the original publication date if newer 1`] = `
+exports[`ArticleService > should not override the original publication date if newer 1`] = `
 [
   {
     "data": {
@@ -166,7 +166,7 @@ exports[`ArticleService should not override the original publication date if new
 ]
 `;
 
-exports[`ArticleService should override the original publication date if older 1`] = `
+exports[`ArticleService > should override the original publication date if older 1`] = `
 [
   {
     "data": {
@@ -190,7 +190,7 @@ exports[`ArticleService should override the original publication date if older 1
 ]
 `;
 
-exports[`ArticleService should override the original publication date if the original date is in the future 1`] = `
+exports[`ArticleService > should override the original publication date if the original date is in the future 1`] = `
 [
   {
     "data": {
@@ -214,7 +214,7 @@ exports[`ArticleService should override the original publication date if the ori
 ]
 `;
 
-exports[`ArticleService should publish a revision 1`] = `
+exports[`ArticleService > should publish a revision 1`] = `
 [
   {
     "data": {
@@ -238,25 +238,22 @@ exports[`ArticleService should publish a revision 1`] = `
 ]
 `;
 
-exports[`ArticleService should query an article by slug 1`] = `
+exports[`ArticleService > should query an article by slug 1`] = `
 [
   {
     "orderBy": {
       "publishedAt": "asc",
     },
     "where": {
-      "slug": {
-        "equals": "1234",
-        "mode": "insensitive",
-      },
+      "slug": "some-slug",
     },
   },
 ]
 `;
 
-exports[`ArticleService should query articles based on filter 1`] = `undefined`;
+exports[`ArticleService > should query articles based on filter 1`] = `undefined`;
 
-exports[`ArticleService should query articles based on filter 2`] = `
+exports[`ArticleService > should query articles based on filter 2`] = `
 [
   {
     "cursor": undefined,
@@ -484,7 +481,7 @@ exports[`ArticleService should query articles based on filter 2`] = `
 ]
 `;
 
-exports[`ArticleService should query articles based on filter 3`] = `
+exports[`ArticleService > should query articles based on filter 3`] = `
 [
   {
     "where": {
@@ -706,7 +703,7 @@ exports[`ArticleService should query articles based on filter 3`] = `
 ]
 `;
 
-exports[`ArticleService should query articles based on full text search 1`] = `
+exports[`ArticleService > should query articles based on full text search 1`] = `
 [
   [
     "
@@ -731,7 +728,7 @@ exports[`ArticleService should query articles based on full text search 1`] = `
 ]
 `;
 
-exports[`ArticleService should query articles based on full text search 2`] = `
+exports[`ArticleService > should query articles based on full text search 2`] = `
 [
   {
     "cursor": undefined,
@@ -960,7 +957,7 @@ exports[`ArticleService should query articles based on full text search 2`] = `
 ]
 `;
 
-exports[`ArticleService should query articles based on full text search 3`] = `
+exports[`ArticleService > should query articles based on full text search 3`] = `
 [
   {
     "where": {
@@ -1183,7 +1180,7 @@ exports[`ArticleService should query articles based on full text search 3`] = `
 ]
 `;
 
-exports[`ArticleService should query articles on all revisions 1`] = `
+exports[`ArticleService > should query articles on all revisions 1`] = `
 [
   [
     "
@@ -1208,7 +1205,7 @@ exports[`ArticleService should query articles on all revisions 1`] = `
 ]
 `;
 
-exports[`ArticleService should query articles on all revisions 2`] = `
+exports[`ArticleService > should query articles on all revisions 2`] = `
 [
   {
     "cursor": undefined,
@@ -1336,7 +1333,7 @@ exports[`ArticleService should query articles on all revisions 2`] = `
 ]
 `;
 
-exports[`ArticleService should query articles on all revisions 3`] = `
+exports[`ArticleService > should query articles on all revisions 3`] = `
 [
   {
     "where": {
@@ -1458,7 +1455,7 @@ exports[`ArticleService should query articles on all revisions 3`] = `
 ]
 `;
 
-exports[`ArticleService should query articles using cursor based pagination 1`] = `
+exports[`ArticleService > should query articles using cursor based pagination 1`] = `
 [
   {
     "cursor": {
@@ -1480,7 +1477,7 @@ exports[`ArticleService should query articles using cursor based pagination 1`] 
 ]
 `;
 
-exports[`ArticleService should query articles using cursor based pagination 2`] = `
+exports[`ArticleService > should query articles using cursor based pagination 2`] = `
 [
   {
     "where": {
@@ -1494,7 +1491,7 @@ exports[`ArticleService should query articles using cursor based pagination 2`] 
 ]
 `;
 
-exports[`ArticleService should return paginated articles 1`] = `
+exports[`ArticleService > should return paginated articles 1`] = `
 {
   "nodes": [
     {
@@ -1511,7 +1508,7 @@ exports[`ArticleService should return paginated articles 1`] = `
 }
 `;
 
-exports[`ArticleService should unpublish & archive all pending revisions on publish 1`] = `
+exports[`ArticleService > should unpublish & archive all pending revisions on publish 1`] = `
 [
   {
     "data": {
@@ -1528,7 +1525,7 @@ exports[`ArticleService should unpublish & archive all pending revisions on publ
 ]
 `;
 
-exports[`ArticleService should unpublish an article 1`] = `
+exports[`ArticleService > should unpublish an article 1`] = `
 [
   {
     "data": {
@@ -1562,7 +1559,7 @@ exports[`ArticleService should unpublish an article 1`] = `
 ]
 `;
 
-exports[`ArticleService should unpublish an article 2`] = `
+exports[`ArticleService > should unpublish an article 2`] = `
 [
   {
     "data": {
@@ -1575,7 +1572,7 @@ exports[`ArticleService should unpublish an article 2`] = `
 ]
 `;
 
-exports[`ArticleService should update an article 1`] = `
+exports[`ArticleService > should update an article 1`] = `
 [
   {
     "include": {
@@ -1588,7 +1585,7 @@ exports[`ArticleService should update an article 1`] = `
 ]
 `;
 
-exports[`ArticleService should update an article 2`] = `
+exports[`ArticleService > should update an article 2`] = `
 [
   {
     "data": {
@@ -1678,7 +1675,7 @@ exports[`ArticleService should update an article 2`] = `
 ]
 `;
 
-exports[`ArticleService should update an article 3`] = `
+exports[`ArticleService > should update an article 3`] = `
 [
   {
     "title": {
@@ -1698,7 +1695,7 @@ exports[`ArticleService should update an article 3`] = `
 ]
 `;
 
-exports[`ArticleService version history should restore a revision as a new draft 1`] = `
+exports[`ArticleService > version history > should restore a revision as a new draft 1`] = `
 [
   {
     "data": {

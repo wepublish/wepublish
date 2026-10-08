@@ -1,10 +1,11 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Badge, css, Theme } from '@mui/material';
 import {
   ArticleTags as ArticleTagsDefault,
   ArticleTagsWrapper,
 } from '@wepublish/article/website';
-import { useCommentListQuery } from '@wepublish/website/api';
+import { CommentListDocument } from '@wepublish/website/api';
 import {
   BuilderArticleMetaProps,
   useWebsiteBuilder,
@@ -176,7 +177,7 @@ export const TsriArticleMeta = ({
   const {
     elements: { Link },
   } = useWebsiteBuilder();
-  const { data } = useCommentListQuery({
+  const { data } = useQuery(CommentListDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       itemId: article.id,

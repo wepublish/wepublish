@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`NavigationResolver createNavigation 1`] = `
+exports[`NavigationResolver > createNavigation 1`] = `
 {
   "data": {
     "createNavigation": {
@@ -12,7 +12,7 @@ exports[`NavigationResolver createNavigation 1`] = `
 }
 `;
 
-exports[`NavigationResolver deleteNavigation 1`] = `
+exports[`NavigationResolver > deleteNavigation 1`] = `
 {
   "data": {
     "deleteNavigation": {
@@ -22,7 +22,7 @@ exports[`NavigationResolver deleteNavigation 1`] = `
 }
 `;
 
-exports[`NavigationResolver navigation 1`] = `
+exports[`NavigationResolver > navigation 1`] = `
 {
   "data": {
     "navigation": {
@@ -35,7 +35,7 @@ exports[`NavigationResolver navigation 1`] = `
 }
 `;
 
-exports[`NavigationResolver navigations 1`] = `
+exports[`NavigationResolver > navigations 1`] = `
 {
   "data": {
     "navigations": [
@@ -56,7 +56,7 @@ exports[`NavigationResolver navigations 1`] = `
 }
 `;
 
-exports[`NavigationResolver updateNavigation 1`] = `
+exports[`NavigationResolver > updateNavigation 1`] = `
 {
   "data": {
     "updateNavigation": {

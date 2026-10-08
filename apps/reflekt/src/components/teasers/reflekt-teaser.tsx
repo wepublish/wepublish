@@ -12,7 +12,7 @@ import {
 } from '@wepublish/block-content/website';
 import {} from '@wepublish/block-content/website';
 import {
-  FlexAlignment,
+  FullFlexAlignmentFragment,
   FullImageFragment,
   FullTeaserFragment,
 } from '@wepublish/website/api';
@@ -60,13 +60,13 @@ export const selectTeaserLeadColor = (teaser: FullTeaserFragment) => {
   return leadColor;
 };
 
-export const TeaserWrapper = styled('div')<FlexAlignment>`
+export const TeaserWrapper = styled('div')<FullFlexAlignmentFragment>`
   list-style: none;
   aspect-ratio: 365/380;
   overflow: hidden;
   background-color: transparent;
   cursor: pointer;
-  container: teaser/inline-size;
+  contain: inline-size;
   display: grid;
   position: relative;
 

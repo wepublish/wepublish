@@ -5,7 +5,11 @@ import {
   OneScopedJwtGuard,
 } from './one-scoped-jwt.guard';
 
-const OPERATIONS = ['getMediumStats', 'getMediumMigrations'] as const;
+const OPERATIONS = [
+  'getMediumStats',
+  'getMediumMigrations',
+  'getMediumChangelogActions',
+] as const;
 
 describe('MediumStatsResolver authorisation wiring', () => {
   it.each(OPERATIONS)('%s declares the read:stats scope', operation => {

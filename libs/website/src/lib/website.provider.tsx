@@ -66,6 +66,7 @@ import {
   AlternatingTeaser,
   AlternatingTeaserSlotsBlock,
   FlexBlock,
+  BlockTemplateBlock,
 } from '@wepublish/block-content/website';
 import {
   Comment,
@@ -88,6 +89,7 @@ import {
   InvoiceListItem,
   MemberPlanItem,
   GoodiePicker,
+  MemberPlanOfferPicker,
   MemberPlanPicker,
   PaymentAmountSlider,
   PaymentMethodPicker,
@@ -133,17 +135,19 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, getDefaultOptions, Locale } from 'date-fns';
 import { memo, PropsWithChildren } from 'react';
 import { IconContext } from 'react-icons';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 import { Paywall } from '@wepublish/paywall/website';
 import { Tag, TagSEO } from '@wepublish/tag/website';
-import { FontStyleOptions } from '@mui/material/styles/createTypography';
+import { TypographyVariantsOptions } from '@mui/material/styles';
 
 export type WebsiteProps = PropsWithChildren;
 
 const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime ? format(date, 'dd.MM.yyyy HH:mm') : format(date, 'dd.MM.yyyy');
+  format(date, includeTime ? 'dd.MM.yyyy HH:mm' : 'dd.MM.yyyy', {
+    locale: (getDefaultOptions() as { locale: Locale }).locale,
+  });
 
 const globalStyles = (
   <GlobalStyles
@@ -151,10 +155,10 @@ const globalStyles = (
       html,
       body {
         scroll-padding-top: ${theme.spacing(7)};
-        font-family: ${(theme.typography as FontStyleOptions).allVariants
-          ?.fontFamily};
-        font-weight: ${(theme.typography as FontStyleOptions).allVariants
-          ?.fontWeight};
+        font-family: ${(theme.typography as TypographyVariantsOptions)
+          .allVariants?.fontFamily};
+        font-weight: ${(theme.typography as TypographyVariantsOptions)
+          .allVariants?.fontWeight};
         hyphens: auto;
         word-break: break-word;
 
@@ -242,6 +246,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         GoodiePicker={GoodiePicker}
         MemberPlanPicker={MemberPlanPicker}
         MemberPlanItem={MemberPlanItem}
+        MemberPlanOfferPicker={MemberPlanOfferPicker}
         PeriodicityPicker={PeriodicityPicker}
         PaymentAmountSlider={PaymentAmountSlider}
         PaymentAmountPicker={PaymentAmountPicker}
@@ -313,6 +318,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           StreamableVideo: StreamableVideoBlock,
           YouTubeVideo: YouTubeVideoBlock,
           FlexBlock,
+          BlockTemplate: BlockTemplateBlock,
         }}
         blockStyles={{
           Banner,

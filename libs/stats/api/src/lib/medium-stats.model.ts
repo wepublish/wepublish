@@ -1,6 +1,14 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 
-export const MEDIUM_STATS_SCHEMA_VERSION = 1;
+/**
+ * The contract version a medium announces, shown to operators as "an older one
+ * reports fewer figures". Raised whenever a release adds or removes a block, so
+ * that field can actually tell an updated medium from one that is behind.
+ *
+ * 2 — adds `audit`: editor actions, failures, active accounts, concentration,
+ *     impersonation, the action mix, the top errors and mutation usage.
+ */
+export const MEDIUM_STATS_SCHEMA_VERSION = 2;
 
 @ObjectType()
 export class MediumStatsWindow {
@@ -85,6 +93,27 @@ export class MediumMigrationSummary {
   lastMigrationFailed!: boolean;
 }
 
+/**
+ * Changelog entries that ask the medium to do something. Purely informative
+ * entries are never counted here — they need nobody's attention and would
+ * otherwise turn every release into an open task.
+ */
+@ObjectType()
+export class MediumChangelogStats {
+  @Field(() => Int, {
+    description:
+      'Action-required entries that nobody has confirmed yet. Informative entries are excluded.',
+  })
+  openActions!: number;
+
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      'Release date of the longest-open action-required entry, or null when none is open.',
+  })
+  oldestOpenActionAt!: Date | null;
+}
+
 @ObjectType()
 export class MediumOperationsStats {
   @Field(() => Date, { nullable: true })
@@ -120,6 +149,9 @@ export class MediumOperationsStats {
 
   @Field(() => MediumMigrationSummary)
   migrations!: MediumMigrationSummary;
+
+  @Field(() => MediumChangelogStats)
+  changelog!: MediumChangelogStats;
 }
 
 @ObjectType()
@@ -166,6 +198,19 @@ export class MediumCommunityStats {
 
 @ObjectType()
 export class MediumMailStats {
+  /**
+   * Every individual mail handed to the provider in the window — invoices,
+   * dunning, password links and campaign mail alike.
+   *
+   * `sends` below counts something narrower: the sentCount of CAMPAIGN jobs. A
+   * medium that mails 1023 invoices and runs no newsletter reports `sends: 0`,
+   * which reads as "nothing was sent" when the opposite is true. The two are
+   * kept apart rather than merged, because "did the newsletter go out" and "how
+   * much mail did we send" are different questions.
+   */
+  @Field(() => Int)
+  total!: number;
+
   @Field(() => Int)
   sends!: number;
 
@@ -225,6 +270,90 @@ export class MediumNetworkStats {
 }
 
 @ObjectType()
+export class MediumMutationUsage {
+  @Field()
+  mutation!: string;
+
+  @Field(() => Int)
+  count!: number;
+}
+
+@ObjectType()
+export class MediumAuditError {
+  @Field({
+    description: 'First line of the error, capped — enough to recognise it.',
+  })
+  message!: string;
+
+  @Field(() => Int)
+  count!: number;
+}
+
+@ObjectType()
+export class MediumAuditActionCount {
+  @Field({ description: 'create, update, delete or other.' })
+  action!: string;
+
+  @Field(() => Int)
+  count!: number;
+}
+
+@ObjectType()
+export class MediumAuditStats {
+  @Field(() => Boolean, {
+    description:
+      'False when this installation keeps no audit log, in which case every figure below is zero and must not be read as "nothing happened".',
+  })
+  supported!: boolean;
+
+  @Field(() => Int, {
+    description: 'Permission gated editor actions in the window.',
+  })
+  actions!: number;
+
+  @Field(() => Int, {
+    description:
+      'Of those, the ones the system refused. A rate worth acting on needs both numbers, so they travel together.',
+  })
+  failedActions!: number;
+
+  @Field(() => Int, {
+    description:
+      'Accounts that performed at least one action in the 30 days ending with the window. Deliberately NOT the window itself: a one-day window would drop to zero every weekend and the curve would be unreadable.',
+  })
+  activeEditors!: number;
+
+  @Field(() => Int, {
+    description: 'Actions performed while impersonating another account.',
+  })
+  impersonatedActions!: number;
+
+  @Field(() => Float, {
+    nullable: true,
+    description:
+      'Share of all named-account actions performed by the single busiest account. Five editors where one does 90 % looks identical to five balanced ones in activeEditors alone — this is what tells them apart. Null when nobody acted.',
+  })
+  topEditorShare!: number | null;
+
+  @Field(() => [MediumAuditActionCount], {
+    description: 'How the actions split across create, update and delete.',
+  })
+  actionsByType!: MediumAuditActionCount[];
+
+  @Field(() => [MediumAuditError], {
+    description:
+      'The errors editors ran into most often, worst first. Without this the error rate says something is wrong but never what, and the answer sits one filtered page away.',
+  })
+  topErrors!: MediumAuditError[];
+
+  @Field(() => [MediumMutationUsage], {
+    description:
+      'How often each mutation was used in the window, most used first. Shows whether a shipped feature is actually being touched.',
+  })
+  mutationUsage!: MediumMutationUsage[];
+}
+
+@ObjectType()
 export class MediumStats {
   @Field(() => Int)
   schemaVersion!: number;
@@ -249,6 +378,9 @@ export class MediumStats {
 
   @Field(() => MediumEditorialStats)
   editorial!: MediumEditorialStats;
+
+  @Field(() => MediumAuditStats)
+  audit!: MediumAuditStats;
 
   @Field(() => MediumCommunityStats)
   community!: MediumCommunityStats;

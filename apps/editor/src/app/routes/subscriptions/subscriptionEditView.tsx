@@ -1,7 +1,9 @@
-import { ApolloError } from '@apollo/client';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Alert } from '@mui/material';
 import {
+  CancelSubscriptionDocument,
+  CreateSubscriptionDocument,
   Currency,
   DeactivationFragment,
   FullMemberPlanFragment,
@@ -9,25 +11,29 @@ import {
   FullSubscriptionFragment,
   FullUserFragment,
   InvoiceFragment,
+  InvoicesDocument,
+  MemberPlanListDocument,
+  PaymentMethodListDocument,
   PaymentPeriodicity,
   PropertyInput,
+  RenewSubscriptionDocument,
   SubscriptionDeactivationReason,
-  useCancelSubscriptionMutation,
-  useCreateSubscriptionMutation,
-  useInvoicesQuery,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
-  useRenewSubscriptionMutation,
-  useSubscriptionQuery,
-  useUpdateSubscriptionMutation,
-  useUserQuery,
+  SubscriptionCancellationMailDocument,
+  SubscriptionCreationMailDocument,
+  SubscriptionDocument,
+  UpdateSubscriptionDocument,
+  UserDocument,
 } from '@wepublish/editor/api';
 import {
   ALL_PAYMENT_PERIODICITIES,
+  getMonthlyEquivalentRange,
+  PAYMENT_PERIODICITY_MONTHS,
   createCheckedPermissionComponent,
   CurrencyInput,
   DescriptionList,
   DescriptionListItem,
+  IconButtonTooltip,
+  InfoTooltip,
   InvoiceListPanel,
   ListViewActions,
   ListViewContainer as ListViewContainerDefault,
@@ -35,6 +41,8 @@ import {
   PermissionControl,
   TableWrapper,
   toggleRequiredLabel,
+  skipMailFor,
+  useActionMailQuestion,
   useAuthorisation,
   UserSearch,
   UserSubscriptionDeactivatePanel,
@@ -72,12 +80,8 @@ const Form = styled(RForm)`
   height: 100%;
 `;
 
-const FormLabelMarginLeft = styled(Label)`
-  margin-left: 10px;
-`;
-
 const Button = styled(RButton)`
-  margin-top: 10px;
+  margin-top: 8px;
 `;
 
 const Grid = styled(RGrid)`
@@ -102,12 +106,12 @@ const UserFormGrid = styled(RGrid)`
 `;
 
 const ButtonMarginRight = styled(Button)`
-  margin-right: 10px;
+  margin-right: 8px;
 `;
 
 const IconButtonMarginRight = styled(IconButton)`
-  margin-right: 10px;
-  margin-top: 10px;
+  margin-right: 8px;
+  margin-top: 8px;
 `;
 
 export interface SubscriptionEditViewProps {
@@ -130,6 +134,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [isDeactivationPanelOpen, setDeactivationPanelOpen] =
     useState<boolean>(false);
   const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false);
+  const client = useApolloClient();
+  const { askMail, actionMailDialog } = useActionMailQuestion();
   const [user, setUser] = useState<FullUserFragment | null>();
   const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment>();
   const [paymentPeriodicity, setPaymentPeriodicity] =
@@ -157,12 +163,33 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
   const [extendModal, setExtendModal] = useState<boolean>(false);
 
+  const periodicityMonths = PAYMENT_PERIODICITY_MONTHS[paymentPeriodicity];
+  const periodAmount = Math.round(monthlyAmount * periodicityMonths);
+  const periodMinAmount = useMemo(() => {
+    if (!memberPlan) {
+      return 0;
+    }
+
+    const override = memberPlan.periodicityPricing?.find(
+      price =>
+        price.periodicity === paymentPeriodicity && price.amountMin != null
+    );
+
+    return (
+      override?.amountMin ??
+      Math.round(
+        getMonthlyEquivalentRange(memberPlan.periodicityPricing)
+          .amountPerMonthMin * periodicityMonths
+      )
+    );
+  }, [memberPlan, paymentPeriodicity, periodicityMonths]);
+
   const {
     data,
     loading: isLoading,
     error: loadError,
     refetch: reloadSubscription,
-  } = useSubscriptionQuery({
+  } = useQuery(SubscriptionDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
@@ -172,7 +199,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     loading: isLoadingInvoices,
     error: loadErrorInvoices,
     refetch: reloadInvoices,
-  } = useInvoicesQuery({
+  } = useQuery(InvoicesDocument, {
     variables: {
       take: 100,
       filter: {
@@ -251,7 +278,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     data: memberPlanData,
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
-  } = useMemberPlanListQuery({
+  } = useQuery(MemberPlanListDocument, {
     variables: {
       take: 100, // TODO: Pagination
     },
@@ -261,22 +288,25 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
-  } = usePaymentMethodListQuery({});
+  } = useQuery(PaymentMethodListDocument, {});
 
-  const [updateSubscription, { loading: isUpdating }] =
-    useUpdateSubscriptionMutation();
+  const [updateSubscription, { loading: isUpdating }] = useMutation(
+    UpdateSubscriptionDocument
+  );
   const [cancelSubscription, { loading: isCancel, error: cancelError }] =
-    useCancelSubscriptionMutation();
+    useMutation(CancelSubscriptionDocument);
 
-  const [createSubscription, { loading: isCreating }] =
-    useCreateSubscriptionMutation();
-  const [renewSubscription, { error: renewalError }] =
-    useRenewSubscriptionMutation();
+  const [createSubscription, { loading: isCreating }] = useMutation(
+    CreateSubscriptionDocument
+  );
+  const [renewSubscription, { error: renewalError }] = useMutation(
+    RenewSubscriptionDocument
+  );
 
   /**
    * fetch edited user from api
    */
-  const { data: editedUserData } = useUserQuery({
+  const { data: editedUserData } = useQuery(UserDocument, {
     variables: { id: editedUserId! },
     skip: editedUserId === undefined,
   });
@@ -445,12 +475,41 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           onSave?.(data.updateSubscription);
         }
       } else {
+        const { data: mailData } = await client.query({
+          query: SubscriptionCreationMailDocument,
+          variables: {
+            userID: user.id,
+            memberPlanID: memberPlan.id,
+            paymentMethodID: paymentMethod.id,
+            paymentPeriodicity,
+            autoRenew,
+          },
+          fetchPolicy: 'network-only',
+        });
+        const mail = mailData?.subscriptionCreationMail;
+
+        if (!mail) {
+          throw new Error('Could not look up the mail of this action');
+        }
+
+        // asked every time: whether the mail goes out, or that none will
+        const decision = await askMail({
+          ...mail,
+          // the address the mail goes to, from the API; the view's user may lack it
+          recipient: mail.recipientEmail ?? user.email,
+        });
+
+        if (decision === 'cancel') {
+          return;
+        }
+
         const { data } = await createSubscription({
           variables: {
             ...inputBase,
             userID: user.id,
             paymentMethodID: paymentMethod.id,
             memberPlanID: memberPlan.id,
+            skipMail: skipMailFor(decision),
           },
         });
 
@@ -489,26 +548,53 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           showIcon
           closable
         >
-          {t('toast.updateError', { error: (e as ApolloError)?.message })}
+          {t('toast.updateError', { error: (e as Error)?.message })}
         </Message>,
         { duration: 6000 }
       );
     }
   }
 
+  /** @returns false when the admin cancelled, so the dialog stays open */
   async function handleDeactivation(
     date: Date,
     reason: SubscriptionDeactivationReason
-  ) {
-    if (!id || !memberPlan || !paymentMethod || !user?.id) return;
+  ): Promise<boolean> {
+    if (!id || !memberPlan || !paymentMethod || !user?.id) return true;
+
+    const { data: mailData } = await client.query({
+      query: SubscriptionCancellationMailDocument,
+      variables: { id, reason },
+      fetchPolicy: 'network-only',
+    });
+    const mail = mailData?.subscriptionCancellationMail;
+
+    if (!mail) {
+      throw new Error('Could not look up the mail of this action');
+    }
+
+    // asked every time: whether the mail goes out, or that none will
+    const decision = await askMail({
+      ...mail,
+      // the address the mail goes to, from the API; the view's user may lack it
+      recipient: mail.recipientEmail ?? user.email,
+    });
+
+    if (decision === 'cancel') {
+      return false;
+    }
+
     const { data } = await cancelSubscription({
       variables: {
         reason,
         cancelSubscriptionId: id,
+        skipMail: skipMailFor(decision),
       },
     });
     if (data?.cancelSubscription) onSave?.(data.cancelSubscription);
     await reloadInvoices();
+
+    return true;
   }
 
   async function handleRenewal() {
@@ -539,9 +625,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     monthlyAmount: NumberType()
       .isRequired(t('errorMessages.noAmountErrorMessage'))
       .min(
-        (memberPlan?.amountPerMonthMin || 0) / 100,
+        periodMinAmount,
         t(`errorMessages.minimalAmountPerMonth`, {
-          amount: (memberPlan?.amountPerMonthMin || 0) / 100,
+          amount: (periodMinAmount / 100).toFixed(2),
           currency: memberPlan?.currency,
         })
       ),
@@ -573,15 +659,20 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           user: user?.name,
           paymentMethod: paymentMethod?.name,
           paymentPeriodicity,
-          monthlyAmount,
+          monthlyAmount: periodAmount,
         }}
       >
         <ListViewContainer>
           <ListViewHeader>
             <h2>
-              <Link to={goBackLink}>
-                <MdChevronLeft />
-              </Link>
+              <IconButtonTooltip caption={t('back')}>
+                <Link
+                  to={goBackLink}
+                  aria-label={t('back')}
+                >
+                  <MdChevronLeft />
+                </Link>
+              </IconButtonTooltip>
               {id ?
                 t('userSubscriptionEdit.editTitle')
               : t('userSubscriptionEdit.createTitle')}
@@ -724,8 +815,17 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                   mp => mp.id === value
                                 );
                                 if (!foundMemberPlan) return;
+                                const planPeriodMin =
+                                  foundMemberPlan.periodicityPricing?.find(
+                                    price =>
+                                      price.periodicity === paymentPeriodicity
+                                  )?.amountMin;
                                 setMonthlyAmount(
-                                  foundMemberPlan.amountPerMonthMin
+                                  planPeriodMin != null ?
+                                    planPeriodMin / periodicityMonths
+                                  : getMonthlyEquivalentRange(
+                                      foundMemberPlan.periodicityPricing
+                                    ).amountPerMonthMin
                                 );
                                 setCurrency(foundMemberPlan.currency);
                                 return foundMemberPlan;
@@ -745,9 +845,11 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                     }
                                   )}
                                 >
-                                  {(memberPlan.amountPerMonthMin / 100).toFixed(
-                                    2
-                                  )}
+                                  {(
+                                    getMonthlyEquivalentRange(
+                                      memberPlan.periodicityPricing
+                                    ).amountPerMonthMin / 100
+                                  ).toFixed(2)}
                                 </DescriptionListItem>
                               </DescriptionList>
                             </Text>
@@ -785,20 +887,22 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             accepter={SelectPicker}
                           />
                         </Col>
-                        {/* monthly amount */}
+                        {/* amount per period */}
                         <Col xs={12}>
                           <Label>
                             {toggleRequiredLabel(
-                              t('userSubscriptionEdit.monthlyAmount')
+                              t('userSubscriptionEdit.periodAmount')
                             )}
                           </Label>
 
                           <CurrencyInput
                             name="monthlyAmount"
                             currency={currency}
-                            centAmount={monthlyAmount}
+                            centAmount={periodAmount}
                             onChange={centAmount => {
-                              setMonthlyAmount(Math.round(centAmount || 0));
+                              setMonthlyAmount(
+                                Math.round(centAmount || 0) / periodicityMonths
+                              );
                             }}
                             disabled={
                               isDisabled ||
@@ -806,6 +910,18 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                               isDeactivated
                             }
                           />
+                          {paymentPeriodicity !==
+                            PaymentPeriodicity.Monthly && (
+                            <Text>
+                              {t(
+                                'userSubscriptionEdit.monthlyAmountEquivalent',
+                                {
+                                  currency,
+                                  amount: (monthlyAmount / 100).toFixed(2),
+                                }
+                              )}
+                            </Text>
+                          )}
                         </Col>
                       </RowPaddingTop>
                       <RowPaddingTop>
@@ -860,7 +976,12 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </Col>
                         {/* subscription paid until */}
                         <Col xs={12}>
-                          <Label>{t('userSubscriptionEdit.paidUntil')}</Label>
+                          <Label>
+                            {t('userSubscriptionEdit.paidUntil')}{' '}
+                            <InfoTooltip
+                              text={t('userSubscriptionEdit.paidUntilInfo')}
+                            />
+                          </Label>
                           <DatePicker
                             block
                             value={paidUntil ?? undefined}
@@ -925,6 +1046,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                       <Col xs={12}>
                         <Toggle
                           checked={extendable}
+                          label={t('memberplanForm.extendableToggle')}
                           onChange={updatedExtendable =>
                             setExtendable(() =>
                               checkTrialSubscription(updatedExtendable) ?
@@ -933,9 +1055,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             )
                           }
                         />
-                        <FormLabelMarginLeft>
-                          {t('memberplanForm.extendableToggle')}
-                        </FormLabelMarginLeft>
                         <Text>{t('memberplanForm.extendableHelpText')}</Text>
                       </Col>
                     </RowPaddingTop>
@@ -949,6 +1068,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             hasNoMemberPlanSelected ||
                             isDeactivated
                           }
+                          label={t('userSubscriptionEdit.autoRenew')}
                           onChange={value =>
                             setAutoRenew(() =>
                               checkTrialSubscription(extendable, value) ? value
@@ -956,9 +1076,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             )
                           }
                         />
-                        <FormLabelMarginLeft>
-                          {t('userSubscriptionEdit.autoRenew')}
-                        </FormLabelMarginLeft>
                         <Text>
                           {t('userSubscriptionEdit.autoRenewDescription')}
                         </Text>
@@ -1009,13 +1126,16 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               userEmail={user.email}
               paidUntil={paidUntil ?? undefined}
               onDeactivate={async data => {
-                await handleDeactivation(data.date, data.reason);
-                setDeactivationPanelOpen(false);
+                if (await handleDeactivation(data.date, data.reason)) {
+                  setDeactivationPanelOpen(false);
+                }
               }}
               onClose={() => setDeactivationPanelOpen(false)}
             />
           </Modal>
         )}
+
+        {actionMailDialog}
 
         {/* ask user to really extend the subscripion */}
         <Modal

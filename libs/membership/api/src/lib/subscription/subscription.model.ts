@@ -2,6 +2,7 @@ import {
   ArgsType,
   Field,
   InputType,
+  Float,
   Int,
   ObjectType,
   OmitType,
@@ -96,7 +97,7 @@ export class PublicSubscription
   @Field(() => PaymentPeriodicity)
   paymentPeriodicity!: PaymentPeriodicity;
 
-  @Field(() => Int)
+  @Field(() => Float)
   monthlyAmount!: number;
 
   @Field(() => Boolean)
@@ -176,6 +177,13 @@ export class CreatePublicSubscriptionInput extends PickType(
   override memberPlanID!: string;
   @Field()
   override paymentMethodID!: string;
+
+  @Field(() => Boolean, {
+    nullable: true,
+    description:
+      'When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.',
+  })
+  skipMail?: boolean;
 }
 
 @ArgsType()
@@ -183,18 +191,11 @@ export class ImportPublicSubscriptionInput extends OmitType(
   CreatePublicSubscriptionInput,
   [] as const,
   ArgsType
-) {
-  @Field(() => Boolean, {
-    nullable: true,
-    description:
-      'When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.',
-  })
-  skipMail?: boolean;
-}
+) {}
 
 @ArgsType()
 export class UpdatePublicSubscriptionInput extends PartialType(
-  CreatePublicSubscriptionInput,
+  OmitType(CreatePublicSubscriptionInput, ['skipMail'] as const, ArgsType),
   ArgsType
 ) {
   @Field()
@@ -213,7 +214,7 @@ export class CancelPublicSubscriptionInput extends PickType(
   @Field(() => Boolean, {
     nullable: true,
     description:
-      'When true, suppress the subscription-deactivation mail. Useful for bulk migrations of already-cancelled subscriptions.',
+      'When true, suppress the subscription-deactivation mail, e.g. when an editor chose not to mail the reader, or for bulk migrations of already-cancelled subscriptions.',
   })
   skipMail?: boolean;
 }

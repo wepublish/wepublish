@@ -116,12 +116,12 @@ export const ALWAYS_PLACEHOLDERS: MailPlaceholder[] = [
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…',
   },
   {
-    key: "currentDate",
-    label: "Current date",
-    description: "Aktuelles Datum.",
-    example: "14.06.2024",
+    key: 'currentDate',
+    label: 'Current date',
+    description: 'Aktuelles Datum.',
+    example: '14.06.2024',
     kind: 'date',
-  }
+  },
 ];
 
 const SUBSCRIPTION_SCALARS: MailPlaceholder[] = [

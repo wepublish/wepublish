@@ -1,11 +1,12 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import { PollBlockProvider } from '@wepublish/block-content/website';
 import {
+  ArticleDocument,
   CommentItemType,
   CommentSort,
   SortOrder,
-  useArticleQuery,
 } from '@wepublish/website/api';
 import { BuilderPollBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
@@ -88,10 +89,14 @@ const StyledInfoBox = styled(InfoBox)`
   background-color: ${({ theme }) => theme.palette.secondary.light};
 `;
 
-const PollBlockStyled = styled(PollBlock)`
-  position: sticky;
-  top: ${({ theme }) => theme.spacing(14)};
+const StickyPoll = styled('div')`
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    position: sticky;
+    top: ${({ theme }) => theme.spacing(14)};
+  }
+`;
 
+const PollBlockStyled = styled(PollBlock)`
   button {
     text-transform: uppercase;
     border-width: 1px;
@@ -113,7 +118,7 @@ export const FdtPollBlock = ({ poll }: BuilderPollBlockProps) => {
     query: { slug },
   } = useRouter();
 
-  const { data: articleData } = useArticleQuery({
+  const { data: articleData } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
@@ -127,10 +132,12 @@ export const FdtPollBlock = ({ poll }: BuilderPollBlockProps) => {
       <FrageDesTagesContainer>
         <FrageDesTagesWrapper>
           <PollWrapper>
-            {articleData?.article?.latest.image && (
-              <FdtArticleImage image={articleData.article.latest.image} />
-            )}
-            <PollBlockStyled poll={poll} />
+            <StickyPoll>
+              {articleData?.article?.latest.image && (
+                <FdtArticleImage image={articleData.article.latest.image} />
+              )}
+              <PollBlockStyled poll={poll} />
+            </StickyPoll>
           </PollWrapper>
 
           <CommentsWrapper>

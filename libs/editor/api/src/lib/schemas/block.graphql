@@ -264,11 +264,16 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle
     blockStyleName
     memberPlanIds
+    periodicityDisplay
     memberPlanRenderSettings {
       isDefault
       memberPlanId
       layout {
         type
+
+        ... on SubscribeBlockLayoutNoneConfig {
+          showInput
+        }
 
         ... on SubscribeBlockLayoutSliderConfig {
           showInput
@@ -277,6 +282,10 @@ fragment BlockWithoutTeaser on BlockContent {
         ... on SubscribeBlockLayoutPickerConfig {
           showInput
           values
+          valuesByPeriodicity {
+            periodicity
+            values
+          }
         }
       }
     }
@@ -284,6 +293,7 @@ fragment BlockWithoutTeaser on BlockContent {
     showGoodies
     showDiscountCodes
     goodieMinValue
+    goodieMinValueAppliesToUpgrade
     hideRepeatGoodieOnUpgrade
     type
   }
@@ -315,10 +325,14 @@ fragment BlockWithoutTeaser on BlockContent {
         urlParam
         defaultValue
         value
+        optionsLayout
         options {
           id
           name
           description
+          image {
+            ...FullImage
+          }
         }
       }
     }
@@ -521,61 +535,71 @@ fragment FullBlock on BlockContent {
       }
       block {
         __typename
-
-        ... on TeaserSlotsBlock {
-          title
-          disabled
-          blockStyle
-          blockStyleName
-          type
-          autofillConfig {
-            enabled
-            filter {
-              tags
-              tagObjects {
-                id
-                tag
-              }
-            }
-            sort
-            teaserType
-          }
-          slots {
-            type
-            teaser {
-              __typename
-              ...FullTeaser
-            }
-          }
-          autofillTeasers {
-            ...FullTeaser
-          }
-        }
-
-        ... on TeaserListBlock {
-          title
-          disabled
-          blockStyle
-          blockStyleName
-          type
-          skip
-          take
-          sort
-          teaserType
-          filter {
-            tags
-            tagObjects {
-              id
-              tag
-            }
-          }
-          teasers {
-            ...FullTeaser
-          }
-        }
-
         ...BlockWithoutTeaser
+        ...NestedTeaserBlock
+
+        ... on BlockTemplateBlock {
+          ...NestedBlockTemplateBlock
+        }
       }
+    }
+  }
+
+  ... on BlockTemplateBlock {
+    ...NestedBlockTemplateBlock
+  }
+}
+
+fragment NestedTeaserBlock on BlockContent {
+  ... on TeaserSlotsBlock {
+    title
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    autofillConfig {
+      enabled
+      filter {
+        tags
+        tagObjects {
+          id
+          tag
+        }
+      }
+      sort
+      teaserType
+    }
+    slots {
+      type
+      teaser {
+        __typename
+        ...FullTeaser
+      }
+    }
+    autofillTeasers {
+      ...FullTeaser
+    }
+  }
+
+  ... on TeaserListBlock {
+    title
+    disabled
+    blockStyle
+    blockStyleName
+    type
+    skip
+    take
+    sort
+    teaserType
+    filter {
+      tags
+      tagObjects {
+        id
+        tag
+      }
+    }
+    teasers {
+      ...FullTeaser
     }
   }
 }

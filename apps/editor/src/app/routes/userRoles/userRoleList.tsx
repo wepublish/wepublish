@@ -1,7 +1,8 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeleteUserRoleDocument,
   FullUserRoleFragment,
-  useDeleteUserRoleMutation,
-  useUserRoleListQuery,
+  UserRoleListDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -65,14 +66,15 @@ function UserRoleList() {
     data,
     refetch,
     loading: isLoading,
-  } = useUserRoleListQuery({
+  } = useQuery(UserRoleListDocument, {
     variables: {
       filter: filter || undefined,
       take: 200,
     },
   });
 
-  const [deleteUserRole, { loading: isDeleting }] = useDeleteUserRoleMutation(
+  const [deleteUserRole, { loading: isDeleting }] = useMutation(
+    DeleteUserRoleDocument,
     {}
   );
 
@@ -159,7 +161,7 @@ function UserRoleList() {
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullUserRoleFragment>) => (
                 <PermissionControl
@@ -173,6 +175,7 @@ function UserRoleList() {
                       color="red"
                       size="sm"
                       icon={<MdDelete />}
+                      aria-label={t('delete')}
                       onClick={() => {
                         setConfirmationDialogOpen(true);
                         setCurrentUserRole(rowData as FullUserRoleFragment);

@@ -31,6 +31,9 @@ export class SettingPaymentProvider extends SettingProvider {
   @Field(type => PaymentProviderType)
   type!: PaymentProviderType;
 
+  @Field(type => Date, { nullable: true })
+  deletedAt?: Date | null;
+
   @Field(type => Boolean, { nullable: true })
   offSessionPayments?: boolean;
 
@@ -59,6 +62,10 @@ export class SettingPaymentProvider extends SettingProvider {
 
   @Field({ nullable: true })
   payrexx_vatrate?: string;
+
+  // Simulated provider: renewals (charges of a stored customer) come back declined.
+  @Field(type => Boolean, { nullable: true })
+  simulated_declineRenewals?: boolean;
 
   @Field(type => Number, { nullable: true })
   bexio_userId?: number;
@@ -115,7 +122,14 @@ export class SettingPaymentProviderFilter extends PartialType(
 @ArgsType()
 export class CreateSettingPaymentProviderInput extends OmitType(
   SettingPaymentProvider,
-  ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
+  [
+    'id',
+    'type',
+    'deletedAt',
+    'createdAt',
+    'lastLoadedAt',
+    'modifiedAt',
+  ] as const,
   ArgsType
 ) {
   @Field()

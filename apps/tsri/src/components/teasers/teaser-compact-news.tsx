@@ -79,33 +79,37 @@ export const CompactNewsRowText = styled('span')`
 
 export const CompactNewsRowTitle = styled('strong')`
   ${({ theme }) => theme.breakpoints.up('xs')} {
-    display: block;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     font-weight: 700;
     font-size: calc(var(--tw, 100cqw) * 0.04);
     line-height: 1.35;
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
+    display: block;
+    -webkit-line-clamp: unset;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: calc(var(--tw, 100cqw) * 0.0265);
   }
 `;
 
 export const CompactNewsRowLead = styled('span')`
   ${({ theme }) => theme.breakpoints.up('xs')} {
+    display: none;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: 400;
-    font-size: calc(var(--tw, 100cqw) * 0.04);
-    line-height: 1.35;
-  }
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
     font-size: calc(var(--tw, 100cqw) * 0.0265);
+    line-height: 1.35;
   }
 `;
 

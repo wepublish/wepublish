@@ -1,7 +1,7 @@
 //@ts-check
 
 const { composePlugins, withNx } = require('@nx/next');
-const { withSentryConfig } = require('@sentry/nextjs');
+const { withSentryConfig } = require('@sentry/nextjs/config');
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled:

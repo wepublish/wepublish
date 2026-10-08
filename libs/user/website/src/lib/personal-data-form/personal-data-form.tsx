@@ -154,7 +154,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
           })
         )
       ).refine(data => data.password === data.passwordRepeated, {
-        message: 'Passwörter stimmen nicht überein.',
+        message: t('user.form.passwordsDoNotMatch'),
         path: ['passwordRepeated'],
       }),
     [fieldsToDisplay, schema]
@@ -239,20 +239,22 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                     label={t('user.password')}
                     error={!!error}
                     helperText={error?.message}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={togglePassword}
-                            onMouseDown={event => event.preventDefault()}
-                            edge="end"
-                          >
-                            {showPassword ?
-                              <MdVisibilityOff />
-                            : <MdVisibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
+                    slotProps={{
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={togglePassword}
+                              onMouseDown={event => event.preventDefault()}
+                              edge="end"
+                            >
+                              {showPassword ?
+                                <MdVisibilityOff />
+                              : <MdVisibility />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      },
                     }}
                   />
                 </>
@@ -272,20 +274,22 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                   label={t('user.passwordRepeat')}
                   error={!!error}
                   helperText={error?.message}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={toggleRepeatPassword}
-                          onMouseDown={event => event.preventDefault()}
-                          edge="end"
-                        >
-                          {showRepeatPassword ?
-                            <MdVisibilityOff />
-                          : <MdVisibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={toggleRepeatPassword}
+                            onMouseDown={event => event.preventDefault()}
+                            edge="end"
+                          >
+                            {showRepeatPassword ?
+                              <MdVisibilityOff />
+                            : <MdVisibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
                   }}
                 />
               )}

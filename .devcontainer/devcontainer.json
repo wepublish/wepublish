@@ -25,7 +25,8 @@
     "S3_PORT": "9000",
     "MAIL_SMTP_HOST": "mailpit",
     "MAIL_SMTP_PORT": "1025",
-    "MAIL_SMTP_FROM": "no-reply@wepublish.local"
+    "MAIL_SMTP_FROM": "no-reply@wepublish.local",
+    "REDIS_URL": "redis://wepublish-local:wepublish-local@dragonfly:6379/0"
   },
 
   // Mailpit web UI (read caught dev mails).

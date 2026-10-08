@@ -20,6 +20,7 @@ query MailProviderSettings {
 }
 
 mutation UpdateMailProviderSetting(
+  $type: MailProviderType
   $apiKey: String
   $fromAddress: String
   $id: String!
@@ -36,6 +37,7 @@ mutation UpdateMailProviderSetting(
   $webhookEndpointSecret: String
 ) {
   updateMailProviderSetting(
+    type: $type
     apiKey: $apiKey
     fromAddress: $fromAddress
     id: $id
@@ -67,5 +69,17 @@ mutation UpdateMailProviderSetting(
     smtp_secure
     smtp_user
     type
+  }
+}
+
+mutation CreateMailProviderSetting(
+  $id: String!
+  $type: MailProviderType!
+  $name: String
+) {
+  createMailProviderSetting(id: $id, type: $type, name: $name) {
+    id
+    type
+    name
   }
 }
