@@ -116,6 +116,10 @@ export function getApiClientV2() {
         },
         watchQuery: {
           fetchPolicy: 'network-only',
+          refetchOn: {
+            online: false,
+            windowFocus: false,
+          },
         },
       },
     });
