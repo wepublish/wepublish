@@ -24,15 +24,18 @@ const FileDropInputWrapper = styled.div<{
   padding-bottom: 20px;
   padding-left: 20px;
   padding-right: 20px;
-  border-radius: 3px;
+  border-radius: var(--rs-radius-md);
   border-style: dashed;
   border-width: 3px;
   position: relative;
   font-size: 16px;
   text-align: center;
-  border-color: ${({ dragging }) => (dragging ? '#3498ff' : '#004299')};
-  color: ${({ dragging }) => (dragging ? '#3498ff' : '#004299')};
-  fill: ${({ dragging }) => (dragging ? '#3498ff' : '#004299')};
+  border-color: ${({ dragging }) =>
+    dragging ? 'var(--rs-primary-500)' : 'var(--rs-text-link-active)'};
+  color: ${({ dragging }) =>
+    dragging ? 'var(--rs-primary-500)' : 'var(--rs-text-link-active)'};
+  fill: ${({ dragging }) =>
+    dragging ? 'var(--rs-primary-500)' : 'var(--rs-text-link-active)'};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;
 

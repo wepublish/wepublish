@@ -1,3 +1,4 @@
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient, TagType } from '@prisma/client';
 import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';
@@ -12,7 +13,10 @@ import {
 
 @Injectable()
 export class TagService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private publicContentCache: PublicContentCacheInvalidator
+  ) {}
 
   @PrimeDataLoader(TagDataloader)
   async getTags({
@@ -74,7 +78,7 @@ export class TagService {
 
   @PrimeDataLoader(TagDataloader)
   async updateTag({ id, description, ...input }: UpdateTagInput) {
-    return this.prisma.tag.update({
+    const result = await this.prisma.tag.update({
       where: {
         id,
       },
@@ -83,24 +87,33 @@ export class TagService {
         description: description as any,
       },
     });
+    await this.publicContentCache.invalidate('articles');
+
+    return result;
   }
 
   @PrimeDataLoader(TagDataloader)
   async createTag({ description, ...input }: CreateTagInput) {
-    return this.prisma.tag.create({
+    const result = await this.prisma.tag.create({
       data: {
         ...input,
         description: description as any,
       },
     });
+    await this.publicContentCache.invalidate();
+
+    return result;
   }
 
   async deleteTag(id: string) {
-    return this.prisma.tag.delete({
+    const result = await this.prisma.tag.delete({
       where: {
         id,
       },
     });
+    await this.publicContentCache.invalidate('articles', 'pages');
+
+    return result;
   }
 }
 

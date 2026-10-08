@@ -1,17 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 import { OneChannelStateService } from './one-channel-state.service';
+import type { Mock } from 'vitest';
 
 describe('OneChannelStateService', () => {
   const successAt = new Date('2026-09-16T12:00:00.000Z');
   const failureAt = new Date('2026-09-16T12:05:00.000Z');
-  let prisma: { oneChannelState: { upsert: jest.Mock; findUnique: jest.Mock } };
+  let prisma: { oneChannelState: { upsert: Mock; findUnique: Mock } };
   let service: OneChannelStateService;
 
   beforeEach(() => {
     prisma = {
       oneChannelState: {
-        upsert: jest.fn().mockResolvedValue({}),
-        findUnique: jest.fn().mockResolvedValue({ lastSuccessAt: successAt }),
+        upsert: vi.fn().mockResolvedValue({}),
+        findUnique: vi.fn().mockResolvedValue({ lastSuccessAt: successAt }),
       },
     };
     service = new OneChannelStateService(prisma as unknown as PrismaClient);

@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
+import { useQuery } from '@apollo/client/react';
 import {
+  BlockTemplateDocument,
+  BlockTemplateListDocument,
   FullBlockFragment,
-  useBlockTemplateListQuery,
-  useBlockTemplateQuery,
 } from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +16,7 @@ import {
 } from 'rsuite';
 
 import { BlockMapType, BlockProps } from '../atoms/blockList';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { ConfirmActionModal } from '../atoms/notification/confirmActionModal';
 import { BlockMap } from './blockMap';
 import { blockForQueryBlock, BlockTemplateBlockValue } from './types';
@@ -40,7 +42,7 @@ const Preview = styled.div`
 
 const PreviewItem = styled(RPanel)`
   padding: 0;
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
 `;
 
 const PreviewLabel = styled.div`
@@ -49,8 +51,8 @@ const PreviewLabel = styled.div`
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border-bottom: 1px solid #e5e5ea;
-  color: #8e8e93;
+  border-bottom: 1px solid var(--rs-border-primary);
+  color: var(--rs-text-secondary);
 `;
 
 const PreviewBlock = styled.div`
@@ -67,7 +69,7 @@ export const BlockTemplateBlock = ({
   const blockMap = BlockMap as BlockMapType;
   const [isConfirmOpen, setConfirmOpen] = useState(false);
 
-  const { data, loading, refetch } = useBlockTemplateListQuery({
+  const { data, loading, refetch } = useQuery(BlockTemplateListDocument, {
     variables: { take: 100 },
     fetchPolicy: 'cache-and-network',
   });
@@ -77,7 +79,7 @@ export const BlockTemplateBlock = ({
     [data?.blockTemplates.nodes]
   );
 
-  const { data: templateData } = useBlockTemplateQuery({
+  const { data: templateData } = useQuery(BlockTemplateDocument, {
     variables: { id: template?.id ?? '' },
     skip: !template?.id,
     fetchPolicy: 'cache-and-network',
@@ -116,13 +118,16 @@ export const BlockTemplateBlock = ({
         />
 
         <ButtonToolbar>
-          <IconButton
-            icon={<MdRefresh />}
-            onClick={event => {
-              refetch();
-              event.preventDefault();
-            }}
-          />
+          <IconButtonTooltip caption={t('blocks.blockTemplate.reload')}>
+            <IconButton
+              aria-label={t('blocks.blockTemplate.reload')}
+              icon={<MdRefresh />}
+              onClick={event => {
+                refetch();
+                event.preventDefault();
+              }}
+            />
+          </IconButtonTooltip>
           <IconButton
             icon={<MdEdit />}
             disabled={!selectedTemplate}

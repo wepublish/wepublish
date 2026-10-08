@@ -9,6 +9,7 @@ import {
 } from '@prisma/client';
 import { DashboardSubscriptionResolver } from './dashboard-subscription.resolver';
 import { DashboardSubscriptionService } from './dashboard-subscription.service';
+import type { Mocked } from 'vitest';
 
 const newSubscribersQuery = `
   query Dashboard($end:DateTime!, $start:DateTime!) {
@@ -66,7 +67,7 @@ const newDeactivationsQuery = `
 
 describe('DashboardSubscriptionResolver', () => {
   let app: INestApplication;
-  let dashboardSubscriptionService: jest.Mocked<
+  let dashboardSubscriptionService: Mocked<
     Pick<
       DashboardSubscriptionService,
       | 'newSubscribers'
@@ -78,10 +79,10 @@ describe('DashboardSubscriptionResolver', () => {
 
   beforeEach(async () => {
     dashboardSubscriptionService = {
-      newSubscribers: jest.fn(),
-      activeSubscribers: jest.fn(),
-      renewingSubscribers: jest.fn(),
-      newDeactivations: jest.fn(),
+      newSubscribers: vi.fn(),
+      activeSubscribers: vi.fn(),
+      renewingSubscribers: vi.fn(),
+      newDeactivations: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({

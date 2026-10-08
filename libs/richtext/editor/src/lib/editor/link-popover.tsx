@@ -58,11 +58,17 @@ const Actions = styled('div')`
 `;
 
 const CancelButton = styled(Button)`
-  background-color: ${({ theme }) => theme.palette.grey[100]};
+  background-color: ${({ theme }) =>
+    theme.palette.mode === 'dark' ?
+      theme.palette.grey[800]
+    : theme.palette.grey[100]};
   color: ${({ theme }) => theme.palette.text.primary};
 
   &:hover {
-    background-color: ${({ theme }) => theme.palette.grey[200]};
+    background-color: ${({ theme }) =>
+      theme.palette.mode === 'dark' ?
+        theme.palette.grey[700]
+      : theme.palette.grey[200]};
   }
 `;
 
@@ -329,34 +335,36 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
                   : t('richtext.link.url')
                 }
                 type={linkType === 'email' ? 'email' : 'url'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        edge="end"
-                        size="small"
-                        title={t('richtext.link.openLink')}
-                        disabled={!field.value}
-                        onClick={() => {
-                          if (!field.value) {
-                            return;
-                          }
-
-                          const url =
-                            linkType === 'email' ?
-                              `${mailTo}${field.value}`
-                            : field.value;
-
-                          window.open(url, '_blank', 'noopener,noreferrer');
-                        }}
-                      >
-                        <TbExternalLink size={18} />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
                 error={!!error}
                 helperText={error?.message}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          edge="end"
+                          size="small"
+                          title={t('richtext.link.openLink')}
+                          disabled={!field.value}
+                          onClick={() => {
+                            if (!field.value) {
+                              return;
+                            }
+
+                            const url =
+                              linkType === 'email' ?
+                                `${mailTo}${field.value}`
+                              : field.value;
+
+                            window.open(url, '_blank', 'noopener,noreferrer');
+                          }}
+                        >
+                          <TbExternalLink size={18} />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
               />
             )}
           />

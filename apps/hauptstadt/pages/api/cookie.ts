@@ -1,5 +1,5 @@
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
+import { FullSessionWithTokenWithoutUserFragment } from '@wepublish/website/api';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -7,7 +7,9 @@ async function writeCookie(req: NextApiRequest, res: NextApiResponse) {
   await setCookie(AuthTokenStorageKey, JSON.stringify(req.body), {
     req,
     res,
-    expires: new Date((req.body as SessionWithTokenWithoutUser).expiresAt),
+    expires: new Date(
+      (req.body as FullSessionWithTokenWithoutUserFragment).expiresAt
+    ),
     sameSite: 'strict',
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
@@ -20,7 +22,7 @@ async function readCookie(req: NextApiRequest, res: NextApiResponse) {
   const token = await getCookie(AuthTokenStorageKey, { req });
   const sessionToken =
     token ?
-      (JSON.parse(token.toString()) as SessionWithTokenWithoutUser)
+      (JSON.parse(token.toString()) as FullSessionWithTokenWithoutUserFragment)
     : null;
 
   return res.send({ sessionToken });

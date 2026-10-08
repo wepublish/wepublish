@@ -44,7 +44,7 @@ export const CrowdfundingGoalList = ({
               t('crowdfunding.goalsForm.amountSubscriptions')
             : t('crowdfunding.goalsForm.amount')}
           </Col>
-          <Col xs={4}>{t('crowdfunding.goalsForm.remove')}</Col>
+          <Col xs={4}>{t('action')}</Col>
         </Row>
 
         {goals.map((goal, index) => (

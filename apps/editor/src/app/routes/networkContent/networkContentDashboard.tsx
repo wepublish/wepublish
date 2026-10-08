@@ -1,8 +1,9 @@
-import { CircularProgress, Typography } from '@mui/material';
-import { useImportPeerArticleMutation } from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { ImportPeerArticleDocument } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Loader } from 'rsuite';
 
 import {
   useNetworkClients,
@@ -11,6 +12,7 @@ import {
 } from './networkContent.hooks';
 import {
   CenteredContainer,
+  ErrorText,
   FeedList,
   ScrollContainer,
 } from './networkContent.styles';
@@ -45,13 +47,15 @@ export default function NetworkContentDashboard() {
     null
   );
 
-  const [importPeerArticle, { loading: importing }] =
-    useImportPeerArticleMutation({
+  const [importPeerArticle, { loading: importing }] = useMutation(
+    ImportPeerArticleDocument,
+    {
       onCompleted(data) {
         setArticleToImport(undefined);
         navigate(`/articles/edit/${data.importPeerArticle.id}`);
       },
-    });
+    }
+  );
 
   const handleConfirmImport = () => {
     if (!articleToImport) return;
@@ -88,7 +92,7 @@ export default function NetworkContentDashboard() {
   if (loading) {
     return (
       <CenteredContainer>
-        <CircularProgress size={24} />
+        <Loader />
       </CenteredContainer>
     );
   }
@@ -96,12 +100,7 @@ export default function NetworkContentDashboard() {
   if (error) {
     return (
       <CenteredContainer>
-        <Typography
-          color="error"
-          variant="body2"
-        >
-          {t('networkContentDashboard.errorLoading')}
-        </Typography>
+        <ErrorText>{t('networkContentDashboard.errorLoading')}</ErrorText>
       </CenteredContainer>
     );
   }
@@ -109,12 +108,7 @@ export default function NetworkContentDashboard() {
   if (articles.length === 0) {
     return (
       <CenteredContainer>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {t('networkContentDashboard.noArticles')}
-        </Typography>
+        {t('networkContentDashboard.noArticles')}
       </CenteredContainer>
     );
   }

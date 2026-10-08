@@ -18,7 +18,7 @@ import {
   useSlidesPerView,
 } from '../teaser-slider/teaser-slider';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullImageGalleryBlockFragment,
 } from '@wepublish/website/api';
 import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
@@ -89,6 +89,7 @@ export const ImageSlider = ({
                 <ImageSliderImage
                   caption={image.caption}
                   image={image.image}
+                  linkUrl={null}
                 />
               </div>
             ))}
@@ -135,6 +136,6 @@ export const ImageSlider = ({
 };
 
 export const isImageSliderBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullImageGalleryBlockFragment =>
   allPass([hasBlockStyle('Slider'), isImageGalleryBlock])(block);

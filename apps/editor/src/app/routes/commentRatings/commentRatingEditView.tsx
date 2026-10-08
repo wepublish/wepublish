@@ -1,17 +1,19 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CreateRatingSystemAnswerDocument,
+  DeleteRatingSystemAnswerDocument,
   CommentRatingSystemAnswer,
   FullCommentRatingSystemFragment,
+  RatingSystemDocument,
   RatingSystemType,
-  useCreateRatingSystemAnswerMutation,
-  useDeleteRatingSystemAnswerMutation,
-  useRatingSystemLazyQuery,
-  useUpdateRatingSystemMutation,
+  UpdateRatingSystemDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -41,14 +43,40 @@ const IconButton = styled(RIconButton)`
   margin-right: 12px;
 `;
 
-const AnswerGrid = styled(Stack)`
-  margin-bottom: 12px;
+const AnswerList = styled.div`
+  display: grid;
   gap: 12px;
-  flex-wrap: wrap;
+  width: 100%;
+  max-width: 880px;
+`;
+
+const AnswerRow = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--rs-border-primary);
+  border-radius: var(--rs-radius-md);
+  background-color: var(--rs-bg-card);
+
+  && .rs-form-control-wrapper,
+  && .rs-picker,
+  && .rs-picker-toggle {
+    width: 100%;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    > :first-child {
+      grid-column: 1 / -1;
+    }
+  }
 `;
 
 const Loader = styled(RLoader)`
-  margin: 30px;
+  margin: 32px;
 `;
 
 const P = styled.p`
@@ -57,15 +85,15 @@ const P = styled.p`
   gap: 8px;
 `;
 
-const showErrors = (error: ApolloError): void => {
+const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -77,15 +105,24 @@ function CommentRatingEditView() {
 
   const [t] = useTranslation();
 
-  const [fetchRatingSystem, { loading: isFetching }] = useRatingSystemLazyQuery(
-    {
-      onError: showErrors,
-      onCompleted: data => setRatingSystem(data.ratingSystem),
-    }
-  );
+  const [fetchRatingSystem, { loading: isFetching, data, error }] =
+    useLazyQuery(RatingSystemDocument);
 
-  const [addAnswer, { loading: isAdding }] =
-    useCreateRatingSystemAnswerMutation({
+  useEffect(() => {
+    if (error) {
+      showErrors(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (data) {
+      setRatingSystem(data.ratingSystem);
+    }
+  }, [data]);
+
+  const [addAnswer, { loading: isAdding }] = useMutation(
+    CreateRatingSystemAnswerDocument,
+    {
       onCompleted: ({ createRatingSystemAnswer }) => {
         setRatingSystem(old =>
           old ?
@@ -96,10 +133,12 @@ function CommentRatingEditView() {
           : null
         );
       },
-    });
+    }
+  );
 
-  const [deleteAnswer, { loading: isDeleting }] =
-    useDeleteRatingSystemAnswerMutation({
+  const [deleteAnswer, { loading: isDeleting }] = useMutation(
+    DeleteRatingSystemAnswerDocument,
+    {
       onError: showErrors,
       onCompleted: data => {
         setRatingSystem(old =>
@@ -113,9 +152,11 @@ function CommentRatingEditView() {
           : null
         );
       },
-    });
+    }
+  );
 
-  const [updateAnswer, { loading: isUpdating }] = useUpdateRatingSystemMutation(
+  const [updateAnswer, { loading: isUpdating }] = useMutation(
+    UpdateRatingSystemDocument,
     {
       onError: showErrors,
       onCompleted: () =>
@@ -143,7 +184,7 @@ function CommentRatingEditView() {
           {
             ...old,
             answers: old.answers.map(a =>
-              answerId === a.id ? { ...a, answer, type } : a
+              answerId === a.id ? { ...a, answer: answer ?? null, type } : a
             ),
           }
         : null
@@ -163,12 +204,14 @@ function CommentRatingEditView() {
       <ListViewContainer>
         <ListViewHeader>
           <h2>{t('comments.ratingEdit.title')}</h2>
+          <InfoTooltip text={t('comments.ratingEdit.info')} />
         </ListViewHeader>
 
         {ratingSystem && (
           <ListViewActions>
             <IconButton
               appearance="primary"
+              icon={<MdAdd />}
               onClick={() => {
                 addAnswer({
                   variables: {
@@ -178,7 +221,6 @@ function CommentRatingEditView() {
                 });
               }}
             >
-              <MdAdd />
               {t('comments.ratingEdit.newAnswer')}
             </IconButton>
 
@@ -291,9 +333,9 @@ export function RatingAnswers({
   const { t } = useTranslation();
 
   return (
-    <div>
+    <AnswerList>
       {answers?.map(answer => (
-        <AnswerGrid key={answer.id}>
+        <AnswerRow key={answer.id}>
           <Form.Control
             name={`answer-${answer.id}`}
             placeholder={t('comments.ratingEdit.placeholder')}
@@ -317,6 +359,7 @@ export function RatingAnswers({
 
           <IconButtonTooltip caption={t('delete')}>
             <RIconButton
+              aria-label={t('delete')}
               icon={<MdDelete />}
               circle
               size="sm"
@@ -325,9 +368,9 @@ export function RatingAnswers({
               onClick={() => onDeleteAnswer(answer.id)}
             />
           </IconButtonTooltip>
-        </AnswerGrid>
+        </AnswerRow>
       ))}
-    </div>
+    </AnswerList>
   );
 }
 

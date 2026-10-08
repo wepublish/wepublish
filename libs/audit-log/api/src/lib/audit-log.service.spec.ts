@@ -74,15 +74,15 @@ describe('AuditLogService', () => {
   let service: AuditLogService;
   const mockPrisma = {
     auditLog: {
-      create: jest.fn(),
-      count: jest.fn(),
-      findMany: jest.fn(),
-      deleteMany: jest.fn(),
+      create: vi.fn(),
+      count: vi.fn(),
+      findMany: vi.fn(),
+      deleteMany: vi.fn(),
     },
   };
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     const module = await Test.createTestingModule({
       providers: [

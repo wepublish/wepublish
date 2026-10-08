@@ -1,17 +1,17 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  ConsentDocument,
   FullConsentFragment,
   MutationCreateConsentArgs,
   MutationUpdateConsentArgs,
-  useConsentQuery,
-  useUpdateConsentMutation,
+  UpdateConsentDocument,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { SingleViewTitle } from '@wepublish/ui/editor';
+import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
 import { ConsentForm } from './consent-form';
 
 const mapApiDataToInput = (
@@ -30,14 +30,14 @@ export const ConsentEditView = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const onErrorToast = (error: ApolloError, slug?: string) => {
+  const onErrorToast = (error: Error, slug?: string) => {
     if (error.message.includes('Unique constraint')) {
       toaster.push(
         <Message
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('consents.uniqueConstraint', { slug })}
         </Message>
@@ -49,9 +49,9 @@ export const ConsentEditView = () => {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -67,41 +67,54 @@ export const ConsentEditView = () => {
 
   const [shouldClose, setShouldClose] = useState<boolean>(false);
 
-  const { loading: dataLoading } = useConsentQuery({
+  const {
+    loading: dataLoading,
+    data: consentData,
+    error: consentError,
+  } = useQuery(ConsentDocument, {
     variables: {
       id: consentId,
     },
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.consent) {
-        setConsent(mapApiDataToInput(data.consent));
-      }
-    },
   });
 
-  const [updateConsent, { loading: updateLoading }] = useUpdateConsentMutation({
-    onError: error => onErrorToast(error, consent.slug ?? ''),
-    onCompleted: data => {
-      if (shouldClose) {
-        navigate(closePath);
-      }
+  useEffect(() => {
+    if (consentError) {
+      onErrorToast(consentError);
+    }
+  }, [consentError]);
 
-      if (data.updateConsent) {
-        setConsent(mapApiDataToInput(data.updateConsent));
-      }
+  useEffect(() => {
+    if (consentData?.consent) {
+      setConsent(mapApiDataToInput(consentData.consent));
+    }
+  }, [consentData]);
 
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.updatedSuccess')}
-        </Message>
-      );
-    },
-  });
+  const [updateConsent, { loading: updateLoading }] = useMutation(
+    UpdateConsentDocument,
+    {
+      onError: error => onErrorToast(error, consent.slug ?? ''),
+      onCompleted: data => {
+        if (shouldClose) {
+          navigate(closePath);
+        }
+
+        if (data.updateConsent) {
+          setConsent(mapApiDataToInput(data.updateConsent));
+        }
+
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('toast.updatedSuccess')}
+          </Message>
+        );
+      },
+    }
+  );
 
   const onSubmit = () => {
     updateConsent({

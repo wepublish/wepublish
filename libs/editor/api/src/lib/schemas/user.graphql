@@ -145,6 +145,7 @@ mutation CreateUser(
   $note: String
   $properties: [PropertyInput!]!
   $roleIDs: [String!]!
+  $skipMail: Boolean
 ) {
   createUser(
     name: $name
@@ -160,6 +161,7 @@ mutation CreateUser(
     properties: $properties
     note: $note
     roleIDs: $roleIDs
+    skipMail: $skipMail
   ) {
     ...FullUser
   }

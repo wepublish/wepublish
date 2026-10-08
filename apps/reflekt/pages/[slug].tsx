@@ -1,5 +1,6 @@
+import { CombinedGraphQLErrors } from '@apollo/client';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -31,7 +32,8 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { slug, id } = params || {};
+  const slug = params?.slug?.toString();
+  const id = params?.id?.toString();
   const client = getApiClient(getApiUrl(), []);
   const [page] = await Promise.all([
     client.query<PageQuery>({
@@ -44,20 +46,20 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     client.query({
       query: NavigationListDocument,
     }),
-      client.query({
-        query: PageDocument,
-        variables: {
-          slug: 'footer',
-        },
-      }),
+    client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'footer',
+      },
+    }),
     client.query({
       query: PeerProfileDocument,
     }),
   ]);
 
-  const is404 = page.errors?.find(
-    ({ extensions }) => extensions?.status === 404
-  );
+  const is404 =
+    CombinedGraphQLErrors.is(page.error) &&
+    page.error.errors.find(({ extensions }) => extensions?.status === 404);
 
   if (is404) {
     return {
@@ -70,6 +72,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: !page.data?.page ? 1 : 60,
+    revalidate:
+      !page.data?.page ? 1 : revalidateFor(page.data.page, page.error),
   };
 };

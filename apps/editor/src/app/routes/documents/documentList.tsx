@@ -1,11 +1,11 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeleteDocumentDocument,
   DocumentListDocument,
   DocumentListQuery,
+  DocumentStorageUsageDocument,
   FullDocumentFragment,
-  useDeleteDocumentMutation,
-  useDocumentListQuery,
-  useDocumentStorageUsageQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -15,6 +15,7 @@ import {
   DocumentUploadAndEditPanel,
   IconButton,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewFilterArea,
@@ -58,6 +59,7 @@ const Thumbnail = styled.img`
   width: auto;
   display: block;
   margin: 0 auto;
+  border-radius: var(--rs-radius-md);
 `;
 
 function DocumentList() {
@@ -99,11 +101,12 @@ function DocumentList() {
     data,
     refetch,
     loading: isLoading,
-  } = useDocumentListQuery({
+  } = useQuery(DocumentListDocument, {
     variables: listVariables,
   });
 
-  const [deleteDocument, { loading: isDeleting }] = useDeleteDocumentMutation(
+  const [deleteDocument, { loading: isDeleting }] = useMutation(
+    DeleteDocumentDocument,
     {}
   );
 
@@ -111,7 +114,7 @@ function DocumentList() {
     data: storageData,
     error: storageError,
     refetch: refetchStorage,
-  } = useDocumentStorageUsageQuery();
+  } = useQuery(DocumentStorageUsageDocument);
   if (storageError) {
     console.error('DocumentStorageUsage query error:', storageError);
   }
@@ -122,9 +125,9 @@ function DocumentList() {
   const isOverLimit = hasLimit && usageRatio >= 1;
   const isNearLimit = hasLimit && usageRatio >= 0.95 && !isOverLimit;
   const storageColor =
-    isOverLimit ? '#d32f2f'
-    : isNearLimit ? '#f9a825'
-    : '#888';
+    isOverLimit ? 'var(--rs-state-error)'
+    : isNearLimit ? 'var(--rs-state-warning)'
+    : 'var(--rs-text-secondary)';
 
   const { t } = useTranslation();
 
@@ -200,7 +203,7 @@ function DocumentList() {
       {storage && (
         <p
           style={{
-            margin: '10px 0',
+            margin: '12px 0',
             color: storageColor,
             fontSize: 14,
             fontWeight: isOverLimit || isNearLimit ? 'bold' : 'normal',
@@ -216,6 +219,12 @@ function DocumentList() {
           })}
           {isOverLimit && ` — ${t('documents.overview.storageFull')}`}
           {isNearLimit && ` — ${t('documents.overview.storageWarning')}`}
+          {hasLimit && (
+            <>
+              {' '}
+              <InfoTooltip text={t('documents.overview.storageUsageInfo')} />
+            </>
+          )}
         </p>
       )}
 
@@ -301,17 +310,17 @@ function DocumentList() {
           </Column>
 
           <Column
-            width={200}
+            width={220}
             align="center"
-            resizable
             fixed="right"
           >
-            <HeaderCell>{t('documents.overview.actions')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullDocumentFragment>) => (
                 <>
                   <IconButtonTooltip caption={t('documents.overview.copyLink')}>
                     <IconButton
+                      aria-label={t('documents.overview.copyLink')}
                       icon={<MdContentCopy />}
                       circle
                       size="sm"
@@ -335,6 +344,7 @@ function DocumentList() {
                       rel="noreferrer"
                     >
                       <IconButton
+                        aria-label={t('documents.overview.openLink')}
                         icon={<MdOpenInNew />}
                         circle
                         size="sm"
@@ -347,6 +357,7 @@ function DocumentList() {
                     <IconButtonTooltip caption={t('documents.overview.edit')}>
                       <Link to={`/documents/edit/${rowData.id}`}>
                         <IconButton
+                          aria-label={t('documents.overview.edit')}
                           icon={<MdEdit />}
                           circle
                           size="sm"
@@ -359,6 +370,7 @@ function DocumentList() {
                   >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
+                        aria-label={t('delete')}
                         icon={<MdDelete />}
                         circle
                         size="sm"
@@ -471,6 +483,7 @@ function DocumentList() {
                   cache.writeQuery<DocumentListQuery>({
                     query: DocumentListDocument,
                     data: {
+                      __typename: 'Query',
                       documents: {
                         ...query.documents,
                         nodes: query.documents.nodes.filter(

@@ -1,10 +1,11 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { RichTextBlockWrapper } from '@wepublish/block-content/website';
 import {
   MemberPlanPicker,
   MemberPlanPickerRadios,
 } from '@wepublish/membership/website';
-import { useSubscriptionsQuery } from '@wepublish/website/api';
+import { SubscriptionsDocument } from '@wepublish/website/api';
 import {
   BuilderMemberPlanPickerProps,
   BuilderRouterContext,
@@ -43,7 +44,7 @@ export const ReflektMemberPlanPicker = forwardRef<
   const {
     query: { upgradeSubscriptionId },
   } = useContext(BuilderRouterContext);
-  const { data } = useSubscriptionsQuery({
+  const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
     skip: !upgradeSubscriptionId,
   });

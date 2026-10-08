@@ -1,8 +1,9 @@
-import { ApolloError } from '@apollo/client';
-import { PageSort, SortOrder, usePageListQuery } from '@wepublish/editor/api';
-import { useMemo } from 'react';
+import { useQuery } from '@apollo/client/react';
+import { PageListDocument, PageSort, SortOrder } from '@wepublish/editor/api';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message, SelectPicker, toaster } from 'rsuite';
+import { humanizeError } from '../../humanizeError';
 
 interface SelectPageProps {
   className?: string;
@@ -25,15 +26,15 @@ export function SelectPage({
    * Error handling
    * @param error
    */
-  const showErrors = (error: ApolloError): void => {
+  const showErrors = (error: Error): void => {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -42,15 +43,24 @@ export function SelectPage({
    * Loading page
    */
 
-  const { data: pageData, refetch } = usePageListQuery({
+  const {
+    data: pageData,
+    error: pageListError,
+    refetch,
+  } = useQuery(PageListDocument, {
     variables: {
       sort: PageSort.PublishedAt,
       order: SortOrder.Ascending,
       take: 200,
     },
     fetchPolicy: 'no-cache',
-    onError: showErrors,
   });
+
+  useEffect(() => {
+    if (pageListError) {
+      showErrors(pageListError);
+    }
+  }, [pageListError]);
 
   /**
    * Prepare available page

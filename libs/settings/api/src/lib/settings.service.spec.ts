@@ -5,21 +5,22 @@ import { PrismaClient, Setting } from '@prisma/client';
 import { SettingName } from './setting';
 import { GraphQLSettingValueType } from './settings.model';
 import { SettingDataloaderService } from './setting-dataloader.service';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 describe('SettingsService', () => {
   let service: SettingsService;
   let prisma: PrismaClient;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule],
+      imports: [PrismaModule, KvTtlCacheModule],
       providers: [
         SettingsService,
         GraphQLSettingValueType,
         {
           provide: SettingDataloaderService,
           useValue: {
-            prime: jest.fn(),
+            prime: vi.fn(),
           },
         },
       ],
@@ -53,7 +54,7 @@ describe('SettingsService', () => {
       },
     ];
 
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.setting, 'findMany')
       .mockResolvedValue(mockSettings);
 
@@ -72,7 +73,7 @@ describe('SettingsService', () => {
       settingRestriction: null,
     };
 
-    jest.spyOn(prisma.setting, 'findMany').mockResolvedValue([
+    vi.spyOn(prisma.setting, 'findMany').mockResolvedValue([
       known,
       {
         ...known,
@@ -94,7 +95,7 @@ describe('SettingsService', () => {
       settingRestriction: null,
     };
 
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.setting, 'findUnique')
       .mockResolvedValue(mockSetting);
 
@@ -123,14 +124,65 @@ describe('SettingsService', () => {
       },
     };
 
-    jest.spyOn(prisma.setting, 'findUnique').mockResolvedValue(updatedSetting);
-    jest.spyOn(prisma.setting, 'update').mockResolvedValue(updatedSetting);
+    vi.spyOn(prisma.setting, 'findUnique').mockResolvedValue(updatedSetting);
+    vi.spyOn(prisma.setting, 'update').mockResolvedValue(updatedSetting);
 
     const result = await service.updateSetting(updateInput);
     expect(result).toMatchSnapshot({
       modifiedAt: expect.any(Date),
       createdAt: expect.any(Date),
       id: expect.any(String),
+    });
+  });
+
+  describe('cache', () => {
+    const setting: Setting = {
+      id: '1',
+      name: SettingName.ALLOW_GUEST_COMMENTING,
+      value: true,
+      createdAt: new Date('2020-01-01T00:00:00.000Z'),
+      modifiedAt: new Date('2020-02-01T00:00:00.000Z'),
+      settingRestriction: null,
+    };
+
+    test('serves the settings list from the cache', async () => {
+      const findMany = vi
+        .spyOn(prisma.setting, 'findMany')
+        .mockResolvedValue([setting]);
+
+      await service.settingsList();
+      const second = await service.settingsList();
+
+      expect(findMany).toHaveBeenCalledTimes(1);
+      expect(second).toEqual([setting]);
+    });
+
+    test('serves a setting by name from the cache', async () => {
+      const findUnique = vi
+        .spyOn(prisma.setting, 'findUnique')
+        .mockResolvedValue(setting);
+
+      await service.settingByName(SettingName.ALLOW_GUEST_COMMENTING);
+      await service.settingByName(SettingName.ALLOW_GUEST_COMMENTING);
+
+      expect(findUnique).toHaveBeenCalledTimes(1);
+    });
+
+    test('loads the settings again after one was updated', async () => {
+      const findMany = vi
+        .spyOn(prisma.setting, 'findMany')
+        .mockResolvedValue([setting]);
+      vi.spyOn(prisma.setting, 'findUnique').mockResolvedValue(setting);
+      vi.spyOn(prisma.setting, 'update').mockResolvedValue(setting);
+
+      await service.settingsList();
+      await service.updateSetting({
+        name: SettingName.ALLOW_GUEST_COMMENTING,
+        value: false,
+      });
+      await service.settingsList();
+
+      expect(findMany).toHaveBeenCalledTimes(2);
     });
   });
 });

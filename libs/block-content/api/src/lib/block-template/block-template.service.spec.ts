@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { BlockContentInput } from '../block-content.model';
 import { BlockType } from '../block-type.model';
 import { BlockTemplateDataloaderService } from './block-template-dataloader.service';
 import { BlockTemplateService } from './block-template.service';
+import type { Mock } from 'vitest';
 
 const templateBlock = (templateId: string): BlockContentInput => ({
   [BlockType.BlockTemplate]: { templateId },
@@ -32,20 +34,28 @@ describe('BlockTemplateService', () => {
   let service: BlockTemplateService;
   let prismaMock: {
     blockTemplate: {
-      [method in keyof PrismaClient['blockTemplate']]?: jest.Mock;
+      [method in keyof PrismaClient['blockTemplate']]?: Mock;
     };
+  };
+  let publicContentCache: {
+    invalidate: Mock;
+    invalidateArticleLayout: Mock;
   };
 
   beforeEach(async () => {
     prismaMock = {
       blockTemplate: {
-        count: jest.fn(),
-        findMany: jest.fn().mockResolvedValue([]),
-        findUnique: jest.fn(),
-        delete: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        count: vi.fn(),
+        findMany: vi.fn().mockResolvedValue([]),
+        findUnique: vi.fn(),
+        delete: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
+    };
+    publicContentCache = {
+      invalidate: vi.fn(),
+      invalidateArticleLayout: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -53,9 +63,13 @@ describe('BlockTemplateService', () => {
         BlockTemplateService,
         { provide: PrismaClient, useValue: prismaMock },
         {
+          provide: PublicContentCacheInvalidator,
+          useValue: publicContentCache,
+        },
+        {
           provide: BlockTemplateDataloaderService,
           useValue: {
-            prime: jest.fn(),
+            prime: vi.fn(),
           },
         },
       ],
@@ -207,5 +221,46 @@ describe('BlockTemplateService', () => {
     await service.deleteBlockTemplate('1234');
 
     expect(prismaMock.blockTemplate.delete?.mock.calls[0]).toMatchSnapshot();
+  });
+
+  it('should retire cached answers and article pages after an update', async () => {
+    prismaMock.blockTemplate.update?.mockImplementation(async () => {
+      expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+
+      return { id: '1234' };
+    });
+
+    await service.updateBlockTemplate({
+      id: '1234',
+      name: 'Name',
+      blocks: [{ [BlockType.Title]: { title: 'Title' } }],
+    });
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith();
+    expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+  });
+
+  it('should retire cached answers and article pages after a delete', async () => {
+    prismaMock.blockTemplate.delete?.mockResolvedValue({ id: '1234' });
+
+    await expect(service.deleteBlockTemplate('1234')).resolves.toEqual({
+      id: '1234',
+    });
+
+    expect(publicContentCache.invalidate).toHaveBeenCalledWith();
+    expect(publicContentCache.invalidateArticleLayout).toHaveBeenCalled();
+  });
+
+  it('should not retire cached answers when an update is rejected', async () => {
+    await expect(
+      service.updateBlockTemplate({
+        id: '1234',
+        name: 'Name',
+        blocks: [templateBlock('1234')],
+      })
+    ).rejects.toThrow();
+
+    expect(publicContentCache.invalidate).not.toHaveBeenCalled();
+    expect(publicContentCache.invalidateArticleLayout).not.toHaveBeenCalled();
   });
 });

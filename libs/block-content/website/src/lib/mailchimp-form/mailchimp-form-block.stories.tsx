@@ -14,8 +14,10 @@ const apolloClient = {
     {
       request: {
         query: AddMailchimpContactDocument,
+        // Apollo Client 4 matches variables through `request.variables`, which
+        // accepts a predicate; `variableMatcher` is gone.
+        variables: () => true,
       },
-      variableMatcher: () => true,
       maxUsageCount: Number.POSITIVE_INFINITY,
       result: {
         data: {

@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { SettingProvider } from '@wepublish/editor/api';
-import { Textarea } from '@wepublish/ui/editor';
+import { InfoTooltip, Textarea } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
 import { ComponentType, ReactNode, useMemo, useState } from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
@@ -30,7 +30,7 @@ const HeaderWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
 `;
 
 const HeaderLogo = styled.img`
@@ -100,6 +100,7 @@ type Fields =
 export type FieldDefinition<TFormValues> = Fields & {
   name: Path<TFormValues>;
   label: string;
+  info?: string;
   placeholder?: string;
   disabled?: boolean;
   autoComplete?: string;
@@ -201,13 +202,19 @@ export function SingleGenericIntegrationForm<
             to claim the full width itself or it shrinks to its content. */}
         <Card
           variant="outlined"
-          sx={{ alignSelf: 'stretch', width: '100%' }}
+          sx={{
+            alignSelf: 'stretch',
+            width: '100%',
+            borderRadius: 'var(--rs-radius-lg)',
+          }}
         >
           <CardContent>
             <Typography
               variant="h5"
               component={HeaderWrapper}
-              marginBottom={2}
+              sx={{
+                marginBottom: 2,
+              }}
             >
               {setting.name || setting.type}
 
@@ -219,13 +226,24 @@ export function SingleGenericIntegrationForm<
               )}
             </Typography>
 
-            {resolvedFields.map(field => (
+            {resolvedFields.map(({ info, ...field }) => (
               <Form.Group
                 controlId={`${String(field.name)}-${setting.id}`}
                 key={String(field.name)}
               >
                 <Form.Label>
-                  {field.type === 'checkbox' ? ' ' : field.label}
+                  {field.type === 'checkbox' ?
+                    ' '
+                  : <>
+                      {field.label}
+                      {info && (
+                        <>
+                          {' '}
+                          <InfoTooltip text={info} />
+                        </>
+                      )}
+                    </>
+                  }
                 </Form.Label>
 
                 <Controller
@@ -277,6 +295,12 @@ export function SingleGenericIntegrationForm<
                           {...restField}
                         >
                           {field.label}
+                          {info && (
+                            <>
+                              {' '}
+                              <InfoTooltip text={info} />
+                            </>
+                          )}
                         </Checkbox>
                       );
                     }
@@ -316,7 +340,8 @@ export function SingleGenericIntegrationForm<
               >
                 <small>
                   {t('integrations.lastLoaded')}:{' '}
-                  {formatLastLoaded(setting.lastLoadedAt)}
+                  {formatLastLoaded(setting.lastLoadedAt)}{' '}
+                  <InfoTooltip text={t('integrations.lastLoadedInfo')} />
                 </small>
               </Typography>
             )}

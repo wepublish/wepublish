@@ -1,5 +1,10 @@
 import { getArticleSEO } from '@wepublish/article/website';
-import { Article, Page } from '@wepublish/website/api';
+import {
+  FullArticleFragment,
+  FullPageFragment,
+  SlimArticleFragment,
+  SlimPageFragment,
+} from '@wepublish/website/api';
 import { escape } from 'lodash';
 
 const SITEMAP_MAX_ENTRIES = 49999;
@@ -22,7 +27,11 @@ export const generateSitemap =
     newsMaxAgeDays,
     homepageLastmod,
   }: SitemapConfig) =>
-  (articles: Article[], pages: Page[], pageUrls: string[]) => {
+  (
+    articles: (FullArticleFragment | SlimArticleFragment)[],
+    pages: (FullPageFragment | SlimPageFragment)[],
+    pageUrls: string[]
+  ) => {
     if (
       articles.length + pages.length + pageUrls.length >
       SITEMAP_MAX_ENTRIES
@@ -90,7 +99,7 @@ export const generateSitemap =
 
         ${articles
           .map(article => {
-            const seo = getArticleSEO(article);
+            const seo = getArticleSEO(article as FullArticleFragment);
 
             return `
             <url>

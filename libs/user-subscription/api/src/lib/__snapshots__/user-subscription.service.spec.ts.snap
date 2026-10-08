@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`UserSubscriptionService createSubscription unhappy path should throw if discountCode has expired 1`] = `[BadRequestException: DiscountCode has expired.]`;
+exports[`UserSubscriptionService > createSubscription > unhappy path > should throw if discountCode has expired 1`] = `[BadRequestException: DiscountCode has expired.]`;
 
-exports[`UserSubscriptionService createSubscription unhappy path should throw if discountCode is not found 1`] = `[BadRequestException: DiscountCode is invalid.]`;
+exports[`UserSubscriptionService > createSubscription > unhappy path > should throw if discountCode is not found 1`] = `[BadRequestException: DiscountCode is invalid.]`;
 
-exports[`UserSubscriptionService createSubscription unhappy path should throw if discountCode is not yet valid 1`] = `[BadRequestException: DiscountCode is invalid.]`;
+exports[`UserSubscriptionService > createSubscription > unhappy path > should throw if discountCode is not yet valid 1`] = `[BadRequestException: DiscountCode is invalid.]`;

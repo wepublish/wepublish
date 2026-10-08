@@ -7,7 +7,6 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 import { PrismaClient } from '@prisma/client';
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
-import { ActionModule } from '@wepublish/action/api';
 import { AuditLogModule } from '@wepublish/audit-log/api';
 import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
@@ -37,6 +36,7 @@ import {
 import { HealthModule } from '@wepublish/health';
 import { MediaAdapterModule } from '@wepublish/image/api';
 import {
+  GraphqlResponseCacheModule,
   KvTtlCacheModule,
   KvTtlCacheService,
 } from '@wepublish/kv-ttl-cache/api';
@@ -118,7 +118,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
           introspection:
             process.env.NODE_ENV !== 'production' &&
             configFile.general.apolloIntrospection,
-          playground: configFile.general.apolloPlayground,
+          graphiql: configFile.general.apolloPlayground,
           allowBatchedHttpRequests: true,
           inheritResolversFromInterfaces: true,
           csrfPrevention: false,
@@ -126,6 +126,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       },
     }),
     KvTtlCacheModule,
+    GraphqlResponseCacheModule,
     V0Module.registerAsync({
       imports: [PrismaModule, KvTtlCacheModule],
     }),
@@ -272,7 +273,6 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     BlockContentModule,
     PollModule,
     PhraseModule,
-    ActionModule,
     UserModule,
     UserSubscriptionModule,
     ChallengeModule.registerAsync({

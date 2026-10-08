@@ -1,39 +1,28 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  Table,
-  TableBody,
-  tableCellClasses,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
-import {
-  useMailTemplateQuery,
+  MailTemplateDocument,
+  SystemMailsDocument,
+  TestSystemMailDocument,
+  UpdateSystemMailDocument,
   UserEvent,
-  useSystemMailsQuery,
-  useTestSystemMailMutation,
-  useUpdateSystemMailMutation,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   PermissionControl,
   useAuthorisation,
 } from '@wepublish/ui/editor';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdManageAccounts, MdUnsubscribe } from 'react-icons/md';
 import { RiTestTubeLine } from 'react-icons/ri';
 import { Button, SelectPicker } from 'rsuite';
 import {
   DEFAULT_MUTATION_OPTIONS,
-  DEFAULT_QUERY_OPTIONS,
   MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE,
+  showErrors,
 } from '../common';
-import {
-  EventHeadCell,
-  EventTableCell,
-  SectionBandCell,
-} from '../mail-settings-layout';
+import { EventList, EventRow, MailBlock } from '../mail-settings-layout';
 import { formatTemplateLabel } from '../mail-template/mail-placeholders';
 
 /**
@@ -48,27 +37,42 @@ const ACCOUNT_EVENT_ORDER: UserEvent[] = [
   UserEvent.TestMail,
 ];
 
-const HeadRow = styled(TableRow)`
-  .${tableCellClasses.head} {
-    background-color: ${({ theme }) => theme.palette.action.hover};
-  }
-`;
+const Controls = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 
-const CellStack = styled('div')`
-  display: grid;
-  gap: 6px;
-  justify-items: stretch;
+  > .rs-picker {
+    flex: 1 1 200px;
+    min-width: 0;
+  }
 `;
 
 function SystemMailSection() {
   const { t } = useTranslation();
 
-  const { data: systemMails } = useSystemMailsQuery(DEFAULT_QUERY_OPTIONS());
-  const { data: mailTemplates } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
-  const [updateSystemMail] = useUpdateSystemMailMutation(
+  const { data: systemMails, error: systemMailsError } =
+    useQuery(SystemMailsDocument);
+  const { data: mailTemplates, error: mailTemplatesError } =
+    useQuery(MailTemplateDocument);
+
+  useEffect(() => {
+    if (systemMailsError) {
+      showErrors(systemMailsError);
+    }
+  }, [systemMailsError]);
+
+  useEffect(() => {
+    if (mailTemplatesError) {
+      showErrors(mailTemplatesError);
+    }
+  }, [mailTemplatesError]);
+  const [updateSystemMail] = useMutation(
+    UpdateSystemMailDocument,
     DEFAULT_MUTATION_OPTIONS(t)
   );
-  const [testSystemMail] = useTestSystemMailMutation(
+  const [testSystemMail] = useMutation(
+    TestSystemMailDocument,
     MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE(t('systemMails.testSent'))
   );
 
@@ -136,105 +140,73 @@ function SystemMailSection() {
   }
 
   return (
-    <TableContainer
-      style={{ marginTop: '16px', marginBottom: '40px', maxWidth: '100%' }}
+    <MailBlock
+      title={t('systemMails.title')}
+      icon={<MdManageAccounts size={20} />}
+      description={t('systemMails.sectionDescription')}
+      example={t('systemMails.sectionExample')}
     >
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <SectionBandCell
-              colSpan={events.length}
-              label={t('systemMails.title')}
-              icon={<MdManageAccounts size={20} />}
-              description={t('systemMails.sectionDescription')}
-              example={t('systemMails.sectionExample')}
-            />
-          </TableRow>
+      <EventList>
+        {events.map(systemMail => {
+          const eventKey = systemMail.event.toLowerCase();
+          const mailTemplateId = assignedTemplateId(
+            systemMail.event,
+            systemMail.mailTemplate?.id
+          );
 
-          <HeadRow>
-            {events.map(({ event }) => {
-              const eventKey = event.toLowerCase();
+          return (
+            <EventRow
+              key={systemMail.event}
+              title={t(`systemMails.events.${eventKey}`)}
+              hint={t(`systemMails.eventInfo.${eventKey}.short`)}
+              description={t(`systemMails.eventInfo.${eventKey}.description`)}
+              example={t(`systemMails.eventInfo.${eventKey}.example`)}
+            >
+              <Controls>
+                <SelectPicker
+                  block
+                  data={templateOptions}
+                  cleanable
+                  disabled={!canUpdateSystemMails}
+                  placeholder={
+                    <>
+                      <MdUnsubscribe
+                        size={16}
+                        style={{ marginRight: '5px' }}
+                      />
+                      {t('mailTemplateSelect.noMailSentSelectNow')}
+                    </>
+                  }
+                  defaultValue={systemMail.mailTemplate?.id}
+                  onSelect={(value: string) =>
+                    assignTemplate(systemMail.event, value)
+                  }
+                  onClean={() => assignTemplate(systemMail.event, null)}
+                />
 
-              return (
-                <EventTableCell
-                  key={event}
-                  align="center"
+                <PermissionControl
+                  showRejectionMessage={false}
+                  qualifyingPermissions={['CAN_TEST_SYSTEM_MAILS']}
                 >
-                  <EventHeadCell
-                    title={t(`systemMails.events.${eventKey}`)}
-                    hint={t(`systemMails.eventInfo.${eventKey}.short`)}
-                    description={t(
-                      `systemMails.eventInfo.${eventKey}.description`
-                    )}
-                    example={t(`systemMails.eventInfo.${eventKey}.example`)}
-                  />
-                </EventTableCell>
-              );
-            })}
-          </HeadRow>
-        </TableHead>
-
-        <TableBody>
-          <TableRow>
-            {events.map(systemMail => {
-              const mailTemplateId = assignedTemplateId(
-                systemMail.event,
-                systemMail.mailTemplate?.id
-              );
-
-              return (
-                <EventTableCell
-                  key={systemMail.event}
-                  align="center"
-                >
-                  <CellStack>
-                    <SelectPicker
-                      style={{ width: '100%' }}
-                      data={templateOptions}
-                      cleanable
-                      disabled={!canUpdateSystemMails}
-                      placeholder={
-                        <>
-                          <MdUnsubscribe
-                            size={16}
-                            style={{ marginRight: '5px' }}
-                          />
-                          {t('mailTemplateSelect.noMailSentSelectNow')}
-                        </>
-                      }
-                      defaultValue={systemMail.mailTemplate?.id}
-                      onSelect={(value: string) =>
-                        assignTemplate(systemMail.event, value)
-                      }
-                      onClean={() => assignTemplate(systemMail.event, null)}
-                    />
-
-                    <PermissionControl
-                      showRejectionMessage={false}
-                      qualifyingPermissions={['CAN_TEST_SYSTEM_MAILS']}
-                    >
-                      <Button
-                        size="sm"
-                        appearance="ghost"
-                        disabled={!mailTemplateId}
-                        onClick={() =>
-                          testSystemMail({
-                            variables: { event: systemMail.event },
-                          })
-                        }
-                      >
-                        <RiTestTubeLine style={{ marginRight: '4px' }} />
-                        {t('systemMails.sendTest')}
-                      </Button>
-                    </PermissionControl>
-                  </CellStack>
-                </EventTableCell>
-              );
-            })}
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+                  <Button
+                    appearance="ghost"
+                    startIcon={<RiTestTubeLine />}
+                    disabled={!mailTemplateId}
+                    onClick={() =>
+                      testSystemMail({
+                        variables: { event: systemMail.event },
+                      })
+                    }
+                  >
+                    {t('systemMails.sendTest')}
+                  </Button>
+                </PermissionControl>
+              </Controls>
+            </EventRow>
+          );
+        })}
+      </EventList>
+    </MailBlock>
   );
 }
 

@@ -1,12 +1,13 @@
+import { useQuery } from '@apollo/client/react';
 import React from 'react';
 import styled from '@emotion/styled';
 import {
   CreateBannerActionInput,
   CreateBannerInput,
   FullImageFragment,
-  UpdateBannerInput,
-  usePageListQuery,
   LoginStatus,
+  PageListDocument,
+  UpdateBannerInput,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +27,7 @@ import {
   ChooseEditImage,
   ImageEditPanel,
   ImageSelectPanel,
+  InfoTooltip,
 } from '@wepublish/ui/editor';
 
 type BannerFormData = (CreateBannerInput | UpdateBannerInput) & {
@@ -44,7 +46,7 @@ interface BannerFormProps {
 const BannerFormContainer = styled('div')`
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 12px;
+  gap: 16px;
   grid-template-areas:
     'displayoptions content'
     'actions        actions';
@@ -53,7 +55,7 @@ const BannerFormContainer = styled('div')`
 export const BannerForm = (props: BannerFormProps) => {
   const { t } = useTranslation();
 
-  const { data: pageData } = usePageListQuery({
+  const { data: pageData } = useQuery(PageListDocument, {
     variables: { take: 50 },
   });
 
@@ -70,33 +72,39 @@ export const BannerForm = (props: BannerFormProps) => {
         <h3>{t('banner.form.displayOptions')}</h3>
 
         <Form.Group controlId="active">
-          <Form.Label>{t('banner.form.active')}</Form.Label>
-
           <Form.Control
             name="active"
-            value={props.banner.active}
+            checked={props.banner.active}
             onChange={value =>
               props.onChange({ ...props.banner, active: value })
             }
             accepter={Toggle}
+            label={t('banner.form.active')}
           />
         </Form.Group>
 
         <Form.Group controlId="collapsible">
-          <Form.Label>{t('banner.form.collapsible')}</Form.Label>
-
           <Form.Control
             name="collapsible"
-            value={props.banner.collapsible}
+            checked={props.banner.collapsible}
             onChange={value =>
               props.onChange({ ...props.banner, collapsible: value })
             }
             accepter={Toggle}
+            label={
+              <>
+                {t('banner.form.collapsible')}{' '}
+                <InfoTooltip text={t('banner.form.collapsibleInfo')} />
+              </>
+            }
           />
         </Form.Group>
 
         <Form.Group controlId="delay">
-          <Form.Label>{t('banner.form.delay')}</Form.Label>
+          <Form.Label>
+            {t('banner.form.delay')}{' '}
+            <InfoTooltip text={t('banner.form.delayInfo')} />
+          </Form.Label>
 
           <Form.Control
             name="delay"
@@ -120,7 +128,10 @@ export const BannerForm = (props: BannerFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="showForLoginStatus">
-          <Form.Label>{t('banner.form.showForLoginStatus')}</Form.Label>
+          <Form.Label>
+            {t('banner.form.showForLoginStatus')}{' '}
+            <InfoTooltip text={t('banner.form.showForLoginStatusInfo')} />
+          </Form.Label>
 
           <RadioGroup
             name="showForLoginStatus"
@@ -144,20 +155,22 @@ export const BannerForm = (props: BannerFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="showOnArticles">
-          <Form.Label>{t('banner.form.showOnArticles')}</Form.Label>
-
           <Form.Control
             name="showOnArticles"
-            value={props.banner.showOnArticles}
+            checked={props.banner.showOnArticles}
             onChange={value =>
               props.onChange({ ...props.banner, showOnArticles: value })
             }
             accepter={Toggle}
+            label={t('banner.form.showOnArticles')}
           />
         </Form.Group>
 
         <Form.Group controlId="showOnPages">
-          <Form.Label>{t('banner.form.showOnPages')}</Form.Label>
+          <Form.Label>
+            {t('banner.form.showOnPages')}{' '}
+            <InfoTooltip text={t('banner.form.showOnPagesInfo')} />
+          </Form.Label>
 
           <CheckPicker
             block
@@ -185,7 +198,7 @@ export const BannerForm = (props: BannerFormProps) => {
         bordered
         style={{ overflow: 'initial', gridArea: 'content' }}
       >
-        <h3>Inhalt</h3>
+        <h3>{t('banner.form.content')}</h3>
 
         <Form.Group controlId="title">
           <Form.Label>{t('banner.form.title')}</Form.Label>
@@ -212,7 +225,10 @@ export const BannerForm = (props: BannerFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="cta">
-          <Form.Label>{t('banner.form.cta')}</Form.Label>
+          <Form.Label>
+            {t('banner.form.cta')}{' '}
+            <InfoTooltip text={t('banner.form.ctaInfo')} />
+          </Form.Label>
 
           <Form.Control
             name="cta"
@@ -244,7 +260,10 @@ export const BannerForm = (props: BannerFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="html">
-          <Form.Label>{t('banner.form.html')}</Form.Label>
+          <Form.Label>
+            {t('banner.form.html')}{' '}
+            <InfoTooltip text={t('banner.form.htmlInfo')} />
+          </Form.Label>
 
           <Input
             name="html"

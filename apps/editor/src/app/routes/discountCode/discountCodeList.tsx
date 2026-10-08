@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  DiscountCode,
+  DeleteDiscountCodeDocument,
+  DiscountCodeListDocument,
   DiscountCodesort,
-  useDeleteDiscountCodeMutation,
-  useDiscountCodeListQuery,
+  FullDiscountCodeFragment,
 } from '@wepublish/editor/api';
 import {
   CanCreateDiscountCode,
@@ -15,6 +15,9 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  IconButton,
+  IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -38,10 +41,6 @@ import {
 } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 
-const IconButton = styled(RIconButton)`
-  margin-left: 12px;
-`;
-
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function DiscountCodeList() {
@@ -54,10 +53,10 @@ function DiscountCodeList() {
   const [page, setPage] = useState<number>(1);
 
   const [discountCodeToDelete, setDiscountCodeToDelete] = useState<
-    DiscountCode | undefined
+    FullDiscountCodeFragment | undefined
   >(undefined);
 
-  const { data, loading, refetch } = useDiscountCodeListQuery({
+  const { data, loading, refetch } = useQuery(DiscountCodeListDocument, {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
@@ -65,7 +64,7 @@ function DiscountCodeList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
-  const [deleteDiscountCode] = useDeleteDiscountCodeMutation({
+  const [deleteDiscountCode] = useMutation(DeleteDiscountCodeDocument, {
     onCompleted() {
       refetch();
     },
@@ -87,13 +86,13 @@ function DiscountCodeList() {
 
         <ListViewActions>
           <Link to="create">
-            <IconButton
+            <RIconButton
               appearance="primary"
               loading={false}
             >
               <MdAdd />
               {t('discountCode.overview.createDiscountCode')}
-            </IconButton>
+            </RIconButton>
           </Link>
         </ListViewActions>
       </ListViewContainer>
@@ -111,13 +110,16 @@ function DiscountCodeList() {
           }}
         >
           <Column
-            width={75}
+            width={100}
             resizable
           >
-            <HeaderCell>{t('discountCode.overview.valid')}</HeaderCell>
+            <HeaderCell>
+              {t('discountCode.overview.valid')}{' '}
+              <InfoTooltip text={t('discountCode.overview.validInfo')} />
+            </HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<DiscountCode>) =>
+              {(rowData: RowDataType<FullDiscountCodeFragment>) =>
                 (
                   new Date() > new Date(rowData.validFrom) &&
                   new Date(rowData.validTo) > new Date()
@@ -135,7 +137,7 @@ function DiscountCodeList() {
             <HeaderCell>{t('discountCode.overview.code')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<DiscountCode>) => (
+              {(rowData: RowDataType<FullDiscountCodeFragment>) => (
                 <Link to={`edit/${rowData.id}`}>
                   {rowData.code.toUpperCase()}
                 </Link>
@@ -153,7 +155,9 @@ function DiscountCodeList() {
             </HeaderCell>
 
             <RCell dataKey={DiscountCodesort.Discount}>
-              {(rowData: DiscountCode) => `${rowData.discountPercent}%`}
+              {(rowData: FullDiscountCodeFragment) =>
+                `${rowData.discountPercent}%`
+              }
             </RCell>
           </Column>
 
@@ -164,7 +168,7 @@ function DiscountCodeList() {
             <HeaderCell>{t('discountCode.overview.usage')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<DiscountCode>) => {
+              {(rowData: RowDataType<FullDiscountCodeFragment>) => {
                 const usage = t('discountCode.overview.usageValue', {
                   total: rowData.usageCount,
                   paid: rowData.paidUsageCount,
@@ -186,7 +190,9 @@ function DiscountCodeList() {
             <HeaderCell>{t('discountCode.overview.memberPlan')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<DiscountCode>) => rowData.memberPlan.name}
+              {(rowData: RowDataType<FullDiscountCodeFragment>) =>
+                rowData.memberPlan.name
+              }
             </RCell>
           </Column>
 
@@ -197,7 +203,7 @@ function DiscountCodeList() {
             <HeaderCell>{t('discountCode.overview.validFrom')}</HeaderCell>
 
             <RCell>
-              {(rowData: DiscountCode) =>
+              {(rowData: FullDiscountCodeFragment) =>
                 `${new Date(rowData.validFrom).toDateString()}`
               }
             </RCell>
@@ -210,30 +216,35 @@ function DiscountCodeList() {
             <HeaderCell>{t('discountCode.overview.validTo')}</HeaderCell>
 
             <RCell>
-              {(rowData: DiscountCode) =>
+              {(rowData: FullDiscountCodeFragment) =>
                 `${new Date(rowData.validTo).toDateString()}`
               }
             </RCell>
           </Column>
 
           <Column
-            width={50}
-            resizable
+            width={100}
+            align="center"
             fixed="right"
           >
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(discountCode: RowDataType<DiscountCode>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() =>
-                    setDiscountCodeToDelete(discountCode as DiscountCode)
-                  }
-                />
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell>
+              {(discountCode: RowDataType<FullDiscountCodeFragment>) => (
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    aria-label={t('delete')}
+                    onClick={() =>
+                      setDiscountCodeToDelete(
+                        discountCode as FullDiscountCodeFragment
+                      )
+                    }
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

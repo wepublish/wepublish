@@ -872,6 +872,13 @@ export const CanGetPeriodicJobLog: Permission = {
   deprecated: false,
 };
 
+export const CanRetryPeriodicJob: Permission = {
+  id: 'CAN_RETRY_PERIODIC_JOB',
+  description:
+    'Allows to retry a failed periodic job and catch up the runs up to today',
+  deprecated: false,
+};
+
 /**
  * Block Styles
  */
@@ -1307,6 +1314,7 @@ export const AllPermissions: Permission[] = [
   CanDeleteSubscriptionFlow,
   CanGetMailTemplates,
   CanGetPeriodicJobLog,
+  CanRetryPeriodicJob,
   CanCreateMailTemplates,
   CanUpdateMailTemplates,
   CanDeleteMailTemplates,

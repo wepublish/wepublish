@@ -48,7 +48,7 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
     [V1_CLIENT_STATE_PROP_NAME]?: NormalizedCacheObject;
   };
   const subscribeState = subscribeProps[V1_CLIENT_STATE_PROP_NAME] ?? {};
-  const pageState = client.cache.extract();
+  const pageState = client.cache.extract() as NormalizedCacheObject;
 
   return {
     ...subscribeProps,

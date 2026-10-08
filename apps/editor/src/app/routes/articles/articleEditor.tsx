@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Button as MuiButton,
@@ -8,21 +9,21 @@ import {
   DialogTitle as MuiDialogTitle,
 } from '@mui/material';
 import {
+  ArticleDocument,
+  ArticleRevisionListDocument,
+  ArticleRevisionPreviewDocument,
+  CreateArticleDocument,
   CreateArticleMutationVariables,
+  CreateJwtForWebsiteLoginDocument,
+  DiscardArticleDraftDocument,
   EditorBlockType,
   FullAuthorFragment,
   FullImageFragment,
+  PublishArticleDocument,
+  RestoreArticleRevisionDocument,
   SettingName,
-  useArticleQuery,
-  useArticleRevisionListQuery,
-  useArticleRevisionPreviewLazyQuery,
-  useCreateArticleMutation,
-  useCreateJwtForWebsiteLoginMutation,
-  useDiscardArticleDraftMutation,
-  usePublishArticleMutation,
-  useRestoreArticleRevisionMutation,
-  useSettingsListQuery,
-  useUpdateArticleMutation,
+  SettingsListDocument,
+  UpdateArticleDocument,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
@@ -36,12 +37,13 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   DocumentUrlProvider,
+  EditorHeader,
+  EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
   InfoData,
   ListicleBlockListValue,
   mapBlockValueToBlockInput,
-  NavigationBar,
   PermissionControl,
   PublishArticlePanel,
   QuoteBlockListValue,
@@ -75,7 +77,6 @@ import {
   Message,
   Modal,
   Notification,
-  Tag as RTag,
   toaster,
 } from 'rsuite';
 
@@ -87,51 +88,12 @@ import {
 } from '../../previewFrame';
 import { useAutosave } from '../../useAutosave';
 
-const IconButtonMarginTop = styled(RIconButton)`
-  margin-top: 4px;
-`;
-
-const PreviewControlsMarginTop = styled(PreviewControls)`
-  margin-top: 4px;
-`;
-
-const PreviewActions = styled.div`
-  display: flex;
-  gap: 10px;
-`;
-
 const EditorContent = styled.div`
   width: 100%;
 
   &[hidden] {
     display: none;
   }
-`;
-
-const IconButton = styled(RIconButton)`
-  margin-left: 10px;
-`;
-
-const CenterChildren = styled.div`
-  margin-top: 4px;
-  margin-bottom: 20px;
-`;
-
-const Legend = styled.legend`
-  width: auto;
-  margin: 0px auto;
-`;
-
-const FieldSet = styled('fieldset', {
-  shouldForwardProp: prop => prop !== 'stateColor',
-})<{ stateColor: string }>`
-  border-color: ${({ stateColor }) => stateColor};
-`;
-
-const Tag = styled(RTag, {
-  shouldForwardProp: prop => prop !== 'stateColor',
-})<{ stateColor: string }>`
-  background-color: ${({ stateColor }) => stateColor};
 `;
 
 const InitialArticleBlocks: BlockValue[] = [
@@ -174,19 +136,19 @@ function ArticleEditor() {
   const [
     createArticle,
     { data: createData, loading: isCreating, error: createError },
-  ] = useCreateArticleMutation();
+  ] = useMutation(CreateArticleDocument);
   const [updateArticle, { loading: isUpdating, error: updateError }] =
-    useUpdateArticleMutation({});
+    useMutation(UpdateArticleDocument, {});
   const [autosaveArticle, { loading: isAutosaving, error: autosaveError }] =
-    useUpdateArticleMutation({});
+    useMutation(UpdateArticleDocument, {});
   const [publishArticle, { loading: isPublishing, error: publishError }] =
-    usePublishArticleMutation({});
+    useMutation(PublishArticleDocument, {});
   const [
     restoreArticleRevision,
     { loading: isRestoring, error: restoreError },
-  ] = useRestoreArticleRevisionMutation({});
+  ] = useMutation(RestoreArticleRevisionDocument, {});
   const [discardArticleDraft, { loading: isDiscarding, error: discardError }] =
-    useDiscardArticleDraftMutation({});
+    useMutation(DiscardArticleDraftDocument, {});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
@@ -234,23 +196,25 @@ function ArticleEditor() {
     trackingPixels: undefined,
   });
 
-  useSettingsListQuery({
-    onCompleted(data) {
+  const { data: settingsData } = useQuery(SettingsListDocument);
+
+  useEffect(() => {
+    if (settingsData) {
       setMetadata(meta => ({
         ...meta,
         shared:
           meta.shared ??
-          !!data.settings.find(
+          !!settingsData.settings.find(
             setting => setting.name === SettingName.NewArticlePeering
           )?.value,
         paywall:
           meta.paywall ??
-          data.settings.find(
+          (settingsData.settings.find(
             setting => setting.name === SettingName.NewArticlePaywall
-          )?.value,
+          )?.value as string | null | undefined),
       }));
-    },
-  });
+    }
+  }, [settingsData]);
 
   const isNew = id === undefined;
   const [blocks, setBlocks] = useState<BlockValue[]>(
@@ -263,12 +227,12 @@ function ArticleEditor() {
     data: articleData,
     refetch,
     loading: isLoading,
-  } = useArticleQuery({
+  } = useQuery(ArticleDocument, {
     errorPolicy: 'all',
     variables: { id: articleID! },
     skip: !articleID,
   });
-  const [createJWT] = useCreateJwtForWebsiteLoginMutation({
+  const [createJWT] = useMutation(CreateJwtForWebsiteLoginDocument, {
     errorPolicy: 'none',
     fetchPolicy: 'no-cache',
   });
@@ -278,7 +242,7 @@ function ArticleEditor() {
     refetch: refetchRevisions,
     fetchMore: fetchMoreRevisions,
     loading: isRevisionsLoading,
-  } = useArticleRevisionListQuery({
+  } = useQuery(ArticleRevisionListDocument, {
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
@@ -332,7 +296,7 @@ function ArticleEditor() {
   const [
     loadRevisionPreview,
     { data: previewData, loading: isPreviewLoading },
-  ] = useArticleRevisionPreviewLazyQuery({ errorPolicy: 'all' });
+  ] = useLazyQuery(ArticleRevisionPreviewDocument, { errorPolicy: 'all' });
 
   function handlePreviewRevision(revisionId: string) {
     setPreviewRevisionId(revisionId);
@@ -693,7 +657,7 @@ function ArticleEditor() {
         type="error"
         showIcon={false}
         closable
-        duration={5000}
+        duration={8000}
       >
         <strong>{header}</strong>
         <div>{summaries || t('articleEditor.validationFailedGeneric')}</div>
@@ -863,207 +827,199 @@ function ArticleEditor() {
 
   return (
     <>
-      <FieldSet stateColor={stateColor}>
-        <Legend>
-          <Tag stateColor={stateColor}>{tagTitle}</Tag>
-        </Legend>
-        <EditorTemplate
-          maxWidth={showPreview ? '80vw' : undefined}
-          navigationChildren={
-            <NavigationBar
-              leftChildren={
-                <Link to="/articles">
-                  <RIconButton
-                    size="lg"
-                    icon={<MdKeyboardBackspace />}
-                    onClick={e => {
-                      if (!unsavedChangesDialog()) e.preventDefault();
-                    }}
-                  >
-                    {t('articleEditor.overview.back')}
-                  </RIconButton>
-                </Link>
-              }
-              centerChildren={
-                <CenterChildren>
-                  <RIconButton
-                    icon={<MdIntegrationInstructions />}
-                    size="lg"
-                    disabled={isDisabled}
-                    onClick={() => {
-                      syncFirstTitleBlockWithMetadata();
-                      setMetaDrawerOpen(true);
-                    }}
-                  >
-                    {t('articleEditor.overview.metadata')}
-                  </RIconButton>
+      <EditorTemplate
+        maxWidth={showPreview ? '80vw' : undefined}
+        navigationChildren={
+          <EditorHeader
+            state={stateColor}
+            stateLabel={tagTitle}
+            meta={<LastSavedAt date={articleData?.article?.latest.createdAt} />}
+            back={
+              <Link to="/articles">
+                <RIconButton
+                  circle
+                  appearance="subtle"
+                  icon={<MdKeyboardBackspace />}
+                  title={t('articleEditor.overview.back')}
+                  aria-label={t('articleEditor.overview.back')}
+                  onClick={e => {
+                    if (!unsavedChangesDialog()) e.preventDefault();
+                  }}
+                />
+              </Link>
+            }
+            secondaryActions={
+              <>
+                <EditorHeaderButton
+                  appearance="subtle"
+                  icon={<MdIntegrationInstructions />}
+                  label={t('articleEditor.overview.metadata')}
+                  disabled={isDisabled}
+                  onClick={() => {
+                    syncFirstTitleBlockWithMetadata();
+                    setMetaDrawerOpen(true);
+                  }}
+                />
 
-                  {!isNew && (
-                    <>
-                      <PermissionControl
-                        qualifyingPermissions={['CAN_GET_ARTICLE']}
-                      >
-                        <IconButton
-                          icon={<MdHistory />}
-                          size="lg"
-                          disabled={isDisabled}
-                          onClick={() => {
-                            if (isVersionHistoryRequested) {
-                              refetchRevisions();
-                            }
-                            setVersionHistoryRequested(true);
-                            setVersionHistoryOpen(true);
-                          }}
+                {!isNew && (
+                  <>
+                    <PermissionControl
+                      qualifyingPermissions={['CAN_GET_ARTICLE']}
+                    >
+                      <EditorHeaderButton
+                        appearance="subtle"
+                        icon={<MdHistory />}
+                        label={t('versionHistory.title')}
+                        disabled={isDisabled}
+                        onClick={() => {
+                          if (isVersionHistoryRequested) {
+                            refetchRevisions();
+                          }
+                          setVersionHistoryRequested(true);
+                          setVersionHistoryOpen(true);
+                        }}
+                      />
+                    </PermissionControl>
+
+                    {articleData?.article?.draft &&
+                      articleData?.article?.published && (
+                        <PermissionControl
+                          qualifyingPermissions={['CAN_CREATE_ARTICLE']}
                         >
-                          {t('versionHistory.title')}
-                        </IconButton>
-                      </PermissionControl>
+                          <EditorHeaderButton
+                            appearance="subtle"
+                            icon={<MdDeleteOutline />}
+                            label={t('discardDraft.button')}
+                            disabled={isDisabled}
+                            onClick={() => setDiscardDialogOpen(true)}
+                          />
+                        </PermissionControl>
+                      )}
+                  </>
+                )}
 
-                      {articleData?.article?.draft &&
-                        articleData?.article?.published && (
-                          <PermissionControl
-                            qualifyingPermissions={['CAN_CREATE_ARTICLE']}
-                          >
-                            <IconButton
-                              icon={<MdDeleteOutline />}
-                              size="lg"
-                              disabled={isDisabled}
-                              onClick={() => setDiscardDialogOpen(true)}
-                            >
-                              {t('discardDraft.button')}
-                            </IconButton>
-                          </PermissionControl>
-                        )}
-                    </>
+                <PermissionControl qualifyingPermissions={[CanPreview.id]}>
+                  {showPreview && previewUrl && (
+                    <PreviewControls
+                      device={previewDevice}
+                      onDeviceChange={setPreviewDevice}
+                      previewUrl={previewUrl}
+                    />
                   )}
 
-                  {isNew && createData == null ?
-                    <PermissionControl
-                      qualifyingPermissions={['CAN_CREATE_ARTICLE']}
-                    >
-                      <IconButton
-                        size="lg"
-                        icon={<MdSave />}
-                        disabled={isDisabled}
-                        onClick={() => handleSave()}
-                      >
-                        {t('create')}
-                      </IconButton>
-                    </PermissionControl>
-                  : <PermissionControl
-                      qualifyingPermissions={['CAN_CREATE_ARTICLE']}
-                    >
-                      <Badge className={hasChanged ? 'unsaved' : 'saved'}>
-                        <IconButton
-                          size="lg"
-                          icon={<MdSave />}
-                          disabled={isDisabled}
-                          onClick={() => handleSave()}
-                        >
-                          {t('save')}
-                        </IconButton>
-                      </Badge>
-                      <PermissionControl
-                        qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}
-                      >
-                        <Badge
-                          className={
-                            (
-                              articleData?.article?.draft ||
-                              !articleData?.article?.published
-                            ) ?
-                              'unsaved'
-                            : 'saved'
-                          }
-                        >
-                          <IconButton
-                            size="lg"
-                            icon={<MdCloudUpload />}
-                            disabled={isDisabled}
-                            onClick={() => {
-                              if (!runEditorValidation('publish')) {
-                                return;
-                              }
-                              setPublishDialogOpen(true);
-                            }}
-                          >
-                            {t('articleEditor.overview.publish')}
-                          </IconButton>
-                        </Badge>
-                      </PermissionControl>
-                    </PermissionControl>
-                  }
-
-                  <LastSavedAt date={articleData?.article?.latest.createdAt} />
-                </CenterChildren>
-              }
-              rightChildren={
-                <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <PreviewActions>
-                    {showPreview && previewUrl && (
-                      <PreviewControlsMarginTop
-                        device={previewDevice}
-                        onDeviceChange={setPreviewDevice}
-                        previewUrl={previewUrl}
-                      />
-                    )}
-
-                    <IconButtonMarginTop
-                      disabled={isPreviewDisabled}
-                      size="lg"
-                      icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
-                      onClick={() => setPreviewOpen(!showPreview)}
-                    >
-                      {showPreview ?
+                  <EditorHeaderButton
+                    appearance={showPreview ? 'ghost' : 'subtle'}
+                    icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
+                    label={
+                      showPreview ?
                         t('preview.backToEditor')
-                      : t('articleEditor.overview.preview')}
-                    </IconButtonMarginTop>
-                  </PreviewActions>
+                      : t('articleEditor.overview.preview')
+                    }
+                    disabled={isPreviewDisabled}
+                    onClick={() => setPreviewOpen(!showPreview)}
+                  />
                 </PermissionControl>
-              }
-            />
-          }
-        >
-          {showPreview && previewUrl && (
-            <PreviewFrame
-              key={articleData?.article?.latest.id}
-              previewUrl={previewUrl}
-              device={previewDevice}
-              title={t('articleEditor.overview.preview')}
-              createToken={async () => {
-                const { data: jwtData } = await createJWT();
+              </>
+            }
+            primaryActions={
+              isNew && createData == null ?
+                <PermissionControl
+                  qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                >
+                  <EditorHeaderButton
+                    appearance="primary"
+                    icon={<MdSave />}
+                    label={t('create')}
+                    collapse={false}
+                    disabled={isDisabled}
+                    onClick={() => handleSave()}
+                  />
+                </PermissionControl>
+              : <PermissionControl
+                  qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                >
+                  <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+                    <EditorHeaderButton
+                      icon={<MdSave />}
+                      label={t('save')}
+                      collapse="sm"
+                      disabled={isDisabled}
+                      onClick={() => handleSave()}
+                    />
+                  </Badge>
 
-                return jwtData?.createJWTForWebsiteLogin?.token;
-              }}
-              onSilence={() =>
-                toaster.push(
-                  <Message
-                    type="warning"
-                    showIcon
-                    closable
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}
                   >
-                    {t('previewHandshake.notResponding')}
-                  </Message>
-                )
-              }
-            />
-          )}
+                    <Badge
+                      className={
+                        (
+                          articleData?.article?.draft ||
+                          !articleData?.article?.published
+                        ) ?
+                          'unsaved'
+                        : 'saved'
+                      }
+                    >
+                      <EditorHeaderButton
+                        appearance="primary"
+                        icon={<MdCloudUpload />}
+                        label={t('articleEditor.overview.publish')}
+                        collapse={false}
+                        disabled={isDisabled}
+                        onClick={() => {
+                          if (!runEditorValidation('publish')) {
+                            return;
+                          }
+                          setPublishDialogOpen(true);
+                        }}
+                      />
+                    </Badge>
+                  </PermissionControl>
+                </PermissionControl>
+            }
+          />
+        }
+      >
+        {showPreview && previewUrl && (
+          <PreviewFrame
+            key={articleData?.article?.latest.id}
+            previewUrl={previewUrl}
+            device={previewDevice}
+            title={t('articleEditor.overview.preview')}
+            createToken={async () => {
+              const { data: jwtData } = await createJWT();
 
-          <EditorContent hidden={showPreview}>
-            <EditorValidationProvider runAllRef={validateAll}>
-              <DocumentUrlProvider documentUrl={articleData?.article?.url}>
-                <BlockList
-                  itemId={articleID}
-                  value={blocks}
-                  onChange={handleChange}
-                  disabled={isBusy || !isAuthorized}
-                  blockMap={BlockMap}
-                />
-              </DocumentUrlProvider>
-            </EditorValidationProvider>
-          </EditorContent>
-        </EditorTemplate>
-      </FieldSet>
+              return jwtData?.createJWTForWebsiteLogin?.token;
+            }}
+            onSilence={() =>
+              toaster.push(
+                <Message
+                  type="warning"
+                  showIcon
+                  closable
+                >
+                  {t('previewHandshake.notResponding')}
+                </Message>
+              )
+            }
+          />
+        )}
+
+        <EditorContent hidden={showPreview}>
+          <EditorValidationProvider runAllRef={validateAll}>
+            <DocumentUrlProvider documentUrl={articleData?.article?.url}>
+              <BlockList
+                itemId={articleID}
+                value={blocks}
+                onChange={handleChange}
+                disabled={isBusy || !isAuthorized}
+                blockMap={BlockMap}
+              />
+            </DocumentUrlProvider>
+          </EditorValidationProvider>
+        </EditorContent>
+      </EditorTemplate>
 
       <Drawer
         open={isMetaDrawerOpen}

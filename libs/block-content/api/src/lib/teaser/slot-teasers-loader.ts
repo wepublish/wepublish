@@ -1,4 +1,4 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Scope } from '@nestjs/common';
 import { ArticleTeaser, EventTeaser, Teaser, TeaserType } from './teaser.model';
 import {
   isTeaserSlotsBlock,
@@ -98,6 +98,7 @@ export class SlotTeasersLoader {
 
   constructor(
     private eventService: EventService,
+    @Inject(forwardRef(() => ArticleService))
     private articleService: ArticleService,
     private blockTemplates: BlockTemplateDataloaderService
   ) {}

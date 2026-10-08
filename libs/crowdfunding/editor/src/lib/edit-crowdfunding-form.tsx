@@ -1,27 +1,27 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   CreateCrowdfundingGoalInput,
-  CrowdfundingGoal,
+  CrowdfundingDocument,
+  FullCrowdfundingGoalFragment,
+  UpdateCrowdfundingDocument,
   UpdateCrowdfundingInput,
-  useCrowdfundingQuery,
-  useUpdateCrowdfundingMutation,
 } from '@wepublish/editor/api';
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CrowdfundingForm } from './crowdfunding-form';
-import { SingleViewTitle } from '@wepublish/ui/editor';
+import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
 import { Form, Message, Schema, toaster } from 'rsuite';
-import { ApolloError } from '@apollo/client';
 
-const showError = (error: ApolloError): void => {
+const showError = (error: Error): void => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -48,14 +48,27 @@ export const EditCrowdfundingForm = () => {
     }
   );
 
-  useCrowdfundingQuery({
-    variables: {
-      id: id!,
-    },
-    skip: !id,
-    onError: showError,
-    onCompleted: data => setCrowdfunding(data.crowdfunding),
-  });
+  const { data: crowdfundingData, error: crowdfundingError } = useQuery(
+    CrowdfundingDocument,
+    {
+      variables: {
+        id: id!,
+      },
+      skip: !id,
+    }
+  );
+
+  useEffect(() => {
+    if (crowdfundingError) {
+      showError(crowdfundingError);
+    }
+  }, [crowdfundingError]);
+
+  useEffect(() => {
+    if (crowdfundingData) {
+      setCrowdfunding(crowdfundingData.crowdfunding);
+    }
+  }, [crowdfundingData]);
 
   const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
@@ -64,16 +77,19 @@ export const EditCrowdfundingForm = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [updateCrowdfunding, { loading }] = useUpdateCrowdfundingMutation({
-    onError: showError,
-    onCompleted: data => {
-      setCrowdfunding(data.updateCrowdfunding);
+  const [updateCrowdfunding, { loading }] = useMutation(
+    UpdateCrowdfundingDocument,
+    {
+      onError: showError,
+      onCompleted: data => {
+        setCrowdfunding(data.updateCrowdfunding);
 
-      if (shouldClose) {
-        navigate(closePath);
-      }
-    },
-  });
+        if (shouldClose) {
+          navigate(closePath);
+        }
+      },
+    }
+  );
 
   const onSubmit = () => {
     const processedCrowdfunding = {
@@ -89,7 +105,7 @@ export const EditCrowdfundingForm = () => {
   };
 
   const removeIdAndTypename = (goal: CreateCrowdfundingGoalInput) => {
-    const { id, ...goalCleaned } = goal as CrowdfundingGoal;
+    const { id, ...goalCleaned } = goal as FullCrowdfundingGoalFragment;
     return goalCleaned;
   };
 

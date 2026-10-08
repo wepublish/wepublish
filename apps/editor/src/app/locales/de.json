@@ -1,5 +1,18 @@
 {
   "translation": {
+    "ok": "OK",
+    "send": "Senden",
+    "actionMail": {
+      "title": "E-Mail an das Mitglied senden?",
+      "question": "E-Mail «{{template}}» an {{recipient}} senden?",
+      "skip": "Nicht senden",
+      "noMailTitle": "Keine E-Mail an das Mitglied",
+      "noTemplate": "Für «{{event}}» ist keine E-Mail konfiguriert. An {{recipient}} wird keine E-Mail gesendet.",
+      "firstPeriod": "Für die erste Periode eines Abos wird keine Zahlungsbestätigung versandt. An {{recipient}} wird keine E-Mail gesendet.",
+      "alreadyHandled": "Die Zahlungsbestätigung für diese Rechnung wurde bereits versandt oder unterdrückt. An {{recipient}} wird keine E-Mail gesendet.",
+      "notApplicable": "An {{recipient}} wird keine E-Mail gesendet.",
+      "theMember": "das Mitglied"
+    },
     "lastSavedAt": "Zuletzt gespeichert {{date, ccc PP pp}}",
     "preview": {
       "backToEditor": "Editor",
@@ -29,7 +42,7 @@
       "outageTextNever": "Es gab noch nie erfolgreichen Kontakt. Bitte URL und Zugang des Connectors prüfen."
     },
     "oneMessages": {
-      "header": "Nachrichten vom We.Publish Team",
+      "header": "Nachrichten vom We.Publish-Team",
       "expand": "Ausklappen",
       "linkFallback": "Mehr erfahren"
     },
@@ -59,7 +72,7 @@
       },
       "confirm": {
         "title": "Diese Version wiederherstellen?",
-        "message": "Es wird ein neuer Entwurf aus der Version vom {{date}} erstellt. Ihr aktueller Entwurf wird archiviert. Es wird nichts veröffentlicht, bis Sie es veröffentlichen.",
+        "message": "Es wird ein neuer Entwurf aus der Version vom {{date}} erstellt. Dein aktueller Entwurf wird archiviert. Es wird nichts veröffentlicht, bis du es veröffentlichst.",
         "cancel": "Abbrechen",
         "confirm": "Als Entwurf wiederherstellen"
       }
@@ -69,7 +82,7 @@
       "success": "Entwurf verworfen — zur veröffentlichten Version zurückgekehrt",
       "confirm": {
         "title": "Aktuellen Entwurf verwerfen?",
-        "message": "Ihre unveröffentlichten Änderungen werden archiviert und der Editor kehrt zur aktuell veröffentlichten Version zurück. Dies kann nicht rückgängig gemacht werden, der verworfene Entwurf bleibt jedoch im Versionsverlauf verfügbar.",
+        "message": "Deine unveröffentlichten Änderungen werden archiviert und der Editor kehrt zur aktuell veröffentlichten Version zurück. Dies kann nicht rückgängig gemacht werden, der verworfene Entwurf bleibt jedoch im Versionsverlauf verfügbar.",
         "cancel": "Abbrechen",
         "confirm": "Entwurf verwerfen"
       }
@@ -100,43 +113,42 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Publikation widerrufen",
         "unpublished": "Nicht publiziert",
-        "unpublishWarningMessage": "Bei Bestätigung wird bei allen publizierten und geplanten Artikel die Publikation widerrufen",
+        "unpublishWarningMessage": "Bei Bestätigung wird die Publikation aller publizierten und/oder geplanten Versionen widerrufen",
         "warningLabel": "Warnung"
       },
       "panels": {
         "firstPublishedAtDate": "Erstpublikation am {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Artikel wurde noch nicht publiziert",
         "addSlug": "Bitte Slug erfassen",
-        "allowPeerPublishing": "Peers erlauben, diesen Artikel zu publizieren.",
         "articlePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Eine erneute Publikation überschreibt diese.",
         "articlePreviewLink": "Vorschau-Link",
         "articlePreviewLinkDesc": "Vorschau-Links zeigen immer die neuesten Änderungen im Entwurf des Artikels an. Vorschau-Links funktionieren nicht mehr, nachdem der Artikel publiziert oder geplant wurde.",
-        "articlePreviewLinkField": "Vorschau Link",
+        "articlePreviewLinkField": "Vorschau-Link",
         "articlePreviewLinkHours": "Gültigkeitsdauer des Links",
         "authorRole": "Funktion (z.B. Text, Bilder)",
         "authors": "Autor*innen",
         "back": "Zurück",
         "breakingNews": "Breaking News",
         "canonicalUrl": "Kanonische URL",
-        "canonicalUrLHelpBlock": "Ein kanonisches Link-Element ist ein HTML-Element, das Webmastern hilft, Probleme mit doppeltem Inhalt bei der Suchmaschinenoptimierung zu vermeiden, indem es die \"kanonische\" oder \"bevorzugte\" Version einer Webseite angibt. <2>Canonical Url Guide</2>",
+        "canonicalUrLHelpBlock": "Ein kanonisches Link-Element ist ein HTML-Element, das Webmastern hilft, Probleme mit doppeltem Inhalt bei der Suchmaschinenoptimierung zu vermeiden, indem es die «kanonische» oder «bevorzugte» Version einer Webseite angibt. <2>Canonical URL Guide</2>",
         "charCountWarning": "Die maximale Zeichenanzahl sollte {{charCountWarning}} sein",
         "chooseImage": "Bild wählen",
         "chooseTeaser": "Teaser wählen",
         "close": "Schliessen",
         "comments": "Kommentare",
         "confirm": "Bestätigen",
-        "contentUrl": "Inhalt URL",
+        "contentUrl": "Inhalts-URL",
         "createdAt": "{{createdAt, ccc PP p}}",
-        "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge in sozialen Medien für den nächsten Morgen im Voraus geplant werden.",
+        "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt publiziert werden sollen. Dies ist z. B. hilfreich, wenn Beiträge in sozialen Medien für den nächsten Morgen im Voraus geplant werden.",
         "displayOptions": "Anzeigeoptionen",
         "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern.",
         "draft": "Entwurf",
-        "dropImage": "Bild hier droppen",
+        "dropImage": "Bild hier ablegen",
         "editTeaser": "Teaser bearbeiten",
         "enterAuthors": "Bitte Autor:in hinzufügen",
         "enterImage": "Bitte Bild hinzufügen",
         "enterSeoTitle": "Bitte SEO-Titel eingeben",
-        "enterSocialMediaAuthors": "Bitte Autor:in für Social-Media hinzufügen",
+        "enterSocialMediaAuthors": "Bitte Autor:in für Social Media hinzufügen",
         "enterSocialMediaDescription": "Bitte Social-Media-Beschreibung eingeben",
         "enterSocialMediaTitle": "Bitte Titel für Social Media hinzufügen",
         "enterTag": "Bitte Tag eingeben",
@@ -155,32 +167,31 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Nein",
         "noImagesFound": "Keine Bilder gefunden",
-        "openInNewTab": "Inhalt URL öffnet in einem neuen Tab",
-        "pagePreviewLink": "Vorschau Link",
+        "openInNewTab": "Inhalts-URL wird in einem neuen Tab geöffnet",
+        "pagePreviewLink": "Vorschau-Link",
         "peerDisabled": "Dieser Peer ist momentan deaktiviert",
         "peeredArticlePreview": "Vorschau",
         "peering": "Peering",
         "pending": "Geplant",
         "postImage": "Bild für Post",
         "preTitle": "Oberzeile",
-        "private": "Privat",
         "properties": "Eigenschaften",
-        "propertiesInfo": "Properties können pro Artikel eingestellt werden. Public Properties sind über die public API zugänglich.",
+        "propertiesInfo": "Eigenschaften können pro Artikel festgelegt werden. Öffentliche Eigenschaften sind über die öffentliche API zugänglich.",
         "public": "Öffentlich",
         "publishArticle": "Artikel publizieren",
         "publishAt": "Online verfügbar ab",
-        "publishAtDateCheckbox": "Wähle ein anderes Datum für die online Verfügbarkeit",
+        "publishAtDateCheckbox": "Wähle ein anderes Datum für die Online-Verfügbarkeit",
         "publishDate": "Publikationsdatum",
         "published": "Publiziert",
         "selectAuthor": "Autor*in wählen",
         "seoTitle": "SEO-Titel",
-        "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel <2>SEO Guide</2>",
+        "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel. <2>SEO Guide</2>",
         "seoDescription": "SEO-Beschreibung",
         "seoDescriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
         "sharedWithPeers": "Geteilt mit Peers",
         "slug": "Slug",
         "slugGuide": "Slug Guide",
-        "slugifySeoTitle": "Slug aus den SEO-Titel generieren",
+        "slugifySeoTitle": "Slug aus dem SEO-Titel generieren",
         "socialMedia": "Social Media",
         "socialMediaAuthors": "Autor*innen für Social Media",
         "socialMediaDescription": "Beschreibung für Social Media",
@@ -192,32 +203,37 @@
         "status": "{{stateJoin}}",
         "tags": "Tags",
         "title": "Titel",
-        "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
         "totalCharCount": "Anzahl Zeichen {{totalCharCount}}",
-        "likeCount": "Likes {{likeCount}}",
+        "likeCount": "Likes",
         "type": "Typ",
         "untitled": "Ohne Titel",
-        "updateDate": "Update-Datum",
-        "updateDateWarning": "Das Update-Datum darf nicht vor dem Publikations-Datum liegen.",
         "uploadImage": "Bild hochladen",
         "url": "URL",
         "urlPlaceholder": "https://canonical-url.com",
         "value": "Wert",
         "yes": "Ja",
         "hidden": "Ausblenden",
-        "setAsHidden": "Ausgeblendete Artikel werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
         "disableComments": "Kommentare für diesen Artikel deaktivieren",
         "light": "Light",
         "style": "Style",
         "text": "Text",
-        "default": "Default",
+        "default": "Standard",
         "tracking": "Tracking",
-        "paywall": "Paywall"
+        "paywall": "Paywall",
+        "likeCountInfo": "Anzahl Likes, die Leser*innen diesem Artikel auf der Website gegeben haben. Bei Bedarf kannst du die Zahl hier korrigieren.",
+        "slugInfo": "Der letzte Teil der Webadresse des Artikels, z.B. …/a/mein-artikel. Verwende nur Kleinbuchstaben, Zahlen und Bindestriche.",
+        "hideAuthorsInfo": "Die Autor*innen werden bei diesem Artikel auf der Website nicht angezeigt. Im Editor bleiben sie gespeichert.",
+        "breakingNewsInfo": "Markiert den Artikel als Breaking News. Je nach Design deiner Website erhält sein Teaser eine spezielle Kennzeichnung.",
+        "peeringInfo": "Erlaubt Partnermedien im We.Publish-Netzwerk (Peers), diesen Artikel zu übernehmen und auf ihrer Website zu publizieren.",
+        "paywallInfo": "Wähle eine Paywall, wenn nur Leser*innen mit passendem Abo diesen Artikel lesen können sollen. Leer lassen für freien Zugang.",
+        "hiddenInfo": "Ausgeblendete Artikel erscheinen nicht in automatischen Artikellisten auf der Website (z.B. neueste Artikel oder Tag-Seiten), bleiben aber über ihren direkten Link erreichbar.",
+        "contentUrlInfo": "Die Webadresse, zu der Leser*innen beim Klick auf den Teaser gelangen.",
+        "teaserPropertiesInfo": "Zusätzliche Schlüssel-Wert-Paare, die deine Website für spezielle Darstellungen nutzen kann. Nur nötig, wenn die Entwickler*innen deiner Website dich darum gebeten haben. Öffentliche Eigenschaften sind über die öffentliche API sichtbar.",
+        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
       }
     },
     "articles": {
       "overview": {
-        "action": "Aktion",
         "articles": "Artikel",
         "authors": "Autor*innen",
         "draft": "Entwurf",
@@ -252,7 +268,6 @@
     },
     "authors": {
       "overview": {
-        "action": "Aktion",
         "authors": "Autor*innen",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
@@ -261,7 +276,8 @@
         "deleteAuthor": "Autor*in löschen?",
         "name": "Name",
         "newAuthor": "Neue*r Autor*in",
-        "unknown": "Unbekannt"
+        "unknown": "Unbekannt",
+        "untitled": "Ohne Namen"
       },
       "panels": {
         "bioInformation": "Biographie",
@@ -286,7 +302,7 @@
       },
       "delete": {
         "title": "Banner löschen",
-        "body": "Willst Du den Banner wirklich löschen?",
+        "body": "Willst du den Banner wirklich löschen?",
         "delete": "Banner löschen"
       },
       "form": {
@@ -294,8 +310,8 @@
         "title": "Titel",
         "text": "Text",
         "cta": "Call to action",
-        "hideForMinutes": "Dauer des Ausblendens/einklappen nach dem Schließen des Banners in Minuten",
-        "collapsible": "Banner einklappen nach dem Schließen statt ausblenden",
+        "hideForMinutes": "Dauer des Ausblendens/Einklappens nach dem Schliessen des Banners in Minuten",
+        "collapsible": "Banner nach dem Schliessen einklappen statt ausblenden",
         "delay": "Verzögerung in Sekunden",
         "active": "Aktiv",
         "showOnArticles": "Auf Artikeln anzeigen",
@@ -310,7 +326,7 @@
           "LOGGED_OUT": "nur ausgeloggt",
           "SUBSCRIBED": "nur abonniert",
           "UNSUBSCRIBED": "nicht abonniert",
-          "PAYWALL_BYPASSED": "paywall überbrückung"
+          "PAYWALL_BYPASSED": "Paywall umgangen"
         },
         "actions": "Aktionen",
         "image": "Bild",
@@ -319,8 +335,17 @@
           "label": "Beschriftung",
           "url": "URL",
           "style": "Stil",
-          "role": "Funktion"
-        }
+          "role": "Funktion",
+          "styleInfo": "Optionaler Stilname für den Button, z.B. «outline». Wirkt nur, wenn deine Website ihn unterstützt.",
+          "roleInfo": "«Primär» hebt den Button hervor. «Abbrechen» schliesst den Banner, statt den Link zu öffnen. «Andere» zeigt einen normalen Button."
+        },
+        "content": "Inhalt",
+        "collapsibleInfo": "Wenn Leser*innen den Banner schliessen, wird er eingeklappt, statt ganz zu verschwinden. Wie ein eingeklappter Banner aussieht, hängt von deiner Website ab.",
+        "delayInfo": "Wie viele Sekunden nach dem Laden der Seite der Banner erscheint. Bei 0 erscheint er sofort.",
+        "showForLoginStatusInfo": "Wähle, welche Besucher*innen den Banner sehen, z.B. nur solche ohne Abo. Passen mehrere aktive Banner, wird jener mit der genauesten Zielgruppe angezeigt.",
+        "showOnPagesInfo": "Der Banner erscheint auf den hier gewählten Seiten. Leer lassen, wenn er auf keiner Seite erscheinen soll.",
+        "ctaInfo": "Kurzer Satz über den Buttons, der Leser*innen zum Handeln auffordert, z.B. «Unterstütze uns mit einem Abo».",
+        "htmlInfo": "Optional: eigener HTML-Code für den Banner. Wenn ausgefüllt, ersetzt er Titel, Text, Call to Action und Buttons."
       },
       "list": {
         "title": "Banner",
@@ -345,8 +370,9 @@
         "label": "Blockvorlage",
         "select": "Blockvorlage auswählen",
         "useContent": "Inhalt übernehmen",
-        "useContentConfirmMessage": "Der Inhalt der Vorlage wird hierher kopiert, damit Sie ihn frei bearbeiten können. Danach ist dieser Block nicht mehr mit der Vorlage verknüpft und spätere Änderungen an der Vorlage erscheinen hier nicht mehr.",
-        "useContentConfirmTitle": "Inhalt der Vorlage übernehmen?"
+        "useContentConfirmMessage": "Der Inhalt der Vorlage wird hierher kopiert, damit du ihn frei bearbeiten kannst. Danach ist dieser Block nicht mehr mit der Vorlage verknüpft und spätere Änderungen an der Vorlage erscheinen hier nicht mehr.",
+        "useContentConfirmTitle": "Inhalt der Vorlage übernehmen?",
+        "reload": "Vorlagen neu laden"
       },
       "crowdfunding": {
         "edit": "Bearbeiten",
@@ -354,7 +380,8 @@
         "title": "Crowdfunding auswählen",
         "name": "Name des Crowdfundings",
         "select": "Auswählen",
-        "open": "öffnen"
+        "open": "öffnen",
+        "crowdfundingName": "Crowdfunding {{name}}"
       },
       "comment": {
         "cherryPick": "Spezifische Kommentare auswählen",
@@ -364,22 +391,26 @@
         "edit": "Bearbeiten",
         "filterByTag": "Kommentare filtern nach Tag",
         "label": "Kommentare",
-        "title": "Kommentarblock Bearbeiten"
+        "title": "Kommentarblock bearbeiten",
+        "cherryPickInfo": "Wenn eingeschaltet, zeigt der Block nur die Kommentare, die du in der Liste unten ankreuzt. Wenn ausgeschaltet, zeigt er alle Kommentare, die zum Tag-Filter passen.",
+        "chooseComments": "Kommentare wählen"
       },
       "teaserList": {
-        "label": "Teaser Liste",
+        "label": "Teaser-Liste",
         "teasers": "{{count}} Teaser geladen",
         "teaserType": "{{teaserType}} Teaser werden geladen",
         "teaserTypeLabel": "Teaser-Typ",
         "skip": "Die ersten {{skip}} Teaser überspringen",
-        "skipLabel": "Wieviele Teaser sollen übersprungen werden",
+        "skipLabel": "Wie viele Teaser sollen übersprungen werden",
         "take": "Bis zu {{take}} Teaser anzeigen",
-        "takeLabel": "Wieviele Teaser sollten geladen werden",
+        "takeLabel": "Wie viele Teaser sollten geladen werden",
         "tags": "Nur mit diesen Tags anzeigen: {{tags}}",
         "tagsLabel": "Welche Tags sollten geladen werden",
-        "edit": "Teaser Liste bearbeiten",
+        "edit": "Teaser-Liste bearbeiten",
         "sort": "Sortiert nach {{sort}}",
-        "sortLabel": "Sortieren nach"
+        "sortLabel": "Sortieren nach",
+        "sortInfo": "Legt die Reihenfolge der Teaser fest. «Beliebtheit» zeigt die aktuell meistgelesenen Artikel; bei dieser Sortierung ist der Tag-Filter nicht verfügbar.",
+        "skipInfo": "Nützlich, wenn die ersten Teaser schon an anderer Stelle der Seite erscheinen, z.B. in einem Block weiter oben. Gib 0 ein, um mit dem ersten Teaser zu beginnen."
       },
       "embeds": {
         "label": "Embed",
@@ -387,14 +418,14 @@
           "editEmbed": "Embed bearbeiten"
         },
         "panels": {
-          "alternativeStyling": "Setze <code>style</code> alternativ als Attribut, um die Voreinstellungen zu überschreiben und die automatische Grössenskalierung zu deaktivieren z.B.",
+          "alternativeStyling": "Setze <code>style</code> alternativ als Attribut, um die Voreinstellungen zu überschreiben und die automatische Grössenskalierung zu deaktivieren, z.B.",
           "close": "Schliessen",
           "confirm": "Bestätigen",
           "editEmbed": "Embed bearbeiten",
           "embed": "Einbinden",
-          "embedCodeAttributes": "Embed-Code-Attribute <code>title, src, width, heigh</code> werden z.B. validiert.",
+          "embedCodeAttributes": "Embed-Code-Attribute <code>title, src, width, height</code> werden validiert, z.B.",
           "fbPosts": "https://www.facebook.com/id/posts/id/",
-          "GDPRInfo": "Aufgrund von Validierung, Shareable Peers und GDPR-Konformität sind die Embed-Blocks derzeit auf einfache iframes und die oben aufgeführten unterstützten Einbettungen beschränkt.",
+          "GDPRInfo": "Aufgrund von Validierung, Shareable Peers und DSGVO-Konformität sind die Embed-Blöcke derzeit auf einfache iframes und die oben aufgeführten unterstützten Einbettungen beschränkt.",
           "iframe1Sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
           "iframe2Sample": "<iframe style=\"height:350px;width:100%;\" src=\"https://...\"></iframe>",
           "invalidURL": "Ungültige URL oder iFrame-Code",
@@ -404,11 +435,14 @@
       "event": {
         "cherryPick": "Spezifische Events auswählen",
         "edit": "Bearbeiten",
-        "events": "{{count}} Event",
         "eventsFilterByTagInformation": "Alle untenstehenden Events werden angezeigt",
         "filterByTag": "Events filtern nach Tag",
         "label": "Events",
-        "title": "Eventblock Bearbeiten"
+        "title": "Eventblock bearbeiten",
+        "events_one": "{{count}} Event",
+        "events_other": "{{count}} Events",
+        "cherryPickInfo": "Wenn eingeschaltet, zeigt der Block nur die Events, die du in der Liste unten ankreuzt. Wenn ausgeschaltet, zeigt er alle Events, die zum Tag-Filter passen.",
+        "chooseEvents": "Events wählen"
       },
       "flexTeaser": {
         "addBlock": "Block hinzufügen",
@@ -420,7 +454,7 @@
         "unlockBlock": "Entsperren"
       },
       "flexBlock": {
-        "label": "Flex Block",
+        "label": "Flex-Block",
         "addNestedBlock": "(Sub-)Block hinzufügen",
         "chooseNestedBlock": "(Sub-)Block wählen",
         "close": "Schliessen",
@@ -435,9 +469,9 @@
         "confirm": "Bestätigen",
         "edit": "HTML bearbeiten",
         "label": "HTML",
-        "placeholder": "Füge hier deinen HTML Block ein",
-        "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist.",
-        "generate": "Generieren Sie Ihr HTML mit KI",
+        "placeholder": "Füge hier deinen HTML-Block ein",
+        "warning": "Bitte beachte, dass benutzerdefinierte HTML-Blöcke für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML-Block frei von bösartigen Skripten und korrekt strukturiert ist.",
+        "generate": "Generiere dein HTML mit KI",
         "prompt": "Prompt senden",
         "promptSuccess": "HTML erfolgreich generiert und Block aktualisiert. Der Chatverlauf wurde gespeichert und du kannst den Chat hier fortsetzen."
       },
@@ -447,13 +481,13 @@
         "selectMemberPlansPlaceholder": "Alle Pläne anzeigen",
         "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
         "selectFields": "Benutzer-Eingabefelder",
-        "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
+        "selectFieldsSelectionHint": "E-Mail & Nachname werden immer abgefragt. Reihenfolge spielt keine Rolle",
         "periodicityDisplay": "Zahlungsintervalle: Darstellung und Konfiguration",
         "periodicityDisplayDropdown": "Auswahlfeld",
         "periodicityDisplayOfferCards": "Pro Plan & Intervall eine Karte",
         "periodicityDisplayToggle": "Umschalter",
         "periodicityDisplayDropdownHint": "Alle Preise werden monatlich angezeigt – Karten, Betrag und Betragsvorschläge. Das Intervall wird weiter unten bei der Zahlungsmethode gewählt und bestimmt nur, wie oft verrechnet wird.",
-        "periodicityDisplayOfferCardsHint": "Jedes Angebot als eigene Karte. (Anzahl Karten ergibt sich aus: Summe aller Pläne × Zahlungsintervalle) – ideal für ein bis zwei Abo-Pläne.",
+        "periodicityDisplayOfferCardsHint": "Jedes Angebot als eigene Karte (Anzahl Karten ergibt sich aus: Summe aller Pläne × Zahlungsintervalle) – ideal für ein bis zwei Abo-Pläne.",
         "periodicityDisplayToggleHint": "Das Zahlungsintervall wird im ersten Schritt gewählt; danach zeigen die Abo-Plan-Karten den Preis des gewählten Intervalls an.",
         "periodicityDisplayDropdownIgnoredRows_one": "Hinweis: Für den Abo-Plan «{{plans}}» sind Preise für Zahlungsintervalle konfiguriert, die im Modus «Auswahlfeld» ignoriert werden.",
         "periodicityDisplayDropdownIgnoredRows_other": "Hinweis: Für die Abo-Pläne «{{plans}}» sind Preise für Zahlungsintervalle konfiguriert, die im Modus «Auswahlfeld» ignoriert werden.",
@@ -469,7 +503,7 @@
         "FirstName": "Vorname",
         "Birthday": "Geburtstag",
         "Address": "Adresse",
-        "EmailRepeated": "Email wiederholen",
+        "EmailRepeated": "E-Mail wiederholen",
         "Password": "Passwort",
         "PasswordRepeated": "Passwort wiederholen",
         "renderLayouts": {
@@ -478,7 +512,7 @@
           "Slider": "Betrags-Slider",
           "Picker": "Vordefinierte Beträge"
         },
-        "renderStylesHeading": "Abo-Plan Reihenfolge und Darstellung",
+        "renderStylesHeading": "Reihenfolge und Darstellung der Abo-Pläne",
         "amountTileValues": {
           "hint": "Beträge der Kacheln pro Zahlungsintervall (in Franken). Leer lassen für Standard-Werte.",
           "hintMonthly": "Beträge der Kacheln (in Franken, pro Monat). Leer lassen für Standard-Werte.",
@@ -500,7 +534,9 @@
         },
         "planAmountsTitle": "Minimal- / Ziel- / Maximalbetrag",
         "defaultPlanTitle": "Standardmässig ausgewählt — dieser Abo-Plan ist nach dem Laden der Seite vorausgewählt.",
-        "defaultPlanLabel": "Standard"
+        "defaultPlanLabel": "Standard",
+        "dragToReorder": "Ziehen, um die Reihenfolge zu ändern",
+        "renderStylesHelp": "Ziehe die Abo-Pläne in die Reihenfolge, in der sie auf der Website erscheinen. Wähle pro Plan, wie der Betrag eingegeben wird und welcher Plan vorausgewählt ist."
       },
       "image": {
         "label": "Bild",
@@ -513,7 +549,11 @@
       "imageGallery": {
         "label": "Bildgalerie",
         "overview": {
-          "caption": "Bildunterschrift"
+          "caption": "Bildunterschrift",
+          "new": "(neu)",
+          "previousImage": "Vorheriges Bild",
+          "nextImage": "Nächstes Bild",
+          "addImage": "Bild hinzufügen"
         },
         "panels": {
           "caption": "Bildunterschrift",
@@ -523,7 +563,8 @@
       },
       "linkPageBreak": {
         "label": "Umbruch",
-        "title": "Titel"
+        "title": "Titel",
+        "editSettings": "Link und Button bearbeiten"
       },
       "listicle": {
         "title": "Titel",
@@ -533,7 +574,8 @@
         "edit": "Bearbeiten",
         "label": "Umfrage",
         "select": "Auswählen",
-        "title": "Umfrageblock Bearbeiten"
+        "title": "Umfrageblock bearbeiten",
+        "choosePoll": "Umfrage wählen"
       },
       "quote": {
         "author": "Autor*in",
@@ -541,10 +583,10 @@
         "quote": "Zitat"
       },
       "richText": {
-        "label": "Rich text"
+        "label": "Rich Text"
       },
       "teaserFlexGrid": {
-        "label": "Flexible Teaser Grids"
+        "label": "Flexible Teaser-Grids"
       },
       "teaserGrid1": {
         "label": "1 Kol"
@@ -553,16 +595,26 @@
         "label": "6 Kol"
       },
       "teaserSlots": {
-        "autoLoading": "Auto-loading:",
-        "fillManually": "Alle slots werden manuell gefüllt",
+        "fillManually": "Alle Slots werden manuell gefüllt",
         "teasersLoaded": "Teaser geladen",
         "configure": "Konfigurieren",
         "latest": "Neuste",
         "addSlot": "Slot hinzufügen",
-        "label": "Teaser Slots",
+        "label": "Teaser-Slots",
         "filter": "Nach Tags filtern",
-        "filterHelpText": "Tags kommasepariert eingeben. Leer lassen um keinen Tag-Filter anzuwenden.",
-        "autofillType": "Teaser-Typ der automatisch geladenen Teaser"
+        "filterHelpText": "Tags kommasepariert eingeben. Leer lassen, um keinen Tag-Filter anzuwenden.",
+        "autofillType": "Teaser-Typ der automatisch geladenen Teaser",
+        "autoLoadingToggle": "Teaser automatisch laden",
+        "autoLoadingHelp": "Ist das eingeschaltet, werden die Slots automatisch mit den neusten Artikeln oder Events gefüllt, auf Wunsch nach Tags gefiltert. Einzelne Slots kannst du trotzdem auf manuell stellen und den Teaser selbst wählen.",
+        "manualSlot": "Manuell",
+        "manualSlotHelp": "Ein: Du wählst den Teaser für diesen Slot selbst aus. Aus: Der Slot wird automatisch gefüllt.",
+        "deleteSlot": "Slot entfernen",
+        "dialogTitleEnable": "Automatisches Laden einschalten und einrichten",
+        "dialogTitleConfigure": "Automatisches Laden einrichten",
+        "dialogDescriptionEnable": "Wähle, welche Teaser automatisch in die Slots geladen werden, und schalte das automatische Laden ein.",
+        "dialogDescriptionConfigure": "Wähle, welche Teaser automatisch in die Slots geladen werden.",
+        "enableAndSave": "Einschalten und speichern",
+        "saveConfiguration": "Einstellungen speichern"
       },
       "title": {
         "label": "Titel",
@@ -644,8 +696,8 @@
         "optionLabel": "Beschriftung",
         "optionBackground": "Hintergrundfarbe",
         "optionUrl": "URL",
-        "optionMergeFieldName": "Merge-Feld Name",
-        "optionMergeFieldValue": "Merge-Feld Wert",
+        "optionMergeFieldName": "Merge-Feld-Name",
+        "optionMergeFieldValue": "Merge-Feld-Wert",
         "addSuccessOption": "Option hinzufügen",
         "successOptionTitle": "Option {{number}}",
         "interestOption": "Interesse",
@@ -654,7 +706,11 @@
         "interestOptionImage": "Bild (optional)",
         "optionsLayout": "Darstellung",
         "optionsLayoutList": "Liste",
-        "optionsLayoutGrid": "Raster mit Karten"
+        "optionsLayoutGrid": "Raster mit Karten",
+        "autoFocusHelp": "Setzt den Cursor beim Laden der Seite direkt ins erste Feld, damit Leserinnen und Leser sofort tippen können. Sinnvoll, wenn das Formular der Hauptinhalt der Seite ist.",
+        "doubleOptInHelp": "Neue Abonnentinnen und Abonnenten erhalten zuerst eine Bestätigungs-E-Mail von Mailchimp und werden erst in die Liste aufgenommen, wenn sie auf den Link darin klicken.",
+        "advancedStepHelp": "Zeigt Bedingungen, wann dieser Schritt übersprungen oder angezeigt wird, z. B. wenn bestimmte Angaben bereits vorhanden sind.",
+        "advancedInputHelp": "Zeigt weitere Einstellungen für dieses Feld, z. B. eine Beschreibung unter dem Feld oder einen Standardwert."
       }
     },
     "cancel": "Abbrechen",
@@ -672,17 +728,18 @@
       "chooseImage": "Bild wählen",
       "editImage": "Bild bearbeiten",
       "header": "Bild",
-      "removeImage": "Bild entfernen"
+      "removeImage": "Bild entfernen",
+      "imageOptions": "Bildoptionen"
     },
     "close": "Schliessen",
     "commentDeleteBtn": {
-      "modalBody": "Wenn Du diesen Kommentar löscht, ist dies unwiderruflich. Der Kommentar kann nicht wiederhergestellt werden.",
+      "modalBody": "Wenn du diesen Kommentar löschst, ist dies unwiderruflich. Der Kommentar kann nicht wiederhergestellt werden.",
       "modalTitle": "Wirklich löschen?"
     },
     "commentEditView": {
       "featured": "Hervorgehoben",
       "actions": "Aktionen",
-      "comment": "Text Kommentar",
+      "comment": "Kommentartext",
       "commentContextHeader": "Kommentar-Historie",
       "goToArticle": "Zum Artikel",
       "lead": "Lead",
@@ -693,7 +750,10 @@
       "title": "Titel",
       "userPanelHeader": "Verfasser:in des Kommentars",
       "variousPanelHeader": "Tags & Quelle",
-      "featuredHelpText": "Der Kommentar erscheint zu oberst in der Liste der Kommentare."
+      "featuredHelpText": "Der Kommentar erscheint zuoberst in der Liste der Kommentare.",
+      "sourceInfo": "Wird auf der Website neben dem Namen der verfassenden Person angezeigt, z. B. woher der Kommentar stammt. Gibst du eine Webadresse ein, wird sie verlinkt.",
+      "ratingOverridesInfo": "Ersetzt die durchschnittliche Bewertung, die Leserinnen und Leser bei diesem Kommentar sehen, durch einen festen Wert. Wähle «Nicht überschreiben», um die tatsächliche Bewertung anzuzeigen.",
+      "goToPage": "Zur Seite"
     },
     "commentHistory": {
       "addComment": "Neuen Kommentar erstellen",
@@ -711,17 +771,18 @@
       "edit": {
         "success": "Kommentar erfolgreich editiert",
         "title": "Kommentar editieren",
-        "unnamedTag": "<Unbennanter Tag>"
+        "unnamedTag": "<Unbenannter Tag>",
+        "unnamedPaywall": "<Unbenannte Paywall>"
       },
       "overview": {
-        "action": "Aktion",
         "comments": "Kommentare",
         "edit": "Kommentar editieren",
         "editState": "Status bearbeiten",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "text": "Text",
         "updated": "Bearbeitet",
-        "userName": "User Name"
+        "userName": "Benutzername",
+        "pendingUserChangesInfo": "Du hast die Verfasserin oder den Verfasser gebeten, den Kommentar zu überarbeiten. Nach der Überarbeitung wartet er wieder auf Freigabe."
       },
       "panels": {
         "approve": "Annehmen",
@@ -732,29 +793,30 @@
         "id": "ID",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
         "noUserName": "Kein Benutzername",
-        "parent": "Elter",
+        "parent": "Übergeordneter Kommentar",
         "parentDate": "{{parentDate,ccc PP p}}",
         "reject": "Ablehnen",
         "rejectComment": "Kommentar ablehnen",
         "rejectionReason": "Ablehnungsgrund",
-        "requestChanges": "Änderungen beantragen",
-        "requestChangesOnComment": "Änderungen am Kommentar beantragen",
+        "requestChanges": "Änderungen anfordern",
+        "requestChangesOnComment": "Änderungen am Kommentar anfordern",
         "requestChangesReason": "Grund",
         "revisionCreatedAtDate": "{{revisionCreatedAtDate,ccc PP p}}",
         "revisions": "Revisionen",
         "unregisteredUser": "(Nicht registrierter Benutzer)",
         "updatedAt": "Aktualisiert am",
-        "userName": "User Name"
+        "userName": "Benutzername"
       },
       "ratingEdit": {
-        "areYouSure": "Bist Du sicher?",
-        "areYouSureBody": "Die Bewertung \"{{ answer }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
-        "areYouSureConfirmation": "Berwertung löschen",
+        "areYouSure": "Bist du sicher?",
+        "areYouSureBody": "Die Bewertung «{{ answer }}» wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
+        "areYouSureConfirmation": "Bewertung löschen",
         "loading": "Laden",
-        "newAnswer": "Berwertung hinzufügen",
-        "placeholder": "Name der Berwertung",
+        "newAnswer": "Bewertung hinzufügen",
+        "placeholder": "Name der Bewertung",
         "title": "Bewertungssystem",
-        "updateSuccessful": "Bewertungssystem erfolgreich gespeichert."
+        "updateSuccessful": "Bewertungssystem erfolgreich gespeichert.",
+        "info": "Leserinnen und Leser können Kommentare auf deiner Website mit Sternen bewerten. Jede Zeile ist eine Bewertungskategorie, z. B. «Relevanz»."
       },
       "state": {
         "approved": "Angenommen",
@@ -770,42 +832,39 @@
     },
     "confirm": "Bestätigen",
     "consents": {
-      "create": "Neuer Konsens erstellen",
+      "create": "Neue Einwilligung erstellen",
       "defaultValue": "Standardwert",
-      "defaultValueTitle": "Default value (checked by default)",
+      "defaultValueTitle": "Standardwert (standardmässig angekreuzt)",
       "name": "Name",
       "slug": "Slug",
-      "title": "Konsens",
-      "titleCreate": "Konsens erstellen",
-      "titleEdit": "Konsens bearbeiten",
-      "uniqueConstraint": "A consent with slug '\"{{slug}}\"' already exists. Please choose a different slug."
+      "title": "Einwilligungen",
+      "titleCreate": "Einwilligung erstellen",
+      "titleEdit": "Einwilligung bearbeiten",
+      "uniqueConstraint": "Eine Einwilligung mit dem Slug «{{slug}}» existiert bereits. Bitte wähle einen anderen Slug.",
+      "consent": "Einwilligung",
+      "accepted": "Akzeptiert",
+      "rejected": "Abgelehnt",
+      "slugInfo": "Technische Kennung, über die deine Website oder Apps diese Einwilligung finden, z.B. «newsletter». Verwende nur Kleinbuchstaben, Zahlen und Bindestriche.",
+      "defaultValueInfo": "Ob die Einwilligung für Benutzer*innen, die noch nicht entschieden haben, vorausgewählt ist, z.B. als bereits angekreuzte Checkbox in einem Formular.",
+      "checkedByDefault": "Standardmässig angekreuzt"
     },
     "create": "Erstellen",
     "createAndClose": "Erstellen & Schliessen",
     "createOrEditUserPassword": {
       "sendLoginLink": "Login-Link per E-Mail versenden?",
-      "sendLoginLinkContent": "Willst Du {{email}} einen Link senden, mit der sich {{firstName}} {{name}} mit seinen bestehenden Rechten einloggen kann?"
+      "sendLoginLinkContent": "Willst du {{email}} einen Link senden, mit dem sich {{firstName}} {{name}} mit den bestehenden Rechten einloggen kann?"
     },
     "createOrUpdateUserPassword": {
-      "unexpectedErrorNoUserFound": "Unerwartetet Fehler: kein User gefunden"
+      "unexpectedErrorNoUserFound": "Unerwarteter Fehler: kein User gefunden"
     },
     "currency": {
       "chf": "chf"
     },
     "dashboard": {
-      "activity": "Letzte Aktivitäten",
       "dashboard": "Dashboard",
       "notifications": "Mitteilungen",
       "showAllNotifications": "Alle anzeigen",
       "greeting": "Hallo, {{name}}!",
-      "newArticle": "Neuer <0>Artikel</0> erstellt",
-      "newAuthor": "Neuer <0>Author</0> erstellt",
-      "newComment": "Neuer <0>Kommentar</0>",
-      "newEvent": "Neues <0>event</0>",
-      "newPage": "Neue <0>Seite</0> erstellt",
-      "newPoll": "Neue <0>Umfrage</0>",
-      "newSubscription": "Neues <0>Abo</0>",
-      "newUser": "Neuer <0>User</0> erstellt",
       "noData": "Keine aktuellen Abo-Daten",
       "user": "Benutzer",
       "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr",
@@ -813,46 +872,56 @@
       "goToAudienceDashboard": "Zum Audience Dashboard",
       "externalApps": "We.Publish Apps",
       "networkContent": "Aus dem We.Publish-Netzwerk",
-      "goToNetwork": "Zum Netzwerk"
+      "goToNetwork": "Zum Netzwerk",
+      "externalAppsInfo": "Verknüpfungen zu Tools, die dein Team neben We.Publish nutzt. Admins verwalten sie unter «Apps».",
+      "networkContentInfo": "Die neuesten Artikel anderer Medien im We.Publish-Netzwerk. Du kannst sie in deinen Editor übernehmen (importieren) und auf deiner Website veröffentlichen."
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
       "nextMonday": "Nächsten Montag",
-      "nextSaturday": "Nächster Samstag",
+      "nextSaturday": "Nächsten Samstag",
       "now": "Jetzt",
       "today": "Heute",
       "tomorrow": "Morgen"
     },
     "delete": "Löschen",
     "deleteBlockTemplateModal": {
-      "body": "Willst Du die Block-Vorlage \"{{name}}\" wirklich löschen?",
+      "body": "Willst du die Blockvorlage «{{name}}» wirklich löschen?",
       "deleteBtn": "Ja, löschen",
-      "title": "Block-Vorlage löschen?"
+      "title": "Blockvorlage löschen?"
     },
     "deletePollModal": {
-      "body": "Willst Du die Umfrage \"{{pollQuestion}}\" wirklich löschen?",
+      "body": "Willst du die Umfrage «{{pollQuestion}}» wirklich löschen?",
       "deleteBtn": "Ja, löschen",
       "title": "Umfrage löschen?"
     },
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "Mails an deaktivierte Abos werden nicht verschickt!"
     },
-    "edit": "Editieren",
+    "edit": "Bearbeiten",
+    "errors": {
+      "uniqueEmail": "Diese E-Mail-Adresse wird bereits verwendet.",
+      "uniqueField": "Dieser Wert ist bereits vergeben ({{field}}).",
+      "inUse": "Dieser Eintrag wird noch verwendet und kann deshalb nicht gelöscht werden.",
+      "forbidden": "Dir fehlt die Berechtigung für diese Aktion.",
+      "network": "Keine Verbindung zum Server. Bitte prüfe deine Internetverbindung und versuche es erneut.",
+      "unexpected": "Das hat leider nicht geklappt. Bitte versuche es erneut – falls das Problem bleibt, melde dich beim Support."
+    },
     "errorMessages": {
       "invalidEmailErrorMessage": "Bitte eine gültige E-Mail eingeben",
       "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",
       "invalidUrlErrorMessage": "Bitte eine gültige URL eingeben",
       "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} {{currency}}.",
-      "noAmountErrorMessage": "Der Betrag ist 5, wenn Du nichts eingibst",
-      "noCallToActionImageErrorMessage": "Bitte erfasse einen Call-To-Action-Bild",
+      "noAmountErrorMessage": "Der Betrag ist 5, wenn du nichts eingibst",
+      "noCallToActionImageErrorMessage": "Bitte erfasse ein Call-to-Action-Bild",
       "noEmailErrorMessage": "Bitte E-Mail eingeben",
       "noImageErrorMessage": "Bild fehlt",
-      "noMemberPlanErrorMessage": "Bitte gib den Member-Plan ein",
+      "noMemberPlanErrorMessage": "Bitte wähle einen Abo-Plan aus",
       "noNameErrorMessage": "Bitte Namen eingeben",
       "noPasswordErrorMessage": "Bitte Passwort eingeben",
-      "noPaymentMethodErrorMessage": "Bitte gib eine Bezahl-Methode ein",
-      "noPaymentPeriodicityErrorMessage": "Bitte gib die Bezahl-Periodizität ein",
-      "noPaymentProviderErrorMessage": "Bitte gib den Zahlungs-Anbieter ein",
+      "noPaymentMethodErrorMessage": "Bitte gib eine Zahlungsmethode ein",
+      "noPaymentPeriodicityErrorMessage": "Bitte gib die Zahlungsperiodizität ein",
+      "noPaymentProviderErrorMessage": "Bitte gib den Zahlungsanbieter ein",
       "noTokenErrorMessage": "Bitte gib den Token ein",
       "noUrlErrorMessage": "Bitte URL eingeben",
       "noUserErrorMessage": "Bitte wähle den/die Benutzer:in",
@@ -863,21 +932,21 @@
     },
     "event": {
       "create": {
-        "title": "Event Erstellen"
+        "title": "Event erstellen"
       },
       "delete": {
-        "body": "Willst Du das Event \"{{name}}\" wirklich löschen?",
+        "body": "Willst du das Event «{{name}}» wirklich löschen?",
         "delete": "Ja, lösche das Event",
-        "title": "Event Löschen?"
+        "title": "Event löschen?"
       },
       "edit": {
-        "title": "Event Bearbeiten"
+        "title": "Event bearbeiten"
       },
       "form": {
         "cancelled": "Abgesagt",
         "description": "Beschreibung",
-        "endsAt": "Ended um",
-        "externalSource": "External source (for imported events)",
+        "endsAt": "Endet um",
+        "externalSource": "Externe Quelle (für importierte Events)",
         "image": "Bild",
         "location": "Veranstaltungsort",
         "name": "Name",
@@ -887,17 +956,22 @@
         "scheduled": "Geplant",
         "startsAt": "Startet um",
         "status": "Status",
-        "tags": "Tags"
+        "tags": "Tags",
+        "statusInfo": "Zeigt Suchmaschinen, ob der Event wie geplant stattfindet oder abgesagt, verschoben oder auf ein neues Datum gelegt wurde."
       },
       "list": {
         "create": "Neues Event erstellen",
-        "delete": "Löschen",
         "edit": "Bearbeiten",
-        "endsAt": "Ended um {{endsAt, ccc PP p}}",
+        "endsAt": "Endet am {{endsAt, ccc PP p}}",
         "endsAtNone": "Offenes Ende",
         "name": "Name",
-        "startsAt": "Startet um {{startsAt, ccc PP p}}",
-        "title": "Events"
+        "startsAt": "Startet am {{startsAt, ccc PP p}}",
+        "title": "Events",
+        "endsAtHeader": "Endet um",
+        "source": "Quelle",
+        "startsAtHeader": "Startet um",
+        "upcomingOnly": "Nur bevorstehende",
+        "sourceInfo": "Der externe Veranstaltungskalender, aus dem ein Event importiert wurde. Leer bei Events, die du selbst erstellt hast."
       }
     },
     "filterableList": {
@@ -910,7 +984,7 @@
         "lead": "Nach Lead filtern",
         "location": "Veranstaltungsort",
         "name": "Name",
-        "preTitle": "Nach Pre-Titel filtern",
+        "preTitle": "Nach Oberzeile filtern",
         "providers": "Anbieter",
         "publicationDate": "Publikationsdatum",
         "reset": "Filter zurücksetzen",
@@ -922,7 +996,6 @@
     },
     "documents": {
       "overview": {
-        "actions": "Aktionen",
         "description": "Beschreibung",
         "documentLibrary": "Dokumentenbibliothek",
         "copyLink": "Link kopieren",
@@ -938,7 +1011,8 @@
         "title": "Titel",
         "unlimited": "Unbegrenzt",
         "untitled": "Ohne Titel",
-        "uploadDocument": "Dokument hochladen"
+        "uploadDocument": "Dokument hochladen",
+        "storageUsageInfo": "Gesamtgrösse aller hochgeladenen Dokumente. Ist das Limit erreicht, kannst du erst wieder neue Dokumente hochladen, wenn du alte löschst."
       },
       "panels": {
         "cancel": "Abbrechen",
@@ -966,24 +1040,25 @@
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Hochladen",
         "uploadDocument": "Dokument hochladen",
-        "uploadFailed": "Upload fehlgeschlagen. Bitte versuchen Sie es erneut."
+        "uploadFailed": "Upload fehlgeschlagen. Bitte versuche es erneut."
       }
     },
     "images": {
       "overview": {
-        "actions": "Aktionen",
         "description": "Beschreibung",
         "edit": "Bearbeiten",
-        "filename": "Filename",
+        "filename": "Dateiname",
         "image": "Bild",
         "imageLibrary": "Bilder",
         "noDescription": "Keine Beschreibung",
         "title": "Titel",
         "untitled": "Ohne Titel",
-        "uploadImage": "Bild hochladen"
+        "uploadImage": "Bild hochladen",
+        "gridView": "Rasteransicht",
+        "listView": "Listenansicht"
       },
       "panels": {
-        "attribution": "Attribut",
+        "attribution": "Bildnachweis",
         "cancel": "Abbrechen",
         "close": "Schliessen",
         "confirm": "Bestätigen",
@@ -993,7 +1068,7 @@
         "description": "Beschreibung",
         "dimension": "Dimension",
         "editImage": "Bild bearbeiten",
-        "filename": "Filename",
+        "filename": "Dateiname",
         "fileSize": "Dateigrösse",
         "imageDimension": "{{imageWidth}} x {{imageHeight}}",
         "imageUpdated": "Bild aktualisiert",
@@ -1009,25 +1084,27 @@
         "title": "Titel",
         "untitled": "Ohne Titel",
         "Untitled": "Ohne Titel",
-        "updated": "Updated",
+        "updated": "Aktualisiert",
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Hochladen",
         "uploadImage": "Bild hochladen",
-        "urlPlaceholder": "https://www.link.com"
+        "urlPlaceholder": "https://www.link.com",
+        "focalPoint": "Bildfokus",
+        "focalPointInfo": "Ziehe den Punkt auf den wichtigsten Bereich des Bildes. Wird das Bild zugeschnitten, z.B. in Teasern, bleibt dieser Bereich sichtbar.",
+        "descriptionInfo": "Beschreibe, was auf dem Bild zu sehen ist. Der Text dient als Alternativtext für Menschen mit Screenreader und für Suchmaschinen.",
+        "linkUrlInfo": "Webadresse, die sich öffnet, wenn Leser*innen auf das Bild klicken. Leer lassen, wenn das Bild kein Link sein soll."
       }
     },
     "importableEvent": {
-      "import": "Import",
-      "imported": "Imported",
-      "title": "Importable events"
+      "import": "Importieren",
+      "imported": "Importiert",
+      "title": "Importierbare Events"
     },
     "invoice": {
-      "areYouSure": "Bist Du sicher?",
+      "areYouSure": "Bist du sicher?",
       "canceledAt": "Storniert am",
-      "doNotSendMail": "Keine Zahlungsbestätigung an das Mitglied senden",
       "invoiceNo": "Rechnung Nr.",
       "manuallyPaidModalBody": "Die Rechnung wird als bezahlt markiert, obwohl keine Zahlung durch den oder die Benutzer:in eingegangen ist. Du solltest dein Vorhaben mit dem:r Buchführer:in besprechen.",
-      "noMailForFirstPeriod": "Es wird keine Zahlungsbestätigung versandt, da dies die erste Periode des Abos ist.",
       "paidAt": "Bezahlt am",
       "panel": {
         "invoiceHistory": "Rechnungsverlauf",
@@ -1043,7 +1120,6 @@
         "description": "Beschreibung",
         "goodie": "Goodie",
         "status": "Status",
-        "action": "Aktion",
         "idCopied": "Rechnungs-ID kopiert"
       }
     },
@@ -1056,12 +1132,13 @@
         "targetLabel": "Link öffnen in",
         "targetLabelBlank": "Neuer Browser-Tab",
         "targetLabelSelf": "Dieser Browser-Tab",
-        "urlLabel": "CTA-URL"
+        "urlLabel": "CTA-URL",
+        "urlInfo": "CTA steht für «Call to Action»: ein Button, der Leser*innen zu einer Handlung auffordert, z.B. «Jetzt abonnieren». Gib die Webadresse ein, zu der der Button führen soll."
       },
       "title": "Einstellungen"
     },
     "login": {
-      "email": "Email",
+      "email": "E-Mail",
       "login": "Login",
       "next": "Weiter",
       "password": "Passwort",
@@ -1069,52 +1146,53 @@
       "forgotPassword": "Passwort vergessen?",
       "totp": {
         "back": "Zurück",
-        "setupDescription": "Bitte richten Sie die Zwei-Faktor-Authentifizierung ein, um Ihr Konto zu schützen. Scannen Sie den QR-Code mit Ihrer Authenticator-App.",
+        "setupDescription": "Bitte richte die Zwei-Faktor-Authentifizierung ein, um dein Konto zu schützen. Scanne den QR-Code mit deiner Authenticator-App.",
         "downloadApp": "Proton Authenticator herunterladen:",
-        "backupHint": "Aktivieren Sie Backup oder Sync in der App, damit Sie bei Geräteverlust nicht ausgesperrt werden.",
+        "backupHint": "Aktiviere Backup oder Sync in der App, damit du bei Geräteverlust nicht ausgesperrt wirst.",
         "android": "Android",
         "ios": "iOS",
-        "manualEntry": "Oder geben Sie diesen Code manuell in Ihre Authenticator-App ein:",
+        "manualEntry": "Oder gib diesen Code manuell in deine Authenticator-App ein:",
         "code": "Bestätigungscode",
         "activate": "2FA aktivieren",
-        "invalidCode": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut.",
-        "setupError": "Fehler beim Erstellen der 2FA-Einrichtung. Bitte versuchen Sie es erneut.",
+        "invalidCode": "Ungültiger Bestätigungscode. Bitte versuche es erneut.",
+        "setupError": "Fehler beim Erstellen der 2FA-Einrichtung. Bitte versuche es erneut.",
         "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
       },
       "impersonate": {
         "pending": "Anmeldung als Benutzer läuft …",
         "failed": "Die Anmeldung ist fehlgeschlagen. Der Link ist abgelaufen oder wurde bereits verwendet.",
         "notAGrant": "Dieser Link ist kein gültiger Impersonations-Link."
-      }
+      },
+      "jwt": "Du wirst angemeldet …"
     },
     "resetPassword": {
-      "description": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+      "description": "Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.",
       "submit": "Reset-Link senden",
-      "sent": "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde ein Link zum Zurücksetzen des Passworts versendet. Bitte prüfen Sie Ihren Posteingang.",
-      "notConfigured": "Passwort-Reset ist nicht konfiguriert. Bitte kontaktieren Sie Ihren Administrator.",
+      "sent": "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde ein Link zum Zurücksetzen des Passworts versendet. Bitte prüfe deinen Posteingang.",
+      "notConfigured": "Passwort-Reset ist nicht konfiguriert. Bitte kontaktiere deinen Administrator.",
       "backToLogin": "Zurück zum Login"
     },
     "setNewPassword": {
-      "description": "Geben Sie Ihr neues Passwort ein.",
+      "description": "Gib dein neues Passwort ein.",
       "password": "Neues Passwort",
       "passwordRepeat": "Neues Passwort wiederholen",
       "submit": "Neues Passwort setzen",
       "mismatch": "Passwörter stimmen nicht überein.",
       "invalidLink": "Ungültiger oder abgelaufener Passwort-Reset-Link.",
       "error": "Passwort konnte nicht zurückgesetzt werden. Der Link ist möglicherweise abgelaufen.",
-      "success": "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
+      "success": "Dein Passwort wurde erfolgreich zurückgesetzt. Du kannst dich jetzt mit deinem neuen Passwort anmelden.",
       "goToLogin": "Zum Login"
     },
     "mailTemplates": {
-      "availableTemplates": "Verfügbare E-Mail-Templates",
+      "availableTemplates": "Verfügbare E-Mail-Vorlagen",
       "cancel": "Abbrechen",
       "content": "Inhalt",
-      "create": "Template erstellen",
+      "create": "Vorlage erstellen",
       "description": "Beschreibung",
       "edit": {
         "createHeader": "Mail-Vorlage erstellen",
         "editHeader": "Mail-Vorlage bearbeiten",
-        "saveAndClose": "Speichern & schließen",
+        "saveAndClose": "Speichern & schliessen",
         "nameRequired": "Name ist erforderlich.",
         "testSent": "Testmail gesendet.",
         "details": "Details",
@@ -1133,7 +1211,12 @@
         "textContentReadonlyHint": "Wird automatisch aus dem Inhalt erzeugt. Bearbeite den Visuell- oder HTML-Tab, um ihn zu ändern.",
         "background": "Hintergrund",
         "contentWidth": "Breite (px)",
-        "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z. B. den Rechnungsbetrag."
+        "purposeHint": "Der Verwendungszweck legt fest, in welcher Situation diese Vorlage verschickt wird. Davon hängt ab, welche Daten – und damit welche Platzhalter – zur Verfügung stehen: Nur eine Rechnungs-Vorlage kennt z. B. den Rechnungsbetrag.",
+        "descriptionHelp": "Nur intern sichtbar: Hilft dir und deinem Team, die Vorlage in der Liste wiederzufinden. Erscheint nicht in der E-Mail.",
+        "sampleSubscriptionHelp": "Wähle ein bestehendes Abo, damit Vorschau und Testmail mit dessen echten Daten gefüllt werden. Ohne Auswahl werden erfundene Beispieldaten verwendet. Die Testmail geht trotzdem nur an dich.",
+        "bodyModeHelp": "Visuell: Inhalt wie in einem Textprogramm bearbeiten. HTML: den Quellcode direkt bearbeiten – nur für Fortgeschrittene. Text-Inhalt: die reine Textversion für E-Mail-Programme ohne HTML; sie wird automatisch erzeugt.",
+        "backgroundHelp": "Farbe der Fläche rund um den Inhalt der E-Mail.",
+        "contentWidthHelp": "Maximale Breite des Inhalts in Pixeln. 600 px ist ein bewährter Wert, der in den meisten E-Mail-Programmen gut aussieht. Auf schmalen Bildschirmen wird der Inhalt automatisch schmaler."
       },
       "editor": {
         "undo": "Rückgängig",
@@ -1179,9 +1262,11 @@
         "insert": "Einfügen",
         "appendJwt": "Login-Token anhängen",
         "appendJwtHint": "Hängt {{param}} an – damit ist der Empfänger beim Klick automatisch eingeloggt.",
-        "appendJwtDone": "Login-Token ist bereits enthalten – der Empfänger ist beim Klick eingeloggt."
+        "appendJwtDone": "Login-Token ist bereits enthalten – der Empfänger ist beim Klick eingeloggt.",
+        "imageAltHelp": "Beschreibt das Bild in wenigen Worten. Wird angezeigt, wenn das Bild nicht lädt, und von Screenreadern vorgelesen.",
+        "imageWidthHelp": "Leer lassen, um die Originalgrösse zu verwenden. Breiter als die E-Mail wird das Bild nie."
       },
-      "goToPlaceholders": "Verfügbare Placeholders",
+      "goToPlaceholders": "Verfügbare Platzhalter",
       "htmlContent": "HTML-Inhalt",
       "name": "Name",
       "placeholders": "Platzhalter",
@@ -1259,7 +1344,7 @@
         "optional_invoice_total": "Rechnungsbetrag",
         "optional_newEmail": "Neue E-Mail-Adresse",
         "optional_subscription_deactivation_reason": "Deaktivierungsgrund",
-        "optional_subscription_memberPlan_name": "Memberplan",
+        "optional_subscription_memberPlan_name": "Name des Abo-Plans",
         "optional_subscription_paymentMethod_name": "Zahlungsmethode",
         "optional_items_0_name": "Rechnungsposten 1 — Name",
         "optional_items_0_amount": "Rechnungsposten 1 — Betrag (Rappen)",
@@ -1267,7 +1352,7 @@
         "optional_subscriptionToCreateInvoice_id": "Abo-ID",
         "optional_subscriptionToCreateInvoice_monthlyAmount": "Monatlicher Betrag",
         "optional_subscriptionToCreateInvoice_periodAmount": "Betrag pro Periode",
-        "optional_subscriptionToCreateInvoice_memberPlan_name": "Memberplan",
+        "optional_subscriptionToCreateInvoice_memberPlan_name": "Name des Abo-Plans",
         "optional_invoice_items_0_name": "Rechnungsposten 1 — Name",
         "optional_invoice_items_0_amount": "Rechnungsposten 1 — Betrag (Rappen)",
         "optional_invoices_0_id": "Neueste Rechnung — ID",
@@ -1275,7 +1360,7 @@
       },
       "rawHtml": "HTML",
       "save": "Speichern",
-      "showPlaceholders": "Placeholder Dokumentation",
+      "showPlaceholders": "Platzhalter-Dokumentation",
       "status": "Status",
       "statuses": {
         "error": "Unbekannter Fehler",
@@ -1293,7 +1378,7 @@
       "importWarning": "Dies importiert alle Vorlagen des Mail-Providers. Noch unbekannte werden neu angelegt, bereits importierte werden mit HTML und Betreff des Providers überschrieben. Lokale Änderungen daran gehen verloren.",
       "importDone": "{{count}} Vorlage(n) vom Provider importiert.",
       "placeholderContextNotes": {
-        "account": "Nur Benutzer-Felder verfügbar.",
+        "account": "Nur Empfänger-Felder verfügbar.",
         "subscription": "Abo-Stammdaten. Plan- und Zahlungsmethoden-Namen sind hier NICHT verfügbar – nur in Verlängerungs-Mails.",
         "renewal": "Enthält zusätzlich Plan-/Zahlungsmethoden-Namen und Rechnungsdaten.",
         "invoiceCreation": "Achtung: Abo-Felder hier unter dem Präfix optional_subscriptionToCreateInvoice_*.",
@@ -1308,7 +1393,9 @@
         "invoiceCreation": "Sobald eine neue Rechnung erstellt wurde. Zusätzlich verfügbar: die Rechnung und das zugehörige Abo.",
         "custom": "Frei verschickbare Mail an Abonnent:innen, z. B. ein Newsletter über «E-Mail senden». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
         "customNoSubscription": "Frei verschickbare Mail an Personen ohne Abo, z. B. eine Einladung oder Reaktivierung. Verfügbar sind nur die Empfänger-Felder – Abo-Platzhalter bleiben leer."
-      }
+      },
+      "statusHelp": "Ein Häkchen bedeutet: Eine automatische Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische Mail nutzt sie – über «E-Mail senden» kannst du sie trotzdem von Hand verschicken.",
+      "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die Daten der jeweiligen Person ersetzt, z. B. durch ihren Vornamen. So wird jede E-Mail persönlich."
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "Keine E-Mail senden"
@@ -1321,12 +1408,10 @@
       "amountPerMonthMin": "Minimaler Betrag / Monat",
       "amountPerMonthMax": "Maximaler Betrag / Monat",
       "amountPerMonthMinRequired": "Minimaler Betrag erforderlich",
-      "amountPerMonthMaxRequired": "Maximaler Betrag erforderlich",
       "amountPerMonthMinZero": "Minimaler Betrag muss mindestens 0 betragen",
-      "amountPerMonthMaxZero": "Maximaler Betrag muss mindestens 0 betragen",
       "maxPriceMustBeGreaterThanMin": "Maximaler Betrag muss grösser als der minimale Betrag sein",
       "autoRenewalDescription": "Erzwingt automatische Erneuerung des Abonnements",
-      "createMemberPlanHeader": "Erstelle Memberplan",
+      "createMemberPlanHeader": "Abo-Plan erstellen",
       "description": "Beschreibung",
       "shortDescription": "Kurze Beschreibung",
       "editPaymentSetting": "Zahlungsmethoden & Periodizitäten bearbeiten",
@@ -1334,7 +1419,7 @@
       "loadingTitle": "Lade",
       "name": "Name",
       "nameRequired": "Name erforderlich",
-      "noMemberPlanName": "Memberplan ohne Namen",
+      "noMemberPlanName": "Abo-Plan ohne Namen",
       "paymentConfigs": "Zahlungseinstellungen",
       "saveAndCloseBtnTitle": "Speichern & Schliessen",
       "saveBtnTitle": "Speichern",
@@ -1344,16 +1429,20 @@
       "savedChanges": "Gespeichert",
       "successPage": "Weiterleitung zur Seite bei erfolgreicher Zahlung",
       "failPage": "Weiterleitung zur Seite bei Zahlungsfehler",
-      "externalReward": "Link oder Beschreibung zu einer externer Belohnung (nur für Abonnenten sichtbar)"
+      "externalReward": "Link oder Beschreibung zu einer externen Belohnung (nur für Abonnenten sichtbar)",
+      "targetPriceMustBeGreaterThanMin": "Der Zielbetrag muss zwischen Minimal- und Maximalbetrag liegen.",
+      "slugHelp": "Kurzer, eindeutiger Name für Links, z. B. «jahresabo». Damit lässt sich der Plan per Link auf der Abo-Seite vorauswählen. Beim Erstellen wird er automatisch aus dem Namen erzeugt.",
+      "descriptionHelp": "Wird auf der Abo-Seite unter der Plan-Auswahl angezeigt, sobald dieser Plan gewählt ist – zusammen mit dem Bild.",
+      "shortDescriptionHelp": "Kurzer Text direkt im Auswahlfeld des Plans auf der Abo-Seite, z. B. die wichtigsten Vorteile in einem Satz.",
+      "forceAutoRenewalHelp": "Wenn aktiv, verlängern sich Abos mit diesen Zahlungsmethoden immer automatisch. Beim Abschluss kann die automatische Verlängerung nicht abgewählt werden."
     },
     "memberPlanList": {
-      "action": "Aktionen",
       "created": "Erstellt",
       "createdAt": "{{createdAt, ccc PP p}}",
       "modified": "Zuletzt bearbeitet",
       "modifiedAt": "{{modifiedAt, ccc PP p}}",
-      "createNew": "Neuer Memberplan",
-      "deleteModalTitle": "Memberplan löschen",
+      "createNew": "Neuer Abo-Plan",
+      "deleteModalTitle": "Abo-Plan löschen",
       "editFlow": "Kommunikationsfluss bearbeiten",
       "editFlowShort": "Kommunikationsfluss",
       "name": "Name",
@@ -1368,16 +1457,17 @@
         "lifetime": "Lebenslang",
         "donationOnce": "Einmalige Spende"
       },
-      "title": "Abo Pläne"
+      "title": "Abo-Pläne",
+      "paymentProviderStatusInfo": "✅ heisst, alle Zahlungsmethoden dieses Abo-Plans sind mit einem Zahlungsanbieter verbunden. ❌ heisst, mindestens einer Zahlungsmethode fehlt der Anbieter – damit können Leser:innen nicht bezahlen."
     },
     "navbar": {
       "articles": "Artikel",
       "authors": "Autor*innen",
       "banners": "Banner",
       "blocks": {
-        "polls": "Umfrage",
+        "polls": "Umfragen",
         "blockStyles": "Block Styling",
-        "topMenu": "Inhalts-Blöcke",
+        "topMenu": "Inhaltsblöcke",
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Blockvorlagen"
       },
@@ -1386,18 +1476,25 @@
       "commentTags": "Tags",
       "articleTags": "Tags",
       "pageTags": "Tags",
-      "consents": "Konsens",
+      "consents": "Einwilligungen",
       "dashboard": "Dashboard",
       "notifications": "Mitteilungen",
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Dokumente",
       "imageLibrary": "Bilder",
-      "importableEvents": "Importable Events",
+      "importableEvents": "Importierbare Events",
       "media": "Dateien",
+      "menu": "Menü",
+      "colorMode": {
+        "title": "Darstellung",
+        "light": "Hell",
+        "dark": "Dunkel",
+        "system": "Wie System"
+      },
       "logout": "Logout",
       "mailTemplates": "E-Mail-Vorlagen",
-      "memberPlans": "Abo Pläne",
+      "memberPlans": "Abo-Pläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
       "paymentMethods": "Zahlungsmethoden",
@@ -1406,12 +1503,12 @@
       "peering": "Peering",
       "peers": "Peers",
       "settings": "Einstellungen",
-      "subscriptionPlans": "Abo Pläne",
+      "subscriptionPlans": "Abo-Pläne",
       "subscriptions": "Abonnements",
       "subscriptionSettings": "Automatische Mails",
       "tokens": "Tokens",
-      "userConsents": "User-Konsens",
-      "userRoles": "Userrollen",
+      "userConsents": "Benutzereinwilligungen",
+      "userRoles": "Benutzerrollen",
       "users": "User",
       "audience": "Audience",
       "authorTags": "Tags",
@@ -1425,7 +1522,6 @@
     },
     "navigation": {
       "overview": {
-        "action": "Aktion",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
         "deleteNavigation": "Navigation löschen",
@@ -1443,18 +1539,22 @@
         "name": "Name",
         "selectArticle": "Artikel auswählen",
         "selectPage": "Seite auswählen",
-        "url": "URL"
+        "url": "URL",
+        "linkTypeArticle": "Artikel",
+        "linkTypePage": "Seite",
+        "linkTypeExternal": "Externer Link",
+        "keyInfo": "Technischer Name, über den deine Website diese Navigation findet, z.B. «main» oder «footer». Nur in Absprache mit den Entwickler*innen deiner Website ändern."
       }
     },
     "notifications": {
-      "noTeamMessages": "Zurzeit keine Nachrichten vom We.Publish Team.",
+      "noTeamMessages": "Zurzeit keine Nachrichten vom We.Publish-Team.",
       "sourceTeam": "We.Publish Team",
       "sourceChangelog": "Changelog",
       "sourceJobLogs": "Job-Logs",
       "markAsRead": "Als gelesen markieren",
       "markAsDone": "Als erledigt markieren",
       "confirmTitle": "Als erledigt markieren?",
-      "confirmMessage": "Damit bestätigen Sie für Ihr ganzes Team, dass «{{title}}» erledigt wurde. Der Hinweis verschwindet vom Dashboard.",
+      "confirmMessage": "Damit bestätigst du für dein ganzes Team, dass «{{title}}» erledigt wurde. Der Hinweis verschwindet vom Dashboard.",
       "confirmSuccess": "Danke! Die Aufgabe wurde als erledigt markiert.",
       "loadMore": "Mehr anzeigen",
       "sourceConnector": "We.Publish Connector"
@@ -1470,8 +1570,8 @@
         "duplicate": "Duplizieren",
         "metadata": "Metadaten",
         "modifiedAt": "{{modificationDate, ccc PP pp}}",
-        "pageDraftCreated": "Seiten Entwurf erstellt",
-        "pageDraftSaved": "Seiten Entwurf gespeichert",
+        "pageDraftCreated": "Seitenentwurf erstellt",
+        "pageDraftSaved": "Seitenentwurf gespeichert",
         "pageDraftAutosaved": "Seitenentwurf automatisch gespeichert",
         "pageNotFound": "Seite nicht gefunden",
         "pagePending": "Seite geplant",
@@ -1490,35 +1590,32 @@
         "confirm": "Bestätigen",
         "createdAt": "{{createdAt, ccc PP p}}",
         "chooseBlock": "Blocktyp wählen",
-        "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge auf Sozialen Medien für den nächsten Morgen geplant werden.",
+        "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge in sozialen Medien für den nächsten Morgen geplant werden.",
         "description": "Beschreibung",
-        "descriptionHelpBlock": "Die Beschreibung, die auf der Seite angezeigt wird",
         "enterDescription": "Bitte SEO-Beschreibung hinzufügen",
         "seoTitle": "SEO-Titel",
         "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel",
         "seoDescription": "SEO-Beschreibung",
         "seoDescriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
-        "enterImage": "Biite Bild hinzufügen",
+        "enterImage": "Bitte Bild hinzufügen",
         "enterSocialMediaDescription": "Bitte Beschreibung für Social Media eingeben",
         "enterSocialMediaTitle": "Bitte Titel für Social Media eingeben",
         "enterTitle": "Bitte SEO-Titel eingeben",
         "image": "Bild",
-        "key": "Key",
+        "key": "Schlüssel",
         "metadata": "Metadaten",
-        "metadataInfo": "Informationen aus diesen Feldern werden für Vorschauen in Social Media Posts verwendet. Wenn sie leer bleiben, werden stattdessen Informationen aus dem Tab \"Allgemein\" verwendet.",
+        "metadataInfo": "Informationen aus diesen Feldern werden für Vorschauen in Social-Media-Posts verwendet. Wenn sie leer bleiben, werden stattdessen Informationen aus dem Tab «Allgemein» verwendet.",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
-        "pagePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Ein erneutes publizieren überschreibt diese.",
+        "pagePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Ein erneutes Publizieren überschreibt diese.",
         "postImage": "Bild für Post",
-        "private": "Privat",
         "properties": "Eigenschaften",
-        "propertiesInfo": "Properties können pro Seite eingestellt werden. Public Properties sind über die public API zugänglich.",
+        "propertiesInfo": "Eigenschaften können pro Seite eingestellt werden. Öffentliche Eigenschaften sind über die öffentliche API zugänglich.",
         "public": "Öffentlich",
         "publishAt": "Online verfügbar ab",
         "publishAtDateCheckbox": "Anderes Datum für Online-Verfügbarkeit wählen",
         "publishDate": "Publikationsdatum",
         "publishPage": "Seite publizieren",
         "hidden": "Ausblenden",
-        "setAsHidden": "Ausgeblendete Seiten werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
         "slug": "Slug",
         "socialMediaDescription": "Beschreibung für Social Media",
         "socialMediaImage": "Bild für Social Media",
@@ -1526,15 +1623,15 @@
         "tags": "Tags",
         "title": "Titel",
         "titleHelpBlock": "Der Titel, der auf der Seite angezeigt wird",
-        "updateDate": "Update-Datum",
-        "updateDateWarning": "Das Update-Datum darf nicht vor dem Publikations-Datum liegen.",
         "url": "URL",
-        "value": "Wert"
+        "value": "Wert",
+        "slugInfo": "Der letzte Teil der Webadresse der Seite, z.B. «ueber-uns». Verwende nur Kleinbuchstaben, Zahlen und Bindestriche. Eine spätere Änderung macht bestehende Links ungültig.",
+        "hiddenInfo": "Ausgeblendete Seiten erscheinen nicht in automatischen Listen auf der Website, bleiben aber über ihren direkten Link erreichbar.",
+        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
       }
     },
     "pages": {
       "overview": {
-        "action": "Aktion",
         "draft": "Entwurf",
         "newPage": "Neue Seite",
         "notPublished": "Noch nicht publiziert",
@@ -1566,7 +1663,6 @@
       }
     },
     "paymentMethodList": {
-      "action": "Aktionen",
       "active": "Aktiv",
       "activeDescription": "Macht die Methode verfügbar",
       "adapter": "Zahlungsadapter",
@@ -1579,7 +1675,10 @@
       "name": "Name",
       "slug": "Slug",
       "title": "Zahlungsmethoden",
-      "selectImage": "Vorschau Bild auswählen"
+      "selectImage": "Vorschaubild auswählen",
+      "paymentProviderStatusInfo": "✅ heisst, diese Zahlungsmethode ist mit einem eingerichteten Zahlungsanbieter verbunden. ❌ heisst, der Anbieter fehlt – mit dieser Methode können Leser:innen nicht bezahlen.",
+      "slugInfo": "Wird automatisch aus dem Namen erstellt. Die Website erkennt die Zahlungsmethode daran.",
+      "adapterInfo": "Der Zahlungsanbieter, der die Zahlungen dieser Methode abwickelt, z.B. ein Anbieter für Karte oder TWINT oder die Rechnung. Es werden nur Anbieter angezeigt, die für dein Medium eingerichtet sind."
     },
     "peerArticles": {
       "articleImage": "Teaserbild",
@@ -1588,19 +1687,21 @@
       "peer": "Peer",
       "peerArticles": "Peerbare Artikel",
       "publicationDate": "{{publicationDate, ccc PP p}}",
-      "publishedAt": "Publikations Datum",
+      "publishedAt": "Publikationsdatum",
       "title": "Titel",
       "import": {
         "import": "Importieren",
         "title": "Artikel importieren",
         "includeAuthors": "Autoren des Artikels importieren",
-        "includeAuthorsHint": "Importiert oder updated Autoren des Artikels. Falls eine andere Person bei euch den gleichen Namen trägt, werden die unterschieden.",
+        "includeAuthorsHint": "Importiert oder aktualisiert die Autoren des Artikels. Falls eine andere Person bei euch den gleichen Namen trägt, werden die beiden unterschieden.",
         "includeTags": "Tags des Artikels importieren",
-        "includeTagsHint": "Importiert die Tags des Artikels solange sie nicht schon existieren.",
+        "includeTagsHint": "Importiert die Tags des Artikels, sofern sie noch nicht existieren.",
         "includeImages": "Bilder des Artikels importieren",
-        "includeImagesHint": "Bilder welche in den Metadaten oder Blöcken des Artikels vorkommen werden auch importiert. Ist das gleiche Bild mehrmals vorhanden, wird dieses auch mehrmals importiert.",
+        "includeImagesHint": "Bilder, welche in den Metadaten oder Blöcken des Artikels vorkommen, werden auch importiert. Ist das gleiche Bild mehrmals vorhanden, wird dieses auch mehrmals importiert.",
         "confirm": "Ja, Artikel importieren"
-      }
+      },
+      "info": "Artikel, die andere Medien im We.Publish-Netzwerk mit dir teilen. Importierst du einen Artikel, erhältst du eine bearbeitbare Kopie, die du auf deiner Website publizieren kannst.",
+      "peerInfo": "Das Medium, das diesen Artikel mit dir teilt."
     },
     "peerList": {
       "overview": {
@@ -1608,26 +1709,28 @@
         "editProfile": "Profil bearbeiten",
         "enable": "Aktivieren",
         "invalidURLTooltip": "Ungültige URL",
-        "myPeerProfile": "Mein Peer Profil",
+        "myPeerProfile": "Mein Peer-Profil",
         "newPeer": "Neuer Peer",
         "noPeersFound": "Keine Peers gefunden",
-        "peers": "Peers"
+        "peers": "Peers",
+        "myPeerProfileInfo": "So wird dein Medium bei anderen We.Publish-Medien angezeigt, die deine Artikel übernehmen.",
+        "peersInfo": "Andere We.Publish-Medien, deren Artikel du übernehmen kannst. Deaktiviere einen Peer, um den Austausch zu pausieren, ohne ihn zu löschen."
       },
       "panels": {
-        "callToActionImage": "Call To Action Bild",
-        "callToActionImageURL": "Call To Action Bild URL",
-        "callToActionText": "Call to Action Text",
-        "callToActionURL": "Call to Action URL",
+        "callToActionImage": "Call-to-Action-Bild",
+        "callToActionImageURL": "Call-to-Action-Bild-URL",
+        "callToActionText": "Call-to-Action-Text",
+        "callToActionURL": "Call-to-Action-URL",
         "cancel": "Abbrechen",
         "checkOwnPeerProfileHelpBlock": "Vorschau deines eigenen Profils:",
         "close": "Schliessen",
         "confirm": "Bestätigen",
         "createPeer": "Peer erstellen",
-        "ctaImageInfo": "Empfohlene Call To Action Bildgrösse 728x90",
+        "ctaImageInfo": "Empfohlene Call-to-Action-Bildgrösse: 728x90",
         "deletePeer": "Peer löschen",
         "editPeer": "Peer bearbeiten",
         "editPeerInfo": "Peer-Info bearbeiten",
-        "getRemote": "Peer Profil abrufen",
+        "getRemote": "Peer-Profil abrufen",
         "image": "Bild",
         "squareImage": "Quadratisches Bild",
         "information": "Information",
@@ -1635,60 +1738,47 @@
         "name": "Name",
         "peerCreated": "Peer erstellt",
         "peerInfoUpdated": "Peer-Info aktualisiert",
-        "peeringPreviewGuide": "Peering preview guide",
+        "peeringPreviewGuide": "Anleitung zur Peering-Vorschau",
         "peerUpdated": "Peer aktualisiert",
         "text": "Text",
-        "themeColor": "Theme Farbe",
-        "themeFontColor": "Schrift Farbe",
+        "themeColor": "Theme-Farbe",
+        "themeFontColor": "Schriftfarbe",
         "token": "Token",
         "unknown": "Unbekannt",
         "unnamed": "Unbenannt",
-        "URL": "URL: https://www.url.com"
+        "URL": "URL: https://www.url.com",
+        "urlInfo": "Adresse der We.Publish-API des Partnermediums. Du erhältst sie zusammen mit dem Token vom Partner.",
+        "tokenInfo": "Zugangsschlüssel, den du vom Partnermedium erhältst. Damit kann dein Editor die Artikel des Partners laden.",
+        "themeColorInfo": "Deine Markenfarbe. Partnermedien sehen sie zusammen mit deinem Logo und können damit von dir übernommene Artikel kennzeichnen.",
+        "callToActionInfo": "Kurzer Text mit Link, den Partnermedien bei deinen Artikeln zeigen können, z.B. eine Einladung, deine Website zu besuchen oder ein Abo zu lösen."
       }
     },
     "periodicJobsLog": {
       "concerns": "Betrifft: u.a. Abo-Erneuerung.",
+      "errorTime": "Fehlgeschlagen: {{date, ccc PP p}}",
       "failedJob": "Fehlgeschlagen! Umgehend mit IT Kontakt aufnehmen.",
       "jobFailedTitle": "Automatische Jobs ausgefallen! Umgehend mit IT Kontakt aufnehmen.",
       "lastRunSuccessful": "Im letzten Durchlauf erfolgreich.",
       "noRun": "Die automatische Erneuerung der Abos wurde nie ausgeführt.",
-      "startTime": "Gestarted: {{date, ccc PP p}}",
+      "retry": "Erneut ausführen",
+      "retryHint": "Führt den fehlgeschlagenen Lauf nochmals aus und holt danach alle Läufe bis und mit heute nach. Das läuft im Hintergrund weiter, du kannst die Seite verlassen.",
+      "running": "Läuft gerade",
+      "runningHint": "Solange dieser Lauf nicht fertig ist, kann kein weiterer gestartet werden.",
+      "startTime": "Gestartet: {{date, ccc PP p}}",
       "successTime": "Erfolgreich: {{date, ccc PP p}}",
       "title": "Automatische Job-Logs",
       "tries": "Versuche: {{tries}}"
     },
     "permissions": {
-      "contactAdmin": "Bitte kontaktiere den Administrator, um Dir folgende Berechtigungen zu erteilen: {{permissions}}",
+      "contactAdmin": "Bitte kontaktiere den Administrator, um dir folgende Berechtigungen zu erteilen: {{permissions}}",
       "noAccess": "Du verfügst nicht über genügend Berechtigungen, um den Inhalt zu sehen."
-    },
-    "placeholderList": {
-      "description": {
-        "jwt": "jwt steht für JSON Web Token. Mit diesem Token kann sich der User einloggen. Hierzu muss das Token in der URL an das Frontend übergeben werden. In der Regel in dem man ?jwt=TOKEN an die URL anhängt. Rechter Hand findest du ein Beispiel.",
-        "optional_subscription_autoRenew": "Ob das Abo automatisch erneuert wird. Die Werte sind true oder false",
-        "optional_subscription_memberPlan_name": "Name des Subscription-Plans. Z.B. Jahres-Abo.",
-        "optional_subscription_monthlyAmount": "Monatlicher Betrag in Rappen. Z.B. 1000 für 10 chf / Monat.",
-        "optional_subscription_paymentMethod_name": "Name der Payment-Methode. Z.B. Stripe",
-        "optional_subscription_paymentPeriodicity": "Periodizität des Abos. Mögliche Werte sind: yearly, biannual, quarterly, monthly, biennial, lifetime",
-        "optional_subscriptionID": "Eindeutige ID der Subscription.",
-        "user_email": "E-Mail des Users.",
-        "user_firstName": "Vorname des Users",
-        "user_id": "Eindeutige ID des Users.",
-        "user_name": "Nachname des Users.",
-        "optional_newEmail": "Die neue E-Mail-Adresse, auf die der Benutzer wechseln möchte.",
-        "optional_newEmail_example": "Du hast eine Änderung deiner E-Mail-Adresse auf <strong>{{newEmailPlaceholder}}</strong> beantragt. Bitte bestätige diese Änderung über folgenden Link: {{confirmLink}}E-Mail-Änderung bestätigen</a>"
-      },
-      "descriptionTitle": "Beschreibung",
-      "example": "Beispiel im Template",
-      "header": "Liste der verfügbaren Placeholder",
-      "placeholder": "Placeholder",
-      "subtitle": "Bitte beachte, dass die Placeholder je nach Mail unterschiedlich sind. Wenn etwa ein Login-Link verschickt wird, hat dieses Mail nicht die gleichen Placeholder, wie bei einer Erneuerung des Abos."
     },
     "pollAnswer": {
       "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
-      "copyVoteUrl": "Kopiere Abstimmungs-Link",
+      "copyVoteUrl": "Abstimmungs-Link kopieren",
       "copyVoteUrlHint": "Die Abstimmungs-Links können nun direkt im Umfrage-Block des Artikels oder der Seite kopiert werden, in welchem die Umfrage verwendet wird.",
       "deleteBtn": "Löschen",
-      "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
+      "deleteModalBody": "Willst du die Antwort «{{answer}}» unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
       "deleteModalTitle": "Löschen?",
       "insertYourNewAnswer": "Neue Antwort eingeben",
       "urlCopied": "Abstimmungs-Link in die Zwischenablage kopiert.",
@@ -1704,26 +1794,29 @@
       "opensAtLabel": "Startet am",
       "pollExternalVotesPanelHeader": "Externe Abstimmungsquellen",
       "questionPanelHeader": "Frage",
-      "questionRequired": "Bitte gib Deine Frage ein.",
+      "questionRequired": "Bitte gib deine Frage ein.",
       "saveAndCloseTitle": "Speichern & Schliessen",
       "savedSuccessfully": "Umfrage gespeichert.",
       "saveTitle": "Speichern",
-      "toBeOrNotToBe": "Sein oder nicht sein?"
+      "toBeOrNotToBe": "Sein oder nicht sein?",
+      "closesAtInfo": "Ab diesem Zeitpunkt kann niemand mehr abstimmen und es wird nur noch das Resultat angezeigt. Leer lassen, damit die Umfrage offen bleibt.",
+      "infoTextInfo": "Optionaler Text, der auf deiner Website unter der Frage erscheint, z. B. Hintergrundinfos zur Umfrage.",
+      "pollExternalVotesInfo": "Erfasse Stimmen, die du anderswo gesammelt hast, z. B. an einem Anlass oder auf Social Media. Sie werden im Resultat zu den Online-Stimmen dazugezählt."
     },
     "pollExternalVotes": {
       "addSourceBtn": "Hinzufügen",
-      "deleteBody": "Willst Du die Quelle \"{{source}}\" unwiderruflich löschen?",
+      "deleteBody": "Willst du die Quelle «{{source}}» unwiderruflich löschen?",
       "deleteExternalVoteBtn": "Löschen",
       "deleteTitle": "Löschen?",
       "emptySource": "Bitte Name der Quelle eingeben.",
       "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",
-      "sourceHeaderCell": "Quelle"
+      "sourceHeaderCell": "Quelle",
+      "noPollAvailable": "Keine Umfrage verfügbar"
     },
     "pollList": {
       "closedAt": "Geschlossen am",
       "closedAtNone": "Nicht geschlossen",
       "createNew": "Umfrage erstellen",
-      "delete": "Löschen",
       "showVotes": "Stimmen anzeigen",
       "hasBeenClosedAt": "Geschlossen am {{closedAt, ccc PP p}}",
       "noQuestion": "Keine Frage erfasst",
@@ -1740,7 +1833,9 @@
       "answerId": "Antwort",
       "userId": "Benutzer-ID",
       "fingerprint": "Fingerabdruck",
-      "deleteItems": "Elemente löschen"
+      "deleteItems": "Elemente löschen",
+      "userIdInfo": "Nur ausgefüllt, wenn die Person beim Abstimmen eingeloggt war. Bei anonymen Stimmen leer.",
+      "fingerprintInfo": "Ein anonymer Code aus Internetverbindung und Browser der abstimmenden Person. Viele Stimmen mit demselben Fingerabdruck stammen wahrscheinlich vom selben Gerät; du kannst sie auswählen und löschen."
     },
     "pollStateIndication": {
       "closed": "Umfrage geschlossen",
@@ -1752,7 +1847,7 @@
       "tooltip": "Erstellt einen neuen Kommentar, welcher auf diesen Kommentar antwortet."
     },
     "resetUserPasswordForm": {
-      "sendMail": "Mail an User:in senden (Registration System Mail)"
+      "sendMail": "Mail an Benutzer:in senden (Registration System Mail)"
     },
     "richtext": {
       "menuBar": {
@@ -1784,7 +1879,7 @@
       },
       "placeholder": {
         "heading": "Ohne Titel",
-        "paragraph": "Schreibe oder tippe '/' für Befehle ..."
+        "paragraph": "Schreibe oder tippe «/» für Befehle ..."
       }
     },
     "save": "Speichern",
@@ -1792,47 +1887,69 @@
     "settingList": {
       "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
       "comments": "Kommentare",
-      "sessionTtlDays": "Gültigkeitsdauer der Anmeldung",
       "days": "Tage",
       "errorTitle": "Fehler",
       "guestCommenting": "Gastkommentare erlauben",
       "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen",
       "login": "Login",
-      "loginMinutes": "Gültigkeitsdauer Email-Login-Token",
+      "loginMinutes": "Gültigkeitsdauer E-Mail-Login-Token",
       "minutes": "Minuten",
-      "ms": "Milisekunden",
-      "passwordToken": "Gültigkeitsdauer Email-Passwort-Reset-Token",
+      "ms": "Millisekunden",
+      "passwordToken": "Gültigkeitsdauer E-Mail-Passwort-Reset-Token",
       "payment": "Zahlung",
       "peering": "Peering",
-      "sessionTtlDays": "Wie lange eine Anmeldung gültig bleibt, bevor man sich neu anmelden muss. Gilt ab der nächsten Anmeldung; bestehende Sitzungen behalten ihre Laufzeit.",
-      "peerToken": "Peering timeout",
+      "peerToken": "Peering-Timeout",
       "polls": "Umfragen",
       "settings": "Einstellungen",
       "successMessage": "Einstellungen erfolgreich aktualisiert!",
       "successTitle": "Gespeichert",
-      "newArticlePeering": "Neue erstellte Artikel werden automatisch gepeered.",
-      "newArticlePaywall": "Neue erstellte Artikel benötigen ein Abo um gelesen zu werden.",
+      "newArticlePeering": "Neu erstellte Artikel werden standardmässig gepeert.",
+      "newArticlePaywall": "Neu erstellte Artikel benötigen standardmässig ein Abo, um gelesen zu werden.",
       "subscriptionPlans": "Abo-Pläne",
       "subscriptionUpgradeModel": "Beim Upgrade die volle Preisdifferenz verrechnen (statt des anteiligen Restguthabens)",
       "warnings": {
-        "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum abstürzen bringen oder andere unvorhersehbare Folgen haben. Falls es Unsicherheiten gibt, wendet euch an eure Operators. Falls nicht, einfach fortfahren.",
+        "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum Absturz bringen oder andere unvorhersehbare Folgen haben. Falls du unsicher bist, wende dich zuerst an die Operators. Falls du sicher bist, kannst du einfach fortfahren.",
         "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
         "guestCommentRating": "Erlaube (nicht eingeloggten) Gastbesuchern, die Kommentare anderer Personen zu bewerten.",
         "guestPollVote": "Erlaube Gastbesuchern (nicht eingeloggt), an Umfragen teilzunehmen.",
-        "invoiceReminders": "Wie oft wird der Benutzer daran erinnert, das Abonnement zu bezahlen (einmal pro Tag).",
-        "loginMinutes": "Wie lange (in Minuten) ist der per E-Mail gesendete Link zum Erstellen eines Kontos gültig. Die Standardeinstellung ist eine Woche (10080 / 60 / 24).",
-        "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
-        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
-        "newArticlePeering": "Beeinflusst nicht schon erstellte Artikel",
-        "newArticlePaywall": "Beeinflusst nicht schon erstellte Artikel",
+        "invoiceReminders": "Wie oft der Benutzer daran erinnert wird, das Abonnement zu bezahlen (einmal pro Tag).",
+        "newArticlePeering": "Hat keinen Einfluss auf bereits erstellte Artikel",
+        "newArticlePaywall": "Hat keinen Einfluss auf bereits erstellte Artikel",
         "subscriptionUpgradeModel": "Wenn aktiviert, wird bei einem Upgrade immer die Differenz zwischen dem neuen und dem aktuellen Plan-Preis verrechnet, unabhängig davon, wie viel Zeit in der aktuellen Periode noch verbleibt. Wenn deaktiviert, wird nur das ungenutzte (anteilige) Restguthaben der aktuellen Periode angerechnet.",
-        "sessionTtlDays": "Wie lange eine Anmeldung gültig bleibt, bevor man sich neu anmelden muss. Gilt ab der nächsten Anmeldung; bestehende Sitzungen behalten ihre Laufzeit."
+        "sessionTtlDays": "Wie lange eine Anmeldung gültig bleibt, bevor man sich neu anmelden muss. Gilt ab der nächsten Anmeldung; bestehende Sitzungen behalten ihre Laufzeit.",
+        "showPendingWhenNotPublished": "Dadurch werden geplante Artikel und Seiten öffentlich sichtbar (und somit auch für Crawler), obwohl sie noch nie veröffentlicht wurden."
       },
-      "sessionTtlDays": "Gültigkeitsdauer der Anmeldung"
+      "sessionTtlDays": "Gültigkeitsdauer der Anmeldung",
+      "activeSubscriptionsApiPublic": "API für aktive Abos öffentlich zugänglich machen",
+      "expectedRevenueApiPublic": "API für erwartete Einnahmen öffentlich zugänglich machen",
+      "newDeactivationsApiPublic": "API für neue Deaktivierungen öffentlich zugänglich machen",
+      "newSubscriptionsApiPublic": "API für neue Abos öffentlich zugänglich machen",
+      "renewingSubscriptionsApiPublic": "API für sich erneuernde Abos öffentlich zugänglich machen",
+      "revenueApiPublic": "API für Einnahmen öffentlich zugänglich machen",
+      "allowCommentEditing": "Bearbeiten von Kommentaren erlauben",
+      "articlePage": "Artikel & Seiten",
+      "commentCharLimit": "Zeichenlimit für Kommentare",
+      "disabled": "deaktiviert",
+      "enabled": "aktiviert",
+      "memberships": "Abos",
+      "showPendingWhenNotPublished": "Geplante Artikel oder Seiten auch dann anzeigen, wenn sie noch nicht veröffentlicht sind.",
+      "info": {
+        "allowCommentEditing": "Leser*innen können den Text ihrer eigenen Kommentare nach dem Abschicken noch ändern.",
+        "commentCharLimit": "Maximale Anzahl Zeichen, die ein Kommentar enthalten darf. Längere Kommentare können nicht abgeschickt werden.",
+        "newSubscriptionsApiPublic": "Macht die neuen Abos eines gewählten Zeitraums ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
+        "activeSubscriptionsApiPublic": "Macht alle aktuell aktiven Abos ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
+        "renewingSubscriptionsApiPublic": "Macht die Abos, die sich in einem gewählten Zeitraum erneuern, ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
+        "newDeactivationsApiPublic": "Macht die in einem gewählten Zeitraum gekündigten Abos ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
+        "expectedRevenueApiPublic": "Macht die erwarteten Einnahmen aus Rechnungen eines gewählten Zeitraums ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
+        "revenueApiPublic": "Macht die Einnahmen aus bezahlten Rechnungen eines gewählten Zeitraums ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
+        "loginMinutes": "Wie lange per E-Mail verschickte Login-Links gültig bleiben, in Minuten (60 = 1 Stunde, 1440 = 1 Tag, 10080 = 1 Woche). Danach muss ein neuer Link angefordert werden.",
+        "passwordToken": "Wie lange der E-Mail-Link zum Zurücksetzen des Passworts gültig bleibt, in Minuten (60 = 1 Stunde, 1440 = 1 Tag).",
+        "peerToken": "Wie lange beim Laden von Artikeln auf Partnermedien (Peers) gewartet wird, in Millisekunden (1000 = 1 Sekunde). Danach wird die Anfrage abgebrochen."
+      }
     },
     "automaticMails": {
       "title": "Automatische Mails",
-      "intro": "Hier legen Sie fest, welche E-Mail-Vorlage bei welchem Ereignis automatisch verschickt wird. Wählen Sie pro Ereignis eine Vorlage – oder lassen Sie das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
+      "intro": "Hier legst du fest, welche E-Mail-Vorlage bei welchem Ereignis automatisch verschickt wird. Wähle pro Ereignis eine Vorlage – oder lass das Feld auf «Keine E-Mail senden», wenn nichts verschickt werden soll. Das ⓘ-Symbol erklärt jedes Ereignis.",
       "example": "Beispiel: {{example}}"
     },
     "subscriptionFlow": {
@@ -1844,7 +1961,7 @@
       "invoice_creation": "Rechnungserstellung",
       "deactivation_unpaid": "Deaktivierung wegen unbezahlter Rechnung",
       "custom": "Benutzerdefiniertes Ereignis",
-      "settings": "Abonnement-Ablauf Einstellungen",
+      "settings": "Einstellungen zum Abonnement-Ablauf",
       "edit": "Abonnement-Ablauf bearbeiten",
       "settingsDescription": "Diese Einstellungen gelten nur für diesen Abo-Plan und überschreiben die automatischen Mails.",
       "addNew": "Neuen Ablauf erstellen",
@@ -1852,7 +1969,6 @@
       "days": "Tage",
       "savedChange": "Änderung erfolgreich gespeichert",
       "add": "Hinzufügen",
-      "memberplan": "Mitgliedsplan",
       "paymentMethod": "Zahlungsmethode",
       "periodicity": "Periodizität",
       "autoRenewal": "Automatische Verlängerung?",
@@ -1860,7 +1976,7 @@
         "true": "Ja",
         "false": "Nein"
       },
-      "deleteFlowQuestion": "Das Löschen dieses Ablaufs ist permanent und kann nicht rückgängig gemacht werden. Möchten Sie trotzdem fortfahren?",
+      "deleteFlowQuestion": "Das Löschen dieses Ablaufs ist permanent und kann nicht rückgängig gemacht werden. Möchtest du trotzdem fortfahren?",
       "deletePermanently": "Permanent löschen",
       "dropHere": "Hier ablegen",
       "filters": "Filter",
@@ -1870,11 +1986,16 @@
       "subscriptionEventsDescription": "E-Mails, die sofort verschickt werden, wenn im Abo etwas passiert. Sie sind an kein Datum gebunden.",
       "subscriptionEventsExample": "Jemand schliesst auf der Website ein Abo ab → Bestätigungsmail geht sofort raus.",
       "timeline": "Zeitleiste",
-      "timelineDescription": "E-Mails, die an einem bestimmten Tag rund um das Abo-Ende verschickt werden. Tag 0 ist der Tag der Verlängerung, negative Tage liegen davor, positive danach. Grün heisst «Rechnung wird erstellt» und ist nur an Tag 0 oder davor möglich, Orange heisst «Abo wird wegen unbezahlter Rechnung beendet» und nur an Tag 0 oder danach. Beide Felder müssen immer gesetzt sein. Ziehen Sie ein farbiges Feld auf einen anderen Tag, um es zu verschieben.",
+      "timelineDescription": "E-Mails, die an einem bestimmten Tag rund um das Abo-Ende verschickt werden. Tag 0 ist der Tag der Verlängerung, negative Tage liegen davor, positive danach. Grün heisst «Rechnung wird erstellt» und ist nur an Tag 0 oder davor möglich, Orange heisst «Abo wird wegen unbezahlter Rechnung beendet» und nur an Tag 0 oder danach. Beide Felder müssen immer gesetzt sein. Zieh ein farbiges Feld auf einen anderen Tag, um es zu verschieben.",
       "timelineExample": "Tag -14: Rechnung erstellen und Erinnerung verschicken. Tag 5: Abo beenden, falls die Rechnung offen bleibt.",
-      "actions": "Aktionen",
-      "actionsDescription": "Mit dem grünen Plus fügen Sie der Zeitleiste einen weiteren Tag hinzu. Selber erstellte Abläufe können Sie hier auch löschen.",
-      "actionsExample": "Tag -30 hinzufügen, um früh an die Verlängerung zu erinnern.",
+      "addDay": "Tag hinzufügen",
+      "editDay": "Tag ändern",
+      "addMail": "Mail hinzufügen",
+      "deleteMail": "Mail entfernen",
+      "defaultFlow": "Standard-Ablauf",
+      "defaultFlowDescription": "Gilt für alle Abos, auf die kein anderer Ablauf passt. Änderungen hier gelten auch unter «Automatische Mails».",
+      "flowNumber": "Ablauf {{number}}",
+      "newFlow": "Neuer Ablauf",
       "newDayTitle": "Neuer Tag in der Zeitleiste",
       "newDayHint": "Negative Zahl = vor dem Abo-Ende, positive Zahl = danach.",
       "dayOfRenewal": "Tag der Verlängerung / Abonnement endet",
@@ -1884,34 +2005,34 @@
         "subscribe": {
           "short": "Der Normalfall auf der Website.",
           "description": "Der Normalfall: Eine Person hat auf der Website selber ein Abo abgeschlossen und die Zahlung ausgelöst. Das Abo ist damit sofort aktiv.",
-          "example": "«Danke für Ihr Abo – hier ist Ihre Rechnung.»"
+          "example": "«Danke für dein Abo – hier ist deine Rechnung.»"
         },
         "confirm_subscription": {
           "short": "Für die Rückgewinnung von Abos.",
-          "description": "Wird für die Rückgewinnung verwendet: Sie legen für eine Person ein fertiges Abo an, das sie nur noch bestätigen und bezahlen muss. Aktiv wird das Abo erst, wenn die Rechnung bezahlt ist. Mehr dazu in der Dokumentation unter «Abonnent:innen zurückgewinnen».",
-          "example": "«Ihr Abo ist bereit – jetzt mit einem Klick bestätigen.»"
+          "description": "Wird für die Rückgewinnung verwendet: Du legst für eine Person ein fertiges Abo an, das sie nur noch bestätigen und bezahlen muss. Aktiv wird das Abo erst, wenn die Rechnung bezahlt ist. Mehr dazu in der Dokumentation unter «Abonnent:innen zurückgewinnen».",
+          "example": "«Dein Abo ist bereit – jetzt mit einem Klick bestätigen.»"
         },
         "renewal_success": {
           "short": "Verlängerung hat geklappt.",
           "description": "Geht raus, sobald die Verlängerung eines Abos bezahlt ist – ob automatisch abgebucht, von der Person selbst bezahlt oder von der Redaktion manuell als bezahlt markiert. Bei der ersten Periode eines neuen Abos geht es nicht raus.",
-          "example": "«Ihr Abo läuft weiter – vielen Dank.»"
+          "example": "«Dein Abo läuft weiter – vielen Dank.»"
         },
         "renewal_failed": {
           "short": "Abbuchung hat nicht geklappt.",
           "description": "Geht raus, wenn die automatische Abbuchung bei der Verlängerung nicht klappt – etwa bei abgelaufener Kreditkarte, fehlenden Zahlungsdaten oder wenn die Zahlung eine Bestätigung der Person braucht.",
-          "example": "«Ihre Zahlung hat nicht funktioniert – bitte prüfen Sie Ihr Zahlungsmittel.»"
+          "example": "«Deine Zahlung hat nicht funktioniert – bitte prüfe dein Zahlungsmittel.»"
         },
         "deactivation_by_user": {
           "short": "Kündigung durch Person oder Redaktion.",
-          "description": "Geht raus, wenn ein Abo gekündigt wird – von der Person selber auf der Website oder von Ihnen im Editor. Für die Kündigung wegen unbezahlter Rechnung ist die Zeitleiste zuständig.",
-          "example": "«Schade, dass Sie gehen – Ihr Abo läuft noch bis zum 31.12.»"
+          "description": "Geht raus, wenn ein Abo gekündigt wird – von der Person selber auf der Website oder von dir im Editor. Für die Kündigung wegen unbezahlter Rechnung ist die Zeitleiste zuständig.",
+          "example": "«Schade, dass du gehst – dein Abo läuft noch bis zum 31.12.»"
         }
       }
     },
     "subscriptionList": {
       "filter": {
         "activeAt": "Aktiv am",
-        "deactivationReason": "Grund Deaktivierung",
+        "deactivationReason": "Deaktivierungsgrund",
         "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
         "reasonNone": "Kein Grund",
         "reasonUserSelfDeactivated": "Durch Benutzer:in",
@@ -1924,41 +2045,44 @@
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Gelöschte:r Benutzer:in",
-        "email": "Email",
-        "memberPlan": "Member-Plan",
+        "email": "E-Mail",
+        "memberPlan": "Abo-Plan",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
-        "newSubscription": "Neue Subscription",
-        "subscription": "Subscription"
+        "newSubscription": "Neues Abo",
+        "subscription": "Abo"
       },
       "panels": {
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
-        "deleteSubscription": "Subscription löschen?",
+        "deleteSubscription": "Abo löschen?",
         "name": "Name",
         "unknown": "Unbekannt"
       }
     },
     "tags": {
       "overview": {
-        "areYouSure": "Bist Du sicher?",
-        "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
+        "areYouSure": "Bist du sicher?",
+        "areYouSureBody": "Der Tag «{{ tag }}» wird endgültig gelöscht. Dies kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Tag löschen",
         "color": "Farbe",
         "createTag": "Neuer Tag",
-        "editTag": "{{tag}} Bearbeiten",
+        "editTag": "{{tag}} bearbeiten",
         "placeholder": "Name des Tags",
         "title": "Tags",
         "name": "Name",
         "description": "Beschreibung",
-        "markAsMain": "Als Haupt-Tag verwenden"
+        "markAsMain": "Als Haupt-Tag verwenden",
+        "colorInfo": "Manche Website-Designs heben den Tag in dieser Farbe hervor, z. B. als Hintergrund des Tag-Labels.",
+        "descriptionInfo": "Erscheint oben auf der Tag-Seite deiner Website, die alle Inhalte mit diesem Tag auflistet. Auch Suchmaschinen verwenden den Text.",
+        "markAsMainInfo": "Haupt-Tags stehen für ein Thema. Manche Website-Designs zeigen sie prominent an, z. B. als Themen-Label über einem Artikel."
       }
     },
     "tokenList": {
       "overview": {
         "generateToken": "Token generieren",
-        "loading": "laden...",
-        "tokens": "Tokens"
+        "tokens": "Tokens",
+        "tokensInfo": "Tokens geben anderen Programmen, z.B. Peering-Partnern oder Import-Skripten, Zugriff auf die We.Publish-API. Löschst du einen Token, verliert das Programm sofort den Zugriff."
       },
       "panels": {
         "cancel": "Abbrechen",
@@ -1975,12 +2099,12 @@
     },
     "untitled": "Kein Titel",
     "userConsents": {
-      "consentName": "Konsensname",
-      "consentSlug": "Konsens-Slug",
-      "create": "Neuer User-Konsens erstellen",
-      "title": "User-Konsens",
-      "titleCreate": "User-Konsens erstellen",
-      "titleEdit": "User-Konsens bearbeiten",
+      "consentName": "Name der Einwilligung",
+      "consentSlug": "Slug der Einwilligung",
+      "create": "Neue Benutzereinwilligung erstellen",
+      "title": "Benutzereinwilligungen",
+      "titleCreate": "Benutzereinwilligung erstellen",
+      "titleEdit": "Benutzereinwilligung bearbeiten",
       "user": "Benutzer",
       "value": "Wert"
     },
@@ -1992,10 +2116,10 @@
       "confirm": "Bestätigen",
       "country": "Land",
       "createNewUser": "Neue:n Benutzer:in erstellen",
-      "deleteUser": "User löschen?",
-      "email": "Email",
+      "deleteUser": "Benutzer:in löschen?",
+      "email": "E-Mail",
       "errorCreatingUser": "Benutzer:in konnte nicht erstellt werden. Unerwarteter Fehler: {{error}}",
-      "errorOnUpdate": "Fehler beim Aktualisieren des Users: {{error}}",
+      "errorOnUpdate": "Fehler beim Aktualisieren der Benutzerdaten: {{error}}",
       "firstName": "Vorname",
       "flair": "Funktionsbeschreibung",
       "foreignKeySubscription": "Benutzer kann nicht gelöscht werden. Dieser Benutzer ist mit einem bestehenden Abonnement verknüpft.",
@@ -2008,7 +2132,7 @@
       "totpDisabled": "Zwei-Faktor-Authentifizierung ist noch nicht eingerichtet. Der Benutzer wird beim nächsten Editor-Login aufgefordert, diese einzurichten.",
       "totpExemptInfo": "Dieser Benutzer ist von der Zwei-Faktor-Authentifizierungspflicht befreit.",
       "totpExemptLabel": "Von 2FA-Pflicht befreien",
-      "totpExemptWarning": "⚠️ SICHERHEITSWARNUNG ⚠️\n\nSie sind dabei, die Zwei-Faktor-Authentifizierungspflicht für diesen Benutzer zu DEAKTIVIEREN!\n\nDies reduziert die Sicherheit dieses Kontos erheblich. Der Benutzer kann sich nur mit einem Passwort im Editor anmelden, ohne einen zweiten Faktor.\n\nDies sollte nur in Ausnahmefällen verwendet werden.\n\nSind Sie sicher, dass Sie fortfahren möchten?",
+      "totpExemptWarning": "⚠️ SICHERHEITSWARNUNG ⚠️\n\nDu bist dabei, die Zwei-Faktor-Authentifizierungspflicht für diesen Benutzer zu DEAKTIVIEREN!\n\nDies reduziert die Sicherheit dieses Kontos erheblich. Der Benutzer kann sich nur mit einem Passwort im Editor anmelden, ohne einen zweiten Faktor.\n\nDies sollte nur in Ausnahmefällen verwendet werden.\n\nBist du sicher, dass du fortfahren möchtest?",
       "properties": "Eigenschaften",
       "resetPassword": "Passwort zurücksetzen",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
@@ -2023,16 +2147,20 @@
       "successfullyCreatedUser": "Benutzer:in erstellt",
       "successfullyUpdatedUser": "Benutzerdaten aktualisiert",
       "Unknown": "Unbekannt",
-      "userDataTitle": "Userdaten",
-      "userRoles": "Userrollen",
+      "userDataTitle": "Benutzerdaten",
+      "userRoles": "Benutzerrollen",
       "zipCode": "PLZ",
       "birthday": "Geburtstag",
       "note": "Notiz",
-      "noteHelpText": "Nicht für den Nutzer sichtbar."
+      "noteHelpText": "Nicht für den Nutzer sichtbar.",
+      "sendWebsiteLoginFailureMessage": "Der Login-Link konnte nicht versendet werden: {{error}}",
+      "activeInfo": "Inaktive Benutzer:innen können sich nicht mehr anmelden – weder auf der Website noch im Editor.",
+      "flairInfo": "Kurze Beschreibung der Funktion, z.B. «Chefredaktorin». Wird auf der Website bei Kommentaren neben dem Namen angezeigt.",
+      "propertiesInfo": "Zusätzliche Daten als Schlüssel und Wert, z.B. aus Importen. Öffentliche Eigenschaften kann auch die Website lesen, private nur der Editor.",
+      "userRolesInfo": "Rollen legen die Berechtigungen dieser Person fest, z.B. was sie im Editor sehen und tun darf."
     },
     "userList": {
       "overview": {
-        "action": "Aktion",
         "amountOfSubscriptions": "{{amount}} Abos",
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
@@ -2054,7 +2182,7 @@
         "resetPassword": "Passwort zurücksetzen",
         "resetTotp": "2FA zurücksetzen",
         "resetTotpTitle": "Zwei-Faktor-Authentifizierung zurücksetzen",
-        "resetTotpConfirmation": "Möchten Sie die Zwei-Faktor-Authentifizierung für {{name}} wirklich zurücksetzen? Der Benutzer muss 2FA beim nächsten Login erneut einrichten.",
+        "resetTotpConfirmation": "Möchtest du die Zwei-Faktor-Authentifizierung für {{name}} wirklich zurücksetzen? Der Benutzer muss 2FA beim nächsten Login erneut einrichten.",
         "totpResetSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich zurückgesetzt.",
         "totpResetError": "Fehler beim Zurücksetzen der Zwei-Faktor-Authentifizierung.",
         "subscriptions": "Abos",
@@ -2064,20 +2192,20 @@
     },
     "userRoles": {
       "overview": {
-        "action": "Aktion",
         "description": "Beschreibung",
         "name": "Name",
-        "newUserRole": "Neue Userrolle",
-        "userRoles": "Userrollen"
+        "newUserRole": "Neue Benutzerrolle",
+        "userRoles": "Benutzerrollen",
+        "untitled": "Ohne Namen"
       },
       "panels": {
         "cancel": "Abbrechen",
         "close": "Schliessen",
         "confirm": "Bestätigen",
-        "createUserRole": "Userrolle kreieren",
-        "deleteUserRole": "Userrolle löschen?",
+        "createUserRole": "Benutzerrolle erstellen",
+        "deleteUserRole": "Benutzerrolle löschen?",
         "description": "Beschreibung",
-        "editUserRole": "Userrolle bearbeiten",
+        "editUserRole": "Benutzerrolle bearbeiten",
         "name": "Name",
         "permissions": "Berechtigungen",
         "systemRole": "ist eine Systemrolle und kann nicht bearbeitet werden",
@@ -2092,22 +2220,22 @@
         "action": {
           "activated": "Deaktivieren"
         },
-        "date": "Deaktivierung",
-        "help": "Deaktivierte Abonnements können bis zum \"bezahlt bis\"-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert auch wenn die automatische Erneuerung gewählt ist. Einmal deaktiviert, kann das Abo nicht reaktiviert werden.",
+        "date": "Deaktivierungsdatum",
+        "help": "Deaktivierte Abonnements können bis zum «Bezahlt bis»-Datum genutzt werden. Sie werden aber nicht automatisch verlängert, auch wenn die automatische Erneuerung gewählt ist. Einmal deaktiviert, kann das Abo nicht reaktiviert werden.",
         "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Grund: {{reason}}. Allenfalls kann ein neues Abo gelöst werden.",
         "cancellation": "Stornierungsdatum",
         "modalMessage": {
-          "activated": "Willst du das Abonnement von \"{{userName}}\" deaktiviern mit der Emailadresse \"{{userEmail}}\"?"
+          "activated": "Willst du das Abonnement von «{{userName}}» mit der E-Mail-Adresse «{{userEmail}}» deaktivieren?"
         },
         "modalTitle": {
           "activated": "Abonnement deaktivieren?"
         },
-        "reason": "Deaktivierungs Grund",
-        "reasonInvoiceNotPaid": "User hat Rechnung nicht bezahlt",
+        "reason": "Deaktivierungsgrund",
+        "reasonInvoiceNotPaid": "Benutzer:in hat Rechnungen nicht bezahlt",
         "reasonUserReplacedSubscription": "Ersetzt durch anderes Abo",
         "reasonChargeback": "Rückbuchung",
         "reasonNone": "Keiner",
-        "reasonUserSelfDeactivated": "User will deaktivieren",
+        "reasonUserSelfDeactivated": "Benutzer:in will deaktivieren",
         "title": {
           "activated": "Abonnement deaktivieren"
         },
@@ -2121,13 +2249,21 @@
       "paidUntil": "Bezahlt bis",
       "paymentMethod": "Zahlungsmethode",
       "renewNow": "Jetzt verlängern",
-      "selectMemberPlan": "Memberplan",
+      "selectMemberPlan": "Abo-Plan",
       "selectUser": "Benutzer:in wählen",
       "startsAt": "Abonnements-Beginn",
       "uniqueSubscription": "Unique-Abo",
-      "uniqueSubscriptionHelpText": "Ein Benutzer kann nur ein Abo pro Unique-Abo-Plan lösen. Die manuelle Verlängerung durch den Benutzer ist nicht möglich. Eine automatische Verlängerung ist möglich."
+      "uniqueSubscriptionHelpText": "Ein Benutzer kann nur ein Abo pro Unique-Abo-Plan lösen. Die manuelle Verlängerung durch den Benutzer ist nicht möglich. Eine automatische Verlängerung ist möglich.",
+      "paidUntilInfo": "Wird automatisch gesetzt, sobald eine Rechnung bezahlt ist. Bis zu diesem Datum ist das Abo bezahlt."
     },
     "userSubscriptionList": {
+      "addSubscription": "Abonnement hinzufügen",
+      "subscriptionNumber": "Nr. {{subscriptionId}}",
+      "periodTitle": "Periode {{date}}",
+      "status": {
+        "active": "Aktiv",
+        "expired": "Abgelaufen"
+      },
       "aboDetails": "Abo-Details",
       "deactivationReason": {
         "InvoiceNotPaid": "Rechnung nicht bezahlt",
@@ -2144,7 +2280,7 @@
       "confirmed": "bestätigt",
       "unconfirmed": "unbestätigt",
       "monthlyAmount": "Monatlicher Betrag: {{monthlyAmount}} {{currency}}",
-      "noAutoRenew": "Subscription läuft aus, keine automatische Erneuerung",
+      "noAutoRenew": "Abo läuft aus, keine automatische Erneuerung",
       "noDeactivation": "Keine Deaktivierung.",
       "paidUntil": "Bezahlt bis am {{date}}",
       "paymentPeriodicity": "Zahlungsperiodizität: {{paymentPeriodicity}}",
@@ -2153,10 +2289,9 @@
       "periodEndsAt": "bis {{date}}",
       "periods": "Perioden",
       "periodStartsAt": "Gültig von {{date}}",
-      "subscriptionCreatedAt": "Erstellt {{date}}",
-      "subscriptionIsAutoRenewed": "Subscription wird automatisch erneuert",
+      "subscriptionCreatedAt": "Erstellt am {{date}}",
+      "subscriptionIsAutoRenewed": "Abo wird automatisch erneuert",
       "subscriptionStartsAt": "Abo startet am {{date}}",
-      "subscriptionTitle": "{{memberPlanName}} / Nr. {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
     },
     "blockTemplates": {
@@ -2165,7 +2300,6 @@
         "newBlockTemplate": "Neue Blockvorlage",
         "name": "Name",
         "noName": "Kein Name",
-        "delete": "Löschen",
         "info": "Blockvorlagen werden einmal erstellt und können dann in beliebig vielen Artikeln und Seiten verwendet werden. Wird eine Vorlage geändert, zeigen alle Artikel und Seiten, die sie verwenden, sofort den neuen Inhalt."
       },
       "edit": {
@@ -2177,9 +2311,10 @@
         "delete": "Löschen",
         "saved": "Gespeichert",
         "new": "Neu",
-        "editing": "Bearbeiten",
+        "editing": "In Bearbeitung",
         "saveConfirmMessage": "Beim Speichern wird der Inhalt dieser Vorlage sofort in allen Artikeln und Seiten aktualisiert, die sie verwenden, auch in bereits veröffentlichten.",
-        "saveConfirmTitle": "Vorlage speichern?"
+        "saveConfirmTitle": "Vorlage speichern?",
+        "created": "Blockvorlage erstellt"
       }
     },
     "yes": "Ja",
@@ -2195,7 +2330,7 @@
       "trialMemberplanAlert": "Dieser Abo-Plan ist für Probeabos konfiguriert.",
       "forceAutoRenewNotPossible": "Automatische Erneuerung ist nicht möglich, weil der Abo-Plan nicht verlängerbar ist.",
       "trialSubscriptionNotPossible": "Der Abo-Plan muss verlängerbar bleiben, weil in einer Zahlungseinstellung eine automatische Verlängerung eingestellt ist. Du kannst das natürlich ändern.",
-      "migratePMTitle": "Migraton der Abos zu Ziel-Zahlungsmethode",
+      "migratePMTitle": "Migration der Abos zu Ziel-Zahlungsmethode",
       "migratePMHelptext": "Migriere die Abos dieses Planes zu einer neuen Zahlungsmethode. Abos, die noch automatisch abgebucht werden, werden nicht migriert. Die Migration findet erst dann statt, wenn ein User selbst tätig wird und in seinem Profil etwa eine offene Rechnung bezahlen will oder ein Abo frühzeitig verlängert.",
       "amountPerMonthTarget": "Ziel-Betrag / Monat",
       "amountPerMonthTargetHelpText": "Der monatliche Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss höher als der Minimalbetrag sein und definiert typischerweise die Voreinstellung im Zahlungsformular.",
@@ -2205,9 +2340,9 @@
       "periodicityPricingNoPeriodicities": "Aktiviere zuerst Zahlungsintervalle in den Zahlungseinstellungen, um intervall-spezifische Preise zu konfigurieren.",
       "periodicityPricingRequired": "Mindestens ein Zahlungsintervall benötigt einen Minimalbetrag.",
       "periodicityPricingLabel": "Marketing-Label",
-      "periodicityPricingLabelHelpText": "Optionaler Hinweis, der bei diesem Zahlungsintervall auf der Abo-Seite angezeigt wird, z.B. \u00ab2 Monate geschenkt\u00bb.",
+      "periodicityPricingLabelHelpText": "Optionaler Hinweis, der bei diesem Zahlungsintervall auf der Abo-Seite angezeigt wird, z.B. «2 Monate geschenkt».",
       "defaultPaymentPeriodicity": "Standard-Zahlungsintervall",
-      "defaultPaymentPeriodicityHelpText": "Dieses Zahlungsintervall ist auf der Abo-Seite vorausgew\u00e4hlt. Ohne Auswahl gilt das erste konfigurierte Intervall.",
+      "defaultPaymentPeriodicityHelpText": "Dieses Zahlungsintervall ist auf der Abo-Seite vorausgewählt. Ohne Auswahl gilt das erste konfigurierte Intervall.",
       "periodicityPricingDelta": "Rabatt gegenüber Monatspreis: {{delta}}",
       "periodicityPricingCustom": "Eigene Preise",
       "periodicityPricingDerived": "Aus Monatspreis",
@@ -2225,17 +2360,19 @@
       "productType": "Produkttyp",
       "productTypeHelpText": "Wähle, ob der Plan als Abonnement oder Spende angeboten wird.",
       "productTypeSubscription": "Abonnement",
-      "productTypeDonation": "Spende"
+      "productTypeDonation": "Spende",
+      "configureTrialHelp": "Stellt den Plan als Probeabo ein: nicht verlängerbar und pro Person nur einmal lösbar. Du kannst beide Einstellungen danach noch anpassen.",
+      "periodicityPricingCustomHelp": "Aus: Die Preise werden aus dem Monatspreis hochgerechnet. Ein: Du legst für dieses Zahlungsintervall eigene Preise fest, z. B. für einen Jahresrabatt."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Erweiterte Einstellungen",
       "trialSubscriptionConfigured": "Dieses Abo ist als Probeabo konfiguriert.",
-      "nonExtendableNotCompatibleWithAutoRenew": "Ein automatisch erneuerndes Abo muss verlängerbar sein. Ändere einen dieser Parameter.",
+      "nonExtendableNotCompatibleWithAutoRenew": "Ein sich automatisch erneuerndes Abo muss verlängerbar sein. Ändere einen dieser Parameter.",
       "configureAsTrialSubscription": "Als Probeabo konfigurieren",
       "subscriptionTrialNotPossible": "Das Abo kann nicht als Probeabo konfiguriert werden. Ändere hierzu die Einstellungen des Abo-Plans.",
       "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst.",
       "extendModalTitle": "Abo frühzeitig verlängern?",
-      "extendModalBody": "Das Abo wird frühzeitig um die nächst mögliche Periode verlängert. Es wird eine Rechnung erstellt."
+      "extendModalBody": "Das Abo wird frühzeitig um die nächstmögliche Periode verlängert. Es wird eine Rechnung erstellt."
     },
     "subscriptionListFilter": {
       "extendable": "Verlängerbar"
@@ -2245,11 +2382,12 @@
         "article": "Artikel",
         "page": "Seite",
         "event": "Event",
-        "custom": "Benutzerdefinierte"
+        "custom": "Benutzerdefiniert"
       },
       "teaserSort": {
         "HotAndTrending": "Beliebtheit",
-        "PublishedAt": "Publikationsdatum"
+        "PublishedAt": "Publikationsdatum",
+        "UpdatedAt": "Zuletzt aktualisiert"
       }
     },
     "authorEditPanel": {
@@ -2264,7 +2402,10 @@
     "trackingPixels": {
       "noPixelInfoHeader": "Keine Tracking-Integration vorhanden",
       "noPixelInfoDescription": "Dies ist etwa der Fall, wenn kein Tracking konfiguriert ist oder bei alten Artikeln.",
-      "errorHeader": "Fehler"
+      "errorHeader": "Fehler",
+      "providerId": "Anbieter-ID:",
+      "trackingId": "Tracking-ID:",
+      "trackingURI": "Tracking-URI:"
     },
     "audienceDashboard": {
       "title": "Audience Dashboard"
@@ -2273,8 +2414,8 @@
       "list": {
         "title": "Crowdfundings",
         "name": "Name",
-        "delete": "Löschen",
-        "createNew": "Erstellen"
+        "createNew": "Erstellen",
+        "unnamed": "Crowdfunding ohne Namen"
       },
       "delete": {
         "title": "Unwiderruflich löschen?",
@@ -2289,26 +2430,31 @@
       },
       "form": {
         "name": "Bezeichnung des Crowdfundings (wird nicht publiziert)",
-        "memberPlans": "Abo Pläne",
+        "memberPlans": "Abo-Pläne",
         "filter": "Einnahmen filtern",
-        "additionalRevenue": "Externe Einnamen (z.B. via direkte Banküberweisung)",
+        "additionalRevenue": "Externe Einnahmen (z.B. via direkte Banküberweisung)",
         "additionalSubscriptions": "Externe Abos (z.B. via direkte Banküberweisung)",
-        "selectMemberPlans": "Abo Pläne wählen",
+        "selectMemberPlans": "Abo-Pläne wählen",
         "countSubscriptionsFrom": "Nur Abos einrechnen, die bezahlt wurden ab Datum",
         "countSubscriptionsUntil": "Nur Abos einrechnen, die bezahlt wurden bis Datum",
         "revenue": "Bereits CHF {{revenue}} finanziert",
-        "subscriptions": "Bereits {{subscriptions}} abonnieren",
+        "subscriptions": "Bereits {{subscriptions}} abonniert",
         "goals": "Ziele",
         "crowdfunding": "Crowdfunding",
         "goalType": "Zieltyp",
         "goalType_Revenue": "Einnahmen",
-        "goalType_Subscription": "Anzahl Abos"
+        "goalType_Subscription": "Anzahl Abos",
+        "additionalRevenueInfo": "Geld, das ausserhalb von We.Publish eingenommen wurde, z.B. per direkter Banküberweisung. Es wird zu den Einnahmen im Fortschrittsbalken dazugezählt.",
+        "additionalSubscriptionsInfo": "Abos, die ausserhalb von We.Publish verkauft wurden, z.B. per direkter Banküberweisung bezahlt. Sie werden zur Anzahl im Fortschrittsbalken dazugezählt.",
+        "memberPlansInfo": "Nur Abos der gewählten Abo-Pläne zählen für das Crowdfunding. Mit den Daten darunter kannst du den Zeitraum weiter eingrenzen.",
+        "goalTypeInfo": "Wähle, ob die Ziele in Geld (Einnahmen) oder in Anzahl Abos gemessen werden.",
+        "goalsInfo": "Du kannst mehrere Ziele festlegen, z.B. Etappenziele. Der Fortschrittsbalken zeigt immer das nächste noch nicht erreichte Ziel."
       },
       "goalsForm": {
         "title": "Titel",
         "description": "Beschreibung",
         "amount": "Zielbetrag",
-        "amountSubscriptions": "Ziel Anzahl Abos",
+        "amountSubscriptions": "Zielanzahl Abos",
         "remove": "Entfernen",
         "add": "Ziel hinzufügen"
       }
@@ -2324,7 +2470,7 @@
       "daily": "Täglich",
       "monthly": "Monatlich",
       "rangePickerPlaceholder": "von - bis",
-      "filterSubscriptionPlans": "Nach Abo Pläne filtern",
+      "filterSubscriptionPlans": "Nach Abo-Plänen filtern",
       "chart": "Diagramm",
       "table": "Tabelle",
       "panelHeader": "Auswahl der Daten",
@@ -2338,15 +2484,23 @@
       "rangeNextYear": "Nächstes Jahr"
     },
     "audience": {
+      "chart": {
+        "noActivityDay": "Keine Abo-Bewegungen an diesem Tag",
+        "noActivityMonth": "Keine Abo-Bewegungen in diesem Monat",
+        "flowsTitle": "Zu- und Abgänge",
+        "net": "Saldo",
+        "since": "seit {{date}}",
+        "flowsInfo": "Jeder Balken zeigt, wie viele Abos pro Tag oder Monat dazugekommen (über der Linie) oder weggefallen (unter der Linie) sind. Fahre über einen Balken für Details und den Saldo."
+      },
       "legend": {
         "info": {
-          "totalActiveSubscriptionCount": "Abos, die am Stichtag aktiv und bezahlt waren.",
+          "totalActiveSubscriptionCount": "Abos, die am Stichtag aktiv und bezahlt waren oder die künftig bezahlt werden und dann möglicherweise noch aktiv sind.",
           "overdueSubscriptionCount": "Erneuerte Abos, deren Bezahlung fällig und offen ist. Nicht eingerechnet sind erstmalig gelöste Abos, die nicht bezahlt wurden.",
           "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert und bezahlt wurden.",
           "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden.",
           "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
           "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos).",
-          "predictedSubscriptionRenewalCount": "Anzahl Abos, die am Ende ihrer Laufzeit zur Erneuerung anstehen.\n Erstmalige Abo-Erneuerungen, sowie...\n Abo-Erneuerungen Stammkunden: Abos, die in der Vergangenheit bereits ein oder mehrmals erneuert worden sind\n Abo-Erneuerungen werden beginnend ab dem gewählten Start-Datum (oder ab dem aktuellen Datum, falls der gewählte Zeitraum in der Vergangenheit beginnt) dargestellt .\n Als anstehende Abo-Erneuerungen werden die zurzeit Bezahlten mit aktivierter automatischer Verlängerung gezählt.",
+          "predictedSubscriptionRenewalCount": "Anzahl Abos, die am Ende ihrer Laufzeit zur Erneuerung anstehen.\n Erstmalige Abo-Erneuerungen sowie...\n Abo-Erneuerungen Stammkunden: Abos, die in der Vergangenheit bereits ein- oder mehrmals erneuert worden sind\n Abo-Erneuerungen werden beginnend ab dem gewählten Start-Datum (oder ab dem aktuellen Datum, falls der gewählte Zeitraum in der Vergangenheit beginnt) dargestellt.\n Als anstehende Abo-Erneuerungen werden die zurzeit bezahlten Abos mit aktivierter automatischer Verlängerung gezählt.",
           "endingSubscriptionCount": "Abos, die am Ende ihrer Laufzeit auslaufen werden, d.h. ohne Abos mit automatischer Verlängerung."
         },
         "totalActiveSubscriptionCount": "Total aktive & bezahlte Abos",
@@ -2391,12 +2545,12 @@
       "email": "E-Mail",
       "goToUser": "Link zum Benutzer",
       "close": "Schliessen",
-      "userBtn": "Link zum Benutzer"
+      "userBtn": "Link zum Benutzer",
+      "noDateAvailable": "Kein Datum verfügbar"
     },
     "audienceTable": {
       "header": {
-        "date": "Datum",
-        "actions": "Aktionen"
+        "date": "Datum"
       },
       "showUsers": "Details anzeigen",
       "byDate": "Per",
@@ -2404,8 +2558,8 @@
       "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
       "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden.",
       "predictedSubscriptionRenewalCountPerDay": {
-        "lowProbability": "erstmalige Abo-Erneuerungen",
-        "highProbability": "Abo-Erneuerungen Stammkunden"
+        "highProbabilityInfo": "Bezahlte Abos mit automatischer Verlängerung, die bereits ein- oder mehrmals erneuert wurden und am Ende ihrer Laufzeit wieder zur Erneuerung anstehen.",
+        "lowProbabilityInfo": "Bezahlte Abos mit automatischer Verlängerung, die am Ende ihrer ersten Laufzeit zum ersten Mal zur Erneuerung anstehen."
       }
     },
     "audienceTableExport": {
@@ -2422,11 +2576,11 @@
       "form": {
         "editTitle": "Paywall bearbeiten",
         "createTitle": "Paywall erstellen",
-        "name": "Name der Paywall (Nicht sichtbar für Benutzer:innen)",
-        "description": "Paywall-Text (Sichtbar für Benutzer:innen)",
-        "circumventDescription": "Paywall-Text wenn der Artikel-Content nicht versteckt ist (Sichtbar für Benutzer:innen)",
+        "name": "Name der Paywall (nicht sichtbar für Benutzer:innen)",
+        "description": "Paywall-Text (sichtbar für Benutzer:innen)",
+        "circumventDescription": "Paywall-Text, wenn der Artikelinhalt nicht versteckt ist (sichtbar für Benutzer:innen)",
         "active": "Aktiv",
-        "activeHelpText": "Erlaubt, die Paywall für alle Artikel rasch zu dekativieren",
+        "activeHelpText": "Erlaubt, die Paywall für alle Artikel rasch zu deaktivieren",
         "alternativeSubscribeUrl": "Alternative URL zur Abo-Seite",
         "alternativeSubscribeUrlHelpText": "Kann in Kombination mit einem Abonnieren-Block auf einer Seite verwendet werden. Wenn leer gelassen, wird die Standardseite verwendet.",
         "anyMemberPlan": "Die Paywall entfällt für alle Abos",
@@ -2434,19 +2588,22 @@
         "bypassToken": "Bypass-Token",
         "memberPlans": "Die Paywall entfällt nur mit spezifischen Abos",
         "newBypassToken": "Neuen Bypass-Token erstellen",
-        "addBypass": "hinzufügen",
+        "addBypass": "Hinzufügen",
         "qrCodeTitle": "QR-Code für Bypass-Token",
         "downloadSvg": "SVG herunterladen",
-        "baseUrl": "Website-Url (Baseurl). Z.B. https://wepublish.ch",
+        "baseUrl": "Website-URL (Baseurl). Z.B. https://wepublish.ch",
         "upgrade": "Texte, wenn die Paywall ein Upgrade unterstützt und zulässt",
         "display": "Anzeigeoptionen",
         "hideContentAfter": "Inhalt nach X Blöcken ausblenden",
-        "fadeout": "Ausgeblendete Blöcke ausblenden mit Überblendung",
-        "fadeoutHelpText": "Die Überblendung ermöglicht eine Vorschau auf den restlichen Inhalt."
+        "fadeout": "Überblendung für ausgeblendete Blöcke",
+        "fadeoutHelpText": "Die Überblendung ermöglicht eine Vorschau auf den restlichen Inhalt.",
+        "bypassesInfo": "Geheime Codes, mit denen man Artikel hinter dieser Paywall ohne Abo lesen kann, z.B. für eine Print- oder Event-Aktion. Teile den Link oder QR-Code: Wer ihn öffnet, hat für einige Stunden freien Zugang.",
+        "showQrCode": "QR-Code anzeigen",
+        "hideContentAfterInfo": "Wie viele Blöcke des Artikels (z.B. Titel, Lead, Absätze) Leser:innen ohne Zugang noch sehen, bevor der Rest ausgeblendet wird. Standard: 3."
       },
       "overview": {
         "areYouSure": "Bist du sicher?",
-        "areYouSureBody": "Die Paywall „{{ paywall }}“ wird dauerhaft gelöscht und kann nicht rückgängig gemacht werden.",
+        "areYouSureBody": "Die Paywall «{{ paywall }}» wird dauerhaft gelöscht und kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Paywall löschen",
         "createPaywall": "Neue Paywall",
         "title": "Paywalls",
@@ -2460,12 +2617,15 @@
       "navbar": "Rabattcodes",
       "form": {
         "createTitle": "Rabattcode erstellen",
-        "editTitle": "Rabattcode \"{{ discountCode }}\" bearbeiten",
+        "editTitle": "Rabattcode «{{ discountCode }}» bearbeiten",
         "code": "Code",
         "discountPercent": "Rabatt (%)",
         "validFrom": "Gültig ab",
         "validTo": "Gültig bis",
-        "memberPlan": "Abo-Plan"
+        "memberPlan": "Abo-Plan",
+        "codeInfo": "Diesen Code geben Leser:innen beim Abschliessen eines Abos ein, um den Rabatt zu erhalten.",
+        "discountPercentInfo": "Prozentsatz, der beim Einlösen vom Preis der ersten Zahlungsperiode abgezogen wird.",
+        "memberPlanInfo": "Der Code gilt nur für diesen Abo-Plan."
       },
       "overview": {
         "title": "Rabattcodes",
@@ -2478,13 +2638,14 @@
         "validFrom": "Gültig ab",
         "validTo": "Gültig bis",
         "areYouSure": "Bist du sicher?",
-        "areYouSureBody": "Der Rabattcode \"{{ discountCode }}\" wird unwiderruflich gelöscht.",
+        "areYouSureBody": "Der Rabattcode «{{ discountCode }}» wird unwiderruflich gelöscht.",
         "areYouSureConfirmation": "Rabattcode löschen",
         "usage": "Verwendet",
-        "usageValue": "{{total}} ({{paid}} bezahlt)"
+        "usageValue": "{{total}} ({{paid}} bezahlt)",
+        "validInfo": "✅ heisst, der Code kann heute eingelöst werden, weil heute zwischen «Gültig ab» und «Gültig bis» liegt."
       },
       "usage": {
-        "title": "Verwendungen von \"{{ discountCode }}\"",
+        "title": "Verwendungen von «{{ discountCode }}»",
         "summary": "{{total}} Einlösungen, davon {{paid}} bezahlt",
         "back": "Zurück zur Übersicht",
         "date": "Datum",
@@ -2495,20 +2656,24 @@
         "open": "Offen",
         "canceled": "Storniert",
         "subscription": "Abo",
-        "showSubscription": "Abo öffnen"
+        "showSubscription": "Abo öffnen",
+        "amountInfo": "Rechnungsbetrag nach Abzug des Rabatts."
       }
     },
     "goodie": {
       "navbar": "Goodies",
       "form": {
         "createTitle": "Goodie erstellen",
-        "editTitle": "Goodie \"{{ goodie }}\" bearbeiten",
+        "editTitle": "Goodie «{{ goodie }}» bearbeiten",
         "name": "Name",
         "description": "Beschreibung",
         "stock": "Lagerbestand",
         "active": "Aktiv",
         "image": "Bild",
-        "memberPlans": "Abo-Pläne"
+        "memberPlans": "Abo-Pläne",
+        "activeInfo": "Nur aktive Goodies werden Leser:innen beim Abschliessen eines Abos angeboten.",
+        "stockInfo": "Gesamtzahl Stück, die du vergeben kannst. Sind alle vergeben, wird das Goodie nicht mehr angeboten. Leer lassen für eine unbegrenzte Anzahl.",
+        "memberPlansInfo": "Das Goodie wird nur bei diesen Abo-Plänen angeboten."
       },
       "overview": {
         "title": "Goodies",
@@ -2521,8 +2686,9 @@
         "createdAt": "Erstellt am",
         "unlimited": "∞",
         "areYouSure": "Bist du sicher?",
-        "areYouSureBody": "Das Goodie \"{{ goodie }}\" wird unwiderruflich gelöscht.",
-        "areYouSureConfirmation": "Goodie löschen"
+        "areYouSureBody": "Das Goodie «{{ goodie }}» wird unwiderruflich gelöscht.",
+        "areYouSureConfirmation": "Goodie löschen",
+        "availableStockInfo": "So viele Stück können noch vergeben werden: Lagerbestand minus die Goodies, die Abonnent:innen bereits gewählt haben. ∞ bedeutet unbegrenzt."
       }
     },
     "paymentMethodEditPanel": {
@@ -2541,13 +2707,13 @@
     "search": "Suche",
     "integrations": {
       "whatAreIntegrations": "Was sind Integrationen?",
-      "infoText": " Integrationen sind in We.Publish eingebaute Schnittstellen von Drittanbietern. Diese werden etwa verwendet, um Mails zu versenden oder Zahlungen sicher abzuwickeln.",
+      "infoText": "Integrationen sind in We.Publish eingebaute Schnittstellen von Drittanbietern. Diese werden etwa verwendet, um Mails zu versenden oder Zahlungen sicher abzuwickeln.",
       "title": "Integrationen",
       "ai": "AI",
       "challengeProvider": "Challenge Provider",
       "paymentProvider": "Zahlungsanbieter",
-      "trackingPixel": "Tracking Pixel",
-      "mailProvider": "E-Mail Provider",
+      "trackingPixel": "Tracking-Pixel",
+      "mailProvider": "E-Mail-Provider",
       "back": "Zurück zu Integrationen",
       "unknown": "Unbekannte Integration",
       "notFound": "Integration nicht gefunden",
@@ -2558,38 +2724,63 @@
       "lastLoaded": "Zuletzt geladen",
       "aiSettings": {
         "apiKey": "API Key",
-        "systemPrompt": "System Prompt"
+        "systemPrompt": "System Prompt",
+        "apiKeyInfo": "Der Schlüssel deines v0-Kontos. Du erstellst ihn in den Kontoeinstellungen von v0 unter «API Keys». Ohne Schlüssel funktioniert die KI-Hilfe in HTML-Blöcken nicht.",
+        "systemPromptInfo": "Allgemeine Anweisungen, die die KI bei jeder Anfrage mitbekommt, z. B. eure Farben, Schriften oder Stilregeln. Leer lassen, wenn du keine brauchst."
       },
       "challengeSettings": {
         "secret": "Geheimnis (Secret)",
         "siteKey": "Webseiten-Schlüssel (Site Key)",
-        "type": "Typ"
+        "type": "Typ",
+        "typeInfo": "Welcher Dienst die Prüfung übernimmt: Cloudflare Turnstile oder hCaptcha. Ein Wechsel löscht die gespeicherten Schlüssel.",
+        "siteKeyInfo": "Der öffentliche Schlüssel, mit dem die Website die Prüfung anzeigt. Du findest ihn im Dashboard von Cloudflare (Turnstile) bzw. hCaptcha bei deiner Website.",
+        "secretInfo": "Der geheime Schlüssel, mit dem der Server das Ergebnis überprüft. Er steht neben dem Site Key. Gib ihn nie weiter."
       },
       "paymentSettings": {
         "apiKey": "API Key",
         "apiUrl": "API URL",
-        "instanceName": "Instanz Name",
+        "instanceName": "Instanzname",
         "methods": "Zahlungsmethoden",
-        "offSessionPayments": "Off-Session Zahlungen",
+        "offSessionPayments": "Off-Session-Zahlungen",
         "pm": "Zahlungsmethoden",
         "psp": "Zahlungsdienstleister (PSPs)",
         "type": "Typ",
         "vatRate": "Mehrwertsteuersatz",
+        "declineRenewals": "Verlängerungen ablehnen (fehlgeschlagene wiederkehrende Zahlungen simulieren)",
         "webhookEndpointSecret": "Webhook Endpoint Secret",
-        "bexioUserId": "Bexio Benutzer ID",
-        "bexioCountryId": "Bexio Länder ID",
-        "bexioUnitId": "Bexio Einheits ID",
-        "bexioTaxId": "Bexio Steuer ID",
-        "bexioAccountId": "Bexio Konto ID",
+        "bexioUserId": "Bexio-Benutzer-ID",
+        "bexioCountryId": "Bexio-Länder-ID",
+        "bexioUnitId": "Bexio-Einheiten-ID",
+        "bexioTaxId": "Bexio-Steuer-ID",
+        "bexioAccountId": "Bexio-Konto-ID",
         "bexioInvoiceTemplateNewMembership": "Rechnungsvorlage (Neue Mitgliedschaft)",
         "bexioInvoiceTemplateRenewalMembership": "Rechnungsvorlage (Mitgliedschafts-Erneuerung)",
-        "bexioInvoiceMailSubjectNewMembership": "Rechnungs-E-Mail Betreff (Neue Mitgliedschaft)",
-        "bexioInvoiceMailSubjectRenewalMembership": "Rechnungs-E-Mail Betreff (Mitgliedschafts-Erneuerung)",
-        "bexioInvoiceMailBodyNewMembership": "Rechnungs-E-Mail Inhalt (Neue Mitgliedschaft)",
-        "bexioInvoiceMailBodyRenewalMembership": "Rechnungs-E-Mail Inhalt (Mitgliedschafts-Erneuerung)",
+        "bexioInvoiceMailSubjectNewMembership": "Betreff der Rechnungs-E-Mail (Neue Mitgliedschaft)",
+        "bexioInvoiceMailSubjectRenewalMembership": "Betreff der Rechnungs-E-Mail (Mitgliedschafts-Erneuerung)",
+        "bexioInvoiceMailBodyNewMembership": "Inhalt der Rechnungs-E-Mail (Neue Mitgliedschaft)",
+        "bexioInvoiceMailBodyRenewalMembership": "Inhalt der Rechnungs-E-Mail (Mitgliedschafts-Erneuerung)",
         "bexioMarkInvoiceAsOpen": "Rechnung als offen markieren",
         "bexioInvoiceTitleNewMembership": "Rechnungstitel (Neue Mitgliedschaft)",
-        "bexioInvoiceTitleRenewalMembership": "Rechnungstitel (Mitgliedschafts-Erneuerung)"
+        "bexioInvoiceTitleRenewalMembership": "Rechnungstitel (Mitgliedschafts-Erneuerung)",
+        "typeInfo": "Der Zahlungsdienst, mit dem diese Integration verbunden ist. Er wird beim Anlegen festgelegt und lässt sich nicht ändern.",
+        "offSessionPaymentsInfo": "Wenn aktiv, bucht We.Publish Abo-Verlängerungen automatisch über die gespeicherte Zahlungsart ab, ohne dass erneut bezahlt werden muss. Nur aktivieren, wenn der Anbieter wiederkehrende Zahlungen unterstützt.",
+        "apiKeyInfo": "Der geheime API-Schlüssel aus deinem Konto beim Zahlungsanbieter, z. B. im Stripe-Dashboard unter «Entwickler» → «API-Schlüssel». Ein gespeicherter Schlüssel wird aus Sicherheitsgründen nicht mehr angezeigt.",
+        "webhookEndpointSecretInfo": "Bestätigt, dass Zahlungsmeldungen (Webhooks) wirklich vom Anbieter kommen. Bei Stripe kopierst du das Signing Secret (whsec_…) deines Webhook-Endpunkts. Bei Payrexx und Mollie wählst du ein zufälliges Passwort; bei Payrexx hängst du es zusätzlich als ?key=… an die Webhook-URL an.",
+        "methodsInfo": "Welche Zahlungsarten beim Bezahlen zur Auswahl stehen. Wähle nur Zahlungsarten, die in deinem Konto beim Anbieter auch freigeschaltet sind.",
+        "apiUrlInfo": "Die öffentliche Adresse deiner We.Publish-API, z. B. https://api.example.ch. Mollie schickt Zahlungsmeldungen an diese Adresse, sie muss also aus dem Internet erreichbar sein.",
+        "instanceNameInfo": "Der Name deiner Payrexx-Instanz – der Teil vor .payrexx.com in deiner Payrexx-Adresse (z. B. «meinmedium» bei meinmedium.payrexx.com).",
+        "vatRateInfo": "Der Mehrwertsteuersatz in Prozent, der bei jeder Zahlung an Payrexx übergeben wird, z. B. 8.1 oder 2.6. Ohne Angabe kann keine Zahlung gestartet werden.",
+        "pspInfo": "Die Zahlungsdienstleister, über die Payrexx die Zahlung abwickeln soll. Wähle nur solche, die du in deinem Payrexx-Konto verbunden hast.",
+        "bexioUserIdInfo": "Die numerische ID des Bexio-Benutzerkontos, dem neue Kontakte und Rechnungen zugeordnet werden.",
+        "bexioCountryIdInfo": "Die numerische Bexio-ID des Landes, das neuen Kontakten zugewiesen wird, z. B. die ID für die Schweiz.",
+        "bexioUnitIdInfo": "Die numerische Bexio-ID der Einheit, die für die Rechnungsposition verwendet wird, z. B. «Stück».",
+        "bexioTaxIdInfo": "Die numerische Bexio-ID des Mehrwertsteuersatzes, der auf die Rechnungsposition angewendet wird.",
+        "bexioAccountIdInfo": "Die numerische Bexio-ID des Ertragskontos, auf das die Abo-Einnahmen gebucht werden.",
+        "bexioInvoiceTemplateInfo": "Die Bexio-Dokumentvorlage (ihr Slug), die das Layout der Rechnung bestimmt. Für neue Abos und Verlängerungen kannst du verschiedene Vorlagen verwenden.",
+        "bexioInvoiceTitleInfo": "Der Titel, der auf der Rechnung steht. Für neue Abos und Verlängerungen kannst du verschiedene Titel verwenden.",
+        "bexioInvoiceMailSubjectInfo": "Der Betreff der E-Mail, mit der Bexio die Rechnung verschickt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt.",
+        "bexioInvoiceMailBodyInfo": "Der Text der E-Mail, mit der Bexio die Rechnung verschickt; das PDF wird angehängt. Platzhalter wie :user.firstName: oder :memberPlan.name: werden automatisch ersetzt. Bexio verlangt den Platzhalter [Network Link] im Text.",
+        "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen."
       },
       "placeholderSecret": "Unverändert (Versteckt)",
       "mailSettings": {
@@ -2606,7 +2797,18 @@
         "smtpSecure": "TLS (SSL) verwenden",
         "smtpUser": "SMTP-Benutzername",
         "smtpPassword": "SMTP-Passwort",
-        "webhookEndpointSecret": "Webhook Endpoint Secret"
+        "webhookEndpointSecret": "Webhook Endpoint Secret",
+        "typeInfo": "Der Dienst, der die E-Mails verschickt. MAILCHIMP steht für Mailchimp Transactional (Mandrill). SLACK und LOG stellen Leserinnen und Lesern nichts zu – sie sind nur zum Testen gedacht.",
+        "fromAddressInfo": "Die Absenderadresse, die Leserinnen und Leser sehen, z. B. abo@example.ch. Ihre Domain muss beim Mail-Dienst verifiziert sein, sonst landen E-Mails womöglich im Spam.",
+        "replyToAddressInfo": "Wohin Antworten gehen, wenn jemand auf eine deiner E-Mails antwortet. Bleibt das Feld leer, gehen Antworten an die Absenderadresse.",
+        "apiKeyInfo": "Der API-Schlüssel aus deinem Konto beim Mail-Dienst (Mailchimp Transactional/Mandrill oder Mailgun). Ohne ihn können keine E-Mails verschickt werden.",
+        "webhookEndpointSecretInfo": "Damit prüft We.Publish, dass Zustellmeldungen (z. B. Bounces) wirklich vom Mail-Dienst stammen. Kopiere den Webhook-Signaturschlüssel aus Mandrill bzw. Mailgun. Ohne ihn wird der Zustellstatus nicht aktualisiert.",
+        "mailgunBaseDomainInfo": "Die Adresse der Mailgun-API ohne https://: api.mailgun.net bzw. api.eu.mailgun.net, wenn dein Konto in der EU liegt.",
+        "mailgunMailDomainInfo": "Die Versand-Domain, die du in Mailgun eingerichtet hast, z. B. mg.example.ch.",
+        "slackWebhookUrlInfo": "Die Adresse eines Slack-Incoming-Webhooks. Statt zugestellt zu werden, landet jede E-Mail in diesem Slack-Kanal – praktisch zum Testen.",
+        "smtpHostInfo": "Die Adresse des Postausgangsservers, z. B. smtp.example.ch. Du erhältst sie von deinem E-Mail-Anbieter.",
+        "smtpPortInfo": "Meist 587 oder 465 – siehe Angaben deines E-Mail-Anbieters.",
+        "smtpSecureInfo": "Für Port 465 einschalten. Bei Port 587 ausgeschaltet lassen – die Verbindung wird dann über STARTTLS verschlüsselt."
       },
       "trackingPixelSettings": {
         "type": "Typ",
@@ -2615,17 +2817,26 @@
         "prolitterisPassword": "Passwort",
         "prolitterisPublisherInternalKeyDomain": "Publisher Internal Key Domain",
         "prolitterisUsePublisherInternalKey": "Publisher Internal Key verwenden",
-        "prolitterisUsername": "Benutzername"
+        "prolitterisUsername": "Benutzername",
+        "prolitterisMemberNrInfo": "Deine Mitgliedernummer als Verlag bei ProLitteris. Sie ist Teil jedes Zählpixels.",
+        "prolitterisLoginInfo": "Dein ProLitteris-Login. Nur nötig, wenn «Publisher Internal Key verwenden» ausgeschaltet ist – We.Publish holt die Pixel dann bei ProLitteris ab.",
+        "prolitterisOnlyPaidContentAccessInfo": "Einschalten, wenn deine Artikel hinter einer Paywall stehen. Das Pixel meldet sie ProLitteris dann als bezahlte statt als frei zugängliche Inhalte.",
+        "prolitterisUsePublisherInternalKeyInfo": "Wenn aktiv, erzeugt We.Publish die Pixel-IDs selbst aus deiner Mitgliedernummer und dem Artikel, statt sie bei ProLitteris abzuholen. Dafür braucht es die Domain unten.",
+        "prolitterisPublisherInternalKeyDomainInfo": "Die Zähl-Domain, die dir ProLitteris für den Publisher Internal Key zugeteilt hat, ohne https://. Nur nötig, wenn der Publisher Internal Key eingeschaltet ist."
       },
       "analyticsSettings": {
         "analytics": "Analytik",
-        "invalidFile": "Die Google-Analytics Anmeldedatei ist ungültig",
+        "invalidFile": "Die Google-Analytics-Anmeldedatei ist ungültig",
         "credentialsReadyToBeSaved": "Die Anmeldedaten sind bereit zum Speichern!",
         "dropCredentialsFile": "Anmeldedatei hier ablegen!",
-        "dragCredentialsFileHere": "Google-Analytics Anmeldedatei hierher ziehen und ablegen",
+        "dragCredentialsFileHere": "Google-Analytics-Anmeldedatei hierher ziehen und ablegen",
         "articlePrefix": "We.Publish Artikel-URL-Präfix (normalerweise /a/)",
-        "property": "Google-Analytics Property-ID",
-        "credentials": "Anmeldedatei"
+        "property": "Google-Analytics-Property-ID",
+        "credentials": "Anmeldedatei",
+        "articlePrefixInfo": "Der Teil der Adresse, der auf deiner Website vor dem Slug eines Artikels steht. Nur Aufrufe von Adressen, die so beginnen, zählen als Artikel-Aufrufe.",
+        "propertyInfo": "Die numerische ID deiner Google-Analytics-4-Property (nicht die Mess-ID G-…). Du findest sie in Google Analytics unter «Verwaltung» → «Property-Details».",
+        "credentialsInfo": "Die JSON-Schlüsseldatei eines Google-Cloud-Dienstkontos mit Lesezugriff auf deine Analytics-Property. Zieh die Datei ins Feld unten; gespeichert wird sie erst beim Speichern.",
+        "readFileError": "Die Datei konnte nicht gelesen werden."
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
@@ -2633,12 +2844,12 @@
         "apiKey": "Mailchimp API Key",
         "listId": "Mailchimp Listen-/Zielgruppen-ID",
         "mergeFieldMappings": "Merge-Feld-Zuordnungen",
-        "mergeFieldHelp": "Bestimmt, welcher Wert in ein Mailchimp Merge-Feld geschrieben wird. Mehrere Ausdrücke mit | (ODER) kombinierbar – der erste Treffer gewinnt.\n\nVerfügbare Ausdrücke:\n• user.firstName / user.name – Vorname bzw. Nachname\n• slug:contains:wert – \"1\" wenn der Abo-Slug \"wert\" enthält\n• slug:contains_any:w1,w2 – \"1\" wenn einer der Werte enthalten ist\n• slug:equals:wert – \"1\" bei exakter Übereinstimmung\n• active_abo – \"1\" aktiv, \"-1\" abgelaufen, leer wenn kein Abo\n• active_abo_with_payment:slug:tage – wie active_abo, aber auch \"1\" wenn die letzte Zahlungsmethode \"slug\" ist und das Abo innerhalb der letzten \"tage\" Tage ablief\n• retarget:tage – \"1\" wenn das Abo innerhalb der letzten \"tage\" Tage ablief, \"-1\" bei allen übrigen ehemaligen Abonnent:innen, leer wenn kein Abo\n• static:wert – gibt immer \"wert\" zurück",
+        "mergeFieldHelp": "Bestimmt, welcher Wert in ein Mailchimp-Merge-Feld geschrieben wird. Mehrere Ausdrücke mit | (ODER) kombinierbar – der erste Treffer gewinnt.\n\nVerfügbare Ausdrücke:\n• user.firstName / user.name – Vorname bzw. Nachname\n• slug:contains:wert – «1», wenn der Abo-Slug «wert» enthält\n• slug:contains_any:w1,w2 – «1», wenn einer der Werte enthalten ist\n• slug:equals:wert – «1» bei exakter Übereinstimmung\n• active_abo – «1» aktiv, «-1» abgelaufen, leer, wenn kein Abo\n• active_abo_with_payment:slug:tage – wie active_abo, aber auch «1», wenn die letzte Zahlungsmethode «slug» ist und das Abo innerhalb der letzten «tage» Tage ablief\n• retarget:tage – «1», wenn das Abo innerhalb der letzten «tage» Tage ablief, «-1» bei allen übrigen ehemaligen Abonnent:innen, leer, wenn kein Abo\n• static:wert – gibt immer «wert» zurück",
         "mergeFieldTag": "Merge-Feld-Tag (z.B. FNAME)",
         "mergeFieldExpression": "Ausdruck (z.B. user.firstName)",
         "addMergeField": "Merge-Feld hinzufügen",
         "interestGroupMappings": "Interessengruppen-Zuordnungen",
-        "interestGroupHelp": "Bestimmt anhand des Abos, ob ein Kontakt einer Mailchimp-Interessengruppe zugeordnet wird. Für Gruppen die immer aktiv sein sollen, nutze stattdessen die Standard-Interessengruppen unten.\n\nVerfügbare Ausdrücke:\n• slug:equals:wert – aktiv bei exakter Übereinstimmung des Abo-Slugs\n• slug:contains:wert – aktiv wenn der Abo-Slug \"wert\" enthält\n• slug:contains_any:w1,w2 – aktiv wenn einer der Werte enthalten ist",
+        "interestGroupHelp": "Bestimmt anhand des Abos, ob ein Kontakt einer Mailchimp-Interessengruppe zugeordnet wird. Für Gruppen, die immer aktiv sein sollen, nutze stattdessen die Standard-Interessengruppen unten.\n\nVerfügbare Ausdrücke:\n• slug:equals:wert – aktiv bei exakter Übereinstimmung des Abo-Slugs\n• slug:contains:wert – aktiv, wenn der Abo-Slug «wert» enthält\n• slug:contains_any:w1,w2 – aktiv, wenn einer der Werte enthalten ist",
         "interestGroupId": "Interessengruppen-ID",
         "interestGroupExpression": "Ausdruck (z.B. always)",
         "addInterestGroup": "Interessengruppe hinzufügen",
@@ -2693,19 +2904,23 @@
         "extensions": "Erweiterte Zusatzmodule",
         "clickTracking": {
           "title": "Kampagnen-Klick-Tracking",
-          "help": "Wenn aktiviert, durchsucht wepublish nach jedem Sync die letzten Kampagnenberichte nach URLs, die dem unten stehenden Muster entsprechen. Für jede passende URL wird die ID aus dem angegebenen Pfadsegment in das konfigurierte Merge Field aller Kontakte geschrieben, die den Link angeklickt haben.",
+          "help": "Wenn aktiviert, durchsucht We.Publish nach jedem Sync die letzten Kampagnenberichte nach URLs, die dem unten stehenden Muster entsprechen. Für jede passende URL wird die ID aus dem angegebenen Pfadsegment in das konfigurierte Merge-Feld aller Kontakte geschrieben, die den Link angeklickt haben.",
           "enabled": "Klick-Tracking aktivieren",
           "urlPattern": "URL-Muster (Regex)",
           "urlPatternHelp": "Nur URLs, die diesem Regex entsprechen, werden verarbeitet. Beispiel: https://bajour\\.ch/pool/",
           "pathSegmentIndex": "Pfadsegment-Index",
-          "pathSegmentIndexHelp": "Position der ID im URL-Pfad (getrennt durch \"/\"). Für /pool/123 verwende 2.",
-          "mergeFieldTag": "Ziel-Merge-Field",
-          "mergeFieldTagHelp": "Mailchimp-Merge-Field-Tag, in das die extrahierte ID geschrieben wird.",
+          "pathSegmentIndexHelp": "Position der ID im URL-Pfad (getrennt durch «/»). Für /pool/123 verwende 2.",
+          "mergeFieldTag": "Ziel-Merge-Feld",
+          "mergeFieldTagHelp": "Mailchimp-Merge-Feld-Tag, in das die extrahierte ID geschrieben wird.",
           "requireQueryParam": "Erforderlicher Query-Parameter",
           "requireQueryParamHelp": "Die URL muss diesen Query-Parameter enthalten, um verarbeitet zu werden. Leer lassen, um zu deaktivieren.",
           "lookbackHours": "Zeitraum (Stunden)",
           "lookbackHoursHelp": "Wie weit zurück Kampagnen durchsucht werden (Standard: 30)."
-        }
+        },
+        "enabledInfo": "Wenn aktiviert, überträgt We.Publish jede Nacht alle aktiven Benutzerkonten samt Abo-Daten in die Mailchimp-Zielgruppe. «Jetzt synchronisieren» geht nur, wenn das aktiviert ist.",
+        "apiKeyInfo": "Der API-Schlüssel deines Mailchimp-Kontos («Profil» → «Extras» → «API-Schlüssel»), er endet auf -us1, -us2 usw. Speichere ihn zuerst, damit unten Zielgruppen, Merge-Felder und Gruppen geladen werden können.",
+        "listIdInfo": "Die Mailchimp-Zielgruppe, in die die Benutzerkonten übertragen werden. Sobald der API-Schlüssel gespeichert ist, kannst du sie aus der Liste wählen; sonst gib ihre ID aus den Zielgruppen-Einstellungen in Mailchimp ein.",
+        "dryRunInfo": "Zeigt, welche Kontakte sich in Mailchimp ändern würden, ohne dort etwas zu verändern. Das Testlauf-Limit prüft eine zufällige Auswahl von so vielen Benutzerkonten; leer gelassen, werden alle geprüft."
       },
       "typeChangeTitle": "Typ wirklich wechseln?",
       "typeChangeWarning": "Beim Wechsel des Typs wird die gesamte Konfiguration dieser Integration gelöscht, einschliesslich aller hinterlegten Zugangsdaten. Das lässt sich nicht rückgängig machen.",
@@ -2719,13 +2934,27 @@
       "addType": "Typ",
       "addId": "Kennung",
       "addIdHelp": "Eindeutige Kennung, unter der die Integration angesprochen wird. Wird auch in Webhook-URLs verwendet und lässt sich später nicht ändern.",
-      "addIdTaken": "Diese Kennung ist bereits vergeben."
+      "addIdTaken": "Diese Kennung ist bereits vergeben.",
+      "analytics": "Anbieter für Hot & Trending",
+      "aiInfo": "Verbindet v0 von Vercel – einen KI-Dienst, der dir aus einer kurzen Beschreibung den HTML-Code für HTML-Blöcke schreibt.",
+      "challengeProviderInfo": "Schützt Formulare auf deiner Website, etwa die Registrierung oder Kommentare, mit einer unauffälligen Prüfung vor Spam-Bots (Cloudflare Turnstile oder hCaptcha).",
+      "paymentProviderInfo": "Dienste, über die Abos bezahlt werden, z. B. Payrexx, Stripe, Mollie oder Rechnungen über Bexio.",
+      "trackingPixelInfo": "Fügt deinen Artikeln das Zählpixel von ProLitteris hinzu, damit die Zugriffe für deine Urheberrechtsvergütung gezählt werden.",
+      "mailProviderInfo": "Der Dienst, über den We.Publish E-Mails verschickt – etwa Login-Links, Zahlungserinnerungen oder Abo-Bestätigungen.",
+      "analyticsInfo": "Liest die Seitenaufrufe aus Google Analytics, um zu ermitteln, welche Artikel gerade am meisten gelesen werden (Hot & Trending).",
+      "mailchimpSyncInfo": "Überträgt jede Nacht alle aktiven Benutzerkonten samt Abo-Daten in eine Mailchimp-Zielgruppe, damit du Newsletter gezielt nach Abo verschicken kannst.",
+      "lastLoadedInfo": "Wann We.Publish diese Konfiguration zuletzt geladen hat, etwa um eine Zahlung zu verarbeiten. So siehst du, ob die Integration im Einsatz ist.",
+      "setUp": "Einrichten",
+      "setUpHint": "Noch nicht eingerichtet. Richte die Integration ein, damit Editor und Website sie nutzen können."
     },
     "websiteSettings": {
       "backToOverview": "Zurück zur Übersicht",
-      "navbar": "Website Einstellungen",
+      "navbar": "Website-Einstellungen",
       "list": {
-        "title": "Website Einstellungen"
+        "title": "Website-Einstellungen",
+        "statusActive": "Aktiv",
+        "statusInactive": "Nicht aktiviert",
+        "statusMissingKey": "Aktiviert, aber die ID bzw. der Schlüssel fehlt – es funktioniert erst, wenn du sie ergänzt."
       },
       "analytics": {
         "title": "Analytics",
@@ -2765,7 +2994,7 @@
         "sparkLoop": {
           "title": "SparkLoop",
           "enable": "SparkLoop aktivieren",
-          "sparkLoop": "<url>SparkLoop</url> ist eine Newsletter-Empfehlungs- und Empfehlungsplattform, die dir hilft, dein Publikum zu vergrössern.",
+          "sparkLoop": "<url>SparkLoop</url> ist eine Plattform für Newsletter-Weiterempfehlungen und -Empfehlungen, die dir hilft, dein Publikum zu vergrössern.",
           "idLocator": "Du findest deine ID im <url>Skript-Bereich</url> deines SparkLoop-Dashboards."
         }
       },
@@ -2817,7 +3046,8 @@
           "backgroundDefault": "Die Hintergrundfarbe der Website",
           "backgroundPaper": "Hintergrundfarbe von erhöhten Flächen wie Dialogen und Modals",
           "text": "Text",
-          "textPrimary": "Die Textfarbe der Website"
+          "textPrimary": "Die Textfarbe der Website",
+          "pickColor": "Farbe auswählen"
         },
         "typography": {
           "fontFamily": "Schriftfamilie",
@@ -2840,31 +3070,44 @@
           "body1": "Fliesstext 1",
           "body2": "Fliesstext 2",
           "caption": "Bildunterschrift",
-          "teaserPretitle": "Teaser Vortitel",
-          "teaserTitle": "Teaser Titel",
-          "teaserLead": "Teaser Lead",
-          "teaserMeta": "Teaser Meta",
-          "articleAuthors": "Artikel Autoren",
+          "teaserPretitle": "Teaser-Vortitel",
+          "teaserTitle": "Teaser-Titel",
+          "teaserLead": "Teaser-Lead",
+          "teaserMeta": "Teaser-Meta",
+          "articleAuthors": "Artikelautoren",
           "peerInformation": "Peer-Informationen",
-          "bannerTitle": "Banner Titel",
-          "bannerText": "Banner Text",
-          "bannerCta": "Banner CTA",
-          "blockBreakTitle": "Blocktrenner Titel",
-          "blockBreakBody": "Blocktrenner Text",
-          "blockTitlePreTitle": "Blocktitel Vortitel",
-          "blockQuote": "Blockzitat"
-        }
+          "bannerTitle": "Bannertitel",
+          "bannerText": "Bannertext",
+          "bannerCta": "Banner-CTA",
+          "blockBreakTitle": "Blocktrenner-Titel",
+          "blockBreakBody": "Blocktrenner-Text",
+          "blockTitlePreTitle": "Vortitel des Blocktitels",
+          "blockQuote": "Blockzitat",
+          "fontFamilyInfo": "Wähle aus den Schriften, die unter «Schriften» hinzugefügt sind. «Standard» verwendet die Standardschrift der Website.",
+          "fontSizeInfo": "Die Grösse des Textes. rem bezieht sich auf die Grundgrösse der Website (1rem sind meist 16px), px ist eine feste Pixelgrösse.",
+          "lineHeightInfo": "Der Abstand zwischen den Zeilen eines Absatzes. 1.5em bedeutet das Anderthalbfache der Schriftgrösse.",
+          "letterSpacingInfo": "Der Abstand zwischen den einzelnen Buchstaben. 0 ist der normale Abstand der Schrift; kleine Werte wie 0.02em reichen meist.",
+          "textTransformInfo": "Ändert die Gross- und Kleinschreibung automatisch – z. B. zeigt «Grossbuchstaben» den ganzen Text in Grossbuchstaben, egal wie er eingegeben wurde.",
+          "overrideInfo": "Einschalten, um für diesen Textstil einen eigenen Wert festzulegen. Ausgeschaltet gilt der allgemeine Wert oben in diesem Tab."
+        },
+        "tabs": "Theme-Bereiche",
+        "paletteTab": "Farbpalette",
+        "typographyTab": "Typografie"
       },
       "fonts": {
         "title": "Schriften",
         "addFont": "Schrift hinzufügen",
         "default": "Standard",
-        "description": "Verwendet <Link>Google Fonts</Link>. Die Suche nach einer idealen Schrift geht am besten direkt dort."
+        "description": "Verwendet <Link>Google Fonts</Link>. Die Suche nach einer idealen Schrift geht am besten direkt dort.",
+        "searchPlaceholder": "Google Fonts durchsuchen …"
       },
       "saveSuccess": "Die Website-Einstellungen wurden erfolgreich gespeichert"
     },
     "externalApps": {
-      "apps": "Apps"
+      "apps": "Apps",
+      "noAppsFound": "Keine externen Apps eingerichtet.",
+      "notFound": "Externe App nicht gefunden",
+      "appsInfo": "Verknüpfungen zu externen Tools, die auf dem Dashboard unter «We.Publish Apps» erscheinen. «Ziel» bestimmt, ob eine App in einem neuen Browser-Tab oder direkt im Editor geöffnet wird. Manche Websites lassen sich nicht im Editor anzeigen – öffne sie in einem neuen Tab."
     },
     "externalAppForm": {
       "create": "Erstellen",
@@ -2881,8 +3124,11 @@
       "successDelete": "Externe App erfolgreich gelöscht",
       "errorDelete": "Fehler beim Löschen der externen App",
       "deleteConfirmationTitle": "Externe App löschen",
-      "deleteConfirmationText": "Möchten Sie diese externe App wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-      "icon": "Icon URL"
+      "deleteConfirmationText": "Möchtest du diese externe App wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "icon": "Icon-URL",
+      "targetBlank": "Neuer Browser-Tab",
+      "targetIframe": "Im Editor",
+      "selectIcon": "Symbol auswählen"
     },
     "networkContentDashboard": {
       "errorLoading": "Netzwerkartikel konnten nicht geladen werden.",
@@ -2934,7 +3180,7 @@
       "hideBlockDisabled": "Block kann nicht ausgeblendet werden — leerer Teaserplatz vorhanden",
       "hideAllBlocks": "Alle Blöcke ausblenden",
       "unhideAllBlocks": "Alle Blöcke einblenden",
-      "tooltipDefault": "• Ziehen um neu Anzuordnen\n• Klick zum Ersetzen",
+      "tooltipDefault": "• Ziehen, um neu anzuordnen\n• Klick zum Ersetzen",
       "tooltipDefaultSelected": "• Klick zum Ersetzen",
       "dropHere": "Hierher ziehen",
       "dropHereShift": "Hierher ziehen\n• Dieser und nachfolgende Teaser werden um eine Position weiter nach rechts verschoben",
@@ -2943,11 +3189,11 @@
         "teaserGrid1": "Teaser Grid 1",
         "teaserGrid6": "Teaser Grid 6",
         "flexGrid": "Flex Grid",
-        "teaserList": "Teaser Liste",
+        "teaserList": "Teaser-Liste",
         "teaserSlots": "Teaser Slots",
         "flexBlock": "Flex Block"
       },
-      "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}}, \"{{title}}\")",
+      "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}}, «{{title}}»)",
       "nestedLabel": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}})",
       "duplicateBadge": "Duplikat: Dieser Teaser wurde bereits auf der Seite platziert",
       "filterLabel": "Filter:",
@@ -2956,8 +3202,8 @@
       "cancelReplaceTitle": "Auswahl aufheben",
       "cancelLoad": "Laden abbrechen",
       "cancelLoadTitle": "Auswahl aufheben",
-      "hintTextLoad": "Teaserplatz ausgewählt — auf \"Laden\" klicken, um einen Teaser zu platzieren",
-      "hintTextReplace": "Teaser ausgewählt — auf \"Ersetzen\" klicken, um den Inhalt auszutauschen",
+      "hintTextLoad": "Teaserplatz ausgewählt — auf «Laden» klicken, um einen Teaser zu platzieren",
+      "hintTextReplace": "Teaser ausgewählt — auf «Ersetzen» klicken, um den Inhalt auszutauschen",
       "loadButton": "Teaser laden",
       "loadButtonTitle": "Einen beliebigen Teaser laden",
       "emptySlot": "Leerer Teaserplatz",
@@ -2974,14 +3220,14 @@
       "validationSummaryOne": "1 Block hat leere Teaserplätze",
       "validationSummaryMany": "{{count}} Blöcke haben leere Teaserplätze",
       "undo": "Rückgängig",
-      "undoEmpty": "Keine Rückgängig-Schritte",
+      "undoEmpty": "Keine Schritte zum Rückgängigmachen vorhanden",
       "redo": "Wiederholen",
-      "redoEmpty": "Keine Wiederholen-Schritte",
+      "redoEmpty": "Keine Schritte zum Wiederholen vorhanden",
       "teaserTypes": {
         "Article": "Artikel",
         "Page": "Seite",
         "Event": "Event",
-        "Custom": "Custom"
+        "Custom": "Benutzerdefiniert"
       }
     },
     "columnConfigurator": {
@@ -2992,7 +3238,7 @@
       "sectionDescription": "E-Mails rund um das Benutzerkonto. Sie werden durch eine Aktion der Person ausgelöst – unabhängig davon, ob sie ein Abo hat.",
       "sectionExample": "Jemand registriert sich → Willkommensmail geht sofort raus.",
       "sendTest": "Test an mich",
-      "testSent": "Test-E-Mail an Sie verschickt",
+      "testSent": "Test-E-Mail an dich verschickt",
       "events": {
         "account_creation": "Registrierung",
         "login_link": "Login-Link",
@@ -3004,7 +3250,7 @@
         "account_creation": {
           "short": "Neues Konto wurde erstellt.",
           "description": "Geht raus, sobald sich eine Person neu registriert oder beim Abo-Kauf ein Konto erhält.",
-          "example": "«Willkommen – Ihr Konto ist bereit.»"
+          "example": "«Willkommen – dein Konto ist bereit.»"
         },
         "login_link": {
           "short": "Anmelden ohne Passwort.",
@@ -3014,17 +3260,17 @@
         "password_reset": {
           "short": "Passwort vergessen.",
           "description": "Geht raus, wenn eine Person «Passwort vergessen» anklickt. Die E-Mail muss den Link zum Setzen eines neuen Passworts enthalten.",
-          "example": "«Hier setzen Sie ein neues Passwort.»"
+          "example": "«Hier setzt du ein neues Passwort.»"
         },
         "email_change": {
           "short": "Neue Adresse bestätigen.",
           "description": "Geht an die neue Adresse, wenn jemand seine E-Mail-Adresse ändert. Die Änderung gilt erst nach der Bestätigung.",
-          "example": "«Bitte bestätigen Sie Ihre neue E-Mail-Adresse.»"
+          "example": "«Bitte bestätige deine neue E-Mail-Adresse.»"
         },
         "test_mail": {
-          "short": "Nur für Ihre eigenen Tests.",
-          "description": "Wird nie automatisch an Leser*innen verschickt. Diese Vorlage nutzen Sie, um den Mailversand selber auszuprobieren.",
-          "example": "«Testmail – wenn Sie das lesen, funktioniert der Versand.»"
+          "short": "Nur für deine eigenen Tests.",
+          "description": "Wird nie automatisch an Leser*innen verschickt. Diese Vorlage nutzt du, um den Mailversand selber auszuprobieren.",
+          "example": "«Testmail – wenn du das liest, funktioniert der Versand.»"
         }
       }
     },
@@ -3146,7 +3392,9 @@
       "startsAt": "Abo-Beginn",
       "endsAt": "Abo-Ende",
       "from": "ab",
-      "to": "bis"
+      "to": "bis",
+      "stateHelp": "Aktiv: bestätigt, nicht deaktiviert und bezahlt. Ausstehend: abgeschlossen, aber noch nicht bestätigt – z. B. weil die erste Zahlung noch fehlt. Deaktiviert: Das Abo wurde beendet oder die Beendigung ist bereits eingetragen.",
+      "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst."
     },
     "mailLog": {
       "title": "Gesendete E-Mails",
@@ -3166,7 +3414,8 @@
         "all": "Alle",
         "title": "Filter",
         "reset": "Filter zurücksetzen",
-        "typeHint": "Wodurch der Versand angestossen wurde."
+        "typeHint": "Wodurch der Versand angestossen wurde.",
+        "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «E-Mail senden» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."
       },
       "types": {
         "subscriptionFlow": "Abo-Mailing",
@@ -3178,7 +3427,7 @@
       "typeDescriptions": {
         "manual": "Von Hand über «E-Mail senden» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
         "subscriptionFlow": "Zeitgesteuert aus «Automatische Mails», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
-        "userFlow": "Sofort ausgelöst durch eine konkrete Aktion oder ein Ereignis. Beispiele: Login-Link angefordert, E-Mail-Adresse geändert, Verlängerung der Zahlung fehlgeschlagen.",
+        "userFlow": "Sofort ausgelöst durch eine konkrete Aktion oder ein Ereignis. Beispiele: Login-Link angefordert, E-Mail-Adresse geändert, Zahlung für die Verlängerung fehlgeschlagen.",
         "systemMail": "Konto-Mails, konfiguriert unter «Automatische Mails» im Abschnitt «Konto & Login». Beispiele: Willkommensmail nach Registrierung, Passwort zurücksetzen."
       },
       "errorHelp": {
@@ -3211,7 +3460,7 @@
         },
         "rateLimit": {
           "cause": "Der Anbieter hat das Sendelimit erreicht und weitere Mails vorerst abgewiesen.",
-          "fix": "1. Warte ab und sende den Versand später erneut.\n2. Prüfe das Kontingent deines Tarifs beim Mailanbieter."
+          "fix": "1. Warte ab und starte den Versand später erneut.\n2. Prüfe das Kontingent deines Tarifs beim Mailanbieter."
         },
         "noProvider": {
           "cause": "Es ist kein Mailanbieter konfiguriert, deshalb kann nichts verschickt werden.",
@@ -3286,7 +3535,6 @@
       "audience": "Empfängergruppe",
       "state": "Status",
       "progress": "Fortschritt",
-      "actions": "Aktionen",
       "details": "Details",
       "finished": "Beendet",
       "empty": "Noch keine Versände gestartet.",
@@ -3334,7 +3582,8 @@
         "state": "Status",
         "sentAt": "Gesendet am",
         "attempts": "Versuche",
-        "empty": "Keine Einträge für diesen Filter."
+        "empty": "Keine Einträge für diesen Filter.",
+        "attemptsHelp": "Wie oft versucht wurde, diese E-Mail zu verschicken. Mehr als 1 heisst: Sie wurde nach einem Fehler oder Unterbruch erneut versucht."
       }
     },
     "auditLogList": {
@@ -3342,7 +3591,7 @@
         "title": "Audit-Log",
         "createdAt": "Zeitpunkt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "actor": "Akteur*in",
+        "actor": "Akteur:in",
         "action": "Aktion",
         "mutation": "Mutation",
         "record": "Datensatz",
@@ -3354,7 +3603,10 @@
         "tokenActor": "API-Token: {{name}}",
         "impersonatedActor": "{{impersonator}} als {{actor}}",
         "unknownActor": "Unbekannt",
-        "notSupported": "Diese Installation führt kein Audit-Log. Sobald die Migration eingespielt ist, erscheinen hier die Einträge."
+        "notSupported": "Diese Installation führt kein Audit-Log. Sobald die Migration eingespielt ist, erscheinen hier die Einträge.",
+        "titleInfo": "Zeigt, wer wann was geändert hat – im Editor oder über einen API-Token.",
+        "mutationInfo": "Technischer Name der ausgeführten Änderung, z.B. updateArticle.",
+        "sessionInfo": "Die Anmelde-Session, in der die Änderung gemacht wurde. Klicke auf eine ID, um alle Änderungen dieser Session zu sehen."
       },
       "filter": {
         "searchPlaceholder": "Suchen (Mutation, Datensatz, E-Mail …)",
@@ -3363,7 +3615,8 @@
         "session": "Session-ID",
         "dateRange": "Zeitraum",
         "failuresOnly": "Nur Fehlschläge",
-        "impersonatedOnly": "Nur Impersonation"
+        "impersonatedOnly": "Nur Impersonation",
+        "impersonatedOnlyInfo": "Zeigt nur Änderungen, die jemand gemacht hat, während er oder sie als andere Person angemeldet war."
       },
       "action": {
         "create": "Erstellt",
@@ -3371,6 +3624,44 @@
         "delete": "Gelöscht",
         "other": "Sonstige"
       }
+    },
+    "back": "Zurück",
+    "loading": "Wird geladen …",
+    "action": "Aktionen",
+    "deactivated": "Deaktiviert",
+    "blockStyles": {
+      "areYouSure": "Bist du sicher?",
+      "areYouSureBody": "Der Style «{{ blockStyle }}» wird unwiderruflich gelöscht.",
+      "areYouSureConfirmation": "Style löschen",
+      "createBlockStyle": "Neuen Style erstellen",
+      "placeholder": "Name des Styles",
+      "style": "Style",
+      "title": "Block-Styles",
+      "info": "Mit einem Style zeigst du einen Block auf deiner Website anders an, z. B. ein Teaser-Raster als Slider. Wähle, für welche Blocktypen ein Style verfügbar ist; wie er aussieht, bestimmt das Design deiner Website.",
+      "blockTypesPlaceholder": "Verfügbar für Blocktypen"
+    },
+    "name": "Name",
+    "toast": {
+      "createdSuccess": "Erfolgreich erstellt",
+      "deletedSuccess": "Erfolgreich gelöscht",
+      "updateError": "Es ist ein Fehler aufgetreten, bitte versuche es erneut: {{error}}",
+      "updatedSuccess": "Erfolgreich aktualisiert"
+    },
+    "blockList": {
+      "addBlock": "Block hinzufügen",
+      "hideBlock": "Block auf der Website ausblenden",
+      "showBlock": "Block auf der Website wieder anzeigen",
+      "deleteBlock": "Block löschen",
+      "moveBlockUp": "Block nach oben verschieben",
+      "moveBlockDown": "Block nach unten verschieben",
+      "styleHelp": "Ändert, wie dieser Block auf der Website aussieht. Leer lassen für die Standarddarstellung. Die Styles verwaltest du unter «Block Styling»."
+    },
+    "placeholderInput": {
+      "add": "Hinzufügen"
+    },
+    "listInput": {
+      "dragToReorder": "Ziehen, um die Reihenfolge zu ändern",
+      "add": "Eintrag hinzufügen"
     }
   }
 }

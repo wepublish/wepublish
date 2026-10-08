@@ -1,26 +1,26 @@
+import { useMutation } from '@apollo/client/react';
 import {
+  CreateCrowdfundingDocument,
   CreateCrowdfundingGoalInput,
   CreateCrowdfundingInput,
-  useCreateCrowdfundingMutation,
   CreateCrowdfundingMutation,
 } from '@wepublish/editor/api';
 import { useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { CrowdfundingForm } from './crowdfunding-form';
-import { SingleViewTitle } from '@wepublish/ui/editor';
+import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
 import { Form, Message, Schema, toaster } from 'rsuite';
-import { ApolloError } from '@apollo/client';
 
-const showError = (error: ApolloError): void => {
+const showError = (error: Error): void => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -49,16 +49,19 @@ export const CreateCrowdfundingForm = () => {
     name: StringType().isRequired(),
   });
 
-  const [createCrowdfunding, { loading }] = useCreateCrowdfundingMutation({
-    onError: showError,
-    onCompleted: (crowdfunding: CreateCrowdfundingMutation) => {
-      if (shouldClose) {
-        navigate(closePath);
-      } else {
-        navigate(`/crowdfundings/edit/${crowdfunding.createCrowdfunding.id}`);
-      }
-    },
-  });
+  const [createCrowdfunding, { loading }] = useMutation(
+    CreateCrowdfundingDocument,
+    {
+      onError: showError,
+      onCompleted: (crowdfunding: CreateCrowdfundingMutation) => {
+        if (shouldClose) {
+          navigate(closePath);
+        } else {
+          navigate(`/crowdfundings/edit/${crowdfunding.createCrowdfunding.id}`);
+        }
+      },
+    }
+  );
 
   const onSubmit = () => {
     const processedCrowdfunding = {

@@ -1,10 +1,11 @@
+import { useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import { getMonthlyEquivalentRange } from '@wepublish/membership/website';
 import {
   FullMemberPlanFragment,
   FullSubscriptionFragment,
   ProductType,
-  useSubscriptionsQuery,
+  SubscriptionsDocument,
 } from '@wepublish/website/api';
 import { useRouter } from 'next/router';
 import { ascend, prop, sortWith } from 'ramda';
@@ -35,7 +36,7 @@ export const useForceUpgradeRedirect = (
   const router = useRouter();
   const forceUpgrade = useContext(ForceUpgradeContext);
 
-  const { data } = useSubscriptionsQuery({
+  const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
     skip: !hasUser,
   });

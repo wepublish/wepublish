@@ -1,6 +1,7 @@
 import 'rsuite/dist/rsuite.css';
 
-import { gql, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { css, Global } from '@emotion/react';
 import {
   BannerList,
@@ -49,6 +50,8 @@ import enGB from 'rsuite/locales/en_GB';
 import fr from 'rsuite/locales/fr_FR';
 
 import { Base } from './base';
+import { useColorMode } from './colorMode';
+import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
 import { LoginImpersonate } from './loginImpersonate';
@@ -152,6 +155,7 @@ export function App() {
   });
 
   const { session } = useContext(AuthContext);
+  const { mode: colorMode } = useColorMode();
 
   useEffect(() => {
     if (session === null && !window.location.pathname.startsWith('/login')) {
@@ -166,25 +170,34 @@ export function App() {
           .rs-table {
             .highlighted-row,
             .highlighted-row &-cell-group &-cell {
-              background-color: #f2faff;
+              background-color: var(--wep-row-highlight);
             }
 
             &-row.approved:not(&-row-header),
             &-row.approved &-cell-group,
             &-row.approved &-cell {
-              background: #e1f8de;
+              background: var(--wep-row-approved);
+            }
+
+            &-row.approved &-cell-first {
+              box-shadow: inset 3px 0 0 var(--wep-accent-approved);
             }
 
             &-row.pending-user:not(&-row-header),
             &-row.pending-user &-cell-group,
             &-row.pending-user &-cell {
-              background: #f8def2;
+              background: var(--wep-row-pending);
+            }
+
+            &-row.pending-user &-cell-first,
+            &-row.pending-approval &-cell-first {
+              box-shadow: inset 3px 0 0 var(--wep-accent-pending);
             }
 
             &-row.pending-approval:not(&-row-header),
             &-row.pending-approval &-cell-group,
             &-row.pending-approval &-cell {
-              background: #f8def2;
+              background: var(--wep-row-pending);
             }
 
             &-row.rejected:not(&-row-header),
@@ -198,16 +211,16 @@ export function App() {
             &-hover &-row.rejected:not(&-row-header):hover,
             &-hover &-row.rejected:hover &-cell-group,
             &-hover &-row.rejected:hover &-cell {
-              color: rgb(83, 85, 83);
+              color: var(--rs-text-secondary);
               text-decoration: line-through;
             }
           }
 
           .icon-selector {
-            fill: #7a7a7a;
+            fill: var(--rs-text-secondary);
 
             &:hover {
-              fill: #1675e0;
+              fill: var(--rs-text-link);
             }
 
             svg {
@@ -246,21 +259,6 @@ export function App() {
             margin-top: 5px;
           }
 
-          .rs-sidenav-item-active,
-          .rs-dropdown-item-active {
-            position: relative;
-
-            &:before {
-              content: '';
-              position: absolute;
-              width: 4px;
-              height: 100%;
-              left: 0;
-              top: 0;
-              background-color: #1675e0;
-            }
-          }
-
           // Styles missing from v6 of rsuite
           :root {
             --rs-form-control-width: 100%;
@@ -280,13 +278,13 @@ export function App() {
           .rs-drawer-header {
             width: 100%;
           }
-
-          .rs-drawer-dialog {
-            overflow: scroll;
-          }
         `}
       />
-      <CustomProvider locale={lng}>
+      <EditorGlobalStyles />
+      <CustomProvider
+        locale={lng}
+        theme={colorMode}
+      >
         <BrowserRouter>
           <Routes>
             <Route

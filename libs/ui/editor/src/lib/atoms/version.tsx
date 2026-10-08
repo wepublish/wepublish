@@ -1,9 +1,10 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Tooltip } from '@mui/material';
 import {
   OneChannelConnectionState,
-  useOneChannelStatusQuery,
-  useVersionInformationQuery,
+  OneChannelStatusDocument,
+  VersionInformationDocument,
 } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 
@@ -46,15 +47,15 @@ const ConnectorLabel = styled.div`
 const UNKNOWN_VERSION = '<!- VERSION UNKNOWN -!>';
 
 const DOT_COLORS: Record<OneChannelConnectionState, string> = {
-  [OneChannelConnectionState.Connected]: '#2e7d32',
-  [OneChannelConnectionState.Failing]: '#ed6c02',
-  [OneChannelConnectionState.NotConfigured]: '#d32f2f',
+  [OneChannelConnectionState.Connected]: 'var(--rs-state-success)',
+  [OneChannelConnectionState.Failing]: 'var(--rs-state-warning)',
+  [OneChannelConnectionState.NotConfigured]: 'var(--rs-state-error)',
 };
 
 export function Version() {
   const { t } = useTranslation();
-  const { data: versionData } = useVersionInformationQuery();
-  const { data: channelData } = useOneChannelStatusQuery();
+  const { data: versionData } = useQuery(VersionInformationDocument);
+  const { data: channelData } = useQuery(OneChannelStatusDocument);
 
   // The API returns the whole label ("Deployed Version: 890550c"), so it is
   // shown as-is rather than wrapped in another one.

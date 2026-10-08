@@ -93,16 +93,18 @@ export const PaymentAmountSlider = forwardRef<
             }
             type={'number'}
             fullWidth
-            inputProps={{
-              step: 'any',
-              min: periodMin / 100,
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  {currency ?? Currency.Chf}
-                </InputAdornment>
-              ),
+            slotProps={{
+              htmlInput: {
+                step: 'any',
+                min: periodMin / 100,
+              },
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    {currency ?? Currency.Chf}
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         )}

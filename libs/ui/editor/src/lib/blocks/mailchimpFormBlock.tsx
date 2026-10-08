@@ -1,10 +1,11 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   MailchimpFormOptionsLayout,
-  useMailchimpInterestGroupsQuery,
-  useMailchimpListsQuery,
-  useMailchimpMergeFieldsQuery,
-  useSyncProviderSettingsQuery,
+  MailchimpInterestGroupsDocument,
+  MailchimpListsDocument,
+  MailchimpMergeFieldsDocument,
+  SyncProviderSettingsDocument,
 } from '@wepublish/editor/api';
 import { useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,6 +31,8 @@ import {
 
 import { BlockProps } from '../atoms/blockList';
 import { ChooseEditImage } from '../atoms/chooseEditImage';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { useRegisterValidator } from '../hooks/useEditorValidation';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
@@ -42,7 +45,7 @@ import {
 } from './types';
 
 const Panel = styled(RPanel)`
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
   margin-bottom: 12px;
 
   .rs-panel-body {
@@ -69,12 +72,12 @@ const Field = styled.div`
 
 const Label = styled('label')`
   font-size: 12px;
-  color: #6c757d;
+  color: var(--rs-text-secondary);
 `;
 
 const HelpText = styled('small')`
   font-size: 11px;
-  color: #8e8e93;
+  color: var(--rs-text-secondary);
 `;
 
 const ErrorText = styled('small')`
@@ -83,8 +86,8 @@ const ErrorText = styled('small')`
 `;
 
 const ItemPanel = styled(RPanel)`
-  background-color: #fff;
-  border: 1px solid #e5e5ea;
+  background-color: var(--rs-bg-card);
+  border: 1px solid var(--rs-border-primary);
 `;
 
 const ItemHeader = styled.div`
@@ -152,30 +155,36 @@ function ItemActions({
   return (
     <ItemActionsWrapper>
       {onMoveUp && (
-        <IconButton
-          size="xs"
-          icon={<MdArrowUpward />}
-          aria-label={t('blocks.mailchimpForm.moveUp')}
-          disabled={disabled}
-          onClick={onMoveUp}
-        />
+        <IconButtonTooltip caption={t('blocks.mailchimpForm.moveUp')}>
+          <IconButton
+            size="xs"
+            icon={<MdArrowUpward />}
+            aria-label={t('blocks.mailchimpForm.moveUp')}
+            disabled={disabled}
+            onClick={onMoveUp}
+          />
+        </IconButtonTooltip>
       )}
       {onMoveDown && (
+        <IconButtonTooltip caption={t('blocks.mailchimpForm.moveDown')}>
+          <IconButton
+            size="xs"
+            icon={<MdArrowDownward />}
+            aria-label={t('blocks.mailchimpForm.moveDown')}
+            disabled={disabled}
+            onClick={onMoveDown}
+          />
+        </IconButtonTooltip>
+      )}
+      <IconButtonTooltip caption={t('blocks.mailchimpForm.remove')}>
         <IconButton
           size="xs"
-          icon={<MdArrowDownward />}
-          aria-label={t('blocks.mailchimpForm.moveDown')}
+          icon={<MdDelete />}
+          aria-label={t('blocks.mailchimpForm.remove')}
           disabled={disabled}
-          onClick={onMoveDown}
+          onClick={onRemove}
         />
-      )}
-      <IconButton
-        size="xs"
-        icon={<MdDelete />}
-        aria-label={t('blocks.mailchimpForm.remove')}
-        disabled={disabled}
-        onClick={onRemove}
-      />
+      </IconButtonTooltip>
     </ItemActionsWrapper>
   );
 }
@@ -474,8 +483,9 @@ export function MailchimpFormBlock({
 
   const showErrors = saveAttempted && !value.disabled;
 
-  const { data: syncData, loading: syncLoading } =
-    useSyncProviderSettingsQuery();
+  const { data: syncData, loading: syncLoading } = useQuery(
+    SyncProviderSettingsDocument
+  );
 
   const providerOptions = useMemo(
     () =>
@@ -486,10 +496,13 @@ export function MailchimpFormBlock({
     [syncData?.syncProviderSettings]
   );
 
-  const { data: listsData, loading: listsLoading } = useMailchimpListsQuery({
-    skip: !value.syncProviderId,
-    variables: { configId: value.syncProviderId ?? '' },
-  });
+  const { data: listsData, loading: listsLoading } = useQuery(
+    MailchimpListsDocument,
+    {
+      skip: !value.syncProviderId,
+      variables: { configId: value.syncProviderId ?? '' },
+    }
+  );
 
   const listOptions = useMemo(
     () =>
@@ -500,7 +513,7 @@ export function MailchimpFormBlock({
     [listsData?.mailchimpLists]
   );
 
-  const { data: interestData } = useMailchimpInterestGroupsQuery({
+  const { data: interestData } = useQuery(MailchimpInterestGroupsDocument, {
     skip: !value.syncProviderId || !value.listId,
     variables: {
       configId: value.syncProviderId ?? '',
@@ -517,14 +530,16 @@ export function MailchimpFormBlock({
     [interestData?.mailchimpInterestGroups]
   );
 
-  const { data: mergeFieldData, loading: mergeFieldsLoading } =
-    useMailchimpMergeFieldsQuery({
+  const { data: mergeFieldData, loading: mergeFieldsLoading } = useQuery(
+    MailchimpMergeFieldsDocument,
+    {
       skip: !value.syncProviderId || !value.listId,
       variables: {
         configId: value.syncProviderId ?? '',
         listId: value.listId ?? '',
       },
-    });
+    }
+  );
 
   const mergeFieldOptions = useMemo(() => {
     const fields = (mergeFieldData?.mailchimpMergeFields ?? [])
@@ -620,8 +635,13 @@ export function MailchimpFormBlock({
               disabled={disabled}
               checked={value.autoFocus}
               onChange={autoFocus => update({ autoFocus })}
+              label={
+                <>
+                  {t('blocks.mailchimpForm.autoFocus')}{' '}
+                  <InfoTooltip text={t('blocks.mailchimpForm.autoFocusHelp')} />
+                </>
+              }
             />
-            <Label>{t('blocks.mailchimpForm.autoFocus')}</Label>
           </ToggleRow>
 
           <ToggleRow>
@@ -629,8 +649,15 @@ export function MailchimpFormBlock({
               disabled={disabled}
               checked={value.doubleOptIn ?? false}
               onChange={doubleOptIn => update({ doubleOptIn })}
+              label={
+                <>
+                  {t('blocks.mailchimpForm.doubleOptIn')}{' '}
+                  <InfoTooltip
+                    text={t('blocks.mailchimpForm.doubleOptInHelp')}
+                  />
+                </>
+              }
             />
-            <Label>{t('blocks.mailchimpForm.doubleOptIn')}</Label>
           </ToggleRow>
         </Row>
 
@@ -721,8 +748,15 @@ export function MailchimpFormBlock({
                   disabled={disabled}
                   checked={showStepAdvanced}
                   onChange={enabled => toggleAdvanced(stepAdvancedKey, enabled)}
+                  label={
+                    <>
+                      {t('blocks.mailchimpForm.advanced')}{' '}
+                      <InfoTooltip
+                        text={t('blocks.mailchimpForm.advancedStepHelp')}
+                      />
+                    </>
+                  }
                 />
-                <Label>{t('blocks.mailchimpForm.advanced')}</Label>
               </ToggleRow>
 
               {showStepAdvanced && (
@@ -868,8 +902,8 @@ export function MailchimpFormBlock({
                           disabled={disabled}
                           checked={input.required ?? false}
                           onChange={required => updateInput({ required })}
+                          label={t('blocks.mailchimpForm.required')}
                         />
-                        <Label>{t('blocks.mailchimpForm.required')}</Label>
                       </ToggleRow>
                     </Row>
 
@@ -927,8 +961,15 @@ export function MailchimpFormBlock({
                         onChange={enabled =>
                           toggleAdvanced(advancedKey, enabled)
                         }
+                        label={
+                          <>
+                            {t('blocks.mailchimpForm.advanced')}{' '}
+                            <InfoTooltip
+                              text={t('blocks.mailchimpForm.advancedInputHelp')}
+                            />
+                          </>
+                        }
                       />
-                      <Label>{t('blocks.mailchimpForm.advanced')}</Label>
                     </ToggleRow>
 
                     {showAdvanced && (
@@ -1150,8 +1191,8 @@ export function MailchimpFormBlock({
                 successUrl: enabled ? null : value.successUrl,
               })
             }
+            label={t('blocks.mailchimpForm.useSuccessPage')}
           />
-          <Label>{t('blocks.mailchimpForm.useSuccessPage')}</Label>
         </ToggleRow>
 
         {value.successPage && (
@@ -1196,21 +1237,26 @@ export function MailchimpFormBlock({
                           number: optionIndex + 1,
                         })}
                     </Heading>
-                    <IconButton
-                      size="xs"
-                      icon={<MdDelete />}
-                      disabled={disabled}
-                      onClick={() =>
-                        update({
-                          successPage: {
-                            ...value.successPage!,
-                            options: value.successPage!.options.filter(
-                              (_, i) => i !== optionIndex
-                            ),
-                          },
-                        })
-                      }
-                    />
+                    <IconButtonTooltip
+                      caption={t('blocks.mailchimpForm.remove')}
+                    >
+                      <IconButton
+                        size="xs"
+                        icon={<MdDelete />}
+                        aria-label={t('blocks.mailchimpForm.remove')}
+                        disabled={disabled}
+                        onClick={() =>
+                          update({
+                            successPage: {
+                              ...value.successPage!,
+                              options: value.successPage!.options.filter(
+                                (_, i) => i !== optionIndex
+                              ),
+                            },
+                          })
+                        }
+                      />
+                    </IconButtonTooltip>
                   </ItemHeader>
                   <Row>
                     <Field>

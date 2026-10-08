@@ -1,13 +1,14 @@
+import { useQuery } from '@apollo/client/react';
 import { AuthorListContainer } from '@wepublish/author/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { AuthorSort, SortOrder } from '@wepublish/website/api';
 import {
-  addClientCacheToProps,
   AuthorListDocument,
-  getApiClient,
+  AuthorSort,
   NavigationListDocument,
   PeerProfileDocument,
-  useAuthorListQuery,
+  SortOrder,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -42,7 +43,7 @@ export default function AuthorList() {
     [page]
   );
 
-  const { data } = useAuthorListQuery({
+  const { data } = useQuery(AuthorListDocument, {
     fetchPolicy: 'cache-only',
     variables,
   });

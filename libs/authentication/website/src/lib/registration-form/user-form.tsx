@@ -197,20 +197,22 @@ export function UserForm<T extends BuilderUserFormFields>({
                 label={t('user.form.password')}
                 error={!!error}
                 helperText={error?.message}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={togglePassword}
-                        onMouseDown={event => event.preventDefault()}
-                        edge="end"
-                      >
-                        {showPassword ?
-                          <MdVisibilityOff />
-                        : <MdVisibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={togglePassword}
+                          onMouseDown={event => event.preventDefault()}
+                          edge="end"
+                        >
+                          {showPassword ?
+                            <MdVisibilityOff />
+                          : <MdVisibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
                 }}
               />
             )}
@@ -230,20 +232,22 @@ export function UserForm<T extends BuilderUserFormFields>({
                   label={t('user.form.passwordRepeated')}
                   error={!!error}
                   helperText={error?.message}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={togglePassword}
-                          onMouseDown={event => event.preventDefault()}
-                          edge="end"
-                        >
-                          {showPassword ?
-                            <MdVisibilityOff />
-                          : <MdVisibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={togglePassword}
+                            onMouseDown={event => event.preventDefault()}
+                            edge="end"
+                          >
+                            {showPassword ?
+                              <MdVisibilityOff />
+                            : <MdVisibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
                   }}
                 />
               )}

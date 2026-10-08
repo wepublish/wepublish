@@ -1,10 +1,11 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DocumentDocument,
   DocumentListDocument,
   FullDocumentFragment,
-  useDocumentQuery,
-  useUpdateDocumentMutation,
-  useUploadDocumentMutation,
+  UpdateDocumentDocument,
+  UploadDocumentDocument,
 } from '@wepublish/editor/api';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
@@ -22,6 +23,7 @@ import {
 } from 'rsuite';
 
 import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import {
   createCheckedPermissionComponent,
   PermissionControl,
@@ -62,16 +64,16 @@ function DocumentEditPanel({
   const [createdAt, setCreatedAt] = useState<string>();
   const [updatedAt, setUpdatedAt] = useState<string>();
 
-  const { data, error: loadingError } = useDocumentQuery({
+  const { data, error: loadingError } = useQuery(DocumentDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
 
   const [updateDocument, { loading: isUpdating, error: savingError }] =
-    useUpdateDocumentMutation();
+    useMutation(UpdateDocumentDocument);
 
   const [uploadDocument, { loading: isUploading, error: uploadError }] =
-    useUploadDocumentMutation({
+    useMutation(UploadDocumentDocument, {
       refetchQueries: [getOperationNameFromDocument(DocumentListDocument)],
     });
 
@@ -278,23 +280,28 @@ function DocumentEditPanel({
                       {documentURL}
                     </a>
 
-                    <IconButton
-                      icon={<MdContentCopy />}
-                      size="xs"
-                      appearance="subtle"
-                      style={{ marginLeft: 8 }}
-                      onClick={() => {
-                        navigator.clipboard.writeText(documentURL);
-                        toaster.push(
-                          <Notification
-                            type="success"
-                            header={t('documents.panels.linkCopied')}
-                            duration={2000}
-                          />,
-                          { placement: 'topEnd' }
-                        );
-                      }}
-                    />
+                    <IconButtonTooltip
+                      caption={t('documents.overview.copyLink')}
+                    >
+                      <IconButton
+                        aria-label={t('documents.overview.copyLink')}
+                        icon={<MdContentCopy />}
+                        size="xs"
+                        appearance="subtle"
+                        style={{ marginLeft: 8 }}
+                        onClick={() => {
+                          navigator.clipboard.writeText(documentURL);
+                          toaster.push(
+                            <Notification
+                              type="success"
+                              header={t('documents.panels.linkCopied')}
+                              duration={2000}
+                            />,
+                            { placement: 'topEnd' }
+                          );
+                        }}
+                      />
+                    </IconButtonTooltip>
                   </DescriptionListItem>
                 )}
               </DescriptionList>

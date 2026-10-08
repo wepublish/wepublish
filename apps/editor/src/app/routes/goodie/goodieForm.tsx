@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
   FullImageFragment,
-  MemberPlan,
+  FullMemberPlanFragment,
   MutationCreateGoodieArgs,
   MutationUpdateGoodieArgs,
 } from '@wepublish/editor/api';
@@ -9,6 +9,7 @@ import {
   ChooseEditImage,
   ImageEditPanel,
   ImageSelectPanel,
+  InfoTooltip,
   RichTextBlock,
   RichTextBlockValue,
   SelectMemberPlans,
@@ -22,7 +23,7 @@ export type GoodieFormData = (
   | MutationUpdateGoodieArgs
 ) & {
   image?: FullImageFragment | null;
-  memberPlans?: Pick<MemberPlan, 'id' | 'name'>[];
+  memberPlans?: Pick<FullMemberPlanFragment, 'id' | 'name'>[];
 };
 
 type GoodieFormProps = {
@@ -35,7 +36,7 @@ const GoodieFormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   align-items: start;
-  gap: 12px;
+  gap: 16px;
 
   ${({ theme }) => theme.breakpoints.up('lg')} {
     grid-template-columns: 1fr 1fr;
@@ -45,13 +46,27 @@ const GoodieFormWrapper = styled.div`
 const GoodieFormSection = styled.div`
   display: grid;
   align-items: start;
-  gap: 12px;
+  gap: 16px;
 `;
 
 const NameStockGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 120px;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 220px);
+  align-self: stretch;
+  gap: 16px;
+
+  .rs-form-group {
+    min-width: 0;
+  }
+
+  .rs-form-control,
+  .rs-input-group {
+    width: 100%;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 `;
 
 export const GoodieForm = ({ goodie, onChange, create }: GoodieFormProps) => {
@@ -66,10 +81,14 @@ export const GoodieForm = ({ goodie, onChange, create }: GoodieFormProps) => {
           <Panel bordered>
             <Form.Stack>
               <Form.Group controlId="active">
-                <Form.Label>{t('goodie.form.active')}</Form.Label>
-
                 <Toggle
                   checked={!!goodie.active}
+                  label={
+                    <>
+                      {t('goodie.form.active')}{' '}
+                      <InfoTooltip text={t('goodie.form.activeInfo')} />
+                    </>
+                  }
                   onChange={active => onChange({ active })}
                 />
               </Form.Group>
@@ -86,7 +105,10 @@ export const GoodieForm = ({ goodie, onChange, create }: GoodieFormProps) => {
                 </Form.Group>
 
                 <Form.Group controlId="stock">
-                  <Form.Label>{t('goodie.form.stock')}</Form.Label>
+                  <Form.Label>
+                    {t('goodie.form.stock')}{' '}
+                    <InfoTooltip text={t('goodie.form.stockInfo')} />
+                  </Form.Label>
 
                   <Form.Control
                     name="stock"
@@ -127,7 +149,10 @@ export const GoodieForm = ({ goodie, onChange, create }: GoodieFormProps) => {
           >
             <Form.Stack>
               <Form.Group controlId="memberPlanIDs">
-                <Form.Label>{t('goodie.form.memberPlans')}</Form.Label>
+                <Form.Label>
+                  {t('goodie.form.memberPlans')}{' '}
+                  <InfoTooltip text={t('goodie.form.memberPlansInfo')} />
+                </Form.Label>
 
                 <Form.Control
                   name="memberPlanIDs"
