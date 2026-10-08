@@ -498,8 +498,35 @@ happened to import `ArticleModule` early enough to hide two missing
 **Load-bearing:** the `forwardRef` wrappers. Removing or reordering a module in
 `app.module.ts` can make a cycle that "worked" fail at the next start.
 
-Nothing guards this — unit tests construct the classes directly; only booting
-the api (`nx serve api-example`) shows it.
+Guarded for `SlotTeasersLoader` only: `slot-teasers-loader.spec.ts` starts with
+`import './article.service';`, which enters the cycle from the article side and
+reproduces the boot error in a unit test. A new injection site needs the same
+trick or nothing catches it before `nx serve api-example`.
+
+---
+
+### ⚠️ The editor's `refetchOn` config does nothing; a refocus reload is `AuthProvider`
+
+[setup.tsx](../../libs/editor/api/src/lib/setup.tsx) sets
+`defaultOptions.watchQuery.refetchOn = {online: false, windowFocus: false}`. It
+type-checks and has no effect: Apollo Client 4 only reads `refetchOn` when the
+client is built with a `refetchEventManager`, and nothing in this repo
+constructs one, so Apollo never refetches on focus in the first place.
+
+What did reload the whole editor on refocus was
+[authContext.tsx](../../libs/ui/editor/src/lib/authContext.tsx): it re-checks
+the session on every `usePageVisibility()` change and used to render `null`
+while `loading`. Apollo Client 4 flipped the `notifyOnNetworkStatusChange`
+default from `false` to `true` (verified in `QueryManager.js`, @apollo/client
+4.3.1, 2026-10-08), so from AC4 on a `refetch()` sets `loading: true` — the
+provider returned `null`, unmounted the editor, and every remounted query
+re-ran under the `network-only` default.
+
+**Load-bearing:** `loading && !data` (not `loading`) in the provider's return,
+and the `if (!isPageActive) return` guard, which keeps the tab *losing* focus
+from triggering the same round trip.
+
+Pinned by [authContext.spec.tsx](../../libs/ui/editor/src/lib/authContext.spec.tsx).
 
 ---
 
