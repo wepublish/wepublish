@@ -33,7 +33,7 @@ export class TeaserListBlockResolver {
     private articleService: ArticleService,
     @Inject(forwardRef(() => PageService))
     private pageService: PageService,
-    @Inject(HOT_AND_TRENDING_DATA_SOURCE)
+    @Inject(forwardRef(() => HOT_AND_TRENDING_DATA_SOURCE))
     private hotAndTrending: HotAndTrendingDataSource
   ) {}
 

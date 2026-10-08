@@ -71,6 +71,16 @@ export class ChallengeProviderSettingsService {
   async createChallengeProviderSetting(
     input: CreateSettingChallengeProviderInput
   ): Promise<SettingChallengeProvider> {
+    if (
+      await this.prisma.settingChallengeProvider.count({
+        where: { deletedAt: null },
+      })
+    ) {
+      throw new BadRequestException(
+        `A challenge provider is already set up. Change its type or settings instead of adding another one.`
+      );
+    }
+
     const data = this.encryptSecretsIfPresent(input);
     const returnValue = await this.prisma.settingChallengeProvider.create({
       data,

@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { SettingProvider } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
 import { useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
@@ -41,6 +42,11 @@ interface GenericIntegrationListProps<
     name: string;
     createMutation: DocumentNode;
   };
+
+  setup?: {
+    createMutation: DocumentNode;
+    types: ProviderTypeOption[];
+  };
 }
 
 const StyledInputGroup = styled(InputGroup)`
@@ -67,6 +73,7 @@ export function GenericIntegrationList<
   dataKey,
   registry,
   fixedProvider,
+  setup,
   ...formProps
 }: GenericIntegrationListProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
@@ -99,7 +106,7 @@ export function GenericIntegrationList<
   }
 
   if (error) {
-    return <Message type="error">{error.message}</Message>;
+    return <Message type="error">{humanizeError(error)}</Message>;
   }
 
   const addButton = registry && (
@@ -114,11 +121,25 @@ export function GenericIntegrationList<
   if (!settings?.length) {
     return (
       <>
-        <Message type="warning">{t('integrations.noSettingsFound')}</Message>
+        <Message type="warning">
+          {setup ?
+            t('integrations.setUpHint')
+          : t('integrations.noSettingsFound')}
+        </Message>
 
-        {(addButton || fixedProvider) && (
+        {(addButton || fixedProvider || setup) && (
           <Toolbar>
             {addButton}
+
+            {setup && (
+              <AddIntegrationButton
+                types={setup.types}
+                mutation={setup.createMutation}
+                refetchQuery={query}
+                existingIds={[]}
+                label={t('integrations.setUp')}
+              />
+            )}
 
             {fixedProvider && (
               <CreateFixedIntegrationButton

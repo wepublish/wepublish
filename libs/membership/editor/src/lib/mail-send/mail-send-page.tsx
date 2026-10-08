@@ -17,6 +17,8 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
+  InfoTooltip,
   ListViewContainer,
   ListViewHeader,
 } from '@wepublish/ui/editor';
@@ -275,7 +277,7 @@ function MailSendPage() {
             showIcon
             closable
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>
         ),
       onCompleted: result => {
@@ -451,7 +453,7 @@ function MailSendPage() {
                           <Typography
                             variant="caption"
                             style={{
-                              color: '#8e8e93',
+                              color: 'var(--rs-text-secondary)',
                               whiteSpace: 'normal',
                               lineHeight: 1.35,
                             }}
@@ -576,7 +578,8 @@ function MailSendPage() {
 
                       <Form.Group>
                         <Form.ControlLabel>
-                          {t('mailSend.state.label')}
+                          {t('mailSend.state.label')}{' '}
+                          <InfoTooltip text={t('mailSend.stateHelp')} />
                         </Form.ControlLabel>
                         <SelectPicker
                           block
@@ -594,7 +597,8 @@ function MailSendPage() {
 
                       <Form.Group>
                         <Form.ControlLabel>
-                          {t('mailSend.autoRenew')}
+                          {t('mailSend.autoRenew')}{' '}
+                          <InfoTooltip text={t('mailSend.autoRenewHelp')} />
                         </Form.ControlLabel>
                         <SelectPicker
                           block
@@ -633,7 +637,9 @@ function MailSendPage() {
                           block
                           data={Object.values(PaymentPeriodicity).map(
                             value => ({
-                              label: value,
+                              label: t(
+                                `memberPlanList.paymentPeriodicity.${value}`
+                              ),
                               value,
                             })
                           )}
@@ -1121,7 +1127,7 @@ function TemplatePreview({
             </div>
             <Typography
               variant="caption"
-              style={{ color: '#8e8e93', marginTop: 4 }}
+              style={{ color: 'var(--rs-text-secondary)', marginTop: 4 }}
               sx={{
                 display: 'block',
               }}
@@ -1130,7 +1136,7 @@ function TemplatePreview({
             </Typography>
           </div>
 
-          {error && <Message type="error">{error.message}</Message>}
+          {error && <Message type="error">{humanizeError(error)}</Message>}
 
           {preview && (
             <MailPreview

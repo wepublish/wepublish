@@ -32,6 +32,8 @@ import {
   CurrencyInput,
   DescriptionList,
   DescriptionListItem,
+  IconButtonTooltip,
+  InfoTooltip,
   InvoiceListPanel,
   ListViewActions,
   ListViewContainer as ListViewContainerDefault,
@@ -78,12 +80,8 @@ const Form = styled(RForm)`
   height: 100%;
 `;
 
-const FormLabelMarginLeft = styled(Label)`
-  margin-left: 10px;
-`;
-
 const Button = styled(RButton)`
-  margin-top: 10px;
+  margin-top: 8px;
 `;
 
 const Grid = styled(RGrid)`
@@ -108,12 +106,12 @@ const UserFormGrid = styled(RGrid)`
 `;
 
 const ButtonMarginRight = styled(Button)`
-  margin-right: 10px;
+  margin-right: 8px;
 `;
 
 const IconButtonMarginRight = styled(IconButton)`
-  margin-right: 10px;
-  margin-top: 10px;
+  margin-right: 8px;
+  margin-top: 8px;
 `;
 
 export interface SubscriptionEditViewProps {
@@ -667,9 +665,14 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
         <ListViewContainer>
           <ListViewHeader>
             <h2>
-              <Link to={goBackLink}>
-                <MdChevronLeft />
-              </Link>
+              <IconButtonTooltip caption={t('back')}>
+                <Link
+                  to={goBackLink}
+                  aria-label={t('back')}
+                >
+                  <MdChevronLeft />
+                </Link>
+              </IconButtonTooltip>
               {id ?
                 t('userSubscriptionEdit.editTitle')
               : t('userSubscriptionEdit.createTitle')}
@@ -973,7 +976,12 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         </Col>
                         {/* subscription paid until */}
                         <Col xs={12}>
-                          <Label>{t('userSubscriptionEdit.paidUntil')}</Label>
+                          <Label>
+                            {t('userSubscriptionEdit.paidUntil')}{' '}
+                            <InfoTooltip
+                              text={t('userSubscriptionEdit.paidUntilInfo')}
+                            />
+                          </Label>
                           <DatePicker
                             block
                             value={paidUntil ?? undefined}
@@ -1038,6 +1046,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                       <Col xs={12}>
                         <Toggle
                           checked={extendable}
+                          label={t('memberplanForm.extendableToggle')}
                           onChange={updatedExtendable =>
                             setExtendable(() =>
                               checkTrialSubscription(updatedExtendable) ?
@@ -1046,9 +1055,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             )
                           }
                         />
-                        <FormLabelMarginLeft>
-                          {t('memberplanForm.extendableToggle')}
-                        </FormLabelMarginLeft>
                         <Text>{t('memberplanForm.extendableHelpText')}</Text>
                       </Col>
                     </RowPaddingTop>
@@ -1062,6 +1068,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             hasNoMemberPlanSelected ||
                             isDeactivated
                           }
+                          label={t('userSubscriptionEdit.autoRenew')}
                           onChange={value =>
                             setAutoRenew(() =>
                               checkTrialSubscription(extendable, value) ? value
@@ -1069,9 +1076,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             )
                           }
                         />
-                        <FormLabelMarginLeft>
-                          {t('userSubscriptionEdit.autoRenew')}
-                        </FormLabelMarginLeft>
                         <Text>
                           {t('userSubscriptionEdit.autoRenewDescription')}
                         </Text>

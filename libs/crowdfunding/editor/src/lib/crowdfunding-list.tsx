@@ -6,13 +6,15 @@ import {
   ListViewHeader,
   createCheckedPermissionComponent,
   IconButton,
+  IconButtonTooltip,
   TableWrapper,
   PaddedCell,
+  Table,
 } from '@wepublish/ui/editor';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { IconButton as RIconButton, Table as RTable, Table } from 'rsuite';
+import { IconButton as RIconButton, Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 import {
   CrowdfundingsDocument,
@@ -64,35 +66,37 @@ function CrowdfundingList() {
             <RCell>
               {(rowData: RowDataType<FullCrowdfundingFragment>) => (
                 <Link to={`/crowdfundings/edit/${rowData.id}`}>
-                  {rowData.name || 'FullCrowdfundingFragment ohne Namen'}
+                  {rowData.name || t('crowdfunding.list.unnamed')}
                 </Link>
               )}
             </RCell>
           </Column>
 
           <Column
-            resizable
-            width={75}
+            width={100}
+            align="center"
+            resizable={false}
             fixed="right"
           >
-            <HeaderCell align={'center'}>
-              {t('crowdfunding.list.delete')}
-            </HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
 
-            <PaddedCell align={'center'}>
+            <PaddedCell align="center">
               {(crowdfunding: RowDataType<FullCrowdfundingFragment>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() =>
-                    setCrowdfundingDelete(
-                      crowdfunding as FullCrowdfundingFragment
-                    )
-                  }
-                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    onClick={() =>
+                      setCrowdfundingDelete(
+                        crowdfunding as FullCrowdfundingFragment
+                      )
+                    }
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

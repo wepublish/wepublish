@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaClient, SettingPaymentProvider } from '@prisma/client';
+import {
+  PaymentProviderType,
+  PrismaClient,
+  SettingPaymentProvider,
+} from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { ProviderSettingsChanged } from './provider-settings-changed';
@@ -132,6 +136,40 @@ describe('PaymentProviderSettingsService', () => {
     } as never);
 
     expect(upsert.mock.calls[0][0].update).toEqual({ deletedAt: null });
+  });
+
+  describe('simulated payment provider', () => {
+    const env = process.env;
+
+    afterEach(() => {
+      process.env = env;
+    });
+
+    const createSimulated = () =>
+      service.createPaymentProviderSetting({
+        id: 'simulated',
+        name: 'Simulated',
+        type: PaymentProviderType.SIMULATED,
+      } as never);
+
+    test('can be added outside of production', async () => {
+      process.env = { ...env, APP_ENVIRONMENT: 'review' };
+      const upsert = vi
+        .spyOn(prisma.settingPaymentProvider, 'upsert')
+        .mockResolvedValue(provider({ id: 'simulated' }));
+
+      await createSimulated();
+
+      expect(upsert).toHaveBeenCalled();
+    });
+
+    test('cannot be added on production', async () => {
+      process.env = { ...env, APP_ENVIRONMENT: 'production' };
+      const upsert = vi.spyOn(prisma.settingPaymentProvider, 'upsert');
+
+      await expect(createSimulated()).rejects.toThrow(/production/);
+      expect(upsert).not.toHaveBeenCalled();
+    });
   });
 
   test('asks for the providers to be rebuilt after a change', async () => {

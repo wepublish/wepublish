@@ -6,8 +6,6 @@ enum AIProviderType {
   V0
 }
 
-union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
-
 """
 The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action.
 """
@@ -37,17 +35,6 @@ enum ActionMailNoMailReason {
   firstPeriod
   noTemplate
   notApplicable
-}
-
-enum ActionType {
-  ArticleCreated
-  AuthorCreated
-  CommentCreated
-  EventCreated
-  PageCreated
-  PollStarted
-  SubscriptionCreated
-  UserCreated
 }
 
 type AllowedSettingVals {
@@ -82,13 +69,6 @@ type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   tags: [Tag!]!
   trackingPixels: [TrackingPixel!]!
   url: String!
-}
-
-type ArticleCreatedAction implements BaseAction & HasArticleLc {
-  actionType: ActionType!
-  article: Article!
-  articleId: String!
-  date: DateTime!
 }
 
 input ArticleFilter {
@@ -265,13 +245,6 @@ type Author implements HasImage & HasOptionalPeerLc {
   url: String!
 }
 
-type AuthorCreatedAction implements BaseAction & HasAuthor {
-  actionType: ActionType!
-  author: Author!
-  authorId: String!
-  date: DateTime!
-}
-
 input AuthorFilter {
   hideOnTeam: Boolean
   name: String
@@ -344,11 +317,6 @@ enum BannerActionRole {
 enum BannerDocumentType {
   ARTICLE
   PAGE
-}
-
-interface BaseAction {
-  actionType: ActionType!
-  date: DateTime!
 }
 
 interface BaseBlock {
@@ -689,13 +657,6 @@ input CommentBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: CommentBlockFilterInput!
-}
-
-type CommentCreatedAction implements BaseAction & HasComment {
-  actionType: ActionType!
-  comment: Comment!
-  commentId: String!
-  date: DateTime!
 }
 
 input CommentFilter {
@@ -1132,13 +1093,6 @@ input EventBlockInput {
   filter: EventBlockFilterInput!
 }
 
-type EventCreatedAction implements BaseAction & HasEventLc {
-  actionType: ActionType!
-  date: DateTime!
-  event: Event!
-  eventId: String!
-}
-
 input EventFilter {
   from: DateTime
   location: String
@@ -1388,28 +1342,8 @@ interface HasArticle {
   articleID: String!
 }
 
-interface HasArticleLc {
-  article: Article!
-  articleId: String!
-}
-
-interface HasAuthor {
-  author: Author!
-  authorId: String!
-}
-
 interface HasBlockContent {
   blocks: [BlockContent!]!
-}
-
-interface HasComment {
-  comment: Comment!
-  commentId: String!
-}
-
-interface HasEventLc {
-  event: Event!
-  eventId: String!
 }
 
 interface HasImage {
@@ -1491,34 +1425,14 @@ interface HasPage {
   pageID: String!
 }
 
-interface HasPageLc {
-  page: Page!
-  pageId: String!
-}
-
 interface HasPaymentMethod {
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
 }
 
-interface HasPoll {
-  poll: FullPoll!
-  pollId: String!
-}
-
-interface HasSubscriptionLc {
-  subscription: PublicSubscription!
-  subscriptionId: String!
-}
-
 interface HasUser {
   user: User!
   userID: String!
-}
-
-interface HasUserLc {
-  user: User!
-  userId: String!
 }
 
 type IFrameBlock implements BaseBlock {
@@ -2723,6 +2637,11 @@ type Mutation {
   """Creates a new block template."""
   createBlockTemplate(blocks: [BlockContentInput!]!, name: String!): BlockTemplate!
 
+  """
+  Sets up the challenge provider. Only possible while none is configured.
+  """
+  createChallengeProviderSetting(id: String!, name: String, secret: String, siteKey: String, type: ChallengeProviderType!): SettingChallengeProvider!
+
   """Creates a comment for any user"""
   createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, publish: Boolean = false, tagIds: [String!], text: RichText): Comment!
 
@@ -2756,6 +2675,9 @@ type Mutation {
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
 
+  """Sets up the mail provider. Only possible while none is configured."""
+  createMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType!, webhookEndpointSecret: String): SettingMailProvider!
+
   """Start a background job sending a template to a filtered audience"""
   createMailSendJob(input: MailSendJobInput!): MailSendJobModel!
 
@@ -2783,7 +2705,7 @@ type Mutation {
   createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
 
   """Creates a new payment provider setting."""
-  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
+  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -2829,6 +2751,9 @@ type Mutation {
 
   """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+
+  """Sets up the sync provider. Only possible while none is configured."""
+  createSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String, type: SyncProviderType!): SettingSyncProvider!
 
   """Creates a new tag."""
   createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
@@ -3250,7 +3175,7 @@ type Mutation {
   updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
 
   """Updates an existing payment provider setting."""
-  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
+  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -3421,13 +3346,6 @@ type Page {
   slug: String
   tags: [Tag!]!
   url: String!
-}
-
-type PageCreatedAction implements BaseAction & HasPageLc {
-  actionType: ActionType!
-  date: DateTime!
-  page: Page!
-  pageId: String!
 }
 
 input PageFilter {
@@ -3767,6 +3685,7 @@ enum PaymentProviderType {
   NO_CHARGE
   PAYREXX
   PAYREXX_SUBSCRIPTION
+  SIMULATED
   STRIPE
   STRIPE_CHECKOUT
 }
@@ -4121,13 +4040,6 @@ enum PollSort {
   OpensAt
 }
 
-type PollStartedAction implements BaseAction & HasPoll {
-  actionType: ActionType!
-  date: DateTime!
-  poll: FullPoll!
-  pollId: String!
-}
-
 type PollVote {
   answer: PollAnswerInVote!
   answerId: String!
@@ -4207,9 +4119,6 @@ type PublicSubscriptionConnection {
 type Query {
   """The mail createUser would send, or why it sends none."""
   accountCreationMail: ActionMail!
-
-  """Returns latest actions"""
-  actions: [Action!]!
 
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
@@ -5051,6 +4960,7 @@ type SettingPaymentProvider implements SettingProvider {
   payrexx_pm: [PayrexxPM!]
   payrexx_psp: [PayrexxPSP!]
   payrexx_vatrate: String
+  simulated_declineRenewals: Boolean
   stripe_methods: [StripePaymentMethod!]
   type: PaymentProviderType!
 }
@@ -5297,13 +5207,6 @@ enum SubscribePeriodicityDisplay {
   Toggle
 }
 
-type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
-  actionType: ActionType!
-  date: DateTime!
-  subscription: PublicSubscription!
-  subscriptionId: String!
-}
-
 type SubscriptionDeactivation {
   date: DateTime!
   reason: SubscriptionDeactivationReason!
@@ -5356,7 +5259,7 @@ type SubscriptionFlowModel {
   id: String!
   intervals: [SubscriptionInterval!]!
   memberPlan: MemberPlan
-  numberOfSubscriptions: Int!
+  numberOfSubscriptions(memberPlanId: String): Int!
   paymentMethods: [PaymentMethod!]!
   periodicities: [PaymentPeriodicity!]!
 }
@@ -5768,13 +5671,6 @@ type UserConsent {
   modifiedAt: DateTime!
   user: User!
   value: Boolean!
-}
-
-type UserCreatedAction implements BaseAction & HasUserLc {
-  actionType: ActionType!
-  date: DateTime!
-  user: User!
-  userId: String!
 }
 
 enum UserEvent {

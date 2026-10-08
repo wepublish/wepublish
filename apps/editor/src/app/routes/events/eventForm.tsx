@@ -10,6 +10,7 @@ import {
   ChooseEditImage,
   DateTimePicker,
   ImageEditPanel,
+  InfoTooltip,
   ImageSelectPanel,
   RichTextBlock,
   RichTextBlockValue,
@@ -41,7 +42,7 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
   return (
     <>
       <div
-        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}
+        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}
       >
         <Panel
           bordered
@@ -138,7 +139,10 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
         <Panel bordered>
           {!create && (
             <Form.Group controlId="status">
-              <Form.Label>{t('event.form.status')}</Form.Label>
+              <Form.Label>
+                {t('event.form.status')}{' '}
+                <InfoTooltip text={t('event.form.statusInfo')} />
+              </Form.Label>
               <Form.Control
                 name="status"
                 block
@@ -184,7 +188,7 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
             />
           </Form.Group>
 
-          <Form.Group controlId="tagIds">
+          <Form.Group controlId="image">
             <Form.Label>{t('event.form.image')}</Form.Label>
             <Form.Control
               name="image"

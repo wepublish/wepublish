@@ -29,12 +29,14 @@ const TeaserGrid = styled.div`
 const TeaserWrapper = styled('article')`
   position: relative;
   min-height: 250px;
-  background-color: #f7f9fa;
+  overflow: hidden;
+  border-radius: var(--rs-radius-md);
+  background-color: var(--rs-bg-well);
 `;
 
 const PreviewPanel = styled(Panel)`
   overflow: hidden;
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
   display: grid;
   position: relative;
 `;

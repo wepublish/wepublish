@@ -9,7 +9,7 @@ import {
   CanGetTrackingPixelSettings,
   Permission,
 } from '@wepublish/permissions';
-import { PermissionControl } from '@wepublish/ui/editor';
+import { InfoTooltip, PermissionControl } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
 import { Link, useParams } from 'react-router-dom';
@@ -45,6 +45,29 @@ const useIntegrationTitle = (type: string | undefined) => {
   }
 };
 
+const useIntegrationInfo = (type: string | undefined) => {
+  const { t } = useTranslation();
+
+  switch (type) {
+    case 'ai':
+      return t('integrations.aiInfo');
+    case 'challenge':
+      return t('integrations.challengeProviderInfo');
+    case 'payment':
+      return t('integrations.paymentProviderInfo');
+    case 'tracking-pixel':
+      return t('integrations.trackingPixelInfo');
+    case 'analytics':
+      return t('integrations.analyticsInfo');
+    case 'mail':
+      return t('integrations.mailProviderInfo');
+    case 'mailchimp-sync':
+      return t('integrations.mailchimpSyncInfo');
+    default:
+      return undefined;
+  }
+};
+
 const getPermission = (type: string | undefined): Permission | undefined => {
   switch (type) {
     case 'ai':
@@ -72,6 +95,7 @@ export function IntegrationEditView() {
 
   const permission = getPermission(type);
   const title = useIntegrationTitle(type);
+  const info = useIntegrationInfo(type);
 
   const renderConfiguration = (() => {
     switch (type) {
@@ -109,7 +133,15 @@ export function IntegrationEditView() {
           </Button>
         </Link>
 
-        <h1>{title}</h1>
+        <h1>
+          {title}
+          {info && (
+            <>
+              {' '}
+              <InfoTooltip text={info} />
+            </>
+          )}
+        </h1>
 
         <div style={{ marginTop: 20 }}>{renderConfiguration}</div>
       </div>

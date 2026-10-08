@@ -1,4 +1,5 @@
 import {
+  CreateMailProviderSettingDocument,
   MailProviderSettingsDocument,
   MailProviderType,
   SettingMailProvider,
@@ -46,6 +47,13 @@ export function MailIntegrationForm() {
       query={MailProviderSettingsDocument}
       mutation={UpdateMailProviderSettingDocument}
       dataKey="mailProviderSettings"
+      setup={{
+        createMutation: CreateMailProviderSettingDocument,
+        types: Object.values(MailProviderType).map(type => ({
+          label: type,
+          value: type,
+        })),
+      }}
       schema={mailSettingsSchema}
       getLogo={setting => {
         switch (setting.type) {
@@ -64,6 +72,7 @@ export function MailIntegrationForm() {
           {
             name: 'type',
             label: t('integrations.mailSettings.type'),
+            info: t('integrations.mailSettings.typeInfo'),
             type: 'select',
             options: Object.values(MailProviderType).map(v => ({
               label: v,
@@ -79,11 +88,13 @@ export function MailIntegrationForm() {
             type: 'text',
             name: 'fromAddress',
             label: t('integrations.mailSettings.fromAddress'),
+            info: t('integrations.mailSettings.fromAddressInfo'),
           },
           {
             type: 'text',
             name: 'replyToAddress',
             label: t('integrations.mailSettings.replyToAddress'),
+            info: t('integrations.mailSettings.replyToAddressInfo'),
           },
         ];
 
@@ -91,12 +102,14 @@ export function MailIntegrationForm() {
           commonFields.push({
             name: 'apiKey',
             label: t('integrations.mailSettings.apiKey'),
+            info: t('integrations.mailSettings.apiKeyInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
           });
           commonFields.push({
             name: 'webhookEndpointSecret',
             label: t('integrations.mailSettings.webhookEndpointSecret'),
+            info: t('integrations.mailSettings.webhookEndpointSecretInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
           });
@@ -111,12 +124,14 @@ export function MailIntegrationForm() {
           commonFields.push({
             name: 'apiKey',
             label: t('integrations.mailSettings.apiKey'),
+            info: t('integrations.mailSettings.apiKeyInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
           });
           commonFields.push({
             name: 'webhookEndpointSecret',
             label: t('integrations.mailSettings.webhookEndpointSecret'),
+            info: t('integrations.mailSettings.webhookEndpointSecretInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
           });
@@ -124,11 +139,13 @@ export function MailIntegrationForm() {
             type: 'text',
             name: 'mailgun_baseDomain',
             label: t('integrations.mailSettings.mailgunBaseDomain'),
+            info: t('integrations.mailSettings.mailgunBaseDomainInfo'),
           });
           commonFields.push({
             type: 'text',
             name: 'mailgun_mailDomain',
             label: t('integrations.mailSettings.mailgunMailDomain'),
+            info: t('integrations.mailSettings.mailgunMailDomainInfo'),
           });
         }
 
@@ -137,6 +154,7 @@ export function MailIntegrationForm() {
             type: 'text',
             name: 'slack_webhookURL',
             label: t('integrations.mailSettings.slackWebhookUrl'),
+            info: t('integrations.mailSettings.slackWebhookUrlInfo'),
           });
         }
 
@@ -145,16 +163,19 @@ export function MailIntegrationForm() {
             type: 'text',
             name: 'smtp_host',
             label: t('integrations.mailSettings.smtpHost'),
+            info: t('integrations.mailSettings.smtpHostInfo'),
           });
           commonFields.push({
             type: 'number',
             name: 'smtp_port',
             label: t('integrations.mailSettings.smtpPort'),
+            info: t('integrations.mailSettings.smtpPortInfo'),
           });
           commonFields.push({
             type: 'checkbox',
             name: 'smtp_secure',
             label: t('integrations.mailSettings.smtpSecure'),
+            info: t('integrations.mailSettings.smtpSecureInfo'),
           });
           commonFields.push({
             type: 'text',

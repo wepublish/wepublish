@@ -7,6 +7,10 @@ const Children = styled('div', {
   display: flex;
   width: 80%;
   max-width: ${({ maxWidth }) => maxWidth};
+
+  @media (max-width: 899px) {
+    width: 100%;
+  }
 `;
 
 const ChildrenWrapper = styled.div`
@@ -18,6 +22,10 @@ const ChildrenWrapper = styled.div`
   padding-bottom: 60px;
   padding-left: 40px;
   padding-right: 40px;
+
+  @media (max-width: 899px) {
+    padding: 16px 12px 40px;
+  }
 `;
 
 const NavigationChildren = styled.div`
@@ -25,7 +33,8 @@ const NavigationChildren = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
-  width: 100%;
+  margin: calc(-1 * var(--wep-page-padding-top, 0px))
+    calc(-1 * var(--wep-page-padding-x, 0px)) 0;
 `;
 
 const EditorTemplateWrapper = styled.div`

@@ -23,6 +23,7 @@ import {
 } from 'rsuite';
 
 import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import {
   createCheckedPermissionComponent,
   PermissionControl,
@@ -279,23 +280,28 @@ function DocumentEditPanel({
                       {documentURL}
                     </a>
 
-                    <IconButton
-                      icon={<MdContentCopy />}
-                      size="xs"
-                      appearance="subtle"
-                      style={{ marginLeft: 8 }}
-                      onClick={() => {
-                        navigator.clipboard.writeText(documentURL);
-                        toaster.push(
-                          <Notification
-                            type="success"
-                            header={t('documents.panels.linkCopied')}
-                            duration={2000}
-                          />,
-                          { placement: 'topEnd' }
-                        );
-                      }}
-                    />
+                    <IconButtonTooltip
+                      caption={t('documents.overview.copyLink')}
+                    >
+                      <IconButton
+                        aria-label={t('documents.overview.copyLink')}
+                        icon={<MdContentCopy />}
+                        size="xs"
+                        appearance="subtle"
+                        style={{ marginLeft: 8 }}
+                        onClick={() => {
+                          navigator.clipboard.writeText(documentURL);
+                          toaster.push(
+                            <Notification
+                              type="success"
+                              header={t('documents.panels.linkCopied')}
+                              duration={2000}
+                            />,
+                            { placement: 'topEnd' }
+                          );
+                        }}
+                      />
+                    </IconButtonTooltip>
                   </DescriptionListItem>
                 )}
               </DescriptionList>

@@ -27,6 +27,7 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '../atoms';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { RichTextBlock, RichTextBlockValue } from '../blocks';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { getOperationNameFromDocument } from '../utility';
@@ -46,8 +47,8 @@ const HiddenFontControl = styled(Control)`
 `;
 
 const BoxWrapper = styled.div`
-  border: solid 1px #cad5e4;
-  border-radius: 8px;
+  border: solid 1px var(--rs-border-primary);
+  border-radius: var(--rs-radius-md);
   padding: 12px;
   margin-top: 4px;
 `;
@@ -57,7 +58,7 @@ const Panel = styled(RPanel)`
 `;
 
 const Message = styled(RMessage)`
-  margin-top: 5px;
+  margin-top: 4px;
 `;
 
 function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
@@ -280,7 +281,10 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
             />
           </Group>
           <Group controlId="peerListThemeColor">
-            <Label>{t('peerList.panels.themeColor')}</Label>
+            <Label>
+              {t('peerList.panels.themeColor')}{' '}
+              <InfoTooltip text={t('peerList.panels.themeColorInfo')} />
+            </Label>
             <ColorPicker
               disabled={isDisabled}
               setColor={color => {
@@ -300,7 +304,10 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
             />
           </Group>
 
-          <Label>{t('peerList.panels.callToActionText')}</Label>
+          <Label>
+            {t('peerList.panels.callToActionText')}{' '}
+            <InfoTooltip text={t('peerList.panels.callToActionInfo')} />
+          </Label>
           <BoxWrapper>
             <Group controlId="peerListCallToAction">
               <Label>{t('peerList.panels.text')}</Label>

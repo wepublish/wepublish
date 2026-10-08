@@ -15,6 +15,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { FieldError } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import fontsData from './all-fonts.json';
 
@@ -135,6 +136,7 @@ type FontPickerProps = {
 export const FontPicker = memo(
   forwardRef<HTMLInputElement, FontPickerProps>(
     ({ value, onChange, onBlur, error, name }, ref) => {
+      const { t } = useTranslation();
       const selectedFont = fontFamilyMap.get(value ?? '') ?? null;
 
       const [fontFamilies, setFontFamilies] = useState(() =>
@@ -201,6 +203,7 @@ export const FontPicker = memo(
                 name={name}
                 size="small"
                 ref={ref}
+                placeholder={t('websiteSettings.fonts.searchPlaceholder')}
                 error={!!error}
                 helperText={error?.message}
                 slotProps={{

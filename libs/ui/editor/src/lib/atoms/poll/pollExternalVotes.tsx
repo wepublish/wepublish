@@ -24,6 +24,8 @@ import {
 } from 'rsuite';
 import FormControl from 'rsuite/FormControl';
 import { RowDataType } from 'rsuite-table';
+import { humanizeError } from '../../humanizeError';
+import { IconButtonTooltip } from '../iconButtonTooltip';
 
 const Row = styled(RRow)`
   margin-top: 20px;
@@ -133,16 +135,27 @@ export function ExternalVoteTable({
       </Table.Column>
       {iterateAnswerColumns()}
       {/* delete button */}
-      <Table.Column>
-        <Table.HeaderCell>{t('delete')}</Table.HeaderCell>
+      <Table.Column
+        width={100}
+        align="center"
+        fixed="right"
+      >
+        <Table.HeaderCell align="center">{t('action')}</Table.HeaderCell>
         <Table.Cell>
           {(voteSource: RowDataType<PollExternalVoteSourceFragment>) => (
-            <IconButton
-              icon={<MdDelete />}
-              onClick={() =>
-                onClickDeleteBtn(voteSource as PollExternalVoteSourceFragment)
-              }
-            />
+            <IconButtonTooltip caption={t('delete')}>
+              <IconButton
+                circle
+                size="sm"
+                appearance="ghost"
+                color="red"
+                aria-label={t('delete')}
+                icon={<MdDelete />}
+                onClick={() =>
+                  onClickDeleteBtn(voteSource as PollExternalVoteSourceFragment)
+                }
+              />
+            </IconButtonTooltip>
           )}
         </Table.Cell>
       </Table.Column>
@@ -174,9 +187,9 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -188,7 +201,7 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
           showIcon
           type="error"
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollExternalVotes.emptySource')}
         </Message>
@@ -201,7 +214,7 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
           showIcon
           type="error"
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollExternalVotes.noPollAvailable')}
         </Message>

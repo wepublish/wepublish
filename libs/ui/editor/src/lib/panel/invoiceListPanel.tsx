@@ -27,6 +27,7 @@ import { createCheckedPermissionComponent } from '../atoms';
 import { useActionMailQuestion } from '../hooks';
 import { ColumnConfigurator } from '../listView/column-configurator';
 import { ListColumn, renderListColumns } from '../listView/list-columns';
+import { Table } from '../listView/list-view';
 import { useColumnConfig } from '../listView/use-column-config';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -55,7 +56,7 @@ const StatusPill = styled('span')<{ pillColor: string }>`
   background-color: ${({ pillColor }) => pillColor};
   color: white;
   font-size: 10px;
-  box-shadow: 0 0 0 2px white;
+  box-shadow: 0 0 0 2px var(--rs-bg-card);
 `;
 
 const IdButton = styled('button')`
@@ -179,18 +180,18 @@ function InvoiceListPanel({
             invoice.paidAt ?
               {
                 title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
-                color: '#22c55e',
+                color: 'var(--rs-state-success)',
                 icon: <MdDone />,
               }
             : invoice.canceledAt ?
               {
                 title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
-                color: '#ef4444',
+                color: 'var(--rs-state-error)',
                 icon: <MdClose />,
               }
             : {
                 title: t('invoice.unpaid'),
-                color: '#eab308',
+                color: 'var(--rs-state-warning)',
                 icon: <MdAccessTime />,
               };
 
@@ -314,15 +315,19 @@ function InvoiceListPanel({
       bordered
       header={panelHeader}
     >
-      <RTable
+      <Table
         autoHeight
         wordWrap="break-word"
         data={invoices}
       >
         {renderListColumns(columns, isVisible)}
 
-        <Column width={160}>
-          <HeaderCell>{t('invoice.table.action')}</HeaderCell>
+        <Column
+          width={160}
+          align="center"
+          fixed="right"
+        >
+          <HeaderCell align="center">{t('action')}</HeaderCell>
           <RCell>
             {(rowData: RowDataType<InvoiceFragment>) =>
               !rowData.paidAt && !rowData.canceledAt ?
@@ -338,7 +343,7 @@ function InvoiceListPanel({
             }
           </RCell>
         </Column>
-      </RTable>
+      </Table>
 
       <Modal
         open={!!invoiceToPay}

@@ -7,11 +7,20 @@ import {
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
-import { Button, Drawer, IconButton, Message, Table, toaster } from 'rsuite';
+import {
+  Button,
+  Drawer,
+  IconButton,
+  Message,
+  Table as RTable,
+  toaster,
+} from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 import { IconButtonTooltip } from '../atoms';
 import { CrowdfundingBlockValue } from '../blocks';
+import { humanizeError } from '../humanizeError';
+import { Table } from '../listView/list-view';
 
 const DrawerBody = styled(Drawer.Body)`
   padding: 24px;
@@ -24,9 +33,9 @@ const onErrorToast = (error: Error) => {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </Message>
     );
   }
@@ -87,28 +96,32 @@ export function SelectCrowdfundingPanel({
             rowData?.id === selectedCrowdfunding?.id ? 'highlighted-row' : ''
           }
         >
-          <Table.Column
+          <RTable.Column
             resizable
             width={200}
           >
-            <Table.HeaderCell>{t('blocks.crowdfunding.name')}</Table.HeaderCell>
-            <Table.Cell>
+            <RTable.HeaderCell>
+              {t('blocks.crowdfunding.name')}
+            </RTable.HeaderCell>
+            <RTable.Cell>
               {(rowData: RowDataType<FullCrowdfundingFragment>) => rowData.name}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column width={125}>
-            <Table.HeaderCell align="center">
-              {t('blocks.crowdfunding.select')}
-            </Table.HeaderCell>
-            <Table.Cell align="center">
+          <RTable.Column
+            width={100}
+            align="center"
+            fixed="right"
+          >
+            <RTable.HeaderCell align="center">{t('action')}</RTable.HeaderCell>
+            <RTable.Cell align="center">
               {(rowData: RowDataType<FullCrowdfundingFragment>) => (
                 <IconButtonTooltip caption={t('blocks.crowdfunding.select')}>
                   <IconButton
+                    aria-label={t('blocks.crowdfunding.select')}
                     icon={<MdAddCircle />}
-                    appearance="primary"
                     circle
-                    size="xs"
+                    size="sm"
                     onClick={() => {
                       onSelect(
                         rowData as CrowdfundingBlockValue['crowdfunding']
@@ -118,8 +131,8 @@ export function SelectCrowdfundingPanel({
                   />
                 </IconButtonTooltip>
               )}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
         </Table>
       </DrawerBody>
     </>

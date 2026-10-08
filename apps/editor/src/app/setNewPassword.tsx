@@ -21,7 +21,7 @@ const Description = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 14px;
-  color: #555;
+  color: var(--rs-text-secondary);
 `;
 
 const BackLink = styled.a`
@@ -29,7 +29,7 @@ const BackLink = styled.a`
   text-align: center;
   margin-top: 12px;
   font-size: 13px;
-  color: #1675e0;
+  color: var(--rs-text-link);
   cursor: pointer;
   text-decoration: none;
   &:hover {
@@ -65,7 +65,7 @@ export function SetNewPassword() {
           type="error"
           showIcon
           closable
-          duration={5000}
+          duration={8000}
         >
           {t('setNewPassword.mismatch')}
         </Message>
@@ -79,7 +79,7 @@ export function SetNewPassword() {
           type="error"
           showIcon
           closable
-          duration={5000}
+          duration={8000}
         >
           {t('setNewPassword.invalidLink')}
         </Message>
@@ -96,7 +96,7 @@ export function SetNewPassword() {
           type="error"
           showIcon
           closable
-          duration={5000}
+          duration={8000}
         >
           {error?.message || t('setNewPassword.error')}
         </Message>
