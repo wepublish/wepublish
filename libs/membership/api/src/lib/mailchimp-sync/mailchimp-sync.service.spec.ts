@@ -144,6 +144,27 @@ describe('MailchimpSyncService', () => {
     service = module.get<MailchimpSyncService>(MailchimpSyncService);
   });
 
+  it('keeps readably why a nightly sync failed', async () => {
+    vi.spyOn(
+      service as unknown as { executeSyncForConfig: () => Promise<void> },
+      'executeSyncForConfig'
+    ).mockRejectedValue({
+      status: 401,
+      title: 'API Key Invalid',
+      detail:
+        'Your API key may be invalid, or you have attempted to access the wrong datacenter.',
+    });
+
+    await service.executeAllSync();
+
+    expect(
+      syncProviderSettingsServiceMock.updateSyncResult
+    ).toHaveBeenCalledWith(
+      syncConfig.id,
+      '401 Your API key may be invalid, or you have attempted to access the wrong datacenter.'
+    );
+  });
+
   describe('newly created CMS user', () => {
     it('syncs a user missing on Mailchimp as a new contact', async () => {
       prismaMock.subscription.findMany.mockResolvedValue([buildSubscription()]);

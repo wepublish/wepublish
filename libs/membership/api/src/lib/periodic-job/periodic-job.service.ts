@@ -1,8 +1,10 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   Logger,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import {
   Invoice,
@@ -40,17 +42,43 @@ import { SubscriptionEventDictionary } from '../subscription-event-dictionary/su
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionService } from './subscription.service';
 import { PeriodicJobRunObject } from './periodic-job.type';
-import { getMaxTake } from '@wepublish/utils/api';
+import { addErrorContext, getMaxTake } from '@wepublish/utils/api';
+import { KvLock, KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
 export const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
+
+const RUN_LOCK = 'periodic-job-run';
+const RUN_LOCK_TTL_MS = 2 * 60 * 1000;
 
 const toDbDate = (day: Date) =>
   new Date(Date.UTC(day.getFullYear(), day.getMonth(), day.getDate()));
 
 const fromDbDate = (date: Date) =>
   new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+
+type RunState = Partial<
+  Pick<
+    PeriodicJob,
+    'executionTime' | 'successfullyFinished' | 'finishedWithError'
+  >
+>;
+
+const isUnfinished = ({
+  executionTime,
+  successfullyFinished,
+  finishedWithError,
+}: RunState) =>
+  !!executionTime &&
+  !successfullyFinished &&
+  (!finishedWithError || executionTime > finishedWithError);
+
+export const isPeriodicJobRunning = (job: RunState, now = Date.now()) =>
+  isUnfinished(job) &&
+  (job.executionTime?.getTime() ?? 0) > now - NIGHT_CLAIM_MS;
+
+type RetryRun = Extract<PeriodicJobRunObject, { isRetry: true }>;
 
 /**
  * Controller responsible for performing periodic jobs. A new controller
@@ -70,8 +98,17 @@ export class PeriodicJobService {
     private mailContext: MailContext,
     private subscriptionController: SubscriptionService,
     private payments: PaymentsService,
-    private invoicePaidNotifier: InvoicePaidNotifier
+    private invoicePaidNotifier: InvoicePaidNotifier,
+    private kv: KvTtlCacheService
   ) {}
+
+  async isRunning(job: RunState) {
+    if (!isUnfinished(job)) {
+      return false;
+    }
+
+    return (await this.kv.isLocked(RUN_LOCK)) ?? isPeriodicJobRunning(job);
+  }
 
   getJobLog(take: number, skip?: number) {
     return this.prismaService.periodicJob.findMany({
@@ -110,46 +147,145 @@ export class PeriodicJobService {
    * If any of the tasks fail, the entire job is marked as failed.
    */
   public async execute(customRunDate: Date = new Date()) {
+    const lock = await this.kv.lock(RUN_LOCK, RUN_LOCK_TTL_MS);
+
+    if (lock === false) {
+      this.logger.log(
+        'Periodic job is already running on another replica, skipping'
+      );
+      return;
+    }
+
+    try {
+      await this.runOutstanding(customRunDate, lock);
+    } finally {
+      await lock?.release();
+    }
+  }
+
+  public async retryAndCatchUp(): Promise<PeriodicJob> {
+    const lock = await this.kv.lock(RUN_LOCK, RUN_LOCK_TTL_MS);
+
+    if (lock === false) {
+      throw new ConflictException(
+        'A periodic job is already running. Wait until it has finished.'
+      );
+    }
+
+    let failedRun: RetryRun;
+    let job: PeriodicJob;
+
+    try {
+      failedRun = await this.findRunToRetry(lock);
+      job = await this.retryFailedJob(failedRun);
+    } catch (error) {
+      await lock?.release();
+      throw error;
+    }
+
+    this.processRun(failedRun)
+      .then(() => this.runOutstanding(new Date(), lock))
+      .catch(error =>
+        this.logger.error('Retrying the periodic job failed:', error)
+      )
+      .finally(() => lock?.release());
+
+    return job;
+  }
+
+  private async findRunToRetry(lock: KvLock | undefined): Promise<RetryRun> {
+    if (!lock) {
+      if ((await this.kv.dragonflyStatus()) === 'unreachable') {
+        throw new ServiceUnavailableException(
+          'Dragonfly is unreachable, so nothing makes sure only one replica runs the periodic job. Try again in a moment.'
+        );
+      }
+
+      const latestRun = await this.prismaService.periodicJob.findFirst({
+        orderBy: { date: 'desc' },
+      });
+
+      if (latestRun && isPeriodicJobRunning(latestRun)) {
+        throw new ConflictException(
+          'A periodic job is already running. Wait until it has finished.'
+        );
+      }
+    }
+
+    const [failedRun] = await this.getOutstandingRuns(new Date(), !!lock);
+
+    if (!failedRun?.isRetry) {
+      throw new BadRequestException(
+        'There is no failed periodic job to retry.'
+      );
+    }
+
+    return failedRun;
+  }
+
+  private async runOutstanding(runDate: Date, lock: KvLock | undefined) {
     for (const periodicJobRunObject of await this.getOutstandingRuns(
-      customRunDate
+      runDate,
+      !!lock
     )) {
-      if (periodicJobRunObject.isRetry) {
-        await this.retryFailedJob(periodicJobRunObject.date);
-      } else {
-        await this.markJobStarted(periodicJobRunObject.date);
+      if (lock?.lost) {
+        throw new Error(
+          'Lost the periodic job lock to another replica, stopping before the next run'
+        );
       }
 
-      try {
-        this.logger.log('Executing periodic job...');
-        this.logger.log('Processing custom mails...');
-        await this.sendCustomSubscriptionEmails(periodicJobRunObject);
-        this.logger.log('Processing invoice state changes...');
-        await this.checkStateOfOpenInvoices();
-        this.logger.log('Processing invoice creation...');
-        await this.createMissingInvoicesForActiveSubscriptions(
-          periodicJobRunObject
-        );
-        this.logger.log('Processing charge of invoices...');
-        await this.chargeUnpaidDueInvoices(periodicJobRunObject);
-        this.logger.log(
-          'Processing deactivation of subscriptions with unpaid invoice...'
-        );
-        await this.deactivateSubscriptionsWithUnpaidInvoices(
-          periodicJobRunObject
-        );
-        this.logger.log(
-          'Processing deactivation of subscriptions with which are not auto renewed...'
-        );
-        await this.deactivateExpiredNotAutoRenewSubscriptions(
-          periodicJobRunObject
-        );
-        this.logger.log('Periodic job successfully finished.');
-      } catch (e) {
-        await this.markJobFailed(inspect(e));
-        throw new Error(inspect(e));
-      }
+      await this.startRun(periodicJobRunObject);
+      await this.processRun(periodicJobRunObject);
+    }
+  }
 
-      await this.markJobSuccessful();
+  private async startRun(periodicJobRunObject: PeriodicJobRunObject) {
+    if (periodicJobRunObject.isRetry) {
+      await this.retryFailedJob(periodicJobRunObject);
+    } else {
+      await this.markJobStarted(periodicJobRunObject.date);
+    }
+  }
+
+  private async processRun(periodicJobRunObject: PeriodicJobRunObject) {
+    try {
+      this.logger.log('Executing periodic job...');
+      this.logger.log('Processing custom mails...');
+      await this.sendCustomSubscriptionEmails(periodicJobRunObject);
+      this.logger.log('Processing invoice state changes...');
+      await this.checkStateOfOpenInvoices();
+      this.logger.log('Processing invoice creation...');
+      await this.createMissingInvoicesForActiveSubscriptions(
+        periodicJobRunObject
+      );
+      this.logger.log('Processing charge of invoices...');
+      await this.chargeUnpaidDueInvoices(periodicJobRunObject);
+      this.logger.log(
+        'Processing deactivation of subscriptions with unpaid invoice...'
+      );
+      await this.deactivateSubscriptionsWithUnpaidInvoices(
+        periodicJobRunObject
+      );
+      this.logger.log(
+        'Processing deactivation of subscriptions with which are not auto renewed...'
+      );
+      await this.deactivateExpiredNotAutoRenewSubscriptions(
+        periodicJobRunObject
+      );
+      this.logger.log('Periodic job successfully finished.');
+    } catch (e) {
+      await this.markJobFailed(inspect(e));
+      throw new Error(inspect(e));
+    }
+
+    await this.markJobSuccessful();
+  }
+
+  private async inContext<T>(context: string, run: () => Promise<T>) {
+    try {
+      return await run();
+    } catch (error) {
+      throw addErrorContext(error, context);
     }
   }
 
@@ -200,9 +336,13 @@ export class PeriodicJobService {
       );
 
     for (const unpaidInvoice of unpaidInvoices) {
-      await this.deactivateSubscriptionByInvoice(
-        periodicJobRunObject,
-        unpaidInvoice
+      await this.inContext(
+        `Deactivating subscription ${unpaidInvoice.subscription?.id ?? unpaidInvoice.subscriptionID} for unpaid invoice ${unpaidInvoice.id} failed`,
+        () =>
+          this.deactivateSubscriptionByInvoice(
+            periodicJobRunObject,
+            unpaidInvoice
+          )
       );
     }
   }
@@ -214,14 +354,19 @@ export class PeriodicJobService {
       endOfDay(periodicJobRunObject.date)
     );
     for (const invoice of invoices) {
-      await this.chargeInvoice(periodicJobRunObject, invoice);
+      await this.inContext(`Charging invoice ${invoice.id} failed`, () =>
+        this.chargeInvoice(periodicJobRunObject, invoice)
+      );
     }
   }
 
   private async checkStateOfOpenInvoices() {
     const invoices = await this.subscriptionController.findAllOpenInvoices();
     for (const invoice of invoices) {
-      await this.checkInvoiceState(invoice);
+      await this.inContext(
+        `Checking the state of invoice ${invoice.id} failed`,
+        () => this.checkInvoiceState(invoice)
+      );
     }
   }
 
@@ -236,7 +381,10 @@ export class PeriodicJobService {
         )
       );
     for (const subscription of activeSubscriptionsWithoutInvoice) {
-      await this.createInvoice(periodicJobRunObject, subscription);
+      await this.inContext(
+        `Creating the invoice for subscription ${subscription.id} failed`,
+        () => this.createInvoice(periodicJobRunObject, subscription)
+      );
     }
   }
 
@@ -275,7 +423,10 @@ export class PeriodicJobService {
         },
       });
     for (const subscriptionsWithEvent of subscriptionsWithEvents) {
-      await this.sendCustomMails(periodicJobRunObject, subscriptionsWithEvent);
+      await this.inContext(
+        `Sending custom mails for subscription ${subscriptionsWithEvent.id} failed`,
+        () => this.sendCustomMails(periodicJobRunObject, subscriptionsWithEvent)
+      );
     }
   }
 
@@ -552,19 +703,30 @@ export class PeriodicJobService {
 
   /**
    * Mark a job as re-trying at the current date.
-   * @param runDate The original date of the job run.
+   * @param run The failed run, as it was read before the retry.
    */
-  private async retryFailedJob(runDate: Date) {
-    this.runningJob = await this.prismaService.periodicJob.update({
+  private async retryFailedJob({ date, lastStartedAt }: RetryRun) {
+    const [claimed] = await this.prismaService.periodicJob.updateManyAndReturn({
       where: {
-        date: toDbDate(runDate),
+        date: toDbDate(date),
+        executionTime: lastStartedAt,
+        successfullyFinished: null,
       },
       data: {
         executionTime: new Date(),
       },
     });
 
+    if (!claimed) {
+      throw new ConflictException(
+        'The failed periodic job has just been retried by someone else.'
+      );
+    }
+
+    this.runningJob = claimed;
     this.logger.warn('Retry failed job!');
+
+    return claimed;
   }
 
   /**
@@ -667,7 +829,8 @@ export class PeriodicJobService {
    * @returns An array of pending runs.
    */
   private async getOutstandingRuns(
-    customRunDate: Date
+    customRunDate: Date,
+    exclusive = false
   ): Promise<PeriodicJobRunObject[]> {
     const today = customRunDate || new Date();
     const runDates: PeriodicJobRunObject[] = [];
@@ -684,15 +847,22 @@ export class PeriodicJobService {
 
     const latestRunDay = fromDbDate(latestRun.date);
 
-    if (latestRun.finishedWithError && !latestRun.successfullyFinished) {
-      this.logger.warn('Last run had errors retrying....');
-      runDates.push({ isRetry: true, date: latestRunDay });
-    } else if (
-      !latestRun.successfullyFinished &&
-      (latestRun.executionTime?.getTime() ?? 0) < Date.now() - NIGHT_CLAIM_MS
-    ) {
-      this.logger.warn('Last run was aborted before it finished retrying....');
-      runDates.push({ isRetry: true, date: latestRunDay });
+    if (!exclusive && isPeriodicJobRunning(latestRun)) {
+      this.logger.log('Periodic job is still running, it catches up the rest');
+      return [];
+    }
+
+    if (!latestRun.successfullyFinished) {
+      this.logger.warn(
+        latestRun.finishedWithError ?
+          'Last run had errors retrying....'
+        : 'Last run was aborted before it finished retrying....'
+      );
+      runDates.push({
+        isRetry: true,
+        date: latestRunDay,
+        lastStartedAt: latestRun.executionTime,
+      });
     }
 
     return runDates.concat(this.generateDateArray(latestRunDay, today));
@@ -705,7 +875,7 @@ export class PeriodicJobService {
    * @returns An array of Date objects
    */
   private generateDateArray(startDate: Date, endDate: Date) {
-    const dateArray = [];
+    const dateArray: PeriodicJobRunObject[] = [];
     const lastDate = startOfDay(endDate);
     let inputDate = startOfDay(startDate);
     while (inputDate < lastDate) {

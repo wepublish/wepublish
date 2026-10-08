@@ -1,4 +1,4 @@
-import { INestApplication, Module } from '@nestjs/common';
+import { ConflictException, INestApplication, Module } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
@@ -7,6 +7,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PeriodicJobResolver } from './periodic-job.resolver';
 import { PeriodicJobService } from './periodic-job.service';
 import { PeriodicJob } from './periodic-job.model';
+import type { PeriodicJob as StoredPeriodicJob } from '@prisma/client';
 
 @Module({
   imports: [
@@ -20,7 +21,14 @@ import { PeriodicJob } from './periodic-job.model';
   ],
   providers: [
     PeriodicJobResolver,
-    { provide: PeriodicJobService, useValue: { getJobLog: vi.fn() } },
+    {
+      provide: PeriodicJobService,
+      useValue: {
+        getJobLog: vi.fn(),
+        retryAndCatchUp: vi.fn(),
+        isRunning: vi.fn(),
+      },
+    },
   ],
 })
 export class AppModule {}
@@ -36,6 +44,39 @@ const periodicJobsQuery = `
         }
     }
 `;
+
+const retryPeriodicJobMutation = `
+    mutation RetryPeriodicJob {
+        retryPeriodicJob {
+            id
+            running
+        }
+    }
+`;
+
+const runningJobQuery = `
+    query PeriodicJobLogs {
+        periodicJobLog {
+            id
+            running
+        }
+    }
+`;
+
+const storedJob = (
+  overrides: Partial<StoredPeriodicJob> = {}
+): StoredPeriodicJob => ({
+  id: '1234',
+  createdAt: new Date('2023-01-01'),
+  modifiedAt: new Date('2023-01-01'),
+  date: new Date('2023-01-01'),
+  tries: 1,
+  executionTime: new Date('2023-01-01'),
+  finishedWithError: null,
+  successfullyFinished: new Date('2023-01-01'),
+  error: null,
+  ...overrides,
+});
 
 export const mockLogs: PeriodicJob[] = [
   {
@@ -86,5 +127,60 @@ describe('ConsentResolver', () => {
         expect(spy).toHaveBeenCalledWith(1, undefined);
       })
       .expect(200);
+  });
+
+  it('tells which run is still going on', async () => {
+    vi.spyOn(service, 'getJobLog').mockResolvedValue([
+      storedJob({ id: 'running' }),
+      storedJob(),
+    ]);
+    vi.spyOn(service, 'isRunning')
+      .mockResolvedValueOnce(true)
+      .mockResolvedValueOnce(false);
+
+    await request(app.getHttpServer())
+      .post('')
+      .send({ query: runningJobQuery })
+      .expect(res => {
+        expect(res.body.data.periodicJobLog).toEqual([
+          { id: 'running', running: true },
+          { id: '1234', running: false },
+        ]);
+      })
+      .expect(200);
+  });
+
+  it('starts the retry and answers with the run it took over', async () => {
+    const spy = vi
+      .spyOn(service, 'retryAndCatchUp')
+      .mockResolvedValue(storedJob());
+    vi.spyOn(service, 'isRunning').mockResolvedValue(true);
+
+    await request(app.getHttpServer())
+      .post('')
+      .send({ query: retryPeriodicJobMutation })
+      .expect(res => {
+        expect(res.body.data.retryPeriodicJob).toEqual({
+          id: '1234',
+          running: true,
+        });
+        expect(spy).toHaveBeenCalledTimes(1);
+      })
+      .expect(200);
+  });
+
+  it('reports why a retry is refused', async () => {
+    vi.spyOn(service, 'retryAndCatchUp').mockRejectedValue(
+      new ConflictException('A periodic job is already running.')
+    );
+
+    await request(app.getHttpServer())
+      .post('')
+      .send({ query: retryPeriodicJobMutation })
+      .expect(res => {
+        expect(res.body.errors[0].message).toBe(
+          'A periodic job is already running.'
+        );
+      });
   });
 });

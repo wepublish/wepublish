@@ -43,6 +43,14 @@ vi.mock('node-fetch', () => ({
   ),
 }));
 
+const mockLoggerError = vi.fn();
+
+vi.mock('@wepublish/utils/api', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/utils/api')>()),
+  logger: () => ({ error: mockLoggerError, warn: vi.fn(), info: vi.fn() }),
+}));
+
+const mockBexioInvoiceCancel = vi.fn();
 const mockBexioContactSearch = vi.fn();
 const mockBexioContactCreate = vi.fn();
 const mockBexioContactEdit = vi.fn();
@@ -70,6 +78,7 @@ vi.mock('bexio', () => {
         sent: vi.fn().mockImplementation(() => ({
           success: true,
         })),
+        cancel: mockBexioInvoiceCancel,
       },
     };
   });
@@ -127,6 +136,56 @@ describe('BexioPaymentProvider', () => {
     };
 
     bexioPaymentProvider = new BexioPaymentProvider(mockProps);
+  });
+
+  describe('when Bexio refuses', () => {
+    const unauthorized = { code: 401, message: { message: 'Unauthorized' } };
+
+    it('says which step failed and why, instead of a bare object', async () => {
+      mockFindUnique.mockResolvedValue({
+        id: 'inv-1',
+        items: [],
+        subscription: { user: { email: 'dev@wepublish.ch' } },
+      });
+      mockBexioContactSearch.mockRejectedValueOnce(unauthorized);
+
+      await expect(
+        bexioPaymentProvider.bexioCreate('inv-1', true)
+      ).rejects.toThrow(
+        'Bexio failed while searching the contact for invoice inv-1: 401 Unauthorized'
+      );
+      expect(mockLoggerError).toHaveBeenCalledWith(
+        expect.any(String),
+        'inv-1',
+        true,
+        'Bexio failed while searching the contact for invoice inv-1: 401 Unauthorized'
+      );
+    });
+
+    it('logs which payment it could not cancel and why', async () => {
+      const provider = new BexioPaymentProvider({
+        ...mockProps,
+        prisma: {
+          invoice: { findFirst: vi.fn().mockResolvedValue({ id: 'inv-1' }) },
+          payment: {
+            findMany: vi
+              .fn()
+              .mockResolvedValue([{ id: 'pay-1', intentID: '42' }]),
+          },
+        },
+      });
+      mockBexioInvoiceCancel.mockRejectedValueOnce(unauthorized);
+
+      await provider.cancelRemoteSubscription({
+        subscription: { id: 'sub-1' },
+      } as never);
+
+      expect(mockLoggerError).toHaveBeenCalledWith(
+        'Error to cancel invoice for payment (id: %s): %s',
+        'pay-1',
+        '401 Unauthorized'
+      );
+    });
   });
 
   describe('Creating an invoice in Bexio', () => {

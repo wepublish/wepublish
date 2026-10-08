@@ -641,7 +641,7 @@ export class MemberContext implements MemberContextInterface {
       input?.autoRenew === false
     ) {
       throw new Error(
-        `It is not possible to update the subscription with payment provider "${paymentProvider.getName()}".`
+        `It is not possible to update the subscription with payment provider "${await paymentProvider.getName()}".`
       );
     }
 

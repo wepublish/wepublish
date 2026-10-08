@@ -133,5 +133,16 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   `BadRequestException`) rather than returning null-ish sentinels.
 - Log with Pino; report to Sentry. Never log tokens, passwords, or payment
   payloads.
+- **API errors say where they come from.** Every payment, mail, challenge and
+  tracking-pixel provider the `ProviderRegistryService` builds is wrapped by
+  `withProviderErrorContext`, so its errors read `Payment provider "<name>"
+  (<class>, id <id>) failed in <method>: …`; the error keeps its class
+  (`instanceof MailProviderRecipientError` still works). Turn unknown errors
+  into text with `describeError` and prefix context with `addErrorContext`
+  (`@wepublish/utils/api`), never `e instanceof Error ? e.message : String(e)`
+  or `JSON.stringify(e)`: SDKs like `bexio` reject with plain objects, which
+  print as `[object Object]` / `{}`. The periodic job adds the subscription or
+  invoice it was working on; that text is what the editor job log and ONE
+  (`mediumStats.operations.periodicJobError`) show.
 
 See [graphql-prisma.md](graphql-prisma.md) for the full schema workflow.

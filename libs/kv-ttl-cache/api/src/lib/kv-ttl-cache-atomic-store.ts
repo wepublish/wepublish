@@ -56,6 +56,7 @@ export interface KvAtomicStore {
   getManyRaw(keys: string[]): Promise<Array<string | undefined>>;
   setRaw(key: string, value: string, ttlMs?: number): Promise<boolean>;
   incrementRaw(key: string, ttlMs: number): Promise<number | undefined>;
+  expireRaw(key: string, ttlMs: number): Promise<boolean>;
   delRaw(key: string): Promise<void>;
   disconnect(): Promise<void>;
 }
@@ -103,6 +104,18 @@ export class MemoryAtomicStore implements KvAtomicStore {
     this.write(key, String(count), ttlMs);
 
     return count;
+  }
+
+  async expireRaw(key: string, ttlMs: number) {
+    const value = this.read(key);
+
+    if (value === undefined) {
+      return false;
+    }
+
+    this.write(key, value, ttlMs);
+
+    return true;
   }
 
   async delRaw(key: string) {
@@ -200,6 +213,10 @@ export class DragonflyAtomicStore implements KvAtomicStore {
     await this.send(['PEXPIRE', this.key(key), String(ttlMs)]);
 
     return count;
+  }
+
+  async expireRaw(key: string, ttlMs: number) {
+    return (await this.send(['PEXPIRE', this.key(key), String(ttlMs)])) === 1;
   }
 
   async delRaw(key: string) {

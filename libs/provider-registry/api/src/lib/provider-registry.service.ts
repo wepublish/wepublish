@@ -15,6 +15,7 @@ import {
 } from '@wepublish/tracking-pixel/api';
 import { ProviderSettingsChangedListener } from '@wepublish/settings/api';
 import { createSwappableProvider } from './swappable-provider';
+import { withProviderErrorContext } from './provider-error-context';
 
 export const PROVIDER_REGISTRY_BOOTSTRAP = 'PROVIDER_REGISTRY_BOOTSTRAP';
 
@@ -140,10 +141,25 @@ export class ProviderRegistryService
     const deps = { prisma: this.prisma, kv: this.kv };
 
     const [payment, trackingPixel, mail, challenge] = await Promise.all([
-      loadPaymentProviders(deps),
-      loadTrackingPixelProviders({ ...deps, httpClient: this.httpClient }),
-      loadMailProvider(deps),
-      loadChallengeProvider(deps),
+      loadPaymentProviders(deps).then(providers =>
+        providers.map(provider =>
+          withProviderErrorContext('Payment provider', provider)
+        )
+      ),
+      loadTrackingPixelProviders({ ...deps, httpClient: this.httpClient }).then(
+        providers =>
+          providers.map(provider =>
+            withProviderErrorContext('Tracking pixel provider', provider)
+          )
+      ),
+      loadMailProvider(deps).then(
+        provider =>
+          provider && withProviderErrorContext('Mail provider', provider)
+      ),
+      loadChallengeProvider(deps).then(
+        provider =>
+          provider && withProviderErrorContext('Challenge provider', provider)
+      ),
     ]);
 
     this.paymentProviders.splice(0, this.paymentProviders.length, ...payment);

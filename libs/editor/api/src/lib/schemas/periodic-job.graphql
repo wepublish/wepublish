@@ -5,6 +5,7 @@ fragment FullPeriodicJob on PeriodicJob {
   executionTime
   finishedWithError
   modifiedAt
+  running
   successfullyFinished
   tries
   createdAt
@@ -12,6 +13,12 @@ fragment FullPeriodicJob on PeriodicJob {
 
 query PeriodicJobLogs($skip: Int, $take: Int) {
   periodicJobLog(skip: $skip, take: $take) {
+    ...FullPeriodicJob
+  }
+}
+
+mutation RetryPeriodicJob {
+  retryPeriodicJob {
     ...FullPeriodicJob
   }
 }
