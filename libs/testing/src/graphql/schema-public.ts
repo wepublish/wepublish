@@ -31,6 +31,28 @@ export enum AiProviderType {
   V0 = 'V0'
 }
 
+/** The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action. */
+export type ActionMail = {
+  __typename?: 'ActionMail';
+  /** The SubscriptionEvent or UserEvent of the mail, e.g. SUBSCRIBE or ACCOUNT_CREATION. */
+  event: Scalars['String']['output'];
+  /** Set when a mail would be sent. */
+  mailTemplateId?: Maybe<Scalars['String']['output']>;
+  /** Set when a mail would be sent. */
+  mailTemplateName?: Maybe<Scalars['String']['output']>;
+  /** Set when no mail would be sent. */
+  noMailReason?: Maybe<ActionMailNoMailReason>;
+  /** The address the mail would go to; null while the user does not exist yet (createUser). */
+  recipientEmail?: Maybe<Scalars['String']['output']>;
+};
+
+export enum ActionMailNoMailReason {
+  AlreadyHandled = 'alreadyHandled',
+  FirstPeriod = 'firstPeriod',
+  NoTemplate = 'noTemplate',
+  NotApplicable = 'notApplicable'
+}
+
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
   boolChoice?: Maybe<Scalars['Boolean']['output']>;
@@ -3420,6 +3442,7 @@ export type MutationCreateSubscriptionArgs = {
   paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertyInput>;
+  skipMail?: InputMaybe<Scalars['Boolean']['input']>;
   startsAt: Scalars['DateTime']['input'];
   userID: Scalars['String']['input'];
 };
@@ -5468,6 +5491,8 @@ export type PublicSubscriptionConnection = {
 
 export type Query = {
   __typename?: 'Query';
+  /** The mail createUser would send, or why it sends none. */
+  accountCreationMail: ActionMail;
   /**
    *
    *       Returns all active subscribers.
@@ -5617,6 +5642,8 @@ export type Query = {
   importedEventsIds: Array<Scalars['String']['output']>;
   /** Returns a invoice by id. */
   invoice: Invoice;
+  /** The mail markInvoiceAsPaid would send for this invoice, or why it sends none. */
+  invoicePaymentMail: ActionMail;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
   /** Paginated list of sent mails */
@@ -5771,6 +5798,10 @@ export type Query = {
   stats?: Maybe<Stats>;
   /** Returns a subscription by id. */
   subscription: PublicSubscription;
+  /** The mail cancelSubscription would send for this subscription and reason, or why it sends none. */
+  subscriptionCancellationMail: ActionMail;
+  /** The mail createSubscription would send for a subscription with these settings, or why it sends none. */
+  subscriptionCreationMail: ActionMail;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
   /** Returns a paginated list of subscriptions based on the filters given. */
@@ -6134,6 +6165,11 @@ export type QueryInvoiceArgs = {
 };
 
 
+export type QueryInvoicePaymentMailArgs = {
+  invoiceId: Scalars['String']['input'];
+};
+
+
 export type QueryInvoicesArgs = {
   cursorId?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<InvoiceFilter>;
@@ -6460,6 +6496,21 @@ export type QuerySettingsArgs = {
 
 export type QuerySubscriptionArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QuerySubscriptionCancellationMailArgs = {
+  id: Scalars['String']['input'];
+  reason: SubscriptionDeactivationReason;
+};
+
+
+export type QuerySubscriptionCreationMailArgs = {
+  autoRenew: Scalars['Boolean']['input'];
+  memberPlanID: Scalars['String']['input'];
+  paymentMethodID: Scalars['String']['input'];
+  paymentPeriodicity: PaymentPeriodicity;
+  userID: Scalars['String']['input'];
 };
 
 
