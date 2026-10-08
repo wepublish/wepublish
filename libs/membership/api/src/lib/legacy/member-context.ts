@@ -866,7 +866,6 @@ export class MemberContext implements MemberContextInterface {
       throw new InternalServerErrorException();
     }
 
-    // Send subscribe mail (skipped when an editor chose not to mail the reader)
     if (!skipMail) {
       const subscriptionEvent =
         needsConfirmation ?

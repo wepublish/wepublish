@@ -1,9 +1,10 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { ActionMailNoMailReason } from '@wepublish/editor/api';
+import { ActionMailNoMailReason, UserEvent } from '@wepublish/editor/api';
 
 import {
   ActionMailDecision,
   ActionMailQuestion,
+  skipMailFor,
   useActionMailQuestion,
 } from './useActionMailQuestion';
 
@@ -74,13 +75,16 @@ describe('useActionMailQuestion', () => {
       expect(dialog.textContent).toContain('anna@example.com');
     });
 
-    // the safe answer: an accidental Enter never mails a member
-    it('answers "do not send" on Enter', async () => {
-      const { onDecision, dialog } = await ask(withTemplate);
+    // the safe answer: Enter presses the focused button, so an accidental
+    // Enter never mails a member
+    it('focuses "do not send"', async () => {
+      await ask(withTemplate);
 
-      fireEvent.keyDown(dialog, { key: 'Enter' });
-
-      await waitFor(() => expect(onDecision).toHaveBeenCalledWith('skip'));
+      await waitFor(() =>
+        expect(document.activeElement).toBe(
+          screen.getByRole('button', { name: 'actionMail.skip' })
+        )
+      );
     });
 
     it('answers "do not send" with its button', async () => {
@@ -94,7 +98,7 @@ describe('useActionMailQuestion', () => {
     it('sends only when asked to', async () => {
       const { onDecision } = await ask(withTemplate);
 
-      fireEvent.click(screen.getByText('actionMail.send'));
+      fireEvent.click(screen.getByText('send'));
 
       await waitFor(() => expect(onDecision).toHaveBeenCalledWith('send'));
     });
@@ -124,19 +128,19 @@ describe('useActionMailQuestion', () => {
       // the event's name as the subscription flow shows it
       expect(dialog.textContent).toContain('subscriptionFlow.subscribe');
       expect(dialog.textContent).toContain('anna@example.com');
-      expect(screen.queryByText('actionMail.send')).toBeNull();
+      expect(screen.queryByText('send')).toBeNull();
     });
 
-    it('names a user event by its system mail name', async () => {
-      const { dialog } = await ask({
-        ...withoutTemplate,
-        event: 'ACCOUNT_CREATION',
-      });
+    it.each(Object.values(UserEvent))(
+      'names the user event %s by its system mail name',
+      async event => {
+        const { dialog } = await ask({ ...withoutTemplate, event });
 
-      expect(dialog.textContent).toContain(
-        'systemMails.events.account_creation'
-      );
-    });
+        expect(dialog.textContent).toContain(
+          `systemMails.events.${event.toLowerCase()}`
+        );
+      }
+    );
 
     it('explains why a payment sends no confirmation', async () => {
       const { dialog } = await ask({
@@ -148,18 +152,20 @@ describe('useActionMailQuestion', () => {
       expect(dialog.textContent).toContain('actionMail.firstPeriod');
     });
 
-    it('goes on without a mail on Enter', async () => {
-      const { onDecision, dialog } = await ask(withoutTemplate);
+    it('focuses OK', async () => {
+      await ask(withoutTemplate);
 
-      fireEvent.keyDown(dialog, { key: 'Enter' });
-
-      await waitFor(() => expect(onDecision).toHaveBeenCalledWith('none'));
+      await waitFor(() =>
+        expect(document.activeElement).toBe(
+          screen.getByRole('button', { name: 'ok' })
+        )
+      );
     });
 
     it('goes on without a mail with OK', async () => {
       const { onDecision } = await ask(withoutTemplate);
 
-      fireEvent.click(screen.getByText('actionMail.ok'));
+      fireEvent.click(screen.getByText('ok'));
 
       await waitFor(() => expect(onDecision).toHaveBeenCalledWith('none'));
     });
@@ -171,5 +177,15 @@ describe('useActionMailQuestion', () => {
 
       await waitFor(() => expect(onDecision).toHaveBeenCalledWith('cancel'));
     });
+  });
+});
+
+describe('skipMailFor', () => {
+  it.each<[ActionMailDecision, boolean]>([
+    ['skip', true],
+    ['send', false],
+    ['none', false],
+  ])('maps %s to skipMail %s', (decision, expected) => {
+    expect(skipMailFor(decision)).toBe(expected);
   });
 });

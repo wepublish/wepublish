@@ -1,16 +1,16 @@
 {
   "translation": {
+    "ok": "OK",
+    "send": "Senden",
     "actionMail": {
-      "title": "E-Mail an das Mitglied?",
+      "title": "E-Mail an das Mitglied senden?",
       "question": "E-Mail «{{template}}» an {{recipient}} senden?",
-      "send": "Senden",
       "skip": "Nicht senden",
       "noMailTitle": "Keine E-Mail an das Mitglied",
       "noTemplate": "Für «{{event}}» ist keine E-Mail konfiguriert. An {{recipient}} wird keine E-Mail gesendet.",
       "firstPeriod": "Für die erste Periode eines Abos wird keine Zahlungsbestätigung versandt. An {{recipient}} wird keine E-Mail gesendet.",
       "alreadyHandled": "Die Zahlungsbestätigung für diese Rechnung wurde bereits versandt oder unterdrückt. An {{recipient}} wird keine E-Mail gesendet.",
       "notApplicable": "An {{recipient}} wird keine E-Mail gesendet.",
-      "ok": "OK",
       "theMember": "das Mitglied"
     },
     "lastSavedAt": "Zuletzt gespeichert {{date, ccc PP pp}}",

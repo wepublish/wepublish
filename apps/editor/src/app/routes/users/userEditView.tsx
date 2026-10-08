@@ -432,7 +432,7 @@ function UserEditView() {
             address,
             userImageID: userImage?.id || null,
             password,
-            ...skipMailFor(decision),
+            skipMail: skipMailFor(decision),
           },
         });
         const newUser = data?.createUser;

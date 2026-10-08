@@ -1,16 +1,16 @@
 {
   "translation": {
+    "send": "Envoyer",
+    "ok": "OK",
     "actionMail": {
-      "title": "Envoyer un e-mail au membre ?",
+      "title": "Envoyer un e-mail au membre?",
       "question": "Envoyer l'e-mail « {{template}} » à {{recipient}} ?",
-      "send": "Envoyer",
       "skip": "Ne pas envoyer",
       "noMailTitle": "Pas d'e-mail au membre",
       "noTemplate": "Aucun e-mail n'est configuré pour « {{event}} ». Aucun e-mail ne sera envoyé à {{recipient}}.",
       "firstPeriod": "Aucune confirmation de paiement n'est envoyée pour la première période d'un abonnement. Aucun e-mail ne sera envoyé à {{recipient}}.",
       "alreadyHandled": "La confirmation de paiement de cette facture a déjà été envoyée ou supprimée. Aucun e-mail ne sera envoyé à {{recipient}}.",
       "notApplicable": "Aucun e-mail ne sera envoyé à {{recipient}}.",
-      "ok": "OK",
       "theMember": "ce membre"
     },
     "lastSavedAt": "Dernier enregistrement {{date, ccc PP pp}}",

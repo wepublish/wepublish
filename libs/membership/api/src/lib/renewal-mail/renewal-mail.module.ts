@@ -13,7 +13,6 @@ import { RenewalSuccessMailService } from './renewal-success-mail.service';
       useExisting: RenewalSuccessMailService,
     },
   ],
-  // the service also answers ActionMailService which mail a payment would send
   exports: [INVOICE_PAID_LISTENER, RenewalSuccessMailService],
 })
 export class RenewalMailModule {}

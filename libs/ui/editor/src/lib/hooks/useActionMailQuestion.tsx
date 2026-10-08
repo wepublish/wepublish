@@ -1,5 +1,5 @@
-import { ActionMailNoMailReason } from '@wepublish/editor/api';
-import { KeyboardEvent, ReactNode, useCallback, useRef, useState } from 'react';
+import { ActionMailNoMailReason, UserEvent } from '@wepublish/editor/api';
+import { ReactNode, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Modal } from 'rsuite';
 
@@ -23,13 +23,7 @@ export interface ActionMailQuestion {
   recipient?: string | null;
 }
 
-const USER_EVENTS = [
-  'ACCOUNT_CREATION',
-  'EMAIL_CHANGE',
-  'LOGIN_LINK',
-  'PASSWORD_RESET',
-  'TEST_MAIL',
-];
+const USER_EVENTS: string[] = Object.values(UserEvent);
 
 /** The event's name as the "Automatic emails" settings show it. */
 const eventLabelKey = (event: string) =>
@@ -52,7 +46,6 @@ export function useActionMailQuestion(): {
   const resolveRef = useRef<((decision: ActionMailDecision) => void) | null>(
     null
   );
-  const sendRef = useRef<HTMLButtonElement>(null);
   const defaultRef = useRef<HTMLButtonElement>(null);
 
   const askMail = useCallback(
@@ -74,19 +67,9 @@ export function useActionMailQuestion(): {
     setQuestion(null);
   };
 
-  // Enter takes the default, unless the admin moved the focus to "send".
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter' && document.activeElement !== sendRef.current) {
-      event.preventDefault();
-      decide(defaultDecision);
-    }
-  };
-
-  // React renders the values as text and escapes them already.
   const values = (extra: Record<string, string> = {}) => ({
     recipient: question?.recipient || t('actionMail.theMember'),
     ...extra,
-    interpolation: { escapeValue: false },
   });
 
   const message =
@@ -114,7 +97,6 @@ export function useActionMailQuestion(): {
       backdrop="static"
       onClose={() => decide('cancel')}
       onEntered={() => defaultRef.current?.focus()}
-      onKeyDown={handleKeyDown}
     >
       <Modal.Header>
         <Modal.Title>
@@ -124,19 +106,14 @@ export function useActionMailQuestion(): {
       <Modal.Body>{message}</Modal.Body>
       <Modal.Footer>
         {sendsMail && (
-          <Button
-            ref={sendRef}
-            onClick={() => decide('send')}
-          >
-            {t('actionMail.send')}
-          </Button>
+          <Button onClick={() => decide('send')}>{t('send')}</Button>
         )}
         <Button
           ref={defaultRef}
           appearance="primary"
           onClick={() => decide(defaultDecision)}
         >
-          {sendsMail ? t('actionMail.skip') : t('actionMail.ok')}
+          {sendsMail ? t('actionMail.skip') : t('ok')}
         </Button>
       </Modal.Footer>
     </Modal>
@@ -144,11 +121,5 @@ export function useActionMailQuestion(): {
 
   return { askMail, actionMailDialog };
 }
-
-/** The `skipMail` argument for a decision: only set when the admin chose. */
-export const skipMailFor = (
-  decision: ActionMailDecision
-): { skipMail?: boolean } =>
-  decision === 'send' ? { skipMail: false }
-  : decision === 'skip' ? { skipMail: true }
-  : {};
+export const skipMailFor = (decision: ActionMailDecision): boolean =>
+  decision === 'skip';

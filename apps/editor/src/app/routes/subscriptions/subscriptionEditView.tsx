@@ -509,7 +509,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
             userID: user.id,
             paymentMethodID: paymentMethod.id,
             memberPlanID: memberPlan.id,
-            ...skipMailFor(decision),
+            skipMail: skipMailFor(decision),
           },
         });
 
@@ -588,7 +588,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
       variables: {
         reason,
         cancelSubscriptionId: id,
-        ...skipMailFor(decision),
+        skipMail: skipMailFor(decision),
       },
     });
     if (data?.cancelSubscription) onSave?.(data.cancelSubscription);

@@ -202,7 +202,6 @@ export class ImportPublicSubscriptionInput extends OmitType(
 
 @ArgsType()
 export class UpdatePublicSubscriptionInput extends PartialType(
-  // updating sends no subscribe mail, and the input is written to the subscription
   OmitType(CreatePublicSubscriptionInput, ['skipMail'] as const, ArgsType),
   ArgsType
 ) {

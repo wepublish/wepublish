@@ -1,16 +1,16 @@
 {
   "translation": {
+    "send": "Send",
+    "ok": "OK",
     "actionMail": {
       "title": "Email the member?",
       "question": "Send the email “{{template}}” to {{recipient}}?",
-      "send": "Send",
       "skip": "Don't send",
       "noMailTitle": "No email to the member",
       "noTemplate": "No email is configured for “{{event}}”. No email will be sent to {{recipient}}.",
       "firstPeriod": "No payment confirmation is sent for the first period of a subscription. No email will be sent to {{recipient}}.",
       "alreadyHandled": "The payment confirmation for this invoice was already sent or suppressed. No email will be sent to {{recipient}}.",
       "notApplicable": "No email will be sent to {{recipient}}.",
-      "ok": "OK",
       "theMember": "the member"
     },
     "lastSavedAt": "Last saved {{date, ccc PP pp}}",
