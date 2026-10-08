@@ -181,7 +181,7 @@ export class CreatePublicSubscriptionInput extends PickType(
   @Field(() => Boolean, {
     nullable: true,
     description:
-      'When true, suppress the subscribe mail to the user, e.g. when an editor creates the subscription and chose not to mail the reader.',
+      'When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.',
   })
   skipMail?: boolean;
 }
@@ -191,14 +191,7 @@ export class ImportPublicSubscriptionInput extends OmitType(
   CreatePublicSubscriptionInput,
   [] as const,
   ArgsType
-) {
-  @Field(() => Boolean, {
-    nullable: true,
-    description:
-      'When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.',
-  })
-  override skipMail?: boolean;
-}
+) {}
 
 @ArgsType()
 export class UpdatePublicSubscriptionInput extends PartialType(
