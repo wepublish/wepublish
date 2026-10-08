@@ -1,5 +1,7 @@
+import { Logger } from '@nestjs/common';
 import { PaymentProviderType, PrismaClient } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { isSimulatedPaymentAllowed } from '@wepublish/utils/api';
 import bodyParser from 'body-parser';
 import { PaymentProvider } from './payment-provider';
 import { BexioPaymentProvider } from './bexio/bexio-payment-provider';
@@ -80,5 +82,21 @@ export const loadPaymentProviders = async (
     orderBy: { id: 'asc' },
   });
 
-  return rows.map(row => createPaymentProvider(row.id, row.type, deps));
+  // A simulated provider lets anyone "pay" without money moving, so it never
+  // runs on production, even if a row got there (dump, seed, direct insert).
+  const allowSimulated = isSimulatedPaymentAllowed();
+
+  return rows
+    .filter(row => {
+      if (row.type !== PaymentProviderType.SIMULATED || allowSimulated) {
+        return true;
+      }
+
+      new Logger('PaymentProviders').warn(
+        `Skipping simulated payment provider "${row.id}": not allowed on production`
+      );
+
+      return false;
+    })
+    .map(row => createPaymentProvider(row.id, row.type, deps));
 };

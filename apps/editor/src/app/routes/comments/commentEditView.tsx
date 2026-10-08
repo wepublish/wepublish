@@ -14,6 +14,8 @@ import {
   CommentStateDropdown,
   CommentUser,
   createCheckedPermissionComponent,
+  humanizeError,
+  InfoTooltip,
   SelectTags,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
@@ -35,13 +37,14 @@ import {
   toaster,
 } from 'rsuite';
 import Text from 'rsuite/Text';
+import { commentItemLink } from './commentItemLink';
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
 `;
 
 const FlexItem = styled(RCol)`
-  margin-top: 10px;
+  margin-top: 12px;
 `;
 
 const showErrors = (error: Error): void => {
@@ -50,9 +53,9 @@ const showErrors = (error: Error): void => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -229,6 +232,8 @@ const CommentEditView = memo(() => {
     }
   }
 
+  const itemLink = comment && commentItemLink(comment.itemType, comment.itemID);
+
   return (
     <Form
       onSubmit={() => updateComment()}
@@ -294,10 +299,12 @@ const CommentEditView = memo(() => {
                         color="violet"
                         icon={<MdVisibility />}
                         onClick={() => {
-                          navigate(`/articles/edit/${comment?.itemID}`);
+                          if (itemLink) {
+                            navigate(itemLink.path);
+                          }
                         }}
                       >
-                        {t('commentEditView.goToArticle')}
+                        {t(itemLink?.labelKey ?? 'commentEditView.goToArticle')}
                       </IconButton>
                     </RCol>
 
@@ -367,7 +374,10 @@ const CommentEditView = memo(() => {
 
                     {/* external source */}
                     <RCol xs={24}>
-                      <Form.Label>{t('commentEditView.source')}</Form.Label>
+                      <Form.Label>
+                        {t('commentEditView.source')}{' '}
+                        <InfoTooltip text={t('commentEditView.sourceInfo')} />
+                      </Form.Label>
                       <Form.Control
                         name="externalSource"
                         placeholder={t('commentEditView.source')}
@@ -404,7 +414,14 @@ const CommentEditView = memo(() => {
               <ColNoMargin xs={24}>
                 <RPanel
                   bordered
-                  header={t('commentEditView.ratingOverrides')}
+                  header={
+                    <>
+                      {t('commentEditView.ratingOverrides')}{' '}
+                      <InfoTooltip
+                        text={t('commentEditView.ratingOverridesInfo')}
+                      />
+                    </>
+                  }
                 >
                   <Row>
                     {ratingOverrides.map(override => (

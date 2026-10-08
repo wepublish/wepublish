@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
 import {
   EventFilter,
   EventListDocument,
@@ -9,11 +10,15 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  humanizeError,
   IconButton,
+  IconButtonTooltip,
+  InfoTooltip,
   ListFilters,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PaddedCell,
   PermissionControl,
   Table,
   TableWrapper,
@@ -30,6 +35,11 @@ import { RowDataType } from 'rsuite-table';
 import { DeleteEventModal } from './deleteEventModal';
 
 const { Column, HeaderCell, Cell } = RTable;
+
+const HeaderInfo = styled.span`
+  display: inline-flex;
+  margin-left: 4px;
+`;
 
 export function EventStartsAtView({ startsAt }: { startsAt: string }) {
   const startsAtDate = new Date(startsAt);
@@ -65,9 +75,9 @@ const onErrorToast = (error: Error) => {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </Message>
     );
   }
@@ -184,7 +194,12 @@ function EventListView() {
             width={150}
             resizable
           >
-            <HeaderCell>{t('event.list.source')}</HeaderCell>
+            <HeaderCell>
+              {t('event.list.source')}
+              <HeaderInfo>
+                <InfoTooltip text={t('event.list.sourceInfo')} />
+              </HeaderInfo>
+            </HeaderCell>
             <Cell>
               {(rowData: RowDataType<FullEventFragment>) =>
                 rowData.externalSourceName
@@ -192,23 +207,27 @@ function EventListView() {
             </Cell>
           </Column>
 
-          <Column width={75}>
-            <HeaderCell align={'center'}>{t('event.list.delete')}</HeaderCell>
-            <Cell
-              align={'center'}
-              style={{ padding: '5px 0' }}
-            >
+          <Column
+            width={100}
+            align="center"
+            fixed="right"
+          >
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell align="center">
               {(event: RowDataType<FullEventFragment>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  color="red"
-                  appearance="ghost"
-                  circle
-                  size="sm"
-                  onClick={() => setEventDelete(event as FullEventFragment)}
-                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    icon={<MdDelete />}
+                    color="red"
+                    appearance="ghost"
+                    circle
+                    size="sm"
+                    onClick={() => setEventDelete(event as FullEventFragment)}
+                  />
+                </IconButtonTooltip>
               )}
-            </Cell>
+            </PaddedCell>
           </Column>
         </Table>
 

@@ -14,4 +14,4 @@ When a reader reaches the checkout page, three buttons decide what happens:
 
 If the provider is set to charge automatically, renewals are booked as paid right away. Tick **Decline renewals** to let them fail instead — useful to see what readers and your team receive when a recurring payment does not go through.
 
-No money ever changes hands, and anyone who opens the checkout page can mark a payment as paid. Use this on test and demo sites only, never on your live site.
+No money ever changes hands, and anyone who opens the checkout page can mark a payment as paid. That is why the provider is only available on test and demo sites: on your live site it is not offered and cannot be set up.

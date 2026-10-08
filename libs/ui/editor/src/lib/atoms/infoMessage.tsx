@@ -7,14 +7,14 @@ export interface InfoMessageProps {
 }
 
 export enum InfoColor {
-  warning = '#fffaf2',
-  error = '#fff2f2',
-  white = '#ffffff',
+  warning = 'rgb(from var(--rs-state-warning) r g b / 10%)',
+  error = 'rgb(from var(--rs-state-error) r g b / 10%)',
+  white = 'var(--rs-bg-card)',
 }
 
 const Message = styled.div<{ backgroundColor: InfoColor }>`
-  border-radius: 8px;
-  padding: 0px 6px;
+  border-radius: var(--rs-radius-md);
+  padding: 0px 8px;
   background-color: ${({ backgroundColor }) => backgroundColor};
 `;
 

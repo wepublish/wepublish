@@ -1,5 +1,6 @@
 import {
   CreatePaymentProviderSettingDocument,
+  getSettings,
   DeletePaymentProviderSettingDocument,
   PaymentMethodMollie,
   PaymentProviderSettingsDocument,
@@ -19,6 +20,15 @@ import payrexxLogo from './assets/payrexx.webp';
 import stripeLogo from './assets/stripe.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
+
+// Mirrors the API's `isSimulatedPaymentAllowed`, which also refuses to create
+// the simulated provider on production; this only keeps it out of the picker.
+export const creatablePaymentProviderTypes = (appEnvironment?: string) =>
+  Object.values(PaymentProviderType).filter(
+    type =>
+      type !== PaymentProviderType.Simulated ||
+      (!!appEnvironment && appEnvironment !== 'production')
+  );
 
 const paymentSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
@@ -80,10 +90,12 @@ export function PaymentIntegrationForm() {
       registry={{
         createMutation: CreatePaymentProviderSettingDocument,
         deleteMutation: DeletePaymentProviderSettingDocument,
-        types: Object.values(PaymentProviderType).map(value => ({
-          label: value,
-          value,
-        })),
+        types: creatablePaymentProviderTypes(getSettings().appEnvironment).map(
+          value => ({
+            label: value,
+            value,
+          })
+        ),
       }}
       getLogo={setting => {
         switch (setting.type) {
@@ -112,16 +124,19 @@ export function PaymentIntegrationForm() {
             type: 'text',
             name: 'type',
             label: t('integrations.paymentSettings.type'),
+            info: t('integrations.paymentSettings.typeInfo'),
             disabled: true,
           },
           {
             name: 'offSessionPayments',
             label: t('integrations.paymentSettings.offSessionPayments'),
+            info: t('integrations.paymentSettings.offSessionPaymentsInfo'),
             type: 'checkbox',
           },
           {
             name: 'apiKey',
             label: t('integrations.paymentSettings.apiKey'),
+            info: t('integrations.paymentSettings.apiKeyInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
             placeholder: t('integrations.placeholderSecret'),
@@ -129,6 +144,7 @@ export function PaymentIntegrationForm() {
           {
             name: 'webhookEndpointSecret',
             label: t('integrations.paymentSettings.webhookEndpointSecret'),
+            info: t('integrations.paymentSettings.webhookEndpointSecretInfo'),
             type: 'password',
             autoComplete: 'one-time-code',
             placeholder: t('integrations.placeholderSecret'),
@@ -144,26 +160,31 @@ export function PaymentIntegrationForm() {
             {
               name: 'bexio_userId',
               label: t('integrations.paymentSettings.bexioUserId'),
+              info: t('integrations.paymentSettings.bexioUserIdInfo'),
               type: 'number',
             },
             {
               name: 'bexio_countryId',
               label: t('integrations.paymentSettings.bexioCountryId'),
+              info: t('integrations.paymentSettings.bexioCountryIdInfo'),
               type: 'number',
             },
             {
               name: 'bexio_unitId',
               label: t('integrations.paymentSettings.bexioUnitId'),
+              info: t('integrations.paymentSettings.bexioUnitIdInfo'),
               type: 'number',
             },
             {
               name: 'bexio_taxId',
               label: t('integrations.paymentSettings.bexioTaxId'),
+              info: t('integrations.paymentSettings.bexioTaxIdInfo'),
               type: 'number',
             },
             {
               name: 'bexio_accountId',
               label: t('integrations.paymentSettings.bexioAccountId'),
+              info: t('integrations.paymentSettings.bexioAccountIdInfo'),
               type: 'number',
             },
             {
@@ -172,6 +193,7 @@ export function PaymentIntegrationForm() {
               label: t(
                 'integrations.paymentSettings.bexioInvoiceTemplateNewMembership'
               ),
+              info: t('integrations.paymentSettings.bexioInvoiceTemplateInfo'),
             },
             {
               type: 'text',
@@ -179,6 +201,7 @@ export function PaymentIntegrationForm() {
               label: t(
                 'integrations.paymentSettings.bexioInvoiceTemplateRenewalMembership'
               ),
+              info: t('integrations.paymentSettings.bexioInvoiceTemplateInfo'),
             },
             {
               type: 'text',
@@ -186,6 +209,7 @@ export function PaymentIntegrationForm() {
               label: t(
                 'integrations.paymentSettings.bexioInvoiceTitleNewMembership'
               ),
+              info: t('integrations.paymentSettings.bexioInvoiceTitleInfo'),
             },
             {
               type: 'text',
@@ -193,12 +217,16 @@ export function PaymentIntegrationForm() {
               label: t(
                 'integrations.paymentSettings.bexioInvoiceTitleRenewalMembership'
               ),
+              info: t('integrations.paymentSettings.bexioInvoiceTitleInfo'),
             },
             {
               type: 'text',
               name: 'bexio_invoiceMailSubjectNewMembership',
               label: t(
                 'integrations.paymentSettings.bexioInvoiceMailSubjectNewMembership'
+              ),
+              info: t(
+                'integrations.paymentSettings.bexioInvoiceMailSubjectInfo'
               ),
             },
             {
@@ -207,12 +235,16 @@ export function PaymentIntegrationForm() {
               label: t(
                 'integrations.paymentSettings.bexioInvoiceMailSubjectRenewalMembership'
               ),
+              info: t(
+                'integrations.paymentSettings.bexioInvoiceMailSubjectInfo'
+              ),
             },
             {
               name: 'bexio_invoiceMailBodyNewMembership',
               label: t(
                 'integrations.paymentSettings.bexioInvoiceMailBodyNewMembership'
               ),
+              info: t('integrations.paymentSettings.bexioInvoiceMailBodyInfo'),
               type: 'textarea',
               rows: 10,
             },
@@ -221,12 +253,16 @@ export function PaymentIntegrationForm() {
               label: t(
                 'integrations.paymentSettings.bexioInvoiceMailBodyRenewalMembership'
               ),
+              info: t('integrations.paymentSettings.bexioInvoiceMailBodyInfo'),
               type: 'textarea',
               rows: 10,
             },
             {
               name: 'bexio_markInvoiceAsOpen',
               label: t('integrations.paymentSettings.bexioMarkInvoiceAsOpen'),
+              info: t(
+                'integrations.paymentSettings.bexioMarkInvoiceAsOpenInfo'
+              ),
               type: 'checkbox',
             }
           );
@@ -241,6 +277,7 @@ export function PaymentIntegrationForm() {
           fields.push({
             name: 'stripe_methods',
             label: t('integrations.paymentSettings.methods'),
+            info: t('integrations.paymentSettings.methodsInfo'),
             type: 'checkPicker',
             searchable: true,
             options: Object.values(StripePaymentMethod).map(v => ({
@@ -255,10 +292,12 @@ export function PaymentIntegrationForm() {
             type: 'text',
             name: 'mollie_apiBaseUrl',
             label: t('integrations.paymentSettings.apiUrl'),
+            info: t('integrations.paymentSettings.apiUrlInfo'),
           });
           fields.push({
             name: 'mollie_methods',
             label: t('integrations.paymentSettings.methods'),
+            info: t('integrations.paymentSettings.methodsInfo'),
             type: 'checkPicker',
             searchable: true,
             options: Object.values(PaymentMethodMollie).map(v => ({
@@ -273,15 +312,18 @@ export function PaymentIntegrationForm() {
             type: 'text',
             name: 'payrexx_instancename',
             label: t('integrations.paymentSettings.instanceName'),
+            info: t('integrations.paymentSettings.instanceNameInfo'),
           });
           fields.push({
             type: 'text',
             name: 'payrexx_vatrate',
             label: t('integrations.paymentSettings.vatRate'),
+            info: t('integrations.paymentSettings.vatRateInfo'),
           });
           fields.push({
             name: 'payrexx_psp',
             label: t('integrations.paymentSettings.psp'),
+            info: t('integrations.paymentSettings.pspInfo'),
             type: 'checkPicker',
             searchable: true,
             options: Object.values(PayrexxPsp).map(v => ({
@@ -292,6 +334,7 @@ export function PaymentIntegrationForm() {
           fields.push({
             name: 'payrexx_pm',
             label: t('integrations.paymentSettings.pm'),
+            info: t('integrations.paymentSettings.methodsInfo'),
             type: 'checkPicker',
             searchable: true,
             options: Object.values(PayrexxPm).map(v => ({
@@ -314,6 +357,7 @@ export function PaymentIntegrationForm() {
             type: 'text',
             name: 'payrexx_instancename',
             label: t('integrations.paymentSettings.instanceName'),
+            info: t('integrations.paymentSettings.instanceNameInfo'),
           });
         }
 

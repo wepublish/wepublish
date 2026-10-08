@@ -47,6 +47,8 @@ export function AddBlockInput({
             icon={<MdAdd />}
             circle
             appearance="primary"
+            title={t('blockList.addBlock')}
+            aria-label={t('blockList.addBlock')}
           />
         )}
       >

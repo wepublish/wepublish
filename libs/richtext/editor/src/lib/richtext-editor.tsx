@@ -107,7 +107,7 @@ const Editor = styled(EditorContent)`
 
     td,
     th {
-      border: 1px solid #000;
+      border: 1px solid var(--rs-border-primary);
       box-sizing: border-box;
       min-width: 1em;
       padding: 6px 8px;
@@ -120,7 +120,10 @@ const Editor = styled(EditorContent)`
     }
 
     th {
-      background-color: ${({ theme }) => theme.palette.grey['300']};
+      background-color: ${({ theme }) =>
+        theme.palette.mode === 'dark' ?
+          theme.palette.grey['800']
+        : theme.palette.grey['300']};
       font-weight: bold;
       text-align: left;
     }
@@ -146,7 +149,7 @@ const Editor = styled(EditorContent)`
   }
 
   .ProseMirror-selectednode:not(img):not(pre):not(.react-renderer) {
-    background-color: #68cef822;
+    background-color: rgb(from var(--rs-primary-500) r g b / 13%);
     border-radius: 0.5rem;
 
     &:is(blockquote) {

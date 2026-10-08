@@ -1,9 +1,10 @@
 import { Typography } from '@mui/material';
 import { MailChannel, MailLogState, MailLogType } from '@wepublish/editor/api';
+import { InfoTrigger } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { MdHelpOutline } from 'react-icons/md';
-import { IconButton, Popover, Stack, Tag, Whisper } from 'rsuite';
+import { Popover, Stack, Tag, Whisper } from 'rsuite';
 
 const STATE_COLORS: Record<MailLogState, 'green' | 'yellow' | 'red' | 'blue'> =
   {
@@ -158,7 +159,10 @@ export function MailLogStateLegend() {
 
           <Typography
             variant="caption"
-            style={{ color: '#8e8e93', whiteSpace: 'pre-line' }}
+            style={{
+              color: 'var(--rs-text-secondary)',
+              whiteSpace: 'pre-line',
+            }}
             sx={{
               display: 'block',
             }}
@@ -168,12 +172,7 @@ export function MailLogStateLegend() {
         </Popover>
       }
     >
-      <IconButton
-        size="xs"
-        appearance="subtle"
-        icon={<MdHelpOutline />}
-        aria-label={t('mailLog.stateHelp.legendTitle')}
-      />
+      <InfoTrigger aria-label={t('mailLog.stateHelp.legendTitle')} />
     </Whisper>
   );
 }
@@ -281,7 +280,7 @@ export function MailErrorCell({ error }: { error?: string | null }) {
 
           <Typography
             variant="caption"
-            style={{ color: '#8e8e93' }}
+            style={{ color: 'var(--rs-text-secondary)' }}
             sx={{
               display: 'block',
             }}
@@ -296,7 +295,7 @@ export function MailErrorCell({ error }: { error?: string | null }) {
     >
       <span
         style={{
-          color: '#d9534f',
+          color: 'var(--rs-state-error)',
           display: 'inline-flex',
           alignItems: 'center',
           gap: 4,

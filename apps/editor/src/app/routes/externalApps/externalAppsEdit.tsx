@@ -1,26 +1,16 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { ExternalAppsDocument } from '@wepublish/editor/api';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 
 import { ExternalAppForm } from './externalAppForm';
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
-  gap: ${({ theme }) => theme.spacing(4)};
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  ${({ theme }) => theme.breakpoints.up('lg')} {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  ${({ theme }) => theme.breakpoints.up('xl')} {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr));
+  gap: 24px;
+  align-items: start;
 `;
 
 const Title = styled.h3`
@@ -33,7 +23,10 @@ export function ExternalApps() {
 
   return (
     <Wrapper>
-      <Title>{t('externalApps.apps')}</Title>
+      <Title>
+        {t('externalApps.apps')}{' '}
+        <InfoTooltip text={t('externalApps.appsInfo')} />
+      </Title>
 
       {data?.externalApps?.map(app => (
         <ExternalAppForm

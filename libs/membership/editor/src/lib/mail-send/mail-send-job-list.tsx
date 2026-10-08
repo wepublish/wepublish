@@ -18,6 +18,7 @@ import {
   MailSendJobState,
   MailSendJobsDocument,
 } from '@wepublish/editor/api';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdMail, MdOutlineChevronRight } from 'react-icons/md';
@@ -56,7 +57,7 @@ const ClickableRow = styled(TableRow)`
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.03);
+    background-color: rgb(from var(--rs-text-primary) r g b / 0.03);
   }
 `;
 
@@ -65,7 +66,8 @@ const Stat = styled.div<{ tone: string }>`
   min-width: 110px;
   padding: 8px 12px;
   border-left: 3px solid ${({ tone }) => tone};
-  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: var(--rs-radius-md);
+  background-color: rgb(from var(--rs-text-primary) r g b / 0.02);
 `;
 
 const StatValue = styled.div`
@@ -74,10 +76,10 @@ const StatValue = styled.div`
 `;
 
 const TONE = {
-  sent: '#4caf50',
-  pending: '#8e8e93',
-  failed: '#d9534f',
-  sending: '#f5a623',
+  sent: 'var(--rs-state-success)',
+  pending: 'var(--rs-text-secondary)',
+  failed: 'var(--rs-state-error)',
+  sending: 'var(--rs-state-warning)',
 } as const;
 
 /**
@@ -139,8 +141,8 @@ export function MailSendJobList({
               <TableCell width="24%">
                 <strong>{t('mailJobs.progress')}</strong>
               </TableCell>
-              <TableCell align="right">
-                <strong>{t('mailJobs.actions')}</strong>
+              <TableCell align="center">
+                <strong>{t('action')}</strong>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -161,7 +163,7 @@ export function MailSendJobList({
                   <JobProgressBar job={job} />
                   <Typography
                     variant="caption"
-                    style={{ color: '#8e8e93' }}
+                    style={{ color: 'var(--rs-text-secondary)' }}
                     sx={{
                       display: 'block',
                     }}
@@ -176,10 +178,10 @@ export function MailSendJobList({
                       })}`}
                   </Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
                   <Stack
                     spacing={8}
-                    justifyContent="flex-end"
+                    justifyContent="center"
                   >
                     {canResume(job) && (
                       <ResumeJobButton
@@ -388,7 +390,7 @@ function JobSummary({
       {job.status === MailSendJobState.Running && job.heartbeatAt && (
         <Typography
           variant="caption"
-          style={{ color: '#8e8e93', marginTop: 12 }}
+          style={{ color: 'var(--rs-text-secondary)', marginTop: 12 }}
           sx={{
             display: 'block',
           }}
@@ -517,7 +519,8 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
                 <strong>{t('mailJobs.queue.sentAt')}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t('mailJobs.queue.attempts')}</strong>
+                <strong>{t('mailJobs.queue.attempts')}</strong>{' '}
+                <InfoTooltip text={t('mailJobs.queue.attemptsHelp')} />
               </TableCell>
               <TableCell>
                 <strong>{t('mailLog.error')}</strong>
@@ -527,7 +530,7 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
           <TableBody>
             {entries.map(entry => (
               <TableRow key={entry.id}>
-                <TableCell style={{ color: '#8e8e93' }}>
+                <TableCell style={{ color: 'var(--rs-text-secondary)' }}>
                   {entry.position + 1}
                 </TableCell>
                 <TableCell>
@@ -535,7 +538,7 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
                   {entry.memberPlanName && (
                     <Typography
                       variant="caption"
-                      style={{ color: '#8e8e93' }}
+                      style={{ color: 'var(--rs-text-secondary)' }}
                       sx={{
                         display: 'block',
                       }}

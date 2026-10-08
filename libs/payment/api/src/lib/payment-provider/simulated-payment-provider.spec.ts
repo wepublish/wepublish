@@ -1,9 +1,9 @@
+import type { Mock } from 'vitest';
 import { Currency, PaymentState, PrismaClient } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import express from 'express';
 import { InvoiceWithItems } from './payment-provider';
 import { SimulatedPaymentProvider } from './simulated-payment-provider';
-import type { Mock } from 'vitest';
 
 describe('SimulatedPaymentProvider', () => {
   const env = process.env;

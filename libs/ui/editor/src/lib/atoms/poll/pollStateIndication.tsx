@@ -32,7 +32,10 @@ export function PollStateIndication({
   if (closedAt && now.getTime() >= closedAt.getTime()) {
     return (
       <Whisper speaker={<Tooltip>{t('pollStateIndication.closed')}</Tooltip>}>
-        <span>
+        <span
+          role="img"
+          aria-label={t('pollStateIndication.closed')}
+        >
           <ClosedIcon />
         </span>
       </Whisper>
@@ -44,7 +47,10 @@ export function PollStateIndication({
   if (now.getTime() > opensAt.getTime()) {
     return (
       <Whisper speaker={<Tooltip>{t('pollStateIndication.open')}</Tooltip>}>
-        <span>
+        <span
+          role="img"
+          aria-label={t('pollStateIndication.open')}
+        >
           <OpensIcon />
         </span>
       </Whisper>
@@ -60,7 +66,12 @@ export function PollStateIndication({
         </Tooltip>
       }
     >
-      <span>
+      <span
+        role="img"
+        aria-label={t('pollStateIndication.waiting', {
+          date: new Date(pollOpensAt),
+        })}
+      >
         <MdHourglassEmpty />
       </span>
     </Whisper>

@@ -12,7 +12,9 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  humanizeError,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -22,7 +24,7 @@ import {
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete, MdInfo } from 'react-icons/md';
+import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import {
   IconButton,
@@ -44,9 +46,9 @@ const onErrorToast = (error: Error) => {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </Message>
     );
   }
@@ -91,9 +93,7 @@ function BlockTemplateList() {
       <ListViewContainer>
         <ListViewHeader>
           <h2>{t('blockTemplates.list.title')}</h2>
-          <IconButtonTooltip caption={t('blockTemplates.list.info')}>
-            <MdInfo />
-          </IconButtonTooltip>
+          <InfoTooltip text={t('blockTemplates.list.info')} />
         </ListViewHeader>
 
         <ListViewActions>
@@ -129,24 +129,26 @@ function BlockTemplateList() {
             </RCell>
           </Column>
           <Column
-            width={50}
+            width={100}
+            align="center"
             fixed="right"
           >
-            <HeaderCell align={'center'}>
-              {t('blockTemplates.list.delete')}
-            </HeaderCell>
-            <PaddedCell align={'center'}>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell align="center">
               {(blockTemplate: RowDataType<BlockTemplate>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() =>
-                    setBlockTemplateDelete(blockTemplate as BlockTemplate)
-                  }
-                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    onClick={() =>
+                      setBlockTemplateDelete(blockTemplate as BlockTemplate)
+                    }
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

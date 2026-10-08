@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { PaymentState } from '@prisma/client';
 import { Request, Response } from 'express';
 import { InvoicePaidNotifier } from './invoice-paid.listener';

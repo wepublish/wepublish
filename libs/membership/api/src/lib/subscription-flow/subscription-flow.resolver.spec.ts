@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import {
   CanActivate,
@@ -342,6 +343,10 @@ describe('Subscription Flow Resolver', () => {
   describe('authenticated', () => {
     let resolver: SubscriptionFlowResolver;
     let subscriptionFlowService: SubscriptionFlowService;
+    let prisma: {
+      subscription: { count: Mock };
+      subscriptionFlow: { findMany: Mock };
+    };
 
     const mockMemberPlan = {
       id: 'plan-1',
@@ -383,13 +388,15 @@ describe('Subscription Flow Resolver', () => {
           {
             provide: PrismaClient,
             useValue: {
-              // Mock any PrismaClient methods that might be used in resolver
+              subscription: { count: vi.fn().mockResolvedValue(0) },
+              subscriptionFlow: { findMany: vi.fn().mockResolvedValue([]) },
             },
           },
         ],
       }).compile();
 
       resolver = module.get<SubscriptionFlowResolver>(SubscriptionFlowResolver);
+      prisma = module.get(PrismaClient);
       subscriptionFlowService = module.get<SubscriptionFlowService>(
         SubscriptionFlowService
       );
@@ -407,6 +414,92 @@ describe('Subscription Flow Resolver', () => {
         false,
         'plan-1'
       );
+    });
+
+    describe('numberOfSubscriptions', () => {
+      const customFlow = {
+        ...mockSubscriptionFlow,
+        id: 'flow-2',
+        default: false,
+        memberPlanId: 'plan-1',
+        paymentMethods: [{ id: 'payment-1' }],
+        periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
+        autoRenewal: [true, false],
+      };
+
+      const subscriptionsOfCustomFlow = {
+        memberPlanID: 'plan-1',
+        paymentMethodID: { in: ['payment-1'] },
+        paymentPeriodicity: {
+          in: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
+        },
+        OR: [{ autoRenew: true }, { autoRenew: false }],
+      };
+
+      it('counts the subscriptions of the member plan that match the filters', async () => {
+        prisma.subscription.count.mockResolvedValue(12);
+
+        const count = await resolver.numberOfSubscriptions(customFlow as any);
+
+        expect(count).toBe(12);
+        expect(prisma.subscription.count).toHaveBeenCalledWith({
+          where: subscriptionsOfCustomFlow,
+        });
+      });
+
+      it('counts every subscription no other flow covers for the default flow', async () => {
+        prisma.subscriptionFlow.findMany.mockResolvedValue([customFlow]);
+        prisma.subscription.count.mockResolvedValue(30);
+
+        const count = await resolver.numberOfSubscriptions({
+          ...mockSubscriptionFlow,
+          paymentMethods: [],
+          periodicities: [],
+          autoRenewal: [],
+        } as any);
+
+        expect(count).toBe(30);
+        expect(prisma.subscriptionFlow.findMany).toHaveBeenCalledWith({
+          where: { default: false },
+          include: { paymentMethods: true },
+        });
+        expect(prisma.subscription.count).toHaveBeenCalledWith({
+          where: { NOT: { OR: [subscriptionsOfCustomFlow] } },
+        });
+      });
+
+      it('counts only the subscriptions of a member plan for the default flow when asked for one', async () => {
+        prisma.subscriptionFlow.findMany.mockResolvedValue([customFlow]);
+        prisma.subscription.count.mockResolvedValue(3);
+
+        const count = await resolver.numberOfSubscriptions(
+          mockSubscriptionFlow as any,
+          'plan-1'
+        );
+
+        expect(count).toBe(3);
+        expect(prisma.subscriptionFlow.findMany).toHaveBeenCalledWith({
+          where: { default: false, memberPlanId: 'plan-1' },
+          include: { paymentMethods: true },
+        });
+        expect(prisma.subscription.count).toHaveBeenCalledWith({
+          where: {
+            memberPlanID: 'plan-1',
+            NOT: { OR: [subscriptionsOfCustomFlow] },
+          },
+        });
+      });
+
+      it('counts all subscriptions for the default flow when there are no other flows', async () => {
+        prisma.subscription.count.mockResolvedValue(42);
+
+        const count = await resolver.numberOfSubscriptions(
+          mockSubscriptionFlow as any
+        );
+
+        expect(count).toBe(42);
+        expect(prisma.subscription.count).toHaveBeenCalledWith({ where: {} });
+      });
     });
 
     it('returns subscription flows for all queries and mutations', async () => {

@@ -148,7 +148,7 @@ function NavigationList() {
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullNavigationFragment>) => (
                 <PermissionControl
@@ -156,6 +156,7 @@ function NavigationList() {
                 >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
+                      aria-label={t('delete')}
                       icon={<MdDelete />}
                       circle
                       size="sm"

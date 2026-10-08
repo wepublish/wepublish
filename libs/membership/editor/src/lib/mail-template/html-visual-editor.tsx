@@ -65,8 +65,8 @@ const EditorWrapper = styled(Box)`
   height: 100%;
   min-height: 480px;
   border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: 6px;
-  background-color: #fff;
+  border-radius: var(--rs-radius-md);
+  background-color: var(--rs-bg-card);
   overflow: hidden;
 `;
 
@@ -98,7 +98,7 @@ const DeviceFrame = styled(Box)`
   width: 100%;
   align-self: stretch;
   background-color: #ffffff;
-  border-radius: 8px;
+  border-radius: var(--rs-radius-md);
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: max-width 0.2s ease;
@@ -782,6 +782,7 @@ const HtmlVisualEditorComponent = forwardRef<
       <ToggleButton
         size="small"
         value={command + (argument ?? '')}
+        aria-label={title}
         sx={SQUARE_BUTTON_SX}
         onMouseDown={event => {
           event.preventDefault();
@@ -793,18 +794,21 @@ const HtmlVisualEditorComponent = forwardRef<
     </Tooltip>
   );
 
-  const headingButton = (label: string, block: string) => (
-    <ToggleButton
-      size="small"
-      value={block}
-      sx={LABEL_BUTTON_SX}
-      onMouseDown={event => {
-        event.preventDefault();
-        exec('formatBlock', block);
-      }}
-    >
-      {label}
-    </ToggleButton>
+  const headingButton = (label: string, block: string, title: string) => (
+    <Tooltip title={title}>
+      <ToggleButton
+        size="small"
+        value={block}
+        aria-label={title}
+        sx={LABEL_BUTTON_SX}
+        onMouseDown={event => {
+          event.preventDefault();
+          exec('formatBlock', block);
+        }}
+      >
+        {label}
+      </ToggleButton>
+    </Tooltip>
   );
 
   return (
@@ -818,10 +822,10 @@ const HtmlVisualEditorComponent = forwardRef<
           flexItem
         />
 
-        {headingButton('H1', 'H1')}
-        {headingButton('H2', 'H2')}
-        {headingButton('H3', 'H3')}
-        {headingButton('T', 'P')}
+        {headingButton('H1', 'H1', t('richtext.menuBar.heading', { level: 1 }))}
+        {headingButton('H2', 'H2', t('richtext.menuBar.heading', { level: 2 }))}
+        {headingButton('H3', 'H3', t('richtext.menuBar.heading', { level: 3 }))}
+        {headingButton('T', 'P', t('richtext.menuBar.paragraph'))}
 
         <Divider
           orientation="vertical"
@@ -900,6 +904,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <ToggleButton
             size="small"
             value="fontSize"
+            aria-label={t('mailTemplates.editor.fontSize', 'Size')}
             sx={SQUARE_BUTTON_SX}
             onMouseDown={event => {
               event.preventDefault();
@@ -947,6 +952,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <ToggleButton
             size="small"
             value="link"
+            aria-label={t('mailTemplates.editor.link', 'Link')}
             sx={SQUARE_BUTTON_SX}
             onMouseDown={event => {
               event.preventDefault();
@@ -961,6 +967,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <ToggleButton
             size="small"
             value="image"
+            aria-label={t('mailTemplates.editor.image', 'Image')}
             sx={SQUARE_BUTTON_SX}
             onMouseDown={event => {
               event.preventDefault();
@@ -975,6 +982,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <ToggleButton
             size="small"
             value="button"
+            aria-label={t('mailTemplates.editor.button', 'Button')}
             sx={SQUARE_BUTTON_SX}
             onMouseDown={event => {
               event.preventDefault();
@@ -996,6 +1004,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <Tooltip title={t('mailTemplates.editor.desktop', 'Desktop')}>
             <ToggleButton
               value="desktop"
+              aria-label={t('mailTemplates.editor.desktop', 'Desktop')}
               sx={SQUARE_BUTTON_SX}
             >
               <MdLaptopMac />
@@ -1004,6 +1013,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <Tooltip title={t('mailTemplates.editor.tablet', 'Tablet')}>
             <ToggleButton
               value="tablet"
+              aria-label={t('mailTemplates.editor.tablet', 'Tablet')}
               sx={SQUARE_BUTTON_SX}
             >
               <MdTabletMac />
@@ -1012,6 +1022,7 @@ const HtmlVisualEditorComponent = forwardRef<
           <Tooltip title={t('mailTemplates.editor.mobile', 'Mobile')}>
             <ToggleButton
               value="mobile"
+              aria-label={t('mailTemplates.editor.mobile', 'Mobile')}
               sx={SQUARE_BUTTON_SX}
             >
               <MdPhoneIphone />
@@ -1133,6 +1144,7 @@ const HtmlVisualEditorComponent = forwardRef<
               fullWidth
               size="small"
               label={t('mailTemplates.editor.imageAlt', 'Alternative text')}
+              helperText={t('mailTemplates.editor.imageAltHelp')}
               value={imageDialog.alt}
               onChange={event =>
                 setImageDialog(state => ({ ...state, alt: event.target.value }))
@@ -1145,6 +1157,7 @@ const HtmlVisualEditorComponent = forwardRef<
                 'mailTemplates.editor.imageWidth',
                 'Width (px, optional)'
               )}
+              helperText={t('mailTemplates.editor.imageWidthHelp')}
               value={imageDialog.width}
               onChange={event =>
                 setImageDialog(state => ({
@@ -1263,6 +1276,10 @@ const HtmlVisualEditorComponent = forwardRef<
                   <Box sx={{ ml: 1 }}>
                     <MailColorPicker
                       value={buttonDialog.color}
+                      label={t(
+                        'mailTemplates.editor.buttonColor',
+                        'Button color'
+                      )}
                       onChange={color =>
                         setButtonDialog(state => ({ ...state, color }))
                       }

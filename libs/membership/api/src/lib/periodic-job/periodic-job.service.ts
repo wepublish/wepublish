@@ -46,6 +46,12 @@ const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
 export const NIGHT_CLAIM_MS = 12 * 60 * 60 * 1000;
 
+const toDbDate = (day: Date) =>
+  new Date(Date.UTC(day.getFullYear(), day.getMonth(), day.getDate()));
+
+const fromDbDate = (date: Date) =>
+  new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+
 /**
  * Controller responsible for performing periodic jobs. A new controller
  * instance must be created for every run.
@@ -572,7 +578,7 @@ export class PeriodicJobService {
   private async retryFailedJob(runDate: Date) {
     this.runningJob = await this.prismaService.periodicJob.update({
       where: {
-        date: runDate,
+        date: toDbDate(runDate),
       },
       data: {
         executionTime: new Date(),
@@ -589,7 +595,7 @@ export class PeriodicJobService {
   private async markJobStarted(runDate: Date) {
     this.runningJob = await this.prismaService.periodicJob.create({
       data: {
-        date: runDate,
+        date: toDbDate(runDate),
         executionTime: new Date(),
       },
     });
@@ -697,18 +703,20 @@ export class PeriodicJobService {
       return [{ isRetry: false, date: startOfDay(today) }];
     }
 
+    const latestRunDay = fromDbDate(latestRun.date);
+
     if (latestRun.finishedWithError && !latestRun.successfullyFinished) {
       this.logger.warn('Last run had errors retrying....');
-      runDates.push({ isRetry: true, date: startOfDay(latestRun.date) });
+      runDates.push({ isRetry: true, date: latestRunDay });
     } else if (
       !latestRun.successfullyFinished &&
       (latestRun.executionTime?.getTime() ?? 0) < Date.now() - NIGHT_CLAIM_MS
     ) {
       this.logger.warn('Last run was aborted before it finished retrying....');
-      runDates.push({ isRetry: true, date: startOfDay(latestRun.date) });
+      runDates.push({ isRetry: true, date: latestRunDay });
     }
 
-    return runDates.concat(this.generateDateArray(latestRun.date, today));
+    return runDates.concat(this.generateDateArray(latestRunDay, today));
   }
 
   /**

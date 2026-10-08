@@ -178,11 +178,10 @@ type SubscriptionStatus = {
  * merely "not deactivated" (imported subscriptions often expire without a
  * deactivation record).
  */
-function getSubscriptionStatus(
-  subscription: UserSubscriptionFragment
+export function getSubscriptionStatus(
+  subscription: UserSubscriptionFragment,
+  now = new Date()
 ): SubscriptionStatus {
-  const now = new Date();
-
   if (subscription.deactivation) {
     return { label: 'userSubscriptionList.table.deactivated', color: 'red' };
   }

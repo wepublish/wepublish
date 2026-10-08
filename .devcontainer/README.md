@@ -17,3 +17,4 @@ The container automatically runs the following services:
 * PostgreSQL database, accessible over port 5432
 * PGAdmin, accessible on http://localhost:8000
 * MinIO, accessible on http://localhost:9001
+* Dragonfly, accessible from the container on `redis://dragonfly:6379` (admin `default`/`dragonfly`)

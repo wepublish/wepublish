@@ -1,11 +1,23 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { PrismaClient, SettingPaymentProvider } from '@prisma/client';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  PaymentProviderType,
+  PrismaClient,
+  SettingPaymentProvider,
+} from '@prisma/client';
 import {
   CreateSettingPaymentProviderInput,
   UpdateSettingPaymentProviderInput,
   SettingPaymentProviderFilter,
 } from './payment-provider-settings.model';
-import { PrimeDataLoader } from '@wepublish/utils/api';
+import {
+  isSimulatedPaymentAllowed,
+  PrimeDataLoader,
+} from '@wepublish/utils/api';
 import { PaymentProviderSettingsDataloaderService } from './payment-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
@@ -73,6 +85,15 @@ export class PaymentProviderSettingsService {
   async createPaymentProviderSetting(
     input: CreateSettingPaymentProviderInput
   ): Promise<SettingPaymentProvider> {
+    if (
+      input.type === PaymentProviderType.SIMULATED &&
+      !isSimulatedPaymentAllowed()
+    ) {
+      throw new BadRequestException(
+        'The simulated payment provider is not available on production.'
+      );
+    }
+
     const output = this.encryptSecretsIfPresent(input);
 
     const returnValue = await this.prisma.settingPaymentProvider.upsert({

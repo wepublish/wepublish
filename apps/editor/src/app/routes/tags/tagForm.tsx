@@ -5,6 +5,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   ColorPicker,
+  InfoTooltip,
   RichTextBlock,
   RichTextBlockValue,
 } from '@wepublish/ui/editor';
@@ -43,7 +44,10 @@ export const TagForm = ({ tag, onChange }: TagFormProps) => {
           </Form.Group>
 
           <Form.Group controlId="color">
-            <Form.Label>{t('tags.overview.color')}</Form.Label>
+            <Form.Label>
+              {t('tags.overview.color')}{' '}
+              <InfoTooltip text={t('tags.overview.colorInfo')} />
+            </Form.Label>
             <ColorPicker
               setColor={color => {
                 onChange({ color });
@@ -53,7 +57,10 @@ export const TagForm = ({ tag, onChange }: TagFormProps) => {
           </Form.Group>
 
           <Form.Group controlId="description">
-            <Form.Label>{t('tags.overview.description')}</Form.Label>
+            <Form.Label>
+              {t('tags.overview.description')}{' '}
+              <InfoTooltip text={t('tags.overview.descriptionInfo')} />
+            </Form.Label>
 
             <Form.Control
               name="description"
@@ -72,7 +79,8 @@ export const TagForm = ({ tag, onChange }: TagFormProps) => {
               onChange={() => onChange({ main: !tag.main })}
               accepter={Checkbox}
             >
-              {t('tags.overview.markAsMain')}
+              {t('tags.overview.markAsMain')}{' '}
+              <InfoTooltip text={t('tags.overview.markAsMainInfo')} />
             </Form.Control>
           </Form.Group>
         </Form.Stack>

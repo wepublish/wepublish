@@ -36,10 +36,11 @@ import {
   Panel,
   Stack,
   toaster,
-  Toggle as RToggle,
+  Toggle,
 } from 'rsuite';
 
 import { ChooseEditImage } from '../atoms/chooseEditImage';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { ListInput, ListValue } from '../atoms/listInput';
 import { Teaser, TeaserLink } from '../blocks/types';
 import { generateID } from '../utility';
@@ -57,11 +58,6 @@ const InputGroup = styled(RInputGroup)`
 
 const Nav = styled(RNav)`
   margin-bottom: 20px;
-`;
-
-const Toggle = styled(RToggle)`
-  max-width: 70px;
-  min-width: 70px;
 `;
 
 const ButtonWithMargin = styled(Button)`
@@ -85,7 +81,7 @@ const InputW60 = styled(Input)`
 
 const InputW40 = styled(Input)`
   width: 40%;
-  margin-right: 10px;
+  margin-right: 8px;
 `;
 
 const FlexRow = styled.div`
@@ -98,19 +94,17 @@ const H3 = styled.h3`
 `;
 
 const FormGroup = styled(Form.Group)`
+  flex-shrink: 0;
   padding-top: 6px;
   padding-left: 8px;
+  white-space: nowrap;
 `;
 
 const EventFilterContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 12px;
-`;
-
-const ToggleLabel = styled.span`
-  margin-right: 8px;
-  margin-bottom: 4px;
 `;
 
 const LoadMoreButton = styled(Button)`
@@ -548,7 +542,10 @@ export function TeaserSelectPanel({
 
                   <Form.Group controlId="customTeaserContentUrl">
                     <Form.Label>
-                      {t('articleEditor.panels.contentUrl')}
+                      {t('articleEditor.panels.contentUrl')}{' '}
+                      <InfoTooltip
+                        text={t('articleEditor.panels.contentUrlInfo')}
+                      />
                     </Form.Label>
 
                     <Form.Control
@@ -561,23 +558,21 @@ export function TeaserSelectPanel({
                   </Form.Group>
 
                   <Form.Group controlId="customTeaserOpenInNewTab">
-                    <Form.Label>
-                      {t('articleEditor.panels.openInNewTab')}
-                    </Form.Label>
-
                     <Toggle
-                      checkedChildren={t('articleEditor.panels.yes')}
-                      unCheckedChildren={t('articleEditor.panels.no')}
                       checked={!!openInNewTab}
                       onChange={(isChecked: boolean) =>
                         setOpenInNewTab(isChecked)
                       }
+                      label={t('articleEditor.panels.openInNewTab')}
                     />
                   </Form.Group>
 
                   <Form.Group controlId="properties">
                     <Form.Label>
-                      {t('articleEditor.panels.properties')}
+                      {t('articleEditor.panels.properties')}{' '}
+                      <InfoTooltip
+                        text={t('articleEditor.panels.teaserPropertiesInfo')}
+                      />
                     </Form.Label>
 
                     <ListInput
@@ -607,14 +602,11 @@ export function TeaserSelectPanel({
 
                           <FormGroup controlId="articleProperty">
                             <Toggle
-                              checkedChildren={t('articleEditor.panels.public')}
-                              unCheckedChildren={t(
-                                'articleEditor.panels.private'
-                              )}
                               checked={value.public}
                               onChange={isPublic =>
                                 onChange({ ...value, public: isPublic })
                               }
+                              label={t('articleEditor.panels.public')}
                             />
                           </FormGroup>
                         </FlexRow>
@@ -715,10 +707,10 @@ export function TeaserSelectPanel({
           !isEventListLoading &&
           events.length !== 0 && (
             <EventFilterContainer>
-              <ToggleLabel>{t('event.list.upcomingOnly')}</ToggleLabel>
               <Toggle
                 checked={eventFilter}
                 onChange={value => setEventFilter(value)}
+                label={t('event.list.upcomingOnly')}
               />
             </EventFilterContainer>
           )}

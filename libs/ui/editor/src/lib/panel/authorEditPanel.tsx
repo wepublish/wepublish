@@ -49,7 +49,7 @@ const { Label: RLabel, Group, Control } = RForm;
 
 const InputGroup = styled(RInputGroup)`
   width: 230px;
-  margin-left: 5px;
+  margin-left: 4px;
 `;
 
 const Controls = styled('div')`
@@ -63,6 +63,13 @@ const Form = styled(RForm)`
 
 const Label = styled(RLabel)`
   padding-top: 16px;
+`;
+
+const ToggleList = styled('div')`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
 `;
 
 const emptyAuthorLink: AuthorLink = {
@@ -366,23 +373,25 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
             {/* hide author in different places */}
             <Panel header={t('authorEditPanel.hideAuthor')}>
               <Group controlId="hideAuthorToggles">
-                <RLabel>{t('authorEditPanel.hideOnArticle')}</RLabel>
-                <Toggle
-                  checked={!!hideOnArticle}
-                  onChange={value => setHideOnArticle(value)}
-                />
+                <ToggleList>
+                  <Toggle
+                    checked={!!hideOnArticle}
+                    onChange={value => setHideOnArticle(value)}
+                    label={t('authorEditPanel.hideOnArticle')}
+                  />
 
-                <Label>{t('authorEditPanel.hideOnTeaser')}</Label>
-                <Toggle
-                  checked={!!hideOnTeaser}
-                  onChange={value => setHideOnTeaser(value)}
-                />
+                  <Toggle
+                    checked={!!hideOnTeaser}
+                    onChange={value => setHideOnTeaser(value)}
+                    label={t('authorEditPanel.hideOnTeaser')}
+                  />
 
-                <Label>{t('authorEditPanel.hideOnTeam')}</Label>
-                <Toggle
-                  checked={!!hideOnTeam}
-                  onChange={value => setHideOnTeam(value)}
-                />
+                  <Toggle
+                    checked={!!hideOnTeam}
+                    onChange={value => setHideOnTeam(value)}
+                    label={t('authorEditPanel.hideOnTeam')}
+                  />
+                </ToggleList>
               </Group>
             </Panel>
           </PanelGroup>

@@ -1,7 +1,8 @@
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   InvoiceFragment,
+  InvoicePaymentMailDocument,
   MarkInvoiceAsPaidDocument,
   MeDocument,
 } from '@wepublish/editor/api';
@@ -11,7 +12,6 @@ import { LiaFileInvoiceSolid } from 'react-icons/lia';
 import { MdAccessTime, MdClose, MdContentCopy, MdDone } from 'react-icons/md';
 import {
   Button,
-  Checkbox,
   Message,
   Modal,
   Notification,
@@ -24,8 +24,10 @@ import {
 import { RowDataType } from 'rsuite/esm/Table';
 
 import { createCheckedPermissionComponent } from '../atoms';
+import { useActionMailQuestion } from '../hooks';
 import { ColumnConfigurator } from '../listView/column-configurator';
 import { ListColumn, renderListColumns } from '../listView/list-columns';
+import { Table } from '../listView/list-view';
 import { useColumnConfig } from '../listView/use-column-config';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -54,7 +56,7 @@ const StatusPill = styled('span')<{ pillColor: string }>`
   background-color: ${({ pillColor }) => pillColor};
   color: white;
   font-size: 10px;
-  box-shadow: 0 0 0 2px white;
+  box-shadow: 0 0 0 2px var(--rs-bg-card);
 `;
 
 const IdButton = styled('button')`
@@ -82,32 +84,9 @@ const PanelHeader = styled('div')`
   gap: 8px;
 `;
 
-export interface SubscriptionPeriodRef {
-  invoiceID: string;
-  startsAt: string;
-}
-
-export function shouldOfferMailOptOut(
-  periods: SubscriptionPeriodRef[] | undefined,
-  invoiceId: string
-): boolean {
-  const invoicePeriod = periods?.find(period => period.invoiceID === invoiceId);
-
-  if (!invoicePeriod) {
-    return true;
-  }
-
-  const invoiceStart = new Date(invoicePeriod.startsAt).getTime();
-
-  return (periods ?? []).some(
-    period => new Date(period.startsAt).getTime() < invoiceStart
-  );
-}
-
 export interface InvoiceListPanelProps {
   subscriptionId?: string;
   invoices?: InvoiceFragment[];
-  periods?: SubscriptionPeriodRef[];
   disabled?: boolean;
   onClose?(): void;
   onSave?(): void;
@@ -117,7 +96,6 @@ export interface InvoiceListPanelProps {
 function InvoiceListPanel({
   subscriptionId,
   invoices,
-  periods,
   disabled,
   onInvoicePaid,
 }: InvoiceListPanelProps) {
@@ -136,9 +114,8 @@ function InvoiceListPanel({
       : billingDate(b) - billingDate(a)
     );
   }, [invoices, sortType]);
-  const [doNotSendMail, setDoNotSendMail] = useState(false);
-  const offersMailOptOut =
-    invoiceToPay ? shouldOfferMailOptOut(periods, invoiceToPay.id) : true;
+  const client = useApolloClient();
+  const { askMail, actionMailDialog } = useActionMailQuestion();
   const columns = useMemo<ListColumn<InvoiceFragment>[]>(
     () => [
       {
@@ -219,18 +196,18 @@ function InvoiceListPanel({
             invoice.paidAt ?
               {
                 title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
-                color: '#22c55e',
+                color: 'var(--rs-state-success)',
                 icon: <MdDone />,
               }
             : invoice.canceledAt ?
               {
                 title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
-                color: '#ef4444',
+                color: 'var(--rs-state-error)',
                 icon: <MdClose />,
               }
             : {
                 title: t('invoice.unpaid'),
-                color: '#eab308',
+                color: 'var(--rs-state-warning)',
                 icon: <MdAccessTime />,
               };
 
@@ -262,13 +239,11 @@ function InvoiceListPanel({
 
   function closePayModal() {
     setInvoiceToPay(undefined);
-    setDoNotSendMail(false);
   }
 
   async function payManually() {
-    const invoiceId = invoiceToPay?.id;
+    const invoice = invoiceToPay;
     setInvoiceToPay(undefined);
-    setDoNotSendMail(false);
 
     if (!me?.me?.id) {
       toaster.push(
@@ -278,14 +253,38 @@ function InvoiceListPanel({
       return;
     }
 
-    if (!invoiceId) {
+    if (!invoice) {
+      return;
+    }
+
+    const { data } = await client.query({
+      query: InvoicePaymentMailDocument,
+      variables: { invoiceId: invoice.id },
+      fetchPolicy: 'network-only',
+    });
+    const mail = data?.invoicePaymentMail;
+
+    if (!mail) {
+      throw new Error('Could not look up the mail of this action');
+    }
+
+    // asked every time: whether the mail goes out, or that none will
+    const decision = await askMail({
+      ...mail,
+      recipient: mail.recipientEmail ?? invoice.mail,
+    });
+
+    if (decision === 'cancel') {
       return;
     }
 
     await markInvoiceAsPaid({
       variables: {
-        id: invoiceId,
-        sendMail: !doNotSendMail,
+        id: invoice.id,
+        // only set when the admin chose; otherwise the API default applies
+        ...((decision === 'send' || decision === 'skip') && {
+          sendMail: decision === 'send',
+        }),
       },
     });
     onInvoicePaid();
@@ -332,7 +331,7 @@ function InvoiceListPanel({
       bordered
       header={panelHeader}
     >
-      <RTable
+      <Table
         autoHeight
         wordWrap="break-word"
         data={sortedInvoices}
@@ -342,8 +341,12 @@ function InvoiceListPanel({
       >
         {renderListColumns(columns, isVisible)}
 
-        <Column width={160}>
-          <HeaderCell>{t('invoice.table.action')}</HeaderCell>
+        <Column
+          width={160}
+          align="center"
+          fixed="right"
+        >
+          <HeaderCell align="center">{t('action')}</HeaderCell>
           <RCell>
             {(rowData: RowDataType<InvoiceFragment>) =>
               !rowData.paidAt && !rowData.canceledAt ?
@@ -359,7 +362,7 @@ function InvoiceListPanel({
             }
           </RCell>
         </Column>
-      </RTable>
+      </Table>
 
       <Modal
         open={!!invoiceToPay}
@@ -368,18 +371,7 @@ function InvoiceListPanel({
         onClose={closePayModal}
       >
         <Modal.Title>{t('invoice.areYouSure')}</Modal.Title>
-        <Modal.Body>
-          {t('invoice.manuallyPaidModalBody')}
-
-          {offersMailOptOut ?
-            <Checkbox
-              checked={doNotSendMail}
-              onChange={(value, checked) => setDoNotSendMail(checked)}
-            >
-              {t('invoice.doNotSendMail')}
-            </Checkbox>
-          : <p>{t('invoice.noMailForFirstPeriod')}</p>}
-        </Modal.Body>
+        <Modal.Body>{t('invoice.manuallyPaidModalBody')}</Modal.Body>
         <Modal.Footer>
           <Button
             appearance="primary"
@@ -395,6 +387,8 @@ function InvoiceListPanel({
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {actionMailDialog}
     </RPanel>
   );
 }

@@ -54,6 +54,7 @@ export interface MailColorPickerProps {
   /** Called before the picker opens — used to snapshot the editor selection. */
   onOpen?: () => void;
   title?: string;
+  label?: string;
   size?: number;
 }
 
@@ -67,6 +68,7 @@ export function MailColorPicker({
   onChange,
   onOpen,
   title,
+  label,
   size = 32,
 }: MailColorPickerProps) {
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -76,12 +78,23 @@ export function MailColorPicker({
   const swatch = (
     <Box
       ref={anchorRef}
+      role="button"
+      tabIndex={0}
+      aria-label={title ?? label}
+      aria-expanded={open}
       onMouseDown={event => {
         // Keep the caret in the editor: opening the picker must not steal it.
         event.preventDefault();
         onOpen?.();
       }}
       onClick={() => setOpen(current => !current)}
+      onKeyDown={event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onOpen?.();
+          setOpen(current => !current);
+        }
+      }}
       sx={theme => ({
         width: size,
         height: size,

@@ -6,17 +6,35 @@ enum AIProviderType {
   V0
 }
 
-union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
+"""
+The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action.
+"""
+type ActionMail {
+  """
+  The SubscriptionEvent or UserEvent of the mail, e.g. SUBSCRIBE or ACCOUNT_CREATION.
+  """
+  event: String!
 
-enum ActionType {
-  ArticleCreated
-  AuthorCreated
-  CommentCreated
-  EventCreated
-  PageCreated
-  PollStarted
-  SubscriptionCreated
-  UserCreated
+  """Set when a mail would be sent."""
+  mailTemplateId: String
+
+  """Set when a mail would be sent."""
+  mailTemplateName: String
+
+  """Set when no mail would be sent."""
+  noMailReason: ActionMailNoMailReason
+
+  """
+  The address the mail would go to; null while the user does not exist yet (createUser).
+  """
+  recipientEmail: String
+}
+
+enum ActionMailNoMailReason {
+  alreadyHandled
+  firstPeriod
+  noTemplate
+  notApplicable
 }
 
 type AllowedSettingVals {
@@ -51,13 +69,6 @@ type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   tags: [Tag!]!
   trackingPixels: [TrackingPixel!]!
   url: String!
-}
-
-type ArticleCreatedAction implements BaseAction & HasArticleLc {
-  actionType: ActionType!
-  article: Article!
-  articleId: String!
-  date: DateTime!
 }
 
 input ArticleFilter {
@@ -234,13 +245,6 @@ type Author implements HasImage & HasOptionalPeerLc {
   url: String!
 }
 
-type AuthorCreatedAction implements BaseAction & HasAuthor {
-  actionType: ActionType!
-  author: Author!
-  authorId: String!
-  date: DateTime!
-}
-
 input AuthorFilter {
   hideOnTeam: Boolean
   name: String
@@ -313,11 +317,6 @@ enum BannerActionRole {
 enum BannerDocumentType {
   ARTICLE
   PAGE
-}
-
-interface BaseAction {
-  actionType: ActionType!
-  date: DateTime!
 }
 
 interface BaseBlock {
@@ -658,13 +657,6 @@ input CommentBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: CommentBlockFilterInput!
-}
-
-type CommentCreatedAction implements BaseAction & HasComment {
-  actionType: ActionType!
-  comment: Comment!
-  commentId: String!
-  date: DateTime!
 }
 
 input CommentFilter {
@@ -1101,13 +1093,6 @@ input EventBlockInput {
   filter: EventBlockFilterInput!
 }
 
-type EventCreatedAction implements BaseAction & HasEventLc {
-  actionType: ActionType!
-  date: DateTime!
-  event: Event!
-  eventId: String!
-}
-
 input EventFilter {
   from: DateTime
   location: String
@@ -1357,28 +1342,8 @@ interface HasArticle {
   articleID: String!
 }
 
-interface HasArticleLc {
-  article: Article!
-  articleId: String!
-}
-
-interface HasAuthor {
-  author: Author!
-  authorId: String!
-}
-
 interface HasBlockContent {
   blocks: [BlockContent!]!
-}
-
-interface HasComment {
-  comment: Comment!
-  commentId: String!
-}
-
-interface HasEventLc {
-  event: Event!
-  eventId: String!
 }
 
 interface HasImage {
@@ -1460,34 +1425,14 @@ interface HasPage {
   pageID: String!
 }
 
-interface HasPageLc {
-  page: Page!
-  pageId: String!
-}
-
 interface HasPaymentMethod {
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
 }
 
-interface HasPoll {
-  poll: FullPoll!
-  pollId: String!
-}
-
-interface HasSubscriptionLc {
-  subscription: PublicSubscription!
-  subscriptionId: String!
-}
-
 interface HasUser {
   user: User!
   userID: String!
-}
-
-interface HasUserLc {
-  user: User!
-  userId: String!
 }
 
 type IFrameBlock implements BaseBlock {
@@ -2758,7 +2703,7 @@ type Mutation {
     reason: SubscriptionDeactivationReason!
 
     """
-    When true, suppress the subscription-deactivation mail. Useful for bulk migrations of already-cancelled subscriptions.
+    When true, suppress the subscription-deactivation mail, e.g. when an editor chose not to mail the reader, or for bulk migrations of already-cancelled subscriptions.
     """
     skipMail: Boolean
   ): PublicSubscription!
@@ -2804,6 +2749,11 @@ type Mutation {
 
   """Creates a new block template."""
   createBlockTemplate(blocks: [BlockContentInput!]!, name: String!): BlockTemplate!
+
+  """
+  Sets up the challenge provider. Only possible while none is configured.
+  """
+  createChallengeProviderSetting(id: String!, name: String, secret: String, siteKey: String, type: ChallengeProviderType!): SettingChallengeProvider!
 
   """Creates a comment for any user"""
   createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, publish: Boolean = false, tagIds: [String!], text: RichText): Comment!
@@ -2855,6 +2805,9 @@ type Mutation {
     type: LetterProviderType!
     webhookSigningKey: String
   ): SettingLetterProvider!
+
+  """Sets up the mail provider. Only possible while none is configured."""
+  createMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType!, webhookEndpointSecret: String): SettingMailProvider!
 
   """Start a background job sending a template to a filtered audience"""
   createMailSendJob(input: MailSendJobInput!): MailSendJobModel!
@@ -2909,13 +2862,32 @@ type Mutation {
   createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
   """Creates a new subscription."""
-  createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Float!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
+  createSubscription(
+    autoRenew: Boolean!
+    extendable: Boolean!
+    memberPlanID: String!
+    monthlyAmount: Float!
+    paidUntil: DateTime
+    paymentMethodID: String!
+    paymentPeriodicity: PaymentPeriodicity!
+    properties: [PropertyInput!]!
+
+    """
+    When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.
+    """
+    skipMail: Boolean
+    startsAt: DateTime!
+    userID: String!
+  ): PublicSubscription!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
   """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+
+  """Sets up the sync provider. Only possible while none is configured."""
+  createSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String, type: SyncProviderType!): SettingSyncProvider!
 
   """Creates a new tag."""
   createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
@@ -3552,13 +3524,6 @@ type Page {
   slug: String
   tags: [Tag!]!
   url: String!
-}
-
-type PageCreatedAction implements BaseAction & HasPageLc {
-  actionType: ActionType!
-  date: DateTime!
-  page: Page!
-  pageId: String!
 }
 
 input PageFilter {
@@ -4258,13 +4223,6 @@ enum PollSort {
   OpensAt
 }
 
-type PollStartedAction implements BaseAction & HasPoll {
-  actionType: ActionType!
-  date: DateTime!
-  poll: FullPoll!
-  pollId: String!
-}
-
 type PollVote {
   answer: PollAnswerInVote!
   answerId: String!
@@ -4342,8 +4300,8 @@ type PublicSubscriptionConnection {
 }
 
 type Query {
-  """Returns latest actions"""
-  actions: [Action!]!
+  """The mail createUser would send, or why it sends none."""
+  accountCreationMail: ActionMail!
 
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
@@ -4603,6 +4561,11 @@ type Query {
   """Returns a invoice by id."""
   invoice(id: String!): Invoice!
 
+  """
+  The mail markInvoiceAsPaid would send for this invoice, or why it sends none.
+  """
+  invoicePaymentMail(invoiceId: String!): ActionMail!
+
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
@@ -4805,6 +4768,16 @@ type Query {
 
   """Returns a subscription by id."""
   subscription(id: String!): PublicSubscription!
+
+  """
+  The mail cancelSubscription would send for this subscription and reason, or why it sends none.
+  """
+  subscriptionCancellationMail(id: String!, reason: SubscriptionDeactivationReason!): ActionMail!
+
+  """
+  The mail createSubscription would send for a subscription with these settings, or why it sends none.
+  """
+  subscriptionCreationMail(autoRenew: Boolean!, memberPlanID: String!, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, userID: String!): ActionMail!
 
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
@@ -5472,13 +5445,6 @@ enum SubscribePeriodicityDisplay {
   Toggle
 }
 
-type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
-  actionType: ActionType!
-  date: DateTime!
-  subscription: PublicSubscription!
-  subscriptionId: String!
-}
-
 type SubscriptionDeactivation {
   date: DateTime!
   reason: SubscriptionDeactivationReason!
@@ -5531,7 +5497,7 @@ type SubscriptionFlowModel {
   id: String!
   intervals: [SubscriptionInterval!]!
   memberPlan: MemberPlan
-  numberOfSubscriptions: Int!
+  numberOfSubscriptions(memberPlanId: String): Int!
   paymentMethods: [PaymentMethod!]!
   periodicities: [PaymentPeriodicity!]!
 }
@@ -5943,13 +5909,6 @@ type UserConsent {
   modifiedAt: DateTime!
   user: User!
   value: Boolean!
-}
-
-type UserCreatedAction implements BaseAction & HasUserLc {
-  actionType: ActionType!
-  date: DateTime!
-  user: User!
-  userId: String!
 }
 
 enum UserEvent {
