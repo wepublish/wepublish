@@ -114,3 +114,19 @@ describe('MemberContext.deactivateSubscription', () => {
     expect(mailContext.sendMail).not.toHaveBeenCalled();
   });
 });
+
+describe('MemberContext.updateRemoteSubscription', () => {
+  it('names the payment provider that cannot change the subscription', async () => {
+    const { context } = setup();
+
+    await expect(
+      context.updateRemoteSubscription({
+        paymentProvider: { getName: async () => 'Payrexx Abo' } as never,
+        input: { memberPlanID: 'plan-2' } as never,
+        originalSubscription: { memberPlanID: 'plan-1' } as never,
+      })
+    ).rejects.toThrow(
+      'It is not possible to update the subscription with payment provider "Payrexx Abo".'
+    );
+  });
+});

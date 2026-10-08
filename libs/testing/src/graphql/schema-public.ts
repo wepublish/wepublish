@@ -2872,6 +2872,8 @@ export type Mutation = {
   restorePageRevision: Page;
   /** Continue a send job that stopped early. Recipients already sent are skipped. */
   resumeMailSendJob: MailSendJobModel;
+  /** Retries the failed periodic job and then catches up every run up to today. Answers once the failed run is taken over; the runs go on in the background. Refused while a run is going on. */
+  retryPeriodicJob: PeriodicJob;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean']['output'];
   revokeImpersonationSessions: Scalars['Int']['output'];
@@ -5276,6 +5278,7 @@ export type PeriodicJob = {
   finishedWithError?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
+  running: Scalars['Boolean']['output'];
   successfullyFinished?: Maybe<Scalars['DateTime']['output']>;
   tries: Scalars['Float']['output'];
 };

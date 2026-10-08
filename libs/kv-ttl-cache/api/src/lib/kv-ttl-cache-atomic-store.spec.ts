@@ -46,6 +46,19 @@ describe('MemoryAtomicStore', () => {
     await store.delRaw('key');
     await expect(store.getRaw('key')).resolves.toBeUndefined();
   });
+
+  it('keeps a key that is still there for longer, but brings none back', async () => {
+    const store = new MemoryAtomicStore();
+    await store.setIfAbsent('lock', '1', 1000);
+
+    vi.advanceTimersByTime(900);
+    await expect(store.expireRaw('lock', 1000)).resolves.toBe(true);
+    await expect(store.expireRaw('gone', 1000)).resolves.toBe(false);
+    vi.advanceTimersByTime(900);
+
+    await expect(store.getRaw('lock')).resolves.toBe('1');
+    await expect(store.getRaw('gone')).resolves.toBeUndefined();
+  });
 });
 
 describe('DragonflyAtomicStore', () => {
@@ -180,12 +193,13 @@ describe('DragonflyAtomicStore', () => {
 
   it('sends only commands the production ACL allows, every key under the prefix of its medium', async () => {
     const sendCommand = vi.fn(async (command: string[]) =>
-      command[0] === 'INCR' ? 1 : 'OK'
+      command[0] === 'INCR' || command[0] === 'PEXPIRE' ? 1 : 'OK'
     );
     const store = createStore(sendCommand);
 
     await store.ping();
     await store.setIfAbsent('lock:nightly-job', 'token', 60_000);
+    await store.expireRaw('lock:periodic-job-run', 120_000);
     await store.getRaw('nsv:settings');
     await store.getManyRaw(['nsv:navigations', 'nsv:banners']);
     await store.setRaw('val:dev:ns:navigations:v1:main', '{}', 60_000);
@@ -206,6 +220,22 @@ describe('DragonflyAtomicStore', () => {
     ).toBe(true);
     expect(keys.length).toBeGreaterThan(0);
     expect(keys.every(key => key.startsWith('wepublish-demo::'))).toBe(true);
+  });
+
+  it('extends a key with PEXPIRE and tells whether it was still there', async () => {
+    const sendCommand = vi
+      .fn()
+      .mockResolvedValueOnce(1)
+      .mockResolvedValueOnce(0);
+    const store = createStore(sendCommand);
+
+    await expect(store.expireRaw('lock:job', 120_000)).resolves.toBe(true);
+    await expect(store.expireRaw('lock:job', 120_000)).resolves.toBe(false);
+    expect(sendCommand).toHaveBeenCalledWith([
+      'PEXPIRE',
+      'wepublish-demo::lock:job',
+      '120000',
+    ]);
   });
 
   it('is shared between replicas, unlike memory', () => {

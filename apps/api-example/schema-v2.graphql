@@ -3054,6 +3054,11 @@ type Mutation {
   """
   resumeMailSendJob(id: String!, retryUnfinished: Boolean): MailSendJobModel!
 
+  """
+  Retries the failed periodic job and then catches up every run up to today. Answers once the failed run is taken over; the runs go on in the background. Refused while a run is going on.
+  """
+  retryPeriodicJob: PeriodicJob!
+
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
   revokeImpersonationSessions(ids: [String!]): Int!
@@ -3920,6 +3925,7 @@ type PeriodicJob {
   finishedWithError: DateTime
   id: String!
   modifiedAt: DateTime!
+  running: Boolean!
   successfullyFinished: DateTime
   tries: Float!
 }
