@@ -1,6 +1,7 @@
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  AccountCreationMailDocument,
   CreateUserDocument,
   FullImageFragment,
   FullUserFragment,
@@ -24,6 +25,8 @@ import {
   SingleViewTitle,
   Textarea,
   toggleRequiredLabel,
+  skipMailFor,
+  useActionMailQuestion,
   useAuthorisation,
   UserSubscriptionsList,
 } from '@wepublish/ui/editor';
@@ -147,6 +150,8 @@ function UserEditView() {
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null);
   const [password, setPassword] = useState('');
   const [active, setActive] = useState(true);
+  const client = useApolloClient();
+  const { askMail, actionMailDialog } = useActionMailQuestion();
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([]);
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
   const [address, setAddress] = useState<UserAddress | null>(null);
@@ -389,6 +394,23 @@ function UserEditView() {
       }
     } else {
       try {
+        const { data: mailData } = await client.query({
+          query: AccountCreationMailDocument,
+          fetchPolicy: 'network-only',
+        });
+        const mail = mailData?.accountCreationMail;
+
+        if (!mail) {
+          throw new Error('Could not look up the mail of this action');
+        }
+
+        // asked every time: whether the mail goes out, or that none will
+        const decision = await askMail({ ...mail, recipient: email });
+
+        if (decision === 'cancel') {
+          return;
+        }
+
         const { data } = await createUser({
           variables: {
             name,
@@ -410,6 +432,7 @@ function UserEditView() {
             address,
             userImageID: userImage?.id || null,
             password,
+            skipMail: skipMailFor(decision),
           },
         });
         const newUser = data?.createUser;
@@ -1059,6 +1082,8 @@ function UserEditView() {
           </PageColumns>
         </UserFormGrid>
       </Form>
+
+      {actionMailDialog}
 
       {/* image selection panel */}
       <Drawer

@@ -1,5 +1,18 @@
 {
   "translation": {
+    "send": "Send",
+    "ok": "OK",
+    "actionMail": {
+      "title": "Email the member?",
+      "question": "Send the email “{{template}}” to {{recipient}}?",
+      "skip": "Don't send",
+      "noMailTitle": "No email to the member",
+      "noTemplate": "No email is configured for “{{event}}”. No email will be sent to {{recipient}}.",
+      "firstPeriod": "No payment confirmation is sent for the first period of a subscription. No email will be sent to {{recipient}}.",
+      "alreadyHandled": "The payment confirmation for this invoice was already sent or suppressed. No email will be sent to {{recipient}}.",
+      "notApplicable": "No email will be sent to {{recipient}}.",
+      "theMember": "the member"
+    },
     "lastSavedAt": "Last saved {{date, ccc PP pp}}",
     "preview": {
       "backToEditor": "Editor",
@@ -1090,10 +1103,8 @@
     "invoice": {
       "areYouSure": "Are you sure?",
       "canceledAt": "Cancelled at",
-      "doNotSendMail": "Do not send a payment confirmation to the member",
       "invoiceNo": "Invoice No.",
       "manuallyPaidModalBody": "The invoice is marked as paid even though no payment has been received from the user. You should discuss your intention with the accountant.",
-      "noMailForFirstPeriod": "No payment confirmation will be sent, because this is the first period of the subscription.",
       "paidAt": "Paid at",
       "panel": {
         "invoiceHistory": "Invoice history",

@@ -1,5 +1,18 @@
 {
   "translation": {
+    "send": "Envoyer",
+    "ok": "OK",
+    "actionMail": {
+      "title": "Envoyer un e-mail au membre?",
+      "question": "Envoyer l'e-mail « {{template}} » à {{recipient}} ?",
+      "skip": "Ne pas envoyer",
+      "noMailTitle": "Pas d'e-mail au membre",
+      "noTemplate": "Aucun e-mail n'est configuré pour « {{event}} ». Aucun e-mail ne sera envoyé à {{recipient}}.",
+      "firstPeriod": "Aucune confirmation de paiement n'est envoyée pour la première période d'un abonnement. Aucun e-mail ne sera envoyé à {{recipient}}.",
+      "alreadyHandled": "La confirmation de paiement de cette facture a déjà été envoyée ou supprimée. Aucun e-mail ne sera envoyé à {{recipient}}.",
+      "notApplicable": "Aucun e-mail ne sera envoyé à {{recipient}}.",
+      "theMember": "ce membre"
+    },
     "lastSavedAt": "Dernier enregistrement {{date, ccc PP pp}}",
     "preview": {
       "backToEditor": "Éditeur",
@@ -1090,10 +1103,8 @@
     "invoice": {
       "areYouSure": "Êtes-vous sûr·e ?",
       "canceledAt": "Annulée le",
-      "doNotSendMail": "Ne pas envoyer de confirmation de paiement au membre",
       "invoiceNo": "Facture n°",
       "manuallyPaidModalBody": "La facture est marquée comme payée, bien qu'aucun paiement n'ait été effectué par l'utilisateur·trice. Veuillez vous adresser au comptable pour discuter de ce cas de figure.",
-      "noMailForFirstPeriod": "Aucune confirmation de paiement ne sera envoyée, car il s'agit de la première période de l'abonnement.",
       "paidAt": "Payée le",
       "panel": {
         "invoiceHistory": "Historique de facturation",

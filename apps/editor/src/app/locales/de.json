@@ -1,5 +1,18 @@
 {
   "translation": {
+    "ok": "OK",
+    "send": "Senden",
+    "actionMail": {
+      "title": "E-Mail an das Mitglied senden?",
+      "question": "E-Mail «{{template}}» an {{recipient}} senden?",
+      "skip": "Nicht senden",
+      "noMailTitle": "Keine E-Mail an das Mitglied",
+      "noTemplate": "Für «{{event}}» ist keine E-Mail konfiguriert. An {{recipient}} wird keine E-Mail gesendet.",
+      "firstPeriod": "Für die erste Periode eines Abos wird keine Zahlungsbestätigung versandt. An {{recipient}} wird keine E-Mail gesendet.",
+      "alreadyHandled": "Die Zahlungsbestätigung für diese Rechnung wurde bereits versandt oder unterdrückt. An {{recipient}} wird keine E-Mail gesendet.",
+      "notApplicable": "An {{recipient}} wird keine E-Mail gesendet.",
+      "theMember": "das Mitglied"
+    },
     "lastSavedAt": "Zuletzt gespeichert {{date, ccc PP pp}}",
     "preview": {
       "backToEditor": "Editor",
@@ -1090,10 +1103,8 @@
     "invoice": {
       "areYouSure": "Bist du sicher?",
       "canceledAt": "Storniert am",
-      "doNotSendMail": "Keine Zahlungsbestätigung an das Mitglied senden",
       "invoiceNo": "Rechnung Nr.",
       "manuallyPaidModalBody": "Die Rechnung wird als bezahlt markiert, obwohl keine Zahlung durch den oder die Benutzer:in eingegangen ist. Du solltest dein Vorhaben mit dem:r Buchführer:in besprechen.",
-      "noMailForFirstPeriod": "Es wird keine Zahlungsbestätigung versandt, da dies die erste Periode des Abos ist.",
       "paidAt": "Bezahlt am",
       "panel": {
         "invoiceHistory": "Rechnungsverlauf",
