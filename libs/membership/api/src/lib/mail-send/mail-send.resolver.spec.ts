@@ -85,6 +85,7 @@ describe('MailSendResolver', () => {
     const recipientService = {
       count: vi.fn(async () => 12),
       countUsers: vi.fn(async () => 10),
+      countWithoutAddress: vi.fn(async () => 3),
       allowsSubscriptionTemplates: vi.fn(() => true),
     };
 
@@ -97,6 +98,7 @@ describe('MailSendResolver', () => {
     expect(preview).toEqual({
       count: 12,
       userCount: 10,
+      withoutAddressCount: 3,
       allowsSubscriptionTemplates: true,
     });
   });

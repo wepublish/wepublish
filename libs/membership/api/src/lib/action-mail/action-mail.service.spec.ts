@@ -42,11 +42,9 @@ const setup = ({
       findUnique: vi.fn().mockResolvedValue({ email: 'ben@example.com' }),
     },
     invoice: {
-      findUnique: vi
-        .fn()
-        .mockResolvedValue({
-          subscription: { user: { email: 'cleo@example.com' } },
-        }),
+      findUnique: vi.fn().mockResolvedValue({
+        subscription: { user: { email: 'cleo@example.com' } },
+      }),
     },
     mailTemplate: {
       findUnique: vi.fn(async ({ where: { id } }: { where: { id: string } }) =>

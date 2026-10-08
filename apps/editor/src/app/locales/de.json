@@ -229,7 +229,8 @@
         "hiddenInfo": "Ausgeblendete Artikel erscheinen nicht in automatischen Artikellisten auf der Website (z.B. neueste Artikel oder Tag-Seiten), bleiben aber über ihren direkten Link erreichbar.",
         "contentUrlInfo": "Die Webadresse, zu der Leser*innen beim Klick auf den Teaser gelangen.",
         "teaserPropertiesInfo": "Zusätzliche Schlüssel-Wert-Paare, die deine Website für spezielle Darstellungen nutzen kann. Nur nötig, wenn die Entwickler*innen deiner Website dich darum gebeten haben. Öffentliche Eigenschaften sind über die öffentliche API sichtbar.",
-        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
+        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
+        "private": "Privat"
       }
     },
     "articles": {
@@ -1120,7 +1121,8 @@
         "description": "Beschreibung",
         "goodie": "Goodie",
         "status": "Status",
-        "idCopied": "Rechnungs-ID kopiert"
+        "idCopied": "Rechnungs-ID kopiert",
+        "action": "Aktion"
       }
     },
     "linkPageBreakEditPanel": {
@@ -2234,7 +2236,7 @@
         "title": {
           "activated": "Abonnement deaktivieren"
         },
-        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
+        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert. Grund: {{reason}}"
       },
       "editTitle": "Abonnement bearbeiten",
       "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",
@@ -2283,11 +2285,30 @@
       "periodCreatedAt": "Erstellt am {{date}}",
       "periodEndsAt": "bis {{date}}",
       "periods": "Perioden",
+      "periodRange": "Zeitraum",
       "periodStartsAt": "Gültig von {{date}}",
       "subscriptionCreatedAt": "Erstellt am {{date}}",
       "subscriptionIsAutoRenewed": "Abo wird automatisch erneuert",
       "subscriptionStartsAt": "Abo startet am {{date}}",
-      "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
+      "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden.",
+      "subscriptionTitle": "{{memberPlanName}} / Nr. {{subscriptionId}}",
+      "table": {
+        "subscription": "Abo",
+        "start": "Start",
+        "periodicity": "Zahlungsintervall",
+        "paidUntil": "Bezahlt bis",
+        "active": "Aktiv",
+        "deactivated": "Deaktiviert",
+        "planned": "Geplant",
+        "unpaid": "Unbezahlt",
+        "expired": "Abgelaufen",
+        "created": "Erstellt",
+        "renewal": "Erneuerung",
+        "renewsAutomatically": "Automatisch",
+        "expires": "Läuft aus",
+        "confirmed": "Bestätigt",
+        "perMonthSuffix": "/Mt."
+      }
     },
     "blockTemplates": {
       "list": {
@@ -2709,6 +2730,8 @@
       "paymentProvider": "Zahlungsanbieter",
       "trackingPixel": "Tracking-Pixel",
       "mailProvider": "E-Mail-Provider",
+      "letterProvider": "Brief-Provider",
+      "pdfRenderer": "PDF-Renderer",
       "back": "Zurück zu Integrationen",
       "unknown": "Unbekannte Integration",
       "notFound": "Integration nicht gefunden",
@@ -2778,6 +2801,25 @@
         "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen."
       },
       "placeholderSecret": "Unverändert (Versteckt)",
+      "pdfRendererSettings": {
+        "type": "Typ",
+        "cloudflareAccountId": "Cloudflare Account-ID",
+        "cloudflareApiToken": "Cloudflare API-Token",
+        "gotenbergUrl": "Gotenberg-URL",
+        "gotenbergUsername": "Gotenberg-Benutzername",
+        "gotenbergPassword": "Gotenberg-Passwort",
+        "timeoutMs": "Timeout (ms)"
+      },
+      "letterSettings": {
+        "type": "Typ",
+        "environment": "Umgebung",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "organisationId": "Organisations-ID",
+        "webhookSigningKey": "Webhook Signing Key",
+        "autoSend": "Briefe automatisch versenden",
+        "placeholderEmailContains": "Platzhalter-E-Mail enthält"
+      },
       "mailSettings": {
         "type": "Typ",
         "fromAddress": "Absender-Adresse",
@@ -3276,8 +3318,8 @@
           "description": "Empfängergruppe und Filter"
         },
         "content": {
-          "title": "E-Mail-Inhalt",
-          "description": "Vorlage und Vorschau"
+          "title": "Inhalt & Versandart",
+          "description": "Vorlage, E-Mail oder Brief"
         },
         "send": {
           "title": "E-Mail senden",
@@ -3356,10 +3398,20 @@
         "loading": "Empfänger werden geladen …",
         "email": "E-Mail",
         "name": "Name",
-        "memberPlan": "Abo-Plan"
+        "memberPlan": "Abo-Plan",
+        "address": "Adresse",
+        "withAddress": "Adresse vorhanden",
+        "withoutAddress": "Keine gültige Adresse – wird nicht verschickt"
       },
       "endedWithinDays": "Deaktiviert innerhalb der letzten … Tage",
       "endedWithinDaysHint": "Nur Abos, die in diesem Zeitraum deaktiviert wurden.",
+      "emailFilter": {
+        "label": "E-Mail-Adresse",
+        "all": "Alle",
+        "placeholder": "Nur Platzhalter",
+        "real": "Nur echt",
+        "hint": "Platzhalter-Adressen werden in der Brief-Integration festgelegt."
+      },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
         "relative": "Letzte … Tage",
@@ -3374,7 +3426,8 @@
         "firstRecipient": "Erste:r Empfänger:in",
         "hint": "So sieht die Mail für diese Person aus – mit ihren echten Daten.",
         "loading": "Vorschau wird geladen …",
-        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen."
+        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen.",
+        "letterTitle": "Briefvorschau"
       },
       "recipientsCountPerPerson": "{{count}} Mails an {{people}} Personen",
       "endsAtHint": "Kündigungsdatum, sonst das Datum, bis zu dem bezahlt ist.",
@@ -3389,7 +3442,40 @@
       "from": "ab",
       "to": "bis",
       "stateHelp": "Aktiv: bestätigt, nicht deaktiviert und bezahlt. Ausstehend: abgeschlossen, aber noch nicht bestätigt – z. B. weil die erste Zahlung noch fehlt. Deaktiviert: Das Abo wurde beendet oder die Beendigung ist bereits eingetragen.",
-      "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst."
+      "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst.",
+      "lettersCount": "{{count}} Briefe an {{people}} Personen",
+      "confirmTextLetter": "Diesen Brief an {{count}} Empfänger:innen senden?",
+      "channel": {
+        "label": "Versand",
+        "mail": "E-Mail",
+        "letter": "Brief",
+        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Adressfenster",
+          "left": "Links",
+          "right": "Rechts"
+        },
+        "deliveryProduct": {
+          "label": "Zustellung",
+          "cheap": "Günstig (B-Post)",
+          "fast": "Schnell (A-Post)",
+          "premium": "Premium",
+          "registered": "Eingeschrieben",
+          "bulk": "Massensendung"
+        },
+        "printMode": {
+          "label": "Druck",
+          "simplex": "Einseitig",
+          "duplex": "Beidseitig"
+        },
+        "printSpectrum": {
+          "label": "Farbe",
+          "grayscale": "Graustufen",
+          "color": "Farbig"
+        }
+      }
     },
     "mailLog": {
       "title": "Gesendete E-Mails",
@@ -3410,7 +3496,8 @@
         "title": "Filter",
         "reset": "Filter zurücksetzen",
         "typeHint": "Wodurch der Versand angestossen wurde.",
-        "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «E-Mail senden» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."
+        "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «E-Mail senden» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen.",
+        "channel": "Versand"
       },
       "types": {
         "subscriptionFlow": "Abo-Mailing",
@@ -3513,7 +3600,27 @@
           "name": "rejected — Abgewiesen",
           "meaning": "Die E-Mail wurde nie verschickt. Entweder konnte We.Publish sie nicht übergeben (fehlende oder falsche Anbieter-Konfiguration), oder der Anbieter hat sie von vornherein verweigert: nicht verifizierte Absenderdomain («unsigned»), Adresse auf der Sperrliste des Anbieters nach früherem Hard Bounce oder Spam-Beschwerde, abgemeldeter Empfänger, oder das Sendelimit des Kontos ist erreicht.",
           "next": "Die Spalte «Fehler» nennt den Grund – fahre mit der Maus darüber für Ursache und Behebung. Ursache beheben und erneut senden: automatisch wiederholt wird nichts."
+        },
+        "dispatched": {
+          "name": "Aufgegeben",
+          "meaning": "Der Druckdienstleister hat den Brief gedruckt und der Post übergeben.",
+          "next": "Nichts zu tun. Der Status wechselt auf zugestellt, sobald die Post die Zustellung meldet."
+        },
+        "undeliverable": {
+          "name": "Unzustellbar",
+          "meaning": "Die Post konnte den Brief nicht zustellen und hat ihn retourniert.",
+          "next": "Adresse der Empfängerin oder des Empfängers prüfen und den Brief erneut senden."
+        },
+        "canceled": {
+          "name": "Storniert",
+          "meaning": "Der Brief wurde zurückgezogen, bevor er gedruckt wurde.",
+          "next": "Nichts zu tun. Es wurde nichts gedruckt und nichts verrechnet."
         }
+      },
+      "channel": "Versand",
+      "channels": {
+        "mail": "E-Mail",
+        "letter": "Brief"
       }
     },
     "userMail": {

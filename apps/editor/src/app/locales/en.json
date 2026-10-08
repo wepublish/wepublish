@@ -229,7 +229,8 @@
         "hiddenInfo": "Hidden articles do not appear in automatic article lists on the website (e.g. latest articles or tag pages), but remain reachable via their direct link.",
         "contentUrlInfo": "The web address readers are taken to when they click on the teaser.",
         "teaserPropertiesInfo": "Additional key-value pairs your website can use for special display options. Only needed if the people who develop your website asked you to set them. Public properties are visible via the public API.",
-        "enterSocialMediaImage": "Please add an image for social media"
+        "enterSocialMediaImage": "Please add an image for social media",
+        "private": "Private"
       }
     },
     "articles": {
@@ -1120,7 +1121,8 @@
         "description": "Description",
         "goodie": "Goodie",
         "status": "Status",
-        "idCopied": "Invoice ID copied"
+        "idCopied": "Invoice ID copied",
+        "action": "Action"
       }
     },
     "linkPageBreakEditPanel": {
@@ -2282,7 +2284,7 @@
         "title": {
           "activated": "Deactivate subscription"
         },
-        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
+        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}. Reason: {{reason}}"
       },
       "editTitle": "Edit Subscription",
       "memberPlanMonthlyAmount": "Minimal Monthly Amount ({{currency}})",
@@ -2331,11 +2333,30 @@
       "periodCreatedAt": "Created at {{date}}",
       "periodEndsAt": "until {{date}}",
       "periods": "Periods",
+      "periodRange": "Period",
       "periodStartsAt": "Starts at {{date}}",
       "subscriptionCreatedAt": "Created at {{date}}",
       "subscriptionIsAutoRenewed": "Subscription will be renewed automatically",
       "subscriptionStartsAt": "Subscription starts at {{date}}",
-      "unexpectedErrorNoInvoice": "Unexpected error: invoice not available."
+      "unexpectedErrorNoInvoice": "Unexpected error: invoice not available.",
+      "subscriptionTitle": "{{memberPlanName}} / No. {{subscriptionId}}",
+      "table": {
+        "subscription": "Subscription",
+        "start": "Start",
+        "periodicity": "Payment interval",
+        "paidUntil": "Paid until",
+        "active": "Active",
+        "deactivated": "Deactivated",
+        "planned": "Planned",
+        "unpaid": "Unpaid",
+        "expired": "Expired",
+        "created": "Created",
+        "renewal": "Renewal",
+        "renewsAutomatically": "Automatic",
+        "expires": "Expires",
+        "confirmed": "Confirmed",
+        "perMonthSuffix": "/mo."
+      }
     },
     "blockStyles": {
       "style": "Style",
@@ -2769,6 +2790,8 @@
       "trackingPixel": "Tracking Pixel",
       "analytics": "Hot & Trending Provider",
       "mailProvider": "Mail Provider",
+      "letterProvider": "Letter Provider",
+      "pdfRenderer": "PDF Renderer",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
       "notFound": "Integration not found",
@@ -2838,6 +2861,25 @@
         "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft."
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "Cloudflare Account ID",
+        "cloudflareApiToken": "Cloudflare API Token",
+        "gotenbergUrl": "Gotenberg URL",
+        "gotenbergUsername": "Gotenberg Username",
+        "gotenbergPassword": "Gotenberg Password",
+        "timeoutMs": "Timeout (ms)"
+      },
+      "letterSettings": {
+        "type": "Type",
+        "environment": "Environment",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "organisationId": "Organisation ID",
+        "webhookSigningKey": "Webhook Signing Key",
+        "autoSend": "Send letters automatically",
+        "placeholderEmailContains": "Placeholder email contains"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",
@@ -3294,8 +3336,8 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Mail content",
-          "description": "Template and preview"
+          "title": "Content & delivery",
+          "description": "Template, email or letter"
         },
         "send": {
           "title": "Send email",
@@ -3374,10 +3416,20 @@
         "loading": "Loading recipients …",
         "email": "Email",
         "name": "Name",
-        "memberPlan": "Subscription plan"
+        "memberPlan": "Subscription plan",
+        "address": "Address",
+        "withAddress": "Address present",
+        "withoutAddress": "No valid address – will be skipped"
       },
       "endedWithinDays": "Deactivated within the last … days",
       "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
+      "emailFilter": {
+        "label": "Email address",
+        "all": "All",
+        "placeholder": "Placeholders only",
+        "real": "Real only",
+        "hint": "Placeholder addresses are defined in the letter integration."
+      },
       "endedWindow": {
         "label": "When the subscription was deactivated",
         "relative": "Last … days",
@@ -3392,7 +3444,8 @@
         "firstRecipient": "First recipient",
         "hint": "How the mail looks for this person — with their real data.",
         "loading": "Loading preview …",
-        "noRecipients": "No recipients — adjust the audience first."
+        "noRecipients": "No recipients — adjust the audience first.",
+        "letterTitle": "Letter preview"
       },
       "recipientsCountPerPerson": "{{count}} mails to {{people}} people",
       "endsAtHint": "Cancellation date, otherwise the date paid up to.",
@@ -3407,7 +3460,40 @@
       "from": "From",
       "to": "Until",
       "stateHelp": "Active: confirmed, not deactivated and paid. Pending: taken out but not confirmed yet, e.g. because the first payment is still missing. Deactivated: the subscription has ended or its end is already scheduled.",
-      "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves."
+      "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves.",
+      "lettersCount": "{{count}} letters to {{people}} people",
+      "confirmTextLetter": "Send this letter to {{count}} recipients?",
+      "channel": {
+        "label": "Delivery",
+        "mail": "Email",
+        "letter": "Letter",
+        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Address window",
+          "left": "Left",
+          "right": "Right"
+        },
+        "deliveryProduct": {
+          "label": "Delivery",
+          "cheap": "Cheap (B-Post)",
+          "fast": "Fast (A-Post)",
+          "premium": "Premium",
+          "registered": "Registered",
+          "bulk": "Bulk"
+        },
+        "printMode": {
+          "label": "Print",
+          "simplex": "Single sided",
+          "duplex": "Double sided"
+        },
+        "printSpectrum": {
+          "label": "Colour",
+          "grayscale": "Grayscale",
+          "color": "Colour"
+        }
+      }
     },
     "mailLog": {
       "title": "Sent emails",
@@ -3428,7 +3514,8 @@
         "title": "Filter",
         "reset": "Reset filters",
         "typeHint": "What set this send off.",
-        "jobHelp": "A send job groups all emails sent with one click via «Send email». Pick one to see only its emails."
+        "jobHelp": "A send job groups all emails sent with one click via «Send email». Pick one to see only its emails.",
+        "channel": "Delivery"
       },
       "types": {
         "subscriptionFlow": "Subscription mailing",
@@ -3531,7 +3618,27 @@
           "name": "rejected",
           "meaning": "The mail was never sent. Either We.Publish could not hand it over (missing or wrong provider configuration), or the provider refused it up front: unverified sending domain (“unsigned”), address on the provider's suppression list after an earlier hard bounce or spam complaint, unsubscribed recipient, or the account's sending limit was reached.",
           "next": "The “Error” column names the reason — hover it for cause and remedy. Fix the cause and send again: nothing is retried automatically."
+        },
+        "dispatched": {
+          "name": "Dispatched",
+          "meaning": "The print vendor has printed the letter and handed it to the post.",
+          "next": "Nothing to do. The state changes to delivered once the post reports the delivery."
+        },
+        "undeliverable": {
+          "name": "Undeliverable",
+          "meaning": "The post could not deliver the letter and returned it.",
+          "next": "Check the address on the recipient and send the letter again."
+        },
+        "canceled": {
+          "name": "Canceled",
+          "meaning": "The letter was withdrawn before it was printed.",
+          "next": "Nothing to do. Nothing was printed and nothing was charged."
         }
+      },
+      "channel": "Delivery",
+      "channels": {
+        "mail": "Email",
+        "letter": "Letter"
       }
     },
     "userMail": {

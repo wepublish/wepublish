@@ -15,182 +15,93 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const period = (
-  id: string,
-  startsAt: string,
-  isPaid = true
-): UserSubscriptionFragment['periods'][number] => ({
-  id,
-  createdAt: startsAt,
-  startsAt,
-  endsAt: startsAt,
-  amount: 12000,
-  invoiceID: `invoice-${id}`,
-  isPaid,
-});
+vi.mock('../permissionControl', () => ({
+  createCheckedPermissionComponent: () => (component: unknown) => component,
+  useAuthorisation: () => true,
+}));
 
 const subscription = (
   id: string,
   planName: string,
-  createdAt: string,
   overrides: Partial<UserSubscriptionFragment> = {}
 ) =>
   ({
     id,
-    createdAt,
-    startsAt: createdAt,
+    createdAt: '2023-01-01T00:00:00.000Z',
+    startsAt: '2023-01-01T00:00:00.000Z',
     memberPlan: { name: planName },
     paymentPeriodicity: 'yearly',
     monthlyAmount: 1000,
     currency: 'CHF',
     autoRenew: true,
     confirmed: true,
-    paidUntil: null,
+    paidUntil: '2026-12-31T00:00:00.000Z',
     deactivation: null,
     periods: [],
     ...overrides,
   }) as unknown as UserSubscriptionFragment;
 
-const renderList = (subscriptions: UserSubscriptionFragment[]) =>
-  render(
-    <MemoryRouter>
-      <UserSubscriptionsList
-        subscriptions={subscriptions}
-        userId="user-1"
-      />
-    </MemoryRouter>
-  );
-
 describe('getSubscriptionStatus', () => {
   const now = new Date('2026-06-01T00:00:00.000Z');
+  const label = (overrides: Partial<UserSubscriptionFragment>) =>
+    getSubscriptionStatus(subscription('a', 'Basis', overrides), now).label;
 
-  it('treats a subscription without deactivation as active', () => {
-    expect(getSubscriptionStatus(subscription('a', 'Basis', ''), now)).toBe(
-      'active'
+  it('is active when started and paid beyond today', () => {
+    expect(label({})).toBe('userSubscriptionList.table.active');
+  });
+
+  it('is expired once paidUntil has passed, even without a deactivation', () => {
+    expect(label({ paidUntil: '2026-01-31T00:00:00.000Z' })).toBe(
+      'userSubscriptionList.table.expired'
     );
   });
 
-  it('stays active until a scheduled deactivation date is reached', () => {
-    const scheduled = subscription('a', 'Basis', '', {
-      deactivation: { date: '2026-12-31T00:00:00.000Z' },
-    } as Partial<UserSubscriptionFragment>);
-
-    expect(getSubscriptionStatus(scheduled, now)).toBe('active');
+  it('is unpaid when nothing has been paid yet', () => {
+    expect(label({ paidUntil: null })).toBe(
+      'userSubscriptionList.table.unpaid'
+    );
   });
 
-  it('is expired once the deactivation date has passed', () => {
-    const deactivated = subscription('a', 'Basis', '', {
-      deactivation: { date: '2026-01-31T00:00:00.000Z' },
-    } as Partial<UserSubscriptionFragment>);
+  it('is planned when it starts in the future', () => {
+    expect(label({ startsAt: '2026-07-01T00:00:00.000Z' })).toBe(
+      'userSubscriptionList.table.planned'
+    );
+  });
 
-    expect(getSubscriptionStatus(deactivated, now)).toBe('expired');
+  it('is deactivated whenever a deactivation exists', () => {
+    expect(
+      label({
+        deactivation: { date: '2026-12-31T00:00:00.000Z' },
+      } as Partial<UserSubscriptionFragment>)
+    ).toBe('userSubscriptionList.table.deactivated');
   });
 });
 
 describe('UserSubscriptionsList', () => {
-  afterEach(() => vi.restoreAllMocks());
-
-  it('lists the newest subscription first', () => {
-    renderList([
-      subscription('old', 'Basis-Abo', '2023-04-23T00:00:00.000Z'),
-      subscription('new', 'Abo Plus', '2024-04-23T00:00:00.000Z'),
-    ]);
-
-    const plans = screen.getAllByTestId('subscription-plan');
-
-    expect(plans.map(plan => plan.textContent)).toEqual([
-      'Abo Plus',
-      'Basis-Abo',
-    ]);
-  });
-
-  it('shows the newest period on top', () => {
-    renderList([
-      subscription('a', 'Basis-Abo', '2023-01-01T00:00:00.000Z', {
-        periods: [
-          period('p-2023', '2023-01-15T00:00:00.000Z'),
-          period('p-2024', '2024-01-15T00:00:00.000Z'),
-        ],
-      }),
-    ]);
-
-    const titles = screen.getAllByTestId('period-title');
-
-    expect(titles.map(title => title.textContent)).toEqual([
-      'userSubscriptionList.periodTitle 01.2024',
-      'userSubscriptionList.periodTitle 01.2023',
-    ]);
-  });
-
-  it('keeps the Swiss month format whatever locale data the runtime ships', () => {
-    const format = Intl.DateTimeFormat;
-    vi.spyOn(Intl, 'DateTimeFormat').mockImplementation(
-      function (locale, options) {
-        return options?.month ?
-            ({ format: () => '01/2024' } as unknown as Intl.DateTimeFormat)
-          : new format(locale, options);
-      }
+  it('lists active subscriptions first, then by furthest paidUntil', () => {
+    render(
+      <MemoryRouter>
+        <UserSubscriptionsList
+          subscriptions={[
+            subscription('old', 'Old-Abo', {
+              paidUntil: '2020-12-31T00:00:00.000Z',
+            }),
+            subscription('lapsed', 'Lapsed-Abo', {
+              paidUntil: '2021-12-31T00:00:00.000Z',
+            }),
+            subscription('current', 'Current-Abo', {
+              paidUntil: '2999-12-31T00:00:00.000Z',
+            }),
+          ]}
+          userId="user-1"
+        />
+      </MemoryRouter>
     );
 
-    renderList([
-      subscription('a', 'Basis-Abo', '2023-01-01T00:00:00.000Z', {
-        periods: [period('p-2024', '2024-01-15T00:00:00.000Z')],
-      }),
-    ]);
+    const names = screen
+      .getAllByText(/-Abo$/)
+      .map(element => element.textContent);
 
-    expect(screen.getByTestId('period-title').textContent).toBe(
-      'userSubscriptionList.periodTitle 01.2024'
-    );
-  });
-
-  it('labels active and expired subscriptions', () => {
-    renderList([
-      subscription('a', 'Basis-Abo', '2023-01-01T00:00:00.000Z'),
-      subscription('b', 'Abo Plus', '2022-01-01T00:00:00.000Z', {
-        deactivation: { date: '2023-01-01T00:00:00.000Z' },
-      } as Partial<UserSubscriptionFragment>),
-    ]);
-
-    expect(
-      screen.getByText('userSubscriptionList.status.active')
-    ).not.toBeNull();
-    expect(
-      screen.getByText('userSubscriptionList.status.expired')
-    ).not.toBeNull();
-  });
-
-  it('marks unpaid invoices as open', () => {
-    renderList([
-      subscription('a', 'Basis-Abo', '2023-01-01T00:00:00.000Z', {
-        paidUntil: '2023-12-31T00:00:00.000Z',
-        periods: [period('p', '2023-01-01T00:00:00.000Z', false)],
-      }),
-    ]);
-
-    expect(
-      screen.getByText('userSubscriptionList.invoiceUnpaid')
-    ).not.toBeNull();
-  });
-
-  it('only becomes scrollable with more than two subscriptions', () => {
-    const { unmount } = renderList([
-      subscription('a', 'A', '2023-01-01T00:00:00.000Z'),
-      subscription('b', 'B', '2023-02-01T00:00:00.000Z'),
-    ]);
-
-    expect(
-      screen.getByTestId('subscription-scroller').dataset['scrollable']
-    ).toBe('false');
-
-    unmount();
-    renderList([
-      subscription('a', 'A', '2023-01-01T00:00:00.000Z'),
-      subscription('b', 'B', '2023-02-01T00:00:00.000Z'),
-      subscription('c', 'C', '2023-03-01T00:00:00.000Z'),
-    ]);
-
-    expect(
-      screen.getByTestId('subscription-scroller').dataset['scrollable']
-    ).toBe('true');
+    expect(names).toEqual(['Current-Abo', 'Lapsed-Abo', 'Old-Abo']);
   });
 });

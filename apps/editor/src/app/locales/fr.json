@@ -229,7 +229,8 @@
         "hiddenInfo": "Les articles masqués n'apparaissent pas dans les listes automatiques d'articles du site (p.ex. derniers articles ou pages de tags), mais restent accessibles via leur lien direct.",
         "contentUrlInfo": "L'adresse web vers laquelle les lecteur·trice·s sont dirigé·e·s en cliquant sur le teaser.",
         "teaserPropertiesInfo": "Paires clé-valeur supplémentaires que votre site peut utiliser pour des affichages particuliers. Nécessaire uniquement si les personnes qui développent votre site vous l'ont demandé. Les propriétés publiques sont visibles via l'API publique.",
-        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux"
+        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
+        "private": "Privé"
       }
     },
     "articles": {
@@ -1120,7 +1121,8 @@
         "description": "Description",
         "goodie": "Goodie",
         "status": "Statut",
-        "idCopied": "ID de facture copié"
+        "idCopied": "ID de facture copié",
+        "action": "Action"
       }
     },
     "linkPageBreakEditPanel": {
@@ -2234,7 +2236,7 @@
         "title": {
           "activated": "Désactiver l'abonnement"
         },
-        "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}"
+        "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}. Raison : {{reason}}"
       },
       "editTitle": "Modifier l'abonnement",
       "memberPlanMonthlyAmount": "Montant mensuel minimum ({{currency}})",
@@ -2283,11 +2285,30 @@
       "periodCreatedAt": "Créé le {{date}}",
       "periodEndsAt": "jusqu'à {{date}}",
       "periods": "Périodes",
+      "periodRange": "Période",
       "periodStartsAt": "Valable de {{date}}",
       "subscriptionCreatedAt": "Créé le {{date}}",
       "subscriptionIsAutoRenewed": "L'abonnement sera renouvelé automatiquement",
       "subscriptionStartsAt": "L'abonnement débute le {{date}}",
-      "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante."
+      "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante.",
+      "subscriptionTitle": "{{memberPlanName}} / N° {{subscriptionId}}",
+      "table": {
+        "subscription": "Abonnement",
+        "start": "Début",
+        "periodicity": "Intervalle de paiement",
+        "paidUntil": "Payé jusqu’au",
+        "active": "Actif",
+        "deactivated": "Désactivé",
+        "planned": "Prévu",
+        "unpaid": "Impayé",
+        "expired": "Expiré",
+        "created": "Créé",
+        "renewal": "Renouvellement",
+        "renewsAutomatically": "Automatique",
+        "expires": "Expire",
+        "confirmed": "Confirmé",
+        "perMonthSuffix": "/mois"
+      }
     },
     "blockTemplates": {
       "list": {
@@ -2701,6 +2722,7 @@
       "paymentProvider": "Fournisseur de paiement",
       "trackingPixel": "Pixel de suivi",
       "mailProvider": "Fournisseur de messagerie",
+      "pdfRenderer": "Moteur de rendu PDF",
       "back": "Retour aux intégrations",
       "unknown": "Intégration inconnue",
       "notFound": "Intégration non trouvée",
@@ -2770,6 +2792,15 @@
         "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l'envoi, au lieu de la laisser en brouillon."
       },
       "placeholderSecret": "Inchangé (Masqué)",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "ID de compte Cloudflare",
+        "cloudflareApiToken": "Jeton d'API Cloudflare",
+        "gotenbergUrl": "URL de Gotenberg",
+        "gotenbergUsername": "Nom d'utilisateur Gotenberg",
+        "gotenbergPassword": "Mot de passe Gotenberg",
+        "timeoutMs": "Délai d'attente (ms)"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "Adresse de l'expéditeur",
@@ -2932,7 +2963,18 @@
       "mailchimpSyncInfo": "Transfère chaque nuit tous les comptes utilisateur actifs et leurs données d'abonnement vers une audience Mailchimp, afin de cibler vos newsletters selon l'abonnement.",
       "lastLoadedInfo": "Moment où We.Publish a chargé cette configuration pour la dernière fois, p. ex. pour traiter un paiement. Vous voyez ainsi si l'intégration est utilisée.",
       "setUp": "Configurer",
-      "setUpHint": "Pas encore configurée. Configurez cette intégration pour que l’éditeur et votre site puissent l’utiliser."
+      "setUpHint": "Pas encore configurée. Configurez cette intégration pour que l’éditeur et votre site puissent l’utiliser.",
+      "letterProvider": "Prestataire de courrier",
+      "letterSettings": {
+        "type": "Type",
+        "environment": "Environnement",
+        "clientId": "ID client",
+        "clientSecret": "Secret client",
+        "organisationId": "ID de l'organisation",
+        "webhookSigningKey": "Clé de signature du webhook",
+        "autoSend": "Envoyer les lettres automatiquement",
+        "placeholderEmailContains": "L'e-mail fictif contient"
+      }
     },
     "websiteSettings": {
       "backToOverview": "Retour à la vue d’ensemble",
@@ -3268,8 +3310,8 @@
           "description": "Public et filtres"
         },
         "content": {
-          "title": "Contenu de l'e-mail",
-          "description": "Modèle et aperçu"
+          "title": "Contenu et envoi",
+          "description": "Modèle, e-mail ou lettre"
         },
         "send": {
           "title": "Envoyer l'e-mail",
@@ -3348,10 +3390,20 @@
         "loading": "Chargement des destinataires …",
         "email": "E-mail",
         "name": "Nom",
-        "memberPlan": "Plan d’abonnement"
+        "memberPlan": "Plan d’abonnement",
+        "address": "Adresse",
+        "withAddress": "Adresse disponible",
+        "withoutAddress": "Pas d’adresse valide – ne sera pas envoyé"
       },
       "endedWithinDays": "Désactivé au cours des … derniers jours",
       "endedWithinDaysHint": "Uniquement les abonnements désactivés dans cette période.",
+      "emailFilter": {
+        "label": "Adresse e-mail",
+        "all": "Toutes",
+        "placeholder": "Uniquement les substituts",
+        "real": "Uniquement les réelles",
+        "hint": "Les adresses de substitution sont définies dans l’intégration courrier."
+      },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
         "relative": "Derniers … jours",
@@ -3366,7 +3418,8 @@
         "firstRecipient": "Premier·ère destinataire",
         "hint": "À quoi ressemble le mail pour cette personne — avec ses données réelles.",
         "loading": "Chargement de l’aperçu …",
-        "noRecipients": "Aucun destinataire — ajustez d’abord le public."
+        "noRecipients": "Aucun destinataire — ajustez d’abord le public.",
+        "letterTitle": "Aperçu de la lettre"
       },
       "recipientsCountPerPerson": "{{count}} e-mails à {{people}} personnes",
       "endsAtHint": "Date de résiliation, sinon la date jusqu'à laquelle l'abonnement est payé.",
@@ -3381,7 +3434,40 @@
       "from": "À partir du",
       "to": "Jusqu'au",
       "stateHelp": "Actif : confirmé, non désactivé et payé. En attente : souscrit mais pas encore confirmé, p. ex. parce que le premier paiement manque encore. Désactivé : l'abonnement est terminé ou sa fin est déjà enregistrée.",
-      "autoRenewHelp": "Oui : l'abonnement se renouvelle automatiquement à la fin de la période et est à nouveau facturé. Non : il expire, sauf si la personne le renouvelle elle-même."
+      "autoRenewHelp": "Oui : l'abonnement se renouvelle automatiquement à la fin de la période et est à nouveau facturé. Non : il expire, sauf si la personne le renouvelle elle-même.",
+      "lettersCount": "{{count}} lettres à {{people}} personnes",
+      "confirmTextLetter": "Envoyer cette lettre à {{count}} destinataires ?",
+      "channel": {
+        "label": "Envoi",
+        "mail": "E-mail",
+        "letter": "Lettre",
+        "withoutAddress": "{{count}} des destinataires n'ont pas d'adresse postale utilisable et seront ignorés."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Fenêtre d'adresse",
+          "left": "Gauche",
+          "right": "Droite"
+        },
+        "deliveryProduct": {
+          "label": "Distribution",
+          "cheap": "Économique (courrier B)",
+          "fast": "Rapide (courrier A)",
+          "premium": "Premium",
+          "registered": "Recommandé",
+          "bulk": "Envoi en nombre"
+        },
+        "printMode": {
+          "label": "Impression",
+          "simplex": "Recto",
+          "duplex": "Recto verso"
+        },
+        "printSpectrum": {
+          "label": "Couleur",
+          "grayscale": "Niveaux de gris",
+          "color": "Couleur"
+        }
+      }
     },
     "mailLog": {
       "title": "E-mails envoyés",
@@ -3402,7 +3488,8 @@
         "title": "Filtres",
         "reset": "Réinitialiser les filtres",
         "typeHint": "Ce qui a déclenché l’envoi.",
-        "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Envoyer un e-mail ». Sélectionnez-en un pour ne voir que ses e-mails."
+        "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Envoyer un e-mail ». Sélectionnez-en un pour ne voir que ses e-mails.",
+        "channel": "Envoi"
       },
       "types": {
         "subscriptionFlow": "Mailing d’abonnement",
@@ -3505,7 +3592,27 @@
           "name": "rejected — Rejeté",
           "meaning": "L’e-mail n’a jamais été envoyé. Soit We.Publish n’a pas pu le remettre (configuration du fournisseur absente ou erronée), soit le fournisseur l’a refusé d’emblée : domaine d’envoi non vérifié (« unsigned »), adresse sur la liste de suppression du fournisseur après un hard bounce ou une plainte pour spam, destinataire désabonné, ou limite d’envoi du compte atteinte.",
           "next": "La colonne « Erreur » indique la raison – survolez-la pour la cause et la solution. Corrigez la cause et renvoyez : rien n’est réessayé automatiquement."
+        },
+        "dispatched": {
+          "name": "Expédiée",
+          "meaning": "Le prestataire d'impression a imprimé la lettre et l'a remise à la poste.",
+          "next": "Rien à faire. Le statut passe à « distribué » dès que la poste signale la distribution."
+        },
+        "undeliverable": {
+          "name": "Non distribuable",
+          "meaning": "La poste n'a pas pu distribuer la lettre et l'a renvoyée.",
+          "next": "Vérifiez l'adresse du destinataire et renvoyez la lettre."
+        },
+        "canceled": {
+          "name": "Annulée",
+          "meaning": "La lettre a été retirée avant d'être imprimée.",
+          "next": "Rien à faire. Rien n'a été imprimé ni facturé."
         }
+      },
+      "channel": "Envoi",
+      "channels": {
+        "mail": "E-mail",
+        "letter": "Lettre"
       }
     },
     "userMail": {
