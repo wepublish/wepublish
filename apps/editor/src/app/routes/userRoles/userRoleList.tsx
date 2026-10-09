@@ -143,7 +143,7 @@ function UserRoleList() {
             <RCell>
               {(rowData: RowDataType<FullUserRoleFragment>) => (
                 <Link to={`/userroles/edit/${rowData.id}`}>
-                  {rowData.name || t('userRoles.overview.untitled')}
+                  {rowData.name || t('untitled')}
                 </Link>
               )}
             </RCell>

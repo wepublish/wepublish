@@ -72,7 +72,7 @@ export const EditCrowdfundingForm = () => {
 
   const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
-    name: StringType().isRequired(),
+    name: StringType().isRequired(t('errorMessages.required')),
   });
 
   const [shouldClose, setShouldClose] = useState(false);
