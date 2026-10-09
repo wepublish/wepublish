@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
+import { ArticleTrackingPixels } from '@wepublish/article/website';
 import { Blocks, QuoteBlockWrapper } from '@wepublish/block-content/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ContentUnavailable } from '@wepublish/content/website';
@@ -404,6 +405,8 @@ export const EenewsArticle = ({
         )}
 
         {children}
+
+        <ArticleTrackingPixels trackingPixels={article.trackingPixels} />
 
         <ShareRow>
           <ShareLabel variant="pageEyebrow">Teilen</ShareLabel>
