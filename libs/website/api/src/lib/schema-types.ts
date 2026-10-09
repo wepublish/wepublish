@@ -1764,6 +1764,46 @@ export type KeyEnabledInput = {
   key?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Where the address window sits on the printed sheet. */
+export enum LetterAddressPosition {
+  Left = 'left',
+  Right = 'right'
+}
+
+export enum LetterDeliveryProduct {
+  Bulk = 'bulk',
+  Cheap = 'cheap',
+  Fast = 'fast',
+  Premium = 'premium',
+  Registered = 'registered'
+}
+
+export type LetterPrintInput = {
+  addressPosition?: InputMaybe<LetterAddressPosition>;
+  deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
+  printMode?: InputMaybe<LetterPrintMode>;
+  printSpectrum?: InputMaybe<LetterPrintSpectrum>;
+};
+
+export enum LetterPrintMode {
+  Duplex = 'duplex',
+  Simplex = 'simplex'
+}
+
+export enum LetterPrintSpectrum {
+  Color = 'color',
+  Grayscale = 'grayscale'
+}
+
+export enum LetterProviderEnvironment {
+  Production = 'production',
+  Staging = 'staging'
+}
+
+export enum LetterProviderType {
+  Pingen = 'pingen'
+}
+
 export type ListicleBlock = BaseBlock & {
   __typename: 'ListicleBlock';
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -1794,6 +1834,15 @@ export type ListicleItemInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Attribute printed on the letter that a restricted session must confirm before it can claim the account with a real email address. */
+export enum LoginCodeSecondFactor {
+  City = 'city',
+  FirstName = 'firstName',
+  LastName = 'lastName',
+  None = 'none',
+  PostalCode = 'postalCode'
+}
+
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
@@ -1806,6 +1855,8 @@ export enum LoginStatus {
 export type MailAudienceInput = {
   autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
   base: MailRecipientBase;
+  /** Restrict to placeholder or real email addresses. Defaults to all. */
+  emailFilter?: InputMaybe<MailEmailFilter>;
   /** Win-back audience only: start of an explicit period the subscription ended in. */
   endedFrom?: InputMaybe<Scalars['DateTime']['input']>;
   /** Win-back audience only: end of an explicit period the subscription ended in. */
@@ -1833,7 +1884,20 @@ export type MailAudienceInput = {
   subscriptionState?: InputMaybe<MailSubscriptionState>;
 };
 
+/** Whether a send goes out as an email or as a printed letter. */
+export enum MailChannel {
+  Letter = 'letter',
+  Mail = 'mail'
+}
+
+export enum MailEmailFilter {
+  All = 'all',
+  Placeholder = 'placeholder',
+  Real = 'real'
+}
+
 export type MailLogFilter = {
+  channel?: InputMaybe<MailChannel>;
   mailSendJobId?: InputMaybe<Scalars['String']['input']>;
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
   recipientId?: InputMaybe<Scalars['String']['input']>;
@@ -1843,6 +1907,9 @@ export type MailLogFilter = {
 
 export type MailLogModel = {
   __typename: 'MailLogModel';
+  /** Letters only: the address the letter was sent to. */
+  address?: Maybe<Scalars['String']['output']>;
+  channel: MailChannel;
   createdAt: Scalars['DateTime']['output'];
   /** Why a rejected mail could not be delivered. */
   error?: Maybe<Scalars['String']['output']>;
@@ -1850,6 +1917,8 @@ export type MailLogModel = {
   mailProviderID: Scalars['String']['output'];
   mailSendJobId?: Maybe<Scalars['String']['output']>;
   mailTemplate: MailLogTemplate;
+  /** Letters only: id the print vendor assigned to the letter. */
+  providerLetterID?: Maybe<Scalars['String']['output']>;
   recipient: MailLogRecipient;
   sentDate: Scalars['DateTime']['output'];
   state: MailLogState;
@@ -1868,10 +1937,13 @@ export type MailLogRecipient = {
 export enum MailLogState {
   Accepted = 'accepted',
   Bounced = 'bounced',
+  Canceled = 'canceled',
   Deferred = 'deferred',
   Delivered = 'delivered',
+  Dispatched = 'dispatched',
   Rejected = 'rejected',
-  Submitted = 'submitted'
+  Submitted = 'submitted',
+  Undeliverable = 'undeliverable'
 }
 
 export type MailLogSyncModel = {
@@ -1925,12 +1997,17 @@ export enum MailSendAudience {
 
 export type MailSendJobInput = {
   audience: MailAudienceInput;
+  /** Defaults to mail. */
+  channel?: InputMaybe<MailChannel>;
   mailTemplateId: Scalars['String']['input'];
+  /** Letter sends only. Ignored for mail. */
+  print?: InputMaybe<LetterPrintInput>;
 };
 
 export type MailSendJobModel = {
   __typename: 'MailSendJobModel';
   audience: MailSendAudience;
+  channel: MailChannel;
   createdAt: Scalars['DateTime']['output'];
   createdByUserId: Scalars['String']['output'];
   error?: Maybe<Scalars['String']['output']>;
@@ -1984,14 +2061,20 @@ export enum MailSendJobState {
 
 export type MailSendPreviewInput = {
   audience: MailAudienceInput;
+  /** Defaults to mail. A letter preview renders the pdf. */
+  channel?: InputMaybe<MailChannel>;
   mailTemplateId: Scalars['String']['input'];
+  print?: InputMaybe<LetterPrintInput>;
   /** Row id of the recipient to render for. Defaults to the first of the audience. */
   recipientId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MailSendPreviewModel = {
   __typename: 'MailSendPreviewModel';
+  /** Empty for a letter preview. */
   html: Scalars['String']['output'];
+  /** Letter previews only: the rendered pdf, base64 encoded, exactly as it would be printed. */
+  pdf?: Maybe<Scalars['String']['output']>;
   /** The recipient this preview was rendered for. */
   recipient?: Maybe<MailSendRecipientModel>;
   subject: Scalars['String']['output'];
@@ -2002,6 +2085,8 @@ export type MailSendRecipientModel = {
   __typename: 'MailSendRecipientModel';
   email: Scalars['String']['output'];
   firstName?: Maybe<Scalars['String']['output']>;
+  /** Whether the user has a postal address a letter can be sent to. A letter send skips recipients without one. */
+  hasAddress: Scalars['Boolean']['output'];
   /** Row identity. A user appears once per matching subscription, so this combines both. */
   id: Scalars['String']['output'];
   memberPlanName?: Maybe<Scalars['String']['output']>;
@@ -2014,10 +2099,12 @@ export type MailSendRecipientPreview = {
   __typename: 'MailSendRecipientPreview';
   /** Whether recipients carry subscription data (subscription-context templates allowed). */
   allowsSubscriptionTemplates: Scalars['Boolean']['output'];
-  /** Number of mails that would be sent. */
+  /** Number of messages that would be sent over the given channel. A letter send reaches every person once, so it equals `userCount`. */
   count: Scalars['Int']['output'];
   /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
   userCount: Scalars['Int']['output'];
+  /** How many of the recipients have no usable postal address and would be skipped by a letter send. */
+  withoutAddressCount: Scalars['Int']['output'];
 };
 
 export enum MailSubscriptionState {
@@ -2044,6 +2131,12 @@ export type MailTemplateInput = {
   name: Scalars['String']['input'];
   subject: Scalars['String']['input'];
   textContent?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MailTemplateLetterPreviewModel = {
+  __typename: 'MailTemplateLetterPreviewModel';
+  /** The rendered letter as a base64 encoded pdf. */
+  pdf: Scalars['String']['output'];
 };
 
 export type MailTemplateModel = {
@@ -2613,7 +2706,7 @@ export type Mutation = {
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings. */
   confirmChangelogEntry: ChangelogEntry;
-  /** Confirms a pending email change for the logged-in user. */
+  /** Confirms a pending email change with the token from the confirmation email. */
   confirmEmailChange: SensitiveDataUser;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
   confirmNotification: NotificationConfirmation;
@@ -2657,6 +2750,8 @@ export type Mutation = {
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Creates a new letter provider setting. */
+  createLetterProviderSetting: SettingLetterProvider;
   /** Sets up the mail provider. Only possible while none is configured. */
   createMailProviderSetting: SettingMailProvider;
   /** Start a background job sending a template to a filtered audience */
@@ -2679,6 +2774,8 @@ export type Mutation = {
   createPaymentProviderSetting: SettingPaymentProvider;
   /** Creates a paywall. */
   createPaywall: Paywall;
+  /** Creates a new pdf renderer setting. */
+  createPdfRendererSetting: SettingPdfRenderer;
   /** Creates a new peer. */
   createPeer: Peer;
   /** Creates a new poll. */
@@ -2691,6 +2788,8 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
+  /** Logs in with a personal login code (PURL). Limited uses, expiring and revocable; rate limited per client. */
+  createSessionWithLoginCode: SessionWithToken;
   /** Creates a new subscription. */
   createSubscription: PublicSubscription;
   /** Create a new subscription flow */
@@ -2754,6 +2853,8 @@ export type Mutation = {
   deleteImage: Scalars['String']['output'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Deletes an existing letter provider setting. */
+  deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
   deleteMailTemplate?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes a single sync error so the contact will be retried. */
@@ -2770,6 +2871,8 @@ export type Mutation = {
   deletePaymentProviderSetting: SettingPaymentProvider;
   /** Deletes a paywall. */
   deletePaywall: Paywall;
+  /** Deletes an existing pdf renderer setting. */
+  deletePdfRendererSetting: SettingPdfRenderer;
   /** Deletes an existing peer. */
   deletePeer: Scalars['String']['output'];
   /** Deletes an existing poll. */
@@ -2850,16 +2953,20 @@ export type Mutation = {
   rateComment: Comment;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
+  /** Revokes existing personal login links of a user and issues a new one. The code is returned exactly once. */
+  reissueUserLoginCode: UserLoginCodeIssue;
   /** Rejects a comment */
   rejectComment: Comment;
-  /** Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API. */
+  /** Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf renderer providers from their settings, so integration changes take effect without restarting the API. */
   reloadProviders: Scalars['Boolean']['output'];
   /** Renews a subscription. */
   renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
   requestChangesOnComment: Comment;
-  /** Requests an email change. A confirmation link is sent to the current email address. */
+  /** Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter. */
   requestEmailChange: Scalars['Boolean']['output'];
+  /** Sends a confirmation link to the current email address to verify it. */
+  requestEmailVerification: Scalars['Boolean']['output'];
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
   /** Resets the password using a token from the password reset email. Does not create a session. */
@@ -2877,6 +2984,8 @@ export type Mutation = {
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean']['output'];
   revokeImpersonationSessions: Scalars['Int']['output'];
+  /** Revokes all personal login links of a user. */
+  revokeUserLoginCode: Scalars['Boolean']['output'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String']['output'];
   /** Manually send a mail template to a single user */
@@ -2938,6 +3047,8 @@ export type Mutation = {
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
+  /** Updates an existing letter provider setting. */
+  updateLetterProviderSetting: SettingLetterProvider;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
   /** Update an existing mail template */
@@ -2956,6 +3067,8 @@ export type Mutation = {
   updatePaymentProviderSetting: SettingPaymentProvider;
   /** Updates a paywall. */
   updatePaywall: Paywall;
+  /** Updates an existing pdf renderer setting. */
+  updatePdfRendererSetting: SettingPdfRenderer;
   /** Updates an existing peer. */
   updatePeer: Peer;
   /** Updates the peer profile of the current media. */
@@ -3054,7 +3167,7 @@ export type MutationConfirmChangelogEntryArgs = {
 
 
 export type MutationConfirmEmailChangeArgs = {
-  newEmail: Scalars['String']['input'];
+  token: Scalars['String']['input'];
 };
 
 
@@ -3236,6 +3349,20 @@ export type MutationCreateInvoiceArgs = {
 };
 
 
+export type MutationCreateLetterProviderSettingArgs = {
+  autoSend?: InputMaybe<Scalars['Boolean']['input']>;
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  organisationId?: InputMaybe<Scalars['String']['input']>;
+  placeholderEmailContains?: InputMaybe<Scalars['String']['input']>;
+  type: LetterProviderType;
+  webhookSigningKey?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationCreateMailProviderSettingArgs = {
   apiKey?: InputMaybe<Scalars['String']['input']>;
   fromAddress?: InputMaybe<Scalars['String']['input']>;
@@ -3383,6 +3510,19 @@ export type MutationCreatePaywallArgs = {
 };
 
 
+export type MutationCreatePdfRendererSettingArgs = {
+  cloudflare_accountId?: InputMaybe<Scalars['String']['input']>;
+  cloudflare_apiToken?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_password?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_url?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_username?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  timeoutMs?: InputMaybe<Scalars['Int']['input']>;
+  type: PdfRendererType;
+};
+
+
 export type MutationCreatePeerArgs = {
   hostURL: Scalars['String']['input'];
   information?: InputMaybe<Scalars['RichText']['input']>;
@@ -3429,6 +3569,13 @@ export type MutationCreateSessionArgs = {
 
 export type MutationCreateSessionWithJwtArgs = {
   jwt: Scalars['String']['input'];
+  totpToken?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateSessionWithLoginCodeArgs = {
+  challengeAnswer?: InputMaybe<ChallengeInput>;
+  code: Scalars['String']['input'];
   totpToken?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3650,6 +3797,11 @@ export type MutationDeleteInvoiceArgs = {
 };
 
 
+export type MutationDeleteLetterProviderSettingArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String']['input'];
 };
@@ -3686,6 +3838,11 @@ export type MutationDeletePaymentProviderSettingArgs = {
 
 
 export type MutationDeletePaywallArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeletePdfRendererSettingArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -3889,6 +4046,11 @@ export type MutationRegisterMemberArgs = {
 };
 
 
+export type MutationReissueUserLoginCodeArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
 export type MutationRejectCommentArgs = {
   id: Scalars['String']['input'];
   rejectionReason: CommentRejectionReason;
@@ -3908,6 +4070,7 @@ export type MutationRequestChangesOnCommentArgs = {
 
 export type MutationRequestEmailChangeArgs = {
   newEmail: Scalars['String']['input'];
+  secondFactor?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3948,6 +4111,11 @@ export type MutationResumeMailSendJobArgs = {
 
 export type MutationRevokeImpersonationSessionsArgs = {
   ids?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type MutationRevokeUserLoginCodeArgs = {
+  userId: Scalars['String']['input'];
 };
 
 
@@ -4120,11 +4288,9 @@ export type MutationUpdateCrowdfundingArgs = {
 export type MutationUpdateCurrentUserArgs = {
   address?: InputMaybe<UserAddressInput>;
   birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  challengeAnswer?: InputMaybe<ChallengeInput>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   flair?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4204,6 +4370,20 @@ export type MutationUpdateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']['input']>;
   scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']['input']>;
   subscriptionID?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateLetterProviderSettingArgs = {
+  autoSend?: InputMaybe<Scalars['Boolean']['input']>;
+  clientId?: InputMaybe<Scalars['String']['input']>;
+  clientSecret?: InputMaybe<Scalars['String']['input']>;
+  environment?: InputMaybe<LetterProviderEnvironment>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  organisationId?: InputMaybe<Scalars['String']['input']>;
+  placeholderEmailContains?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<LetterProviderType>;
+  webhookSigningKey?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4345,6 +4525,19 @@ export type MutationUpdatePaywallArgs = {
   name?: InputMaybe<Scalars['String']['input']>;
   upgradeCircumventDescription?: InputMaybe<Scalars['RichText']['input']>;
   upgradeDescription?: InputMaybe<Scalars['RichText']['input']>;
+};
+
+
+export type MutationUpdatePdfRendererSettingArgs = {
+  cloudflare_accountId?: InputMaybe<Scalars['String']['input']>;
+  cloudflare_apiToken?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_password?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_url?: InputMaybe<Scalars['String']['input']>;
+  gotenberg_username?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  timeoutMs?: InputMaybe<Scalars['Int']['input']>;
+  type?: InputMaybe<PdfRendererType>;
 };
 
 
@@ -5158,6 +5351,11 @@ export type PaywallBypass = {
   token: Scalars['String']['output'];
 };
 
+export enum PdfRendererType {
+  Cloudflare = 'cloudflare',
+  Gotenberg = 'gotenberg'
+}
+
 export type Peer = {
   __typename: 'Peer';
   createdAt: Scalars['DateTime']['output'];
@@ -5566,6 +5764,8 @@ export type Query = {
   crowdfunding: Crowdfunding;
   /** Returns a list of crowdfundings. */
   crowdfundings: Array<Crowdfunding>;
+  /** Origin and restriction state of the current session. Restricted sessions may only complete onboarding. */
+  currentSession: SessionInfo;
   /**
    *
    *       Returns daily stats in a given timeframe.
@@ -5646,6 +5846,12 @@ export type Query = {
   invoicePaymentMail: ActionMail;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Whether a letter integration is configured, so letters can be previewed and sent */
+  letterChannelAvailable: Scalars['Boolean']['output'];
+  /** Returns a single letter provider setting by id. */
+  letterProviderSetting: SettingLetterProvider;
+  /** Returns all letter provider settings. */
+  letterProviderSettings: Array<SettingLetterProvider>;
   /** Paginated list of sent mails */
   mailLogs: PaginatedMailLog;
   /** Returns a single mail provider setting by id. */
@@ -5666,6 +5872,8 @@ export type Query = {
   mailSendRecipients: PaginatedMailSendRecipient;
   /** Return a single mail template, including its html and text body. */
   mailTemplate?: Maybe<MailTemplateModel>;
+  /** Render a draft mail template as the letter a send would print */
+  mailTemplateLetterPreview: MailTemplateLetterPreviewModel;
   /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
   mailTemplateMissingPlaceholders: Array<Scalars['String']['output']>;
   /** Render a draft mail template with a mail type's sample data */
@@ -5739,6 +5947,10 @@ export type Query = {
   paywall: Paywall;
   /** Returns a list of paywalls based on the filters given. */
   paywalls: Array<Paywall>;
+  /** Returns a single pdf renderer setting by id. */
+  pdfRendererSetting: SettingPdfRenderer;
+  /** Returns all pdf renderer settings. */
+  pdfRendererSettings: Array<SettingPdfRenderer>;
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>;
   /** Returns a paginated list of peer articles based on the filters given. */
@@ -5841,6 +6053,8 @@ export type Query = {
   userConsents: Array<UserConsent>;
   /** Get all invoices for the authenticated user */
   userInvoices: Array<Invoice>;
+  /** The current personal login link of a user, without the code itself. */
+  userLoginCode?: Maybe<UserLoginCodeStatus>;
   userPollVote?: Maybe<Scalars['String']['output']>;
   /** Returns a userrole by id. */
   userRole: UserRole;
@@ -6180,6 +6394,16 @@ export type QueryInvoicesArgs = {
 };
 
 
+export type QueryLetterProviderSettingArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryLetterProviderSettingsArgs = {
+  filter?: InputMaybe<SettingLetterProviderFilter>;
+};
+
+
 export type QueryMailLogsArgs = {
   filter?: InputMaybe<MailLogFilter>;
   skip?: InputMaybe<Scalars['Int']['input']>;
@@ -6223,11 +6447,13 @@ export type QueryMailSendPreviewArgs = {
 
 export type QueryMailSendRecipientPreviewArgs = {
   audience: MailAudienceInput;
+  channel?: InputMaybe<MailChannel>;
 };
 
 
 export type QueryMailSendRecipientsArgs = {
   audience: MailAudienceInput;
+  channel?: InputMaybe<MailChannel>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -6235,6 +6461,11 @@ export type QueryMailSendRecipientsArgs = {
 
 export type QueryMailTemplateArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryMailTemplateLetterPreviewArgs = {
+  input: MailTemplatePreviewInput;
 };
 
 
@@ -6387,6 +6618,16 @@ export type QueryPaymentProviderSettingsArgs = {
 
 export type QueryPaywallArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryPdfRendererSettingArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryPdfRendererSettingsArgs = {
+  filter?: InputMaybe<SettingPdfRendererFilter>;
 };
 
 
@@ -6614,6 +6855,11 @@ export type QueryUserConsentsArgs = {
 };
 
 
+export type QueryUserLoginCodeArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
 export type QueryUserPollVoteArgs = {
   pollId: Scalars['String']['input'];
 };
@@ -6747,12 +6993,36 @@ export type SensitiveDataUser = BaseUser & {
   userImageID?: Maybe<Scalars['String']['output']>;
 };
 
+export type SessionInfo = {
+  __typename: 'SessionInfo';
+  createdAt: Scalars['DateTime']['output'];
+  expiresAt: Scalars['DateTime']['output'];
+  origin: SessionOrigin;
+  placeholderEmail: Scalars['Boolean']['output'];
+  restricted: Scalars['Boolean']['output'];
+  /** Attribute from the letter a restricted session must confirm when it claims the account with a real email address. */
+  secondFactor: LoginCodeSecondFactor;
+};
+
+export enum SessionOrigin {
+  Impersonation = 'impersonation',
+  Jwt = 'jwt',
+  Password = 'password',
+  Preview = 'preview',
+  Purl = 'purl',
+  Register = 'register'
+}
+
 export type SessionWithToken = {
   __typename: 'SessionWithToken';
   createdAt: Scalars['DateTime']['output'];
   expiresAt: Scalars['DateTime']['output'];
   /** Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation. */
   impersonated: Scalars['Boolean']['output'];
+  /** How this session was created. */
+  origin: SessionOrigin;
+  /** Whether this session is limited to onboarding until a real email address has been confirmed. */
+  restricted: Scalars['Boolean']['output'];
   token: Scalars['String']['output'];
   /** Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding. */
   totpEnabled: Scalars['Boolean']['output'];
@@ -6838,6 +7108,28 @@ export type SettingFilter = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type SettingLetterProvider = SettingProvider & {
+  __typename: 'SettingLetterProvider';
+  autoSend: Scalars['Boolean']['output'];
+  clientId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  environment: LetterProviderEnvironment;
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  organisationId?: Maybe<Scalars['String']['output']>;
+  /** Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com). */
+  placeholderEmailContains?: Maybe<Scalars['String']['output']>;
+  type: LetterProviderType;
+};
+
+export type SettingLetterProviderFilter = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<LetterProviderType>;
+};
+
 export type SettingMailProvider = SettingProvider & {
   __typename: 'SettingMailProvider';
   createdAt: Scalars['DateTime']['output'];
@@ -6870,6 +7162,9 @@ export enum SettingName {
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  LoginCodeMaxUses = 'LOGIN_CODE_MAX_USES',
+  LoginCodeSecondFactor = 'LOGIN_CODE_SECOND_FACTOR',
+  LoginCodeValidDays = 'LOGIN_CODE_VALID_DAYS',
   MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
@@ -6880,6 +7175,7 @@ export enum SettingName {
   NewArticlePaywall = 'NEW_ARTICLE_PAYWALL',
   NewArticlePeering = 'NEW_ARTICLE_PEERING',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  PlaceholderEmailPatterns = 'PLACEHOLDER_EMAIL_PATTERNS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   SessionTtlDays = 'SESSION_TTL_DAYS',
@@ -6925,6 +7221,26 @@ export type SettingPaymentProviderFilter = {
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<PaymentProviderType>;
+};
+
+export type SettingPdfRenderer = SettingProvider & {
+  __typename: 'SettingPdfRenderer';
+  cloudflare_accountId?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  gotenberg_url?: Maybe<Scalars['String']['output']>;
+  gotenberg_username?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  lastLoadedAt: Scalars['DateTime']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  timeoutMs?: Maybe<Scalars['Int']['output']>;
+  type: PdfRendererType;
+};
+
+export type SettingPdfRendererFilter = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<PdfRendererType>;
 };
 
 export type SettingProvider = {
@@ -7669,6 +7985,7 @@ export type UserConsent = {
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   EmailChange = 'EMAIL_CHANGE',
+  EmailVerification = 'EMAIL_VERIFICATION',
   LoginLink = 'LOGIN_LINK',
   PasswordReset = 'PASSWORD_RESET',
   TestMail = 'TEST_MAIL'
@@ -7678,6 +7995,28 @@ export type UserFilter = {
   name?: InputMaybe<Scalars['String']['input']>;
   text?: InputMaybe<Scalars['String']['input']>;
   userRole?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type UserLoginCodeIssue = {
+  __typename: 'UserLoginCodeIssue';
+  code: Scalars['String']['output'];
+  purl: Scalars['String']['output'];
+  status: UserLoginCodeStatus;
+};
+
+export type UserLoginCodeStatus = {
+  __typename: 'UserLoginCodeStatus';
+  createdAt: Scalars['DateTime']['output'];
+  expiresAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  issuedBy?: Maybe<Scalars['String']['output']>;
+  lastUsedAt?: Maybe<Scalars['DateTime']['output']>;
+  maxUses: Scalars['Float']['output'];
+  revokedAt?: Maybe<Scalars['DateTime']['output']>;
+  secondFactor: LoginCodeSecondFactor;
+  /** Whether the user record holds the attribute the configured second factor asks for. */
+  secondFactorAvailable: Scalars['Boolean']['output'];
+  usesRemaining: Scalars['Float']['output'];
 };
 
 export type UserRole = {

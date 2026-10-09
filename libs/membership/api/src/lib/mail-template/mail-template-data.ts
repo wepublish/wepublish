@@ -1,3 +1,5 @@
+import { PurlData, SAMPLE_PURL_DATA } from '@wepublish/mail/api';
+
 /**
  * Builds the `{ user, optional, jwt }` payload that a transactional mail of a
  * given "mail type" (context) receives. Used for the editor preview and test
@@ -43,13 +45,14 @@ export interface MailDataSources {
 export function assembleMailData(
   contextId: MailTemplateContextId,
   sources: MailDataSources,
-  jwt: string
+  jwt: string,
+  purl: PurlData = SAMPLE_PURL_DATA
 ): {
   user: any;
   optional: Record<string, any>;
   jwt: string;
   currentDate: Date;
-} {
+} & PurlData {
   const { user, subscription, invoice } = sources;
   const items = invoice?.items ?? [];
 
@@ -80,7 +83,7 @@ export function assembleMailData(
       break;
   }
 
-  return { user, optional, jwt, currentDate: new Date() };
+  return { user, optional, jwt, currentDate: new Date(), ...purl };
 }
 
 const day = (iso: string) => new Date(iso);
@@ -95,6 +98,19 @@ export const SAMPLE_USER = {
   active: true,
   lastLogin: day('2026-06-30T08:22:10.000Z'),
   createdAt: day('2025-03-01T12:00:00.000Z'),
+};
+
+/**
+ * Where a letter preview without a chosen subscription is addressed to. Kept
+ * off {@link SAMPLE_USER} so it does not turn into placeholders of its own.
+ */
+export const SAMPLE_LETTER_ADDRESS = {
+  name: 'Jane Doe',
+  street: 'Musterstrasse',
+  number: '1',
+  zip: '8000',
+  city: 'Zürich',
+  country: 'CH',
 };
 
 export const SAMPLE_SUBSCRIPTION = {
@@ -161,13 +177,15 @@ export function assembleSampleMailData(contextId: MailTemplateContextId) {
  */
 export function assembleFullMailData(
   sources: MailDataSources,
-  jwt: string
-): { user: any; optional: Record<string, any>; jwt: string } {
+  jwt: string,
+  purl: PurlData = SAMPLE_PURL_DATA
+): { user: any; optional: Record<string, any>; jwt: string } & PurlData {
   const { user, subscription, invoice } = sources;
 
   return {
     user,
     jwt,
+    ...purl,
     optional: {
       newEmail: 'new.address@example.com',
       subscription,

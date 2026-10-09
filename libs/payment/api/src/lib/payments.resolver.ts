@@ -5,8 +5,8 @@ import {
   PaymentFromSubscriptionArgs,
 } from './payment.model';
 import {
-  Authenticated,
   CurrentUser,
+  RequiresFullSession,
   UserSession,
 } from '@wepublish/authentication/api';
 import { PaymentsService } from './payments.service';
@@ -15,7 +15,7 @@ import { PaymentsService } from './payments.service';
 export class PaymentsResolver {
   constructor(private paymentsService: PaymentsService) {}
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(() => Payment, {
     nullable: true,
     description:
@@ -28,7 +28,7 @@ export class PaymentsResolver {
     return this.paymentsService.createPaymentFromInvoice(user.id, input);
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(() => Payment, {
     nullable: true,
     description:

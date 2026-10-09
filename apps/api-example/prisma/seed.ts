@@ -5,6 +5,8 @@ import {
   CommentState,
   Prisma,
   MailProviderType,
+  LetterProviderType,
+  PdfRendererType,
   PaymentProviderType,
   PayrexxPM,
   PayrexxPSP,
@@ -1019,9 +1021,19 @@ interface SeedSubscriber {
   email: string;
   firstName: string;
   name: string;
+  /** Postal address; most subscribers have one, a few are left without. */
+  address?: SeedAddress;
   /** Why this row exists — printed after seeding as a quick test overview. */
   purpose: string;
   subscriptions: SeedSubscription[];
+}
+
+interface SeedAddress {
+  streetAddress: string;
+  streetAddressNumber: string;
+  zipCode: string;
+  city: string;
+  country: string;
 }
 
 const MONTHS_PER_PERIOD: Record<PaymentPeriodicity, number> = {
@@ -1044,6 +1056,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.aktiv.chf@wepublish.ch',
     firstName: 'Anna',
     name: 'Aktiv',
+    address: {
+      streetAddress: 'Bahnhofstrasse',
+      streetAddressNumber: '12',
+      zipCode: '8001',
+      city: 'Zürich',
+      country: 'CH',
+    },
     purpose: 'Active yearly CHF subscription, auto-renewing, invoice paid',
     subscriptions: [
       {
@@ -1063,6 +1082,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.aktiv.eur@wepublish.ch',
     firstName: 'Bruno',
     name: 'Monatlich',
+    address: {
+      streetAddress: 'Hauptstraße',
+      streetAddressNumber: '5',
+      zipCode: '10115',
+      city: 'Berlin',
+      country: 'DE',
+    },
     purpose: 'Active monthly EUR subscription, auto-renewing, invoice paid',
     subscriptions: [
       {
@@ -1082,6 +1108,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.mehrfach@wepublish.ch',
     firstName: 'Clara',
     name: 'Mehrfach',
+    address: {
+      streetAddress: 'Marktgasse',
+      streetAddressNumber: '27',
+      zipCode: '3011',
+      city: 'Bern',
+      country: 'CH',
+    },
     purpose:
       'Three subscriptions at once: two active across plans and currencies, one deactivated',
     subscriptions: [
@@ -1128,6 +1161,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.gekuendigt@wepublish.ch',
     firstName: 'Daniel',
     name: 'Gekündigt',
+    address: {
+      streetAddress: 'Rue du Rhône',
+      streetAddressNumber: '48',
+      zipCode: '1204',
+      city: 'Genève',
+      country: 'CH',
+    },
     purpose: 'Deactivated by the user — no active subscription left',
     subscriptions: [
       {
@@ -1151,6 +1191,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.chargeback@wepublish.ch',
     firstName: 'Elena',
     name: 'Rückbuchung',
+    address: {
+      streetAddress: 'Mariahilfer Straße',
+      streetAddressNumber: '101',
+      zipCode: '1060',
+      city: 'Wien',
+      country: 'AT',
+    },
     purpose: 'Deactivated after a chargeback',
     subscriptions: [
       {
@@ -1174,6 +1221,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.offene.rechnung@wepublish.ch',
     firstName: 'Fabio',
     name: 'Unbezahlt',
+    address: {
+      streetAddress: 'Via Nassa',
+      streetAddressNumber: '3',
+      zipCode: '6900',
+      city: 'Lugano',
+      country: 'CH',
+    },
     purpose:
       'Still active but the renewal invoice is open and overdue — deactivation is scheduled',
     subscriptions: [
@@ -1194,6 +1248,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.ausgelaufen@wepublish.ch',
     firstName: 'Lena',
     name: 'Ausgelaufen',
+    address: {
+      streetAddress: 'Steinenvorstadt',
+      streetAddressNumber: '9',
+      zipCode: '4051',
+      city: 'Basel',
+      country: 'CH',
+    },
     purpose:
       'Ran out without auto-renewal; the periodic job deactivated it at paidUntil. A win-back target.',
     subscriptions: [
@@ -1220,6 +1281,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.laeuft.ab@wepublish.ch',
     firstName: 'Gina',
     name: 'Ablauf',
+    address: {
+      streetAddress: 'Pilatusstrasse',
+      streetAddressNumber: '22',
+      zipCode: '6003',
+      city: 'Luzern',
+      country: 'CH',
+    },
     purpose:
       'Active without auto-renewal, ends in 10 days — target for renewal reminders',
     subscriptions: [
@@ -1260,6 +1328,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.lebenslang@wepublish.ch',
     firstName: 'Igor',
     name: 'Lebenslang',
+    address: {
+      streetAddress: 'Multergasse',
+      streetAddressNumber: '14',
+      zipCode: '9000',
+      city: 'St. Gallen',
+      country: 'CH',
+    },
     purpose: 'Lifetime subscription without a paid-until date',
     subscriptions: [
       {
@@ -1280,6 +1355,13 @@ const SEED_SUBSCRIBERS: SeedSubscriber[] = [
     email: 'abo.quartal@wepublish.ch',
     firstName: 'Jana',
     name: 'Quartal',
+    address: {
+      streetAddress: 'Rathausgasse',
+      streetAddressNumber: '7',
+      zipCode: '5000',
+      city: 'Aarau',
+      country: 'CH',
+    },
     purpose: 'Quarterly billing period, auto-renewing',
     subscriptions: [
       {
@@ -1362,6 +1444,17 @@ export async function seedSubscribers(prisma: PrismaClient) {
         totpExempt: true,
       },
     });
+
+    // Upsert so a re-seed also brings the address of existing users in line.
+    if (subscriber.address) {
+      await prisma.userAddress.upsert({
+        where: { userId: user.id },
+        update: subscriber.address,
+        create: { ...subscriber.address, userId: user.id },
+      });
+    } else {
+      await prisma.userAddress.deleteMany({ where: { userId: user.id } });
+    }
 
     for (const seed of subscriber.subscriptions) {
       const memberPlanID = planIdBySlug.get(seed.planSlug);
@@ -1459,6 +1552,10 @@ const SEED_LOGIN_URL = `${
   process.env.WEBSITE_URL ?? 'http://localhost:4200'
 }/login?jwt={{jwt}}`;
 
+const SEED_CONFIRM_EMAIL_URL = `${
+  process.env.WEBSITE_URL ?? 'http://localhost:4200'
+}/confirm-email?token={{jwt}}`;
+
 const mailDocument = (body: string) => `<!doctype html>
 <html lang="de">
   <head>
@@ -1542,15 +1639,31 @@ Letzte Anmeldung: {{user_lastLogin_dateTime}}`,
     subject: 'Bestätige deine neue E-Mail-Adresse',
     htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
     <p>Du möchtest künftig <strong>{{optional_newEmail}}</strong> verwenden.</p>
-    <p><a href="${SEED_LOGIN_URL}">Änderung bestätigen</a></p>
+    <p><a href="${SEED_CONFIRM_EMAIL_URL}">Änderung bestätigen</a></p>
     <p>Bis zur Bestätigung bleibt {{user_email}} aktiv.</p>`),
     textContent: `Hallo {{user_firstName}}
 
 Du möchtest künftig {{optional_newEmail}} verwenden.
 
-Änderung bestätigen: ${SEED_LOGIN_URL}
+Änderung bestätigen: ${SEED_CONFIRM_EMAIL_URL}
 
 Bis zur Bestätigung bleibt {{user_email}} aktiv.`,
+  },
+  {
+    id: 'seed-email-verification',
+    name: 'E-Mail-Adresse bestätigen',
+    description:
+      'Bestätigung der aktuellen Adresse, z.B. nach dem Login per Brief.',
+    context: MailTemplateContext.emailChange,
+    subject: 'Bestätige deine E-Mail-Adresse',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Bitte bestätige, dass <strong>{{optional_newEmail}}</strong> deine E-Mail-Adresse ist.</p>
+    <p><a href="${SEED_CONFIRM_EMAIL_URL}">E-Mail-Adresse bestätigen</a></p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Bitte bestätige, dass {{optional_newEmail}} deine E-Mail-Adresse ist.
+
+E-Mail-Adresse bestätigen: ${SEED_CONFIRM_EMAIL_URL}`,
   },
   {
     id: 'seed-subscription-confirmed',
@@ -1725,6 +1838,27 @@ async function seedSettings(prisma: PrismaClient) {
           name: 'SMTP',
           type: MailProviderType.SMTP,
           fromAddress: 'dev@wepublish.ch',
+        },
+      })
+    : Promise.resolve(null);
+
+  const letterProvider =
+    (await prisma.settingLetterProvider.count()) === 0 ?
+      prisma.settingLetterProvider.create({
+        data: { id: 'pingen', name: 'Pingen', type: LetterProviderType.pingen },
+      })
+    : Promise.resolve(null);
+
+  // The url falls back to the GOTENBERG_URL env var (the gotenberg service in
+  // docker-compose), so this works without configuring it in the editor.
+  // Switch the type to cloudflare in the editor to render there instead.
+  const pdfRenderer =
+    (await prisma.settingPdfRenderer.count()) === 0 ?
+      prisma.settingPdfRenderer.create({
+        data: {
+          id: 'gotenberg',
+          name: 'Gotenberg',
+          type: PdfRendererType.gotenberg,
         },
       })
     : Promise.resolve(null);
@@ -1910,6 +2044,8 @@ async function seedSettings(prisma: PrismaClient) {
 
   await Promise.all([
     mailprovider,
+    letterProvider,
+    pdfRenderer,
     payrexx,
     payrexxSubscription,
     stripe,

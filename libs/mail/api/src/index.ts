@@ -12,6 +12,7 @@ export * from './lib/mail.webhook';
 export * from './lib/mail.controller';
 export * from './lib/mail-context';
 export * from './lib/mail-renderer';
+export * from './lib/mail-data';
 export * from './lib/mails.module';
 export * from './lib/mailchimp-contact/mailchimp-contact.service';
 export * from './lib/mailchimp-contact/mailchimp-contact.module';

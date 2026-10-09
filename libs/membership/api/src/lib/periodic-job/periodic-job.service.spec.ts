@@ -27,6 +27,9 @@ import {
 } from '@wepublish/mail/api';
 
 const createMockPrisma = () => ({
+  mailTemplate: {
+    findUnique: vi.fn().mockResolvedValue(null),
+  },
   subscriptionFlow: {
     findMany: vi.fn().mockResolvedValue([
       {
@@ -180,6 +183,26 @@ const createMockMailContext = () => ({
   prisma: null,
   kv: null,
   jwtGenerator: vi.fn().mockResolvedValue('test-jwt-token'),
+  isPlaceholderEmail: vi.fn().mockResolvedValue(false),
+  buildMailData: vi.fn(
+    async ({
+      recipient,
+      optionalData,
+      jwtOverride,
+    }: {
+      recipient: Record<string, unknown>;
+      optionalData: Record<string, unknown>;
+      jwtOverride?: string;
+    }) => ({
+      user: recipient,
+      optional: optionalData,
+      jwt: jwtOverride ?? 'test-jwt-token',
+      currentDate: new Date(),
+      purl: '',
+      purlCode: '',
+      purlQr: '',
+    })
+  ),
   sendComposedMail: vi.fn().mockResolvedValue({ subject: 'Test subject' }),
 });
 

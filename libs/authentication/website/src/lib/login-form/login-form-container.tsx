@@ -1,6 +1,7 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
   CheckLoginOtpDocument,
+  LoginWithCodeDocument,
   LoginWithCredentialsDocument,
   LoginWithEmailDocument,
 } from '@wepublish/website/api';
@@ -34,6 +35,20 @@ export function LoginFormContainer({
   const [otpRequired, setOtpRequired] = useState(false);
   const [totpRedirectToPassword, setTotpRedirectToPassword] = useState(false);
   const [loginLinkCooldownSeconds, markLoginLinkSent] = useLoginLinkCooldown();
+  const [codeChallengeRequired, setCodeChallengeRequired] = useState(false);
+  const [loginWithCode, withCode] = useMutation(LoginWithCodeDocument, {
+    onCompleted(data) {
+      setToken({
+        __typename: 'SessionWithTokenWithoutUser',
+        createdAt: data.createSessionWithLoginCode.createdAt,
+        expiresAt: data.createSessionWithLoginCode.expiresAt,
+        token: data.createSessionWithLoginCode.token,
+      });
+    },
+    onError(error) {
+      setCodeChallengeRequired(error.message.includes('CHALLENGE_REQUIRED'));
+    },
+  });
 
   // Check if redirected from a failed JWT login (2FA user)
   useEffect(() => {
@@ -107,6 +122,17 @@ export function LoginFormContainer({
         }
       }}
       loginWithCredentials={withCredentials}
+      loginWithCode={withCode}
+      codeChallengeRequired={codeChallengeRequired}
+      onSubmitLoginWithCode={async (code, totpToken) => {
+        const result = await loginWithCode({
+          variables: { code, totpToken },
+        }).catch(() => null);
+
+        if (result?.data?.createSessionWithLoginCode && afterLoginCallback) {
+          afterLoginCallback();
+        }
+      }}
       onSubmitLoginWithEmail={handleSubmitLoginWithEmail}
       loginWithEmail={withEmail}
       loginLinkCooldownSeconds={loginLinkCooldownSeconds}

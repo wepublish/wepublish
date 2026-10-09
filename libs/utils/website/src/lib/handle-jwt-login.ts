@@ -64,12 +64,28 @@ export async function handleJwtLogin(
         httpOnly: !!httpOnlyCookie,
       }
     );
+
+    redirectWithoutJwt(ctx);
   } catch {
     redirectToLoginWithError(ctx);
     return false;
   }
 
   return true;
+}
+
+function redirectWithoutJwt(ctx: NextPageContext) {
+  if (!ctx.res || ctx.res.headersSent) {
+    return;
+  }
+
+  const url = new URL(ctx.asPath ?? '/', 'http://localhost');
+  url.searchParams.delete('jwt');
+
+  ctx.res.writeHead(302, {
+    Location: `${url.pathname}${url.search}${url.hash}`,
+  });
+  ctx.res.end();
 }
 
 function redirectToLoginWithError(ctx: NextPageContext) {

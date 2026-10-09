@@ -20,6 +20,10 @@ vi.mock('@wepublish/mail/api', () => ({
 vi.mock('@wepublish/challenge/api', () => ({
   loadChallengeProvider: vi.fn(async () => null),
 }));
+vi.mock('@wepublish/letter/api', () => ({
+  loadLetterProvider: vi.fn(async () => null),
+  loadPdfRenderer: vi.fn(async () => null),
+}));
 
 const createReplica = () => {
   const versions: Record<string, string> = {};
@@ -45,8 +49,10 @@ describe('ProviderRegistryService across replicas', () => {
 
   it.each([
     'settings:challenge',
+    'settings:letterprovider',
     'settings:mailprovider',
     'settings:paymentprovider',
+    'settings:pdfrenderer',
     'settings:tracking-pixel',
   ])(
     'rebuilds its providers once another replica saved %s',

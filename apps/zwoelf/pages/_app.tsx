@@ -19,6 +19,7 @@ import {
   RoutedAdminBar,
   withBuilderRouter,
   withJwtHandler,
+  withRestrictedSessionRedirect,
   withSessionProvider,
 } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
@@ -204,7 +205,11 @@ const withApollo = createWithApiClient([authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(
-      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+      withPaywallBypassToken(
+        withSessionProvider(
+          withRestrictedSessionRedirect('/welcome')(withJwtHandler(CustomApp))
+        )
+      )
     )
   )
 );

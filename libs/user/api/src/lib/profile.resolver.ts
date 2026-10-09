@@ -1,21 +1,32 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
-  Authenticated,
+  AuthenticationService,
   AuthSessionType,
+  Authenticated,
   CurrentUser,
+  Public,
+  RequiresFullSession,
   UserSession,
 } from '@wepublish/authentication/api';
+import {
+  LoginCodeSecondFactorService,
+  TooManyAttemptsError,
+} from '@wepublish/login-code/api';
 import { SensitiveDataUser } from './user.model';
 import { UploadImageInput } from '@wepublish/image/api';
 import { ProfileService } from './profile.service';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { UserService } from './user.service';
+
+export const EMAIL_VERIFICATION_REQUIRED = 'EMAIL_VERIFICATION_REQUIRED';
 
 @Resolver()
 export class ProfileResolver {
   constructor(
     private userService: UserService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private secondFactorService: LoginCodeSecondFactorService,
+    private authenticationService: AuthenticationService
   ) {}
 
   @Authenticated()
@@ -28,10 +39,12 @@ export class ProfileResolver {
       return null;
     }
 
-    return session.user;
+    return session.restricted ?
+        this.secondFactorService.mask(session.user)
+      : session.user;
   }
 
-  @Authenticated()
+  @RequiresFullSession()
   @Mutation(() => SensitiveDataUser, {
     description: `This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.`,
   })
@@ -71,24 +84,64 @@ export class ProfileResolver {
   @Authenticated()
   @Mutation(() => Boolean, {
     description:
-      'Requests an email change. A confirmation link is sent to the current email address.',
+      'Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter.',
   })
   async requestEmailChange(
     @Args('newEmail') newEmail: string,
-    @CurrentUser() { user }: UserSession
+    @CurrentUser() session: UserSession,
+    @Args('secondFactor', { nullable: true }) secondFactor?: string
   ): Promise<boolean> {
-    await this.userService.requestEmailChange(user.id, newEmail);
+    if (session.restricted && !session.placeholderEmail) {
+      throw new ForbiddenException(EMAIL_VERIFICATION_REQUIRED);
+    }
+
+    if (session.restricted) {
+      await this.assertSecondFactor(session, secondFactor);
+    }
+
+    await this.userService.requestEmailChange(session.user.id, newEmail);
     return true;
   }
 
+  private async assertSecondFactor(
+    session: UserSession,
+    secondFactor: string | undefined
+  ) {
+    try {
+      await this.secondFactorService.assert(session.user, secondFactor);
+    } catch (error) {
+      if (error instanceof TooManyAttemptsError) {
+        await this.authenticationService.revokeUserSessions(session.user.id);
+      }
+
+      throw error;
+    }
+  }
+
   @Authenticated()
+  @Mutation(() => Boolean, {
+    description:
+      'Sends a confirmation link to the current email address to verify it.',
+  })
+  async requestEmailVerification(
+    @CurrentUser() { user }: UserSession
+  ): Promise<boolean> {
+    await this.userService.requestEmailVerification(user.id);
+    return true;
+  }
+
+  @Public()
   @Mutation(() => SensitiveDataUser, {
-    description: 'Confirms a pending email change for the logged-in user.',
+    description:
+      'Confirms a pending email change with the token from the confirmation email.',
   })
   async confirmEmailChange(
-    @Args('newEmail') newEmail: string,
-    @CurrentUser() { user }: UserSession
+    @Args('token') token: string,
+    @CurrentUser() session?: UserSession
   ) {
-    return this.userService.confirmEmailChange(user.id, newEmail);
+    return this.userService.confirmEmailChange(token, {
+      exceptSessionToken:
+        session?.type === AuthSessionType.User ? session.token : undefined,
+    });
   }
 }

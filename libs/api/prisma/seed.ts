@@ -89,6 +89,60 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.LOGIN_CODE_MAX_USES,
+      },
+      update: {},
+      create: {
+        name: SettingName.LOGIN_CODE_MAX_USES,
+        value: 5,
+        settingRestriction: { minValue: 1, maxValue: 100 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.LOGIN_CODE_VALID_DAYS,
+      },
+      update: {},
+      create: {
+        name: SettingName.LOGIN_CODE_VALID_DAYS,
+        value: 90,
+        settingRestriction: { minValue: 1, maxValue: 365 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.LOGIN_CODE_SECOND_FACTOR,
+      },
+      update: {},
+      create: {
+        name: SettingName.LOGIN_CODE_SECOND_FACTOR,
+        value: 'none',
+        settingRestriction: {
+          allowedValues: {
+            stringChoice: [
+              'none',
+              'postalCode',
+              'city',
+              'firstName',
+              'lastName',
+            ],
+          },
+        },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.PLACEHOLDER_EMAIL_PATTERNS,
+      },
+      update: {},
+      create: {
+        name: SettingName.PLACEHOLDER_EMAIL_PATTERNS,
+        value: '',
+        settingRestriction: { inputLength: 1000 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.MAKE_NEW_SUBSCRIBERS_API_PUBLIC,
       },
       update: {},

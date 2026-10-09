@@ -7,6 +7,7 @@ import { AuthenticationService } from './authentication.service';
 import { OneOfGuard, PrismaModule } from '@wepublish/nest-modules';
 import { PublicGuard } from './public.guard';
 import { AuthenticatedGuard } from './authenticated.guard';
+import { FullSessionGuard } from './full-session.guard';
 import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 @Module({
@@ -28,6 +29,10 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     {
       provide: APP_GUARD,
       useClass: OneOfGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: FullSessionGuard,
     },
     PublicGuard,
     AuthenticatedGuard,

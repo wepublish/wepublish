@@ -2,6 +2,7 @@ import { Logger } from '@nestjs/common';
 import { MailLogState, MailLogType, PrismaClient, User } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { MailContext } from './mail-context';
+import { templateUsesJwt } from './mail-data';
 
 export enum mailLogType {
   SubscriptionFlow,
@@ -28,6 +29,7 @@ export type MailControllerConfig = {
   mailType: mailLogType;
   /** Override the auto-generated login JWT with a custom token (e.g. password reset). */
   jwtOverride?: string;
+  recipientEmailOverride?: string;
   /** Set for mails produced by a manual bulk send job. */
   mailSendJobId?: string | null;
   /**
@@ -78,24 +80,19 @@ export class MailController {
    * @returns a HashMap of configuration data
    */
   private async buildData() {
-    // avoid unwanted data mutation by reference
-    const recipient = JSON.parse(JSON.stringify(this.config.recipient));
+    const template = await this.prismaService.mailTemplate.findUnique({
+      where: { id: this.config.mailTemplateId },
+      select: { subject: true, htmlContent: true, textContent: true },
+    });
 
-    // Remove sensitive fields from mail template data
-    delete recipient.password;
-    delete recipient.roleIDs;
-    delete recipient.totpSecret;
-    delete recipient.totpEnabled;
-    delete recipient.totpExempt;
-
-    return {
-      user: recipient,
-      optional: this.config.optionalData,
-      jwt:
-        this.config.jwtOverride ??
-        (await this.mailContext.jwtGenerator(recipient.id)),
-      currentDate: new Date(),
-    };
+    return this.mailContext.buildMailData({
+      recipient: this.config.recipient,
+      optionalData: this.config.optionalData,
+      jwtOverride: this.config.jwtOverride,
+      mode: 'send',
+      purlOrigin: 'mail',
+      mintJwt: !template || templateUsesJwt(template),
+    });
   }
 
   /**
@@ -114,6 +111,23 @@ export class MailController {
     }
 
     const mailLogId = this.config.mailLogId ?? randomUUID();
+    const recipientEmail =
+      this.config.recipientEmailOverride ?? this.config.recipient.email;
+
+    if (await this.mailContext.isPlaceholderEmail(recipientEmail)) {
+      this.logger.warn(
+        `Recipient <${recipientEmail}> is a placeholder address. Suppressing mail template <${this.config.mailTemplateId}>.`
+      );
+
+      await this.writeLog(
+        mailLogId,
+        MailLogState.rejected,
+        null,
+        'PLACEHOLDER_EMAIL_SUPPRESSED'
+      );
+
+      return;
+    }
 
     let subject: string | null = null;
     let providerMessageID: string | undefined;
@@ -122,7 +136,7 @@ export class MailController {
         {
           mailLogID: mailLogId,
           mailTemplateId: this.config.mailTemplateId,
-          recipient: this.config.recipient.email,
+          recipient: recipientEmail,
           data: await this.buildData(),
         }
       ));

@@ -1,7 +1,10 @@
 import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { SessionCacheInvalidator } from '@wepublish/authentication/api';
+import {
+  AuthenticationService,
+  SessionCacheInvalidator,
+} from '@wepublish/authentication/api';
 import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { MailContext, MailchimpContactService } from '@wepublish/mail/api';
 import { UserService } from './user.service';
@@ -12,7 +15,8 @@ const user = {
   id: 'user-1',
   email: 'old@example.com',
   pendingEmail: 'new@example.com',
-  pendingEmailAt: new Date(),
+  // Past the request cooldown, within the confirmation window.
+  pendingEmailAt: new Date(Date.now() - 10 * 60 * 1000),
 };
 
 describe('UserService session cache', () => {
@@ -58,6 +62,13 @@ describe('UserService session cache', () => {
           },
         },
         { provide: UserDataloaderService, useValue: { prime: vi.fn() } },
+        {
+          provide: AuthenticationService,
+          useValue: {
+            revokeUserSessions: vi.fn().mockResolvedValue(0),
+            isPlaceholderEmail: vi.fn().mockResolvedValue(false),
+          },
+        },
         { provide: SessionCacheInvalidator, useValue: sessionCache },
         {
           provide: PublicContentCacheInvalidator,

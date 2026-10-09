@@ -5,6 +5,11 @@ import { unselectPassword } from './unselect-password';
 import { addPredefinedPermissions } from '@wepublish/permissions/api';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import {
+  loadPlaceholderEmailPatterns,
+  matchesPlaceholderEmail,
+} from '@wepublish/utils/api';
+import { isSessionRestricted } from './session-restriction';
+import {
   SESSION_CACHE_NAMESPACE,
   SESSION_CACHE_TTL_SECONDS,
   sessionCacheKey,
@@ -24,6 +29,28 @@ export class AuthenticationService {
     private prisma: PrismaClient,
     private kv: KvTtlCacheService
   ) {}
+
+  public async getPlaceholderEmailPatterns(): Promise<string[]> {
+    return this.kv.getOrLoadNs(
+      'placeholder-email',
+      'patterns',
+      () => loadPlaceholderEmailPatterns(this.prisma),
+      60
+    );
+  }
+
+  public async isPlaceholderEmail(
+    email: string | null | undefined
+  ): Promise<boolean> {
+    if (!email) {
+      return false;
+    }
+
+    return matchesPlaceholderEmail(
+      email,
+      await this.getPlaceholderEmailPatterns()
+    );
+  }
 
   public async getUserSession(token: string): Promise<AuthSession | null> {
     const session = await this.kv.getOrLoadNs(
@@ -60,12 +87,24 @@ export class AuthenticationService {
     });
 
     if (session && session.user) {
+      const placeholderEmail = await this.isPlaceholderEmail(
+        session.user.email
+      );
+
       return {
         type: AuthSessionType.User,
         id: session.id,
         token: session.token,
         createdAt: session.createdAt,
         expiresAt: session.expiresAt,
+        origin: session.origin,
+        placeholderEmail,
+        restricted: isSessionRestricted({
+          origin: session.origin,
+          placeholderEmail,
+          emailVerifiedAt: session.user.emailVerifiedAt,
+          sessionCreatedAt: session.createdAt,
+        }),
         impersonatedBy: session.impersonatedBy,
         user: session.user,
         roles: (
@@ -121,5 +160,24 @@ export class AuthenticationService {
     }
 
     return true;
+  }
+
+  public async revokeUserSessions(
+    userId: string,
+    options?: { exceptToken?: string }
+  ) {
+    const { count } = await this.prisma.session.deleteMany({
+      where: {
+        userID: userId,
+        ...(options?.exceptToken ?
+          { token: { not: options.exceptToken } }
+        : {}),
+      },
+    });
+    // Sessions are cached by token, so a revoked one would otherwise keep
+    // working until its cache entry expires.
+    await this.kv.resetNamespace(SESSION_CACHE_NAMESPACE);
+
+    return count;
   }
 }
