@@ -1034,7 +1034,7 @@ const HtmlVisualEditorComponent = forwardRef<
         <DeviceFrame sx={{ maxWidth: DEVICE_WIDTH[device] }}>
           <Frame
             ref={frameRef}
-            title="mail-template-visual-editor"
+            title={t('mailTemplates.editor.frameTitle')}
             sandbox="allow-same-origin"
             srcDoc={value}
             onLoad={handleLoad}
