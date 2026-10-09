@@ -91,7 +91,7 @@ export class JwtService {
     return new SignJWT({
       durationMinutes: claims.durationMinutes,
       impersonatedBy: claims.impersonatedBy,
-      reason: claims.reason,
+      ...(claims.reason ? { reason: claims.reason } : {}),
     })
       .setProtectedHeader({ alg: 'EdDSA', kid: this.kid })
       .setSubject(claims.userId)
@@ -123,7 +123,7 @@ export class JwtService {
         jti: payload.jti,
         durationMinutes: Number(payload['durationMinutes']),
         impersonatedBy: String(payload['impersonatedBy'] ?? ''),
-        reason: String(payload['reason'] ?? ''),
+        reason: payload['reason'] ? String(payload['reason']) : null,
       };
     } catch {
       return null;

@@ -139,4 +139,30 @@ describe('SessionResolver', () => {
     expect(session.user.email).toBe('dev@wepublish.ch');
     expect(session.token).toBeDefined();
   });
+
+  test('passes the code verifier of a support login on', async () => {
+    sessionService.createSessionWithJWT.mockResolvedValue(
+      mockUserSession as any
+    );
+
+    const res = await request(app.getHttpServer())
+      .post('/')
+      .send({
+        query: `
+          mutation CreateSessionWithJWT($jwt: String!, $codeVerifier: String) {
+            createSessionWithJWT(jwt: $jwt, codeVerifier: $codeVerifier) {
+              token
+            }
+          }
+        `,
+        variables: { jwt: 'grant', codeVerifier: 'verifier' },
+      });
+
+    expect(res.body.errors).toBeUndefined();
+    expect(sessionService.createSessionWithJWT).toHaveBeenCalledWith(
+      'grant',
+      undefined,
+      'verifier'
+    );
+  });
 });

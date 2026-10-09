@@ -1064,6 +1064,7 @@ model ImpersonationGrant {
   jti       String    @unique
   expiresAt DateTime  @db.Timestamptz(3)
   redeemedAt DateTime? @db.Timestamptz(3)
+  codeChallenge String?
 
   @@index([expiresAt])
   @@map("impersonation_grants")

@@ -1,12 +1,22 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { PrismaClient, User, UserEvent } from '@prisma/client';
+import {
+  AuditLogAction,
+  AuditLogActorType,
+  PrismaClient,
+  User,
+  UserEvent,
+} from '@prisma/client';
+import { AuditLogService } from '@wepublish/audit-log/api';
 import { InvalidCredentialsError, NotActiveError } from './session.errors';
 import nanoid from 'nanoid/generate';
 import {
   ImpersonationError,
+  assertCodeChallenge,
   assertDuration,
   assertReason,
+  codeChallengeOf,
   isImpersonationEnabled,
+  isSupportAccount,
   type ImpersonationClaims,
 } from './impersonation';
 import { UserAuthenticationService } from './user-authentication.service';
@@ -46,7 +56,8 @@ export class SessionService {
     private settingsService: SettingsService,
     private mailContext: MailContext,
     private totpService: TotpService,
-    private sessionCache: SessionCacheInvalidator
+    private sessionCache: SessionCacheInvalidator,
+    private auditLog: AuditLogService
   ) {}
 
   private async sessionTtlMs(): Promise<number> {
@@ -112,11 +123,15 @@ export class SessionService {
     return this.createUserSession(user);
   }
 
-  async createSessionWithJWT(jwt: string, totpToken?: string) {
+  async createSessionWithJWT(
+    jwt: string,
+    totpToken?: string,
+    codeVerifier?: string
+  ) {
     const grant = await this.jwtService.verifyImpersonationGrant(jwt);
 
     if (grant) {
-      return this.redeemImpersonationGrant(grant);
+      return this.redeemImpersonationGrant(grant, codeVerifier);
     }
 
     // Try preview audience first (1-min JWT from editor, skips TOTP)
@@ -177,19 +192,21 @@ export class SessionService {
     durationMinutes,
     reason,
     impersonatedBy,
+    codeChallenge,
   }: {
     userId: string;
     durationMinutes: number;
-    reason: string;
+    reason?: string | null;
     impersonatedBy: string;
+    codeChallenge?: string | null;
   }) {
     if (!isImpersonationEnabled(process.env)) {
       throw new ImpersonationError('Impersonation is disabled for this medium');
     }
 
     const minutes = assertDuration(durationMinutes);
-    const checkedReason = assertReason(reason);
     const actor = assertReason(impersonatedBy);
+    const challenge = assertCodeChallenge(codeChallenge);
 
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
 
@@ -201,11 +218,16 @@ export class SessionService {
       throw new ImpersonationError('User is not active');
     }
 
+    const checkedReason =
+      reason?.trim() || !isSupportAccount(user.email) ?
+        assertReason(reason ?? '')
+      : null;
+
     const jti = nanoid(IDAlphabet, 32);
     const expiresAt = new Date(Date.now() + 60 * 1000);
 
     await this.prisma.impersonationGrant.create({
-      data: { jti, expiresAt },
+      data: { jti, expiresAt, codeChallenge: challenge },
     });
 
     const token = await this.jwtService.generateImpersonationGrant({
@@ -219,13 +241,24 @@ export class SessionService {
     return { token, expiresAt, durationMinutes: minutes, email: user.email };
   }
 
-  private async redeemImpersonationGrant(claims: ImpersonationClaims) {
+  private async redeemImpersonationGrant(
+    claims: ImpersonationClaims,
+    codeVerifier?: string
+  ) {
     const redeemed = await this.prisma.impersonationGrant.updateMany({
-      where: { jti: claims.jti, redeemedAt: null },
+      where: {
+        jti: claims.jti,
+        redeemedAt: null,
+        codeChallenge: codeVerifier ? codeChallengeOf(codeVerifier) : null,
+      },
       data: { redeemedAt: new Date() },
     });
 
     if (redeemed.count !== 1) {
+      await this.recordImpersonation(claims, {
+        error:
+          'Impersonation grant refused: already redeemed or wrong code verifier',
+      });
       throw new InvalidCredentialsError();
     }
 
@@ -234,17 +267,50 @@ export class SessionService {
     });
 
     if (!user) {
+      await this.recordImpersonation(claims, {
+        error: 'Impersonation grant refused: unknown user',
+      });
       throw new InvalidCredentialsError();
     }
 
     if (!user.active) {
+      await this.recordImpersonation(claims, {
+        user,
+        error: 'Impersonation grant refused: user is not active',
+      });
       throw new NotActiveError();
     }
 
-    return this.createUserSession(user, {
+    const session = await this.createUserSession(user, {
       ttlMs: assertDuration(claims.durationMinutes) * 60 * 1000,
       impersonatedBy: claims.impersonatedBy,
       impersonationReason: claims.reason,
+    });
+
+    await this.recordImpersonation(claims, {
+      user,
+      sessionId: session.sessionId,
+    });
+
+    return session;
+  }
+
+  private recordImpersonation(
+    claims: ImpersonationClaims,
+    outcome: { user?: User; sessionId?: string; error?: string }
+  ) {
+    return this.auditLog.record({
+      mutation: 'createSessionWithJWT',
+      action: AuditLogAction.other,
+      entity: 'Session',
+      recordId: outcome.sessionId ?? null,
+      actorType: AuditLogActorType.user,
+      userId: claims.userId,
+      userEmail: outcome.user?.email ?? null,
+      sessionId: outcome.sessionId ?? null,
+      impersonatedBy: claims.impersonatedBy,
+      success: !outcome.error,
+      errorMessage: outcome.error ?? null,
     });
   }
 
@@ -284,7 +350,7 @@ export class SessionService {
     options?: {
       ttlMs?: number;
       impersonatedBy?: string;
-      impersonationReason?: string;
+      impersonationReason?: string | null;
     }
   ) {
     const token = nanoid(IDAlphabet, 64);
@@ -293,7 +359,7 @@ export class SessionService {
       Date.now() + (options?.ttlMs ?? (await this.sessionTtlMs()))
     );
 
-    const [{ createdAt }] = await Promise.all([
+    const [{ id: sessionId, createdAt }] = await Promise.all([
       this.prisma.session.create({
         data: {
           token,
@@ -321,6 +387,7 @@ export class SessionService {
     return {
       user,
       token,
+      sessionId,
       createdAt,
       expiresAt,
       totpEnabled: user.totpEnabled,
