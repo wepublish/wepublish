@@ -1,5 +1,6 @@
 import { Autocomplete, Box, TextField } from '@mui/material';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ICON_REGISTRY } from './iconRegistry';
 
@@ -20,6 +21,7 @@ export const IconPickerSelect = ({
   onChange,
   iconRegistry = ICON_REGISTRY,
 }: IconPickerProps) => {
+  const { t } = useTranslation();
   const data = useMemo<IconPickerItem[]>(
     () =>
       Object.entries(iconRegistry).map(([iconKey, iconData]) => ({
@@ -56,27 +58,31 @@ export const IconPickerSelect = ({
       renderInput={params => (
         <TextField
           {...params}
-          label="Select Icon"
+          label={t('externalAppForm.selectIcon')}
           variant="outlined"
-          InputProps={{
-            ...params.InputProps,
-            startAdornment:
-              value && data.find(item => item.value === value) ?
-                <Box
-                  sx={{ display: 'flex', alignItems: 'center', mr: 1, ml: 1 }}
-                >
-                  {(() => {
-                    const selectedItem = data.find(
-                      item => item.value === value
-                    );
-                    if (selectedItem) {
-                      const IconComponent = selectedItem.icon;
-                      return <IconComponent size={20} />;
-                    }
-                    return null;
-                  })()}
-                </Box>
-              : null,
+          slotProps={{
+            ...params.slotProps,
+
+            input: {
+              ...params.slotProps.input,
+              startAdornment:
+                value && data.find(item => item.value === value) ?
+                  <Box
+                    sx={{ display: 'flex', alignItems: 'center', mr: 1, ml: 1 }}
+                  >
+                    {(() => {
+                      const selectedItem = data.find(
+                        item => item.value === value
+                      );
+                      if (selectedItem) {
+                        const IconComponent = selectedItem.icon;
+                        return <IconComponent size={20} />;
+                      }
+                      return null;
+                    })()}
+                  </Box>
+                : null,
+            },
           }}
         />
       )}

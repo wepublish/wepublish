@@ -5,7 +5,11 @@ import {
   MediumStatsService,
   resolveWindow,
   sumInvoiceAmounts,
+  busiestEditorShare,
+  summariseErrorMessage,
+  summariseErrors,
 } from './medium-stats.service';
+import type { Mock } from 'vitest';
 
 describe('resolveWindow', () => {
   const now = new Date('2026-09-16T12:00:00.000Z');
@@ -52,100 +56,110 @@ describe('sumInvoiceAmounts', () => {
 });
 
 type PrismaStub = {
-  payment: { findMany: jest.Mock };
-  invoiceItem: { findMany: jest.Mock };
-  invoice: { findFirst: jest.Mock };
-  userRole: { findFirst: jest.Mock };
-  user: { count: jest.Mock };
-  mailSendJob: { aggregate: jest.Mock; findFirst: jest.Mock };
-  mailchimpSyncError: { count: jest.Mock };
-  page: { count: jest.Mock };
-  pageRevision: { count: jest.Mock };
-  session: { count: jest.Mock; findMany: jest.Mock };
-  peer: { count: jest.Mock };
-  settingMailProvider: { count: jest.Mock };
-  settingPaymentProvider: { count: jest.Mock };
-  settingSyncProvider: { count: jest.Mock };
-  settingAnalyticsProvider: { count: jest.Mock };
-  mailLog: { count: jest.Mock };
-  periodicJob: { findFirst: jest.Mock };
+  payment: { findMany: Mock };
+  invoiceItem: { findMany: Mock };
+  invoice: { findFirst: Mock };
+  userRole: { findFirst: Mock };
+  user: { count: Mock };
+  mailSendJob: { aggregate: Mock; findFirst: Mock };
+  mailchimpSyncError: { count: Mock };
+  page: { count: Mock };
+  pageRevision: { count: Mock };
+  session: { count: Mock; findMany: Mock };
+  peer: { count: Mock };
+  settingMailProvider: { count: Mock };
+  settingPaymentProvider: { count: Mock };
+  settingSyncProvider: { count: Mock };
+  settingAnalyticsProvider: { count: Mock };
+  mailLog: { count: Mock };
+  periodicJob: { findFirst: Mock };
   changelogEntry: {
-    count: jest.Mock;
-    findFirst: jest.Mock;
-    findMany: jest.Mock;
+    count: Mock;
+    findFirst: Mock;
+    findMany: Mock;
   };
-  image: { aggregate: jest.Mock };
-  document: { aggregate: jest.Mock };
-  subscription: { count: jest.Mock };
-  subscriptionDeactivation: { groupBy: jest.Mock };
-  article: { count: jest.Mock };
-  articleRevision: { findFirst: jest.Mock; count: jest.Mock };
-  author: { count: jest.Mock };
-  comment: { count: jest.Mock };
-  poll: { count: jest.Mock };
-  pollVote: { count: jest.Mock };
+  image: { aggregate: Mock };
+  document: { aggregate: Mock };
+  subscription: { count: Mock };
+  auditLog: {
+    count: Mock;
+    findMany: Mock;
+    groupBy: Mock;
+  };
+  subscriptionDeactivation: { groupBy: Mock };
+  article: { count: Mock };
+  articleRevision: { findFirst: Mock; count: Mock };
+  author: { count: Mock };
+  comment: { count: Mock };
+  poll: { count: Mock };
+  pollVote: { count: Mock };
 };
 
 function makePrisma(): PrismaStub {
   return {
-    payment: { findMany: jest.fn().mockResolvedValue([]) },
-    invoiceItem: { findMany: jest.fn().mockResolvedValue([]) },
-    userRole: { findFirst: jest.fn().mockResolvedValue(null) },
-    user: { count: jest.fn().mockResolvedValue(0) },
+    payment: { findMany: vi.fn().mockResolvedValue([]) },
+    invoiceItem: { findMany: vi.fn().mockResolvedValue([]) },
+    userRole: { findFirst: vi.fn().mockResolvedValue(null) },
+    user: { count: vi.fn().mockResolvedValue(0) },
     mailSendJob: {
-      aggregate: jest
+      aggregate: vi
         .fn()
         .mockResolvedValue({ _sum: { sentCount: null, failedCount: null } }),
-      findFirst: jest.fn().mockResolvedValue(null),
+      findFirst: vi.fn().mockResolvedValue(null),
     },
-    mailLog: { count: jest.fn().mockResolvedValue(0) },
-    periodicJob: { findFirst: jest.fn().mockResolvedValue(null) },
+    mailLog: { count: vi.fn().mockResolvedValue(0) },
+    periodicJob: { findFirst: vi.fn().mockResolvedValue(null) },
     changelogEntry: {
-      count: jest.fn().mockResolvedValue(0),
-      findFirst: jest.fn().mockResolvedValue(null),
-      findMany: jest.fn().mockResolvedValue([]),
+      count: vi.fn().mockResolvedValue(0),
+      findFirst: vi.fn().mockResolvedValue(null),
+      findMany: vi.fn().mockResolvedValue([]),
     },
     image: {
-      aggregate: jest
+      aggregate: vi
         .fn()
         .mockResolvedValue({ _count: { _all: 0 }, _sum: { fileSize: null } }),
     },
     document: {
-      aggregate: jest
+      aggregate: vi
         .fn()
         .mockResolvedValue({ _count: { _all: 0 }, _sum: { fileSize: null } }),
     },
-    invoice: { findFirst: jest.fn().mockResolvedValue(null) },
-    subscription: { count: jest.fn().mockResolvedValue(0) },
-    subscriptionDeactivation: { groupBy: jest.fn().mockResolvedValue([]) },
-    article: { count: jest.fn().mockResolvedValue(0) },
+    invoice: { findFirst: vi.fn().mockResolvedValue(null) },
+    subscription: { count: vi.fn().mockResolvedValue(0) },
+    auditLog: {
+      count: vi.fn().mockResolvedValue(0),
+      findMany: vi.fn().mockResolvedValue([]),
+      groupBy: vi.fn().mockResolvedValue([]),
+    },
+    subscriptionDeactivation: { groupBy: vi.fn().mockResolvedValue([]) },
+    article: { count: vi.fn().mockResolvedValue(0) },
     articleRevision: {
-      findFirst: jest.fn().mockResolvedValue(null),
-      count: jest.fn().mockResolvedValue(0),
+      findFirst: vi.fn().mockResolvedValue(null),
+      count: vi.fn().mockResolvedValue(0),
     },
-    author: { count: jest.fn().mockResolvedValue(0) },
-    comment: { count: jest.fn().mockResolvedValue(0) },
-    poll: { count: jest.fn().mockResolvedValue(0) },
-    pollVote: { count: jest.fn().mockResolvedValue(0) },
-    mailchimpSyncError: { count: jest.fn().mockResolvedValue(0) },
-    page: { count: jest.fn().mockResolvedValue(0) },
-    pageRevision: { count: jest.fn().mockResolvedValue(0) },
+    author: { count: vi.fn().mockResolvedValue(0) },
+    comment: { count: vi.fn().mockResolvedValue(0) },
+    poll: { count: vi.fn().mockResolvedValue(0) },
+    pollVote: { count: vi.fn().mockResolvedValue(0) },
+    mailchimpSyncError: { count: vi.fn().mockResolvedValue(0) },
+    page: { count: vi.fn().mockResolvedValue(0) },
+    pageRevision: { count: vi.fn().mockResolvedValue(0) },
     session: {
-      count: jest.fn().mockResolvedValue(0),
-      findMany: jest.fn().mockResolvedValue([]),
+      count: vi.fn().mockResolvedValue(0),
+      findMany: vi.fn().mockResolvedValue([]),
     },
-    peer: { count: jest.fn().mockResolvedValue(0) },
-    settingMailProvider: { count: jest.fn().mockResolvedValue(0) },
-    settingPaymentProvider: { count: jest.fn().mockResolvedValue(0) },
-    settingSyncProvider: { count: jest.fn().mockResolvedValue(0) },
-    settingAnalyticsProvider: { count: jest.fn().mockResolvedValue(0) },
+    peer: { count: vi.fn().mockResolvedValue(0) },
+    settingMailProvider: { count: vi.fn().mockResolvedValue(0) },
+    settingPaymentProvider: { count: vi.fn().mockResolvedValue(0) },
+    settingSyncProvider: { count: vi.fn().mockResolvedValue(0) },
+    settingAnalyticsProvider: { count: vi.fn().mockResolvedValue(0) },
   };
 }
 
 function makeService(prisma: PrismaStub): MediumStatsService {
   const dashboardInvoice = {
-    revenue: jest.fn().mockResolvedValue([]),
-    expectedRevenue: jest.fn().mockResolvedValue([]),
+    revenue: vi.fn().mockResolvedValue([]),
+    expectedRevenue: vi.fn().mockResolvedValue([]),
   } as unknown as DashboardInvoiceService;
 
   return new MediumStatsService(
@@ -317,11 +331,14 @@ describe('MediumStatsService null tolerance', () => {
     expect(stats.operations.lastPeriodicJobAt).toEqual(executed);
   });
 
+  // Deliberately the literal and not the constant: a new block of figures has
+  // to change this line, which is where someone notices the version needs to
+  // move with it. Asserting the constant against itself would notice nothing.
   it('stamps the schema version and generation time', async () => {
     const now = new Date('2026-09-16T12:00:00.000Z');
     const stats = await makeService(makePrisma()).getMediumStats({ now });
 
-    expect(stats.schemaVersion).toBe(1);
+    expect(stats.schemaVersion).toBe(2);
     expect(stats.generatedAt).toBe(now);
     expect(stats.window.to).toBe(now);
   });
@@ -377,7 +394,7 @@ describe('MediumStatsService new groups', () => {
   it('counts pages and revisions alongside articles', async () => {
     const prisma = makePrisma();
     prisma.page.count.mockResolvedValueOnce(12).mockResolvedValueOnce(3);
-    prisma.articleRevision.count = jest.fn().mockResolvedValue(500);
+    prisma.articleRevision.count = vi.fn().mockResolvedValue(500);
     prisma.pageRevision.count.mockResolvedValue(60);
 
     const stats = await makeService(prisma).getMediumStats();
@@ -496,7 +513,7 @@ describe('MediumStatsService.listChangelogActions', () => {
 
   it('lists informative entries too, flagged as no task', async () => {
     const prisma = makePrisma();
-    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+    prisma.changelogEntry.findMany = vi.fn().mockResolvedValue([
       {
         id: 'i1',
         name: '20260916080000_news',
@@ -518,7 +535,7 @@ describe('MediumStatsService.listChangelogActions', () => {
 
   it('maps the confirming user to a name and an email', async () => {
     const prisma = makePrisma();
-    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+    prisma.changelogEntry.findMany = vi.fn().mockResolvedValue([
       {
         id: 'e1',
         name: '20260916080000_entry',
@@ -550,7 +567,7 @@ describe('MediumStatsService.listChangelogActions', () => {
 
   it('reports an open action with no one attached', async () => {
     const prisma = makePrisma();
-    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+    prisma.changelogEntry.findMany = vi.fn().mockResolvedValue([
       {
         id: 'e2',
         name: '20260916080000_open',
@@ -571,7 +588,7 @@ describe('MediumStatsService.listChangelogActions', () => {
 
   it('falls back to the last name when no first name is set', async () => {
     const prisma = makePrisma();
-    prisma.changelogEntry.findMany = jest.fn().mockResolvedValue([
+    prisma.changelogEntry.findMany = vi.fn().mockResolvedValue([
       {
         id: 'e3',
         name: '20260916080000_entry',
@@ -590,10 +607,258 @@ describe('MediumStatsService.listChangelogActions', () => {
 
   it('answers empty when the changelog table is missing', async () => {
     const prisma = makePrisma();
-    prisma.changelogEntry.findMany = jest
+    prisma.changelogEntry.findMany = vi
       .fn()
       .mockRejectedValue(new Error('no such table'));
 
     expect(await makeService(prisma).listChangelogActions()).toEqual([]);
+  });
+});
+
+describe('MediumStatsService audit', () => {
+  const now = new Date('2026-09-16T12:00:00.000Z');
+
+  it('reports the counts and marks the log as supported', async () => {
+    const prisma = makePrisma();
+    prisma.auditLog.count
+      .mockResolvedValueOnce(120)
+      .mockResolvedValueOnce(9)
+      .mockResolvedValueOnce(4);
+    prisma.auditLog.findMany.mockResolvedValue([
+      { userId: 'a' },
+      { userId: 'b' },
+    ]);
+    prisma.auditLog.groupBy.mockResolvedValue([
+      { mutation: 'updateArticle', _count: { _all: 70 } },
+      { mutation: 'createArticle', _count: { _all: 50 } },
+    ]);
+
+    const stats = await makeService(prisma).getMediumStats({ now });
+
+    expect(stats.audit).toMatchObject({
+      supported: true,
+      actions: 120,
+      failedActions: 9,
+      impersonatedActions: 4,
+      activeEditors: 2,
+    });
+  });
+
+  it('sorts the mutation usage by how often it was used', async () => {
+    const prisma = makePrisma();
+    prisma.auditLog.groupBy.mockResolvedValue([
+      { mutation: 'createPaywall', _count: { _all: 2 } },
+      { mutation: 'updateArticle', _count: { _all: 88 } },
+    ]);
+
+    const stats = await makeService(prisma).getMediumStats({ now });
+
+    expect(stats.audit.mutationUsage).toEqual([
+      { mutation: 'updateArticle', count: 88 },
+      { mutation: 'createPaywall', count: 2 },
+    ]);
+  });
+
+  it('counts active editors over a trailing 30 days, not the window', async () => {
+    const prisma = makePrisma();
+
+    await makeService(prisma).getMediumStats({
+      from: new Date('2026-09-16T00:00:00.000Z'),
+      to: new Date('2026-09-16T23:59:59.999Z'),
+      now,
+    });
+
+    const editorQuery = prisma.auditLog.findMany.mock.calls[0][0];
+
+    expect(editorQuery.distinct).toEqual(['userId']);
+    expect(editorQuery.where.createdAt.gte).toEqual(
+      new Date('2026-08-17T23:59:59.999Z')
+    );
+  });
+
+  it('reports an installation without the audit log as unsupported, not as quiet', async () => {
+    const prisma = makePrisma();
+    prisma.auditLog.count.mockRejectedValue(
+      new Error('relation "audit_logs" does not exist')
+    );
+
+    const stats = await makeService(prisma).getMediumStats({ now });
+
+    expect(stats.audit.supported).toBe(false);
+    expect(stats.audit.actions).toBe(0);
+  });
+
+  it('still delivers the other stats when the audit log fails', async () => {
+    const prisma = makePrisma();
+    prisma.auditLog.count.mockRejectedValue(new Error('table missing'));
+    prisma.article.count.mockResolvedValue(42);
+
+    const stats = await makeService(prisma).getMediumStats({ now });
+
+    expect(stats.editorial.articlesCount).toBe(42);
+  });
+});
+
+describe('summariseErrorMessage', () => {
+  it('survives a Prisma message, which opens with a newline', () => {
+    // Copied from a real failed deleteTag on a local instance. Taking line one
+    // literally yields '', which silently dropped every Prisma failure.
+    const real = [
+      '',
+      'Invalid `this.prisma.tag.delete()` invocation in',
+      '/home/elias/gitroot/wepublish/dist/apps/api-example/main.js:25221:42',
+      '',
+      'An operation failed because it depends on one or more records that were required but not found.',
+    ].join('\n');
+
+    expect(summariseErrorMessage(real)).toBe(
+      'Invalid `this.prisma.tag.delete()` invocation in'
+    );
+  });
+
+  it('keeps only the first line', () => {
+    expect(
+      summariseErrorMessage('Invalid invocation\n  at /home/elias/x.js:12')
+    ).toBe('Invalid invocation');
+  });
+
+  it('does not carry absolute paths of the medium machine to One', () => {
+    const prisma = [
+      'Invalid `this.prisma.tag.delete()` invocation in',
+      '/home/elias/gitroot/wepublish/dist/apps/api-example/main.js:25196:42',
+    ].join('\n');
+
+    expect(summariseErrorMessage(prisma)).not.toContain('/home/elias');
+  });
+
+  it('caps a single runaway line', () => {
+    expect(summariseErrorMessage('x'.repeat(500))).toHaveLength(200);
+  });
+});
+
+describe('summariseErrors', () => {
+  const entry = (errorMessage: string | null, count: number) => ({
+    errorMessage,
+    _count: { _all: count },
+  });
+
+  it('merges messages that differ only below the first line', () => {
+    const result = summariseErrors([
+      entry('Forbidden resource\n  at a.js', 3),
+      entry('Forbidden resource\n  at b.js', 4),
+    ]);
+
+    expect(result).toEqual([{ message: 'Forbidden resource', count: 7 }]);
+  });
+
+  it('puts the worst error first', () => {
+    const result = summariseErrors([entry('rare', 1), entry('common', 9)]);
+
+    expect(result[0]).toEqual({ message: 'common', count: 9 });
+  });
+
+  it('ignores rows without a message', () => {
+    expect(summariseErrors([entry(null, 5), entry('   ', 2)])).toEqual([]);
+  });
+
+  it('keeps the list short enough to read', () => {
+    const many = Array.from({ length: 20 }, (_, i) => entry(`e${i}`, 20 - i));
+
+    expect(summariseErrors(many)).toHaveLength(5);
+  });
+});
+
+describe('MediumStatsService top errors', () => {
+  it('reports the errors editors actually ran into', async () => {
+    const prisma = makePrisma();
+    prisma.auditLog.groupBy.mockResolvedValueOnce([]).mockResolvedValueOnce([
+      { errorMessage: 'Forbidden resource', _count: { _all: 12 } },
+      { errorMessage: 'Unique constraint failed', _count: { _all: 3 } },
+    ]);
+
+    const stats = await makeService(prisma).getMediumStats({
+      now: new Date('2026-09-16T12:00:00.000Z'),
+    });
+
+    expect(stats.audit.topErrors).toEqual([
+      { message: 'Forbidden resource', count: 12 },
+      { message: 'Unique constraint failed', count: 3 },
+    ]);
+  });
+
+  it('is empty when the installation keeps no audit log', async () => {
+    const prisma = makePrisma();
+    prisma.auditLog.count.mockRejectedValue(new Error('table missing'));
+
+    const stats = await makeService(prisma).getMediumStats();
+
+    expect(stats.audit.topErrors).toEqual([]);
+  });
+});
+
+describe('busiestEditorShare', () => {
+  const actor = (count: number) => ({ _count: { _all: count } });
+
+  it('is null when nobody acted — a share of nothing is not zero', () => {
+    expect(busiestEditorShare([])).toBeNull();
+  });
+
+  it('is one when a single account does everything', () => {
+    expect(busiestEditorShare([actor(40)])).toBe(1);
+  });
+
+  it('tells a lopsided newsroom from a balanced one of the same size', () => {
+    const balanced = busiestEditorShare([
+      actor(25),
+      actor(25),
+      actor(25),
+      actor(25),
+    ]);
+    const lopsided = busiestEditorShare([
+      actor(90),
+      actor(4),
+      actor(3),
+      actor(3),
+    ]);
+
+    expect(balanced).toBe(0.25);
+    expect(lopsided).toBe(0.9);
+  });
+});
+
+describe('MediumStatsService concentration and action mix', () => {
+  const now = new Date('2026-09-16T12:00:00.000Z');
+
+  it('reports the busiest account share and the action mix', async () => {
+    const prisma = makePrisma();
+    prisma.auditLog.groupBy
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([
+        { userId: 'a', _count: { _all: 80 } },
+        { userId: 'b', _count: { _all: 20 } },
+      ])
+      .mockResolvedValueOnce([
+        { action: 'update', _count: { _all: 70 } },
+        { action: 'create', _count: { _all: 30 } },
+      ]);
+
+    const stats = await makeService(prisma).getMediumStats({ now });
+
+    expect(stats.audit.topEditorShare).toBe(0.8);
+    expect(stats.audit.actionsByType).toEqual([
+      { action: 'update', count: 70 },
+      { action: 'create', count: 30 },
+    ]);
+  });
+
+  it('leaves token work out of the concentration', async () => {
+    const prisma = makePrisma();
+
+    await makeService(prisma).getMediumStats({ now });
+
+    const actorQuery = prisma.auditLog.groupBy.mock.calls[2][0];
+
+    expect(actorQuery.where.userId).toEqual({ not: null });
   });
 });

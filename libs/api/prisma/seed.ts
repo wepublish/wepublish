@@ -1,4 +1,11 @@
-import { PrismaClient } from '@prisma/client';
+import {
+  ChallengeProviderType,
+  MailProviderType,
+  PaymentProviderType,
+  PrismaClient,
+  SyncProviderType,
+  TrackingPixelProviderType,
+} from '@prisma/client';
 import { SettingName } from '../../settings/api/src/lib/setting';
 
 const seedSettings = (prisma: PrismaClient) =>
@@ -12,6 +19,17 @@ const seedSettings = (prisma: PrismaClient) =>
         name: SettingName.PEERING_TIMEOUT_MS,
         value: 3000,
         settingRestriction: { minValue: 1000, maxValue: 10000 },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.SESSION_TTL_DAYS,
+      },
+      update: {},
+      create: {
+        name: SettingName.SESSION_TTL_DAYS,
+        value: 7,
+        settingRestriction: { minValue: 1, maxValue: 365 },
       },
     }),
     prisma.setting.upsert({
@@ -350,9 +368,84 @@ const seedRoles = (prisma: PrismaClient) =>
     }),
   ] as const;
 
+const DEFAULT_PAYMENT_PROVIDERS = [
+  PaymentProviderType.PAYREXX,
+  PaymentProviderType.PAYREXX_SUBSCRIPTION,
+  PaymentProviderType.STRIPE,
+  PaymentProviderType.STRIPE_CHECKOUT,
+  PaymentProviderType.MOLLIE,
+  PaymentProviderType.BEXIO,
+  PaymentProviderType.NO_CHARGE,
+] as const;
+
+const PROVIDER_IDS: Record<PaymentProviderType, string> = {
+  [PaymentProviderType.PAYREXX]: 'payrexx',
+  [PaymentProviderType.PAYREXX_SUBSCRIPTION]: 'payrexx-subscription',
+  [PaymentProviderType.STRIPE]: 'stripe',
+  [PaymentProviderType.STRIPE_CHECKOUT]: 'stripe-checkout',
+  [PaymentProviderType.MOLLIE]: 'mollie',
+  [PaymentProviderType.BEXIO]: 'bexio',
+  [PaymentProviderType.NO_CHARGE]: 'no-charge',
+  [PaymentProviderType.SIMULATED]: 'simulated',
+};
+
+export async function seedProviders(prisma: PrismaClient) {
+  const existing = await Promise.all([
+    prisma.settingPaymentProvider.count(),
+    prisma.settingMailProvider.count(),
+    prisma.settingChallengeProvider.count(),
+    prisma.settingTrackingPixel.count(),
+    prisma.settingSyncProvider.count(),
+  ]);
+
+  if (existing.some(count => count > 0)) {
+    return;
+  }
+
+  await prisma.settingPaymentProvider.createMany({
+    data: DEFAULT_PAYMENT_PROVIDERS.map(type => ({
+      id: PROVIDER_IDS[type],
+      name: PROVIDER_IDS[type],
+      type,
+    })),
+  });
+
+  await prisma.settingMailProvider.create({
+    data: { id: 'smtp', name: 'SMTP', type: MailProviderType.SMTP },
+  });
+
+  await prisma.settingChallengeProvider.create({
+    data: {
+      id: 'turnstile',
+      name: 'Cloudflare Turnstile',
+      type: ChallengeProviderType.TURNSTILE,
+    },
+  });
+
+  await prisma.settingTrackingPixel.create({
+    data: {
+      id: 'prolitteris',
+      name: 'ProLitteris',
+      type: TrackingPixelProviderType.prolitteris,
+    },
+  });
+
+  await prisma.settingSyncProvider.create({
+    data: {
+      id: 'mailchimp-sync',
+      name: 'Mailchimp',
+      type: SyncProviderType.MAILCHIMP,
+    },
+  });
+}
+
 export async function seed(prisma: PrismaClient) {
-  return prisma.$transaction([
+  const result = await prisma.$transaction([
     ...seedRoles(prisma),
     ...seedSettings(prisma),
   ] as const);
+
+  await seedProviders(prisma);
+
+  return result;
 }

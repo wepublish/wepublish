@@ -1,17 +1,17 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdInfo } from 'react-icons/md';
 import {
   Button,
   ButtonGroup,
   ButtonToolbar,
   DatePicker,
   Form,
-  IconButton,
   Popover as RPopover,
   Whisper,
 } from 'rsuite';
+
+import { InfoTrigger } from './infoTooltip';
 
 export interface DateTimePreset {
   label: string;
@@ -134,11 +134,7 @@ export function DateTimePicker({
               </Popover>
             }
           >
-            <IconButton
-              icon={<MdInfo />}
-              circle
-              size="xs"
-            />
+            <InfoTrigger aria-label={helpInfo} />
           </Whisper>
         : ''}
       </Header>

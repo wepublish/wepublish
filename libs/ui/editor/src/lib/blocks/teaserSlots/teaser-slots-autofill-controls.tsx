@@ -1,16 +1,18 @@
 'use client';
 
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import GearIcon from '@rsuite/icons/Gear';
 import {
+  TagListDocument,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,
-  useTagListQuery,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Panel, Tag, Toggle } from 'rsuite';
 
+import { InfoTooltip } from '../../atoms/infoTooltip';
 import { TeaserSlotsAutofillDialog } from './teaser-slots-autofill-dialog';
 
 interface TeaserSlotsContorlsProps {
@@ -22,19 +24,21 @@ interface TeaserSlotsContorlsProps {
 
 const ControlsContainer = styled(Panel)`
   margin-bottom: 16px;
-  border-radius: 6px;
-  background-color: #f9fafb;
+  border-radius: var(--rs-radius-lg);
+  background-color: var(--rs-bg-well);
   padding: 12px;
 `;
 
 const ControlsSection = styled('div')`
   align-items: center;
   display: flex;
-  gap: 15px;
+  gap: 16px;
 `;
 
-const ControlsLabel = styled.span`
-  margin-right: 8px;
+const ToggleRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const SummarySection = styled.div``;
@@ -55,7 +59,7 @@ export function TeaserSlotsAutofillControls({
   const { t } = useTranslation();
   const [configDialogOpen, setConfigDialogOpen] = useState(false);
 
-  const { data: tagsData, refetch } = useTagListQuery({
+  const { data: tagsData, refetch } = useQuery(TagListDocument, {
     skip: !config.filter?.tags?.length,
   });
 
@@ -88,29 +92,29 @@ export function TeaserSlotsAutofillControls({
   return (
     <ControlsContainer bordered>
       <ControlsSection>
-        <div>
-          <ControlsLabel>{t('blocks.teaserSlots.autoLoading')}</ControlsLabel>
+        <ToggleRow>
           <Toggle
             checked={config.enabled}
             onChange={handleToggleChange}
-            size="md"
+            label={
+              <>
+                {t('blocks.teaserSlots.autoLoadingToggle')}{' '}
+                <InfoTooltip text={t('blocks.teaserSlots.autoLoadingHelp')} />
+              </>
+            }
           />
-          <ControlsLabel style={{ marginLeft: '8px' }}>
-            {config.enabled ? 'Enabled' : 'Disabled'}
-          </ControlsLabel>
 
           {config.enabled && (
             <Button
               appearance="ghost"
               size="sm"
               onClick={() => setConfigDialogOpen(true)}
-              style={{ marginLeft: '8px' }}
             >
               <GearIcon style={{ marginRight: '4px' }} />
               {t('blocks.teaserSlots.configure')}
             </Button>
           )}
-        </div>
+        </ToggleRow>
         <SummarySection>
           {config.enabled ?
             <>
@@ -134,7 +138,7 @@ export function TeaserSlotsAutofillControls({
                 {t('blocks.teaserSlots.teasersLoaded')}{' '}
               </span>
             </>
-          : <span style={{ color: '#6b7280' }}>
+          : <span style={{ color: 'var(--rs-text-secondary)' }}>
               {t('blocks.teaserSlots.fillManually')}
             </span>
           }

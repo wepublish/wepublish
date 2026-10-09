@@ -10,6 +10,19 @@ import {
   PLACEHOLDER_EMAIL_PATTERNS_SETTING,
 } from '@wepublish/utils/api';
 import { isSessionRestricted } from './session-restriction';
+import {
+  SESSION_CACHE_NAMESPACE,
+  SESSION_CACHE_TTL_SECONDS,
+  sessionCacheKey,
+} from './session-cache';
+
+const withoutToken = <T extends { token: string }>(
+  session: T | null
+): Omit<T, 'token'> | null =>
+  session &&
+  (Object.fromEntries(
+    Object.entries(session).filter(([key]) => key !== 'token')
+  ) as Omit<T, 'token'>);
 
 @Injectable()
 export class AuthenticationService {
@@ -47,6 +60,28 @@ export class AuthenticationService {
   }
 
   public async getUserSession(token: string): Promise<AuthSession | null> {
+    const session = await this.kv.getOrLoadNs(
+      SESSION_CACHE_NAMESPACE,
+      sessionCacheKey('user', token),
+      async () => withoutToken(await this.loadUserSession(token)),
+      SESSION_CACHE_TTL_SECONDS
+    );
+
+    return session && ({ ...session, token } as AuthSession);
+  }
+
+  public async getPeerSession(token: string): Promise<AuthSession | null> {
+    const session = await this.kv.getOrLoadNs(
+      SESSION_CACHE_NAMESPACE,
+      sessionCacheKey('peer', token),
+      async () => withoutToken(await this.loadPeerSession(token)),
+      SESSION_CACHE_TTL_SECONDS
+    );
+
+    return session && ({ ...session, token } as AuthSession);
+  }
+
+  private async loadUserSession(token: string): Promise<AuthSession | null> {
     const session = await this.prisma.session.findFirst({
       where: {
         token,
@@ -77,6 +112,7 @@ export class AuthenticationService {
           emailVerifiedAt: session.user.emailVerifiedAt,
           sessionCreatedAt: session.createdAt,
         }),
+        impersonatedBy: session.impersonatedBy,
         user: session.user,
         roles: (
           await this.prisma.userRole.findMany({
@@ -93,7 +129,7 @@ export class AuthenticationService {
     return null;
   }
 
-  public async getPeerSession(token: string): Promise<AuthSession | null> {
+  private async loadPeerSession(token: string): Promise<AuthSession | null> {
     const tokenMatch = await this.prisma.token.findFirst({
       where: {
         token,
@@ -127,7 +163,7 @@ export class AuthenticationService {
     }
 
     if (session.type === AuthSessionType.User) {
-      return session.expiresAt > new Date() && session.user.active;
+      return session.expiresAt > new Date() && session.user?.active === true;
     }
 
     return true;
@@ -145,6 +181,9 @@ export class AuthenticationService {
         : {}),
       },
     });
+    // Sessions are cached by token, so a revoked one would otherwise keep
+    // working until its cache entry expires.
+    await this.kv.resetNamespace(SESSION_CACHE_NAMESPACE);
 
     return count;
   }

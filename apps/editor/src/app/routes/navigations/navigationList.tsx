@@ -1,8 +1,9 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeleteNavigationDocument,
   FullNavigationFragment,
+  NavigationListDocument,
   SlimNavigationFragment,
-  useDeleteNavigationMutation,
-  useNavigationListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -61,10 +62,15 @@ function NavigationList() {
   const [currentNavigation, setCurrentNavigation] =
     useState<FullNavigationFragment>();
 
-  const { data, refetch, loading: isLoading } = useNavigationListQuery({});
+  const {
+    data,
+    refetch,
+    loading: isLoading,
+  } = useQuery(NavigationListDocument, {});
 
-  const [deleteNavigation, { loading: isDeleting }] =
-    useDeleteNavigationMutation();
+  const [deleteNavigation, { loading: isDeleting }] = useMutation(
+    DeleteNavigationDocument
+  );
 
   useEffect(() => {
     if (isCreateRoute) {
@@ -142,7 +148,7 @@ function NavigationList() {
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullNavigationFragment>) => (
                 <PermissionControl
@@ -150,6 +156,7 @@ function NavigationList() {
                 >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
+                      aria-label={t('delete')}
                       icon={<MdDelete />}
                       circle
                       size="sm"

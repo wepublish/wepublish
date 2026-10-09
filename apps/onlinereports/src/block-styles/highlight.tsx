@@ -7,7 +7,7 @@ import {
   TeaserGridBlockWrapper,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserGridBlockFragment,
   FullTeaserListBlockFragment,
   FullTeaserSlotsBlockFragment,
@@ -22,7 +22,7 @@ import { allPass, anyPass } from 'ramda';
 import { HighlightTeaser } from '../custom-teasers/highlight';
 
 export const isHighlightTeasers = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is
   | FullTeaserGridBlockFragment
   | FullTeaserListBlockFragment

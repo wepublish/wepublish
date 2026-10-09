@@ -22,6 +22,9 @@ export class SettingTrackingPixelProvider extends SettingProvider {
   @Field(type => TrackingPixelProviderType)
   type!: TrackingPixelProviderType;
 
+  @Field(type => Date, { nullable: true })
+  deletedAt?: Date | null;
+
   @Field({ nullable: true })
   prolitteris_memberNr?: string;
 
@@ -56,7 +59,14 @@ export class SettingTrackingPixelFilter extends PartialType(
 @ArgsType()
 export class CreateSettingTrackingPixelProviderInput extends OmitType(
   SettingTrackingPixelProvider,
-  ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
+  [
+    'id',
+    'type',
+    'deletedAt',
+    'createdAt',
+    'lastLoadedAt',
+    'modifiedAt',
+  ] as const,
   ArgsType
 ) {
   @Field()

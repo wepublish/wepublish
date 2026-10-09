@@ -1,7 +1,9 @@
-import { useResetUserPasswordMutation } from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { ResetUserPasswordDocument } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Notification, Schema, toaster } from 'rsuite';
+import { humanizeError } from '../../humanizeError';
 
 export interface ResetUserPasswordPanelProps {
   userID?: string;
@@ -17,7 +19,7 @@ export function ResetUserPasswordForm({
   const [password, setPassword] = useState('');
 
   const [resetUserPassword, { loading: isUpdating, error: updateError }] =
-    useResetUserPasswordMutation();
+    useMutation(ResetUserPasswordDocument);
 
   const isDisabled = isUpdating;
 
@@ -68,7 +70,7 @@ export function ResetUserPasswordForm({
           disabled={isDisabled}
           type="password"
           placeholder={t('userCreateOrEditView.password')}
-          errorMessage={updateError?.message}
+          errorMessage={updateError && humanizeError(updateError)}
           value={password}
           onChange={(value: string) => setPassword(value)}
         />

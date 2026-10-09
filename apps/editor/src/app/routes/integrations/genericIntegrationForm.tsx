@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -10,9 +10,9 @@ import {
   Typography,
 } from '@mui/material';
 import { SettingProvider } from '@wepublish/editor/api';
-import { Textarea } from '@wepublish/ui/editor';
+import { InfoTooltip, Textarea } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
-import { ComponentType, useMemo } from 'react';
+import { ComponentType, ReactNode, useMemo, useState } from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -20,6 +20,7 @@ import {
   CheckPicker,
   Form,
   Message,
+  Modal,
   SelectPicker,
   toaster,
 } from 'rsuite';
@@ -29,7 +30,7 @@ const HeaderWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
 `;
 
 const HeaderLogo = styled.img`
@@ -99,6 +100,7 @@ type Fields =
 export type FieldDefinition<TFormValues> = Fields & {
   name: Path<TFormValues>;
   label: string;
+  info?: string;
   placeholder?: string;
   disabled?: boolean;
   autoComplete?: string;
@@ -115,6 +117,8 @@ export interface GenericIntegrationFormProps<
     | FieldDefinition<TFormValues>[]
     | ((setting: TSetting) => FieldDefinition<TFormValues>[]);
   getLogo?: (setting: TSetting) => string | undefined;
+
+  renderActions?: (setting: TSetting) => ReactNode;
 }
 
 export function SingleGenericIntegrationForm<
@@ -126,6 +130,7 @@ export function SingleGenericIntegrationForm<
   mutation,
   fields,
   getLogo,
+  renderActions,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
 
@@ -151,7 +156,11 @@ export function SingleGenericIntegrationForm<
     reValidateMode: 'onChange',
   });
 
-  const onSubmit = handleSubmit(async formData => {
+  const [pendingTypeChange, setPendingTypeChange] = useState<z.infer<
+    typeof schema
+  > | null>(null);
+
+  const save = async (formData: z.infer<typeof schema>) => {
     try {
       await updateSettings({
         variables: {
@@ -170,6 +179,17 @@ export function SingleGenericIntegrationForm<
 
       console.error(e);
     }
+  };
+
+  const onSubmit = handleSubmit(async formData => {
+    const nextType = (formData as { type?: string }).type;
+
+    if (nextType && setting.type && nextType !== setting.type) {
+      setPendingTypeChange(formData);
+      return;
+    }
+
+    await save(formData);
   });
 
   const logo = getLogo?.(setting);
@@ -182,13 +202,19 @@ export function SingleGenericIntegrationForm<
             to claim the full width itself or it shrinks to its content. */}
         <Card
           variant="outlined"
-          sx={{ alignSelf: 'stretch', width: '100%' }}
+          sx={{
+            alignSelf: 'stretch',
+            width: '100%',
+            borderRadius: 'var(--rs-radius-lg)',
+          }}
         >
           <CardContent>
             <Typography
               variant="h5"
               component={HeaderWrapper}
-              marginBottom={2}
+              sx={{
+                marginBottom: 2,
+              }}
             >
               {setting.name || setting.type}
 
@@ -200,13 +226,24 @@ export function SingleGenericIntegrationForm<
               )}
             </Typography>
 
-            {resolvedFields.map(field => (
+            {resolvedFields.map(({ info, ...field }) => (
               <Form.Group
                 controlId={`${String(field.name)}-${setting.id}`}
                 key={String(field.name)}
               >
                 <Form.Label>
-                  {field.type === 'checkbox' ? ' ' : field.label}
+                  {field.type === 'checkbox' ?
+                    ' '
+                  : <>
+                      {field.label}
+                      {info && (
+                        <>
+                          {' '}
+                          <InfoTooltip text={info} />
+                        </>
+                      )}
+                    </>
+                  }
                 </Form.Label>
 
                 <Controller
@@ -258,6 +295,12 @@ export function SingleGenericIntegrationForm<
                           {...restField}
                         >
                           {field.label}
+                          {info && (
+                            <>
+                              {' '}
+                              <InfoTooltip text={info} />
+                            </>
+                          )}
                         </Checkbox>
                       );
                     }
@@ -297,7 +340,8 @@ export function SingleGenericIntegrationForm<
               >
                 <small>
                   {t('integrations.lastLoaded')}:{' '}
-                  {formatLastLoaded(setting.lastLoadedAt)}
+                  {formatLastLoaded(setting.lastLoadedAt)}{' '}
+                  <InfoTooltip text={t('integrations.lastLoadedInfo')} />
                 </small>
               </Typography>
             )}
@@ -319,9 +363,47 @@ export function SingleGenericIntegrationForm<
 
               {t('save')}
             </Button>
+
+            {renderActions?.(setting)}
           </CardActions>
         </Card>
       </Form.Stack>
+
+      <Modal
+        open={!!pendingTypeChange}
+        onClose={() => setPendingTypeChange(null)}
+      >
+        <Modal.Header>
+          <Modal.Title>{t('integrations.typeChangeTitle')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>{t('integrations.typeChangeWarning')}</Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            variant="text"
+            onClick={() => setPendingTypeChange(null)}
+          >
+            {t('integrations.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
+            disabled={updating}
+            onClick={async () => {
+              const formData = pendingTypeChange;
+              setPendingTypeChange(null);
+
+              if (formData) {
+                await save(formData);
+              }
+            }}
+          >
+            {t('integrations.typeChangeConfirm')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Form>
   );
 }

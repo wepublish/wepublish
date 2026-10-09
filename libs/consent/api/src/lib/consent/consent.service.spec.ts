@@ -4,11 +4,11 @@ import { PrismaClient } from '@prisma/client';
 
 const mockPrisma = {
   consent: {
-    findMany: jest.fn(),
-    findUnique: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
+    findMany: vi.fn(),
+    findUnique: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
   },
 };
 
@@ -30,7 +30,7 @@ describe('ConsentService', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('should be defined', () => {

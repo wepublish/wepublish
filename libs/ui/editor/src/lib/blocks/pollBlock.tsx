@@ -1,5 +1,6 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { usePollQuery } from '@wepublish/editor/api';
+import { PollDocument } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
@@ -58,7 +59,7 @@ const Panel = styled(RPanel)`
   display: grid;
   min-height: 200px;
   padding: 0;
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
 `;
 
 export const PollBlock = ({
@@ -70,7 +71,7 @@ export const PollBlock = ({
   const { t } = useTranslation();
   const buildVoteUrl = usePollAnswerVoteUrl();
 
-  const { data } = usePollQuery({
+  const { data } = useQuery(PollDocument, {
     variables: { id: poll?.id as string },
     skip: !poll?.id,
   });
@@ -89,7 +90,10 @@ export const PollBlock = ({
         bodyFill
         bordered
       >
-        <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
+        <PlaceholderInput
+          onAddClick={() => setIsDialogOpen(true)}
+          addLabel={t('blocks.poll.choosePoll')}
+        >
           {poll && (
             <Poll>
               <IconWrapper>

@@ -1,10 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  CanCreateAnalyticsProviderSettings,
   CanGetAnalyticsProviderSettings,
   CanUpdateAnalyticsProviderSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
+  CreateSettingAnalyticsProviderInput,
   SettingAnalyticsProvider,
   UpdateSettingAnalyticsProviderInput,
   SettingAnalyticsProviderFilter,
@@ -41,16 +43,18 @@ export class AnalyticsProviderSettingsResolver {
     return this.analyticsProviderSettingsDataloader.load(id);
   }
 
-  /**
   @Permissions(CanCreateAnalyticsProviderSettings)
   @Mutation(returns => SettingAnalyticsProvider, {
     name: 'createAnalyticsProviderSetting',
     description: 'Creates a new analytics provider setting.',
   })
-  createAnalyticsProviderSetting(@Args() input: CreateSettingAnalyticsProviderInput) {
-    return this.analyticsProviderSettingsService.createAnalyticsProviderSetting(input);
+  createAnalyticsProviderSetting(
+    @Args() input: CreateSettingAnalyticsProviderInput
+  ) {
+    return this.analyticsProviderSettingsService.createAnalyticsProviderSetting(
+      input
+    );
   }
-   **/
 
   @Permissions(CanUpdateAnalyticsProviderSettings)
   @Mutation(returns => SettingAnalyticsProvider, {

@@ -46,7 +46,7 @@ export function DeleteSubscriptionFlow({
           size="sm"
           color="red"
           circle
-          appearance="primary"
+          appearance="ghost"
           icon={<MdDelete />}
           disabled={subscriptionFlow.default}
         />

@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { isFilledTeaser } from '@wepublish/block-content/website';
 import { TeaserSlotsBlockTeasers as TeaserSlotsBlockTeasersDefault } from '@wepublish/block-content/website';
-import { FlexAlignment } from '@wepublish/website/api';
+import { FullFlexAlignmentFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
@@ -32,10 +32,10 @@ export const TeaserSlotsTeasers = styled(TeaserSlotsBlockTeasersDefault)`
 export const defaultAlignmentForTeaserBlock = (
   index: number,
   count?: number
-): FlexAlignment => {
+): FullFlexAlignmentFragment => {
   const alignment = {
+    __typename: 'FlexAlignment' as const,
     i: index.toString(),
-    static: false,
     h: 1, // how many rows high
     w: 4, // how many columns wide
     x: 0, // starting column - 1
@@ -56,7 +56,10 @@ export const FazettenTeaserSlots = ({
   blockStyle,
   title,
 }: BuilderTeaserSlotsBlockProps & {
-  alignmentForTeaserBlock?: (index: number, count?: number) => FlexAlignment;
+  alignmentForTeaserBlock?: (
+    index: number,
+    count?: number
+  ) => FullFlexAlignmentFragment;
   teaserBlockStyleByIndex?: (index: number, count?: number) => string;
 }) => {
   const {

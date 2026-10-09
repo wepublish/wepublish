@@ -207,6 +207,7 @@ export const EenewsTopNewsCarousel = ({
                   blockStyle={blockStyle}
                   numColumns={3}
                   alignment={{
+                    __typename: 'FlexAlignment',
                     i: String(idx),
                     x: 0,
                     y: 0,

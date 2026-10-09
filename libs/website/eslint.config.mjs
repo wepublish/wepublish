@@ -19,4 +19,13 @@ export default [
     // Override or add rules here
     rules: {},
   },
+  {
+    files: ['.storybook/**/*.ts', '.storybook/**/*.tsx'],
+    rules: {
+      // The addons live in the workspace root package.json, which the rule
+      // cannot resolve since the inferred lint target runs eslint with the
+      // project root as its cwd.
+      'storybook/no-uninstalled-addons': 'off',
+    },
+  },
 ];

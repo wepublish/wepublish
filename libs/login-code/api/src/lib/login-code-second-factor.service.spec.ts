@@ -13,9 +13,8 @@ import {
 const createService = (value: unknown) => {
   const prisma = {
     setting: {
-      findUnique: jest.fn(
-        async ({ where }: { where: { name: SettingName } }) =>
-          where.name === SettingName.LOGIN_CODE_SECOND_FACTOR ? { value } : null
+      findUnique: vi.fn(async ({ where }: { where: { name: SettingName } }) =>
+        where.name === SettingName.LOGIN_CODE_SECOND_FACTOR ? { value } : null
       ),
     },
   };

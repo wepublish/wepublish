@@ -1,12 +1,13 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  ApproveCommentDocument,
   CommentRejectionReason,
-  CommentRevision,
+  CommentRevisionFragment,
   CommentState,
   FullCommentFragment,
-  useApproveCommentMutation,
-  useRejectCommentMutation,
-  useRequestChangesOnCommentMutation,
+  RejectCommentDocument,
+  RequestChangesOnCommentDocument,
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
 import { useEffect, useMemo, useState } from 'react';
@@ -86,13 +87,13 @@ export function CommentStateChangeModal({
     useState<CommentRejectionReason>();
 
   const [approveComment, { loading: isApproving, error: errorApprove }] =
-    useApproveCommentMutation();
+    useMutation(ApproveCommentDocument);
   const [
     requestChanges,
     { loading: isRequestingChanges, error: errorRequestingChanges },
-  ] = useRequestChangesOnCommentMutation();
+  ] = useMutation(RequestChangesOnCommentDocument);
   const [rejectComment, { loading: isRejecting, error: errorRejecting }] =
-    useRejectCommentMutation();
+    useMutation(RejectCommentDocument);
 
   useEffect(() => {
     const error =
@@ -169,7 +170,7 @@ export function CommentStateChangeModal({
   const sortedRevisions = useMemo(() => {
     const dcRevisions = [...comment.revisions];
     return dcRevisions.sort(
-      (a: CommentRevision, b: CommentRevision) =>
+      (a: CommentRevisionFragment, b: CommentRevisionFragment) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   }, [comment.revisions]);

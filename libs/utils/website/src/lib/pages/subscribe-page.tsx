@@ -1,25 +1,26 @@
+import { useQuery } from '@apollo/client/react';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { ssrAuthLink } from '../auth-link';
 import { getSessionTokenProps } from '../get-session-token-props';
 import { handleJwtLogin } from '../handle-jwt-login';
-import { useSubscriptionsQuery } from '@wepublish/website/api';
-import { MemberPlanListQueryVariables } from '@wepublish/website/api';
+import {
+  InvoicesDocument,
+  MeDocument,
+  MemberPlanListDocument,
+  MemberPlanListQueryVariables,
+  NavigationListDocument,
+  PeerProfileDocument,
+  SubscriptionsDocument,
+  addClientCacheToProps,
+  getApiClient,
+} from '@wepublish/website/api';
 import { useUser } from '@wepublish/authentication/website';
 import {
   getMonthlyEquivalentRange,
   SubscribeContainer,
   UpgradeContainer,
 } from '@wepublish/membership/website';
-import {
-  getApiClient,
-  MemberPlanListDocument,
-  NavigationListDocument,
-  PeerProfileDocument,
-  MeDocument,
-  InvoicesDocument,
-  addClientCacheToProps,
-} from '@wepublish/website/api';
 import { ComponentProps, useMemo } from 'react';
 
 import { getApiUrl } from '../api-url';
@@ -43,7 +44,7 @@ export function SubscribePage(props: SubscribePageProps) {
 
   const { hasUser } = useUser();
 
-  const userSubscriptions = useSubscriptionsQuery({
+  const userSubscriptions = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
     skip: !hasUser,
   });
@@ -147,7 +148,7 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
 
   const sessionProps = await getSessionTokenProps(ctx);
 
-  const dataPromises = [
+  const dataPromises: Promise<unknown>[] = [
     client.query<MemberPlanListQueryVariables>({
       query: MemberPlanListDocument,
       variables: {
@@ -173,9 +174,6 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
         }),
         client.query({
           query: InvoicesDocument,
-          variables: {
-            take: 50,
-          },
         }),
       ]
     );

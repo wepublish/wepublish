@@ -84,6 +84,7 @@ export const createLoginCodePage = ({
     }
 
     const sessionToken: SessionWithTokenWithoutUser = {
+      __typename: 'SessionWithTokenWithoutUser',
       token: result.session.token,
       createdAt: result.session.createdAt,
       expiresAt: result.session.expiresAt,

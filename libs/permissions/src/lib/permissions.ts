@@ -593,6 +593,12 @@ export const CanGetSettings: Permission = {
   deprecated: false,
 };
 
+export const CanGetAuditLogs: Permission = {
+  id: 'CAN_GET_AUDIT_LOGS',
+  description: 'Allows to read the audit log',
+  deprecated: false,
+};
+
 export const CanUpdateSettings: Permission = {
   id: 'CAN_UPDATE_SETTINGS',
   description: 'Allows to update settings',
@@ -873,6 +879,13 @@ export const CanGetPeriodicJobLog: Permission = {
   deprecated: false,
 };
 
+export const CanRetryPeriodicJob: Permission = {
+  id: 'CAN_RETRY_PERIODIC_JOB',
+  description:
+    'Allows to retry a failed periodic job and catch up the runs up to today',
+  deprecated: false,
+};
+
 /**
  * Block Styles
  */
@@ -897,6 +910,28 @@ export const CanDeleteBlockStyle: Permission = {
 export const CanGetAudienceStats: Permission = {
   id: 'CAN_GET_AUDIENCE_STATS',
   description: 'Allows reading statistics about the audience.',
+  deprecated: false,
+};
+
+/**
+ * Block Templates
+ */
+
+export const CanCreateBlockTemplate: Permission = {
+  id: 'CAN_CREATE_BLOCK_TEMPLATE',
+  description: 'Allows to create a block template',
+  deprecated: false,
+};
+
+export const CanUpdateBlockTemplate: Permission = {
+  id: 'CAN_UPDATE_BLOCK_TEMPLATE',
+  description: 'Allows to update a block template',
+  deprecated: false,
+};
+
+export const CanDeleteBlockTemplate: Permission = {
+  id: 'CAN_DELETE_BLOCK_TEMPLATE',
+  description: 'Allows to delete a block template',
   deprecated: false,
 };
 
@@ -1020,6 +1055,13 @@ export const CanUpdatePaymentProviderSettings: Permission = {
 export const CanDeletePaymentProviderSettings: Permission = {
   id: 'CAN_DELETE_PAYMENT_PROVIDER_SETTINGS',
   description: 'Allows to delete payment provider settings',
+  deprecated: false,
+};
+
+export const CanReloadProviders: Permission = {
+  id: 'CAN_RELOAD_PROVIDERS',
+  description:
+    'Allows to apply integration changes to the running API without a restart',
   deprecated: false,
 };
 
@@ -1280,6 +1322,7 @@ export const AllPermissions: Permission[] = [
   CanDeleteSubscriptionFlow,
   CanGetMailTemplates,
   CanGetPeriodicJobLog,
+  CanRetryPeriodicJob,
   CanCreateMailTemplates,
   CanUpdateMailTemplates,
   CanDeleteMailTemplates,
@@ -1293,6 +1336,9 @@ export const AllPermissions: Permission[] = [
   CanCreateBlockStyle,
   CanUpdateBlockStyle,
   CanDeleteBlockStyle,
+  CanCreateBlockTemplate,
+  CanUpdateBlockTemplate,
+  CanDeleteBlockTemplate,
   CanCreatePaywall,
   CanUpdatePaywall,
   CanDeletePaywall,
@@ -1309,6 +1355,7 @@ export const AllPermissions: Permission[] = [
   CanCreatePaymentProviderSettings,
   CanUpdatePaymentProviderSettings,
   CanDeletePaymentProviderSettings,
+  CanReloadProviders,
   CanGetTrackingPixelSettings,
   CanCreateTrackingPixelSettings,
   CanUpdateTrackingPixelSettings,
@@ -1331,6 +1378,7 @@ export const AllPermissions: Permission[] = [
   CanRunMailchimpSync,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
+  CanGetAuditLogs,
 ];
 
 export const EditorPermissions: Permission[] = [
@@ -1396,6 +1444,9 @@ export const EditorPermissions: Permission[] = [
   CanGetMailLogs,
   CanGetPeriodicJobLog,
   CanCreateApprovedComment,
+  CanCreateBlockTemplate,
+  CanUpdateBlockTemplate,
+  CanDeleteBlockTemplate,
   CanPreview,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,

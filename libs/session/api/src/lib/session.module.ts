@@ -23,9 +23,11 @@ import { TotpResolver } from './totp.resolver';
 import { WebsiteTokenController } from './website-token.controller';
 import {
   AuthenticationModule,
+  SessionCacheModule,
   SCOPED_JWT_VERIFIER,
   ScopedJwtGuard,
 } from '@wepublish/authentication/api';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 export interface SessionModuleOptions {
   sessionTTL: number;
@@ -50,6 +52,8 @@ export interface SessionModuleAsyncOptions
     ChallengeModule,
     SettingModule,
     AuthenticationModule,
+    SessionCacheModule,
+    KvTtlCacheModule,
   ],
   exports: [SessionService, JwtService, SCOPED_JWT_VERIFIER, ScopedJwtGuard],
 })

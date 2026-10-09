@@ -36,9 +36,10 @@ export const FontWeightSelect = memo(
           size="small"
           displayEmpty
           error={!!error}
-          onChange={e =>
-            onChange(e.target.value === '' ? null : Number(e.target.value))
-          }
+          onChange={e => {
+            const newValue = e.target.value as number | '';
+            onChange(newValue === '' ? null : Number(newValue));
+          }}
           onBlur={onBlur}
           sx={{ width: '100%' }}
         >

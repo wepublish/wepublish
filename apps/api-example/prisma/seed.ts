@@ -23,7 +23,7 @@ import { createReadStream } from 'fs';
 import { seed as rootSeed } from '../../../libs/api/prisma/seed';
 import { NovaMediaAdapter } from '../../../libs/api/src/lib/media/novaMediaAdapter';
 import { capitalize } from '@mui/material';
-import { NavigationLinkType } from 'libs/navigation/api/src/lib/navigation.model';
+import { NavigationLinkType } from '../../../libs/navigation/api/src/lib/navigation.model';
 import {
   TeaserGridFlexBlock,
   TeaserType,
@@ -877,6 +877,14 @@ async function seedPaymentMethods(prisma: PrismaClient) {
         paymentProviderID: 'stripe',
         active: true,
       },
+      {
+        id: 'simulated',
+        name: 'Simulated payment',
+        slug: 'simulated',
+        description: 'Pick the outcome on a checkout page; no money moves.',
+        paymentProviderID: 'simulated',
+        active: true,
+      },
     ],
   });
 }
@@ -908,7 +916,7 @@ async function seedMemberPlans(prisma: PrismaClient) {
       availablePaymentMethods: {
         create: {
           forceAutoRenewal: true,
-          paymentMethodIDs: ['payrexx'],
+          paymentMethodIDs: ['payrexx', 'simulated'],
           paymentPeriodicities: ['yearly'],
         },
       },
@@ -932,7 +940,7 @@ async function seedMemberPlans(prisma: PrismaClient) {
       availablePaymentMethods: {
         create: {
           forceAutoRenewal: false,
-          paymentMethodIDs: ['stripe'],
+          paymentMethodIDs: ['stripe', 'simulated'],
           paymentPeriodicities: ['yearly', 'monthly'],
         },
       },
@@ -958,7 +966,7 @@ async function seedMemberPlans(prisma: PrismaClient) {
       availablePaymentMethods: {
         create: {
           forceAutoRenewal: false,
-          paymentMethodIDs: ['payrexx', 'stripe'],
+          paymentMethodIDs: ['payrexx', 'stripe', 'simulated'],
           paymentPeriodicities: ['monthly', 'quarterly'],
         },
       },
@@ -1729,15 +1737,17 @@ async function seedSettings(prisma: PrismaClient) {
     update: {},
   });
 
-  const mailprovider = prisma.settingMailProvider.upsert(
-    upsert({
-      id: 'slackmail',
-      name: 'Slackmail',
-      type: MailProviderType.SLACK,
-      fromAddress: 'dev@wepublish.ch',
-      slack_webhookURL: 'https://slackmail.com',
-    })
-  );
+  const mailprovider =
+    (await prisma.settingMailProvider.count()) === 0 ?
+      prisma.settingMailProvider.create({
+        data: {
+          id: 'smtp',
+          name: 'SMTP',
+          type: MailProviderType.SMTP,
+          fromAddress: 'dev@wepublish.ch',
+        },
+      })
+    : Promise.resolve(null);
 
   const payrexx = prisma.settingPaymentProvider.upsert(
     upsert({
@@ -1850,6 +1860,17 @@ async function seedSettings(prisma: PrismaClient) {
     })
   );
 
+  // Stays inside We.Publish: the checkout page lets you pick the outcome, and
+  // renewals are charged straight away.
+  const simulated = prisma.settingPaymentProvider.upsert(
+    upsert({
+      id: 'simulated',
+      type: PaymentProviderType.SIMULATED,
+      name: 'Simulated',
+      offSessionPayments: true,
+    })
+  );
+
   const turnstile = prisma.settingChallengeProvider.upsert(
     upsert({
       id: 'turnstile',
@@ -1916,6 +1937,7 @@ async function seedSettings(prisma: PrismaClient) {
     mollie,
     bexio,
     noCharge,
+    simulated,
     turnstile,
     prolitteris,
     v0,

@@ -40,7 +40,8 @@ Align all code suggestions, architecture recommendations, and technical solution
 
 ## Testing
 
-- **Jest 30** as the test runner
+- **Vitest 4** as the test runner for every project (backend included); NestJS
+  projects transform with swc via `createVitestConfig({nest: true})`
 - **@nestjs/testing** for backend service/resolver unit tests
 - **Testing Library** for frontend component tests
 - Test commands: `npm run test`, `npm run test-backend`, `npm run test-website`

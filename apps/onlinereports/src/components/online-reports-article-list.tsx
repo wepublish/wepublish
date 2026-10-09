@@ -49,6 +49,12 @@ function enrichTeaserListWithOnlineReportsAds(teasers: FullTeaserFragment[]) {
           __typename: 'CustomTeaser',
           type: TeaserType.Custom,
           title: 'ad-small',
+          preTitle: null,
+          lead: null,
+          contentUrl: null,
+          openInNewTab: null,
+          image: null,
+          properties: null,
         });
       }
       teasers.push(teaser);

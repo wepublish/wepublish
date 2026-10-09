@@ -1,14 +1,15 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  AuthorDocument,
   AuthorLink,
   AuthorListDocument,
+  CreateAuthorDocument,
   FullAuthorFragment,
   FullImageFragment,
   Maybe,
   TagType,
-  useAuthorQuery,
-  useCreateAuthorMutation,
-  useUpdateAuthorMutation,
+  UpdateAuthorDocument,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
 import React, { useEffect, useState } from 'react';
@@ -48,7 +49,7 @@ const { Label: RLabel, Group, Control } = RForm;
 
 const InputGroup = styled(RInputGroup)`
   width: 230px;
-  margin-left: 5px;
+  margin-left: 4px;
 `;
 
 const Controls = styled('div')`
@@ -63,6 +64,19 @@ const Form = styled(RForm)`
 const Label = styled(RLabel)`
   padding-top: 16px;
 `;
+
+const ToggleList = styled('div')`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+`;
+
+const emptyAuthorLink: AuthorLink = {
+  __typename: 'AuthorLink',
+  title: '',
+  url: '',
+};
 
 export interface AuthorEditPanelProps {
   id?: string;
@@ -88,7 +102,10 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     undefined
   );
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
-    { id: generateID(), value: { title: '', url: '' } },
+    {
+      id: generateID(),
+      value: emptyAuthorLink,
+    },
   ]);
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
@@ -100,18 +117,18 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     data,
     loading: isLoading,
     error: loadError,
-  } = useAuthorQuery({
+  } = useQuery(AuthorDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
 
   const [createAuthor, { loading: isCreating, error: createError }] =
-    useCreateAuthorMutation({
+    useMutation(CreateAuthorDocument, {
       refetchQueries: [getOperationNameFromDocument(AuthorListDocument)],
     });
 
   const [updateAuthor, { loading: isUpdating, error: updateError }] =
-    useUpdateAuthorMutation({});
+    useMutation(UpdateAuthorDocument, {});
 
   const isDisabled =
     isLoading ||
@@ -138,6 +155,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
           data.author.links.map(link => ({
             id: generateID(),
             value: {
+              __typename: 'AuthorLink',
               title: link.title,
               url: link.url,
             },
@@ -307,7 +325,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
                 onChange={links => {
                   setLinks(links);
                 }}
-                defaultValue={{ title: '', url: '' }}
+                defaultValue={emptyAuthorLink}
               >
                 {({ value, onChange }) => (
                   <Controls>
@@ -355,23 +373,25 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
             {/* hide author in different places */}
             <Panel header={t('authorEditPanel.hideAuthor')}>
               <Group controlId="hideAuthorToggles">
-                <RLabel>{t('authorEditPanel.hideOnArticle')}</RLabel>
-                <Toggle
-                  checked={!!hideOnArticle}
-                  onChange={value => setHideOnArticle(value)}
-                />
+                <ToggleList>
+                  <Toggle
+                    checked={!!hideOnArticle}
+                    onChange={value => setHideOnArticle(value)}
+                    label={t('authorEditPanel.hideOnArticle')}
+                  />
 
-                <Label>{t('authorEditPanel.hideOnTeaser')}</Label>
-                <Toggle
-                  checked={!!hideOnTeaser}
-                  onChange={value => setHideOnTeaser(value)}
-                />
+                  <Toggle
+                    checked={!!hideOnTeaser}
+                    onChange={value => setHideOnTeaser(value)}
+                    label={t('authorEditPanel.hideOnTeaser')}
+                  />
 
-                <Label>{t('authorEditPanel.hideOnTeam')}</Label>
-                <Toggle
-                  checked={!!hideOnTeam}
-                  onChange={value => setHideOnTeam(value)}
-                />
+                  <Toggle
+                    checked={!!hideOnTeam}
+                    onChange={value => setHideOnTeam(value)}
+                    label={t('authorEditPanel.hideOnTeam')}
+                  />
+                </ToggleList>
               </Group>
             </Panel>
           </PanelGroup>

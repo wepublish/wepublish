@@ -1,5 +1,5 @@
 import {
-  CommentRevision,
+  CommentRevisionFragment,
   CommentRevisionInput,
   FullCommentFragment,
 } from '@wepublish/editor/api';
@@ -24,7 +24,7 @@ import { CreateCommentBtn } from './createCommentBtn';
 export function CommentRevisionView({
   revision,
 }: {
-  revision: CommentRevision | undefined;
+  revision: CommentRevisionFragment | undefined;
 }) {
   const { t } = useTranslation();
   if (!revision) {
@@ -185,7 +185,10 @@ export function CommentPreview({
       onSelect={() => setPanelExpanded(!panelExpanded)}
       style={
         expanded ?
-          { border: `1px solid black`, backgroundColor: '#f7f9fa' }
+          {
+            border: `1px solid var(--rs-text-primary)`,
+            backgroundColor: 'var(--rs-bg-well)',
+          }
         : {}
       }
     >

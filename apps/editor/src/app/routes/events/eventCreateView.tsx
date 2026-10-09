@@ -1,10 +1,10 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
+  CreateEventDocument,
   FullImageFragment,
   MutationCreateEventArgs,
-  useCreateEventMutation,
 } from '@wepublish/editor/api';
-import { SingleViewTitle } from '@wepublish/ui/editor';
+import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -12,15 +12,15 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { EventForm } from './eventForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -36,7 +36,7 @@ export const EventCreateView = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [createEvent, { loading }] = useCreateEventMutation({
+  const [createEvent, { loading }] = useMutation(CreateEventDocument, {
     onError: onErrorToast,
     onCompleted: event => {
       if (shouldClose) {

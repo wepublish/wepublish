@@ -51,7 +51,7 @@ export class ProfileResolver {
   async updatePassword(
     @Args('password') password: string,
     @Args('passwordRepeated') passwordRepeated: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() { id, user }: UserSession
   ) {
     if (password !== passwordRepeated) {
       throw new BadRequestException(
@@ -61,8 +61,8 @@ export class ProfileResolver {
 
     await this.userService.validatePassword(password);
 
-    return this.userService.updateUserPassword(session.user.id, password, {
-      exceptToken: session.token,
+    return this.userService.updateUserPassword(user.id, password, {
+      keepSessionId: id,
     });
   }
 

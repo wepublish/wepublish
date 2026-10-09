@@ -9,17 +9,18 @@ import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { MailchimpMailProvider } from './mail-provider/mailchimp-mail-provider';
 import { MailgunMailProvider } from './mail-provider/mailgun-mail-provider';
+import type { Mock } from 'vitest';
 const kvMock = createKvMock();
 
 describe('MailController', () => {
   let mailContext: MailContext;
   let prismaMock: {
-    mailLog: { [method in keyof PrismaClient['mailLog']]?: jest.Mock };
+    mailLog: { [method in keyof PrismaClient['mailLog']]?: Mock };
     mailTemplate: {
-      [method in keyof PrismaClient['mailTemplate']]?: jest.Mock;
+      [method in keyof PrismaClient['mailTemplate']]?: Mock;
     };
-    user: { [method in keyof PrismaClient['user']]?: jest.Mock };
-    setting: { [method in keyof PrismaClient['setting']]?: jest.Mock };
+    user: { [method in keyof PrismaClient['user']]?: Mock };
+    setting: { [method in keyof PrismaClient['setting']]?: Mock };
   };
 
   const mockMailTemplate1: MailTemplate = {
@@ -78,19 +79,19 @@ describe('MailController', () => {
 
     prismaMock = {
       mailLog: {
-        create: jest.fn(),
-        findFirst: jest.fn(),
-        update: jest.fn(),
-        count: jest.fn(),
+        create: vi.fn(),
+        findFirst: vi.fn(),
+        update: vi.fn(),
+        count: vi.fn(),
       },
       mailTemplate: {
-        findUnique: jest.fn(),
+        findUnique: vi.fn(),
       },
       user: {
-        findUnique: jest.fn(),
+        findUnique: vi.fn(),
       },
       setting: {
-        findUnique: jest.fn(async () => null),
+        findUnique: vi.fn(async () => null),
       },
     };
 

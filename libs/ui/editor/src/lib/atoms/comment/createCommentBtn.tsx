@@ -1,8 +1,5 @@
-import { ApolloError } from '@apollo/client';
-import {
-  CommentItemType,
-  useCreateCommentMutation,
-} from '@wepublish/editor/api';
+import { useMutation } from '@apollo/client/react';
+import { CommentItemType, CreateCommentDocument } from '@wepublish/editor/api';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
@@ -16,6 +13,7 @@ import type {
 } from 'rsuite/esm/internals/types';
 
 import { IconButtonTooltip } from '../iconButtonTooltip';
+import { humanizeError } from '../../humanizeError';
 
 interface ReplyCommentBtnProps {
   circle?: boolean;
@@ -45,20 +43,20 @@ export function CreateCommentBtn({
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const onError = (error: ApolloError) => {
+  const onError = (error: Error) => {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
 
-  const [createComment] = useCreateCommentMutation({
+  const [createComment] = useMutation(CreateCommentDocument, {
     onError,
   });
 
@@ -83,6 +81,7 @@ export function CreateCommentBtn({
       return (
         <IconButton
           style={{ marginLeft: '10px' }}
+          aria-label={t('replyCommentBtn.tooltip')}
           icon={icon || <MdReply />}
           size={size}
           circle={circle}

@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import { ContentWrapper } from '@wepublish/content/website';
@@ -14,14 +15,13 @@ import {
   TotpSetupContainer,
 } from '@wepublish/user/website';
 import {
-  addClientCacheToProps,
-  getApiClient,
+  InvoicesDocument,
   MeDocument,
   NavigationListDocument,
-  InvoicesDocument,
-  SubscriptionsDocument,
   ProductType,
-  useSubscriptionsQuery,
+  SubscriptionsDocument,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { NextPage, NextPageContext } from 'next';
@@ -88,7 +88,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const router = useRouter();
-  const { data: subscriptonData } = useSubscriptionsQuery({
+  const { data: subscriptonData } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
   });
 

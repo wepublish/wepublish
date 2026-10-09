@@ -24,6 +24,7 @@ export type UserSession = {
   origin: SessionOrigin;
   restricted: boolean;
   placeholderEmail: boolean;
+  impersonatedBy?: string | null;
 };
 
 export type AuthSession = TokenSession | UserSession;

@@ -1,6 +1,7 @@
+import { useLazyQuery } from '@apollo/client/react';
 import {
   SubscriptionFilter,
-  useSubscriptionsAsCsvLazyQuery,
+  SubscriptionsAsCsvDocument,
 } from '@wepublish/editor/api';
 import { Ref, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -89,7 +90,7 @@ export function SubscriptionExportDropdown({
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {(error as Error).message}
         </Message>
@@ -126,7 +127,7 @@ export function SubscriptionExportDropdown({
 }
 
 export function useExportSubscriptions() {
-  const [getCsv, { loading }] = useSubscriptionsAsCsvLazyQuery({});
+  const [getCsv, { loading }] = useLazyQuery(SubscriptionsAsCsvDocument, {});
 
   return { initDownload, loading, getCsv };
 }

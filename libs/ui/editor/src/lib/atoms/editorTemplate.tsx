@@ -1,10 +1,16 @@
 import styled from '@emotion/styled';
 import { ReactNode } from 'react';
 
-const Children = styled.div`
+const Children = styled('div', {
+  shouldForwardProp: propName => propName !== 'maxWidth',
+})<{ maxWidth: string }>`
   display: flex;
-  width: 100%;
-  max-width: 1220px;
+  width: 80%;
+  max-width: ${({ maxWidth }) => maxWidth};
+
+  @media (max-width: 899px) {
+    width: 100%;
+  }
 `;
 
 const ChildrenWrapper = styled.div`
@@ -16,6 +22,10 @@ const ChildrenWrapper = styled.div`
   padding-bottom: 60px;
   padding-left: 40px;
   padding-right: 40px;
+
+  @media (max-width: 899px) {
+    padding: 16px 12px 40px;
+  }
 `;
 
 const NavigationChildren = styled.div`
@@ -23,7 +33,8 @@ const NavigationChildren = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
-  width: 100%;
+  margin: calc(-1 * var(--wep-page-padding-top, 0px))
+    calc(-1 * var(--wep-page-padding-x, 0px)) 0;
 `;
 
 const EditorTemplateWrapper = styled.div`
@@ -36,17 +47,19 @@ const EditorTemplateWrapper = styled.div`
 export interface EditorTemplateProps {
   navigationChildren?: ReactNode;
   children?: ReactNode;
+  maxWidth?: string;
 }
 
 export function EditorTemplate({
   children,
   navigationChildren,
+  maxWidth = '1220px',
 }: EditorTemplateProps) {
   return (
     <EditorTemplateWrapper>
       <NavigationChildren>{navigationChildren}</NavigationChildren>
       <ChildrenWrapper>
-        <Children>{children}</Children>
+        <Children maxWidth={maxWidth}>{children}</Children>
       </ChildrenWrapper>
     </EditorTemplateWrapper>
   );

@@ -9,8 +9,10 @@ export default {
   title: 'UI/Rating',
   render: () => (
     <Stack
-      gap={1}
-      alignItems={'start'}
+      sx={{
+        gap: 1,
+        alignItems: 'start',
+      }}
     >
       <RatingCmp />
       <RatingCmp defaultValue={4} />

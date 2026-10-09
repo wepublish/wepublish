@@ -1,10 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  CanCreateMailProviderSettings,
   CanGetMailProviderSettings,
   CanUpdateMailProviderSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
+  CreateSettingMailProviderInput,
   SettingMailProvider,
   UpdateSettingMailProviderInput,
   SettingMailProviderFilter,
@@ -39,16 +41,15 @@ export class MailProviderSettingsResolver {
     return this.mailProviderSettingsDataloader.load(id);
   }
 
-  /** DISABLE FOR NOW
   @Permissions(CanCreateMailProviderSettings)
   @Mutation(returns => SettingMailProvider, {
     name: 'createMailProviderSetting',
-    description: 'Creates a new mail provider setting.',
+    description:
+      'Sets up the mail provider. Only possible while none is configured.',
   })
   createMailProviderSetting(@Args() input: CreateSettingMailProviderInput) {
     return this.mailProviderSettingsService.createMailProviderSetting(input);
   }
- **/
 
   @Permissions(CanUpdateMailProviderSettings)
   @Mutation(returns => SettingMailProvider, {

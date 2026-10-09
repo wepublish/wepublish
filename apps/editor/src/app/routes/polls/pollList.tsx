@@ -1,11 +1,14 @@
-import { ApolloError } from '@apollo/client';
-import { Poll, usePollsQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
+import { FullPollFragment, PollsDocument } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   CreatePollBtn,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   DeletePollModal,
+  humanizeError,
+  IconButton,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -18,30 +21,23 @@ import {
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdHowToVote } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton,
-  Message,
-  Pagination,
-  Table as RTable,
-  toaster,
-} from 'rsuite';
+import { Message, Pagination, Table as RTable, toaster } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </Message>
     );
   }
@@ -49,17 +45,24 @@ const onErrorToast = (error: ApolloError) => {
 
 function PollList() {
   const { t } = useTranslation();
-  const [pollDelete, setPollDelete] = useState<Poll | undefined>(undefined);
+  const [pollDelete, setPollDelete] = useState<FullPollFragment | undefined>(
+    undefined
+  );
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const { data, loading, refetch } = usePollsQuery({
+  const { data, loading, refetch, error } = useQuery(PollsDocument, {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
     },
-    onError: onErrorToast,
   });
+
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
 
   /**
    * Refetch data
@@ -94,7 +97,7 @@ function PollList() {
           <Column width={50}>
             <HeaderCell>{t('pollList.state')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
+              {(rowData: RowDataType<FullPollFragment>) => (
                 <PollStateIndication
                   closedAt={rowData.closedAt}
                   opensAt={rowData.opensAt}
@@ -109,7 +112,7 @@ function PollList() {
           >
             <HeaderCell>{t('pollList.question')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
+              {(rowData: RowDataType<FullPollFragment>) => (
                 <Link to={`/polls/edit/${rowData.id}`}>
                   {rowData.question || t('pollList.noQuestion')}
                 </Link>
@@ -123,8 +126,8 @@ function PollList() {
           >
             <HeaderCell>{t('pollList.opensAt')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollOpensAtView poll={rowData as Poll} />
+              {(rowData: RowDataType<FullPollFragment>) => (
+                <PollOpensAtView poll={rowData as FullPollFragment} />
               )}
             </RCell>
           </Column>
@@ -135,44 +138,41 @@ function PollList() {
           >
             <HeaderCell>{t('pollList.closedAt')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollClosedAtView poll={rowData as Poll} />
+              {(rowData: RowDataType<FullPollFragment>) => (
+                <PollClosedAtView poll={rowData as FullPollFragment} />
               )}
             </RCell>
           </Column>
-          {/* delete */}
           <Column
-            resizable
+            width={140}
+            align="center"
             fixed="right"
           >
-            <HeaderCell align={'center'}>{t('pollList.delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(poll: RowDataType<Poll>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() => setPollDelete(poll as Poll)}
-                />
-              )}
-            </PaddedCell>
-          </Column>
-          {/* show votes */}
-          <Column
-            resizable
-            fixed="right"
-          >
-            <HeaderCell align={'center'}>{t('pollList.showVotes')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(poll: RowDataType<Poll>) => (
-                <Button
-                  appearance={'primary'}
-                  href={`/polls/votes/${poll?.id}`}
-                >
-                  {t('pollList.showVotes')}
-                </Button>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell align="center">
+              {(poll: RowDataType<FullPollFragment>) => (
+                <>
+                  <IconButtonTooltip caption={t('pollList.showVotes')}>
+                    <IconButton
+                      aria-label={t('pollList.showVotes')}
+                      icon={<MdHowToVote />}
+                      circle
+                      size="sm"
+                      href={`/polls/votes/${poll?.id}`}
+                    />
+                  </IconButtonTooltip>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      aria-label={t('delete')}
+                      icon={<MdDelete />}
+                      circle
+                      appearance="ghost"
+                      color="red"
+                      size="sm"
+                      onClick={() => setPollDelete(poll as FullPollFragment)}
+                    />
+                  </IconButtonTooltip>
+                </>
               )}
             </PaddedCell>
           </Column>

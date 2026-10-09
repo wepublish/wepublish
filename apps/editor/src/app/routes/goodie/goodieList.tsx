@@ -1,8 +1,9 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  Goodie,
+  DeleteGoodieDocument,
+  FullGoodieFragment,
+  GoodieListDocument,
   GoodieSort,
-  useDeleteGoodieMutation,
-  useGoodieListQuery,
 } from '@wepublish/editor/api';
 import {
   CanCreateGoodie,
@@ -14,6 +15,8 @@ import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
   IconButton,
+  IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -44,11 +47,11 @@ function GoodieList() {
   const [sortField, setSortField] = useState<GoodieSort>();
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const [goodieToDelete, setGoodieToDelete] = useState<Goodie | undefined>(
-    undefined
-  );
+  const [goodieToDelete, setGoodieToDelete] = useState<
+    FullGoodieFragment | undefined
+  >(undefined);
 
-  const { data, loading, refetch } = useGoodieListQuery({
+  const { data, loading, refetch } = useQuery(GoodieListDocument, {
     variables: {
       take: limit,
       skip: (page - 1) * limit,
@@ -56,7 +59,7 @@ function GoodieList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
-  const [deleteGoodie] = useDeleteGoodieMutation({
+  const [deleteGoodie] = useMutation(DeleteGoodieDocument, {
     onCompleted() {
       refetch();
     },
@@ -108,7 +111,9 @@ function GoodieList() {
             <HeaderCell>{t('goodie.overview.active')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Goodie>) => (rowData.active ? `✅` : `❌`)}
+              {(rowData: RowDataType<FullGoodieFragment>) =>
+                rowData.active ? `✅` : `❌`
+              }
             </RCell>
           </Column>
 
@@ -120,7 +125,7 @@ function GoodieList() {
             <HeaderCell>{t('goodie.overview.name')}</HeaderCell>
 
             <RCell dataKey={GoodieSort.Name}>
-              {(rowData: RowDataType<Goodie>) => (
+              {(rowData: RowDataType<FullGoodieFragment>) => (
                 <Link to={`edit/${rowData.id}`}>{rowData.name}</Link>
               )}
             </RCell>
@@ -133,7 +138,7 @@ function GoodieList() {
             <HeaderCell>{t('goodie.overview.memberPlans')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Goodie>) =>
+              {(rowData: RowDataType<FullGoodieFragment>) =>
                 rowData.memberPlans
                   .map((memberPlan: { name: string }) => memberPlan.name)
                   .join(', ')
@@ -148,7 +153,7 @@ function GoodieList() {
             <HeaderCell>{t('goodie.overview.stock')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Goodie>) =>
+              {(rowData: RowDataType<FullGoodieFragment>) =>
                 rowData.stock ?? t('goodie.overview.unlimited')
               }
             </RCell>
@@ -158,10 +163,13 @@ function GoodieList() {
             width={120}
             resizable
           >
-            <HeaderCell>{t('goodie.overview.availableStock')}</HeaderCell>
+            <HeaderCell>
+              {t('goodie.overview.availableStock')}{' '}
+              <InfoTooltip text={t('goodie.overview.availableStockInfo')} />
+            </HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Goodie>) =>
+              {(rowData: RowDataType<FullGoodieFragment>) =>
                 rowData.availableStock ?? t('goodie.overview.unlimited')
               }
             </RCell>
@@ -175,27 +183,33 @@ function GoodieList() {
             <HeaderCell>{t('goodie.overview.createdAt')}</HeaderCell>
 
             <RCell dataKey={GoodieSort.CreatedAt}>
-              {(rowData: Goodie) =>
+              {(rowData: FullGoodieFragment) =>
                 `${new Date(rowData.createdAt).toDateString()}`
               }
             </RCell>
           </Column>
 
           <Column
+            width={100}
+            align="center"
             fixed="right"
-            width={50}
           >
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(goodie: RowDataType<Goodie>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() => setGoodieToDelete(goodie as Goodie)}
-                />
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell>
+              {(goodie: RowDataType<FullGoodieFragment>) => (
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    aria-label={t('delete')}
+                    onClick={() =>
+                      setGoodieToDelete(goodie as FullGoodieFragment)
+                    }
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

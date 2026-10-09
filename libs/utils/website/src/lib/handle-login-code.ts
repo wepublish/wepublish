@@ -11,19 +11,18 @@ export type LoginCodeRedemption =
   | { kind: 'failed'; message: string };
 
 export const redeemLoginCode = async (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  client: ApolloClient<any>,
+  client: ApolloClient,
   code: string,
   totpToken?: string
 ): Promise<LoginCodeRedemption> => {
-  const { data, errors } = await client.mutate<LoginWithCodeMutation>({
+  const { data, error } = await client.mutate({
     mutation: LoginWithCodeDocument,
     variables: { code, totpToken },
     errorPolicy: 'all',
   });
 
-  if (errors?.length || !data?.createSessionWithLoginCode) {
-    const message = errors?.[0]?.message ?? '';
+  if (error || !data?.createSessionWithLoginCode) {
+    const message = error?.message ?? '';
 
     if (message.includes('TOTP_REQUIRED')) {
       return { kind: 'totpRequired' };

@@ -1,6 +1,5 @@
-import { ApolloError } from '@apollo/client';
 import { Meta } from '@storybook/nextjs-vite';
-import { FullNavigationFragment, Navigation } from '@wepublish/website/api';
+import { FullNavigationFragment } from '@wepublish/website/api';
 import { Footer } from './footer';
 
 const navigation = {
@@ -244,7 +243,7 @@ const navigations = [
       },
     ],
   },
-] as Navigation[];
+] as FullNavigationFragment[];
 
 export default {
   component: Footer,
@@ -289,9 +288,7 @@ export const WithError = {
       navigations: null,
     },
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
     slug: 'main',
     categorySlugs: [['guides', 'fokusthema'], ['about']],
     wepublishLogo: 'light',

@@ -23,7 +23,10 @@ import {
   CreateSubscriptionWithConfirmationArgs,
   ExtendSubscriptionArgs,
 } from './subscription.model';
-import { PaymentsService } from '@wepublish/payment/api';
+import {
+  isPaymentMethodRetired,
+  PaymentsService,
+} from '@wepublish/payment/api';
 import {
   calculatePeriodAmount,
   getPeriodPriceRange,
@@ -418,6 +421,15 @@ export class UserSubscriptionService {
       throw new NotFoundException('PaymentMethod', paymentMethodID as string);
     }
 
+    if (
+      paymentMethod.id !== subscription.paymentMethodID &&
+      (await isPaymentMethodRetired(this.prisma, paymentMethod))
+    ) {
+      throw new BadRequestException(
+        `PaymentMethod ${paymentMethod.id} is no longer offered`
+      );
+    }
+
     const effectivePeriodicity =
       (paymentPeriodicity as PaymentPeriodicity | undefined) ??
       subscription.paymentPeriodicity;
@@ -580,6 +592,12 @@ export class UserSubscriptionService {
     if (!paymentMethod) {
       throw new BadRequestException(
         `PaymentMethod not found ${paymentMethodID || paymentMethodSlug}`
+      );
+    }
+
+    if (await isPaymentMethodRetired(this.prisma, paymentMethod)) {
+      throw new BadRequestException(
+        `PaymentMethod ${paymentMethod.id} is no longer offered`
       );
     }
 

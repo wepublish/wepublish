@@ -83,15 +83,15 @@ export const createConfirmEmailPage = ({
       ssrAuthLink(sessionToken?.token),
     ]);
 
-    const { data, errors } = await client.mutate({
+    const { data, error } = await client.mutate({
       mutation: ConfirmEmailChangeDocument,
       variables: { token },
       errorPolicy: 'all',
     });
 
-    if (errors?.length || !data?.confirmEmailChange) {
+    if (error || !data?.confirmEmailChange) {
       return {
-        error: errors?.[0]?.message ?? 'Invalid or expired confirmation link.',
+        error: error?.message || 'Invalid or expired confirmation link.',
       };
     }
 

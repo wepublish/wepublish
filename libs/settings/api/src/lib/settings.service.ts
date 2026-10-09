@@ -8,20 +8,39 @@ import {
 import { checkSettingRestrictions } from './settings-utils';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { SettingDataloaderService } from './setting-dataloader.service';
+import { SettingName } from './setting';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  SETTINGS_CACHE_NAMESPACE,
+  SETTINGS_CACHE_TTL_SECONDS,
+} from './settings-cache';
+
+const KNOWN_SETTING_NAMES = new Set<string>(Object.values(SettingName));
 
 @Injectable()
 export class SettingsService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
   @PrimeDataLoader(SettingDataloaderService, 'name')
   async settingsList(filter?: SettingFilter): Promise<Setting[]> {
-    const data = await this.prisma.setting.findMany({
-      where: filter,
-      orderBy: {
-        createdAt: 'desc',
+    return this.kv.getOrLoadNs(
+      SETTINGS_CACHE_NAMESPACE,
+      `list:${JSON.stringify(filter ?? {})}`,
+      async () => {
+        const data = await this.prisma.setting.findMany({
+          where: filter,
+          orderBy: {
+            createdAt: 'desc',
+          },
+        });
+
+        return data.filter(setting => KNOWN_SETTING_NAMES.has(setting.name));
       },
-    });
-    return data;
+      SETTINGS_CACHE_TTL_SECONDS
+    );
   }
 
   @PrimeDataLoader(SettingDataloaderService, 'name')
@@ -41,11 +60,17 @@ export class SettingsService {
 
   @PrimeDataLoader(SettingDataloaderService, 'name')
   async settingByName(name: string): Promise<Setting> {
-    const data = await this.prisma.setting.findUnique({
-      where: {
-        name,
-      },
-    });
+    const data = await this.kv.getOrLoadNs(
+      SETTINGS_CACHE_NAMESPACE,
+      `name:${name}`,
+      () =>
+        this.prisma.setting.findUnique({
+          where: {
+            name,
+          },
+        }),
+      SETTINGS_CACHE_TTL_SECONDS
+    );
 
     if (!data) {
       throw Error(`Setting with name ${name} not found`);
@@ -68,7 +93,7 @@ export class SettingsService {
     const restriction = fullSetting.settingRestriction;
     checkSettingRestrictions(value, restriction as SettingRestriction);
 
-    return this.prisma.setting.update({
+    const updated = await this.prisma.setting.update({
       where: {
         name,
       },
@@ -76,5 +101,8 @@ export class SettingsService {
         value: value as unknown as Prisma.InputJsonValue,
       },
     });
+    await this.kv.resetNamespace(SETTINGS_CACHE_NAMESPACE);
+
+    return updated;
   }
 }

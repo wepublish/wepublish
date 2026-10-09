@@ -2,6 +2,7 @@ import {
   CreateBannerActionInput,
   BannerActionRole,
 } from '@wepublish/editor/api';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { Button, Col, Form, Grid, Row, SelectPicker } from 'rsuite';
 
@@ -31,9 +32,15 @@ export const BannerActionList = ({
         <Row>
           <Col xs={5}>{t('banner.form.action.label')}</Col>
           <Col xs={5}>{t('banner.form.action.url')}</Col>
-          <Col xs={5}>{t('banner.form.action.style')}</Col>
-          <Col xs={5}>{t('banner.form.action.role')}</Col>
-          <Col xs={4}>{t('banner.form.actions')}</Col>
+          <Col xs={5}>
+            {t('banner.form.action.style')}{' '}
+            <InfoTooltip text={t('banner.form.action.styleInfo')} />
+          </Col>
+          <Col xs={5}>
+            {t('banner.form.action.role')}{' '}
+            <InfoTooltip text={t('banner.form.action.roleInfo')} />
+          </Col>
+          <Col xs={4}>{t('action')}</Col>
         </Row>
         {actions.map((action, index) => (
           <Row>

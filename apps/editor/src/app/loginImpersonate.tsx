@@ -1,6 +1,7 @@
+import { useMutation } from '@apollo/client/react';
 import {
+  CreateSessionWithJwtDocument,
   LocalStorageKey,
-  useCreateSessionWithJwtMutation,
 } from '@wepublish/editor/api';
 import {
   AuthDispatchActionType,
@@ -28,7 +29,7 @@ export function LoginImpersonate() {
   const authDispatch = useContext(AuthDispatchContext);
   const { t } = useTranslation();
 
-  const [authenticateWithJWT] = useCreateSessionWithJwtMutation();
+  const [authenticateWithJWT] = useMutation(CreateSessionWithJwtDocument);
   const [error, setError] = useState<string>();
 
   useEffect(() => {

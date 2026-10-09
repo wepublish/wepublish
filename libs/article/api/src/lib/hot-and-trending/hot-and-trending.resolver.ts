@@ -1,8 +1,9 @@
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Int, Query, Resolver } from '@nestjs/graphql';
 import { Inject, Logger } from '@nestjs/common';
 import { Article as ArticleModel } from '../article.model';
 import { Article } from '@prisma/client';
 import { Public } from '@wepublish/authentication/api';
+import { skipAnswerCache } from '@wepublish/kv-ttl-cache/api';
 
 export const HOT_AND_TRENDING_DATA_SOURCE = Symbol(
   'HOT_AND_TRENDING_DATA_SOURCE'
@@ -39,7 +40,8 @@ export class HotAndTrendingResolver {
     })
     start: Date | null,
     @Args('take', { nullable: true, type: () => Int, defaultValue: 10 })
-    take: number
+    take: number,
+    @Context() context: object
   ): Promise<Article[]> {
     try {
       return await this.datasource.getMostViewedArticles({
@@ -50,6 +52,7 @@ export class HotAndTrendingResolver {
       this.logger.error(
         `hotAndTrending query failed: ${error instanceof Error ? error.message : error}`
       );
+      skipAnswerCache(context);
 
       return [];
     }
