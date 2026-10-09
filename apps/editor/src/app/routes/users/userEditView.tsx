@@ -12,6 +12,7 @@ import {
   LoginCodeSecondFactor,
   ReissueUserLoginCodeDocument,
   RevokeUserLoginCodeDocument,
+  SettingsListDocument,
   UserDocument,
   UserLoginCodeDocument,
   UserRoleListDocument,
@@ -59,6 +60,7 @@ import {
   toaster,
   Toggle,
 } from 'rsuite';
+import { isLoginCodeEnabled } from './login-code-enabled';
 
 const PropertyRow = styled.div`
   display: grid;
@@ -261,7 +263,11 @@ function UserEditView() {
   const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
     ResetUserTotpDocument
   );
-  const canManageLoginCodes = useAuthorisation('CAN_MANAGE_USER_LOGIN_CODES');
+  const { data: settingsData } = useQuery(SettingsListDocument);
+  // The panel only makes sense once the medium has login codes switched on.
+  const canManageLoginCodes =
+    useAuthorisation('CAN_MANAGE_USER_LOGIN_CODES') &&
+    isLoginCodeEnabled(settingsData?.settings);
   const { data: loginCodeData, refetch: refetchLoginCode } = useQuery(
     UserLoginCodeDocument,
     {

@@ -89,6 +89,17 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
+        name: SettingName.LOGIN_CODE_ENABLED,
+      },
+      update: {},
+      create: {
+        name: SettingName.LOGIN_CODE_ENABLED,
+        value: false,
+        settingRestriction: { allowedValues: { boolChoice: true } },
+      },
+    }),
+    prisma.setting.upsert({
+      where: {
         name: SettingName.LOGIN_CODE_MAX_USES,
       },
       update: {},

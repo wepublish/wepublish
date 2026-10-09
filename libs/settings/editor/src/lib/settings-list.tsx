@@ -140,6 +140,11 @@ function SettingList() {
       name: SettingName.ResetPasswordJwtExpiresMin,
       label: 'settingList.passwordToken',
     },
+    [SettingName.LoginCodeEnabled]: {
+      value: false,
+      name: SettingName.LoginCodeEnabled,
+      label: 'settingList.loginCodeEnabled',
+    },
     [SettingName.LoginCodeMaxUses]: {
       value: 0,
       name: SettingName.LoginCodeMaxUses,
@@ -667,6 +672,11 @@ function SettingList() {
                           SettingName.SendLoginJwtExpiresMin,
                           t('settingList.info.loginMinutes'),
                           t('settingList.minutes')
+                        )}
+
+                        {renderToggle(
+                          SettingName.LoginCodeEnabled,
+                          t('settingList.warnings.loginCodeEnabled')
                         )}
 
                         {renderNumberInput(

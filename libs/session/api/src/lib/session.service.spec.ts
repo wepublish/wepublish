@@ -5,6 +5,7 @@ import { AuthenticationService } from '@wepublish/authentication/api';
 import { ChallengeService } from '@wepublish/challenge/api';
 import {
   InvalidLoginCodeError,
+  LoginCodeDisabledError,
   LoginCodeRateLimiter,
   LoginCodeService,
 } from '@wepublish/login-code/api';
@@ -48,6 +49,7 @@ describe('SessionService.createSessionWithLoginCode', () => {
     limiter.recordFailure!.mockResolvedValue(undefined);
     limiter.clear!.mockResolvedValue(undefined);
     loginCodes.consume!.mockResolvedValue(undefined);
+    loginCodes.isEnabled!.mockResolvedValue(true);
     authentication.isPlaceholderEmail!.mockResolvedValue(false);
 
     service = new SessionService(
@@ -90,6 +92,23 @@ describe('SessionService.createSessionWithLoginCode', () => {
     expect(createUserSession).toHaveBeenCalledWith(user, {
       origin: SessionOrigin.purl,
     });
+  });
+
+  it('refuses login codes while the medium has them switched off, before any rate limiting or challenge', async () => {
+    loginCodes.isEnabled!.mockResolvedValue(false);
+
+    await expect(
+      service.createSessionWithLoginCode('ABCDE-FGHJK', undefined, 'fp', {
+        challengeID: 'challenge-1',
+        challengeSolution: 'solution',
+      })
+    ).rejects.toBeInstanceOf(LoginCodeDisabledError);
+
+    expect(challenge.validateChallenge).not.toHaveBeenCalled();
+    expect(limiter.assertAllowed).not.toHaveBeenCalled();
+    expect(limiter.recordFailure).not.toHaveBeenCalled();
+    expect(loginCodes.verify).not.toHaveBeenCalled();
+    expect(createUserSession).not.toHaveBeenCalled();
   });
 
   it('refuses inactive users without consuming a use', async () => {

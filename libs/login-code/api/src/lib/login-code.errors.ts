@@ -3,10 +3,17 @@ import { BadRequestException } from '@nestjs/common';
 export const LOGIN_CODE_INVALID = 'LOGIN_CODE_INVALID';
 export const TOO_MANY_ATTEMPTS = 'TOO_MANY_ATTEMPTS';
 export const CHALLENGE_REQUIRED = 'CHALLENGE_REQUIRED';
+export const LOGIN_CODE_DISABLED = 'LOGIN_CODE_DISABLED';
 
 export class InvalidLoginCodeError extends BadRequestException {
   constructor() {
     super(LOGIN_CODE_INVALID);
+  }
+}
+
+export class LoginCodeDisabledError extends BadRequestException {
+  constructor() {
+    super(LOGIN_CODE_DISABLED);
   }
 }
 

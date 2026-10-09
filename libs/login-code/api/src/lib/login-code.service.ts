@@ -1,6 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient, UserLoginCode } from '@prisma/client';
-import { PurlData, PurlOrigin, PurlProvider } from '@wepublish/mail/api';
+import {
+  EMPTY_PURL_DATA,
+  PurlData,
+  PurlOrigin,
+  PurlProvider,
+} from '@wepublish/mail/api';
 import { SecretCrypto, SettingName } from '@wepublish/settings/api';
 import { renderQrSvg } from '@wepublish/utils/api';
 import { addDays } from 'date-fns';
@@ -8,7 +13,10 @@ import {
   LOGIN_CODE_MODULE_OPTIONS,
   LoginCodeModuleOptions,
 } from './login-code-module-options';
-import { InvalidLoginCodeError } from './login-code.errors';
+import {
+  InvalidLoginCodeError,
+  LoginCodeDisabledError,
+} from './login-code.errors';
 import {
   buildPurl,
   deriveLoginCodeKey,
@@ -44,6 +52,21 @@ export class LoginCodeService implements PurlProvider {
     const value = Number(setting?.value);
 
     return Number.isFinite(value) && value > 0 ? value : fallback;
+  }
+
+  /** Login codes are opt-in: each medium switches them on in the settings. */
+  async isEnabled() {
+    const setting = await this.prisma.setting.findUnique({
+      where: { name: SettingName.LOGIN_CODE_ENABLED },
+    });
+
+    return setting?.value === true;
+  }
+
+  private async assertEnabled() {
+    if (!(await this.isEnabled())) {
+      throw new LoginCodeDisabledError();
+    }
   }
 
   private activeWhere(now: Date) {
@@ -102,6 +125,10 @@ export class LoginCodeService implements PurlProvider {
   }
 
   async purlFor(userId: string, origin: PurlOrigin): Promise<PurlData> {
+    if (!(await this.isEnabled())) {
+      return EMPTY_PURL_DATA;
+    }
+
     const { canonical } = await this.getOrIssue(userId, origin);
     const purl = buildPurl(this.options.websiteURL, canonical);
 
@@ -113,6 +140,8 @@ export class LoginCodeService implements PurlProvider {
   }
 
   async verify(rawCode: string) {
+    await this.assertEnabled();
+
     const canonical = normalizeLoginCode(rawCode);
 
     if (!canonical) {
@@ -165,6 +194,7 @@ export class LoginCodeService implements PurlProvider {
   }
 
   async reissue(userId: string, issuedBy: string) {
+    await this.assertEnabled();
     await this.revoke(userId, issuedBy);
     const { record, canonical } = await this.issue(userId, issuedBy);
 
