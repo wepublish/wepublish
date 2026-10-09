@@ -23,17 +23,17 @@ import { Link } from 'react-router-dom';
 import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
+import { lazyMessage } from '../../utility';
 import { Explainer, WebsiteAnalyticsWrapper } from './website-analytics';
 
 const mailSchema = z.object({
   mailchimp: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(
-        /^[a-f0-9]{32}-us\d{1,2}$/,
-        'Must be a valid Mailchimp API-Key (e.g., XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)'
-      )
+      .string({
+        errorMap: lazyMessage('websiteSettings.mail.mailchimp.apiKeyInvalid'),
+      })
+      .regex(/^[a-f0-9]{32}-us\d{1,2}$/)
       .or(z.literal(''))
       .nullish(),
   }),

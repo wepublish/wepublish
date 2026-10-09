@@ -113,7 +113,7 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Unpublish",
         "unpublished": "Unpublished",
-        "unpublishWarningMessage": "If you confirm, you’ll unpublish any published and/or pending state",
+        "unpublishWarningMessage": "If you confirm, any published and/or pending version will be unpublished",
         "warningLabel": "Warning"
       },
       "panels": {
@@ -122,7 +122,7 @@
         "addSlug": "Please add a slug",
         "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, ccc PP p}}. Publishing again will override that publication.",
         "articlePreviewLink": "Article Preview Link",
-        "articlePreviewLinkDesc": "Preview Links always show the latest changes in the draft of the article. Preview Links stop working after you publish the article.",
+        "articlePreviewLinkDesc": "Preview links always show the latest changes in the draft of the article. Preview links stop working after you publish the article.",
         "articlePreviewLinkField": "Preview Link",
         "articlePreviewLinkHours": "Validity period of link",
         "authorRole": "Role (e.g. Text, Photos)",
@@ -139,7 +139,7 @@
         "confirm": "Confirm",
         "contentUrl": "Content URL",
         "createdAt": "{{createdAt, ccc PP p}}",
-        "dateExplanationPopOver": "This can be used to reference articles that will be published at a later time. For example, helpful when scheduling social media posts in advance for the next morning.",
+        "dateExplanationPopOver": "This can be used to reference articles that will be published at a later time. It is helpful, for example, when scheduling social media posts in advance for the next morning.",
         "displayOptions": "Display Options",
         "dontChangeSlug": "Please don't change the slug once the article is published.",
         "draft": "Draft",
@@ -160,16 +160,16 @@
         "invalidImage": "Invalid Image",
         "key": "Key",
         "lead": "Lead",
-        "loading": "Loading ...",
+        "loading": "Loading...",
         "loadMore": "Load More",
         "noDataToDisplay": "No data to display",
         "metadata": "Metadata",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "No",
-        "noImagesFound": "No Images found",
+        "noImagesFound": "No images found",
         "openInNewTab": "Content URL opens in a new tab",
         "pagePreviewLink": "Page Preview Link",
-        "peerDisabled": "Currently this peer is disabled",
+        "peerDisabled": "This peer is currently disabled",
         "peeredArticlePreview": "Preview",
         "peering": "Peering",
         "pending": "Pending",
@@ -185,9 +185,9 @@
         "published": "Published",
         "selectAuthor": "Select author",
         "seoTitle": "SEO Title",
-        "seoTitleHelpBlock": "Please use an SEO-optimised title. <2>SEO Guide</2>",
+        "seoTitleHelpBlock": "Please use an SEO-optimized title. <2>SEO Guide</2>",
         "seoDescription": "SEO Description",
-        "seoDescriptionHelpBlock": "Please use an SEO-optimised description",
+        "seoDescriptionHelpBlock": "Please use an SEO-optimized description",
         "sharedWithPeers": "Shared With Peers",
         "slug": "Slug",
         "slugGuide": "Slug Guide",
@@ -203,7 +203,7 @@
         "status": "{{stateJoin}}",
         "tags": "Tags",
         "title": "Title",
-        "totalCharCount": "Total characters count is {{totalCharCount}}",
+        "totalCharCount": "Total character count is {{totalCharCount}}",
         "likeCount": "Likes",
         "type": "Type",
         "untitled": "Untitled",
@@ -311,13 +311,13 @@
         "text": "Text",
         "cta": "Call to action",
         "delay": "Delay in seconds",
-        "hideForMinutes": "Hiding/Collapse duration after dismissing the banner in minutes",
+        "hideForMinutes": "Hide/collapse duration in minutes after the banner is dismissed",
         "collapsible": "Collapse banner instead of hiding it after dismissing",
         "active": "Active",
         "showOnArticles": "Display on articles",
-        "showOnPages": "Display on those pages",
+        "showOnPages": "Display on these pages",
         "showForLoginStatus": "Display for",
-        "html": "HTML-Code",
+        "html": "HTML code",
         "embedUrl": "Embed URL (iframe)",
         "embedUrlHelp": "URL of a page embedded as an iframe with automatic height adjustment. The article's tags are appended as a ?tags=... query parameter.",
         "loginStatus": {
@@ -340,6 +340,7 @@
           "roleInfo": "«Primary» highlights the button. «Cancel» closes the banner instead of opening the link. «Other» shows a normal button."
         },
         "content": "Content",
+        "mustNotBeNegative": "Value must not be negative",
         "collapsibleInfo": "When a reader closes the banner, it is collapsed instead of disappearing completely. How a collapsed banner looks depends on your website.",
         "delayInfo": "How many seconds after the page has loaded the banner appears. 0 shows it immediately.",
         "showForLoginStatusInfo": "Choose which visitors see the banner, e.g. only visitors without a subscription. If several active banners fit a visitor, the one with the most specific target group is shown.",
@@ -385,7 +386,7 @@
       },
       "comment": {
         "cherryPick": "Select specific comments",
-        "comments": "{{count}} Comment",
+        "comments": "Comments: {{count}}",
         "commentsFilterByTagInformation": "All comments below will be displayed",
         "displayName": "Display name",
         "edit": "Edit comment block",
@@ -406,7 +407,7 @@
         "skipLabel": "How many teasers should be skipped",
         "take": "Showing up to {{take}} teasers",
         "takeLabel": "How many teasers should be loaded",
-        "tags": "Only showing with tags: {{tags}}",
+        "tags": "Only showing teasers with tags: {{tags}}",
         "tagsLabel": "Which tags should be loaded",
         "edit": "Edit teaser list block",
         "sortInfo": "Defines the order of the teasers. «Hot & Trending» shows the currently most read articles; with this sorting, the tag filter is not available.",
@@ -418,19 +419,20 @@
           "editEmbed": "Edit Embed"
         },
         "panels": {
-          "alternativeStyling": "Alternatively, set <code>style</code> as an attribute to override the defaults and disable automatic ratio scaling, e.g.",
+          "alternativeStyling": "Alternatively, set <code>style</code> as an attribute to override the defaults and disable automatic size scaling, for example:",
           "close": "Close",
           "confirm": "Confirm",
           "editEmbed": "Edit Embed",
           "embed": "Embed",
-          "embedCodeAttributes": "Embed code attributes <code>title, src, width, height</code> are validated e.g.",
+          "embedCodeAttributes": "Embed code attributes <code>title, src, width, height</code> are validated, for example:",
           "fbPosts": "https://www.facebook.com/id/posts/id/",
-          "GDPRInfo": "Due to validation, shareable peers and GDPR compliance, embed blocks are currently limited to simple iframes and the supported embeds listed above.",
+          "GDPRInfo": "Due to validation, peer sharing and GDPR compliance, embed blocks are currently limited to simple iframes and the supported embeds listed above.",
           "iframe1Sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
           "iframe2Sample": "<iframe style=\"height:350px;width:100%;\" src=\"https://...\"></iframe>",
           "invalidURL": "Invalid URL or iframe code",
-          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, TikTok Video, Polis Conversation formatted like e.g."
-        }
+          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, TikTok Video, Polis Conversation formatted like:"
+        },
+        "streamableVideo": "Streamable video"
       },
       "event": {
         "cherryPick": "Select specific events",
@@ -462,14 +464,16 @@
         "editNestedBlock": "Edit (Sub-)Block",
         "lockNestedBlock": "Lock (Sub-)Block",
         "removeNestedBlock": "Remove (Sub-)Block",
-        "unlockNestedBlock": "Unlock (Sub-)Block"
+        "unlockNestedBlock": "Unlock (Sub-)Block",
+        "noId": "no ID",
+        "unknownBlock": "Unknown block"
       },
       "html": {
         "close": "Close",
         "confirm": "Confirm",
         "edit": "Edit HTML",
         "label": "HTML",
-        "placeholder": "Paste your HTML block here…",
+        "placeholder": "Paste your HTML block here...",
         "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly.",
         "generate": "Generate your HTML via AI",
         "prompt": "Send prompt",
@@ -481,7 +485,7 @@
         "selectMemberPlansPlaceholder": "Show all plans",
         "selectMemberPlansSelectionHintAll": "Leave empty to display every active plan.",
         "selectFields": "User input fields",
-        "selectFieldsSelectionHint": "Email & last name are always requested. Order does not matter",
+        "selectFieldsSelectionHint": "Email & last name are always requested. The order does not matter.",
         "periodicityDisplay": "Payment interval display",
         "periodicityDisplayDropdown": "Select field",
         "periodicityDisplayOfferCards": "One card per interval",
@@ -550,7 +554,7 @@
         "label": "Gallery",
         "overview": {
           "caption": "Caption",
-          "new": "(new)",
+          "new": "(New)",
           "previousImage": "Previous image",
           "nextImage": "Next image",
           "addImage": "Add image"
@@ -659,13 +663,13 @@
         "inputTypeGroupsHelp": "Lets readers choose which interests of the selected Mailchimp list they want to subscribe to, e.g. individual newsletters. Add one option per interest below.",
         "required": "Required",
         "inputName": "Name",
-        "inputNameHelp": "Name of the merge field, where this info is stored on Mailchimp",
+        "inputNameHelp": "Name of the merge field where this information is stored in Mailchimp",
         "inputLabel": "Label",
         "inputLabelHelp": "Label of the form input",
         "inputLabelGroupsHelp": "Heading shown above the interests, e.g. “Which newsletters would you like to receive?”",
         "inputDescription": "Description",
         "inputDescriptionHelp": "Description displayed below the form field",
-        "fieldUrlParamHelp": "Which URL-Param (?foo=bar) is able to pre-set this information",
+        "fieldUrlParamHelp": "Which URL parameter (?foo=bar) can pre-set this information",
         "fieldDefaultValueHelp": "Value to be stored when no information is entered",
         "fieldValueHelp": "Fixed value to be used if nothing is entered",
         "advanced": "Advanced",
@@ -733,7 +737,7 @@
     },
     "close": "Close",
     "commentDeleteBtn": {
-      "modalBody": "If you delete this comment, it is irrevocable. The comment cannot be restored.",
+      "modalBody": "If you delete this comment, it cannot be restored.",
       "modalTitle": "Really delete?"
     },
     "commentEditView": {
@@ -741,7 +745,7 @@
       "actions": "Actions",
       "comment": "Comment text",
       "commentContextHeader": "Comment history",
-      "goToArticle": "To the article",
+      "goToArticle": "Go to article",
       "lead": "Lead",
       "noOverride": "Don't override",
       "ratingOverrides": "Override comment rating",
@@ -750,7 +754,7 @@
       "title": "Title",
       "userPanelHeader": "Author of the comment",
       "variousPanelHeader": "Tags & Source",
-      "featuredHelpText": "The comment shows at the top of the comment list.",
+      "featuredHelpText": "The comment is shown at the top of the comment list.",
       "sourceInfo": "Shown next to the author's name on the website, e.g. where the comment comes from. If you enter a web address, it becomes a link.",
       "ratingOverridesInfo": "Replaces the average rating that readers see for this comment with a fixed value. Choose \"Don't override\" to show the readers' actual rating.",
       "goToPage": "To the page"
@@ -772,7 +776,7 @@
         "success": "Comment successfully updated",
         "title": "Edit Comment",
         "unnamedTag": "<Unnamed Tag>",
-        "unnamedPaywall": "<Unnamed paywall>"
+        "unnamedPaywall": "<Unnamed Paywall>"
       },
       "overview": {
         "comments": "Comments",
@@ -781,7 +785,7 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "text": "Text",
         "updated": "Modified",
-        "userName": "User Name",
+        "userName": "Username",
         "pendingUserChangesInfo": "You asked the author to revise the comment. Once they have edited it, it is pending approval again."
       },
       "panels": {
@@ -790,7 +794,7 @@
         "cancel": "Cancel",
         "createdAt": "Created At",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "id": "Id",
+        "id": "ID",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
         "noUserName": "No username",
         "parent": "Parent",
@@ -799,17 +803,21 @@
         "rejectComment": "Reject Comment",
         "rejectionReason": "Rejection Reason",
         "requestChanges": "Request Changes",
-        "requestChangesOnComment": "Request Changes On Comment",
+        "requestChangesOnComment": "Request Changes on Comment",
         "requestChangesReason": "Reason",
         "revisionCreatedAtDate": "{{revisionCreatedAtDate,ccc PP p}}",
         "revisions": "Revisions",
-        "unregisteredUser": "(Not registered user)",
+        "unregisteredUser": "(Unregistered user)",
         "updatedAt": "Updated At",
-        "userName": "User Name"
+        "userName": "Username",
+        "rejectionReasons": {
+          "spam": "Spam",
+          "misconduct": "Misconduct"
+        }
       },
       "ratingEdit": {
         "areYouSure": "Are you sure?",
-        "areYouSureBody": "The rating \"{{ answer }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureBody": "The rating \"{{ answer }}\" will be deleted permanently and cannot be undone.",
         "areYouSureConfirmation": "Delete rating",
         "loading": "Loading",
         "newAnswer": "Add rating",
@@ -833,7 +841,7 @@
     "confirm": "Confirm",
     "consents": {
       "consent": "Consent",
-      "create": "Create new Consent",
+      "create": "Create new consent",
       "defaultValue": "Default value",
       "defaultValueTitle": "Default value (checked by default)",
       "name": "Name",
@@ -841,7 +849,7 @@
       "title": "Consents",
       "titleCreate": "Create Consent",
       "titleEdit": "Edit Consent",
-      "uniqueConstraint": "A consent with slug \"{{slug}}\" already exists. Please choose a different slug.",
+      "uniqueConstraint": "A consent with the slug \"{{slug}}\" already exists. Please choose a different slug.",
       "accepted": "Accepted",
       "rejected": "Rejected",
       "slugInfo": "Technical identifier your website or apps use to find this consent, e.g. «newsletter». Use lowercase letters, numbers and hyphens only.",
@@ -867,12 +875,13 @@
       "greeting": "Hello, {{name}}!",
       "noData": "No current subscriber data",
       "user": "User",
-      "yearlySubscribers": "New subscribers over past year",
+      "yearlySubscribers": "New subscribers over the past year",
       "audience": "Audience",
       "goToAudienceDashboard": "Go to Audience Dashboard",
       "externalApps": "We.Publish Apps",
       "networkContent": "From the We.Publish Network",
       "goToNetwork": "Go to Network",
+      "welcome": "Welcome to the dashboard!",
       "externalAppsInfo": "Shortcuts to tools your team uses alongside We.Publish. Admins manage them under «Apps».",
       "networkContentInfo": "The latest articles from other media in the We.Publish network. You can take them over into your editor (import) and publish them on your website."
     },
@@ -896,7 +905,7 @@
       "title": "Delete Poll?"
     },
     "draggableSubscriptionInterval": {
-      "ignoreDeactivatedSubscriptions": "No mails will be sent to deactivated subscriptions!"
+      "ignoreDeactivatedSubscriptions": "No emails will be sent to deactivated subscriptions!"
     },
     "edit": "Edit",
     "errors": {
@@ -911,12 +920,12 @@
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
       "invalidUrlErrorMessage": "Please enter a valid URL",
-      "minimalAmountPerMonth": "The minimal amount / month is defined as {{amount}} {{currency}}.",
+      "minimalAmountPerMonth": "The minimum amount per month is {{amount}} {{currency}}.",
       "noAmountErrorMessage": "Default amount will be set to 5.00 if empty",
       "noCallToActionImageErrorMessage": "Please enter a call to action image",
       "noEmailErrorMessage": "Please enter an email address",
       "noImageErrorMessage": "Please enter an image",
-      "noMemberPlanErrorMessage": "Please select a subscription plan",
+      "noMemberPlanErrorMessage": "Please enter a subscription plan",
       "noNameErrorMessage": "Please enter a name",
       "noPasswordErrorMessage": "Please enter a password",
       "noPaymentMethodErrorMessage": "Please enter a payment method",
@@ -943,7 +952,7 @@
         "title": "Edit Event"
       },
       "form": {
-        "cancelled": "Cancelled",
+        "cancelled": "Canceled",
         "description": "Description",
         "endsAt": "Ends at",
         "externalSource": "External source (for imported events)",
@@ -964,7 +973,7 @@
         "edit": "Edit",
         "endsAt": "Ends at {{endsAt, ccc PP p}}",
         "endsAtHeader": "Ends at",
-        "endsAtNone": "Open ended",
+        "endsAtNone": "Open-ended",
         "name": "Name",
         "source": "Source",
         "startsAt": "Starts at {{startsAt, ccc PP p}}",
@@ -1102,7 +1111,7 @@
     },
     "invoice": {
       "areYouSure": "Are you sure?",
-      "canceledAt": "Cancelled at",
+      "canceledAt": "Canceled at",
       "invoiceNo": "Invoice No.",
       "manuallyPaidModalBody": "The invoice is marked as paid even though no payment has been received from the user. You should discuss your intention with the accountant.",
       "paidAt": "Paid at",
@@ -1126,10 +1135,10 @@
     "linkPageBreakEditPanel": {
       "close": "Close",
       "link": {
-        "buttonLabel": "CTA Button label",
-        "hideToggleLabel": "Hide CTA Button",
-        "hideToogleDescription": "Hide button and make whole element clickable.",
-        "targetLabel": "Open Link in",
+        "buttonLabel": "CTA button label",
+        "hideToggleLabel": "Hide CTA button",
+        "hideToogleDescription": "Hide the button and make the whole element clickable.",
+        "targetLabel": "Open link in",
         "targetLabelBlank": "new browser tab",
         "targetLabelSelf": "this browser tab",
         "urlLabel": "CTA URL",
@@ -1152,7 +1161,7 @@
         "android": "Android",
         "ios": "iOS",
         "manualEntry": "Or enter this code manually in your authenticator app:",
-        "code": "Verification Code",
+        "code": "Verification code",
         "activate": "Activate 2FA",
         "invalidCode": "Invalid verification code. Please try again.",
         "setupError": "Failed to generate 2FA setup. Please try again.",
@@ -1163,7 +1172,7 @@
         "failed": "Sign-in failed. The link has expired or was already used.",
         "notAGrant": "This link is not a valid impersonation link."
       },
-      "jwt": "Signing you in…"
+      "jwt": "Signing in …"
     },
     "resetPassword": {
       "description": "Enter your email address and we will send you a link to reset your password.",
@@ -1266,10 +1275,11 @@
         "appendJwt": "Add login token",
         "appendJwtHint": "Appends {{param}} — the recipient is then logged in on click.",
         "appendJwtDone": "Login token already included — the recipient is logged in on click.",
+        "frameTitle": "Mail content editor",
         "imageAltHelp": "Describes the image in a few words. Shown when the image does not load and read aloud by screen readers.",
         "imageWidthHelp": "Leave empty to use the original size. The image is never wider than the email."
       },
-      "goToPlaceholders": "Available Placeholders",
+      "goToPlaceholders": "Available placeholders",
       "htmlContent": "HTML content",
       "name": "Name",
       "placeholders": "Placeholders",
@@ -1297,7 +1307,7 @@
       },
       "rawHtml": "HTML",
       "save": "Save",
-      "showPlaceholders": "Placeholder Documentation",
+      "showPlaceholders": "Placeholder documentation",
       "status": "Status",
       "statuses": {
         "error": "Unknown error",
@@ -1389,13 +1399,59 @@
       "noPlaceholders": "No matching placeholders.",
       "placeholderExample": "Example",
       "purposeDescriptions": {
-        "account": "Around the user account: confirm registration, send a login link, reset a password. Only the recipient fields are available.",
+        "account": "Covers the user account: confirm registration, send a login link, reset a password. Only the recipient fields are available.",
         "emailChange": "Confirmation when someone changes their email address. Additionally available: the newly requested address.",
-        "subscription": "Around the subscription itself: newly taken out, confirmed or deactivated. Additionally available: subscription data such as amount and term.",
+        "subscription": "Covers the subscription itself: newly started, confirmed or deactivated. Additionally available: subscription data such as amount and term.",
         "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
         "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
-        "custom": "A mail you send freely to subscribers, e.g. a newsletter via «Manual mailings». Additionally available: the subscription and the latest invoices.",
+        "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Manual mailings”. Additionally available: the subscription and the latest invoices.",
         "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty."
+      },
+      "placeholderDescriptions": {
+        "user_fullName": "First and last name together (e.g. for the salutation).",
+        "user_firstName": "First name of the recipient.",
+        "user_name": "Last name of the recipient.",
+        "user_email": "Email address of the recipient.",
+        "user_flair": "Role / flair of the user.",
+        "user_birthday": "Birthday. Choose a format.",
+        "user_id": "Unique ID of the user.",
+        "user_active": "Whether the account is active (true/false).",
+        "user_lastLogin": "Last login. Choose a format.",
+        "user_createdAt": "Date the recipient's account was registered. Choose a format.",
+        "jwt": "Login token. Append it to a frontend URL, e.g. ?jwt={{jwt}}. In password reset mails this is the reset token.",
+        "currentDate": "Current date.",
+        "optional_subscription_id": "Unique ID of the subscription.",
+        "optional_subscription_monthlyAmount": "Monthly amount. Choose a format.",
+        "optional_subscription_periodAmount": "Amount for the whole payment period (monthly amount × months of the period). Choose a format.",
+        "optional_subscription_periodMonths": "Number of months in the payment period (yearly = 12).",
+        "optional_subscription_currency": "Currency of the subscription.",
+        "optional_subscription_paymentPeriodicity": "Payment period (raw value): yearly, biannual, quarterly, monthly, biennial, lifetime.",
+        "optional_subscription_paymentPeriodicity_display": "Payment period as text (in German: monatlich, jährlich …).",
+        "optional_subscription_autoRenew": "Whether the subscription renews automatically (true/false).",
+        "optional_subscription_startsAt": "Start date of the subscription. Choose a format.",
+        "optional_subscription_paidUntil": "Paid until. Choose a format.",
+        "optional_invoice_id": "Unique ID of the invoice.",
+        "optional_invoice_description": "Description of the invoice.",
+        "optional_invoice_mail": "Billing email address.",
+        "optional_invoice_currency": "Currency of the invoice.",
+        "optional_invoice_dueAt": "Due date of the invoice. Choose a format.",
+        "optional_invoice_paidAt": "Payment date of the invoice. Choose a format.",
+        "optional_invoice_total": "Sum of all invoice items. Choose a format.",
+        "optional_newEmail": "The new email address the user is switching to.",
+        "optional_subscription_deactivation_reason": "Only when the user deactivates the subscription: none, userSelfDeactivated, invoiceNotPaid, userReplacedSubscription.",
+        "optional_subscription_memberPlan_name": "Name of the subscription plan, e.g. Jahres-Abo.",
+        "optional_subscription_paymentMethod_name": "Name of the payment method, e.g. Stripe.",
+        "optional_items_0_name": "Name of the first invoice item (array, index 0).",
+        "optional_items_0_amount": "Amount of the first invoice item in Rappen.",
+        "optional_errorCode": "Only set when the payment failed.",
+        "optional_subscriptionToCreateInvoice_id": "ID of the subscription the invoice is created for.",
+        "optional_subscriptionToCreateInvoice_monthlyAmount": "Monthly amount. Choose a format.",
+        "optional_subscriptionToCreateInvoice_periodAmount": "Amount for the whole payment period. Choose a format.",
+        "optional_subscriptionToCreateInvoice_memberPlan_name": "Name of the subscription plan.",
+        "optional_invoice_items_0_name": "Name of the first invoice item (array, index 0).",
+        "optional_invoice_items_0_amount": "Amount of the first invoice item in Rappen.",
+        "optional_invoices_0_id": "ID of the latest invoice (array, index 0).",
+        "optional_invoices_0_description": "Description of the latest invoice."
       },
       "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual mailings».",
       "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal."
@@ -1408,16 +1464,16 @@
       "activeDescription": "Makes the plan available",
       "currency": "Currency",
       "currencyRequired": "Currency required",
-      "amountPerMonthMin": "Minimal amount / month",
-      "amountPerMonthMax": "Maximal amount / month",
-      "amountPerMonthMinRequired": "Minimal amount required",
-      "amountPerMonthMinZero": "Minimal amount cannot be less than 0",
-      "autoRenewalDescription": "Forces auto renewal of subscription",
-      "createMemberPlanHeader": "Create subscription plan",
+      "amountPerMonthMin": "Minimum amount / month",
+      "amountPerMonthMax": "Maximum amount / month",
+      "amountPerMonthMinRequired": "Minimum amount required",
+      "amountPerMonthMinZero": "Minimum amount cannot be less than 0",
+      "autoRenewalDescription": "Forces automatic renewal of the subscription",
+      "createMemberPlanHeader": "Create Subscription Plan",
       "description": "Description",
       "shortDescription": "Short description",
       "editPaymentSetting": "Edit payment methods & periodicities",
-      "forceAutoRenewal": "Force Auto Renew",
+      "forceAutoRenewal": "Force Auto Renewal",
       "loadingTitle": "Loading",
       "name": "Name",
       "nameRequired": "Name required",
@@ -1431,9 +1487,9 @@
       "savedChanges": "Saved",
       "successPage": "Redirect to page on payment success",
       "failPage": "Redirect to page on payment error",
-      "externalReward": "Link or description to an external reward (only visible to subscribers)",
-      "targetPriceMustBeGreaterThanMin": "The target amount must be between the minimum and the maximum amount.",
-      "maxPriceMustBeGreaterThanMin": "Maximal amount must be greater than the minimal amount",
+      "externalReward": "Link or description of an external reward (only visible to subscribers)",
+      "targetPriceMustBeGreaterThanMin": "Target amount must be between the minimum and the maximum amount",
+      "maxPriceMustBeGreaterThanMin": "Maximum amount must be greater than the minimum amount",
       "slugHelp": "Short, unique name for links, e.g. «yearly». It lets a link preselect this plan on the subscribe page. When you create a plan, it is generated from the name automatically.",
       "descriptionHelp": "Shown on the subscribe page below the plan selection once this plan is selected, together with the image.",
       "shortDescriptionHelp": "Short text shown right in the plan's selection box on the subscribe page, e.g. the main benefits in one sentence.",
@@ -1444,8 +1500,8 @@
       "createdAt": "{{createdAt, ccc PP p}}",
       "modified": "Last edited",
       "modifiedAt": "{{modifiedAt, ccc PP p}}",
-      "createNew": "New subscription plan",
-      "deleteModalTitle": "Delete subscription plan",
+      "createNew": "New Subscription Plan",
+      "deleteModalTitle": "Delete Subscription Plan",
       "editFlow": "Edit communication flow",
       "editFlowShort": "Edit flow",
       "name": "Name",
@@ -1501,7 +1557,7 @@
       "navigations": "Navigations",
       "pages": "Pages",
       "paymentMethods": "Payment Methods",
-      "peerArticles": "Peerable articles",
+      "peerArticles": "Peerable Articles",
       "networkContent": "We.Publish Network",
       "peering": "Peering",
       "peers": "Peers",
@@ -1593,21 +1649,21 @@
         "close": "Close",
         "confirm": "Confirm",
         "createdAt": "{{createdAt, ccc PP p}}",
-        "dateExplanationPopOver": "This can be used to reference articles that will be published at a later time. For example, helpful when scheduling social media posts in advance for the next morning.",
+        "dateExplanationPopOver": "This can be used to reference articles that will be published at a later time. It is helpful, for example, when scheduling social media posts in advance for the next morning.",
         "description": "Description",
-        "enterDescription": "Please enter a SEO description",
+        "enterDescription": "Please enter an SEO description",
         "seoTitle": "SEO Title",
-        "seoTitleHelpBlock": "Please use an SEO-optimised title",
+        "seoTitleHelpBlock": "Please use an SEO-optimized title",
         "seoDescription": "SEO Description",
-        "seoDescriptionHelpBlock": "Please use an SEO-optimised description",
+        "seoDescriptionHelpBlock": "Please use an SEO-optimized description",
         "enterImage": "Please add an image",
         "enterSocialMediaDescription": "Please enter a description for social media",
         "enterSocialMediaTitle": "Please enter a title for social media",
-        "enterTitle": "Please enter a SEO title",
+        "enterTitle": "Please enter an SEO title",
         "image": "Image",
         "key": "Key",
         "metadata": "Metadata",
-        "metadataInfo": "Information from these fields is used for previews in social media posts. If left blank, information from the General tab is used instead.",
+        "metadataInfo": "Information from these fields is used for previews in social media posts. If left blank, the information from the General tab is used instead.",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "pagePending": "There is already a pending publication scheduled at {{pendingPublishDate, ccc PP p}}. Publishing again will override that publication.",
         "postImage": "Image for Post",
@@ -1678,7 +1734,7 @@
       "slug": "Slug",
       "title": "Payment Methods",
       "selectImage": "Select preview image",
-      "providerName": "Payment provider",
+      "providerName": "Payment Provider",
       "paymentProviderStatusInfo": "✅ means this payment method is connected to a configured payment provider. ❌ means the provider is missing, so readers cannot pay with this method.",
       "slugInfo": "Created automatically from the name. The website uses it to identify this payment method.",
       "adapterInfo": "The payment provider that processes the payments of this method, e.g. a card or TWINT provider or invoices. Only providers configured for your media are listed."
@@ -1696,7 +1752,7 @@
         "import": "Import",
         "title": "Import article",
         "includeAuthors": "Import authors of the article",
-        "includeAuthorsHint": "Imports or updates the authors of the article. If another person has the same name, they will be distinguished.",
+        "includeAuthorsHint": "Imports or updates the authors of the article. If another person has the same name, they are kept as separate authors.",
         "includeTags": "Import tags of the article",
         "includeTagsHint": "Imports the tags of the article as long as they do not already exist.",
         "includeImages": "Import images of the article",
@@ -1720,10 +1776,10 @@
         "peersInfo": "Other We.Publish media whose articles you can take over. Disable a peer to pause the exchange without deleting it."
       },
       "panels": {
-        "callToActionImage": "Call To Action Image",
-        "callToActionImageURL": "Call To Action Image URL",
-        "callToActionText": "Call To Action Text",
-        "callToActionURL": "Call To Action URL",
+        "callToActionImage": "Call to Action Image",
+        "callToActionImageURL": "Call to Action Image URL",
+        "callToActionText": "Call to Action Text",
+        "callToActionURL": "Call to Action URL",
         "cancel": "Cancel",
         "checkOwnPeerProfileHelpBlock": "Preview your own peer profile:",
         "close": "Close",
@@ -1740,7 +1796,7 @@
         "leaveEmpty": "Leave empty if you don't want to change it",
         "name": "Name",
         "peerCreated": "Peer created",
-        "peerInfoUpdated": "Peer Info Updated",
+        "peerInfoUpdated": "Peer info updated",
         "peeringPreviewGuide": "Peering preview guide",
         "peerUpdated": "Peer updated",
         "text": "Text",
@@ -1757,15 +1813,15 @@
       }
     },
     "periodicJobsLog": {
-      "concerns": "Concerns: e.g. subscription renewal.",
+      "concerns": "Affects: e.g. subscription renewal.",
       "errorTime": "Failed at: {{date, ccc PP p}}",
       "failedJob": "Failed! Contact IT immediately.",
       "jobFailedTitle": "Automatic jobs did not run! Contact IT.",
       "lastRunSuccessful": "Successful in the last run.",
-      "noRun": "The automatic renewal of subscriptions was never executed.",
+      "noRun": "The automatic renewal of subscriptions has never been executed.",
       "retry": "Run again",
       "retryHint": "Runs the failed run again and then catches up every run up to and including today. It keeps going in the background, you can leave this page.",
-      "running": "Running",
+      "running": "Running …",
       "runningHint": "No other run can be started until this one has finished.",
       "startTime": "Started at: {{date, ccc PP p}}",
       "successTime": "Success at: {{date, ccc PP p}}",
@@ -1774,7 +1830,7 @@
     },
     "permissions": {
       "contactAdmin": "Please contact your administrator to add any of the following permissions: {{permissions}}",
-      "noAccess": "You have insufficient permission to access this content."
+      "noAccess": "You do not have sufficient permissions to access this content."
     },
     "pollAnswer": {
       "answerMissing": "Please enter your answer.",
@@ -1783,7 +1839,7 @@
       "deleteBtn": "Delete",
       "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
       "deleteModalTitle": "Delete?",
-      "insertYourNewAnswer": "Enter new answer",
+      "insertYourNewAnswer": "Enter a new answer",
       "urlCopied": "Voting link copied to the clipboard.",
       "urlCopyingFailed": "Voting link could not be copied.",
       "votes": "votes"
@@ -1811,10 +1867,10 @@
       "deleteBody": "Do you want to delete the source \"{{source}}\" permanently?",
       "deleteExternalVoteBtn": "Delete",
       "deleteTitle": "Delete?",
-      "emptySource": "Please insert the source name.",
-      "newSourcePlaceholder": "Input new external vote source (e.g. Facebook)",
+      "emptySource": "Please enter the source name.",
+      "newSourcePlaceholder": "Enter a new external vote source (e.g. Facebook)",
       "sourceHeaderCell": "Source",
-      "noPollAvailable": "No poll available"
+      "noPollAvailable": "No poll available."
     },
     "pollList": {
       "closedAt": "Closed at",
@@ -1843,14 +1899,14 @@
     "pollStateIndication": {
       "closed": "Poll closed",
       "open": "Poll open",
-      "waiting": "Poll is waiting for the opening on {{date, ccc PP p}}"
+      "waiting": "Poll opens on {{date, ccc PP p}}"
     },
     "replyCommentBtn": {
       "reply": "Reply to this comment",
-      "tooltip": "Create a new comment, which replies to this comment."
+      "tooltip": "Create a new comment in reply to this comment."
     },
     "resetUserPasswordForm": {
-      "sendMail": "Send mail to user (Registration System Mail)"
+      "sendMail": "Send email to user (registration system email)"
     },
     "richtext": {
       "menuBar": {
@@ -1869,7 +1925,9 @@
         "selectAnchor": "Select anchor",
         "openInNewTab": "Open link in new tab",
         "openLink": "Open link in a new window",
-        "remove": "Remove link"
+        "remove": "Remove link",
+        "variantButtonMain": "Button (main)",
+        "variantButtonSecondary": "Button (secondary)"
       },
       "colorPicker": {
         "clear": "Clear color"
@@ -1925,7 +1983,7 @@
       "subscriptionUpgradeModel": "On upgrade, bill the full price difference (instead of the pro-rated remaining credit)",
       "warnings": {
         "askOperators": "Warning: changing one or more of the settings may break the page or have other unpredictable consequences. If you are unsure, please try talking to the operators first. If you are sure, feel free to continue.",
-        "guestCommenting": "Allow guest visitors (not logged in) to write and publish comments to articles.",
+        "guestCommenting": "Allow guest visitors (not logged in) to write and publish comments on articles.",
         "guestCommentRating": "Allow guest visitors (not logged in) to rate other people's comments.",
         "guestPollVote": "Allow guest visitors (not logged in) to take a vote in polls.",
         "invoiceReminders": "How many times we will remind the user to pay for the subscription (once per day).",
@@ -1952,29 +2010,29 @@
     },
     "automaticMails": {
       "title": "Automatic emails",
-      "intro": "Here you decide which email template goes out automatically for which event. Pick a template per event – or leave it on «Do not send an email» if nothing should go out. The ⓘ icon explains every event.",
+      "intro": "Here you decide which email template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
       "example": "Example: {{example}}"
     },
     "subscriptionFlow": {
       "subscribe": "Subscription started",
       "renewal_success": "Renewal successful",
       "renewal_failed": "Renewal failed",
-      "deactivation_by_user": "Subscription cancelled",
+      "deactivation_by_user": "Subscription canceled",
       "reactivation": "Reactivated",
       "invoice_creation": "Invoice creation",
       "deactivation_unpaid": "Deactivation for unpaid invoice",
       "custom": "Custom event",
       "settings": "Subscription flow settings",
       "edit": "Edit subscription flow",
-      "settingsDescription": "These settings apply to this subscription plan only and overrule the automatic emails.",
+      "settingsDescription": "These settings apply to this subscription plan only and override the automatic emails.",
       "addNew": "Create new flow",
       "dayWithNumber": "day {{day}}",
       "days": "days",
       "savedChange": "Change successfully saved",
       "add": "Add",
-      "paymentMethod": "Payment Method",
+      "paymentMethod": "Payment method",
       "periodicity": "Periodicity",
-      "autoRenewal": "Auto Renewal?",
+      "autoRenewal": "Auto renewal?",
       "booleanFilter": {
         "true": "Yes",
         "false": "No"
@@ -1989,7 +2047,7 @@
       "subscriptionEventsDescription": "Emails that go out immediately when something happens to a subscription. They are not tied to a date.",
       "subscriptionEventsExample": "Someone subscribes on the website → the confirmation email goes out right away.",
       "timeline": "Timeline",
-      "timelineDescription": "Emails sent on a specific day around the end of the subscription. Day 0 is the day of renewal, negative days are before it, positive days after. Green means «an invoice is created» and is only possible on day 0 or earlier, orange means «the subscription ends because the invoice is unpaid» and only on day 0 or later. Both boxes always have to be set. Drag a colored box onto another day to move it.",
+      "timelineDescription": "Emails sent on a specific day around the end of the subscription. Day 0 is the day of renewal, negative days are before it, positive days after. Green means “an invoice is created” and is only possible on day 0 or earlier, orange means “the subscription ends because the invoice is unpaid” and only on day 0 or later. Both boxes always have to be set. Drag a colored box onto another day to move it.",
       "timelineExample": "Day -14: create the invoice and send a reminder. Day 5: end the subscription if the invoice is still open.",
       "addDay": "Add day",
       "editDay": "Change day",
@@ -2008,27 +2066,27 @@
         "subscribe": {
           "short": "The normal case on the website.",
           "description": "The normal case: a person subscribed on the website themselves and started the payment. The subscription is active right away.",
-          "example": "«Thanks for subscribing – here is your invoice.»"
+          "example": "“Thanks for subscribing – here is your invoice.”"
         },
         "confirm_subscription": {
           "short": "Used to win subscribers back.",
-          "description": "Used for winning subscribers back: you set up a ready-made subscription for a person who only has to confirm and pay for it. The subscription becomes active once the invoice is paid. See «Winning subscribers back» in the documentation.",
-          "example": "«Your subscription is ready – confirm it with one click.»"
+          "description": "Used for winning subscribers back: you set up a ready-made subscription for a person who only has to confirm and pay for it. The subscription becomes active once the invoice is paid. See “Winning subscribers back” in the documentation.",
+          "example": "“Your subscription is ready – confirm it with one click.”"
         },
         "renewal_success": {
           "short": "The renewal worked.",
           "description": "Goes out as soon as a subscription renewal is paid – whether the amount was collected automatically, paid by the person themselves or marked as paid manually by the editorial team. It does not go out for the first period of a new subscription.",
-          "example": "«Your subscription continues – many thanks.»"
+          "example": "“Your subscription continues – many thanks.”"
         },
         "renewal_failed": {
           "short": "Collecting the money failed.",
           "description": "Goes out when collecting the money for an automatic renewal fails – an expired credit card, missing payment details, or a payment that needs the person to confirm it.",
-          "example": "«Your payment did not go through – please check your payment method.»"
+          "example": "“Your payment did not go through – please check your payment method.”"
         },
         "deactivation_by_user": {
-          "short": "Cancelled by the person or by you.",
-          "description": "Goes out when a subscription is cancelled – either by the person on the website or by you in the editor. Cancellation because of an unpaid invoice is handled by the timeline.",
-          "example": "«Sorry to see you go – your subscription runs until 31 December.»"
+          "short": "Canceled by the person or by you.",
+          "description": "Goes out when a subscription is canceled – either by the person on the website or by you in the editor. Cancellation because of an unpaid invoice is handled by the timeline.",
+          "example": "“Sorry to see you go – your subscription runs until 31 December.”"
         }
       }
     },
@@ -2037,7 +2095,7 @@
         "activeAt": "Active at",
         "deactivationReason": "Deactivation reason",
         "reasonInvoiceNotPaid": "Invoice not paid",
-        "reasonUserReplacedSubscription": "Replaced by other subscription",
+        "reasonUserReplacedSubscription": "Replaced by another subscription",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "By user",
         "reasonChargeback": "Chargeback",
@@ -2049,7 +2107,7 @@
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "deleted": "Deleted user",
         "email": "Email",
-        "memberPlan": "Subscription plan",
+        "memberPlan": "Subscription Plan",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
         "newSubscription": "New Subscription",
@@ -2080,34 +2138,34 @@
         "account_creation": {
           "short": "A new account was created.",
           "description": "Goes out as soon as a person registers or gets an account while buying a subscription.",
-          "example": "«Welcome – your account is ready.»"
+          "example": "“Welcome – your account is ready.”"
         },
         "login_link": {
           "short": "Log in without a password.",
           "description": "Goes out when a person wants to log in via a link instead of typing a password. The email has to contain the login link.",
-          "example": "«Log in with a single click.»"
+          "example": "“Log in with a single click.”"
         },
         "password_reset": {
           "short": "Password forgotten.",
-          "description": "Goes out when a person clicks «Forgot password». The email has to contain the link for setting a new password.",
-          "example": "«Set a new password here.»"
+          "description": "Goes out when a person clicks “Forgot password”. The email has to contain the link for setting a new password.",
+          "example": "“Set a new password here.”"
         },
         "email_change": {
           "short": "Confirm the new address.",
           "description": "Goes to the new address when someone changes their email address. The change only takes effect after the confirmation.",
-          "example": "«Please confirm your new email address.»"
+          "example": "“Please confirm your new email address.”"
         },
         "test_mail": {
           "short": "For your own tests only.",
           "description": "Never sent to readers automatically. Use this template to try out the mail delivery yourself.",
-          "example": "«Test mail – if you can read this, sending works.»"
+          "example": "“Test mail – if you can read this, sending works.”"
         }
       }
     },
     "tags": {
       "overview": {
         "areYouSure": "Are you sure?",
-        "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and cannot be undone.",
         "areYouSureConfirmation": "Delete tag",
         "color": "Color",
         "createTag": "New Tag",
@@ -2126,7 +2184,7 @@
       "createdSuccess": "Created successfully",
       "deletedSuccess": "Deleted successfully",
       "updatedSuccess": "Updated successfully",
-      "updateError": "There was an error, please try again: {{error}}"
+      "updateError": "There was an error. Please try again: {{error}}"
     },
     "tokenList": {
       "overview": {
@@ -2151,12 +2209,13 @@
     "userConsents": {
       "consentName": "Consent name",
       "consentSlug": "Consent slug",
-      "create": "Create new User Consent",
+      "create": "Create new user consent",
       "title": "User Consents",
       "titleCreate": "Create User Consent",
       "titleEdit": "Edit User Consent",
       "user": "User",
-      "value": "Value"
+      "value": "Value",
+      "uniqueConstraint": "A user consent with slug '{{slug}}' already exists. Please choose a different slug."
     },
     "userCreateOrEditView": {
       "active": "Active",
@@ -2182,13 +2241,13 @@
       "totpDisabled": "Two-factor authentication is not yet configured. The user will be prompted to set it up on their next editor login.",
       "totpExemptInfo": "This user is exempt from the two-factor authentication requirement.",
       "totpExemptLabel": "Exempt from 2FA requirement",
-      "totpExemptWarning": "⚠️ SECURITY WARNING ⚠️\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log into the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
+      "totpExemptWarning": "⚠️ SECURITY WARNING ⚠️\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log in to the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
       "properties": "Properties",
       "resetPassword": "Reset Password",
       "resetPasswordFor": "Reset the password for {{userName}}",
       "selectUserImage": "Choose profile picture",
       "sendWebsiteLogin": "Send Login Link for Website",
-      "sendWebsiteLoginSuccessMessage": "Login Link sent to {{email}}",
+      "sendWebsiteLoginSuccessMessage": "Login link sent to {{email}}",
       "streetAddress": "Street",
       "streetAddressNumber": "House number",
       "streetAddress2": "Street 2",
@@ -2258,7 +2317,7 @@
         "editUserRole": "Edit User Role",
         "name": "Name",
         "permissions": "Permissions",
-        "systemRole": "is a System Role and cannot be edited",
+        "systemRole": "is a system role and cannot be edited",
         "Unknown": "Unknown"
       }
     },
@@ -2271,8 +2330,8 @@
           "activated": "Deactivate"
         },
         "date": "Deactivation Date",
-        "help": "Deactivated subscriptions can still be used until the \"paid until\" date, but they will not be renewed automatically, even if auto renew is enabled. Once deactivated, the subscription cannot be reactivated.",
-        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Reason: {{reason}}. If necessary, a new subscription can be created.",
+        "help": "Deactivated subscriptions can still be used until the paid-until date, but they will not be renewed automatically, even if auto renew is enabled. Once deactivated, the subscription cannot be reactivated.",
+        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Reason: {{reason}}. If needed, a new subscription can be created.",
         "modalMessage": {
           "activated": "Do you want to deactivate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
         },
@@ -2281,7 +2340,7 @@
         },
         "reason": "Deactivation Reason",
         "reasonInvoiceNotPaid": "User did not pay invoices",
-        "reasonUserReplacedSubscription": "Replaced by other subscription",
+        "reasonUserReplacedSubscription": "Replaced by another subscription",
         "reasonChargeback": "Chargeback",
         "cancellation": "Cancellation Date",
         "reasonNone": "None",
@@ -2292,14 +2351,14 @@
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
       },
       "editTitle": "Edit Subscription",
-      "memberPlanMonthlyAmount": "Minimal Monthly Amount ({{currency}})",
+      "memberPlanMonthlyAmount": "Minimum Monthly Amount ({{currency}})",
       "monthlyAmount": "Monthly amount",
       "monthlyAmountEquivalent": "Equals {{currency}} {{amount}} per month",
       "periodAmount": "Amount per payment interval",
       "paidUntil": "Paid Until",
       "paymentMethod": "Payment Method",
       "renewNow": "Renew now",
-      "selectMemberPlan": "Subscription plan",
+      "selectMemberPlan": "Subscription Plan",
       "selectUser": "Select User",
       "startsAt": "Subscription Start",
       "uniqueSubscription": "Unique Subscription",
@@ -2319,7 +2378,7 @@
         "InvoiceNotPaid": "Invoice not paid",
         "None": "None",
         "UserSelfDeactivated": "User wanted to cancel the subscription",
-        "UserReplacedSubscription": "Replaced by other subscription",
+        "UserReplacedSubscription": "Replaced by another subscription",
         "Chargeback": "Chargeback"
       },
       "deactivationString": "Deactivated at {{date}}. Reason: {{reason}}",
@@ -2350,7 +2409,7 @@
       "createBlockStyle": "Create new style",
       "placeholder": "Style name",
       "areYouSure": "Are you sure?",
-      "areYouSureBody": "The style \"{{ blockStyle }}\" will be deleted permanently. This cannot be undone.",
+      "areYouSureBody": "The style \"{{ blockStyle }}\" will be deleted permanently and cannot be undone.",
       "areYouSureConfirmation": "Delete style",
       "info": "A style lets you show a block differently on your website, e.g. a teaser grid as a slider. Select the block types each style is available for; how it looks is defined by your website's design.",
       "blockTypesPlaceholder": "Available for block types"
@@ -2375,7 +2434,7 @@
         "editing": "Editing",
         "saveConfirmMessage": "Saving updates this template's content right away in every article and page that uses it, including published ones.",
         "saveConfirmTitle": "Save template?",
-        "created": "Block template created"
+        "created": "Created"
       }
     },
     "yes": "Yes",
@@ -2383,7 +2442,7 @@
       "trialSubscription": "Advanced settings",
       "configureTrialBtn": "Configure for trial subscriptions",
       "extendableToggle": "Extendable",
-      "extendableHelpText": "Determine whether a user's subscription can be renewed - automatically or manually - or not. As a rule, trial subscriptions cannot be renewed.",
+      "extendableHelpText": "Determine whether a user's subscription can be renewed (automatically or manually) or not. As a rule, trial subscriptions cannot be renewed.",
       "maxCount": "Maximum number of subscriptions per user",
       "maxCountHelpText": "Limit the number of subscriptions that a user can purchase for this subscription plan. This also includes deactivated subscriptions.",
       "maxCountDonation": "Maximum number of donations per user",
@@ -2392,7 +2451,7 @@
       "forceAutoRenewNotPossible": "Automatic renewal is not possible because the subscription plan is not extendable.",
       "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this.",
       "migratePMTitle": "Migration of subscriptions to target payment method",
-      "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early.",
+      "migratePMHelptext": "Migrate the subscriptions of this plan to a new payment method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early.",
       "amountPerMonthTarget": "Target amount / month",
       "amountPerMonthTargetHelpText": "The monthly target amount defines the desired plan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
       "periodicityPricing": "Prices per enabled payment interval",
@@ -2417,7 +2476,7 @@
       "amountPerMonthMaxHelpText": "The maximum monthly amount is the highest amount users can pay when subscribing.",
       "redirectionsTitle": "Redirects",
       "confirmationPage": "Redirect to page for existing users (retargeting)",
-      "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page.",
+      "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an email to pay for the subscription. This can be mentioned on this page.",
       "productType": "Product type",
       "productTypeHelpText": "Choose whether the plan should be offered as a subscription or donation.",
       "productTypeSubscription": "Subscription",
@@ -2431,9 +2490,9 @@
       "nonExtendableNotCompatibleWithAutoRenew": "An automatically renewing subscription must be renewable. Change one of these parameters.",
       "configureAsTrialSubscription": "Configure as a trial subscription",
       "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan.",
-      "extendableWasChanged": "The «Extendable» option has been adjusted according to the subscription plan.",
+      "extendableWasChanged": "The “Extendable” option has been adjusted according to the subscription plan.",
       "extendModalTitle": "Extend your subscription early?",
-      "extendModalBody": "The subscription will be extended prematurely for the next possible period. An invoice will be issued."
+      "extendModalBody": "The subscription will be extended early for the next possible period. An invoice will be issued."
     },
     "subscriptionListFilter": {
       "extendable": "Extendable"
@@ -2448,7 +2507,7 @@
       "teaserSort": {
         "HotAndTrending": "Hot & Trending",
         "PublishedAt": "Publication date",
-        "UpdatedAt": "Last updated"
+        "UpdatedAt": "Last modified"
       }
     },
     "authorEditPanel": {
@@ -2458,7 +2517,7 @@
       "hideOnTeaser": "Hide on teasers"
     },
     "selectableItemsActions": {
-      "selectedItems": "{{numberOfItems}} items selected"
+      "selectedItems": "Selected items: {{numberOfItems}}"
     },
     "trackingPixels": {
       "noPixelInfoHeader": "No tracking integration available",
@@ -2480,7 +2539,7 @@
       },
       "delete": {
         "title": "Delete Permanently?",
-        "body": "Should the crowdfunding be irrevocably deleted?",
+        "body": "Should the crowdfunding be deleted permanently?",
         "delete": "Delete"
       },
       "create": {
@@ -2493,7 +2552,7 @@
         "name": "Name of the crowdfunding (not published)",
         "memberPlans": "Subscription Plans",
         "filter": "Revenue Filter",
-        "additionalRevenue": "External Revenues (e.g. via direct bank transfer)",
+        "additionalRevenue": "External Revenue (e.g. via direct bank transfer)",
         "additionalSubscriptions": "External Subscriptions (e.g. via direct bank transfer)",
         "selectMemberPlans": "Select Subscription Plans",
         "countSubscriptionsFrom": "Include only subscriptions paid from date",
@@ -2527,7 +2586,7 @@
       "permalinkHelpLabel": "About the permalink",
       "permalinkHelpWhat": "The permalink is a link to exactly this view: the date range, the subscription plans, the selected metrics and whether chart and table are shown are all part of the address.",
       "permalinkHelpWhy": "That lets you share an analysis with your team or bookmark it, without setting all the filters again every time. The date range is stored as fixed dates, so the link still shows the same numbers later on.",
-      "permalinkHelpExample": "Example: pick “Last month” and the “Annual subscription” plan, copy the permalink and share it in chat – everyone sees exactly these numbers, even next week.",
+      "permalinkHelpExample": "Example: pick “Last Month” and the “Annual subscription” plan, copy the permalink and share it in chat – everyone sees exactly these numbers, even next week.",
       "daily": "Daily",
       "monthly": "Monthly",
       "rangePickerPlaceholder": "from - to",
@@ -2561,7 +2620,7 @@
           "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far.",
           "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
           "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions).",
-          "predictedSubscriptionRenewalCount": "Number of subscriptions that are ready to be renewed at the end of their term.\n First-time subscriptions vs. \n Subscriptions with a history of renewal (subsequent renewals)\n Renewals are shown from the start of the selected period (or current date, if period starts in the past) \n Renewals are represented by the number of currently paid and active subscriptions set to auto-renew.",
+          "predictedSubscriptionRenewalCount": "Number of subscriptions that are ready to be renewed at the end of their term.\n First-time subscriptions vs. \n Subscriptions with a history of renewal (subsequent renewals)\n Renewals are shown from the start of the selected period (or the current date, if the period starts in the past) \n Renewals are represented by the number of currently paid and active subscriptions set to auto-renew.",
           "endingSubscriptionCount": "Subscriptions that will expire at the end of their term, excluding those set to auto-renew."
         },
         "totalActiveSubscriptionCount": "Total active & paid subscriptions",
@@ -2572,14 +2631,14 @@
         "replacedSubscriptionCount": "Replaced subscriptions",
         "predictedSubscriptionRenewalCount": "Upcoming renewals in period",
         "predictedSubscriptionRenewalCount_variants": {
-          "low": "First time renewals",
+          "low": "First-time renewals",
           "high": "Subsequent renewals",
           "total": "Sum of upcoming renewals",
           "perDayHighProbability": "Subsequent renewals",
-          "perDayLowProbability": "First time renewals"
+          "perDayLowProbability": "First-time renewals"
         },
         "predictedSubscriptionRenewalCountPerDay": {
-          "lowProbability": "First time renewals",
+          "lowProbability": "First-time renewals",
           "highProbability": "Subsequent renewals"
         },
         "endingSubscriptionCount": "Expiring subscriptions",
@@ -2593,7 +2652,7 @@
         "deactivatedSubscriptionUsers": "Deactivated subscriptions",
         "renewedSubscriptionUsers": "Renewed paid subscriptions",
         "replacedSubscriptionUsers": "Replaced subscriptions",
-        "predictedSubscriptionRenewalUsersLowProbability": "First time renewals",
+        "predictedSubscriptionRenewalUsersLowProbability": "First-time renewals",
         "predictedSubscriptionRenewalUsersHighProbability": "Subsequent renewals",
         "endingSubscriptionUsers": "Expiring subscriptions"
       }
@@ -2637,13 +2696,13 @@
       "form": {
         "editTitle": "Edit Paywall",
         "createTitle": "Create Paywall",
-        "name": "Name of the paywall (Not visible to the user)",
+        "name": "Name of the paywall (not visible to the user)",
         "description": "Paywall text (visible to the user)",
         "circumventDescription": "Paywall text when the article content is not hidden (visible to the user)",
         "active": "Active",
-        "activeHelpText": "Lets you quickly deactivate the paywall on all articles",
+        "activeHelpText": "Allows you to quickly deactivate the paywall on all articles",
         "alternativeSubscribeUrl": "Alternative URL to the subscribe page",
-        "alternativeSubscribeUrlHelpText": "Can be used in combination with a subscribe block on a page. If left empty will use the default page.",
+        "alternativeSubscribeUrlHelpText": "Can be used in combination with a subscribe block on a page. If left empty, the default page is used.",
         "anyMemberPlan": "Allow any subscription to pass the paywall",
         "memberPlans": "Only specific subscriptions can pass the paywall",
         "bypasses": "Bypasses",
@@ -2657,14 +2716,14 @@
         "display": "Display options",
         "hideContentAfter": "Hide content after X blocks",
         "fadeout": "Fade out hidden blocks",
-        "fadeoutHelpText": "Fading out shows a preview of the rest of the content.",
+        "fadeoutHelpText": "Fading out allows a preview of the rest of the content to be shown.",
         "bypassesInfo": "Secret codes that let people read articles behind this paywall without a subscription, e.g. for a print or event campaign. Share the link or QR code: whoever opens it gets free access for a few hours.",
         "showQrCode": "Show QR code",
         "hideContentAfterInfo": "How many blocks of the article (e.g. title, lead, paragraphs) readers without access still see before the rest is hidden. Default: 3."
       },
       "overview": {
         "areYouSure": "Are you sure?",
-        "areYouSureBody": "The paywall \"{{ paywall }}\" will be deleted permanently and cannot be reversed.",
+        "areYouSureBody": "The paywall \"{{ paywall }}\" will be deleted permanently and cannot be undone.",
         "areYouSureConfirmation": "Delete paywall",
         "createPaywall": "New Paywall",
         "title": "Paywalls",
@@ -2696,10 +2755,10 @@
         "code": "Code",
         "discountPercent": "Discount",
         "memberPlan": "Subscription plan",
-        "validFrom": "Valid From",
-        "validTo": "Valid To",
+        "validFrom": "Valid from",
+        "validTo": "Valid to",
         "areYouSure": "Are you sure?",
-        "areYouSureBody": "The discount code \"{{ discountCode }}\" will be deleted permanently. This cannot be undone.",
+        "areYouSureBody": "The discount code \"{{ discountCode }}\" will be deleted permanently and cannot be undone.",
         "areYouSureConfirmation": "Delete discount code",
         "usage": "Used",
         "usageValue": "{{total}} ({{paid}} paid)",
@@ -2747,14 +2806,14 @@
         "createdAt": "Created At",
         "unlimited": "∞",
         "areYouSure": "Are you sure?",
-        "areYouSureBody": "The goodie \"{{ goodie }}\" will be deleted permanently and cannot be reversed.",
+        "areYouSureBody": "The goodie \"{{ goodie }}\" will be deleted permanently and cannot be undone.",
         "areYouSureConfirmation": "Delete goodie",
         "availableStockInfo": "How many pieces can still be given away: the stock minus the goodies already chosen by subscribers. ∞ means unlimited."
       }
     },
     "paymentMethodEditPanel": {
       "gracePeriod": "Grace Period",
-      "gracePeriodHelpText": "If you use the paywall, allow users to read instantly after ordering a subscription, even if they don't pay eventually. This would apply to payments via bank transfer, for instance.",
+      "gracePeriodHelpText": "If you use the paywall, allow users to read immediately after ordering a subscription, even if they have not paid yet. This is useful for payments via bank transfer, for instance.",
       "days": "days"
     },
     "subscriptionsExport": {
@@ -2805,7 +2864,7 @@
         "apiUrl": "API URL",
         "instanceName": "Instance Name",
         "methods": "Payment Methods",
-        "offSessionPayments": "Off Session Payments",
+        "offSessionPayments": "Off-Session Payments",
         "pm": "Payment Methods",
         "psp": "Payment Service Providers",
         "type": "Type",
@@ -2823,7 +2882,7 @@
         "bexioInvoiceMailSubjectRenewalMembership": "Invoice Mail Subject (Renewal Membership)",
         "bexioInvoiceMailBodyNewMembership": "Invoice Mail Body (New Membership)",
         "bexioInvoiceMailBodyRenewalMembership": "Invoice Mail Body (Renewal Membership)",
-        "bexioMarkInvoiceAsOpen": "Mark Invoice As Open",
+        "bexioMarkInvoiceAsOpen": "Mark Invoice as Open",
         "bexioInvoiceTitleNewMembership": "Invoice Title (New Membership)",
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)",
         "typeInfo": "The payment service this integration is connected to. It is set when the integration is created and cannot be changed.",
@@ -2869,7 +2928,7 @@
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",
-        "replyToAddress": "Reply To Address",
+        "replyToAddress": "Reply-To Address",
         "apiKey": "API Key",
         "mailchimpBaseUrl": "Base URL",
         "mailgunBaseDomain": "Base Domain",
@@ -2895,7 +2954,7 @@
       },
       "trackingPixelSettings": {
         "type": "Type",
-        "prolitterisMemberNr": "Member Nr",
+        "prolitterisMemberNr": "Member No.",
         "prolitterisOnlyPaidContentAccess": "Only Paid Content Access",
         "prolitterisPassword": "Password",
         "prolitterisPublisherInternalKeyDomain": "Publisher Internal Key Domain",
@@ -2913,8 +2972,8 @@
         "credentialsReadyToBeSaved": "Credentials are ready to be saved!",
         "dropCredentialsFile": "Drop the credential file here!",
         "dragCredentialsFileHere": "Drag and drop the Google Analytics credential file here",
-        "articlePrefix": "We.Publish article url prefix (usually /a/)",
-        "property": "Google Analytics Property-ID",
+        "articlePrefix": "We.Publish article URL prefix (usually /a/)",
+        "property": "Google Analytics Property ID",
         "credentials": "Credential file",
         "articlePrefixInfo": "The part of the address that comes before an article's slug on your website. Only page views of addresses starting with it count as article reads.",
         "propertyInfo": "The numeric ID of your Google Analytics 4 property (not the G-… measurement ID). You find it in Google Analytics under «Admin» → «Property details».",
@@ -2998,8 +3057,12 @@
           "requireQueryParam": "Required query parameter",
           "requireQueryParamHelp": "URL must contain this query parameter to be processed. Leave empty to disable.",
           "lookbackHours": "Lookback (hours)",
-          "lookbackHoursHelp": "How far back to scan campaigns (default: 30)."
+          "lookbackHoursHelp": "How far back to scan campaigns (default: 30).",
+          "urlPatternInvalid": "Invalid regular expression"
         },
+        "syncProvider": "Sync provider",
+        "memberCount_one": "{{count}} member",
+        "memberCount_other": "{{count}} members",
         "enabledInfo": "When enabled, We.Publish transfers all active user accounts with their subscription data to the Mailchimp audience every night. «Sync Now» only works when this is on.",
         "apiKeyInfo": "The API key of your Mailchimp account («Profile» → «Extras» → «API keys»), ending in -us1, -us2 etc. Save it first so that the audiences, merge fields and groups below can be loaded.",
         "listIdInfo": "The Mailchimp audience the user accounts are transferred to. Once the API key is saved, you can pick it from the list; otherwise enter its ID from the audience settings in Mailchimp.",
@@ -3047,19 +3110,23 @@
           "gaLocator": "You can find it in the <url>admin dashboard</url> under data streams",
           "gtmEnable": "Enable Google Tag Manager",
           "gtm": "<url>Google Tag Manager</url> is a tool from Google that lets you manage tracking and marketing scripts on your website without changing the site’s code each time.",
-          "gtmLocator": "You can find it in the <url>admin dashboard</url> under Google tag"
+          "gtmLocator": "You can find it in the <url>admin dashboard</url> under Google tag",
+          "gaInvalid": "Must be a valid GA ID (e.g., G-XXXXXXXXXX or UA-XXXXXXXX-X)",
+          "gtmInvalid": "Must be a valid GTM ID (e.g., GTM-XXXXXXX)"
         },
         "plausible": {
           "title": "Plausible",
           "enable": "Enable Plausible",
           "pa": "<url>Plausible Analytics</url> is a privacy-focused alternative to Google Analytics.",
-          "paLocator": "You can find it in the <url>website settings</url> of your admin dashboard"
+          "paLocator": "You can find it in the <url>website settings</url> of your admin dashboard",
+          "paInvalid": "Must be a valid PA ID (e.g., pa-XXXXXXXXXXXXXXXXXXXX)"
         },
         "piwik": {
           "title": "Piwik PRO",
           "enable": "Enable Piwik PRO",
           "pro": "<url>Piwik PRO</url> is a privacy-focused analytics platform and an alternative to Google Analytics.",
-          "proLocator": "You can find it in the Menu > Administration > Site > ID of your administration panel"
+          "proLocator": "You can find it in the Menu > Administration > Site > ID of your administration panel",
+          "proInvalid": "Must be a valid Piwik ID (e.g., xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
         }
       },
       "mail": {
@@ -3067,8 +3134,9 @@
         "mailchimp": {
           "title": "Mailchimp",
           "enable": "Enable Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> is an email marketing platform that lets you manage newsletters and subscriber lists. This gives the website access to your newsletters so it can display them.",
-          "apiKeyLocator": "You can find it in the <url>API keys section</url> of your Mailchimp account. Make sure that it is a Mailchimp and not Mandrill key."
+          "mailchimp": "<url>Mailchimp</url> is an email marketing platform that lets you manage newsletters and subscriber lists. This gives the website access to your newsletters and lets it display them.",
+          "apiKeyLocator": "You can find it in the <url>API keys section</url> of your Mailchimp account. Make sure that it is a Mailchimp key and not a Mandrill key.",
+          "apiKeyInvalid": "Must be a valid Mailchimp API-Key (e.g., XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)"
         }
       },
       "ads": {
@@ -3077,49 +3145,50 @@
           "title": "SparkLoop",
           "enable": "Enable SparkLoop",
           "sparkLoop": "<url>SparkLoop</url> is a newsletter referral and recommendation platform that helps you grow your audience.",
-          "idLocator": "You can find your ID in the <url>script section</url> of your SparkLoop dashboard."
+          "idLocator": "You can find your ID in the <url>script section</url> of your SparkLoop dashboard.",
+          "idInvalid": "Must be a valid SparkLoop ID (e.g., pub_xxxxxxxxxxxx)"
         }
       },
       "theme": {
         "title": "Theme",
         "palette": {
           "primary": "Primary",
-          "primaryMain": "Main color present on the website. Used for links, navigation, buttons, etc.",
-          "primaryDark": "Used when the primary color is being displayed slightly darker",
-          "primaryLight": "Used when the primary color is being displayed slightly lighter",
-          "primaryContrastText": "Color that is easy to read when the primary color is used as a background color",
+          "primaryMain": "Main color of the website. Used for links, navigation, buttons, etc.",
+          "primaryDark": "Used when the primary color is displayed slightly darker",
+          "primaryLight": "Used when the primary color is displayed slightly lighter",
+          "primaryContrastText": "Color that is easily readable when the primary color is used as a background color",
           "secondary": "Secondary",
           "secondaryMain": "Sparingly used color throughout the website. Often seen on banners, focus teasers, etc.",
-          "secondaryDark": "Used when the secondary color is being displayed slightly darker",
-          "secondaryLight": "Used when the secondary color is being displayed slightly lighter",
-          "secondaryContrastText": "Color that is easy to read when the secondary color is used as a background color",
+          "secondaryDark": "Used when the secondary color is displayed slightly darker",
+          "secondaryLight": "Used when the secondary color is displayed slightly lighter",
+          "secondaryContrastText": "Color that is easily readable when the secondary color is used as a background color",
           "accent": "Accent",
-          "accentMain": "Color used to stand out from the rest of the page. Often seen on pre titles, break blocks, paywalls, buttons, etc.",
-          "accentDark": "Used when the accent color is being displayed slightly darker",
-          "accentLight": "Used when the accent color is being displayed slightly lighter",
-          "accentContrastText": "Color that is easy to read when the accent color is used as a background color",
+          "accentMain": "Color used to stand out from the rest of the page. Often seen on pre-titles, break blocks, paywalls, buttons, etc.",
+          "accentDark": "Used when the accent color is displayed slightly darker",
+          "accentLight": "Used when the accent color is displayed slightly lighter",
+          "accentContrastText": "Color that is easily readable when the accent color is used as a background color",
           "info": "Info",
           "infoMain": "Color used to portray useful information to the user",
-          "infoDark": "Used when the info color is being displayed slightly darker",
-          "infoLight": "Used when the info color is being displayed slightly lighter",
-          "infoContrastText": "Color that is easy to read when the info color is used as a background color",
+          "infoDark": "Used when the info color is displayed slightly darker",
+          "infoLight": "Used when the info color is displayed slightly lighter",
+          "infoContrastText": "Color that is easily readable when the info color is used as a background color",
           "success": "Success",
-          "successMain": "Color used to portray successful states to the user. Such as saving confirmation popups",
-          "successDark": "Used when the success color is being displayed slightly darker",
-          "successLight": "Used when the success color is being displayed slightly lighter",
-          "successContrastText": "Color that is easy to read when the success color is used as a background color",
+          "successMain": "Color used to portray successful states to the user, such as save confirmation pop-ups",
+          "successDark": "Used when the success color is displayed slightly darker",
+          "successLight": "Used when the success color is displayed slightly lighter",
+          "successContrastText": "Color that is easily readable when the success color is used as a background color",
           "error": "Error",
-          "errorMain": "Color used to portray erroneous states to the user. Such as form validation errors",
-          "errorDark": "Used when the error color is being displayed slightly darker",
-          "errorLight": "Used when the error color is being displayed slightly lighter",
-          "errorContrastText": "Color that is easy to read when the error color is used as a background color",
+          "errorMain": "Color used to portray erroneous states to the user, such as form validation errors",
+          "errorDark": "Used when the error color is displayed slightly darker",
+          "errorLight": "Used when the error color is displayed slightly lighter",
+          "errorContrastText": "Color that is easily readable when the error color is used as a background color",
           "warning": "Warning",
           "warningMain": "Color used to portray important information to the user",
-          "warningDark": "Used when the warning color is being displayed slightly darker",
-          "warningLight": "Used when the warning color is being displayed slightly lighter",
-          "warningContrastText": "Color that is easy to read when the warning color is used as a background color",
+          "warningDark": "Used when the warning color is displayed slightly darker",
+          "warningLight": "Used when the warning color is displayed slightly lighter",
+          "warningContrastText": "Color that is easily readable when the warning color is used as a background color",
           "divider": "Divider",
-          "dividerHelperText": "Used for thin lines that divide items on various different background colors. Ideally kept semi transparent for that reason.",
+          "dividerHelperText": "Used for thin lines that divide items on various background colors. Ideally kept semi-transparent for that reason.",
           "main": "Main",
           "light": "Light",
           "dark": "Dark",
@@ -3129,6 +3198,8 @@
           "backgroundPaper": "Background color of raised panels like dialogs and modals",
           "text": "Text",
           "textPrimary": "The text color of the website",
+          "default": "Default",
+          "paper": "Paper",
           "pickColor": "Pick color"
         },
         "typography": {
@@ -3165,6 +3236,15 @@
           "blockBreakBody": "Block Break Body",
           "blockTitlePreTitle": "Block Title Pre-title",
           "blockQuote": "Block Quote",
+          "fontWeightThin": "Thin",
+          "fontWeightExtraLight": "Extra Light",
+          "fontWeightLight": "Light",
+          "fontWeightNormal": "Normal",
+          "fontWeightMedium": "Medium",
+          "fontWeightSemiBold": "Semi Bold",
+          "fontWeightBold": "Bold",
+          "fontWeightExtraBold": "Extra Bold",
+          "fontWeightBlack": "Black",
           "fontFamilyInfo": "Choose from the fonts added under «Fonts». «Default» uses the website's standard font.",
           "fontSizeInfo": "The size of the text. rem refers to the website's base size (1rem is usually 16px), px is a fixed pixel size.",
           "lineHeightInfo": "The space between the lines of a paragraph. 1.5em means one and a half times the font size.",
@@ -3172,15 +3252,18 @@
           "textTransformInfo": "Changes the letter case automatically – e.g. «Uppercase» shows the whole text in capital letters, no matter how it was typed.",
           "overrideInfo": "Turn it on to set a value just for this text style. When it is off, the general value at the top of this tab applies."
         },
-        "tabs": "Theme sections",
+        "tabs": "Theme tabs",
         "paletteTab": "Palette",
-        "typographyTab": "Typography"
+        "typographyTab": "Typography",
+        "invalidColor": "Invalid color format. Must be a 3, 6 or 8-character hex code (e.g. #RGB, #RRGGBB or #RRGGBBAA).",
+        "invalidLength": "Must be a value with unit (e.g. \"1em\", \"16px\" or \"1rem\").",
+        "lengthOutOfRange": "Value must be between {{min}} and {{max}}."
       },
       "fonts": {
         "title": "Fonts",
         "addFont": "Add Font",
         "default": "Default",
-        "description": "Uses <Link>Google Fonts</Link>. Looking for an ideal font is best done directly there.",
+        "description": "Uses <Link>Google Fonts</Link>. The best way to look for an ideal font is directly there.",
         "searchPlaceholder": "Search Google Fonts …"
       },
       "saveSuccess": "Successfully saved the website settings"
@@ -3279,7 +3362,7 @@
       "nestedLabel": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}})",
       "duplicateBadge": "Duplicate: this teaser has already been placed on the page",
       "filterLabel": "Filter:",
-      "filterSuffix": "Filter: {{count}} Teasers",
+      "filterSuffix": "Filter: {{count}} teasers",
       "cancelReplace": "Cancel replace",
       "cancelReplaceTitle": "Clear selection",
       "cancelLoad": "Cancel load",
@@ -3310,7 +3393,8 @@
         "Page": "Page",
         "Event": "Event",
         "Custom": "Custom"
-      }
+      },
+      "blockNumber": "Block {{number}}"
     },
     "columnConfigurator": {
       "title": "Show/hide columns"
@@ -3351,7 +3435,7 @@
         "allUsersHint": "Everyone registered, with or without a subscription.",
         "hasSubscriptionHint": "People with a subscription. Subscription placeholders are available.",
         "noActiveSubscriptionHint": "People without an active subscription. Subscription placeholders stay empty.",
-        "endedSubscriptionHint": "People whose subscription was deactivated recently and who have not subscribed again since. The deactivated subscription is bound to the mail, so its placeholders are available."
+        "endedSubscriptionHint": "People whose subscription was deactivated recently and who have not subscribed again since. The deactivated subscription is attached to the email, so its placeholders are available."
       },
       "memberPlans": "Subscription plans",
       "memberPlansAll": "All subscription plans",
@@ -3390,7 +3474,7 @@
         "running": "Running",
         "done": "Done",
         "failed": "Failed",
-        "cancelled": "Cancelled"
+        "cancelled": "Canceled"
       },
       "missingPlaceholders": "Heads up: these placeholders won't be filled for these recipients: {{placeholders}}",
       "createTemplate": "New template",
@@ -3433,10 +3517,10 @@
         "letterTitle": "Letter preview"
       },
       "recipientsCountPerPerson": "{{count}} mails to {{people}} people",
-      "endsAtHint": "Cancellation date, otherwise the date paid up to.",
+      "endsAtHint": "Cancellation date, otherwise the paid-until date.",
       "isPaid": "Paid (currently covered)",
       "isPaidHint": "Grace periods are not taken into account.",
-      "isCanceled": "Cancelled",
+      "isCanceled": "Canceled",
       "isCanceledHint": "Also includes cancellations that only take effect later.",
       "hasReplacedSubscription": "Replaced another subscription (e.g. upgrade)",
       "hasReplacedSubscriptionHint": "Also includes downgrades and plan switches; manual or imported changes are not detected.",
@@ -3498,7 +3582,7 @@
         "all": "All",
         "title": "Filter",
         "reset": "Reset filters",
-        "typeHint": "What set this send off.",
+        "typeHint": "What triggered this send.",
         "channel": "Delivery",
         "jobHelp": "A send job groups all emails sent with one click via «Manual mailings». Pick one to see only its emails."
       },
@@ -3510,10 +3594,10 @@
       },
       "error": "Error",
       "typeDescriptions": {
-        "manual": "Sent by hand via «Manual mailings» or «Send test». Example: a newsletter to all subscribers.",
-        "subscriptionFlow": "Time-based, from «Automatic emails», scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
+        "manual": "Sent by hand via “Manual mailings” or “Send test”. Example: a newsletter to all subscribers.",
+        "subscriptionFlow": "Time-based, from “Automatic emails”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
         "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
-        "systemMail": "Account mails, configured under «Automatic emails» in the «Account & login» section. Examples: welcome mail after registration, password reset."
+        "systemMail": "Account mails, configured under “Automatic emails” in the “Account & login” section. Examples: welcome mail after registration, password reset."
       },
       "errorHelp": {
         "causeTitle": "What happened?",
@@ -3525,27 +3609,27 @@
         },
         "connectionRefused": {
           "cause": "Nothing accepts connections on the configured SMTP host and port.",
-          "fix": "1. Check host and port under Settings › Integrations › Mail.\n2. Start the mail server (locally e.g. «docker compose up mailpit»).\n3. Check whether a firewall blocks the port."
+          "fix": "1. Check host and port under Settings › Integrations › Mail.\n2. Start the mail server (locally e.g. “docker compose up mailpit”).\n3. Check whether a firewall blocks the port."
         },
         "hostNotFound": {
           "cause": "The mail server hostname cannot be resolved — it does not exist or DNS is unreachable.",
-          "fix": "1. Check the SMTP host for typos (Settings › Integrations › Mail).\n2. Inside Docker use the service name (e.g. «mailpit» instead of «localhost»)."
+          "fix": "1. Check the SMTP host for typos (Settings › Integrations › Mail).\n2. Inside Docker use the service name (e.g. “mailpit” instead of “localhost”)."
         },
         "timeout": {
           "cause": "The mail server did not answer in time. Usually a firewall blocks the port or the server is overloaded.",
-          "fix": "1. Check whether the port is reachable from this server.\n2. Many hosts block port 25 — use 587 or 465.\n3. Try the send again later."
+          "fix": "1. Check whether the port is reachable from this server.\n2. Many hosts block port 25 — use 587 or 465.\n3. Try sending again later."
         },
         "auth": {
           "cause": "The mail provider rejected the credentials.",
-          "fix": "1. Renew the API key or user and password under Settings › Integrations › Mail.\n2. Check that the key belongs to the right account and region."
+          "fix": "1. Renew the API key or username and password under Settings › Integrations › Mail.\n2. Check that the key belongs to the right account and region."
         },
         "recipientRejected": {
           "cause": "The mail server rejected the recipient address — it does not exist, or the sender domain is not allowed to send to it.",
-          "fix": "1. Check the recipient address.\n2. Verify the sender domain with your provider (SPF/DKIM).\n3. In sandbox mode (e.g. Mailgun) recipients must be authorised first."
+          "fix": "1. Check the recipient address.\n2. Verify the sender domain with your provider (SPF/DKIM).\n3. In sandbox mode (e.g. Mailgun) recipients must be authorized first."
         },
         "rateLimit": {
           "cause": "The provider hit its sending limit and rejected further mails for now.",
-          "fix": "1. Wait and run the send again later.\n2. Check the quota of your plan with the mail provider."
+          "fix": "1. Wait and try sending again later.\n2. Check the quota of your plan with the mail provider."
         },
         "noProvider": {
           "cause": "No mail provider is configured, so nothing can be sent.",
@@ -3553,7 +3637,7 @@
         },
         "templateMissing": {
           "cause": "The mailing template used here no longer exists.",
-          "fix": "Pick an existing template under «Mailing templates» or create it again, then start the send once more."
+          "fix": "Pick an existing template under “Mailing templates” or create it again, then start the send once more."
         },
         "generic": {
           "cause": "The mail server rejected the send with the message below.",
@@ -3731,7 +3815,10 @@
       }
     },
     "back": "Back",
-    "loading": "Loading…",
+    "loading": "Loading …",
+    "unsavedChangesDialog": {
+      "message": "Changes you made may not be saved."
+    },
     "action": "Actions",
     "deactivated": "Deactivated",
     "blockList": {

@@ -24,34 +24,36 @@ import { Link } from 'react-router-dom';
 import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
+import { lazyMessage } from '../../utility';
+
 const analyticsSchema = z.object({
   googleAnalytics: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(
-        /^(G|UA|YT|MO)-[A-Za-z0-9-]+$/,
-        'Must be a valid GA ID (e.g., G-XXXXXXXXXX or UA-XXXXXXXX-X)'
-      )
+      .string({
+        errorMap: lazyMessage('websiteSettings.analytics.google.gaInvalid'),
+      })
+      .regex(/^(G|UA|YT|MO)-[A-Za-z0-9-]+$/)
       .or(z.literal(''))
       .nullish(),
   }),
   googleTagManager: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(/^GTM-[A-Za-z0-9]+$/, 'Must be a valid GTM ID (e.g., GTM-XXXXXXX)')
+      .string({
+        errorMap: lazyMessage('websiteSettings.analytics.google.gtmInvalid'),
+      })
+      .regex(/^GTM-[A-Za-z0-9]+$/)
       .or(z.literal(''))
       .nullish(),
   }),
   plausible: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(
-        /^PA-[A-Za-z0-9_-]+$/i,
-        'Must be a valid PA ID (e.g., pa-XXXXXXXXXXXXXXXXXXXX)'
-      )
+      .string({
+        errorMap: lazyMessage('websiteSettings.analytics.plausible.paInvalid'),
+      })
+      .regex(/^PA-[A-Za-z0-9_-]+$/i)
       .or(z.literal(''))
       .nullish(),
   }),
@@ -59,8 +61,7 @@ const analyticsSchema = z.object({
     enabled: z.boolean(),
     key: z
       .string({
-        message:
-          'Must be a valid Piwik ID (e.g., xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)',
+        errorMap: lazyMessage('websiteSettings.analytics.piwik.proInvalid'),
       })
       .or(z.literal(''))
       .nullish(),
