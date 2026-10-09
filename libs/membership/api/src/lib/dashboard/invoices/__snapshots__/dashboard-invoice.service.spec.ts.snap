@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`DashboardInvoiceService should get the expected revenue of a month 1`] = `
+exports[`DashboardInvoiceService > should get the expected revenue of a month 1`] = `
 [
   {
     "amount": 150,
@@ -23,7 +23,7 @@ exports[`DashboardInvoiceService should get the expected revenue of a month 1`] 
 ]
 `;
 
-exports[`DashboardInvoiceService should get the expected revenue of a month 2`] = `
+exports[`DashboardInvoiceService > should get the expected revenue of a month 2`] = `
 {
   "include": {
     "items": true,
@@ -61,7 +61,7 @@ exports[`DashboardInvoiceService should get the expected revenue of a month 2`] 
 }
 `;
 
-exports[`DashboardInvoiceService should get the revenue of a month 1`] = `
+exports[`DashboardInvoiceService > should get the revenue of a month 1`] = `
 [
   {
     "amount": 150,
@@ -78,7 +78,7 @@ exports[`DashboardInvoiceService should get the revenue of a month 1`] = `
 ]
 `;
 
-exports[`DashboardInvoiceService should get the revenue of a month 2`] = `
+exports[`DashboardInvoiceService > should get the revenue of a month 2`] = `
 {
   "include": {
     "items": {

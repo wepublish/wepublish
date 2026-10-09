@@ -47,8 +47,8 @@ describe('NotificationConfirmationResolver', () => {
   let app: INestApplication;
 
   const notificationConfirmationService = {
-    getNotificationConfirmations: jest.fn(),
-    confirmNotification: jest.fn(),
+    getNotificationConfirmations: vi.fn(),
+    confirmNotification: vi.fn(),
   };
 
   beforeAll(async () => {
@@ -79,7 +79,7 @@ describe('NotificationConfirmationResolver', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   afterAll(async () => {

@@ -42,10 +42,10 @@ const config: SettingPdfRenderer = {
 };
 
 describe('CloudflarePdfRenderer', () => {
-  const fetchMock = jest.fn();
+  const fetchMock = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     global.fetch = fetchMock as unknown as typeof fetch;
   });
 
@@ -60,7 +60,7 @@ describe('CloudflarePdfRenderer', () => {
       fallback,
     });
 
-    jest.spyOn(renderer, 'getConfig').mockResolvedValue(setting);
+    vi.spyOn(renderer, 'getConfig').mockResolvedValue(setting);
 
     return renderer;
   }
@@ -117,7 +117,7 @@ describe('CloudflarePdfRenderer', () => {
 
   it('uses the configured timeout', async () => {
     fetchMock.mockResolvedValue(response(PDF));
-    const timeout = jest.spyOn(AbortSignal, 'timeout');
+    const timeout = vi.spyOn(AbortSignal, 'timeout');
 
     await createRenderer({ ...config, timeoutMs: 5000 }).render(
       '<html></html>'

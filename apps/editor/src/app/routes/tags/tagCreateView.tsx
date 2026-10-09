@@ -1,12 +1,13 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
+  CreateTagDocument,
   MutationCreateTagArgs,
   TagType,
-  useCreateTagMutation,
 } from '@wepublish/editor/api';
 import { CanCreateTag } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
@@ -16,15 +17,15 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { TagForm } from './tagForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -45,18 +46,21 @@ const TagCreateView = ({ type }: TagCreateViewProps) => {
   const [shouldClose, setShouldClose] = useState(false);
   const closePath = './..';
 
-  const [createTag, { loading: createLoading }] = useCreateTagMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.createTag) {
-        if (shouldClose) {
-          navigate(`./..`);
-        } else {
-          navigate(`./../edit/${data.createTag.id}`);
+  const [createTag, { loading: createLoading }] = useMutation(
+    CreateTagDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.createTag) {
+          if (shouldClose) {
+            navigate(`./..`);
+          } else {
+            navigate(`./../edit/${data.createTag.id}`);
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   const loading = createLoading;
   const onSubmit = () => createTag({ variables: tag });

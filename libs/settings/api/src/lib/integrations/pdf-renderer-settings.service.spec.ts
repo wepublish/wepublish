@@ -31,11 +31,11 @@ describe('PdfRendererSettingsService', () => {
       imports: [PrismaModule],
       providers: [
         PdfRendererSettingsService,
-        { provide: KvTtlCacheService, useValue: { resetNamespace: jest.fn() } },
-        { provide: ProviderSettingsChanged, useValue: { notify: jest.fn() } },
+        { provide: KvTtlCacheService, useValue: { resetNamespace: vi.fn() } },
+        { provide: ProviderSettingsChanged, useValue: { notify: vi.fn() } },
         {
           provide: PdfRendererSettingsDataloaderService,
-          useValue: { prime: jest.fn() },
+          useValue: { prime: vi.fn() },
         },
       ],
     }).compile();
@@ -46,10 +46,10 @@ describe('PdfRendererSettingsService', () => {
     );
   });
 
-  afterEach(() => jest.restoreAllMocks());
+  afterEach(() => vi.restoreAllMocks());
 
   test('stores the gotenberg password encrypted', async () => {
-    const create = jest
+    const create = vi
       .spyOn(prisma.settingPdfRenderer, 'create')
       .mockResolvedValue(cloudflare);
 
@@ -74,10 +74,10 @@ describe('PdfRendererSettingsService', () => {
   });
 
   test('switching from cloudflare to gotenberg clears the cloudflare credentials', async () => {
-    jest
-      .spyOn(prisma.settingPdfRenderer, 'findUnique')
-      .mockResolvedValue(cloudflare);
-    const update = jest
+    vi.spyOn(prisma.settingPdfRenderer, 'findUnique').mockResolvedValue(
+      cloudflare
+    );
+    const update = vi
       .spyOn(prisma.settingPdfRenderer, 'update')
       .mockResolvedValue(cloudflare);
 

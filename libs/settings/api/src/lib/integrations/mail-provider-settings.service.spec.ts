@@ -27,11 +27,11 @@ describe('MailProviderSettingsService', () => {
       imports: [PrismaModule],
       providers: [
         MailProviderSettingsService,
-        { provide: KvTtlCacheService, useValue: { resetNamespace: jest.fn() } },
-        { provide: ProviderSettingsChanged, useValue: { notify: jest.fn() } },
+        { provide: KvTtlCacheService, useValue: { resetNamespace: vi.fn() } },
+        { provide: ProviderSettingsChanged, useValue: { notify: vi.fn() } },
         {
           provide: MailProviderSettingsDataloaderService,
-          useValue: { prime: jest.fn() },
+          useValue: { prime: vi.fn() },
         },
       ],
     }).compile();
@@ -42,13 +42,13 @@ describe('MailProviderSettingsService', () => {
     );
   });
 
-  afterEach(() => jest.restoreAllMocks());
+  afterEach(() => vi.restoreAllMocks());
 
   test('switching type clears the configuration of the old one', async () => {
-    jest
-      .spyOn(prisma.settingMailProvider, 'findUnique')
-      .mockResolvedValue(existing);
-    const update = jest
+    vi.spyOn(prisma.settingMailProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    const update = vi
       .spyOn(prisma.settingMailProvider, 'update')
       .mockResolvedValue(existing);
 
@@ -72,10 +72,10 @@ describe('MailProviderSettingsService', () => {
   });
 
   test('leaves the configuration alone when the type stays the same', async () => {
-    jest
-      .spyOn(prisma.settingMailProvider, 'findUnique')
-      .mockResolvedValue(existing);
-    const update = jest
+    vi.spyOn(prisma.settingMailProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    const update = vi
       .spyOn(prisma.settingMailProvider, 'update')
       .mockResolvedValue(existing);
 
@@ -92,17 +92,17 @@ describe('MailProviderSettingsService', () => {
   });
 
   test('refuses to delete the only mail provider', async () => {
-    jest
-      .spyOn(prisma.settingMailProvider, 'findUnique')
-      .mockResolvedValue(existing);
-    jest.spyOn(prisma.settingMailProvider, 'count').mockResolvedValue(1);
+    vi.spyOn(prisma.settingMailProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    vi.spyOn(prisma.settingMailProvider, 'count').mockResolvedValue(1);
 
     await expect(service.deleteMailProviderSetting('mail')).rejects.toThrow(
       'is the only one configured'
     );
   });
   test('lists only the providers that were not retired', async () => {
-    const findMany = jest
+    const findMany = vi
       .spyOn(prisma.settingMailProvider, 'findMany')
       .mockResolvedValue([existing]);
 
@@ -114,10 +114,10 @@ describe('MailProviderSettingsService', () => {
   });
 
   test('ignores retired providers when guarding the last one', async () => {
-    jest
-      .spyOn(prisma.settingMailProvider, 'findUnique')
-      .mockResolvedValue(existing);
-    const count = jest
+    vi.spyOn(prisma.settingMailProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    const count = vi
       .spyOn(prisma.settingMailProvider, 'count')
       .mockResolvedValue(1);
 
@@ -125,5 +125,32 @@ describe('MailProviderSettingsService', () => {
       'is the only one configured'
     );
     expect(count).toHaveBeenCalledWith({ where: { deletedAt: null } });
+  });
+
+  test('sets up the mail provider when none is configured yet', async () => {
+    vi.spyOn(prisma.settingMailProvider, 'count').mockResolvedValue(0);
+    const create = vi
+      .spyOn(prisma.settingMailProvider, 'create')
+      .mockResolvedValue(existing);
+
+    await service.createMailProviderSetting({
+      id: 'mail',
+      type: 'MAILGUN',
+    } as never);
+
+    expect(create).toHaveBeenCalled();
+  });
+
+  test('refuses a second mail provider', async () => {
+    const count = vi
+      .spyOn(prisma.settingMailProvider, 'count')
+      .mockResolvedValue(1);
+    const create = vi.spyOn(prisma.settingMailProvider, 'create');
+
+    await expect(
+      service.createMailProviderSetting({ id: 'other', type: 'SMTP' } as never)
+    ).rejects.toThrow('already set up');
+    expect(count).toHaveBeenCalledWith({ where: { deletedAt: null } });
+    expect(create).not.toHaveBeenCalled();
   });
 });

@@ -1,3 +1,4 @@
+import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { AuthorDataloaderService } from './author-dataloader.service';
@@ -13,7 +14,7 @@ import { ArticleAuthorDataloader } from './article-author.dataloader';
 import { AuthorLinkDataloader } from './author-links.dataloader';
 
 @Module({
-  imports: [PrismaModule, TagModule],
+  imports: [GraphqlResponseCacheModule, PrismaModule, TagModule],
   providers: [
     AuthorDataloaderService,
     AuthorService,

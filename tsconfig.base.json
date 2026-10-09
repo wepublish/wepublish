@@ -18,7 +18,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@wepublish/action/api": ["libs/action/api/src/index.ts"],
       "@wepublish/ai/api": ["libs/ai/api/src/index.ts"],
       "@wepublish/ai/editor": ["libs/ai/editor/src/index.ts"],
       "@wepublish/ai/website": ["libs/ai/website/src/index.ts"],

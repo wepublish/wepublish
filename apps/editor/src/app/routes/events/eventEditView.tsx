@@ -1,28 +1,28 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  EventDocument,
   FullEventFragment,
   FullImageFragment,
   MutationUpdateEventArgs,
-  useEventQuery,
-  useUpdateEventMutation,
+  UpdateEventDocument,
 } from '@wepublish/editor/api';
-import { SingleViewTitle } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { EventForm } from './eventForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -50,30 +50,43 @@ export const EventEditView = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const { loading: dataLoading } = useEventQuery({
+  const {
+    loading: dataLoading,
+    data: eventData,
+    error: eventError,
+  } = useQuery(EventDocument, {
     variables: {
       id: eventId,
     },
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.event) {
-        setEvent(mapApiDataToInput(data.event));
-      }
-    },
   });
 
-  const [updateEvent, { loading: updateLoading }] = useUpdateEventMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (shouldClose) {
-        navigate(closePath);
-      }
+  useEffect(() => {
+    if (eventError) {
+      onErrorToast(eventError);
+    }
+  }, [eventError]);
 
-      if (data.updateEvent) {
-        setEvent(mapApiDataToInput(data.updateEvent));
-      }
-    },
-  });
+  useEffect(() => {
+    if (eventData?.event) {
+      setEvent(mapApiDataToInput(eventData.event));
+    }
+  }, [eventData]);
+
+  const [updateEvent, { loading: updateLoading }] = useMutation(
+    UpdateEventDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (shouldClose) {
+          navigate(closePath);
+        }
+
+        if (data.updateEvent) {
+          setEvent(mapApiDataToInput(data.updateEvent));
+        }
+      },
+    }
+  );
 
   const loading = dataLoading || updateLoading;
 

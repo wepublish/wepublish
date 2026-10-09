@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import {
   CanActivate,
@@ -122,8 +123,8 @@ const paymentMethodsQuery = `
 `;
 
 const mockPrismaClient = {
-  subscription: { count: jest.fn().mockResolvedValue(0) },
-  paymentMethod: { findMany: jest.fn().mockResolvedValue([]) },
+  subscription: { count: vi.fn().mockResolvedValue(0) },
+  paymentMethod: { findMany: vi.fn().mockResolvedValue([]) },
 } as unknown as PrismaClient;
 
 describe('Subscription Flow Resolver', () => {
@@ -145,13 +146,13 @@ describe('Subscription Flow Resolver', () => {
           {
             provide: SubscriptionFlowService,
             useValue: {
-              getFlows: jest.fn().mockResolvedValue([]),
-              createFlow: jest.fn().mockResolvedValue([]),
-              updateFlow: jest.fn().mockResolvedValue([]),
-              deleteFlow: jest.fn().mockResolvedValue([]),
-              createInterval: jest.fn().mockResolvedValue([]),
-              updateInterval: jest.fn().mockResolvedValue([]),
-              deleteInterval: jest.fn().mockResolvedValue([]),
+              getFlows: vi.fn().mockResolvedValue([]),
+              createFlow: vi.fn().mockResolvedValue([]),
+              updateFlow: vi.fn().mockResolvedValue([]),
+              deleteFlow: vi.fn().mockResolvedValue([]),
+              createInterval: vi.fn().mockResolvedValue([]),
+              updateInterval: vi.fn().mockResolvedValue([]),
+              deleteInterval: vi.fn().mockResolvedValue([]),
             },
           },
           {
@@ -342,6 +343,10 @@ describe('Subscription Flow Resolver', () => {
   describe('authenticated', () => {
     let resolver: SubscriptionFlowResolver;
     let subscriptionFlowService: SubscriptionFlowService;
+    let prisma: {
+      subscription: { count: Mock };
+      subscriptionFlow: { findMany: Mock };
+    };
 
     const mockMemberPlan = {
       id: 'plan-1',
@@ -374,22 +379,24 @@ describe('Subscription Flow Resolver', () => {
           {
             provide: SubscriptionFlowService,
             useValue: {
-              getFlows: jest.fn(),
-              createFlow: jest.fn(),
-              updateFlow: jest.fn(),
-              deleteFlow: jest.fn(),
+              getFlows: vi.fn(),
+              createFlow: vi.fn(),
+              updateFlow: vi.fn(),
+              deleteFlow: vi.fn(),
             },
           },
           {
             provide: PrismaClient,
             useValue: {
-              // Mock any PrismaClient methods that might be used in resolver
+              subscription: { count: vi.fn().mockResolvedValue(0) },
+              subscriptionFlow: { findMany: vi.fn().mockResolvedValue([]) },
             },
           },
         ],
       }).compile();
 
       resolver = module.get<SubscriptionFlowResolver>(SubscriptionFlowResolver);
+      prisma = module.get(PrismaClient);
       subscriptionFlowService = module.get<SubscriptionFlowService>(
         SubscriptionFlowService
       );
@@ -397,9 +404,9 @@ describe('Subscription Flow Resolver', () => {
 
     it('includes number of subscriptions', async () => {
       const mockFlows = [mockSubscriptionFlow];
-      jest
-        .spyOn(subscriptionFlowService, 'getFlows')
-        .mockResolvedValue(mockFlows as any);
+      vi.spyOn(subscriptionFlowService, 'getFlows').mockResolvedValue(
+        mockFlows as any
+      );
 
       const response = await resolver.subscriptionFlows(false, 'plan-1');
       expect(response.length).toEqual(1);
@@ -407,6 +414,92 @@ describe('Subscription Flow Resolver', () => {
         false,
         'plan-1'
       );
+    });
+
+    describe('numberOfSubscriptions', () => {
+      const customFlow = {
+        ...mockSubscriptionFlow,
+        id: 'flow-2',
+        default: false,
+        memberPlanId: 'plan-1',
+        paymentMethods: [{ id: 'payment-1' }],
+        periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
+        autoRenewal: [true, false],
+      };
+
+      const subscriptionsOfCustomFlow = {
+        memberPlanID: 'plan-1',
+        paymentMethodID: { in: ['payment-1'] },
+        paymentPeriodicity: {
+          in: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
+        },
+        OR: [{ autoRenew: true }, { autoRenew: false }],
+      };
+
+      it('counts the subscriptions of the member plan that match the filters', async () => {
+        prisma.subscription.count.mockResolvedValue(12);
+
+        const count = await resolver.numberOfSubscriptions(customFlow as any);
+
+        expect(count).toBe(12);
+        expect(prisma.subscription.count).toHaveBeenCalledWith({
+          where: subscriptionsOfCustomFlow,
+        });
+      });
+
+      it('counts every subscription no other flow covers for the default flow', async () => {
+        prisma.subscriptionFlow.findMany.mockResolvedValue([customFlow]);
+        prisma.subscription.count.mockResolvedValue(30);
+
+        const count = await resolver.numberOfSubscriptions({
+          ...mockSubscriptionFlow,
+          paymentMethods: [],
+          periodicities: [],
+          autoRenewal: [],
+        } as any);
+
+        expect(count).toBe(30);
+        expect(prisma.subscriptionFlow.findMany).toHaveBeenCalledWith({
+          where: { default: false },
+          include: { paymentMethods: true },
+        });
+        expect(prisma.subscription.count).toHaveBeenCalledWith({
+          where: { NOT: { OR: [subscriptionsOfCustomFlow] } },
+        });
+      });
+
+      it('counts only the subscriptions of a member plan for the default flow when asked for one', async () => {
+        prisma.subscriptionFlow.findMany.mockResolvedValue([customFlow]);
+        prisma.subscription.count.mockResolvedValue(3);
+
+        const count = await resolver.numberOfSubscriptions(
+          mockSubscriptionFlow as any,
+          'plan-1'
+        );
+
+        expect(count).toBe(3);
+        expect(prisma.subscriptionFlow.findMany).toHaveBeenCalledWith({
+          where: { default: false, memberPlanId: 'plan-1' },
+          include: { paymentMethods: true },
+        });
+        expect(prisma.subscription.count).toHaveBeenCalledWith({
+          where: {
+            memberPlanID: 'plan-1',
+            NOT: { OR: [subscriptionsOfCustomFlow] },
+          },
+        });
+      });
+
+      it('counts all subscriptions for the default flow when there are no other flows', async () => {
+        prisma.subscription.count.mockResolvedValue(42);
+
+        const count = await resolver.numberOfSubscriptions(
+          mockSubscriptionFlow as any
+        );
+
+        expect(count).toBe(42);
+        expect(prisma.subscription.count).toHaveBeenCalledWith({ where: {} });
+      });
     });
 
     it('returns subscription flows for all queries and mutations', async () => {
@@ -417,22 +510,23 @@ describe('Subscription Flow Resolver', () => {
         default: false,
       };
 
-      jest
-        .spyOn(subscriptionFlowService, 'getFlows')
+      vi.spyOn(subscriptionFlowService, 'getFlows')
         .mockResolvedValueOnce([mockFlow1] as any) // First call
         .mockResolvedValueOnce([mockFlow1, mockFlow2] as any) // After create
         .mockResolvedValueOnce([mockFlow1, mockFlow2] as any) // After update
         .mockResolvedValueOnce([mockFlow1] as any); // After delete
 
-      jest
-        .spyOn(subscriptionFlowService, 'createFlow')
-        .mockResolvedValue([mockFlow1, mockFlow2] as any);
-      jest
-        .spyOn(subscriptionFlowService, 'updateFlow')
-        .mockResolvedValue([mockFlow1, mockFlow2] as any);
-      jest
-        .spyOn(subscriptionFlowService, 'deleteFlow')
-        .mockResolvedValue([mockFlow1] as any);
+      vi.spyOn(subscriptionFlowService, 'createFlow').mockResolvedValue([
+        mockFlow1,
+        mockFlow2,
+      ] as any);
+      vi.spyOn(subscriptionFlowService, 'updateFlow').mockResolvedValue([
+        mockFlow1,
+        mockFlow2,
+      ] as any);
+      vi.spyOn(subscriptionFlowService, 'deleteFlow').mockResolvedValue([
+        mockFlow1,
+      ] as any);
 
       // Test initial state
       expect(

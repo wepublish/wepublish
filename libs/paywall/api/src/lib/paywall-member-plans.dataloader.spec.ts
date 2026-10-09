@@ -1,0 +1,89 @@
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaClient } from '@prisma/client';
+import { PaywallMemberPlansDataloader } from './paywall-member-plans.dataloader';
+import type { Mock } from 'vitest';
+
+describe('PaywallMemberPlansDataloader', () => {
+  let dataloader: PaywallMemberPlansDataloader;
+  let prismaMock: {
+    paywallMemberplan: {
+      findMany: Mock;
+    };
+  };
+
+  beforeEach(async () => {
+    prismaMock = {
+      paywallMemberplan: {
+        findMany: vi.fn(),
+      },
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [KvTtlCacheModule],
+      providers: [
+        PaywallMemberPlansDataloader,
+        {
+          provide: PrismaClient,
+          useValue: prismaMock,
+        },
+      ],
+    }).compile();
+
+    dataloader = await module.resolve(PaywallMemberPlansDataloader);
+  });
+
+  it('should batch loads into a single query', async () => {
+    prismaMock.paywallMemberplan.findMany.mockResolvedValue([]);
+
+    await Promise.all([
+      dataloader.load('paywall-1'),
+      dataloader.load('paywall-2'),
+      dataloader.load('paywall-1'),
+    ]);
+
+    expect(prismaMock.paywallMemberplan.findMany).toHaveBeenCalledTimes(1);
+    expect(prismaMock.paywallMemberplan.findMany).toHaveBeenCalledWith({
+      where: {
+        paywallId: {
+          in: ['paywall-1', 'paywall-2'],
+        },
+      },
+      include: {
+        memberPlan: {
+          include: {
+            availablePaymentMethods: true,
+            periodicityPricing: true,
+          },
+        },
+      },
+    });
+  });
+
+  it('should group member plans by paywall', async () => {
+    const memberPlan1 = {
+      id: 'plan-1',
+      availablePaymentMethods: [],
+      periodicityPricing: [],
+    };
+    const memberPlan2 = {
+      id: 'plan-2',
+      availablePaymentMethods: [],
+      periodicityPricing: [],
+    };
+
+    prismaMock.paywallMemberplan.findMany.mockResolvedValue([
+      { paywallId: 'paywall-1', memberPlan: memberPlan1 },
+      { paywallId: 'paywall-1', memberPlan: memberPlan2 },
+      { paywallId: 'paywall-2', memberPlan: memberPlan2 },
+    ]);
+
+    const result = await dataloader.loadMany([
+      'paywall-1',
+      'paywall-2',
+      'paywall-3',
+    ]);
+
+    expect(result).toEqual([[memberPlan1, memberPlan2], [memberPlan2], []]);
+  });
+});

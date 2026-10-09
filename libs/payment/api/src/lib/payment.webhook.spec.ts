@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { PaymentState } from '@prisma/client';
 import { Request, Response } from 'express';
 import { InvoicePaidNotifier } from './invoice-paid.listener';
@@ -12,11 +13,11 @@ function fakeProvider(
 ): PaymentProvider {
   return {
     id,
-    webhookForPaymentIntent: jest.fn().mockResolvedValue({
+    webhookForPaymentIntent: vi.fn().mockResolvedValue({
       status: 200,
       paymentStates: [{ paymentID: 'payment-1', state: paymentState }],
     }),
-    updatePaymentWithIntentState: jest
+    updatePaymentWithIntentState: vi
       .fn()
       .mockResolvedValue(updatePaymentWithIntentStateResult),
   } as unknown as PaymentProvider;
@@ -24,13 +25,15 @@ function fakeProvider(
 
 function fakeResponse(): Response {
   const res = {} as Response;
-  res.status = jest.fn().mockReturnValue(res);
-  res.send = jest.fn().mockReturnValue(res);
+  res.status = vi.fn().mockReturnValue(res);
+  res.send = vi.fn().mockReturnValue(res);
+  res.type = vi.fn().mockReturnValue(res);
+  res.redirect = vi.fn().mockReturnValue(res);
   return res;
 }
 
 function fakeRequest(): Request {
-  return { get: jest.fn() } as unknown as Request;
+  return { get: vi.fn() } as unknown as Request;
 }
 
 describe('PaymentWebhookController.receiveWebhook', () => {
@@ -39,7 +42,7 @@ describe('PaymentWebhookController.receiveWebhook', () => {
       id: 'payment-1',
       invoiceID: 'invoice-1',
     });
-    const notifier = { notify: jest.fn().mockResolvedValue(undefined) };
+    const notifier = { notify: vi.fn().mockResolvedValue(undefined) };
     const config = { paymentProviders: [provider] } as PaymentMethodConfig;
     const controller = new PaymentWebhookController(
       config,
@@ -58,7 +61,7 @@ describe('PaymentWebhookController.receiveWebhook', () => {
       id: 'payment-1',
       invoiceID: 'invoice-1',
     });
-    const notifier = { notify: jest.fn().mockResolvedValue(undefined) };
+    const notifier = { notify: vi.fn().mockResolvedValue(undefined) };
     const config = { paymentProviders: [provider] } as PaymentMethodConfig;
     const controller = new PaymentWebhookController(
       config,
@@ -78,7 +81,7 @@ describe('PaymentWebhookController.receiveWebhook', () => {
       PaymentState.paid,
       undefined
     );
-    const notifier = { notify: jest.fn().mockResolvedValue(undefined) };
+    const notifier = { notify: vi.fn().mockResolvedValue(undefined) };
     const config = { paymentProviders: [provider] } as PaymentMethodConfig;
     const controller = new PaymentWebhookController(
       config,
@@ -92,5 +95,52 @@ describe('PaymentWebhookController.receiveWebhook', () => {
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(notifier.notify).not.toHaveBeenCalled();
+  });
+
+  it('redirects after applying the payment states when the provider asks for it', async () => {
+    const provider = fakeProvider('simulated', PaymentState.paid, {
+      id: 'payment-1',
+      invoiceID: 'invoice-1',
+    });
+    (provider.webhookForPaymentIntent as Mock).mockResolvedValue({
+      status: 200,
+      paymentStates: [{ paymentID: 'payment-1', state: PaymentState.paid }],
+      redirectUrl: 'https://example.com/success',
+    });
+    const notifier = { notify: vi.fn().mockResolvedValue(undefined) };
+    const controller = new PaymentWebhookController(
+      { paymentProviders: [provider] } as PaymentMethodConfig,
+      notifier as unknown as InvoicePaidNotifier
+    );
+    const res = fakeResponse();
+
+    await controller.receiveWebhook('simulated', fakeRequest(), res);
+
+    expect(provider.updatePaymentWithIntentState).toHaveBeenCalled();
+    expect(notifier.notify).toHaveBeenCalledWith('invoice-1');
+    expect(res.redirect).toHaveBeenCalledWith(
+      303,
+      'https://example.com/success'
+    );
+    expect(res.send).not.toHaveBeenCalled();
+  });
+
+  it('answers with the html page a provider returns', async () => {
+    const provider = fakeProvider('simulated', PaymentState.paid, null);
+    (provider.webhookForPaymentIntent as Mock).mockResolvedValue({
+      status: 200,
+      html: '<html>checkout</html>',
+    });
+    const controller = new PaymentWebhookController(
+      { paymentProviders: [provider] } as PaymentMethodConfig,
+      { notify: vi.fn() } as unknown as InvoicePaidNotifier
+    );
+    const res = fakeResponse();
+
+    await controller.receiveWebhook('simulated', fakeRequest(), res);
+
+    expect(res.type).toHaveBeenCalledWith('html');
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith('<html>checkout</html>');
   });
 });

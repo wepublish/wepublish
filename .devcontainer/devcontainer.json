@@ -26,7 +26,8 @@
     "MAIL_SMTP_HOST": "mailpit",
     "MAIL_SMTP_PORT": "1025",
     "MAIL_SMTP_FROM": "no-reply@wepublish.local",
-    "GOTENBERG_URL": "http://gotenberg:3000"
+    "GOTENBERG_URL": "http://gotenberg:3000",
+    "REDIS_URL": "redis://wepublish-local:wepublish-local@dragonfly:6379/0"
   },
 
   // Mailpit web UI (read caught dev mails).

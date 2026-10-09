@@ -1,3 +1,4 @@
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { Injectable } from '@nestjs/common';
 import { MediaAdapter } from './media-adapter';
 import { PrismaClient } from '@prisma/client';
@@ -22,14 +23,15 @@ export type UploadImage = Pick<
 export class ImageUploadService {
   constructor(
     private prisma: PrismaClient,
-    private mediaAdapter: MediaAdapter
+    private mediaAdapter: MediaAdapter,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   @PrimeDataLoader(ImageDataloaderService)
   async uploadImage({ file, ...input }: UploadImageInput): Promise<Image> {
     const { id, ...image } = await this.mediaAdapter.uploadImage(file);
 
-    return this.prisma.image.create({
+    const created = await this.prisma.image.create({
       data: {
         id,
         ...input,
@@ -37,11 +39,15 @@ export class ImageUploadService {
         filename: input.filename ?? image.filename,
       },
     });
+    await this.publicContentCache.invalidateDraft('images');
+
+    return created;
   }
 
   async replaceImage(
     imageId: string,
-    uploadImageInput: UploadImageInput
+    uploadImageInput: UploadImageInput,
+    { profileImage = false }: { profileImage?: boolean } = {}
   ): Promise<Image> {
     const {
       file,
@@ -57,7 +63,7 @@ export class ImageUploadService {
     } = uploadImageInput;
     const { id, ...image } = await this.mediaAdapter.uploadImage(file);
 
-    return this.prisma.image.update({
+    const result = await this.prisma.image.update({
       where: {
         id: imageId,
       },
@@ -75,12 +81,29 @@ export class ImageUploadService {
         focalPointY,
       },
     });
+    await this.forgetImages(profileImage);
+
+    if (id !== imageId) {
+      await this.mediaAdapter.deleteImage(imageId);
+    }
+
+    return result;
   }
 
-  async deleteImage(imageId: string) {
+  async deleteImage(
+    imageId: string,
+    { profileImage = false }: { profileImage?: boolean } = {}
+  ) {
     await this.mediaAdapter.deleteImage(imageId);
     await this.prisma.image.delete({ where: { id: imageId } });
+    await this.forgetImages(profileImage);
 
     return imageId;
+  }
+
+  private forgetImages(profileImage: boolean) {
+    return profileImage ?
+        this.publicContentCache.invalidateDraft('images')
+      : this.publicContentCache.invalidate('images');
   }
 }

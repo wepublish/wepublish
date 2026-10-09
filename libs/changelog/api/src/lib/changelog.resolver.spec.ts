@@ -63,8 +63,8 @@ describe('ChangelogResolver', () => {
   let app: INestApplication;
 
   const changelogService = {
-    getChangelogEntries: jest.fn(),
-    confirmChangelogEntry: jest.fn(),
+    getChangelogEntries: vi.fn(),
+    confirmChangelogEntry: vi.fn(),
   };
 
   beforeAll(async () => {
@@ -95,7 +95,7 @@ describe('ChangelogResolver', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   afterAll(async () => {

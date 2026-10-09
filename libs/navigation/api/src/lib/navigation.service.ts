@@ -6,23 +6,37 @@ import {
 import { PrismaClient } from '@prisma/client';
 import { NavigationDataloaderService } from './navigation-dataloader.service';
 import { PrimeDataLoader } from '@wepublish/utils/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import {
+  NAVIGATION_CACHE_NAMESPACE,
+  NAVIGATION_CACHE_TTL_SECONDS,
+} from './navigation-cache';
 
 @Injectable()
 export class NavigationService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
   @PrimeDataLoader(NavigationDataloaderService)
   async getNavigations() {
-    return this.prisma.navigation.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
+    return this.kv.getOrLoadNs(
+      NAVIGATION_CACHE_NAMESPACE,
+      'all',
+      () =>
+        this.prisma.navigation.findMany({
+          orderBy: { createdAt: 'desc' },
+        }),
+      NAVIGATION_CACHE_TTL_SECONDS
+    );
   }
 
   @PrimeDataLoader(NavigationDataloaderService)
   async createNavigation(input: CreateNavigationInput) {
     const { links, ...data } = input;
 
-    return this.prisma.navigation.create({
+    const navigation = await this.prisma.navigation.create({
       data: {
         ...data,
         links: {
@@ -30,12 +44,18 @@ export class NavigationService {
         },
       },
     });
+    await this.kv.resetNamespace(NAVIGATION_CACHE_NAMESPACE);
+
+    return navigation;
   }
 
   async deleteNavigationById(id: string) {
-    return this.prisma.navigation.delete({
+    const navigation = await this.prisma.navigation.delete({
       where: { id },
     });
+    await this.kv.resetNamespace(NAVIGATION_CACHE_NAMESPACE);
+
+    return navigation;
   }
 
   @PrimeDataLoader(NavigationDataloaderService)
@@ -46,7 +66,7 @@ export class NavigationService {
       where: { navigationId: id },
     });
 
-    return this.prisma.navigation.update({
+    const navigation = await this.prisma.navigation.update({
       where: { id },
       data: {
         ...data,
@@ -55,6 +75,9 @@ export class NavigationService {
         },
       },
     });
+    await this.kv.resetNamespace(NAVIGATION_CACHE_NAMESPACE);
+
+    return navigation;
   }
 
   async getNavigationLinks(id: string) {

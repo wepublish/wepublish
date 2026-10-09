@@ -1,15 +1,17 @@
+import { useQuery } from '@apollo/client/react';
 import {
   Currency,
+  DiscountCodeDocument,
+  DiscountCodeUsagesDocument,
   DiscountCodeUsagesQuery,
   InvoiceSort,
-  useDiscountCodeQuery,
-  useDiscountCodeUsagesQuery,
 } from '@wepublish/editor/api';
 import { CanGetInvoices } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -41,13 +43,13 @@ function DiscountCodeUsageView() {
   const [limit, setLimit] = useState<number>(10);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const { data: discountCodeData } = useDiscountCodeQuery({
+  const { data: discountCodeData } = useQuery(DiscountCodeDocument, {
     variables: {
       id: id as string,
     },
   });
 
-  const { data, loading } = useDiscountCodeUsagesQuery({
+  const { data, loading } = useQuery(DiscountCodeUsagesDocument, {
     variables: {
       discountCodeId: id as string,
       take: limit,
@@ -127,7 +129,10 @@ function DiscountCodeUsageView() {
             resizable
             align="right"
           >
-            <HeaderCell>{t('discountCode.usage.amount')}</HeaderCell>
+            <HeaderCell>
+              {t('discountCode.usage.amount')}{' '}
+              <InfoTooltip text={t('discountCode.usage.amountInfo')} />
+            </HeaderCell>
 
             <RCell>
               {(rowData: RowDataType<Usage>) =>

@@ -1,8 +1,8 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`BlockStyleService blockStyles 1`] = `[]`;
+exports[`BlockStyleService > blockStyles 1`] = `[]`;
 
-exports[`BlockStyleService blockStyles 2`] = `
+exports[`BlockStyleService > blockStyles 2`] = `
 [
   {
     "blocks": [
@@ -14,7 +14,7 @@ exports[`BlockStyleService blockStyles 2`] = `
 ]
 `;
 
-exports[`BlockStyleService create 1`] = `
+exports[`BlockStyleService > create 1`] = `
 [
   {
     "blocks": [
@@ -25,7 +25,7 @@ exports[`BlockStyleService create 1`] = `
 ]
 `;
 
-exports[`BlockStyleService create 2`] = `
+exports[`BlockStyleService > create 2`] = `
 {
   "blocks": [
     "Event",
@@ -35,13 +35,13 @@ exports[`BlockStyleService create 2`] = `
 }
 `;
 
-exports[`BlockStyleService delete 1`] = `
+exports[`BlockStyleService > delete 1`] = `
 [
   "1234",
 ]
 `;
 
-exports[`BlockStyleService delete 2`] = `
+exports[`BlockStyleService > delete 2`] = `
 {
   "blocks": [
     "Event",
@@ -51,7 +51,7 @@ exports[`BlockStyleService delete 2`] = `
 }
 `;
 
-exports[`BlockStyleService update 1`] = `
+exports[`BlockStyleService > update 1`] = `
 [
   {
     "blocks": [
@@ -64,7 +64,7 @@ exports[`BlockStyleService update 1`] = `
 ]
 `;
 
-exports[`BlockStyleService update 2`] = `
+exports[`BlockStyleService > update 2`] = `
 {
   "blocks": [
     "Event",

@@ -1,6 +1,7 @@
-import { Tooltip } from '@mui/material';
+import { IconButtonTooltip } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdDownload, MdLink } from 'react-icons/md';
+import { Button } from 'rsuite';
 
 import {
   ActionColumn,
@@ -9,8 +10,6 @@ import {
   ArticleLink,
   ArticleRow,
   ArticleTitle,
-  ButtonTopMargin,
-  ChipTopMargin,
   ContentArea,
   ImagePlaceholder,
   MetaLine,
@@ -69,31 +68,30 @@ export function NetworkContentArticleItem({
       <ActionColumn>
         <PublisherName>{publisher}</PublisherName>
         {peerMatch ?
-          <Tooltip
-            title={t('networkContentDashboard.importFrom', {
+          <IconButtonTooltip
+            caption={t('networkContentDashboard.importFrom', {
               peer: peerMatch.peerName,
             })}
           >
-            <ButtonTopMargin
-              size="small"
-              variant="contained"
+            <Button
+              size="sm"
+              appearance="primary"
               startIcon={<MdDownload />}
               onClick={() => onImport(peerMatch.peerId, article.source_id)}
             >
               {t('peerArticles.import.import')}
-            </ButtonTopMargin>
-          </Tooltip>
-        : <Tooltip title={t('networkContentDashboard.noPeer')}>
-            <ChipTopMargin
-              icon={<MdLink />}
-              label={t('networkContentPage.connectBtn')}
-              size="small"
-              color="primary"
-              variant="outlined"
+            </Button>
+          </IconButtonTooltip>
+        : <IconButtonTooltip caption={t('networkContentDashboard.noPeer')}>
+            <Button
+              size="sm"
+              appearance="ghost"
+              startIcon={<MdLink />}
               onClick={onShowPeerInfo}
-              clickable
-            />
-          </Tooltip>
+            >
+              {t('networkContentPage.connectBtn')}
+            </Button>
+          </IconButtonTooltip>
         }
       </ActionColumn>
     </ArticleRow>

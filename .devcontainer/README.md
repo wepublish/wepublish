@@ -19,3 +19,4 @@ The container automatically runs the following services:
 * MinIO, accessible on http://localhost:9001
 * Mailpit (caught mails), accessible on http://localhost:8025
 * Gotenberg (letter pdf renderer), reachable from the container as http://gotenberg:3000
+* Dragonfly, accessible from the container on `redis://dragonfly:6379` (admin `default`/`dragonfly`)

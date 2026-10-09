@@ -1,31 +1,32 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   FullGoodieFragment,
+  GoodieDocument,
   MutationUpdateGoodieArgs,
-  useGoodieQuery,
-  useUpdateGoodieMutation,
+  UpdateGoodieDocument,
 } from '@wepublish/editor/api';
 import { CanUpdateGoodie } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { GoodieForm } from './goodieForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -47,31 +48,46 @@ const GoodieEditView = () => {
 
   const [goodie, setGoodie] = useState<MutationUpdateGoodieArgs>();
 
-  const { loading: dataLoading } = useGoodieQuery({
+  const {
+    loading: dataLoading,
+    data,
+    error,
+  } = useQuery(GoodieDocument, {
     variables: {
       id: id as string,
     },
-    onError: onErrorToast,
-    onCompleted: data => {
-      setGoodie(mapApiDataToInput(data.goodie));
-    },
   });
 
-  const [updateGoodie, { loading: updateLoading }] = useUpdateGoodieMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.updateGoodie) {
-        if (shouldClose) {
-          navigate(closePath);
-        } else {
-          setGoodie(mapApiDataToInput(data.updateGoodie));
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (data) {
+      setGoodie(mapApiDataToInput(data.goodie));
+    }
+  }, [data]);
+
+  const [updateGoodie, { loading: updateLoading }] = useMutation(
+    UpdateGoodieDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.updateGoodie) {
+          if (shouldClose) {
+            navigate(closePath);
+          } else {
+            setGoodie(mapApiDataToInput(data.updateGoodie));
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   const loading = dataLoading || updateLoading;
-  const onSubmit = () => updateGoodie({ variables: goodie });
+  const onSubmit = () => updateGoodie({ variables: goodie! });
 
   const { StringType, NumberType } = Schema.Types;
   const validationModel = Schema.Model({

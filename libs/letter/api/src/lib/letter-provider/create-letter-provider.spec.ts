@@ -5,7 +5,7 @@ import { PingenLetterProvider } from './pingen-letter-provider';
 
 describe('loadLetterProvider', () => {
   it('builds the provider of the configured type', async () => {
-    const findFirst = jest
+    const findFirst = vi
       .fn()
       .mockResolvedValue({ id: 'pingen', type: LetterProviderType.pingen });
 
@@ -19,7 +19,7 @@ describe('loadLetterProvider', () => {
   });
 
   it('reports no provider when none is configured', async () => {
-    const findFirst = jest.fn().mockResolvedValue(null);
+    const findFirst = vi.fn().mockResolvedValue(null);
 
     const provider = await loadLetterProvider({
       prisma: { settingLetterProvider: { findFirst } } as never,

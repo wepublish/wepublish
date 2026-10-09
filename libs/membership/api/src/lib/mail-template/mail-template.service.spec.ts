@@ -23,8 +23,8 @@ describe('MailTemplateService', () => {
       mailLog: number;
     }) => ({
       mailTemplate: {
-        findUnique: jest.fn(async () => ({ id: 't1', _count: counts })),
-        delete: jest.fn(async () => undefined),
+        findUnique: vi.fn(async () => ({ id: 't1', _count: counts })),
+        delete: vi.fn(async () => undefined),
       },
     });
 
@@ -77,11 +77,11 @@ describe('MailTemplateService', () => {
 
   describe('importFromProvider', () => {
     const makeImportService = (remoteTemplates: any[]) => {
-      const upsert = jest.fn(async (args: any) => args);
+      const upsert = vi.fn(async (args: any) => args);
       const service = makeService(
         { mailTemplate: { upsert } },
         {
-          mailProvider: { listTemplates: jest.fn(async () => remoteTemplates) },
+          mailProvider: { listTemplates: vi.fn(async () => remoteTemplates) },
         }
       );
 
@@ -158,10 +158,10 @@ describe('MailTemplateService', () => {
 
     it('surfaces a provider failure instead of reporting zero imports', async () => {
       const service = makeService(
-        { mailTemplate: { upsert: jest.fn() } },
+        { mailTemplate: { upsert: vi.fn() } },
         {
           mailProvider: {
-            listTemplates: jest.fn(async () => {
+            listTemplates: vi.fn(async () => {
               throw new Error('Invalid API key');
             }),
           },
@@ -204,7 +204,7 @@ describe('MailTemplateService', () => {
 
   describe('previewLetter', () => {
     const renderLetter = () =>
-      jest.fn(async () => Buffer.from('%PDF-1.4 letter'));
+      vi.fn(async () => Buffer.from('%PDF-1.4 letter'));
 
     it('renders the draft with sample data and a sample address', async () => {
       const render = renderLetter();
@@ -260,9 +260,9 @@ describe('MailTemplateService', () => {
       };
       const prisma = {
         subscription: {
-          findUnique: jest.fn(async () => ({ id: 's1', user })),
+          findUnique: vi.fn(async () => ({ id: 's1', user })),
         },
-        invoice: { findFirst: jest.fn(async () => null) },
+        invoice: { findFirst: vi.fn(async () => null) },
       };
       const service = makeService(prisma, {}, { renderLetter: render });
 
@@ -295,12 +295,12 @@ describe('MailTemplateService', () => {
       const render = renderLetter();
       const prisma = {
         subscription: {
-          findUnique: jest.fn(async () => ({
+          findUnique: vi.fn(async () => ({
             id: 's1',
             user: { id: 'u1', email: 'max@example.com', address: null },
           })),
         },
-        invoice: { findFirst: jest.fn(async () => null) },
+        invoice: { findFirst: vi.fn(async () => null) },
       };
       const service = makeService(prisma, {}, { renderLetter: render });
 

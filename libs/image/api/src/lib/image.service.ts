@@ -1,3 +1,4 @@
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
@@ -20,7 +21,8 @@ import { ImageUploadService } from './image-upload.service';
 export class ImageService {
   constructor(
     private prisma: PrismaClient,
-    private upload: ImageUploadService
+    private upload: ImageUploadService,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   @PrimeDataLoader(ImageDataloaderService)
@@ -70,7 +72,7 @@ export class ImageService {
 
   @PrimeDataLoader(ImageDataloaderService)
   async updateImage({ id, ...input }: UpdateImageInput) {
-    return this.prisma.image.update({
+    const result = await this.prisma.image.update({
       where: {
         id,
       },
@@ -78,6 +80,9 @@ export class ImageService {
         ...input,
       },
     });
+    await this.publicContentCache.invalidate('images');
+
+    return result;
   }
 
   @PrimeDataLoader(ImageDataloaderService)

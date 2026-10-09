@@ -8,17 +8,17 @@ import {
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { CreatePaymentIntentProps } from '../payment-provider';
 
-jest.mock('axios');
+vi.mock('axios');
 
-const mockFindFirst = jest.fn();
-const mockFindUnique = jest.fn();
+const mockFindFirst = vi.fn();
+const mockFindUnique = vi.fn();
 
-jest.mock('@prisma/client', () => {
-  const originalModule = jest.requireActual('@prisma/client');
+vi.mock('@prisma/client', async () => {
+  const originalModule = await vi.importActual('@prisma/client');
   return {
     __esModule: true,
     ...originalModule,
-    PrismaClient: jest.fn().mockImplementation(() => ({
+    PrismaClient: vi.fn().mockImplementation(() => ({
       payment: {
         findFirst: mockFindFirst,
       },
@@ -29,8 +29,8 @@ jest.mock('@prisma/client', () => {
   };
 });
 
-jest.mock('node-fetch', () =>
-  jest.fn(() =>
+vi.mock('node-fetch', () => ({
+  default: vi.fn(() =>
     Promise.resolve({
       json: () =>
         Promise.resolve({
@@ -40,21 +40,29 @@ jest.mock('node-fetch', () =>
         }),
       status: 200,
     })
-  )
-);
+  ),
+}));
 
-const mockBexioContactSearch = jest.fn();
-const mockBexioContactCreate = jest.fn();
-const mockBexioContactEdit = jest.fn();
+const mockLoggerError = vi.fn();
 
-jest.mock('bexio', () => {
+vi.mock('@wepublish/utils/api', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/utils/api')>()),
+  logger: () => ({ error: mockLoggerError, warn: vi.fn(), info: vi.fn() }),
+}));
+
+const mockBexioInvoiceCancel = vi.fn();
+const mockBexioContactSearch = vi.fn();
+const mockBexioContactCreate = vi.fn();
+const mockBexioContactEdit = vi.fn();
+
+vi.mock('bexio', () => {
   const ContactsStatic = {
     ContactSearchParameters: {
       mail: 'mockMailParameter',
     },
   };
 
-  const Bexio = jest.fn().mockImplementation(() => {
+  const Bexio = vi.fn().mockImplementation(function () {
     return {
       contacts: {
         search: mockBexioContactSearch,
@@ -62,14 +70,15 @@ jest.mock('bexio', () => {
         edit: mockBexioContactEdit,
       },
       invoices: {
-        create: jest.fn().mockImplementation(() => ({
+        create: vi.fn().mockImplementation(() => ({
           id: 'testid',
           intentID: '12345',
           state: PaymentState.submitted,
         })),
-        sent: jest.fn().mockImplementation(() => ({
+        sent: vi.fn().mockImplementation(() => ({
           success: true,
         })),
+        cancel: mockBexioInvoiceCancel,
       },
     };
   });
@@ -127,6 +136,56 @@ describe('BexioPaymentProvider', () => {
     };
 
     bexioPaymentProvider = new BexioPaymentProvider(mockProps);
+  });
+
+  describe('when Bexio refuses', () => {
+    const unauthorized = { code: 401, message: { message: 'Unauthorized' } };
+
+    it('says which step failed and why, instead of a bare object', async () => {
+      mockFindUnique.mockResolvedValue({
+        id: 'inv-1',
+        items: [],
+        subscription: { user: { email: 'dev@wepublish.ch' } },
+      });
+      mockBexioContactSearch.mockRejectedValueOnce(unauthorized);
+
+      await expect(
+        bexioPaymentProvider.bexioCreate('inv-1', true)
+      ).rejects.toThrow(
+        'Bexio failed while searching the contact for invoice inv-1: 401 Unauthorized'
+      );
+      expect(mockLoggerError).toHaveBeenCalledWith(
+        expect.any(String),
+        'inv-1',
+        true,
+        'Bexio failed while searching the contact for invoice inv-1: 401 Unauthorized'
+      );
+    });
+
+    it('logs which payment it could not cancel and why', async () => {
+      const provider = new BexioPaymentProvider({
+        ...mockProps,
+        prisma: {
+          invoice: { findFirst: vi.fn().mockResolvedValue({ id: 'inv-1' }) },
+          payment: {
+            findMany: vi
+              .fn()
+              .mockResolvedValue([{ id: 'pay-1', intentID: '42' }]),
+          },
+        },
+      });
+      mockBexioInvoiceCancel.mockRejectedValueOnce(unauthorized);
+
+      await provider.cancelRemoteSubscription({
+        subscription: { id: 'sub-1' },
+      } as never);
+
+      expect(mockLoggerError).toHaveBeenCalledWith(
+        'Error to cancel invoice for payment (id: %s): %s',
+        'pay-1',
+        '401 Unauthorized'
+      );
+    });
   });
 
   describe('Creating an invoice in Bexio', () => {

@@ -1,4 +1,5 @@
-import { useApolloClient } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { SubscriptionListContainer } from '@wepublish/membership/website';
@@ -7,8 +8,8 @@ import {
   TotpSetupContainer,
 } from '@wepublish/user/website';
 import {
-  useConfirmEmailChangeMutation,
-  useSubscriptionsQuery,
+  ConfirmEmailChangeDocument,
+  SubscriptionsDocument,
 } from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
@@ -59,7 +60,7 @@ export const EenewsProfile = () => {
   const router = useRouter();
   const client = useApolloClient();
   const [confirmEmailChange, { data: confirmData, error: confirmError }] =
-    useConfirmEmailChangeMutation();
+    useMutation(ConfirmEmailChangeDocument);
 
   useEffect(() => {
     const newEmail = router.query.confirmEmailChange as string | undefined;
@@ -81,7 +82,7 @@ export const EenewsProfile = () => {
     }
   }, [router.query.confirmEmailChange, confirmEmailChange, router, client]);
 
-  const { data: subscriptionData } = useSubscriptionsQuery({
+  const { data: subscriptionData } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
   });
   const hasActiveSubscriptions = subscriptionData?.userSubscriptions.some(

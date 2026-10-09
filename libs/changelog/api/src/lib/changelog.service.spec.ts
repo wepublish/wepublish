@@ -22,13 +22,13 @@ describe('ChangelogService', () => {
 
   const mockPrisma = {
     changelogEntry: {
-      count: jest.fn(),
-      findMany: jest.fn(),
-      findUnique: jest.fn(),
-      update: jest.fn(),
+      count: vi.fn(),
+      findMany: vi.fn(),
+      findUnique: vi.fn(),
+      update: vi.fn(),
     },
     changelogEntryTranslation: {
-      findUnique: jest.fn(),
+      findUnique: vi.fn(),
     },
   };
 
@@ -47,7 +47,7 @@ describe('ChangelogService', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('getChangelogEntries', () => {

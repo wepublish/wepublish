@@ -1,11 +1,15 @@
+import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
 import {
   FullPollVoteFragment,
   FullPollVoteWithAnswerFragment,
-  PollQueryResult,
-  PollVoteListQueryResult,
+  PollQuery,
+  PollQueryVariables,
+  PollVoteListQuery,
   PollVoteListQueryVariables,
 } from '@wepublish/editor/api';
 import {
+  InfoTooltip,
   ListFilters,
   ListViewContainer,
   ListViewHeader,
@@ -23,10 +27,23 @@ import { Button, Checkbox, Table as RTable } from 'rsuite';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
+const HeaderInfo = styled.span`
+  display: inline-flex;
+  margin-left: 4px;
+`;
+
 type PollVotesListProps = {
   listQueryState: QueryState<PollVoteListQueryVariables>;
-  listQuery: PollVoteListQueryResult;
-  pollQuery: PollQueryResult;
+  listQuery: useQuery.Result<
+    PollVoteListQuery,
+    PollVoteListQueryVariables,
+    'complete' | 'streaming' | 'empty'
+  >;
+  pollQuery: useQuery.Result<
+    PollQuery,
+    PollQueryVariables,
+    'complete' | 'streaming' | 'empty'
+  >;
   deleteItems: (ids: string[]) => Promise<void>;
 };
 
@@ -48,7 +65,10 @@ export function PollVoteList({
   const { t } = useTranslation();
 
   const ids = useMemo(
-    () => listQuery?.data?.pollVotes?.nodes?.map(n => n.id),
+    () =>
+      listQuery?.data?.pollVotes?.nodes
+        ?.map(n => n.id)
+        .filter((id): id is string => id !== undefined),
     [listQuery?.data?.pollVotes?.nodes]
   );
   const { selectedItems, allSelected, someSelected, toggleItem, toggleAll } =
@@ -79,7 +99,7 @@ export function PollVoteList({
         <Table
           fillHeight
           loading={listQuery.loading}
-          data={listQuery?.data?.pollVotes.nodes}
+          data={listQuery?.data?.pollVotes?.nodes}
           sortColumn={sortField ?? 'createdAt'}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
@@ -140,7 +160,12 @@ export function PollVoteList({
             align="left"
             resizable
           >
-            <HeaderCell>{t('pollVoteList.userId')}</HeaderCell>
+            <HeaderCell>
+              {t('pollVoteList.userId')}
+              <HeaderInfo>
+                <InfoTooltip text={t('pollVoteList.userIdInfo')} />
+              </HeaderInfo>
+            </HeaderCell>
             <RCell dataKey="userId">
               {({ userId }: FullPollVoteFragment) => userId}
             </RCell>
@@ -150,7 +175,12 @@ export function PollVoteList({
             align="left"
             resizable
           >
-            <HeaderCell>{t('pollVoteList.fingerprint')}</HeaderCell>
+            <HeaderCell>
+              {t('pollVoteList.fingerprint')}
+              <HeaderInfo>
+                <InfoTooltip text={t('pollVoteList.fingerprintInfo')} />
+              </HeaderInfo>
+            </HeaderCell>
             <RCell dataKey="userId">
               {({ fingerprint }: FullPollVoteFragment) => fingerprint}
             </RCell>

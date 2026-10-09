@@ -1,10 +1,12 @@
+import { useMutation } from '@apollo/client/react';
 import { Typography } from '@mui/material';
 import {
+  CancelMailSendJobDocument,
   FullMailSendJobFragment,
   MailSendJobState,
-  useCancelMailSendJobMutation,
-  useResumeMailSendJobMutation,
+  ResumeMailSendJobDocument,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdPlayArrow, MdStop } from 'react-icons/md';
@@ -69,7 +71,7 @@ export function JobProgressBar({ job }: { job: FullMailSendJobFragment }) {
   return (
     <Progress.Line
       percent={percent}
-      strokeColor={job.failedCount ? '#f5a623' : undefined}
+      strokeColor={job.failedCount ? 'var(--rs-state-warning)' : undefined}
       status={
         job.status === MailSendJobState.Running ? 'active'
         : job.status === MailSendJobState.Done ?
@@ -100,7 +102,7 @@ export function ResumeJobButton({
   const [open, setOpen] = useState(false);
   const [retryUnfinished, setRetryUnfinished] = useState(false);
 
-  const [resume, { loading }] = useResumeMailSendJobMutation({
+  const [resume, { loading }] = useMutation(ResumeMailSendJobDocument, {
     onError: error =>
       toaster.push(
         <Message
@@ -108,7 +110,7 @@ export function ResumeJobButton({
           showIcon
           closable
         >
-          {error.message}
+          {humanizeError(error)}
         </Message>
       ),
     onCompleted: () => {
@@ -143,7 +145,6 @@ export function ResumeJobButton({
       >
         {t('mailJobs.resume')}
       </Button>
-
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -165,8 +166,14 @@ export function ResumeJobButton({
               </Checkbox>
               <Typography
                 variant="caption"
-                display="block"
-                style={{ color: '#8e8e93', lineHeight: 1.35, marginLeft: 34 }}
+                style={{
+                  color: 'var(--rs-text-secondary)',
+                  lineHeight: 1.35,
+                  marginLeft: 34,
+                }}
+                sx={{
+                  display: 'block',
+                }}
               >
                 {t('mailJobs.retryUnfinishedHint')}
               </Typography>
@@ -217,7 +224,7 @@ export function CancelJobButton({
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
-  const [cancel, { loading }] = useCancelMailSendJobMutation({
+  const [cancel, { loading }] = useMutation(CancelMailSendJobDocument, {
     onError: error =>
       toaster.push(
         <Message
@@ -225,7 +232,7 @@ export function CancelJobButton({
           showIcon
           closable
         >
-          {error.message}
+          {humanizeError(error)}
         </Message>
       ),
     onCompleted: () => onDone?.(),

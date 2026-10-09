@@ -3,8 +3,8 @@ import { PayrexxClient } from './payrexx-client';
 
 function mockClient(response: unknown): PayrexxClient {
   return {
-    get: jest.fn().mockResolvedValue(response),
-    post: jest.fn().mockResolvedValue(response),
+    get: vi.fn().mockResolvedValue(response),
+    post: vi.fn().mockResolvedValue(response),
   } as unknown as PayrexxClient;
 }
 

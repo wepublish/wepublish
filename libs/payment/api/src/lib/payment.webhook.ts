@@ -72,6 +72,14 @@ export class PaymentWebhookController {
             }
           }
 
+          if (response.redirectUrl) {
+            return await res.redirect(303, response.redirectUrl);
+          }
+
+          if (response.html) {
+            return await res.type('html').status(200).send(response.html);
+          }
+
           return await res.status(200).send(response.message || 'OK');
         }
 

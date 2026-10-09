@@ -78,7 +78,7 @@ export function MailTemplateSelect({
 
   return (
     <SelectPicker
-      style={{ width: '100%' }}
+      block
       data={mailTemplates.map(mailTemplate => ({
         label: formatTemplateLabel(
           mailTemplate.name,

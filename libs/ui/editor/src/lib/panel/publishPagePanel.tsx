@@ -125,7 +125,7 @@ function PublishPagePanel({
 
           <DescriptionListItemWithMessage
             label={t('pageEditor.panels.socialMediaImage')}
-            message={t('pageEditor.panels.enterSocialMediaDescription')}
+            message={t('pageEditor.panels.enterSocialMediaImage')}
             messageType={InfoColor.warning}
           >
             {metadata.socialMediaImage?.filename}

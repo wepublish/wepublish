@@ -6,6 +6,7 @@ import { Drawer, IconButton, Input as RInput } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { ChooseEditImage } from '../atoms/chooseEditImage';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import { LinkPageBreakEditPanel } from '../panel/linkPageBreakEditPanel';
@@ -83,11 +84,14 @@ export function LinkPageBreakBlock({
     <>
       <LinkPage>
         <IconWrapper>
-          <IconButton
-            size="lg"
-            icon={<MdEdit />}
-            onClick={() => setEditPanelOpen(true)}
-          />
+          <IconButtonTooltip caption={t('blocks.linkPageBreak.editSettings')}>
+            <IconButton
+              size="lg"
+              aria-label={t('blocks.linkPageBreak.editSettings')}
+              icon={<MdEdit />}
+              onClick={() => setEditPanelOpen(true)}
+            />
+          </IconButtonTooltip>
         </IconWrapper>
       </LinkPage>
       <ContentWrapper>

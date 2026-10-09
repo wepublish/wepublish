@@ -21,3 +21,17 @@ export const subscribeToPreviewHandshake = (listener: () => void) => {
     listeners.delete(listener);
   };
 };
+
+export const isFramed = () => window.parent !== window;
+
+export const getPreviewHost = (): Window | null => {
+  if (window.opener) {
+    return window.opener;
+  }
+
+  const previewRequested = new URLSearchParams(window.location.search).has(
+    'preview'
+  );
+
+  return isFramed() && previewRequested ? window.parent : null;
+};

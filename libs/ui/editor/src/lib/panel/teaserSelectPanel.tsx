@@ -1,18 +1,18 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   ArticleFilter,
+  ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
   EventFilter,
+  EventListDocument,
   PageFilter,
-  PageInfo,
+  PageListDocument,
   PageListQueryVariables,
   PageSort,
   SortOrder,
   TeaserType,
-  useArticleListQuery,
-  useEventListQuery,
-  usePageListQuery,
 } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -36,10 +36,11 @@ import {
   Panel,
   Stack,
   toaster,
-  Toggle as RToggle,
+  Toggle,
 } from 'rsuite';
 
 import { ChooseEditImage } from '../atoms/chooseEditImage';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { ListInput, ListValue } from '../atoms/listInput';
 import { Teaser, TeaserLink } from '../blocks/types';
 import { generateID } from '../utility';
@@ -57,11 +58,6 @@ const InputGroup = styled(RInputGroup)`
 
 const Nav = styled(RNav)`
   margin-bottom: 20px;
-`;
-
-const Toggle = styled(RToggle)`
-  max-width: 70px;
-  min-width: 70px;
 `;
 
 const ButtonWithMargin = styled(Button)`
@@ -85,7 +81,7 @@ const InputW60 = styled(Input)`
 
 const InputW40 = styled(Input)`
   width: 40%;
-  margin-right: 10px;
+  margin-right: 8px;
 `;
 
 const FlexRow = styled.div`
@@ -98,19 +94,17 @@ const H3 = styled.h3`
 `;
 
 const FormGroup = styled(Form.Group)`
+  flex-shrink: 0;
   padding-top: 6px;
   padding-left: 8px;
+  white-space: nowrap;
 `;
 
 const EventFilterContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 12px;
-`;
-
-const ToggleLabel = styled.span`
-  margin-right: 8px;
-  margin-bottom: 4px;
 `;
 
 const LoadMoreButton = styled(Button)`
@@ -183,7 +177,7 @@ export function TeaserSelectPanel({
     fetchMore: fetchMoreEvents,
     error: eventListError,
     loading: isEventListLoading,
-  } = useEventListQuery({
+  } = useQuery(EventListDocument, {
     variables: eventVariables,
   });
 
@@ -210,7 +204,7 @@ export function TeaserSelectPanel({
     fetchMore: fetchMoreArticles,
     error: articleListError,
     loading: isArticleListLoading,
-  } = useArticleListQuery({
+  } = useQuery(ArticleListDocument, {
     variables: listVariables,
   });
 
@@ -219,7 +213,7 @@ export function TeaserSelectPanel({
     fetchMore: fetchMorePages,
     error: pageListError,
     loading: isPageListLoading,
-  } = usePageListQuery({
+  } = useQuery(PageListDocument, {
     variables: pageListVariables,
   });
 
@@ -256,6 +250,7 @@ export function TeaserSelectPanel({
         if (!fetchMoreResult) return prev;
 
         return {
+          __typename: 'Query',
           articles: {
             ...fetchMoreResult.articles,
             nodes: [...prev.articles.nodes, ...fetchMoreResult.articles.nodes],
@@ -268,13 +263,14 @@ export function TeaserSelectPanel({
   function loadMorePages() {
     fetchMorePages({
       variables: {
-        ...listVariables,
+        ...pageListVariables,
         cursor: pageListData?.pages.pageInfo.endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
 
         return {
+          __typename: 'Query',
           pages: {
             ...fetchMoreResult.pages,
             nodes: [...prev.pages.nodes, ...fetchMoreResult.pages.nodes],
@@ -291,19 +287,18 @@ export function TeaserSelectPanel({
         cursorId: eventListData?.events?.pageInfo.endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) {
+        if (!fetchMoreResult?.events) {
           return prev;
         }
 
         return {
+          __typename: 'Query',
           events: {
             ...fetchMoreResult.events,
             nodes: [
               ...(prev.events?.nodes || []),
-              ...(fetchMoreResult.events?.nodes || []),
+              ...fetchMoreResult.events.nodes,
             ],
-            totalCount: fetchMoreResult.events?.totalCount as number,
-            pageInfo: fetchMoreResult.events?.pageInfo as PageInfo,
           },
         };
       },
@@ -547,7 +542,10 @@ export function TeaserSelectPanel({
 
                   <Form.Group controlId="customTeaserContentUrl">
                     <Form.Label>
-                      {t('articleEditor.panels.contentUrl')}
+                      {t('articleEditor.panels.contentUrl')}{' '}
+                      <InfoTooltip
+                        text={t('articleEditor.panels.contentUrlInfo')}
+                      />
                     </Form.Label>
 
                     <Form.Control
@@ -560,23 +558,21 @@ export function TeaserSelectPanel({
                   </Form.Group>
 
                   <Form.Group controlId="customTeaserOpenInNewTab">
-                    <Form.Label>
-                      {t('articleEditor.panels.openInNewTab')}
-                    </Form.Label>
-
                     <Toggle
-                      checkedChildren={t('articleEditor.panels.yes')}
-                      unCheckedChildren={t('articleEditor.panels.no')}
                       checked={!!openInNewTab}
                       onChange={(isChecked: boolean) =>
                         setOpenInNewTab(isChecked)
                       }
+                      label={t('articleEditor.panels.openInNewTab')}
                     />
                   </Form.Group>
 
                   <Form.Group controlId="properties">
                     <Form.Label>
-                      {t('articleEditor.panels.properties')}
+                      {t('articleEditor.panels.properties')}{' '}
+                      <InfoTooltip
+                        text={t('articleEditor.panels.teaserPropertiesInfo')}
+                      />
                     </Form.Label>
 
                     <ListInput
@@ -606,14 +602,11 @@ export function TeaserSelectPanel({
 
                           <FormGroup controlId="articleProperty">
                             <Toggle
-                              checkedChildren={t('articleEditor.panels.public')}
-                              unCheckedChildren={t(
-                                'articleEditor.panels.private'
-                              )}
                               checked={value.public}
                               onChange={isPublic =>
                                 onChange({ ...value, public: isPublic })
                               }
+                              label={t('articleEditor.panels.public')}
                             />
                           </FormGroup>
                         </FlexRow>
@@ -714,10 +707,10 @@ export function TeaserSelectPanel({
           !isEventListLoading &&
           events.length !== 0 && (
             <EventFilterContainer>
-              <ToggleLabel>{t('event.list.upcomingOnly')}</ToggleLabel>
               <Toggle
                 checked={eventFilter}
                 onChange={value => setEventFilter(value)}
+                label={t('event.list.upcomingOnly')}
               />
             </EventFilterContainer>
           )}

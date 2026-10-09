@@ -1,17 +1,18 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { EventListContainer } from '@wepublish/event/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { EventSort, SortOrder } from '@wepublish/website/api';
 import {
-  addClientCacheToProps,
   EventListDocument,
   EventListQueryVariables,
-  getApiClient,
+  EventSort,
   NavigationListDocument,
   PeerProfileDocument,
-  useEventListQuery,
+  SortOrder,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -66,7 +67,7 @@ export default function EventList() {
     [from, page, to, upcomingOnly]
   );
 
-  const { data } = useEventListQuery({
+  const { data } = useQuery(EventListDocument, {
     fetchPolicy: 'cache-only',
     variables,
   });

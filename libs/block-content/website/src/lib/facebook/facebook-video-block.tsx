@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullFacebookVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderFacebookVideoBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
 
 export const isFacebookVideoBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullFacebookVideoBlockFragment =>
   block.__typename === 'FacebookVideoBlock';
 

@@ -6,6 +6,7 @@ import {
   PrimeDataLoader,
   SortOrder,
 } from '@wepublish/utils/api';
+import { SessionCacheInvalidator } from '@wepublish/authentication/api';
 import { UserRoleDataloader } from './user-role.dataloader';
 import {
   CreateUserRoleInput,
@@ -17,7 +18,10 @@ import {
 
 @Injectable()
 export class UserRoleService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private sessionCache: SessionCacheInvalidator
+  ) {}
 
   @PrimeDataLoader(UserRoleDataloader)
   async getUserRoles({
@@ -66,7 +70,7 @@ export class UserRoleService {
 
   @PrimeDataLoader(UserRoleDataloader)
   async updateUserRole({ id, ...input }: UpdateUserRoleInput) {
-    return this.prisma.userRole.update({
+    const role = await this.prisma.userRole.update({
       where: {
         id,
       },
@@ -74,6 +78,9 @@ export class UserRoleService {
         ...input,
       },
     });
+    await this.sessionCache.invalidate();
+
+    return role;
   }
 
   @PrimeDataLoader(UserRoleDataloader)
@@ -87,11 +94,14 @@ export class UserRoleService {
   }
 
   async deleteUserRole(id: string) {
-    return this.prisma.userRole.delete({
+    const role = await this.prisma.userRole.delete({
       where: {
         id,
       },
     });
+    await this.sessionCache.invalidate();
+
+    return role;
   }
 }
 

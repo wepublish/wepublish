@@ -1,13 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaClient, SettingPaymentProvider } from '@prisma/client';
+import {
+  PaymentProviderType,
+  PrismaClient,
+  SettingPaymentProvider,
+} from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { ProviderSettingsChanged } from './provider-settings-changed';
 import * as Sentry from '@sentry/nestjs';
 
-jest.mock('@sentry/nestjs', () => ({ captureMessage: jest.fn() }));
+vi.mock('@sentry/nestjs', () => ({ captureMessage: vi.fn() }));
 import { PaymentProviderSettingsDataloaderService } from './payment-provider-settings-dataloader.service';
 import { PaymentProviderSettingsService } from './payment-provider-settings.service';
+import type { Mock } from 'vitest';
 
 const provider = (
   overrides: Partial<SettingPaymentProvider> = {}
@@ -25,7 +30,7 @@ const provider = (
 describe('PaymentProviderSettingsService', () => {
   let service: PaymentProviderSettingsService;
   let prisma: PrismaClient;
-  let providerSettingsChanged: { notify: jest.Mock };
+  let providerSettingsChanged: { notify: Mock };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -34,15 +39,15 @@ describe('PaymentProviderSettingsService', () => {
         PaymentProviderSettingsService,
         {
           provide: KvTtlCacheService,
-          useValue: { resetNamespace: jest.fn() },
+          useValue: { resetNamespace: vi.fn() },
         },
         {
           provide: ProviderSettingsChanged,
-          useValue: { notify: jest.fn() },
+          useValue: { notify: vi.fn() },
         },
         {
           provide: PaymentProviderSettingsDataloaderService,
-          useValue: { prime: jest.fn() },
+          useValue: { prime: vi.fn() },
         },
       ],
     }).compile();
@@ -55,12 +60,12 @@ describe('PaymentProviderSettingsService', () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
-    jest.mocked(Sentry.captureMessage).mockClear();
+    vi.restoreAllMocks();
+    vi.mocked(Sentry.captureMessage).mockClear();
   });
 
   test('hides deleted providers from the list', async () => {
-    const findMany = jest
+    const findMany = vi
       .spyOn(prisma.settingPaymentProvider, 'findMany')
       .mockResolvedValue([]);
 
@@ -70,14 +75,14 @@ describe('PaymentProviderSettingsService', () => {
   });
 
   test('deleting only marks the row, so the provider keeps running', async () => {
-    jest
-      .spyOn(prisma.settingPaymentProvider, 'findUnique')
-      .mockResolvedValue(provider());
-    jest.spyOn(prisma.paymentMethod, 'findMany').mockResolvedValue([]);
-    const update = jest
+    vi.spyOn(prisma.settingPaymentProvider, 'findUnique').mockResolvedValue(
+      provider()
+    );
+    vi.spyOn(prisma.paymentMethod, 'findMany').mockResolvedValue([]);
+    const update = vi
       .spyOn(prisma.settingPaymentProvider, 'update')
       .mockResolvedValue(provider({ deletedAt: new Date() }));
-    const hardDelete = jest.spyOn(prisma.settingPaymentProvider, 'delete');
+    const hardDelete = vi.spyOn(prisma.settingPaymentProvider, 'delete');
 
     await service.deletePaymentProviderSetting('payrexx');
 
@@ -86,16 +91,16 @@ describe('PaymentProviderSettingsService', () => {
   });
 
   test('warns to the log and to Sentry when the provider is still in use', async () => {
-    jest
-      .spyOn(prisma.settingPaymentProvider, 'findUnique')
-      .mockResolvedValue(provider());
-    jest
-      .spyOn(prisma.paymentMethod, 'findMany')
-      .mockResolvedValue([{ id: 'method-1' }] as never);
-    jest.spyOn(prisma.subscription, 'count').mockResolvedValue(12);
-    jest
-      .spyOn(prisma.settingPaymentProvider, 'update')
-      .mockResolvedValue(provider({ deletedAt: new Date() }));
+    vi.spyOn(prisma.settingPaymentProvider, 'findUnique').mockResolvedValue(
+      provider()
+    );
+    vi.spyOn(prisma.paymentMethod, 'findMany').mockResolvedValue([
+      { id: 'method-1' },
+    ] as never);
+    vi.spyOn(prisma.subscription, 'count').mockResolvedValue(12);
+    vi.spyOn(prisma.settingPaymentProvider, 'update').mockResolvedValue(
+      provider({ deletedAt: new Date() })
+    );
 
     await service.deletePaymentProviderSetting('payrexx');
 
@@ -106,13 +111,13 @@ describe('PaymentProviderSettingsService', () => {
   });
 
   test('stays quiet when nothing depends on the provider', async () => {
-    jest
-      .spyOn(prisma.settingPaymentProvider, 'findUnique')
-      .mockResolvedValue(provider());
-    jest.spyOn(prisma.paymentMethod, 'findMany').mockResolvedValue([]);
-    jest
-      .spyOn(prisma.settingPaymentProvider, 'update')
-      .mockResolvedValue(provider({ deletedAt: new Date() }));
+    vi.spyOn(prisma.settingPaymentProvider, 'findUnique').mockResolvedValue(
+      provider()
+    );
+    vi.spyOn(prisma.paymentMethod, 'findMany').mockResolvedValue([]);
+    vi.spyOn(prisma.settingPaymentProvider, 'update').mockResolvedValue(
+      provider({ deletedAt: new Date() })
+    );
 
     await service.deletePaymentProviderSetting('payrexx');
 
@@ -120,7 +125,7 @@ describe('PaymentProviderSettingsService', () => {
   });
 
   test('adding a deleted provider back restores it without touching its config', async () => {
-    const upsert = jest
+    const upsert = vi
       .spyOn(prisma.settingPaymentProvider, 'upsert')
       .mockResolvedValue(provider());
 
@@ -133,13 +138,47 @@ describe('PaymentProviderSettingsService', () => {
     expect(upsert.mock.calls[0][0].update).toEqual({ deletedAt: null });
   });
 
+  describe('simulated payment provider', () => {
+    const env = process.env;
+
+    afterEach(() => {
+      process.env = env;
+    });
+
+    const createSimulated = () =>
+      service.createPaymentProviderSetting({
+        id: 'simulated',
+        name: 'Simulated',
+        type: PaymentProviderType.SIMULATED,
+      } as never);
+
+    test('can be added outside of production', async () => {
+      process.env = { ...env, APP_ENVIRONMENT: 'review' };
+      const upsert = vi
+        .spyOn(prisma.settingPaymentProvider, 'upsert')
+        .mockResolvedValue(provider({ id: 'simulated' }));
+
+      await createSimulated();
+
+      expect(upsert).toHaveBeenCalled();
+    });
+
+    test('cannot be added on production', async () => {
+      process.env = { ...env, APP_ENVIRONMENT: 'production' };
+      const upsert = vi.spyOn(prisma.settingPaymentProvider, 'upsert');
+
+      await expect(createSimulated()).rejects.toThrow(/production/);
+      expect(upsert).not.toHaveBeenCalled();
+    });
+  });
+
   test('asks for the providers to be rebuilt after a change', async () => {
-    jest
-      .spyOn(prisma.settingPaymentProvider, 'findUnique')
-      .mockResolvedValue(provider());
-    jest
-      .spyOn(prisma.settingPaymentProvider, 'update')
-      .mockResolvedValue(provider());
+    vi.spyOn(prisma.settingPaymentProvider, 'findUnique').mockResolvedValue(
+      provider()
+    );
+    vi.spyOn(prisma.settingPaymentProvider, 'update').mockResolvedValue(
+      provider()
+    );
 
     await service.updatePaymentProviderSetting({
       id: 'payrexx',
