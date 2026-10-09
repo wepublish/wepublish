@@ -1,7 +1,10 @@
 import { SecretCrypto, SettingName } from '@wepublish/settings/api';
 import { addDays } from 'date-fns';
 import { LoginCodeService } from './login-code.service';
-import { InvalidLoginCodeError } from './login-code.errors';
+import {
+  InvalidLoginCodeError,
+  LoginCodeDisabledError,
+} from './login-code.errors';
 import { deriveLoginCodeKey, hashLoginCode } from './login-code.util';
 
 process.env['APP_SECRET_KEY'] = 'login-code-test-secret-key-0123456789';
@@ -9,13 +12,18 @@ process.env['APP_SECRET_KEY'] = 'login-code-test-secret-key-0123456789';
 const SECRET = process.env['APP_SECRET_KEY'];
 const CODE = 'ABCDEFGHJK';
 
-const createPrismaMock = () => ({
+const createPrismaMock = ({ enabled = true }: { enabled?: boolean } = {}) => ({
   setting: {
-    findUnique: vi.fn(async ({ where }: { where: { name: SettingName } }) =>
-      where.name === SettingName.LOGIN_CODE_MAX_USES ?
-        { value: 3 }
-      : { value: 30 }
-    ),
+    findUnique: vi.fn(async ({ where }: { where: { name: SettingName } }) => {
+      switch (where.name) {
+        case SettingName.LOGIN_CODE_ENABLED:
+          return { value: enabled };
+        case SettingName.LOGIN_CODE_MAX_USES:
+          return { value: 3 };
+        default:
+          return { value: 30 };
+      }
+    }),
   },
   userLoginCode: {
     findFirst: vi.fn(async () => null),
@@ -149,5 +157,46 @@ describe('LoginCodeService', () => {
     await expect(service.consume('code-1')).rejects.toBeInstanceOf(
       InvalidLoginCodeError
     );
+  });
+
+  describe('while the medium has not switched login codes on', () => {
+    it.each([
+      ['switched off', { value: false }],
+      ['never set', null],
+    ])('rejects even a valid code when %s', async (_label, setting) => {
+      const prisma = createPrismaMock();
+      prisma.setting.findUnique.mockResolvedValue(setting as never);
+      prisma.userLoginCode.findUnique.mockResolvedValue(
+        activeRecord() as never
+      );
+      const { service } = createService(prisma);
+
+      await expect(service.verify(CODE)).rejects.toBeInstanceOf(
+        LoginCodeDisabledError
+      );
+    });
+
+    it('puts no login link into mails and letters, and issues no code', async () => {
+      const prisma = createPrismaMock({ enabled: false });
+      const { service } = createService(prisma);
+
+      expect(await service.purlFor('user-1', 'letter')).toEqual({
+        purl: '',
+        purlCode: '',
+        purlQr: '',
+      });
+      expect(prisma.userLoginCode.findFirst).not.toHaveBeenCalled();
+      expect(prisma.userLoginCode.create).not.toHaveBeenCalled();
+    });
+
+    it('lets no editor issue a new code', async () => {
+      const prisma = createPrismaMock({ enabled: false });
+      const { service } = createService(prisma);
+
+      await expect(
+        service.reissue('user-1', 'editor:admin')
+      ).rejects.toBeInstanceOf(LoginCodeDisabledError);
+      expect(prisma.userLoginCode.create).not.toHaveBeenCalled();
+    });
   });
 });
