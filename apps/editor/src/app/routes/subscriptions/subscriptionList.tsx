@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   DeleteSubscriptionDocument,
+  ReactivateSubscriptionDocument,
   SubscriptionFilter,
   SubscriptionListDocument,
   SubscriptionSort,
@@ -33,7 +34,7 @@ import {
 } from '@wepublish/ui/editor';
 import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete } from 'react-icons/md';
+import { MdAdd, MdDelete, MdRestartAlt } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import {
   Button,
@@ -45,6 +46,8 @@ import {
   toaster,
 } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
+
+import { ReactivateSubscriptionModal } from './reactivateSubscriptionModal';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
@@ -102,6 +105,7 @@ function SubscriptionList() {
       defaultSortField: 'createdAt',
     });
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [isReactivationDialogOpen, setReactivationDialogOpen] = useState(false);
   const [currentSubscription, setCurrentSubscription] =
     useState<TinySubscriptionFragment>();
 
@@ -143,6 +147,10 @@ function SubscriptionList() {
 
   const [deleteSubscription, { loading: isDeleting }] = useMutation(
     DeleteSubscriptionDocument
+  );
+
+  const [reactivateSubscription, { loading: isReactivating }] = useMutation(
+    ReactivateSubscriptionDocument
   );
 
   const { t } = useTranslation();
@@ -248,7 +256,7 @@ function SubscriptionList() {
                   </Link>
 
                   {rowData.deactivation && (
-                    <DeactivationInfo>
+                    <DeactivationInfo data-testid="deactivationIcon">
                       <InfoTooltip text={t('deactivated')} />
                     </DeactivationInfo>
                   )}
@@ -272,30 +280,56 @@ function SubscriptionList() {
           </Column>
           {/* action */}
           <Column
-            width={100}
+            width={120}
             align="center"
             fixed="right"
           >
             <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<TinySubscriptionFragment>) => (
-                <IconButtonTooltip caption={t('delete')}>
-                  <IconButton
-                    circle
-                    size="sm"
-                    appearance="ghost"
-                    color="red"
-                    icon={<MdDelete />}
-                    aria-label={t('delete')}
-                    onClick={e => {
-                      e.preventDefault();
-                      setCurrentSubscription(
-                        rowData as TinySubscriptionFragment
-                      );
-                      setConfirmationDialogOpen(true);
-                    }}
-                  />
-                </IconButtonTooltip>
+                <>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      circle
+                      size="sm"
+                      appearance="ghost"
+                      color="red"
+                      data-testid="deleteSubscription"
+                      icon={<MdDelete />}
+                      aria-label={t('delete')}
+                      onClick={e => {
+                        e.preventDefault();
+                        setCurrentSubscription(
+                          rowData as TinySubscriptionFragment
+                        );
+                        setConfirmationDialogOpen(true);
+                      }}
+                    />
+                  </IconButtonTooltip>
+
+                  {rowData.deactivation && (
+                    <IconButtonTooltip
+                      caption={t('subscriptionList.overview.reactivate')}
+                    >
+                      <IconButton
+                        circle
+                        size="sm"
+                        appearance="ghost"
+                        color="green"
+                        data-testid="reactivateSubscription"
+                        icon={<MdRestartAlt />}
+                        aria-label={t('subscriptionList.overview.reactivate')}
+                        onClick={e => {
+                          e.preventDefault();
+                          setCurrentSubscription(
+                            rowData as TinySubscriptionFragment
+                          );
+                          setReactivationDialogOpen(true);
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  )}
+                </>
               )}
             </PaddedCell>
           </Column>
@@ -375,6 +409,42 @@ function SubscriptionList() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <ReactivateSubscriptionModal
+        open={isReactivationDialogOpen}
+        loading={isReactivating}
+        userName={currentSubscription?.user?.name}
+        memberPlanName={currentSubscription?.memberPlan.name}
+        monthlyAmount={currentSubscription?.monthlyAmount}
+        paymentPeriodicity={currentSubscription?.paymentPeriodicity}
+        currency={currentSubscription?.currency}
+        paidUntil={
+          currentSubscription?.paidUntil ?
+            new Date(currentSubscription.paidUntil)
+          : null
+        }
+        deactivation={currentSubscription?.deactivation}
+        onClose={() => setReactivationDialogOpen(false)}
+        onConfirm={async () => {
+          if (!currentSubscription) return;
+
+          await reactivateSubscription({
+            variables: { id: currentSubscription.id },
+          });
+          toaster.push(
+            <Message
+              type="success"
+              showIcon
+              closable
+              duration={2000}
+            >
+              {t('toast.updatedSuccess')}
+            </Message>
+          );
+          setReactivationDialogOpen(false);
+          refetch();
+        }}
+      />
     </>
   );
 }

@@ -893,6 +893,7 @@
       "today": "Today",
       "tomorrow": "Tomorrow"
     },
+    "deactivated": "Deactivated",
     "delete": "Delete",
     "deleteBlockTemplateModal": {
       "body": "Do you really want to delete the block template \"{{name}}\"?",
@@ -2109,6 +2110,7 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
         "newSubscription": "New Subscription",
+        "reactivate": "Reactivate",
         "subscription": "Subscription"
       },
       "panels": {
@@ -2328,8 +2330,8 @@
           "activated": "Deactivate"
         },
         "date": "Deactivation Date",
-        "help": "Deactivated subscriptions can still be used until the paid-until date, but they will not be renewed automatically, even if auto renew is enabled. Once deactivated, the subscription cannot be reactivated.",
-        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Reason: {{reason}}. If needed, a new subscription can be created.",
+        "help": "Deactivated subscriptions can still be used until the paid-until date, but they will not be renewed automatically, even if auto renew is enabled. A deactivation can be removed again in the editor.",
+        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Reason: {{reason}}. It can be reactivated, or a new subscription can be created.",
         "modalMessage": {
           "activated": "Do you want to deactivate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
         },
@@ -2347,6 +2349,22 @@
           "activated": "Deactivate subscription"
         },
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
+      },
+      "revertUpgrade": {
+        "title": "Undo upgrade",
+        "modalTitle": "Undo the upgrade?",
+        "modalMessage": "The new subscription and its invoices are deleted and the replaced subscription continues as before. This only works as long as the new subscription has not been paid.",
+        "confirm": "Undo upgrade"
+      },
+      "reactivation": {
+        "deactivatedSince": "Deactivated since {{date, ccc PP p}} · Reason: {{reason}}",
+        "deactivatedOn": "Deactivation on {{date, ccc PP p}} · Reason: {{reason}}",
+        "date": "{{date, ccc PP p}}",
+        "hint": "Reactivating removes this deactivation. If the subscription has already run out, a new invoice is created.",
+        "title": "Reactivate subscription",
+        "modalTitle": "Reactivate subscription?",
+        "modalMessage": "Do you want to remove the deactivation of the subscription of \"{{userName}}\"? The subscription will continue as before.",
+        "confirm": "Reactivate"
       },
       "editTitle": "Edit Subscription",
       "memberPlanMonthlyAmount": "Minimum Monthly Amount ({{currency}})",
