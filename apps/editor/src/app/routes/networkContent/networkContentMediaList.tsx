@@ -1,15 +1,20 @@
-import { Chip, CircularProgress, IconButton, Typography } from '@mui/material';
+import { IconButtonTooltip } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
-import { MdCheck, MdChevronLeft, MdChevronRight, MdLink } from 'react-icons/md';
+import { MdCheck, MdLink } from 'react-icons/md';
+import { Button, Loader, Pagination } from 'rsuite';
 
 import { CLIENTS_PER_PAGE } from './networkContent.hooks';
 import {
+  Card,
+  CardCount,
+  CardFooter,
+  CardHeader,
   CenteredContainer,
   ClientCard,
   ClientName,
   ClientUserInfo,
-  PaginationBar,
-  SectionTitle,
+  ConnectedBadge,
+  ErrorText,
 } from './networkContent.styles';
 import type {
   PeerMatch,
@@ -52,54 +57,42 @@ export function NetworkMediaList({
 
   const totalPages = Math.max(1, Math.ceil(totalCount / CLIENTS_PER_PAGE));
 
-  if (loading) {
-    return (
-      <CenteredContainer>
-        <CircularProgress size={20} />
-      </CenteredContainer>
-    );
-  }
-
-  if (error) {
-    return (
-      <CenteredContainer>
-        <Typography
-          color="error"
-          variant="body2"
-        >
-          {t('networkContentPage.errorLoadingClients')}
-        </Typography>
-      </CenteredContainer>
-    );
-  }
-
-  if (clients.length === 0) {
-    return (
-      <CenteredContainer>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {t('networkContentPage.noClients')}
-        </Typography>
-      </CenteredContainer>
-    );
-  }
-
   return (
-    <div>
-      <SectionTitle>{t('networkContentPage.mediaTitle')}</SectionTitle>
+    <Card aria-labelledby="network-media-title">
+      <CardHeader>
+        <h3 id="network-media-title">{t('networkContentPage.mediaTitle')}</h3>
+        {!loading && !error && <CardCount>{totalCount}</CardCount>}
+      </CardHeader>
 
-      {clients.map((client: WepOneClient) => {
-        const peerMatch = findPeerMatch(client.apiUrl);
-        const externalUsers = getExternalUsers(client);
+      {loading && (
+        <CenteredContainer>
+          <Loader />
+        </CenteredContainer>
+      )}
 
-        return (
-          <ClientCard key={client.name}>
-            <div>
-              <ClientName>{client.name}</ClientName>
-              {externalUsers.length > 0 &&
-                externalUsers.map((user, idx) => {
+      {!loading && error && (
+        <CenteredContainer>
+          <ErrorText>{t('networkContentPage.errorLoadingClients')}</ErrorText>
+        </CenteredContainer>
+      )}
+
+      {!loading && !error && clients.length === 0 && (
+        <CenteredContainer>
+          {t('networkContentPage.noClients')}
+        </CenteredContainer>
+      )}
+
+      {!loading &&
+        !error &&
+        clients.map((client: WepOneClient) => {
+          const peerMatch = findPeerMatch(client.apiUrl);
+          const externalUsers = getExternalUsers(client);
+
+          return (
+            <ClientCard key={client.name}>
+              <div>
+                <ClientName>{client.name}</ClientName>
+                {externalUsers.map((user, idx) => {
                   const name = [user?.first_name, user?.last_name]
                     .filter(Boolean)
                     .join(' ');
@@ -112,53 +105,44 @@ export function NetworkMediaList({
                     </ClientUserInfo>
                   );
                 })}
-            </div>
+              </div>
 
-            <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
               {peerMatch ?
-                <Chip
-                  icon={<MdCheck />}
-                  label={t('networkContentPage.connected')}
-                  size="small"
-                  color="success"
-                  variant="filled"
-                />
-              : <Chip
-                  icon={<MdLink />}
-                  label={t('networkContentPage.connectBtn')}
-                  size="small"
-                  color="primary"
-                  variant="outlined"
-                  onClick={() => onConnectClient?.(client)}
-                  clickable
-                />
+                <ConnectedBadge>
+                  <MdCheck />
+                  {t('networkContentPage.connected')}
+                </ConnectedBadge>
+              : <IconButtonTooltip
+                  caption={t('networkContentDashboard.noPeer')}
+                >
+                  <Button
+                    size="xs"
+                    appearance="ghost"
+                    startIcon={<MdLink />}
+                    onClick={() => onConnectClient?.(client)}
+                  >
+                    {t('networkContentPage.connectBtn')}
+                  </Button>
+                </IconButtonTooltip>
               }
-            </div>
-          </ClientCard>
-        );
-      })}
+            </ClientCard>
+          );
+        })}
 
-      {totalPages > 1 && (
-        <PaginationBar>
-          <IconButton
-            size="small"
-            disabled={page === 0}
-            onClick={() => onPageChange(page - 1)}
-          >
-            <MdChevronLeft />
-          </IconButton>
-          <Typography variant="body2">
-            {page + 1} / {totalPages}
-          </Typography>
-          <IconButton
-            size="small"
-            disabled={page >= totalPages - 1}
-            onClick={() => onPageChange(page + 1)}
-          >
-            <MdChevronRight />
-          </IconButton>
-        </PaginationBar>
+      {!loading && !error && totalPages > 1 && (
+        <CardFooter>
+          <Pagination
+            prev
+            next
+            size="sm"
+            maxButtons={5}
+            total={totalCount}
+            limit={CLIENTS_PER_PAGE}
+            activePage={page + 1}
+            onChangePage={nextPage => onPageChange(nextPage - 1)}
+          />
+        </CardFooter>
       )}
-    </div>
+    </Card>
   );
 }

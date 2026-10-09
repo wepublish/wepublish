@@ -105,6 +105,27 @@ describe('useAudienceFilter', () => {
     expect(new Date(end).getDate()).toBe(17);
   });
 
+  it('fetches once per committed filter change', () => {
+    // The fetch moved out of the reducer and into an effect (reducers run
+    // during render, which Apollo Client 4 rejects). Guard against the refactor
+    // either dropping the fetch or firing it twice per change.
+    const { result, fetchStats } = renderFilter({ persist: false });
+
+    expect(fetchStats).toHaveBeenCalledTimes(1);
+
+    act(() => {
+      result.current.setAudienceApiFilter({
+        dateRange: [new Date('2026-01-01'), new Date('2026-01-31')],
+      });
+    });
+
+    expect(fetchStats).toHaveBeenCalledTimes(2);
+
+    const { start, end } = fetchStats.mock.calls[1][0].variables;
+    expect(start).toBe(new Date('2026-01-01').toISOString());
+    expect(end).toBe(new Date('2026-01-31').toISOString());
+  });
+
   it('writes a change to the URL and to storage', () => {
     const { result } = renderFilter();
 

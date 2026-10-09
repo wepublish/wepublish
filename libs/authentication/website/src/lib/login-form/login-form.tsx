@@ -87,6 +87,7 @@ export function LoginForm({
   loginWithCode,
   onSubmitLoginWithCode,
   codeChallengeRequired,
+  loginLinkCooldownSeconds = 0,
   defaults,
   disablePasswordLogin,
   otpRequired,
@@ -349,11 +350,13 @@ export function LoginForm({
               )}
 
               <LoginFormButton
-                disabled={loading || loginLinkSent}
+                disabled={loading || loginLinkCooldownSeconds > 0}
                 type="submit"
               >
-                {loginLinkSent ?
-                  t('login.loginLinkSent')
+                {loginLinkCooldownSeconds > 0 ?
+                  t('login.requestNewLinkIn', {
+                    seconds: loginLinkCooldownSeconds,
+                  })
                 : t('login.loginWithLink')}
               </LoginFormButton>
             </>

@@ -1,11 +1,13 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  ChangelogEntriesDocument,
   ChangelogEntryFragment,
-  useChangelogEntriesQuery,
-  useConfirmChangelogEntryMutation,
+  ConfirmChangelogEntryDocument,
 } from '@wepublish/editor/api';
 import {
   ConfirmActionModal,
+  humanizeError,
   NotificationItem,
   NotificationSeverity,
   useHasPermission,
@@ -29,7 +31,7 @@ const Lead = styled.p`
 
 const EntryMeta = styled.p`
   margin-top: 12px;
-  color: gray;
+  color: var(--rs-text-secondary);
   font-size: 0.9em;
 `;
 
@@ -45,13 +47,13 @@ const EntryLead = styled.p`
 
 const EntryDate = styled.p`
   margin: 4px 0 0;
-  color: gray;
+  color: var(--rs-text-secondary);
   font-size: 0.85em;
 `;
 
 const CenteredText = styled.p`
   text-align: center;
-  color: gray;
+  color: var(--rs-text-secondary);
   padding: 12px;
 `;
 
@@ -197,7 +199,8 @@ interface ConfirmChangelogModalProps {
 
 function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
   const { t, i18n } = useTranslation();
-  const [confirmChangelogEntry, { loading }] = useConfirmChangelogEntryMutation(
+  const [confirmChangelogEntry, { loading }] = useMutation(
+    ConfirmChangelogEntryDocument,
     {
       refetchQueries: ['ChangelogEntries'],
       onCompleted() {
@@ -219,7 +222,7 @@ function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
             showIcon
             closable
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>
         );
       },
@@ -268,7 +271,7 @@ export function useChangelogActionNotifications({
   const [confirmEntry, setConfirmEntry] =
     useState<ChangelogEntryFragment | null>(null);
 
-  const { data } = useChangelogEntriesQuery({
+  const { data } = useQuery(ChangelogEntriesDocument, {
     fetchPolicy: 'cache-and-network',
     variables: {
       take: 100,
@@ -403,7 +406,7 @@ export function useChangelogNewsNotifications({
   const [confirmEntry, setConfirmEntry] =
     useState<ChangelogEntryFragment | null>(null);
 
-  const { data, loading, error } = useChangelogEntriesQuery({
+  const { data, loading, error } = useQuery(ChangelogEntriesDocument, {
     fetchPolicy: 'cache-and-network',
     variables: {
       take:
@@ -514,7 +517,7 @@ export function ChangelogDashboard(props: ChangelogDashboardProps) {
   }
 
   if (error) {
-    return <Message type="error">{error.message}</Message>;
+    return <Message type="error">{humanizeError(error)}</Message>;
   }
 
   if (!items.length) {

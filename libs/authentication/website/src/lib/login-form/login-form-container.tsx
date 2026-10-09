@@ -1,8 +1,9 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
-  useCheckLoginOtpLazyQuery,
-  useLoginWithCodeMutation,
-  useLoginWithCredentialsMutation,
-  useLoginWithEmailMutation,
+  CheckLoginOtpDocument,
+  LoginWithCodeDocument,
+  LoginWithCredentialsDocument,
+  LoginWithEmailDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -11,6 +12,7 @@ import {
 } from '@wepublish/website/builder';
 import { useCallback, useEffect, useState } from 'react';
 import { useUser } from '../session.context';
+import { useLoginLinkCooldown } from './login-link-cooldown';
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -32,10 +34,12 @@ export function LoginFormContainer({
   const { setToken } = useUser();
   const [otpRequired, setOtpRequired] = useState(false);
   const [totpRedirectToPassword, setTotpRedirectToPassword] = useState(false);
+  const [loginLinkCooldownSeconds, markLoginLinkSent] = useLoginLinkCooldown();
   const [codeChallengeRequired, setCodeChallengeRequired] = useState(false);
-  const [loginWithCode, withCode] = useLoginWithCodeMutation({
+  const [loginWithCode, withCode] = useMutation(LoginWithCodeDocument, {
     onCompleted(data) {
       setToken({
+        __typename: 'SessionWithTokenWithoutUser',
         createdAt: data.createSessionWithLoginCode.createdAt,
         expiresAt: data.createSessionWithLoginCode.expiresAt,
         token: data.createSessionWithLoginCode.token,
@@ -56,18 +60,25 @@ export function LoginFormContainer({
       }
     }
   }, []);
-  const [checkLoginOtp] = useCheckLoginOtpLazyQuery();
-  const [loginWithEmail, withEmail] = useLoginWithEmailMutation();
-  const [loginWithCredentials, withCredentials] =
-    useLoginWithCredentialsMutation({
+  const [checkLoginOtp] = useLazyQuery(CheckLoginOtpDocument);
+  const [loginWithEmail, withEmail] = useMutation(LoginWithEmailDocument, {
+    onCompleted() {
+      markLoginLinkSent();
+    },
+  });
+  const [loginWithCredentials, withCredentials] = useMutation(
+    LoginWithCredentialsDocument,
+    {
       onCompleted(data) {
         setToken({
+          __typename: 'SessionWithTokenWithoutUser',
           createdAt: data.createSession.createdAt,
           expiresAt: data.createSession.expiresAt,
           token: data.createSession.token,
         });
       },
-    });
+    }
+  );
 
   const handleEmailChange = useCallback(
     (email: string) => {
@@ -124,6 +135,7 @@ export function LoginFormContainer({
       }}
       onSubmitLoginWithEmail={handleSubmitLoginWithEmail}
       loginWithEmail={withEmail}
+      loginLinkCooldownSeconds={loginLinkCooldownSeconds}
       defaults={defaults}
       disablePasswordLogin={disablePasswordLogin}
       otpRequired={otpRequired}

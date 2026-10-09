@@ -1,12 +1,12 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CommentDocument,
   CommentRevisionInput,
   FullCommentFragment,
+  RatingSystemDocument,
   TagType,
-  useCommentQuery,
-  useRatingSystemQuery,
-  useUpdateCommentMutation,
+  UpdateCommentDocument,
 } from '@wepublish/editor/api';
 import {
   CommentDeleteBtn,
@@ -14,6 +14,8 @@ import {
   CommentStateDropdown,
   CommentUser,
   createCheckedPermissionComponent,
+  humanizeError,
+  InfoTooltip,
   SelectTags,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
@@ -35,24 +37,25 @@ import {
   toaster,
 } from 'rsuite';
 import Text from 'rsuite/Text';
+import { commentItemLink } from './commentItemLink';
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
 `;
 
 const FlexItem = styled(RCol)`
-  margin-top: 10px;
+  margin-top: 12px;
 `;
 
-const showErrors = (error: ApolloError): void => {
+const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -114,20 +117,37 @@ const CommentEditView = memo(() => {
   // where the tag list is handled
   const [selectedTags, setSelectedTags] = useState<string[] | null>(null);
 
-  const { data: commentData, loading: loadingComment } = useCommentQuery({
+  const {
+    data: commentData,
+    loading: loadingComment,
+    error: commentError,
+  } = useQuery(CommentDocument, {
     variables: {
       id: commentId,
     },
-    onError: showErrors,
   });
 
-  const { data: ratingSystem, loading: loadingRatingSystem } =
-    useRatingSystemQuery({
-      onError: showErrors,
-    });
+  const {
+    data: ratingSystem,
+    loading: loadingRatingSystem,
+    error: ratingSystemError,
+  } = useQuery(RatingSystemDocument);
 
-  const [updateCommentMutation, { loading: updatingComment }] =
-    useUpdateCommentMutation({
+  useEffect(() => {
+    if (commentError) {
+      showErrors(commentError);
+    }
+  }, [commentError]);
+
+  useEffect(() => {
+    if (ratingSystemError) {
+      showErrors(ratingSystemError);
+    }
+  }, [ratingSystemError]);
+
+  const [updateCommentMutation, { loading: updatingComment }] = useMutation(
+    UpdateCommentDocument,
+    {
       onCompleted: () =>
         toaster.push(
           <Message
@@ -140,7 +160,8 @@ const CommentEditView = memo(() => {
           </Message>
         ),
       onError: showErrors,
-    });
+    }
+  );
 
   // compute loading state
   const loading = updatingComment || loadingComment || loadingRatingSystem;
@@ -211,6 +232,8 @@ const CommentEditView = memo(() => {
     }
   }
 
+  const itemLink = comment && commentItemLink(comment.itemType, comment.itemID);
+
   return (
     <Form
       onSubmit={() => updateComment()}
@@ -276,10 +299,12 @@ const CommentEditView = memo(() => {
                         color="violet"
                         icon={<MdVisibility />}
                         onClick={() => {
-                          navigate(`/articles/edit/${comment?.itemID}`);
+                          if (itemLink) {
+                            navigate(itemLink.path);
+                          }
                         }}
                       >
-                        {t('commentEditView.goToArticle')}
+                        {t(itemLink?.labelKey ?? 'commentEditView.goToArticle')}
                       </IconButton>
                     </RCol>
 
@@ -291,7 +316,7 @@ const CommentEditView = memo(() => {
                             setComment({
                               ...comment,
                               state,
-                              rejectionReason,
+                              rejectionReason: rejectionReason ?? null,
                             });
                           }}
                         />
@@ -349,7 +374,10 @@ const CommentEditView = memo(() => {
 
                     {/* external source */}
                     <RCol xs={24}>
-                      <Form.Label>{t('commentEditView.source')}</Form.Label>
+                      <Form.Label>
+                        {t('commentEditView.source')}{' '}
+                        <InfoTooltip text={t('commentEditView.sourceInfo')} />
+                      </Form.Label>
                       <Form.Control
                         name="externalSource"
                         placeholder={t('commentEditView.source')}
@@ -386,7 +414,14 @@ const CommentEditView = memo(() => {
               <ColNoMargin xs={24}>
                 <RPanel
                   bordered
-                  header={t('commentEditView.ratingOverrides')}
+                  header={
+                    <>
+                      {t('commentEditView.ratingOverrides')}{' '}
+                      <InfoTooltip
+                        text={t('commentEditView.ratingOverridesInfo')}
+                      />
+                    </>
+                  }
                 >
                   <Row>
                     {ratingOverrides.map(override => (
@@ -411,8 +446,13 @@ const CommentEditView = memo(() => {
                                         oldOverride.answerId ===
                                         override.answerId
                                       ) ?
-                                        { answerId: override.answerId, value }
+                                        {
+                                          __typename: 'OverriddenRating',
+                                          answerId: override.answerId,
+                                          value,
+                                        }
                                       : {
+                                          __typename: 'OverriddenRating',
                                           answerId: oldOverride.answerId,
                                           value: oldOverride.value,
                                         }

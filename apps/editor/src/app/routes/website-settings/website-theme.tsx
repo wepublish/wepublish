@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -9,10 +10,11 @@ import {
   Tabs,
 } from '@mui/material';
 import {
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { minimalTheme } from '@wepublish/ui';
+import { humanizeError } from '@wepublish/ui/editor';
 import { memo, PropsWithChildren, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -63,9 +65,10 @@ function a11yProps(index: number) {
 export const WebsiteTheme = memo(() => {
   const { t } = useTranslation();
 
-  const [loadSettings, { loading }] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings, { loading }] = useLazyQuery(WebsiteSettingsDocument);
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
         toaster.push(
           <Message
@@ -84,13 +87,14 @@ export const WebsiteTheme = memo(() => {
             type="error"
             showIcon
             closable
-            duration={3000}
+            duration={8000}
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>
         );
       },
-    });
+    }
+  );
 
   const [activeTab, setActiveTab] = useState<number>(0);
   const handleChange = (
@@ -145,14 +149,14 @@ export const WebsiteTheme = memo(() => {
         <Tabs
           value={activeTab}
           onChange={handleChange}
-          aria-label="Theme tabs"
+          aria-label={t('websiteSettings.theme.tabs')}
         >
           <Tab
-            label="Palette"
+            label={t('websiteSettings.theme.paletteTab')}
             {...a11yProps(0)}
           />
           <Tab
-            label="Typography"
+            label={t('websiteSettings.theme.typographyTab')}
             {...a11yProps(1)}
           />
         </Tabs>

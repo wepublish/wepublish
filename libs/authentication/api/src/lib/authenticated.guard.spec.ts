@@ -4,13 +4,13 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthenticatedGuard } from './authenticated.guard';
 import { AUTHENTICATED_METADATA_KEY } from './authenticated.decorator';
 
-jest.mock('@nestjs/graphql', () => {
-  const original = jest.requireActual('@nestjs/graphql');
+vi.mock('@nestjs/graphql', async () => {
+  const original = await vi.importActual('@nestjs/graphql');
 
   return {
     ...original,
     GqlExecutionContext: {
-      create: jest.fn(),
+      create: vi.fn(),
     },
   };
 });
@@ -28,8 +28,8 @@ describe('AuthenticatedGuard', () => {
     guard = module.get<AuthenticatedGuard>(AuthenticatedGuard);
     reflector = module.get<Reflector>(Reflector);
 
-    GqlExecutionContext.create = jest.fn().mockImplementation(() => ({
-      getContext: jest.fn().mockReturnValue({
+    GqlExecutionContext.create = vi.fn().mockImplementation(() => ({
+      getContext: vi.fn().mockReturnValue({
         req: {
           user: {},
         },
@@ -38,9 +38,7 @@ describe('AuthenticatedGuard', () => {
   });
 
   it('should return true if decorator is not set', () => {
-    const spy = jest
-      .spyOn(reflector, 'getAllAndOverride')
-      .mockReturnValue(false);
+    const spy = vi.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
     const mockContext = {
       getHandler: () => ({}),
       getClass: () => ({}),
@@ -52,9 +50,7 @@ describe('AuthenticatedGuard', () => {
   });
 
   it('should return true if a user is logged in', () => {
-    const spy = jest
-      .spyOn(reflector, 'getAllAndOverride')
-      .mockReturnValue(true);
+    const spy = vi.spyOn(reflector, 'getAllAndOverride').mockReturnValue(true);
     const mockContext = {
       getHandler: () => ({}),
       getClass: () => ({}),
@@ -66,16 +62,14 @@ describe('AuthenticatedGuard', () => {
   });
 
   it('should return false if a user is not logged in', () => {
-    GqlExecutionContext.create = jest.fn().mockImplementation(() => ({
-      getContext: jest.fn().mockReturnValue({
+    GqlExecutionContext.create = vi.fn().mockImplementation(() => ({
+      getContext: vi.fn().mockReturnValue({
         req: {
           user: undefined,
         },
       }),
     }));
-    const spy = jest
-      .spyOn(reflector, 'getAllAndOverride')
-      .mockReturnValue(true);
+    const spy = vi.spyOn(reflector, 'getAllAndOverride').mockReturnValue(true);
     const mockContext = {
       getHandler: () => ({}),
       getClass: () => ({}),

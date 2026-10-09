@@ -1,5 +1,6 @@
+import { useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
-import { useCurrentSessionQuery } from '@wepublish/website/api';
+import { CurrentSessionDocument } from '@wepublish/website/api';
 import { useRouter } from 'next/router';
 import {
   ComponentType,
@@ -27,7 +28,7 @@ const RestrictedSessionRedirect = ({
 }: RestrictedSessionRedirectProps) => {
   const router = useRouter();
   const { hasUser } = useUser();
-  const { data, refetch } = useCurrentSessionQuery({
+  const { data, refetch } = useQuery(CurrentSessionDocument, {
     skip: !hasUser,
     fetchPolicy: 'cache-and-network',
   });

@@ -39,3 +39,18 @@ mutation UpdateAnalyticsProviderSetting(
     property
   }
 }
+
+mutation CreateAnalyticsProviderSetting(
+  $id: String!
+  $type: AnalyticsProviderType!
+  $name: String
+) {
+  createAnalyticsProviderSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}

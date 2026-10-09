@@ -1,7 +1,8 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  DeletePaymentMethodDocument,
   FullPaymentMethodFragment,
-  useDeletePaymentMethodMutation,
-  usePaymentMethodListQuery,
+  PaymentMethodListDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -9,6 +10,7 @@ import {
   DescriptionListItem,
   IconButton,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -22,7 +24,13 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Button, Drawer, Modal, Table as RTable } from 'rsuite';
+import {
+  Button,
+  Drawer,
+  IconButton as RIconButton,
+  Modal,
+  Table as RTable,
+} from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -57,10 +65,15 @@ function PaymentMethodList() {
   const [currentPaymentMethod, setCurrentPaymentMethod] =
     useState<FullPaymentMethodFragment>();
 
-  const { data, loading: isLoading, refetch } = usePaymentMethodListQuery({});
+  const {
+    data,
+    loading: isLoading,
+    refetch,
+  } = useQuery(PaymentMethodListDocument, {});
 
-  const [deletePaymentMethod, { loading: isDeleting }] =
-    useDeletePaymentMethodMutation();
+  const [deletePaymentMethod, { loading: isDeleting }] = useMutation(
+    DeletePaymentMethodDocument
+  );
 
   useEffect(() => {
     if (isCreateRoute) {
@@ -91,13 +104,13 @@ function PaymentMethodList() {
         >
           <ListViewActions>
             <Link to="/paymentmethods/create">
-              <IconButton
+              <RIconButton
                 appearance="primary"
                 disabled={isLoading}
-                icon={<MdAdd />}
               >
+                <MdAdd />
                 {t('paymentMethodList.createNew')}
-              </IconButton>
+              </RIconButton>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -113,7 +126,11 @@ function PaymentMethodList() {
             width={40}
             align="left"
           >
-            <HeaderCell>{''}</HeaderCell>
+            <HeaderCell>
+              <InfoTooltip
+                text={t('paymentMethodList.paymentProviderStatusInfo')}
+              />
+            </HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullPaymentMethodFragment>) =>
                 hasBrokenPaymentProvider(rowData as FullPaymentMethodFragment) ?
@@ -156,7 +173,7 @@ function PaymentMethodList() {
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullPaymentMethodFragment>) => (
                 <PermissionControl
@@ -169,6 +186,7 @@ function PaymentMethodList() {
                       appearance="ghost"
                       color="red"
                       size="sm"
+                      aria-label={t('delete')}
                       onClick={() => {
                         setConfirmationDialogOpen(true);
                         setCurrentPaymentMethod(

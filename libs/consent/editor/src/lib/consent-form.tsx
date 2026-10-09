@@ -1,20 +1,26 @@
+import styled from '@emotion/styled';
 import {
   MutationCreateConsentArgs,
   MutationUpdateConsentArgs,
 } from '@wepublish/editor/api';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
-import { Checkbox, Form, Panel } from 'rsuite';
+import { Form, Panel, Toggle } from 'rsuite';
 
-const consentValues = [
-  {
-    value: true,
-    label: 'Accepted',
-  },
-  {
-    value: false,
-    label: 'Rejected',
-  },
-];
+const FormCard = styled(Panel)`
+  width: 100%;
+  max-width: 640px;
+  overflow: initial;
+`;
+
+const Fields = styled.div`
+  display: grid;
+  gap: 20px;
+
+  .rs-form-group {
+    margin-bottom: 0;
+  }
+`;
 
 type ConsentFormData = MutationCreateConsentArgs | MutationUpdateConsentArgs;
 
@@ -32,13 +38,8 @@ export const ConsentForm = ({
   const { t } = useTranslation();
 
   return (
-    <div
-      style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}
-    >
-      <Panel
-        bordered
-        style={{ overflow: 'initial' }}
-      >
+    <FormCard bordered>
+      <Fields>
         <Form.Group controlId="name">
           <Form.Label>{t('consents.name')}</Form.Label>
           <Form.Control
@@ -49,7 +50,9 @@ export const ConsentForm = ({
         </Form.Group>
 
         <Form.Group controlId="slug">
-          <Form.Label>{t('consents.slug')}</Form.Label>
+          <Form.Label>
+            {t('consents.slug')} <InfoTooltip text={t('consents.slugInfo')} />
+          </Form.Label>
           <Form.Control
             name="slug"
             value={consent.slug ?? ''}
@@ -57,18 +60,17 @@ export const ConsentForm = ({
           />
         </Form.Group>
 
-        <Form.Group controlId="defaultValue">
-          <Form.Label>{t('consents.defaultValueTitle')}</Form.Label>
-          <Checkbox
-            checked={!!consent.defaultValue}
-            onChange={(_, checked) => {
-              onChange({ defaultValue: checked });
-            }}
-          >
-            {consentValues.find(v => v.value === consent.defaultValue)?.label}
-          </Checkbox>
-        </Form.Group>
-      </Panel>
-    </div>
+        <Toggle
+          checked={!!consent.defaultValue}
+          label={
+            <>
+              {t('consents.checkedByDefault')}{' '}
+              <InfoTooltip text={t('consents.defaultValueInfo')} />
+            </>
+          }
+          onChange={defaultValue => onChange({ defaultValue })}
+        />
+      </Fields>
+    </FormCard>
   );
 };

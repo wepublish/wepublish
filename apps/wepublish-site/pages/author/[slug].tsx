@@ -1,3 +1,5 @@
+import { useQuery } from '@apollo/client/react';
+import { CombinedGraphQLErrors } from '@apollo/client';
 import {
   ArticleListContainer,
   ArticleWrapper,
@@ -5,17 +7,15 @@ import {
 import { AuthorContainer } from '@wepublish/author/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   ArticleListDocument,
   ArticleListQuery,
   AuthorDocument,
   AuthorQuery,
-  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   SlimArticleFragment,
-  useArticleListQuery,
-  useAuthorQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
@@ -43,7 +43,7 @@ export default function AuthorPage({
   const { query, replace, locale } = useRouter();
   const { page, slug } = pageSchema.parse(query);
 
-  const { data } = useAuthorQuery({
+  const { data } = useQuery(AuthorDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug,
@@ -67,7 +67,7 @@ export default function AuthorPage({
     [locale]
   );
 
-  const { data: articleListData } = useArticleListQuery({
+  const { data: articleListData } = useQuery(ArticleListDocument, {
     fetchPolicy: 'cache-only',
     variables,
   });
@@ -140,7 +140,7 @@ export const getStaticPaths = async () => ({
 });
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { slug } = params || {};
+  const slug = params?.slug?.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const [author] = await Promise.all([
@@ -158,9 +158,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }),
   ]);
 
-  const is404 = author.errors?.find(
-    ({ extensions }) => extensions?.status === 404
-  );
+  const is404 =
+    CombinedGraphQLErrors.is(author.error) &&
+    author.error.errors.find(({ extensions }) => extensions?.status === 404);
 
   if (is404) {
     return {

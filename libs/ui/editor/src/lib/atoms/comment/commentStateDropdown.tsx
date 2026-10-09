@@ -153,6 +153,8 @@ export function CommentStateDropdown({
               appearance="primary"
               color={mapCommentStateToColor(comment.state)}
               icon={<MdArrowDropDown />}
+              title={t('comments.overview.editState')}
+              aria-label={t('comments.overview.editState')}
             />
           </Whisper>
         </ButtonGroup>

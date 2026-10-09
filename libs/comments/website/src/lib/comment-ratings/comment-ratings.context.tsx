@@ -1,4 +1,4 @@
-import { FetchResult, MutationFunctionOptions } from '@apollo/client';
+import type { useMutation } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import {
   RateCommentMutation,
@@ -9,12 +9,10 @@ import { createContext, useContext } from 'react';
 export type CommentRatingContextProps = Partial<{
   canRateAnonymously: boolean;
   getAnonymousRate: (commentId: string, answerId: string) => number | null;
-  rate: (
-    options: MutationFunctionOptions<
-      RateCommentMutation,
-      RateCommentMutationVariables
-    >
-  ) => Promise<FetchResult<RateCommentMutation>>;
+  rate: useMutation.MutationFunction<
+    RateCommentMutation,
+    RateCommentMutationVariables
+  >;
 }>;
 
 export const CommentRatingContext = createContext<CommentRatingContextProps>(

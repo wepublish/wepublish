@@ -1,10 +1,11 @@
-import { PrismaClient } from '@prisma/client';
+import { MailChannel, PrismaClient } from '@prisma/client';
 import { UserSession } from '@wepublish/authentication/api';
 import { MailSendResolver } from './mail-send.resolver';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailLogSyncService } from './mail-log-sync.service';
 import { MailRecipientBase } from './mail-send.model';
+import type { Mock } from 'vitest';
 
 const session = { user: { id: 'editor-1' } } as UserSession;
 
@@ -32,14 +33,14 @@ describe('MailSendResolver', () => {
     it('mailLogs fetches only the exposed template and recipient fields', async () => {
       const prisma = {
         mailLog: {
-          count: jest.fn(async () => 0),
-          findMany: jest.fn(async () => []),
+          count: vi.fn(async () => 0),
+          findMany: vi.fn(async () => []),
         },
       };
 
       await makeResolver(prisma).mailLogs(undefined, 0, 20);
 
-      const args = (prisma.mailLog.findMany as jest.Mock).mock.calls[0][0];
+      const args = (prisma.mailLog.findMany as Mock).mock.calls[0][0];
 
       expect(args.include).toEqual({
         mailTemplate: templateSelect,
@@ -52,14 +53,14 @@ describe('MailSendResolver', () => {
     it('mailSendJobs fetches only the exposed template fields', async () => {
       const prisma = {
         mailSendJob: {
-          count: jest.fn(async () => 0),
-          findMany: jest.fn(async () => []),
+          count: vi.fn(async () => 0),
+          findMany: vi.fn(async () => []),
         },
       };
 
       await makeResolver(prisma).mailSendJobs(0, 20);
 
-      const args = (prisma.mailSendJob.findMany as jest.Mock).mock.calls[0][0];
+      const args = (prisma.mailSendJob.findMany as Mock).mock.calls[0][0];
 
       expect(args.include).toEqual({ mailTemplate: templateSelect });
     });
@@ -67,14 +68,13 @@ describe('MailSendResolver', () => {
     it('mailSendJob fetches only the exposed template fields', async () => {
       const prisma = {
         mailSendJob: {
-          findUnique: jest.fn(async () => null),
+          findUnique: vi.fn(async () => null),
         },
       };
 
       await makeResolver(prisma).mailSendJob('job-1');
 
-      const args = (prisma.mailSendJob.findUnique as jest.Mock).mock
-        .calls[0][0];
+      const args = (prisma.mailSendJob.findUnique as Mock).mock.calls[0][0];
 
       expect(args.include).toEqual({ mailTemplate: templateSelect });
     });
@@ -83,10 +83,10 @@ describe('MailSendResolver', () => {
   it('mailSendRecipientPreview returns both counts and template-eligibility', async () => {
     // Twelve mails, ten people: two of them match through a second subscription.
     const recipientService = {
-      count: jest.fn(async () => 12),
-      countUsers: jest.fn(async () => 10),
-      countWithoutAddress: jest.fn(async () => 3),
-      allowsSubscriptionTemplates: jest.fn(() => true),
+      count: vi.fn(async () => 12),
+      countUsers: vi.fn(async () => 10),
+      countWithoutAddress: vi.fn(async () => 3),
+      allowsSubscriptionTemplates: vi.fn(() => true),
     };
 
     const preview = await makeResolver(
@@ -103,16 +103,48 @@ describe('MailSendResolver', () => {
     });
   });
 
+  it('mailSendRecipients lists through the preview order', async () => {
+    // The preview puts the people a letter would skip first; the plain page
+    // is the send order and must stay untouched.
+    const recipientService = {
+      count: vi.fn(async () => 1),
+      resolvePage: vi.fn(),
+      resolvePreviewPage: vi.fn(async () => [
+        { user: { id: 'u1', email: 'a@b.ch', name: 'A', address: null } },
+      ]),
+    };
+
+    const result = await makeResolver(
+      {},
+      {},
+      recipientService
+    ).mailSendRecipients(
+      { base: MailRecipientBase.allUsers },
+      0,
+      50,
+      MailChannel.letter
+    );
+
+    expect(recipientService.resolvePreviewPage).toHaveBeenCalledWith(
+      { base: MailRecipientBase.allUsers },
+      0,
+      51,
+      MailChannel.letter
+    );
+    expect(recipientService.resolvePage).not.toHaveBeenCalled();
+    expect(result.nodes[0]).toMatchObject({ userId: 'u1', hasAddress: false });
+  });
+
   it('sendMailTemplateToUser delegates and attaches the template', async () => {
     const jobService = {
-      sendToUser: jest.fn(async () => ({
+      sendToUser: vi.fn(async () => ({
         id: 'job-1',
         mailTemplateId: 'tpl-1',
       })),
     };
     const prisma = {
       mailTemplate: {
-        findUnique: jest.fn(async () => ({ id: 'tpl-1', name: 'Welcome' })),
+        findUnique: vi.fn(async () => ({ id: 'tpl-1', name: 'Welcome' })),
       },
     };
 
@@ -131,14 +163,14 @@ describe('MailSendResolver', () => {
 
   it('createMailSendJob delegates to the service with the current user', async () => {
     const jobService = {
-      createJob: jest.fn(async () => ({
+      createJob: vi.fn(async () => ({
         id: 'job-1',
         mailTemplateId: 'tpl-1',
       })),
     };
     const prisma = {
       mailTemplate: {
-        findUnique: jest.fn(async () => ({ id: 'tpl-1', name: 'N' })),
+        findUnique: vi.fn(async () => ({ id: 'tpl-1', name: 'N' })),
       },
     };
     const input = {
@@ -160,8 +192,8 @@ describe('MailSendResolver', () => {
       ];
       const prisma = {
         mailLog: {
-          count: jest.fn(async () => 3),
-          findMany: jest.fn(async () => rows),
+          count: vi.fn(async () => 3),
+          findMany: vi.fn(async () => rows),
         },
       };
 
@@ -171,8 +203,7 @@ describe('MailSendResolver', () => {
         2
       );
 
-      const where = (prisma.mailLog.findMany as jest.Mock).mock.calls[0][0]
-        .where;
+      const where = (prisma.mailLog.findMany as Mock).mock.calls[0][0].where;
       expect(where).toMatchObject({
         mailTemplateId: 'tpl-1',
         recipientID: 'u1',
@@ -188,15 +219,15 @@ describe('MailSendResolver', () => {
     it('paginates jobs newest first', async () => {
       const prisma = {
         mailSendJob: {
-          count: jest.fn(async () => 1),
-          findMany: jest.fn(async () => [{ id: 'j1' }]),
+          count: vi.fn(async () => 1),
+          findMany: vi.fn(async () => [{ id: 'j1' }]),
         },
       };
 
       const result = await makeResolver(prisma).mailSendJobs(0, 20);
 
       expect(
-        (prisma.mailSendJob.findMany as jest.Mock).mock.calls[0][0].orderBy
+        (prisma.mailSendJob.findMany as Mock).mock.calls[0][0].orderBy
       ).toEqual({
         createdAt: 'desc',
       });

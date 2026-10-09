@@ -1,24 +1,24 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
+  CreateConsentDocument,
   MutationCreateConsentArgs,
-  useCreateConsentMutation,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { SingleViewTitle } from '@wepublish/ui/editor';
+import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
 import { ConsentForm } from './consent-form';
 
-const onErrorToast = (error: ApolloError, slug?: string) => {
+const onErrorToast = (error: Error, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
         {`A consent with slug '${slug}' already exists. Please choose a different slug.`}
       </Message>
@@ -30,9 +30,9 @@ const onErrorToast = (error: ApolloError, slug?: string) => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -50,7 +50,7 @@ export const ConsentCreateView = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [createConsent, { loading }] = useCreateConsentMutation({
+  const [createConsent, { loading }] = useMutation(CreateConsentDocument, {
     onError: error => onErrorToast(error, consent.slug),
     onCompleted: consent => {
       toaster.push(

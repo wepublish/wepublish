@@ -1,4 +1,6 @@
 import {
+  AiProviderType,
+  CreateAiSettingDocument,
   SettingAiProvider,
   SettingsIntegrationsAiDocument,
   UpdateSettingsIntegrationsAiDocument,
@@ -25,17 +27,25 @@ export function AIIntegrationForm() {
       mutation={UpdateSettingsIntegrationsAiDocument}
       dataKey="aiSettings"
       schema={aiSettingsSchema}
+      fixedProvider={{
+        id: 'v0',
+        type: AiProviderType.V0,
+        name: 'V0',
+        createMutation: CreateAiSettingDocument,
+      }}
       getLogo={() => vercelLogo}
       fields={[
         {
           name: 'apiKey',
           label: t('integrations.aiSettings.apiKey'),
+          info: t('integrations.aiSettings.apiKeyInfo'),
           type: 'password',
           autoComplete: 'one-time-code',
         },
         {
           name: 'systemPrompt',
           label: t('integrations.aiSettings.systemPrompt'),
+          info: t('integrations.aiSettings.systemPromptInfo'),
           type: 'textarea',
           rows: 5,
         },

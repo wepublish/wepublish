@@ -1,8 +1,9 @@
+import { useQuery } from '@apollo/client/react';
 import {
   PollBlockProvider,
   SubscribeBlockProvider,
 } from '@wepublish/block-content/website';
-import { BannerDocumentType, usePageQuery } from '@wepublish/website/api';
+import { BannerDocumentType, PageDocument } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
   useWebsiteBuilder,
@@ -23,7 +24,7 @@ export function PageContainer({
   children,
 }: PageContainerProps) {
   const { Page } = useWebsiteBuilder();
-  const { data, loading, error } = usePageQuery({
+  const { data, loading, error } = useQuery(PageDocument, {
     variables: {
       id,
       slug,

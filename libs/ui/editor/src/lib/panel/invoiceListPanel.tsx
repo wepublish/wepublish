@@ -1,8 +1,10 @@
+import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   InvoiceFragment,
-  useMarkInvoiceAsPaidMutation,
-  useMeQuery,
+  InvoicePaymentMailDocument,
+  MarkInvoiceAsPaidDocument,
+  MeDocument,
 } from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,8 +24,10 @@ import {
 import { RowDataType } from 'rsuite/esm/Table';
 
 import { createCheckedPermissionComponent } from '../atoms';
+import { useActionMailQuestion } from '../hooks';
 import { ColumnConfigurator } from '../listView/column-configurator';
 import { ListColumn, renderListColumns } from '../listView/list-columns';
+import { Table } from '../listView/list-view';
 import { useColumnConfig } from '../listView/use-column-config';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -52,7 +56,7 @@ const StatusPill = styled('span')<{ pillColor: string }>`
   background-color: ${({ pillColor }) => pillColor};
   color: white;
   font-size: 10px;
-  box-shadow: 0 0 0 2px white;
+  box-shadow: 0 0 0 2px var(--rs-bg-card);
 `;
 
 const IdButton = styled('button')`
@@ -95,9 +99,11 @@ function InvoiceListPanel({
   disabled,
   onInvoicePaid,
 }: InvoiceListPanelProps) {
-  const { data: me } = useMeQuery({});
+  const { data: me } = useQuery(MeDocument, {});
   const { t } = useTranslation();
   const [invoiceToPay, setInvoiceToPay] = useState<InvoiceFragment>();
+  const client = useApolloClient();
+  const { askMail, actionMailDialog } = useActionMailQuestion();
   const columns = useMemo<ListColumn<InvoiceFragment>[]>(
     () => [
       {
@@ -174,18 +180,18 @@ function InvoiceListPanel({
             invoice.paidAt ?
               {
                 title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
-                color: '#22c55e',
+                color: 'var(--rs-state-success)',
                 icon: <MdDone />,
               }
             : invoice.canceledAt ?
               {
                 title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
-                color: '#ef4444',
+                color: 'var(--rs-state-error)',
                 icon: <MdClose />,
               }
             : {
                 title: t('invoice.unpaid'),
-                color: '#eab308',
+                color: 'var(--rs-state-warning)',
                 icon: <MdAccessTime />,
               };
 
@@ -213,10 +219,14 @@ function InvoiceListPanel({
     columns
   );
 
-  const [markInvoiceAsPaid] = useMarkInvoiceAsPaidMutation();
+  const [markInvoiceAsPaid] = useMutation(MarkInvoiceAsPaidDocument);
+
+  function closePayModal() {
+    setInvoiceToPay(undefined);
+  }
 
   async function payManually() {
-    const invoiceId = invoiceToPay?.id;
+    const invoice = invoiceToPay;
     setInvoiceToPay(undefined);
 
     if (!me?.me?.id) {
@@ -227,13 +237,38 @@ function InvoiceListPanel({
       return;
     }
 
-    if (!invoiceId) {
+    if (!invoice) {
+      return;
+    }
+
+    const { data } = await client.query({
+      query: InvoicePaymentMailDocument,
+      variables: { invoiceId: invoice.id },
+      fetchPolicy: 'network-only',
+    });
+    const mail = data?.invoicePaymentMail;
+
+    if (!mail) {
+      throw new Error('Could not look up the mail of this action');
+    }
+
+    // asked every time: whether the mail goes out, or that none will
+    const decision = await askMail({
+      ...mail,
+      recipient: mail.recipientEmail ?? invoice.mail,
+    });
+
+    if (decision === 'cancel') {
       return;
     }
 
     await markInvoiceAsPaid({
       variables: {
-        id: invoiceId,
+        id: invoice.id,
+        // only set when the admin chose; otherwise the API default applies
+        ...((decision === 'send' || decision === 'skip') && {
+          sendMail: decision === 'send',
+        }),
       },
     });
     onInvoicePaid();
@@ -280,15 +315,19 @@ function InvoiceListPanel({
       bordered
       header={panelHeader}
     >
-      <RTable
+      <Table
         autoHeight
         wordWrap="break-word"
         data={invoices}
       >
         {renderListColumns(columns, isVisible)}
 
-        <Column width={160}>
-          <HeaderCell>{t('invoice.table.action')}</HeaderCell>
+        <Column
+          width={160}
+          align="center"
+          fixed="right"
+        >
+          <HeaderCell align="center">{t('action')}</HeaderCell>
           <RCell>
             {(rowData: RowDataType<InvoiceFragment>) =>
               !rowData.paidAt && !rowData.canceledAt ?
@@ -304,13 +343,13 @@ function InvoiceListPanel({
             }
           </RCell>
         </Column>
-      </RTable>
+      </Table>
 
       <Modal
         open={!!invoiceToPay}
         backdrop="static"
         size="xs"
-        onClose={() => setInvoiceToPay(undefined)}
+        onClose={closePayModal}
       >
         <Modal.Title>{t('invoice.areYouSure')}</Modal.Title>
         <Modal.Body>{t('invoice.manuallyPaidModalBody')}</Modal.Body>
@@ -323,12 +362,14 @@ function InvoiceListPanel({
           </Button>
           <Button
             appearance="subtle"
-            onClick={() => setInvoiceToPay(undefined)}
+            onClick={closePayModal}
           >
             {t('cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {actionMailDialog}
     </RPanel>
   );
 }

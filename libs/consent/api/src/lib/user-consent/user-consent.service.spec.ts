@@ -5,12 +5,12 @@ import { UserSession } from '@wepublish/authentication/api';
 
 const mockPrisma = {
   userConsent: {
-    findMany: jest.fn(),
-    findUnique: jest.fn(),
-    findFirst: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
+    findMany: vi.fn(),
+    findUnique: vi.fn(),
+    findFirst: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
   },
 };
 
@@ -32,7 +32,7 @@ describe('UserConsentService', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('should be defined', () => {

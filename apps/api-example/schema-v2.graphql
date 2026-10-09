@@ -6,17 +6,35 @@ enum AIProviderType {
   V0
 }
 
-union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
+"""
+The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action.
+"""
+type ActionMail {
+  """
+  The SubscriptionEvent or UserEvent of the mail, e.g. SUBSCRIBE or ACCOUNT_CREATION.
+  """
+  event: String!
 
-enum ActionType {
-  ArticleCreated
-  AuthorCreated
-  CommentCreated
-  EventCreated
-  PageCreated
-  PollStarted
-  SubscriptionCreated
-  UserCreated
+  """Set when a mail would be sent."""
+  mailTemplateId: String
+
+  """Set when a mail would be sent."""
+  mailTemplateName: String
+
+  """Set when no mail would be sent."""
+  noMailReason: ActionMailNoMailReason
+
+  """
+  The address the mail would go to; null while the user does not exist yet (createUser).
+  """
+  recipientEmail: String
+}
+
+enum ActionMailNoMailReason {
+  alreadyHandled
+  firstPeriod
+  noTemplate
+  notApplicable
 }
 
 type AllowedSettingVals {
@@ -51,13 +69,6 @@ type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   tags: [Tag!]!
   trackingPixels: [TrackingPixel!]!
   url: String!
-}
-
-type ArticleCreatedAction implements BaseAction & HasArticleLc {
-  actionType: ActionType!
-  article: Article!
-  articleId: String!
-  date: DateTime!
 }
 
 input ArticleFilter {
@@ -159,6 +170,61 @@ input ArticleTeaserInput {
   title: String
 }
 
+type AuditLog {
+  action: AuditLogAction!
+  actorType: AuditLogActorType!
+  createdAt: DateTime!
+  entity: String
+  errorMessage: String
+  id: String!
+  impersonatedBy: String
+  mutation: String!
+  recordId: String
+  sessionId: String
+  success: Boolean!
+  tokenName: String
+  userEmail: String
+  userId: String
+}
+
+enum AuditLogAction {
+  create
+  delete
+  other
+  update
+}
+
+enum AuditLogActorType {
+  token
+  user
+}
+
+input AuditLogFilter {
+  actions: [AuditLogAction!]
+  actorType: AuditLogActorType
+  entity: String
+  from: DateTime
+
+  """Only entries where the actor was impersonating another user."""
+  impersonatedOnly: Boolean
+  mutation: String
+  recordId: String
+
+  """
+  Case insensitive search across mutation, entity, record id, user email and token name.
+  """
+  search: String
+  sessionId: String
+  success: Boolean
+  to: DateTime
+  userEmail: String
+  userId: String
+}
+
+enum AuditLogSort {
+  CreatedAt
+}
+
 type Author implements HasImage & HasOptionalPeerLc {
   bio: RichText
   createdAt: DateTime!
@@ -177,13 +243,6 @@ type Author implements HasImage & HasOptionalPeerLc {
   slug: Slug!
   tags: [Tag!]!
   url: String!
-}
-
-type AuthorCreatedAction implements BaseAction & HasAuthor {
-  actionType: ActionType!
-  author: Author!
-  authorId: String!
-  date: DateTime!
 }
 
 input AuthorFilter {
@@ -260,11 +319,6 @@ enum BannerDocumentType {
   PAGE
 }
 
-interface BaseAction {
-  actionType: ActionType!
-  date: DateTime!
-}
-
 interface BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -332,10 +386,11 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BlockTemplateBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | MailchimpFormBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
+  blockTemplate: BlockTemplateBlockInput
   comment: CommentBlockInput
   crowdfunding: CrowdfundingBlockInput
   embed: IFrameBlockInput
@@ -376,8 +431,43 @@ type BlockStyle {
   name: String!
 }
 
+type BlockTemplate implements HasBlockContent {
+  blocks: [BlockContent!]!
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+type BlockTemplateBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  template: BlockTemplate
+  templateId: String!
+  type: BlockType!
+}
+
+input BlockTemplateBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  disabled: Boolean
+  templateId: String!
+}
+
+input BlockTemplateFilter {
+  name: String
+}
+
+enum BlockTemplateSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
 enum BlockType {
   BildwurfAd
+  BlockTemplate
   Comment
   Crowdfunding
   Embed
@@ -567,13 +657,6 @@ input CommentBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: CommentBlockFilterInput!
-}
-
-type CommentCreatedAction implements BaseAction & HasComment {
-  actionType: ActionType!
-  comment: Comment!
-  commentId: String!
-  date: DateTime!
 }
 
 input CommentFilter {
@@ -941,6 +1024,7 @@ type DocumentStorageUsage {
 }
 
 enum EditorBlockType {
+  BlockTemplate
   Comment
   Crowdfunding
   Embed
@@ -1007,13 +1091,6 @@ input EventBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: EventBlockFilterInput!
-}
-
-type EventCreatedAction implements BaseAction & HasEventLc {
-  actionType: ActionType!
-  date: DateTime!
-  event: Event!
-  eventId: String!
 }
 
 input EventFilter {
@@ -1265,28 +1342,8 @@ interface HasArticle {
   articleID: String!
 }
 
-interface HasArticleLc {
-  article: Article!
-  articleId: String!
-}
-
-interface HasAuthor {
-  author: Author!
-  authorId: String!
-}
-
 interface HasBlockContent {
   blocks: [BlockContent!]!
-}
-
-interface HasComment {
-  comment: Comment!
-  commentId: String!
-}
-
-interface HasEventLc {
-  event: Event!
-  eventId: String!
 }
 
 interface HasImage {
@@ -1368,34 +1425,14 @@ interface HasPage {
   pageID: String!
 }
 
-interface HasPageLc {
-  page: Page!
-  pageId: String!
-}
-
 interface HasPaymentMethod {
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
 }
 
-interface HasPoll {
-  poll: FullPoll!
-  pollId: String!
-}
-
-interface HasSubscriptionLc {
-  subscription: PublicSubscription!
-  subscriptionId: String!
-}
-
 interface HasUser {
   user: User!
   userID: String!
-}
-
-interface HasUserLc {
-  user: User!
-  userId: String!
 }
 
 type IFrameBlock implements BaseBlock {
@@ -1901,6 +1938,7 @@ type MailProviderModel {
 }
 
 enum MailProviderType {
+  LOG
   MAILCHIMP
   MAILGUN
   SLACK
@@ -2181,6 +2219,7 @@ type MailchimpFormFieldConfig {
   label: String
   name: String
   options: [MailchimpFormInterestOption!]!
+  optionsLayout: MailchimpFormOptionsLayout!
   required: Boolean
   urlParam: String
   value: String
@@ -2193,21 +2232,30 @@ input MailchimpFormFieldConfigInput {
   label: String
   name: String
   options: [MailchimpFormInterestOptionInput!]! = []
+  optionsLayout: MailchimpFormOptionsLayout! = List
   required: Boolean
   urlParam: String
   value: String
 }
 
-type MailchimpFormInterestOption {
+type MailchimpFormInterestOption implements HasImage {
   description: String
   id: String!
+  image: Image
+  imageID: String
   name: String!
 }
 
 input MailchimpFormInterestOptionInput {
   description: String
   id: String!
+  imageID: String
   name: String!
+}
+
+enum MailchimpFormOptionsLayout {
+  Grid
+  List
 }
 
 type MailchimpFormStep {
@@ -2323,6 +2371,111 @@ type MediumAccountStats {
   usersWithRole: Int!
 }
 
+type MediumAuditActionCount {
+  """create, update, delete or other."""
+  action: String!
+  count: Int!
+}
+
+type MediumAuditError {
+  count: Int!
+
+  """First line of the error, capped — enough to recognise it."""
+  message: String!
+}
+
+type MediumAuditLog {
+  action: AuditLogAction!
+  actorType: AuditLogActorType!
+  createdAt: DateTime!
+  entity: String
+  errorMessage: String
+  id: String!
+
+  """Set when the actor was impersonating another user."""
+  impersonatedBy: String
+  mutation: String!
+  recordId: String
+  sessionId: String
+  success: Boolean!
+  tokenName: String
+  userEmail: String
+  userId: String
+}
+
+input MediumAuditLogFilter {
+  actions: [AuditLogAction!]
+  actorType: AuditLogActorType
+  entity: String
+  from: DateTime
+  impersonatedOnly: Boolean
+  mutation: String
+  recordId: String
+
+  """
+  Case insensitive search across mutation, entity, record id, user email and token name.
+  """
+  search: String
+
+  """Everything a single login session did."""
+  sessionId: String
+  success: Boolean
+  to: DateTime
+  userEmail: String
+  userId: String
+}
+
+type MediumAuditLogPage {
+  nodes: [MediumAuditLog!]!
+
+  """
+  False when this medium does not provide an audit log, in which case nodes is empty and totalCount is zero.
+  """
+  supported: Boolean!
+  totalCount: Int!
+}
+
+type MediumAuditStats {
+  """Permission gated editor actions in the window."""
+  actions: Int!
+
+  """How the actions split across create, update and delete."""
+  actionsByType: [MediumAuditActionCount!]!
+
+  """
+  Accounts that performed at least one action in the 30 days ending with the window. Deliberately NOT the window itself: a one-day window would drop to zero every weekend and the curve would be unreadable.
+  """
+  activeEditors: Int!
+
+  """
+  Of those, the ones the system refused. A rate worth acting on needs both numbers, so they travel together.
+  """
+  failedActions: Int!
+
+  """Actions performed while impersonating another account."""
+  impersonatedActions: Int!
+
+  """
+  How often each mutation was used in the window, most used first. Shows whether a shipped feature is actually being touched.
+  """
+  mutationUsage: [MediumMutationUsage!]!
+
+  """
+  False when this installation keeps no audit log, in which case every figure below is zero and must not be read as "nothing happened".
+  """
+  supported: Boolean!
+
+  """
+  Share of all named-account actions performed by the single busiest account. Five editors where one does 90 % looks identical to five balanced ones in activeEditors alone — this is what tells them apart. Null when nobody acted.
+  """
+  topEditorShare: Float
+
+  """
+  The errors editors ran into most often, worst first. Without this the error rate says something is wrong but never what, and the answer sits one filtered page away.
+  """
+  topErrors: [MediumAuditError!]!
+}
+
 type MediumChangelogAction {
   """
   False for a purely informative entry, which is never counted as open or overdue.
@@ -2432,6 +2585,11 @@ type MediumMoneyStats {
   revenue: Int!
 }
 
+type MediumMutationUsage {
+  count: Int!
+  mutation: String!
+}
+
 type MediumNetworkStats {
   peersDisabled: Int!
   peersTotal: Int!
@@ -2454,6 +2612,7 @@ type MediumOperationsStats {
 
 type MediumStats {
   accounts: MediumAccountStats!
+  audit: MediumAuditStats!
   community: MediumCommunityStats!
   currency: String
   editorial: MediumEditorialStats!
@@ -2478,6 +2637,7 @@ type MemberPlan implements HasImage {
   availablePaymentMethods: [AvailablePaymentMethod!]!
   confirmationPage: Page
   confirmationPageId: String
+  createdAt: DateTime!
   currency: Currency!
   defaultPaymentPeriodicity: PaymentPeriodicity
   description: RichText
@@ -2496,6 +2656,7 @@ type MemberPlan implements HasImage {
   maxCount: Int
   migrateToTargetPaymentMethod: PaymentMethod
   migrateToTargetPaymentMethodID: String
+  modifiedAt: DateTime!
   name: String!
   periodicityPricing: [PeriodicityPrice!]!
   productType: ProductType!
@@ -2539,7 +2700,7 @@ type Mutation {
     reason: SubscriptionDeactivationReason!
 
     """
-    When true, suppress the subscription-deactivation mail. Useful for bulk migrations of already-cancelled subscriptions.
+    When true, suppress the subscription-deactivation mail, e.g. when an editor chose not to mail the reader, or for bulk migrations of already-cancelled subscriptions.
     """
     skipMail: Boolean
   ): PublicSubscription!
@@ -2564,6 +2725,12 @@ type Mutation {
   """
   confirmNotification(itemId: String!, source: NotificationSource!): NotificationConfirmation!
 
+  """Creates a new AI provider setting."""
+  createAISetting(apiKey: String, id: String!, name: String, systemPrompt: String, type: AIProviderType!, webhookEndpointSecret: String): SettingAIProvider!
+
+  """Creates a new analytics provider setting."""
+  createAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String!, name: String, property: String, type: AnalyticsProviderType!): SettingAnalyticsProvider!
+
   """Creates an article."""
   createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
@@ -2573,6 +2740,14 @@ type Mutation {
 
   """Creates a new block style."""
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
+
+  """Creates a new block template."""
+  createBlockTemplate(blocks: [BlockContentInput!]!, name: String!): BlockTemplate!
+
+  """
+  Sets up the challenge provider. Only possible while none is configured.
+  """
+  createChallengeProviderSetting(id: String!, name: String, secret: String, siteKey: String, type: ChallengeProviderType!): SettingChallengeProvider!
 
   """Creates a comment for any user"""
   createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, publish: Boolean = false, tagIds: [String!], text: RichText): Comment!
@@ -2607,6 +2782,9 @@ type Mutation {
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
 
+  """Sets up the mail provider. Only possible while none is configured."""
+  createMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType!, webhookEndpointSecret: String): SettingMailProvider!
+
   """Start a background job sending a template to a filtered audience"""
   createMailSendJob(input: MailSendJobInput!): MailSendJobModel!
 
@@ -2632,6 +2810,9 @@ type Mutation {
 
   """Creates a new payment method."""
   createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
+
+  """Creates a new payment provider setting."""
+  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -2659,7 +2840,23 @@ type Mutation {
   createSessionWithLoginCode(challengeAnswer: ChallengeInput, code: String!, totpToken: String): SessionWithToken!
 
   """Creates a new subscription."""
-  createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Float!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
+  createSubscription(
+    autoRenew: Boolean!
+    extendable: Boolean!
+    memberPlanID: String!
+    monthlyAmount: Float!
+    paidUntil: DateTime
+    paymentMethodID: String!
+    paymentPeriodicity: PaymentPeriodicity!
+    properties: [PropertyInput!]!
+
+    """
+    When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.
+    """
+    skipMail: Boolean
+    startsAt: DateTime!
+    userID: String!
+  ): PublicSubscription!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -2667,11 +2864,17 @@ type Mutation {
   """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
 
+  """Sets up the sync provider. Only possible while none is configured."""
+  createSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String, type: SyncProviderType!): SettingSyncProvider!
+
   """Creates a new tag."""
   createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
 
   """Creates a token and returns it's secret once."""
   createToken(name: String!): TokenWithSecret!
+
+  """Creates a new tracking pixel setting."""
+  createTrackingPixelSetting(id: String!, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String, type: TrackingPixelProviderType!): SettingTrackingPixelProvider!
 
   """Creates a new user."""
   createUser(
@@ -2723,6 +2926,9 @@ type Mutation {
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
 
+  """Deletes an existing block template."""
+  deleteBlockTemplate(id: String!): BlockTemplate!
+
   """Deletes a comment"""
   deleteComment(id: String!): Comment!
 
@@ -2769,6 +2975,9 @@ type Mutation {
   """Deletes an existing payment method."""
   deletePaymentMethod(id: String!): PaymentMethod!
 
+  """Deletes a payment provider setting."""
+  deletePaymentProviderSetting(id: String!): SettingPaymentProvider!
+
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
 
@@ -2804,6 +3013,9 @@ type Mutation {
 
   """Deletes a token."""
   deleteToken(id: String!): Token!
+
+  """Deletes a tracking pixel setting."""
+  deleteTrackingPixelSetting(id: String!): SettingTrackingPixelProvider!
 
   """Deletes an existing user."""
   deleteUser(id: String!): SensitiveDataUser!
@@ -2877,7 +3089,7 @@ type Mutation {
     properties: [PropertyInput!]!
 
     """
-    When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.
+    When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.
     """
     skipMail: Boolean
     startsAt: DateTime!
@@ -2888,7 +3100,7 @@ type Mutation {
   likeArticle(id: String!): Article!
 
   """Marks an invoice as paid."""
-  markInvoiceAsPaid(id: String!): Invoice!
+  markInvoiceAsPaid(id: String!, sendMail: Boolean! = true): Invoice!
 
   """
   Marks a notification as read for the current user. Requires authentication.
@@ -2918,6 +3130,11 @@ type Mutation {
 
   """Rejects a comment"""
   rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
+
+  """
+  Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API.
+  """
+  reloadProviders: Boolean!
 
   """Renews a subscription."""
   renewSubscription(id: String!): PublicSubscription!
@@ -2956,6 +3173,11 @@ type Mutation {
   Continue a send job that stopped early. Recipients already sent are skipped.
   """
   resumeMailSendJob(id: String!, retryUnfinished: Boolean): MailSendJobModel!
+
+  """
+  Retries the failed periodic job and then catches up every run up to today. Answers once the failed run is taken over; the runs go on in the background. Refused while a run is going on.
+  """
+  retryPeriodicJob: PeriodicJob!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -3018,8 +3240,11 @@ type Mutation {
   """Updates an existing block style."""
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
+  """Updates an existing block template."""
+  updateBlockTemplate(blocks: [BlockContentInput!]!, id: String!, name: String!): BlockTemplate!
+
   """Updates an existing challenge provider setting."""
-  updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String): SettingChallengeProvider!
+  updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String, type: ChallengeProviderType): SettingChallengeProvider!
 
   """Update any existing comment"""
   updateComment(featured: Boolean, guestUserImageID: String, guestUsername: String, id: String!, ratingOverrides: [OverriddenRatingInput!], revision: CommentRevisionInput, source: String, tagIds: [String!], userID: String): Comment!
@@ -3072,7 +3297,7 @@ type Mutation {
   ): SettingLetterProvider!
 
   """Updates an existing mail provider setting."""
-  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, webhookEndpointSecret: String): SettingMailProvider!
+  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType, webhookEndpointSecret: String): SettingMailProvider!
 
   """Update an existing mail template"""
   updateMailTemplate(id: String!, input: MailTemplateInput!): MailTemplateModel!
@@ -3095,7 +3320,7 @@ type Mutation {
   updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
 
   """Updates an existing payment provider setting."""
-  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
+  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -3271,13 +3496,6 @@ type Page {
   url: String!
 }
 
-type PageCreatedAction implements BaseAction & HasPageLc {
-  actionType: ActionType!
-  date: DateTime!
-  page: Page!
-  pageId: String!
-}
-
 input PageFilter {
   description: String
   draft: Boolean
@@ -3378,8 +3596,25 @@ type PaginatedArticles {
   totalCount: Int!
 }
 
+type PaginatedAuditLogs {
+  nodes: [AuditLog!]!
+  pageInfo: PageInfo!
+
+  """
+  False when this installation does not provide an audit log, in which case nodes is empty and totalCount is zero.
+  """
+  supported: Boolean!
+  totalCount: Int!
+}
+
 type PaginatedAuthors {
   nodes: [Author!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedBlockTemplate {
+  nodes: [BlockTemplate!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -3598,6 +3833,7 @@ enum PaymentProviderType {
   NO_CHARGE
   PAYREXX
   PAYREXX_SUBSCRIPTION
+  SIMULATED
   STRIPE
   STRIPE_CHECKOUT
 }
@@ -3836,6 +4072,7 @@ type PeriodicJob {
   finishedWithError: DateTime
   id: String!
   modifiedAt: DateTime!
+  running: Boolean!
   successfullyFinished: DateTime
   tries: Float!
 }
@@ -3956,13 +4193,6 @@ enum PollSort {
   OpensAt
 }
 
-type PollStartedAction implements BaseAction & HasPoll {
-  actionType: ActionType!
-  date: DateTime!
-  poll: FullPoll!
-  pollId: String!
-}
-
 type PollVote {
   answer: PollAnswerInVote!
   answerId: String!
@@ -4040,8 +4270,8 @@ type PublicSubscriptionConnection {
 }
 
 type Query {
-  """Returns latest actions"""
-  actions: [Action!]!
+  """The mail createUser would send, or why it sends none."""
+  accountCreationMail: ActionMail!
 
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
@@ -4072,6 +4302,29 @@ type Query {
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
 
+  """
+  Returns a paginated list of audit log entries based on the filters given.
+  """
+  auditLogs(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for audit logs"""
+    filter: AuditLogFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: AuditLogSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedAuditLogs!
+
   """Get an author by ID or slug"""
   author(id: String, slug: String): Author
 
@@ -4082,6 +4335,30 @@ type Query {
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
+
+  """Returns a single block template by ID."""
+  blockTemplate(id: String!): BlockTemplate!
+
+  """Returns a paginated list of block templates."""
+  blockTemplates(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for block templates"""
+    filter: BlockTemplateFilter
+
+    """Sort order"""
+    order: SortOrder = Ascending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: BlockTemplateSort! = Name
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedBlockTemplate!
 
   """
   This query generates a challenge which can be used to access protected endpoints.
@@ -4259,6 +4536,11 @@ type Query {
   """Returns a invoice by id."""
   invoice(id: String!): Invoice!
 
+  """
+  The mail markInvoiceAsPaid would send for this invoice, or why it sends none.
+  """
+  invoicePaymentMail(invoiceId: String!): ActionMail!
+
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
@@ -4331,6 +4613,7 @@ type Query {
 
   """This query returns the user."""
   me: SensitiveDataUser
+  mediumAuditLogs(filter: MediumAuditLogFilter, limit: Int, skip: Int): MediumAuditLogPage!
   mediumChangelogActions(limit: Int): [MediumChangelogAction!]!
   mediumMigrations(limit: Int): [MediumMigration!]!
   mediumStats(from: DateTime, to: DateTime): MediumStats!
@@ -4460,6 +4743,16 @@ type Query {
 
   """Returns a subscription by id."""
   subscription(id: String!): PublicSubscription!
+
+  """
+  The mail cancelSubscription would send for this subscription and reason, or why it sends none.
+  """
+  subscriptionCancellationMail(id: String!, reason: SubscriptionDeactivationReason!): ActionMail!
+
+  """
+  The mail createSubscription would send for a subscription with these settings, or why it sends none.
+  """
+  subscriptionCreationMail(autoRenew: Boolean!, memberPlanID: String!, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, userID: String!): ActionMail!
 
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
@@ -4865,6 +5158,7 @@ enum SettingName {
   PLACEHOLDER_EMAIL_PATTERNS
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
+  SESSION_TTL_DAYS
   SHOW_PENDING_WHEN_NOT_PUBLISHED
   SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE
 }
@@ -4885,6 +5179,7 @@ type SettingPaymentProvider implements SettingProvider {
   bexio_unitId: Float
   bexio_userId: Float
   createdAt: DateTime!
+  deletedAt: DateTime
   id: String!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
@@ -4896,6 +5191,7 @@ type SettingPaymentProvider implements SettingProvider {
   payrexx_pm: [PayrexxPM!]
   payrexx_psp: [PayrexxPSP!]
   payrexx_vatrate: String
+  simulated_declineRenewals: Boolean
   stripe_methods: [StripePaymentMethod!]
   type: PaymentProviderType!
 }
@@ -4970,6 +5266,7 @@ input SettingTrackingPixelFilter {
 
 type SettingTrackingPixelProvider implements SettingProvider {
   createdAt: DateTime!
+  deletedAt: DateTime
   id: String!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!
@@ -5158,13 +5455,6 @@ enum SubscribePeriodicityDisplay {
   Toggle
 }
 
-type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
-  actionType: ActionType!
-  date: DateTime!
-  subscription: PublicSubscription!
-  subscriptionId: String!
-}
-
 type SubscriptionDeactivation {
   date: DateTime!
   reason: SubscriptionDeactivationReason!
@@ -5217,7 +5507,7 @@ type SubscriptionFlowModel {
   id: String!
   intervals: [SubscriptionInterval!]!
   memberPlan: MemberPlan
-  numberOfSubscriptions: Int!
+  numberOfSubscriptions(memberPlanId: String): Int!
   paymentMethods: [PaymentMethod!]!
   periodicities: [PaymentPeriodicity!]!
 }
@@ -5629,13 +5919,6 @@ type UserConsent {
   modifiedAt: DateTime!
   user: User!
   value: Boolean!
-}
-
-type UserCreatedAction implements BaseAction & HasUserLc {
-  actionType: ActionType!
-  date: DateTime!
-  user: User!
-  userId: String!
 }
 
 enum UserEvent {

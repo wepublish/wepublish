@@ -1,11 +1,12 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Theme, Typography } from '@mui/material';
 import { InvoiceListContainer } from '@wepublish/membership/website';
 import {
   FullInvoiceFragment,
+  InvoicesDocument,
   ProductType,
-  useInvoicesQuery,
-  useSubscriptionsQuery,
+  SubscriptionsDocument,
 } from '@wepublish/website/api';
 import { Link } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
@@ -146,10 +147,12 @@ export const EenewsSubscriptionDetail = () => {
   const router = useRouter();
   const id = router.query.id as string | undefined;
 
-  const { data } = useSubscriptionsQuery({ fetchPolicy: 'cache-only' });
+  const { data } = useQuery(SubscriptionsDocument, {
+    fetchPolicy: 'cache-only',
+  });
   const subscription = data?.userSubscriptions.find(sub => sub.id === id);
 
-  const { data: invoiceData } = useInvoicesQuery();
+  const { data: invoiceData } = useQuery(InvoicesDocument);
   const hasUnpaid = (invoiceData?.userInvoices ?? []).some(
     invoice => invoice.subscriptionID === id && isUnpaid(invoice)
   );

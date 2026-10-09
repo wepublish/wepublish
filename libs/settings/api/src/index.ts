@@ -45,3 +45,4 @@ export * from './lib/website-settings/website-settings.module';
 export * from './lib/website-settings/website-settings.model';
 export * from './lib/website-settings/website-settings.service';
 export * from './lib/website-settings/website-settings.resolver';
+export * from './lib/integrations/provider-settings-changed';

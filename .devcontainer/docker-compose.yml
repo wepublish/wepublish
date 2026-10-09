@@ -54,6 +54,19 @@ services:
     volumes:
       - storage_data:/data
 
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:v2.0.0
+    # Same flags and ACL as ../docker-compose.yml (mirrors dragonfly01).
+    command:
+      - --aclfile=/etc/dragonfly/users.acl
+      - --proactor_threads=2
+      - --maxmemory=1gb
+      - --cache_mode=true
+    volumes:
+      - ../docker/dragonfly/users.acl:/etc/dragonfly/users.acl:ro
+    networks:
+      - default
+
   mailpit:
     image: axllent/mailpit:latest
     # SMTP endpoint on 1025 (the app connects via MAIL_SMTP_HOST=mailpit),

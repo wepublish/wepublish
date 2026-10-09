@@ -4,9 +4,11 @@ import {
   CanCreateAuthor,
   CanCreateBanner,
   CanCreateBlockStyle,
+  CanCreateBlockTemplate,
   CanCreateCommentRatingSystem,
   CanCreateConsent,
   CanCreateCrowdfunding,
+  CanCreateDiscountCode,
   CanCreateDocument,
   CanCreateExternalApp,
   CanCreateGoodie,
@@ -23,11 +25,11 @@ import {
   CanCreateToken,
   CanCreateUser,
   CanCreateUserRole,
-  CanCreateDiscountCode,
   CanDeleteArticle,
   CanDeleteAuthor,
   CanDeleteBanner,
   CanDeleteBlockStyle,
+  CanDeleteBlockTemplate,
   CanDeleteCommentRatingSystem,
   CanDeleteConsent,
   CanDeleteDocument,
@@ -66,7 +68,6 @@ import {
   CanGetMailLogs,
   CanGetMailProviderSettings,
   CanGetMailTemplates,
-  CanSendMailTemplates,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetNavigation,
@@ -81,6 +82,7 @@ import {
   CanGetPeerArticles,
   CanGetPeers,
   CanGetPoll,
+  CanGetAuditLogs,
   CanGetSettings,
   CanGetSubscription,
   CanGetSubscriptionFlows,
@@ -97,21 +99,23 @@ import {
   CanPreview,
   CanPublishArticle,
   CanPublishPage,
-  CanUpdateMailTemplates,
+  CanSendMailTemplates,
   CanTakeActionOnComment,
   CanUpdateBlockStyle,
+  CanUpdateBlockTemplate,
   CanUpdateCommentRatingSystem,
   CanUpdateComments,
   CanUpdateConsent,
   CanUpdateCrowdfunding,
+  CanUpdateDiscountCode,
   CanUpdateEvent,
   CanUpdateExternalApp,
   CanUpdateGoodie,
+  CanUpdateMailTemplates,
   CanUpdatePaywall,
   CanUpdateSettings,
   CanUpdateSystemMails,
   CanUpdateTag,
-  CanUpdateDiscountCode,
   CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
 import { PermissionControl, Version } from '@wepublish/ui/editor';
@@ -127,8 +131,11 @@ import {
   MdBookOnline,
   MdCardGiftcard,
   MdChat,
+  MdBrightnessAuto,
+  MdContentCopy,
   MdCountertops,
   MdCreditCard,
+  MdDarkMode,
   MdDashboard,
   MdDescription,
   MdEvent,
@@ -138,14 +145,15 @@ import {
   MdGroup,
   MdGroups,
   MdHub,
+  MdLightMode,
   MdLocationPin,
   MdLogout,
   MdMail,
+  MdMenu,
   MdMoney,
   MdMultilineChart,
   MdNotificationsNone,
   MdOutgoingMail,
-  MdSend,
   MdOutlineGridView,
   MdPayment,
   MdPersonAddAlt1,
@@ -154,6 +162,8 @@ import {
   MdPower,
   MdQueryStats,
   MdSell,
+  MdSend,
+  MdHistory,
   MdSettings,
   MdSettingsInputAntenna,
   MdSignpost,
@@ -171,6 +181,11 @@ import {
   Sidebar as RSidebar,
   Sidenav as RSidenav,
 } from 'rsuite';
+
+import { ColorModePreference, useColorMode } from './colorMode';
+import { useMobileNavigation } from './mobileNavigation';
+import { onlyLatestOpen } from './sidebarMenu';
+import { Logo } from './ui/logo';
 
 export interface BaseProps {
   children?: ReactNode;
@@ -207,53 +222,211 @@ function useStickyState(defaultValue: string, key: string) {
   return [value, setValue];
 }
 
+const mobile = '@media (max-width: 899px)';
+
 const Wrapper = styled.div`
   display: flex;
   height: 100vh;
   width: 100vw;
+  background-color: var(--wep-shell-bg);
+
+  ${mobile} {
+    flex-direction: column;
+    height: 100dvh;
+  }
+`;
+
+const Layout = styled(Container)`
+  min-width: 0;
+  min-height: 0;
 `;
 
 const Sidebar = styled(RSidebar)`
   display: flex;
   flex-direction: column;
+
+  ${mobile} {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    width: min(300px, 86vw) !important;
+    background-color: var(--wep-shell-bg);
+    transform: translateX(-100%);
+    transition: transform 0.2s ease-out;
+
+    &[data-open='true'] {
+      transform: none;
+      box-shadow: var(--wep-elevated-shadow);
+    }
+  }
+`;
+
+const Backdrop = styled.div`
+  display: none;
+
+  ${mobile} {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1039;
+    background-color: var(--rs-bg-backdrop);
+  }
+`;
+
+const MobileTopBar = styled.header`
+  display: none;
+
+  ${mobile} {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+    height: 56px;
+    padding: 0 8px;
+    border-bottom: 1px solid var(--wep-shell-border);
+  }
+`;
+
+const Brand = styled(Link)`
+  display: flex;
+  align-items: center;
+  padding: 22px 22px 18px;
+  color: var(--rs-text-heading);
+
+  svg {
+    width: 128px;
+    height: auto;
+  }
+
+  svg path[fill='black'] {
+    fill: currentColor;
+  }
+
+  svg path[fill='white'] {
+    fill: var(--wep-shell-bg);
+  }
 `;
 
 const Sidenav = styled(RSidenav)`
   flex: 1 1 auto;
   overflow-y: auto;
+  padding: 0 12px 12px;
+
+  &,
+  .rs-sidenav-body {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.2s;
+  }
+
+  &:hover,
+  &:hover .rs-sidenav-body {
+    scrollbar-color: rgb(from var(--rs-text-primary) r g b / 22%) transparent;
+  }
+
+  .rs-sidenav-item,
+  .rs-sidenav-dropdown-toggle,
+  .rs-dropdown-item {
+    border-radius: 8px;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+
+    > svg {
+      flex-shrink: 0;
+    }
+  }
+
+  && .rs-dropdown-menu {
+    margin-right: 0;
+    padding-right: 0;
+  }
+
+  .rs-sidenav-item[data-active='true'],
+  .rs-dropdown-item[data-active='true'] {
+    background-color: var(--wep-nav-active-bg);
+    color: var(--wep-nav-active-text);
+    font-weight: 600;
+  }
+`;
+
+const Footer = styled(Navbar)`
+  padding: 8px 12px;
+  gap: 4px;
+  border-top: 1px solid var(--wep-shell-border);
 `;
 
 const IconButton = styled(RIconButton)`
-  line-height: 56px;
-  text-align: center;
-
   && {
-    width: 56px;
-    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    color: var(--wep-nav-text);
+  }
+
+  &&:hover {
+    background-color: var(--wep-nav-hover-bg);
+    color: var(--rs-text-heading);
   }
 
   svg {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    width: 20px;
+    height: 20px;
   }
 `;
 
-const Navigation = styled(Nav)`
-  margin-top: 1rem;
+const MobileBrand = styled(Brand)`
+  padding: 0 8px;
+
+  svg {
+    width: 104px;
+  }
 `;
 
 const ChildrenContainer = styled(Container)`
-  padding: 60px 40px 40px 40px;
+  --wep-page-padding-top: 32px;
+  --wep-page-padding-x: 32px;
+  margin: 8px 8px 8px 0;
+  padding: var(--wep-page-padding-top) var(--wep-page-padding-x) 40px;
   overflow-y: auto;
   max-width: 100%;
+  background-color: var(--wep-content-bg);
+  border: 1px solid var(--wep-shell-border);
+  border-radius: 14px;
+  box-shadow: var(--wep-surface-shadow);
+
+  ${mobile} {
+    --wep-page-padding-top: 20px;
+    --wep-page-padding-x: 16px;
+    margin: 0;
+    padding: var(--wep-page-padding-top) var(--wep-page-padding-x) 32px;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
 `;
+
+const colorModeIcons = {
+  light: <MdLightMode />,
+  dark: <MdDarkMode />,
+  system: <MdBrightnessAuto />,
+};
+
+const colorModePreferences: ColorModePreference[] = ['system', 'light', 'dark'];
 
 export function Base({ children }: BaseProps) {
   const { pathname } = useLocation();
   const path = pathname.substring(1);
 
   const { t, i18n } = useTranslation();
+  const { preference: colorModePreference, setPreference: setColorMode } =
+    useColorMode();
+  const mobileNavigation = useMobileNavigation();
+  const [openMenus, setOpenMenus] = useState<string[]>([]);
 
   const [uiLanguage, setUILanguage] = useStickyState(
     AVAILABLE_LANG[0].id,
@@ -266,14 +439,45 @@ export function Base({ children }: BaseProps) {
 
   return (
     <Wrapper>
-      <Container>
-        <Sidebar>
+      <MobileTopBar>
+        <IconButton
+          appearance="subtle"
+          icon={<MdMenu />}
+          onClick={mobileNavigation.toggle}
+          aria-label={t('navbar.menu')}
+          aria-expanded={mobileNavigation.open}
+        />
+        <MobileBrand
+          to="/dashboard"
+          aria-label="We.Publish"
+        >
+          <Logo />
+        </MobileBrand>
+      </MobileTopBar>
+
+      {mobileNavigation.open && <Backdrop onClick={mobileNavigation.close} />}
+
+      <Layout>
+        <Sidebar
+          width={248}
+          data-open={mobileNavigation.open}
+        >
+          <Brand
+            to="/dashboard"
+            aria-label="We.Publish"
+          >
+            <Logo />
+          </Brand>
+
           <Sidenav
-            defaultOpenKeys={['1']}
+            openKeys={openMenus}
+            onOpenChange={keys =>
+              setOpenMenus(current => onlyLatestOpen(current, keys.map(String)))
+            }
             appearance="default"
           >
             <RSidenav.Body>
-              <Navigation>
+              <Nav>
                 <Nav.Menu
                   eventKey={'dashboard'}
                   title={t('navbar.dashboard')}
@@ -536,6 +740,22 @@ export function Base({ children }: BaseProps) {
                         icon={<MdStyle />}
                       >
                         {t('navbar.blocks.blockStyles')}
+                      </Nav.Item>
+                    </PermissionControl>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanCreateBlockTemplate.id,
+                        CanUpdateBlockTemplate.id,
+                        CanDeleteBlockTemplate.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/block-content/templates"
+                        active={path === 'block-content/templates'}
+                        icon={<MdContentCopy />}
+                      >
+                        {t('navbar.blocks.blockTemplates')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>
@@ -1086,6 +1306,7 @@ export function Base({ children }: BaseProps) {
                   ]}
                 >
                   <Nav.Menu
+                    eventKey={'peering'}
                     title={t('navbar.peering')}
                     icon={<MdSettingsInputAntenna />}
                   >
@@ -1127,12 +1348,28 @@ export function Base({ children }: BaseProps) {
                     CanGetUserRole.id,
                     CanCreateUserRole.id,
                     CanDeleteUserRole.id,
+                    CanGetAuditLogs.id,
                   ]}
                 >
                   <Nav.Menu
+                    eventKey={'settings'}
                     icon={<MdSettings />}
                     title={t('navbar.settings')}
                   >
+                    {/* AUDIT LOG */}
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetAuditLogs.id]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/audit-log"
+                        active={path === 'audit-log'}
+                        icon={<MdHistory />}
+                      >
+                        {t('navbar.auditLog')}
+                      </Nav.Item>
+                    </PermissionControl>
+
                     {/* DIVERSE SETTINGS */}
                     <PermissionControl
                       qualifyingPermissions={[
@@ -1206,11 +1443,11 @@ export function Base({ children }: BaseProps) {
                     </PermissionControl>
                   </Nav.Menu>
                 </PermissionControl>
-              </Navigation>
+              </Nav>
             </RSidenav.Body>
           </Sidenav>
 
-          <Navbar
+          <Footer
             appearance="default"
             justifyContent="start"
           >
@@ -1224,6 +1461,7 @@ export function Base({ children }: BaseProps) {
                 ) => (
                   <IconButton
                     {...props}
+                    appearance="subtle"
                     placement="left"
                     ref={ref}
                     icon={<MdLogout />}
@@ -1249,6 +1487,7 @@ export function Base({ children }: BaseProps) {
                 ) => (
                   <IconButton
                     {...props}
+                    appearance="subtle"
                     placement="left"
                     ref={ref}
                     icon={<MdTranslate />}
@@ -1266,12 +1505,44 @@ export function Base({ children }: BaseProps) {
                 ))}
               </Nav.Menu>
             </Nav>
-          </Navbar>
+
+            <Nav>
+              <Nav.Menu
+                placement="topStart"
+                trigger="click"
+                renderToggle={(
+                  props: object,
+                  ref: React.Ref<HTMLButtonElement>
+                ) => (
+                  <IconButton
+                    {...props}
+                    appearance="subtle"
+                    placement="left"
+                    ref={ref}
+                    icon={colorModeIcons[colorModePreference]}
+                    title={t('navbar.colorMode.title')}
+                    aria-label={t('navbar.colorMode.title')}
+                  />
+                )}
+              >
+                {colorModePreferences.map(preference => (
+                  <Nav.Item
+                    key={preference}
+                    icon={colorModeIcons[preference]}
+                    onSelect={() => setColorMode(preference)}
+                    active={preference === colorModePreference}
+                  >
+                    {t(`navbar.colorMode.${preference}`)}
+                  </Nav.Item>
+                ))}
+              </Nav.Menu>
+            </Nav>
+          </Footer>
 
           <Version />
         </Sidebar>
         <ChildrenContainer>{children}</ChildrenContainer>
-      </Container>
+      </Layout>
     </Wrapper>
   );
 }

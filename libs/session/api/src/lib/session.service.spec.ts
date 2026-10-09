@@ -1,3 +1,4 @@
+import type { MockInstance } from 'vitest';
 import { BadRequestException } from '@nestjs/common';
 import { SessionOrigin } from '@prisma/client';
 import { AuthenticationService } from '@wepublish/authentication/api';
@@ -34,7 +35,7 @@ describe('SessionService.createSessionWithLoginCode', () => {
   let totp: ReturnType<typeof createMock<TotpService>>;
   let challenge: ReturnType<typeof createMock<ChallengeService>>;
   let authentication: ReturnType<typeof createMock<AuthenticationService>>;
-  let createUserSession: jest.SpyInstance;
+  let createUserSession: MockInstance;
 
   beforeEach(() => {
     loginCodes = createMock(LoginCodeService);
@@ -65,7 +66,7 @@ describe('SessionService.createSessionWithLoginCode', () => {
       challenge as never
     );
 
-    createUserSession = jest
+    createUserSession = vi
       .spyOn(service, 'createUserSession')
       .mockResolvedValue({ token: 'session-token' } as never);
   });

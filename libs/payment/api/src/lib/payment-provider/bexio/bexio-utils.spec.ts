@@ -5,29 +5,30 @@ import {
   mapBexioStatusToPaymentStatus,
 } from './bexio-utils';
 import Bexio from 'bexio';
-import { MappedReplacer } from 'mapped-replacer/dist/types';
+import { MappedReplacer } from 'mapped-replacer';
+import type { Mock } from 'vitest';
 
-jest.mock('mapped-replacer/dist/types', () => {
+vi.mock('mapped-replacer', () => {
   return {
-    MappedReplacer: jest.fn().mockImplementation(() => {
+    MappedReplacer: vi.fn().mockImplementation(function () {
       return {
-        addRule: jest.fn(),
+        addRule: vi.fn(),
       };
     }),
   };
 });
 
-jest.mock('bexio', () => {
+vi.mock('bexio', () => {
   const ContactsStatic = {
     ContactSearchParameters: {
       mail: 'mockMailParameter',
     },
   };
 
-  const Bexio = jest.fn().mockImplementation(() => {
+  const Bexio = vi.fn().mockImplementation(function () {
     return {
       contacts: {
-        search: jest.fn(),
+        search: vi.fn(),
       },
     };
   });
@@ -66,14 +67,14 @@ const mockUser: User = {
 
 describe('bexio-utils', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('searchForContact', () => {
     it('should search for contact by user email', async () => {
       const mockBexio = new Bexio('12345');
 
-      (mockBexio.contacts.search as jest.Mock).mockResolvedValue([
+      (mockBexio.contacts.search as Mock).mockResolvedValue([
         { id: 1, name: 'Test User' },
       ]);
 
@@ -94,7 +95,7 @@ describe('bexio-utils', () => {
   describe('addToStringReplaceMap', () => {
     it('should add rules to string replace map', () => {
       const mockStringReplaceMap = new MappedReplacer();
-      mockStringReplaceMap.addRule = jest.fn();
+      mockStringReplaceMap.addRule = vi.fn();
 
       const id = 'user';
 

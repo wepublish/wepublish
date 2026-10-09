@@ -17,7 +17,7 @@ import {
   CanGetPdfRendererSettings,
   CanGetTrackingPixelSettings,
 } from '@wepublish/permissions';
-import { PermissionControl } from '@wepublish/ui/editor';
+import { InfoTooltip, PermissionControl } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import {
   MdAnalytics,
@@ -65,8 +65,8 @@ const Title = styled.h3`
 
 const LogoList = styled.div`
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 12px;
+  margin-top: 12px;
   flex-wrap: wrap;
   justify-content: space-around;
 `;
@@ -82,6 +82,7 @@ export function IntegrationList() {
   const integrations = [
     {
       title: t('integrations.ai'),
+      info: t('integrations.aiInfo'),
       permission: CanGetAISettings.id,
       path: '/integrations/ai',
       icon: MdSmartToy,
@@ -89,6 +90,7 @@ export function IntegrationList() {
     },
     {
       title: t('integrations.challengeProvider'),
+      info: t('integrations.challengeProviderInfo'),
       permission: CanGetChallengeProviderSettings.id,
       path: '/integrations/challenge',
       icon: MdSecurity,
@@ -96,6 +98,7 @@ export function IntegrationList() {
     },
     {
       title: t('integrations.paymentProvider'),
+      info: t('integrations.paymentProviderInfo'),
       permission: CanGetPaymentProviderSettings.id,
       path: '/integrations/payment',
       icon: MdCreditCard,
@@ -103,6 +106,7 @@ export function IntegrationList() {
     },
     {
       title: t('integrations.trackingPixel'),
+      info: t('integrations.trackingPixelInfo'),
       permission: CanGetTrackingPixelSettings.id,
       path: '/integrations/tracking-pixel',
       icon: MdAnalytics,
@@ -110,6 +114,7 @@ export function IntegrationList() {
     },
     {
       title: t('integrations.mailProvider'),
+      info: t('integrations.mailProviderInfo'),
       permission: CanGetMailProviderSettings.id,
       path: '/integrations/mail',
       icon: MdEmail,
@@ -131,6 +136,7 @@ export function IntegrationList() {
     },
     {
       title: t('integrations.analytics'),
+      info: t('integrations.analyticsInfo'),
       permission: CanGetAnalyticsProviderSettings.id,
       path: '/integrations/analytics',
       icon: MdAnalytics,
@@ -138,6 +144,7 @@ export function IntegrationList() {
     },
     {
       title: t('integrations.mailchimpSync'),
+      info: t('integrations.mailchimpSyncInfo'),
       permission: CanGetMailchimpSyncSettings.id,
       path: '/integrations/mailchimp-sync',
       icon: MdSync,
@@ -147,21 +154,28 @@ export function IntegrationList() {
 
   return (
     <Wrapper>
-      <Title>{t('integrations.title')}</Title>
-
+      <Title>
+        {t('integrations.title')}{' '}
+        <InfoTooltip text={t('integrations.infoText')} />
+      </Title>
       {integrations.map(integration => (
         <PermissionControl
           key={integration.title}
           qualifyingPermissions={[integration.permission]}
         >
-          <Card variant="outlined">
+          <Card
+            variant="outlined"
+            sx={{ borderRadius: 'var(--rs-radius-lg)' }}
+          >
             <CardContent>
               <Typography
                 variant="h6"
                 component="div"
-                marginBottom={2}
+                sx={{
+                  marginBottom: 2,
+                }}
               >
-                {integration.title}
+                {integration.title} <InfoTooltip text={integration.info} />
               </Typography>
 
               <LogoList>
@@ -169,6 +183,7 @@ export function IntegrationList() {
                   <IntegrationLogo
                     key={index}
                     src={logo}
+                    alt=""
                   />
                 ))}
               </LogoList>

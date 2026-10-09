@@ -1,10 +1,11 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   FullImageFragment,
+  ImageDocument,
   ImageListDocument,
-  useImageQuery,
-  useUpdateImageMutation,
-  useUploadImageMutation,
+  UpdateImageDocument,
+  UploadImageDocument,
 } from '@wepublish/editor/api';
 import imageCompression from 'browser-image-compression';
 import prettyBytes from 'pretty-bytes';
@@ -25,6 +26,7 @@ import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
 import { Point } from '../atoms/draggable';
 import { FocalPointInput } from '../atoms/focalPointInput';
 import { ImageMetaData } from '../atoms/imageMetaData';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import {
   createCheckedPermissionComponent,
   PermissionControl,
@@ -91,16 +93,16 @@ function ImageEditPanel({
 
   const [focalPoint, setFocalPoint] = useState<Point>();
 
-  const { data, error: loadingError } = useImageQuery({
+  const { data, error: loadingError } = useQuery(ImageDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
 
   const [updateImage, { loading: isUpdating, error: savingError }] =
-    useUpdateImageMutation();
+    useMutation(UpdateImageDocument);
 
   const [uploadImage, { loading: isUploading, error: uploadError }] =
-    useUploadImageMutation({
+    useMutation(UploadImageDocument, {
       refetchQueries: [getOperationNameFromDocument(ImageListDocument)],
     });
 
@@ -336,7 +338,14 @@ function ImageEditPanel({
       <Drawer.Body>
         {!isLoading && (
           <>
-            <Panel>
+            <Panel
+              header={
+                <>
+                  {t('images.panels.focalPoint')}{' '}
+                  <InfoTooltip text={t('images.panels.focalPointInfo')} />
+                </>
+              }
+            >
               {imageURL && imageWidth && imageHeight && (
                 <FocalPointInput
                   imageURL={imageURL}
@@ -383,10 +392,6 @@ function ImageEditPanel({
                   {prettyBytes(fileSize)}
                 </DescriptionListItem>
 
-                <DescriptionListItem label={t('images.panels.fileSize')}>
-                  {prettyBytes(fileSize)}
-                </DescriptionListItem>
-
                 {originalImageURL && (
                   <DescriptionListItem label={t('images.panels.link')}>
                     <a
@@ -424,7 +429,10 @@ function ImageEditPanel({
                 </Group>
 
                 <Group controlId="imageDescription">
-                  <Label>{t('images.panels.description')}</Label>
+                  <Label>
+                    {t('images.panels.description')}{' '}
+                    <InfoTooltip text={t('images.panels.descriptionInfo')} />
+                  </Label>
                   <Control
                     name="description"
                     value={description}
@@ -435,7 +443,10 @@ function ImageEditPanel({
 
                 {imageBlock && (
                   <Group controlId="imageLinkUrl">
-                    <Label>{t('images.panels.linkUrl')}</Label>
+                    <Label>
+                      {t('images.panels.linkUrl')}{' '}
+                      <InfoTooltip text={t('images.panels.linkUrlInfo')} />
+                    </Label>
                     <Control
                       name="linkUrl"
                       value={imageBlock.linkUrl}

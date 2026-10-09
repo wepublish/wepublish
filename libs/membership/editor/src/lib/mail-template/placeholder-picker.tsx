@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
 import { MailTemplateContext } from '@wepublish/editor/api';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Tooltip, Whisper } from 'rsuite';
@@ -214,15 +215,17 @@ export function PlaceholderPicker({
 
   return (
     <div style={{ paddingRight: 4 }}>
-      <strong>{t('mailTemplates.placeholders')}</strong>
+      <strong>{t('mailTemplates.placeholders')}</strong>{' '}
+      <InfoTooltip text={t('mailTemplates.placeholdersInfo')} />
       <Typography
         variant="caption"
-        display="block"
         style={{ marginBottom: 8 }}
+        sx={{
+          display: 'block',
+        }}
       >
         {t('mailTemplates.placeholdersHint')}
       </Typography>
-
       <Input
         size="sm"
         placeholder={t('mailTemplates.searchPlaceholders', 'Search…')}
@@ -230,13 +233,12 @@ export function PlaceholderPicker({
         onChange={setSearch}
         style={{ marginBottom: 12 }}
       />
-
       {searchResults ?
         searchResults.length ?
           searchResults.map(renderPlaceholder)
         : <Typography
             variant="caption"
-            style={{ color: '#8e8e93' }}
+            style={{ color: 'var(--rs-text-secondary)' }}
           >
             {t('mailTemplates.noPlaceholders', 'No matching placeholders.')}
           </Typography>
@@ -253,8 +255,10 @@ export function PlaceholderPicker({
           </Typography>
           <Typography
             variant="caption"
-            display="block"
-            style={{ marginBottom: 8, color: '#8e8e93' }}
+            style={{ marginBottom: 8, color: 'var(--rs-text-secondary)' }}
+            sx={{
+              display: 'block',
+            }}
           >
             {t(
               'mailTemplates.placeholderAlwaysHint',
@@ -267,14 +271,16 @@ export function PlaceholderPicker({
             style={{
               marginTop: 20,
               paddingTop: 12,
-              borderTop: '1px solid #e5e5ea',
+              borderTop: '1px solid var(--rs-border-primary)',
             }}
           >
             {!selectedContext ?
               <Typography
                 variant="caption"
-                display="block"
-                style={{ color: '#8e8e93' }}
+                style={{ color: 'var(--rs-text-secondary)' }}
+                sx={{
+                  display: 'block',
+                }}
               >
                 {t(
                   'mailTemplates.placeholderSelectType',
@@ -291,8 +297,13 @@ export function PlaceholderPicker({
                 {selectedContext.note && (
                   <Typography
                     variant="caption"
-                    display="block"
-                    style={{ marginBottom: 8, color: '#8e8e93' }}
+                    style={{
+                      marginBottom: 8,
+                      color: 'var(--rs-text-secondary)',
+                    }}
+                    sx={{
+                      display: 'block',
+                    }}
                   >
                     {t(
                       `mailTemplates.placeholderContextNotes.${selectedContext.id}`,
@@ -304,8 +315,10 @@ export function PlaceholderPicker({
                   selectedContext.placeholders.map(renderPlaceholder)
                 : <Typography
                     variant="caption"
-                    display="block"
-                    style={{ color: '#8e8e93' }}
+                    style={{ color: 'var(--rs-text-secondary)' }}
+                    sx={{
+                      display: 'block',
+                    }}
                   >
                     {t(
                       'mailTemplates.placeholderContextNone',

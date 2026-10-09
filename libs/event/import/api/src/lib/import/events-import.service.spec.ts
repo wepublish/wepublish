@@ -1,3 +1,4 @@
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventStatus, PrismaClient } from '@prisma/client';
@@ -26,18 +27,22 @@ describe('EventsImportService', () => {
         {
           provide: CACHE_MANAGER,
           useValue: {
-            get: jest.fn(),
-            set: jest.fn(),
+            get: vi.fn(),
+            set: vi.fn(),
           },
+        },
+        {
+          provide: PublicContentCacheInvalidator,
+          useValue: { invalidate: vi.fn() },
         },
         {
           provide: PrismaClient,
           useValue: {
             event: {
-              create: jest.fn(),
+              create: vi.fn(),
             },
             image: {
-              create: jest.fn(),
+              create: vi.fn(),
             },
           },
         },
@@ -67,7 +72,7 @@ describe('EventsImportService', () => {
   };
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('importedEvents method should return imported events from the cache if available', async () => {
@@ -81,11 +86,11 @@ describe('EventsImportService', () => {
       },
       totalCount: 1,
     };
-    jest.spyOn(cacheManager, 'get').mockResolvedValueOnce([mockEvent]);
+    vi.spyOn(cacheManager, 'get').mockResolvedValueOnce([mockEvent]);
 
-    jest
-      .spyOn(service, 'importedEvents')
-      .mockResolvedValueOnce(mockEventsDocument);
+    vi.spyOn(service, 'importedEvents').mockResolvedValueOnce(
+      mockEventsDocument
+    );
     const result = await service.importedEvents({
       filter: {} as any,
       order: SortOrder.Ascending,
@@ -100,7 +105,7 @@ describe('EventsImportService', () => {
     const source = 'AgendaBasel';
     const id = '1';
 
-    jest.spyOn(service, 'importedEvent').mockResolvedValueOnce(mockEvent);
+    vi.spyOn(service, 'importedEvent').mockResolvedValueOnce(mockEvent);
 
     const result = await service.importedEvent({ id, source });
 
@@ -115,7 +120,7 @@ describe('EventsImportService', () => {
     const source = 'KulturZueri';
     const id = '1';
 
-    jest.spyOn(service, 'importedEvent').mockResolvedValueOnce(mockEvent);
+    vi.spyOn(service, 'importedEvent').mockResolvedValueOnce(mockEvent);
 
     const result = await service.importedEvent({ id, source });
 
@@ -128,13 +133,13 @@ describe('EventsImportService', () => {
 
   test('createEventFromSource method should create an event in the db', async () => {
     const event = { ...mockEvent, imageId: '123' } as any;
-    jest.spyOn(cacheManager, 'get').mockResolvedValueOnce([event]);
+    vi.spyOn(cacheManager, 'get').mockResolvedValueOnce([event]);
     const createEvent = {
       id: '1',
       source: 'AgendaBasel',
     };
 
-    jest.spyOn(service, 'createEventFromSource').mockResolvedValueOnce(event);
+    vi.spyOn(service, 'createEventFromSource').mockResolvedValueOnce(event);
 
     const result = await service.createEventFromSource(createEvent);
 

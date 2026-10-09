@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { SubscriptionListContainer } from '@wepublish/membership/website';
@@ -5,7 +6,7 @@ import {
   PersonalDataFormContainer,
   TotpSetupContainer,
 } from '@wepublish/user/website';
-import { useSubscriptionsQuery } from '@wepublish/website/api';
+import { SubscriptionsDocument } from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
@@ -52,7 +53,7 @@ export const EenewsProfile = () => {
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const router = useRouter();
-  const { data: subscriptionData } = useSubscriptionsQuery({
+  const { data: subscriptionData } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
   });
   const hasActiveSubscriptions = subscriptionData?.userSubscriptions.some(

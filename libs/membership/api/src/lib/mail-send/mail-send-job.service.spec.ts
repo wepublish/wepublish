@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 
-const defaultBuildMailData = jest.fn(
+const defaultBuildMailData = vi.fn(
   async ({
     recipient,
     optionalData,
@@ -32,12 +32,13 @@ import {
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailRecipientBase } from './mail-send.model';
+import type { Mock } from 'vitest';
 
 const makeService = (
   prisma: any,
-  mailContext: any = { sendMail: jest.fn() },
+  mailContext: any = { sendMail: vi.fn() },
   recipientService: any = {},
-  letterContext: any = { sendLetter: jest.fn(), renderLetter: jest.fn() }
+  letterContext: any = { sendLetter: vi.fn(), renderLetter: vi.fn() }
 ) =>
   new MailSendJobService(
     prisma as PrismaClient,
@@ -117,16 +118,16 @@ function fakePrisma(templateRow: any = template('custom')) {
   return {
     jobs,
     entries,
-    mailTemplate: { findUnique: jest.fn(async () => templateRow) },
-    invoice: { findFirst: jest.fn(async () => null) },
+    mailTemplate: { findUnique: vi.fn(async () => templateRow) },
+    invoice: { findFirst: vi.fn(async () => null) },
     user: {
-      findUnique: jest.fn(async ({ where }: any) => ({
+      findUnique: vi.fn(async ({ where }: any) => ({
         id: where.id,
         email: `${where.id}@x.ch`,
       })),
     },
     mailSendJob: {
-      create: jest.fn(async ({ data }: any) => {
+      create: vi.fn(async ({ data }: any) => {
         const { recipients, ...rest } = data;
         const job = {
           id: `job-${jobs.length + 1}`,
@@ -161,29 +162,29 @@ function fakePrisma(templateRow: any = template('custom')) {
 
         return { ...job, recipients: entries.filter(e => e.jobId === job.id) };
       }),
-      findUnique: jest.fn(async ({ where }: any) =>
+      findUnique: vi.fn(async ({ where }: any) =>
         jobs.find(job => job.id === where.id)
       ),
-      findUniqueOrThrow: jest.fn(async ({ where }: any) => {
+      findUniqueOrThrow: vi.fn(async ({ where }: any) => {
         const job = jobs.find(candidate => candidate.id === where.id);
         if (!job) {
           throw new Error('not found');
         }
         return job;
       }),
-      findMany: jest.fn(async ({ where, orderBy }: any = {}) =>
+      findMany: vi.fn(async ({ where, orderBy }: any = {}) =>
         sortBy(
           jobs.filter(job => matches(job, where)),
           orderBy
         )
       ),
-      update: jest.fn(async ({ where, data }: any) =>
+      update: vi.fn(async ({ where, data }: any) =>
         apply(
           jobs.find(job => job.id === where.id),
           data
         )
       ),
-      updateMany: jest.fn(async ({ where, data }: any) => {
+      updateMany: vi.fn(async ({ where, data }: any) => {
         const affected = jobs.filter(job => matches(job, where));
         affected.forEach(job => apply(job, data));
 
@@ -191,7 +192,7 @@ function fakePrisma(templateRow: any = template('custom')) {
       }),
     },
     mailSendJobRecipient: {
-      createMany: jest.fn(async ({ data }: any) => {
+      createMany: vi.fn(async ({ data }: any) => {
         for (const entry of data) {
           entries.push({
             id: `entry-${entrySeq++}`,
@@ -206,40 +207,38 @@ function fakePrisma(templateRow: any = template('custom')) {
 
         return { count: data.length };
       }),
-      findMany: jest.fn(
-        async ({ where, orderBy, skip = 0, take }: any = {}) => {
-          const found = sortBy(
-            entries.filter(entry => matches(entry, where)),
-            orderBy
-          ).slice(skip);
+      findMany: vi.fn(async ({ where, orderBy, skip = 0, take }: any = {}) => {
+        const found = sortBy(
+          entries.filter(entry => matches(entry, where)),
+          orderBy
+        ).slice(skip);
 
-          return take ? found.slice(0, take) : found;
-        }
-      ),
-      count: jest.fn(
+        return take ? found.slice(0, take) : found;
+      }),
+      count: vi.fn(
         async ({ where }: any = {}) =>
           entries.filter(entry => matches(entry, where)).length
       ),
-      update: jest.fn(async ({ where, data }: any) =>
+      update: vi.fn(async ({ where, data }: any) =>
         apply(
           entries.find(entry => entry.id === where.id),
           data
         )
       ),
-      updateMany: jest.fn(async ({ where, data }: any) => {
+      updateMany: vi.fn(async ({ where, data }: any) => {
         const affected = entries.filter(entry => matches(entry, where));
         affected.forEach(entry => apply(entry, data));
 
         return { count: affected.length };
       }),
-      deleteMany: jest.fn(async ({ where }: any) => {
+      deleteMany: vi.fn(async ({ where }: any) => {
         const kept = entries.filter(entry => !matches(entry, where));
         const count = entries.length - kept.length;
         entries.splice(0, entries.length, ...kept);
 
         return { count };
       }),
-      groupBy: jest.fn(async ({ where }: any) => {
+      groupBy: vi.fn(async ({ where }: any) => {
         const counts = new Map<string, number>();
 
         for (const entry of entries.filter(row => matches(row, where))) {
@@ -259,12 +258,12 @@ const recipientServiceFor = (users: string[]) => {
   const recipients = users.map(id => ({ user: { id, email: `${id}@x.ch` } }));
 
   return {
-    count: jest.fn(async () => recipients.length),
+    count: vi.fn(async () => recipients.length),
     allowsSubscriptionTemplates: () => false,
-    resolvePage: jest.fn(async (_audience: any, skip: number, take: number) =>
+    resolvePage: vi.fn(async (_audience: any, skip: number, take: number) =>
       recipients.slice(skip, skip + take)
     ),
-    loadQueued: jest.fn(
+    loadQueued: vi.fn(
       async (refs: any[]) =>
         new Map(
           refs.map(ref => [
@@ -350,7 +349,7 @@ describe('MailSendJobService', () => {
   describe('sendToUser', () => {
     it('sends the mail, records the queue entry and marks the job done', async () => {
       const prisma = fakePrisma();
-      const mailContext = { sendMail: jest.fn(async () => undefined) };
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
 
       const result = await makeService(prisma, mailContext).sendToUser(
         'tpl-1',
@@ -359,9 +358,7 @@ describe('MailSendJobService', () => {
       );
 
       expect(mailContext.sendMail).toHaveBeenCalledTimes(1);
-      expect(
-        (mailContext.sendMail as jest.Mock).mock.calls[0][0]
-      ).toMatchObject({
+      expect((mailContext.sendMail as Mock).mock.calls[0][0]).toMatchObject({
         mailTemplateId: 'tpl-1',
         mailType: mailLogType.Manual,
         optionalData: {},
@@ -373,7 +370,7 @@ describe('MailSendJobService', () => {
 
     it('rejects an unknown user', async () => {
       const prisma = fakePrisma();
-      prisma.user.findUnique = jest.fn(async () => null) as any;
+      prisma.user.findUnique = vi.fn(async () => null) as any;
 
       await expect(
         makeService(prisma).sendToUser('tpl-1', 'u1', 'editor-1')
@@ -383,7 +380,7 @@ describe('MailSendJobService', () => {
     it('marks the job failed when delivery throws', async () => {
       const prisma = fakePrisma();
       const mailContext = {
-        sendMail: jest.fn(async () => {
+        sendMail: vi.fn(async () => {
           throw new Error('smtp down');
         }),
       };
@@ -410,7 +407,7 @@ describe('MailSendJobService', () => {
 
       const job = await makeService(
         prisma,
-        { sendMail: jest.fn(async () => undefined) },
+        { sendMail: vi.fn(async () => undefined) },
         recipientService
       ).createJob(
         {
@@ -429,7 +426,7 @@ describe('MailSendJobService', () => {
     it('sends to every recipient of the audience it resolved', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2']);
-      const mailContext = { sendMail: jest.fn(async () => undefined) };
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
 
       await makeService(prisma, mailContext, recipientService).createJob(
         { mailTemplateId: 'tpl-1', audience },
@@ -446,8 +443,8 @@ describe('MailSendJobService', () => {
     it('posts letters instead of mails and records the print options', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2']);
-      const mailContext = { sendMail: jest.fn(async () => undefined) };
-      const letterContext = { sendLetter: jest.fn(async () => 'log-1') };
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+      const letterContext = { sendLetter: vi.fn(async () => 'log-1') };
 
       await makeService(
         prisma,
@@ -487,9 +484,9 @@ describe('MailSendJobService', () => {
 
       await makeService(
         prisma,
-        { sendMail: jest.fn(async () => undefined) },
+        { sendMail: vi.fn(async () => undefined) },
         recipientService,
-        { sendLetter: jest.fn(async () => 'log-1') }
+        { sendLetter: vi.fn(async () => 'log-1') }
       ).createJob(
         { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
         'editor-1'
@@ -512,7 +509,7 @@ describe('MailSendJobService', () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2']);
       const letterContext = {
-        sendLetter: jest
+        sendLetter: vi
           .fn()
           .mockRejectedValueOnce(new Error('no postal address'))
           .mockResolvedValue('log-2'),
@@ -520,7 +517,7 @@ describe('MailSendJobService', () => {
 
       await makeService(
         prisma,
-        { sendMail: jest.fn() },
+        { sendMail: vi.fn() },
         recipientService,
         letterContext
       ).createJob(
@@ -539,8 +536,8 @@ describe('MailSendJobService', () => {
     it('defaults to mail when no channel is chosen', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1']);
-      const mailContext = { sendMail: jest.fn(async () => undefined) };
-      const letterContext = { sendLetter: jest.fn() };
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+      const letterContext = { sendLetter: vi.fn() };
 
       await makeService(
         prisma,
@@ -559,7 +556,7 @@ describe('MailSendJobService', () => {
     it('materialises the queue, sends to everyone once and finishes', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2', 'u3']);
-      const mailContext = { sendMail: jest.fn(async () => undefined) };
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
       seedJob(prisma);
 
       await makeService(prisma, mailContext, recipientService).drain();
@@ -582,7 +579,7 @@ describe('MailSendJobService', () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2']);
       const mailContext = {
-        sendMail: jest
+        sendMail: vi
           .fn()
           .mockRejectedValueOnce(new Error('bounced'))
           .mockResolvedValueOnce(undefined),
@@ -606,7 +603,7 @@ describe('MailSendJobService', () => {
     it('never sends to a recipient a second time when the job runs again', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2', 'u3']);
-      const mailContext = { sendMail: jest.fn(async () => undefined) };
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
       const service = makeService(prisma, mailContext, recipientService);
       seedJob(prisma);
 
@@ -621,12 +618,12 @@ describe('MailSendJobService', () => {
     it('marks the job failed when its template disappears', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1']);
-      prisma.mailTemplate.findUnique = jest.fn(async () => null) as any;
+      prisma.mailTemplate.findUnique = vi.fn(async () => null) as any;
       seedJob(prisma);
 
       await makeService(
         prisma,
-        { sendMail: jest.fn() },
+        { sendMail: vi.fn() },
         recipientService
       ).drain();
 
@@ -641,7 +638,7 @@ describe('MailSendJobService', () => {
 
       await makeService(
         prisma,
-        { sendMail: jest.fn() },
+        { sendMail: vi.fn() },
         recipientService
       ).drain();
 
@@ -653,7 +650,7 @@ describe('MailSendJobService', () => {
     it('continues a job whose worker went away, skipping what was sent', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2', 'u3']);
-      const mailContext = { sendMail: jest.fn(async () => undefined) };
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
       seedJob(prisma, {
         status: 'running',
         resolved: true,
@@ -684,7 +681,7 @@ describe('MailSendJobService', () => {
 
       await makeService(
         prisma,
-        { sendMail: jest.fn(async () => undefined) },
+        { sendMail: vi.fn(async () => undefined) },
         recipientService
       ).drain();
 
@@ -705,7 +702,7 @@ describe('MailSendJobService', () => {
 
       await makeService(
         prisma,
-        { sendMail: jest.fn() },
+        { sendMail: vi.fn() },
         recipientService
       ).drain();
 
@@ -725,7 +722,7 @@ describe('MailSendJobService', () => {
     it('sends only what was never attempted', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2', 'u3']);
-      const mailContext = { sendMail: jest.fn(async () => undefined) };
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
       const job = stopped(prisma);
 
       await makeService(prisma, mailContext, recipientService).resumeJob(
@@ -744,7 +741,7 @@ describe('MailSendJobService', () => {
     it('retries the failed ones when asked to', async () => {
       const prisma = fakePrisma();
       const recipientService = recipientServiceFor(['u1', 'u2', 'u3']);
-      const mailContext = { sendMail: jest.fn(async () => undefined) };
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
       const job = stopped(prisma);
 
       await makeService(prisma, mailContext, recipientService).resumeJob(
@@ -781,7 +778,7 @@ describe('MailSendJobService', () => {
         prisma,
         {
           // Cancelled while the first mail is in flight.
-          sendMail: jest.fn(async () => {
+          sendMail: vi.fn(async () => {
             if (prisma.jobs[0].status === 'running') {
               await service.cancelJob(prisma.jobs[0].id);
             }

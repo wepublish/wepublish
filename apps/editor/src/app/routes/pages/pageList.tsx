@@ -1,16 +1,16 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   CommentItemType,
+  CreateCommentDocument,
+  DeletePageDocument,
+  DuplicatePageDocument,
   FullPageFragment,
   PageFilter,
   PageListDocument,
   PageListQuery,
   PageSort,
   TagType,
-  useCreateCommentMutation,
-  useDeletePageMutation,
-  useDuplicatePageMutation,
-  usePageListQuery,
-  useUnpublishPageMutation,
+  UnpublishPageDocument,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
@@ -96,11 +96,16 @@ function PageList() {
 
   const [page, setPage] = useState(1);
 
-  const [deletePage, { loading: isDeleting }] = useDeletePageMutation({});
-  const [unpublishPage, { loading: isUnpublishing }] = useUnpublishPageMutation(
+  const [deletePage, { loading: isDeleting }] = useMutation(
+    DeletePageDocument,
     {}
   );
-  const [duplicatePage, { loading: isDuplicating }] = useDuplicatePageMutation(
+  const [unpublishPage, { loading: isUnpublishing }] = useMutation(
+    UnpublishPageDocument,
+    {}
+  );
+  const [duplicatePage, { loading: isDuplicating }] = useMutation(
+    DuplicatePageDocument,
     {}
   );
 
@@ -116,7 +121,7 @@ function PageList() {
     data,
     refetch,
     loading: isLoading,
-  } = usePageListQuery({
+  } = useQuery(PageListDocument, {
     variables: pageListVariables,
   });
 
@@ -137,14 +142,15 @@ function PageList() {
     refetch(pageListVariables);
   }, [filter, page, limit, sortOrder, sortField]);
 
-  const [createComment] = useCreateCommentMutation({});
+  const [createComment] = useMutation(CreateCommentDocument, {});
 
   const dataColumns = useMemo<ListColumn<FullPageFragment>[]>(
     () => [
       {
         id: 'states',
         label: t('pages.overview.states'),
-        width: 125,
+        width: 190,
+        resizable: false,
         alwaysVisible: true,
         render: page => {
           const states: State[] = [];
@@ -298,7 +304,7 @@ function PageList() {
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('pages.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <IconButtonCell>
               {(rowData: RowDataType<FullPageFragment>) => (
                 <>
@@ -309,6 +315,7 @@ function PageList() {
                       caption={t('pageEditor.overview.unpublish')}
                     >
                       <IconButton
+                        aria-label={t('pageEditor.overview.unpublish')}
                         icon={<MdUnpublished />}
                         circle
                         disabled={!(rowData.published || rowData.pending)}
@@ -329,6 +336,7 @@ function PageList() {
                       caption={t('pageEditor.overview.duplicate')}
                     >
                       <IconButton
+                        aria-label={t('pageEditor.overview.duplicate')}
                         icon={<MdContentCopy />}
                         circle
                         size="sm"
@@ -348,6 +356,7 @@ function PageList() {
                       caption={t('pageEditor.overview.createComment')}
                     >
                       <IconButton
+                        aria-label={t('pageEditor.overview.createComment')}
                         icon={<MdComment />}
                         circle
                         size="sm"
@@ -355,7 +364,7 @@ function PageList() {
                           createComment({
                             variables: {
                               itemID: rowData.id,
-                              itemType: CommentItemType.Article,
+                              itemType: CommentItemType.Page,
                             },
                             onCompleted(data) {
                               navigate(
@@ -373,6 +382,7 @@ function PageList() {
                   >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
+                        aria-label={t('delete')}
                         icon={<MdDelete />}
                         circle
                         size="sm"
@@ -494,6 +504,7 @@ function PageList() {
                       cache.writeQuery<PageListQuery>({
                         query: PageListDocument,
                         data: {
+                          __typename: 'Query',
                           pages: {
                             ...query.pages,
                             nodes: query.pages.nodes.filter(
@@ -529,6 +540,7 @@ function PageList() {
                       cache.writeQuery<PageListQuery>({
                         query: PageListDocument,
                         data: {
+                          __typename: 'Query',
                           pages: {
                             ...query.pages,
                           },

@@ -67,7 +67,7 @@ const Card = styled('div', {
   display: flex;
   align-items: stretch;
   height: 72px;
-  border-radius: 6px;
+  border-radius: var(--rs-radius-md);
   border: ${({ isDropTarget, isOver }) =>
       isDropTarget || isOver ? '3px' : '2px'}
     ${({ isScratch, isEmptyReal }) =>

@@ -1,0 +1,57 @@
+{
+  "name": "kunstbulletin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/kunstbulletin",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "dependsOn": [],
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/kunstbulletin"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/kunstbulletin"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "kunstbulletin:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "kunstbulletin:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "kunstbulletin:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "kunstbulletin:build:production"
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../{projectRoot}/vitest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

@@ -1,8 +1,8 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import {
+  EventListDocument,
   FullEventFragment,
   TagType,
-  useEventListLazyQuery,
 } from '@wepublish/editor/api';
 import { useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,28 +16,31 @@ import {
   IconButton,
   Message,
   Pagination,
-  Table,
+  Table as RTable,
   toaster,
   Toggle,
 } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { PermissionControl } from '../atoms/permissionControl';
 import { SelectTags } from '../atoms/tag/selectTags';
 import { EventBlockValue } from '../blocks/types';
 import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
+import { humanizeError } from '../humanizeError';
+import { Table } from '../listView/list-view';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </Message>
     );
   }
@@ -67,9 +70,14 @@ export function SelectEventPanel({
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
 
-  const [fetchEvents, { data, loading }] = useEventListLazyQuery({
-    onError: onErrorToast,
-  });
+  const [fetchEvents, { data, loading, error: eventListError }] =
+    useLazyQuery(EventListDocument);
+
+  useEffect(() => {
+    if (eventListError) {
+      onErrorToast(eventListError);
+    }
+  }, [eventListError]);
 
   const saveSelection = () => {
     if (allowCherryPicking) {
@@ -154,8 +162,13 @@ export function SelectEventPanel({
           <Toggle
             defaultChecked={allowCherryPicking}
             onChange={toggleCherryPicking}
+            label={
+              <>
+                {t('blocks.event.cherryPick')}{' '}
+                <InfoTooltip text={t('blocks.event.cherryPickInfo')} />
+              </>
+            }
           />
-          {t('blocks.event.cherryPick')}
         </div>
 
         <Table
@@ -168,9 +181,9 @@ export function SelectEventPanel({
           }
         >
           {allowCherryPicking && (
-            <Table.Column width={36}>
-              <Table.HeaderCell>{''}</Table.HeaderCell>
-              <Table.Cell style={{ padding: 0 }}>
+            <RTable.Column width={36}>
+              <RTable.HeaderCell>{''}</RTable.HeaderCell>
+              <RTable.Cell style={{ padding: 0 }}>
                 {(rowData: RowDataType<FullEventFragment>) => (
                   <div
                     style={{
@@ -195,27 +208,27 @@ export function SelectEventPanel({
                     />
                   </div>
                 )}
-              </Table.Cell>
-            </Table.Column>
+              </RTable.Cell>
+            </RTable.Column>
           )}
 
-          <Table.Column
+          <RTable.Column
             width={250}
             resizable
           >
-            <Table.HeaderCell>{t('event.list.name')}</Table.HeaderCell>
-            <Table.Cell>
+            <RTable.HeaderCell>{t('event.list.name')}</RTable.HeaderCell>
+            <RTable.Cell>
               {(rowData: RowDataType<FullEventFragment>) => rowData.name}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column
-            width={150}
+          <RTable.Column
+            width={100}
             align="center"
             fixed="right"
           >
-            <Table.HeaderCell>{t('event.list.edit')}</Table.HeaderCell>
-            <Table.Cell style={{ padding: '6px 0' }}>
+            <RTable.HeaderCell align="center">{t('action')}</RTable.HeaderCell>
+            <RTable.Cell style={{ padding: '6px 0' }}>
               {(rowData: RowDataType<FullEventFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_UPDATE_EVENT']}>
                   <IconButtonTooltip caption={t('event.list.edit')}>
@@ -224,6 +237,7 @@ export function SelectEventPanel({
                       to={`/events/edit/${rowData.id}`}
                     >
                       <IconButton
+                        aria-label={t('event.list.edit')}
                         icon={<MdEdit />}
                         circle
                         size="sm"
@@ -232,8 +246,8 @@ export function SelectEventPanel({
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
         </Table>
 
         <Pagination

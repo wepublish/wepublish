@@ -136,9 +136,9 @@ const mockedXMLData = {
   },
 };
 
-jest.mock('xml2js', () => ({
-  Parser: jest.fn().mockImplementation(() => ({
-    parseStringPromise: jest.fn(() => Promise.resolve(mockedXMLData)),
+vi.mock('xml2js', () => ({
+  Parser: vi.fn().mockImplementation(() => ({
+    parseStringPromise: vi.fn(() => Promise.resolve(mockedXMLData)),
   })),
 }));
 
@@ -161,7 +161,7 @@ describe('fetchAndParseKulturagenda', () => {
     parser = module.get<KulturagendaParser>(KulturagendaParser);
   });
 
-  it.failing(
+  it.fails(
     'should fetch XML data and parse upcoming events correctly',
     async () => {
       const url = 'https://example.com/events.xml';

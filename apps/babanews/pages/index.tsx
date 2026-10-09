@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -32,7 +32,7 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 
   const client = getApiClient(getApiUrl(), []);
-  await Promise.all([
+  const [page] = await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
@@ -51,6 +51,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(page.data?.page, page.error),
   };
 };

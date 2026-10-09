@@ -37,7 +37,7 @@ const Panel = styled(RPanel)`
   height: 200px;
   padding: 0;
   overflow: hidden;
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
 `;
 
 export const CrowdfundingBlock = ({
@@ -60,7 +60,10 @@ export const CrowdfundingBlock = ({
         bodyFill
         bordered
       >
-        <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
+        <PlaceholderInput
+          onAddClick={() => setIsDialogOpen(true)}
+          addLabel={t('blocks.crowdfunding.title')}
+        >
           {crowdfunding && (
             <Crowdfunding>
               <IconWrapper>

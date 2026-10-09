@@ -5,6 +5,7 @@ import {
   BuilderCommentBlockProps,
   BuilderCrowdfundingBlockProps,
   BuilderEventBlockProps,
+  BuilderBlockTemplateBlockProps,
   BuilderFlexBlockProps,
   BuilderHTMLBlockProps,
   BuilderMailchimpFormBlockProps,
@@ -17,6 +18,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { isFlexBlock } from './nested-blocks/flex-block';
+import { isBlockTemplateBlock } from './block-template/block-template-block';
 import { isHtmlBlock } from './html/html-block';
 import { isSubscribeBlock } from './subscribe/subscribe-block';
 import { isMailchimpFormBlock } from './mailchimp-form/mailchimp-form-block';
@@ -466,6 +468,14 @@ export const BlockRenderer = memo(
             <blocks.FlexBlock
               {...(block as BuilderFlexBlockProps)}
               className={className}
+            />
+          ),
+        ],
+        [
+          isBlockTemplateBlock,
+          block => (
+            <blocks.BlockTemplate
+              {...(block as BuilderBlockTemplateBlockProps)}
             />
           ),
         ],

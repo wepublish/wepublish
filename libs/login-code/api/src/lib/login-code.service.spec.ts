@@ -11,16 +11,16 @@ const CODE = 'ABCDEFGHJK';
 
 const createPrismaMock = () => ({
   setting: {
-    findUnique: jest.fn(async ({ where }: { where: { name: SettingName } }) =>
+    findUnique: vi.fn(async ({ where }: { where: { name: SettingName } }) =>
       where.name === SettingName.LOGIN_CODE_MAX_USES ?
         { value: 3 }
       : { value: 30 }
     ),
   },
   userLoginCode: {
-    findFirst: jest.fn(async () => null),
-    findUnique: jest.fn(async () => null),
-    create: jest.fn(async ({ data }: { data: Record<string, unknown> }) => ({
+    findFirst: vi.fn(async () => null),
+    findUnique: vi.fn(async () => null),
+    create: vi.fn(async ({ data }: { data: Record<string, unknown> }) => ({
       id: 'code-1',
       createdAt: new Date(),
       modifiedAt: new Date(),
@@ -29,7 +29,7 @@ const createPrismaMock = () => ({
       revokedBy: null,
       ...data,
     })),
-    updateMany: jest.fn(async () => ({ count: 1 })),
+    updateMany: vi.fn(async () => ({ count: 1 })),
   },
 });
 

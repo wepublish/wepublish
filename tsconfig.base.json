@@ -18,11 +18,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@wepublish/action/api": ["libs/action/api/src/index.ts"],
       "@wepublish/ai/api": ["libs/ai/api/src/index.ts"],
       "@wepublish/ai/editor": ["libs/ai/editor/src/index.ts"],
       "@wepublish/ai/website": ["libs/ai/website/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
+      "@wepublish/audit-log/api": ["libs/audit-log/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
       "@wepublish/article/api": ["libs/article/api/src/index.ts"],
       "@wepublish/article/website": ["libs/article/website/src/index.ts"],
@@ -88,6 +88,9 @@
       "@wepublish/page/api": ["libs/page/api/src/index.ts"],
       "@wepublish/page/website": ["libs/page/website/src/index.ts"],
       "@wepublish/payment/api": ["libs/payment/api/src/index.ts"],
+      "@wepublish/provider-registry/api": [
+        "libs/provider-registry/api/src/index.ts"
+      ],
       "@wepublish/payment/website": ["libs/payment/website/src/index.ts"],
       "@wepublish/paywall/api": ["libs/paywall/api/src/index.ts"],
       "@wepublish/paywall/website": ["libs/paywall/website/src/index.ts"],

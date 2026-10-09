@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   addClientCacheToProps,
@@ -5,11 +6,9 @@ import {
   getApiClient,
   LoginCodeSecondFactor,
   MeDocument,
-  useCurrentSessionQuery,
-  useMeQuery,
-  useRequestEmailChangeMutation,
-  useRequestEmailVerificationMutation,
-  useUpdatePasswordMutation,
+  RequestEmailChangeDocument,
+  RequestEmailVerificationDocument,
+  UpdatePasswordDocument,
 } from '@wepublish/website/api';
 import { Button, useWebsiteBuilder } from '@wepublish/website/builder';
 import { NextPage, NextPageContext } from 'next';
@@ -64,14 +63,18 @@ function WelcomePageComponent({
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const router = useRouter();
-  const { data: meData } = useMeQuery();
-  const { data: sessionData, refetch: refetchSession } = useCurrentSessionQuery(
+  const { data: meData } = useQuery(MeDocument);
+  const { data: sessionData, refetch: refetchSession } = useQuery(
+    CurrentSessionDocument,
     { fetchPolicy: 'network-only' }
   );
-  const [requestEmailChange, emailChange] = useRequestEmailChangeMutation();
-  const [requestEmailVerification, emailVerification] =
-    useRequestEmailVerificationMutation();
-  const [updatePassword, passwordUpdate] = useUpdatePasswordMutation();
+  const [requestEmailChange, emailChange] = useMutation(
+    RequestEmailChangeDocument
+  );
+  const [requestEmailVerification, emailVerification] = useMutation(
+    RequestEmailVerificationDocument
+  );
+  const [updatePassword, passwordUpdate] = useMutation(UpdatePasswordDocument);
 
   const [step, setStep] = useState<Step>(
     router.query.emailConfirmed ? 'password' : 'intro'
