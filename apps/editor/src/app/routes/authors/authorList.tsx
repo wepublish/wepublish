@@ -224,7 +224,7 @@ function AuthorList() {
               {(rowData: FullAuthorFragment) => (
                 <PeerAvatar peer={rowData.peer}>
                   <Link to={`/authors/edit/${rowData.id}`}>
-                    {rowData.name || t('authors.overview.untitled')}
+                    {rowData.name || t('untitled')}
                   </Link>
                 </PeerAvatar>
               )}

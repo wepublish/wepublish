@@ -6,12 +6,13 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { TFunction } from 'i18next';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
 import { ConsentForm } from './consent-form';
 
-const onErrorToast = (error: Error, slug?: string) => {
+const onErrorToast = (t: TFunction, error: Error, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
     toaster.push(
       <Message
@@ -20,7 +21,7 @@ const onErrorToast = (error: Error, slug?: string) => {
         closable
         duration={8000}
       >
-        {`A consent with slug '${slug}' already exists. Please choose a different slug.`}
+        {t('consents.uniqueConstraint', { slug })}
       </Message>
     );
     return;
@@ -51,7 +52,7 @@ export const ConsentCreateView = () => {
   const [shouldClose, setShouldClose] = useState(false);
 
   const [createConsent, { loading }] = useMutation(CreateConsentDocument, {
-    onError: error => onErrorToast(error, consent.slug),
+    onError: error => onErrorToast(t, error, consent.slug),
     onCompleted: consent => {
       toaster.push(
         <Message
@@ -79,9 +80,9 @@ export const ConsentCreateView = () => {
 
   const { StringType, BooleanType } = Schema.Types;
   const validationModel = Schema.Model({
-    name: StringType().isRequired(),
-    slug: StringType().isRequired(),
-    defaultValue: BooleanType().isRequired(),
+    name: StringType().isRequired(t('errorMessages.required')),
+    slug: StringType().isRequired(t('errorMessages.required')),
+    defaultValue: BooleanType().isRequired(t('errorMessages.required')),
   });
 
   return (

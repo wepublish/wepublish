@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import styled from '@emotion/styled';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { TbExternalLink, TbLinkPlus } from 'react-icons/tb';
 import { useHeadings } from './use-headings';
 import {
@@ -24,6 +24,7 @@ import {
 import * as z from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import {
   EditorStateSnapshot,
@@ -103,30 +104,36 @@ type LinkPopoverProps = {
   onClose: () => void;
 };
 
-const linkSchema = z.union([
-  z.object({
-    type: z.literal('web'),
-    url: z
-      .string()
-      .url()
-      .or(z.string().startsWith('#'))
-      .or(z.string().startsWith('/')),
-    newTab: z.boolean(),
-    variant: z.string().nullish(),
-  }),
-  z.object({
-    type: z.literal('email'),
-    url: z.string().email(),
-    newTab: z.boolean(),
-    variant: z.string().nullish(),
-  }),
-  z.object({
-    type: z.literal('anchor'),
-    url: z.string(),
-    newTab: z.boolean(),
-    variant: z.string().nullish(),
-  }),
-]);
+const createLinkSchema = (t: TFunction) => {
+  const invalidUrl = t('errorMessages.invalidUrlErrorMessage');
+
+  return z.union([
+    z.object({
+      type: z.literal('web'),
+      url: z
+        .string()
+        .url(invalidUrl)
+        .or(z.string().startsWith('#', invalidUrl))
+        .or(z.string().startsWith('/', invalidUrl)),
+      newTab: z.boolean(),
+      variant: z.string().nullish(),
+    }),
+    z.object({
+      type: z.literal('email'),
+      url: z.string().email(t('errorMessages.invalidEmailErrorMessage')),
+      newTab: z.boolean(),
+      variant: z.string().nullish(),
+    }),
+    z.object({
+      type: z.literal('anchor'),
+      url: z.string(),
+      newTab: z.boolean(),
+      variant: z.string().nullish(),
+    }),
+  ]);
+};
+
+type LinkFormValues = z.infer<ReturnType<typeof createLinkSchema>>;
 
 const selectLinkState = ({ editor }: EditorStateSnapshot) => {
   if (!editor || editor.isDestroyed) {
@@ -203,13 +210,14 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
       .run();
   }, [editor]);
 
-  const { control, handleSubmit, watch, formState, reset, trigger } = useForm<
-    z.infer<typeof linkSchema>
-  >({
-    resolver: zodResolver(linkSchema),
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
-  });
+  const linkSchema = useMemo(() => createLinkSchema(t), [t]);
+
+  const { control, handleSubmit, watch, formState, reset, trigger } =
+    useForm<LinkFormValues>({
+      resolver: zodResolver(linkSchema),
+      mode: 'onTouched',
+      reValidateMode: 'onChange',
+    });
 
   const onSubmit = handleSubmit(({ type, url, newTab, variant }) => {
     applyLink(type === 'email' ? `${mailTo}${url}` : url, {
@@ -227,7 +235,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
       url: stripMailto(editorState.href),
       newTab: editorState.isLink ? editorState.target === '_blank' : true,
       variant: editorState.variant ?? null,
-    } as z.infer<typeof linkSchema>);
+    } as LinkFormValues);
   }, [headings, editorState, reset]);
 
   return (
@@ -411,7 +419,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
                       key={option.value}
                       value={option.value}
                     >
-                      {option.label}
+                      {t(option.labelKey)}
                     </MenuItem>
                   ))}
                 </Select>
