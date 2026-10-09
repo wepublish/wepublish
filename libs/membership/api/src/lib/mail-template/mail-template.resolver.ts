@@ -129,7 +129,7 @@ export class MailTemplatesResolver {
   @Query(() => Boolean, {
     description: `Whether a letter integration is configured, so letters can be previewed and sent`,
   })
-  letterChannelAvailable(): boolean {
+  letterChannelAvailable(): Promise<boolean> {
     return this.mailTemplateService.isLetterChannelAvailable();
   }
 

@@ -32,6 +32,15 @@ export class CloudflarePdfRenderer extends BasePdfRenderer {
     this.fallback = props.fallback ?? {};
   }
 
+  async isConfigured(): Promise<boolean> {
+    const config = await this.getConfig();
+
+    return !!(
+      (config?.cloudflare_accountId || this.fallback.accountId) &&
+      (config?.cloudflare_apiToken || this.fallback.apiToken)
+    );
+  }
+
   async render(html: string): Promise<Buffer> {
     const config = await this.getConfig();
     const accountId = config?.cloudflare_accountId || this.fallback.accountId;

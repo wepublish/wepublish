@@ -86,11 +86,23 @@ export class LetterContext {
 
   /**
    * Whether letters can be sent at all: a vendor to post them and a renderer to
-   * print them. The registry's swappable providers answer `in` with false while
-   * no integration is loaded, so this is safe to ask without one.
+   * print them, each with its credentials filled in. The registry's swappable
+   * providers answer `in` with false while no integration is loaded, so this is
+   * safe to ask without one.
    */
-  isConfigured(): boolean {
-    return 'sendLetter' in this.letterProvider && 'render' in this.pdfRenderer;
+  async isConfigured(): Promise<boolean> {
+    if (
+      !('sendLetter' in this.letterProvider && 'render' in this.pdfRenderer)
+    ) {
+      return false;
+    }
+
+    const [letterProvider, pdfRenderer] = await Promise.all([
+      this.letterProvider.isConfigured(),
+      this.pdfRenderer.isConfigured(),
+    ]);
+
+    return letterProvider && pdfRenderer;
   }
 
   /** Render a template as the pdf that would be printed. */

@@ -194,10 +194,14 @@ describe('MailTemplateService', () => {
   describe('isLetterChannelAvailable', () => {
     it.each([true, false])(
       'reports whether letters are configured (%s)',
-      configured => {
-        const service = makeService({}, {}, { isConfigured: () => configured });
+      async configured => {
+        const service = makeService(
+          {},
+          {},
+          { isConfigured: async () => configured }
+        );
 
-        expect(service.isLetterChannelAvailable()).toBe(configured);
+        expect(await service.isLetterChannelAvailable()).toBe(configured);
       }
     );
   });
