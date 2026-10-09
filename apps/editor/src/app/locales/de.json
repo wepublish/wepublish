@@ -2209,10 +2209,10 @@
       "passwordHeader": "Passwörter & Zugänge",
       "totpHeader": "Zwei-Faktor-Authentifizierung",
       "loginCode": {
-        "header": "Persönlicher Login-Link",
+        "header": "Persönlicher Login-Code",
         "status": "Gültig bis {{expiresAt}} · noch {{usesRemaining}} von {{maxUses}} Verwendungen · zuletzt genutzt: {{lastUsedAt}}",
         "never": "nie",
-        "none": "Für diese Person wurde noch kein persönlicher Login-Link ausgestellt. Er entsteht automatisch beim ersten Versand einer Mail oder eines Briefs mit {{purl}}.",
+        "none": "Für diese Person wurde noch kein persönlicher Login-Code ausgestellt. Er entsteht automatisch beim ersten Versand einer E-Mail oder eines Briefs mit {{purl}}.",
         "revoke": "Widerrufen",
         "reissue": "Neu ausstellen",
         "issued": "Neuer Code (wird nur einmal angezeigt):",

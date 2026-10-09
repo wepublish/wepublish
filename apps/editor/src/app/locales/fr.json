@@ -2209,10 +2209,10 @@
       "passwordHeader": "Mots de passe & accès",
       "totpHeader": "Authentification à deux facteurs",
       "loginCode": {
-        "header": "Lien de connexion personnel",
+        "header": "Code de connexion personnel",
         "status": "Valable jusqu’au {{expiresAt}} · {{usesRemaining}} utilisations restantes sur {{maxUses}} · dernière utilisation : {{lastUsedAt}}",
         "never": "jamais",
-        "none": "Aucun lien de connexion personnel n’a encore été émis pour cette personne. Il est créé automatiquement lors du premier envoi d’un e-mail ou d’un courrier contenant {{purl}}.",
+        "none": "Aucun code de connexion personnel n’a encore été émis pour cette personne. Il est créé automatiquement lors du premier envoi d’un e-mail ou d’un courrier contenant {{purl}}.",
         "revoke": "Révoquer",
         "reissue": "Réémettre",
         "issued": "Nouveau code (affiché une seule fois) :",

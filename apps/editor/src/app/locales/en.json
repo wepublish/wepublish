@@ -2263,10 +2263,10 @@
       "passwordHeader": "Passwords & Access",
       "totpHeader": "Two-Factor Authentication",
       "loginCode": {
-        "header": "Personal login link",
+        "header": "Personal login code",
         "status": "Valid until {{expiresAt}} · {{usesRemaining}} of {{maxUses}} uses left · last used: {{lastUsedAt}}",
         "never": "never",
-        "none": "No personal login link has been issued for this user yet. One is created automatically the first time a mail or letter containing {{purl}} is sent.",
+        "none": "No personal login code has been issued for this user yet. One is created automatically the first time a mail or letter containing {{purl}} is sent.",
         "revoke": "Revoke",
         "reissue": "Reissue",
         "issued": "New code (shown once):",
