@@ -2,6 +2,8 @@ query PdfRendererSettings {
   pdfRendererSettings {
     cloudflare_accountId
     createdAt
+    gotenberg_url
+    gotenberg_username
     id
     lastLoadedAt
     modifiedAt
@@ -12,26 +14,57 @@ query PdfRendererSettings {
 }
 
 mutation UpdatePdfRendererSetting(
+  $type: PdfRendererType
   $cloudflare_accountId: String
   $cloudflare_apiToken: String
+  $gotenberg_url: String
+  $gotenberg_username: String
+  $gotenberg_password: String
   $id: String!
   $name: String
   $timeoutMs: Int
 ) {
   updatePdfRendererSetting(
+    type: $type
     cloudflare_accountId: $cloudflare_accountId
     cloudflare_apiToken: $cloudflare_apiToken
+    gotenberg_url: $gotenberg_url
+    gotenberg_username: $gotenberg_username
+    gotenberg_password: $gotenberg_password
     id: $id
     name: $name
     timeoutMs: $timeoutMs
   ) {
     cloudflare_accountId
     createdAt
+    gotenberg_url
+    gotenberg_username
     id
     lastLoadedAt
     modifiedAt
     name
     timeoutMs
     type
+  }
+}
+
+mutation CreatePdfRendererSetting(
+  $id: String!
+  $type: PdfRendererType!
+  $name: String
+) {
+  createPdfRendererSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+
+mutation DeletePdfRendererSetting($id: String!) {
+  deletePdfRendererSetting(id: $id) {
+    id
   }
 }

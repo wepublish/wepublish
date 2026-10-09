@@ -1916,6 +1916,7 @@ model SettingLetterProvider {
 
 enum PdfRendererType {
   cloudflare
+  gotenberg
 }
 
 model SettingPdfRenderer {
@@ -1929,6 +1930,9 @@ model SettingPdfRenderer {
 
   cloudflare_accountId String?
   cloudflare_apiToken  String?
+  gotenberg_url        String?
+  gotenberg_username   String?
+  gotenberg_password   String?
   timeoutMs            Int?
 
   @@map("settings.pdfrenderer")

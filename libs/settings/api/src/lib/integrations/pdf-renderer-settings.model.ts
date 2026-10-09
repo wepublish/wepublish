@@ -31,6 +31,17 @@ export class SettingPdfRenderer extends SettingProvider {
   cloudflare_apiToken?: string;
  **/
 
+  @Field({ nullable: true })
+  gotenberg_url?: string;
+
+  @Field({ nullable: true })
+  gotenberg_username?: string;
+
+  /** hide sensitive fields
+  @Field({ nullable: true })
+  gotenberg_password?: string;
+ **/
+
   @Field(type => Int, { nullable: true })
   timeoutMs?: number;
 }
@@ -55,10 +66,13 @@ export class CreateSettingPdfRendererInput extends OmitType(
 
   @Field({ nullable: true })
   cloudflare_apiToken?: string;
+
+  @Field({ nullable: true })
+  gotenberg_password?: string;
 }
 
 @ArgsType()
 export class UpdateSettingPdfRendererInput extends PartialType(
-  OmitType(CreateSettingPdfRendererInput, ['type'] as const, ArgsType),
+  CreateSettingPdfRendererInput,
   ArgsType
 ) {}

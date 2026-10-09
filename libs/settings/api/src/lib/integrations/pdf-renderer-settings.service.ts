@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaClient, SettingPdfRenderer } from '@prisma/client';
 import {
   CreateSettingPdfRendererInput,
@@ -9,6 +13,8 @@ import { PrimeDataLoader } from '@wepublish/utils/api';
 import { PdfRendererSettingsDataloaderService } from './pdf-renderer-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-crypto';
+import { ProviderSettingsChanged } from './provider-settings-changed';
+import { clearProviderConfig } from './clear-provider-config';
 
 export const PDF_RENDERER_SETTINGS_NAMESPACE = 'settings:pdfrenderer';
 
@@ -18,24 +24,30 @@ export class PdfRendererSettingsService {
 
   constructor(
     private prisma: PrismaClient,
-    private kv: KvTtlCacheService
+    private kv: KvTtlCacheService,
+    private providerSettingsChanged: ProviderSettingsChanged
   ) {}
 
   private encryptSecretsIfPresent<
     T extends {
       cloudflare_apiToken?: string | null;
+      gotenberg_password?: string | null;
     },
   >(data: T): T {
-    if (
-      typeof data.cloudflare_apiToken === 'string' &&
-      data.cloudflare_apiToken.length > 0
-    ) {
-      return {
-        ...data,
-        cloudflare_apiToken: this.crypto.encrypt(data.cloudflare_apiToken),
-      };
+    const encrypted = { ...data };
+
+    for (const field of [
+      'cloudflare_apiToken',
+      'gotenberg_password',
+    ] as const) {
+      const value = data[field];
+
+      if (typeof value === 'string' && value.length > 0) {
+        encrypted[field] = this.crypto.encrypt(value) as T[typeof field];
+      }
     }
-    return data;
+
+    return encrypted;
   }
 
   @PrimeDataLoader(PdfRendererSettingsDataloaderService, 'id')
@@ -75,6 +87,7 @@ export class PdfRendererSettingsService {
       data: output,
     });
     await this.kv.resetNamespace(PDF_RENDERER_SETTINGS_NAMESPACE);
+    await this.providerSettingsChanged.notify('Pdf renderer');
     return returnValue;
   }
 
@@ -98,11 +111,27 @@ export class PdfRendererSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
+    const typeChanged =
+      filteredUpdateData['type'] !== undefined &&
+      filteredUpdateData['type'] !== existingSetting.type;
+
+    const data =
+      typeChanged ?
+        {
+          ...clearProviderConfig('SettingPdfRenderer'),
+          type: filteredUpdateData['type'],
+          ...('name' in filteredUpdateData ?
+            { name: filteredUpdateData['name'] }
+          : {}),
+        }
+      : filteredUpdateData;
+
     const returnValue = await this.prisma.settingPdfRenderer.update({
       where: { id },
-      data: filteredUpdateData,
+      data,
     });
     await this.kv.resetNamespace(PDF_RENDERER_SETTINGS_NAMESPACE);
+    await this.providerSettingsChanged.notify('Pdf renderer');
     return returnValue;
   }
 
@@ -118,10 +147,18 @@ export class PdfRendererSettingsService {
       );
     }
 
+    if ((await this.prisma.settingPdfRenderer.count()) === 1) {
+      throw new BadRequestException(
+        `Pdf renderer ${id} is the only one configured and cannot be deleted. ` +
+          `Create a replacement first, or change its type instead.`
+      );
+    }
+
     const returnValue = await this.prisma.settingPdfRenderer.delete({
       where: { id },
     });
     await this.kv.resetNamespace(PDF_RENDERER_SETTINGS_NAMESPACE);
+    await this.providerSettingsChanged.notify('Pdf renderer');
     return returnValue;
   }
 }

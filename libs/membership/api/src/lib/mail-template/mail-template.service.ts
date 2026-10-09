@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { LetterAddressPosition, PrismaClient } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import {
   composeMail,
@@ -12,11 +12,18 @@ import {
   SAMPLE_PURL_DATA,
 } from '@wepublish/mail/api';
 import {
+  LetterAddress,
+  LetterAddressError,
+  LetterContext,
+  toLetterAddress,
+} from '@wepublish/letter/api';
+import {
   assembleMailData,
   assembleSampleMailData,
   MailTemplateContextId,
   MAIL_TEMPLATE_CONTEXT_IDS,
   SAMPLE_JWT,
+  SAMPLE_LETTER_ADDRESS,
 } from './mail-template-data';
 
 export interface PreviewResult {
@@ -29,7 +36,8 @@ export interface PreviewResult {
 export class MailTemplateService {
   constructor(
     private prisma: PrismaClient,
-    private mailContext: MailContext
+    private mailContext: MailContext,
+    private letterContext: LetterContext
   ) {}
 
   /**
@@ -138,7 +146,9 @@ export class MailTemplateService {
     const subscription = await this.prisma.subscription.findUnique({
       where: { id: subscriptionId },
       include: {
-        user: true,
+        // The address is only read by a letter preview, which addresses the
+        // sheet to this user.
+        user: { include: { address: true } },
         memberPlan: true,
         paymentMethod: true,
         deactivation: true,
@@ -196,6 +206,56 @@ export class MailTemplateService {
       html: composed.messageHtml,
       text: composed.message,
     };
+  }
+
+  /** Whether a letter integration is set up, so letters can be offered at all. */
+  isLetterChannelAvailable(): boolean {
+    return this.letterContext.isConfigured();
+  }
+
+  /**
+   * Render a draft template as the letter a send would print, through the same
+   * pdf renderer. Addressed to the chosen subscription's user, or to a sample
+   * address when previewing with sample data.
+   */
+  async previewLetter(input: {
+    contextId: MailTemplateContextId;
+    subscriptionId?: string | null;
+    currentUserId?: string | null;
+    html: string;
+  }): Promise<{ pdf: string }> {
+    const data = await this.buildData(
+      input.contextId,
+      input.subscriptionId,
+      input.currentUserId
+    );
+
+    const pdf = await this.letterContext.renderLetter({
+      template: { htmlContent: input.html },
+      // The window position is chosen per send; a preview shows the default.
+      addressPosition: LetterAddressPosition.left,
+      data,
+      recipient:
+        input.subscriptionId ?
+          this.letterAddressOf(data.user)
+        : SAMPLE_LETTER_ADDRESS,
+    });
+
+    return { pdf: pdf.toString('base64') };
+  }
+
+  private letterAddressOf(user: any): LetterAddress {
+    try {
+      return toLetterAddress(user);
+    } catch (error) {
+      if (error instanceof LetterAddressError) {
+        throw new BadRequestException(
+          `${user.email ?? user.id} has no usable postal address.`
+        );
+      }
+
+      throw error;
+    }
   }
 
   /**

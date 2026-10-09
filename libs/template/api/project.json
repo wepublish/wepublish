@@ -10,11 +10,8 @@
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/template/api/jest.config.ts",
-        "passWithNoTests": true
+        "config": "../../../{projectRoot}/vitest.config.ts"
       }
     }
   }

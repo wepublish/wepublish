@@ -1,4 +1,6 @@
 import {
+  CreatePdfRendererSettingDocument,
+  DeletePdfRendererSettingDocument,
   PdfRendererSettingsDocument,
   PdfRendererType,
   SettingPdfRenderer,
@@ -17,6 +19,10 @@ const pdfRendererSettingsSchema = z.object({
   cloudflare_accountId: z.string().nullish().or(z.literal('')),
   cloudflare_apiToken: z.string().nullish().or(z.literal('')),
 
+  gotenberg_url: z.string().nullish().or(z.literal('')),
+  gotenberg_username: z.string().nullish().or(z.literal('')),
+  gotenberg_password: z.string().nullish().or(z.literal('')),
+
   timeoutMs: z.coerce.number().int().nonnegative().nullish(),
 });
 
@@ -30,6 +36,14 @@ export function PdfRendererIntegrationForm() {
       query={PdfRendererSettingsDocument}
       mutation={UpdatePdfRendererSettingDocument}
       dataKey="pdfRendererSettings"
+      registry={{
+        createMutation: CreatePdfRendererSettingDocument,
+        deleteMutation: DeletePdfRendererSettingDocument,
+        types: Object.values(PdfRendererType).map(value => ({
+          label: value,
+          value,
+        })),
+      }}
       schema={pdfRendererSettingsSchema}
       fields={setting => {
         const commonFields: FieldDefinition<IntegrationFormValues>[] = [
@@ -41,7 +55,6 @@ export function PdfRendererIntegrationForm() {
               label: v,
               value: v,
             })),
-            disabled: true,
           },
           {
             type: 'text',
@@ -59,6 +72,27 @@ export function PdfRendererIntegrationForm() {
           commonFields.push({
             name: 'cloudflare_apiToken',
             label: t('integrations.pdfRendererSettings.cloudflareApiToken'),
+            type: 'password',
+            placeholder: t('integrations.placeholderSecret'),
+            autoComplete: 'one-time-code',
+          });
+        }
+
+        if (setting.type === PdfRendererType.Gotenberg) {
+          commonFields.push({
+            type: 'text',
+            name: 'gotenberg_url',
+            label: t('integrations.pdfRendererSettings.gotenbergUrl'),
+            placeholder: 'http://gotenberg:3000',
+          });
+          commonFields.push({
+            type: 'text',
+            name: 'gotenberg_username',
+            label: t('integrations.pdfRendererSettings.gotenbergUsername'),
+          });
+          commonFields.push({
+            name: 'gotenberg_password',
+            label: t('integrations.pdfRendererSettings.gotenbergPassword'),
             type: 'password',
             placeholder: t('integrations.placeholderSecret'),
             autoComplete: 'one-time-code',

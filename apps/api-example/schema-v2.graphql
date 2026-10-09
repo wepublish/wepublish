@@ -2125,6 +2125,11 @@ input MailTemplateInput {
   textContent: String
 }
 
+type MailTemplateLetterPreviewModel {
+  """The rendered letter as a base64 encoded pdf."""
+  pdf: String!
+}
+
 type MailTemplateModel {
   context: MailTemplateContext
   description: String
@@ -2782,6 +2787,24 @@ type Mutation {
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
 
+  """Creates a new letter provider setting."""
+  createLetterProviderSetting(
+    autoSend: Boolean
+    clientId: String
+    clientSecret: String
+    environment: LetterProviderEnvironment
+    id: String!
+    name: String
+    organisationId: String
+
+    """
+    Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
+    """
+    placeholderEmailContains: String
+    type: LetterProviderType!
+    webhookSigningKey: String
+  ): SettingLetterProvider!
+
   """Sets up the mail provider. Only possible while none is configured."""
   createMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType!, webhookEndpointSecret: String): SettingMailProvider!
 
@@ -2816,6 +2839,9 @@ type Mutation {
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+
+  """Creates a new pdf renderer setting."""
+  createPdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String!, name: String, timeoutMs: Int, type: PdfRendererType!): SettingPdfRenderer!
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
@@ -2957,6 +2983,9 @@ type Mutation {
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
 
+  """Deletes an existing letter provider setting."""
+  deleteLetterProviderSetting(id: String!): SettingLetterProvider!
+
   """Delete an existing mail template"""
   deleteMailTemplate(id: String!): Boolean
 
@@ -2980,6 +3009,9 @@ type Mutation {
 
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
+
+  """Deletes an existing pdf renderer setting."""
+  deletePdfRendererSetting(id: String!): SettingPdfRenderer!
 
   """Deletes an existing peer."""
   deletePeer(id: String!): String!
@@ -3132,7 +3164,7 @@ type Mutation {
   rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
   """
-  Rebuilds the payment, tracking pixel, mail and challenge providers from their settings, so integration changes take effect without restarting the API.
+  Rebuilds the payment, tracking pixel, mail, challenge, letter and pdf renderer providers from their settings, so integration changes take effect without restarting the API.
   """
   reloadProviders: Boolean!
 
@@ -3293,8 +3325,10 @@ type Mutation {
     Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).
     """
     placeholderEmailContains: String
+    type: LetterProviderType
     webhookSigningKey: String
   ): SettingLetterProvider!
+
 
   """Updates an existing mail provider setting."""
   updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType, webhookEndpointSecret: String): SettingMailProvider!
@@ -3326,7 +3360,7 @@ type Mutation {
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Updates an existing pdf renderer setting."""
-  updatePdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, id: String, name: String, timeoutMs: Int): SettingPdfRenderer!
+  updatePdfRendererSetting(cloudflare_accountId: String, cloudflare_apiToken: String, gotenberg_password: String, gotenberg_url: String, gotenberg_username: String, id: String, name: String, timeoutMs: Int, type: PdfRendererType): SettingPdfRenderer!
 
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
@@ -3956,6 +3990,7 @@ type PaywallBypass {
 
 enum PdfRendererType {
   cloudflare
+  gotenberg
 }
 
 type Peer {
@@ -4544,6 +4579,11 @@ type Query {
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
+  """
+  Whether a letter integration is configured, so letters can be previewed and sent
+  """
+  letterChannelAvailable: Boolean!
+
   """Returns a single letter provider setting by id."""
   letterProviderSetting(id: String!): SettingLetterProvider!
 
@@ -4581,6 +4621,9 @@ type Query {
 
   """Return a single mail template, including its html and text body."""
   mailTemplate(id: String!): MailTemplateModel
+
+  """Render a draft mail template as the letter a send would print"""
+  mailTemplateLetterPreview(input: MailTemplatePreviewInput!): MailTemplateLetterPreviewModel!
 
   """
   Placeholders a template uses that would render empty for the given send (empty = none missing)
@@ -5205,6 +5248,8 @@ input SettingPaymentProviderFilter {
 type SettingPdfRenderer implements SettingProvider {
   cloudflare_accountId: String
   createdAt: DateTime!
+  gotenberg_url: String
+  gotenberg_username: String
   id: String!
   lastLoadedAt: DateTime!
   modifiedAt: DateTime!

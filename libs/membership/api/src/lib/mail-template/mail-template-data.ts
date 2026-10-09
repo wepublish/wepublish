@@ -100,6 +100,19 @@ export const SAMPLE_USER = {
   createdAt: day('2025-03-01T12:00:00.000Z'),
 };
 
+/**
+ * Where a letter preview without a chosen subscription is addressed to. Kept
+ * off {@link SAMPLE_USER} so it does not turn into placeholders of its own.
+ */
+export const SAMPLE_LETTER_ADDRESS = {
+  name: 'Jane Doe',
+  street: 'Musterstrasse',
+  number: '1',
+  zip: '8000',
+  city: 'Zürich',
+  country: 'CH',
+};
+
 export const SAMPLE_SUBSCRIPTION = {
   id: 'cklmn456def0002',
   monthlyAmount: 1000,

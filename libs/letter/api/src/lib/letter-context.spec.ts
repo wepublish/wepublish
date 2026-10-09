@@ -50,7 +50,7 @@ const print: LetterPrintSettings = {
 };
 
 function createContext(
-  sendLetter: BaseLetterProvider['sendLetter'] = jest.fn().mockResolvedValue({
+  sendLetter: BaseLetterProvider['sendLetter'] = vi.fn().mockResolvedValue({
     providerLetterID: 'pingen-1',
     state: LetterState.submitted,
   })
@@ -65,11 +65,11 @@ function createContext(
     },
   };
 
-  const create = jest.fn();
+  const create = vi.fn();
 
   const prisma = {
     mailTemplate: {
-      findUnique: jest.fn().mockResolvedValue({
+      findUnique: vi.fn().mockResolvedValue({
         id: 'template-1',
         subject: 'Ihre Rechnung',
         htmlContent: '<p>Hallo {{user_firstName}}</p>',
@@ -122,7 +122,7 @@ describe('LetterContext.renderLetter', () => {
 
 describe('LetterContext.sendLetter', () => {
   it('posts the rendered letter and logs it on the letter channel', async () => {
-    const sendLetter = jest.fn().mockResolvedValue({
+    const sendLetter = vi.fn().mockResolvedValue({
       providerLetterID: 'pingen-1',
       state: LetterState.submitted,
     });
@@ -159,7 +159,7 @@ describe('LetterContext.sendLetter', () => {
 
   it('logs a rejected letter and rethrows when the vendor fails', async () => {
     const { context, create } = createContext(
-      jest.fn().mockRejectedValue(new Error('vendor down'))
+      vi.fn().mockRejectedValue(new Error('vendor down'))
     );
 
     await expect(
@@ -190,5 +190,29 @@ describe('LetterContext.sendLetter', () => {
         print,
       })
     ).rejects.toThrow('has no address');
+  });
+});
+
+describe('LetterContext.isConfigured', () => {
+  // The registry hands in proxies that answer `in` with false while nothing is
+  // loaded, so an empty object behaves like an unconfigured integration.
+  const unconfigured = {} as never;
+
+  it('is configured with a letter provider and a pdf renderer', () => {
+    expect(createContext().context.isConfigured()).toBe(true);
+  });
+
+  it('is not configured without a letter provider', () => {
+    const { context } = createContext();
+    context.letterProvider = unconfigured;
+
+    expect(context.isConfigured()).toBe(false);
+  });
+
+  it('is not configured without a pdf renderer', () => {
+    const { context } = createContext();
+    context.pdfRenderer = unconfigured;
+
+    expect(context.isConfigured()).toBe(false);
   });
 });
