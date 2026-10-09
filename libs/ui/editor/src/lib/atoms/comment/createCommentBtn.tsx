@@ -1,25 +1,25 @@
 import { useMutation } from '@apollo/client/react';
+import {
+  Button,
+  ButtonProps,
+  IconButton,
+  IconButtonProps,
+} from '@mui/material';
 import { CommentItemType, CreateCommentDocument } from '@wepublish/editor/api';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
 import { MdReply } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { IconButton, Message, toaster } from 'rsuite';
-import type {
-  AppearanceType,
-  BasicSize,
-  Color,
-} from 'rsuite/esm/internals/types';
 
-import { IconButtonTooltip } from '../iconButtonTooltip';
 import { humanizeError } from '../../humanizeError';
+import { enqueueSnackbar } from '../../snackbar';
+import { IconButtonTooltip } from '../iconButtonTooltip';
 
 interface ReplyCommentBtnProps {
-  circle?: boolean;
-  size?: BasicSize;
-  color?: Color;
-  appearance?: AppearanceType;
+  size?: IconButtonProps['size'];
+  color?: IconButtonProps['color'];
+  variant?: ButtonProps['variant'];
   text?: string;
   itemID: string;
   itemType: CommentItemType;
@@ -29,10 +29,9 @@ interface ReplyCommentBtnProps {
 }
 
 export function CreateCommentBtn({
-  circle,
   size,
   color,
-  appearance,
+  variant = 'outlined',
   text,
   itemID,
   itemType,
@@ -44,16 +43,10 @@ export function CreateCommentBtn({
   const navigate = useNavigate();
 
   const onError = (error: Error) => {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   };
 
   const [createComment] = useMutation(CreateCommentDocument, {
@@ -82,31 +75,29 @@ export function CreateCommentBtn({
         <IconButton
           style={{ marginLeft: '10px' }}
           aria-label={t('replyCommentBtn.tooltip')}
-          icon={icon || <MdReply />}
           size={size}
-          circle={circle}
           color={color}
-          appearance={appearance}
           onClick={async () => {
             await createNewComment();
           }}
-        />
+        >
+          {icon || <MdReply />}
+        </IconButton>
       );
     }
     return (
-      <IconButton
+      <Button
+        startIcon={icon || <MdReply />}
         style={{ marginLeft: '10px' }}
-        icon={icon || <MdReply />}
         size={size}
-        circle={circle}
-        color={color}
-        appearance={appearance}
+        color={color === 'default' ? undefined : color}
+        variant={variant}
         onClick={async () => {
           await createNewComment();
         }}
       >
         {text}
-      </IconButton>
+      </Button>
     );
   }
 

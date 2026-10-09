@@ -1,12 +1,14 @@
-import type { Mock } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemberPlanSort, SortOrder } from '@wepublish/editor/api';
+import { MemoryRouter } from 'react-router-dom';
+import type { Mock } from 'vitest';
 
 import { MemberPlanList } from './memberPlanList';
 
 // Partial mock: the list also renders components that use other Apollo hooks.
+const theme = createTheme();
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(),
@@ -44,9 +46,11 @@ const lastVariables = () => mockedUseQuery.mock.calls.at(-1)?.[1]?.variables;
 
 const renderList = () =>
   render(
-    <MemoryRouter>
-      <MemberPlanList />
-    </MemoryRouter>
+    <ThemeProvider theme={theme}>
+      <MemoryRouter>
+        <MemberPlanList />
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 beforeEach(() => {

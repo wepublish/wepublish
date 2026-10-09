@@ -3657,6 +3657,16 @@
     "listInput": {
       "dragToReorder": "Glisser pour modifier l’ordre",
       "add": "Ajouter une entrée"
+    },
+    "listView": {
+      "pagination": {
+        "total": "Total : {{count}}",
+        "pageSize": "Éléments par page",
+        "perPage": "{{count}} / page"
+      },
+      "table": {
+        "empty": "Aucune entrée"
+      }
     }
   }
 }

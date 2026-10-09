@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -7,6 +8,10 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Stack,
+  Card,
+  CardContent,
+  CardHeader,
 } from '@mui/material';
 import {
   MailLogState,
@@ -17,20 +22,12 @@ import {
   SyncMailLogStatesDocument,
 } from '@wepublish/editor/api';
 import styled from '@emotion/styled';
-import { InfoTooltip } from '@wepublish/ui/editor';
+import { InfoTooltip, enqueueSnackbar, Pagination } from '@wepublish/ui/editor';
 import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFilterList, MdSync } from 'react-icons/md';
 import { useSearchParams } from 'react-router-dom';
-import {
-  Button,
-  Message,
-  Pagination,
-  Panel,
-  SelectPicker,
-  Stack,
-  toaster,
-} from 'rsuite';
+import { SelectPicker } from 'rsuite';
 import { DEFAULT_MUTATION_OPTIONS, showErrors, useShowErrors } from '../common';
 import {
   formatDateTime,
@@ -167,13 +164,12 @@ export function MailLogTable() {
       return;
     }
 
-    toaster.push(
-      <Message type={sync.updated ? 'success' : 'info'}>
-        {t('mailLog.sync.done', {
-          checked: sync.checked,
-          updated: sync.updated,
-        })}
-      </Message>
+    enqueueSnackbar(
+      t('mailLog.sync.done', {
+        checked: sync.checked,
+        updated: sync.updated,
+      }),
+      { variant: sync.updated ? 'success' : 'info' }
     );
   };
 
@@ -231,114 +227,121 @@ export function MailLogTable() {
 
   return (
     <>
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ marginTop: 16, marginBottom: 16 }}
-        header={
-          <Stack
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Stack
-              spacing={8}
-              alignItems="center"
-            >
-              <MdFilterList />
-              <span>{t('mailLog.filter.title')}</span>
-            </Stack>
-            <Stack
-              spacing={8}
-              alignItems="center"
-            >
-              {hasFilters && (
-                <Button
-                  size="xs"
-                  appearance="link"
-                  onClick={resetFilters}
-                >
-                  {t('mailLog.filter.reset')}
-                </Button>
-              )}
-              <Button
-                size="xs"
-                appearance="ghost"
-                loading={syncing}
-                onClick={runSync}
-              >
-                <MdSync /> {t('mailLog.sync.action')}
-              </Button>
-              <InfoTooltip text={t('mailLog.sync.hint')} />
-            </Stack>
-          </Stack>
-        }
       >
-        <FilterGrid>
-          <FilterField
-            label={t('mailLog.filter.job')}
-            info={t('mailLog.filter.jobHelp')}
-          >
-            <SelectPicker
-              block
-              data={jobOptions}
-              value={jobId}
-              onChange={selectJob}
-              placeholder={t('mailLog.filter.jobAll')}
-            />
-          </FilterField>
-          <FilterField label={t('mailLog.filter.template')}>
-            <SelectPicker
-              block
-              data={templateOptions}
-              value={templateId}
-              onChange={resetPageThen(setTemplateId)}
-              placeholder={t('mailLog.filter.all')}
-            />
-          </FilterField>
-          <FilterField label={t('mailLog.filter.state')}>
-            <SelectPicker
-              block
-              searchable={false}
-              data={stateOptions}
-              value={state}
-              onChange={resetPageThen(setState)}
-              placeholder={t('mailLog.filter.all')}
-            />
-          </FilterField>
-          <FilterField
-            label={t('mailLog.filter.type')}
-            hint={t('mailLog.filter.typeHint')}
-          >
-            <SelectPicker
-              block
-              searchable={false}
-              data={typeOptions}
-              value={type}
-              onChange={resetPageThen(setType)}
-              placeholder={t('mailLog.filter.all')}
-              // Manual vs. the three automatic origins is not self-evident
-              // from the label alone, so spell each one out in the menu.
-              renderOption={(label, item) => (
-                <div style={{ paddingBlock: 2 }}>
-                  <div>{label}</div>
-                  <Typography
-                    variant="caption"
-                    style={{
-                      color: 'var(--rs-text-secondary)',
-                      whiteSpace: 'normal',
-                      lineHeight: 1.35,
-                    }}
-                    sx={{
-                      display: 'block',
-                    }}
+        <CardHeader
+          title={
+            <Stack
+              direction="row"
+              sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+            >
+              <Stack
+                direction="row"
+                sx={{ alignItems: 'center' }}
+                spacing={1}
+              >
+                <MdFilterList />
+                <span>{t('mailLog.filter.title')}</span>
+              </Stack>
+              <Stack
+                direction="row"
+                sx={{ alignItems: 'center' }}
+                spacing={1}
+              >
+                {hasFilters && (
+                  <Button
+                    variant="text"
+                    size="small"
+                    onClick={resetFilters}
                   >
-                    {(item as MailTypeOption).description}
-                  </Typography>
-                </div>
-              )}
-            />
-          </FilterField>
-        </FilterGrid>
-      </Panel>
+                    {t('mailLog.filter.reset')}
+                  </Button>
+                )}
+                <Button
+                  variant="outlined"
+                  size="small"
+                  loading={syncing}
+                  onClick={runSync}
+                >
+                  <MdSync /> {t('mailLog.sync.action')}
+                </Button>
+                <InfoTooltip text={t('mailLog.sync.hint')} />
+              </Stack>
+            </Stack>
+          }
+        />
+
+        <CardContent>
+          <FilterGrid>
+            <FilterField
+              label={t('mailLog.filter.job')}
+              info={t('mailLog.filter.jobHelp')}
+            >
+              <SelectPicker
+                block
+                data={jobOptions}
+                value={jobId}
+                onChange={selectJob}
+                placeholder={t('mailLog.filter.jobAll')}
+              />
+            </FilterField>
+            <FilterField label={t('mailLog.filter.template')}>
+              <SelectPicker
+                block
+                data={templateOptions}
+                value={templateId}
+                onChange={resetPageThen(setTemplateId)}
+                placeholder={t('mailLog.filter.all')}
+              />
+            </FilterField>
+            <FilterField label={t('mailLog.filter.state')}>
+              <SelectPicker
+                block
+                searchable={false}
+                data={stateOptions}
+                value={state}
+                onChange={resetPageThen(setState)}
+                placeholder={t('mailLog.filter.all')}
+              />
+            </FilterField>
+            <FilterField
+              label={t('mailLog.filter.type')}
+              hint={t('mailLog.filter.typeHint')}
+            >
+              <SelectPicker
+                block
+                searchable={false}
+                data={typeOptions}
+                value={type}
+                onChange={resetPageThen(setType)}
+                placeholder={t('mailLog.filter.all')}
+                // Manual vs. the three automatic origins is not self-evident
+                // from the label alone, so spell each one out in the menu.
+                renderOption={(label, item) => (
+                  <div style={{ paddingBlock: 2 }}>
+                    <div>{label}</div>
+                    <Typography
+                      variant="caption"
+                      style={{
+                        color: 'var(--rs-text-secondary)',
+                        whiteSpace: 'normal',
+                        lineHeight: 1.35,
+                      }}
+                      sx={{
+                        display: 'block',
+                      }}
+                    >
+                      {(item as MailTypeOption).description}
+                    </Typography>
+                  </div>
+                )}
+              />
+            </FilterField>
+          </FilterGrid>
+        </CardContent>
+      </Card>
       <TableContainer>
         <Table size="small">
           <TableHead>
@@ -360,8 +363,9 @@ export function MailLogTable() {
               </TableCell>
               <TableCell>
                 <Stack
-                  spacing={4}
-                  alignItems="center"
+                  direction="row"
+                  sx={{ alignItems: 'center' }}
+                  spacing={0.5}
                 >
                   <strong>{t('mailLog.state')}</strong>
                   <MailLogStateLegend />
@@ -392,15 +396,13 @@ export function MailLogTable() {
         </Table>
       </TableContainer>
       <Pagination
-        style={{ marginTop: 16 }}
-        prev
-        next
-        maxButtons={7}
-        size="sm"
-        total={totalCount}
-        limit={PAGE_SIZE}
-        activePage={page}
-        onChangePage={setPage}
+        state={{
+          page,
+          limit: PAGE_SIZE,
+          setPage,
+          setLimit: () => undefined /* page size was fixed here */,
+        }}
+        totalCount={totalCount}
       />
     </>
   );

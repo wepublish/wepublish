@@ -8,15 +8,18 @@ import {
   SettingsListQuery,
   UpdateSettingDocument,
 } from '@wepublish/editor/api';
-import { toaster } from 'rsuite';
 import {
-  AuthContext,
   actWait,
+  AuthContext,
+  closeSnackbar,
   sessionWithPermissions,
 } from '@wepublish/ui/editor';
 import * as v2Client from '@wepublish/editor/api';
 import { BrowserRouter } from 'react-router-dom';
 import { SettingList } from './settings-list';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme();
 
 const MockedProvider = MockedProviderBase as any;
 
@@ -85,24 +88,26 @@ describe('SettingList', () => {
     vi.spyOn(v2Client, 'getApiClientV2').mockReturnValue(undefined as any);
   });
 
-  // toasts arm dismiss timers that outlive the test environment on slow
+  // snackbars arm dismiss timers that outlive the test environment on slow
   // runners ("window is not defined" after teardown) — clear them per test
   afterEach(() => {
-    toaster.clear();
+    closeSnackbar();
   });
 
   test('renders successfully', async () => {
     const { baseElement, asFragment } = render(
-      <AuthContext.Provider value={sessionWithPermissions}>
-        <MockedProvider
-          mocks={[settingsListMock, updateSettingMock, paywallListMock]}
-          addTypename={false}
-        >
-          <BrowserRouter>
-            <SettingList />
-          </BrowserRouter>
-        </MockedProvider>
-      </AuthContext.Provider>
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProvider
+            mocks={[settingsListMock, updateSettingMock, paywallListMock]}
+            addTypename={false}
+          >
+            <BrowserRouter>
+              <SettingList />
+            </BrowserRouter>
+          </MockedProvider>
+        </AuthContext.Provider>
+      </ThemeProvider>
     );
 
     // Apollo Client 4 delivers the first result a tick later than v3, so wait
@@ -132,16 +137,18 @@ describe('SettingList', () => {
 
   test('renders the setting list view with settings', async () => {
     render(
-      <AuthContext.Provider value={sessionWithPermissions}>
-        <MockedProvider
-          mocks={[settingsListMock, updateSettingMock, paywallListMock]}
-          addTypename={false}
-        >
-          <BrowserRouter>
-            <SettingList />
-          </BrowserRouter>
-        </MockedProvider>
-      </AuthContext.Provider>
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProvider
+            mocks={[settingsListMock, updateSettingMock, paywallListMock]}
+            addTypename={false}
+          >
+            <BrowserRouter>
+              <SettingList />
+            </BrowserRouter>
+          </MockedProvider>
+        </AuthContext.Provider>
+      </ThemeProvider>
     );
 
     await actWait();

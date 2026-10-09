@@ -1,5 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   DeleteTagDocument,
   FullTagFragment,
   TagListDocument,
@@ -14,8 +21,6 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
   IconButton,
   IconButtonTooltip,
   ListViewActions,
@@ -23,6 +28,7 @@ import {
   ListViewFilterArea,
   ListViewHeader,
   PaddedCell,
+  Pagination,
   Table,
   TableWrapper,
   useListViewState,
@@ -31,15 +37,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
+import { Input, InputGroup, Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 
 export type TagListProps = {
@@ -89,12 +87,12 @@ function TagList({ type }: TagListProps) {
 
         <ListViewActions>
           <Link to="create">
-            <RIconButton
-              appearance="primary"
-              icon={<MdAdd />}
+            <Button
+              variant="contained"
+              startIcon={<MdAdd />}
             >
               {t('tags.overview.createTag')}
-            </RIconButton>
+            </Button>
           </Link>
         </ListViewActions>
 
@@ -146,13 +144,12 @@ function TagList({ type }: TagListProps) {
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     aria-label={t('delete')}
-                    icon={<MdDelete />}
-                    circle
-                    appearance="ghost"
-                    color="red"
-                    size="sm"
+                    color="error"
+                    size="small"
                     onClick={() => setTagToDelete(tag as FullTagFragment)}
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
               )}
             </PaddedCell>
@@ -160,43 +157,36 @@ function TagList({ type }: TagListProps) {
         </Table>
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.tags?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.tags?.totalCount ?? 0}
         />
       </TableWrapper>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!tagToDelete}
-        backdrop="static"
-        size="xs"
+        maxWidth="xs"
         onClose={() => setTagToDelete(undefined)}
       >
-        <Modal.Title>{t('tags.overview.areYouSure')}</Modal.Title>
+        <DialogTitle>{t('tags.overview.areYouSure')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           {tagToDelete &&
             t('tags.overview.areYouSureBody', { tag: tagToDelete.tag })}
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            color="red"
-            appearance="primary"
+            variant="contained"
+            color="error"
             onClick={() => {
               deleteTag({
                 variables: {
@@ -210,13 +200,13 @@ function TagList({ type }: TagListProps) {
           </Button>
 
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setTagToDelete(undefined)}
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

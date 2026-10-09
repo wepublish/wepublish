@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { PeerListDocument, getSettings } from '@wepublish/editor/api';
+import { getSettings, PeerListDocument } from '@wepublish/editor/api';
 import { useEffect, useMemo, useState } from 'react';
 
 import type {

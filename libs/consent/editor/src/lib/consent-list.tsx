@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { useEffect } from 'react';
-import { IconButton, Message, Table as RTable, toaster } from 'rsuite';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -10,29 +9,18 @@ import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  Table,
   TableWrapper,
+  enqueueSnackbar,
+  DataTable,
 } from '@wepublish/ui/editor';
-import {
-  ConsentsDocument,
-  DeleteConsentDocument,
-  FullConsentFragment,
-} from '@wepublish/editor/api';
-import { RowDataType } from 'rsuite-table';
-
-const { Column, HeaderCell, Cell } = RTable;
+import { ConsentsDocument, DeleteConsentDocument } from '@wepublish/editor/api';
+import { IconButton, Button } from '@mui/material';
 
 const onErrorToast = (error: Error) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 /* eslint-disable-next-line */
@@ -50,16 +38,10 @@ export function ConsentList(props: ConsentListProps) {
   const [deleteConsent] = useMutation(DeleteConsentDocument, {
     onError: onErrorToast,
     onCompleted: () => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.deletedSuccess')}
-        </Message>
-      );
+      enqueueSnackbar(t('toast.deletedSuccess'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
       refetch();
     },
   });
@@ -82,89 +64,69 @@ export function ConsentList(props: ConsentListProps) {
         </ListViewHeader>
         <ListViewActions>
           <Link to="/consents/create">
-            <IconButton
-              appearance="primary"
+            <Button
+              variant="contained"
+              startIcon={<MdAdd />}
               disabled={loading}
-              icon={<MdAdd />}
             >
               {t('consents.create')}
-            </IconButton>
+            </Button>
           </Link>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
           data={data?.consents || []}
-        >
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('consents.name')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullConsentFragment>) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'name',
+              label: t('consents.name'),
+              width: 200,
+              render: rowData => (
                 <Link to={`/consents/edit/${rowData.id}`}>{rowData.name}</Link>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('consents.slug')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullConsentFragment>) => (
-                <span>{rowData.slug}</span>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('consents.defaultValue')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullConsentFragment>) => (
+              ),
+            },
+            {
+              id: 'slug',
+              label: t('consents.slug'),
+              width: 200,
+              render: rowData => <span>{rowData.slug}</span>,
+            },
+            {
+              id: 'defaultvalue',
+              label: t('consents.defaultValue'),
+              width: 200,
+              render: rowData => (
                 <span>
                   {rowData.defaultValue ?
                     t('consents.accepted')
                   : t('consents.rejected')}
                 </span>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={100}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <Cell
-              align="center"
-              style={{ padding: '6px 0' }}
-            >
-              {(rowData: RowDataType<FullConsentFragment>) => (
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: rowData => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     aria-label={t('delete')}
-                    icon={<MdDelete />}
-                    color="red"
-                    appearance="ghost"
-                    circle
-                    size="sm"
+                    color="error"
+                    size="small"
                     onClick={() => onDeleteConsent(rowData.id)}
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
-              )}
-            </Cell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
     </>
   );

@@ -1,4 +1,5 @@
 import { useLazyQuery } from '@apollo/client/react';
+import { Button } from '@mui/material';
 import {
   SubscriptionFilter,
   SubscriptionsAsCsvDocument,
@@ -6,8 +7,9 @@ import {
 import { Ref, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFileDownload } from 'react-icons/md';
-import { Dropdown, IconButton, Message, toaster } from 'rsuite';
+import { Dropdown } from 'rsuite';
 
+import { enqueueSnackbar } from '../snackbar';
 import {
   exportSubscriptionsAsCsv,
   exportSubscriptionsAsXlsx,
@@ -85,16 +87,10 @@ export function SubscriptionExportDropdown({
     try {
       await onExport(format);
     } catch (error) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {(error as Error).message}
-        </Message>
-      );
+      enqueueSnackbar((error as Error).message, {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     } finally {
       setExporting(false);
     }
@@ -104,16 +100,16 @@ export function SubscriptionExportDropdown({
     <Dropdown
       placement="bottomEnd"
       renderToggle={(props: object, ref: Ref<HTMLButtonElement>) => (
-        <IconButton
+        <Button
+          variant="contained"
+          startIcon={<MdFileDownload />}
           {...props}
           ref={ref}
-          appearance="primary"
-          icon={<MdFileDownload />}
           loading={loading || exporting}
           disabled={disabled}
         >
           {label}
-        </IconButton>
+        </Button>
       )}
     >
       <Dropdown.Item onClick={() => exportSubscriptions('csv')}>

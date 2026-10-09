@@ -1,11 +1,18 @@
 import styled from '@emotion/styled';
+import {
+  Button,
+  Card as MuiCard,
+  CardContent,
+  Drawer,
+  LinearProgress,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit, MdOpenInNew } from 'react-icons/md';
-import { Button, Drawer, IconButton, Panel as RPanel, Progress } from 'rsuite';
 
 import { PlaceholderInput } from '../atoms';
 import { BlockProps } from '../atoms/blockList';
+import { DRAWER_WIDTHS } from '../drawer';
 import { SelectCrowdfundingPanel } from '../panel/selectCrowdfundingPanel';
 import { CrowdfundingBlockValue } from '.';
 
@@ -32,7 +39,7 @@ const CrowdfundingRow = styled.div`
   text-align: center;
 `;
 
-const Panel = styled(RPanel)`
+const Panel = styled(MuiCard)`
   display: grid;
   height: 200px;
   padding: 0;
@@ -56,55 +63,69 @@ export const CrowdfundingBlock = ({
 
   return (
     <>
-      <Panel
-        bodyFill
-        bordered
-      >
-        <PlaceholderInput
-          onAddClick={() => setIsDialogOpen(true)}
-          addLabel={t('blocks.crowdfunding.title')}
-        >
-          {crowdfunding && (
-            <Crowdfunding>
-              <IconWrapper>
-                <IconButton
-                  size="lg"
-                  icon={<MdEdit />}
-                  onClick={() => setIsDialogOpen(true)}
-                >
-                  {t('blocks.crowdfunding.edit')}
-                </IconButton>
-              </IconWrapper>
+      <Panel>
+        <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+          <PlaceholderInput
+            onAddClick={() => setIsDialogOpen(true)}
+            addLabel={t('blocks.crowdfunding.title')}
+          >
+            {crowdfunding && (
+              <Crowdfunding>
+                <IconWrapper>
+                  <Button
+                    variant="outlined"
+                    startIcon={<MdEdit />}
+                    size="large"
+                    onClick={() => setIsDialogOpen(true)}
+                  >
+                    {t('blocks.crowdfunding.edit')}
+                  </Button>
+                </IconWrapper>
 
-              <CrowdfundingRow>
-                <h3>
-                  {t('blocks.crowdfunding.crowdfundingName', {
-                    name: crowdfunding.name,
-                  })}
-                </h3>
-              </CrowdfundingRow>
-              <CrowdfundingRow>
-                <Progress.Line
-                  percent={crowdfunding.activeGoal?.progress || 0}
-                />
-              </CrowdfundingRow>
-              <CrowdfundingRow>
-                <Button
-                  href={`/crowdfundings/edit/${crowdfunding.id}`}
-                  target="_blank"
-                  appearance="ghost"
-                  endIcon={<MdOpenInNew />}
-                >
-                  {crowdfunding.name} {t('blocks.crowdfunding.open')}
-                </Button>
-              </CrowdfundingRow>
-            </Crowdfunding>
-          )}
-        </PlaceholderInput>
+                <CrowdfundingRow>
+                  <h3>
+                    {t('blocks.crowdfunding.crowdfundingName', {
+                      name: crowdfunding.name,
+                    })}
+                  </h3>
+                </CrowdfundingRow>
+                <CrowdfundingRow>
+                  <LinearProgress
+                    variant="determinate"
+                    value={Math.min(
+                      crowdfunding.activeGoal?.progress || 0,
+                      100
+                    )}
+                  />
+                </CrowdfundingRow>
+                <CrowdfundingRow>
+                  <Button
+                    variant="outlined"
+                    href={`/crowdfundings/edit/${crowdfunding.id}`}
+                    target="_blank"
+                    endIcon={<MdOpenInNew />}
+                  >
+                    {crowdfunding.name} {t('blocks.crowdfunding.open')}
+                  </Button>
+                </CrowdfundingRow>
+              </Crowdfunding>
+            )}
+          </PlaceholderInput>
+        </CardContent>
       </Panel>
 
       <Drawer
-        size="sm"
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       >

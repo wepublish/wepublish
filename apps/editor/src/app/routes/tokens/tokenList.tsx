@@ -1,11 +1,21 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+} from '@mui/material';
+import {
   DeleteTokenDocument,
   FullTokenFragment,
   TokenListDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  DRAWER_WIDTHS,
+  enqueueSnackbar,
   getOperationNameFromDocument,
   IconButton,
   IconButtonTooltip,
@@ -23,15 +33,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDelete, MdGeneratingTokens } from 'react-icons/md';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {
-  Button,
-  Drawer,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Table as RTable,
-  toaster,
-} from 'rsuite';
+import { Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -63,16 +65,7 @@ function TokenList() {
   useEffect(() => {
     const error = tokenListError?.message ?? deleteTokenError?.message;
     if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
   }, [tokenListError, deleteTokenError]);
 
   useEffect(() => {
@@ -93,13 +86,13 @@ function TokenList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_TOKEN']}>
           <ListViewActions>
             <Link to="/tokens/generate">
-              <RIconButton
-                appearance="primary"
+              <Button
+                variant="contained"
+                startIcon={<MdGeneratingTokens />}
                 disabled={isTokenListLoading}
-                icon={<MdGeneratingTokens />}
               >
                 {t('tokenList.overview.generateToken')}
-              </RIconButton>
+              </Button>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -131,17 +124,16 @@ function TokenList() {
                 <PermissionControl qualifyingPermissions={['CAN_DELETE_TOKEN']}>
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
-                      icon={<MdDelete />}
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      color="red"
+                      size="small"
+                      color="error"
                       aria-label={t('delete')}
                       onClick={() => {
                         setConfirmationDialogOpen(true);
                         setCurrentToken(rowData as FullTokenFragment);
                       }}
-                    />
+                    >
+                      <MdDelete />
+                    </IconButton>
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
@@ -151,12 +143,22 @@ function TokenList() {
       </TableWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isTokenGeneratePanelOpen}
         onClose={() => {
           setTokenGeneratePanelOpen(false);
           navigate('/tokens');
         }}
-        size="sm"
       >
         <TokenGeneratePanel
           onClose={() => {
@@ -166,20 +168,19 @@ function TokenList() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('tokenList.panels.deleteToken')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+        <DialogTitle>{t('tokenList.panels.deleteToken')}</DialogTitle>
+        <DialogContent>
           {t('tokenList.panels.deleteTokenText', {
             name: currentToken?.name || currentToken?.id,
           })}
-        </Modal.Body>
-        <Modal.Footer>
+        </DialogContent>
+        <DialogActions>
           <Button
+            variant="outlined"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentToken) return;
@@ -187,18 +188,18 @@ function TokenList() {
               await deleteToken({ variables: { id: currentToken.id } });
               setConfirmationDialogOpen(false);
             }}
-            color="red"
+            color="error"
           >
             {t('tokenList.panels.confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('tokenList.panels.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

@@ -1,5 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Alert,
+  AlertTitle,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   ArticleFilter,
   ArticleListDocument,
   ArticleListQuery,
@@ -16,26 +25,23 @@ import { CanPreview } from '@wepublish/permissions';
 import {
   ColumnConfigurator,
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   DescriptionList,
   DescriptionListItem,
+  formatArticleAuthors,
   IconButton,
-  IconButtonCell,
   IconButtonTooltip,
+  ListColumn,
   ListFilters,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
+  Pagination,
   PeerAvatar,
   PermissionControl,
   StatusBadge,
-  formatArticleAuthors,
-  Table,
   TableWrapper,
-  ListColumn,
-  renderListColumns,
   useColumnConfig,
   useListViewState,
 } from '@wepublish/ui/editor';
@@ -49,17 +55,6 @@ import {
   MdUnpublished,
 } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
-import type { RowDataType } from 'rsuite-table';
-
-const { Column, HeaderCell } = RTable;
 
 interface State {
   state: string;
@@ -136,6 +131,9 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
   const [createComment] = useMutation(CreateCommentDocument);
 
   const articles = useMemo(() => data?.articles?.nodes ?? [], [data]);
+
+  /** The row shape the list query actually returns. */
+  type ArticleRow = (typeof articles)[number];
   const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -146,7 +144,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     return () => clearTimeout(timerID);
   }, [highlightedRowId]);
 
-  const dataColumns = useMemo<ListColumn<FullArticleFragment>[]>(
+  const dataColumns = useMemo<ListColumn<ArticleRow>[]>(
     () => [
       {
         id: 'states',
@@ -258,13 +256,13 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
           <ListViewActions>
             <Link to="/articles/create">
-              <RIconButton
-                appearance="primary"
+              <Button
+                variant="contained"
+                startIcon={<MdAdd />}
                 disabled={isLoading}
-                icon={<MdAdd />}
               >
                 {t('articles.overview.newArticle')}
-              </RIconButton>
+              </Button>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -294,30 +292,32 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
+        <DataTable
           loading={isLoading}
           data={articles}
           sortColumn={sortField}
-          sortType={sortOrder}
+          sortOrder={sortOrder}
+          sortable={dataColumns
+            .filter(column => column.sortable)
+            .map(column => column.dataKey ?? column.id)}
+          onSort={(column, order) => {
+            setSort(column, order);
+            setPage(1);
+          }}
           rowClassName={rowData =>
             rowData?.id === highlightedRowId ? 'highlighted-row' : ''
           }
-          onSortColumn={(sortColumn, sortType) => {
-            setSort(sortColumn, sortType ?? 'asc');
-            setPage(1);
-          }}
-        >
-          {renderListColumns(dataColumns, isVisible)}
-
-          <Column
-            width={220}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <IconButtonCell>
-              {(rowData: RowDataType<FullArticleFragment>) => (
+          columns={[
+            ...dataColumns
+              .filter(column => isVisible(column.id))
+              .map(column => ({ ...column, sortKey: column.dataKey })),
+            {
+              id: 'action',
+              label: t('action'),
+              width: 220,
+              align: 'center',
+              fixed: true,
+              render: rowData => (
                 <>
                   <PermissionControl
                     qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}
@@ -327,16 +327,16 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                     >
                       <IconButton
                         aria-label={t('articleEditor.overview.unpublish')}
-                        icon={<MdUnpublished />}
-                        circle
                         disabled={!(rowData.published || rowData.pending)}
-                        size="sm"
+                        size="small"
                         onClick={e => {
                           setCurrentArticle(rowData as FullArticleFragment);
                           setConfirmAction(ConfirmAction.Unpublish);
                           setConfirmationDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdUnpublished />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
 
@@ -348,15 +348,15 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                     >
                       <IconButton
                         aria-label={t('articleEditor.overview.duplicate')}
-                        icon={<MdContentCopy />}
-                        circle
-                        size="sm"
+                        size="small"
                         onClick={() => {
                           setCurrentArticle(rowData as FullArticleFragment);
                           setConfirmAction(ConfirmAction.Duplicate);
                           setConfirmationDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdContentCopy />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
 
@@ -368,9 +368,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                     >
                       <IconButton
                         aria-label={t('articleEditor.overview.createComment')}
-                        icon={<MdComment />}
-                        circle
-                        size="sm"
+                        size="small"
                         onClick={() => {
                           createComment({
                             variables: {
@@ -384,7 +382,9 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                             },
                           });
                         }}
-                      />
+                      >
+                        <MdComment />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
 
@@ -394,62 +394,53 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         aria-label={t('delete')}
-                        icon={<MdDelete />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
+                        size="small"
+                        color="error"
                         onClick={() => {
                           setCurrentArticle(rowData as FullArticleFragment);
                           setConfirmAction(ConfirmAction.Delete);
                           setConfirmationDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdDelete />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                 </>
-              )}
-            </IconButtonCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.articles.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.articles.totalCount ?? 0}
         />
       </TableWrapper>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={isConfirmationDialogOpen}
-        size="sm"
+        maxWidth="sm"
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>
-            {confirmAction === ConfirmAction.Unpublish ?
-              t('articles.panels.unpublishArticle')
-            : confirmAction === ConfirmAction.Delete ?
-              t('articles.panels.deleteArticle')
-            : t('articles.panels.duplicateArticle')}
-          </Modal.Title>
-        </Modal.Header>
+        <DialogTitle>
+          {confirmAction === ConfirmAction.Unpublish ?
+            t('articles.panels.unpublishArticle')
+          : confirmAction === ConfirmAction.Delete ?
+            t('articles.panels.deleteArticle')
+          : t('articles.panels.duplicateArticle')}
+        </DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('articles.panels.title')}>
               {currentArticle?.latest.title || t('articles.panels.untitled')}
@@ -484,18 +475,15 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             )}
           </DescriptionList>
 
-          <Message
-            showIcon
-            type="warning"
-            title={t('articleEditor.overview.warningLabel')}
-          >
+          <Alert severity="warning">
+            <AlertTitle>{t('articleEditor.overview.warningLabel')}</AlertTitle>
             {t('articleEditor.overview.unpublishWarningMessage')}
-          </Message>
-        </Modal.Body>
+          </Alert>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            appearance="primary"
+            variant="contained"
             disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
               if (!currentArticle) return;
@@ -577,13 +565,13 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             {t('articles.panels.confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('articles.panels.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

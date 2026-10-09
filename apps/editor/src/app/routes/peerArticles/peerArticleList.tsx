@@ -1,6 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   ArticleSort,
   ImportArticleOptions,
   ImportPeerArticleDocument,
@@ -9,15 +17,16 @@ import {
   SlimPeerArticleFragment,
 } from '@wepublish/editor/api';
 import {
+  ClickPopover,
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  enqueueSnackbar,
   humanizeError,
   InfoTooltip,
   ListFilters,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
+  Pagination,
   PeerAvatar,
   Table,
   TableWrapper,
@@ -26,18 +35,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import {
-  Button,
-  Checkbox,
-  Form,
-  Message,
-  Modal,
-  Pagination,
-  Popover,
-  Table as RTable,
-  toaster,
-  Whisper,
-} from 'rsuite';
+import { Checkbox, Form, Table as RTable } from 'rsuite';
 
 const { Column, HeaderCell, Cell } = RTable;
 
@@ -113,16 +111,10 @@ function PeerArticleList() {
   const [importPeerArticle, { loading: importingInProgress, error, reset }] =
     useMutation(ImportPeerArticleDocument, {
       onCompleted(data) {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-          >
-            {t('toast.createdSuccess')}
-          </Message>,
-          { duration: 3000 }
-        );
+        enqueueSnackbar(t('toast.createdSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
 
         navigate(`/articles/edit/${data.importPeerArticle.id}`);
       },
@@ -138,16 +130,10 @@ function PeerArticleList() {
 
   useEffect(() => {
     if (peerArticleListError) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {humanizeError(peerArticleListError)}
-        </Message>,
-        { duration: 0 }
-      );
+      enqueueSnackbar(humanizeError(peerArticleListError), {
+        variant: 'error',
+        autoHideDuration: null,
+      });
     }
   }, [peerArticleListError]);
 
@@ -262,24 +248,24 @@ function PeerArticleList() {
             <Cell>
               {(rowData: SlimPeerArticleFragment) =>
                 rowData.latest.image?.url ?
-                  <Whisper
-                    placement="left"
-                    trigger="hover"
-                    controlId="control-id-hover"
-                    speaker={
-                      <Popover>
-                        <PopoverImg
-                          src={rowData.latest.image?.url || ''}
-                          alt=""
-                        />
-                      </Popover>
+                  <ClickPopover
+                    trigger={
+                      <Img
+                        src={rowData.latest.image?.url || ''}
+                        alt=""
+                      />
                     }
+                    anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
+                    transformOrigin={{
+                      vertical: 'center',
+                      horizontal: 'right',
+                    }}
                   >
-                    <Img
+                    <PopoverImg
                       src={rowData.latest.image?.url || ''}
                       alt=""
                     />
-                  </Whisper>
+                  </ClickPopover>
                 : ''
               }
             </Cell>
@@ -294,8 +280,8 @@ function PeerArticleList() {
             <Cell>
               {(rowData: SlimPeerArticleFragment) => (
                 <Button
-                  appearance="primary"
-                  size="xs"
+                  variant="contained"
+                  size="small"
                   type="submit"
                   disabled={!rowData.peer?.id}
                   onClick={() => {
@@ -313,45 +299,28 @@ function PeerArticleList() {
         </Table>
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={peerArticleListData?.peerArticles?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={peerArticleListData?.peerArticles?.totalCount ?? 0}
         />
       </TableWrapper>
 
-      <Modal
+      <Dialog
         open={!!articleToImport}
         onClose={() => setArticleToImport(undefined)}
-        onExited={() => reset()}
+        slotProps={{ transition: { onExited: () => reset() } }}
       >
-        <Modal.Header>
-          <Modal.Title>{t('peerArticles.import.title')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('peerArticles.import.title')}</DialogTitle>
 
-        <Modal.Body>
-          {error && (
-            <Message
-              type="error"
-              showIcon
-              closable
-            >
-              {humanizeError(error)}
-            </Message>
-          )}
+        <DialogContent>
+          {error && <Alert severity="error">{humanizeError(error)}</Alert>}
 
           <CheckboxGroup>
             <Form.Group>
@@ -406,10 +375,11 @@ function PeerArticleList() {
               </Form.Text>
             </Form.Group>
           </CheckboxGroup>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="contained"
             onClick={() => {
               importPeerArticle({
                 variables: {
@@ -420,20 +390,19 @@ function PeerArticleList() {
               });
             }}
             disabled={importingInProgress}
-            appearance="primary"
           >
             {t('peerArticles.import.confirm')}
           </Button>
 
           <Button
+            variant="text"
             onClick={() => setArticleToImport(undefined)}
             disabled={importingInProgress}
-            appearance="subtle"
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

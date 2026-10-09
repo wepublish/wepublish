@@ -5,9 +5,15 @@ import {
 } from '@wepublish/editor/api';
 import { InfoTooltip } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
-import { Form, Panel, Toggle } from 'rsuite';
+import { Form } from 'rsuite';
+import {
+  Switch,
+  FormControlLabel,
+  Card as MuiCard,
+  CardContent,
+} from '@mui/material';
 
-const FormCard = styled(Panel)`
+const FormCard = styled(MuiCard)`
   width: 100%;
   max-width: 640px;
   overflow: initial;
@@ -38,39 +44,50 @@ export const ConsentForm = ({
   const { t } = useTranslation();
 
   return (
-    <FormCard bordered>
-      <Fields>
-        <Form.Group controlId="name">
-          <Form.Label>{t('consents.name')}</Form.Label>
-          <Form.Control
-            name="name"
-            value={consent.name ?? ''}
-            onChange={(name: string) => onChange({ name })}
-          />
-        </Form.Group>
+    <FormCard>
+      <CardContent>
+        <CardContent>
+          <Fields>
+            <Form.Group controlId="name">
+              <Form.Label>{t('consents.name')}</Form.Label>
+              <Form.Control
+                name="name"
+                value={consent.name ?? ''}
+                onChange={(name: string) => onChange({ name })}
+              />
+            </Form.Group>
 
-        <Form.Group controlId="slug">
-          <Form.Label>
-            {t('consents.slug')} <InfoTooltip text={t('consents.slugInfo')} />
-          </Form.Label>
-          <Form.Control
-            name="slug"
-            value={consent.slug ?? ''}
-            onChange={(slug: string) => onChange({ slug })}
-          />
-        </Form.Group>
+            <Form.Group controlId="slug">
+              <Form.Label>
+                {t('consents.slug')}{' '}
+                <InfoTooltip text={t('consents.slugInfo')} />
+              </Form.Label>
+              <Form.Control
+                name="slug"
+                value={consent.slug ?? ''}
+                onChange={(slug: string) => onChange({ slug })}
+              />
+            </Form.Group>
 
-        <Toggle
-          checked={!!consent.defaultValue}
-          label={
-            <>
-              {t('consents.checkedByDefault')}{' '}
-              <InfoTooltip text={t('consents.defaultValueInfo')} />
-            </>
-          }
-          onChange={defaultValue => onChange({ defaultValue })}
-        />
-      </Fields>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={!!consent.defaultValue}
+                  onChange={(_event, defaultValue) =>
+                    onChange({ defaultValue })
+                  }
+                />
+              }
+              label={
+                <>
+                  {t('consents.checkedByDefault')}{' '}
+                  <InfoTooltip text={t('consents.defaultValueInfo')} />
+                </>
+              }
+            />
+          </Fields>
+        </CardContent>
+      </CardContent>
     </FormCard>
   );
 };

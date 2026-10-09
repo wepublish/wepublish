@@ -1,5 +1,14 @@
 import styled from '@emotion/styled';
 import {
+  Alert,
+  Button,
+  Card,
+  CardContent,
+  Drawer,
+  FormControlLabel,
+  Switch,
+} from '@mui/material';
+import {
   FullImageFragment,
   FullTagFragment,
   TagType,
@@ -7,17 +16,7 @@ import {
 import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdListAlt, MdSettings, MdShare } from 'react-icons/md';
-import {
-  Button,
-  Drawer,
-  Form,
-  Input,
-  Message,
-  Nav as RNav,
-  Panel,
-  TagPicker as RTagPicker,
-  Toggle,
-} from 'rsuite';
+import { Form, Input, Nav as RNav, TagPicker as RTagPicker } from 'rsuite';
 
 import {
   ChooseEditImage,
@@ -31,6 +30,13 @@ import {
 } from '../atoms';
 import { InfoTooltip } from '../atoms/infoTooltip';
 import { MetaDataType } from '../blocks';
+import {
+  DRAWER_WIDTHS,
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 import { generateID, isFunctionalUpdate } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
@@ -181,12 +187,9 @@ function PageMetadataPanel({
         return (
           <Form.Stack fluid>
             <Form.Group>
-              <Message
-                showIcon
-                type="info"
-              >
+              <Alert severity="info">
                 {t('pageEditor.panels.metadataInfo')}
-              </Message>
+              </Alert>
             </Form.Group>
 
             <DeferredTextField
@@ -304,10 +307,16 @@ function PageMetadataPanel({
             </Form.Group>
 
             <Form.Group controlId="hidden">
-              <Toggle
-                checked={hidden ? true : false}
-                disabled={!isAuthorized}
-                onChange={hidden => onChange?.({ ...value, hidden })}
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={hidden ? true : false}
+                    disabled={!isAuthorized}
+                    onChange={(_event, hidden) =>
+                      onChange?.({ ...value, hidden })
+                    }
+                  />
+                }
                 label={
                   <>
                     {t('pageEditor.panels.hidden')}{' '}
@@ -339,12 +348,9 @@ function PageMetadataPanel({
         return (
           <Form.Stack fluid>
             <Form.Group>
-              <Message
-                showIcon
-                type="info"
-              >
+              <Alert severity="info">
                 {t('pageEditor.panels.propertiesInfo')}
-              </Message>
+              </Alert>
             </Form.Group>
 
             <Form.Group controlId="pageProperties">
@@ -374,10 +380,14 @@ function PageMetadataPanel({
                       }}
                     />
                     <FormGroup>
-                      <Toggle
-                        checked={value.public}
-                        onChange={isPublic =>
-                          onChange({ ...value, public: isPublic })
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={value.public}
+                            onChange={(_event, isPublic) =>
+                              onChange({ ...value, public: isPublic })
+                            }
+                          />
                         }
                         label={t('pageEditor.panels.public')}
                       />
@@ -393,22 +403,22 @@ function PageMetadataPanel({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('pageEditor.panels.metadata')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('pageEditor.panels.metadata')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
             <Button
-              appearance="primary"
+              variant="contained"
               onClick={() => onClose?.()}
             >
               {t('saveAndClose')}
             </Button>
           </PermissionControl>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         <Nav
           appearance="tabs"
           activeKey={activeKey}
@@ -434,14 +444,26 @@ function PageMetadataPanel({
           </RNav.Item>
         </Nav>
 
-        <Panel>
-          <Form disabled={!isAuthorized}>{currentContent()}</Form>
-        </Panel>
-      </Drawer.Body>
+        <Card variant="outlined">
+          <CardContent>
+            <Form disabled={!isAuthorized}>{currentContent()}</Form>
+          </CardContent>
+        </Card>
+      </DrawerBody>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -454,8 +476,18 @@ function PageMetadataPanel({
       </Drawer>
       {(value.image || value.socialMediaImage) && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => {
             setEditModalOpen(false);
           }}

@@ -1,6 +1,12 @@
+import {
+  Alert,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, Modal } from 'rsuite';
 
 import {
   createCheckedPermissionComponent,
@@ -34,17 +40,15 @@ function PublishPagePanel({
 
   return (
     <>
-      <Modal.Header>
-        <Modal.Title>{t('pageEditor.panels.publishPage')}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{t('pageEditor.panels.publishPage')}</DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         {publishedAt && publishedAt > now && (
-          <Message type="warning">
+          <Alert severity="warning">
             {t('pageEditor.panels.pagePending', {
               pendingPublishDate: publishedAt,
             })}
-          </Message>
+          </Alert>
         )}
 
         <div style={{ maxWidth: '200px' }}>
@@ -131,23 +135,23 @@ function PublishPagePanel({
             {metadata.socialMediaImage?.filename}
           </DescriptionListItemWithMessage>
         </DescriptionList>
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
-          appearance="primary"
+          variant="contained"
           disabled={!publishedAt}
           onClick={() => onConfirm(publishedAt!)}
         >
           {t('pageEditor.panels.confirm')}
         </Button>
         <Button
-          appearance="subtle"
+          variant="text"
           onClick={() => onClose()}
         >
           {t('pageEditor.panels.close')}
         </Button>
-      </Modal.Footer>
+      </DialogActions>
     </>
   );
 }

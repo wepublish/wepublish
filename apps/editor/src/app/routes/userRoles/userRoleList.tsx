@@ -1,5 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+} from '@mui/material';
+import {
   DeleteUserRoleDocument,
   FullUserRoleFragment,
   UserRoleListDocument,
@@ -8,6 +16,7 @@ import {
   createCheckedPermissionComponent,
   DescriptionList,
   DescriptionListItem,
+  DRAWER_WIDTHS,
   IconButton,
   IconButtonTooltip,
   ListViewActions,
@@ -24,14 +33,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import {
-  Button,
-  Drawer,
-  Input,
-  InputGroup,
-  Modal,
-  Table as RTable,
-} from 'rsuite';
+import { Input, InputGroup, Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -105,13 +107,13 @@ function UserRoleList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
           <ListViewActions>
             <Link to="/userroles/create">
-              <IconButton
-                appearance="primary"
+              <Button
+                variant="contained"
+                startIcon={<MdAdd />}
                 disabled={isLoading}
-                icon={<MdAdd />}
               >
                 {t('userRoles.overview.newUserRole')}
-              </IconButton>
+              </Button>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -170,17 +172,16 @@ function UserRoleList() {
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       disabled={rowData.systemRole}
-                      circle
-                      appearance="ghost"
-                      color="red"
-                      size="sm"
-                      icon={<MdDelete />}
+                      color="error"
+                      size="small"
                       aria-label={t('delete')}
                       onClick={() => {
                         setConfirmationDialogOpen(true);
                         setCurrentUserRole(rowData as FullUserRoleFragment);
                       }}
-                    />
+                    >
+                      <MdDelete />
+                    </IconButton>
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
@@ -190,12 +191,22 @@ function UserRoleList() {
       </TableWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
         onClose={() => {
           setEditModalOpen(false);
           navigate('/userroles');
         }}
-        size="sm"
       >
         <UserRoleEditPanel
           id={editID!}
@@ -211,24 +222,23 @@ function UserRoleList() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('userRoles.panels.deleteUserRole')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('userRoles.panels.deleteUserRole')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('userRoles.panels.name')}>
               {currentUserRole?.name || t('userRoles.panels.Unknown')}
             </DescriptionListItem>
           </DescriptionList>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="outlined"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentUserRole) return;
@@ -240,18 +250,18 @@ function UserRoleList() {
               setConfirmationDialogOpen(false);
               refetch();
             }}
-            color="red"
+            color="error"
           >
             {t('userRoles.panels.confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('userRoles.panels.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

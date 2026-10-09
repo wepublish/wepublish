@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import {
   CreateUserRoleDocument,
   FullPermissionFragment,
@@ -10,21 +11,20 @@ import {
 } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  CheckPicker,
-  Drawer,
-  Form as RForm,
-  Message,
-  Schema,
-  toaster,
-} from 'rsuite';
+import { CheckPicker, Form as RForm, Schema } from 'rsuite';
 
 import {
   createCheckedPermissionComponent,
   PermissionControl,
   useAuthorisation,
 } from '../atoms';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 
 const { Group, Label, Control } = RForm;
@@ -103,16 +103,7 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
       updateError?.message ??
       loadPermissionError?.message;
     if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
   }, [loadError, createError, updateError, loadPermissionError]);
 
   async function handleSave() {
@@ -156,18 +147,18 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
       formValue={{ name }}
     >
       <RForm.Stack fluid>
-        <Drawer.Header>
-          <Drawer.Title>
+        <DrawerHeader>
+          <DrawerTitle>
             {id ?
               t('userRoles.panels.editUserRole')
             : t('userRoles.panels.createUserRole')}
-          </Drawer.Title>
+          </DrawerTitle>
 
-          <Drawer.Actions>
+          <DrawerActions>
             <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
               <Button
+                variant="contained"
                 type="submit"
-                appearance="primary"
                 disabled={isDisabled}
                 data-testid="saveButton"
               >
@@ -175,15 +166,15 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
               </Button>
             </PermissionControl>
             <Button
-              appearance={'subtle'}
+              variant="text"
               onClick={() => onClose?.()}
             >
               {t('userRoles.panels.close')}
             </Button>
-          </Drawer.Actions>
-        </Drawer.Header>
+          </DrawerActions>
+        </DrawerHeader>
 
-        <Drawer.Body>
+        <DrawerBody>
           <Group controlId="name">
             <Label>{toggleRequiredLabel(t('userRoles.panels.name'))}</Label>
             <Control
@@ -206,9 +197,9 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
           <Group controlId="permissions">
             <Label>{t('userRoles.panels.permissions')}</Label>
             <CheckPicker
+              block
               disabled={isDisabled}
               virtualized
-              block
               disabledItemValues={
                 systemRole ? allPermissions.map(per => per.id) : []
               }
@@ -226,7 +217,7 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
               }}
             />
           </Group>
-        </Drawer.Body>
+        </DrawerBody>
       </RForm.Stack>
     </Form>
   );

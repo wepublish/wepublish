@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { IconButton as MuiIconButton } from '@mui/material';
 import {
   CanCreateArticle,
   CanCreateAuthor,
@@ -51,6 +52,7 @@ import {
   CanGetArticle,
   CanGetArticles,
   CanGetAudienceStats,
+  CanGetAuditLogs,
   CanGetAuthor,
   CanGetAuthors,
   CanGetBanner,
@@ -82,7 +84,6 @@ import {
   CanGetPeerArticles,
   CanGetPeers,
   CanGetPoll,
-  CanGetAuditLogs,
   CanGetSettings,
   CanGetSubscription,
   CanGetSubscriptionFlows,
@@ -129,9 +130,9 @@ import {
   MdAutorenew,
   MdBadge,
   MdBookOnline,
+  MdBrightnessAuto,
   MdCardGiftcard,
   MdChat,
-  MdBrightnessAuto,
   MdContentCopy,
   MdCountertops,
   MdCreditCard,
@@ -144,6 +145,7 @@ import {
   MdFileCopy,
   MdGroup,
   MdGroups,
+  MdHistory,
   MdHub,
   MdLightMode,
   MdLocationPin,
@@ -163,7 +165,6 @@ import {
   MdQueryStats,
   MdSell,
   MdSend,
-  MdHistory,
   MdSettings,
   MdSettingsInputAntenna,
   MdSignpost,
@@ -175,7 +176,6 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import {
   Container,
-  IconButton as RIconButton,
   Nav,
   Navbar,
   Sidebar as RSidebar,
@@ -357,7 +357,7 @@ const Footer = styled(Navbar)`
   border-top: 1px solid var(--wep-shell-border);
 `;
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   && {
     display: inline-flex;
     align-items: center;
@@ -441,12 +441,12 @@ export function Base({ children }: BaseProps) {
     <Wrapper>
       <MobileTopBar>
         <IconButton
-          appearance="subtle"
-          icon={<MdMenu />}
           onClick={mobileNavigation.toggle}
           aria-label={t('navbar.menu')}
           aria-expanded={mobileNavigation.open}
-        />
+        >
+          <MdMenu />
+        </IconButton>
         <MobileBrand
           to="/dashboard"
           aria-label="We.Publish"
@@ -487,7 +487,6 @@ export function Base({ children }: BaseProps) {
                     as={NavLink}
                     href="/dashboard"
                     icon={<MdPieChartOutline />}
-                    active={path === 'dashboard' || path === ''}
                   >
                     {t('navbar.dashboard')}
                   </Nav.Item>
@@ -496,7 +495,6 @@ export function Base({ children }: BaseProps) {
                     as={NavLink}
                     href="/notifications"
                     icon={<MdNotificationsNone />}
-                    active={path === 'notifications'}
                   >
                     {t('navbar.notifications')}
                   </Nav.Item>
@@ -512,7 +510,6 @@ export function Base({ children }: BaseProps) {
                       as={NavLink}
                       href="/dashboard/apps"
                       icon={<MdExtension />}
-                      active={path === 'dashboard/apps'}
                     >
                       {t('navbar.apps')}
                     </Nav.Item>
@@ -553,7 +550,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/articles"
                         icon={<MdDescription />}
-                        active={path === 'articles'}
                       >
                         {t('navbar.articles')}
                       </Nav.Item>
@@ -569,7 +565,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/articles/peer"
                         icon={<MdFileCopy />}
-                        active={path === 'articles/peer'}
                       >
                         {t('navbar.peerArticles')}
                       </Nav.Item>
@@ -579,7 +574,6 @@ export function Base({ children }: BaseProps) {
                       as={NavLink}
                       href="/network"
                       icon={<MdHub />}
-                      active={path === 'network'}
                     >
                       {t('navbar.networkContent')}
                     </Nav.Item>
@@ -596,7 +590,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/articles/tags"
                         icon={<MdSell />}
-                        active={path === 'articles/tags'}
                       >
                         {t('navbar.articleTags')}
                       </Nav.Item>
@@ -612,7 +605,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/articles/paywalls"
                         icon={<MdPayment />}
-                        active={path === 'articles/paywalls'}
                       >
                         {t('paywall.navbar')}
                       </Nav.Item>
@@ -650,7 +642,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/pages"
                         icon={<MdDashboard />}
-                        active={path === 'pages'}
                       >
                         {t('navbar.pages')}
                       </Nav.Item>
@@ -668,7 +659,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/pages/tags"
                         icon={<MdSell />}
-                        active={path === 'pages/tags'}
                       >
                         {t('navbar.pageTags')}
                       </Nav.Item>
@@ -701,7 +691,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/polls"
-                        active={path === 'polls'}
                         icon={<MdQueryStats />}
                       >
                         {t('navbar.blocks.polls')}
@@ -719,7 +708,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/crowdfundings"
-                        active={path === 'crowdfundings'}
                         icon={<MdMoney />}
                       >
                         {t('navbar.blocks.crowdfundings')}
@@ -736,7 +724,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/block-content/styles"
-                        active={path === 'block-content/styles'}
                         icon={<MdStyle />}
                       >
                         {t('navbar.blocks.blockStyles')}
@@ -752,7 +739,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/block-content/templates"
-                        active={path === 'block-content/templates'}
                         icon={<MdContentCopy />}
                       >
                         {t('navbar.blocks.blockTemplates')}
@@ -784,7 +770,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/comments"
                         icon={<MdChat />}
-                        active={path === 'comments'}
                       >
                         {t('navbar.comments')}
                       </Nav.Item>
@@ -802,7 +787,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/comments/tags"
                         icon={<MdSell />}
-                        active={path === 'comments/tags'}
                       >
                         {t('navbar.commentTags')}
                       </Nav.Item>
@@ -820,7 +804,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/comments/rating"
                         icon={<MdStar />}
-                        active={path === 'comments/rating'}
                       >
                         {t('navbar.commentRating')}
                       </Nav.Item>
@@ -850,7 +833,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/events"
                         icon={<MdEvent />}
-                        active={path === 'events'}
                       >
                         {t('navbar.events')}
                       </Nav.Item>
@@ -868,7 +850,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/events/import"
                         icon={<MdEventAvailable />}
-                        active={path === 'events/import'}
                       >
                         {t('navbar.importableEvents')}
                       </Nav.Item>
@@ -886,7 +867,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/events/tags"
                         icon={<MdSell />}
-                        active={path === 'events/tags'}
                       >
                         {t('navbar.eventTags')}
                       </Nav.Item>
@@ -923,7 +903,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/images"
                         icon={<MdPhoto />}
-                        active={path === 'images'}
                       >
                         {t('navbar.imageLibrary')}
                       </Nav.Item>
@@ -941,7 +920,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/documents"
                         icon={<MdDescription />}
-                        active={path === 'documents'}
                       >
                         {t('navbar.documentLibrary')}
                       </Nav.Item>
@@ -961,7 +939,6 @@ export function Base({ children }: BaseProps) {
                     as={NavLink}
                     href="/navigations"
                     icon={<MdLocationPin />}
-                    active={path === 'navigations'}
                   >
                     {t('navbar.navigations')}
                   </Nav.Item>
@@ -979,7 +956,6 @@ export function Base({ children }: BaseProps) {
                     as={NavLink}
                     href="/banners"
                     icon={<MdSignpost />}
-                    active={path === 'banners'}
                   >
                     {t('navbar.banners')}
                   </Nav.Item>
@@ -1005,7 +981,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/authors"
                         icon={<MdGroup />}
-                        active={path === 'authors'}
                       >
                         {t('navbar.authors')}
                       </Nav.Item>
@@ -1023,7 +998,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/authors/tags"
                         icon={<MdSell />}
-                        active={path === 'authors/tags'}
                       >
                         {t('navbar.authorTags')}
                       </Nav.Item>
@@ -1059,7 +1033,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/audience/dashboard"
-                        active={path.includes('audience/dashboard')}
                         icon={<MdMultilineChart />}
                       >
                         {t('navbar.audienceDashboard')}
@@ -1069,7 +1042,6 @@ export function Base({ children }: BaseProps) {
                     <Nav.Item
                       as={NavLink}
                       href="/users"
-                      active={path === 'users'}
                       icon={<MdAccountCircle />}
                     >
                       {t('navbar.users')}
@@ -1086,7 +1058,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/subscriptions"
-                        active={path === 'subscriptions'}
                         icon={<MdAutorenew />}
                       >
                         {t('navbar.subscriptions')}
@@ -1103,7 +1074,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/consents"
-                        active={path === 'consents'}
                         icon={<MdApproval />}
                       >
                         {t('navbar.consents')}
@@ -1111,7 +1081,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/userConsents"
-                        active={path === 'userConsents'}
                         icon={<MdFactCheck />}
                       >
                         {t('navbar.userConsents')}
@@ -1144,7 +1113,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/mailsend"
-                        active={path === 'mailsend'}
                         icon={<MdSend />}
                       >
                         {t('navbar.mailSend')}
@@ -1162,7 +1130,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/communicationflows/edit/default"
-                        active={path === 'communicationflows/edit/default'}
                         icon={<MdOutgoingMail />}
                       >
                         {t('navbar.subscriptionSettings')}
@@ -1179,7 +1146,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/mailtemplates"
-                        active={path === 'mailtemplates'}
                         icon={<MdMail />}
                       >
                         {t('navbar.mailTemplates')}
@@ -1193,7 +1159,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/maillog"
-                        active={path === 'maillog'}
                         icon={<MdOutgoingMail />}
                       >
                         {t('navbar.mailLog')}
@@ -1236,7 +1201,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/memberplans"
-                        active={path === 'memberplans'}
                         icon={<MdBookOnline />}
                       >
                         {t('navbar.memberPlans')}
@@ -1255,7 +1219,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/paymentmethods"
-                        active={path === 'paymentmethods'}
                         icon={<MdCreditCard />}
                       >
                         {t('navbar.paymentMethods')}
@@ -1273,7 +1236,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/discountCodes"
                         icon={<MdCountertops />}
-                        active={path === 'discountCodes'}
                       >
                         {t('discountCode.navbar')}
                       </Nav.Item>
@@ -1289,7 +1251,6 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/goodies"
                         icon={<MdCardGiftcard />}
-                        active={path === 'goodies'}
                       >
                         {t('goodie.navbar')}
                       </Nav.Item>
@@ -1313,7 +1274,6 @@ export function Base({ children }: BaseProps) {
                     <Nav.Item
                       as={NavLink}
                       href="/peering"
-                      active={path === 'peering'}
                       icon={<MdPersonAddAlt1 />}
                     >
                       {t('navbar.peers')}
@@ -1328,7 +1288,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/tokens"
-                        active={path === 'tokens'}
                         icon={<MdVpnKey />}
                       >
                         {t('navbar.tokens')}
@@ -1363,7 +1322,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/audit-log"
-                        active={path === 'audit-log'}
                         icon={<MdHistory />}
                       >
                         {t('navbar.auditLog')}
@@ -1380,7 +1338,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/settings"
-                        active={path === 'settings'}
                         icon={<MdSettings />}
                       >
                         {t('navbar.settings')}
@@ -1399,7 +1356,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/userroles"
-                        active={path === 'userroles'}
                         icon={<MdBadge />}
                       >
                         {t('navbar.userRoles')}
@@ -1419,7 +1375,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/integrations"
-                        active={path === 'integrations'}
                         icon={<MdPower />}
                       >
                         {t('navbar.integrations')}
@@ -1435,7 +1390,6 @@ export function Base({ children }: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/settings/website"
-                        active={path.startsWith('settings/website')}
                         icon={<MdAutoFixHigh />}
                       >
                         {t('websiteSettings.navbar')}
@@ -1461,11 +1415,10 @@ export function Base({ children }: BaseProps) {
                 ) => (
                   <IconButton
                     {...props}
-                    appearance="subtle"
-                    placement="left"
                     ref={ref}
-                    icon={<MdLogout />}
-                  />
+                  >
+                    <MdLogout />
+                  </IconButton>
                 )}
               >
                 <Nav.Item
@@ -1487,18 +1440,16 @@ export function Base({ children }: BaseProps) {
                 ) => (
                   <IconButton
                     {...props}
-                    appearance="subtle"
-                    placement="left"
                     ref={ref}
-                    icon={<MdTranslate />}
-                  />
+                  >
+                    <MdTranslate />
+                  </IconButton>
                 )}
               >
                 {AVAILABLE_LANG.map(lang => (
                   <Nav.Item
                     key={lang.id}
                     onSelect={() => setUILanguage(lang.id)}
-                    active={lang.id === uiLanguage}
                   >
                     {lang.name}
                   </Nav.Item>
@@ -1516,13 +1467,12 @@ export function Base({ children }: BaseProps) {
                 ) => (
                   <IconButton
                     {...props}
-                    appearance="subtle"
-                    placement="left"
                     ref={ref}
-                    icon={colorModeIcons[colorModePreference]}
                     title={t('navbar.colorMode.title')}
                     aria-label={t('navbar.colorMode.title')}
-                  />
+                  >
+                    {colorModeIcons[colorModePreference]}
+                  </IconButton>
                 )}
               >
                 {colorModePreferences.map(preference => (
@@ -1530,7 +1480,6 @@ export function Base({ children }: BaseProps) {
                     key={preference}
                     icon={colorModeIcons[preference]}
                     onSelect={() => setColorMode(preference)}
-                    active={preference === colorModePreference}
                   >
                     {t(`navbar.colorMode.${preference}`)}
                   </Nav.Item>

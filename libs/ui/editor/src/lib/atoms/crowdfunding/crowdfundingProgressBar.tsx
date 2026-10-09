@@ -1,9 +1,9 @@
+import { Box, LinearProgress, Typography } from '@mui/material';
 import {
   CrowdfundingGoalType,
   FullCrowdfundingFragment,
 } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
-import { Progress } from 'rsuite';
 
 function formatMoney(amount: number): string {
   return Math.round(amount / 100).toLocaleString('de-CH', {
@@ -33,10 +33,22 @@ export function CrowdfundingProgressBar({
         }
       </h3>
 
-      <Progress.Line
-        style={{ marginLeft: 0 }}
-        percent={progress}
-      />
+      {/* MUI's LinearProgress draws only the bar, so the percentage that
+          rsuite's Progress.Line printed is rendered alongside it. */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <LinearProgress
+          variant="determinate"
+          value={Math.min(progress, 100)}
+          sx={{ flex: 1 }}
+        />
+
+        <Typography
+          variant="body2"
+          color="text.secondary"
+        >
+          {progress}%
+        </Typography>
+      </Box>
     </>
   );
 }

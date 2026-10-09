@@ -13,11 +13,11 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
+import { Card as MuiCard, CardContent, IconButton } from '@mui/material';
 import nanoid from 'nanoid';
 import React, { JSX, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle, MdDelete, MdDragIndicator } from 'react-icons/md';
-import { IconButton, Panel as RPanel } from 'rsuite';
 
 import { generateID, isFunctionalUpdate } from '../utility';
 import { IconButtonTooltip } from './iconButtonTooltip';
@@ -36,7 +36,7 @@ const ChildrenWrapper = styled.div`
   }
 `;
 
-const Panel = styled(RPanel)`
+const Panel = styled(MuiCard)`
   flex: 1 1 auto;
   min-width: 0;
 `;
@@ -152,24 +152,32 @@ function ListItem({
         <IconButtonTooltip caption={t('listInput.dragToReorder')}>
           <IconButton
             aria-label={t('listInput.dragToReorder')}
-            icon={<MdDragIndicator />}
             disabled={itemDisabled}
-          />
+          >
+            <MdDragIndicator />
+          </IconButton>
         </IconButtonTooltip>
       </DragHandleWrapper>
-      <Panel bodyFill>
-        <ChildrenWrapper>
-          {children({ value: value.value, onChange: handleValueChange })}
-        </ChildrenWrapper>
+      <Panel>
+        <CardContent>
+          <CardContent>
+            <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+              <ChildrenWrapper>
+                {children({ value: value.value, onChange: handleValueChange })}
+              </ChildrenWrapper>
+            </CardContent>
+          </CardContent>
+        </CardContent>
       </Panel>
       <IconButtonWrapper>
         <IconButtonTooltip caption={t('delete')}>
           <IconButton
             aria-label={t('delete')}
-            icon={<MdDelete />}
             onClick={handleRemove}
             disabled={itemDisabled}
-          />
+          >
+            <MdDelete />
+          </IconButton>
         </IconButtonTooltip>
       </IconButtonWrapper>
     </ListItemWrapper>
@@ -254,11 +262,12 @@ export function ListInput<T>({
       <IconButtonTooltip caption={t('listInput.add')}>
         <IconButton
           aria-label={t('listInput.add')}
-          icon={<MdAddCircle />}
           onClick={handleAdd}
           disabled={disabled}
           data-testid="addProperty"
-        />
+        >
+          <MdAddCircle />
+        </IconButton>
       </IconButtonTooltip>
     </div>
   );

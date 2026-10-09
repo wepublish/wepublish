@@ -1,6 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Card,
+  Card as MuiCard,
+  CardContent,
+  CardHeader,
+} from '@mui/material';
+import {
   FullImageFragment,
   ImageDocument,
   ImageListDocument,
@@ -11,16 +18,7 @@ import imageCompression from 'browser-image-compression';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Drawer,
-  Form as RForm,
-  Message,
-  Panel as RPanel,
-  Schema,
-  TagPicker,
-  toaster,
-} from 'rsuite';
+import { Form as RForm, Schema, TagPicker } from 'rsuite';
 
 import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
 import { Point } from '../atoms/draggable';
@@ -34,13 +32,20 @@ import {
 } from '../atoms/permissionControl';
 import { ImageBlockValue } from '../blocks';
 import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
+import {
   getImgMinSizeToCompress,
   getOperationNameFromDocument,
 } from '../utility';
 
 const { Label, Control, Group } = RForm;
 
-const Panel = styled(RPanel)`
+const Panel = styled(MuiCard)`
   background-color: dark;
 `;
 
@@ -183,16 +188,10 @@ function ImageEditPanel({
         setFocalPoint({ x: image.focalPointX, y: image.focalPointY });
         setLoading(false);
       } else {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={0}
-          >
-            {t('images.panels.notFound')}
-          </Message>
-        );
+        enqueueSnackbar(t('images.panels.notFound'), {
+          variant: 'error',
+          autoHideDuration: null,
+        });
       }
     }
 
@@ -205,16 +204,7 @@ function ImageEditPanel({
     const error =
       loadingError?.message ?? savingError?.message ?? uploadError?.message;
     if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
   }, [loadingError, savingError, uploadError]);
 
   async function handleSave() {
@@ -249,16 +239,10 @@ function ImageEditPanel({
         variables: { id: id!, ...commonInput },
       });
 
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={2000}
-        >
-          {t('images.panels.imageUpdated')}
-        </Message>
-      );
+      enqueueSnackbar(t('images.panels.imageUpdated'), {
+        variant: 'success',
+        autoHideDuration: 2000,
+      });
 
       if (data?.updateImage) {
         onSave?.(data.updateImage, imageBlock);
@@ -308,17 +292,17 @@ function ImageEditPanel({
       model={validationModel}
       onSubmit={validationPassed => validationPassed && handleSave()}
     >
-      <Drawer.Header>
-        <Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>
           {isUpload ?
             t('images.panels.uploadImage')
           : t('images.panels.editImage')}
-        </Drawer.Title>
+        </DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
             <Button
-              appearance={'primary'}
+              variant="contained"
               disabled={isDisabled}
               type="submit"
             >
@@ -327,186 +311,206 @@ function ImageEditPanel({
           </PermissionControl>
 
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         {!isLoading && (
           <>
-            <Panel
-              header={
-                <>
-                  {t('images.panels.focalPoint')}{' '}
-                  <InfoTooltip text={t('images.panels.focalPointInfo')} />
-                </>
-              }
-            >
-              {imageURL && imageWidth && imageHeight && (
-                <FocalPointInput
-                  imageURL={imageURL}
-                  imageWidth={imageWidth}
-                  imageHeight={imageHeight}
-                  maxHeight={300}
-                  focalPoint={focalPoint}
-                  onChange={point => setFocalPoint(point)}
-                />
-              )}
+            <Panel>
+              <CardContent>
+                <CardContent>
+                  <CardHeader
+                    title={
+                      <>
+                        {t('images.panels.focalPoint')}{' '}
+                        <InfoTooltip text={t('images.panels.focalPointInfo')} />
+                      </>
+                    }
+                  />
+
+                  <CardContent>
+                    {imageURL && imageWidth && imageHeight && (
+                      <FocalPointInput
+                        imageURL={imageURL}
+                        imageWidth={imageWidth}
+                        imageHeight={imageHeight}
+                        maxHeight={300}
+                        focalPoint={focalPoint}
+                        onChange={point => setFocalPoint(point)}
+                      />
+                    )}
+                  </CardContent>
+                </CardContent>
+              </CardContent>
             </Panel>
 
-            <RPanel header={t('images.panels.description')}>
-              <DescriptionList>
-                <DescriptionListItem label={t('images.panels.filename')}>
-                  {filename || t('images.panels.untitled')}
-                  {extension}
-                </DescriptionListItem>
+            <Card variant="outlined">
+              <CardHeader title={t('images.panels.description')} />
 
-                <DescriptionListItem label={t('images.panels.dimension')}>
-                  {t('images.panels.imageDimension', {
-                    imageWidth,
-                    imageHeight,
-                  })}
-                </DescriptionListItem>
+              <CardContent>
+                <DescriptionList>
+                  <DescriptionListItem label={t('images.panels.filename')}>
+                    {filename || t('images.panels.untitled')}
+                    {extension}
+                  </DescriptionListItem>
 
-                {createdAt && (
-                  <DescriptionListItem label={t('images.panels.created')}>
-                    {t('images.panels.createdAt', {
-                      createdAt: new Date(createdAt),
+                  <DescriptionListItem label={t('images.panels.dimension')}>
+                    {t('images.panels.imageDimension', {
+                      imageWidth,
+                      imageHeight,
                     })}
                   </DescriptionListItem>
-                )}
 
-                {updatedAt && (
-                  <DescriptionListItem label={t('images.panels.updated')}>
-                    {t('images.panels.updatedAt', {
-                      updatedAt: new Date(updatedAt),
-                    })}
+                  {createdAt && (
+                    <DescriptionListItem label={t('images.panels.created')}>
+                      {t('images.panels.createdAt', {
+                        createdAt: new Date(createdAt),
+                      })}
+                    </DescriptionListItem>
+                  )}
+
+                  {updatedAt && (
+                    <DescriptionListItem label={t('images.panels.updated')}>
+                      {t('images.panels.updatedAt', {
+                        updatedAt: new Date(updatedAt),
+                      })}
+                    </DescriptionListItem>
+                  )}
+
+                  <DescriptionListItem label={t('images.panels.fileSize')}>
+                    {prettyBytes(fileSize)}
                   </DescriptionListItem>
-                )}
 
-                <DescriptionListItem label={t('images.panels.fileSize')}>
-                  {prettyBytes(fileSize)}
-                </DescriptionListItem>
+                  {originalImageURL && (
+                    <DescriptionListItem label={t('images.panels.link')}>
+                      <a
+                        href={originalImageURL}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {originalImageURL}
+                      </a>
+                    </DescriptionListItem>
+                  )}
+                </DescriptionList>
+              </CardContent>
+            </Card>
 
-                {originalImageURL && (
-                  <DescriptionListItem label={t('images.panels.link')}>
-                    <a
-                      href={originalImageURL}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {originalImageURL}
-                    </a>
-                  </DescriptionListItem>
-                )}
-              </DescriptionList>
-            </RPanel>
+            <Card variant="outlined">
+              <CardHeader title={t('images.panels.information')} />
 
-            <RPanel header={t('images.panels.information')}>
-              <RForm.Stack fluid>
-                <Group controlId="imageFilename">
-                  <Label>{t('images.panels.filename')}</Label>
-                  <Control
-                    name="filename"
-                    value={filename}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setFilename(value)}
-                  />
-                </Group>
-
-                <Group controlId="imageTitle">
-                  <Label>{t('images.panels.title')}</Label>
-                  <Control
-                    name="title"
-                    value={title}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setTitle(value)}
-                  />
-                </Group>
-
-                <Group controlId="imageDescription">
-                  <Label>
-                    {t('images.panels.description')}{' '}
-                    <InfoTooltip text={t('images.panels.descriptionInfo')} />
-                  </Label>
-                  <Control
-                    name="description"
-                    value={description}
-                    disabled={isDisabled}
-                    onChange={(value: string) => setDescription(value)}
-                  />
-                </Group>
-
-                {imageBlock && (
-                  <Group controlId="imageLinkUrl">
-                    <Label>
-                      {t('images.panels.linkUrl')}{' '}
-                      <InfoTooltip text={t('images.panels.linkUrlInfo')} />
-                    </Label>
+              <CardContent>
+                <RForm.Stack fluid>
+                  <Group controlId="imageFilename">
+                    <Label>{t('images.panels.filename')}</Label>
                     <Control
-                      name="linkUrl"
-                      value={imageBlock.linkUrl}
+                      name="filename"
+                      value={filename}
                       disabled={isDisabled}
-                      onChange={(value: string) =>
-                        setImageBlock({ ...imageBlock, linkUrl: value })
-                      }
+                      onChange={(value: string) => setFilename(value)}
                     />
                   </Group>
-                )}
 
-                <Group controlId="imageTags">
-                  <Label>{t('images.panels.tags')}</Label>
-                  <TagPicker
-                    virtualized
-                    block
-                    creatable
+                  <Group controlId="imageTitle">
+                    <Label>{t('images.panels.title')}</Label>
+                    <Control
+                      name="title"
+                      value={title}
+                      disabled={isDisabled}
+                      onChange={(value: string) => setTitle(value)}
+                    />
+                  </Group>
+
+                  <Group controlId="imageDescription">
+                    <Label>
+                      {t('images.panels.description')}{' '}
+                      <InfoTooltip text={t('images.panels.descriptionInfo')} />
+                    </Label>
+                    <Control
+                      name="description"
+                      value={description}
+                      disabled={isDisabled}
+                      onChange={(value: string) => setDescription(value)}
+                    />
+                  </Group>
+
+                  {imageBlock && (
+                    <Group controlId="imageLinkUrl">
+                      <Label>
+                        {t('images.panels.linkUrl')}{' '}
+                        <InfoTooltip text={t('images.panels.linkUrlInfo')} />
+                      </Label>
+                      <Control
+                        name="linkUrl"
+                        value={imageBlock.linkUrl}
+                        disabled={isDisabled}
+                        onChange={(value: string) =>
+                          setImageBlock({ ...imageBlock, linkUrl: value })
+                        }
+                      />
+                    </Group>
+                  )}
+
+                  <Group controlId="imageTags">
+                    <Label>{t('images.panels.tags')}</Label>
+                    <TagPicker
+                      virtualized
+                      block
+                      creatable
+                      disabled={isDisabled}
+                      value={tags}
+                      data={tags.map(tag => ({ value: tag, label: tag }))}
+                      onChange={value => setTags(value ?? [])}
+                    />
+                  </Group>
+                </RForm.Stack>
+              </CardContent>
+            </Card>
+
+            <Card variant="outlined">
+              <CardHeader title={t('images.panels.attribution')} />
+
+              <CardContent>
+                <Group controlId="imageSource">
+                  <Label>{t('images.panels.source')}</Label>
+                  <Control
+                    name="source"
+                    value={source}
                     disabled={isDisabled}
-                    value={tags}
-                    data={tags.map(tag => ({ value: tag, label: tag }))}
-                    onChange={value => setTags(value ?? [])}
+                    onChange={(value: string) => setSource(value)}
                   />
                 </Group>
-              </RForm.Stack>
-            </RPanel>
-
-            <RPanel header={t('images.panels.attribution')}>
-              <Group controlId="imageSource">
-                <Label>{t('images.panels.source')}</Label>
-                <Control
-                  name="source"
-                  value={source}
-                  disabled={isDisabled}
-                  onChange={(value: string) => setSource(value)}
-                />
-              </Group>
-              <Group controlId="imageLink">
-                <Label>{t('images.panels.link')}</Label>
-                <Control
-                  name="link"
-                  value={link}
-                  placeholder={t('images.panels.urlPlaceholder')}
-                  disabled={isDisabled}
-                  onChange={(value: string) => setLink(value)}
-                />
-                <p>{t('images.panels.sourceLink')}</p>
-              </Group>
-              <Group controlId="imageLicense">
-                <Label>{t('images.panels.license')}</Label>
-                <Control
-                  name="license"
-                  value={license}
-                  disabled={isDisabled}
-                  onChange={(value: string) => setLicense(value)}
-                />
-              </Group>
-            </RPanel>
+                <Group controlId="imageLink">
+                  <Label>{t('images.panels.link')}</Label>
+                  <Control
+                    name="link"
+                    value={link}
+                    placeholder={t('images.panels.urlPlaceholder')}
+                    disabled={isDisabled}
+                    onChange={(value: string) => setLink(value)}
+                  />
+                  <p>{t('images.panels.sourceLink')}</p>
+                </Group>
+                <Group controlId="imageLicense">
+                  <Label>{t('images.panels.license')}</Label>
+                  <Control
+                    name="license"
+                    value={license}
+                    disabled={isDisabled}
+                    onChange={(value: string) => setLicense(value)}
+                  />
+                </Group>
+              </CardContent>
+            </Card>
           </>
         )}
-      </Drawer.Body>
+      </DrawerBody>
     </Form>
   );
 }

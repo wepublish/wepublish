@@ -19,29 +19,28 @@ import {
   SelectPaywall,
   useAuthorisation,
   useUnsavedChangesDialog,
+  enqueueSnackbar,
 } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdCancel, MdSave, MdWarning } from 'react-icons/md';
+import { Form, InputGroup, NumberInput, Schema } from 'rsuite';
+import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon';
 import {
   Button,
-  Col,
-  Form,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  CardContent,
+  CardHeader,
+  Switch,
+  FormControlLabel,
+  Card as MuiCard,
   Grid,
-  IconButton,
-  InputGroup,
-  NumberInput,
-  Modal,
-  Notification,
-  Panel as RPanel,
-  Row,
-  Schema,
-  toaster,
-  Toggle,
-} from 'rsuite';
-import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon';
+} from '@mui/material';
 
-const Panel = styled(RPanel)`
+const Panel = styled(MuiCard)`
   margin-bottom: 16px;
 `;
 
@@ -229,26 +228,18 @@ function SettingList() {
 
     try {
       await Promise.all(batchedUpdates);
-      toaster.push(
-        <Notification
-          header={t('settingList.successTitle')}
-          type="success"
-          duration={2000}
-        >
-          {t('settingList.successMessage')}
-        </Notification>
-      );
+      enqueueSnackbar(t('settingList.successMessage'), {
+        variant: 'success',
+        title: t('settingList.successTitle'),
+        autoHideDuration: 2000,
+      });
       await refetch();
     } catch (error) {
-      toaster.push(
-        <Notification
-          type="error"
-          header={t('settingList.errorTitle')}
-          duration={2000}
-        >
-          {t('toast.updateError')}
-        </Notification>
-      );
+      enqueueSnackbar(t('toast.updateError'), {
+        variant: 'error',
+        title: t('settingList.errorTitle'),
+        autoHideDuration: 2000,
+      });
     }
   }
 
@@ -268,15 +259,11 @@ function SettingList() {
     const error = updateSettingError ?? fetchError;
 
     if (error)
-      toaster.push(
-        <Notification
-          type="error"
-          header={t('settingList.errorTitle')}
-          duration={2000}
-        >
-          {humanizeError(error)}
-        </Notification>
-      );
+      enqueueSnackbar(humanizeError(error), {
+        variant: 'error',
+        title: t('settingList.errorTitle'),
+        autoHideDuration: 2000,
+      });
   }, [fetchError, t, updateSettingError]);
 
   const { NumberType } = Schema.Types;
@@ -388,14 +375,18 @@ function SettingList() {
 
   const renderToggle = (name: SettingName, info: string) => (
     <Form.Group controlId={name}>
-      <Toggle
-        disabled={isDisabled}
-        checked={settings[name].value as boolean}
-        onChange={checked =>
-          setSetting({
-            ...settings[name],
-            value: checked,
-          })
+      <FormControlLabel
+        control={
+          <Switch
+            disabled={isDisabled}
+            checked={settings[name].value as boolean}
+            onChange={(_event, checked) =>
+              setSetting({
+                ...settings[name],
+                value: checked,
+              })
+            }
+          />
         }
         label={
           <SettingLabel
@@ -459,250 +450,313 @@ function SettingList() {
                 qualifyingPermissions={['CAN_UPDATE_SETTINGS']}
               >
                 {/* cancel btn */}
-                <IconButton
-                  icon={<MdCancel />}
+                <Button
+                  variant="outlined"
+                  startIcon={<MdCancel />}
                   onClick={() => handleCancel()}
                   type="reset"
-                  size="lg"
-                  appearance="default"
+                  size="large"
                   disabled={isDisabled || changedSetting.length === 0}
                 >
                   {t('cancel')}
-                </IconButton>
+                </Button>
                 {/* save btn */}
-                <IconButton
-                  icon={<MdSave />}
+                <Button
+                  variant="contained"
+                  startIcon={<MdSave />}
                   type="submit"
-                  size="lg"
-                  appearance="primary"
+                  size="large"
                   disabled={isDisabled || changedSetting.length === 0}
                 >
                   {t('save')}
-                </IconButton>
+                </Button>
               </PermissionControl>
             </ListViewActions>
           </ListViewContainer>
 
-          <Grid fluid>
-            <Row>
+          <Grid
+            container
+            spacing={2}
+          >
+            <Grid
+              container
+              spacing={2}
+            >
               {/* first column */}
-              <Col xs={12}>
-                <Row>
+              <Grid size={{ xs: 6 }}>
+                <Grid
+                  container
+                  spacing={2}
+                >
                   {/* comments */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.comments')}
-                    >
-                      <Form.Stack fluid>
-                        {renderToggle(
-                          SettingName.AllowGuestCommenting,
-                          t('settingList.warnings.guestCommenting')
-                        )}
+                  <Grid size={{ xs: 12 }}>
+                    <Panel>
+                      <CardContent>
+                        <CardContent>
+                          <CardHeader title={t('settingList.comments')} />
 
-                        {/* Allow guest rating of a comment */}
-                        {renderToggle(
-                          SettingName.AllowGuestCommentRating,
-                          t('settingList.warnings.guestCommentRating')
-                        )}
+                          <CardContent>
+                            <Form.Stack fluid>
+                              {renderToggle(
+                                SettingName.AllowGuestCommenting,
+                                t('settingList.warnings.guestCommenting')
+                              )}
 
-                        {/* Allow editing of a comment */}
-                        {renderToggle(
-                          SettingName.AllowCommentEditing,
-                          t('settingList.info.allowCommentEditing')
-                        )}
+                              {/* Allow guest rating of a comment */}
+                              {renderToggle(
+                                SettingName.AllowGuestCommentRating,
+                                t('settingList.warnings.guestCommentRating')
+                              )}
 
-                        {/* Comment char limit */}
-                        {renderNumberInput(
-                          SettingName.CommentCharLimit,
-                          t('settingList.info.commentCharLimit')
-                        )}
-                      </Form.Stack>
+                              {/* Allow editing of a comment */}
+                              {renderToggle(
+                                SettingName.AllowCommentEditing,
+                                t('settingList.info.allowCommentEditing')
+                              )}
+
+                              {/* Comment char limit */}
+                              {renderNumberInput(
+                                SettingName.CommentCharLimit,
+                                t('settingList.info.commentCharLimit')
+                              )}
+                            </Form.Stack>
+                          </CardContent>
+                        </CardContent>
+                      </CardContent>
                     </Panel>
-                  </Col>
+                  </Grid>
 
                   {/* polls */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.polls')}
-                    >
-                      <Form.Stack fluid>
-                        {renderToggle(
-                          SettingName.AllowGuestPollVoting,
-                          t('settingList.warnings.guestPollVote')
-                        )}
-                      </Form.Stack>
+                  <Grid size={{ xs: 12 }}>
+                    <Panel>
+                      <CardContent>
+                        <CardContent>
+                          <CardHeader title={t('settingList.polls')} />
+
+                          <CardContent>
+                            <Form.Stack fluid>
+                              {renderToggle(
+                                SettingName.AllowGuestPollVoting,
+                                t('settingList.warnings.guestPollVote')
+                              )}
+                            </Form.Stack>
+                          </CardContent>
+                        </CardContent>
+                      </CardContent>
                     </Panel>
-                  </Col>
+                  </Grid>
 
                   {/* Memberships */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.memberships')}
-                    >
-                      <Form.Stack fluid>
-                        {renderToggle(
-                          SettingName.MakeNewSubscribersApiPublic,
-                          t('settingList.info.newSubscriptionsApiPublic')
-                        )}
+                  <Grid size={{ xs: 12 }}>
+                    <Panel>
+                      <CardContent>
+                        <CardContent>
+                          <CardHeader title={t('settingList.memberships')} />
 
-                        {renderToggle(
-                          SettingName.MakeActiveSubscribersApiPublic,
-                          t('settingList.info.activeSubscriptionsApiPublic')
-                        )}
+                          <CardContent>
+                            <Form.Stack fluid>
+                              {renderToggle(
+                                SettingName.MakeNewSubscribersApiPublic,
+                                t('settingList.info.newSubscriptionsApiPublic')
+                              )}
 
-                        {renderToggle(
-                          SettingName.MakeRenewingSubscribersApiPublic,
-                          t('settingList.info.renewingSubscriptionsApiPublic')
-                        )}
+                              {renderToggle(
+                                SettingName.MakeActiveSubscribersApiPublic,
+                                t(
+                                  'settingList.info.activeSubscriptionsApiPublic'
+                                )
+                              )}
 
-                        {renderToggle(
-                          SettingName.MakeNewDeactivationsApiPublic,
-                          t('settingList.info.newDeactivationsApiPublic')
-                        )}
+                              {renderToggle(
+                                SettingName.MakeRenewingSubscribersApiPublic,
+                                t(
+                                  'settingList.info.renewingSubscriptionsApiPublic'
+                                )
+                              )}
 
-                        {renderToggle(
-                          SettingName.MakeExpectedRevenueApiPublic,
-                          t('settingList.info.expectedRevenueApiPublic')
-                        )}
+                              {renderToggle(
+                                SettingName.MakeNewDeactivationsApiPublic,
+                                t('settingList.info.newDeactivationsApiPublic')
+                              )}
 
-                        {renderToggle(
-                          SettingName.MakeRevenueApiPublic,
-                          t('settingList.info.revenueApiPublic')
-                        )}
-                      </Form.Stack>
+                              {renderToggle(
+                                SettingName.MakeExpectedRevenueApiPublic,
+                                t('settingList.info.expectedRevenueApiPublic')
+                              )}
+
+                              {renderToggle(
+                                SettingName.MakeRevenueApiPublic,
+                                t('settingList.info.revenueApiPublic')
+                              )}
+                            </Form.Stack>
+                          </CardContent>
+                        </CardContent>
+                      </CardContent>
                     </Panel>
-                  </Col>
+                  </Grid>
 
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.subscriptionPlans')}
-                    >
-                      <Form.Stack fluid>
-                        {renderToggle(
-                          SettingName.SubscriptionUpgradeBillsFullDifference,
-                          t('settingList.warnings.subscriptionUpgradeModel')
-                        )}
-                      </Form.Stack>
+                  <Grid size={{ xs: 12 }}>
+                    <Panel>
+                      <CardContent>
+                        <CardContent>
+                          <CardHeader
+                            title={t('settingList.subscriptionPlans')}
+                          />
+
+                          <CardContent>
+                            <Form.Stack fluid>
+                              {renderToggle(
+                                SettingName.SubscriptionUpgradeBillsFullDifference,
+                                t(
+                                  'settingList.warnings.subscriptionUpgradeModel'
+                                )
+                              )}
+                            </Form.Stack>
+                          </CardContent>
+                        </CardContent>
+                      </CardContent>
                     </Panel>
-                  </Col>
-                </Row>
-              </Col>
+                  </Grid>
+                </Grid>
+              </Grid>
 
               {/* second column */}
-              <Col xs={12}>
-                <Row>
+              <Grid size={{ xs: 6 }}>
+                <Grid
+                  container
+                  spacing={2}
+                >
                   {/* login */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.login')}
-                    >
-                      <Form.Stack fluid>
-                        {renderNumberInput(
-                          SettingName.SessionTtlDays,
-                          t('settingList.warnings.sessionTtlDays'),
-                          t('settingList.days')
-                        )}
+                  <Grid size={{ xs: 12 }}>
+                    <Panel>
+                      <CardContent>
+                        <CardContent>
+                          <CardHeader title={t('settingList.login')} />
 
-                        {renderNumberInput(
-                          SettingName.SendLoginJwtExpiresMin,
-                          t('settingList.info.loginMinutes'),
-                          t('settingList.minutes')
-                        )}
+                          <CardContent>
+                            <Form.Stack fluid>
+                              {renderNumberInput(
+                                SettingName.SessionTtlDays,
+                                t('settingList.warnings.sessionTtlDays'),
+                                t('settingList.days')
+                              )}
 
-                        {renderNumberInput(
-                          SettingName.ResetPasswordJwtExpiresMin,
-                          t('settingList.info.passwordToken'),
-                          t('settingList.minutes')
-                        )}
-                      </Form.Stack>
+                              {renderNumberInput(
+                                SettingName.SendLoginJwtExpiresMin,
+                                t('settingList.info.loginMinutes'),
+                                t('settingList.minutes')
+                              )}
+
+                              {renderNumberInput(
+                                SettingName.ResetPasswordJwtExpiresMin,
+                                t('settingList.info.passwordToken'),
+                                t('settingList.minutes')
+                              )}
+                            </Form.Stack>
+                          </CardContent>
+                        </CardContent>
+                      </CardContent>
                     </Panel>
-                  </Col>
+                  </Grid>
 
                   {/* peering */}
-                  <Col xs={24}>
-                    <Panel
-                      bordered
-                      header={t('settingList.peering')}
-                    >
-                      <Form.Stack fluid>
-                        {renderNumberInput(
-                          SettingName.PeeringTimeoutMs,
-                          t('settingList.info.peerToken'),
-                          t('settingList.ms')
-                        )}
-                      </Form.Stack>
+                  <Grid size={{ xs: 12 }}>
+                    <Panel>
+                      <CardContent>
+                        <CardContent>
+                          <CardHeader title={t('settingList.peering')} />
+
+                          <CardContent>
+                            <Form.Stack fluid>
+                              {renderNumberInput(
+                                SettingName.PeeringTimeoutMs,
+                                t('settingList.info.peerToken'),
+                                t('settingList.ms')
+                              )}
+                            </Form.Stack>
+                          </CardContent>
+                        </CardContent>
+                      </CardContent>
                     </Panel>
-                  </Col>
-                </Row>
+                  </Grid>
+                </Grid>
 
                 {/* articlePage */}
-                <Col xs={24}>
-                  <Panel
-                    bordered
-                    header={t('settingList.articlePage')}
-                  >
-                    <Form.Stack fluid>
-                      {renderToggle(
-                        SettingName.NewArticlePeering,
-                        t('settingList.warnings.newArticlePeering')
-                      )}
+                <Grid size={{ xs: 12 }}>
+                  <Panel>
+                    <CardContent>
+                      <CardContent>
+                        <CardHeader title={t('settingList.articlePage')} />
 
-                      <Form.Group controlId={SettingName.NewArticlePaywall}>
-                        <Form.Label>
-                          <SettingLabel
-                            label={t(
-                              settings[SettingName.NewArticlePaywall].label
+                        <CardContent>
+                          <Form.Stack fluid>
+                            {renderToggle(
+                              SettingName.NewArticlePeering,
+                              t('settingList.warnings.newArticlePeering')
                             )}
-                            info={t('settingList.warnings.newArticlePaywall')}
-                          />
-                        </Form.Label>
 
-                        <SelectPaywall
-                          disabled={isDisabled}
-                          selectedPaywall={
-                            settings[SettingName.NewArticlePaywall].value as
-                              | string
-                              | null
-                          }
-                          setSelectedPaywall={paywall =>
-                            setSetting({
-                              ...settings[SettingName.NewArticlePaywall],
-                              value: paywall,
-                            })
-                          }
-                        />
-                      </Form.Group>
+                            <Form.Group
+                              controlId={SettingName.NewArticlePaywall}
+                            >
+                              <Form.Label>
+                                <SettingLabel
+                                  label={t(
+                                    settings[SettingName.NewArticlePaywall]
+                                      .label
+                                  )}
+                                  info={t(
+                                    'settingList.warnings.newArticlePaywall'
+                                  )}
+                                />
+                              </Form.Label>
 
-                      {renderToggle(
-                        SettingName.ShowPendingWhenNotPublished,
-                        t('settingList.warnings.showPendingWhenNotPublished')
-                      )}
-                    </Form.Stack>
+                              <SelectPaywall
+                                disabled={isDisabled}
+                                selectedPaywall={
+                                  settings[SettingName.NewArticlePaywall]
+                                    .value as string | null
+                                }
+                                setSelectedPaywall={paywall =>
+                                  setSetting({
+                                    ...settings[SettingName.NewArticlePaywall],
+                                    value: paywall,
+                                  })
+                                }
+                              />
+                            </Form.Group>
+
+                            {renderToggle(
+                              SettingName.ShowPendingWhenNotPublished,
+                              t(
+                                'settingList.warnings.showPendingWhenNotPublished'
+                              )
+                            )}
+                          </Form.Stack>
+                        </CardContent>
+                      </CardContent>
+                    </CardContent>
                   </Panel>
-                </Col>
-              </Col>
-            </Row>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
         </Form>
 
-        <Modal
+        <Dialog
+          fullWidth
           open={showWarning}
-          backdrop="static"
-          size="xs"
+          maxWidth="xs"
           onClose={() => setShowWarning(false)}
         >
-          <Modal.Title>
+          <DialogTitle>
             {t('invoice.areYouSure')}
             <WarningIcon />
-          </Modal.Title>
+          </DialogTitle>
 
-          <Modal.Body>{t('settingList.warnings.askOperators')}</Modal.Body>
-          <Modal.Body>
+          <DialogContent>
+            {t('settingList.warnings.askOperators')}
+          </DialogContent>
+          <DialogContent>
             <DescriptionList>
               {changedSetting.map(setting => (
                 <DescriptionListItemWrapper
@@ -714,24 +768,24 @@ function SettingList() {
                 </DescriptionListItemWrapper>
               ))}
             </DescriptionList>
-          </Modal.Body>
+          </DialogContent>
 
-          <Modal.Footer>
+          <DialogActions>
             <Button
-              appearance="primary"
+              variant="contained"
               onClick={handleSettingListUpdate}
             >
               {t('confirm')}
             </Button>
 
             <Button
-              appearance="subtle"
+              variant="text"
               onClick={() => setShowWarning(false)}
             >
               {t('cancel')}
             </Button>
-          </Modal.Footer>
-        </Modal>
+          </DialogActions>
+        </Dialog>
       </>
     )
   );

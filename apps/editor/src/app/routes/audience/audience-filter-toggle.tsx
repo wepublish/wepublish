@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import { Dispatch, SetStateAction } from 'react';
+import { FormControlLabel, Switch } from '@mui/material';
 import { InfoTooltip } from '@wepublish/ui/editor';
+import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Toggle } from 'rsuite';
 
 import { useAudienceChartColors } from './audience-chart';
 import { AudienceClientFilter } from './audience-filter-params';
@@ -46,23 +46,27 @@ export function AudienceFilterToggle({
 
   return (
     <ToggleRow>
-      <Toggle
-        checked={clientFilter[filterKey as keyof AudienceClientFilter]}
+      <FormControlLabel
+        control={
+          <Switch
+            checked={clientFilter[filterKey as keyof AudienceClientFilter]}
+            onChange={(_event, checked: boolean) =>
+              setClientFilter({
+                ...clientFilter,
+                [filterKey]: checked,
+              })
+            }
+          />
+        }
         label={
           <ToggleLabel>
             <Swatch color={chartColor} />
             {t(`audience.legend.${filterKey}`)}
             <InfoTooltip
               text={t(`audience.legend.info.${filterKey}`)}
-              placement="rightStart"
+              placement="right-start"
             />
           </ToggleLabel>
-        }
-        onChange={(checked: boolean) =>
-          setClientFilter({
-            ...clientFilter,
-            [filterKey]: checked,
-          })
         }
       />
     </ToggleRow>

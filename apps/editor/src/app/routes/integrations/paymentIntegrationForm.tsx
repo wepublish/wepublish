@@ -1,7 +1,7 @@
 import {
   CreatePaymentProviderSettingDocument,
-  getSettings,
   DeletePaymentProviderSettingDocument,
+  getSettings,
   PaymentMethodMollie,
   PaymentProviderSettingsDocument,
   PaymentProviderType,

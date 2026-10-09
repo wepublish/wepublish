@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import {
   AuthorListDocument,
   CreateAuthorDocument,
@@ -8,7 +9,7 @@ import {
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, CheckPicker } from 'rsuite';
+import { CheckPicker } from 'rsuite';
 
 import { PeerAvatar } from '../atoms/peer/peerAvatar';
 import { getOperationNameFromDocument } from '../utility';
@@ -70,6 +71,7 @@ export function AuthorCheckPicker({
 
   return (
     <CheckPicker
+      block
       disabled={disabled}
       virtualized
       cleanable
@@ -92,7 +94,6 @@ export function AuthorCheckPicker({
       onExit={() => {
         setAuthorsFilter('');
       }}
-      block
       renderOption={(label, item) => {
         const peer = foundAuthors.find(
           author => author.id === item.value
@@ -105,8 +106,8 @@ export function AuthorCheckPicker({
         !data?.authors.nodes.length && (
           <ButtonWrapper>
             <Button
+              variant="contained"
               onClick={() => handleCreateAuthor()}
-              appearance="primary"
             >
               {t('articles.panels.createAuthorProfile', {
                 name: authorsFilter,

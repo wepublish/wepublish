@@ -4,8 +4,9 @@ import {
   CrowdfundingGoalType,
 } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
-import { Button, Col, Form, Grid, Row } from 'rsuite';
+import { Form } from 'rsuite';
 import { CurrencyInput } from '@wepublish/ui/editor';
+import { Button, Grid } from '@mui/material';
 
 interface CrowdfundingGoalListProps {
   goalType: CrowdfundingGoalType;
@@ -35,37 +36,48 @@ export const CrowdfundingGoalList = ({
 
   return (
     <>
-      <Grid fluid>
-        <Row>
-          <Col xs={5}>{t('crowdfunding.goalsForm.title')}</Col>
-          <Col xs={5}>{t('crowdfunding.goalsForm.description')}</Col>
-          <Col xs={5}>
+      <Grid
+        container
+        spacing={2}
+      >
+        <Grid
+          container
+          spacing={2}
+        >
+          <Grid size={{ xs: 3 }}>{t('crowdfunding.goalsForm.title')}</Grid>
+          <Grid size={{ xs: 3 }}>
+            {t('crowdfunding.goalsForm.description')}
+          </Grid>
+          <Grid size={{ xs: 3 }}>
             {goalType === CrowdfundingGoalType.Subscription ?
               t('crowdfunding.goalsForm.amountSubscriptions')
             : t('crowdfunding.goalsForm.amount')}
-          </Col>
-          <Col xs={4}>{t('action')}</Col>
-        </Row>
+          </Grid>
+          <Grid size={{ xs: 2 }}>{t('action')}</Grid>
+        </Grid>
 
         {goals.map((goal, index) => (
-          <Row>
-            <Col xs={5}>
+          <Grid
+            container
+            spacing={2}
+          >
+            <Grid size={{ xs: 3 }}>
               <Form.Control
                 name="goalTitle"
                 value={goal.title}
                 onChange={value => handleChange(index, 'title', value)}
               />
-            </Col>
+            </Grid>
 
-            <Col xs={5}>
+            <Grid size={{ xs: 3 }}>
               <Form.Control
                 name="goalDescription"
                 value={goal.description}
                 onChange={value => handleChange(index, 'description', value)}
               />
-            </Col>
+            </Grid>
 
-            <Col xs={5}>
+            <Grid size={{ xs: 3 }}>
               {goalType === CrowdfundingGoalType.Revenue && (
                 <CurrencyInput
                   name="goalAmount"
@@ -85,25 +97,32 @@ export const CrowdfundingGoalList = ({
                   }
                 />
               )}
-            </Col>
+            </Grid>
 
-            <Col xs={4}>
-              <Button onClick={() => onRemove(index)}>
+            <Grid size={{ xs: 2 }}>
+              <Button
+                variant="outlined"
+                onClick={() => onRemove(index)}
+              >
                 {t('crowdfunding.goalsForm.remove')}
               </Button>
-            </Col>
-          </Row>
+            </Grid>
+          </Grid>
         ))}
 
-        <Row>
-          <Col xs={24}>
+        <Grid
+          container
+          spacing={2}
+        >
+          <Grid size={{ xs: 12 }}>
             <Button
+              variant="outlined"
               onClick={() => onAdd({ title: '', description: '', amount: 0 })}
             >
               {t('crowdfunding.goalsForm.add')}
             </Button>
-          </Col>
-        </Row>
+          </Grid>
+        </Grid>
       </Grid>
     </>
   );

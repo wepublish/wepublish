@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
+import { IconButton as MuiIconButton } from '@mui/material';
 import { ComponentProps, useCallback, useRef, useState } from 'react';
-import { IconButton as RIconButton, Table as RTable } from 'rsuite';
+import { Table as RTable } from 'rsuite';
 
 import { StateColor } from '../utility';
 import { fitColumnWidths } from './fit-column-widths';
 import { ListViewFilters } from './list-view-filters';
 
+// Still rsuite: the list views below have not moved to DataTable yet.
 const { Cell } = RTable;
 
 export const ListViewContainer = styled.div`
@@ -73,7 +75,7 @@ export const IconButtonCell = styled(RTable.Cell)`
   }
 `;
 
-export const IconButton = styled(RIconButton)`
+export const IconButton = styled(MuiIconButton)`
   &&:not([data-with-text]) {
     width: 36px;
     height: 36px;

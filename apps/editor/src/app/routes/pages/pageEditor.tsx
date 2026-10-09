@@ -1,12 +1,16 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Badge,
   Button as MuiButton,
+  Dialog,
   Dialog as MuiDialog,
   DialogActions as MuiDialogActions,
   DialogContent as MuiDialogContent,
   DialogContentText as MuiDialogContentText,
   DialogTitle as MuiDialogTitle,
+  Drawer,
+  IconButton,
 } from '@mui/material';
 import {
   CreateJwtForWebsiteLoginDocument,
@@ -29,10 +33,12 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   DocumentUrlProvider,
+  DRAWER_WIDTHS,
   EditorHeader,
   EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
+  enqueueSnackbar,
   mapBlockValueToBlockInput,
   PageMetadata,
   PageMetadataPanel,
@@ -59,15 +65,6 @@ import {
   MdSave,
 } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import {
-  Badge,
-  Drawer,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Notification,
-  toaster,
-} from 'rsuite';
 
 import { LastSavedAt } from '../../lastSavedAt';
 import {
@@ -356,16 +353,7 @@ function PageEditor() {
       restoreError?.message ??
       discardError?.message;
     if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
   }, [
     createError,
     updateError,
@@ -390,14 +378,11 @@ function PageEditor() {
       setChanged(false);
       await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
 
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('discardDraft.success')}
-          duration={2000}
-        />,
-        { placement: 'topEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('discardDraft.success'),
+        autoHideDuration: 2000,
+      });
     }
   }
 
@@ -420,14 +405,11 @@ function PageEditor() {
         setChanged(false);
         await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
 
-        toaster.push(
-          <Notification
-            type="success"
-            header={t('versionHistory.restored')}
-            duration={2000}
-          />,
-          { placement: 'topEnd' }
-        );
+        enqueueSnackbar('', {
+          variant: 'success',
+          title: t('versionHistory.restored'),
+          autoHideDuration: 2000,
+        });
 
         setVersionHistoryOpen(false);
       }
@@ -472,17 +454,12 @@ function PageEditor() {
       reason === 'publish' ?
         t('pageEditor.publishValidationFailed')
       : t('pageEditor.saveValidationFailed');
-    toaster.push(
-      <Message
-        type="error"
-        showIcon={false}
-        closable
-        duration={8000}
-      >
+    enqueueSnackbar(
+      <>
         <strong>{header}</strong>
         <div>{summaries || t('pageEditor.validationFailedGeneric')}</div>
-      </Message>,
-      { placement: 'topEnd' }
+      </>,
+      { variant: 'error', autoHideDuration: 8000 }
     );
     return false;
   }
@@ -499,14 +476,11 @@ function PageEditor() {
       skipRepopulate.current = false;
       markSaved();
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('pageEditor.overview.pageDraftSaved')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('pageEditor.overview.pageDraftSaved'),
+        autoHideDuration: 2000,
+      });
       await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
     } else {
       const { data } = await createPage({ variables: input });
@@ -515,14 +489,11 @@ function PageEditor() {
         navigate(`/pages/edit/${data?.createPage.id}`, { replace: true });
       }
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('pageEditor.overview.pageDraftCreated')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('pageEditor.overview.pageDraftCreated'),
+        autoHideDuration: 2000,
+      });
     }
   }
 
@@ -546,14 +517,11 @@ function PageEditor() {
       setChanged(false);
     }
 
-    toaster.push(
-      <Notification
-        type="success"
-        header={t('pageEditor.overview.pageDraftAutosaved')}
-        duration={2000}
-      />,
-      { placement: 'bottomEnd' }
-    );
+    enqueueSnackbar('', {
+      variant: 'success',
+      title: t('pageEditor.overview.pageDraftAutosaved'),
+      autoHideDuration: 2000,
+    });
     await reloadRevisions();
   }
 
@@ -592,32 +560,23 @@ function PageEditor() {
     }
 
     setChanged(false);
-    toaster.push(
-      <Notification
-        type="success"
-        header={t(
-          publishedAt <= new Date() ?
-            'pageEditor.overview.pagePublished'
-          : 'pageEditor.overview.pagePending'
-        )}
-        duration={2000}
-      />,
-      { placement: 'bottomEnd' }
-    );
+    enqueueSnackbar('', {
+      variant: 'success',
+      title: t(
+        publishedAt <= new Date() ?
+          'pageEditor.overview.pagePublished'
+        : 'pageEditor.overview.pagePending'
+      ),
+      autoHideDuration: 2000,
+    });
   }
 
   useEffect(() => {
     if (isNotFound) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {t('pageEditor.overview.pageNotFound')}
-        </Message>
-      );
+      enqueueSnackbar(t('pageEditor.overview.pageNotFound'), {
+        variant: 'error',
+        autoHideDuration: null,
+      });
     }
   }, [isNotFound, t]);
 
@@ -632,22 +591,21 @@ function PageEditor() {
             meta={<LastSavedAt date={pageData?.page?.latest.createdAt} />}
             back={
               <Link to="/pages">
-                <RIconButton
-                  circle
-                  appearance="subtle"
-                  icon={<MdKeyboardBackspace />}
+                <IconButton
                   title={t('back')}
                   aria-label={t('back')}
                   onClick={e => {
                     if (!unsavedChangesDialog()) e.preventDefault();
                   }}
-                />
+                >
+                  <MdKeyboardBackspace />
+                </IconButton>
               </Link>
             }
             secondaryActions={
               <>
                 <EditorHeaderButton
-                  appearance="subtle"
+                  variant="text"
                   icon={<MdIntegrationInstructions />}
                   label={t('pageEditor.overview.metadata')}
                   disabled={isDisabled}
@@ -658,7 +616,7 @@ function PageEditor() {
                   <>
                     <PermissionControl qualifyingPermissions={['CAN_GET_PAGE']}>
                       <EditorHeaderButton
-                        appearance="subtle"
+                        variant="text"
                         icon={<MdHistory />}
                         label={t('versionHistory.title')}
                         disabled={isDisabled}
@@ -677,7 +635,7 @@ function PageEditor() {
                         qualifyingPermissions={['CAN_CREATE_PAGE']}
                       >
                         <EditorHeaderButton
-                          appearance="subtle"
+                          variant="text"
                           icon={<MdDeleteOutline />}
                           label={t('discardDraft.button')}
                           disabled={isDisabled}
@@ -698,8 +656,8 @@ function PageEditor() {
                   )}
 
                   <EditorHeaderButton
+                    variant="outlined"
                     className="actionButton"
-                    appearance={showPreview ? 'ghost' : 'subtle'}
                     icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
                     label={
                       showPreview ?
@@ -716,7 +674,7 @@ function PageEditor() {
               isNew && createData == null ?
                 <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
                   <EditorHeaderButton
-                    appearance="primary"
+                    variant="contained"
                     icon={<MdSave />}
                     label={t('create')}
                     collapse={false}
@@ -725,8 +683,13 @@ function PageEditor() {
                   />
                 </PermissionControl>
               : <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
-                  <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+                  <Badge
+                    variant="dot"
+                    color="warning"
+                    invisible={!hasChanged}
+                  >
                     <EditorHeaderButton
+                      variant="outlined"
                       icon={<MdSave />}
                       label={t('save')}
                       collapse="sm"
@@ -739,14 +702,14 @@ function PageEditor() {
                     qualifyingPermissions={['CAN_PUBLISH_PAGE']}
                   >
                     <Badge
-                      className={
-                        pageData?.page?.draft || !pageData?.page?.published ?
-                          'unsaved'
-                        : 'saved'
+                      variant="dot"
+                      color="warning"
+                      invisible={
+                        !pageData?.page?.draft && !!pageData?.page?.published
                       }
                     >
                       <EditorHeaderButton
-                        appearance="primary"
+                        variant="contained"
                         icon={<MdCloudUpload />}
                         label={t('pageEditor.overview.publish')}
                         collapse={false}
@@ -777,15 +740,9 @@ function PageEditor() {
               return jwtData?.createJWTForWebsiteLogin?.token;
             }}
             onSilence={() =>
-              toaster.push(
-                <Message
-                  type="warning"
-                  showIcon
-                  closable
-                >
-                  {t('previewHandshake.notResponding')}
-                </Message>
-              )
+              enqueueSnackbar(t('previewHandshake.notResponding'), {
+                variant: 'warning',
+              })
             }
           />
         )}
@@ -812,8 +769,18 @@ function PageEditor() {
       </EditorTemplate>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isMetaDrawerOpen}
-        size="sm"
         onClose={() => setMetaDrawerOpen(false)}
       >
         <PageMetadataPanel
@@ -830,9 +797,10 @@ function PageEditor() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={isPublishDialogOpen}
-        size="sm"
+        maxWidth="sm"
         onClose={() => setPublishDialogOpen(false)}
       >
         <PublishPagePanel
@@ -844,7 +812,7 @@ function PageEditor() {
             setPublishDialogOpen(false);
           }}
         />
-      </Modal>
+      </Dialog>
 
       <VersionHistory
         open={isVersionHistoryOpen}

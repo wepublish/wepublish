@@ -14,6 +14,9 @@ import * as v2Client from '@wepublish/editor/api';
 import { AuthContext, sessionWithPermissions } from '@wepublish/ui/editor';
 import { BrowserRouter } from 'react-router-dom';
 import ImportableEventListView from './importable-event-list';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme();
 
 vi.mock('node-fetch', () => ({ default: vi.fn() }));
 
@@ -157,32 +160,24 @@ describe('ImportableEventListView', () => {
 
   test('renders the event list view with events', async () => {
     const { asFragment } = render(
-      <AuthContext.Provider value={sessionWithPermissions}>
-        <MockedProviderBase
-          mocks={mocks}
-          addTypename={false}
-        >
-          <BrowserRouter>
-            <ImportableEventListView />
-          </BrowserRouter>
-        </MockedProviderBase>
-      </AuthContext.Provider>
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProviderBase
+            mocks={mocks}
+            addTypename={false}
+          >
+            <BrowserRouter>
+              <ImportableEventListView />
+            </BrowserRouter>
+          </MockedProviderBase>
+        </AuthContext.Provider>
+      </ThemeProvider>
     );
 
     // Apollo Client 4 delivers results a tick later than v3, and the view
-    // issues a second query, so wait for the rows AND for the table to leave
-    // its loading state — snapshotting on the rows alone is racy.
+    // issues a second query, so wait for the rows before snapshotting.
     expect(await screen.findByText('Event 1')).toBeInTheDocument();
-    await waitFor(() =>
-      expect(screen.getByRole('grid')).toHaveAttribute('aria-busy', 'false')
-    );
-    // rsuite positions the table's scrollbar handle in a later layout pass;
-    // snapshotting before that lands makes the inline style flap.
-    await waitFor(() =>
-      expect(document.querySelector('.rs-table-scrollbar-handle')).toHaveStyle({
-        backfaceVisibility: 'hidden',
-      })
-    );
+    await waitFor(() => expect(screen.getByRole('table')).toBeInTheDocument());
 
     expect(asFragment()).toMatchSnapshot();
 
@@ -201,16 +196,18 @@ describe('ImportableEventListView', () => {
 
   test('imports an event when import button is clicked', async () => {
     render(
-      <AuthContext.Provider value={sessionWithPermissions}>
-        <MockedProviderBase
-          mocks={mocks}
-          addTypename={false}
-        >
-          <BrowserRouter>
-            <ImportableEventListView />
-          </BrowserRouter>
-        </MockedProviderBase>
-      </AuthContext.Provider>
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProviderBase
+            mocks={mocks}
+            addTypename={false}
+          >
+            <BrowserRouter>
+              <ImportableEventListView />
+            </BrowserRouter>
+          </MockedProviderBase>
+        </AuthContext.Provider>
+      </ThemeProvider>
     );
 
     await waitFor(() => {

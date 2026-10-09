@@ -16,6 +16,17 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
+  Card as MuiCard,
+  CardContent,
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  Radio,
+  RadioGroup,
+  Switch as MuiSwitch,
+  Switch,
+} from '@mui/material';
+import {
   MemberPlanListDocument,
   PaymentPeriodicity,
   ProductType,
@@ -33,26 +44,21 @@ import type { CheckPickerProps } from 'rsuite';
 import {
   Checkbox,
   CheckPicker,
-  IconButton,
   Nav,
   NumberInput,
-  Panel as RPanel,
   Popover as RPopover,
-  Radio,
-  RadioGroup,
   SelectPicker,
   TagInput,
-  Toggle,
-  Whisper,
 } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { InfoTooltip, InfoTrigger } from '../atoms/infoTooltip';
+import { ClickPopover } from '../popover';
 import { getMonthlyEquivalentRange } from '../utility';
 import { SubscribeBlockValue } from './types';
 
-const Panel = styled(RPanel)`
+const Panel = styled(MuiCard)`
   display: grid;
   padding: 0;
   overflow: hidden;
@@ -80,7 +86,8 @@ const Hint = styled('p')`
   color: var(--rs-text-secondary);
 `;
 
-const DisplayOptionRadio = styled(Radio)`
+/** Radio whose label is a block of text, so the dot aligns to the first line. */
+const DisplayOptionRadio = styled(FormControlLabel)`
   --rs-radio-border: var(--rs-gray-600);
 
   .rs-radio-checker > label {
@@ -170,7 +177,7 @@ const PlanStyleRow = styled('div')`
   align-items: center;
 `;
 
-const PlanDefaultToggle = styled(Toggle)`
+const PlanDefaultToggle = styled(MuiSwitch)`
   white-space: nowrap;
 `;
 
@@ -276,10 +283,10 @@ const SortablePlanRow = ({ id, disabled, children }: SortablePlanRowProps) => {
         <IconButtonTooltip caption={t('blocks.subscribe.dragToReorder')}>
           <IconButton
             aria-label={t('blocks.subscribe.dragToReorder')}
-            icon={<MdDragIndicator />}
-            appearance="subtle"
             disabled={disabled}
-          />
+          >
+            <MdDragIndicator />
+          </IconButton>
         </IconButtonTooltip>
       </div>
 
@@ -833,83 +840,100 @@ export const SubscribeBlock = ({
   );
 
   return (
-    <Panel bordered>
-      <Content>
-        <Heading>{t('blocks.subscribe.selectMemberPlans')}</Heading>
+    <Panel>
+      <CardContent>
+        <Content>
+          <Heading>{t('blocks.subscribe.selectMemberPlans')}</Heading>
 
-        <CheckPicker
-          cleanable
-          block
-          disabled={disabled}
-          loading={loading}
-          searchable
-          data={memberPlanOptions}
-          value={value.memberPlanIds}
-          onChange={handleMemberPlansChange}
-          placeholder={t('blocks.subscribe.selectMemberPlansPlaceholder')}
-        />
+          <CheckPicker
+            cleanable
+            block
+            disabled={disabled}
+            loading={loading}
+            searchable
+            data={memberPlanOptions}
+            value={value.memberPlanIds}
+            onChange={handleMemberPlansChange}
+            placeholder={t('blocks.subscribe.selectMemberPlansPlaceholder')}
+          />
 
-        {!!value.memberPlanIds.length && (
-          <Hint>{t('blocks.subscribe.selectMemberPlansSelectionHintAll')}</Hint>
-        )}
+          {!!value.memberPlanIds.length && (
+            <Hint>
+              {t('blocks.subscribe.selectMemberPlansSelectionHintAll')}
+            </Hint>
+          )}
 
-        {!!value.memberPlanRenderSettings.length && (
-          <>
-            <Heading>
-              {t('blocks.subscribe.renderStylesHeading')}{' '}
-              <InfoTooltip text={t('blocks.subscribe.renderStylesHelp')} />
-            </Heading>
+          {!!value.memberPlanRenderSettings.length && (
+            <>
+              <Heading>
+                {t('blocks.subscribe.renderStylesHeading')}{' '}
+                <InfoTooltip text={t('blocks.subscribe.renderStylesHelp')} />
+              </Heading>
 
-            <DndContext
-              sensors={sensors}
-              onDragEnd={handlePlanDragEnd}
-            >
-              <SortableContext
-                items={value.memberPlanRenderSettings.map(
-                  ({ memberPlanId }) => memberPlanId
-                )}
-                strategy={verticalListSortingStrategy}
+              <DndContext
+                sensors={sensors}
+                onDragEnd={handlePlanDragEnd}
               >
-                <SettingRow>
-                  {value.memberPlanRenderSettings.map(plan => (
-                    <SortablePlanRow
-                      key={plan.memberPlanId}
-                      id={plan.memberPlanId}
-                      disabled={disabled}
-                    >
-                      <SettingRowContent>
-                        <PlanStyleRow>
-                          <PlanStyleName
-                            title={
-                              memberPlanOptions.find(
+                <SortableContext
+                  items={value.memberPlanRenderSettings.map(
+                    ({ memberPlanId }) => memberPlanId
+                  )}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <SettingRow>
+                    {value.memberPlanRenderSettings.map(plan => (
+                      <SortablePlanRow
+                        key={plan.memberPlanId}
+                        id={plan.memberPlanId}
+                        disabled={disabled}
+                      >
+                        <SettingRowContent>
+                          <PlanStyleRow>
+                            <PlanStyleName
+                              title={
+                                memberPlanOptions.find(
+                                  ({ value: id }) => id === plan.memberPlanId
+                                )?.label ?? plan.memberPlanId
+                              }
+                            >
+                              {memberPlanOptions.find(
                                 ({ value: id }) => id === plan.memberPlanId
-                              )?.label ?? plan.memberPlanId
-                            }
-                          >
-                            {memberPlanOptions.find(
-                              ({ value: id }) => id === plan.memberPlanId
-                            )?.label ?? plan.memberPlanId}
-                          </PlanStyleName>
+                              )?.label ?? plan.memberPlanId}
+                            </PlanStyleName>
 
-                          <PlanAmountsCell>
-                            <PlanAmounts>
-                              {formatPlanPeriodicityAmounts(
-                                memberPlanById.get(plan.memberPlanId),
-                                memberPlanById.get(plan.memberPlanId)?.currency,
-                                periodicity =>
-                                  t(
-                                    `memberPlanList.paymentPeriodicity.${periodicity}`
-                                  ),
-                                usesMonthlyOnlyDisplay ?
-                                  PaymentPeriodicity.Monthly
-                                : undefined
-                              )}
-                            </PlanAmounts>
+                            <PlanAmountsCell>
+                              <PlanAmounts>
+                                {formatPlanPeriodicityAmounts(
+                                  memberPlanById.get(plan.memberPlanId),
+                                  memberPlanById.get(plan.memberPlanId)
+                                    ?.currency,
+                                  periodicity =>
+                                    t(
+                                      `memberPlanList.paymentPeriodicity.${periodicity}`
+                                    ),
+                                  usesMonthlyOnlyDisplay ?
+                                    PaymentPeriodicity.Monthly
+                                  : undefined
+                                )}
+                              </PlanAmounts>
 
-                            <Whisper
-                              trigger={['hover', 'focus']}
-                              placement="top"
-                              speaker={
+                              <ClickPopover
+                                trigger={
+                                  <InfoTrigger
+                                    aria-label={t(
+                                      'blocks.subscribe.planAmountsTitle'
+                                    )}
+                                  />
+                                }
+                                anchorOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'center',
+                                }}
+                                transformOrigin={{
+                                  vertical: 'bottom',
+                                  horizontal: 'center',
+                                }}
+                              >
                                 <PlanAmountsPopover
                                   title={t('blocks.subscribe.planAmountsTitle')}
                                 >
@@ -930,409 +954,432 @@ export const SubscribeBlock = ({
                                     ))}
                                   </PlanAmountsBreakdown>
                                 </PlanAmountsPopover>
+                              </ClickPopover>
+                            </PlanAmountsCell>
+
+                            <SelectPicker
+                              cleanable={false}
+                              searchable={false}
+                              disabled={disabled}
+                              data={renderLayoutOptions}
+                              value={plan.layout.type}
+                              onChange={renderLayout =>
+                                handlePlanLayoutChange(
+                                  plan.memberPlanId,
+                                  renderLayout
+                                )
                               }
-                            >
-                              <InfoTrigger
-                                aria-label={t(
-                                  'blocks.subscribe.planAmountsTitle'
-                                )}
-                              />
-                            </Whisper>
-                          </PlanAmountsCell>
+                            />
 
-                          <SelectPicker
-                            cleanable={false}
-                            searchable={false}
-                            disabled={disabled}
-                            data={renderLayoutOptions}
-                            value={plan.layout.type}
-                            onChange={renderLayout =>
-                              handlePlanLayoutChange(
-                                plan.memberPlanId,
-                                renderLayout
-                              )
-                            }
-                          />
-
-                          <PlanDefaultToggle
-                            checked={!!plan.isDefault}
-                            disabled={disabled}
-                            label={
-                              <>
-                                {t('blocks.subscribe.defaultPlanLabel')}{' '}
-                                <InfoTooltip
-                                  text={t('blocks.subscribe.defaultPlanTitle')}
+                            <FormControlLabel
+                              control={
+                                <PlanDefaultToggle
+                                  checked={!!plan.isDefault}
+                                  disabled={disabled}
+                                  onChange={(_event, checked) =>
+                                    handlePlanDefaultChange(
+                                      plan.memberPlanId,
+                                      checked
+                                    )
+                                  }
                                 />
-                              </>
-                            }
-                            onChange={checked =>
-                              handlePlanDefaultChange(
-                                plan.memberPlanId,
-                                checked
-                              )
-                            }
-                          />
-                        </PlanStyleRow>
-
-                        {plan.layout.type ===
-                          SubscribeBlockRenderLayout.None && (
-                          <PickerSettings>
-                            <Hint>{t('blocks.subscribe.fixedAmountHint')}</Hint>
-
-                            <div>
-                              <Checkbox
-                                checked={
-                                  (
-                                    plan.layout as SubscribeBlockLayoutNoneConfig
-                                  ).showInput
-                                }
-                                disabled={disabled}
-                                onChange={(_value, checked) =>
-                                  handleShowAmountInputChange(
-                                    plan.memberPlanId,
-                                    checked
-                                  )
-                                }
-                              >
-                                <Hint>
-                                  {t(
-                                    'blocks.subscribe.showInCardAmountInput.label'
-                                  )}{' '}
+                              }
+                              label={
+                                <>
+                                  {t('blocks.subscribe.defaultPlanLabel')}{' '}
                                   <InfoTooltip
                                     text={t(
-                                      'blocks.subscribe.showInCardAmountInput.title'
+                                      'blocks.subscribe.defaultPlanTitle'
                                     )}
                                   />
-                                </Hint>
-                              </Checkbox>
-                            </div>
-                          </PickerSettings>
-                        )}
+                                </>
+                              }
+                            />
+                          </PlanStyleRow>
 
-                        {plan.layout.type ===
-                          SubscribeBlockRenderLayout.Slider && (
-                          <PickerSettings>
-                            <div>
-                              <Checkbox
-                                checked={
-                                  (
-                                    plan.layout as SubscribeBlockLayoutSliderConfig
-                                  ).showInput
-                                }
-                                disabled={disabled}
-                                onChange={(_value, checked) =>
-                                  handleShowAmountInputChange(
-                                    plan.memberPlanId,
-                                    checked
-                                  )
-                                }
-                              >
-                                <Hint>
-                                  {t('blocks.subscribe.showAmountInput.label')}{' '}
-                                  <InfoTooltip
-                                    text={t(
-                                      'blocks.subscribe.showAmountInput.title'
-                                    )}
-                                  />
-                                </Hint>
-                              </Checkbox>
-                            </div>
-                          </PickerSettings>
-                        )}
+                          {plan.layout.type ===
+                            SubscribeBlockRenderLayout.None && (
+                            <PickerSettings>
+                              <Hint>
+                                {t('blocks.subscribe.fixedAmountHint')}
+                              </Hint>
 
-                        {plan.layout.type ===
-                          SubscribeBlockRenderLayout.Picker && (
-                          <PickerSettings>
-                            <div>
-                              <Checkbox
-                                checked={
-                                  (
-                                    plan.layout as SubscribeBlockLayoutPickerConfig
-                                  ).showInput
-                                }
-                                disabled={disabled}
-                                onChange={(_value, checked) =>
-                                  handleShowAmountInputChange(
-                                    plan.memberPlanId,
-                                    checked
-                                  )
-                                }
-                              >
-                                <Hint>
-                                  {t('blocks.subscribe.showAmountInput.label')}{' '}
-                                  <InfoTooltip
-                                    text={t(
-                                      'blocks.subscribe.showAmountInput.title'
-                                    )}
-                                  />
-                                </Hint>
-                              </Checkbox>
-                            </div>
-
-                            <div>
-                              {(() => {
-                                const tilePeriodicities =
-                                  usesMonthlyOnlyDisplay ?
-                                    [PaymentPeriodicity.Monthly]
-                                  : getPlanPeriodicities(
-                                      memberPlanById.get(plan.memberPlanId) ??
-                                        {}
-                                    );
-                                const storedValues = (
-                                  plan.layout as SubscribeBlockLayoutPickerConfig
-                                ).valuesByPeriodicity;
-                                const activeTab =
-                                  tilePeriodicities.find(
-                                    periodicity =>
-                                      periodicity ===
-                                      activeTileTabs[plan.memberPlanId]
-                                  ) ?? tilePeriodicities[0];
-
-                                return (
-                                  <>
-                                    <TileTabs
-                                      appearance="subtle"
-                                      activeKey={activeTab}
-                                      onSelect={eventKey =>
-                                        setActiveTileTabs(current => ({
-                                          ...current,
-                                          [plan.memberPlanId]:
-                                            eventKey as PaymentPeriodicity,
-                                        }))
-                                      }
-                                    >
-                                      {tilePeriodicities.map(periodicity => (
-                                        <Nav.Item
-                                          key={periodicity}
-                                          eventKey={periodicity}
-                                          icon={
-                                            (
-                                              storedValues?.some(
-                                                entry =>
-                                                  entry.periodicity ===
-                                                    periodicity &&
-                                                  entry.values.length
-                                              )
-                                            ) ?
-                                              <MdPriceCheck />
-                                            : undefined
-                                          }
-                                        >
-                                          {t(
-                                            `memberPlanList.paymentPeriodicity.${periodicity}`
-                                          )}
-                                        </Nav.Item>
-                                      ))}
-                                    </TileTabs>
-
-                                    <TagInput
-                                      disabled={disabled}
-                                      trigger={['Enter', 'Space', 'Comma']}
-                                      placeholder={formatValues(
-                                        defaultAmountTileValues(activeTab)
-                                      ).join(' ')}
-                                      value={formatValues(
-                                        storedValues?.find(
-                                          entry =>
-                                            entry.periodicity === activeTab
-                                        )?.values
+                              <div>
+                                <Checkbox
+                                  checked={
+                                    (
+                                      plan.layout as SubscribeBlockLayoutNoneConfig
+                                    ).showInput
+                                  }
+                                  disabled={disabled}
+                                  onChange={(_value, checked) =>
+                                    handleShowAmountInputChange(
+                                      plan.memberPlanId,
+                                      checked
+                                    )
+                                  }
+                                >
+                                  <Hint>
+                                    {t(
+                                      'blocks.subscribe.showInCardAmountInput.label'
+                                    )}{' '}
+                                    <InfoTooltip
+                                      text={t(
+                                        'blocks.subscribe.showInCardAmountInput.title'
                                       )}
-                                      onChange={tileValues =>
-                                        handlePeriodicityAmountsChange(
-                                          plan.memberPlanId,
-                                          activeTab,
-                                          tileValues
-                                        )
-                                      }
                                     />
+                                  </Hint>
+                                </Checkbox>
+                              </div>
+                            </PickerSettings>
+                          )}
 
-                                    <TileValuesHint>
-                                      {t(
-                                        usesMonthlyOnlyDisplay ?
-                                          'blocks.subscribe.amountTileValues.hintMonthly'
-                                        : 'blocks.subscribe.amountTileValues.hint'
+                          {plan.layout.type ===
+                            SubscribeBlockRenderLayout.Slider && (
+                            <PickerSettings>
+                              <div>
+                                <Checkbox
+                                  checked={
+                                    (
+                                      plan.layout as SubscribeBlockLayoutSliderConfig
+                                    ).showInput
+                                  }
+                                  disabled={disabled}
+                                  onChange={(_value, checked) =>
+                                    handleShowAmountInputChange(
+                                      plan.memberPlanId,
+                                      checked
+                                    )
+                                  }
+                                >
+                                  <Hint>
+                                    {t(
+                                      'blocks.subscribe.showAmountInput.label'
+                                    )}{' '}
+                                    <InfoTooltip
+                                      text={t(
+                                        'blocks.subscribe.showAmountInput.title'
                                       )}
-                                    </TileValuesHint>
-                                  </>
-                                );
-                              })()}
-                            </div>
-                          </PickerSettings>
-                        )}
-                      </SettingRowContent>
-                    </SortablePlanRow>
-                  ))}
-                </SettingRow>
-              </SortableContext>
-            </DndContext>
-          </>
-        )}
-      </Content>
+                                    />
+                                  </Hint>
+                                </Checkbox>
+                              </div>
+                            </PickerSettings>
+                          )}
 
-      <Content>
-        <Heading>{t('blocks.subscribe.periodicityDisplay')}</Heading>
+                          {plan.layout.type ===
+                            SubscribeBlockRenderLayout.Picker && (
+                            <PickerSettings>
+                              <div>
+                                <Checkbox
+                                  checked={
+                                    (
+                                      plan.layout as SubscribeBlockLayoutPickerConfig
+                                    ).showInput
+                                  }
+                                  disabled={disabled}
+                                  onChange={(_value, checked) =>
+                                    handleShowAmountInputChange(
+                                      plan.memberPlanId,
+                                      checked
+                                    )
+                                  }
+                                >
+                                  <Hint>
+                                    {t(
+                                      'blocks.subscribe.showAmountInput.label'
+                                    )}{' '}
+                                    <InfoTooltip
+                                      text={t(
+                                        'blocks.subscribe.showAmountInput.title'
+                                      )}
+                                    />
+                                  </Hint>
+                                </Checkbox>
+                              </div>
 
-        <RadioGroup
-          disabled={disabled}
-          value={periodicityDisplay}
-          onChange={nextPeriodicityDisplay =>
-            onChange(current => ({
-              ...current,
-              periodicityDisplay:
-                nextPeriodicityDisplay as SubscribePeriodicityDisplay,
-            }))
-          }
-        >
-          <DisplayOptionRadio value={SubscribePeriodicityDisplay.Dropdown}>
-            <RadioOption>
-              <RadioOptionLabel>
-                {t('blocks.subscribe.periodicityDisplayDropdown')}
-              </RadioOptionLabel>
-              <RadioOptionHint>
-                {t('blocks.subscribe.periodicityDisplayDropdownHint')}
-              </RadioOptionHint>
+                              <div>
+                                {(() => {
+                                  const tilePeriodicities =
+                                    usesMonthlyOnlyDisplay ?
+                                      [PaymentPeriodicity.Monthly]
+                                    : getPlanPeriodicities(
+                                        memberPlanById.get(plan.memberPlanId) ??
+                                          {}
+                                      );
+                                  const storedValues = (
+                                    plan.layout as SubscribeBlockLayoutPickerConfig
+                                  ).valuesByPeriodicity;
+                                  const activeTab =
+                                    tilePeriodicities.find(
+                                      periodicity =>
+                                        periodicity ===
+                                        activeTileTabs[plan.memberPlanId]
+                                    ) ?? tilePeriodicities[0];
 
-              {usesMonthlyOnlyDisplay && !!plansWithIgnoredPricing.length && (
-                <RadioOptionNote>
-                  {t('blocks.subscribe.periodicityDisplayDropdownIgnoredRows', {
-                    count: plansWithIgnoredPricing.length,
-                    plans: plansWithIgnoredPricing
-                      .map(({ name }) => name)
-                      .join(', '),
-                  })}
-                </RadioOptionNote>
-              )}
-            </RadioOption>
-          </DisplayOptionRadio>
+                                  return (
+                                    <>
+                                      <TileTabs
+                                        appearance="subtle"
+                                        activeKey={activeTab}
+                                        onSelect={eventKey =>
+                                          setActiveTileTabs(current => ({
+                                            ...current,
+                                            [plan.memberPlanId]:
+                                              eventKey as PaymentPeriodicity,
+                                          }))
+                                        }
+                                      >
+                                        {tilePeriodicities.map(periodicity => (
+                                          <Nav.Item
+                                            key={periodicity}
+                                            eventKey={periodicity}
+                                            icon={
+                                              (
+                                                storedValues?.some(
+                                                  entry =>
+                                                    entry.periodicity ===
+                                                      periodicity &&
+                                                    entry.values.length
+                                                )
+                                              ) ?
+                                                <MdPriceCheck />
+                                              : undefined
+                                            }
+                                          >
+                                            {t(
+                                              `memberPlanList.paymentPeriodicity.${periodicity}`
+                                            )}
+                                          </Nav.Item>
+                                        ))}
+                                      </TileTabs>
 
-          <DisplayOptionRadio value={SubscribePeriodicityDisplay.OfferCards}>
-            <RadioOption>
-              <RadioOptionLabel>
-                {t('blocks.subscribe.periodicityDisplayOfferCards')}
-              </RadioOptionLabel>
-              <RadioOptionHint>
-                {t('blocks.subscribe.periodicityDisplayOfferCardsHint')}
-              </RadioOptionHint>
-            </RadioOption>
-          </DisplayOptionRadio>
+                                      <TagInput
+                                        disabled={disabled}
+                                        trigger={['Enter', 'Space', 'Comma']}
+                                        placeholder={formatValues(
+                                          defaultAmountTileValues(activeTab)
+                                        ).join(' ')}
+                                        value={formatValues(
+                                          storedValues?.find(
+                                            entry =>
+                                              entry.periodicity === activeTab
+                                          )?.values
+                                        )}
+                                        onChange={tileValues =>
+                                          handlePeriodicityAmountsChange(
+                                            plan.memberPlanId,
+                                            activeTab,
+                                            tileValues
+                                          )
+                                        }
+                                      />
 
-          <DisplayOptionRadio value={SubscribePeriodicityDisplay.Toggle}>
-            <RadioOption>
-              <RadioOptionLabel>
-                {t('blocks.subscribe.periodicityDisplayToggle')}
-              </RadioOptionLabel>
-              <RadioOptionHint>
-                {t('blocks.subscribe.periodicityDisplayToggleHint')}
-              </RadioOptionHint>
-            </RadioOption>
-          </DisplayOptionRadio>
-        </RadioGroup>
-      </Content>
+                                      <TileValuesHint>
+                                        {t(
+                                          usesMonthlyOnlyDisplay ?
+                                            'blocks.subscribe.amountTileValues.hintMonthly'
+                                          : 'blocks.subscribe.amountTileValues.hint'
+                                        )}
+                                      </TileValuesHint>
+                                    </>
+                                  );
+                                })()}
+                              </div>
+                            </PickerSettings>
+                          )}
+                        </SettingRowContent>
+                      </SortablePlanRow>
+                    ))}
+                  </SettingRow>
+                </SortableContext>
+              </DndContext>
+            </>
+          )}
+        </Content>
 
-      <Content>
-        <Heading>{t('blocks.subscribe.goodiesHeading')}</Heading>
+        <Content>
+          <Heading>{t('blocks.subscribe.periodicityDisplay')}</Heading>
 
-        <GoodiesToggleRow>
-          <Toggle
-            checked={value.showGoodies}
-            disabled={disabled}
-            onChange={checked => handleShowGoodiesChange(undefined, checked)}
-          >
-            {t('blocks.subscribe.showGoodies')}
-          </Toggle>
-
-          <SmallCheckbox
-            checked={value.hideRepeatGoodieOnUpgrade}
-            disabled={disabled || !value.showGoodies}
-            onChange={handleHideRepeatGoodieOnUpgradeChange}
-          >
-            {t('blocks.subscribe.hideRepeatGoodieOnUpgrade')}
-          </SmallCheckbox>
-        </GoodiesToggleRow>
-
-        <div>
-          <SettingLabel deactivated={disabled || !value.showGoodies}>
-            {t('blocks.subscribe.goodieMinValue.label')}
-          </SettingLabel>
-
-          <GoodieMinValueRow>
-            <GoodieMinValueInput
-              disabled={disabled || !value.showGoodies}
-              min={0}
-              step={1}
-              value={
-                value.goodieMinValue != null ? value.goodieMinValue / 100 : ''
+          <FormControl disabled={disabled}>
+            <RadioGroup
+              value={periodicityDisplay}
+              onChange={(_event, nextPeriodicityDisplay) =>
+                onChange(current => ({
+                  ...current,
+                  periodicityDisplay:
+                    nextPeriodicityDisplay as SubscribePeriodicityDisplay,
+                }))
               }
-              onChange={handleGoodieMinValueChange}
+            >
+              <DisplayOptionRadio
+                value={SubscribePeriodicityDisplay.Dropdown}
+                control={<Radio />}
+                label={
+                  <RadioOption>
+                    <RadioOptionLabel>
+                      {t('blocks.subscribe.periodicityDisplayDropdown')}
+                    </RadioOptionLabel>
+                    <RadioOptionHint>
+                      {t('blocks.subscribe.periodicityDisplayDropdownHint')}
+                    </RadioOptionHint>
+
+                    {usesMonthlyOnlyDisplay &&
+                      !!plansWithIgnoredPricing.length && (
+                        <RadioOptionNote>
+                          {t(
+                            'blocks.subscribe.periodicityDisplayDropdownIgnoredRows',
+                            {
+                              count: plansWithIgnoredPricing.length,
+                              plans: plansWithIgnoredPricing
+                                .map(({ name }) => name)
+                                .join(', '),
+                            }
+                          )}
+                        </RadioOptionNote>
+                      )}
+                  </RadioOption>
+                }
+              />
+
+              <DisplayOptionRadio
+                value={SubscribePeriodicityDisplay.OfferCards}
+                control={<Radio />}
+                label={
+                  <RadioOption>
+                    <RadioOptionLabel>
+                      {t('blocks.subscribe.periodicityDisplayOfferCards')}
+                    </RadioOptionLabel>
+                    <RadioOptionHint>
+                      {t('blocks.subscribe.periodicityDisplayOfferCardsHint')}
+                    </RadioOptionHint>
+                  </RadioOption>
+                }
+              />
+
+              <DisplayOptionRadio
+                value={SubscribePeriodicityDisplay.Toggle}
+                control={<Radio />}
+                label={
+                  <RadioOption>
+                    <RadioOptionLabel>
+                      {t('blocks.subscribe.periodicityDisplayToggle')}
+                    </RadioOptionLabel>
+                    <RadioOptionHint>
+                      {t('blocks.subscribe.periodicityDisplayToggleHint')}
+                    </RadioOptionHint>
+                  </RadioOption>
+                }
+              />
+            </RadioGroup>
+          </FormControl>
+        </Content>
+
+        <Content>
+          <Heading>{t('blocks.subscribe.goodiesHeading')}</Heading>
+
+          <GoodiesToggleRow>
+            <Switch
+              checked={value.showGoodies}
+              disabled={disabled}
+              onChange={(_event, checked) =>
+                handleShowGoodiesChange(undefined, checked)
+              }
             />
 
             <SmallCheckbox
-              checked={value.goodieMinValueAppliesToUpgrade}
-              disabled={
-                disabled || !value.showGoodies || value.goodieMinValue == null
-              }
-              onChange={handleGoodieMinValueAppliesToUpgradeChange}
+              checked={value.hideRepeatGoodieOnUpgrade}
+              disabled={disabled || !value.showGoodies}
+              onChange={handleHideRepeatGoodieOnUpgradeChange}
             >
-              {t('blocks.subscribe.goodieMinValueAppliesToUpgrade')}
+              {t('blocks.subscribe.hideRepeatGoodieOnUpgrade')}
             </SmallCheckbox>
-          </GoodieMinValueRow>
-        </div>
-      </Content>
+          </GoodiesToggleRow>
 
-      <Content>
-        <Heading>{t('blocks.subscribe.discountCodesHeading')}</Heading>
+          <div>
+            <SettingLabel deactivated={disabled || !value.showGoodies}>
+              {t('blocks.subscribe.goodieMinValue.label')}
+            </SettingLabel>
 
-        <Toggle
-          checked={value.showDiscountCodes}
-          disabled={disabled}
-          onChange={checked =>
-            handleShowDiscountCodesChange(undefined, checked)
-          }
-        >
-          {t('blocks.subscribe.showDiscountCodes')}
-        </Toggle>
-      </Content>
+            <GoodieMinValueRow>
+              <GoodieMinValueInput
+                disabled={disabled || !value.showGoodies}
+                min={0}
+                step={1}
+                value={
+                  value.goodieMinValue != null ? value.goodieMinValue / 100 : ''
+                }
+                onChange={handleGoodieMinValueChange}
+              />
 
-      <Content>
-        <Heading>{t('blocks.subscribe.selectFields')}</Heading>
+              <SmallCheckbox
+                checked={value.goodieMinValueAppliesToUpgrade}
+                disabled={
+                  disabled || !value.showGoodies || value.goodieMinValue == null
+                }
+                onChange={handleGoodieMinValueAppliesToUpgradeChange}
+              >
+                {t('blocks.subscribe.goodieMinValueAppliesToUpgrade')}
+              </SmallCheckbox>
+            </GoodieMinValueRow>
+          </div>
+        </Content>
 
-        <CheckPicker
-          block
-          disabled={disabled}
-          data={[
-            {
-              label: t(`blocks.subscribe.${SubscribeBlockField.FirstName}`),
-              value: SubscribeBlockField.FirstName,
-            },
-            {
-              label: t(`blocks.subscribe.${SubscribeBlockField.Birthday}`),
-              value: SubscribeBlockField.Birthday,
-            },
-            {
-              label: t(`blocks.subscribe.${SubscribeBlockField.Address}`),
-              value: SubscribeBlockField.Address,
-            },
-            {
-              label: t(`blocks.subscribe.${SubscribeBlockField.EmailRepeated}`),
-              value: SubscribeBlockField.EmailRepeated,
-            },
-            {
-              label: t(`blocks.subscribe.${SubscribeBlockField.Password}`),
-              value: SubscribeBlockField.Password,
-            },
-            {
-              label: t(
-                `blocks.subscribe.${SubscribeBlockField.PasswordRepeated}`
-              ),
-              value: SubscribeBlockField.PasswordRepeated,
-            },
-          ]}
-          value={value.fields}
-          onChange={handleFieldsChange}
-        />
+        <Content>
+          <Heading>{t('blocks.subscribe.discountCodesHeading')}</Heading>
 
-        <Hint>{t('blocks.subscribe.selectFieldsSelectionHint')}</Hint>
-      </Content>
+          <Switch
+            checked={value.showDiscountCodes}
+            disabled={disabled}
+            onChange={(_event, checked) =>
+              handleShowDiscountCodesChange(undefined, checked)
+            }
+          />
+        </Content>
+
+        <Content>
+          <Heading>{t('blocks.subscribe.selectFields')}</Heading>
+
+          <CheckPicker
+            block
+            disabled={disabled}
+            data={[
+              {
+                label: t(`blocks.subscribe.${SubscribeBlockField.FirstName}`),
+                value: SubscribeBlockField.FirstName,
+              },
+              {
+                label: t(`blocks.subscribe.${SubscribeBlockField.Birthday}`),
+                value: SubscribeBlockField.Birthday,
+              },
+              {
+                label: t(`blocks.subscribe.${SubscribeBlockField.Address}`),
+                value: SubscribeBlockField.Address,
+              },
+              {
+                label: t(
+                  `blocks.subscribe.${SubscribeBlockField.EmailRepeated}`
+                ),
+                value: SubscribeBlockField.EmailRepeated,
+              },
+              {
+                label: t(`blocks.subscribe.${SubscribeBlockField.Password}`),
+                value: SubscribeBlockField.Password,
+              },
+              {
+                label: t(
+                  `blocks.subscribe.${SubscribeBlockField.PasswordRepeated}`
+                ),
+                value: SubscribeBlockField.PasswordRepeated,
+              },
+            ]}
+            value={value.fields}
+            onChange={handleFieldsChange}
+          />
+
+          <Hint>{t('blocks.subscribe.selectFieldsSelectionHint')}</Hint>
+        </Content>
+      </CardContent>
     </Panel>
   );
 };

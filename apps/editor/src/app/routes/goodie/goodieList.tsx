@@ -1,5 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   DeleteGoodieDocument,
   FullGoodieFragment,
   GoodieListDocument,
@@ -12,8 +19,6 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
   IconButton,
   IconButtonTooltip,
   InfoTooltip,
@@ -22,6 +27,7 @@ import {
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
   PaddedCell,
+  Pagination,
   Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
@@ -29,13 +35,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
+import { Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -81,13 +81,13 @@ function GoodieList() {
 
         <ListViewActions>
           <Link to="create">
-            <RIconButton
-              appearance="primary"
+            <Button
+              variant="contained"
               loading={false}
+              startIcon={<MdAdd />}
             >
-              <MdAdd />
               {t('goodie.overview.createGoodie')}
-            </RIconButton>
+            </Button>
           </Link>
         </ListViewActions>
       </ListViewContainer>
@@ -199,16 +199,15 @@ function GoodieList() {
               {(goodie: RowDataType<FullGoodieFragment>) => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
-                    icon={<MdDelete />}
-                    circle
-                    appearance="ghost"
-                    color="red"
-                    size="sm"
+                    color="error"
+                    size="small"
                     aria-label={t('delete')}
                     onClick={() =>
                       setGoodieToDelete(goodie as FullGoodieFragment)
                     }
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
               )}
             </PaddedCell>
@@ -217,41 +216,34 @@ function GoodieList() {
       </TableWrapper>
 
       <Pagination
-        limit={limit}
-        limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-        maxButtons={DEFAULT_MAX_TABLE_PAGES}
-        first
-        last
-        prev
-        next
-        ellipsis
-        boundaryLinks
-        layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-        total={data?.goodies?.totalCount ?? 0}
-        activePage={page}
-        onChangePage={page => setPage(page)}
-        onChangeLimit={limit => setLimit(limit)}
+        state={{
+          page,
+          limit,
+          setPage,
+          setLimit,
+        }}
+        totalCount={data?.goodies?.totalCount ?? 0}
       />
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!goodieToDelete}
-        backdrop="static"
-        size="xs"
+        maxWidth="xs"
         onClose={() => setGoodieToDelete(undefined)}
       >
-        <Modal.Title>{t('goodie.overview.areYouSure')}</Modal.Title>
+        <DialogTitle>{t('goodie.overview.areYouSure')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           {goodieToDelete &&
             t('goodie.overview.areYouSureBody', {
               goodie: goodieToDelete.name,
             })}
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            color="red"
-            appearance="primary"
+            variant="contained"
+            color="error"
             onClick={() => {
               deleteGoodie({
                 variables: {
@@ -265,13 +257,13 @@ function GoodieList() {
           </Button>
 
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setGoodieToDelete(undefined)}
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

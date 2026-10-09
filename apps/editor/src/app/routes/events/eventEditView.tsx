@@ -6,25 +6,23 @@ import {
   MutationUpdateEventArgs,
   UpdateEventDocument,
 } from '@wepublish/editor/api';
-import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
+import {
+  enqueueSnackbar,
+  humanizeError,
+  SingleViewTitle,
+} from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
+import { Form, Schema } from 'rsuite';
 
 import { EventForm } from './eventForm';
 
 const onErrorToast = (error: Error) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const mapApiDataToInput = (

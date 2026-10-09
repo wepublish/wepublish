@@ -1,9 +1,9 @@
-import { Typography } from '@mui/material';
+import { Button, Typography, Tooltip } from '@mui/material';
 import { MailTemplateContext } from '@wepublish/editor/api';
 import { InfoTooltip } from '@wepublish/ui/editor';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, Tooltip, Whisper } from 'rsuite';
+import { Input } from 'rsuite';
 import {
   ALWAYS_PLACEHOLDERS,
   MAIL_PLACEHOLDER_CONTEXTS,
@@ -111,14 +111,14 @@ export function PlaceholderPicker({
     });
   }, [search, scopedPlaceholders, t]);
 
-  const tooltip = (description: string, token: string, example: string) => (
-    <Tooltip>
+  const tooltipText = (description: string, token: string, example: string) => (
+    <>
       {description}
       <br />
       <code>{token}</code>
       <br />
       {t('mailTemplates.placeholderExample', 'Example')}: {example}
-    </Tooltip>
+    </>
   );
 
   const renderPlaceholder = (placeholder: MailPlaceholder) => {
@@ -156,19 +156,18 @@ export function PlaceholderPicker({
           </Typography>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
             {formats.map(format => (
-              <Whisper
+              <Tooltip
                 key={format.suffix}
-                trigger="hover"
                 placement="left"
-                speaker={tooltip(
+                title={tooltipText(
                   placeholder.description,
                   `{{${placeholder.key}${format.suffix}}}`,
                   format.example
                 )}
               >
                 <Button
-                  appearance="ghost"
-                  size="xs"
+                  variant="outlined"
+                  size="small"
                   style={{ padding: '1px 6px' }}
                   // Keep the caret where it is — the button must not become
                   // the focused element before the token is inserted.
@@ -179,7 +178,7 @@ export function PlaceholderPicker({
                 >
                   {t(format.labelKey, format.label)}
                 </Button>
-              </Whisper>
+              </Tooltip>
             ))}
           </div>
         </div>
@@ -187,20 +186,19 @@ export function PlaceholderPicker({
     }
 
     return (
-      <Whisper
+      <Tooltip
         key={placeholder.key}
-        trigger="hover"
         placement="left"
-        speaker={tooltip(
+        title={tooltipText(
           placeholder.description,
           `{{${placeholder.key}}}`,
           placeholder.example
         )}
       >
         <Button
-          appearance="ghost"
-          size="xs"
-          block
+          variant="outlined"
+          size="small"
+          fullWidth
           // Keep the caret where it is — the button must not become the
           // focused element before the token is inserted.
           onMouseDown={event => event.preventDefault()}
@@ -209,7 +207,7 @@ export function PlaceholderPicker({
         >
           {name}
         </Button>
-      </Whisper>
+      </Tooltip>
     );
   };
 

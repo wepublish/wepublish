@@ -1,11 +1,12 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import { SendPasswordResetEmailDocument } from '@wepublish/editor/api';
-import { LoginTemplate } from '@wepublish/ui/editor';
+import { enqueueSnackbar, LoginTemplate } from '@wepublish/ui/editor';
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Button, Form as RForm, Message, toaster } from 'rsuite';
+import { Form as RForm } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
 
@@ -62,16 +63,10 @@ export function ResetPassword() {
     } catch (error: any) {
       // If template not configured, show the actual error
       if (error?.message?.includes('not configured')) {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={0}
-          >
-            {t('resetPassword.notConfigured')}
-          </Message>
-        );
+        enqueueSnackbar(t('resetPassword.notConfigured'), {
+          variant: 'error',
+          autoHideDuration: null,
+        });
         return;
       }
       // For any other error, still show success (anti-enumeration)
@@ -102,7 +97,7 @@ export function ResetPassword() {
               </Group>
 
               <Button
-                appearance="primary"
+                variant="contained"
                 type="submit"
                 disabled={loading || !email}
                 onClick={handleSubmit}

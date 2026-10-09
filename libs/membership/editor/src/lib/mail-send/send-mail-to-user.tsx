@@ -4,12 +4,17 @@ import {
   MailTemplateMissingPlaceholdersDocument,
   SendMailTemplateToUserDocument,
 } from '@wepublish/editor/api';
-import { humanizeError, PermissionControl } from '@wepublish/ui/editor';
+import {
+  humanizeError,
+  PermissionControl,
+  enqueueSnackbar,
+} from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdSend } from 'react-icons/md';
-import { Button, Message, SelectPicker, Stack, toaster } from 'rsuite';
+import { SelectPicker } from 'rsuite';
 import { showErrors, useShowErrors } from '../common';
+import { Alert, Button, Stack } from '@mui/material';
 
 interface SendMailToUserPanelProps {
   userId: string;
@@ -45,26 +50,12 @@ export function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
 
   const [sendMail, { loading }] = useMutation(SendMailTemplateToUserDocument, {
     onError: error =>
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {humanizeError(error)}
-        </Message>
-      ),
+      enqueueSnackbar(humanizeError(error), { variant: 'error' }),
     onCompleted: () =>
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('userMail.sent')}
-        </Message>
-      ),
+      enqueueSnackbar(t('userMail.sent'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      }),
     refetchQueries: ['MailLogs'],
   });
 
@@ -79,9 +70,9 @@ export function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
 
   return (
     <Stack
+      sx={{ alignItems: 'stretch' }}
       direction="column"
-      spacing={12}
-      alignItems="stretch"
+      spacing={1.5}
     >
       <SelectPicker
         block
@@ -95,11 +86,11 @@ export function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
       />
 
       {templateId && missing.length > 0 && (
-        <Message type="warning">
+        <Alert severity="warning">
           {t('mailSend.missingPlaceholders', {
             placeholders: missing.join(', '),
           })}
-        </Message>
+        </Alert>
       )}
 
       <PermissionControl
@@ -107,7 +98,7 @@ export function SendMailToUserPanel({ userId }: SendMailToUserPanelProps) {
         qualifyingPermissions={['CAN_SEND_MAIL-TEMPLATES']}
       >
         <Button
-          appearance="primary"
+          variant="contained"
           disabled={!templateId}
           loading={loading}
           onClick={onSend}

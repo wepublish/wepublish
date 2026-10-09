@@ -1,5 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   DeleteMemberPlanDocument,
   FullMemberPlanFragment,
   MemberPlanListDocument,
@@ -28,14 +35,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Table as RTable,
-} from 'rsuite';
+import { Input, InputGroup, Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -105,13 +105,13 @@ function MemberPlanList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_MEMBER_PLAN']}>
           <ListViewActions>
             <Link to="/memberplans/create">
-              <RIconButton
-                appearance="primary"
+              <Button
+                variant="contained"
+                startIcon={<MdAdd />}
                 disabled={isLoading}
-                icon={<MdAdd />}
               >
                 {t('memberPlanList.createNew')}
-              </RIconButton>
+              </Button>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -237,17 +237,16 @@ function MemberPlanList() {
                 >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
-                      icon={<MdDelete />}
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      color="red"
+                      size="small"
+                      color="error"
                       aria-label={t('delete')}
                       onClick={() => {
                         setConfirmationDialogOpen(true);
                         setCurrentMemberPlan(rowData as FullMemberPlanFragment);
                       }}
-                    />
+                    >
+                      <MdDelete />
+                    </IconButton>
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
@@ -256,24 +255,24 @@ function MemberPlanList() {
         </Table>
       </TableWrapper>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={isConfirmationDialogOpen}
-        size="sm"
+        maxWidth="sm"
       >
-        <Modal.Header>
-          <Modal.Title>{t('memberPlanList.deleteModalTitle')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('memberPlanList.deleteModalTitle')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('memberPlanList.name')}>
               {currentMemberPlan?.name || t('untitled')}
             </DescriptionListItem>
           </DescriptionList>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="outlined"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentMemberPlan) return;
@@ -308,18 +307,18 @@ function MemberPlanList() {
 
               setConfirmationDialogOpen(false);
             }}
-            color="red"
+            color="error"
           >
             {t('confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

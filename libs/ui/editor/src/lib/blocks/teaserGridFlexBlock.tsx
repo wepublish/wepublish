@@ -2,6 +2,14 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
 import styled from '@emotion/styled';
+import {
+  Card as MuiCard,
+  CardContent,
+  Drawer,
+  IconButton as MuiIconButton,
+  Stack as MuiStack,
+  Stack,
+} from '@mui/material';
 import i18next from 'i18next';
 import nanoid from 'nanoid';
 import {
@@ -23,17 +31,12 @@ import {
   MdLock,
   MdLockOpen,
 } from 'react-icons/md';
-import {
-  ButtonToolbar as RButtonToolbar,
-  Drawer,
-  IconButton as RIconButton,
-  Panel as RPanel,
-} from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { PlaceholderInput } from '../atoms/placeholderInput';
 import { TypographicTextArea } from '../atoms/typographicTextArea';
+import { DRAWER_WIDTHS } from '../drawer';
 import { TeaserEditPanel } from '../panel/teaserEditPanel';
 import { TeaserSelectAndEditPanel } from '../panel/teaserSelectAndEditPanel';
 import { ContentForTeaser, IconWrapper } from './teaserGridBlock';
@@ -44,7 +47,7 @@ import {
   TeaserGridFlexBlockValue,
 } from './types';
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   margin: 10px;
 `;
 
@@ -59,13 +62,13 @@ const Teaser = styled.div`
 const GridLayout: ComponentType<PropsWithChildren<ReactGridLayoutProps>> =
   GridLayoutWithoutChildren;
 
-const ButtonToolbar = styled(RButtonToolbar)`
+const ButtonToolbar = styled(MuiStack)`
   top: 0;
   left: 0;
   position: absolute;
 `;
 
-const Panel = styled(RPanel, {
+const Panel = styled(MuiCard, {
   shouldForwardProp: prop => prop !== 'showGrabCursor',
 })<{ showGrabCursor: boolean }>`
   display: grid;
@@ -83,50 +86,52 @@ export function FlexTeaserBlock({
   onRemove,
 }: FlexTeaserBlockProps) {
   return (
-    <Panel
-      bodyFill
-      showGrabCursor={showGrabCursor}
-    >
-      <PlaceholderInput
-        onAddClick={onChoose}
-        addLabel={i18next.t('blocks.flexTeaser.chooseTeaser')}
-      >
-        {teaser && (
-          <Teaser>
-            <ContentForTeaser teaser={teaser} />
+    <Panel showGrabCursor={showGrabCursor}>
+      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+        <PlaceholderInput
+          onAddClick={onChoose}
+          addLabel={i18next.t('blocks.flexTeaser.chooseTeaser')}
+        >
+          {teaser && (
+            <Teaser>
+              <ContentForTeaser teaser={teaser} />
 
-            <IconWrapper>
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexTeaser.chooseTeaser')}
-              >
-                <IconButton
-                  aria-label={i18next.t('blocks.flexTeaser.chooseTeaser')}
-                  icon={<MdArticle />}
-                  onClick={onChoose}
-                />
-              </IconButtonTooltip>
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexTeaser.editTeaser')}
-              >
-                <IconButton
-                  aria-label={i18next.t('blocks.flexTeaser.editTeaser')}
-                  icon={<MdEdit />}
-                  onClick={onEdit}
-                />
-              </IconButtonTooltip>
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexTeaser.deleteTeaser')}
-              >
-                <IconButton
-                  aria-label={i18next.t('blocks.flexTeaser.deleteTeaser')}
-                  icon={<MdDelete />}
-                  onClick={onRemove}
-                />
-              </IconButtonTooltip>
-            </IconWrapper>
-          </Teaser>
-        )}
-      </PlaceholderInput>
+              <IconWrapper>
+                <IconButtonTooltip
+                  caption={i18next.t('blocks.flexTeaser.chooseTeaser')}
+                >
+                  <IconButton
+                    aria-label={i18next.t('blocks.flexTeaser.chooseTeaser')}
+                    onClick={onChoose}
+                  >
+                    <MdArticle />
+                  </IconButton>
+                </IconButtonTooltip>
+                <IconButtonTooltip
+                  caption={i18next.t('blocks.flexTeaser.editTeaser')}
+                >
+                  <IconButton
+                    aria-label={i18next.t('blocks.flexTeaser.editTeaser')}
+                    onClick={onEdit}
+                  >
+                    <MdEdit />
+                  </IconButton>
+                </IconButtonTooltip>
+                <IconButtonTooltip
+                  caption={i18next.t('blocks.flexTeaser.deleteTeaser')}
+                >
+                  <IconButton
+                    aria-label={i18next.t('blocks.flexTeaser.deleteTeaser')}
+                    onClick={onRemove}
+                  >
+                    <MdDelete />
+                  </IconButton>
+                </IconButtonTooltip>
+              </IconWrapper>
+            </Teaser>
+          )}
+        </PlaceholderInput>
+      </CardContent>
     </Panel>
   );
 }
@@ -254,14 +259,13 @@ export function TeaserGridFlexBlock({
         onChange={handleTitleChange}
       />
       <IconButtonTooltip caption={t('blocks.flexTeaser.addBlock')}>
-        <RIconButton
+        <IconButton
           aria-label={t('blocks.flexTeaser.addBlock')}
-          icon={<MdAddBox />}
-          appearance="primary"
-          circle
-          size="md"
+          size="medium"
           onClick={handleAddTeaserBlock}
-        />
+        >
+          <MdAddBox />
+        </IconButton>
       </IconButtonTooltip>
       <GridLayout
         onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
@@ -294,19 +298,22 @@ export function TeaserGridFlexBlock({
               onRemove={() => handleRemoveTeaser(flexTeaser.alignment.i)}
             />
 
-            <ButtonToolbar>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ flexWrap: 'wrap' }}
+            >
               {!flexTeaser.teaser && (
                 <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
-                  <RIconButton
+                  <IconButton
                     aria-label={t('blocks.flexTeaser.removeBlock')}
                     disabled={flexTeaser.alignment.static}
-                    block
-                    appearance="subtle"
-                    icon={<MdDelete />}
                     onClick={() =>
                       handleRemoveTeaserBlock(flexTeaser.alignment.i)
                     }
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
               )}
 
@@ -317,28 +324,37 @@ export function TeaserGridFlexBlock({
                   : t('blocks.flexTeaser.unlockBlock')
                 }
               >
-                <RIconButton
-                  block
-                  appearance="subtle"
+                <IconButton
                   aria-label={
                     !flexTeaser.alignment.static ?
                       t('blocks.flexTeaser.lockBlock')
                     : t('blocks.flexTeaser.unlockBlock')
                   }
-                  icon={
-                    flexTeaser.alignment.static ? <MdLockOpen /> : <MdLock />
-                  }
                   onClick={() => handlePinTeaserBlock(flexTeaser.alignment.i)}
-                />
+                >
+                  {flexTeaser.alignment.static ?
+                    <MdLockOpen />
+                  : <MdLock />}
+                </IconButton>
               </IconButtonTooltip>
-            </ButtonToolbar>
+            </Stack>
           </div>
         ))}
       </GridLayout>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => setEditModalOpen(false)}
       >
         {editItem?.teaser && (
@@ -354,8 +370,18 @@ export function TeaserGridFlexBlock({
         )}
       </Drawer>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <TeaserSelectAndEditPanel

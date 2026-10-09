@@ -3,9 +3,8 @@ import { FullPollFragment, PollsDocument } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   CreatePollBtn,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
   DeletePollModal,
+  enqueueSnackbar,
   humanizeError,
   IconButton,
   IconButtonTooltip,
@@ -13,6 +12,7 @@ import {
   ListViewContainer,
   ListViewHeader,
   PaddedCell,
+  Pagination,
   PollClosedAtView,
   PollOpensAtView,
   PollStateIndication,
@@ -23,23 +23,17 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDelete, MdHowToVote } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Message, Pagination, Table as RTable, toaster } from 'rsuite';
+import { Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
 const onErrorToast = (error: Error) => {
   if (error?.message) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {error && humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(error && humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   }
 };
 
@@ -153,24 +147,24 @@ function PollList() {
               {(poll: RowDataType<FullPollFragment>) => (
                 <>
                   <IconButtonTooltip caption={t('pollList.showVotes')}>
-                    <IconButton
-                      aria-label={t('pollList.showVotes')}
-                      icon={<MdHowToVote />}
-                      circle
-                      size="sm"
-                      href={`/polls/votes/${poll?.id}`}
-                    />
+                    <Link to={`/polls/votes/${poll?.id}`}>
+                      <IconButton
+                        aria-label={t('pollList.showVotes')}
+                        size="small"
+                      >
+                        <MdHowToVote />
+                      </IconButton>
+                    </Link>
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       aria-label={t('delete')}
-                      icon={<MdDelete />}
-                      circle
-                      appearance="ghost"
-                      color="red"
-                      size="sm"
+                      color="error"
+                      size="small"
                       onClick={() => setPollDelete(poll as FullPollFragment)}
-                    />
+                    >
+                      <MdDelete />
+                    </IconButton>
                   </IconButtonTooltip>
                 </>
               )}
@@ -179,20 +173,13 @@ function PollList() {
         </Table>
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.polls?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
+          }}
+          totalCount={data?.polls?.totalCount ?? 0}
         />
       </TableWrapper>
 

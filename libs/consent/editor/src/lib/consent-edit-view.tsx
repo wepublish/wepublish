@@ -9,9 +9,13 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
+import { Form, Schema } from 'rsuite';
 
-import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
+import {
+  humanizeError,
+  SingleViewTitle,
+  enqueueSnackbar,
+} from '@wepublish/ui/editor';
 import { ConsentForm } from './consent-form';
 
 const mapApiDataToInput = (
@@ -32,28 +36,16 @@ export const ConsentEditView = () => {
 
   const onErrorToast = (error: Error, slug?: string) => {
     if (error.message.includes('Unique constraint')) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('consents.uniqueConstraint', { slug })}
-        </Message>
-      );
+      enqueueSnackbar(t('consents.uniqueConstraint', { slug }), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       return;
     }
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   };
 
   const closePath = '/consents';
@@ -102,16 +94,10 @@ export const ConsentEditView = () => {
           setConsent(mapApiDataToInput(data.updateConsent));
         }
 
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('toast.updatedSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('toast.updatedSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
     }
   );

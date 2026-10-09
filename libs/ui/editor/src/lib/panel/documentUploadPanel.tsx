@@ -1,9 +1,17 @@
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { MdUploadFile } from 'react-icons/md';
-import { Button, Drawer, Form, Notification, toaster } from 'rsuite';
+import { Form } from 'rsuite';
 
 import { FileDropInput } from '../atoms';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 
 const InputWrapper = styled.div`
   height: 100px;
@@ -48,28 +56,22 @@ export function DocumentUploadPanel({
     const file = files[0];
 
     if (!supportedTypes.includes(file.type)) {
-      toaster.push(
-        <Notification
-          type="error"
-          header={t('documents.panels.invalidDocument')}
-          duration={5000}
-        />,
-        { placement: 'topEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'error',
+        title: t('documents.panels.invalidDocument'),
+        autoHideDuration: 5000,
+      });
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      toaster.push(
-        <Notification
-          type="error"
-          header={t('documents.panels.fileTooLarge', {
-            maxSize: MAX_FILE_SIZE_MB,
-          })}
-          duration={5000}
-        />,
-        { placement: 'topEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'error',
+        title: t('documents.panels.fileTooLarge', {
+          maxSize: MAX_FILE_SIZE_MB,
+        }),
+        autoHideDuration: 5000,
+      });
       return;
     }
 
@@ -78,20 +80,20 @@ export function DocumentUploadPanel({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('documents.panels.uploadDocument')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('documents.panels.uploadDocument')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('documents.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         <InputWrapper>
           <FileDropInput
             icon={<MdUploadFile />}
@@ -104,7 +106,7 @@ export function DocumentUploadPanel({
           <br />
           {t('documents.panels.maxFileSize', { maxSize: MAX_FILE_SIZE_MB })}
         </Form.Label>
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }

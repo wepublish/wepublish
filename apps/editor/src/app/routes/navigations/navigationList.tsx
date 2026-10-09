@@ -1,5 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+} from '@mui/material';
+import {
   DeleteNavigationDocument,
   FullNavigationFragment,
   NavigationListDocument,
@@ -9,6 +17,7 @@ import {
   createCheckedPermissionComponent,
   DescriptionList,
   DescriptionListItem,
+  DRAWER_WIDTHS,
   IconButton,
   IconButtonTooltip,
   ListViewActions,
@@ -25,14 +34,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import {
-  Button,
-  Drawer,
-  Input,
-  InputGroup,
-  Modal,
-  Table as RTable,
-} from 'rsuite';
+import { Input, InputGroup, Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -99,13 +101,13 @@ function NavigationList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_NAVIGATION']}>
           <ListViewActions>
             <Link to="/navigations/create">
-              <IconButton
-                appearance="primary"
+              <Button
+                variant="contained"
+                startIcon={<MdAdd />}
                 disabled={isLoading}
-                icon={<MdAdd />}
               >
                 {t('navigation.overview.newNavigation')}
-              </IconButton>
+              </Button>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -157,16 +159,15 @@ function NavigationList() {
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       aria-label={t('delete')}
-                      icon={<MdDelete />}
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      color="red"
+                      size="small"
+                      color="error"
                       onClick={() => {
                         setCurrentNavigation(rowData as FullNavigationFragment);
                         setConfirmationDialogOpen(true);
                       }}
-                    />
+                    >
+                      <MdDelete />
+                    </IconButton>
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
@@ -176,8 +177,18 @@ function NavigationList() {
       </TableWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => {
           setEditModalOpen(false);
           navigate('/navigations');
@@ -196,24 +207,23 @@ function NavigationList() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('navigation.overview.deleteNavigation')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('navigation.overview.deleteNavigation')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('navigation.overview.name')}>
               {currentNavigation?.name || t('navigation.overview.unknown')}
             </DescriptionListItem>
           </DescriptionList>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="outlined"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentNavigation) return;
@@ -224,18 +234,18 @@ function NavigationList() {
               setConfirmationDialogOpen(false);
               refetch();
             }}
-            color="red"
+            color="error"
           >
             {t('navigation.overview.confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('navigation.overview.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

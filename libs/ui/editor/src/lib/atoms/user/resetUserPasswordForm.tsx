@@ -1,9 +1,12 @@
 import { useMutation } from '@apollo/client/react';
+import { Button } from '@mui/material';
 import { ResetUserPasswordDocument } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Form, Notification, Schema, toaster } from 'rsuite';
+import { Form, Schema } from 'rsuite';
+
 import { humanizeError } from '../../humanizeError';
+import { enqueueSnackbar } from '../../snackbar';
 
 export interface ResetUserPasswordPanelProps {
   userID?: string;
@@ -49,14 +52,11 @@ export function ResetUserPasswordForm({
           },
         });
         if (data?.resetPassword) {
-          toaster.push(
-            <Notification
-              type="success"
-              header={t('userCreateOrEditView.passwordChangeSuccess')}
-              duration={5000}
-            />,
-            { placement: 'topEnd' }
-          );
+          enqueueSnackbar('', {
+            variant: 'success',
+            title: t('userCreateOrEditView.passwordChangeSuccess'),
+            autoHideDuration: 5000,
+          });
           onClose();
         }
       }}
@@ -77,10 +77,10 @@ export function ResetUserPasswordForm({
       </Form.Group>
 
       <Button
+        variant="contained"
         type="submit"
         disabled={isDisabled}
-        appearance="primary"
-        color="red"
+        color="error"
       >
         {t('userCreateOrEditView.resetPassword')}
       </Button>

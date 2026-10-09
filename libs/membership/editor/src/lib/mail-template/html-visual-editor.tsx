@@ -17,11 +17,11 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
+  Drawer,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { FullImageFragment } from '@wepublish/editor/api';
-import { ImageSelectPanel } from '@wepublish/ui/editor';
-import { Drawer } from 'rsuite';
+import { ImageSelectPanel, DRAWER_WIDTHS } from '@wepublish/ui/editor';
 import {
   MdFormatAlignCenter,
   MdFormatAlignLeft,
@@ -1303,8 +1303,18 @@ const HtmlVisualEditorComponent = forwardRef<
         </DialogActions>
       </Dialog>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={libraryOpen}
-        size="sm"
         onClose={() => setLibraryOpen(false)}
       >
         <ImageSelectPanel

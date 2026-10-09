@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import {
   FullSubscriptionFragment,
   PaymentPeriodicity,
@@ -6,6 +7,7 @@ import {
   UserSubscriptionFragment,
 } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdd,
@@ -21,9 +23,7 @@ import {
   MdRefresh,
   MdTimelapse,
 } from 'react-icons/md';
-import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, IconButton } from 'rsuite';
 
 // import {NewSubscriptionButton} from '../../routes/subscriptionList'
 import {
@@ -262,13 +262,13 @@ export const NewSubscriptionButton = ({
   const urlToRedirect = `/subscriptions/create${userId ? `${`?userId=${userId}`}` : ''}`;
   return (
     <Link to={urlToRedirect}>
-      <IconButton
-        appearance="primary"
+      <Button
+        variant="contained"
         disabled={isLoading || !canCreate}
+        startIcon={<MdAdd />}
       >
-        <MdAdd />
         {label ?? t('subscriptionList.overview.newSubscription')}
-      </IconButton>
+      </Button>
     </Link>
   );
 };
@@ -430,8 +430,8 @@ function UserSubscriptionsList({
                   to={`/subscriptions/edit/${subscription.id}?userId=${userId}`}
                 >
                   <Button
-                    appearance="ghost"
-                    size="sm"
+                    variant="outlined"
+                    size="small"
                     startIcon={<MdEdit />}
                   >
                     {t('userSubscriptionList.editSubscription')}

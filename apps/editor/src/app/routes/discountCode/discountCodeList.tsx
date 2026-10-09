@@ -1,5 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   DeleteDiscountCodeDocument,
   DiscountCodeListDocument,
   DiscountCodesort,
@@ -13,8 +20,6 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
   IconButton,
   IconButtonTooltip,
   InfoTooltip,
@@ -23,6 +28,7 @@ import {
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
   PaddedCell,
+  Pagination,
   Table,
   TableWrapper,
   useAuthorisation,
@@ -32,13 +38,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
+import { Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -86,13 +86,13 @@ function DiscountCodeList() {
 
         <ListViewActions>
           <Link to="create">
-            <RIconButton
-              appearance="primary"
+            <Button
+              variant="contained"
               loading={false}
+              startIcon={<MdAdd />}
             >
-              <MdAdd />
               {t('discountCode.overview.createDiscountCode')}
-            </RIconButton>
+            </Button>
           </Link>
         </ListViewActions>
       </ListViewContainer>
@@ -232,18 +232,17 @@ function DiscountCodeList() {
               {(discountCode: RowDataType<FullDiscountCodeFragment>) => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
-                    icon={<MdDelete />}
-                    circle
-                    appearance="ghost"
-                    color="red"
-                    size="sm"
+                    color="error"
+                    size="small"
                     aria-label={t('delete')}
                     onClick={() =>
                       setDiscountCodeToDelete(
                         discountCode as FullDiscountCodeFragment
                       )
                     }
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
               )}
             </PaddedCell>
@@ -252,44 +251,37 @@ function DiscountCodeList() {
       </TableWrapper>
 
       <Pagination
-        limit={limit}
-        limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-        maxButtons={DEFAULT_MAX_TABLE_PAGES}
-        first
-        last
-        prev
-        next
-        ellipsis
-        boundaryLinks
-        layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-        total={data?.discountCodes?.totalCount ?? 0}
-        activePage={page}
-        onChangePage={page => setPage(page)}
-        onChangeLimit={limit => {
-          setLimit(limit);
-          setPage(1);
+        state={{
+          page,
+          limit,
+          setPage,
+          setLimit: limit => {
+            setLimit(limit);
+            setPage(1);
+          },
         }}
+        totalCount={data?.discountCodes?.totalCount ?? 0}
       />
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!discountCodeToDelete}
-        backdrop="static"
-        size="xs"
+        maxWidth="xs"
         onClose={() => setDiscountCodeToDelete(undefined)}
       >
-        <Modal.Title>{t('discountCode.overview.areYouSure')}</Modal.Title>
+        <DialogTitle>{t('discountCode.overview.areYouSure')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           {discountCodeToDelete &&
             t('discountCode.overview.areYouSureBody', {
               discountCode: discountCodeToDelete.code,
             })}
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            color="red"
-            appearance="primary"
+            variant="contained"
+            color="error"
             onClick={() => {
               deleteDiscountCode({
                 variables: {
@@ -303,13 +295,13 @@ function DiscountCodeList() {
           </Button>
 
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setDiscountCodeToDelete(undefined)}
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

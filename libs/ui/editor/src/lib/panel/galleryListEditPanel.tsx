@@ -1,12 +1,20 @@
+import { Button, Drawer } from '@mui/material';
 import nanoid from 'nanoid';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Drawer, Form } from 'rsuite';
+import { Form } from 'rsuite';
 
 import { ChooseEditImage } from '../atoms/chooseEditImage';
 import { FieldProps, ListInput, ListValue } from '../atoms/listInput';
 import { Textarea } from '../atoms/textarea';
 import { GalleryImageEdge } from '../blocks/types';
+import {
+  DRAWER_WIDTHS,
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 
@@ -35,28 +43,26 @@ export function GalleryListEditPanel({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
-          {t('blocks.imageGallery.panels.editGallery')}
-        </Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('blocks.imageGallery.panels.editGallery')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance="primary"
+            variant="contained"
             onClick={() => onSave?.(images.map(({ value }) => value))}
           >
             {t('save')}
           </Button>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('blocks.imageGallery.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         <ListInput
           value={images}
           onChange={images => setImages(images)}
@@ -64,7 +70,7 @@ export function GalleryListEditPanel({
         >
           {props => <GalleryListItem {...props} />}
         </ListInput>
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }
@@ -109,8 +115,18 @@ export function GalleryListItem({
       </div>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -123,8 +139,18 @@ export function GalleryListItem({
       </Drawer>
       {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel

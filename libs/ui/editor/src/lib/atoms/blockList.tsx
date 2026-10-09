@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Card as MuiCard, CardContent, IconButton } from '@mui/material';
 import {
   BlockStylesDocument,
   EditorBlockType,
@@ -24,7 +25,7 @@ import {
   MdVisibility,
   MdVisibilityOff,
 } from 'react-icons/md';
-import { IconButton, Panel as RPanel, SelectPicker } from 'rsuite';
+import { SelectPicker } from 'rsuite';
 
 import {
   isFunctionalUpdate,
@@ -67,7 +68,7 @@ const ChildrenWrapper = styled.div`
   padding: 20px;
 `;
 
-const Panel = styled(RPanel)`
+const Panel = styled(MuiCard)`
   width: 100%;
 `;
 
@@ -482,24 +483,26 @@ function ListItemWrapper({
       <LeftButtonsWrapper>
         <IconButtonTooltip caption={visibilityLabel}>
           <IconButton
-            appearance={'subtle'}
             aria-label={visibilityLabel}
-            icon={value.value.disabled ? <MdVisibilityOff /> : <MdVisibility />}
             onClick={() => onDisable?.(!value.value.disabled)}
-          />
+          >
+            {value.value.disabled ?
+              <MdVisibilityOff />
+            : <MdVisibility />}
+          </IconButton>
         </IconButtonTooltip>
 
         <FlexGrow />
 
         <IconButtonTooltip caption={t('blockList.deleteBlock')}>
           <IconButton
-            appearance={'ghost'}
-            color={'red'}
+            color="error"
             aria-label={t('blockList.deleteBlock')}
-            icon={<MdDelete />}
             onClick={onDelete}
             disabled={onDelete == null || disabled}
-          />
+          >
+            <MdDelete />
+          </IconButton>
         </IconButtonTooltip>
 
         <FlexGrow />
@@ -508,10 +511,11 @@ function ListItemWrapper({
           <IconButtonTooltip caption={t('blockList.moveBlockUp')}>
             <IconButton
               aria-label={t('blockList.moveBlockUp')}
-              icon={<MdArrowUpward />}
               onClick={onMoveUp}
               disabled={onMoveUp == null || disabled}
-            />
+            >
+              <MdArrowUpward />
+            </IconButton>
           </IconButtonTooltip>
         </UpwardButtonWrapper>
 
@@ -519,10 +523,11 @@ function ListItemWrapper({
           <IconButtonTooltip caption={t('blockList.moveBlockDown')}>
             <IconButton
               aria-label={t('blockList.moveBlockDown')}
-              icon={<MdArrowDownward />}
               onClick={onMoveDown}
               disabled={onMoveDown == null || disabled}
-            />
+            >
+              <MdArrowDownward />
+            </IconButton>
           </IconButtonTooltip>
         </DownwardButtonWrapper>
 
@@ -530,8 +535,10 @@ function ListItemWrapper({
       </LeftButtonsWrapper>
 
       <PanelWrapper disabled={value.value.disabled}>
-        <Panel bordered>
-          <ChildrenWrapper>{children}</ChildrenWrapper>
+        <Panel>
+          <CardContent>
+            <ChildrenWrapper>{children}</ChildrenWrapper>
+          </CardContent>
         </Panel>
       </PanelWrapper>
 

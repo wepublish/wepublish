@@ -1,6 +1,15 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+} from '@mui/material';
+import {
   AuthorListDocument,
   AuthorSort,
   DeleteAuthorDocument,
@@ -9,10 +18,9 @@ import {
 import {
   AuthorEditPanel,
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
   DescriptionList,
   DescriptionListItem,
+  DRAWER_WIDTHS,
   IconButton,
   IconButtonTooltip,
   ListViewActions,
@@ -21,6 +29,7 @@ import {
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
   PaddedCell,
+  Pagination,
   PeerAvatar,
   PermissionControl,
   Table,
@@ -31,17 +40,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import {
-  Avatar,
-  Button,
-  Drawer,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
+import { Input, InputGroup, Table as RTable } from 'rsuite';
 import type { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell } = RTable;
@@ -158,13 +157,13 @@ function AuthorList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
           <ListViewActions>
             <Link to="/authors/create">
-              <RIconButton
-                appearance="primary"
+              <Button
+                variant="contained"
+                startIcon={<MdAdd />}
                 disabled={isLoading}
-                icon={<MdAdd />}
               >
                 {t('authors.overview.newAuthor')}
-              </RIconButton>
+              </Button>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -205,10 +204,7 @@ function AuthorList() {
             <HeaderCell>{null}</HeaderCell>
             <CellSmallPadding>
               {(rowData: RowDataType<FullAuthorFragment>) => (
-                <Avatar
-                  circle
-                  src={rowData.image?.squareURL || undefined}
-                />
+                <Avatar src={rowData.image?.squareURL || undefined} />
               )}
             </CellSmallPadding>
           </Column>
@@ -261,16 +257,15 @@ function AuthorList() {
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       aria-label={t('delete')}
-                      icon={<MdDelete />}
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      color="red"
+                      size="small"
+                      color="error"
                       onClick={() => {
                         setConfirmationDialogOpen(true);
                         setCurrentAuthor(rowData as FullAuthorFragment);
                       }}
-                    />
+                    >
+                      <MdDelete />
+                    </IconButton>
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
@@ -279,29 +274,32 @@ function AuthorList() {
         </Table>
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.authors.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.authors.totalCount ?? 0}
         />
       </TableWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => {
           setEditModalOpen(false);
           navigate('/authors');
@@ -320,24 +318,23 @@ function AuthorList() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('authors.overview.deleteAuthor')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('authors.overview.deleteAuthor')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('authors.overview.name')}>
               {currentAuthor?.name || t('authors.overview.unknown')}
             </DescriptionListItem>
           </DescriptionList>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="outlined"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentAuthor) return;
@@ -350,18 +347,18 @@ function AuthorList() {
 
               setConfirmationDialogOpen(false);
             }}
-            color="red"
+            color="error"
           >
             {t('authors.overview.confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('authors.overview.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

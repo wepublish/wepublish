@@ -1,8 +1,14 @@
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Button, Drawer } from 'rsuite';
 
 import { AddBlockList } from '../atoms/addBlockList';
 import { BlockMap } from '../blocks/blockMap';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 import { AllowedBlockTypes } from './blockSelectAndEditPanel';
 
 export interface BlockSelectPanelProps {
@@ -20,22 +26,22 @@ export function BlockSelectPanel({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('pageEditor.panels.chooseBlock')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('pageEditor.panels.chooseBlock')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => {
               onClose?.();
             }}
           >
             {t('pageEditor.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         <AddBlockList
           listItems={Object.entries(BlockMap)
             .map(([type, { icon, label }]) => ({
@@ -51,7 +57,7 @@ export function BlockSelectPanel({
             onSelect(item);
           }}
         />
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }

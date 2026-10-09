@@ -1,5 +1,6 @@
 import { MockedResponse } from '@apollo/client/testing';
 import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import {
   act,
   fireEvent,
@@ -29,6 +30,8 @@ import {
   MailchimpFormFieldConfigValue,
   MailchimpFormInterestOptionValue,
 } from './types';
+
+const theme = createTheme();
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -135,11 +138,13 @@ const renderBlock = (value: Partial<MailchimpFormBlockValue> = {}) => {
   }
 
   render(
-    <MockedProvider mocks={mocks}>
-      <EditorValidationProvider runAllRef={runAllRef}>
-        <Harness />
-      </EditorValidationProvider>
-    </MockedProvider>
+    <ThemeProvider theme={theme}>
+      <MockedProvider mocks={mocks}>
+        <EditorValidationProvider runAllRef={runAllRef}>
+          <Harness />
+        </EditorValidationProvider>
+      </MockedProvider>
+    </ThemeProvider>
   );
 
   return latest;
@@ -216,13 +221,13 @@ const itemHeader = (heading: string) =>
   screen.getByText(heading).parentElement!;
 
 const itemPanel = (heading: string) =>
-  screen.getByText(heading).closest('.rs-panel') as HTMLElement;
+  screen.getByText(heading).closest('.MuiCard-root') as HTMLElement;
 
 const stepHeader = (index: number) =>
   screen.getByText(`blocks.mailchimpForm.step ${index + 1}`).parentElement!;
 
 const stepPanel = (index: number) =>
-  stepHeader(index).closest('.rs-panel') as HTMLElement;
+  stepHeader(index).closest('.MuiCard-root') as HTMLElement;
 
 const moveUp = (header: HTMLElement) =>
   within(header).getByLabelText('blocks.mailchimpForm.moveUp');

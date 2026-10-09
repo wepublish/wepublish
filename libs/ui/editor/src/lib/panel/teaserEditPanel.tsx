@@ -1,22 +1,39 @@
 import styled from '@emotion/styled';
+import {
+  Button,
+  Card,
+  Card as MuiCard,
+  CardContent,
+  CardHeader,
+  Drawer,
+  FormControlLabel,
+  Switch,
+} from '@mui/material';
 import { TeaserType } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Drawer, Form, Input, Panel as RPanel, Toggle } from 'rsuite';
+import { Form, Input } from 'rsuite';
 
 import { ChooseEditImage } from '../atoms/chooseEditImage';
 import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
 import { InfoTooltip } from '../atoms/infoTooltip';
 import { ListInput, ListValue } from '../atoms/listInput';
 import { Teaser } from '../blocks/types';
+import {
+  DRAWER_WIDTHS,
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 import { generateID } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 
 const { Group, Label, Control } = Form;
 
-const Panel = styled(RPanel)<{ imageUrl?: string | null }>`
+const Panel = styled(MuiCard)<{ imageUrl?: string | null }>`
   height: 200px;
   background-size: cover;
   background-image: url();
@@ -100,12 +117,12 @@ export function TeaserEditPanel({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('articleEditor.panels.editTeaser')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('articleEditor.panels.editTeaser')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'primary'}
+            variant="contained"
             onClick={() => {
               onConfirm({
                 ...initialTeaser,
@@ -125,127 +142,139 @@ export function TeaserEditPanel({
             {t('articleEditor.panels.confirm')}
           </Button>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {closeLabel ?? t('articleEditor.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         {previewForTeaser(initialTeaser, t)}
 
-        <RPanel header={t('articleEditor.panels.displayOptions')}>
-          <Form>
-            <Form.Stack fluid>
-              <Group controlId="articlePreTitle">
-                <Label>{t('articleEditor.panels.preTitle')}</Label>
-                <Control
-                  name="pre-title"
-                  value={preTitle}
-                  onChange={(preTitle: string) => setPreTitle(preTitle)}
-                />
-              </Group>
+        <Card variant="outlined">
+          <CardHeader title={t('articleEditor.panels.displayOptions')} />
 
-              <Group controlId="articleTitle">
-                <Label>{t('articleEditor.panels.title')}</Label>
-                <Control
-                  name="title"
-                  value={title}
-                  onChange={(title: string) => setTitle(title)}
-                />
-              </Group>
+          <CardContent>
+            <Form>
+              <Form.Stack fluid>
+                <Group controlId="articlePreTitle">
+                  <Label>{t('articleEditor.panels.preTitle')}</Label>
+                  <Control
+                    name="pre-title"
+                    value={preTitle}
+                    onChange={(preTitle: string) => setPreTitle(preTitle)}
+                  />
+                </Group>
 
-              <Group controlId="articleLead">
-                <Label>{t('articleEditor.panels.lead')}</Label>
-                <Control
-                  name="lead"
-                  value={lead}
-                  onChange={(lead: string) => setLead(lead)}
-                />
-              </Group>
+                <Group controlId="articleTitle">
+                  <Label>{t('articleEditor.panels.title')}</Label>
+                  <Control
+                    name="title"
+                    value={title}
+                    onChange={(title: string) => setTitle(title)}
+                  />
+                </Group>
 
-              {initialTeaser.type === TeaserType.Custom && (
-                <>
-                  <Group controlId="contentUrl">
-                    <Label>
-                      {t('articleEditor.panels.contentUrl')}{' '}
-                      <InfoTooltip
-                        text={t('articleEditor.panels.contentUrlInfo')}
+                <Group controlId="articleLead">
+                  <Label>{t('articleEditor.panels.lead')}</Label>
+                  <Control
+                    name="lead"
+                    value={lead}
+                    onChange={(lead: string) => setLead(lead)}
+                  />
+                </Group>
+
+                {initialTeaser.type === TeaserType.Custom && (
+                  <>
+                    <Group controlId="contentUrl">
+                      <Label>
+                        {t('articleEditor.panels.contentUrl')}{' '}
+                        <InfoTooltip
+                          text={t('articleEditor.panels.contentUrlInfo')}
+                        />
+                      </Label>
+
+                      <Control
+                        name="content-url"
+                        value={contentUrl}
+                        onChange={(contentUrl: string) =>
+                          setContentUrl(contentUrl)
+                        }
                       />
-                    </Label>
+                    </Group>
 
-                    <Control
-                      name="content-url"
-                      value={contentUrl}
-                      onChange={(contentUrl: string) =>
-                        setContentUrl(contentUrl)
-                      }
-                    />
-                  </Group>
-
-                  <Group controlId="openInNewTab">
-                    <Toggle
-                      checked={!!openInNewTab}
-                      onChange={(isChecked: boolean) =>
-                        setOpenInNewTab(isChecked)
-                      }
-                      label={t('articleEditor.panels.openInNewTab')}
-                    />
-                  </Group>
-
-                  <Group controlId="properties">
-                    <Label>
-                      {t('articleEditor.panels.properties')}{' '}
-                      <InfoTooltip
-                        text={t('articleEditor.panels.teaserPropertiesInfo')}
-                      />
-                    </Label>
-
-                    <ListInput
-                      value={metaDataProperties}
-                      onChange={propertiesItemInput =>
-                        setMetadataProperties(propertiesItemInput)
-                      }
-                      defaultValue={{ key: '', value: '', public: true }}
-                    >
-                      {({ value, onChange }) => (
-                        <InputsWrapper>
-                          <InputWidth40
-                            placeholder={t('articleEditor.panels.key')}
-                            value={value.key}
-                            onChange={propertyKey =>
-                              onChange({ ...value, key: propertyKey })
+                    <Group controlId="openInNewTab">
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={!!openInNewTab}
+                            onChange={(_event, isChecked: boolean) =>
+                              setOpenInNewTab(isChecked)
                             }
                           />
+                        }
+                        label={t('articleEditor.panels.openInNewTab')}
+                      />
+                    </Group>
 
-                          <InputWidth60
-                            placeholder={t('articleEditor.panels.value')}
-                            value={value.value}
-                            onChange={propertyValue =>
-                              onChange({ ...value, value: propertyValue })
-                            }
-                          />
+                    <Group controlId="properties">
+                      <Label>
+                        {t('articleEditor.panels.properties')}{' '}
+                        <InfoTooltip
+                          text={t('articleEditor.panels.teaserPropertiesInfo')}
+                        />
+                      </Label>
 
-                          <FormGroup controlId="articleProperty">
-                            <Toggle
-                              checked={value.public}
-                              onChange={isPublic =>
-                                onChange({ ...value, public: isPublic })
+                      <ListInput
+                        value={metaDataProperties}
+                        onChange={propertiesItemInput =>
+                          setMetadataProperties(propertiesItemInput)
+                        }
+                        defaultValue={{ key: '', value: '', public: true }}
+                      >
+                        {({ value, onChange }) => (
+                          <InputsWrapper>
+                            <InputWidth40
+                              placeholder={t('articleEditor.panels.key')}
+                              value={value.key}
+                              onChange={propertyKey =>
+                                onChange({ ...value, key: propertyKey })
                               }
-                              label={t('articleEditor.panels.public')}
                             />
-                          </FormGroup>
-                        </InputsWrapper>
-                      )}
-                    </ListInput>
-                  </Group>
-                </>
-              )}
-            </Form.Stack>
-          </Form>
-        </RPanel>
+
+                            <InputWidth60
+                              placeholder={t('articleEditor.panels.value')}
+                              value={value.value}
+                              onChange={propertyValue =>
+                                onChange({ ...value, value: propertyValue })
+                              }
+                            />
+
+                            <FormGroup controlId="articleProperty">
+                              <FormControlLabel
+                                control={
+                                  <Switch
+                                    checked={value.public}
+                                    onChange={(_event, isPublic) =>
+                                      onChange({ ...value, public: isPublic })
+                                    }
+                                  />
+                                }
+                                label={t('articleEditor.panels.public')}
+                              />
+                            </FormGroup>
+                          </InputsWrapper>
+                        )}
+                      </ListInput>
+                    </Group>
+                  </>
+                )}
+              </Form.Stack>
+            </Form>
+          </CardContent>
+        </Card>
 
         <ChooseEditImage
           image={image}
@@ -254,11 +283,21 @@ export function TeaserEditPanel({
           openEditModalOpen={() => setEditModalOpen(true)}
           removeImage={() => setImage(undefined)}
         />
-      </Drawer.Body>
+      </DrawerBody>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -272,8 +311,18 @@ export function TeaserEditPanel({
 
       {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel
@@ -330,37 +379,42 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
   }
 
   return (
-    <RPanel>
-      <Panel
-        bordered
-        imageUrl={imageURL}
-      />
-      <DescriptionList>
-        {contentUrl && (
-          <DescriptionListItem label={t('articleEditor.panels.contentUrl')}>
-            {contentUrl}
+    <Card variant="outlined">
+      <CardContent>
+        <Panel imageUrl={imageURL}>
+          <CardContent>
+            <CardContent>
+              <CardContent></CardContent>
+            </CardContent>
+          </CardContent>
+        </Panel>
+        <DescriptionList>
+          {contentUrl && (
+            <DescriptionListItem label={t('articleEditor.panels.contentUrl')}>
+              {contentUrl}
+            </DescriptionListItem>
+          )}
+          {openInNewTab !== undefined && (
+            <DescriptionListItem label={t('articleEditor.panels.openInNewTab')}>
+              {openInNewTab ?
+                t('articleEditor.panels.yes')
+              : t('articleEditor.panels.no')}
+            </DescriptionListItem>
+          )}
+          <DescriptionListItem label={t('articleEditor.panels.type')}>
+            {type ? t(`teaserOverview.teaserTypes.${type}`) : '-'}
           </DescriptionListItem>
-        )}
-        {openInNewTab !== undefined && (
-          <DescriptionListItem label={t('articleEditor.panels.openInNewTab')}>
-            {openInNewTab ?
-              t('articleEditor.panels.yes')
-            : t('articleEditor.panels.no')}
+          <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
+            {preTitle || '-'}
           </DescriptionListItem>
-        )}
-        <DescriptionListItem label={t('articleEditor.panels.type')}>
-          {type ? t(`teaserOverview.teaserTypes.${type}`) : '-'}
-        </DescriptionListItem>
-        <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
-          {preTitle || '-'}
-        </DescriptionListItem>
-        <DescriptionListItem label={t('articleEditor.panels.title')}>
-          {title || '-'}
-        </DescriptionListItem>
-        <DescriptionListItem label={t('articleEditor.panels.lead')}>
-          {lead || '-'}
-        </DescriptionListItem>
-      </DescriptionList>
-    </RPanel>
+          <DescriptionListItem label={t('articleEditor.panels.title')}>
+            {title || '-'}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('articleEditor.panels.lead')}>
+            {lead || '-'}
+          </DescriptionListItem>
+        </DescriptionList>
+      </CardContent>
+    </Card>
   );
 }

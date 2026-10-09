@@ -265,6 +265,8 @@
     "@sentry/react": "^11.4.0",
     "@stripe/react-stripe-js": "^3.0.0",
     "@stripe/stripe-js": "^5.0.0",
+    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.14.13",
     "@tiptap/extension-drag-handle": "^3.13.0",
     "@tiptap/extension-drag-handle-react": "^3.13.0",
     "@tiptap/extension-highlight": "^3.13.0",

@@ -1,8 +1,10 @@
+import { Drawer, Grid } from '@mui/material';
 import { FullCommentFragment, FullImageFragment } from '@wepublish/editor/api';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Col, Drawer, Form, Row } from 'rsuite';
+import { Form } from 'rsuite';
 
+import { DRAWER_WIDTHS } from '../../drawer';
 import { ImageSelectPanel } from '../../panel/imageSelectPanel';
 import { ChooseEditImage } from '../chooseEditImage';
 import { UserSearch } from '../searchAndFilter/userSearch';
@@ -45,8 +47,11 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
 
   return (
     <>
-      <Row>
-        <Col xs={24}>
+      <Grid
+        container
+        spacing={2}
+      >
+        <Grid size={{ xs: 12 }}>
           <Form.Label>{t('commentUser.selectExistingUser')}</Form.Label>
 
           <UserSearch
@@ -58,9 +63,9 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
             // @ts-expect-error test
             user={comment?.user}
           />
-        </Col>
+        </Grid>
 
-        <Col xs={24}>
+        <Grid size={{ xs: 12 }}>
           <Form.Label>{t('commentUser.guestUser')}</Form.Label>
           <Form.Control
             name="guestUser"
@@ -68,21 +73,31 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
             onChange={setGuestUser}
             value={comment?.guestUsername || ''}
           />
-        </Col>
+        </Grid>
 
-        <Col xs={18}>
+        <Grid size={{ xs: 9 }}>
           <ChooseEditImage
             image={comment?.guestUserImage}
             disabled={false}
             openChooseModalOpen={() => setOpen(true)}
             removeImage={() => setImage(undefined)}
             header={t('commentUser.selectImage')}
-            minHeight={150}
           />
-        </Col>
-      </Row>
+        </Grid>
+      </Grid>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={open}
         onClose={() => {
           setOpen(false);

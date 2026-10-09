@@ -1,5 +1,6 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import {
   CheckLoginOtpDocument,
   CreateSessionDocument,
@@ -11,6 +12,7 @@ import {
 import {
   AuthDispatchActionType,
   AuthDispatchContext,
+  enqueueSnackbar,
   LoginTemplate,
 } from '@wepublish/ui/editor';
 import React, {
@@ -24,7 +26,7 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button, Form as RForm, Message, toaster } from 'rsuite';
+import { Form as RForm } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
 import { TotpQrCode } from './ui/totpQrCode';
@@ -136,16 +138,10 @@ export function Login() {
       }, [] as string[]);
 
       if (!permissions.includes('CAN_LOGIN_EDITOR')) {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={0}
-          >
-            {t('login.unauthorized')}
-          </Message>
-        );
+        enqueueSnackbar(t('login.unauthorized'), {
+          variant: 'error',
+          autoHideDuration: null,
+        });
         return;
       }
 
@@ -216,16 +212,10 @@ export function Login() {
         forceTotpSetup(token);
       }
     } catch (error: any) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {error?.message || t('login.unauthorized')}
-        </Message>
-      );
+      enqueueSnackbar(error?.message || t('login.unauthorized'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       setTotpToken('');
     }
   }
@@ -241,16 +231,10 @@ export function Login() {
         setTotpSecret(setupResponse.data.generateTotpSetup.secret);
       }
     } catch (error) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('login.totp.setupError')}
-        </Message>
-      );
+      enqueueSnackbar(t('login.totp.setupError'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     }
   }
 
@@ -263,16 +247,10 @@ export function Login() {
       });
 
       if (response.data?.enableTotp) {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('login.totp.setupSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('login.totp.setupSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
 
         authDispatch({
           type: AuthDispatchActionType.Login,
@@ -290,16 +268,10 @@ export function Login() {
         navigate('/', { replace: true });
       }
     } catch (error: any) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {error?.message || t('login.totp.invalidCode')}
-        </Message>
-      );
+      enqueueSnackbar(error?.message || t('login.totp.invalidCode'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       setTotpToken('');
     }
   }
@@ -356,7 +328,7 @@ export function Login() {
             </Group>
 
             <Button
-              appearance="primary"
+              variant="contained"
               type="submit"
               disabled={loadingEnable || loadingSetup || !totpToken}
               onClick={handleTotpSetup}
@@ -408,7 +380,7 @@ export function Login() {
             </Group>
           )}
           <Button
-            appearance="primary"
+            variant="contained"
             type="submit"
             disabled={loading}
             onClick={handleLogin}

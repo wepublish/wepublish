@@ -1,12 +1,21 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { InfoTooltip, InfoTrigger } from './infoTooltip';
 
-describe('InfoTooltip', () => {
-  it('explains itself when it gets focus', async () => {
-    render(<InfoTooltip text="Applies to new articles only." />);
+const theme = createTheme();
 
-    fireEvent.focus(
+describe('InfoTooltip', () => {
+  // MUI opens the tooltip on hover and on keyboard focus; jsdom cannot
+  // simulate `:focus-visible`, which is what MUI checks, so this covers hover.
+  it('explains itself when it is pointed at', async () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <InfoTooltip text="Applies to new articles only." />
+      </ThemeProvider>
+    );
+
+    fireEvent.mouseOver(
       screen.getByRole('button', { name: 'Applies to new articles only.' })
     );
 
@@ -17,10 +26,12 @@ describe('InfoTooltip', () => {
 
   it('can be named separately from a longer explanation', () => {
     render(
-      <InfoTooltip
-        label="What is this?"
-        text={<p>A longer explanation.</p>}
-      />
+      <ThemeProvider theme={theme}>
+        <InfoTooltip
+          label="What is this?"
+          text={<p>A longer explanation.</p>}
+        />
+      </ThemeProvider>
     );
 
     expect(screen.getByRole('button', { name: 'What is this?' })).toBeTruthy();
@@ -32,9 +43,11 @@ describe('InfoTrigger', () => {
     const onSubmit = vi.fn(event => event.preventDefault());
 
     render(
-      <form onSubmit={onSubmit}>
-        <InfoTrigger aria-label="Info" />
-      </form>
+      <ThemeProvider theme={theme}>
+        <form onSubmit={onSubmit}>
+          <InfoTrigger aria-label="Info" />
+        </form>
+      </ThemeProvider>
     );
 
     fireEvent.click(screen.getByRole('button', { name: 'Info' }));

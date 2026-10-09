@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import {
   InfoTooltip,
   ListViewActions,
@@ -8,7 +9,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Button, Panel as RPanel } from 'rsuite';
 
 import { AudienceDashboard } from '../audience/audience-dashboard';
 import NetworkContentDashboard from '../networkContent/networkContentDashboard';
@@ -37,72 +37,81 @@ export function Dashboard() {
       {/* renders its own panel and hides it while there is nothing to show */}
       <DashboardNotifications />
 
-      <RPanel
-        header={
-          <h2>
-            {t('dashboard.externalApps')}{' '}
-            <InfoTooltip text={t('dashboard.externalAppsInfo')} />
-          </h2>
-        }
-        bordered
-      >
-        <ExternalAppsDashboard />
-      </RPanel>
-
-      <RPanel
-        header={
-          <ListViewContainer>
-            <ListViewHeader>
-              <h2>{t('dashboard.audience')}</h2>
-            </ListViewHeader>
-
-            <ListViewActions>
-              <Link to="/audience/dashboard">
-                <Button
-                  appearance="primary"
-                  endIcon={<MdChevronRight />}
-                >
-                  {t('dashboard.goToAudienceDashboard')}
-                </Button>
-              </Link>
-            </ListViewActions>
-          </ListViewContainer>
-        }
-        bordered
-      >
-        <AudienceDashboard
-          hideHeader
-          hideFilter
-          initialDateRange="lastWeek"
+      <Card variant="outlined">
+        <CardHeader
+          title={
+            <h2>
+              {t('dashboard.externalApps')}{' '}
+              <InfoTooltip text={t('dashboard.externalAppsInfo')} />
+            </h2>
+          }
         />
-      </RPanel>
 
-      <RPanel
-        header={
-          <ListViewContainer>
-            <ListViewHeader>
-              <h2>
-                {t('dashboard.networkContent')}{' '}
-                <InfoTooltip text={t('dashboard.networkContentInfo')} />
-              </h2>
-            </ListViewHeader>
+        <CardContent>
+          <ExternalAppsDashboard />
+        </CardContent>
+      </Card>
 
-            <ListViewActions>
-              <Link to="/network">
-                <Button
-                  appearance="primary"
-                  endIcon={<MdChevronRight />}
-                >
-                  {t('dashboard.goToNetwork')}
-                </Button>
-              </Link>
-            </ListViewActions>
-          </ListViewContainer>
-        }
-        bordered
-      >
-        <NetworkContentDashboard />
-      </RPanel>
+      <Card variant="outlined">
+        <CardHeader
+          title={
+            <ListViewContainer>
+              <ListViewHeader>
+                <h2>{t('dashboard.audience')}</h2>
+              </ListViewHeader>
+
+              <ListViewActions>
+                <Link to="/audience/dashboard">
+                  <Button
+                    variant="contained"
+                    endIcon={<MdChevronRight />}
+                  >
+                    {t('dashboard.goToAudienceDashboard')}
+                  </Button>
+                </Link>
+              </ListViewActions>
+            </ListViewContainer>
+          }
+        />
+
+        <CardContent>
+          <AudienceDashboard
+            hideHeader
+            hideFilter
+            initialDateRange="lastWeek"
+          />
+        </CardContent>
+      </Card>
+
+      <Card variant="outlined">
+        <CardHeader
+          title={
+            <ListViewContainer>
+              <ListViewHeader>
+                <h2>
+                  {t('dashboard.networkContent')}{' '}
+                  <InfoTooltip text={t('dashboard.networkContentInfo')} />
+                </h2>
+              </ListViewHeader>
+
+              <ListViewActions>
+                <Link to="/network">
+                  <Button
+                    variant="contained"
+                    endIcon={<MdChevronRight />}
+                  >
+                    {t('dashboard.goToNetwork')}
+                  </Button>
+                </Link>
+              </ListViewActions>
+            </ListViewContainer>
+          }
+        />
+
+        <CardContent>
+          <NetworkContentDashboard />
+        </CardContent>
+      </Card>
     </DashboardColumns>
   );
 }

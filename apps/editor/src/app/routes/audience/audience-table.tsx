@@ -1,15 +1,16 @@
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import ListIcon from '@rsuite/icons/List';
 import { DailySubscriptionStats } from '@wepublish/editor/api';
 import { InfoTooltip } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Table } from 'rsuite';
+import { Table } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 import { AudienceDetailDrawer } from './audience-detail-drawer';
-import { AudienceStatsComputed } from './useAudience';
 import { AudienceClientFilter, TimeResolution } from './audience-filter-params';
+import { AudienceStatsComputed } from './useAudience';
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -309,8 +310,8 @@ export function AudienceTable({
           <Cell dataKey="action">
             {(rowData: RowDataType<AudienceStatsComputed>) => (
               <Button
-                size="xs"
-                appearance="primary"
+                variant="contained"
+                size="small"
                 startIcon={<ListIcon />}
                 onClick={() =>
                   setSelectedAudienceStats(rowData as AudienceStatsComputed)

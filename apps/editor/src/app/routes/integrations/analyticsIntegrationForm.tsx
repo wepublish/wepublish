@@ -8,11 +8,10 @@ import {
   SettingsIntegrationsAnalyticsDocument,
   UpdateAnalyticsProviderSettingDocument,
 } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
 import { ComponentProps, forwardRef, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
-import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 import googleLogo from './assets/google.svg';
@@ -37,16 +36,10 @@ const analyticsSettingsSchema = z.object({
 type IntegrationFormValues = z.infer<typeof analyticsSettingsSchema>;
 
 const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const CustomDropzoneWrapper = styled.div<{ dragging: boolean; valid: boolean }>`

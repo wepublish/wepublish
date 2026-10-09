@@ -1,24 +1,20 @@
 import { useMutation } from '@apollo/client/react';
-import styled from '@emotion/styled';
+import { Alert, Button, Card, CardContent } from '@mui/material';
 import { CreateTokenDocument, TokenListDocument } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Drawer,
-  Input,
-  Message as RMessage,
-  Panel,
-  toaster,
-} from 'rsuite';
+import { Input } from 'rsuite';
 
 import { createCheckedPermissionComponent } from '../atoms';
-import { getOperationNameFromDocument } from '../utility';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 import { humanizeError } from '../humanizeError';
-
-const Message = styled(RMessage)`
-  margin-top: 4px;
-`;
+import { enqueueSnackbar } from '../snackbar';
+import { getOperationNameFromDocument } from '../utility';
 
 export interface TokenGeneratePanelProps {
   onClose?(): void;
@@ -40,16 +36,10 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
 
   useEffect(() => {
     if (createError?.message)
-      toaster.push(
-        <RMessage
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {humanizeError(createError)}
-        </RMessage>
-      );
+      enqueueSnackbar(humanizeError(createError), {
+        variant: 'error',
+        autoHideDuration: null,
+      });
   }, [createError]);
 
   async function handleSave() {
@@ -58,43 +48,40 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('tokenList.panels.generateToken')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('tokenList.panels.generateToken')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           {!hasGeneratedToken && (
             <Button
+              variant="contained"
               disabled={isDisabled}
               onClick={handleSave}
-              appearance="primary"
             >
               {t('tokenList.panels.generate')}
             </Button>
           )}
           <Button
+            variant="text"
             onClick={() => onClose?.()}
-            appearance="subtle"
           >
             {t('tokenList.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
-      <Drawer.Body>
+        </DrawerActions>
+      </DrawerHeader>
+      <DrawerBody>
         {token ?
           <>
             <p>{t('tokenList.panels.creationSuccess')}</p>
-            <Panel
-              bordered
+            <Card
+              variant="outlined"
               data-sentry-mask
             >
-              {token}
-            </Panel>
-            <Message
-              showIcon
-              type="warning"
-            >
+              <CardContent>{token}</CardContent>
+            </Card>
+            <Alert severity="warning">
               {t('tokenList.panels.tokenWarning')}
-            </Message>
+            </Alert>
           </>
         : <Input
             placeholder={t('tokenList.panels.name')}
@@ -105,7 +92,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
             }}
           />
         }
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }

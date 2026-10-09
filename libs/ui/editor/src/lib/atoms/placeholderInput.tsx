@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
+import { IconButton } from '@mui/material';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
-import { IconButton } from 'rsuite';
 
 import { IconButtonTooltip } from './iconButtonTooltip';
 
@@ -61,11 +61,12 @@ export function PlaceholderInput({
       <IconButtonTooltip caption={addLabel ?? t('placeholderInput.add')}>
         <IconButton
           disabled={disabled}
-          size="sm"
+          size="small"
           aria-label={addLabel ?? t('placeholderInput.add')}
-          icon={<MdAddCircle />}
           onClick={() => onAddClick && onAddClick()}
-        />
+        >
+          <MdAddCircle />
+        </IconButton>
       </IconButtonTooltip>
     </PlaceholderInputWrapper>
   );

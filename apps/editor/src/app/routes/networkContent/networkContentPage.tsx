@@ -1,10 +1,14 @@
 import { useMutation } from '@apollo/client/react';
+import { CircularProgress } from '@mui/material';
 import { ImportPeerArticleDocument } from '@wepublish/editor/api';
-import { ListViewContainer, ListViewHeader } from '@wepublish/ui/editor';
+import {
+  ListViewContainer,
+  ListViewHeader,
+  Pagination,
+} from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Loader, Pagination } from 'rsuite';
 
 import {
   ARTICLES_PER_PAGE,
@@ -158,7 +162,7 @@ export function NetworkContentPage() {
 
           {loading && (
             <CenteredContainer>
-              <Loader />
+              <CircularProgress />
             </CenteredContainer>
           )}
 
@@ -195,14 +199,13 @@ export function NetworkContentPage() {
           {!loading && !error && articleTotalPages > 1 && (
             <CardFooter>
               <Pagination
-                prev
-                next
-                size="sm"
-                maxButtons={5}
-                total={articleTotalCount}
-                limit={ARTICLES_PER_PAGE}
-                activePage={articlePage + 1}
-                onChangePage={nextPage => setArticlePage(nextPage - 1)}
+                state={{
+                  page: articlePage + 1,
+                  limit: ARTICLES_PER_PAGE,
+                  setPage: nextPage => setArticlePage(nextPage - 1),
+                  setLimit: () => undefined /* page size was fixed here */,
+                }}
+                totalCount={articleTotalCount}
               />
             </CardFooter>
           )}

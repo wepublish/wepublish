@@ -105,9 +105,7 @@ describe('fitColumnWidths', () => {
       <>
         {false && <Column width={500} />}
         <Column width={200} />
-        <>
-          <Column width={200} />
-        </>
+        <Column width={200} />
       </>,
       200
     );

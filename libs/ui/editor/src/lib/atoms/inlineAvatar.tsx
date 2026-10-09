@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
+import { Avatar } from '@mui/material';
 import { PropsWithChildren } from 'react';
 import { Link } from 'react-router-dom';
-import { Avatar } from 'rsuite';
 
 const InlineAvatarWrapper = styled.div`
   display: flex;
@@ -31,8 +31,6 @@ export const InlineAvatar = ({
     <Avatar
       src={src ?? ''}
       alt={title ?? undefined}
-      circle
-      size="xs"
     />
   );
 

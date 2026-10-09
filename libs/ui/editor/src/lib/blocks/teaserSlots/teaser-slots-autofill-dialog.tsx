@@ -1,10 +1,16 @@
 'use client';
 
 import styled from '@emotion/styled';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import { TeaserSlotsAutofillConfigInput } from '@wepublish/editor/api';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Modal } from 'rsuite';
 
 import { TeaserSlotsAutofillConfigPanel } from './teaser-slots-autofill-config';
 
@@ -16,14 +22,8 @@ interface TeaserSlotsDialogProps {
   onCancel: () => void;
 }
 
-const StyledModal = styled(Modal)`
-  .rs-modal-content {
-    border-radius: var(--rs-radius-lg);
-  }
-`;
-
 const Description = styled('p')`
-  color: var(--rs-text-secondary);
+  color: var(--mui-palette-text-secondary);
   margin-top: 8px;
   margin-bottom: 16px;
 `;
@@ -70,44 +70,44 @@ export function TeaserSlotsAutofillDialog({
   };
 
   return (
-    <StyledModal
+    <Dialog
       open={open}
       onClose={handleClose}
-      size="sm"
+      fullWidth
+      maxWidth="sm"
     >
-      <Modal.Header>
-        <Modal.Title>
-          {!localConfig.enabled ?
-            t('blocks.teaserSlots.dialogTitleEnable')
-          : t('blocks.teaserSlots.dialogTitleConfigure')}
-        </Modal.Title>
+      <DialogTitle>
+        {!localConfig.enabled ?
+          t('blocks.teaserSlots.dialogTitleEnable')
+        : t('blocks.teaserSlots.dialogTitleConfigure')}
+
         <Description>
           {!localConfig.enabled ?
             t('blocks.teaserSlots.dialogDescriptionEnable')
           : t('blocks.teaserSlots.dialogDescriptionConfigure')}
         </Description>
-      </Modal.Header>
+      </DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         <ContentContainer>
           <TeaserSlotsAutofillConfigPanel
             config={localConfig}
             onChange={setLocalConfig}
           />
         </ContentContainer>
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <FooterContainer>
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={handleCancel}
           >
             {t('cancel')}
           </Button>
 
           <Button
-            appearance="primary"
+            variant="contained"
             onClick={handleSave}
           >
             {!localConfig.enabled ?
@@ -115,7 +115,7 @@ export function TeaserSlotsAutofillDialog({
             : t('blocks.teaserSlots.saveConfiguration')}
           </Button>
         </FooterContainer>
-      </Modal.Footer>
-    </StyledModal>
+      </DialogActions>
+    </Dialog>
   );
 }

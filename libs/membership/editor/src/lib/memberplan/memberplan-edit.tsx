@@ -20,24 +20,19 @@ import {
   SingleView,
   SingleViewContent,
   SingleViewTitle,
+  enqueueSnackbar,
 } from '@wepublish/ui/editor';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
+import { Form, Schema } from 'rsuite';
 import { MemberPlanForm } from './memberplan-form';
 
 const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const closePath = '/memberplans';
@@ -234,29 +229,17 @@ function MemberPlanEdit() {
     );
 
     if (!periodicityPricing.some(price => price.amountMin != null)) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {t('memberplanForm.periodicityPricingRequired')}
-        </Message>
-      );
+      enqueueSnackbar(t('memberplanForm.periodicityPricingRequired'), {
+        variant: 'error',
+      });
 
       return;
     }
 
     if (hasInvalidRow) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {t('memberPlanEdit.targetPriceMustBeGreaterThanMin')}
-        </Message>
-      );
+      enqueueSnackbar(t('memberPlanEdit.targetPriceMustBeGreaterThanMin'), {
+        variant: 'error',
+      });
 
       return;
     }
@@ -313,14 +296,9 @@ function MemberPlanEdit() {
           ...memberPlanInput,
         },
         onCompleted: data => {
-          toaster.push(
-            <Message
-              type="success"
-              closable
-            >
-              {t('memberPlanEdit.savedChanges')}
-            </Message>
-          );
+          enqueueSnackbar(t('memberPlanEdit.savedChanges'), {
+            variant: 'success',
+          });
         },
       });
     } else {
@@ -328,14 +306,9 @@ function MemberPlanEdit() {
       await createMemberPlanMutation({
         variables: memberPlanInput,
         onCompleted: data => {
-          toaster.push(
-            <Message
-              type="success"
-              closable
-            >
-              {t('memberPlanEdit.savedChanges')}
-            </Message>
-          );
+          enqueueSnackbar(t('memberPlanEdit.savedChanges'), {
+            variant: 'success',
+          });
           navigate(`/memberplans/edit/${data.createMemberPlan?.id}`);
         },
       });

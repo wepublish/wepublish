@@ -1,5 +1,14 @@
 import styled from '@emotion/styled';
 import {
+  Badge,
+  Button,
+  ButtonGroup,
+  IconButton as MuiIconButton,
+  IconButtonProps,
+  MenuItem,
+  MenuList,
+} from '@mui/material';
+import {
   CommentRejectionReason,
   CommentState,
   FullCommentFragment,
@@ -7,16 +16,8 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArrowDropDown } from 'react-icons/md';
-import {
-  Badge,
-  ButtonGroup,
-  Dropdown,
-  IconButton as RIconButton,
-  Popover as RPopover,
-  Whisper,
-} from 'rsuite';
-import type { BasicSize } from 'rsuite/esm/internals/types';
 
+import { ClickPopover } from '../../popover';
 import {
   CommentStateChangeModal,
   mapCommentActionToBtnTitle,
@@ -26,23 +27,23 @@ const BadgeWrapper = styled.div`
   margin-bottom: 5px;
 `;
 
-const Popover = styled(RPopover)<{ left: number; top: number }>`
-  left: ${({ left }) => left};
-  top: ${({ top }) => top};
-`;
-const IconButton = styled(RIconButton)`
+/** Surface for the state menu; positioning comes from the popover around it. */
+const Popover = styled('div')``;
+const IconButton = styled(MuiIconButton)`
   padding: 2px;
 `;
 
-export function mapCommentStateToColor(commentState: CommentState) {
+export function mapCommentStateToColor(
+  commentState: CommentState
+): 'success' | 'warning' | 'error' | undefined {
   switch (commentState) {
     case CommentState.Approved:
-      return 'green';
+      return 'success';
     case CommentState.PendingApproval:
     case CommentState.PendingUserChanges:
-      return 'yellow';
+      return 'warning';
     case CommentState.Rejected:
-      return 'red';
+      return 'error';
   }
 }
 
@@ -61,7 +62,7 @@ export function humanReadableCommentState(commentState: CommentState) {
 
 interface CommentStateViewProps {
   comment: FullCommentFragment;
-  size?: BasicSize;
+  size?: IconButtonProps['size'];
   onStateChanged?(
     commentState: CommentState,
     rejectReason?: CommentRejectionReason | null
@@ -86,77 +87,60 @@ export function CommentStateDropdown({
     comment.state === CommentState.Rejected ||
     comment.state === CommentState.PendingUserChanges;
 
-  const renderMenu = (
-    {
-      onClose,
-      className,
-    }: { className?: string; onClose?: (delay?: number) => void },
-    ref: any
-  ) => {
-    const handleSelect = (eventKey: string | number | undefined) => {
-      onClose?.();
-      if (eventKey) {
-        setNewCommentState(eventKey as CommentState);
-      }
-    };
-
-    return (
-      <RPopover
-        ref={ref}
-        className={className}
-        full
-      >
-        <Dropdown.Menu onSelect={handleSelect}>
-          {Object.values(CommentState)
-            .filter(tmpState => tmpState !== CommentState.PendingApproval)
-            .map((tmpState, index) => (
-              <Dropdown.Item
-                key={index}
-                eventKey={tmpState}
-              >
-                {t(mapCommentActionToBtnTitle(tmpState))}
-              </Dropdown.Item>
-            ))}
-        </Dropdown.Menu>
-      </RPopover>
-    );
-  };
+  const renderMenu = (close: () => void) => (
+    <MenuList>
+      {Object.values(CommentState)
+        .filter(tmpState => tmpState !== CommentState.PendingApproval)
+        .map(tmpState => (
+          <MenuItem
+            key={tmpState}
+            onClick={() => {
+              close();
+              setNewCommentState(tmpState);
+            }}
+          >
+            {t(mapCommentActionToBtnTitle(tmpState))}
+          </MenuItem>
+        ))}
+    </MenuList>
+  );
 
   return (
     <>
       {showBadge && (
         <BadgeWrapper>
           <Badge
-            content={comment.rejectionReason}
+            badgeContent={comment.rejectionReason}
             color={mapCommentStateToColor(comment.state)}
           />
         </BadgeWrapper>
       )}
       <div>
         <ButtonGroup>
-          <IconButton
-            appearance="ghost"
-            icon={<MdArrowDropDown />}
-            placement="left"
+          <Button
+            variant="outlined"
+            startIcon={<MdArrowDropDown />}
             color={mapCommentStateToColor(comment.state)}
-            size={size || 'md'}
+            size={size ?? 'medium'}
           >
             {t(humanReadableCommentState(comment.state))}
-          </IconButton>
-          <Whisper
-            placement="bottomEnd"
-            trigger="click"
-            speaker={renderMenu}
+          </Button>
+          <ClickPopover
+            trigger={
+              <IconButton
+                size={size ?? 'medium'}
+                color={mapCommentStateToColor(comment.state)}
+                title={t('comments.overview.editState')}
+                aria-label={t('comments.overview.editState')}
+              >
+                <MdArrowDropDown />
+              </IconButton>
+            }
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
-            <IconButton
-              size={size || 'md'}
-              appearance="primary"
-              color={mapCommentStateToColor(comment.state)}
-              icon={<MdArrowDropDown />}
-              title={t('comments.overview.editState')}
-              aria-label={t('comments.overview.editState')}
-            />
-          </Whisper>
+            {renderMenu}
+          </ClickPopover>
         </ButtonGroup>
       </div>
 

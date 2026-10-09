@@ -3,18 +3,15 @@ import {
   SubscriptionEvent,
   SubscriptionFlowFragment,
 } from '@wepublish/editor/api';
-import { PermissionControl, useAuthorisation } from '@wepublish/ui/editor';
+import {
+  PermissionControl,
+  useAuthorisation,
+  ClickPopover,
+} from '@wepublish/ui/editor';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdAlarmOn, MdCheck, MdEdit, MdRefresh } from 'react-icons/md';
-import {
-  Button,
-  IconButton,
-  NumberInput,
-  Popover,
-  Whisper,
-  type WhisperInstance,
-} from 'rsuite';
+import { NumberInput } from 'rsuite';
 import { MailSubsection } from '../../mail-settings-layout';
 import { DraggableSubscriptionInterval } from '../draggable-subscription-interval';
 import { DroppableSubscriptionInterval } from '../droppable-subscription-interval';
@@ -24,6 +21,7 @@ import {
   MailTemplatesContext,
   NonUserActionInterval,
 } from '../subscription-flow-list';
+import { Button, IconButton } from '@mui/material';
 
 const DayList = styled('ol')`
   margin: 0;
@@ -154,52 +152,50 @@ interface AddDayProps {
 
 function AddDay({ onAdd }: AddDayProps) {
   const { t } = useTranslation();
-  const whisper = useRef<WhisperInstance>(null);
   const [day, setDay] = useState(-3);
 
   return (
     <PermissionControl qualifyingPermissions={['CAN_UPDATE_SUBSCRIPTION_FLOW']}>
-      <Whisper
-        ref={whisper}
-        placement="bottomEnd"
-        trigger="click"
-        speaker={
-          <Popover>
-            <NewDayBody>
-              <h6>{t('subscriptionFlow.newDayTitle')}</h6>
-
-              <NewDayHint>{t('subscriptionFlow.newDayHint')}</NewDayHint>
-
-              <NewDayForm>
-                <NumberInput
-                  defaultValue={day}
-                  onChange={value => setDay(+(value ?? 0))}
-                  step={1}
-                />
-
-                <Button
-                  appearance="primary"
-                  startIcon={<MdAdd />}
-                  onClick={() => {
-                    onAdd(day);
-                    whisper.current?.close();
-                  }}
-                >
-                  {t('subscriptionFlow.add')}
-                </Button>
-              </NewDayForm>
-            </NewDayBody>
-          </Popover>
+      <ClickPopover
+        trigger={
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<MdAdd />}
+          >
+            {t('subscriptionFlow.addDay')}
+          </Button>
         }
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <Button
-          size="sm"
-          appearance="ghost"
-          startIcon={<MdAdd />}
-        >
-          {t('subscriptionFlow.addDay')}
-        </Button>
-      </Whisper>
+        {close => (
+          <NewDayBody>
+            <h6>{t('subscriptionFlow.newDayTitle')}</h6>
+
+            <NewDayHint>{t('subscriptionFlow.newDayHint')}</NewDayHint>
+
+            <NewDayForm>
+              <NumberInput
+                defaultValue={day}
+                onChange={value => setDay(+(value ?? 0))}
+                step={1}
+              />
+
+              <Button
+                variant="contained"
+                startIcon={<MdAdd />}
+                onClick={() => {
+                  onAdd(day);
+                  close();
+                }}
+              >
+                {t('subscriptionFlow.add')}
+              </Button>
+            </NewDayForm>
+          </NewDayBody>
+        )}
+      </ClickPopover>
     </PermissionControl>
   );
 }
@@ -244,40 +240,36 @@ function EditDay({ day, subscriptionFlow }: EditDayProps) {
   }
 
   return (
-    <Whisper
-      placement="bottomStart"
-      trigger="click"
-      onClose={() => (editDay.current = undefined)}
-      speaker={
-        <Popover>
-          <PopoverBody>
-            <NumberInput
-              onChange={value => (editDay.current = +(value ?? 0))}
-              size="sm"
-              defaultValue={day}
-              step={1}
-              postfix={t('subscriptionFlow.days')}
-            />
-
-            <IconButton
-              icon={<MdCheck />}
-              color="green"
-              appearance="primary"
-              size="sm"
-              onClick={updateTimelineDay}
-            />
-          </PopoverBody>
-        </Popover>
+    <ClickPopover
+      trigger={
+        <IconButton
+          size="small"
+          aria-label={t('subscriptionFlow.editDay')}
+        >
+          <MdEdit />
+        </IconButton>
       }
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'left' }}
     >
-      <IconButton
-        icon={<MdEdit />}
-        size="sm"
-        circle
-        appearance="subtle"
-        aria-label={t('subscriptionFlow.editDay')}
-      />
-    </Whisper>
+      <PopoverBody>
+        <NumberInput
+          onChange={value => (editDay.current = +(value ?? 0))}
+          size="sm"
+          defaultValue={day}
+          step={1}
+          postfix={t('subscriptionFlow.days')}
+        />
+
+        <IconButton
+          color="success"
+          size="small"
+          onClick={updateTimelineDay}
+        >
+          <MdCheck />
+        </IconButton>
+      </PopoverBody>
+    </ClickPopover>
   );
 }
 
@@ -389,8 +381,8 @@ export function Timeline({ subscriptionFlow }: TimelineProps) {
                   >
                     <AddMail>
                       <Button
-                        size="xs"
-                        appearance="subtle"
+                        variant="text"
+                        size="small"
                         startIcon={<MdAdd />}
                         onClick={() => addMail(day)}
                       >

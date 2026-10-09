@@ -1,6 +1,12 @@
+import {
+  Alert,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, Modal } from 'rsuite';
 
 import {
   createCheckedPermissionComponent,
@@ -37,17 +43,15 @@ function PublishArticlePanel({
 
   return (
     <>
-      <Modal.Header>
-        <Modal.Title>{t('articleEditor.panels.publishArticle')}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{t('articleEditor.panels.publishArticle')}</DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         {publishedAt && publishedAt > now && (
-          <Message type="warning">
+          <Alert severity="warning">
             {t('articleEditor.panels.articlePending', {
               pendingPublishDate: publishedAt,
             })}
-          </Message>
+          </Alert>
         )}
 
         <div style={{ maxWidth: '200px' }}>
@@ -197,23 +201,23 @@ function PublishArticlePanel({
             {metadata.socialMediaImage?.filename}
           </DescriptionListItemWithMessage>
         </DescriptionList>
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
-          appearance="primary"
+          variant="contained"
           disabled={!publishedAt || !metadata.slug}
           onClick={() => onConfirm(publishedAt!)}
         >
           {t('articleEditor.panels.confirm')}
         </Button>
         <Button
-          appearance="subtle"
+          variant="text"
           onClick={() => onClose()}
         >
           {t('articleEditor.panels.close')}
         </Button>
-      </Modal.Footer>
+      </DialogActions>
     </>
   );
 }

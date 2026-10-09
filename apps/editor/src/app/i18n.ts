@@ -1,10 +1,10 @@
+import { humanizeError } from '@wepublish/ui/editor';
 import { format as formatDate, isDate, Locale } from 'date-fns';
 import {
   de as deLocale,
   enGB as enLocale,
   fr as frLocale,
 } from 'date-fns/locale';
-import { humanizeError } from '@wepublish/ui/editor';
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';

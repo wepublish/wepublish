@@ -1,9 +1,19 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton as MuiIconButton,
+  Stack,
+} from '@mui/material';
+import {
+  CommentRatingSystemAnswer,
   CreateRatingSystemAnswerDocument,
   DeleteRatingSystemAnswerDocument,
-  CommentRatingSystemAnswer,
   FullCommentRatingSystemFragment,
   RatingSystemDocument,
   RatingSystemType,
@@ -11,6 +21,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
   humanizeError,
   IconButtonTooltip,
   InfoTooltip,
@@ -22,24 +33,14 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdOutlineSave, MdReplay } from 'react-icons/md';
-import {
-  Button,
-  Form,
-  IconButton as RIconButton,
-  Loader as RLoader,
-  Message,
-  Modal,
-  SelectPicker,
-  Stack,
-  toaster,
-} from 'rsuite';
+import { Form, SelectPicker } from 'rsuite';
 
 const Content = styled.div`
   margin-top: 2rem;
   height: 100%;
 `;
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   margin-right: 12px;
 `;
 
@@ -75,7 +76,7 @@ const AnswerRow = styled.div`
   }
 `;
 
-const Loader = styled(RLoader)`
+const Loader = styled(CircularProgress)`
   margin: 32px;
 `;
 
@@ -86,16 +87,10 @@ const P = styled.p`
 `;
 
 const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 function CommentRatingEditView() {
@@ -160,16 +155,10 @@ function CommentRatingEditView() {
     {
       onError: showErrors,
       onCompleted: () =>
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('comments.ratingEdit.updateSuccessful')}
-          </Message>
-        ),
+        enqueueSnackbar(t('comments.ratingEdit.updateSuccessful'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        }),
     }
   );
 
@@ -209,9 +198,9 @@ function CommentRatingEditView() {
 
         {ratingSystem && (
           <ListViewActions>
-            <IconButton
-              appearance="primary"
-              icon={<MdAdd />}
+            <Button
+              variant="contained"
+              startIcon={<MdAdd />}
               onClick={() => {
                 addAnswer({
                   variables: {
@@ -222,14 +211,14 @@ function CommentRatingEditView() {
               }}
             >
               {t('comments.ratingEdit.newAnswer')}
-            </IconButton>
+            </Button>
 
-            <RIconButton
+            <Button
+              variant="contained"
+              startIcon={<MdOutlineSave />}
               type="button"
-              appearance="primary"
               data-testid="save"
               disabled={isLoading}
-              icon={<MdOutlineSave />}
               onClick={() =>
                 updateAnswer({
                   variables: {
@@ -246,7 +235,7 @@ function CommentRatingEditView() {
                   <MdReplay /> {t('comments.ratingEdit.loading')}
                 </P>
               : t('save')}
-            </RIconButton>
+            </Button>
           </ListViewActions>
         )}
       </ListViewContainer>
@@ -268,29 +257,32 @@ function CommentRatingEditView() {
       </TableWrapper>
 
       {isFetching && (
-        <Stack justifyContent="center">
-          <Loader size="lg" />
+        <Stack
+          direction="row"
+          sx={{ justifyContent: 'center' }}
+        >
+          <CircularProgress size={40} />
         </Stack>
       )}
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!answerToDelete}
-        backdrop="static"
-        size="xs"
+        maxWidth="xs"
         onClose={() => setAnswerToDelete(null)}
       >
-        <Modal.Title>{t('comments.ratingEdit.areYouSure')}</Modal.Title>
-        <Modal.Body>
+        <DialogTitle>{t('comments.ratingEdit.areYouSure')}</DialogTitle>
+        <DialogContent>
           {t('comments.ratingEdit.areYouSureBody', {
             answer: ratingSystem?.answers.find(
               answer => answer.id === answerToDelete
             )?.answer,
           })}
-        </Modal.Body>
-        <Modal.Footer>
+        </DialogContent>
+        <DialogActions>
           <Button
-            color="red"
-            appearance="primary"
+            variant="contained"
+            color="error"
             onClick={() => {
               deleteAnswer({
                 variables: {
@@ -304,13 +296,13 @@ function CommentRatingEditView() {
           </Button>
 
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setAnswerToDelete(null)}
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
@@ -358,15 +350,14 @@ export function RatingAnswers({
           />
 
           <IconButtonTooltip caption={t('delete')}>
-            <RIconButton
+            <IconButton
               aria-label={t('delete')}
-              icon={<MdDelete />}
-              circle
-              size="sm"
-              appearance="ghost"
-              color="red"
+              size="small"
+              color="error"
               onClick={() => onDeleteAnswer(answer.id)}
-            />
+            >
+              <MdDelete />
+            </IconButton>
           </IconButtonTooltip>
         </AnswerRow>
       ))}

@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { useEffect } from 'react';
-import { IconButton, Message, Table as RTable, toaster } from 'rsuite';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -10,29 +9,21 @@ import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  Table,
   TableWrapper,
+  enqueueSnackbar,
+  DataTable,
 } from '@wepublish/ui/editor';
 import {
   DeleteUserConsentDocument,
-  FullUserConsentFragment,
   UserConsentsDocument,
 } from '@wepublish/editor/api';
-import { RowDataType } from 'rsuite-table';
-
-const { Column, HeaderCell, Cell } = RTable;
+import { IconButton, Button } from '@mui/material';
 
 const onErrorToast = (error: Error) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 /* eslint-disable-next-line */
@@ -52,16 +43,10 @@ export function UserConsentList(props: UserConsentListProps) {
   const [deleteUserConsent] = useMutation(DeleteUserConsentDocument, {
     onError: onErrorToast,
     onCompleted: () => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.deletedSuccess')}
-        </Message>
-      );
+      enqueueSnackbar(t('toast.deletedSuccess'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
       refetch();
     },
   });
@@ -82,103 +67,77 @@ export function UserConsentList(props: UserConsentListProps) {
         </ListViewHeader>
         <ListViewActions>
           <Link to="/userConsents/create">
-            <IconButton
-              appearance="primary"
+            <Button
+              variant="contained"
+              startIcon={<MdAdd />}
               disabled={loading}
-              icon={<MdAdd />}
             >
               {t('userConsents.create')}
-            </IconButton>
+            </Button>
           </Link>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
           data={data?.userConsents || []}
-        >
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('userConsents.user')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullUserConsentFragment>) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'user',
+              label: t('userConsents.user'),
+              width: 200,
+              render: rowData => (
                 <Link to={`/userConsents/edit/${rowData.id}`}>
                   {(rowData.user.firstName || '') + ' ' + rowData.user.name}
                 </Link>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('userConsents.consentName')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullUserConsentFragment>) => (
-                <span>{rowData.consent.name}</span>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('userConsents.consentSlug')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullUserConsentFragment>) => (
-                <span>{rowData.consent.slug}</span>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('userConsents.value')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullUserConsentFragment>) => (
+              ),
+            },
+            {
+              id: 'consentname',
+              label: t('userConsents.consentName'),
+              width: 200,
+              render: rowData => <span>{rowData.consent.name}</span>,
+            },
+            {
+              id: 'consentslug',
+              label: t('userConsents.consentSlug'),
+              width: 200,
+              render: rowData => <span>{rowData.consent.slug}</span>,
+            },
+            {
+              id: 'value',
+              label: t('userConsents.value'),
+              width: 200,
+              render: rowData => (
                 <span>
                   {rowData.value ?
                     t('consents.accepted')
                   : t('consents.rejected')}
                 </span>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={100}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <Cell
-              align="center"
-              style={{ padding: '6px 0' }}
-            >
-              {(rowData: RowDataType<FullUserConsentFragment>) => (
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: rowData => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     aria-label={t('delete')}
-                    icon={<MdDelete />}
-                    color="red"
-                    appearance="ghost"
-                    circle
-                    size="sm"
+                    color="error"
+                    size="small"
                     onClick={() => onDeleteUserConsent(rowData.id)}
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
-              )}
-            </Cell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
     </>
   );

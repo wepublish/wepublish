@@ -1,11 +1,10 @@
 import { useDndContext } from '@dnd-kit/core';
 import styled from '@emotion/styled';
-import { css, Typography, useTheme } from '@mui/material';
+import { css, IconButton, Typography, useTheme } from '@mui/material';
 import { TeaserType } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
-import { IconButton } from 'rsuite';
 
 import { teaserContentKey } from './extractTeasers';
 import { groupColor, TeaserCard } from './TeaserCard';
@@ -231,9 +230,7 @@ export function TeaserBlockGroup({
       <GroupHeader>
         <GroupDot dotColor={color} />
         <HideToggle
-          size="xs"
-          appearance="subtle"
-          icon={isHidden ? <MdVisibilityOff /> : <MdVisibility />}
+          size="small"
           disabled={!canHide && !isHidden}
           onClick={() => onToggleHidden(block.groupKey)}
           title={t(
@@ -244,7 +241,11 @@ export function TeaserBlockGroup({
           aria-label={t(
             isHidden ? 'teaserOverview.showBlock' : 'teaserOverview.hideBlock'
           )}
-        />
+        >
+          {isHidden ?
+            <MdVisibilityOff />
+          : <MdVisibility />}
+        </HideToggle>
         <GroupLabel variant="caption">
           {(() => {
             const [prefix, last] = splitLabel(block.label);

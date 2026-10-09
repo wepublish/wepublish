@@ -1,6 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Card as MuiCard,
+  CardContent,
+  CardHeader,
+} from '@mui/material';
+import {
   MarkNotificationReadDocument,
   NotificationReadsDocument,
   NotificationSource,
@@ -18,7 +24,6 @@ import { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Button, Panel } from 'rsuite';
 
 import { useOneMessageNotifications } from '../../oneMessages/oneMessages';
 import {
@@ -27,7 +32,7 @@ import {
 } from './changelogDashboard';
 import { useOneChannelNotifications } from './oneChannelAlert';
 
-const NotificationsPanel = styled(Panel)`
+const NotificationsPanel = styled(MuiCard)`
   margin-bottom: 20px;
 `;
 
@@ -137,32 +142,36 @@ export function DashboardNotifications() {
   );
 
   return (
-    <NotificationsPanel
-      hidden={!items.length}
-      header={
-        <ListViewContainer>
-          <ListViewHeader>
-            <h2>{t('dashboard.notifications')}</h2>
-          </ListViewHeader>
+    <NotificationsPanel hidden={!items.length}>
+      <CardContent>
+        <CardHeader
+          title={
+            <ListViewContainer>
+              <ListViewHeader>
+                <h2>{t('dashboard.notifications')}</h2>
+              </ListViewHeader>
 
-          <ListViewActions>
-            <Link to="/notifications">
-              <Button
-                appearance="primary"
-                endIcon={<MdChevronRight />}
-              >
-                {t('dashboard.showAllNotifications')}
-              </Button>
-            </Link>
-          </ListViewActions>
-        </ListViewContainer>
-      }
-      bordered
-    >
-      <Section>{items}</Section>
+              <ListViewActions>
+                <Link to="/notifications">
+                  <Button
+                    variant="contained"
+                    endIcon={<MdChevronRight />}
+                  >
+                    {t('dashboard.showAllNotifications')}
+                  </Button>
+                </Link>
+              </ListViewActions>
+            </ListViewContainer>
+          }
+        />
 
-      {actionRequired.overlay}
-      {news.overlay}
+        <CardContent>
+          <Section>{items}</Section>
+
+          {actionRequired.overlay}
+          {news.overlay}
+        </CardContent>
+      </CardContent>
     </NotificationsPanel>
   );
 }

@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import {
   FullPollVoteFragment,
   FullPollVoteWithAnswerFragment,
@@ -23,7 +24,7 @@ import {
 } from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Checkbox, Table as RTable } from 'rsuite';
+import { Checkbox, Table as RTable } from 'rsuite';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
@@ -89,6 +90,7 @@ export function PollVoteList({
 
       <SelectedItemsActions selectedItems={selectedItems}>
         <Button
+          variant="outlined"
           onClick={() => wrapLoading(deleteItems(selectedItems))}
           loading={loading}
         >

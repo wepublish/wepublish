@@ -1,6 +1,13 @@
 import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Alert,
+  Button,
+  FormControlLabel,
+  IconButton,
+  Switch,
+} from '@mui/material';
+import {
   CommentBlockCommentFragment,
   CommentListDocument,
   FullCommentFragment,
@@ -12,26 +19,22 @@ import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  Checkbox,
-  Drawer,
-  Form,
-  IconButton,
-  Message as RMessage,
-  Pagination,
-  Table as RTable,
-  toaster,
-  Toggle,
-} from 'rsuite';
+import { Checkbox, Form, Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 import { IconButtonTooltip, PermissionControl, SelectTags } from '../atoms';
 import { InfoTooltip } from '../atoms/infoTooltip';
 import { CommentBlockValue } from '../blocks/types';
-import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 import { humanizeError } from '../humanizeError';
 import { Table } from '../listView/list-view';
+import { Pagination } from '../listView/pagination';
+import { enqueueSnackbar } from '../snackbar';
 
 const CheckboxWrapper = styled.div`
   height: 46px;
@@ -46,16 +49,8 @@ const ToggleWrapper = styled.div`
   margin-top: 48px;
 `;
 
-const Message = styled(RMessage)`
-  margin-top: 12px;
-`;
-
 const FormGroupWrapper = styled.div`
   width: 250px;
-`;
-
-const DrawerBody = styled(Drawer.Body)`
-  padding: 24px;
 `;
 
 const TableCellNoPadding = styled(RTable.Cell)`
@@ -68,16 +63,10 @@ const PermissionControlWrapper = styled(RTable.Cell)`
 
 const onErrorToast = (error: Error) => {
   if (error?.message) {
-    toaster.push(
-      <RMessage
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {error && humanizeError(error)}
-      </RMessage>
-    );
+    enqueueSnackbar(error && humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   }
 };
 
@@ -161,25 +150,25 @@ export function SelectCommentPanel({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('blocks.comment.title')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('blocks.comment.title')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'ghost'}
+            variant="outlined"
             onClick={() => onClose()}
           >
             {t('close')}
           </Button>
 
           <Button
-            appearance={'primary'}
+            variant="contained"
             onClick={() => saveSelection()}
           >
             {t('saveAndClose')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
       <DrawerBody>
         <FormGroupWrapper>
@@ -197,18 +186,19 @@ export function SelectCommentPanel({
         </FormGroupWrapper>
 
         {!allowCherryPicking && !!tagFilter?.length && (
-          <Message
-            showIcon
-            type="info"
-          >
+          <Alert severity="info">
             {t('blocks.comment.commentsFilterByTagInformation')}
-          </Message>
+          </Alert>
         )}
 
         <ToggleWrapper>
-          <Toggle
-            defaultChecked={allowCherryPicking}
-            onChange={toggleCherryPicking}
+          <FormControlLabel
+            control={
+              <Switch
+                defaultChecked={allowCherryPicking}
+                onChange={() => toggleCherryPicking()}
+              />
+            }
             label={
               <>
                 {t('blocks.comment.cherryPick')}{' '}
@@ -219,11 +209,10 @@ export function SelectCommentPanel({
         </ToggleWrapper>
 
         <Table
-          minHeight={600}
           autoHeight
           loading={loading}
           data={data?.comments?.nodes || []}
-          rowClassName={rowData =>
+          rowClassName={(rowData: any) =>
             commentFilter?.includes(rowData?.id) ? 'highlighted-row' : ''
           }
         >
@@ -303,10 +292,10 @@ export function SelectCommentPanel({
                     >
                       <IconButton
                         aria-label={t('comments.overview.edit')}
-                        icon={<MdEdit />}
-                        circle
-                        size="sm"
-                      />
+                        size="small"
+                      >
+                        <MdEdit />
+                      </IconButton>
                     </Link>
                   </IconButtonTooltip>
                 </PermissionControl>
@@ -316,20 +305,13 @@ export function SelectCommentPanel({
         </Table>
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager']}
-          total={data?.comments?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
+          }}
+          totalCount={data?.comments?.totalCount ?? 0}
         />
       </DrawerBody>
     </>

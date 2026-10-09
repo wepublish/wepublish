@@ -1,11 +1,12 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import { ResetPasswordWithTokenDocument } from '@wepublish/editor/api';
-import { LoginTemplate } from '@wepublish/ui/editor';
+import { enqueueSnackbar, LoginTemplate } from '@wepublish/ui/editor';
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Button, Form as RForm, Message, toaster } from 'rsuite';
+import { Form as RForm } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
 
@@ -60,30 +61,18 @@ export function SetNewPassword() {
     if (!password || !passwordRepeat) return;
 
     if (password !== passwordRepeat) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('setNewPassword.mismatch')}
-        </Message>
-      );
+      enqueueSnackbar(t('setNewPassword.mismatch'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       return;
     }
 
     if (!token) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('setNewPassword.invalidLink')}
-        </Message>
-      );
+      enqueueSnackbar(t('setNewPassword.invalidLink'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       return;
     }
 
@@ -91,16 +80,10 @@ export function SetNewPassword() {
       await resetPassword({ variables: { token, password } });
       setSuccess(true);
     } catch (error: any) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {error?.message || t('setNewPassword.error')}
-        </Message>
-      );
+      enqueueSnackbar(error?.message || t('setNewPassword.error'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     }
   }
 
@@ -141,7 +124,7 @@ export function SetNewPassword() {
               </Group>
 
               <Button
-                appearance="primary"
+                variant="contained"
                 type="submit"
                 disabled={loading || !password || !passwordRepeat}
                 onClick={handleSubmit}

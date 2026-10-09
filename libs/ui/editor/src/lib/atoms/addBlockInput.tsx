@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
+import { IconButton } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
-import { Dropdown, IconButton } from 'rsuite';
+import { Dropdown } from 'rsuite';
 
 export interface MenuProps {
   readonly items: Array<MenuItem>;
@@ -44,12 +45,11 @@ export function AddBlockInput({
           <IconButton
             {...props}
             ref={ref}
-            icon={<MdAdd />}
-            circle
-            appearance="primary"
             title={t('blockList.addBlock')}
             aria-label={t('blockList.addBlock')}
-          />
+          >
+            <MdAdd />
+          </IconButton>
         )}
       >
         {menuItems.map((item, index) => (

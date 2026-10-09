@@ -1,4 +1,5 @@
 import { useLazyQuery } from '@apollo/client/react';
+import { Grid } from '@mui/material';
 import {
   CommentItemType,
   CommentListDocument,
@@ -9,7 +10,6 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
-import { Col, Row } from 'rsuite';
 
 import { CommentPreview, RevisionProps } from './commentPreview';
 import { CreateCommentBtn } from './createCommentBtn';
@@ -124,27 +124,30 @@ export function CommentHistory({
 
   return (
     <>
-      <Row
-        align="bottom"
-        justify="end"
+      <Grid
+        container
+        spacing={2}
+        sx={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}
       >
-        <Col
+        <Grid
+          size={{ xs: 12 }}
+          container
+          spacing={2}
           style={{ textAlign: 'end', paddingBottom: '20px' }}
-          span={24}
         >
           <CreateCommentBtn
             itemID={commentItemID}
             itemType={commentItemType}
             text={t('commentHistory.addComment')}
-            color="green"
-            appearance="ghost"
+            color="success"
+            variant="outlined"
             icon={<MdAdd />}
             onCommentCreated={async () => {
               await fetchComments();
             }}
           />
-        </Col>
-      </Row>
+        </Grid>
+      </Grid>
 
       {comments &&
         comments.map(tmpComment => (

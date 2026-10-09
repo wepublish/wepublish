@@ -1,12 +1,21 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Alert,
+  Button,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Stack,
+  Chip,
 } from '@mui/material';
 import {
   DeleteMailTemplateDocument,
@@ -20,6 +29,7 @@ import {
   ListViewHeader,
   PermissionControl,
   createCheckedPermissionComponent,
+  enqueueSnackbar,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,19 +42,10 @@ import {
   MdWarning,
 } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import {
-  Button,
-  IconButton,
-  Message,
-  Modal,
-  Stack,
-  Tag,
-  toaster,
-} from 'rsuite';
 import { DEFAULT_MUTATION_OPTIONS, showErrors } from '../common';
 import { mailTypeLabel } from './mail-placeholders';
 
-const StatusTag = styled(Tag)`
+const StatusTag = styled(Chip)`
   white-space: nowrap;
 
   .rs-tag-text {
@@ -100,11 +101,9 @@ function MailTemplateList() {
     try {
       const result = await importFromProvider();
       const count = result.data?.importMailTemplatesFromProvider ?? 0;
-      toaster.push(
-        <Message type="success">
-          {t('mailTemplates.importDone', { count })}
-        </Message>
-      );
+      enqueueSnackbar(t('mailTemplates.importDone', { count }), {
+        variant: 'success',
+      });
     } finally {
       setImportOpen(false);
     }
@@ -112,20 +111,26 @@ function MailTemplateList() {
 
   return (
     <>
-      <Stack justifyContent={'space-between'}>
+      <Stack
+        direction="row"
+        sx={{ justifyContent: 'space-between' }}
+      >
         <ListViewContainer>
           <ListViewHeader>
             <h2>{t('mailTemplates.availableTemplates')}</h2>
           </ListViewHeader>
         </ListViewContainer>
 
-        <Stack spacing={8}>
+        <Stack
+          direction="row"
+          spacing={1}
+        >
           <PermissionControl
             showRejectionMessage={false}
             qualifyingPermissions={['CAN_UPDATE_MAIL-TEMPLATES']}
           >
             <Button
-              appearance="ghost"
+              variant="outlined"
               loading={importing}
               startIcon={<MdCloudDownload />}
               onClick={() => setImportOpen(true)}
@@ -139,7 +144,7 @@ function MailTemplateList() {
             qualifyingPermissions={['CAN_CREATE_MAIL-TEMPLATES']}
           >
             <Button
-              appearance="primary"
+              variant="contained"
               startIcon={<MdAdd />}
               onClick={() => navigate('/mailtemplates/create')}
             >
@@ -188,16 +193,17 @@ function MailTemplateList() {
                 <TableCell>
                   {template.status === 'ok' ?
                     <MdCheck />
-                  : <StatusTag>
-                      <MdWarning />
-                      {t(`mailTemplates.statuses.${template.status}`)}
-                    </StatusTag>
+                  : <StatusTag
+                      icon={<MdWarning />}
+                      label={t(`mailTemplates.statuses.${template.status}`)}
+                    />
                   }
                 </TableCell>
                 <TableCell align="center">
                   <Stack
-                    spacing={8}
-                    justifyContent="center"
+                    direction="row"
+                    sx={{ justifyContent: 'center' }}
+                    spacing={1}
                   >
                     <PermissionControl
                       showRejectionMessage={false}
@@ -205,14 +211,14 @@ function MailTemplateList() {
                     >
                       <IconButtonTooltip caption={t('edit')}>
                         <IconButton
-                          icon={<MdEdit />}
-                          circle
-                          size="sm"
+                          size="small"
                           aria-label={t('edit')}
                           onClick={() =>
                             navigate(`/mailtemplates/edit/${template.id}`)
                           }
-                        />
+                        >
+                          <MdEdit />
+                        </IconButton>
                       </IconButtonTooltip>
                     </PermissionControl>
                     <PermissionControl
@@ -221,14 +227,13 @@ function MailTemplateList() {
                     >
                       <IconButtonTooltip caption={t('delete')}>
                         <IconButton
-                          icon={<MdDelete />}
-                          circle
-                          size="sm"
-                          appearance="ghost"
-                          color="red"
+                          size="small"
+                          color="error"
                           aria-label={t('delete')}
                           onClick={() => setDeleteId(template.id)}
-                        />
+                        >
+                          <MdDelete />
+                        </IconButton>
                       </IconButtonTooltip>
                     </PermissionControl>
                   </Stack>
@@ -239,65 +244,58 @@ function MailTemplateList() {
         </Table>
       </TableContainer>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        size="xs"
+        maxWidth="xs"
       >
-        <Modal.Header>
-          <Modal.Title>{t('mailTemplates.delete')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{t('mailTemplates.deleteConfirm')}</Modal.Body>
-        <Modal.Footer>
+        <DialogTitle>{t('mailTemplates.delete')}</DialogTitle>
+        <DialogContent>{t('mailTemplates.deleteConfirm')}</DialogContent>
+        <DialogActions>
           <Button
-            appearance="primary"
-            color="red"
+            variant="contained"
+            color="error"
             onClick={confirmDelete}
           >
             {t('mailTemplates.delete')}
           </Button>
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setDeleteId(null)}
           >
             {t('mailTemplates.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={importOpen}
         onClose={() => setImportOpen(false)}
-        size="sm"
+        maxWidth="sm"
       >
-        <Modal.Header>
-          <Modal.Title>{t('mailTemplates.importFromProvider')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Message
-            type="warning"
-            showIcon
-          >
-            {t('mailTemplates.importWarning')}
-          </Message>
-        </Modal.Body>
-        <Modal.Footer>
+        <DialogTitle>{t('mailTemplates.importFromProvider')}</DialogTitle>
+        <DialogContent>
+          <Alert severity="warning">{t('mailTemplates.importWarning')}</Alert>
+        </DialogContent>
+        <DialogActions>
           <Button
-            appearance="primary"
-            color="red"
+            variant="contained"
+            color="error"
             loading={importing}
             onClick={confirmImport}
           >
             {t('mailTemplates.importConfirm')}
           </Button>
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setImportOpen(false)}
           >
             {t('mailTemplates.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

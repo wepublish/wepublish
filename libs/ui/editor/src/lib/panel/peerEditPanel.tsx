@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import {
   CreatePeerDocument,
   FullRemotePeerProfileFragment,
@@ -13,15 +14,7 @@ import { RichtextJSONDocument, toPlaintext } from '@wepublish/richtext';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Drawer,
-  Form as RForm,
-  Message,
-  Panel,
-  Schema,
-  toaster,
-} from 'rsuite';
+import { Form as RForm, Schema } from 'rsuite';
 
 import {
   createCheckedPermissionComponent,
@@ -32,6 +25,13 @@ import {
 } from '../atoms';
 import { InfoTooltip } from '../atoms/infoTooltip';
 import { RichTextBlock, RichTextBlockValue } from '../blocks';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 
 export interface PeerEditPanelProps {
@@ -116,16 +116,10 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
       });
       setProfile(remote?.remotePeerProfile ? remote.remotePeerProfile : null);
     } catch (error) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {(error as Error).message}
-        </Message>
-      );
+      enqueueSnackbar((error as Error).message, {
+        variant: 'error',
+        autoHideDuration: null,
+      });
     }
   }
 
@@ -148,16 +142,7 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
     const error =
       loadError?.message ?? createError?.message ?? updateError?.message;
     if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
   }, [loadError, createError, updateError]);
 
   useEffect(() => {
@@ -228,18 +213,18 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
       formValue={{ name, url: urlString, token }}
     >
       <RForm.Stack fluid>
-        <Drawer.Header>
-          <Drawer.Title>
+        <DrawerHeader>
+          <DrawerTitle>
             {id ?
               t('peerList.panels.editPeer')
             : t('peerList.panels.createPeer')}
-          </Drawer.Title>
+          </DrawerTitle>
 
-          <Drawer.Actions>
+          <DrawerActions>
             <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
               <Button
+                variant="contained"
                 type="submit"
-                appearance="primary"
                 data-testid="saveButton"
                 disabled={isDisabled}
               >
@@ -247,15 +232,15 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
               </Button>
             </PermissionControl>
             <Button
-              appearance={'subtle'}
+              variant="text"
               onClick={() => onClose?.()}
             >
               {t('peerList.panels.close')}
             </Button>
-          </Drawer.Actions>
-        </Drawer.Header>
+          </DrawerActions>
+        </DrawerHeader>
 
-        <Drawer.Body>
+        <DrawerBody>
           <PermissionControl
             qualifyingPermissions={
               !id ?
@@ -270,132 +255,146 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
             }
             showRejectionMessage
           >
-            <Panel>
-              <Group controlId="name">
-                <Label>{toggleRequiredLabel(t('peerList.panels.name'))}</Label>
+            <Card variant="outlined">
+              <CardContent>
+                <Group controlId="name">
+                  <Label>
+                    {toggleRequiredLabel(t('peerList.panels.name'))}
+                  </Label>
 
-                <Control
-                  value={name}
-                  name="name"
-                  onChange={(value: string) => {
-                    setName(value);
-                    setSlug(slugify(value));
-                  }}
-                />
-              </Group>
-
-              <Group controlId="information">
-                <Label>{t('peerList.panels.information')}</Label>
-                <Panel bordered>
                   <Control
-                    name="information"
-                    value={information}
-                    onChange={(
-                      newInformation: RichTextBlockValue['richText']
-                    ) => setInformation(newInformation)}
-                    accepter={RichTextBlock}
+                    value={name}
+                    name="name"
+                    onChange={(value: string) => {
+                      setName(value);
+                      setSlug(slugify(value));
+                    }}
                   />
-                </Panel>
-              </Group>
+                </Group>
 
-              <Group controlId="url">
-                <Label>
-                  {toggleRequiredLabel(t('peerList.panels.URL'))}{' '}
-                  <InfoTooltip text={t('peerList.panels.urlInfo')} />
-                </Label>
-                <Control
-                  value={urlString}
-                  name="url"
-                  onChange={(value: string) => {
-                    setURLString(value);
-                  }}
-                />
-              </Group>
+                <Group controlId="information">
+                  <Label>{t('peerList.panels.information')}</Label>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Control
+                        name="information"
+                        value={information}
+                        onChange={(
+                          newInformation: RichTextBlockValue['richText']
+                        ) => setInformation(newInformation)}
+                        accepter={RichTextBlock}
+                      />
+                    </CardContent>
+                  </Card>
+                </Group>
 
-              <Group controlId="token">
-                <Label>
-                  {toggleRequiredLabel(t('peerList.panels.token'), !id)}{' '}
-                  <InfoTooltip text={t('peerList.panels.tokenInfo')} />
-                </Label>
+                <Group controlId="url">
+                  <Label>
+                    {toggleRequiredLabel(t('peerList.panels.URL'))}{' '}
+                    <InfoTooltip text={t('peerList.panels.urlInfo')} />
+                  </Label>
+                  <Control
+                    value={urlString}
+                    name="url"
+                    onChange={(value: string) => {
+                      setURLString(value);
+                    }}
+                  />
+                </Group>
 
-                <Control
-                  value={token}
-                  name="token"
-                  placeholder={id ? t('peerList.panels.leaveEmpty') : undefined}
-                  onChange={(value: string) => {
-                    setToken(value);
-                  }}
-                />
-              </Group>
+                <Group controlId="token">
+                  <Label>
+                    {toggleRequiredLabel(t('peerList.panels.token'), !id)}{' '}
+                    <InfoTooltip text={t('peerList.panels.tokenInfo')} />
+                  </Label>
 
-              <Button
-                disabled={!isAuthorized}
-                className="fetchButton"
-                appearance="primary"
-                onClick={() => handleFetch()}
-              >
-                {t('peerList.panels.getRemote')}
-              </Button>
-            </Panel>
+                  <Control
+                    value={token}
+                    name="token"
+                    placeholder={
+                      id ? t('peerList.panels.leaveEmpty') : undefined
+                    }
+                    onChange={(value: string) => {
+                      setToken(value);
+                    }}
+                  />
+                </Group>
+
+                <Button
+                  variant="contained"
+                  disabled={!isAuthorized}
+                  className="fetchButton"
+                  onClick={() => handleFetch()}
+                >
+                  {t('peerList.panels.getRemote')}
+                </Button>
+              </CardContent>
+            </Card>
 
             {profile && (
-              <Panel header={t('peerList.panels.information')}>
-                <Image
-                  src={profile?.logo?.xl ?? '/static/placeholder-240x240.png'}
-                />
+              <Card variant="outlined">
+                <CardHeader title={t('peerList.panels.information')} />
 
-                <DescriptionList>
-                  <DescriptionListItem label={t('peerList.panels.name')}>
-                    {profile?.name}
-                  </DescriptionListItem>
+                <CardContent>
+                  <Image
+                    src={profile?.logo?.xl ?? '/static/placeholder-240x240.png'}
+                  />
 
-                  <DescriptionListItem label={t('peerList.panels.themeColor')}>
-                    <ThemeColor>
-                      <p>{profile?.themeColor}</p>
-                      <ThemeColorBox themeColor={profile.themeColor} />
-                    </ThemeColor>
-                  </DescriptionListItem>
+                  <DescriptionList>
+                    <DescriptionListItem label={t('peerList.panels.name')}>
+                      {profile?.name}
+                    </DescriptionListItem>
 
-                  <DescriptionListItem
-                    label={t('peerList.panels.themeFontColor')}
-                  >
-                    <ThemeColor>
-                      <p>{profile?.themeFontColor}</p>
-                      <ThemeColorBox themeColor={profile?.themeFontColor} />
-                    </ThemeColor>
-                  </DescriptionListItem>
+                    <DescriptionListItem
+                      label={t('peerList.panels.themeColor')}
+                    >
+                      <ThemeColor>
+                        <p>{profile?.themeColor}</p>
+                        <ThemeColorBox themeColor={profile.themeColor} />
+                      </ThemeColor>
+                    </DescriptionListItem>
 
-                  <DescriptionListItem
-                    label={t('peerList.panels.callToActionText')}
-                  >
-                    {toPlaintext(profile?.callToActionText?.content)}
-                  </DescriptionListItem>
+                    <DescriptionListItem
+                      label={t('peerList.panels.themeFontColor')}
+                    >
+                      <ThemeColor>
+                        <p>{profile?.themeFontColor}</p>
+                        <ThemeColorBox themeColor={profile?.themeFontColor} />
+                      </ThemeColor>
+                    </DescriptionListItem>
 
-                  <DescriptionListItem
-                    label={t('peerList.panels.callToActionURL')}
-                  >
-                    {profile?.callToActionURL}
-                  </DescriptionListItem>
+                    <DescriptionListItem
+                      label={t('peerList.panels.callToActionText')}
+                    >
+                      {toPlaintext(profile?.callToActionText?.content)}
+                    </DescriptionListItem>
 
-                  <DescriptionListItem
-                    label={t('peerList.panels.callToActionImage')}
-                  >
-                    <img
-                      src={profile?.callToActionImage?.xsSquare ?? ''}
-                      alt={t('peerList.panels.callToActionImage')}
-                    />
-                  </DescriptionListItem>
+                    <DescriptionListItem
+                      label={t('peerList.panels.callToActionURL')}
+                    >
+                      {profile?.callToActionURL}
+                    </DescriptionListItem>
 
-                  <DescriptionListItem
-                    label={t('peerList.panels.callToActionImageURL')}
-                  >
-                    {profile?.callToActionImageURL}
-                  </DescriptionListItem>
-                </DescriptionList>
-              </Panel>
+                    <DescriptionListItem
+                      label={t('peerList.panels.callToActionImage')}
+                    >
+                      <img
+                        src={profile?.callToActionImage?.xsSquare ?? ''}
+                        alt={t('peerList.panels.callToActionImage')}
+                      />
+                    </DescriptionListItem>
+
+                    <DescriptionListItem
+                      label={t('peerList.panels.callToActionImageURL')}
+                    >
+                      {profile?.callToActionImageURL}
+                    </DescriptionListItem>
+                  </DescriptionList>
+                </CardContent>
+              </Card>
             )}
           </PermissionControl>
-        </Drawer.Body>
+        </DrawerBody>
       </RForm.Stack>
     </Form>
   );

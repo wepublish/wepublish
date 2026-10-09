@@ -1,6 +1,12 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Modal } from 'rsuite';
 
 export interface ConfirmActionModalProps {
   title: string;
@@ -20,21 +26,20 @@ export function ConfirmActionModal({
   const { t } = useTranslation();
 
   return (
-    <Modal
+    <Dialog
+      fullWidth
       open
       onClose={onClose}
-      size="sm"
+      maxWidth="sm"
       role="alertdialog"
     >
-      <Modal.Header>
-        <Modal.Title>{title}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{title}</DialogTitle>
 
-      <Modal.Body>{message}</Modal.Body>
+      <DialogContent>{message}</DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
-          appearance="primary"
+          variant="contained"
           loading={loading}
           onClick={onConfirm}
         >
@@ -42,12 +47,12 @@ export function ConfirmActionModal({
         </Button>
 
         <Button
-          appearance="subtle"
+          variant="text"
           onClick={onClose}
         >
           {t('cancel')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 }

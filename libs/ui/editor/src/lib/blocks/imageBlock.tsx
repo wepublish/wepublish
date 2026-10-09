@@ -1,25 +1,32 @@
 import styled from '@emotion/styled';
+import {
+  Card as MuiCard,
+  CardContent,
+  Drawer,
+  IconButton,
+} from '@mui/material';
 import { FullImageFragment } from '@wepublish/editor/api';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdBuild, MdEdit, MdPhoto } from 'react-icons/md';
-import { Drawer, Dropdown, IconButton, Panel as RPanel } from 'rsuite';
+import { Dropdown } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { PlaceholderInput } from '../atoms/placeholderInput';
 import { TypographicTextArea } from '../atoms/typographicTextArea';
+import { DRAWER_WIDTHS } from '../drawer';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import { ImageBlockValue } from './types';
 
-export const Panel = styled(RPanel)`
+export const Panel = styled(MuiCard)`
   display: grid;
   height: 300px;
   margin-bottom: 10px;
   overflow: hidden;
 `;
 
-export const ImagePanel = styled(RPanel)<{ image: FullImageFragment }>`
+export const ImagePanel = styled(MuiCard)<{ image: FullImageFragment }>`
   padding: 0;
   position: relative;
   height: 100%;
@@ -57,44 +64,52 @@ export function ImageBlock({
 
   return (
     <>
-      <Panel
-        bodyFill
-        bordered
-      >
-        <PlaceholderInput
-          onAddClick={() => setChooseModalOpen(true)}
-          addLabel={t('blocks.image.overview.chooseImage')}
-        >
-          {image && (
-            <ImagePanel image={image}>
-              <Dropdown
-                renderToggle={(
-                  props: object,
-                  ref: React.Ref<HTMLButtonElement>
-                ) => (
-                  <IconButton
-                    {...props}
-                    ref={ref}
-                    icon={<MdBuild />}
-                    circle
-                    appearance="subtle"
-                    data-on-media
-                    title={t('chooseEditImage.imageOptions')}
-                    aria-label={t('chooseEditImage.imageOptions')}
-                  />
-                )}
+      <Panel>
+        <CardContent>
+          <CardContent>
+            <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+              <PlaceholderInput
+                onAddClick={() => setChooseModalOpen(true)}
+                addLabel={t('blocks.image.overview.chooseImage')}
               >
-                <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-                  <MdPhoto /> {t('blocks.image.overview.chooseImage')}
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => setEditModalOpen(true)}>
-                  <MdEdit /> {t('blocks.image.overview.editImage')}
-                </Dropdown.Item>
-                {/* TODO: Meta sync for metadata image */}
-              </Dropdown>
-            </ImagePanel>
-          )}
-        </PlaceholderInput>
+                {image && (
+                  <ImagePanel image={image}>
+                    <CardContent>
+                      <CardContent>
+                        <Dropdown
+                          renderToggle={(
+                            props: object,
+                            ref: React.Ref<HTMLButtonElement>
+                          ) => (
+                            <IconButton
+                              {...props}
+                              ref={ref}
+                              data-on-media
+                              title={t('chooseEditImage.imageOptions')}
+                              aria-label={t('chooseEditImage.imageOptions')}
+                            >
+                              <MdBuild />
+                            </IconButton>
+                          )}
+                        >
+                          <Dropdown.Item
+                            onClick={() => setChooseModalOpen(true)}
+                          >
+                            <MdPhoto /> {t('blocks.image.overview.chooseImage')}
+                          </Dropdown.Item>
+                          <Dropdown.Item onClick={() => setEditModalOpen(true)}>
+                            <MdEdit /> {t('blocks.image.overview.editImage')}
+                          </Dropdown.Item>
+                          {/* TODO: Meta sync for metadata image */}
+                        </Dropdown>
+                      </CardContent>
+                    </CardContent>
+                  </ImagePanel>
+                )}
+              </PlaceholderInput>
+            </CardContent>
+          </CardContent>
+        </CardContent>
       </Panel>
       <TypographicTextArea
         variant="subtitle2"
@@ -106,8 +121,18 @@ export function ImageBlock({
         }}
       />
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -120,8 +145,18 @@ export function ImageBlock({
       </Drawer>
       {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel

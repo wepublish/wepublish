@@ -1,0 +1,31 @@
+[
+  {
+    "from": "Modal.Title",
+    "to": "DialogTitle"
+  },
+  {
+    "from": "Modal.Body",
+    "to": "DialogContent"
+  },
+  {
+    "from": "Modal.Footer",
+    "to": "DialogActions"
+  },
+  {
+    "from": "Modal.Header",
+    "to": "DialogTitle"
+  },
+  {
+    "from": "Modal",
+    "to": "Dialog",
+    "probe": ["size"],
+    "drop": ["backdrop", "overflow", "keyboard", "autoFocus", "enforceFocus"],
+    "rename": { "size": "maxWidth" },
+    "values": {
+      "maxWidth": { "full": "lg" }
+    },
+    "add": [
+      { "when": { "size": "*" }, "attrs": "fullWidth" }
+    ]
+  }
+]

@@ -11,24 +11,23 @@ import {
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  CheckPicker,
-  Drawer,
-  Form,
-  Input,
-  Panel,
-  RadioGroup,
-  Toggle,
-  Radio,
-  NumberInput,
-} from 'rsuite';
+import { CheckPicker, Form, Input, NumberInput, Toggle } from 'rsuite';
 import { BannerActionList } from './banner-action-list';
 import {
   ChooseEditImage,
   ImageEditPanel,
   ImageSelectPanel,
   InfoTooltip,
+  DRAWER_WIDTHS,
 } from '@wepublish/ui/editor';
+import {
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  Drawer,
+  Card,
+  CardContent,
+} from '@mui/material';
 
 type BannerFormData = (CreateBannerInput | UpdateBannerInput) & {
   image?: FullImageFragment | null;
@@ -65,266 +64,287 @@ export const BannerForm = (props: BannerFormProps) => {
 
   return (
     <BannerFormContainer>
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ overflow: 'initial', gridArea: 'displayoptions' }}
       >
-        <h3>{t('banner.form.displayOptions')}</h3>
+        <CardContent>
+          <h3>{t('banner.form.displayOptions')}</h3>
 
-        <Form.Group controlId="active">
-          <Form.Control
-            name="active"
-            checked={props.banner.active}
-            onChange={value =>
-              props.onChange({ ...props.banner, active: value })
-            }
-            accepter={Toggle}
-            label={t('banner.form.active')}
-          />
-        </Form.Group>
+          <Form.Group controlId="active">
+            <Form.Control
+              name="active"
+              checked={props.banner.active}
+              onChange={value =>
+                props.onChange({ ...props.banner, active: value })
+              }
+              accepter={Toggle}
+              label={t('banner.form.active')}
+            />
+          </Form.Group>
 
-        <Form.Group controlId="collapsible">
-          <Form.Control
-            name="collapsible"
-            checked={props.banner.collapsible}
-            onChange={value =>
-              props.onChange({ ...props.banner, collapsible: value })
-            }
-            accepter={Toggle}
-            label={
-              <>
-                {t('banner.form.collapsible')}{' '}
-                <InfoTooltip text={t('banner.form.collapsibleInfo')} />
-              </>
-            }
-          />
-        </Form.Group>
+          <Form.Group controlId="collapsible">
+            <Form.Control
+              name="collapsible"
+              checked={props.banner.collapsible}
+              onChange={value =>
+                props.onChange({ ...props.banner, collapsible: value })
+              }
+              accepter={Toggle}
+              label={
+                <>
+                  {t('banner.form.collapsible')}{' '}
+                  <InfoTooltip text={t('banner.form.collapsibleInfo')} />
+                </>
+              }
+            />
+          </Form.Group>
 
-        <Form.Group controlId="delay">
-          <Form.Label>
-            {t('banner.form.delay')}{' '}
-            <InfoTooltip text={t('banner.form.delayInfo')} />
-          </Form.Label>
+          <Form.Group controlId="delay">
+            <Form.Label>
+              {t('banner.form.delay')}{' '}
+              <InfoTooltip text={t('banner.form.delayInfo')} />
+            </Form.Label>
 
-          <Form.Control
-            name="delay"
-            accepter={NumberInput}
-            value={props.banner.delay}
-            onChange={v => props.onChange({ ...props.banner, delay: +v })}
-          />
-        </Form.Group>
+            <Form.Control
+              name="delay"
+              accepter={NumberInput}
+              value={props.banner.delay}
+              onChange={v => props.onChange({ ...props.banner, delay: +v })}
+            />
+          </Form.Group>
 
-        <Form.Group controlId="hideForMinutes">
-          <Form.Label>{t('banner.form.hideForMinutes')}</Form.Label>
+          <Form.Group controlId="hideForMinutes">
+            <Form.Label>{t('banner.form.hideForMinutes')}</Form.Label>
 
-          <Form.Control
-            name="hideForMinutes"
-            accepter={NumberInput}
-            value={props.banner.hideForMinutes}
-            onChange={v =>
-              props.onChange({ ...props.banner, hideForMinutes: +v })
-            }
-          />
-        </Form.Group>
+            <Form.Control
+              name="hideForMinutes"
+              accepter={NumberInput}
+              value={props.banner.hideForMinutes}
+              onChange={v =>
+                props.onChange({ ...props.banner, hideForMinutes: +v })
+              }
+            />
+          </Form.Group>
 
-        <Form.Group controlId="showForLoginStatus">
-          <Form.Label>
-            {t('banner.form.showForLoginStatus')}{' '}
-            <InfoTooltip text={t('banner.form.showForLoginStatusInfo')} />
-          </Form.Label>
+          <Form.Group controlId="showForLoginStatus">
+            <Form.Label>
+              {t('banner.form.showForLoginStatus')}{' '}
+              <InfoTooltip text={t('banner.form.showForLoginStatusInfo')} />
+            </Form.Label>
 
-          <RadioGroup
-            name="showForLoginStatus"
-            value={props.banner.showForLoginStatus}
-            onChange={value =>
-              props.onChange({
-                ...props.banner,
-                showForLoginStatus: value as LoginStatus,
-              })
-            }
-          >
-            {Object.values(LoginStatus).map((status: LoginStatus) => (
-              <Radio
-                key={status}
-                value={status}
-              >
-                {t(`banner.form.loginStatus.${status}`)}
-              </Radio>
-            ))}
-          </RadioGroup>
-        </Form.Group>
+            <RadioGroup
+              name="showForLoginStatus"
+              value={props.banner.showForLoginStatus}
+              onChange={(_event, value) =>
+                props.onChange({
+                  ...props.banner,
+                  showForLoginStatus: value as LoginStatus,
+                })
+              }
+            >
+              {Object.values(LoginStatus).map((status: LoginStatus) => (
+                <FormControlLabel
+                  key={status}
+                  value={status}
+                  control={<Radio />}
+                  label={t(`banner.form.loginStatus.${status}`)}
+                />
+              ))}
+            </RadioGroup>
+          </Form.Group>
 
-        <Form.Group controlId="showOnArticles">
-          <Form.Control
-            name="showOnArticles"
-            checked={props.banner.showOnArticles}
-            onChange={value =>
-              props.onChange({ ...props.banner, showOnArticles: value })
-            }
-            accepter={Toggle}
-            label={t('banner.form.showOnArticles')}
-          />
-        </Form.Group>
+          <Form.Group controlId="showOnArticles">
+            <Form.Control
+              name="showOnArticles"
+              checked={props.banner.showOnArticles}
+              onChange={value =>
+                props.onChange({ ...props.banner, showOnArticles: value })
+              }
+              accepter={Toggle}
+              label={t('banner.form.showOnArticles')}
+            />
+          </Form.Group>
 
-        <Form.Group controlId="showOnPages">
-          <Form.Label>
-            {t('banner.form.showOnPages')}{' '}
-            <InfoTooltip text={t('banner.form.showOnPagesInfo')} />
-          </Form.Label>
+          <Form.Group controlId="showOnPages">
+            <Form.Label>
+              {t('banner.form.showOnPages')}{' '}
+              <InfoTooltip text={t('banner.form.showOnPagesInfo')} />
+            </Form.Label>
 
-          <CheckPicker
-            block
-            virtualized
-            placeholder={t('navigation.panels.selectPage')}
-            value={props.banner.showOnPages?.map(p => p.id) || []}
-            data={pages.map(page => ({
-              value: page.id,
-              label: page.latest.title,
-            }))}
-            onChange={ids => {
-              if (!ids) return;
-              props.onChange({
-                ...props.banner,
-                showOnPages: ids.map(i => {
-                  return { id: i };
-                }),
-              });
-            }}
-          />
-        </Form.Group>
-      </Panel>
+            <CheckPicker
+              block
+              virtualized
+              placeholder={t('navigation.panels.selectPage')}
+              value={props.banner.showOnPages?.map(p => p.id) || []}
+              data={pages.map(page => ({
+                value: page.id,
+                label: page.latest.title,
+              }))}
+              onChange={ids => {
+                if (!ids) return;
+                props.onChange({
+                  ...props.banner,
+                  showOnPages: ids.map(i => {
+                    return { id: i };
+                  }),
+                });
+              }}
+            />
+          </Form.Group>
+        </CardContent>
+      </Card>
 
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ overflow: 'initial', gridArea: 'content' }}
       >
-        <h3>{t('banner.form.content')}</h3>
+        <CardContent>
+          <h3>{t('banner.form.content')}</h3>
 
-        <Form.Group controlId="title">
-          <Form.Label>{t('banner.form.title')}</Form.Label>
+          <Form.Group controlId="title">
+            <Form.Label>{t('banner.form.title')}</Form.Label>
 
-          <Form.Control
-            name="title"
-            value={props.banner.title}
-            onChange={value =>
-              props.onChange({ ...props.banner, title: value })
-            }
-          />
-        </Form.Group>
+            <Form.Control
+              name="title"
+              value={props.banner.title}
+              onChange={value =>
+                props.onChange({ ...props.banner, title: value })
+              }
+            />
+          </Form.Group>
 
-        <Form.Group controlId="text">
-          <Form.Label>{t('banner.form.text')}</Form.Label>
+          <Form.Group controlId="text">
+            <Form.Label>{t('banner.form.text')}</Form.Label>
 
-          <Form.Control
-            name="text"
-            componentClass="textarea"
-            rows={5}
-            value={props.banner.text}
-            onChange={value => props.onChange({ ...props.banner, text: value })}
-          />
-        </Form.Group>
+            <Form.Control
+              name="text"
+              componentClass="textarea"
+              rows={5}
+              value={props.banner.text}
+              onChange={value =>
+                props.onChange({ ...props.banner, text: value })
+              }
+            />
+          </Form.Group>
 
-        <Form.Group controlId="cta">
-          <Form.Label>
-            {t('banner.form.cta')}{' '}
-            <InfoTooltip text={t('banner.form.ctaInfo')} />
-          </Form.Label>
+          <Form.Group controlId="cta">
+            <Form.Label>
+              {t('banner.form.cta')}{' '}
+              <InfoTooltip text={t('banner.form.ctaInfo')} />
+            </Form.Label>
 
-          <Form.Control
-            name="cta"
-            value={props.banner.cta}
-            onChange={value => props.onChange({ ...props.banner, cta: value })}
-          />
-        </Form.Group>
+            <Form.Control
+              name="cta"
+              value={props.banner.cta}
+              onChange={value =>
+                props.onChange({ ...props.banner, cta: value })
+              }
+            />
+          </Form.Group>
 
-        <Form.Group controlId="images">
-          <Form.Label>{t('banner.form.image')}</Form.Label>
+          <Form.Group controlId="images">
+            <Form.Label>{t('banner.form.image')}</Form.Label>
 
-          <Form.Control
-            name="image"
-            header={''}
-            image={props.banner.image}
-            disabled={false}
-            openChooseModalOpen={() => setChooseModalOpen(true)}
-            openEditModalOpen={() => setEditModalOpen(true)}
-            removeImage={() => {
-              props.onChange({
-                ...props.banner,
-                imageId: undefined,
-                image: undefined,
-              });
-            }}
-            accepter={ChooseEditImage}
-            minHeight={200}
-          />
-        </Form.Group>
+            <Form.Control
+              name="image"
+              header={''}
+              image={props.banner.image}
+              disabled={false}
+              openChooseModalOpen={() => setChooseModalOpen(true)}
+              openEditModalOpen={() => setEditModalOpen(true)}
+              removeImage={() => {
+                props.onChange({
+                  ...props.banner,
+                  imageId: undefined,
+                  image: undefined,
+                });
+              }}
+              accepter={ChooseEditImage}
+            />
+          </Form.Group>
 
-        <Form.Group controlId="html">
-          <Form.Label>
-            {t('banner.form.html')}{' '}
-            <InfoTooltip text={t('banner.form.htmlInfo')} />
-          </Form.Label>
+          <Form.Group controlId="html">
+            <Form.Label>
+              {t('banner.form.html')}{' '}
+              <InfoTooltip text={t('banner.form.htmlInfo')} />
+            </Form.Label>
 
-          <Input
-            name="html"
-            as="textarea"
-            rows={5}
-            value={props.banner.html ?? undefined}
-            onChange={value => props.onChange({ ...props.banner, html: value })}
-          />
-        </Form.Group>
+            <Input
+              name="html"
+              as="textarea"
+              rows={5}
+              value={props.banner.html ?? undefined}
+              onChange={value =>
+                props.onChange({ ...props.banner, html: value })
+              }
+            />
+          </Form.Group>
 
-        <Form.Group controlId="embedUrl">
-          <Form.ControlLabel>{t('banner.form.embedUrl')}</Form.ControlLabel>
+          <Form.Group controlId="embedUrl">
+            <Form.ControlLabel>{t('banner.form.embedUrl')}</Form.ControlLabel>
 
-          <Input
-            name="embedUrl"
-            value={props.banner.embedUrl ?? undefined}
-            onChange={value =>
-              props.onChange({ ...props.banner, embedUrl: value })
-            }
-          />
-          <Form.HelpText>{t('banner.form.embedUrlHelp')}</Form.HelpText>
-        </Form.Group>
-      </Panel>
+            <Input
+              name="embedUrl"
+              value={props.banner.embedUrl ?? undefined}
+              onChange={value =>
+                props.onChange({ ...props.banner, embedUrl: value })
+              }
+            />
+            <Form.HelpText>{t('banner.form.embedUrlHelp')}</Form.HelpText>
+          </Form.Group>
+        </CardContent>
+      </Card>
 
-      <Panel
-        bordered
+      <Card
+        variant="outlined"
         style={{ overflow: 'initial', gridArea: 'actions' }}
       >
-        <Form.Group controlId="actions">
-          <h3>{t('banner.form.actions')}</h3>
-          <BannerActionList
-            actions={props.banner.actions || []}
-            onAdd={action =>
-              props.onChange({
-                ...props.banner,
-                actions: [...(props.banner.actions || []), action],
-              })
-            }
-            onRemove={index =>
-              props.onChange({
-                ...props.banner,
-                actions:
-                  props.banner.actions?.filter((_, i) => i !== index) || [],
-              })
-            }
-            onUpdate={(index, updatedAction) => {
-              const updatedActions = props.banner.actions?.map((action, i) =>
-                i === index ? updatedAction : action
-              );
-              props.onChange({
-                ...props.banner,
-                actions: updatedActions,
-              });
-            }}
-          />
-        </Form.Group>
-      </Panel>
+        <CardContent>
+          <Form.Group controlId="actions">
+            <h3>{t('banner.form.actions')}</h3>
+            <BannerActionList
+              actions={props.banner.actions || []}
+              onAdd={action =>
+                props.onChange({
+                  ...props.banner,
+                  actions: [...(props.banner.actions || []), action],
+                })
+              }
+              onRemove={index =>
+                props.onChange({
+                  ...props.banner,
+                  actions:
+                    props.banner.actions?.filter((_, i) => i !== index) || [],
+                })
+              }
+              onUpdate={(index, updatedAction) => {
+                const updatedActions = props.banner.actions?.map((action, i) =>
+                  i === index ? updatedAction : action
+                );
+                props.onChange({
+                  ...props.banner,
+                  actions: updatedActions,
+                });
+              }}
+            />
+          </Form.Group>
+        </CardContent>
+      </Card>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size={'sm'}
         onClose={() => {
           setChooseModalOpen(false);
         }}
@@ -340,8 +360,18 @@ export const BannerForm = (props: BannerFormProps) => {
 
       {props.banner.imageId && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size={'sm'}
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel

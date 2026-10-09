@@ -1,9 +1,17 @@
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { MdUploadFile } from 'react-icons/md';
-import { Button, Drawer, Form, Notification, toaster } from 'rsuite';
+import { Form } from 'rsuite';
 
 import { FileDropInput } from '../atoms';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 import { getImgMinSizeToCompress } from '../utility';
 
 const InputWrapper = styled.div`
@@ -23,14 +31,11 @@ export function ImageUploadPanel({ onClose, onUpload }: ImageUploadPanelProps) {
     const file = files[0];
 
     if (!file.type.startsWith('image')) {
-      toaster.push(
-        <Notification
-          type="error"
-          header={t('articleEditor.panels.invalidImage')}
-          duration={5000}
-        />,
-        { placement: 'topEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'error',
+        title: t('articleEditor.panels.invalidImage'),
+        autoHideDuration: 5000,
+      });
     }
 
     onUpload(file);
@@ -38,20 +43,20 @@ export function ImageUploadPanel({ onClose, onUpload }: ImageUploadPanelProps) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('articleEditor.panels.uploadImage')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('articleEditor.panels.uploadImage')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('articleEditor.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         <InputWrapper>
           <FileDropInput
             icon={<MdUploadFile />}
@@ -65,7 +70,7 @@ export function ImageUploadPanel({ onClose, onUpload }: ImageUploadPanelProps) {
             sizeMB: getImgMinSizeToCompress(),
           })}
         </Form.Label>
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }

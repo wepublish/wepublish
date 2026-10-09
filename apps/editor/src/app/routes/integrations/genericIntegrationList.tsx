@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Alert, Box, CircularProgress } from '@mui/material';
 import { SettingProvider } from '@wepublish/editor/api';
 import { humanizeError } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
@@ -7,7 +8,7 @@ import { useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdSearch } from 'react-icons/md';
-import { Input, InputGroup, Loader, Message } from 'rsuite';
+import { Input, InputGroup } from 'rsuite';
 
 import {
   GenericIntegrationFormProps,
@@ -102,11 +103,22 @@ export function GenericIntegrationList<
   }, [settings, searchValue]);
 
   if (loading) {
-    return <Loader center />;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (error) {
-    return <Message type="error">{humanizeError(error)}</Message>;
+    return <Alert severity="error">{humanizeError(error)}</Alert>;
   }
 
   const addButton = registry && (
@@ -121,11 +133,11 @@ export function GenericIntegrationList<
   if (!settings?.length) {
     return (
       <>
-        <Message type="warning">
+        <Alert severity="warning">
           {setup ?
             t('integrations.setUpHint')
           : t('integrations.noSettingsFound')}
-        </Message>
+        </Alert>
 
         {(addButton || fixedProvider || setup) && (
           <Toolbar>

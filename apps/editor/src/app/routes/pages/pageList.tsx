@@ -1,5 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Alert,
+  AlertTitle,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   CommentItemType,
   CreateCommentDocument,
   DeletePageDocument,
@@ -16,24 +25,21 @@ import { CanPreview } from '@wepublish/permissions';
 import {
   ColumnConfigurator,
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   DescriptionList,
   DescriptionListItem,
   IconButton,
-  IconButtonCell,
   IconButtonTooltip,
+  ListColumn,
   ListFilters,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
+  Pagination,
   PermissionControl,
   StatusBadge,
-  Table,
   TableWrapper,
-  ListColumn,
-  renderListColumns,
   useColumnConfig,
   useListViewState,
 } from '@wepublish/ui/editor';
@@ -47,22 +53,11 @@ import {
   MdUnpublished,
 } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
-import type { RowDataType } from 'rsuite-table';
 
 interface State {
   state: string;
   text: string;
 }
-
-const { Column, HeaderCell } = RTable;
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -127,6 +122,9 @@ function PageList() {
 
   const pages = useMemo(() => data?.pages?.nodes ?? [], [data]);
 
+  /** The row shape the list query actually returns. */
+  type PageRow = (typeof pages)[number];
+
   const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -144,7 +142,7 @@ function PageList() {
 
   const [createComment] = useMutation(CreateCommentDocument, {});
 
-  const dataColumns = useMemo<ListColumn<FullPageFragment>[]>(
+  const dataColumns = useMemo<ListColumn<PageRow>[]>(
     () => [
       {
         id: 'states',
@@ -250,13 +248,13 @@ function PageList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
           <ListViewActions>
             <Link to="/pages/create">
-              <RIconButton
-                appearance="primary"
+              <Button
+                variant="contained"
+                startIcon={<MdAdd />}
                 disabled={isLoading}
-                icon={<MdAdd />}
               >
                 {t('pages.overview.newPage')}
-              </RIconButton>
+              </Button>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -283,30 +281,32 @@ function PageList() {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
+        <DataTable
           loading={isLoading}
           data={pages}
           sortColumn={sortField}
-          sortType={sortOrder}
+          sortOrder={sortOrder}
+          sortable={dataColumns
+            .filter(column => column.sortable)
+            .map(column => column.dataKey ?? column.id)}
+          onSort={(column, order) => {
+            setSort(column, order);
+            setPage(1);
+          }}
           rowClassName={rowData =>
             rowData?.id === highlightedRowId ? 'highlighted-row' : ''
           }
-          onSortColumn={(sortColumn, sortType) => {
-            setSort(sortColumn, sortType ?? 'asc');
-            setPage(1);
-          }}
-        >
-          {renderListColumns(dataColumns, isVisible)}
-
-          <Column
-            width={220}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <IconButtonCell>
-              {(rowData: RowDataType<FullPageFragment>) => (
+          columns={[
+            ...dataColumns
+              .filter(column => isVisible(column.id))
+              .map(column => ({ ...column, sortKey: column.dataKey })),
+            {
+              id: 'action',
+              label: t('action'),
+              width: 220,
+              align: 'center',
+              fixed: true,
+              render: rowData => (
                 <>
                   <PermissionControl
                     qualifyingPermissions={['CAN_PUBLISH_PAGE']}
@@ -316,16 +316,16 @@ function PageList() {
                     >
                       <IconButton
                         aria-label={t('pageEditor.overview.unpublish')}
-                        icon={<MdUnpublished />}
-                        circle
                         disabled={!(rowData.published || rowData.pending)}
-                        size="sm"
+                        size="small"
                         onClick={e => {
                           setCurrentPage(rowData as FullPageFragment);
                           setConfirmAction(ConfirmAction.Unpublish);
                           setConfirmationDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdUnpublished />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
 
@@ -337,15 +337,15 @@ function PageList() {
                     >
                       <IconButton
                         aria-label={t('pageEditor.overview.duplicate')}
-                        icon={<MdContentCopy />}
-                        circle
-                        size="sm"
+                        size="small"
                         onClick={() => {
                           setCurrentPage(rowData as FullPageFragment);
                           setConfirmAction(ConfirmAction.Duplicate);
                           setConfirmationDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdContentCopy />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
 
@@ -357,9 +357,7 @@ function PageList() {
                     >
                       <IconButton
                         aria-label={t('pageEditor.overview.createComment')}
-                        icon={<MdComment />}
-                        circle
-                        size="sm"
+                        size="small"
                         onClick={() => {
                           createComment({
                             variables: {
@@ -373,7 +371,9 @@ function PageList() {
                             },
                           });
                         }}
-                      />
+                      >
+                        <MdComment />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
 
@@ -383,62 +383,53 @@ function PageList() {
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         aria-label={t('delete')}
-                        icon={<MdDelete />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
+                        size="small"
+                        color="error"
                         onClick={() => {
                           setCurrentPage(rowData as FullPageFragment);
                           setConfirmAction(ConfirmAction.Delete);
                           setConfirmationDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdDelete />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                 </>
-              )}
-            </IconButtonCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.pages.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.pages.totalCount ?? 0}
         />
       </TableWrapper>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={isConfirmationDialogOpen}
-        size="sm"
+        maxWidth="sm"
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>
-            {confirmAction === ConfirmAction.Unpublish ?
-              t('pages.panels.unpublishPage')
-            : confirmAction === ConfirmAction.Delete ?
-              t('pages.panels.deletePage')
-            : t('pages.panels.duplicatePage')}
-          </Modal.Title>
-        </Modal.Header>
+        <DialogTitle>
+          {confirmAction === ConfirmAction.Unpublish ?
+            t('pages.panels.unpublishPage')
+          : confirmAction === ConfirmAction.Delete ?
+            t('pages.panels.deletePage')
+          : t('pages.panels.duplicatePage')}
+        </DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('pages.panels.title')}>
               {currentPage?.latest.title || t('pages.panels.untitled')}
@@ -474,17 +465,15 @@ function PageList() {
             )}
           </DescriptionList>
 
-          <Message
-            showIcon
-            type="warning"
-            title={t('articleEditor.overview.warningLabel')}
-          >
+          <Alert severity="warning">
+            <AlertTitle>{t('articleEditor.overview.warningLabel')}</AlertTitle>
             {t('articleEditor.overview.unpublishWarningMessage')}
-          </Message>
-        </Modal.Body>
+          </Alert>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="contained"
             disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
               if (!currentPage) return;
@@ -560,18 +549,17 @@ function PageList() {
 
               setConfirmationDialogOpen(false);
             }}
-            appearance="primary"
           >
             {t('pages.panels.confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('pages.panels.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

@@ -1,32 +1,16 @@
 import { TFunction } from 'i18next';
 import { useEffect } from 'react';
-import { Message, toaster } from 'rsuite';
-import { humanizeError } from '@wepublish/ui/editor';
+import { humanizeError, enqueueSnackbar } from '@wepublish/ui/editor';
 
 export const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const showSuccessToast = (message: string): void => {
-  toaster.push(
-    <Message
-      type="success"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {message}
-    </Message>
-  );
+  enqueueSnackbar(message, { variant: 'success', autoHideDuration: 3000 });
 };
 
 /**

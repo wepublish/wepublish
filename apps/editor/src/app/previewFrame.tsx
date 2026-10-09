@@ -1,4 +1,11 @@
 import styled from '@emotion/styled';
+import {
+  CircularProgress,
+  IconButton,
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@mui/material';
+import { enqueueSnackbar } from '@wepublish/ui/editor';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
@@ -8,7 +15,6 @@ import {
   MdPhoneIphone,
   MdTabletMac,
 } from 'react-icons/md';
-import { ButtonGroup, IconButton, Loader, Message, toaster } from 'rsuite';
 
 import { OpenPreviewOptions, startPreviewHandshake } from './openPreview';
 
@@ -132,7 +138,7 @@ export function PreviewFrame({
       {isLoading && (
         <LoaderOverlay>
           <LoaderTitle>{t('preview.loading')}</LoaderTitle>
-          <Loader size="lg" />
+          <CircularProgress size={40} />
         </LoaderOverlay>
       )}
     </PreviewWrapper>
@@ -169,53 +175,44 @@ export function PreviewControls({
     try {
       await navigator.clipboard.writeText(previewUrl);
 
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('preview.urlCopied')}
-        </Message>
-      );
+      enqueueSnackbar(t('preview.urlCopied'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
     } catch {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('preview.urlCopyFailed')}
-        </Message>
-      );
+      enqueueSnackbar(t('preview.urlCopyFailed'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     }
   };
 
   return (
     <PreviewControlsWrapper className={className}>
-      <ButtonGroup>
+      <ToggleButtonGroup
+        exclusive
+        value={device}
+        onChange={(_event, next) => next && onDeviceChange(next)}
+      >
         {devices.map(({ device: option, Icon }) => (
-          <IconButton
+          <ToggleButton
             key={option}
-            icon={<Icon />}
-            appearance={option === device ? 'primary' : 'default'}
-            active={option === device}
+            value={option}
             title={t(`preview.${option}`)}
             aria-label={t(`preview.${option}`)}
-            aria-pressed={option === device}
-            onClick={() => onDeviceChange(option)}
-          />
+          >
+            <Icon />
+          </ToggleButton>
         ))}
-      </ButtonGroup>
+      </ToggleButtonGroup>
 
       <IconButton
-        icon={<MdContentCopy />}
         title={t('preview.copyUrl')}
         aria-label={t('preview.copyUrl')}
         onClick={copyPreviewUrl}
-      />
+      >
+        <MdContentCopy />
+      </IconButton>
     </PreviewControlsWrapper>
   );
 }

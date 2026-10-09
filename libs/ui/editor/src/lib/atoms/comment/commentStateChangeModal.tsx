@@ -1,6 +1,15 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Card as MuiCard,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   ApproveCommentDocument,
   CommentRejectionReason,
   CommentRevisionFragment,
@@ -13,19 +22,12 @@ import { toPlaintext } from '@wepublish/richtext';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdReplay } from 'react-icons/md';
-import {
-  Button,
-  Dropdown,
-  Message,
-  Modal,
-  Panel,
-  Timeline,
-  toaster,
-} from 'rsuite';
+import { Dropdown, Timeline } from 'rsuite';
 
+import { enqueueSnackbar } from '../../snackbar';
 import { DescriptionList, DescriptionListItem } from '../descriptionList';
 
-const ParentCommentPanel = styled(Panel)`
+const ParentCommentPanel = styled(MuiCard)`
   margin-right: 40px;
   font-style: italic;
   color: lightslategrey;
@@ -36,7 +38,7 @@ const IconWrapper = styled.div`
   margin-left: 10px;
 `;
 
-const RevisionPanel = styled(Panel)`
+const RevisionPanel = styled(MuiCard)`
   max-height: 300px;
   overflow-y: scroll;
 `;
@@ -101,16 +103,7 @@ export function CommentStateChangeModal({
       errorRequestingChanges?.message ??
       errorRejecting?.message;
     if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
   }, [errorApprove, errorRequestingChanges, errorRejecting]);
 
   async function changeState() {
@@ -198,17 +191,13 @@ export function CommentStateChangeModal({
       )}`;
 
   return (
-    <Modal
+    <Dialog
+      fullWidth
       open={open}
-      size="sm"
-      overflow
+      maxWidth="sm"
     >
-      <Modal.Header onClose={() => setOpen(false)}>
-        <Modal.Title>
-          <div>{t(mapModalTitle(newCommentState))}</div>
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
+      <DialogTitle>{t(mapModalTitle(newCommentState))}</DialogTitle>
+      <DialogContent>
         <DescriptionList>
           <DescriptionListItem label={t('comments.panels.id')}>
             {comment?.id}
@@ -231,21 +220,25 @@ export function CommentStateChangeModal({
 
           {comment?.parentComment && (
             <DescriptionListItem label={t('comments.panels.parent')}>
-              <ParentCommentPanel bordered>
-                <>
-                  <div>
-                    {t('comments.panels.parentDate', {
-                      parentDate: new Date(comment.parentComment.createdAt),
-                    })}
-                  </div>
-                  <p>{printUsername}:</p>
+              <ParentCommentPanel>
+                <CardContent>
+                  <CardContent>
+                    <>
+                      <div>
+                        {t('comments.panels.parentDate', {
+                          parentDate: new Date(comment.parentComment.createdAt),
+                        })}
+                      </div>
+                      <p>{printUsername}:</p>
 
-                  {toPlaintext(
-                    comment.parentComment.revisions[
-                      comment.parentComment.revisions.length - 1
-                    ]?.text?.content
-                  )}
-                </>
+                      {toPlaintext(
+                        comment.parentComment.revisions[
+                          comment.parentComment.revisions.length - 1
+                        ]?.text?.content
+                      )}
+                    </>
+                  </CardContent>
+                </CardContent>
               </ParentCommentPanel>
               <IconWrapper>
                 <MdReplay rotate={180} />
@@ -275,7 +268,6 @@ export function CommentStateChangeModal({
               >
                 <Dropdown.Item
                   key={CommentRejectionReason.Spam}
-                  active={CommentRejectionReason.Spam === rejectionReason}
                   onSelect={() =>
                     setRejectionReason(CommentRejectionReason.Spam)
                   }
@@ -284,7 +276,6 @@ export function CommentStateChangeModal({
                 </Dropdown.Item>
                 <Dropdown.Item
                   key={CommentRejectionReason.Misconduct}
-                  active={CommentRejectionReason.Misconduct === rejectionReason}
                   onSelect={() => {
                     setRejectionReason(CommentRejectionReason.Misconduct);
                   }}
@@ -296,45 +287,49 @@ export function CommentStateChangeModal({
           : null}
 
           <DescriptionListItem label={t('comments.panels.revisions')} />
-          <RevisionPanel bordered>
-            <Timeline align="left">
-              {sortedRevisions.length ?
-                sortedRevisions.map(({ text, createdAt }, index) => (
-                  <Timeline.Item
-                    key={`timeline-item-${index}`}
-                    className={index === 0 ? 'rs-timeline-item-last' : ''}
-                  >
-                    <div>
-                      {t('comments.panels.revisionCreatedAtDate', {
-                        revisionCreatedAtDate: new Date(createdAt),
-                      })}
-                    </div>
+          <RevisionPanel>
+            <CardContent>
+              <CardContent>
+                <Timeline align="left">
+                  {sortedRevisions.length ?
+                    sortedRevisions.map(({ text, createdAt }, index) => (
+                      <Timeline.Item
+                        key={`timeline-item-${index}`}
+                        className={index === 0 ? 'rs-timeline-item-last' : ''}
+                      >
+                        <div>
+                          {t('comments.panels.revisionCreatedAtDate', {
+                            revisionCreatedAtDate: new Date(createdAt),
+                          })}
+                        </div>
 
-                    {toPlaintext(text?.content)}
-                  </Timeline.Item>
-                ))
-              : null}
-            </Timeline>
+                        {toPlaintext(text?.content)}
+                      </Timeline.Item>
+                    ))
+                  : null}
+                </Timeline>
+              </CardContent>
+            </CardContent>
           </RevisionPanel>
         </DescriptionList>
-      </Modal.Body>
-      <Modal.Footer>
+      </DialogContent>
+      <DialogActions>
         <Button
+          variant="contained"
           disabled={isApproving || isRequestingChanges || isRejecting}
-          appearance={'primary'}
           onClick={async () => await changeState()}
         >
           {t(mapCommentActionToBtnTitle(newCommentState))}
         </Button>
         <Button
+          variant="text"
           onClick={() => {
             setOpen(false);
           }}
-          appearance="subtle"
         >
           {t('comments.panels.cancel')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 }

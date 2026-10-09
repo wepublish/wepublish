@@ -1,5 +1,12 @@
 import { useLazyQuery } from '@apollo/client/react';
 import {
+  Alert,
+  Button,
+  FormControlLabel,
+  IconButton,
+  Switch,
+} from '@mui/material';
+import {
   EventListDocument,
   FullEventFragment,
   TagType,
@@ -8,18 +15,7 @@ import { useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  Checkbox,
-  Drawer,
-  Form,
-  IconButton,
-  Message,
-  Pagination,
-  Table as RTable,
-  toaster,
-  Toggle,
-} from 'rsuite';
+import { Checkbox, Form, Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
@@ -27,22 +23,23 @@ import { InfoTooltip } from '../atoms/infoTooltip';
 import { PermissionControl } from '../atoms/permissionControl';
 import { SelectTags } from '../atoms/tag/selectTags';
 import { EventBlockValue } from '../blocks/types';
-import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 import { humanizeError } from '../humanizeError';
 import { Table } from '../listView/list-view';
+import { Pagination } from '../listView/pagination';
+import { enqueueSnackbar } from '../snackbar';
 
 const onErrorToast = (error: Error) => {
   if (error?.message) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {error && humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(error && humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   }
 };
 
@@ -106,27 +103,27 @@ export function SelectEventPanel({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('blocks.event.title')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('blocks.event.title')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'ghost'}
+            variant="outlined"
             onClick={() => onClose()}
           >
             {t('close')}
           </Button>
 
           <Button
-            appearance={'primary'}
+            variant="contained"
             onClick={() => saveSelection()}
           >
             {t('saveAndClose')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body style={{ padding: '24px' }}>
+      <DrawerBody style={{ padding: '24px' }}>
         <div style={{ width: '250px' }}>
           <Form.Group controlId="tags">
             <Form.Label>{t('blocks.event.filterByTag')}</Form.Label>
@@ -142,13 +139,12 @@ export function SelectEventPanel({
         </div>
 
         {!allowCherryPicking && !!tagFilter?.length && (
-          <Message
-            showIcon
-            type="info"
+          <Alert
+            severity="info"
             style={{ marginTop: '12px' }}
           >
             {t('blocks.event.eventsFilterByTagInformation')}
-          </Message>
+          </Alert>
         )}
 
         <div
@@ -159,9 +155,13 @@ export function SelectEventPanel({
             marginTop: '48px',
           }}
         >
-          <Toggle
-            defaultChecked={allowCherryPicking}
-            onChange={toggleCherryPicking}
+          <FormControlLabel
+            control={
+              <Switch
+                defaultChecked={allowCherryPicking}
+                onChange={() => toggleCherryPicking()}
+              />
+            }
             label={
               <>
                 {t('blocks.event.cherryPick')}{' '}
@@ -172,11 +172,10 @@ export function SelectEventPanel({
         </div>
 
         <Table
-          minHeight={600}
           autoHeight
           loading={loading}
           data={data?.events?.nodes || []}
-          rowClassName={rowData =>
+          rowClassName={(rowData: any) =>
             eventFilter?.includes(rowData?.id) ? 'highlighted-row' : ''
           }
         >
@@ -238,10 +237,10 @@ export function SelectEventPanel({
                     >
                       <IconButton
                         aria-label={t('event.list.edit')}
-                        icon={<MdEdit />}
-                        circle
-                        size="sm"
-                      />
+                        size="small"
+                      >
+                        <MdEdit />
+                      </IconButton>
                     </Link>
                   </IconButtonTooltip>
                 </PermissionControl>
@@ -251,22 +250,15 @@ export function SelectEventPanel({
         </Table>
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager']}
-          total={data?.events?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
+          }}
+          totalCount={data?.events?.totalCount ?? 0}
         />
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }

@@ -1,12 +1,19 @@
 import styled from '@emotion/styled';
+import {
+  Button,
+  Card as MuiCard,
+  CardContent,
+  Drawer,
+  IconButton as MuiIconButton,
+} from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
-import { Drawer, IconButton as RSIconButton, Panel } from 'rsuite';
 
 import { TypographicTextArea } from '../atoms';
 import { BlockProps } from '../atoms/blockList';
 import { PlaceholderInput } from '../atoms/placeholderInput';
+import { DRAWER_WIDTHS } from '../drawer';
 import {
   TeaserListConfigPanel,
   useTeaserTypeText,
@@ -34,7 +41,7 @@ const TeaserWrapper = styled('article')`
   background-color: var(--rs-bg-well);
 `;
 
-const PreviewPanel = styled(Panel)`
+const PreviewPanel = styled(MuiCard)`
   overflow: hidden;
   background-color: var(--rs-bg-well);
   display: grid;
@@ -45,7 +52,7 @@ const Count = styled.p`
   text-align: center;
 `;
 
-const IconButton = styled(RSIconButton)`
+const IconButton = styled(MuiIconButton)`
   position: absolute;
   right: 0;
 `;
@@ -86,35 +93,39 @@ export const TeaserListBlock = ({
         onChange={e => onChange({ ...value, title: e.target.value })}
       />
 
-      <PreviewPanel
-        bodyFill
-        bordered
-      >
-        <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
-          <IconButton
-            size={'lg'}
-            icon={<MdEdit />}
-            onClick={() => setIsDialogOpen(true)}
-          >
-            {t('blocks.teaserList.edit')}
-          </IconButton>
+      <PreviewPanel>
+        <CardContent>
+          <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+            <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
+              <Button
+                variant="outlined"
+                startIcon={<MdEdit />}
+                size="large"
+                onClick={() => setIsDialogOpen(true)}
+              >
+                {t('blocks.teaserList.edit')}
+              </Button>
 
-          <InfoList>
-            <li>
-              {t('blocks.teaserList.teaserType', {
-                teaserType: teaserTypeText(teaserType),
-              })}
-            </li>
-            <li>{t('blocks.teaserList.take', { take })}</li>
-            <li>{t('blocks.teaserList.skip', { skip })}</li>
-            {!!sort && <li>{t('blocks.teaserList.sort', { sort })}</li>}
-            {!!filter.tags?.length && (
-              <li>
-                {t('blocks.teaserList.tags', { tags: filter.tags.join(', ') })}
-              </li>
-            )}
-          </InfoList>
-        </PlaceholderInput>
+              <InfoList>
+                <li>
+                  {t('blocks.teaserList.teaserType', {
+                    teaserType: teaserTypeText(teaserType),
+                  })}
+                </li>
+                <li>{t('blocks.teaserList.take', { take })}</li>
+                <li>{t('blocks.teaserList.skip', { skip })}</li>
+                {!!sort && <li>{t('blocks.teaserList.sort', { sort })}</li>}
+                {!!filter.tags?.length && (
+                  <li>
+                    {t('blocks.teaserList.tags', {
+                      tags: filter.tags.join(', '),
+                    })}
+                  </li>
+                )}
+              </InfoList>
+            </PlaceholderInput>
+          </CardContent>
+        </CardContent>
       </PreviewPanel>
 
       <Count>
@@ -134,7 +145,17 @@ export const TeaserListBlock = ({
       )}
 
       <Drawer
-        size="lg"
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.lg,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       >

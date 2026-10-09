@@ -4,27 +4,32 @@ import { MockedProvider } from '@apollo/client/testing/react';
 import { Form } from 'rsuite';
 import { CrowdfundingGoalType } from '@wepublish/editor/api';
 import { CrowdfundingForm } from './crowdfunding-form';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme();
 
 const renderForm = (goalType: CrowdfundingGoalType) =>
   render(
-    <MockedProvider
-      mocks={[]}
-      addTypename={false}
-    >
-      <Form>
-        <CrowdfundingForm
-          crowdfunding={{
-            name: 'Test',
-            goalType,
-            additionalRevenue: 0,
-            goals: [{ title: 'Goal', description: '', amount: 0 }],
-          }}
-          onChange={vi.fn()}
-          onAddGoal={vi.fn()}
-          onRemoveGoal={vi.fn()}
-        />
-      </Form>
-    </MockedProvider>
+    <ThemeProvider theme={theme}>
+      <MockedProvider
+        mocks={[]}
+        addTypename={false}
+      >
+        <Form>
+          <CrowdfundingForm
+            crowdfunding={{
+              name: 'Test',
+              goalType,
+              additionalRevenue: 0,
+              goals: [{ title: 'Goal', description: '', amount: 0 }],
+            }}
+            onChange={vi.fn()}
+            onAddGoal={vi.fn()}
+            onRemoveGoal={vi.fn()}
+          />
+        </Form>
+      </MockedProvider>
+    </ThemeProvider>
   );
 
 describe('CrowdfundingForm', () => {

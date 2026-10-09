@@ -1,6 +1,15 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  ButtonGroup as MuiButtonGroup,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+} from '@mui/material';
+import {
   DeleteImageDocument,
   FullImageFragment,
   ImageListDocument,
@@ -9,8 +18,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DRAWER_WIDTHS,
   IconButton,
   IconButtonTooltip,
   ImageEditPanel,
@@ -20,6 +28,7 @@ import {
   ListViewFilterArea,
   ListViewHeader,
   PaddedCell,
+  Pagination,
   PermissionControl,
   Table,
   TableWrapper,
@@ -36,17 +45,7 @@ import {
   MdViewModule,
 } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import {
-  Button,
-  ButtonGroup as RButtonGroup,
-  Drawer,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
+import { Input, InputGroup, Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 export enum ImageListLayout {
@@ -63,7 +62,7 @@ const Img = styled.img`
   margin: 0 auto;
   border-radius: var(--rs-radius-md);
 `;
-const ButtonGroup = styled(RButtonGroup)`
+const ButtonGroup = styled(MuiButtonGroup)`
   margin-top: 12px;
 `;
 
@@ -233,13 +232,13 @@ function ImageList() {
               to="/images/upload"
               state={{ modalLocation: location }}
             >
-              <RIconButton
-                appearance="primary"
+              <Button
+                variant="contained"
+                startIcon={<MdOutlineAddPhotoAlternate />}
                 disabled={isLoading}
-                icon={<MdOutlineAddPhotoAlternate />}
               >
                 {t('images.overview.uploadImage')}
-              </RIconButton>
+              </Button>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -260,12 +259,11 @@ function ImageList() {
         </ListViewFilterArea>
       </ListViewContainer>
 
-      <ButtonGroup size="lg">
+      <ButtonGroup size="large">
         <IconButtonTooltip caption={t('images.overview.gridView')}>
-          <RIconButton
+          <IconButton
             aria-label={t('images.overview.gridView')}
             aria-pressed={layout === ImageListLayout.Grid}
-            active={layout === ImageListLayout.Grid}
             onClick={() => {
               setLayout(ImageListLayout.Grid);
               localStorage.setItem(
@@ -273,12 +271,12 @@ function ImageList() {
                 ImageListLayout.Grid
               );
             }}
-            appearance={layout === ImageListLayout.Grid ? 'ghost' : 'default'}
-            icon={<MdViewModule />}
-          />
+          >
+            <MdViewModule />
+          </IconButton>
         </IconButtonTooltip>
         <IconButtonTooltip caption={t('images.overview.listView')}>
-          <RIconButton
+          <IconButton
             aria-label={t('images.overview.listView')}
             aria-pressed={layout === ImageListLayout.List}
             onClick={() => {
@@ -288,10 +286,9 @@ function ImageList() {
                 ImageListLayout.List
               );
             }}
-            appearance={layout === ImageListLayout.List ? 'ghost' : 'default'}
-            active={layout === ImageListLayout.List}
-            icon={<MdViewList />}
-          />
+          >
+            <MdViewList />
+          </IconButton>
         </IconButtonTooltip>
       </ButtonGroup>
 
@@ -311,29 +308,32 @@ function ImageList() {
         }
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.images.totalCount ?? 0}
-          activePage={activePage}
-          onChangePage={page => setActivePage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setActivePage(1);
+          state={{
+            page: activePage,
+            limit,
+            setPage: setActivePage,
+            setLimit: limit => {
+              setLimit(limit);
+              setActivePage(1);
+            },
           }}
+          totalCount={data?.images.totalCount ?? 0}
         />
       </TableWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isUploadModalOpen}
-        size="sm"
         onClose={() => {
           setUploadModalOpen(false);
           navigate('/images');
@@ -351,8 +351,18 @@ function ImageList() {
         />
       </Drawer>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => {
           setEditModalOpen(false);
           navigate('/images');
@@ -366,23 +376,24 @@ function ImageList() {
           }}
         />
       </Drawer>
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Title>{t('images.panels.deleteImage')}</Modal.Title>
+        <DialogTitle>{t('images.panels.deleteImage')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <p>
             {`${currentImage?.filename || t('images.panels.untitled')}${currentImage?.extension}` ||
               '-'}
           </p>
           <p>{currentImage?.title || t('images.panels.untitled')}</p>
           <p>{currentImage?.description || '-'}</p>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="outlined"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentImage) {
@@ -416,18 +427,18 @@ function ImageList() {
               });
               setConfirmationDialogOpen(false);
             }}
-            color="red"
+            color="error"
           >
             {t('images.panels.confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('images.panels.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
@@ -466,18 +477,17 @@ const ImageGridView = ({
                   <IconButtonTooltip caption={t('delete')}>
                     <GridIcon
                       aria-label={t('delete')}
-                      icon={<MdDelete />}
-                      circle
-                      size="md"
-                      appearance="default"
-                      color="red"
+                      size="medium"
+                      color="error"
                       data-on-media
                       onClick={event => {
                         event.preventDefault();
                         setCurrentImage(image);
                         setConfirmationDialogOpen(true);
                       }}
-                    />
+                    >
+                      <MdDelete />
+                    </GridIcon>
                   </IconButtonTooltip>
                   {image?.title && <ImgDesc>{image?.title}</ImgDesc>}
                 </Overlay>
@@ -584,10 +594,10 @@ const ImageListView = ({
                   <Link to={`/images/edit/${rowData.id}`}>
                     <IconButton
                       aria-label={t('images.overview.edit')}
-                      icon={<MdEdit />}
-                      circle
-                      size="sm"
-                    />
+                      size="small"
+                    >
+                      <MdEdit />
+                    </IconButton>
                   </Link>
                 </IconButtonTooltip>
               </PermissionControl>
@@ -595,17 +605,16 @@ const ImageListView = ({
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     aria-label={t('delete')}
-                    icon={<MdDelete />}
-                    circle
-                    size="sm"
-                    appearance="ghost"
-                    color="red"
+                    size="small"
+                    color="error"
                     onClick={event => {
                       event.preventDefault();
                       setCurrentImage(rowData as FullImageFragment);
                       setConfirmationDialogOpen(true);
                     }}
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
               </PermissionControl>
             </>

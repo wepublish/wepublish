@@ -1,4 +1,11 @@
+import { Button, Drawer, Grid } from '@mui/material';
 import { DailySubscriptionStatsUser } from '@wepublish/editor/api';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '@wepublish/ui/editor';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,11 +18,11 @@ import {
   MdSpaceBar,
   MdStopCircle,
 } from 'react-icons/md';
-import { Button, Col, Drawer, Nav, Row, Sidenav, Table } from 'rsuite';
+import { Nav, Sidenav, Table } from 'rsuite';
 
 import { AudienceCsvBtn } from './audience-csv-btn';
-import { AggregatedUsers, AudienceStatsComputed } from './useAudience';
 import { TimeResolution } from './audience-filter-params';
+import { AggregatedUsers, AudienceStatsComputed } from './useAudience';
 
 const { Cell, Column, HeaderCell } = Table;
 const { Body, Header } = Sidenav;
@@ -97,30 +104,37 @@ export function AudienceDetailDrawer({
 
   return (
     <Drawer
-      placement="bottom"
-      size="full"
+      anchor="bottom"
+      slotProps={{
+        paper: {
+          sx: { display: 'flex', flexDirection: 'column', height: '80vh' },
+        },
+      }}
       open={!!audienceStats?.date}
       onClose={() => setOpen(undefined)}
     >
-      <Drawer.Header>
-        <Drawer.Title>{date}</Drawer.Title>
-        <Drawer.Actions>
+      <DrawerHeader>
+        <DrawerTitle>{date}</DrawerTitle>
+        <DrawerActions>
           <AudienceCsvBtn
             audienceStats={audienceStats}
             selectedStatKey={selectedStat}
             fileNameDate={date}
           />
           <Button
+            variant="contained"
             onClick={() => setOpen(undefined)}
-            appearance="primary"
           >
             {t('audienceDetailDrawer.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
-      <Drawer.Body>
-        <Row gutter={8}>
-          <Col xs={4}>
+        </DrawerActions>
+      </DrawerHeader>
+      <DrawerBody>
+        <Grid
+          container
+          spacing={2}
+        >
+          <Grid size={{ xs: 2 }}>
             <Sidenav appearance="subtle">
               <Header>{t('audienceDetailDrawer.selectStat')}</Header>
               <Body>
@@ -128,7 +142,6 @@ export function AudienceDetailDrawer({
                   {availableStats.map((availableStat, index) => (
                     <Nav.Item
                       key={index}
-                      active={selectedStat === availableStat}
                       onClick={() => setSelectedStat(availableStat)}
                       icon={getIconByUserFilter(availableStat)}
                     >
@@ -140,8 +153,8 @@ export function AudienceDetailDrawer({
                 </Nav>
               </Body>
             </Sidenav>
-          </Col>
-          <Col xs={20}>
+          </Grid>
+          <Grid size={{ xs: 10 }}>
             <Table
               data={audienceStats?.[selectedStat] || []}
               style={{ width: '100%' }}
@@ -184,9 +197,9 @@ export function AudienceDetailDrawer({
                 <Cell>
                   {(entry: DailySubscriptionStatsUser) => (
                     <Button
+                      variant="outlined"
                       href={`/users/edit/${entry.id}`}
-                      size="xs"
-                      appearance={'ghost'}
+                      size="small"
                       target={'__blank'}
                       endIcon={<MdOpenInNew />}
                     >
@@ -196,9 +209,9 @@ export function AudienceDetailDrawer({
                 </Cell>
               </Column>
             </Table>
-          </Col>
-        </Row>
-      </Drawer.Body>
+          </Grid>
+        </Grid>
+      </DrawerBody>
     </Drawer>
   );
 }

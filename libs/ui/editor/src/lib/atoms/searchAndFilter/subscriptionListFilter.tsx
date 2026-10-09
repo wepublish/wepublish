@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import {
   DateFilterComparison,
   FullMemberPlanFragment,
@@ -14,7 +15,6 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
 import {
-  Button,
   DatePicker,
   DateRangePicker,
   Form as RForm,
@@ -158,9 +158,9 @@ export function SubscriptionListFilter({
     return (
       <FormGroup>
         <Button
+          variant="outlined"
           onClick={() => resetFilter()}
-          color="red"
-          appearance="ghost"
+          color="error"
         >
           <CloseIcon />
           {t('subscriptionList.filter.reset')}
@@ -188,9 +188,9 @@ export function SubscriptionListFilter({
 
       <Group style={formInputStyle}>
         <SelectPicker
+          block
           key={`member-plan-${resetFilterKey}`}
           placeholder={t('userSubscriptionEdit.selectMemberPlan')}
-          block
           disabled={isDisabled}
           data={memberPlans.map(mp => ({ value: mp.id, label: mp.name }))}
           onChange={value =>
@@ -203,9 +203,9 @@ export function SubscriptionListFilter({
 
       <Group style={formInputStyle}>
         <SelectPicker
+          block
           key={`payment-periodicity-${resetFilterKey}`}
           placeholder={t('memberPlanList.paymentPeriodicities')}
-          block
           disabled={isDisabled}
           data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
             value: pp,
@@ -219,9 +219,9 @@ export function SubscriptionListFilter({
 
       <Group style={formInputStyle}>
         <SelectPicker
+          block
           key={`payment-method-${resetFilterKey}`}
           placeholder={t('userSubscriptionEdit.paymentMethod')}
-          block
           disabled={isDisabled}
           data={paymentMethods.map(pm => ({
             value: pm.id,
@@ -237,9 +237,9 @@ export function SubscriptionListFilter({
 
       <Group style={formInputStyle}>
         <DateRangePicker
+          block
           key={`starts-at-${resetFilterKey}`}
           placeholder={t('userSubscriptionEdit.startsAt')}
-          block
           onChange={value => {
             if (value && value[0] && value[1]) {
               updateFilter({
@@ -263,6 +263,7 @@ export function SubscriptionListFilter({
 
       <Group style={formInputStyle}>
         <SelectPicker
+          block
           key={`auto-renew-${resetFilterKey}`}
           placeholder={t('userSubscriptionEdit.autoRenew')}
           searchable={false}
@@ -276,7 +277,6 @@ export function SubscriptionListFilter({
               label: t('no'),
             },
           ]}
-          block
           placement="auto"
           onChange={value => updateFilter({ autoRenew: value === 'true' })}
         />
@@ -284,6 +284,7 @@ export function SubscriptionListFilter({
 
       <Group style={formInputStyle}>
         <SelectPicker
+          block
           key={`deactivation-reason-${resetFilterKey}`}
           placeholder={t('subscriptionList.filter.deactivationReason')}
           searchable={false}
@@ -311,7 +312,6 @@ export function SubscriptionListFilter({
               label: t('subscriptionList.filter.reasonChargeback'),
             },
           ]}
-          block
           placement="auto"
           onChange={value => updateFilter({ deactivationReason: value })}
         />
@@ -319,9 +319,9 @@ export function SubscriptionListFilter({
 
       <Group style={formInputStyle}>
         <DateRangePicker
+          block
           key={`deactivation-date-${resetFilterKey}`}
           placeholder={t('userSubscriptionEdit.deactivation.date')}
-          block
           placement="auto"
           onChange={value => {
             if (value && value[0] && value[1]) {
@@ -348,9 +348,9 @@ export function SubscriptionListFilter({
 
       <Group style={formInputStyle}>
         <DateRangePicker
+          block
           key={`cancellation-date-${resetFilterKey}`}
           placeholder={t('userSubscriptionEdit.deactivation.cancellation')}
-          block
           placement="auto"
           onChange={value => {
             if (value && value[0] && value[1]) {
@@ -377,9 +377,9 @@ export function SubscriptionListFilter({
 
       <Group style={formInputStyle}>
         <DateRangePicker
+          block
           key={`paid-until-${resetFilterKey}`}
           placeholder={t('userSubscriptionEdit.paidUntil')}
-          block
           placement="auto"
           onChange={value => {
             if (value && value[0] && value[1]) {
@@ -406,9 +406,9 @@ export function SubscriptionListFilter({
 
       <Group style={formInputStyle}>
         <DatePicker
+          block
           key={`active-at-${resetFilterKey}`}
           placeholder={t('subscriptionList.filter.activeAt')}
-          block
           placement="auto"
           oneTap
           onChange={value =>
@@ -420,6 +420,7 @@ export function SubscriptionListFilter({
 
       <Group style={formInputStyle}>
         <SelectPicker
+          block
           key={`extendable-${resetFilterKey}`}
           placeholder={t('subscriptionListFilter.extendable')}
           label={t('subscriptionListFilter.extendable')}
@@ -434,7 +435,6 @@ export function SubscriptionListFilter({
               label: t('no'),
             },
           ]}
-          block
           placement="auto"
           onChange={value =>
             updateFilter({

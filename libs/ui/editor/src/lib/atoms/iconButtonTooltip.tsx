@@ -1,22 +1,25 @@
+import { Tooltip } from '@mui/material';
 import { ReactElement } from 'react';
-import { Tooltip, Whisper } from 'rsuite';
 
 interface IconButtonTooltipProps {
   children: ReactElement;
   caption: string;
 }
 
+/**
+ * Labels an icon-only button. MUI's `Tooltip` already opens on hover and on
+ * keyboard focus, so rsuite's explicit `trigger` list has no counterpart.
+ */
 export function IconButtonTooltip({
   children,
   caption,
 }: IconButtonTooltipProps) {
   return (
-    <Whisper
+    <Tooltip
+      title={caption}
       placement="top"
-      trigger={['hover', 'focus']}
-      speaker={<Tooltip>{caption}</Tooltip>}
     >
       {children}
-    </Whisper>
+    </Tooltip>
   );
 }

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
+import { Button, CircularProgress } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { MdChevronLeft } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Button, Loader as RLoader } from 'rsuite';
 
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 
@@ -29,7 +29,7 @@ const Grid = styled.div`
   }
 `;
 
-const Loader = styled(RLoader)`
+const Loader = styled(CircularProgress)`
   margin-right: 4px;
 `;
 
@@ -81,7 +81,7 @@ export function SingleViewTitle({
     if (loading) {
       return (
         <>
-          <Loader />
+          <CircularProgress />
           {loadingTitle ?? title}
         </>
       );
@@ -107,7 +107,7 @@ export function SingleViewTitle({
 
       <div>
         <SaveButton
-          appearance="ghost"
+          variant="outlined"
           loading={loading}
           type="submit"
           data-testid="saveButton"
@@ -116,7 +116,7 @@ export function SingleViewTitle({
         </SaveButton>
 
         <Button
-          appearance="primary"
+          variant="contained"
           loading={loading}
           type="submit"
           data-testid="saveAndCloseButton"

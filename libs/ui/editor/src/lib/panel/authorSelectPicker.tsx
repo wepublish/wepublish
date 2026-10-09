@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import {
   AuthorListDocument,
   CreateAuthorDocument,
@@ -8,11 +9,12 @@ import {
 import { slugify } from '@wepublish/utils';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, SelectPicker, toaster } from 'rsuite';
+import { SelectPicker } from 'rsuite';
 
 import { PeerAvatar } from '../atoms/peer/peerAvatar';
-import { getOperationNameFromDocument } from '../utility';
 import { humanizeError } from '../humanizeError';
+import { enqueueSnackbar } from '../snackbar';
+import { getOperationNameFromDocument } from '../utility';
 
 const ButtonWrapper = styled.div`
   margin: 8px;
@@ -33,16 +35,10 @@ export interface AuthorSelectPickerProps {
  * @param error
  */
 const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 export function AuthorSelectPicker({
@@ -145,8 +141,8 @@ export function AuthorSelectPicker({
         !authorsData?.authors.nodes.length && (
           <ButtonWrapper>
             <Button
+              variant="contained"
               onClick={() => handleCreateAuthor()}
-              appearance="primary"
             >
               {t('articles.panels.createAuthorProfile', {
                 name: authorsFilter,

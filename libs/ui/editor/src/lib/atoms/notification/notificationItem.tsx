@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
+import { Alert, AlertTitle, Chip } from '@mui/material';
 import { MouseEvent, ReactNode } from 'react';
-import { Message, Tag } from 'rsuite';
 
 export type NotificationSeverity = 'info' | 'success' | 'warning' | 'error';
 
@@ -77,17 +77,20 @@ export function NotificationItem({
       severity={severity}
       onClick={onClick}
     >
-      <Message
-        type={severity}
-        showIcon
-        header={
+      <Alert severity={severity}>
+        <AlertTitle>
           <TitleRow>
             <strong>{title}</strong>
             {tags}
-            {sourceTag && <Tag size="sm">{sourceTag}</Tag>}
+            {sourceTag && (
+              <Chip
+                size="small"
+                label={sourceTag}
+              />
+            )}
           </TitleRow>
-        }
-      >
+        </AlertTitle>
+
         {(children || actions) && (
           <Content>
             {children && <Body>{children}</Body>}
@@ -99,7 +102,7 @@ export function NotificationItem({
             )}
           </Content>
         )}
-      </Message>
+      </Alert>
     </Wrapper>
   );
 }

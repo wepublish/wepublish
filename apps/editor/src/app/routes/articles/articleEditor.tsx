@@ -1,12 +1,16 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Badge,
   Button as MuiButton,
+  Dialog,
   Dialog as MuiDialog,
   DialogActions as MuiDialogActions,
   DialogContent as MuiDialogContent,
   DialogContentText as MuiDialogContentText,
   DialogTitle as MuiDialogTitle,
+  Drawer,
+  IconButton,
 } from '@mui/material';
 import {
   ArticleDocument,
@@ -37,10 +41,12 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   DocumentUrlProvider,
+  DRAWER_WIDTHS,
   EditorHeader,
   EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
+  enqueueSnackbar,
   InfoData,
   ListicleBlockListValue,
   mapBlockValueToBlockInput,
@@ -70,15 +76,6 @@ import {
   MdSave,
 } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import {
-  Badge,
-  Drawer,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Notification,
-  toaster,
-} from 'rsuite';
 
 import { LastSavedAt } from '../../lastSavedAt';
 import {
@@ -450,16 +447,7 @@ function ArticleEditor() {
       restoreError?.message ??
       discardError?.message;
     if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
   }, [
     createError,
     updateError,
@@ -484,14 +472,11 @@ function ArticleEditor() {
       setChanged(false);
       await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
 
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('discardDraft.success')}
-          duration={2000}
-        />,
-        { placement: 'topEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('discardDraft.success'),
+        autoHideDuration: 2000,
+      });
     }
   }
 
@@ -514,14 +499,11 @@ function ArticleEditor() {
         setChanged(false);
         await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
 
-        toaster.push(
-          <Notification
-            type="success"
-            header={t('versionHistory.restored')}
-            duration={2000}
-          />,
-          { placement: 'topEnd' }
-        );
+        enqueueSnackbar('', {
+          variant: 'success',
+          title: t('versionHistory.restored'),
+          autoHideDuration: 2000,
+        });
 
         setVersionHistoryOpen(false);
       }
@@ -652,17 +634,12 @@ function ArticleEditor() {
       reason === 'publish' ?
         t('articleEditor.publishValidationFailed')
       : t('articleEditor.saveValidationFailed');
-    toaster.push(
-      <Message
-        type="error"
-        showIcon={false}
-        closable
-        duration={8000}
-      >
+    enqueueSnackbar(
+      <>
         <strong>{header}</strong>
         <div>{summaries || t('articleEditor.validationFailedGeneric')}</div>
-      </Message>,
-      { placement: 'topEnd' }
+      </>,
+      { variant: 'error', autoHideDuration: 8000 }
     );
     return false;
   }
@@ -679,14 +656,11 @@ function ArticleEditor() {
       skipRepopulate.current = false;
       markSaved();
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('articleEditor.overview.draftSaved')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('articleEditor.overview.draftSaved'),
+        autoHideDuration: 2000,
+      });
       await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
     } else {
       const { data } = await createArticle({ variables: input });
@@ -694,14 +668,11 @@ function ArticleEditor() {
         navigate(`/articles/edit/${data?.createArticle.id}`, { replace: true });
       }
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('articleEditor.overview.draftCreated')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('articleEditor.overview.draftCreated'),
+        autoHideDuration: 2000,
+      });
     }
   }
 
@@ -725,14 +696,11 @@ function ArticleEditor() {
       setChanged(false);
     }
 
-    toaster.push(
-      <Notification
-        type="success"
-        header={t('articleEditor.overview.draftAutosaved')}
-        duration={2000}
-      />,
-      { placement: 'bottomEnd' }
-    );
+    enqueueSnackbar('', {
+      variant: 'success',
+      title: t('articleEditor.overview.draftAutosaved'),
+      autoHideDuration: 2000,
+    });
     await reloadRevisions();
   }
 
@@ -747,16 +715,10 @@ function ArticleEditor() {
       return;
     }
     if (!metadata.slug) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {t('articleEditor.overview.noSlug')}
-        </Message>
-      );
+      enqueueSnackbar(t('articleEditor.overview.noSlug'), {
+        variant: 'error',
+        autoHideDuration: null,
+      });
       return;
     }
 
@@ -784,34 +746,25 @@ function ArticleEditor() {
 
       setChanged(false);
 
-      toaster.push(
-        <Notification
-          type="success"
-          header={t(
-            publishedAt <= new Date() ?
-              'articleEditor.overview.articlePublished'
-            : 'articleEditor.overview.articlePending'
-          )}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t(
+          publishedAt <= new Date() ?
+            'articleEditor.overview.articlePublished'
+          : 'articleEditor.overview.articlePending'
+        ),
+        autoHideDuration: 2000,
+      });
     }
     await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
   }
 
   useEffect(() => {
     if (isNotFound) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {t('articleEditor.overview.notFound')}
-        </Message>
-      );
+      enqueueSnackbar(t('articleEditor.overview.notFound'), {
+        variant: 'error',
+        autoHideDuration: null,
+      });
     }
   }, [isNotFound, t]);
 
@@ -836,22 +789,21 @@ function ArticleEditor() {
             meta={<LastSavedAt date={articleData?.article?.latest.createdAt} />}
             back={
               <Link to="/articles">
-                <RIconButton
-                  circle
-                  appearance="subtle"
-                  icon={<MdKeyboardBackspace />}
+                <IconButton
                   title={t('articleEditor.overview.back')}
                   aria-label={t('articleEditor.overview.back')}
                   onClick={e => {
                     if (!unsavedChangesDialog()) e.preventDefault();
                   }}
-                />
+                >
+                  <MdKeyboardBackspace />
+                </IconButton>
               </Link>
             }
             secondaryActions={
               <>
                 <EditorHeaderButton
-                  appearance="subtle"
+                  variant="text"
                   icon={<MdIntegrationInstructions />}
                   label={t('articleEditor.overview.metadata')}
                   disabled={isDisabled}
@@ -867,7 +819,7 @@ function ArticleEditor() {
                       qualifyingPermissions={['CAN_GET_ARTICLE']}
                     >
                       <EditorHeaderButton
-                        appearance="subtle"
+                        variant="text"
                         icon={<MdHistory />}
                         label={t('versionHistory.title')}
                         disabled={isDisabled}
@@ -887,7 +839,7 @@ function ArticleEditor() {
                           qualifyingPermissions={['CAN_CREATE_ARTICLE']}
                         >
                           <EditorHeaderButton
-                            appearance="subtle"
+                            variant="text"
                             icon={<MdDeleteOutline />}
                             label={t('discardDraft.button')}
                             disabled={isDisabled}
@@ -908,7 +860,7 @@ function ArticleEditor() {
                   )}
 
                   <EditorHeaderButton
-                    appearance={showPreview ? 'ghost' : 'subtle'}
+                    variant="outlined"
                     icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
                     label={
                       showPreview ?
@@ -927,7 +879,7 @@ function ArticleEditor() {
                   qualifyingPermissions={['CAN_CREATE_ARTICLE']}
                 >
                   <EditorHeaderButton
-                    appearance="primary"
+                    variant="contained"
                     icon={<MdSave />}
                     label={t('create')}
                     collapse={false}
@@ -938,8 +890,13 @@ function ArticleEditor() {
               : <PermissionControl
                   qualifyingPermissions={['CAN_CREATE_ARTICLE']}
                 >
-                  <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+                  <Badge
+                    variant="dot"
+                    color="warning"
+                    invisible={!hasChanged}
+                  >
                     <EditorHeaderButton
+                      variant="outlined"
                       icon={<MdSave />}
                       label={t('save')}
                       collapse="sm"
@@ -952,17 +909,15 @@ function ArticleEditor() {
                     qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}
                   >
                     <Badge
-                      className={
-                        (
-                          articleData?.article?.draft ||
-                          !articleData?.article?.published
-                        ) ?
-                          'unsaved'
-                        : 'saved'
+                      variant="dot"
+                      color="warning"
+                      invisible={
+                        !articleData?.article?.draft &&
+                        !!articleData?.article?.published
                       }
                     >
                       <EditorHeaderButton
-                        appearance="primary"
+                        variant="contained"
                         icon={<MdCloudUpload />}
                         label={t('articleEditor.overview.publish')}
                         collapse={false}
@@ -993,15 +948,9 @@ function ArticleEditor() {
               return jwtData?.createJWTForWebsiteLogin?.token;
             }}
             onSilence={() =>
-              toaster.push(
-                <Message
-                  type="warning"
-                  showIcon
-                  closable
-                >
-                  {t('previewHandshake.notResponding')}
-                </Message>
-              )
+              enqueueSnackbar(t('previewHandshake.notResponding'), {
+                variant: 'warning',
+              })
             }
           />
         )}
@@ -1022,8 +971,18 @@ function ArticleEditor() {
       </EditorTemplate>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isMetaDrawerOpen}
-        size="md"
         onClose={() => setMetaDrawerOpen(false)}
       >
         <ArticleMetadataPanel
@@ -1043,9 +1002,10 @@ function ArticleEditor() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={isPublishDialogOpen}
-        size="sm"
+        maxWidth="sm"
         onClose={() => setPublishDialogOpen(false)}
       >
         <PublishArticlePanel
@@ -1062,7 +1022,7 @@ function ArticleEditor() {
             setPublishDialogOpen(false);
           }}
         />
-      </Modal>
+      </Dialog>
 
       <VersionHistory
         open={isVersionHistoryOpen}

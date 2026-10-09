@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import {
   CreateSessionWithJwtDocument,
   EnableTotpDocument,
@@ -9,6 +10,7 @@ import {
 import {
   AuthDispatchActionType,
   AuthDispatchContext,
+  enqueueSnackbar,
   LoginTemplate,
 } from '@wepublish/ui/editor';
 import React, {
@@ -21,7 +23,7 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Form as RForm, Message, toaster } from 'rsuite';
+import { Form as RForm } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
 import { TotpQrCode } from './ui/totpQrCode';
@@ -104,16 +106,10 @@ export function LoginJwt() {
           setTotpSecret(setupResponse.data.generateTotpSetup.secret);
         }
       } catch {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={8000}
-          >
-            {t('login.totp.setupError')}
-          </Message>
-        );
+        enqueueSnackbar(t('login.totp.setupError'), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        });
       }
     },
     [generateTotpSetup, t]
@@ -160,16 +156,10 @@ export function LoginJwt() {
       const response = await enableTotp({ variables: { totpToken } });
 
       if (response.data?.enableTotp) {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('login.totp.setupSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('login.totp.setupSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
 
         const sessionToken = localStorage.getItem(LocalStorageKey.SessionToken);
         if (!sessionToken) {
@@ -190,16 +180,7 @@ export function LoginJwt() {
     } catch (error: unknown) {
       const message =
         error instanceof Error ? error.message : t('login.totp.invalidCode');
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {message}
-        </Message>
-      );
+      enqueueSnackbar(message, { variant: 'error', autoHideDuration: 8000 });
       setTotpToken('');
     }
   }
@@ -259,7 +240,7 @@ export function LoginJwt() {
             />
           </Group>
           <Button
-            appearance="primary"
+            variant="contained"
             type="submit"
             disabled={loadingEnable || loadingSetup || !totpToken}
             onClick={handleTotpSetup}

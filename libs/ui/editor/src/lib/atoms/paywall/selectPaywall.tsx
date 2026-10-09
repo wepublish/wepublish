@@ -2,8 +2,10 @@ import { useQuery } from '@apollo/client/react';
 import { PaywallListDocument } from '@wepublish/editor/api';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Message, SelectPicker, toaster } from 'rsuite';
+import { SelectPicker } from 'rsuite';
+
 import { humanizeError } from '../../humanizeError';
+import { enqueueSnackbar } from '../../snackbar';
 
 interface SelectPaywallsProps {
   className?: string;
@@ -19,16 +21,10 @@ interface SelectPaywallsProps {
  * @param error
  */
 const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 export function SelectPaywall({

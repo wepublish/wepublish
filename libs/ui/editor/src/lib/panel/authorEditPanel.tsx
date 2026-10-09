@@ -1,6 +1,16 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Drawer,
+  FormControlLabel,
+  Stack,
+  Switch,
+} from '@mui/material';
+import {
   AuthorDocument,
   AuthorLink,
   AuthorListDocument,
@@ -16,17 +26,10 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdLink } from 'react-icons/md';
 import {
-  Button,
-  Drawer,
   Form as RForm,
   Input,
   InputGroup as RInputGroup,
-  Message,
-  Panel,
-  PanelGroup,
   Schema,
-  toaster,
-  Toggle,
 } from 'rsuite';
 import FormControl from 'rsuite/FormControl';
 
@@ -40,6 +43,14 @@ import {
   useAuthorisation,
 } from '../atoms';
 import { RichTextBlock, RichTextBlockValue } from '../blocks';
+import {
+  DRAWER_WIDTHS,
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { generateID, getOperationNameFromDocument } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
@@ -169,16 +180,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     const error =
       loadError?.message ?? createError?.message ?? updateError?.message;
     if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
   }, [loadError, createError, updateError]);
 
   function handleImageChange(image: FullImageFragment) {
@@ -239,17 +241,17 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
         model={validationModel}
         formValue={{ name }}
       >
-        <Drawer.Header>
-          <Drawer.Title>
+        <DrawerHeader>
+          <DrawerTitle>
             {id ?
               t('authors.panels.editAuthor')
             : t('authors.panels.createAuthor')}
-          </Drawer.Title>
+          </DrawerTitle>
 
-          <Drawer.Actions>
+          <DrawerActions>
             <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
               <Button
-                appearance="primary"
+                variant="contained"
                 disabled={isDisabled}
                 type="submit"
                 data-testid="saveButton"
@@ -258,149 +260,195 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
               </Button>
             </PermissionControl>
             <Button
-              appearance={'subtle'}
+              variant="text"
               onClick={() => onClose?.()}
             >
               {t('authors.panels.close')}
             </Button>
-          </Drawer.Actions>
-        </Drawer.Header>
+          </DrawerActions>
+        </DrawerHeader>
 
-        <Drawer.Body>
-          <PanelGroup>
-            <Panel>
-              <Group controlId="name">
-                <Label>{toggleRequiredLabel(t('authors.panels.name'))}</Label>
+        <DrawerBody>
+          <Stack spacing={2}>
+            <Card variant="outlined">
+              <CardContent>
+                <Group controlId="name">
+                  <Label>{toggleRequiredLabel(t('authors.panels.name'))}</Label>
 
-                <Control
-                  name="name"
-                  value={name}
-                  disabled={isDisabled}
-                  onChange={(value: string) => {
-                    setName(value);
-                    setSlug(slugify(value));
-                  }}
+                  <Control
+                    name="name"
+                    value={name}
+                    disabled={isDisabled}
+                    onChange={(value: string) => {
+                      setName(value);
+                      setSlug(slugify(value));
+                    }}
+                  />
+                </Group>
+                <Group controlId="jobTitle">
+                  <Label>{t('authors.panels.jobTitle')}</Label>
+                  <Control
+                    name={t('authors.panels.jobTitle')}
+                    value={jobTitle}
+                    disabled={isDisabled}
+                    onChange={(value: string) => {
+                      setJobTitle(value);
+                    }}
+                  />
+                </Group>
+              </CardContent>
+            </Card>
+            <Card variant="outlined">
+              <CardHeader title={t('authors.panels.image')} />
+
+              <CardContent>
+                <ChooseEditImage
+                  image={image}
+                  header={''}
+                  top={0}
+                  left={0}
+                  disabled={isLoading}
+                  openChooseModalOpen={() => setChooseModalOpen(true)}
+                  openEditModalOpen={() => setEditModalOpen(true)}
+                  removeImage={() => setImage(undefined)}
                 />
-              </Group>
-              <Group controlId="jobTitle">
-                <Label>{t('authors.panels.jobTitle')}</Label>
-                <Control
-                  name={t('authors.panels.jobTitle')}
-                  value={jobTitle}
+              </CardContent>
+            </Card>
+
+            <Card variant="outlined">
+              <CardHeader title={t('authors.panels.bioInformation')} />
+
+              <CardContent>
+                <RichTextBlock
                   disabled={isDisabled}
-                  onChange={(value: string) => {
-                    setJobTitle(value);
-                  }}
+                  value={bio}
+                  onChange={value => setBio(value)}
                 />
-              </Group>
-            </Panel>
-            <Panel header={t('authors.panels.image')}>
-              <ChooseEditImage
-                image={image}
-                header={''}
-                top={0}
-                left={0}
-                disabled={isLoading}
-                openChooseModalOpen={() => setChooseModalOpen(true)}
-                openEditModalOpen={() => setEditModalOpen(true)}
-                removeImage={() => setImage(undefined)}
-              />
-            </Panel>
+              </CardContent>
+            </Card>
 
-            <Panel header={t('authors.panels.bioInformation')}>
-              <RichTextBlock
-                disabled={isDisabled}
-                value={bio}
-                onChange={value => setBio(value)}
-              />
-            </Panel>
-
-            <Panel
-              header={t('authors.panels.links')}
+            <Card
+              variant="outlined"
               className="authorLinks"
             >
-              <ListInput
-                disabled={isDisabled}
-                value={links}
-                onChange={links => {
-                  setLinks(links);
-                }}
-                defaultValue={emptyAuthorLink}
-              >
-                {({ value, onChange }) => (
-                  <Controls>
-                    <Control
-                      name="title"
-                      placeholder={t('authors.panels.title')}
-                      value={value.title}
-                      onChange={(title: string) =>
-                        onChange({ ...value, title })
-                      }
-                    />
-                    <Group>
-                      <InputGroup inside>
-                        <RInputGroup.Addon>
-                          <MdLink />
-                        </RInputGroup.Addon>
+              <CardHeader title={t('authors.panels.links')} />
 
-                        <Control
-                          name="link"
-                          placeholder={
-                            t('authors.panels.link') + ':https//link.com'
-                          }
-                          value={value.url}
-                          onChange={(url: any) => onChange({ ...value, url })}
-                          accepter={Input}
-                        />
-                      </InputGroup>
-                    </Group>
-                  </Controls>
-                )}
-              </ListInput>
-            </Panel>
+              <CardContent>
+                <ListInput
+                  disabled={isDisabled}
+                  value={links}
+                  onChange={links => {
+                    setLinks(links);
+                  }}
+                  defaultValue={emptyAuthorLink}
+                >
+                  {({ value, onChange }) => (
+                    <Controls>
+                      <Control
+                        name="title"
+                        placeholder={t('authors.panels.title')}
+                        value={value.title}
+                        onChange={(title: string) =>
+                          onChange({ ...value, title })
+                        }
+                      />
+                      <Group>
+                        <InputGroup inside>
+                          <RInputGroup.Addon>
+                            <MdLink />
+                          </RInputGroup.Addon>
 
-            <Panel header={t('authors.panels.tags')}>
-              <FormControl
-                name="tagIds"
-                defaultTags={data?.author?.tags ?? []}
-                selectedTags={tagIds}
-                setSelectedTags={(newTagIds: string[]) => setTagIds(newTagIds)}
-                tagType={TagType.Author}
-                accepter={SelectTags}
-              />
-            </Panel>
+                          <Control
+                            name="link"
+                            placeholder={
+                              t('authors.panels.link') + ':https//link.com'
+                            }
+                            value={value.url}
+                            onChange={(url: any) => onChange({ ...value, url })}
+                            accepter={Input}
+                          />
+                        </InputGroup>
+                      </Group>
+                    </Controls>
+                  )}
+                </ListInput>
+              </CardContent>
+            </Card>
+
+            <Card variant="outlined">
+              <CardHeader title={t('authors.panels.tags')} />
+
+              <CardContent>
+                <FormControl
+                  name="tagIds"
+                  defaultTags={data?.author?.tags ?? []}
+                  selectedTags={tagIds}
+                  setSelectedTags={(newTagIds: string[]) =>
+                    setTagIds(newTagIds)
+                  }
+                  tagType={TagType.Author}
+                  accepter={SelectTags}
+                />
+              </CardContent>
+            </Card>
 
             {/* hide author in different places */}
-            <Panel header={t('authorEditPanel.hideAuthor')}>
-              <Group controlId="hideAuthorToggles">
-                <ToggleList>
-                  <Toggle
-                    checked={!!hideOnArticle}
-                    onChange={value => setHideOnArticle(value)}
-                    label={t('authorEditPanel.hideOnArticle')}
-                  />
+            <Card variant="outlined">
+              <CardHeader title={t('authorEditPanel.hideAuthor')} />
 
-                  <Toggle
-                    checked={!!hideOnTeaser}
-                    onChange={value => setHideOnTeaser(value)}
-                    label={t('authorEditPanel.hideOnTeaser')}
-                  />
+              <CardContent>
+                <Group controlId="hideAuthorToggles">
+                  <ToggleList>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={!!hideOnArticle}
+                          onChange={(_event, value) => setHideOnArticle(value)}
+                        />
+                      }
+                      label={t('authorEditPanel.hideOnArticle')}
+                    />
 
-                  <Toggle
-                    checked={!!hideOnTeam}
-                    onChange={value => setHideOnTeam(value)}
-                    label={t('authorEditPanel.hideOnTeam')}
-                  />
-                </ToggleList>
-              </Group>
-            </Panel>
-          </PanelGroup>
-        </Drawer.Body>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={!!hideOnTeaser}
+                          onChange={(_event, value) => setHideOnTeaser(value)}
+                        />
+                      }
+                      label={t('authorEditPanel.hideOnTeaser')}
+                    />
+
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={!!hideOnTeam}
+                          onChange={(_event, value) => setHideOnTeam(value)}
+                        />
+                      }
+                      label={t('authorEditPanel.hideOnTeam')}
+                    />
+                  </ToggleList>
+                </Group>
+              </CardContent>
+            </Card>
+          </Stack>
+        </DrawerBody>
       </Form>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -413,8 +461,18 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
       </Drawer>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
       >
         <ImageEditPanel
           id={image?.id}

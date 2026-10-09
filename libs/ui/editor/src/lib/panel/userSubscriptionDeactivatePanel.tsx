@@ -1,15 +1,15 @@
 import styled from '@emotion/styled';
+import {
+  Alert,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import { SubscriptionDeactivationReason } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  DatePicker,
-  Form as RForm,
-  Message,
-  Modal,
-  SelectPicker,
-} from 'rsuite';
+import { DatePicker, Form as RForm, SelectPicker } from 'rsuite';
 
 import { createCheckedPermissionComponent } from '../atoms';
 
@@ -50,13 +50,11 @@ function UserSubscriptionDeactivatePanel({
 
   return (
     <>
-      <Modal.Header>
-        <Modal.Title>
-          {t('userSubscriptionEdit.deactivation.modalTitle.activated')}
-        </Modal.Title>
-      </Modal.Header>
+      <DialogTitle>
+        {t('userSubscriptionEdit.deactivation.modalTitle.activated')}
+      </DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         <p>
           {t('userSubscriptionEdit.deactivation.modalMessage.activated', {
             userName: displayName,
@@ -79,6 +77,7 @@ function UserSubscriptionDeactivatePanel({
             <Group controlId="deactivationReason">
               <Label>{t('userSubscriptionEdit.deactivation.reason')}</Label>
               <SelectPicker
+                block
                 virtualized
                 searchable={false}
                 data={[
@@ -113,25 +112,21 @@ function UserSubscriptionDeactivatePanel({
                   },
                 ]}
                 value={deactivationReason}
-                block
                 placement="auto"
                 onChange={value => setDeactivationReason(value)}
               />
             </Group>
-            <Message
-              showIcon
-              type="info"
-            >
+            <Alert severity="info">
               {t('userSubscriptionEdit.deactivation.help')}
-            </Message>
+            </Alert>
           </RForm.Stack>
         </Form>
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
+          variant="contained"
           disabled={!deactivationDate || !deactivationReason}
-          appearance="primary"
           onClick={() =>
             onDeactivate({
               date: deactivationDate!,
@@ -142,12 +137,12 @@ function UserSubscriptionDeactivatePanel({
           {t('userSubscriptionEdit.deactivation.action.activated')}
         </Button>
         <Button
-          appearance="subtle"
+          variant="text"
           onClick={() => onClose()}
         >
           {t('articleEditor.panels.close')}
         </Button>
-      </Modal.Footer>
+      </DialogActions>
     </>
   );
 }

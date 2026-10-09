@@ -1,28 +1,34 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  Card as MuiCard,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+  Grid,
+  Grid as MuiGrid,
+} from '@mui/material';
 import { FullImageFragment, ImageListDocument } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFileUpload, MdSearch } from 'react-icons/md';
-import {
-  Button,
-  Col,
-  Drawer,
-  Form,
-  Input,
-  InputGroup,
-  Loader,
-  Message,
-  Notification,
-  Panel as RPanel,
-  Row,
-  toaster,
-} from 'rsuite';
+import { Form, Input, InputGroup } from 'rsuite';
 
 import { FileDropInput } from '../atoms/fileDropInput';
 import { ImageMetaData, readImageMetaData } from '../atoms/imageMetaData';
 import { createCheckedPermissionComponent } from '../atoms/permissionControl';
 import { Typography } from '../atoms/typography';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 import { getImgMinSizeToCompress } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 
@@ -30,7 +36,7 @@ const ImgWrapper = styled.div`
   background-color: var(--rs-bg-well);
 `;
 
-const Panel = styled(RPanel)`
+const Panel = styled(MuiCard)`
   cursor: pointer;
 `;
 
@@ -42,11 +48,11 @@ const Img = styled.img`
   width: 100%;
 `;
 
-const FileDropWrapper = styled(RPanel)`
+const FileDropWrapper = styled(MuiCard)`
   height: 150px;
 `;
 
-const FlexItem = styled(Col)`
+const FlexItem = styled(MuiGrid)`
   margin-bottom: 20px;
 `;
 
@@ -92,14 +98,11 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
     setImageMetaData(await readImageMetaData(file));
 
     if (!file.type.startsWith('image')) {
-      toaster.push(
-        <Notification
-          type="error"
-          header={t('articleEditor.panels.invalidImage')}
-          duration={5000}
-        />,
-        { placement: 'topEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'error',
+        title: t('articleEditor.panels.invalidImage'),
+        autoHideDuration: 5000,
+      });
 
       return;
     }
@@ -141,26 +144,30 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('articleEditor.panels.chooseImage')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('articleEditor.panels.chooseImage')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('articleEditor.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
-        <FileDropWrapper bodyFill>
-          <FileDropInput
-            icon={<MdFileUpload />}
-            text={t('articleEditor.panels.dropImage')}
-            onDrop={handleDrop}
-          />
+      <DrawerBody>
+        <FileDropWrapper>
+          <CardContent>
+            <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+              <FileDropInput
+                icon={<MdFileUpload />}
+                text={t('articleEditor.panels.dropImage')}
+                onDrop={handleDrop}
+              />
+            </CardContent>
+          </CardContent>
         </FileDropWrapper>
         <Form.Label>
           <br />
@@ -169,68 +176,89 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
           })}
         </Form.Label>
 
-        <RPanel header={t('articleEditor.panels.images')}>
-          <InputGroup>
-            <Input
-              value={filter}
-              onChange={value => setFilter(value)}
-            />
-            <InputGroup.Addon>
-              <MdSearch />
-            </InputGroup.Addon>
-          </InputGroup>
-        </RPanel>
+        <Card variant="outlined">
+          <CardHeader title={t('articleEditor.panels.images')} />
+
+          <CardContent>
+            <InputGroup>
+              <Input
+                value={filter}
+                onChange={value => setFilter(value)}
+              />
+              <InputGroup.Addon>
+                <MdSearch />
+              </InputGroup.Addon>
+            </InputGroup>
+          </CardContent>
+        </Card>
         {images.length ?
           <>
-            <Row justify="space-around">
+            <Grid
+              container
+              spacing={2}
+              sx={{ justifyContent: 'space-around' }}
+            >
               {images.map(image => {
                 const { id, mediumURL, title, filename, extension } = image;
                 return (
                   <FlexItem
+                    size={{ xs: 5 }}
                     key={id}
-                    span={10}
                   >
-                    <Panel
-                      onClick={() => onSelect(image)}
-                      shaded
-                      bordered
-                      bodyFill
-                    >
-                      <ImgWrapper>
-                        <Img src={mediumURL || ''} />
-                      </ImgWrapper>
-                      <RPanel>
-                        <Typography
-                          variant={'subtitle1'}
-                          ellipsize
-                        >{`${
-                          filename || t('images.panels.untitled')
-                        }${extension}`}</Typography>
-                        <Typography variant={'body2'}>
-                          {title || t('images.panels.Untitled')}
-                        </Typography>
-                      </RPanel>
+                    <Panel onClick={() => onSelect(image)}>
+                      <CardContent>
+                        <CardContent>
+                          <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+                            <ImgWrapper>
+                              <Img src={mediumURL || ''} />
+                            </ImgWrapper>
+                            <Card variant="outlined">
+                              <CardContent>
+                                <Typography
+                                  variant={'subtitle1'}
+                                  ellipsize
+                                >{`${
+                                  filename || t('images.panels.untitled')
+                                }${extension}`}</Typography>
+                                <Typography variant={'body2'}>
+                                  {title || t('images.panels.Untitled')}
+                                </Typography>
+                              </CardContent>
+                            </Card>
+                          </CardContent>
+                        </CardContent>
+                      </CardContent>
                     </Panel>
                   </FlexItem>
                 );
               })}
-            </Row>
+            </Grid>
             {data?.images.pageInfo.hasNextPage && (
-              <Button onClick={loadMore}>
+              <Button
+                variant="outlined"
+                onClick={loadMore}
+              >
                 {t('articleEditor.panels.loadMore')}
               </Button>
             )}
           </>
         : !isLoading ?
-          <Message type="info">
+          <Alert severity="info">
             {t('articleEditor.panels.noImagesFound')}
-          </Message>
-        : <Loader
-            center
-            content={t('articleEditor.panels.loading')}
-          />
+          </Alert>
+        : <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <CircularProgress />
+            <span>{t('articleEditor.panels.loading')}</span>
+          </Box>
         }
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }

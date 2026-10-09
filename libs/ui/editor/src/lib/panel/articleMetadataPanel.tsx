@@ -1,5 +1,14 @@
 import styled from '@emotion/styled';
 import {
+  Alert,
+  Badge,
+  Button,
+  Drawer,
+  FormControlLabel,
+  IconButton,
+  Switch,
+} from '@mui/material';
+import {
   CommentItemType,
   FullAuthorFragment,
   FullImageFragment,
@@ -18,19 +27,7 @@ import {
   MdShare,
   MdTrackChanges,
 } from 'react-icons/md';
-import {
-  Badge,
-  Button,
-  Drawer,
-  Form as RForm,
-  IconButton,
-  Input,
-  Message,
-  Nav as RNav,
-  NumberInput,
-  Schema,
-  Toggle,
-} from 'rsuite';
+import { Form as RForm, Input, Nav as RNav, NumberInput, Schema } from 'rsuite';
 
 import {
   ChooseEditImage,
@@ -48,6 +45,13 @@ import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { InfoTooltip } from '../atoms/infoTooltip';
 import TrackingPixels from '../atoms/tracking/tracking-pixels';
 import { MetaDataType } from '../blocks';
+import {
+  DRAWER_WIDTHS,
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 import { ArticleAuthor, ArticleAuthorList } from './articleAuthorList';
 import { AuthorCheckPicker } from './authorCheckPicker';
 import { ImageEditPanel } from './imageEditPanel';
@@ -238,12 +242,9 @@ function ArticleMetadataPanel({
         return (
           <RForm.Stack fluid>
             <Group>
-              <Message
-                showIcon
-                type="info"
-              >
+              <Alert severity="info">
                 {t('pageEditor.panels.metadataInfo')}
-              </Message>
+              </Alert>
             </Group>
 
             <DeferredTextField
@@ -411,11 +412,12 @@ function ArticleMetadataPanel({
                 >
                   <IconButton
                     aria-label={t('articleEditor.panels.slugifySeoTitle')}
-                    icon={<MdAutoFixHigh />}
                     onClick={() => {
                       onChange?.({ ...value, title, slug: slugify(seoTitle) });
                     }}
-                  />
+                  >
+                    <MdAutoFixHigh />
+                  </IconButton>
                 </IconButtonTooltip>
               }
               helpText={
@@ -442,11 +444,17 @@ function ArticleMetadataPanel({
             </Group>
 
             <Group>
-              <Toggle
-                className="hideAuthor"
-                checked={hideAuthor}
-                disabled={!isAuthorized}
-                onChange={hideAuthor => onChange?.({ ...value, hideAuthor })}
+              <FormControlLabel
+                control={
+                  <Switch
+                    className="hideAuthor"
+                    checked={hideAuthor}
+                    disabled={!isAuthorized}
+                    onChange={(_event, hideAuthor) =>
+                      onChange?.({ ...value, hideAuthor })
+                    }
+                  />
+                }
                 label={
                   <>
                     {t('articleEditor.panels.hideAuthors')}{' '}
@@ -472,11 +480,17 @@ function ArticleMetadataPanel({
             </Group>
 
             <Group controlId="articleBreakingNews">
-              <Toggle
-                className="breaking"
-                disabled={!isAuthorized}
-                checked={breaking}
-                onChange={breaking => onChange?.({ ...value, breaking })}
+              <FormControlLabel
+                control={
+                  <Switch
+                    className="breaking"
+                    disabled={!isAuthorized}
+                    checked={breaking}
+                    onChange={(_event, breaking) =>
+                      onChange?.({ ...value, breaking })
+                    }
+                  />
+                }
                 label={
                   <>
                     {t('articleEditor.panels.breakingNews')}{' '}
@@ -513,10 +527,16 @@ function ArticleMetadataPanel({
 
             {!peerId && (
               <Group controlId="articlePeering">
-                <Toggle
-                  checked={shared}
-                  disabled={!isAuthorized}
-                  onChange={shared => onChange?.({ ...value, shared })}
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={shared}
+                      disabled={!isAuthorized}
+                      onChange={(_event, shared) =>
+                        onChange?.({ ...value, shared })
+                      }
+                    />
+                  }
                   label={
                     <>
                       {t('articleEditor.panels.peering')}{' '}
@@ -545,10 +565,16 @@ function ArticleMetadataPanel({
             </Group>
 
             <Group controlId="hidden">
-              <Toggle
-                checked={hidden ?? false}
-                disabled={!isAuthorized}
-                onChange={hidden => onChange?.({ ...value, hidden })}
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={hidden ?? false}
+                    disabled={!isAuthorized}
+                    onChange={(_event, hidden) =>
+                      onChange?.({ ...value, hidden })
+                    }
+                  />
+                }
                 label={
                   <>
                     {t('articleEditor.panels.hidden')}{' '}
@@ -559,11 +585,15 @@ function ArticleMetadataPanel({
             </Group>
 
             <Group controlId="disableComments">
-              <Toggle
-                checked={disableComments ?? false}
-                disabled={!isAuthorized}
-                onChange={disableComments =>
-                  onChange?.({ ...value, disableComments })
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={disableComments ?? false}
+                    disabled={!isAuthorized}
+                    onChange={(_event, disableComments) =>
+                      onChange?.({ ...value, disableComments })
+                    }
+                  />
                 }
                 label={t('articleEditor.panels.disableComments')}
               />
@@ -590,12 +620,9 @@ function ArticleMetadataPanel({
         return (
           <RForm.Stack fluid>
             <Group>
-              <Message
-                showIcon
-                type="info"
-              >
+              <Alert severity="info">
                 {t('articleEditor.panels.propertiesInfo')}
-              </Message>
+              </Alert>
             </Group>
 
             <Group controlId="articleProperties">
@@ -624,10 +651,14 @@ function ArticleMetadataPanel({
                       }
                     />
                     <FormGroup controlId="articleProperty">
-                      <Toggle
-                        checked={value.public}
-                        onChange={isPublic =>
-                          onChange({ ...value, public: isPublic })
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={value.public}
+                            onChange={(_event, isPublic) =>
+                              onChange({ ...value, public: isPublic })
+                            }
+                          />
                         }
                         label={t('articleEditor.panels.public')}
                       />
@@ -663,22 +694,22 @@ function ArticleMetadataPanel({
       fluid
       onSubmit={() => !canonicalUrlError && onClose?.()}
     >
-      <Drawer.Header>
-        <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('articleEditor.panels.metadata')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
             <Button
-              appearance="primary"
+              variant="contained"
               type="submit"
             >
               {t('saveAndClose')}
             </Button>
           </PermissionControl>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         <Nav
           appearance="tabs"
           activeKey={activeKey}
@@ -711,8 +742,10 @@ function ArticleMetadataPanel({
             </Item>
           )}
           <Badge
-            content={
-              !!trackingPixels?.find(trackingPixel => !!trackingPixel?.error)
+            variant="dot"
+            color="error"
+            invisible={
+              !trackingPixels?.find(trackingPixel => !!trackingPixel?.error)
             }
           >
             <Item
@@ -724,11 +757,21 @@ function ArticleMetadataPanel({
           </Badge>
         </Nav>
         {currentContent()}
-      </Drawer.Body>
+      </DrawerBody>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => {
           setChooseModalOpen(false);
         }}
@@ -743,8 +786,18 @@ function ArticleMetadataPanel({
       </Drawer>
       {(value.image || value.socialMediaImage) && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => {
             setEditModalOpen(false);
           }}

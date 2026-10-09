@@ -1,21 +1,20 @@
 import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { PromptHtmlDocument, getApiClientV2 } from '@wepublish/editor/api';
+import { Alert, Button, CircularProgress } from '@mui/material';
+import { getApiClientV2, PromptHtmlDocument } from '@wepublish/editor/api';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAutoFixHigh } from 'react-icons/md';
-import {
-  Button,
-  Drawer,
-  Form,
-  Input as RInput,
-  InputGroup,
-  Loader,
-  Message,
-} from 'rsuite';
+import { Form, Input as RInput, InputGroup } from 'rsuite';
 
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { HTMLBlockValue } from '../blocks/types';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 import { humanizeError } from '../humanizeError';
 
 const Warning = styled.div``;
@@ -24,7 +23,7 @@ const Input = styled(RInput)`
   width: 100%;
 `;
 
-const StyledDrawer = styled(Drawer.Body)`
+const StyledDrawer = styled(DrawerBody)`
   display: grid;
   grid-auto-rows: max-content;
   grid-gap: 20px;
@@ -86,25 +85,25 @@ export function HtmlEditPanel({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('blocks.html.edit')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('blocks.html.edit')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance="primary"
+            variant="contained"
             disabled={isEmpty}
             onClick={() => onConfirm(htmlBlock)}
           >
             {t('blocks.html.confirm')}
           </Button>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('blocks.html.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
       <StyledDrawer>
         <StyledForm onSubmit={() => onGenerateHTML(prompt)}>
@@ -125,29 +124,17 @@ export function HtmlEditPanel({
                   disabled={thinking || !prompt}
                 >
                   {thinking ?
-                    <Loader size={'xs'} />
+                    <CircularProgress size={16} />
                   : <MdAutoFixHigh />}
                 </InputGroup.Button>
               </IconButtonTooltip>
             </InputGroup>
           </div>
 
-          {error && (
-            <Message
-              showIcon
-              type="error"
-            >
-              {humanizeError(error)}
-            </Message>
-          )}
+          {error && <Alert severity="error">{humanizeError(error)}</Alert>}
 
           {v0Data && (
-            <Message
-              showIcon
-              type="success"
-            >
-              {t('blocks.html.promptSuccess')}
-            </Message>
+            <Alert severity="success">{t('blocks.html.promptSuccess')}</Alert>
           )}
         </StyledForm>
 

@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button, Card as MuiCard, CardContent, Drawer } from '@mui/material';
 import { PollDocument } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
-import { Drawer, IconButton, Panel as RPanel } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { PlaceholderInput } from '../atoms/placeholderInput';
@@ -12,6 +12,7 @@ import {
   CopyPollAnswerVoteUrlButton,
   usePollAnswerVoteUrl,
 } from '../atoms/poll/pollAnswerVoteUrl';
+import { DRAWER_WIDTHS } from '../drawer';
 import { SelectPollPanel } from '../panel/selectPollPanel';
 import { PollBlockValue } from '.';
 
@@ -55,7 +56,7 @@ const Answer = styled.div`
   gap: 8px;
 `;
 
-const Panel = styled(RPanel)`
+const Panel = styled(MuiCard)`
   display: grid;
   min-height: 200px;
   padding: 0;
@@ -86,48 +87,62 @@ export const PollBlock = ({
 
   return (
     <>
-      <Panel
-        bodyFill
-        bordered
-      >
-        <PlaceholderInput
-          onAddClick={() => setIsDialogOpen(true)}
-          addLabel={t('blocks.poll.choosePoll')}
-        >
-          {poll && (
-            <Poll>
-              <IconWrapper>
-                <IconButton
-                  size="lg"
-                  icon={<MdEdit />}
-                  onClick={() => setIsDialogOpen(true)}
-                >
-                  {t('blocks.poll.edit')}
-                </IconButton>
-              </IconWrapper>
+      <Panel>
+        <CardContent>
+          <CardContent>
+            <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+              <PlaceholderInput
+                onAddClick={() => setIsDialogOpen(true)}
+                addLabel={t('blocks.poll.choosePoll')}
+              >
+                {poll && (
+                  <Poll>
+                    <IconWrapper>
+                      <Button
+                        variant="outlined"
+                        startIcon={<MdEdit />}
+                        size="large"
+                        onClick={() => setIsDialogOpen(true)}
+                      >
+                        {t('blocks.poll.edit')}
+                      </Button>
+                    </IconWrapper>
 
-              <Content>
-                <Question>{poll.question}</Question>
+                    <Content>
+                      <Question>{poll.question}</Question>
 
-                <Answers>
-                  {answers.map(answer => (
-                    <Answer key={answer.id}>
-                      <span>{answer.answer}</span>
+                      <Answers>
+                        {answers.map(answer => (
+                          <Answer key={answer.id}>
+                            <span>{answer.answer}</span>
 
-                      <CopyPollAnswerVoteUrlButton
-                        voteUrl={buildVoteUrl(answer.id)}
-                      />
-                    </Answer>
-                  ))}
-                </Answers>
-              </Content>
-            </Poll>
-          )}
-        </PlaceholderInput>
+                            <CopyPollAnswerVoteUrlButton
+                              voteUrl={buildVoteUrl(answer.id)}
+                            />
+                          </Answer>
+                        ))}
+                      </Answers>
+                    </Content>
+                  </Poll>
+                )}
+              </PlaceholderInput>
+            </CardContent>
+          </CardContent>
+        </CardContent>
       </Panel>
 
       <Drawer
-        size="lg"
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.lg,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       >

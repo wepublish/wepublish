@@ -9,20 +9,18 @@ import { useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { CrowdfundingForm } from './crowdfunding-form';
-import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
-import { Form, Message, Schema, toaster } from 'rsuite';
+import {
+  humanizeError,
+  SingleViewTitle,
+  enqueueSnackbar,
+} from '@wepublish/ui/editor';
+import { Form, Schema } from 'rsuite';
 
 const showError = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 export const CreateCrowdfundingForm = () => {

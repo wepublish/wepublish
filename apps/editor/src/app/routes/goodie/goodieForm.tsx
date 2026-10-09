@@ -1,5 +1,12 @@
 import styled from '@emotion/styled';
 import {
+  Card,
+  CardContent,
+  Drawer,
+  FormControlLabel,
+  Switch,
+} from '@mui/material';
+import {
   FullImageFragment,
   FullMemberPlanFragment,
   MutationCreateGoodieArgs,
@@ -7,6 +14,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   ChooseEditImage,
+  DRAWER_WIDTHS,
   ImageEditPanel,
   ImageSelectPanel,
   InfoTooltip,
@@ -16,7 +24,7 @@ import {
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Drawer, Form, NumberInput, Panel, Toggle } from 'rsuite';
+import { Form, NumberInput } from 'rsuite';
 
 export type GoodieFormData = (
   | MutationCreateGoodieArgs
@@ -78,111 +86,129 @@ export const GoodieForm = ({ goodie, onChange, create }: GoodieFormProps) => {
     <>
       <GoodieFormWrapper>
         <GoodieFormSection>
-          <Panel bordered>
-            <Form.Stack>
-              <Form.Group controlId="active">
-                <Toggle
-                  checked={!!goodie.active}
-                  label={
-                    <>
-                      {t('goodie.form.active')}{' '}
-                      <InfoTooltip text={t('goodie.form.activeInfo')} />
-                    </>
-                  }
-                  onChange={active => onChange({ active })}
-                />
-              </Form.Group>
-
-              <NameStockGrid>
-                <Form.Group controlId="name">
-                  <Form.Label>{t('goodie.form.name')}</Form.Label>
-
-                  <Form.Control
-                    name="name"
-                    value={goodie.name ?? ''}
-                    onChange={(name: string) => onChange({ name })}
+          <Card variant="outlined">
+            <CardContent>
+              <Form.Stack>
+                <Form.Group controlId="active">
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={!!goodie.active}
+                        onChange={(_event, active) => onChange({ active })}
+                      />
+                    }
+                    label={
+                      <>
+                        {t('goodie.form.active')}{' '}
+                        <InfoTooltip text={t('goodie.form.activeInfo')} />
+                      </>
+                    }
                   />
                 </Form.Group>
 
-                <Form.Group controlId="stock">
-                  <Form.Label>
-                    {t('goodie.form.stock')}{' '}
-                    <InfoTooltip text={t('goodie.form.stockInfo')} />
-                  </Form.Label>
+                <NameStockGrid>
+                  <Form.Group controlId="name">
+                    <Form.Label>{t('goodie.form.name')}</Form.Label>
 
-                  <Form.Control
-                    name="stock"
-                    value={goodie.stock ?? ''}
-                    min={0}
-                    placeholder={t('goodie.overview.unlimited')}
-                    onChange={(stock: string | number | null) =>
+                    <Form.Control
+                      name="name"
+                      value={goodie.name ?? ''}
+                      onChange={(name: string) => onChange({ name })}
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId="stock">
+                    <Form.Label>
+                      {t('goodie.form.stock')}{' '}
+                      <InfoTooltip text={t('goodie.form.stockInfo')} />
+                    </Form.Label>
+
+                    <Form.Control
+                      name="stock"
+                      value={goodie.stock ?? ''}
+                      min={0}
+                      placeholder={t('goodie.overview.unlimited')}
+                      onChange={(stock: string | number | null) =>
+                        onChange({
+                          stock: stock === '' || stock === null ? null : +stock,
+                        })
+                      }
+                      accepter={NumberInput}
+                    />
+                  </Form.Group>
+                </NameStockGrid>
+
+                <Form.Group controlId="description">
+                  <Form.Label>{t('goodie.form.description')}</Form.Label>
+
+                  <RichTextBlock
+                    value={goodie.description}
+                    onChange={description =>
                       onChange({
-                        stock: stock === '' || stock === null ? null : +stock,
+                        description:
+                          description as RichTextBlockValue['richText'],
                       })
                     }
-                    accepter={NumberInput}
                   />
                 </Form.Group>
-              </NameStockGrid>
-
-              <Form.Group controlId="description">
-                <Form.Label>{t('goodie.form.description')}</Form.Label>
-
-                <RichTextBlock
-                  value={goodie.description}
-                  onChange={description =>
-                    onChange({
-                      description:
-                        description as RichTextBlockValue['richText'],
-                    })
-                  }
-                />
-              </Form.Group>
-            </Form.Stack>
-          </Panel>
+              </Form.Stack>
+            </CardContent>
+          </Card>
         </GoodieFormSection>
 
         <GoodieFormSection>
-          <Panel
-            bordered
+          <Card
+            variant="outlined"
             css={{ overflow: 'initial' }}
           >
-            <Form.Stack>
-              <Form.Group controlId="memberPlanIDs">
-                <Form.Label>
-                  {t('goodie.form.memberPlans')}{' '}
-                  <InfoTooltip text={t('goodie.form.memberPlansInfo')} />
-                </Form.Label>
+            <CardContent>
+              <Form.Stack>
+                <Form.Group controlId="memberPlanIDs">
+                  <Form.Label>
+                    {t('goodie.form.memberPlans')}{' '}
+                    <InfoTooltip text={t('goodie.form.memberPlansInfo')} />
+                  </Form.Label>
 
-                <Form.Control
-                  name="memberPlanIDs"
-                  defaultMemberPlans={goodie.memberPlans ?? []}
-                  selectedMemberPlans={goodie.memberPlanIDs ?? []}
-                  setSelectedMemberPlans={(memberPlanIDs: string[]) =>
-                    onChange({ memberPlanIDs })
-                  }
-                  accepter={SelectMemberPlans}
-                />
-              </Form.Group>
+                  <Form.Control
+                    name="memberPlanIDs"
+                    defaultMemberPlans={goodie.memberPlans ?? []}
+                    selectedMemberPlans={goodie.memberPlanIDs ?? []}
+                    setSelectedMemberPlans={(memberPlanIDs: string[]) =>
+                      onChange({ memberPlanIDs })
+                    }
+                    accepter={SelectMemberPlans}
+                  />
+                </Form.Group>
 
-              <Form.Group controlId="image">
-                <ChooseEditImage
-                  image={goodie.image}
-                  header={t('goodie.form.image')}
-                  disabled={false}
-                  openChooseModalOpen={() => setChooseModalOpen(true)}
-                  openEditModalOpen={() => setEditModalOpen(true)}
-                  removeImage={() => onChange({ imageID: null, image: null })}
-                />
-              </Form.Group>
-            </Form.Stack>
-          </Panel>
+                <Form.Group controlId="image">
+                  <ChooseEditImage
+                    image={goodie.image}
+                    header={t('goodie.form.image')}
+                    disabled={false}
+                    openChooseModalOpen={() => setChooseModalOpen(true)}
+                    openEditModalOpen={() => setEditModalOpen(true)}
+                    removeImage={() => onChange({ imageID: null, image: null })}
+                  />
+                </Form.Group>
+              </Form.Stack>
+            </CardContent>
+          </Card>
         </GoodieFormSection>
       </GoodieFormWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -196,8 +222,18 @@ export const GoodieForm = ({ goodie, onChange, create }: GoodieFormProps) => {
 
       {goodie.image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel

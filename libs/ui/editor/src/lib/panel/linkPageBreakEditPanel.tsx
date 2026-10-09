@@ -1,8 +1,21 @@
+import {
+  Button,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Switch,
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Button, Drawer, Form, Radio, RadioGroup, Toggle } from 'rsuite';
+import { Form } from 'rsuite';
 
 import { InfoTooltip } from '../atoms/infoTooltip';
 import { LinkPageBreakBlockValue } from '../blocks/types';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 
 export interface LinkPageBreakEditPanelProps {
   readonly value: LinkPageBreakBlockValue;
@@ -22,20 +35,20 @@ export function LinkPageBreakEditPanel({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('linkPageBreakEditPanel.title')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('linkPageBreakEditPanel.title')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('linkPageBreakEditPanel.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         <Form>
           <Form.Stack fluid>
             <Form.Group controlId="linkUrlLabel">
@@ -74,26 +87,36 @@ export function LinkPageBreakEditPanel({
 
               <RadioGroup
                 name="target_radio"
-                inline
-                onChange={linkTarget =>
+                row
+                onChange={(_event, linkTarget) =>
                   onChange?.({ ...value, linkTarget: linkTarget as string })
                 }
                 value={linkTarget}
               >
-                <Radio value={'_self'}>
-                  {t('linkPageBreakEditPanel.link.targetLabelSelf')}
-                </Radio>
+                <FormControlLabel
+                  value={'_self'}
+                  control={<Radio />}
+                  label={t('linkPageBreakEditPanel.link.targetLabelSelf')}
+                />
 
-                <Radio value={'_blank'}>
-                  {t('linkPageBreakEditPanel.link.targetLabelBlank')}
-                </Radio>
+                <FormControlLabel
+                  value={'_blank'}
+                  control={<Radio />}
+                  label={t('linkPageBreakEditPanel.link.targetLabelBlank')}
+                />
               </RadioGroup>
             </Form.Group>
 
             <Form.Group controlId="linkHideToggle">
-              <Toggle
-                onChange={hideButton => onChange?.({ ...value, hideButton })}
-                checked={hideButton}
+              <FormControlLabel
+                control={
+                  <Switch
+                    onChange={(_event, hideButton) =>
+                      onChange?.({ ...value, hideButton })
+                    }
+                    checked={hideButton}
+                  />
+                }
                 label={t('linkPageBreakEditPanel.link.hideToggleLabel')}
               />
               <Form.Text>
@@ -102,7 +125,7 @@ export function LinkPageBreakEditPanel({
             </Form.Group>
           </Form.Stack>
         </Form>
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }

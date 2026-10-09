@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { FormControlLabel, Switch } from '@mui/material';
 import {
   CommentFilter,
   CommentListDocument,
@@ -12,8 +13,6 @@ import {
   CommentStateDropdown,
   createCheckedPermissionComponent,
   CreateCommentBtn,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
   IconButton,
   IconButtonTooltip,
   InfoTooltip,
@@ -21,6 +20,7 @@ import {
   ListViewFilterArea,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
+  Pagination,
   PermissionControl,
   Table,
   TableWrapper,
@@ -30,7 +30,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Pagination, Table as RTable, Toggle } from 'rsuite';
+import { Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell } = RTable;
@@ -113,64 +113,75 @@ function CommentList() {
         <div />
 
         <ListViewFilterArea>
-          <Toggle
-            defaultChecked={filter.states?.includes?.(CommentState.Approved)}
-            onChange={enabled =>
-              setFilter(f => {
-                const states = f.states || [];
-
-                return {
-                  ...f,
-                  states:
-                    enabled ?
-                      [...states, CommentState.Approved]
-                    : states.filter(val => val !== CommentState.Approved),
-                };
-              })
+          <FormControlLabel
+            control={
+              <Switch
+                defaultChecked={filter.states?.includes?.(
+                  CommentState.Approved
+                )}
+                onChange={(_event, enabled) =>
+                  setFilter(f => {
+                    const states = f.states || [];
+                    return {
+                      ...f,
+                      states:
+                        enabled ?
+                          [...states, CommentState.Approved]
+                        : states.filter(val => val !== CommentState.Approved),
+                    };
+                  })
+                }
+              />
             }
             label={t('comments.state.approved')}
           />
 
-          <Toggle
-            defaultChecked={filter.states?.includes?.(
-              CommentState.PendingApproval
-            )}
-            onChange={enabled =>
-              setFilter(f => {
-                const states = f.states || [];
-
-                return {
-                  ...f,
-                  states:
-                    enabled ?
-                      [...states, CommentState.PendingApproval]
-                    : states.filter(
-                        val => val !== CommentState.PendingApproval
-                      ),
-                };
-              })
+          <FormControlLabel
+            control={
+              <Switch
+                defaultChecked={filter.states?.includes?.(
+                  CommentState.PendingApproval
+                )}
+                onChange={(_event, enabled) =>
+                  setFilter(f => {
+                    const states = f.states || [];
+                    return {
+                      ...f,
+                      states:
+                        enabled ?
+                          [...states, CommentState.PendingApproval]
+                        : states.filter(
+                            val => val !== CommentState.PendingApproval
+                          ),
+                    };
+                  })
+                }
+              />
             }
             label={t('comments.state.pendingApproval')}
           />
 
-          <Toggle
-            defaultChecked={filter.states?.includes?.(
-              CommentState.PendingUserChanges
-            )}
-            onChange={enabled =>
-              setFilter(f => {
-                const states = f.states || [];
-
-                return {
-                  ...f,
-                  states:
-                    enabled ?
-                      [...states, CommentState.PendingUserChanges]
-                    : states.filter(
-                        val => val !== CommentState.PendingUserChanges
-                      ),
-                };
-              })
+          <FormControlLabel
+            control={
+              <Switch
+                defaultChecked={filter.states?.includes?.(
+                  CommentState.PendingUserChanges
+                )}
+                onChange={(_event, enabled) =>
+                  setFilter(f => {
+                    const states = f.states || [];
+                    return {
+                      ...f,
+                      states:
+                        enabled ?
+                          [...states, CommentState.PendingUserChanges]
+                        : states.filter(
+                            val => val !== CommentState.PendingUserChanges
+                          ),
+                    };
+                  })
+                }
+              />
             }
             label={
               <>
@@ -182,20 +193,25 @@ function CommentList() {
             }
           />
 
-          <Toggle
-            defaultChecked={filter.states?.includes?.(CommentState.Rejected)}
-            onChange={enabled =>
-              setFilter(f => {
-                const states = f.states || [];
-
-                return {
-                  ...f,
-                  states:
-                    enabled ?
-                      [...states, CommentState.Rejected]
-                    : states.filter(val => val !== CommentState.Rejected),
-                };
-              })
+          <FormControlLabel
+            control={
+              <Switch
+                defaultChecked={filter.states?.includes?.(
+                  CommentState.Rejected
+                )}
+                onChange={(_event, enabled) =>
+                  setFilter(f => {
+                    const states = f.states || [];
+                    return {
+                      ...f,
+                      states:
+                        enabled ?
+                          [...states, CommentState.Rejected]
+                        : states.filter(val => val !== CommentState.Rejected),
+                    };
+                  })
+                }
+              />
             }
             label={t('comments.state.rejected')}
           />
@@ -206,7 +222,7 @@ function CommentList() {
         <Table
           fillHeight
           rowHeight={60}
-          rowClassName={rowData => {
+          rowClassName={(rowData: any) => {
             switch (rowData?.state) {
               case CommentState.Approved:
                 return 'approved';
@@ -295,7 +311,7 @@ function CommentList() {
                 >
                   <CommentStateDropdown
                     comment={rowData as FullCommentFragment}
-                    size="xs"
+                    size="small"
                     onStateChanged={async () => {
                       await refetch();
                     }}
@@ -324,10 +340,10 @@ function CommentList() {
                       <Link to={`edit/${rowData.id}`}>
                         <IconButton
                           aria-label={t('comments.overview.edit')}
-                          icon={<MdEdit />}
-                          circle
-                          size="sm"
-                        />
+                          size="small"
+                        >
+                          <MdEdit />
+                        </IconButton>
                       </Link>
                     </IconButtonTooltip>
                   </EditIcon>
@@ -337,8 +353,7 @@ function CommentList() {
                     itemType={rowData.itemType}
                     itemID={rowData.itemID}
                     parentID={rowData.id}
-                    size="sm"
-                    circle
+                    size="small"
                   />
                 </PermissionControl>
               )}
@@ -347,23 +362,16 @@ function CommentList() {
         </Table>
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.comments.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.comments.totalCount ?? 0}
         />
       </TableWrapper>
     </>

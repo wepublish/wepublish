@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Card, CardContent } from '@mui/material';
 import {
   FullMemberPlanFragment,
   MutationCreateDiscountCodeArgs,
@@ -10,7 +11,7 @@ import {
   SelectMemberPlan,
 } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
-import { Form, NumberInput, Panel } from 'rsuite';
+import { Form, NumberInput } from 'rsuite';
 
 type DiscountCodeFormData = (
   | MutationCreateDiscountCodeArgs
@@ -79,101 +80,105 @@ export const DiscountCodeForm = ({
   return (
     <DiscountCodeFormWrapper>
       <DiscountCodeFormSection>
-        <Panel
-          bordered
+        <Card
+          variant="outlined"
           css={{ overflow: 'initial' }}
         >
-          <CodeDiscountGrid>
-            <Form.Group controlId="code">
-              <Form.Label>
-                {t('discountCode.form.code')}{' '}
-                <InfoTooltip text={t('discountCode.form.codeInfo')} />
-              </Form.Label>
+          <CardContent>
+            <CodeDiscountGrid>
+              <Form.Group controlId="code">
+                <Form.Label>
+                  {t('discountCode.form.code')}{' '}
+                  <InfoTooltip text={t('discountCode.form.codeInfo')} />
+                </Form.Label>
 
-              <Form.Control
-                name="code"
-                value={(discountCode.code ?? '').toUpperCase()}
-                onChange={(code: string) => onChange({ code })}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="discountPercent">
-              <Form.Label>
-                {t('discountCode.form.discountPercent')}{' '}
-                <InfoTooltip
-                  text={t('discountCode.form.discountPercentInfo')}
+                <Form.Control
+                  name="code"
+                  value={(discountCode.code ?? '').toUpperCase()}
+                  onChange={(code: string) => onChange({ code })}
                 />
-              </Form.Label>
+              </Form.Group>
 
-              <Form.Control
-                name="discountPercent"
-                value={discountCode.discountPercent ?? 0}
-                onChange={(discountPercent: string) =>
-                  onChange({ discountPercent: +discountPercent })
-                }
-                accepter={NumberInput}
-              />
-            </Form.Group>
-          </CodeDiscountGrid>
-        </Panel>
+              <Form.Group controlId="discountPercent">
+                <Form.Label>
+                  {t('discountCode.form.discountPercent')}{' '}
+                  <InfoTooltip
+                    text={t('discountCode.form.discountPercentInfo')}
+                  />
+                </Form.Label>
+
+                <Form.Control
+                  name="discountPercent"
+                  value={discountCode.discountPercent ?? 0}
+                  onChange={(discountPercent: string) =>
+                    onChange({ discountPercent: +discountPercent })
+                  }
+                  accepter={NumberInput}
+                />
+              </Form.Group>
+            </CodeDiscountGrid>
+          </CardContent>
+        </Card>
       </DiscountCodeFormSection>
 
       <DiscountCodeFormSection>
-        <Panel
-          bordered
+        <Card
+          variant="outlined"
           css={{ overflow: 'initial' }}
         >
-          <Form.Group>
-            <Form.Label>
-              {t('discountCode.form.memberPlan')}{' '}
-              <InfoTooltip text={t('discountCode.form.memberPlanInfo')} />
-            </Form.Label>
+          <CardContent>
+            <Form.Group>
+              <Form.Label>
+                {t('discountCode.form.memberPlan')}{' '}
+                <InfoTooltip text={t('discountCode.form.memberPlanInfo')} />
+              </Form.Label>
 
-            <Form.Control
-              name="memberPlan"
-              defaultMemberPlan={discountCode.memberPlan}
-              selectedMemberPlan={discountCode.memberPlanId}
-              setSelectedMemberPlan={(memberPlanId: string) =>
-                onChange({ memberPlanId })
-              }
-              accepter={SelectMemberPlan}
-            />
-          </Form.Group>
-
-          <DateRangeGrid>
-            <Form.Group controlId="validFrom">
               <Form.Control
-                name="validFrom"
-                label={t('discountCode.form.validFrom')}
-                dateTime={
-                  discountCode.validFrom ?
-                    new Date(discountCode.validFrom)
-                  : undefined
+                name="memberPlan"
+                defaultMemberPlan={discountCode.memberPlan}
+                selectedMemberPlan={discountCode.memberPlanId}
+                setSelectedMemberPlan={(memberPlanId: string) =>
+                  onChange({ memberPlanId })
                 }
-                changeDate={(date: Date) =>
-                  onChange({ validFrom: date?.toISOString() })
-                }
-                accepter={DateTimePicker}
+                accepter={SelectMemberPlan}
               />
             </Form.Group>
 
-            <Form.Group controlId="validTo">
-              <Form.Control
-                name="validTo"
-                label={t('discountCode.form.validTo')}
-                dateTime={
-                  discountCode.validTo ?
-                    new Date(discountCode.validTo)
-                  : undefined
-                }
-                changeDate={(date: Date) =>
-                  onChange({ validTo: date?.toISOString() })
-                }
-                accepter={DateTimePicker}
-              />
-            </Form.Group>
-          </DateRangeGrid>
-        </Panel>
+            <DateRangeGrid>
+              <Form.Group controlId="validFrom">
+                <Form.Control
+                  name="validFrom"
+                  label={t('discountCode.form.validFrom')}
+                  dateTime={
+                    discountCode.validFrom ?
+                      new Date(discountCode.validFrom)
+                    : undefined
+                  }
+                  changeDate={(date: Date) =>
+                    onChange({ validFrom: date?.toISOString() })
+                  }
+                  accepter={DateTimePicker}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="validTo">
+                <Form.Control
+                  name="validTo"
+                  label={t('discountCode.form.validTo')}
+                  dateTime={
+                    discountCode.validTo ?
+                      new Date(discountCode.validTo)
+                    : undefined
+                  }
+                  changeDate={(date: Date) =>
+                    onChange({ validTo: date?.toISOString() })
+                  }
+                  accepter={DateTimePicker}
+                />
+              </Form.Group>
+            </DateRangeGrid>
+          </CardContent>
+        </Card>
       </DiscountCodeFormSection>
     </DiscountCodeFormWrapper>
   );

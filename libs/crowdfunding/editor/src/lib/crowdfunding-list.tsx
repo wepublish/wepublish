@@ -8,21 +8,17 @@ import {
   IconButton,
   IconButtonTooltip,
   TableWrapper,
-  PaddedCell,
-  Table,
+  DataTable,
 } from '@wepublish/ui/editor';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { IconButton as RIconButton, Table as RTable } from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
 import {
   CrowdfundingsDocument,
   FullCrowdfundingFragment,
 } from '@wepublish/editor/api';
 import { CrowdfundingDeleteModal } from './crowdfunding-delete-modal';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
+import { Button } from '@mui/material';
 
 function CrowdfundingList() {
   const { t } = useTranslation();
@@ -42,65 +38,56 @@ function CrowdfundingList() {
 
         <ListViewActions>
           <Link to="create">
-            <RIconButton
-              appearance="primary"
-              icon={<MdAdd />}
+            <Button
+              variant="contained"
+              startIcon={<MdAdd />}
             >
               {t('crowdfunding.list.createNew')}
-            </RIconButton>
+            </Button>
           </Link>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
           data={data?.crowdfundings || []}
-        >
-          <Column
-            width={300}
-            resizable
-          >
-            <HeaderCell>{t('crowdfunding.list.name')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullCrowdfundingFragment>) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'name',
+              label: t('crowdfunding.list.name'),
+              width: 300,
+              render: rowData => (
                 <Link to={`/crowdfundings/edit/${rowData.id}`}>
                   {rowData.name || t('crowdfunding.list.unnamed')}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={100}
-            align="center"
-            resizable={false}
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-
-            <PaddedCell align="center">
-              {(crowdfunding: RowDataType<FullCrowdfundingFragment>) => (
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: crowdfunding => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     aria-label={t('delete')}
-                    icon={<MdDelete />}
-                    circle
-                    appearance="ghost"
-                    color="red"
-                    size="sm"
+                    color="error"
+                    size="small"
                     onClick={() =>
                       setCrowdfundingDelete(
                         crowdfunding as FullCrowdfundingFragment
                       )
                     }
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
 
       <CrowdfundingDeleteModal

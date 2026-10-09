@@ -1,9 +1,9 @@
 // directories
 export * from './comment';
 export * from './memberPlan/selectMemberPlan';
+export * from './memberPlan/selectMemberPlans';
 export * from './notification/confirmActionModal';
 export * from './notification/notificationItem';
-export * from './memberPlan/selectMemberPlans';
 export * from './paywall/selectPaywall';
 export * from './poll';
 export * from './searchAndFilter';
@@ -28,9 +28,9 @@ export * from './fileDropInput';
 export * from './focalPointInput';
 export * from './helpers';
 export * from './iconButtonTooltip';
-export * from './infoTooltip';
 export * from './imageMetaData';
 export * from './infoMessage';
+export * from './infoTooltip';
 export * from './listInput';
 export * from './loginTemplate';
 export * from './navigationBar';

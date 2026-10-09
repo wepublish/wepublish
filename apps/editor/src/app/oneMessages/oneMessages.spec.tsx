@@ -1,5 +1,5 @@
-import type { Mock } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
+import type { Mock } from 'vitest';
 
 import { OneMessages } from './oneMessages';
 import { useOneMessages } from './oneMessages.hooks';
@@ -77,10 +77,10 @@ it('renders only the title when body is null', () => {
   expect(container.querySelector('p')).toBeNull();
 });
 
-it('maps critical severity to the rsuite error style', () => {
-  const { container } = renderWith([message({ severity: 'critical' })]);
+it('maps critical severity to the error alert style', () => {
+  renderWith([message({ severity: 'critical' })]);
 
-  expect(container.querySelector('.rs-message-error')).toBeTruthy();
+  expect(screen.getByRole('alert').className).toContain('Error');
 });
 
 it('renders a link opening in a new tab using link_label', () => {

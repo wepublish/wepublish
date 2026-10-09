@@ -26,12 +26,11 @@ import {
   ExternalAppsTarget,
   UpdateExternalAppDocument,
 } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSave } from 'react-icons/md';
-import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 import { IconPickerSelect } from './iconPicker';
@@ -113,34 +112,20 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
     })
       .then(() => {
         setDeleteDialogOpen(false);
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('externalAppForm.successDelete', {
-              defaultValue: 'External app deleted successfully',
-            })}
-          </Message>,
-          { placement: 'topCenter' }
+        enqueueSnackbar(
+          t('externalAppForm.successDelete', {
+            defaultValue: 'External app deleted successfully',
+          }),
+          { variant: 'success', autoHideDuration: 3000 }
         );
       })
       .catch(err => {
         console.error(err);
         setDeleteDialogOpen(false);
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={8000}
-          >
-            {humanizeError(err)}
-          </Message>,
-          { placement: 'topCenter' }
-        );
+        enqueueSnackbar(humanizeError(err), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        });
       });
   };
 
@@ -157,33 +142,19 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
         },
       })
         .then(() => {
-          toaster.push(
-            <Message
-              type="success"
-              showIcon
-              closable
-              duration={3000}
-            >
-              {t('externalAppForm.successUpdate', {
-                defaultValue: 'External app updated successfully',
-              })}
-            </Message>,
-            { placement: 'topCenter' }
+          enqueueSnackbar(
+            t('externalAppForm.successUpdate', {
+              defaultValue: 'External app updated successfully',
+            }),
+            { variant: 'success', autoHideDuration: 3000 }
           );
         })
         .catch(err => {
           console.error(err);
-          toaster.push(
-            <Message
-              type="error"
-              showIcon
-              closable
-              duration={8000}
-            >
-              {humanizeError(err)}
-            </Message>,
-            { placement: 'topCenter' }
-          );
+          enqueueSnackbar(humanizeError(err), {
+            variant: 'error',
+            autoHideDuration: 8000,
+          });
         });
     } else {
       createExternalApp({
@@ -199,33 +170,19 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
       })
         .then(() => {
           reset();
-          toaster.push(
-            <Message
-              type="success"
-              showIcon
-              closable
-              duration={3000}
-            >
-              {t('externalAppForm.successCreate', {
-                defaultValue: 'External app created successfully',
-              })}
-            </Message>,
-            { placement: 'topCenter' }
+          enqueueSnackbar(
+            t('externalAppForm.successCreate', {
+              defaultValue: 'External app created successfully',
+            }),
+            { variant: 'success', autoHideDuration: 3000 }
           );
         })
         .catch(err => {
           console.error(err);
-          toaster.push(
-            <Message
-              type="error"
-              showIcon
-              closable
-              duration={8000}
-            >
-              {humanizeError(err)}
-            </Message>,
-            { placement: 'topCenter' }
-          );
+          enqueueSnackbar(humanizeError(err), {
+            variant: 'error',
+            autoHideDuration: 8000,
+          });
         });
     }
   };

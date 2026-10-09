@@ -6,10 +6,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Alert,
 } from '@mui/material';
 import { MailLogsDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
-import { Message } from 'rsuite';
 import { useShowErrors } from '../common';
 import { formatDateTime, MailLogStateTag } from './mail-log-common';
 
@@ -29,7 +29,7 @@ export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
   const logs = data?.mailLogs.nodes ?? [];
 
   if (logs.length === 0) {
-    return <Message type="info">{t('mailLog.empty')}</Message>;
+    return <Alert severity="info">{t('mailLog.empty')}</Alert>;
   }
 
   return (

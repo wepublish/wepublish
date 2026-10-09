@@ -11,8 +11,9 @@ import { useAuthorisation } from '@wepublish/ui/editor';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
-import { Button, CheckPicker } from 'rsuite';
+import { CheckPicker } from 'rsuite';
 import { SubscriptionClientContext } from '../graphql-client-context';
+import { Button } from '@mui/material';
 
 const FilterGrid = styled('div')`
   display: grid;
@@ -179,8 +180,8 @@ export function FlowFilters({
       {createNewFlow && (
         <CreateAction>
           <Button
-            appearance="primary"
-            color="green"
+            variant="contained"
+            color="success"
             startIcon={<MdAdd />}
             onClick={saveNewFlow}
           >

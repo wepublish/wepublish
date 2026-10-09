@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Card, CardContent, CardHeader } from '@mui/material';
 import {
   FullPollFragment,
   PollDocument,
@@ -10,6 +11,7 @@ import {
 import { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
   humanizeError,
   InfoTooltip,
   PollAnswers,
@@ -20,7 +22,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { DatePicker, Form, Message, Panel, Schema, toaster } from 'rsuite';
+import { DatePicker, Form, Schema } from 'rsuite';
 
 const DateLabel = styled(Form.Label)`
   margin-right: 8px;
@@ -55,28 +57,16 @@ function PollEditView() {
    * Handling toasts
    */
   const onErrorToast = (error: Error) => {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   };
   const onCompletedToast = () => {
-    toaster.push(
-      <Message
-        type="success"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {t('pollEditView.savedSuccessfully')}
-      </Message>
-    );
+    enqueueSnackbar(t('pollEditView.savedSuccessfully'), {
+      variant: 'success',
+      autoHideDuration: 3000,
+    });
   };
 
   // get polls
@@ -214,107 +204,118 @@ function PollEditView() {
       />
 
       <PollEditor>
-        <Panel
-          bordered
+        <Card
+          variant="outlined"
           css={{ gridColumn: '-1/1' }}
         >
-          <Form.Stack fluid>
-            <Form.Group controlId="question">
-              <Form.Label>{t('pollEditView.questionPanelHeader')}</Form.Label>
+          <CardContent>
+            <Form.Stack fluid>
+              <Form.Group controlId="question">
+                <Form.Label>{t('pollEditView.questionPanelHeader')}</Form.Label>
 
-              <Form.Control
-                name="question"
-                placeholder={t('pollEditView.toBeOrNotToBe')}
-                value={poll?.question || ''}
-                onChange={(value: string) => {
-                  if (!poll) {
-                    return;
-                  }
-                  setPoll(p => (p ? { ...p, question: value } : undefined));
-                }}
-              />
-            </Form.Group>
-
-            <DatesWrapper>
-              <DateItem>
-                <DateLabel>{t('pollEditView.opensAtLabel')}</DateLabel>
-
-                <DatePicker
-                  value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
-                  format="yyyy-MM-dd HH:mm"
-                  onSelect={updateOpensAt}
-                  onChange={updateOpensAt}
+                <Form.Control
+                  name="question"
+                  placeholder={t('pollEditView.toBeOrNotToBe')}
+                  value={poll?.question || ''}
+                  onChange={(value: string) => {
+                    if (!poll) {
+                      return;
+                    }
+                    setPoll(p => (p ? { ...p, question: value } : undefined));
+                  }}
                 />
-              </DateItem>
+              </Form.Group>
 
-              <DateItem>
-                <DateLabel>
-                  {t('pollEditView.closesAtLabel')}{' '}
-                  <InfoTooltip text={t('pollEditView.closesAtInfo')} />
-                </DateLabel>
+              <DatesWrapper>
+                <DateItem>
+                  <DateLabel>{t('pollEditView.opensAtLabel')}</DateLabel>
 
-                <DatePicker
-                  value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
-                  format="yyyy-MM-dd HH:mm"
-                  onSelect={updateClosedAt}
-                  onChange={updateClosedAt}
-                />
-              </DateItem>
-            </DatesWrapper>
-          </Form.Stack>
-        </Panel>
+                  <DatePicker
+                    value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
+                    format="yyyy-MM-dd HH:mm"
+                    onSelect={updateOpensAt}
+                    onChange={updateOpensAt}
+                  />
+                </DateItem>
 
-        <Panel
-          header={t('pollEditView.answerPanelHeader')}
-          bordered
-        >
-          <PollAnswers
-            poll={poll}
-            onPollChange={(poll: FullPollFragment) => {
-              setPoll(poll);
-            }}
+                <DateItem>
+                  <DateLabel>
+                    {t('pollEditView.closesAtLabel')}{' '}
+                    <InfoTooltip text={t('pollEditView.closesAtInfo')} />
+                  </DateLabel>
+
+                  <DatePicker
+                    value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
+                    format="yyyy-MM-dd HH:mm"
+                    onSelect={updateClosedAt}
+                    onChange={updateClosedAt}
+                  />
+                </DateItem>
+              </DatesWrapper>
+            </Form.Stack>
+          </CardContent>
+        </Card>
+
+        <Card variant="outlined">
+          <CardHeader title={t('pollEditView.answerPanelHeader')} />
+
+          <CardContent>
+            <PollAnswers
+              poll={poll}
+              onPollChange={(poll: FullPollFragment) => {
+                setPoll(poll);
+              }}
+            />
+          </CardContent>
+        </Card>
+
+        <Card variant="outlined">
+          <CardHeader
+            title={
+              <>
+                {t('pollEditView.infoText')}{' '}
+                <InfoTooltip text={t('pollEditView.infoTextInfo')} />
+              </>
+            }
           />
-        </Panel>
 
-        <Panel
-          header={
-            <>
-              {t('pollEditView.infoText')}{' '}
-              <InfoTooltip text={t('pollEditView.infoTextInfo')} />
-            </>
-          }
-          bordered
-        >
-          <RichTextBlock
-            value={poll?.infoText}
-            onChange={value => {
-              if (poll) {
-                setPoll({
-                  ...poll,
-                  infoText: value as RichtextJSONDocument,
-                });
-              }
-            }}
-          />
-        </Panel>
+          <CardContent>
+            <RichTextBlock
+              value={poll?.infoText}
+              onChange={value => {
+                if (poll) {
+                  setPoll({
+                    ...poll,
+                    infoText: value as RichtextJSONDocument,
+                  });
+                }
+              }}
+            />
+          </CardContent>
+        </Card>
 
-        <Panel
-          header={
-            <>
-              {t('pollEditView.pollExternalVotesPanelHeader')}{' '}
-              <InfoTooltip text={t('pollEditView.pollExternalVotesInfo')} />
-            </>
-          }
-          bordered
+        <Card
+          variant="outlined"
           css={{ gridColumn: '-1/1' }}
         >
-          <PollExternalVotes
-            poll={poll}
-            onPollChange={(poll: FullPollFragment) => {
-              setPoll(poll);
-            }}
+          <CardHeader
+            title={
+              <>
+                {t('pollEditView.pollExternalVotesPanelHeader')}{' '}
+                <InfoTooltip text={t('pollEditView.pollExternalVotesInfo')} />
+              </>
+            }
           />
-        </Panel>
+
+          <CardContent>
+            <PollExternalVotes
+              poll={poll}
+              onPollChange={(poll: FullPollFragment) => {
+                setPoll(poll);
+              }}
+            />
+          </CardContent>
+        </Card>
       </PollEditor>
     </Form>
   );

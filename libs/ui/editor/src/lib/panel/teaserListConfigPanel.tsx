@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import {
   TagType,
   TeaserListBlockSort,
@@ -7,15 +7,17 @@ import {
 } from '@wepublish/editor/api';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Drawer, Form, Schema, SelectPicker } from 'rsuite';
+import { Form, Schema, SelectPicker } from 'rsuite';
 
 import { InfoTooltip } from '../atoms/infoTooltip';
 import { SelectTags } from '../atoms/tag/selectTags';
 import { TeaserListBlockValue } from '../blocks/types';
-
-const DrawerBody = styled(Drawer.Body)`
-  padding: 24px;
-`;
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 
 const inputStyles = css`
   width: 200px !important;
@@ -95,12 +97,12 @@ export function TeaserListConfigPanel({
         })
       }
     >
-      <Drawer.Header>
-        <Drawer.Title>{t('blocks.teaserList.edit')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('blocks.teaserList.edit')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'ghost'}
+            variant="outlined"
             onClick={() => onClose()}
             type="button"
           >
@@ -108,13 +110,13 @@ export function TeaserListConfigPanel({
           </Button>
 
           <Button
-            appearance={'primary'}
+            variant="contained"
             type="submit"
           >
             {t('saveAndClose')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
       <DrawerBody>
         <Form.Group controlId="teaserType">

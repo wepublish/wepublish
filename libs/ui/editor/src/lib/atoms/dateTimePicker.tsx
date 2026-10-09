@@ -1,16 +1,15 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   Button,
   ButtonGroup,
-  ButtonToolbar,
-  DatePicker,
-  Form,
-  Popover as RPopover,
-  Whisper,
-} from 'rsuite';
+  Popover as MuiPopover,
+  Stack,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DatePicker, Form } from 'rsuite';
 
+import { ClickPopover } from '../popover';
 import { InfoTrigger } from './infoTooltip';
 
 export interface DateTimePreset {
@@ -33,7 +32,7 @@ const Header = styled.div`
   margin: 5px auto;
 `;
 
-const Popover = styled(RPopover)`
+const Popover = styled(MuiPopover)`
   max-width: 300px;
 `;
 
@@ -124,18 +123,13 @@ export function DateTimePicker({
       <Header>
         <Form.Label>{label}</Form.Label>
         {helpInfo ?
-          <Whisper
-            placement="right"
-            trigger="hover"
-            controlId="control-id-hover"
-            speaker={
-              <Popover>
-                <p>{helpInfo}</p>
-              </Popover>
-            }
+          <ClickPopover
+            trigger={<InfoTrigger aria-label={helpInfo} />}
+            anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'center', horizontal: 'left' }}
           >
-            <InfoTrigger aria-label={helpInfo} />
-          </Whisper>
+            <p>{helpInfo}</p>
+          </ClickPopover>
         : ''}
       </Header>
 
@@ -149,33 +143,43 @@ export function DateTimePicker({
         onChange={handleChange}
         renderExtraFooter={() => (
           <Presets>
-            <ButtonToolbar>
-              <ButtonGroup justified>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ flexWrap: 'wrap' }}
+            >
+              <ButtonGroup fullWidth>
                 {dateButtonPresets.map((datePreset, i) => (
                   <PresetsButton
+                    variant="outlined"
                     key={i}
-                    size="xs"
+                    size="small"
                     onClick={() => handleDatePresetButton(datePreset.offset)}
                   >
                     {datePreset.label}
                   </PresetsButton>
                 ))}
               </ButtonGroup>
-            </ButtonToolbar>
+            </Stack>
 
-            <ButtonToolbar>
-              <ButtonGroup justified>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ flexWrap: 'wrap' }}
+            >
+              <ButtonGroup fullWidth>
                 {timeButtonPresets.map((timePreset, i) => (
                   <PresetsButton
+                    variant="outlined"
                     key={i}
-                    size="xs"
+                    size="small"
                     onClick={() => handleTimePresetButton(timePreset.offset)}
                   >
                     {timePreset.label}
                   </PresetsButton>
                 ))}
               </ButtonGroup>
-            </ButtonToolbar>
+            </Stack>
           </Presets>
         )}
       />

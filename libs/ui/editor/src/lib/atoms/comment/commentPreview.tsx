@@ -1,4 +1,13 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Button,
+  Grid,
+  Stack,
+} from '@mui/material';
+import {
   CommentRevisionFragment,
   CommentRevisionInput,
   FullCommentFragment,
@@ -14,7 +23,7 @@ import {
   MdTag,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Col, Form, Grid, IconButton, Panel, Row, Stack } from 'rsuite';
+import { Form } from 'rsuite';
 
 import { RichTextBlock } from '../../blocks/richTextBlock/rich-text-block';
 import { RichTextBlockValue } from '../../blocks/types';
@@ -169,20 +178,8 @@ export function CommentPreview({
   }
 
   return (
-    <Panel
-      bordered
-      collapsible
-      header={
-        <Stack justifyContent="space-between">
-          <Stack.Item>{getPanelHeader()}</Stack.Item>
-          <Stack.Item>
-            {panelExpanded && <MdExpandMore />}
-            {!panelExpanded && <MdExpandLess />}
-          </Stack.Item>
-        </Stack>
-      }
+    <Accordion
       defaultExpanded={!!expanded}
-      onSelect={() => setPanelExpanded(!panelExpanded)}
       style={
         expanded ?
           {
@@ -192,103 +189,137 @@ export function CommentPreview({
         : {}
       }
     >
-      {!expanded && (
-        <Grid style={{ maxWidth: '100%' }}>
-          <Row style={{ maxWidth: '100%' }}>
-            {/* title, lead, text */}
-            <Col xs={18}>
-              <CommentRevisionView revision={lastRevision} />
-            </Col>
-            {/* tags & source */}
-            <Col xs={6}>
-              <div>
-                <CommentTags comment={displayComment} />
-              </div>
-              <div style={{ marginTop: '20px' }}>
-                <CommentSource comment={displayComment} />
-              </div>
-            </Col>
-          </Row>
-        </Grid>
-      )}
-      {expanded && (
-        <Grid style={{ maxWidth: '100%' }}>
-          <Row>
-            {/* comment title */}
-            <Col xs={24}>
-              <Form.Label>{t('commentEditView.title')}</Form.Label>
-              <Form.Control
-                name="commentTitle"
-                value={revision?.title || ''}
-                placeholder={t('commentEditView.title')}
-                onChange={(title: string) => {
-                  if (setRevision) {
-                    setRevision(oldRevision => ({ ...oldRevision, title }));
-                  }
-                }}
-              />
-            </Col>
-            {/* comment lead */}
-            <Col xs={24}>
-              <Form.Label>{t('commentEditView.lead')}</Form.Label>
-              <Form.Control
-                name="commentLead"
-                value={revision?.lead || ''}
-                placeholder={t('commentEditView.lead')}
-                onChange={(lead: string) => {
-                  if (setRevision) {
-                    setRevision(oldRevision => ({ ...oldRevision, lead }));
-                  }
-                }}
-              />
-            </Col>
-            {/* comment text */}
-            <Col
-              xs={24}
-              style={{ marginTop: '20px' }}
-            >
-              <Form.Label>{t('commentEditView.comment')}</Form.Label>
+      <AccordionSummary expandIcon={<MdExpandMore />}>
+        <Stack
+          direction="row"
+          sx={{ justifyContent: 'space-between' }}
+        >
+          <Box>{getPanelHeader()}</Box>
+          <Box>
+            {panelExpanded && <MdExpandMore />}
+            {!panelExpanded && <MdExpandLess />}
+          </Box>
+        </Stack>
+      </AccordionSummary>
 
-              <RichTextBlock
-                value={revision?.text}
-                onChange={text => {
-                  if (setRevision) {
-                    setRevision(oldRevision => ({
-                      ...oldRevision,
-                      text: text as RichTextBlockValue['richText'],
-                    }));
-                  }
-                }}
-              />
-            </Col>
-          </Row>
-        </Grid>
-      )}
-
-      {/* actions */}
-      <Col
-        xs={24}
-        style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}
-      >
-        <CreateCommentBtn
-          itemID={comment.itemID}
-          itemType={comment.itemType}
-          parentID={comment.id}
-          appearance="ghost"
-          text={t('replyCommentBtn.reply')}
-        />
+      <AccordionDetails>
         {!expanded && (
-          <Link to={`/comments/edit/${comment.id}`}>
-            <IconButton
-              style={{ marginLeft: '10px' }}
-              icon={<MdEdit />}
-              appearance="ghost"
+          <Grid
+            container
+            spacing={2}
+            style={{ maxWidth: '100%' }}
+          >
+            <Grid
+              container
+              spacing={2}
+              style={{ maxWidth: '100%' }}
             >
-              {t('commentPreview.editComment')}
-            </IconButton>
-          </Link>
+              {/* title, lead, text */}
+              <Grid size={{ xs: 9 }}>
+                <CommentRevisionView revision={lastRevision} />
+              </Grid>
+              {/* tags & source */}
+              <Grid size={{ xs: 3 }}>
+                <div>
+                  <CommentTags comment={displayComment} />
+                </div>
+                <div style={{ marginTop: '20px' }}>
+                  <CommentSource comment={displayComment} />
+                </div>
+              </Grid>
+            </Grid>
+          </Grid>
         )}
-      </Col>
-    </Panel>
+        {expanded && (
+          <Grid
+            container
+            spacing={2}
+            style={{ maxWidth: '100%' }}
+          >
+            <Grid
+              container
+              spacing={2}
+            >
+              {/* comment title */}
+              <Grid size={{ xs: 12 }}>
+                <Form.Label>{t('commentEditView.title')}</Form.Label>
+                <Form.Control
+                  name="commentTitle"
+                  value={revision?.title || ''}
+                  placeholder={t('commentEditView.title')}
+                  onChange={(title: string) => {
+                    if (setRevision) {
+                      setRevision(oldRevision => ({ ...oldRevision, title }));
+                    }
+                  }}
+                />
+              </Grid>
+              {/* comment lead */}
+              <Grid size={{ xs: 12 }}>
+                <Form.Label>{t('commentEditView.lead')}</Form.Label>
+                <Form.Control
+                  name="commentLead"
+                  value={revision?.lead || ''}
+                  placeholder={t('commentEditView.lead')}
+                  onChange={(lead: string) => {
+                    if (setRevision) {
+                      setRevision(oldRevision => ({ ...oldRevision, lead }));
+                    }
+                  }}
+                />
+              </Grid>
+              {/* comment text */}
+              <Grid
+                size={{ xs: 12 }}
+                style={{ marginTop: '20px' }}
+              >
+                <Form.Label>{t('commentEditView.comment')}</Form.Label>
+
+                <RichTextBlock
+                  value={revision?.text}
+                  onChange={text => {
+                    if (setRevision) {
+                      setRevision(oldRevision => ({
+                        ...oldRevision,
+                        text: text as RichTextBlockValue['richText'],
+                      }));
+                    }
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
+
+        {/* actions */}
+        <Grid
+          size={{ xs: 12 }}
+          style={{
+            textAlign: 'center',
+            marginTop: '20px',
+            marginBottom: '20px',
+          }}
+        >
+          <CreateCommentBtn
+            variant="outlined"
+            itemID={comment.itemID}
+            itemType={comment.itemType}
+            parentID={comment.id}
+            text={t('replyCommentBtn.reply')}
+          />
+          {!expanded && (
+            <Link to={`/comments/edit/${comment.id}`}>
+              <Button
+                variant="outlined"
+                startIcon={<MdEdit />}
+                style={{ marginLeft: '10px' }}
+              >
+                {t('commentPreview.editComment')}
+              </Button>
+            </Link>
+          )}
+        </Grid>
+      </AccordionDetails>
+    </Accordion>
   );
 }

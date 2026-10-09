@@ -1,6 +1,17 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+  Drawer,
+  FormControlLabel,
+  Stack,
+  Switch,
+} from '@mui/material';
+import {
   ArticleFilter,
   ArticleListDocument,
   ArticleListQueryVariables,
@@ -24,25 +35,25 @@ import {
   MdSettings,
 } from 'react-icons/md';
 import {
-  Button,
-  Drawer,
   Form,
   Input,
   InputGroup as RInputGroup,
   List as RList,
-  Loader as RLoader,
   Nav as RNav,
-  Notification,
-  Panel,
-  Stack,
-  toaster,
-  Toggle,
 } from 'rsuite';
 
 import { ChooseEditImage } from '../atoms/chooseEditImage';
 import { InfoTooltip } from '../atoms/infoTooltip';
 import { ListInput, ListValue } from '../atoms/listInput';
 import { Teaser, TeaserLink } from '../blocks/types';
+import {
+  DRAWER_WIDTHS,
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 import { generateID } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
@@ -112,7 +123,7 @@ const LoadMoreButton = styled(Button)`
   margin-top: 16px;
 `;
 
-const Loader = styled(RLoader)`
+const Loader = styled(CircularProgress)`
   margin: 5rem 0;
   width: 100%;
   display: flex;
@@ -224,19 +235,15 @@ export function TeaserSelectPanel({
 
   useEffect(() => {
     if (articleListError ?? pageListError ?? eventListError) {
-      toaster.push(
-        <Notification
-          type="error"
-          header={
-            articleListError?.message ??
-            pageListError?.message ??
-            eventListError?.message ??
-            t('toast.updateError')
-          }
-          duration={5000}
-        />,
-        { placement: 'topEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'error',
+        title:
+          articleListError?.message ??
+          pageListError?.message ??
+          eventListError?.message ??
+          t('toast.updateError'),
+        autoHideDuration: 5000,
+      });
     }
   }, [articleListError, pageListError, eventListError]);
 
@@ -318,7 +325,7 @@ export function TeaserSelectPanel({
           <>
             {isArticleListLoading ?
               <RList.Item>
-                <Loader />
+                <CircularProgress />
               </RList.Item>
             : null}
             {!isArticleListLoading && articles.length === 0 ?
@@ -363,8 +370,8 @@ export function TeaserSelectPanel({
             })}
             {articleListData?.articles.pageInfo.hasNextPage && (
               <LoadMoreButton
+                variant="contained"
                 onClick={loadMoreArticles}
-                appearance="primary"
               >
                 {t('articleEditor.panels.loadMore')}
               </LoadMoreButton>
@@ -377,7 +384,7 @@ export function TeaserSelectPanel({
           <>
             {isPageListLoading ?
               <RList.Item>
-                <Loader />
+                <CircularProgress />
               </RList.Item>
             : null}
             {!isPageListLoading && pages.length === 0 ?
@@ -418,7 +425,10 @@ export function TeaserSelectPanel({
               );
             })}
             {pageListData?.pages.pageInfo.hasNextPage && (
-              <Button onClick={loadMorePages}>
+              <Button
+                variant="outlined"
+                onClick={loadMorePages}
+              >
                 {t('articleEditor.panels.loadMore')}
               </Button>
             )}
@@ -430,7 +440,7 @@ export function TeaserSelectPanel({
           <>
             {isEventListLoading ?
               <RList.Item>
-                <Loader />
+                <CircularProgress />
               </RList.Item>
             : null}
             {!isEventListLoading && events.length === 0 ?
@@ -464,7 +474,10 @@ export function TeaserSelectPanel({
               );
             })}
             {eventListData?.events?.pageInfo.hasNextPage && (
-              <Button onClick={loadMoreEvents}>
+              <Button
+                variant="outlined"
+                onClick={loadMoreEvents}
+              >
                 {t('articleEditor.panels.loadMore')}
               </Button>
             )}
@@ -474,9 +487,12 @@ export function TeaserSelectPanel({
       case TeaserType.Custom:
         return (
           <>
-            <Stack justifyContent="flex-end">
+            <Stack
+              direction="row"
+              sx={{ justifyContent: 'flex-end' }}
+            >
               <Button
-                appearance={'primary'}
+                variant="contained"
                 onClick={() => {
                   onSelect({
                     ...initialTeaser,
@@ -496,7 +512,7 @@ export function TeaserSelectPanel({
                 {t('articleEditor.panels.confirm')}
               </Button>
               <ButtonWithMargin
-                appearance={'subtle'}
+                variant="text"
                 onClick={() => onClose?.()}
               >
                 {t('navigation.overview.cancel')}
@@ -505,117 +521,129 @@ export function TeaserSelectPanel({
 
             {previewForTeaser(initialTeaser, t)}
 
-            <Panel header={t('articleEditor.panels.displayOptions')}>
-              <Form>
-                <Form.Stack fluid>
-                  <Form.Group controlId="articlePreTitle">
-                    <Form.Label>
-                      {t('articleEditor.panels.preTitle')}
-                    </Form.Label>
+            <Card variant="outlined">
+              <CardHeader title={t('articleEditor.panels.displayOptions')} />
 
-                    <Form.Control
-                      name="pre-title"
-                      value={preTitle}
-                      onChange={(preTitle: string) => setPreTitle(preTitle)}
-                    />
-                  </Form.Group>
+              <CardContent>
+                <Form>
+                  <Form.Stack fluid>
+                    <Form.Group controlId="articlePreTitle">
+                      <Form.Label>
+                        {t('articleEditor.panels.preTitle')}
+                      </Form.Label>
 
-                  <Form.Group controlId="articleTitle">
-                    <Form.Label>{t('articleEditor.panels.title')}</Form.Label>
-
-                    <Form.Control
-                      name="title"
-                      value={title}
-                      onChange={(title: string) => setTitle(title)}
-                    />
-                  </Form.Group>
-
-                  <Form.Group controlId="articleLead">
-                    <Form.Label>{t('articleEditor.panels.lead')}</Form.Label>
-
-                    <Form.Control
-                      name="lead"
-                      value={lead}
-                      onChange={(lead: string) => setLead(lead)}
-                    />
-                  </Form.Group>
-
-                  <Form.Group controlId="customTeaserContentUrl">
-                    <Form.Label>
-                      {t('articleEditor.panels.contentUrl')}{' '}
-                      <InfoTooltip
-                        text={t('articleEditor.panels.contentUrlInfo')}
+                      <Form.Control
+                        name="pre-title"
+                        value={preTitle}
+                        onChange={(preTitle: string) => setPreTitle(preTitle)}
                       />
-                    </Form.Label>
+                    </Form.Group>
 
-                    <Form.Control
-                      name="content-url"
-                      value={contentUrl}
-                      onChange={(contentUrl: string) =>
-                        setContentUrl(contentUrl)
-                      }
-                    />
-                  </Form.Group>
+                    <Form.Group controlId="articleTitle">
+                      <Form.Label>{t('articleEditor.panels.title')}</Form.Label>
 
-                  <Form.Group controlId="customTeaserOpenInNewTab">
-                    <Toggle
-                      checked={!!openInNewTab}
-                      onChange={(isChecked: boolean) =>
-                        setOpenInNewTab(isChecked)
-                      }
-                      label={t('articleEditor.panels.openInNewTab')}
-                    />
-                  </Form.Group>
-
-                  <Form.Group controlId="properties">
-                    <Form.Label>
-                      {t('articleEditor.panels.properties')}{' '}
-                      <InfoTooltip
-                        text={t('articleEditor.panels.teaserPropertiesInfo')}
+                      <Form.Control
+                        name="title"
+                        value={title}
+                        onChange={(title: string) => setTitle(title)}
                       />
-                    </Form.Label>
+                    </Form.Group>
 
-                    <ListInput
-                      value={metaDataProperties}
-                      onChange={propertiesItemInput =>
-                        setMetadataProperties(propertiesItemInput)
-                      }
-                      defaultValue={{ key: '', value: '', public: true }}
-                    >
-                      {({ value, onChange }) => (
-                        <FlexRow>
-                          <InputW40
-                            placeholder={t('articleEditor.panels.key')}
-                            value={value.key}
-                            onChange={propertyKey =>
-                              onChange({ ...value, key: propertyKey })
+                    <Form.Group controlId="articleLead">
+                      <Form.Label>{t('articleEditor.panels.lead')}</Form.Label>
+
+                      <Form.Control
+                        name="lead"
+                        value={lead}
+                        onChange={(lead: string) => setLead(lead)}
+                      />
+                    </Form.Group>
+
+                    <Form.Group controlId="customTeaserContentUrl">
+                      <Form.Label>
+                        {t('articleEditor.panels.contentUrl')}{' '}
+                        <InfoTooltip
+                          text={t('articleEditor.panels.contentUrlInfo')}
+                        />
+                      </Form.Label>
+
+                      <Form.Control
+                        name="content-url"
+                        value={contentUrl}
+                        onChange={(contentUrl: string) =>
+                          setContentUrl(contentUrl)
+                        }
+                      />
+                    </Form.Group>
+
+                    <Form.Group controlId="customTeaserOpenInNewTab">
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={!!openInNewTab}
+                            onChange={(_event, isChecked: boolean) =>
+                              setOpenInNewTab(isChecked)
                             }
                           />
+                        }
+                        label={t('articleEditor.panels.openInNewTab')}
+                      />
+                    </Form.Group>
 
-                          <InputW60
-                            placeholder={t('articleEditor.panels.value')}
-                            value={value.value}
-                            onChange={propertyValue =>
-                              onChange({ ...value, value: propertyValue })
-                            }
-                          />
+                    <Form.Group controlId="properties">
+                      <Form.Label>
+                        {t('articleEditor.panels.properties')}{' '}
+                        <InfoTooltip
+                          text={t('articleEditor.panels.teaserPropertiesInfo')}
+                        />
+                      </Form.Label>
 
-                          <FormGroup controlId="articleProperty">
-                            <Toggle
-                              checked={value.public}
-                              onChange={isPublic =>
-                                onChange({ ...value, public: isPublic })
+                      <ListInput
+                        value={metaDataProperties}
+                        onChange={propertiesItemInput =>
+                          setMetadataProperties(propertiesItemInput)
+                        }
+                        defaultValue={{ key: '', value: '', public: true }}
+                      >
+                        {({ value, onChange }) => (
+                          <FlexRow>
+                            <InputW40
+                              placeholder={t('articleEditor.panels.key')}
+                              value={value.key}
+                              onChange={propertyKey =>
+                                onChange({ ...value, key: propertyKey })
                               }
-                              label={t('articleEditor.panels.public')}
                             />
-                          </FormGroup>
-                        </FlexRow>
-                      )}
-                    </ListInput>
-                  </Form.Group>
-                </Form.Stack>
-              </Form>
-            </Panel>
+
+                            <InputW60
+                              placeholder={t('articleEditor.panels.value')}
+                              value={value.value}
+                              onChange={propertyValue =>
+                                onChange({ ...value, value: propertyValue })
+                              }
+                            />
+
+                            <FormGroup controlId="articleProperty">
+                              <FormControlLabel
+                                control={
+                                  <Switch
+                                    checked={value.public}
+                                    onChange={(_event, isPublic) =>
+                                      onChange({ ...value, public: isPublic })
+                                    }
+                                  />
+                                }
+                                label={t('articleEditor.panels.public')}
+                              />
+                            </FormGroup>
+                          </FlexRow>
+                        )}
+                      </ListInput>
+                    </Form.Group>
+                  </Form.Stack>
+                </Form>
+              </CardContent>
+            </Card>
 
             <ChooseEditImage
               image={image}
@@ -626,8 +654,18 @@ export function TeaserSelectPanel({
             />
 
             <Drawer
+              anchor="right"
+              slotProps={{
+                paper: {
+                  sx: {
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: DRAWER_WIDTHS.sm,
+                    maxWidth: '100vw',
+                  },
+                },
+              }}
               open={isChooseModalOpen}
-              size="sm"
               onClose={() => setChooseModalOpen(false)}
             >
               <ImageSelectPanel
@@ -641,8 +679,18 @@ export function TeaserSelectPanel({
 
             {image && (
               <Drawer
+                anchor="right"
+                slotProps={{
+                  paper: {
+                    sx: {
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: DRAWER_WIDTHS.sm,
+                      maxWidth: '100vw',
+                    },
+                  },
+                }}
                 open={isEditModalOpen}
-                size="sm"
                 onClose={() => setEditModalOpen(false)}
               >
                 <ImageEditPanel
@@ -658,20 +706,20 @@ export function TeaserSelectPanel({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('articleEditor.panels.chooseTeaser')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('articleEditor.panels.chooseTeaser')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('articleEditor.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         <Nav
           appearance="tabs"
           activeKey={type}
@@ -707,9 +755,13 @@ export function TeaserSelectPanel({
           !isEventListLoading &&
           events.length !== 0 && (
             <EventFilterContainer>
-              <Toggle
-                checked={eventFilter}
-                onChange={value => setEventFilter(value)}
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={eventFilter}
+                    onChange={(_event, value) => setEventFilter(value)}
+                  />
+                }
                 label={t('event.list.upcomingOnly')}
               />
             </EventFilterContainer>
@@ -728,7 +780,7 @@ export function TeaserSelectPanel({
         )}
 
         <List>{currentContent()}</List>
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }

@@ -1,9 +1,15 @@
 import styled from '@emotion/styled';
+import {
+  Card as MuiCard,
+  CardContent,
+  CardHeader,
+  IconButton,
+} from '@mui/material';
 import { FullImageFragment } from '@wepublish/editor/api';
 import React, { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose, MdEdit, MdPhoto } from 'react-icons/md';
-import { Dropdown, IconButton, Panel as RPanel, Placeholder } from 'rsuite';
+import { Dropdown, Placeholder } from 'rsuite';
 
 import { PlaceholderInput } from './placeholderInput';
 
@@ -42,7 +48,7 @@ const DropdownWrapper = styled.div<{ top: number; left: number }>`
   left: ${({ left }) => left};
 `;
 
-const Panel = styled(RPanel)`
+const Panel = styled(MuiCard)`
   display: grid;
   overflow: visible;
 `;
@@ -62,73 +68,80 @@ export function ChooseEditImage({
   const { t } = useTranslation();
   header = header ?? t('chooseEditImage.header');
   return (
-    <Panel
-      header={header}
-      bodyFill
-    >
-      {!image && disabled === true && <Placeholder.Graph />}
-      <PlaceholderInput
-        onAddClick={() => openChooseModalOpen?.()}
-        addLabel={t('chooseEditImage.chooseImage')}
-        maxHeight={maxHeight}
-        minHeight={minHeight}
-      >
-        {image && (
-          <ImageWrapper maxHeight={maxHeight}>
-            <Image src={image?.largeURL ?? '/static/placeholder-240x240.png'} />
+    <Panel>
+      <CardContent>
+        <CardContent>
+          <CardHeader title={header} />
 
-            {(openChooseModalOpen || openEditModalOpen || removeImage) && (
-              <DropdownWrapper
-                top={top}
-                left={left}
-              >
-                <Dropdown
-                  renderToggle={(
-                    props: object,
-                    ref: React.Ref<HTMLButtonElement>
-                  ) => (
-                    <IconButton
-                      {...props}
-                      ref={ref}
-                      icon={<MdEdit />}
-                      circle
-                      size="sm"
-                      appearance="primary"
-                      title={t('chooseEditImage.imageOptions')}
-                      aria-label={t('chooseEditImage.imageOptions')}
-                    />
-                  )}
-                >
-                  {openChooseModalOpen && (
-                    <Dropdown.Item
-                      disabled={disabled}
-                      onClick={() => openChooseModalOpen()}
+          <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+            {!image && disabled === true && <Placeholder.Graph />}
+            <PlaceholderInput
+              onAddClick={() => openChooseModalOpen?.()}
+              addLabel={t('chooseEditImage.chooseImage')}
+              maxHeight={maxHeight}
+            >
+              {image && (
+                <ImageWrapper maxHeight={maxHeight}>
+                  <Image
+                    src={image?.largeURL ?? '/static/placeholder-240x240.png'}
+                  />
+
+                  {(openChooseModalOpen ||
+                    openEditModalOpen ||
+                    removeImage) && (
+                    <DropdownWrapper
+                      top={top}
+                      left={left}
                     >
-                      <MdPhoto /> {t('chooseEditImage.chooseImage')}
-                    </Dropdown.Item>
+                      <Dropdown
+                        renderToggle={(
+                          props: object,
+                          ref: React.Ref<HTMLButtonElement>
+                        ) => (
+                          <IconButton
+                            {...props}
+                            ref={ref}
+                            size="small"
+                            title={t('chooseEditImage.imageOptions')}
+                            aria-label={t('chooseEditImage.imageOptions')}
+                          >
+                            <MdEdit />
+                          </IconButton>
+                        )}
+                      >
+                        {openChooseModalOpen && (
+                          <Dropdown.Item
+                            disabled={disabled}
+                            onClick={() => openChooseModalOpen()}
+                          >
+                            <MdPhoto /> {t('chooseEditImage.chooseImage')}
+                          </Dropdown.Item>
+                        )}
+                        {openEditModalOpen && (
+                          <Dropdown.Item
+                            disabled={disabled}
+                            onClick={() => openEditModalOpen()}
+                          >
+                            <MdEdit /> {t('chooseEditImage.editImage')}
+                          </Dropdown.Item>
+                        )}
+                        {removeImage && (
+                          <Dropdown.Item
+                            disabled={disabled}
+                            onClick={() => removeImage()}
+                          >
+                            <MdClose /> {t('chooseEditImage.removeImage')}
+                          </Dropdown.Item>
+                        )}
+                      </Dropdown>
+                    </DropdownWrapper>
                   )}
-                  {openEditModalOpen && (
-                    <Dropdown.Item
-                      disabled={disabled}
-                      onClick={() => openEditModalOpen()}
-                    >
-                      <MdEdit /> {t('chooseEditImage.editImage')}
-                    </Dropdown.Item>
-                  )}
-                  {removeImage && (
-                    <Dropdown.Item
-                      disabled={disabled}
-                      onClick={() => removeImage()}
-                    >
-                      <MdClose /> {t('chooseEditImage.removeImage')}
-                    </Dropdown.Item>
-                  )}
-                </Dropdown>
-              </DropdownWrapper>
-            )}
-          </ImageWrapper>
-        )}
-      </PlaceholderInput>
+                </ImageWrapper>
+              )}
+            </PlaceholderInput>
+          </CardContent>
+        </CardContent>
+      </CardContent>
     </Panel>
   );
 }

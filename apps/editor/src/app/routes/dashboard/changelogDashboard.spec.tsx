@@ -1,7 +1,7 @@
-import type { Mock } from 'vitest';
 import { useQuery } from '@apollo/client/react';
 import { render, screen } from '@testing-library/react';
 import type { ChangelogEntryFragment } from '@wepublish/editor/api';
+import type { Mock } from 'vitest';
 
 import {
   ChangelogActionRequired,
@@ -73,7 +73,7 @@ describe('ChangelogDashboard', () => {
       <ChangelogDashboard onVisibilityChange={onVisibilityChange} />
     );
 
-    expect(container.querySelector('.rs-loader')).toBeTruthy();
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
     expect(onVisibilityChange).toHaveBeenLastCalledWith(false);
   });
 

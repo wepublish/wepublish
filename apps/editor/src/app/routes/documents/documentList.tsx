@@ -1,6 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+} from '@mui/material';
+import {
   DeleteDocumentDocument,
   DocumentListDocument,
   DocumentListQuery,
@@ -9,10 +17,10 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
   DocumentEditPanel,
   DocumentUploadAndEditPanel,
+  DRAWER_WIDTHS,
+  enqueueSnackbar,
   IconButton,
   IconButtonTooltip,
   InfoTooltip,
@@ -21,6 +29,7 @@ import {
   ListViewFilterArea,
   ListViewHeader,
   PaddedCell,
+  Pagination,
   PermissionControl,
   Table,
   TableWrapper,
@@ -38,18 +47,7 @@ import {
   MdSearch,
 } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import {
-  Button,
-  Drawer,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Notification,
-  Pagination,
-  Table as RTable,
-  toaster,
-} from 'rsuite';
+import { Input, InputGroup, Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -161,24 +159,24 @@ function DocumentList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_DOCUMENT']}>
           <ListViewActions>
             {isOverLimit ?
-              <RIconButton
-                appearance="primary"
+              <Button
+                variant="contained"
+                startIcon={<MdOutlineUploadFile />}
                 disabled
-                icon={<MdOutlineUploadFile />}
               >
                 {t('documents.overview.storageFull')}
-              </RIconButton>
+              </Button>
             : <Link
                 to="/documents/upload"
                 state={{ modalLocation: location }}
               >
-                <RIconButton
-                  appearance="primary"
+                <Button
+                  variant="contained"
+                  startIcon={<MdOutlineUploadFile />}
                   disabled={isLoading}
-                  icon={<MdOutlineUploadFile />}
                 >
                   {t('documents.overview.uploadDocument')}
-                </RIconButton>
+                </Button>
               </Link>
             }
           </ListViewActions>
@@ -321,21 +319,18 @@ function DocumentList() {
                   <IconButtonTooltip caption={t('documents.overview.copyLink')}>
                     <IconButton
                       aria-label={t('documents.overview.copyLink')}
-                      icon={<MdContentCopy />}
-                      circle
-                      size="sm"
+                      size="small"
                       onClick={() => {
                         navigator.clipboard.writeText(rowData.url as string);
-                        toaster.push(
-                          <Notification
-                            type="success"
-                            header={t('documents.panels.linkCopied')}
-                            duration={2000}
-                          />,
-                          { placement: 'topEnd' }
-                        );
+                        enqueueSnackbar('', {
+                          variant: 'success',
+                          title: t('documents.panels.linkCopied'),
+                          autoHideDuration: 2000,
+                        });
                       }}
-                    />
+                    >
+                      <MdContentCopy />
+                    </IconButton>
                   </IconButtonTooltip>
                   <IconButtonTooltip caption={t('documents.overview.openLink')}>
                     <a
@@ -345,10 +340,10 @@ function DocumentList() {
                     >
                       <IconButton
                         aria-label={t('documents.overview.openLink')}
-                        icon={<MdOpenInNew />}
-                        circle
-                        size="sm"
-                      />
+                        size="small"
+                      >
+                        <MdOpenInNew />
+                      </IconButton>
                     </a>
                   </IconButtonTooltip>
                   <PermissionControl
@@ -358,10 +353,10 @@ function DocumentList() {
                       <Link to={`/documents/edit/${rowData.id}`}>
                         <IconButton
                           aria-label={t('documents.overview.edit')}
-                          icon={<MdEdit />}
-                          circle
-                          size="sm"
-                        />
+                          size="small"
+                        >
+                          <MdEdit />
+                        </IconButton>
                       </Link>
                     </IconButtonTooltip>
                   </PermissionControl>
@@ -371,17 +366,16 @@ function DocumentList() {
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         aria-label={t('delete')}
-                        icon={<MdDelete />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
+                        size="small"
+                        color="error"
                         onClick={event => {
                           event.preventDefault();
                           setCurrentDocument(rowData as FullDocumentFragment);
                           setConfirmationDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdDelete />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                 </>
@@ -391,29 +385,32 @@ function DocumentList() {
         </Table>
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.documents.totalCount ?? 0}
-          activePage={activePage}
-          onChangePage={page => setActivePage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setActivePage(1);
+          state={{
+            page: activePage,
+            limit,
+            setPage: setActivePage,
+            setLimit: limit => {
+              setLimit(limit);
+              setActivePage(1);
+            },
           }}
+          totalCount={data?.documents.totalCount ?? 0}
         />
       </TableWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isUploadModalOpen}
-        size="sm"
         onClose={() => {
           setUploadModalOpen(false);
           navigate('/documents');
@@ -432,8 +429,18 @@ function DocumentList() {
         />
       </Drawer>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => {
           setEditModalOpen(false);
           navigate('/documents');
@@ -447,23 +454,24 @@ function DocumentList() {
           }}
         />
       </Drawer>
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Title>{t('documents.panels.deleteDocument')}</Modal.Title>
+        <DialogTitle>{t('documents.panels.deleteDocument')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <p>
             {`${currentDocument?.filename || t('documents.panels.untitled')}${currentDocument?.extension}` ||
               '-'}
           </p>
           <p>{currentDocument?.title || t('documents.panels.untitled')}</p>
           <p>{currentDocument?.description || '-'}</p>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="outlined"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentDocument) {
@@ -498,18 +506,18 @@ function DocumentList() {
               setConfirmationDialogOpen(false);
               refetchStorage();
             }}
-            color="red"
+            color="error"
           >
             {t('documents.panels.confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('documents.panels.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

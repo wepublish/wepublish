@@ -15,12 +15,15 @@ import {
   WebsiteRemoteFontInput,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
-import { humanizeError, IconButtonTooltip } from '@wepublish/ui/editor';
+import {
+  enqueueSnackbar,
+  humanizeError,
+  IconButtonTooltip,
+} from '@wepublish/ui/editor';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdAdd, MdArrowBack, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 import { FontPicker } from './theme/font-picker';
@@ -59,28 +62,16 @@ export const WebsiteFonts = () => {
     UpdateWebsiteSettingsDocument,
     {
       onCompleted: () => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-          >
-            {t('websiteSettings.saveSuccess')}
-          </Message>,
-          { duration: 3000 }
-        );
+        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
       onError: error => {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-          >
-            {humanizeError(error)}
-          </Message>,
-          { duration: 3000 }
-        );
+        enqueueSnackbar(humanizeError(error), {
+          variant: 'error',
+          autoHideDuration: 3000,
+        });
       },
     }
   );

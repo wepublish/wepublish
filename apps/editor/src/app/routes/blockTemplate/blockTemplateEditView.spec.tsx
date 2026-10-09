@@ -1,13 +1,14 @@
 import '@testing-library/jest-dom/vitest';
 
 import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
-
 import { BlockStylesDocument } from '@wepublish/editor/api';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { BlockTemplateEditView } from './blockTemplateEditView';
 
+const theme = createTheme();
 const blockTemplateQueryMock = vi.fn();
 const blockTemplateListQueryMock = vi.fn();
 const updateBlockTemplate = vi.fn();
@@ -100,16 +101,20 @@ const mockQuery = (template = blockTemplate()) => {
 };
 
 const view = () => (
-  <MockedProvider mocks={blockStylesMock}>
-    <MemoryRouter initialEntries={['/block-content/templates/edit/template-1']}>
-      <Routes>
-        <Route
-          path="/block-content/templates/edit/:id"
-          element={<BlockTemplateEditView />}
-        />
-      </Routes>
-    </MemoryRouter>
-  </MockedProvider>
+  <ThemeProvider theme={theme}>
+    <MockedProvider mocks={blockStylesMock}>
+      <MemoryRouter
+        initialEntries={['/block-content/templates/edit/template-1']}
+      >
+        <Routes>
+          <Route
+            path="/block-content/templates/edit/:id"
+            element={<BlockTemplateEditView />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </MockedProvider>
+  </ThemeProvider>
 );
 
 const renderView = () => render(view());

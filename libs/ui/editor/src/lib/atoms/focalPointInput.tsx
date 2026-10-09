@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
+import { Card as MuiCard, CardContent } from '@mui/material';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { MdCropSquare } from 'react-icons/md';
-import { Panel as RPanel } from 'rsuite';
 
 import { Draggable, DraggableContainer, Point } from './draggable';
 
@@ -30,7 +30,7 @@ const Image = styled.img`
   max-height: 300px;
 `;
 
-const Panel = styled(RPanel)`
+const Panel = styled(MuiCard)`
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -114,7 +114,13 @@ export function FocalPointInput({
         {layouted && (
           <PanelWrapper>
             <Panel>
-              <Image src={imageURL} />
+              <CardContent>
+                <CardContent>
+                  <CardContent>
+                    <Image src={imageURL} />
+                  </CardContent>
+                </CardContent>
+              </CardContent>
             </Panel>
             <DraggableContainerWrapper>
               <DraggableContainer>

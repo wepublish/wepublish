@@ -1,12 +1,23 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Alert,
+  Button,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   ChangelogEntriesDocument,
   ChangelogEntryFragment,
   ConfirmChangelogEntryDocument,
 } from '@wepublish/editor/api';
 import {
   ConfirmActionModal,
+  enqueueSnackbar,
   humanizeError,
   NotificationItem,
   NotificationSeverity,
@@ -15,7 +26,6 @@ import {
 import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
-import { Button, Loader, Message, Modal, Tag, toaster } from 'rsuite';
 
 const MarkdownContainer = styled.div`
   img {
@@ -114,18 +124,16 @@ function ChangelogEntryTag({ entry }: { entry: ChangelogEntryFragment }) {
   }
 
   return entry.confirmedAt ?
-      <Tag
-        color="green"
-        size="sm"
-      >
-        {t('changelog.done')}
-      </Tag>
-    : <Tag
-        color="orange"
-        size="sm"
-      >
-        {t('changelog.actionRequired')}
-      </Tag>;
+      <Chip
+        color="success"
+        size="small"
+        label={t('changelog.done')}
+      />
+    : <Chip
+        color="warning"
+        size="small"
+        label={t('changelog.actionRequired')}
+      />;
 }
 
 interface ChangelogEntryModalProps {
@@ -143,16 +151,15 @@ function ChangelogEntryModal({
   const mayConfirm = useHasPermission(CONFIRM_PERMISSION);
 
   return (
-    <Modal
+    <Dialog
+      fullWidth
       open
       onClose={onClose}
-      size="md"
+      maxWidth="md"
     >
-      <Modal.Header>
-        <Modal.Title>{entry.title}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{entry.title}</DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         <Lead>{entry.lead}</Lead>
 
         {entry.description && (
@@ -166,15 +173,15 @@ function ChangelogEntryModal({
               date: new Date(entry.confirmedAt),
             })}`}
         </EntryMeta>
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         {mayConfirm &&
           entry.actionRequired &&
           !entry.confirmedAt &&
           onMarkAsDone && (
             <Button
-              appearance="default"
+              variant="outlined"
               onClick={onMarkAsDone}
             >
               {t('notifications.markAsDone')}
@@ -182,13 +189,13 @@ function ChangelogEntryModal({
           )}
 
         <Button
-          appearance="primary"
+          variant="contained"
           onClick={onClose}
         >
           {t('close')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 }
 
@@ -204,27 +211,13 @@ function ConfirmChangelogModal({ entry, onClose }: ConfirmChangelogModalProps) {
     {
       refetchQueries: ['ChangelogEntries'],
       onCompleted() {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-          >
-            {t('notifications.confirmSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('notifications.confirmSuccess'), {
+          variant: 'success',
+        });
         onClose();
       },
       onError(error) {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-          >
-            {humanizeError(error)}
-          </Message>
-        );
+        enqueueSnackbar(humanizeError(error), { variant: 'error' });
       },
     }
   );
@@ -322,8 +315,8 @@ export function useChangelogActionNotifications({
           <>
             {mayConfirm && (
               <Button
-                size="sm"
-                appearance={entry.description ? 'default' : 'primary'}
+                variant="outlined"
+                size="small"
                 onClick={() => setConfirmEntry(entry)}
               >
                 {t('notifications.markAsDone')}
@@ -332,8 +325,8 @@ export function useChangelogActionNotifications({
 
             {entry.description && (
               <Button
-                size="sm"
-                appearance="primary"
+                variant="contained"
+                size="small"
                 onClick={() => setDetailsEntry(entry)}
               >
                 {t('changelog.details')}
@@ -458,7 +451,7 @@ export function useChangelogNewsNotifications({
     paginated && data?.changelogEntries.pageInfo.hasNextPage ?
       <LoadMoreWrapper>
         <Button
-          appearance="subtle"
+          variant="text"
           loading={loading}
           onClick={() => setLimit(limit + take)}
         >
@@ -484,8 +477,8 @@ export function useChangelogNewsNotifications({
         actions={
           onMarkRead && (!entry.actionRequired || !!entry.confirmedAt) ?
             <Button
-              size="sm"
-              appearance="default"
+              variant="outlined"
+              size="small"
               onClick={() => onMarkRead(entry.id)}
             >
               {t('notifications.markAsRead')}
@@ -511,13 +504,13 @@ export function ChangelogDashboard(props: ChangelogDashboardProps) {
   if (loading && !totalFetched) {
     return (
       <LoaderWrapper>
-        <Loader />
+        <CircularProgress />
       </LoaderWrapper>
     );
   }
 
   if (error) {
-    return <Message type="error">{humanizeError(error)}</Message>;
+    return <Alert severity="error">{humanizeError(error)}</Alert>;
   }
 
   if (!items.length) {

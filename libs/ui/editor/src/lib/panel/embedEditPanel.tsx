@@ -1,10 +1,17 @@
 import styled from '@emotion/styled';
+import { Alert, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Drawer, Input as RInput, Message } from 'rsuite';
+import { Input as RInput } from 'rsuite';
 
 import { EmbedPreview } from '../blocks/embedBlock';
 import { EmbedBlockValue, EmbedType } from '../blocks/types';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
 import { flattenDOMTokenList } from '../utility';
 
 const Metadata = styled.div`
@@ -138,27 +145,27 @@ export function EmbedEditPanel({ value, onClose, onConfirm }: EmbedEditPanel) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('blocks.embeds.panels.editEmbed')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('blocks.embeds.panels.editEmbed')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance="primary"
+            variant="contained"
             disabled={isEmpty}
             onClick={() => onConfirm(embed)}
           >
             {t('blocks.embeds.panels.confirm')}
           </Button>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('blocks.embeds.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         <Input
           as="textarea"
           rows={3}
@@ -166,7 +173,7 @@ export function EmbedEditPanel({ value, onClose, onConfirm }: EmbedEditPanel) {
           value={input}
           onChange={input => setInput(input)}
         />
-        {errorMessage && <Message type="error">{errorMessage}</Message>}
+        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         <Metadata>
           <p>{t('blocks.embeds.panels.socialMediaList')}</p>
           <code>{t('blocks.embeds.panels.fbPosts')}</code>
@@ -177,7 +184,7 @@ export function EmbedEditPanel({ value, onClose, onConfirm }: EmbedEditPanel) {
           <p>{t('blocks.embeds.panels.GDPRInfo')}</p>
         </Metadata>
         <EmbedPreview value={embed} />
-      </Drawer.Body>
+      </DrawerBody>
     </>
   );
 }

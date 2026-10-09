@@ -41,6 +41,7 @@ describe('EditorHeaderButton', () => {
   it('stays named for screen readers when its label collapses', () => {
     render(
       <EditorHeaderButton
+        variant="outlined"
         icon={<MdSave />}
         label="Save"
       />

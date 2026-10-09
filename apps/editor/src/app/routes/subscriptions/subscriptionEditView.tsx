@@ -1,6 +1,20 @@
 import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Alert } from '@mui/material';
+import {
+  Alert,
+  Button as RButton,
+  Card,
+  CardContent,
+  CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  Grid as MuiGrid,
+  IconButton,
+  Switch,
+} from '@mui/material';
 import {
   CancelSubscriptionDocument,
   CreateSubscriptionDocument,
@@ -17,31 +31,32 @@ import {
   PaymentPeriodicity,
   PropertyInput,
   RenewSubscriptionDocument,
-  SubscriptionDeactivationReason,
   SubscriptionCancellationMailDocument,
   SubscriptionCreationMailDocument,
+  SubscriptionDeactivationReason,
   SubscriptionDocument,
   UpdateSubscriptionDocument,
   UserDocument,
 } from '@wepublish/editor/api';
 import {
   ALL_PAYMENT_PERIODICITIES,
-  getMonthlyEquivalentRange,
-  PAYMENT_PERIODICITY_MONTHS,
   createCheckedPermissionComponent,
   CurrencyInput,
   DescriptionList,
   DescriptionListItem,
+  enqueueSnackbar,
+  getMonthlyEquivalentRange,
   IconButtonTooltip,
   InfoTooltip,
   InvoiceListPanel,
   ListViewActions,
   ListViewContainer as ListViewContainerDefault,
   ListViewHeader,
+  PAYMENT_PERIODICITY_MONTHS,
   PermissionControl,
+  skipMailFor,
   TableWrapper,
   toggleRequiredLabel,
-  skipMailFor,
   useActionMailQuestion,
   useAuthorisation,
   UserSearch,
@@ -57,22 +72,7 @@ import {
   MdUnpublished,
 } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import {
-  Button as RButton,
-  Col,
-  DatePicker,
-  Form as RForm,
-  Grid as RGrid,
-  IconButton,
-  Message,
-  Modal,
-  Panel as RPanel,
-  Row,
-  Schema,
-  SelectPicker,
-  toaster,
-  Toggle,
-} from 'rsuite';
+import { DatePicker, Form as RForm, Schema, SelectPicker } from 'rsuite';
 
 const { Group, Label, Control, Text } = RForm;
 
@@ -84,11 +84,11 @@ const Button = styled(RButton)`
   margin-top: 8px;
 `;
 
-const Grid = styled(RGrid)`
+const Grid = styled(MuiGrid)`
   padding-right: 0px;
 `;
 
-const RowPaddingTop = styled(Row)`
+const RowPaddingTop = styled(MuiGrid)`
   padding-top: 12px;
 `;
 
@@ -96,7 +96,7 @@ const ListViewContainer = styled(ListViewContainerDefault)`
   grid-template-columns: 1fr 1fr;
 `;
 
-const UserFormGrid = styled(RGrid)`
+const UserFormGrid = styled(MuiGrid)`
   width: 100%;
   padding-left: 0px;
   height: auto;
@@ -233,16 +233,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
     setExtendable(memberPlan.extendable);
 
-    toaster.push(
-      <Message
-        type="info"
-        showIcon
-        closable
-      >
-        {t('subscriptionEditView.extendableWasChanged')}
-      </Message>,
-      { duration: 6000 }
-    );
+    enqueueSnackbar(t('subscriptionEditView.extendableWasChanged'), {
+      autoHideDuration: 6000,
+    });
   }, [memberPlan?.id]);
 
   function setSubscriptionProperties(
@@ -340,16 +333,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
       loadErrorInvoices?.message ??
       cancelError?.message ??
       renewalError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {error}
-        </Message>
-      );
+    if (error) enqueueSnackbar(error, { variant: 'error' });
   }, [
     loadError,
     loadMemberPlanError,
@@ -439,15 +423,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     checkAutoRenew: boolean = autoRenew
   ): boolean {
     if (!checkExtendable && checkAutoRenew) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {t('subscriptionEditView.nonExtendableNotCompatibleWithAutoRenew')}
-        </Message>,
-        { duration: 6000 }
+      enqueueSnackbar(
+        t('subscriptionEditView.nonExtendableNotCompatibleWithAutoRenew'),
+        { variant: 'error', autoHideDuration: 6000 }
       );
       return false;
     }
@@ -527,14 +505,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
         }
       }
 
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-        >
-          {id ? `${t('toast.updatedSuccess')}` : `${t('toast.createdSuccess')}`}
-        </Message>
+      enqueueSnackbar(
+        id ? `${t('toast.updatedSuccess')}` : `${t('toast.createdSuccess')}`,
+        { variant: 'success' }
       );
 
       // go back to subscription list or user edit, depending on where we came from
@@ -542,15 +515,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
         navigate(goBackLink);
       }
     } catch (e) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {t('toast.updateError', { error: (e as Error)?.message })}
-        </Message>,
-        { duration: 6000 }
+      enqueueSnackbar(
+        t('toast.updateError', { error: (e as Error)?.message }),
+        { variant: 'error', autoHideDuration: 6000 }
       );
     }
   }
@@ -684,25 +651,25 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               qualifyingPermissions={['CAN_CREATE_SUBSCRIPTION']}
             >
               {showInvoiceHistory() && (
-                <IconButtonMarginRight
-                  appearance="ghost"
+                <ButtonMarginRight
+                  variant="outlined"
                   disabled={isDisabled || isDeactivated}
                   onClick={() => setDeactivationPanelOpen(true)}
+                  startIcon={<MdUnpublished />}
                 >
-                  <MdUnpublished />
                   {t('userSubscriptionEdit.deactivation.title.activated')}
-                </IconButtonMarginRight>
+                </ButtonMarginRight>
               )}
               <ButtonMarginRight
-                appearance="primary"
+                variant="contained"
                 disabled={isDisabled || isDeactivated}
                 type="submit"
               >
                 {id ? t('save') : t('create')}
               </ButtonMarginRight>
               <Button
+                variant="contained"
                 disabled={isDisabled || isDeactivated}
-                appearance="primary"
                 loading={isDisabled}
                 type="submit"
                 data-testid="saveAndCloseButton"
@@ -715,13 +682,18 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
         </ListViewContainer>
 
         <UserFormGrid>
-          <Row gutter={10}>
-            <Col xs={12}>
-              <RGrid fluid>
+          <Grid
+            container
+            spacing={2}
+          >
+            <Grid size={{ xs: 6 }}>
+              <Grid
+                container
+                spacing={2}
+              >
                 {deactivation && (
-                  <Message
-                    showIcon
-                    type="error"
+                  <Alert
+                    severity="error"
                     style={{ marginBottom: '12px' }}
                   >
                     {t(
@@ -737,369 +709,404 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         ),
                       }
                     )}
-                  </Message>
+                  </Alert>
                 )}
 
-                <RPanel
-                  bordered
-                  header={
-                    id ?
-                      t('userSubscriptionEdit.editTitle')
-                    : t('userSubscriptionEdit.createTitle')
-                  }
-                >
-                  <Group controlId="memberPlan">
-                    <Grid fluid>
-                      <Row gutter={24}>
-                        {/* user */}
-                        <Col xs={12}>
-                          <Label>
-                            {user?.id ?
-                              <Link
-                                to={`/users/edit/${user.id}`}
-                                target="_blank"
-                              >
-                                {toggleRequiredLabel(
-                                  t('userSubscriptionEdit.selectUser')
-                                )}{' '}
-                                <MdOpenInNew style={{ marginLeft: '4px' }} />
-                              </Link>
-                            : <p>
-                                {toggleRequiredLabel(
-                                  t('userSubscriptionEdit.selectUser')
-                                )}
-                              </p>
-                            }
-                          </Label>
+                <Card variant="outlined">
+                  <CardHeader
+                    title={
+                      id ?
+                        t('userSubscriptionEdit.editTitle')
+                      : t('userSubscriptionEdit.createTitle')
+                    }
+                  />
 
-                          <UserSearch
-                            name="user"
-                            user={user}
-                            onUpdateUser={user => {
-                              setUser(user);
-                            }}
-                          />
-                        </Col>
-                        {/* member plan */}
-                        <Col xs={12}>
-                          <Label>
-                            {memberPlan?.id ?
-                              <Link
-                                to={`/memberplans/edit/${memberPlan?.id}`}
-                                target="_blank"
-                              >
-                                {toggleRequiredLabel(
-                                  t('userSubscriptionEdit.selectMemberPlan')
-                                )}
-                                <MdOpenInNew style={{ marginLeft: '4px' }} />
-                              </Link>
-                            : <p>
-                                {toggleRequiredLabel(
-                                  t('userSubscriptionEdit.selectMemberPlan')
-                                )}
-                              </p>
-                            }
-                          </Label>
-                          <Control
-                            block
-                            name="memberPlan"
-                            disabled={isDisabled || isDeactivated}
-                            data={memberPlans.map(mp => ({
-                              value: mp.id,
-                              label: mp.name,
-                            }))}
-                            value={memberPlan?.id}
-                            onChange={(value: any) =>
-                              setMemberPlan(() => {
-                                const foundMemberPlan = memberPlans.find(
-                                  mp => mp.id === value
-                                );
-                                if (!foundMemberPlan) return;
-                                const planPeriodMin =
-                                  foundMemberPlan.periodicityPricing?.find(
-                                    price =>
-                                      price.periodicity === paymentPeriodicity
-                                  )?.amountMin;
-                                setMonthlyAmount(
-                                  planPeriodMin != null ?
-                                    planPeriodMin / periodicityMonths
-                                  : getMonthlyEquivalentRange(
-                                      foundMemberPlan.periodicityPricing
-                                    ).amountPerMonthMin
-                                );
-                                setCurrency(foundMemberPlan.currency);
-                                return foundMemberPlan;
-                              })
-                            }
-                            accepter={SelectPicker}
-                          />
-
-                          {memberPlan && (
-                            <Text>
-                              <DescriptionList>
-                                <DescriptionListItem
-                                  label={t(
-                                    'userSubscriptionEdit.memberPlanMonthlyAmount',
-                                    {
-                                      currency: memberPlan?.currency,
-                                    }
-                                  )}
+                  <CardContent>
+                    <Group controlId="memberPlan">
+                      <Grid
+                        container
+                        spacing={2}
+                      >
+                        <Grid
+                          container
+                          spacing={2}
+                        >
+                          {/* user */}
+                          <Grid size={{ xs: 6 }}>
+                            <Label>
+                              {user?.id ?
+                                <Link
+                                  to={`/users/edit/${user.id}`}
+                                  target="_blank"
                                 >
-                                  {(
-                                    getMonthlyEquivalentRange(
-                                      memberPlan.periodicityPricing
-                                    ).amountPerMonthMin / 100
-                                  ).toFixed(2)}
-                                </DescriptionListItem>
-                              </DescriptionList>
-                            </Text>
-                          )}
-                        </Col>
-                      </Row>
-                      <RowPaddingTop>
-                        {/* payment periodicity */}
-                        <Col xs={12}>
-                          <Label>
-                            {toggleRequiredLabel(
-                              t('memberPlanList.paymentPeriodicities')
-                            )}
-                          </Label>
+                                  {toggleRequiredLabel(
+                                    t('userSubscriptionEdit.selectUser')
+                                  )}{' '}
+                                  <MdOpenInNew style={{ marginLeft: '4px' }} />
+                                </Link>
+                              : <p>
+                                  {toggleRequiredLabel(
+                                    t('userSubscriptionEdit.selectUser')
+                                  )}
+                                </p>
+                              }
+                            </Label>
 
-                          <Control
-                            virtualized
-                            value={paymentPeriodicity}
-                            name="paymentPeriodicity"
-                            data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
-                              value: pp,
-                              label: t(
-                                `memberPlanList.paymentPeriodicity.${pp}`
-                              ),
-                            }))}
-                            disabled={
-                              isDisabled ||
-                              hasNoMemberPlanSelected ||
-                              isDeactivated
-                            }
-                            onChange={(value: any) =>
-                              setPaymentPeriodicity(value)
-                            }
-                            block
-                            accepter={SelectPicker}
-                          />
-                        </Col>
-                        {/* amount per period */}
-                        <Col xs={12}>
-                          <Label>
-                            {toggleRequiredLabel(
-                              t('userSubscriptionEdit.periodAmount')
-                            )}
-                          </Label>
-
-                          <CurrencyInput
-                            name="monthlyAmount"
-                            currency={currency}
-                            centAmount={periodAmount}
-                            onChange={centAmount => {
-                              setMonthlyAmount(
-                                Math.round(centAmount || 0) / periodicityMonths
-                              );
-                            }}
-                            disabled={
-                              isDisabled ||
-                              hasNoMemberPlanSelected ||
-                              isDeactivated
-                            }
-                          />
-                          {paymentPeriodicity !==
-                            PaymentPeriodicity.Monthly && (
-                            <Text>
-                              {t(
-                                'userSubscriptionEdit.monthlyAmountEquivalent',
-                                {
-                                  currency,
-                                  amount: (monthlyAmount / 100).toFixed(2),
-                                }
-                              )}
-                            </Text>
-                          )}
-                        </Col>
-                      </RowPaddingTop>
-                      <RowPaddingTop>
-                        {/* payment method */}
-                        <Col xs={12}>
-                          <Label>
-                            {toggleRequiredLabel(
-                              t('userSubscriptionEdit.paymentMethod')
-                            )}
-                          </Label>
-
-                          <Control
-                            name="paymentMethod"
-                            block
-                            virtualized
-                            disabled={
-                              isDisabled ||
-                              hasNoMemberPlanSelected ||
-                              isDeactivated
-                            }
-                            data={paymentMethods.map(pm => ({
-                              value: pm.id,
-                              label: pm.name,
-                            }))}
-                            value={paymentMethod?.id}
-                            onChange={(value: any) =>
-                              setPaymentMethod(
-                                paymentMethods.find(pm => pm.id === value)
-                              )
-                            }
-                            accepter={SelectPicker}
-                            placement="auto"
-                          />
-                        </Col>
-                      </RowPaddingTop>
-                      <RowPaddingTop>
-                        {/* subscription start */}
-                        <Col xs={12}>
-                          <Label>{t('userSubscriptionEdit.startsAt')}</Label>
-                          <DatePicker
-                            block
-                            oneTap
-                            cleanable={false}
-                            value={startsAt}
-                            disabled={
-                              isDisabled ||
-                              hasNoMemberPlanSelected ||
-                              isDeactivated
-                            }
-                            onChange={value => setStartsAt(value!)}
-                          />
-                        </Col>
-                        {/* subscription paid until */}
-                        <Col xs={12}>
-                          <Label>
-                            {t('userSubscriptionEdit.paidUntil')}{' '}
-                            <InfoTooltip
-                              text={t('userSubscriptionEdit.paidUntilInfo')}
+                            <UserSearch
+                              name="user"
+                              user={user}
+                              onUpdateUser={user => {
+                                setUser(user);
+                              }}
                             />
-                          </Label>
-                          <DatePicker
-                            block
-                            value={paidUntil ?? undefined}
-                            disabled
+                          </Grid>
+                          {/* member plan */}
+                          <Grid size={{ xs: 6 }}>
+                            <Label>
+                              {memberPlan?.id ?
+                                <Link
+                                  to={`/memberplans/edit/${memberPlan?.id}`}
+                                  target="_blank"
+                                >
+                                  {toggleRequiredLabel(
+                                    t('userSubscriptionEdit.selectMemberPlan')
+                                  )}
+                                  <MdOpenInNew style={{ marginLeft: '4px' }} />
+                                </Link>
+                              : <p>
+                                  {toggleRequiredLabel(
+                                    t('userSubscriptionEdit.selectMemberPlan')
+                                  )}
+                                </p>
+                              }
+                            </Label>
+                            <Control
+                              block
+                              name="memberPlan"
+                              disabled={isDisabled || isDeactivated}
+                              data={memberPlans.map(mp => ({
+                                value: mp.id,
+                                label: mp.name,
+                              }))}
+                              value={memberPlan?.id}
+                              onChange={(value: any) =>
+                                setMemberPlan(() => {
+                                  const foundMemberPlan = memberPlans.find(
+                                    mp => mp.id === value
+                                  );
+                                  if (!foundMemberPlan) return;
+                                  const planPeriodMin =
+                                    foundMemberPlan.periodicityPricing?.find(
+                                      price =>
+                                        price.periodicity === paymentPeriodicity
+                                    )?.amountMin;
+                                  setMonthlyAmount(
+                                    planPeriodMin != null ?
+                                      planPeriodMin / periodicityMonths
+                                    : getMonthlyEquivalentRange(
+                                        foundMemberPlan.periodicityPricing
+                                      ).amountPerMonthMin
+                                  );
+                                  setCurrency(foundMemberPlan.currency);
+                                  return foundMemberPlan;
+                                })
+                              }
+                              accepter={SelectPicker}
+                            />
+
+                            {memberPlan && (
+                              <Text>
+                                <DescriptionList>
+                                  <DescriptionListItem
+                                    label={t(
+                                      'userSubscriptionEdit.memberPlanMonthlyAmount',
+                                      {
+                                        currency: memberPlan?.currency,
+                                      }
+                                    )}
+                                  >
+                                    {(
+                                      getMonthlyEquivalentRange(
+                                        memberPlan.periodicityPricing
+                                      ).amountPerMonthMin / 100
+                                    ).toFixed(2)}
+                                  </DescriptionListItem>
+                                </DescriptionList>
+                              </Text>
+                            )}
+                          </Grid>
+                        </Grid>
+                        <RowPaddingTop>
+                          {/* payment periodicity */}
+                          <Grid size={{ xs: 6 }}>
+                            <Label>
+                              {toggleRequiredLabel(
+                                t('memberPlanList.paymentPeriodicities')
+                              )}
+                            </Label>
+
+                            <Control
+                              virtualized
+                              value={paymentPeriodicity}
+                              name="paymentPeriodicity"
+                              data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
+                                value: pp,
+                                label: t(
+                                  `memberPlanList.paymentPeriodicity.${pp}`
+                                ),
+                              }))}
+                              disabled={
+                                isDisabled ||
+                                hasNoMemberPlanSelected ||
+                                isDeactivated
+                              }
+                              onChange={(value: any) =>
+                                setPaymentPeriodicity(value)
+                              }
+                              block
+                              accepter={SelectPicker}
+                            />
+                          </Grid>
+                          {/* amount per period */}
+                          <Grid size={{ xs: 6 }}>
+                            <Label>
+                              {toggleRequiredLabel(
+                                t('userSubscriptionEdit.periodAmount')
+                              )}
+                            </Label>
+
+                            <CurrencyInput
+                              name="monthlyAmount"
+                              currency={currency}
+                              centAmount={periodAmount}
+                              onChange={centAmount => {
+                                setMonthlyAmount(
+                                  Math.round(centAmount || 0) /
+                                    periodicityMonths
+                                );
+                              }}
+                              disabled={
+                                isDisabled ||
+                                hasNoMemberPlanSelected ||
+                                isDeactivated
+                              }
+                            />
+                            {paymentPeriodicity !==
+                              PaymentPeriodicity.Monthly && (
+                              <Text>
+                                {t(
+                                  'userSubscriptionEdit.monthlyAmountEquivalent',
+                                  {
+                                    currency,
+                                    amount: (monthlyAmount / 100).toFixed(2),
+                                  }
+                                )}
+                              </Text>
+                            )}
+                          </Grid>
+                        </RowPaddingTop>
+                        <RowPaddingTop>
+                          {/* payment method */}
+                          <Grid size={{ xs: 6 }}>
+                            <Label>
+                              {toggleRequiredLabel(
+                                t('userSubscriptionEdit.paymentMethod')
+                              )}
+                            </Label>
+
+                            <Control
+                              name="paymentMethod"
+                              block
+                              virtualized
+                              disabled={
+                                isDisabled ||
+                                hasNoMemberPlanSelected ||
+                                isDeactivated
+                              }
+                              data={paymentMethods.map(pm => ({
+                                value: pm.id,
+                                label: pm.name,
+                              }))}
+                              value={paymentMethod?.id}
+                              onChange={(value: any) =>
+                                setPaymentMethod(
+                                  paymentMethods.find(pm => pm.id === value)
+                                )
+                              }
+                              accepter={SelectPicker}
+                              placement="auto"
+                            />
+                          </Grid>
+                        </RowPaddingTop>
+                        <RowPaddingTop>
+                          {/* subscription start */}
+                          <Grid size={{ xs: 6 }}>
+                            <Label>{t('userSubscriptionEdit.startsAt')}</Label>
+                            <DatePicker
+                              block
+                              oneTap
+                              cleanable={false}
+                              value={startsAt}
+                              disabled={
+                                isDisabled ||
+                                hasNoMemberPlanSelected ||
+                                isDeactivated
+                              }
+                              onChange={value => setStartsAt(value!)}
+                            />
+                          </Grid>
+                          {/* subscription paid until */}
+                          <Grid size={{ xs: 6 }}>
+                            <Label>
+                              {t('userSubscriptionEdit.paidUntil')}{' '}
+                              <InfoTooltip
+                                text={t('userSubscriptionEdit.paidUntilInfo')}
+                              />
+                            </Label>
+                            <DatePicker
+                              block
+                              value={paidUntil ?? undefined}
+                              disabled
+                            />
+                          </Grid>
+                        </RowPaddingTop>
+                      </Grid>
+                    </Group>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+
+            <Grid size={{ xs: 6 }}>
+              <Grid
+                container
+                spacing={2}
+              >
+                <Card variant="outlined">
+                  <CardHeader
+                    title={t('subscriptionEditView.additionalSettingsTitle')}
+                  />
+
+                  <CardContent>
+                    <Grid
+                      container
+                      spacing={2}
+                    >
+                      <Grid
+                        container
+                        spacing={2}
+                      >
+                        <Grid size={{ xs: 12 }}>
+                          {/* trial member plan & trial subscription */}
+                          {isTrialMemberPlan && isTrialSubscription && (
+                            <Alert
+                              icon={<MdCheck />}
+                              severity="success"
+                            >
+                              {t(
+                                'subscriptionEditView.trialSubscriptionConfigured'
+                              )}
+                            </Alert>
+                          )}
+                          {/* trial member plan but not a trial subscription */}
+                          {isTrialMemberPlan && !isTrialSubscription && (
+                            <Button
+                              variant="outlined"
+                              startIcon={<MdAutoFixHigh />}
+                              disabled={isTrialSubscription}
+                              onClick={() => {
+                                setAutoRenew(false);
+                                setExtendable(false);
+                              }}
+                              color="success"
+                            >
+                              {t(
+                                'subscriptionEditView.configureAsTrialSubscription'
+                              )}
+                            </Button>
+                          )}
+                          {/* not a trial member plan. Trial subscription not possible */}
+                          {!isTrialMemberPlan && !isLoading && (
+                            <Alert severity="info">
+                              {t(
+                                'subscriptionEditView.subscriptionTrialNotPossible'
+                              )}
+                            </Alert>
+                          )}
+                        </Grid>
+                      </Grid>
+                      <RowPaddingTop>
+                        {/* extendable */}
+                        <Grid size={{ xs: 6 }}>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={extendable}
+                                onChange={(_event, updatedExtendable) =>
+                                  setExtendable(() =>
+                                    checkTrialSubscription(updatedExtendable) ?
+                                      updatedExtendable
+                                    : extendable
+                                  )
+                                }
+                              />
+                            }
+                            label={t('memberplanForm.extendableToggle')}
                           />
-                        </Col>
+                          <Text>{t('memberplanForm.extendableHelpText')}</Text>
+                        </Grid>
+                      </RowPaddingTop>
+                      <RowPaddingTop>
+                        {/* auto renew */}
+                        <Grid size={{ xs: 6 }}>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={autoRenew}
+                                disabled={
+                                  isDisabled ||
+                                  hasNoMemberPlanSelected ||
+                                  isDeactivated
+                                }
+                                onChange={(_event, value) =>
+                                  setAutoRenew(() =>
+                                    checkTrialSubscription(extendable, value) ?
+                                      value
+                                    : autoRenew
+                                  )
+                                }
+                              />
+                            }
+                            label={t('userSubscriptionEdit.autoRenew')}
+                          />
+                          <Text>
+                            {t('userSubscriptionEdit.autoRenewDescription')}
+                          </Text>
+                        </Grid>
+                      </RowPaddingTop>
+                      <RowPaddingTop>
+                        <Grid size={{ xs: 12 }}>
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            loading={isDisabled}
+                            onClick={() => setExtendModal(true)}
+                          >
+                            {t('userSubscriptionEdit.renewNow')}
+                          </Button>
+                        </Grid>
                       </RowPaddingTop>
                     </Grid>
-                  </Group>
-                </RPanel>
-              </RGrid>
-            </Col>
-
-            <Col xs={12}>
-              <Grid fluid>
-                <RPanel
-                  bordered
-                  header={t('subscriptionEditView.additionalSettingsTitle')}
-                >
-                  <Grid fluid>
-                    <Row>
-                      <Col xs={24}>
-                        {/* trial member plan & trial subscription */}
-                        {isTrialMemberPlan && isTrialSubscription && (
-                          <Alert
-                            icon={<MdCheck />}
-                            severity="success"
-                          >
-                            {t(
-                              'subscriptionEditView.trialSubscriptionConfigured'
-                            )}
-                          </Alert>
-                        )}
-                        {/* trial member plan but not a trial subscription */}
-                        {isTrialMemberPlan && !isTrialSubscription && (
-                          <Button
-                            startIcon={<MdAutoFixHigh />}
-                            disabled={isTrialSubscription}
-                            onClick={() => {
-                              setAutoRenew(false);
-                              setExtendable(false);
-                            }}
-                            color={'green'}
-                          >
-                            {t(
-                              'subscriptionEditView.configureAsTrialSubscription'
-                            )}
-                          </Button>
-                        )}
-                        {/* not a trial member plan. Trial subscription not possible */}
-                        {!isTrialMemberPlan && !isLoading && (
-                          <Alert severity="info">
-                            {t(
-                              'subscriptionEditView.subscriptionTrialNotPossible'
-                            )}
-                          </Alert>
-                        )}
-                      </Col>
-                    </Row>
-                    <RowPaddingTop>
-                      {/* extendable */}
-                      <Col xs={12}>
-                        <Toggle
-                          checked={extendable}
-                          label={t('memberplanForm.extendableToggle')}
-                          onChange={updatedExtendable =>
-                            setExtendable(() =>
-                              checkTrialSubscription(updatedExtendable) ?
-                                updatedExtendable
-                              : extendable
-                            )
-                          }
-                        />
-                        <Text>{t('memberplanForm.extendableHelpText')}</Text>
-                      </Col>
-                    </RowPaddingTop>
-                    <RowPaddingTop>
-                      {/* auto renew */}
-                      <Col xs={12}>
-                        <Toggle
-                          checked={autoRenew}
-                          disabled={
-                            isDisabled ||
-                            hasNoMemberPlanSelected ||
-                            isDeactivated
-                          }
-                          label={t('userSubscriptionEdit.autoRenew')}
-                          onChange={value =>
-                            setAutoRenew(() =>
-                              checkTrialSubscription(extendable, value) ? value
-                              : autoRenew
-                            )
-                          }
-                        />
-                        <Text>
-                          {t('userSubscriptionEdit.autoRenewDescription')}
-                        </Text>
-                      </Col>
-                    </RowPaddingTop>
-                    <RowPaddingTop>
-                      <Col xs={24}>
-                        <Button
-                          appearance="ghost"
-                          color="red"
-                          loading={isDisabled}
-                          onClick={() => setExtendModal(true)}
-                        >
-                          {t('userSubscriptionEdit.renewNow')}
-                        </Button>
-                      </Col>
-                    </RowPaddingTop>
-                  </Grid>
-                </RPanel>
+                  </CardContent>
+                </Card>
               </Grid>
-            </Col>
+            </Grid>
 
-            <Col xs={24}>
-              <Grid fluid>
+            <Grid size={{ xs: 12 }}>
+              <Grid
+                container
+                spacing={2}
+              >
                 {id && (
                   <InvoiceListPanel
                     subscriptionId={id}
@@ -1109,16 +1116,15 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                   />
                 )}
               </Grid>
-            </Col>
-          </Row>
+            </Grid>
+          </Grid>
         </UserFormGrid>
 
         {id && user && (
-          <Modal
+          <Dialog
+            fullWidth
             open={isDeactivationPanelOpen}
-            size="sm"
-            backdrop={'static'}
-            keyboard={false}
+            maxWidth="sm"
             onClose={() => setDeactivationPanelOpen(false)}
           >
             <UserSubscriptionDeactivatePanel
@@ -1132,39 +1138,39 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               }}
               onClose={() => setDeactivationPanelOpen(false)}
             />
-          </Modal>
+          </Dialog>
         )}
 
         {actionMailDialog}
 
         {/* ask user to really extend the subscripion */}
-        <Modal
+        <Dialog
+          fullWidth
           open={extendModal}
-          size="sm"
-          backdrop="static"
+          maxWidth="sm"
           onClose={() => setExtendModal(false)}
         >
-          <Modal.Header>
-            <Modal.Title>
-              {t('subscriptionEditView.extendModalTitle')}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>{t('subscriptionEditView.extendModalBody')}</Modal.Body>
-          <Modal.Footer>
+          <DialogTitle>
+            {t('subscriptionEditView.extendModalTitle')}
+          </DialogTitle>
+          <DialogContent>
+            {t('subscriptionEditView.extendModalBody')}
+          </DialogContent>
+          <DialogActions>
             <Button
+              variant="contained"
               onClick={() => handleRenewal()}
-              appearance="primary"
             >
               {t('userSubscriptionEdit.renewNow')}
             </Button>
             <Button
+              variant="text"
               onClick={() => setExtendModal(false)}
-              appearance="subtle"
             >
               {t('cancel')}
             </Button>
-          </Modal.Footer>
-        </Modal>
+          </DialogActions>
+        </Dialog>
       </Form>
     </TableWrapper>
   );

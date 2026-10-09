@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client/react';
-import { useApolloClient } from '@apollo/client/react';
+import { useApolloClient, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Divider as MuiDivider } from '@mui/material';
 import {
   FullTagFragment,
   SortOrder,
@@ -13,23 +13,18 @@ import {
 } from '@wepublish/editor/api';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Divider as RDivider,
-  Message,
-  Pagination as RPagination,
-  TagPicker,
-  toaster,
-} from 'rsuite';
+import { TagPicker } from 'rsuite';
 import type { Option } from 'rsuite/esm/internals/types';
 
-import { DEFAULT_MAX_TABLE_PAGES } from '../../utility';
 import { humanizeError } from '../../humanizeError';
+import { Pagination } from '../../listView/pagination';
+import { enqueueSnackbar } from '../../snackbar';
 
-const Divider = styled(RDivider)`
+const Divider = styled(MuiDivider)`
   margin: '12px 0';
 `;
 
-const Pagination = styled(RPagination)`
+const StyledPagination = styled(Pagination)`
   margin: 0 12px 12px;
 `;
 
@@ -129,16 +124,10 @@ export function SelectTags({
    * @param error
    */
   const showErrors = (error: Error): void => {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   };
 
   /**
@@ -216,19 +205,14 @@ export function SelectTags({
 
             <Divider />
 
-            <Pagination
-              limit={take}
-              maxButtons={DEFAULT_MAX_TABLE_PAGES}
-              first
-              last
-              prev
-              next
-              ellipsis
-              boundaryLinks
-              layout={['total', '-', '|', 'pager']}
-              total={tagsData?.tags?.totalCount ?? 0}
-              activePage={page}
-              onChangePage={setPage}
+            <StyledPagination
+              state={{
+                page,
+                limit: take,
+                setPage,
+                setLimit: () => undefined /* page size was fixed here */,
+              }}
+              totalCount={tagsData?.tags?.totalCount ?? 0}
             />
           </>
         );

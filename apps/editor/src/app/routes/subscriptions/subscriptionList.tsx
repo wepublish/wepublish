@@ -1,6 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   DeleteSubscriptionDocument,
   SubscriptionFilter,
   SubscriptionListDocument,
@@ -9,10 +16,9 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
   DescriptionList,
   DescriptionListItem,
+  enqueueSnackbar,
   ExportSubscriptions,
   IconButton,
   IconButtonTooltip,
@@ -23,6 +29,7 @@ import {
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
   PaddedCell,
+  Pagination,
   PermissionControl,
   SortType,
   SubscriptionListFilter,
@@ -35,15 +42,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Pagination,
-  Table as RTable,
-  toaster,
-} from 'rsuite';
+import { Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -85,13 +84,13 @@ export const NewSubscriptionButton = ({
 
   return (
     <Link to={urlToRedirect}>
-      <RIconButton
-        appearance="primary"
+      <Button
+        variant="contained"
         disabled={isLoading || !canCreate}
+        startIcon={<MdAdd />}
       >
-        <MdAdd />
         {t('subscriptionList.overview.newSubscription')}
-      </RIconButton>
+      </Button>
     </Link>
   );
 };
@@ -281,11 +280,8 @@ function SubscriptionList() {
               {(rowData: RowDataType<TinySubscriptionFragment>) => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
-                    circle
-                    size="sm"
-                    appearance="ghost"
-                    color="red"
-                    icon={<MdDelete />}
+                    size="small"
+                    color="error"
                     aria-label={t('delete')}
                     onClick={e => {
                       e.preventDefault();
@@ -294,7 +290,9 @@ function SubscriptionList() {
                       );
                       setConfirmationDialogOpen(true);
                     }}
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
               )}
             </PaddedCell>
@@ -302,65 +300,50 @@ function SubscriptionList() {
         </Table>
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.subscriptions.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.subscriptions.totalCount ?? 0}
         />
       </TableWrapper>
 
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>
-            {t('subscriptionList.panels.deleteSubscription')}
-          </Modal.Title>
-        </Modal.Header>
+        <DialogTitle>
+          {t('subscriptionList.panels.deleteSubscription')}
+        </DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('subscriptionList.panels.name')}>
               {currentSubscription?.user?.name ||
                 t('subscriptionList.panels.unknown')}
             </DescriptionListItem>
           </DescriptionList>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="contained"
             disabled={isDeleting}
-            appearance="primary"
             onClick={async () => {
               if (!currentSubscription) return;
 
               await deleteSubscription({
                 variables: { id: currentSubscription.id },
               });
-              toaster.push(
-                <Message
-                  type="success"
-                  showIcon
-                  closable
-                  duration={2000}
-                >
-                  {t('toast.deletedSuccess')}
-                </Message>
-              );
+              enqueueSnackbar(t('toast.deletedSuccess'), {
+                variant: 'success',
+                autoHideDuration: 2000,
+              });
               setConfirmationDialogOpen(false);
               refetch();
             }}
@@ -368,13 +351,13 @@ function SubscriptionList() {
             {t('subscriptionList.panels.confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('subscriptionList.panels.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

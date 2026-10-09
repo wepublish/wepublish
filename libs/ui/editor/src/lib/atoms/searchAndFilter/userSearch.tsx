@@ -1,8 +1,10 @@
 import { useQuery } from '@apollo/client/react';
 import { FullUserFragment, UserListDocument } from '@wepublish/editor/api';
 import { useEffect, useMemo, useState } from 'react';
-import { Form, Message, SelectPicker, toaster } from 'rsuite';
+import { Form, SelectPicker } from 'rsuite';
+
 import { humanizeError } from '../../humanizeError';
+import { enqueueSnackbar } from '../../snackbar';
 
 export interface UserSearchProps {
   user?: FullUserFragment | null;
@@ -71,15 +73,7 @@ export function UserSearch({
 
   useEffect(() => {
     if (error) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {humanizeError(error)}
-        </Message>
-      );
+      enqueueSnackbar(humanizeError(error), { variant: 'error' });
     }
   }, [error]);
 
@@ -97,13 +91,13 @@ export function UserSearch({
     return (
       <Form.Group>
         <Form.Control
+          block
           key={resetFilterKey}
           placeholder={placeholder}
           name={name}
           disabled={loading || !!error}
           data={formData}
           cleanable
-          block
           accepter={SelectPicker}
           onChange={(userId: any) => setUser(userId)}
           onSearch={(searchString: any) => {
@@ -118,11 +112,11 @@ export function UserSearch({
   return (
     <Form.Group>
       <Form.Control
+        block
         placeholder={placeholder}
         disabled={loading || !!error}
         data={formData}
         cleanable
-        block
         name={name}
         onChange={(userId: any) => setUser(userId)}
         onSearch={(searchString: any) => {

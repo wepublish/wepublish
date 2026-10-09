@@ -1,5 +1,6 @@
 import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button, FormControlLabel, Switch } from '@mui/material';
 import {
   ArticleFilter,
   DateFilterComparison,
@@ -24,13 +25,11 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
 import {
-  Button,
   CheckPicker as RCheckPicker,
   DateRangePicker,
   Form as RForm,
   Input,
   SelectPicker as RSelectPicker,
-  Toggle as RToggle,
 } from 'rsuite';
 
 import { SelectTags } from '../atoms/tag/selectTags';
@@ -73,7 +72,7 @@ const CheckPicker = styled(RCheckPicker)`
   width: 200px;
 `;
 
-const Toggle = styled(RToggle)`
+const Toggle = styled(Switch)`
   margin-top: 6px;
 `;
 
@@ -306,9 +305,9 @@ export function ListViewFilters({
     return (
       <FormGroup>
         <Button
+          variant="outlined"
           onClick={() => resetFilter()}
-          color="red"
-          appearance="ghost"
+          color="error"
         >
           <CloseIcon />
           {t('filterableList.filter.reset')}
@@ -334,9 +333,9 @@ export function ListViewFilters({
       {fields.includes('userRole') && (
         <Group style={formInputStyle}>
           <CheckPicker
+            block
             data-testid="userRole-combobox"
             name="userRoles"
-            block
             value={filter?.userRole || []}
             data={userRoles.map(userRole => ({
               value: userRole.id,
@@ -362,9 +361,9 @@ export function ListViewFilters({
       {fields.includes('answerIds') && (
         <Group style={formInputStyle}>
           <CheckPicker
+            block
             data-testid="answerIds-combobox"
             name="answerIds"
-            block
             value={filter?.answerIds || []}
             data={answers.map(answer => ({
               value: answer.id,
@@ -492,6 +491,7 @@ export function ListViewFilters({
       {fields.includes('providers') && (
         <Group style={formInputStyle}>
           <CheckPicker
+            block
             disabled={false}
             searchable={false}
             virtualized
@@ -514,17 +514,21 @@ export function ListViewFilters({
                   : undefined,
               });
             }}
-            block
           />
         </Group>
       )}
 
       {fields.includes('draft') && (
         <Group style={formInputStyle}>
-          <Toggle
-            defaultChecked={!!filter.draft}
-            checked={!!filter.draft}
-            onChange={value => updateFilter({ draft: value || null })}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={!!filter.draft}
+                onChange={(_event, value) =>
+                  updateFilter({ draft: value || null })
+                }
+              />
+            }
             label={t('filterableList.filter.isDraft')}
           />
         </Group>
@@ -532,10 +536,15 @@ export function ListViewFilters({
 
       {fields.includes('pending') && (
         <Group style={formInputStyle}>
-          <Toggle
-            defaultChecked={!!filter.pending}
-            checked={!!filter.pending}
-            onChange={value => updateFilter({ pending: value || null })}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={!!filter.pending}
+                onChange={(_event, value) =>
+                  updateFilter({ pending: value || null })
+                }
+              />
+            }
             label={t('filterableList.filter.isPending')}
           />
         </Group>
@@ -543,10 +552,15 @@ export function ListViewFilters({
 
       {fields.includes('published') && (
         <Group style={formInputStyle}>
-          <Toggle
-            defaultChecked={!!filter.published}
-            checked={!!filter.published}
-            onChange={value => updateFilter({ published: value || null })}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={!!filter.published}
+                onChange={(_event, value) =>
+                  updateFilter({ published: value || null })
+                }
+              />
+            }
             label={t('filterableList.filter.isPublished')}
           />
         </Group>
@@ -555,9 +569,9 @@ export function ListViewFilters({
       {fields.includes('publicationDate') && (
         <Group style={formInputStyle}>
           <DateRangePicker
+            block
             key={`publication-date-${resetFilterKey}`}
             placeholder={t('filterableList.filter.publicationDate')}
-            block
             placement="auto"
             value={
               (
@@ -597,9 +611,9 @@ export function ListViewFilters({
       {fields.includes('dates') && (
         <Group style={formInputStyle}>
           <DateRangePicker
+            block
             key={`dates-${resetFilterKey}`}
             placeholder={t('filterableList.filter.dates')}
-            block
             placement="auto"
             value={
               filter.from && filter.to ?
@@ -647,10 +661,15 @@ export function ListViewFilters({
 
       {fields.includes('includeHidden') && (
         <Group style={formInputStyle}>
-          <Toggle
-            defaultChecked={!!filter.includeHidden}
-            checked={!!filter.includeHidden}
-            onChange={value => updateFilter({ includeHidden: value || null })}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={!!filter.includeHidden}
+                onChange={(_event, value) =>
+                  updateFilter({ includeHidden: value || null })
+                }
+              />
+            }
             label={
               tagType === TagType.Page ?
                 t('filterableList.filter.includeHiddenPages')

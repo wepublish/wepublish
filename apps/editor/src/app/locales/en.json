@@ -3657,6 +3657,16 @@
     "listInput": {
       "dragToReorder": "Drag to change the order",
       "add": "Add entry"
+    },
+    "listView": {
+      "pagination": {
+        "total": "Total: {{count}}",
+        "pageSize": "Items per page",
+        "perPage": "{{count}} / page"
+      },
+      "table": {
+        "empty": "No entries"
+      }
     }
   }
 }

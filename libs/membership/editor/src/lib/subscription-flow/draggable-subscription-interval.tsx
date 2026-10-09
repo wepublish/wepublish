@@ -7,12 +7,11 @@ import {
 } from '@wepublish/editor/api';
 import { useContext, useMemo } from 'react';
 import { MdDelete, MdDragIndicator } from 'react-icons/md';
-import { IconButton } from 'rsuite';
 import { SubscriptionClientContext } from './graphql-client-context';
 import { MailTemplateSelect } from './mail-template-select';
 import { DecoratedSubscriptionInterval } from './subscription-flow-list';
 
-import { Tooltip } from '@mui/material';
+import { Tooltip, IconButton } from '@mui/material';
 import { PermissionControl, useAuthorisation } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 
@@ -173,11 +172,8 @@ export function DraggableSubscriptionInterval({
               qualifyingPermissions={['CAN_UPDATE_SUBSCRIPTION_FLOW']}
             >
               <IconButton
-                icon={<MdDelete />}
-                size="sm"
-                circle
-                appearance="ghost"
-                color="red"
+                size="small"
+                color="error"
                 aria-label={t('subscriptionFlow.deleteMail')}
                 onClick={() =>
                   subscriptionInterval ?
@@ -186,7 +182,9 @@ export function DraggableSubscriptionInterval({
                     })
                   : onRemove?.()
                 }
-              />
+              >
+                <MdDelete />
+              </IconButton>
             </PermissionControl>
           )}
         </Entry>

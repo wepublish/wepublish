@@ -3,11 +3,17 @@ import {
   DeleteCrowdfundingDocument,
   FullCrowdfundingFragment,
 } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
+import { humanizeError, enqueueSnackbar } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, Modal, toaster } from 'rsuite';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material';
 
 type DeleteCrowdfundingProps = {
   crowdfunding: FullCrowdfundingFragment | undefined;
@@ -16,29 +22,17 @@ type DeleteCrowdfundingProps = {
 };
 
 const onErrorToast = (error: Error) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const onCompletedToast = (t: TFunction) => () => {
-  toaster.push(
-    <Message
-      type="success"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {t('toast.deletedSuccess')}
-    </Message>
-  );
+  enqueueSnackbar(t('toast.deletedSuccess'), {
+    variant: 'success',
+    autoHideDuration: 3000,
+  });
 };
 
 export function CrowdfundingDeleteModal({
@@ -69,36 +63,34 @@ export function CrowdfundingDeleteModal({
   }
 
   return (
-    <Modal
+    <Dialog
       open={!!crowdfunding}
       onClose={onClose}
     >
-      <Modal.Header>
-        <Modal.Title>{t('crowdfunding.delete.title')}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{t('crowdfunding.delete.title')}</DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         {t('crowdfunding.delete.body', {
           name: crowdfunding?.name,
         })}
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
+          variant="contained"
           onClick={deleteCrowdfunding}
-          appearance="primary"
-          color="red"
+          color="error"
         >
           {t('crowdfunding.delete.delete')}
         </Button>
 
         <Button
+          variant="text"
           onClick={onClose}
-          appearance="subtle"
         >
           {t('cancel')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 }

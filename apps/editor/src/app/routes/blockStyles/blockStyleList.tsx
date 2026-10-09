@@ -1,6 +1,15 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+} from '@mui/material';
+import {
   BlockStylesDocument,
   CreateBlockStyleDocument,
   DeleteBlockStyleDocument,
@@ -10,6 +19,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
   humanizeError,
   IconButton,
   IconButtonTooltip,
@@ -24,17 +34,7 @@ import { equals } from 'ramda';
 import { memo, useCallback, useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSave } from 'react-icons/md';
-import {
-  Button,
-  CheckPicker,
-  Form,
-  IconButton as RIconButton,
-  Loader as RLoader,
-  Message,
-  Modal,
-  Stack,
-  toaster,
-} from 'rsuite';
+import { CheckPicker, Form } from 'rsuite';
 
 const FlexGridSmallerMargin = styled(Stack)`
   margin-bottom: 12px;
@@ -56,7 +56,7 @@ const FlexWrapper = styled.div`
   flex: 1 1;
 `;
 
-const Loader = styled(RLoader)`
+const Loader = styled(CircularProgress)`
   margin: 32px;
 `;
 
@@ -124,16 +124,10 @@ const blockStyleFormValueReducer = (
 };
 
 const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const BlockStyleList = memo(() => {
@@ -255,11 +249,11 @@ const BlockStyleList = memo(() => {
 
         <PermissionControl qualifyingPermissions={['CAN_CREATE_BLOCK_STYLE']}>
           <ListViewActions>
-            <RIconButton
+            <Button
+              variant="contained"
+              startIcon={<MdAdd />}
               type="button"
-              appearance="primary"
               data-testid="create"
-              icon={<MdAdd />}
               onClick={() =>
                 createBlockStyle({
                   variables: {
@@ -271,14 +265,17 @@ const BlockStyleList = memo(() => {
               disabled={hasEmptyStyle}
             >
               {t('blockStyles.createBlockStyle')}
-            </RIconButton>
+            </Button>
           </ListViewActions>
         </PermissionControl>
       </ListViewContainer>
 
       {loading && (
-        <Stack justifyContent="center">
-          <Loader size="lg" />
+        <Stack
+          direction="row"
+          sx={{ justifyContent: 'center' }}
+        >
+          <CircularProgress size={40} />
         </Stack>
       )}
 
@@ -335,16 +332,16 @@ const BlockStyleList = memo(() => {
                       <IconButton
                         aria-label={t('save')}
                         type="submit"
-                        circle
-                        size="sm"
-                        icon={<MdSave />}
+                        size="small"
                         onClick={() => {
                           updateBlockStyle({
                             variables: inputValue,
                           });
                         }}
                         disabled={!shouldUpdateBlockStyle(blockstyleId)}
-                      />
+                      >
+                        <MdSave />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
 
@@ -354,13 +351,12 @@ const BlockStyleList = memo(() => {
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         aria-label={t('delete')}
-                        color="red"
-                        appearance="ghost"
-                        circle
-                        size="sm"
-                        icon={<MdDelete />}
+                        color="error"
+                        size="small"
                         onClick={() => setBlockStyleToDelete(blockstyleId)}
-                      />
+                      >
+                        <MdDelete />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                 </Flex>
@@ -370,22 +366,22 @@ const BlockStyleList = memo(() => {
         </Content>
       </TableWrapper>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!blockstyleToDelete}
-        backdrop="static"
-        size="xs"
+        maxWidth="xs"
         onClose={() => setBlockStyleToDelete(null)}
       >
-        <Modal.Title>{t('blockStyles.areYouSure')}</Modal.Title>
-        <Modal.Body>
+        <DialogTitle>{t('blockStyles.areYouSure')}</DialogTitle>
+        <DialogContent>
           {t('blockStyles.areYouSureBody', {
             blockStyle: formValue[blockstyleToDelete!]?.name,
           })}
-        </Modal.Body>
-        <Modal.Footer>
+        </DialogContent>
+        <DialogActions>
           <Button
-            color="red"
-            appearance="primary"
+            variant="contained"
+            color="error"
             onClick={() => {
               deleteBlockStyle({
                 variables: {
@@ -399,13 +395,13 @@ const BlockStyleList = memo(() => {
           </Button>
 
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setBlockStyleToDelete(null)}
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 });

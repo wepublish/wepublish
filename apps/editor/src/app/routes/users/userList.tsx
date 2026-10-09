@@ -1,5 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Tooltip,
+} from '@mui/material';
+import {
   DeleteUserDocument,
   FullUserRoleFragment,
   ResetUserTotpDocument,
@@ -10,10 +18,9 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
   DescriptionList,
   DescriptionListItem,
+  enqueueSnackbar,
   humanizeError,
   IconButton,
   IconButtonTooltip,
@@ -23,6 +30,7 @@ import {
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
   PaddedCell,
+  Pagination,
   PermissionControl,
   ResetUserPasswordForm,
   Table,
@@ -33,17 +41,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdLockReset, MdPassword } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Pagination,
-  Table as RTable,
-  toaster,
-  Tooltip,
-  Whisper,
-} from 'rsuite';
+import { Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -156,7 +154,7 @@ function UserList() {
 
   function getSubscriptionTooltip(user: TinyUserFragment) {
     return (
-      <Tooltip>
+      <>
         {user.subscriptionOverview.map(({ id, memberPlanName, status }) => (
           <div key={id}>
             {t('userList.overview.subscriptionWithStatus', {
@@ -165,7 +163,7 @@ function UserList() {
             })}
           </div>
         ))}
-      </Tooltip>
+      </>
     );
   }
 
@@ -176,42 +174,24 @@ function UserList() {
       await deleteUser({
         variables: { id: currentUser.id },
       });
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={2000}
-        >
-          {t('toast.deletedSuccess')}
-        </Message>
-      );
+      enqueueSnackbar(t('toast.deletedSuccess'), {
+        variant: 'success',
+        autoHideDuration: 2000,
+      });
       setConfirmationDialogOpen(false);
       refetch();
     } catch (e) {
       if (e instanceof Error) {
         if (e.message.includes('Foreign key constraint')) {
-          toaster.push(
-            <Message
-              type="error"
-              showIcon
-              closable
-              duration={8000}
-            >
-              {t('userCreateOrEditView.foreignKeySubscription')}
-            </Message>
-          );
+          enqueueSnackbar(t('userCreateOrEditView.foreignKeySubscription'), {
+            variant: 'error',
+            autoHideDuration: 8000,
+          });
           setConfirmationDialogOpen(false);
         } else {
-          toaster.push(
-            <Message
-              type="error"
-              showIcon
-              closable
-              duration={8000}
-            >
-              {t('userCreateOrEditView.errorOnUpdate', { error: e })}
-            </Message>
+          enqueueSnackbar(
+            t('userCreateOrEditView.errorOnUpdate', { error: e }),
+            { variant: 'error', autoHideDuration: 8000 }
           );
         }
       }
@@ -225,29 +205,17 @@ function UserList() {
       await resetUserTotp({
         variables: { userId: currentUser.id },
       });
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={2000}
-        >
-          {t('userList.overview.totpResetSuccess')}
-        </Message>
-      );
+      enqueueSnackbar(t('userList.overview.totpResetSuccess'), {
+        variant: 'success',
+        autoHideDuration: 2000,
+      });
       setIsResetTotpDialogOpen(false);
       refetch();
     } catch (e) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('userList.overview.totpResetError')}
-        </Message>
-      );
+      enqueueSnackbar(t('userList.overview.totpResetError'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     }
   };
 
@@ -260,13 +228,13 @@ function UserList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER']}>
           <ListViewActions>
             <Link to="/users/create">
-              <RIconButton
-                appearance="primary"
+              <Button
+                variant="contained"
+                startIcon={<MdAdd />}
                 disabled={isLoading}
-                icon={<MdAdd />}
               >
                 {t('userList.overview.newUser')}
-              </RIconButton>
+              </Button>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -390,13 +358,12 @@ function UserList() {
                 }
 
                 return (
-                  <Whisper
+                  <Tooltip
                     placement="top"
-                    trigger="hover"
-                    speaker={getSubscriptionTooltip(user)}
+                    title={getSubscriptionTooltip(user)}
                   >
                     {cell}
-                  </Whisper>
+                  </Tooltip>
                 );
               }}
             </RCell>
@@ -417,15 +384,15 @@ function UserList() {
                       caption={t('userList.overview.resetPassword')}
                     >
                       <IconButton
-                        circle
-                        size="sm"
-                        icon={<MdPassword />}
+                        size="small"
                         aria-label={t('userList.overview.resetPassword')}
                         onClick={e => {
                           setCurrentUser(rowData as TinyUserFragment);
                           setIsResetUserPasswordOpen(true);
                         }}
-                      />
+                      >
+                        <MdPassword />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                   <PermissionControl
@@ -435,16 +402,16 @@ function UserList() {
                       caption={t('userList.overview.resetTotp')}
                     >
                       <IconButton
-                        circle
-                        size="sm"
-                        icon={<MdLockReset />}
+                        size="small"
                         aria-label={t('userList.overview.resetTotp')}
                         disabled={!(rowData as TinyUserFragment).totpEnabled}
                         onClick={() => {
                           setCurrentUser(rowData as TinyUserFragment);
                           setIsResetTotpDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdLockReset />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                   <PermissionControl
@@ -452,17 +419,16 @@ function UserList() {
                   >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
-                        icon={<MdDelete />}
+                        size="small"
+                        color="error"
                         aria-label={t('delete')}
                         onClick={() => {
                           setConfirmationDialogOpen(true);
                           setCurrentUser(rowData as TinyUserFragment);
                         }}
-                      />
+                      >
+                        <MdDelete />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                 </>
@@ -472,123 +438,110 @@ function UserList() {
         </Table>
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.users.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.users.totalCount ?? 0}
         />
       </TableWrapper>
 
       {/* reset user password */}
       {currentUser?.id && (
-        <Modal
+        <Dialog
           open={isResetUserPasswordOpen}
           onClose={() => setIsResetUserPasswordOpen(false)}
         >
-          <Modal.Header>
-            <Modal.Title>{t('userCreateOrEditView.resetPassword')}</Modal.Title>
-          </Modal.Header>
+          <DialogTitle>{t('userCreateOrEditView.resetPassword')}</DialogTitle>
 
-          <Modal.Body>
+          <DialogContent>
             <ResetUserPasswordForm
               userID={currentUser?.id}
               userName={currentUser?.name}
               onClose={() => setIsResetUserPasswordOpen(false)}
             />
-          </Modal.Body>
+          </DialogContent>
 
-          <Modal.Footer>
+          <DialogActions>
             <Button
+              variant="text"
               onClick={() => setIsResetUserPasswordOpen(false)}
-              appearance="subtle"
             >
               {t('userCreateOrEditView.cancel')}
             </Button>
-          </Modal.Footer>
-        </Modal>
+          </DialogActions>
+        </Dialog>
       )}
 
       {/* delete user modal */}
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('userCreateOrEditView.deleteUser')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('userCreateOrEditView.deleteUser')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('userCreateOrEditView.name')}>
               {currentUser?.name || t('userCreateOrEditView.Unknown')}
             </DescriptionListItem>
           </DescriptionList>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            appearance="primary"
+            variant="contained"
             disabled={isDeleting}
             onClick={handleDeleteUser}
           >
             {t('userCreateOrEditView.confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('userCreateOrEditView.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
 
       {/* reset totp modal */}
-      <Modal
+      <Dialog
         open={isResetTotpDialogOpen}
         onClose={() => setIsResetTotpDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('userList.overview.resetTotpTitle')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('userList.overview.resetTotpTitle')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <p>
             {t('userList.overview.resetTotpConfirmation', {
               name: currentUser?.name || '',
             })}
           </p>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            appearance="primary"
-            color="orange"
+            variant="contained"
+            color="warning"
             disabled={isResettingTotp}
             onClick={handleResetTotp}
           >
             {t('userCreateOrEditView.confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setIsResetTotpDialogOpen(false)}
-            appearance="subtle"
           >
             {t('userCreateOrEditView.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

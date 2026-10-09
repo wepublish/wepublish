@@ -6,35 +6,27 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
+import { Form, Schema } from 'rsuite';
 
-import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
+import {
+  humanizeError,
+  SingleViewTitle,
+  enqueueSnackbar,
+} from '@wepublish/ui/editor';
 import { ConsentForm } from './consent-form';
 
 const onErrorToast = (error: Error, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {`A consent with slug '${slug}' already exists. Please choose a different slug.`}
-      </Message>
+    enqueueSnackbar(
+      `A consent with slug '${slug}' already exists. Please choose a different slug.`,
+      { variant: 'error', autoHideDuration: 8000 }
     );
     return;
   }
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 export const ConsentCreateView = () => {
@@ -53,16 +45,10 @@ export const ConsentCreateView = () => {
   const [createConsent, { loading }] = useMutation(CreateConsentDocument, {
     onError: error => onErrorToast(error, consent.slug),
     onCompleted: consent => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.createdSuccess')}
-        </Message>
-      );
+      enqueueSnackbar(t('toast.createdSuccess'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
       if (shouldClose) {
         navigate(closePath);
       } else {

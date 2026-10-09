@@ -16,7 +16,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdManageAccounts, MdUnsubscribe } from 'react-icons/md';
 import { RiTestTubeLine } from 'react-icons/ri';
-import { Button, SelectPicker } from 'rsuite';
+import { SelectPicker } from 'rsuite';
 import {
   DEFAULT_MUTATION_OPTIONS,
   MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE,
@@ -24,6 +24,7 @@ import {
 } from '../common';
 import { EventList, EventRow, MailBlock } from '../mail-settings-layout';
 import { formatTemplateLabel } from '../mail-template/mail-placeholders';
+import { Button } from '@mui/material';
 
 /**
  * Display order of the account events. Events not listed here are appended, so
@@ -189,7 +190,7 @@ function SystemMailSection() {
                   qualifyingPermissions={['CAN_TEST_SYSTEM_MAILS']}
                 >
                   <Button
-                    appearance="ghost"
+                    variant="outlined"
                     startIcon={<RiTestTubeLine />}
                     disabled={!mailTemplateId}
                     onClick={() =>

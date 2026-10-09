@@ -1,16 +1,17 @@
 import styled from '@emotion/styled';
+import { Button, Card as MuiCard, CardContent, Drawer } from '@mui/material';
 import InnerHTML from 'dangerously-set-html-content';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
-import { Drawer, IconButton, Panel as RPanel } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { PlaceholderInput } from '../atoms/placeholderInput';
+import { DRAWER_WIDTHS } from '../drawer';
 import { HtmlEditPanel } from '../panel/htmlEditPanel';
 import { HTMLBlockValue } from './types';
 
-const Panel = styled(RPanel, {
+const Panel = styled(MuiCard, {
   shouldForwardProp: prop => prop !== 'isEmpty',
 })<{ isEmpty: boolean }>`
   display: grid;
@@ -61,37 +62,48 @@ export const HTMLBlock = ({
 
   return (
     <>
-      <Panel
-        isEmpty={isEmpty}
-        bodyFill
-        bordered
-      >
-        <PlaceholderInput
-          onAddClick={() => setHtmlDialogOpen(true)}
-          addLabel={t('blocks.html.edit')}
-        >
-          {!isEmpty && (
-            <Wrapper>
-              <IconWrapper>
-                <IconButton
-                  size="lg"
-                  icon={<MdEdit />}
-                  onClick={() => setHtmlDialogOpen(true)}
-                >
-                  {t('blocks.html.edit')}
-                </IconButton>
-              </IconWrapper>
+      <Panel isEmpty={isEmpty}>
+        <CardContent>
+          <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+            <PlaceholderInput
+              onAddClick={() => setHtmlDialogOpen(true)}
+              addLabel={t('blocks.html.edit')}
+            >
+              {!isEmpty && (
+                <Wrapper>
+                  <IconWrapper>
+                    <Button
+                      variant="outlined"
+                      startIcon={<MdEdit />}
+                      size="large"
+                      onClick={() => setHtmlDialogOpen(true)}
+                    >
+                      {t('blocks.html.edit')}
+                    </Button>
+                  </IconWrapper>
 
-              <InnerHtmlWrapper>
-                <InnerHTML html={correctScript()} />
-              </InnerHtmlWrapper>
-            </Wrapper>
-          )}
-        </PlaceholderInput>
+                  <InnerHtmlWrapper>
+                    <InnerHTML html={correctScript()} />
+                  </InnerHtmlWrapper>
+                </Wrapper>
+              )}
+            </PlaceholderInput>
+          </CardContent>
+        </CardContent>
       </Panel>
 
       <Drawer
-        size="sm"
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isHtmlDialogOpen}
         onClose={() => setHtmlDialogOpen(false)}
       >

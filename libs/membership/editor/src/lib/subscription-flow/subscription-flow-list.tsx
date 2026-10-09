@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { Typography } from '@mui/material';
+import { Typography, CircularProgress, Box } from '@mui/material';
 import {
   CreateSubscriptionFlowDocument,
   CreateSubscriptionIntervalDocument,
@@ -30,7 +30,6 @@ import {
   MdTune,
 } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
-import { Loader } from 'rsuite';
 import { DEFAULT_MUTATION_OPTIONS, showErrors, useShowErrors } from '../common';
 import { MailBlock, MailBlocks } from '../mail-settings-layout';
 import { SystemMailSection } from '../system-mail/system-mail-section';
@@ -211,7 +210,18 @@ function SubscriptionFlowBlocks({
   const knownFlowIds = useRef<Set<string>>(undefined);
 
   if (loading || !subscriptionFlows) {
-    return <Loader center />;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   knownFlowIds.current ??= new Set(

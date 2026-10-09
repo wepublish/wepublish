@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
+import { Drawer, IconButton } from '@mui/material';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
-import { Drawer, IconButton, Input as RInput } from 'rsuite';
+import { Input as RInput } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { ChooseEditImage } from '../atoms/chooseEditImage';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import { DRAWER_WIDTHS } from '../drawer';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import { LinkPageBreakEditPanel } from '../panel/linkPageBreakEditPanel';
@@ -86,11 +88,12 @@ export function LinkPageBreakBlock({
         <IconWrapper>
           <IconButtonTooltip caption={t('blocks.linkPageBreak.editSettings')}>
             <IconButton
-              size="lg"
+              size="large"
               aria-label={t('blocks.linkPageBreak.editSettings')}
-              icon={<MdEdit />}
               onClick={() => setEditPanelOpen(true)}
-            />
+            >
+              <MdEdit />
+            </IconButton>
           </IconButtonTooltip>
         </IconWrapper>
       </LinkPage>
@@ -105,7 +108,6 @@ export function LinkPageBreakBlock({
             removeImage={() =>
               onChange(value => ({ ...value, image: undefined }))
             }
-            minHeight={150}
           />
         </ChooseImageWrapper>
 
@@ -126,8 +128,18 @@ export function LinkPageBreakBlock({
       </ContentWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -140,8 +152,18 @@ export function LinkPageBreakBlock({
       </Drawer>
       {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel
@@ -152,8 +174,18 @@ export function LinkPageBreakBlock({
         </Drawer>
       )}
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditPanelOpen}
-        size="sm"
         onClose={() => setEditPanelOpen(false)}
       >
         <LinkPageBreakEditPanel

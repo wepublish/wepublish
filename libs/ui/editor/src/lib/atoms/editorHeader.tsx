@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
+import { Button, ButtonProps } from '@mui/material';
 import { ReactNode, useId } from 'react';
-import { IconButton, IconButtonProps } from 'rsuite';
 
 import { StateColor } from '../utility';
 
@@ -21,21 +21,31 @@ const Bar = styled('header', {
   box-shadow: inset 0 3px 0 ${({ accent }) => accent};
 
   @container (max-width: 1240px) {
-    .rs-btn[data-collapse='md'] {
+    button[data-collapse='md'] {
+      min-width: 0;
       padding-inline: 9px;
 
-      > [data-label] {
+      [data-label] {
         display: none;
+      }
+
+      .MuiButton-startIcon {
+        margin: 0;
       }
     }
   }
 
   @container (max-width: 520px) {
-    .rs-btn[data-collapse='sm'] {
+    button[data-collapse='sm'] {
+      min-width: 0;
       padding-inline: 9px;
 
-      > [data-label] {
+      [data-label] {
         display: none;
+      }
+
+      .MuiButton-startIcon {
+        margin: 0;
       }
     }
   }
@@ -205,24 +215,32 @@ export function EditorHeader({
   );
 }
 
-export interface EditorHeaderButtonProps extends IconButtonProps {
+export interface EditorHeaderButtonProps extends Omit<ButtonProps, 'variant'> {
   label: string;
+  /** Leading icon; hidden labels leave just this behind when collapsed. */
+  icon?: ReactNode;
+  /** Container width below which the label collapses away. */
   collapse?: 'md' | 'sm' | false;
+  variant?: ButtonProps['variant'];
 }
 
 export function EditorHeaderButton({
   label,
+  icon,
   collapse = 'md',
+  variant = 'text',
   ...props
 }: EditorHeaderButtonProps) {
   return (
-    <IconButton
+    <Button
       title={collapse ? label : undefined}
       aria-label={label}
       data-collapse={collapse || undefined}
+      variant={variant}
+      startIcon={icon}
       {...props}
     >
       <span data-label>{label}</span>
-    </IconButton>
+    </Button>
   );
 }

@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client/react';
+import { IconButton } from '@mui/material';
 import {
   Currency,
   DiscountCodeDocument,
@@ -9,13 +10,12 @@ import {
 import { CanGetInvoices } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
   InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
+  Pagination,
   Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
@@ -23,7 +23,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdChevronLeft } from 'react-icons/md';
 import { Link, useParams } from 'react-router-dom';
-import { IconButton, Pagination, Table as RTable } from 'rsuite';
+import { Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -83,7 +83,7 @@ function DiscountCodeUsageView() {
 
         <ListViewActions>
           <Link to="/discountCodes">
-            <IconButton appearance="ghost">
+            <IconButton>
               <MdChevronLeft />
               {t('discountCode.usage.back')}
             </IconButton>
@@ -182,20 +182,13 @@ function DiscountCodeUsageView() {
       </TableWrapper>
 
       <Pagination
-        limit={limit}
-        limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-        maxButtons={DEFAULT_MAX_TABLE_PAGES}
-        first
-        last
-        prev
-        next
-        ellipsis
-        boundaryLinks
-        layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-        total={data?.invoices.totalCount ?? 0}
-        activePage={page}
-        onChangePage={page => setPage(page)}
-        onChangeLimit={limit => setLimit(limit)}
+        state={{
+          page,
+          limit,
+          setPage,
+          setLimit,
+        }}
+        totalCount={data?.invoices.totalCount ?? 0}
       />
     </>
   );

@@ -1,5 +1,17 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
-import { Typography } from '@mui/material';
+import {
+  Alert,
+  Button,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Stack,
+  ButtonGroup,
+  Card,
+  CardContent,
+  CardHeader,
+} from '@mui/material';
 import { useApolloClient } from '@apollo/client/react';
 import {
   CreateMailTemplateDocument,
@@ -18,23 +30,12 @@ import {
   InfoTooltip,
   ListViewContainer,
   ListViewHeader,
+  enqueueSnackbar,
 } from '@wepublish/ui/editor';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Button,
-  ButtonGroup,
-  Form,
-  Input,
-  InputNumber,
-  Message,
-  Modal,
-  Panel,
-  SelectPicker,
-  Stack,
-  toaster,
-} from 'rsuite';
+import { Form, Input, InputNumber, SelectPicker } from 'rsuite';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
 import { HtmlSourceEditor, HtmlSourceEditorHandle } from './html-source-editor';
 import { HtmlVisualEditor, HtmlVisualEditorHandle } from './html-visual-editor';
@@ -239,21 +240,20 @@ function MailTemplateEdit() {
 
   const save = async (close: boolean) => {
     if (!name) {
-      toaster.push(
-        <Message type="error">{t('mailTemplates.edit.nameRequired')}</Message>
-      );
+      enqueueSnackbar(t('mailTemplates.edit.nameRequired'), {
+        variant: 'error',
+      });
       return;
     }
     // The mail type is enforced on save (existing null-type templates still
     // load, but can't be saved again without choosing one).
     if (!contextId) {
-      toaster.push(
-        <Message type="error">
-          {t(
-            'mailTemplates.edit.selectMailType',
-            'Please choose a purpose first.'
-          )}
-        </Message>
+      enqueueSnackbar(
+        t(
+          'mailTemplates.edit.selectMailType',
+          'Please choose a purpose first.'
+        ),
+        { variant: 'error' }
       );
       return;
     }
@@ -312,7 +312,7 @@ function MailTemplateEdit() {
       const message = error instanceof Error ? error.message : String(error);
       setPreviewError(message);
       setPreviewHtml(null);
-      toaster.push(<Message type="error">{message}</Message>);
+      enqueueSnackbar(message, { variant: 'error' });
     } finally {
       setPreviewLoading(false);
     }
@@ -325,9 +325,7 @@ function MailTemplateEdit() {
         input: previewInput(ctx),
       },
     });
-    toaster.push(
-      <Message type="success">{t('mailTemplates.edit.testSent')}</Message>
-    );
+    enqueueSnackbar(t('mailTemplates.edit.testSent'), { variant: 'success' });
   };
 
   const contextOptions = MAIL_PLACEHOLDER_CONTEXTS.map(c => ({
@@ -339,8 +337,8 @@ function MailTemplateEdit() {
   return (
     <div style={{ flexShrink: 0 }}>
       <Stack
-        justifyContent="space-between"
-        alignItems="center"
+        direction="row"
+        sx={{ alignItems: 'center', justifyContent: 'space-between' }}
       >
         <ListViewContainer>
           <ListViewHeader>
@@ -353,19 +351,19 @@ function MailTemplateEdit() {
         </ListViewContainer>
         <ButtonGroup>
           <Button
-            appearance="ghost"
+            variant="outlined"
             onClick={() => navigate('/mailtemplates')}
           >
             {t('mailTemplates.cancel')}
           </Button>
           <Button
-            appearance="default"
+            variant="outlined"
             onClick={() => save(false)}
           >
             {t('mailTemplates.save')}
           </Button>
           <Button
-            appearance="primary"
+            variant="contained"
             onClick={() => save(true)}
           >
             {t('mailTemplates.edit.saveAndClose')}
@@ -387,166 +385,178 @@ function MailTemplateEdit() {
           background: 'var(--rs-body)',
         }}
       >
-        <Panel
-          bordered
-          header={t('mailTemplates.edit.details', 'Details')}
+        <Card
+          variant="outlined"
           style={{ flex: 1, minWidth: 360, background: 'var(--rs-bg-card)' }}
         >
-          <Form fluid>
-            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-              <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
+          <CardHeader title={t('mailTemplates.edit.details', 'Details')} />
+
+          <CardContent>
+            <Form fluid>
+              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
+                  <Form.ControlLabel>
+                    {t('mailTemplates.edit.mailType')} *{' '}
+                    <InfoTooltip text={t('mailTemplates.edit.purposeHint')} />
+                  </Form.ControlLabel>
+                  <SelectPicker
+                    block
+                    cleanable={false}
+                    searchable={false}
+                    data={contextOptions}
+                    value={contextId}
+                    onChange={value =>
+                      setContextId((value as MailTemplateContext) ?? null)
+                    }
+                    // rsuite's popup defaults to z-index 7; lift it above the
+                    // sticky header row (z-index 10) so the menu isn't covered
+                    // when it opens down over the content below.
+                    popupStyle={{ zIndex: 100, maxWidth: 520 }}
+                    placeholder={t(
+                      'mailTemplates.edit.selectMailTypePlaceholder',
+                      'Choose a purpose …'
+                    )}
+                    // The purposes differ in which data they carry, which the
+                    // bare title doesn't convey — describe each one in the menu.
+                    renderOption={(label, item) => (
+                      <div style={{ paddingBlock: 2 }}>
+                        <div>{label}</div>
+                        <Typography
+                          variant="caption"
+                          style={{
+                            color: 'var(--rs-text-secondary)',
+                            whiteSpace: 'normal',
+                            lineHeight: 1.35,
+                          }}
+                          sx={{
+                            display: 'block',
+                          }}
+                        >
+                          {(item as { description?: string }).description}
+                        </Typography>
+                      </div>
+                    )}
+                  />
+                </Form.Group>
+                <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
+                  <Form.ControlLabel>
+                    {t('mailTemplates.name')}
+                  </Form.ControlLabel>
+                  <Input
+                    value={name}
+                    onChange={setName}
+                  />
+                </Form.Group>
+                <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
+                  <Form.ControlLabel>
+                    {t('mailTemplates.description')}{' '}
+                    <InfoTooltip
+                      text={t('mailTemplates.edit.descriptionHelp')}
+                    />
+                  </Form.ControlLabel>
+                  <Input
+                    value={description}
+                    onChange={setDescription}
+                  />
+                </Form.Group>
+                <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
+                  <Form.ControlLabel>
+                    {t('mailTemplates.subject')}
+                  </Form.ControlLabel>
+                  <Input
+                    value={subject}
+                    onChange={setSubject}
+                    onFocus={() => setActiveField('subject')}
+                  />
+                </Form.Group>
+              </div>
+            </Form>
+          </CardContent>
+        </Card>
+
+        <Card
+          variant="outlined"
+          style={{ flex: 1, minWidth: 360, background: 'var(--rs-bg-card)' }}
+        >
+          <CardHeader title={t('mailTemplates.edit.previewAndTest')} />
+
+          <CardContent>
+            <div
+              style={{
+                display: 'flex',
+                gap: 16,
+                flexWrap: 'wrap',
+                alignItems: 'flex-end',
+              }}
+            >
+              <div style={{ flex: 1, minWidth: 200 }}>
                 <Form.ControlLabel>
-                  {t('mailTemplates.edit.mailType')} *{' '}
-                  <InfoTooltip text={t('mailTemplates.edit.purposeHint')} />
+                  {t('mailTemplates.edit.sampleSubscription')}{' '}
+                  <InfoTooltip
+                    text={t('mailTemplates.edit.sampleSubscriptionHelp')}
+                  />
                 </Form.ControlLabel>
                 <SelectPicker
                   block
-                  cleanable={false}
-                  searchable={false}
-                  data={contextOptions}
-                  value={contextId}
-                  onChange={value =>
-                    setContextId((value as MailTemplateContext) ?? null)
+                  data={(subscriptionData?.mailTemplateSubscriptions ?? []).map(
+                    s => ({ label: s.label, value: s.id })
+                  )}
+                  value={subscriptionId}
+                  onChange={value => setSubscriptionId(value)}
+                  onSearch={query =>
+                    searchSubscriptions({ variables: { query } })
                   }
-                  // rsuite's popup defaults to z-index 7; lift it above the
-                  // sticky header row (z-index 10) so the menu isn't covered
-                  // when it opens down over the content below.
-                  popupStyle={{ zIndex: 100, maxWidth: 520 }}
-                  placeholder={t(
-                    'mailTemplates.edit.selectMailTypePlaceholder',
-                    'Choose a purpose …'
-                  )}
-                  // The purposes differ in which data they carry, which the
-                  // bare title doesn't convey — describe each one in the menu.
-                  renderOption={(label, item) => (
-                    <div style={{ paddingBlock: 2 }}>
-                      <div>{label}</div>
-                      <Typography
-                        variant="caption"
-                        style={{
-                          color: 'var(--rs-text-secondary)',
-                          whiteSpace: 'normal',
-                          lineHeight: 1.35,
-                        }}
-                        sx={{
-                          display: 'block',
-                        }}
-                      >
-                        {(item as { description?: string }).description}
-                      </Typography>
-                    </div>
-                  )}
+                  onOpen={() => searchSubscriptions({ variables: {} })}
+                  // Same as the mail-type picker: lift the popup above the
+                  // sticky header row (z-index 10) so it isn't clipped/covered.
+                  popupStyle={{ zIndex: 100 }}
+                  placeholder={t('mailTemplates.edit.sampleDataFallback')}
                 />
-              </Form.Group>
-              <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
-                <Form.ControlLabel>{t('mailTemplates.name')}</Form.ControlLabel>
-                <Input
-                  value={name}
-                  onChange={setName}
-                />
-              </Form.Group>
-              <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
-                <Form.ControlLabel>
-                  {t('mailTemplates.description')}{' '}
-                  <InfoTooltip text={t('mailTemplates.edit.descriptionHelp')} />
-                </Form.ControlLabel>
-                <Input
-                  value={description}
-                  onChange={setDescription}
-                />
-              </Form.Group>
-              <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
-                <Form.ControlLabel>
-                  {t('mailTemplates.subject')}
-                </Form.ControlLabel>
-                <Input
-                  value={subject}
-                  onChange={setSubject}
-                  onFocus={() => setActiveField('subject')}
-                />
-              </Form.Group>
-            </div>
-          </Form>
-        </Panel>
-
-        <Panel
-          bordered
-          header={t('mailTemplates.edit.previewAndTest')}
-          style={{ flex: 1, minWidth: 360, background: 'var(--rs-bg-card)' }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              gap: 16,
-              flexWrap: 'wrap',
-              alignItems: 'flex-end',
-            }}
-          >
-            <div style={{ flex: 1, minWidth: 200 }}>
-              <Form.ControlLabel>
-                {t('mailTemplates.edit.sampleSubscription')}{' '}
-                <InfoTooltip
-                  text={t('mailTemplates.edit.sampleSubscriptionHelp')}
-                />
-              </Form.ControlLabel>
-              <SelectPicker
-                block
-                data={(subscriptionData?.mailTemplateSubscriptions ?? []).map(
-                  s => ({ label: s.label, value: s.id })
-                )}
-                value={subscriptionId}
-                onChange={value => setSubscriptionId(value)}
-                onSearch={query =>
-                  searchSubscriptions({ variables: { query } })
-                }
-                onOpen={() => searchSubscriptions({ variables: {} })}
-                // Same as the mail-type picker: lift the popup above the
-                // sticky header row (z-index 10) so it isn't clipped/covered.
-                popupStyle={{ zIndex: 100 }}
-                placeholder={t('mailTemplates.edit.sampleDataFallback')}
-              />
-            </div>
-            <Stack spacing={8}>
-              <Button
-                appearance="primary"
-                loading={previewLoading}
-                onClick={doPreview}
+              </div>
+              <Stack
+                direction="row"
+                spacing={1}
               >
-                {t('mailTemplates.edit.preview')}
-              </Button>
-              <Button
-                appearance="default"
-                loading={testLoading}
-                onClick={doSendTest}
-              >
-                {t('mailTemplates.edit.sendTest')}
-              </Button>
-            </Stack>
-          </div>
+                <Button
+                  variant="contained"
+                  loading={previewLoading}
+                  onClick={doPreview}
+                >
+                  {t('mailTemplates.edit.preview')}
+                </Button>
+                <Button
+                  variant="outlined"
+                  loading={testLoading}
+                  onClick={doSendTest}
+                >
+                  {t('mailTemplates.edit.sendTest')}
+                </Button>
+              </Stack>
+            </div>
 
-          <Typography
-            variant="caption"
-            style={{ marginTop: 8, color: 'var(--rs-text-secondary)' }}
-            sx={{
-              display: 'block',
-            }}
-          >
-            {t(
-              'mailTemplates.edit.testRecipientHint',
-              'Test mails are always sent to your own account.'
-            )}
-          </Typography>
-
-          {previewError && (
-            <Message
-              type="error"
-              showIcon
-              style={{ marginTop: 16 }}
+            <Typography
+              variant="caption"
+              style={{ marginTop: 8, color: 'var(--rs-text-secondary)' }}
+              sx={{
+                display: 'block',
+              }}
             >
-              {previewError}
-            </Message>
-          )}
-        </Panel>
+              {t(
+                'mailTemplates.edit.testRecipientHint',
+                'Test mails are always sent to your own account.'
+              )}
+            </Typography>
+
+            {previewError && (
+              <Alert
+                severity="error"
+                style={{ marginTop: 16 }}
+              >
+                {previewError}
+              </Alert>
+            )}
+          </CardContent>
+        </Card>
       </div>
       <div
         style={{
@@ -575,30 +585,31 @@ function MailTemplateEdit() {
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <Stack
-            spacing={8}
-            justifyContent="space-between"
-            alignItems="center"
+            direction="row"
+            sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+            spacing={1}
             style={{ marginBottom: 8 }}
           >
             <Stack
-              spacing={8}
-              alignItems="center"
+              direction="row"
+              sx={{ alignItems: 'center' }}
+              spacing={1}
             >
-              <ButtonGroup size="sm">
+              <ButtonGroup size="small">
                 <Button
-                  appearance={bodyMode === 'visual' ? 'primary' : 'default'}
+                  variant="outlined"
                   onClick={() => switchMode('visual')}
                 >
                   {t('mailTemplates.wysiwyg')}
                 </Button>
                 <Button
-                  appearance={bodyMode === 'html' ? 'primary' : 'default'}
+                  variant="outlined"
                   onClick={() => switchMode('html')}
                 >
                   {t('mailTemplates.rawHtml')}
                 </Button>
                 <Button
-                  appearance={bodyMode === 'text' ? 'primary' : 'default'}
+                  variant="outlined"
                   onClick={() => switchMode('text')}
                 >
                   {t('mailTemplates.textContent')}
@@ -608,12 +619,14 @@ function MailTemplateEdit() {
             </Stack>
 
             <Stack
-              spacing={16}
-              alignItems="center"
+              direction="row"
+              sx={{ alignItems: 'center' }}
+              spacing={2}
             >
               <Stack
-                spacing={6}
-                alignItems="center"
+                direction="row"
+                sx={{ alignItems: 'center' }}
+                spacing={0.75}
               >
                 <Form.ControlLabel style={{ margin: 0 }}>
                   {t('mailTemplates.edit.background', 'Background')}{' '}
@@ -627,8 +640,9 @@ function MailTemplateEdit() {
                 />
               </Stack>
               <Stack
-                spacing={6}
-                alignItems="center"
+                direction="row"
+                sx={{ alignItems: 'center' }}
+                spacing={0.75}
               >
                 <Form.ControlLabel style={{ margin: 0 }}>
                   {t('mailTemplates.edit.contentWidth', 'Width (px)')}{' '}
@@ -710,20 +724,19 @@ function MailTemplateEdit() {
           </div>
         </div>
       </div>
-      <Modal
+      <Dialog
+        fullWidth
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
-        size="full"
+        maxWidth="lg"
       >
-        <Modal.Header>
-          <Modal.Title>
-            {t('mailTemplates.subject')}: {previewSubject || '—'}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body style={{ height: '85vh' }}>
+        <DialogTitle>
+          {t('mailTemplates.subject')}: {previewSubject || '—'}
+        </DialogTitle>
+        <DialogContent style={{ height: '85vh' }}>
           <MailPreview html={previewHtml ?? ''} />
-        </Modal.Body>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

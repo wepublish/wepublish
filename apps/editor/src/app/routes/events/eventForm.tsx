@@ -1,3 +1,4 @@
+import { Card, CardContent, Drawer } from '@mui/material';
 import {
   EventStatus,
   FullImageFragment,
@@ -9,9 +10,10 @@ import {
 import {
   ChooseEditImage,
   DateTimePicker,
+  DRAWER_WIDTHS,
   ImageEditPanel,
-  InfoTooltip,
   ImageSelectPanel,
+  InfoTooltip,
   RichTextBlock,
   RichTextBlockValue,
   SelectTags,
@@ -19,7 +21,7 @@ import {
 } from '@wepublish/ui/editor';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Drawer, Form, Panel, SelectPicker } from 'rsuite';
+import { Form, SelectPicker } from 'rsuite';
 
 type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
   image?: FullImageFragment | null;
@@ -44,172 +46,189 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
       <div
         style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}
       >
-        <Panel
-          bordered
+        <Card
+          variant="outlined"
           style={{ overflow: 'initial' }}
         >
-          <Form.Group controlId="name">
-            <Form.Label>{t('event.form.name')}</Form.Label>
-            <Form.Control
-              name="name"
-              value={event.name ?? ''}
-              onChange={(name: string) => onChange({ name })}
-            />
-          </Form.Group>
-
-          {event.externalSourceName && (
-            <Form.Group controlId="externalSourceName">
-              <Form.Label>{t('event.form.externalSource')}</Form.Label>
+          <CardContent>
+            <Form.Group controlId="name">
+              <Form.Label>{t('event.form.name')}</Form.Label>
               <Form.Control
-                name="externalSourceName"
-                value={event.externalSourceName ?? ''}
-                disabled
-              />
-            </Form.Group>
-          )}
-
-          <Form.Group controlId="location">
-            <Form.Label>{t('event.form.location')}</Form.Label>
-            <Form.Control
-              name="location"
-              value={event.location ?? ''}
-              onChange={(location: string) => onChange({ location })}
-            />
-          </Form.Group>
-
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '12px',
-              marginTop: '20px',
-            }}
-          >
-            <Form.Group controlId="startsAt">
-              <Form.Control
-                name="startsAt"
-                label={t('event.form.startsAt')}
-                dateTime={event.startsAt ? new Date(event.startsAt) : undefined}
-                changeDate={(date: Date) =>
-                  onChange({ startsAt: date?.toISOString() })
-                }
-                accepter={DateTimePicker}
+                name="name"
+                value={event.name ?? ''}
+                onChange={(name: string) => onChange({ name })}
               />
             </Form.Group>
 
-            <Form.Group controlId="endsAt">
+            {event.externalSourceName && (
+              <Form.Group controlId="externalSourceName">
+                <Form.Label>{t('event.form.externalSource')}</Form.Label>
+                <Form.Control
+                  name="externalSourceName"
+                  value={event.externalSourceName ?? ''}
+                  disabled
+                />
+              </Form.Group>
+            )}
+
+            <Form.Group controlId="location">
+              <Form.Label>{t('event.form.location')}</Form.Label>
               <Form.Control
-                name="endsAt"
-                label={t('event.form.endsAt')}
-                dateTime={event.endsAt ? new Date(event.endsAt) : undefined}
-                changeDate={(date: Date) =>
-                  onChange({ endsAt: date?.toISOString() })
-                }
-                accepter={DateTimePicker}
+                name="location"
+                value={event.location ?? ''}
+                onChange={(location: string) => onChange({ location })}
               />
             </Form.Group>
-          </div>
 
-          <Form.Group controlId="lead">
-            <Form.Label>{t('event.form.lead')}</Form.Label>
-            <Form.Control
-              name="lead"
-              rows={3}
-              value={event.lead ?? ''}
-              onChange={(lead: string) => onChange({ lead })}
-              accepter={Textarea}
-            />
-          </Form.Group>
-
-          <Form.Group controlId="description">
-            <Form.Label>{t('event.form.description')}</Form.Label>
-            <Panel bordered>
-              <Form.Control
-                name="description"
-                value={event.description}
-                onChange={(description: RichTextBlockValue['richText']) =>
-                  onChange({ description })
-                }
-                accepter={RichTextBlock}
-              />
-            </Panel>
-          </Form.Group>
-        </Panel>
-
-        <Panel bordered>
-          {!create && (
-            <Form.Group controlId="status">
-              <Form.Label>
-                {t('event.form.status')}{' '}
-                <InfoTooltip text={t('event.form.statusInfo')} />
-              </Form.Label>
-              <Form.Control
-                name="status"
-                block
-                placement="auto"
-                cleanable={false}
-                searchable={false}
-                accepter={SelectPicker}
-                value={(event as MutationUpdateEventArgs).status ?? ''}
-                data={[
-                  {
-                    value: EventStatus.Scheduled,
-                    label: t('event.form.scheduled'),
-                  },
-                  {
-                    value: EventStatus.Cancelled,
-                    label: t('event.form.cancelled'),
-                  },
-                  {
-                    value: EventStatus.Postponed,
-                    label: t('event.form.postponed'),
-                  },
-                  {
-                    value: EventStatus.Rescheduled,
-                    label: t('event.form.rescheduled'),
-                  },
-                ]}
-                onChange={(status: any) =>
-                  onChange({ status: status as EventStatus })
-                }
-              />
-            </Form.Group>
-          )}
-
-          <Form.Group controlId="tagIds">
-            <Form.Label>{t('event.form.tags')}</Form.Label>
-            <Form.Control
-              name="tagIds"
-              defaultTags={event.tags ?? []}
-              selectedTags={event.tagIds ?? []}
-              setSelectedTags={(tagIds: string[]) => onChange({ tagIds })}
-              tagType={TagType.Event}
-              accepter={SelectTags}
-            />
-          </Form.Group>
-
-          <Form.Group controlId="image">
-            <Form.Label>{t('event.form.image')}</Form.Label>
-            <Form.Control
-              name="image"
-              header={''}
-              image={event.image}
-              disabled={false}
-              openChooseModalOpen={() => setChooseModalOpen(true)}
-              openEditModalOpen={() => setEditModalOpen(true)}
-              removeImage={() => {
-                onChange({ imageId: undefined, image: undefined });
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '12px',
+                marginTop: '20px',
               }}
-              accepter={ChooseEditImage}
-              minHeight={200}
-            />
-          </Form.Group>
-        </Panel>
+            >
+              <Form.Group controlId="startsAt">
+                <Form.Control
+                  name="startsAt"
+                  label={t('event.form.startsAt')}
+                  dateTime={
+                    event.startsAt ? new Date(event.startsAt) : undefined
+                  }
+                  changeDate={(date: Date) =>
+                    onChange({ startsAt: date?.toISOString() })
+                  }
+                  accepter={DateTimePicker}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="endsAt">
+                <Form.Control
+                  name="endsAt"
+                  label={t('event.form.endsAt')}
+                  dateTime={event.endsAt ? new Date(event.endsAt) : undefined}
+                  changeDate={(date: Date) =>
+                    onChange({ endsAt: date?.toISOString() })
+                  }
+                  accepter={DateTimePicker}
+                />
+              </Form.Group>
+            </div>
+
+            <Form.Group controlId="lead">
+              <Form.Label>{t('event.form.lead')}</Form.Label>
+              <Form.Control
+                name="lead"
+                rows={3}
+                value={event.lead ?? ''}
+                onChange={(lead: string) => onChange({ lead })}
+                accepter={Textarea}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="description">
+              <Form.Label>{t('event.form.description')}</Form.Label>
+              <Card variant="outlined">
+                <CardContent>
+                  <Form.Control
+                    name="description"
+                    value={event.description}
+                    onChange={(description: RichTextBlockValue['richText']) =>
+                      onChange({ description })
+                    }
+                    accepter={RichTextBlock}
+                  />
+                </CardContent>
+              </Card>
+            </Form.Group>
+          </CardContent>
+        </Card>
+
+        <Card variant="outlined">
+          <CardContent>
+            {!create && (
+              <Form.Group controlId="status">
+                <Form.Label>
+                  {t('event.form.status')}{' '}
+                  <InfoTooltip text={t('event.form.statusInfo')} />
+                </Form.Label>
+                <Form.Control
+                  name="status"
+                  block
+                  placement="auto"
+                  cleanable={false}
+                  searchable={false}
+                  accepter={SelectPicker}
+                  value={(event as MutationUpdateEventArgs).status ?? ''}
+                  data={[
+                    {
+                      value: EventStatus.Scheduled,
+                      label: t('event.form.scheduled'),
+                    },
+                    {
+                      value: EventStatus.Cancelled,
+                      label: t('event.form.cancelled'),
+                    },
+                    {
+                      value: EventStatus.Postponed,
+                      label: t('event.form.postponed'),
+                    },
+                    {
+                      value: EventStatus.Rescheduled,
+                      label: t('event.form.rescheduled'),
+                    },
+                  ]}
+                  onChange={(status: any) =>
+                    onChange({ status: status as EventStatus })
+                  }
+                />
+              </Form.Group>
+            )}
+
+            <Form.Group controlId="tagIds">
+              <Form.Label>{t('event.form.tags')}</Form.Label>
+              <Form.Control
+                name="tagIds"
+                defaultTags={event.tags ?? []}
+                selectedTags={event.tagIds ?? []}
+                setSelectedTags={(tagIds: string[]) => onChange({ tagIds })}
+                tagType={TagType.Event}
+                accepter={SelectTags}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="image">
+              <Form.Label>{t('event.form.image')}</Form.Label>
+              <Form.Control
+                name="image"
+                header={''}
+                image={event.image}
+                disabled={false}
+                openChooseModalOpen={() => setChooseModalOpen(true)}
+                openEditModalOpen={() => setEditModalOpen(true)}
+                removeImage={() => {
+                  onChange({ imageId: undefined, image: undefined });
+                }}
+                accepter={ChooseEditImage}
+              />
+            </Form.Group>
+          </CardContent>
+        </Card>
       </div>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size={'sm'}
         onClose={() => {
           setChooseModalOpen(false);
         }}
@@ -225,8 +244,18 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
 
       {event.imageId && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size={'sm'}
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel

@@ -1,0 +1,84 @@
+[
+  {
+    "from": "Drawer.Title",
+    "to": "DrawerTitle"
+  },
+  {
+    "from": "Drawer.Actions",
+    "to": "DrawerActions"
+  },
+  {
+    "from": "Drawer.Header",
+    "to": "DrawerHeader"
+  },
+  {
+    "from": "Drawer.Body",
+    "to": "DrawerBody"
+  },
+  {
+    "from": "Drawer.Footer",
+    "to": "DrawerFooter"
+  },
+  {
+    "from": "Drawer",
+    "probe": [
+      "size",
+      "placement"
+    ],
+    "drop": [
+      "size",
+      "backdrop",
+      "keyboard",
+      "full",
+      "closeButton"
+    ],
+    "rename": {
+      "placement": "anchor"
+    },
+    "add": [
+      {
+        "when": {
+          "size": "xs"
+        },
+        "attrs": "anchor=\"right\" slotProps={{ paper: { sx: { display: 'flex', flexDirection: 'column', width: DRAWER_WIDTHS.xs, maxWidth: '100vw' } } }}"
+      },
+      {
+        "when": {
+          "size": "small"
+        },
+        "attrs": "anchor=\"right\" slotProps={{ paper: { sx: { display: 'flex', flexDirection: 'column', width: DRAWER_WIDTHS.sm, maxWidth: '100vw' } } }}"
+      },
+      {
+        "when": {
+          "size": "sm"
+        },
+        "attrs": "anchor=\"right\" slotProps={{ paper: { sx: { display: 'flex', flexDirection: 'column', width: DRAWER_WIDTHS.sm, maxWidth: '100vw' } } }}"
+      },
+      {
+        "when": {
+          "size": "md"
+        },
+        "attrs": "anchor=\"right\" slotProps={{ paper: { sx: { display: 'flex', flexDirection: 'column', width: DRAWER_WIDTHS.md, maxWidth: '100vw' } } }}"
+      },
+      {
+        "when": {
+          "size": "large"
+        },
+        "attrs": "anchor=\"right\" slotProps={{ paper: { sx: { display: 'flex', flexDirection: 'column', width: DRAWER_WIDTHS.lg, maxWidth: '100vw' } } }}"
+      },
+      {
+        "when": {
+          "size": "lg"
+        },
+        "attrs": "anchor=\"right\" slotProps={{ paper: { sx: { display: 'flex', flexDirection: 'column', width: DRAWER_WIDTHS.lg, maxWidth: '100vw' } } }}"
+      },
+      {
+        "when": {
+          "size": "full"
+        },
+        "attrs": "anchor=\"right\" slotProps={{ paper: { sx: { display: 'flex', flexDirection: 'column', width: DRAWER_WIDTHS.full } } }}"
+      }
+    ],
+    "defaults": "anchor=\"right\" slotProps={{ paper: { sx: { display: 'flex', flexDirection: 'column', width: DRAWER_WIDTHS.sm, maxWidth: '100vw' } } }}"
+  }
+]

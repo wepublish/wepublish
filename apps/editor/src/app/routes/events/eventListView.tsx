@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import {
   EventFilter,
   EventListDocument,
@@ -8,8 +9,7 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  enqueueSnackbar,
   humanizeError,
   IconButton,
   IconButtonTooltip,
@@ -19,6 +19,7 @@ import {
   ListViewContainer,
   ListViewHeader,
   PaddedCell,
+  Pagination,
   PermissionControl,
   Table,
   TableWrapper,
@@ -29,7 +30,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Message, Pagination, Table as RTable, toaster } from 'rsuite';
+import { Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 import { DeleteEventModal } from './deleteEventModal';
@@ -70,16 +71,10 @@ export function EventEndsAtView({
 
 const onErrorToast = (error: Error) => {
   if (error?.message) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {error && humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(error && humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   }
 };
 
@@ -127,12 +122,12 @@ function EventListView() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_EVENT']}>
           <ListViewActions>
             <Link to="create">
-              <IconButton
-                appearance="primary"
-                icon={<MdAdd />}
+              <Button
+                variant="contained"
+                startIcon={<MdAdd />}
               >
                 {t('event.list.create')}
-              </IconButton>
+              </Button>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -218,13 +213,12 @@ function EventListView() {
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     aria-label={t('delete')}
-                    icon={<MdDelete />}
-                    color="red"
-                    appearance="ghost"
-                    circle
-                    size="sm"
+                    color="error"
+                    size="small"
                     onClick={() => setEventDelete(event as FullEventFragment)}
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
               )}
             </PaddedCell>
@@ -232,23 +226,16 @@ function EventListView() {
         </Table>
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.events?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.events?.totalCount ?? 0}
         />
       </TableWrapper>
 

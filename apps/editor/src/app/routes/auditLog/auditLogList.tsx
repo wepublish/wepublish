@@ -1,23 +1,23 @@
-import styled from '@emotion/styled';
 import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
+import { Alert, Chip } from '@mui/material';
 import {
   AuditLogAction,
   AuditLogActorType,
   AuditLogFilter,
+  AuditLogListDocument,
   AuditLogSort,
   FullAuditLogFragment,
-  AuditLogListDocument,
   SortOrder,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   IconButtonTooltip,
   InfoTooltip,
   ListViewContainer,
   ListViewHeader,
-  Table,
+  Pagination,
   TableWrapper,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
@@ -28,15 +28,8 @@ import {
   DateRangePicker,
   Input,
   InputGroup,
-  Message,
-  Pagination,
-  Table as RTable,
   SelectPicker,
-  Tag as RTag,
 } from 'rsuite';
-import { RowDataType } from 'rsuite-table';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
 
 const FilterBar = styled.div`
   display: flex;
@@ -71,12 +64,12 @@ const Truncate = styled.span`
 
 const actionColors: Record<
   AuditLogAction,
-  'green' | 'blue' | 'red' | 'violet'
+  'success' | 'primary' | 'error' | 'secondary'
 > = {
-  [AuditLogAction.Create]: 'green',
-  [AuditLogAction.Update]: 'blue',
-  [AuditLogAction.Delete]: 'red',
-  [AuditLogAction.Other]: 'violet',
+  [AuditLogAction.Create]: 'success',
+  [AuditLogAction.Update]: 'primary',
+  [AuditLogAction.Delete]: 'error',
+  [AuditLogAction.Other]: 'secondary',
 };
 
 function AuditLogList() {
@@ -152,12 +145,7 @@ function AuditLogList() {
           </ListViewHeader>
         </ListViewContainer>
 
-        <Message
-          type="info"
-          showIcon
-        >
-          {t('auditLogList.overview.notSupported')}
-        </Message>
+        <Alert severity="info">{t('auditLogList.overview.notSupported')}</Alert>
       </>
     );
   }
@@ -249,84 +237,63 @@ function AuditLogList() {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={isLoading}
+        <DataTable
           data={auditLogs}
-          sortColumn="createdAt"
-          sortType={sortOrder}
-          onSortColumn={(_, sortType) => setSortOrder(sortType ?? 'desc')}
-        >
-          <Column
-            width={180}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('auditLogList.overview.createdAt')}</HeaderCell>
-            <RCell dataKey="createdAt">
-              {({ createdAt }: RowDataType<FullAuditLogFragment>) =>
+          loading={isLoading}
+          columns={[
+            {
+              id: 'createdat',
+              label: t('auditLogList.overview.createdAt'),
+              width: 180,
+              align: 'left',
+              render: ({ createdAt }) =>
                 t('auditLogList.overview.createdAtDate', {
                   createdAtDate: new Date(createdAt),
-                })
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={240}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('auditLogList.overview.actor')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullAuditLogFragment>) => {
+                }),
+            },
+            {
+              id: 'actor',
+              label: t('auditLogList.overview.actor'),
+              width: 240,
+              align: 'left',
+              render: rowData => {
                 const actor = describeActor(rowData as FullAuditLogFragment);
 
                 return <Truncate title={actor}>{actor}</Truncate>;
-              }}
-            </RCell>
-          </Column>
-
-          <Column
-            width={110}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('auditLogList.overview.action')}</HeaderCell>
-            <RCell>
-              {({ action }: RowDataType<FullAuditLogFragment>) => (
-                <RTag color={actionColors[action as AuditLogAction]}>
-                  {t(`auditLogList.action.${action}`)}
-                </RTag>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>
-              {t('auditLogList.overview.mutation')}{' '}
-              <InfoTooltip text={t('auditLogList.overview.mutationInfo')} />
-            </HeaderCell>
-            <RCell>
-              {({ mutation }: RowDataType<FullAuditLogFragment>) => (
+              },
+            },
+            {
+              id: 'action',
+              label: t('auditLogList.overview.action'),
+              width: 110,
+              align: 'left',
+              render: ({ action }) => (
+                <Chip
+                  color={actionColors[action as AuditLogAction]}
+                  label={t(`auditLogList.action.${action}`)}
+                />
+              ),
+            },
+            {
+              id: 'mutation',
+              label: (
+                <>
+                  {t('auditLogList.overview.mutation')}{' '}
+                  <InfoTooltip text={t('auditLogList.overview.mutationInfo')} />
+                </>
+              ),
+              width: 200,
+              align: 'left',
+              render: ({ mutation }) => (
                 <Truncate title={mutation}>{mutation}</Truncate>
-              )}
-            </RCell>
-          </Column>
-
-          <Column
-            width={280}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('auditLogList.overview.record')}</HeaderCell>
-            <RCell>
-              {({ entity, recordId }: RowDataType<FullAuditLogFragment>) =>
+              ),
+            },
+            {
+              id: 'record',
+              label: t('auditLogList.overview.record'),
+              width: 280,
+              align: 'left',
+              render: ({ entity, recordId }) =>
                 entity ?
                   <Truncate
                     title={recordId ? `${entity} · ${recordId}` : entity}
@@ -339,22 +306,19 @@ function AuditLogList() {
                       </>
                     )}
                   </Truncate>
-                : <Muted>—</Muted>
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>
-              {t('auditLogList.overview.session')}{' '}
-              <InfoTooltip text={t('auditLogList.overview.sessionInfo')} />
-            </HeaderCell>
-            <RCell>
-              {({ sessionId }: RowDataType<FullAuditLogFragment>) =>
+                : <Muted>—</Muted>,
+            },
+            {
+              id: 'session',
+              label: (
+                <>
+                  {t('auditLogList.overview.session')}{' '}
+                  <InfoTooltip text={t('auditLogList.overview.sessionInfo')} />
+                </>
+              ),
+              width: 200,
+              align: 'left',
+              render: ({ sessionId }) =>
                 sessionId ?
                   <IconButtonTooltip
                     caption={t('auditLogList.overview.filterBySession')}
@@ -366,49 +330,37 @@ function AuditLogList() {
                       {sessionId.slice(0, 8)}… <MdFilterAlt />
                     </Monospace>
                   </IconButtonTooltip>
-                : <Muted>—</Muted>
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={220}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('auditLogList.overview.status')}</HeaderCell>
-            <RCell>
-              {({
-                success,
-                errorMessage,
-              }: RowDataType<FullAuditLogFragment>) =>
+                : <Muted>—</Muted>,
+            },
+            {
+              id: 'status',
+              label: t('auditLogList.overview.status'),
+              width: 220,
+              align: 'left',
+              render: ({ success, errorMessage }) =>
                 success ?
-                  <RTag color="green">
-                    {t('auditLogList.overview.succeeded')}
-                  </RTag>
+                  <Chip
+                    color="success"
+                    label={t('auditLogList.overview.succeeded')}
+                  />
                 : <IconButtonTooltip caption={errorMessage ?? ''}>
-                    <RTag color="red">{t('auditLogList.overview.failed')}</RTag>
-                  </IconButtonTooltip>
-              }
-            </RCell>
-          </Column>
-        </Table>
+                    <Chip
+                      color="error"
+                      label={t('auditLogList.overview.failed')}
+                    />
+                  </IconButtonTooltip>,
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.auditLogs.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
+          }}
+          totalCount={data?.auditLogs.totalCount ?? 0}
         />
       </TableWrapper>
     </>

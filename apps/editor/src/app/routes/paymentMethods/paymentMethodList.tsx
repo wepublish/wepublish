@@ -1,5 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+} from '@mui/material';
+import {
   DeletePaymentMethodDocument,
   FullPaymentMethodFragment,
   PaymentMethodListDocument,
@@ -8,6 +16,7 @@ import {
   createCheckedPermissionComponent,
   DescriptionList,
   DescriptionListItem,
+  DRAWER_WIDTHS,
   IconButton,
   IconButtonTooltip,
   InfoTooltip,
@@ -24,13 +33,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import {
-  Button,
-  Drawer,
-  IconButton as RIconButton,
-  Modal,
-  Table as RTable,
-} from 'rsuite';
+import { Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -104,13 +107,13 @@ function PaymentMethodList() {
         >
           <ListViewActions>
             <Link to="/paymentmethods/create">
-              <RIconButton
-                appearance="primary"
+              <Button
+                variant="contained"
                 disabled={isLoading}
+                startIcon={<MdAdd />}
               >
-                <MdAdd />
                 {t('paymentMethodList.createNew')}
-              </RIconButton>
+              </Button>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -181,11 +184,8 @@ function PaymentMethodList() {
                 >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
-                      icon={<MdDelete />}
-                      circle
-                      appearance="ghost"
-                      color="red"
-                      size="sm"
+                      color="error"
+                      size="small"
                       aria-label={t('delete')}
                       onClick={() => {
                         setConfirmationDialogOpen(true);
@@ -193,7 +193,9 @@ function PaymentMethodList() {
                           rowData as FullPaymentMethodFragment
                         );
                       }}
-                    />
+                    >
+                      <MdDelete />
+                    </IconButton>
                   </IconButtonTooltip>
                 </PermissionControl>
               )}
@@ -203,8 +205,18 @@ function PaymentMethodList() {
       </TableWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => {
           setEditModalOpen(false);
           navigate('/paymentmethods');
@@ -225,24 +237,24 @@ function PaymentMethodList() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={isConfirmationDialogOpen}
-        size="sm"
+        maxWidth="sm"
       >
-        <Modal.Header>
-          <Modal.Title>{t('paymentMethodList.deleteModalTitle')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('paymentMethodList.deleteModalTitle')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('paymentMethodList.name')}>
               {currentPaymentMethod?.name || t('untitled')}
             </DescriptionListItem>
           </DescriptionList>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="outlined"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentPaymentMethod) return;
@@ -254,18 +266,18 @@ function PaymentMethodList() {
               await refetch();
               setConfirmationDialogOpen(false);
             }}
-            color="red"
+            color="error"
           >
             {t('confirm')}
           </Button>
           <Button
+            variant="text"
             onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

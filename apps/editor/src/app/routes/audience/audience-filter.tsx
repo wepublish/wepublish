@@ -1,27 +1,27 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  FormControlLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  Switch,
+} from '@mui/material';
 import { MemberPlanListDocument } from '@wepublish/editor/api';
-import { InfoTrigger } from '@wepublish/ui/editor';
+import {
+  ClickPopover,
+  enqueueSnackbar,
+  InfoTrigger,
+} from '@wepublish/ui/editor';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdLink } from 'react-icons/md';
 import type { DateRangePickerProps } from 'rsuite';
-import {
-  Button,
-  Col,
-  DateRangePicker,
-  Grid,
-  Message,
-  Panel,
-  Popover as RPopover,
-  Radio,
-  RadioGroup,
-  Row,
-  TagPicker,
-  toaster,
-  Toggle,
-  Whisper,
-} from 'rsuite';
+import { DateRangePicker, TagPicker } from 'rsuite';
 
 import {
   AudienceApiFilter,
@@ -56,7 +56,7 @@ const ActionContainer = styled('div')`
   margin-top: ${({ theme }) => theme.spacing(1)};
 `;
 
-const HelpPopover = styled(RPopover)`
+const HelpPopover = styled('div')`
   max-width: 320px;
 
   p + p {
@@ -93,27 +93,15 @@ export function AudienceFilter({
     try {
       await navigator.clipboard.writeText(buildPermalink());
 
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('audienceFilter.permalinkCopied')}
-        </Message>
-      );
+      enqueueSnackbar(t('audienceFilter.permalinkCopied'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
     } catch {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('audienceFilter.permalinkCopyFailed')}
-        </Message>
-      );
+      enqueueSnackbar(t('audienceFilter.permalinkCopyFailed'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     }
   };
 
@@ -181,31 +169,39 @@ export function AudienceFilter({
   }, [t]);
 
   return (
-    <Grid style={{ width: '100%' }}>
-      <Row>
+    <Grid
+      container
+      spacing={2}
+      style={{ width: '100%' }}
+    >
+      <Grid
+        container
+        spacing={2}
+      >
         {/* select date range */}
-        <Col
-          xs={24}
-          xl={4}
-        >
+        <Grid size={{ xs: 12, xl: 2 }}>
           <RadioGroup
             name="aggregation-picker"
-            inline
-            appearance="picker"
+            row
             value={resolution}
-            onChange={newResolution =>
+            onChange={(_event, newResolution) =>
               setResolution(newResolution as TimeResolution)
             }
           >
-            <Radio value="daily">{t('audienceFilter.daily')}</Radio>
-            <Radio value="monthly">{t('audienceFilter.monthly')}</Radio>
+            <FormControlLabel
+              value="daily"
+              control={<Radio />}
+              label={t('audienceFilter.daily')}
+            />
+            <FormControlLabel
+              value="monthly"
+              control={<Radio />}
+              label={t('audienceFilter.monthly')}
+            />
           </RadioGroup>
-        </Col>
+        </Grid>
 
-        <Col
-          xs={24}
-          xl={6}
-        >
+        <Grid size={{ xs: 12, xl: 3 }}>
           <DateRangePicker
             size="lg"
             value={apiFilter.dateRange}
@@ -228,80 +224,88 @@ export function AudienceFilter({
 
           <ComponentFilterContainer>
             <ToggleContainer>
-              <Toggle
-                checked={componentFilter.chart}
-                label={t('audienceFilter.chart')}
-                onChange={chart =>
-                  setComponentFilter({ ...componentFilter, chart })
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={componentFilter.chart}
+                    onChange={(_event, chart) =>
+                      setComponentFilter({ ...componentFilter, chart })
+                    }
+                  />
                 }
+                label={t('audienceFilter.chart')}
               />
             </ToggleContainer>
             <ToggleContainer>
-              <Toggle
-                checked={componentFilter.table}
-                label={t('audienceFilter.table')}
-                onChange={table =>
-                  setComponentFilter({ ...componentFilter, table })
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={componentFilter.table}
+                    onChange={(_event, table) =>
+                      setComponentFilter({ ...componentFilter, table })
+                    }
+                  />
                 }
+                label={t('audienceFilter.table')}
               />
             </ToggleContainer>
 
             <ActionContainer>
               <Button
-                appearance="ghost"
-                size="sm"
+                variant="outlined"
+                size="small"
                 startIcon={<MdLink />}
                 onClick={copyPermalink}
               >
                 {t('audienceFilter.copyPermalink')}
               </Button>
 
-              <Whisper
-                trigger={['hover', 'focus']}
-                placement="rightStart"
-                speaker={
-                  <HelpPopover>
-                    <p>{t('audienceFilter.permalinkHelpWhat')}</p>
-                    <p>{t('audienceFilter.permalinkHelpWhy')}</p>
-                    <p>{t('audienceFilter.permalinkHelpExample')}</p>
-                  </HelpPopover>
+              <ClickPopover
+                trigger={
+                  <InfoTrigger
+                    aria-label={t('audienceFilter.permalinkHelpLabel')}
+                  />
                 }
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
               >
-                <InfoTrigger
-                  aria-label={t('audienceFilter.permalinkHelpLabel')}
-                />
-              </Whisper>
+                <HelpPopover>
+                  <p>{t('audienceFilter.permalinkHelpWhat')}</p>
+                  <p>{t('audienceFilter.permalinkHelpWhy')}</p>
+                  <p>{t('audienceFilter.permalinkHelpExample')}</p>
+                </HelpPopover>
+              </ClickPopover>
             </ActionContainer>
           </ComponentFilterContainer>
-        </Col>
+        </Grid>
 
         {/* filter data */}
-        <Col
-          xs={24}
-          xl={14}
-        >
-          <Panel
-            header={t('audienceFilter.panelHeader')}
-            bordered
-          >
-            <Row>
-              {Object.keys(clientFilter).map((filterKey, filterIndex) => (
-                <Col
-                  xs={24}
-                  xl={12}
-                  key={filterIndex}
-                >
-                  <AudienceFilterToggle
-                    filterKey={filterKey as keyof AudienceClientFilter}
-                    clientFilter={clientFilter}
-                    setClientFilter={setClientFilter}
-                  />
-                </Col>
-              ))}
-            </Row>
-          </Panel>
-        </Col>
-      </Row>
+        <Grid size={{ xs: 12, xl: 7 }}>
+          <Card variant="outlined">
+            <CardHeader title={t('audienceFilter.panelHeader')} />
+
+            <CardContent>
+              <Grid
+                container
+                spacing={2}
+              >
+                {Object.keys(clientFilter).map((filterKey, filterIndex) => (
+                  <Grid
+                    size={{ xs: 12, xl: 6 }}
+                    key={filterIndex}
+                  >
+                    <AudienceFilterToggle
+                      filterKey={filterKey as keyof AudienceClientFilter}
+                      clientFilter={clientFilter}
+                      setClientFilter={setClientFilter}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </Grid>
   );
 }

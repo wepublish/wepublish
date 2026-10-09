@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client/react';
+import { Button, IconButton } from '@mui/material';
 import {
   BlockTemplate,
   BlockTemplateListDocument,
@@ -10,47 +11,30 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
+  enqueueSnackbar,
   humanizeError,
   IconButtonTooltip,
   InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  PaddedCell,
-  Table,
+  Pagination,
   TableWrapper,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  IconButton,
-  Message,
-  Pagination,
-  Table as RTable,
-  toaster,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
 
 import { DeleteBlockTemplateModal } from './deleteBlockTemplateModal';
 
-const { Column, HeaderCell, Cell: RCell } = RTable;
-
 const onErrorToast = (error: Error) => {
   if (error?.message) {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {error && humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(error && humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   }
 };
 
@@ -98,77 +82,63 @@ function BlockTemplateList() {
 
         <ListViewActions>
           <Link to="/block-content/templates/create">
-            <IconButton
-              appearance="primary"
+            <Button
+              variant="contained"
+              startIcon={<MdAdd />}
               disabled={loading}
-              icon={<MdAdd />}
             >
               {t('blockTemplates.list.newBlockTemplate')}
-            </IconButton>
+            </Button>
           </Link>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
           data={data?.blockTemplates?.nodes || []}
-        >
-          <Column
-            flexGrow={1}
-            resizable
-          >
-            <HeaderCell>{t('blockTemplates.list.name')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<BlockTemplate>) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'name',
+              label: t('blockTemplates.list.name'),
+              render: rowData => (
                 <Link to={`/block-content/templates/edit/${rowData.id}`}>
                   {rowData.name || t('blockTemplates.list.noName')}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-          <Column
-            width={100}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <PaddedCell align="center">
-              {(blockTemplate: RowDataType<BlockTemplate>) => (
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: blockTemplate => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     aria-label={t('delete')}
-                    icon={<MdDelete />}
-                    circle
-                    appearance="ghost"
-                    color="red"
-                    size="sm"
+                    color="error"
+                    size="small"
                     onClick={() =>
                       setBlockTemplateDelete(blockTemplate as BlockTemplate)
                     }
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.blockTemplates?.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit,
+          }}
+          totalCount={data?.blockTemplates?.totalCount ?? 0}
         />
       </TableWrapper>
 

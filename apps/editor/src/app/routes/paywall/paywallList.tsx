@@ -1,5 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import {
   DeletePaywallDocument,
   FullPaywallFragment,
   PaywallListDocument,
@@ -24,12 +31,7 @@ import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Modal,
-  Table as RTable,
-} from 'rsuite';
+import { Table as RTable } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -56,13 +58,13 @@ function PaywallList() {
 
         <ListViewActions>
           <Link to="create">
-            <RIconButton
-              appearance="primary"
+            <Button
+              variant="contained"
               loading={false}
+              startIcon={<MdAdd />}
             >
-              <MdAdd />
               {t('paywall.overview.createPaywall')}
-            </RIconButton>
+            </Button>
           </Link>
         </ListViewActions>
       </ListViewContainer>
@@ -130,16 +132,15 @@ function PaywallList() {
               {(paywall: RowDataType<FullPaywallFragment>) => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
-                    icon={<MdDelete />}
-                    circle
-                    appearance="ghost"
-                    color="red"
-                    size="sm"
+                    color="error"
+                    size="small"
                     aria-label={t('delete')}
                     onClick={() =>
                       setPaywallToDelete(paywall as FullPaywallFragment)
                     }
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
               )}
             </PaddedCell>
@@ -147,25 +148,25 @@ function PaywallList() {
         </Table>
       </TableWrapper>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!paywallToDelete}
-        backdrop="static"
-        size="xs"
+        maxWidth="xs"
         onClose={() => setPaywallToDelete(undefined)}
       >
-        <Modal.Title>{t('paywall.overview.areYouSure')}</Modal.Title>
+        <DialogTitle>{t('paywall.overview.areYouSure')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           {paywallToDelete &&
             t('paywall.overview.areYouSureBody', {
               paywall: paywallToDelete.name,
             })}
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            color="red"
-            appearance="primary"
+            variant="contained"
+            color="error"
             onClick={() => {
               deletePaywall({
                 variables: {
@@ -179,13 +180,13 @@ function PaywallList() {
           </Button>
 
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setPaywallToDelete(undefined)}
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

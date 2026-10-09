@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 
 import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 import {
   BlockStylesDocument,
@@ -13,6 +14,8 @@ import { BlockList, BlockProps } from '../atoms/blockList';
 import { BlockMap } from './blockMap';
 import { BlockTemplateBlock } from './blockTemplateBlock';
 import { BlockTemplateBlockValue, BlockValue } from './types';
+
+const theme = createTheme();
 
 const blockTemplateListQueryMock = vi.fn();
 const blockTemplateQueryMock = vi.fn();
@@ -111,12 +114,14 @@ const renderBlock = ({
   const onReplace = vi.fn();
 
   const result = render(
-    <BlockTemplateBlock
-      value={value}
-      onChange={onChange}
-      onReplace={onReplace}
-      {...props}
-    />
+    <ThemeProvider theme={theme}>
+      <BlockTemplateBlock
+        value={value}
+        onChange={onChange}
+        onReplace={onReplace}
+        {...props}
+      />
+    </ThemeProvider>
   );
 
   return { ...result, onChange, onReplace };
@@ -319,7 +324,11 @@ describe('BlockTemplateBlock', () => {
 
   describe('inside a block list', () => {
     it('should disappear and leave its content behind once it is used', () => {
-      render(<BlockListHarness initialValue={[templateBlockValue()]} />);
+      render(
+        <ThemeProvider theme={theme}>
+          <BlockListHarness initialValue={[templateBlockValue()]} />
+        </ThemeProvider>
+      );
 
       expect(useContentButton()).toBeEnabled();
       expect(screen.getByDisplayValue('First Title')).toBeDisabled();
@@ -338,13 +347,15 @@ describe('BlockTemplateBlock', () => {
 
     it('should keep the surrounding blocks untouched', () => {
       render(
-        <BlockListHarness
-          initialValue={[
-            titleBlockValue('before', 'Before'),
-            templateBlockValue(),
-            titleBlockValue('after', 'After'),
-          ]}
-        />
+        <ThemeProvider theme={theme}>
+          <BlockListHarness
+            initialValue={[
+              titleBlockValue('before', 'Before'),
+              templateBlockValue(),
+              titleBlockValue('after', 'After'),
+            ]}
+          />
+        </ThemeProvider>
       );
 
       useContent();

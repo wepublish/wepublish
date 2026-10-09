@@ -1,8 +1,8 @@
-import type { Mock } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { CommentItemType, CreateCommentDocument } from '@wepublish/editor/api';
+import { MemoryRouter } from 'react-router-dom';
+import type { Mock } from 'vitest';
 
 import { PageList } from './pageList';
 

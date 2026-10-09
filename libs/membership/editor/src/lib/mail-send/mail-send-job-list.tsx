@@ -1,6 +1,8 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Alert,
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -8,6 +10,11 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Stack,
+  Drawer,
+  Card,
+  CardContent,
+  CardHeader,
 } from '@mui/material';
 import {
   FullMailSendJobFragment,
@@ -18,20 +25,19 @@ import {
   MailSendJobState,
   MailSendJobsDocument,
 } from '@wepublish/editor/api';
-import { InfoTooltip } from '@wepublish/ui/editor';
+import {
+  InfoTooltip,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerBody,
+  DRAWER_WIDTHS,
+  Pagination,
+} from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdMail, MdOutlineChevronRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  Drawer,
-  Message,
-  Pagination,
-  Panel,
-  SelectPicker,
-  Stack,
-} from 'rsuite';
+import { SelectPicker } from 'rsuite';
 import { useShowErrors } from '../common';
 import {
   formatDateTime,
@@ -180,19 +186,20 @@ export function MailSendJobList({
                 </TableCell>
                 <TableCell align="center">
                   <Stack
-                    spacing={8}
-                    justifyContent="center"
+                    direction="row"
+                    sx={{ justifyContent: 'center' }}
+                    spacing={1}
                   >
                     {canResume(job) && (
                       <ResumeJobButton
                         job={job}
-                        size="xs"
+                        size="small"
                         onDone={() => refetch()}
                       />
                     )}
                     <Button
-                      size="xs"
-                      appearance="subtle"
+                      variant="text"
+                      size="small"
                       endIcon={<MdOutlineChevronRight />}
                       onClick={event => {
                         event.stopPropagation();
@@ -209,23 +216,22 @@ export function MailSendJobList({
         </Table>
       </TableContainer>
       {!jobs.length && (
-        <Message
-          type="info"
+        <Alert
+          severity="info"
           style={{ marginTop: 16 }}
         >
           {t('mailJobs.empty')}
-        </Message>
+        </Alert>
       )}
       <Pagination
-        style={{ marginTop: 16 }}
-        prev
-        next
-        maxButtons={7}
-        size="sm"
-        total={data?.mailSendJobs.totalCount ?? 0}
-        limit={PAGE_SIZE}
-        activePage={page}
-        onChangePage={setPage}
+        state={{
+          page,
+          limit: PAGE_SIZE,
+          setPage,
+          // This list has a fixed page size.
+          setLimit: () => undefined,
+        }}
+        totalCount={data?.mailSendJobs.totalCount ?? 0}
       />
       <MailSendJobDrawer
         jobId={selectedJobId}
@@ -273,17 +279,27 @@ function MailSendJobDrawer({
 
   return (
     <Drawer
+      anchor="right"
+      slotProps={{
+        paper: {
+          sx: {
+            display: 'flex',
+            flexDirection: 'column',
+            width: DRAWER_WIDTHS.lg,
+            maxWidth: '100vw',
+          },
+        },
+      }}
       open={!!jobId}
       onClose={onClose}
-      size="lg"
     >
-      <Drawer.Header>
-        <Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>
           {job?.mailTemplate?.name ?? t('mailJobs.detailTitle')}
-        </Drawer.Title>
-      </Drawer.Header>
+        </DrawerTitle>
+      </DrawerHeader>
 
-      <Drawer.Body>
+      <DrawerBody>
         {job && (
           <>
             <JobSummary
@@ -296,7 +312,7 @@ function MailSendJobDrawer({
             />
           </>
         )}
-      </Drawer.Body>
+      </DrawerBody>
     </Drawer>
   );
 }
@@ -314,9 +330,9 @@ function JobSummary({
   return (
     <>
       <Stack
-        spacing={16}
-        alignItems="center"
-        wrap
+        direction="row"
+        sx={{ flexWrap: 'wrap', alignItems: 'center' }}
+        spacing={2}
         style={{ marginBottom: 16 }}
       >
         <MailSendJobStateTag status={job.status} />
@@ -334,8 +350,9 @@ function JobSummary({
       </Stack>
       <JobProgressBar job={job} />
       <Stack
-        spacing={12}
-        wrap
+        direction="row"
+        sx={{ flexWrap: 'wrap' }}
+        spacing={1.5}
         style={{ marginTop: 16 }}
       >
         <Stat tone={TONE.sent}>
@@ -366,9 +383,8 @@ function JobSummary({
         </Stat>
       </Stack>
       {job.error && (
-        <Message
-          type={pending > 0 ? 'warning' : 'error'}
-          showIcon
+        <Alert
+          severity={pending > 0 ? 'warning' : 'error'}
           style={{ marginTop: 16 }}
         >
           <div>{job.error}</div>
@@ -376,16 +392,15 @@ function JobSummary({
             <strong>{t('mailLog.errorHelp.fixTitle')}:</strong>{' '}
             {t(`mailLog.errorHelp.${mailErrorHelpKey(job.error)}.fix`)}
           </div>
-        </Message>
+        </Alert>
       )}
       {pending > 0 && !isActive(job) && (
-        <Message
-          type="info"
-          showIcon
+        <Alert
+          severity="info"
           style={{ marginTop: 16 }}
         >
           {t('mailJobs.unfinishedHint', { count: pending })}
-        </Message>
+        </Alert>
       )}
       {job.status === MailSendJobState.Running && job.heartbeatAt && (
         <Typography
@@ -401,8 +416,9 @@ function JobSummary({
         </Typography>
       )}
       <Stack
-        spacing={8}
-        wrap
+        direction="row"
+        sx={{ flexWrap: 'wrap' }}
+        spacing={1}
         style={{ marginTop: 16, marginBottom: 24 }}
       >
         {canResume(job) && (
@@ -418,9 +434,9 @@ function JobSummary({
           />
         )}
         <Button
-          size="sm"
-          appearance="ghost"
-          as={Link}
+          variant="outlined"
+          size="small"
+          component={Link}
           to={`/maillog?job=${job.id}`}
           startIcon={<MdMail />}
         >
@@ -428,10 +444,10 @@ function JobSummary({
         </Button>
         {job.failedCount > 0 && (
           <Button
-            size="sm"
-            appearance="ghost"
-            color="red"
-            as={Link}
+            variant="outlined"
+            size="small"
+            color="error"
+            component={Link}
             to={`/maillog?job=${job.id}&state=${MailLogState.Rejected}`}
           >
             {t('mailJobs.showFailedMails', { count: job.failedCount })}
@@ -480,106 +496,107 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
   const entries = data?.mailSendJobRecipients.nodes ?? [];
 
   return (
-    <Panel
-      bordered
-      header={
-        <Stack
-          justifyContent="space-between"
-          alignItems="center"
-          style={{ width: '100%' }}
-        >
-          <span>{t('mailJobs.queue.title')}</span>
-          <SelectPicker
-            size="sm"
-            searchable={false}
-            style={{ width: 200 }}
-            data={Object.values(MailSendJobRecipientState).map(value => ({
-              label: t(`mailJobs.recipientState.${value}`),
-              value,
-            }))}
-            value={state}
-            onChange={setState}
-            placeholder={t('mailJobs.queue.allStates')}
-          />
-        </Stack>
-      }
-    >
-      <TableContainer>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>#</TableCell>
-              <TableCell>
-                <strong>{t('mailJobs.queue.recipient')}</strong>
-              </TableCell>
-              <TableCell>
-                <strong>{t('mailJobs.queue.state')}</strong>
-              </TableCell>
-              <TableCell>
-                <strong>{t('mailJobs.queue.sentAt')}</strong>
-              </TableCell>
-              <TableCell>
-                <strong>{t('mailJobs.queue.attempts')}</strong>{' '}
-                <InfoTooltip text={t('mailJobs.queue.attemptsHelp')} />
-              </TableCell>
-              <TableCell>
-                <strong>{t('mailLog.error')}</strong>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {entries.map(entry => (
-              <TableRow key={entry.id}>
-                <TableCell style={{ color: 'var(--rs-text-secondary)' }}>
-                  {entry.position + 1}
+    <Card variant="outlined">
+      <CardHeader
+        title={
+          <Stack
+            direction="row"
+            sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+            style={{ width: '100%' }}
+          >
+            <span>{t('mailJobs.queue.title')}</span>
+            <SelectPicker
+              size="sm"
+              searchable={false}
+              style={{ width: 200 }}
+              data={Object.values(MailSendJobRecipientState).map(value => ({
+                label: t(`mailJobs.recipientState.${value}`),
+                value,
+              }))}
+              value={state}
+              onChange={setState}
+              placeholder={t('mailJobs.queue.allStates')}
+            />
+          </Stack>
+        }
+      />
+
+      <CardContent>
+        <TableContainer>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>#</TableCell>
+                <TableCell>
+                  <strong>{t('mailJobs.queue.recipient')}</strong>
                 </TableCell>
                 <TableCell>
-                  {entry.user.email}
-                  {entry.memberPlanName && (
-                    <Typography
-                      variant="caption"
-                      style={{ color: 'var(--rs-text-secondary)' }}
-                      sx={{
-                        display: 'block',
-                      }}
-                    >
-                      {entry.memberPlanName}
-                    </Typography>
-                  )}
+                  <strong>{t('mailJobs.queue.state')}</strong>
                 </TableCell>
                 <TableCell>
-                  <RecipientStateTag state={entry.state} />
+                  <strong>{t('mailJobs.queue.sentAt')}</strong>
                 </TableCell>
-                <TableCell>{formatDateTime(entry.sentAt)}</TableCell>
-                <TableCell>{entry.attempts}</TableCell>
                 <TableCell>
-                  <MailErrorCell error={entry.error} />
+                  <strong>{t('mailJobs.queue.attempts')}</strong>{' '}
+                  <InfoTooltip text={t('mailJobs.queue.attemptsHelp')} />
+                </TableCell>
+                <TableCell>
+                  <strong>{t('mailLog.error')}</strong>
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {!entries.length && (
-        <Message
-          type="info"
-          style={{ marginTop: 12 }}
-        >
-          {t('mailJobs.queue.empty')}
-        </Message>
-      )}
-      <Pagination
-        style={{ marginTop: 12 }}
-        prev
-        next
-        maxButtons={5}
-        size="xs"
-        total={data?.mailSendJobRecipients.totalCount ?? 0}
-        limit={RECIPIENT_PAGE_SIZE}
-        activePage={page}
-        onChangePage={setPage}
-      />
-    </Panel>
+            </TableHead>
+            <TableBody>
+              {entries.map(entry => (
+                <TableRow key={entry.id}>
+                  <TableCell style={{ color: 'var(--rs-text-secondary)' }}>
+                    {entry.position + 1}
+                  </TableCell>
+                  <TableCell>
+                    {entry.user.email}
+                    {entry.memberPlanName && (
+                      <Typography
+                        variant="caption"
+                        style={{ color: 'var(--rs-text-secondary)' }}
+                        sx={{
+                          display: 'block',
+                        }}
+                      >
+                        {entry.memberPlanName}
+                      </Typography>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <RecipientStateTag state={entry.state} />
+                  </TableCell>
+                  <TableCell>{formatDateTime(entry.sentAt)}</TableCell>
+                  <TableCell>{entry.attempts}</TableCell>
+                  <TableCell>
+                    <MailErrorCell error={entry.error} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {!entries.length && (
+          <Alert
+            severity="info"
+            style={{ marginTop: 12 }}
+          >
+            {t('mailJobs.queue.empty')}
+          </Alert>
+        )}
+        <Pagination
+          state={{
+            page,
+            limit: RECIPIENT_PAGE_SIZE,
+            setPage,
+            setLimit: () => undefined /* page size was fixed here */,
+          }}
+          totalCount={data?.mailSendJobRecipients.totalCount ?? 0}
+        />
+      </CardContent>
+    </Card>
   );
 }
 

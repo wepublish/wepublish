@@ -1,7 +1,7 @@
-import type { Mock } from 'vitest';
 import { useMutation, useQuery } from '@apollo/client/react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { SyncProviderType } from '@wepublish/editor/api';
+import type { Mock } from 'vitest';
 
 import { MailchimpSyncIntegrationForm } from './mailchimpSyncIntegrationForm';
 

@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
+import { IconButton } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TbColumns, TbColumnsOff } from 'react-icons/tb';
-import { Checkbox, IconButton } from 'rsuite';
+import { Checkbox } from 'rsuite';
 
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 
@@ -80,13 +81,15 @@ export const ColumnConfigurator = ({
     <Wrapper ref={wrapperRef}>
       <IconButtonTooltip caption={label}>
         <IconButton
-          size="sm"
-          appearance="subtle"
+          size="small"
           aria-label={label}
           aria-expanded={expanded}
-          icon={expanded ? <TbColumnsOff /> : <TbColumns />}
           onClick={() => setExpanded(expanded => !expanded)}
-        />
+        >
+          {expanded ?
+            <TbColumnsOff />
+          : <TbColumns />}
+        </IconButton>
       </IconButtonTooltip>
 
       {expanded && (

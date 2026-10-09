@@ -1,6 +1,15 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Badge as MuiBadge,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton as MuiIconButton,
+} from '@mui/material';
+import {
   CreatePollAnswerDocument,
   DeletePollAnswerDocument,
   FullPollFragment,
@@ -8,30 +17,24 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import {
-  Badge as RBadge,
-  Button,
-  Form,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  toaster,
-} from 'rsuite';
+import { Form } from 'rsuite';
+
 import { humanizeError } from '../../humanizeError';
+import { enqueueSnackbar } from '../../snackbar';
 import { IconButtonTooltip } from '../iconButtonTooltip';
 
 type PollAnswerFragment = FullPollFragment['answers'][number];
 type PollExternalVoteFragment =
   FullPollFragment['externalVoteSources'][number]['voteAmounts'][number];
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   &&:not([data-with-text]) {
     width: 36px;
     height: 36px;
   }
 `;
 
-const Badge = styled(RBadge)`
+const Badge = styled(MuiBadge)`
   width: 100%;
   display: grid;
 `;
@@ -129,16 +132,10 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
   const [deleteAnswerMutation] = useMutation(DeletePollAnswerDocument);
 
   const onErrorToast = (error: Error) => {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   };
 
   /**
@@ -150,16 +147,10 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     }
 
     if (!newAnswer) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('pollAnswer.answerMissing')}
-        </Message>
-      );
+      enqueueSnackbar(t('pollAnswer.answerMissing'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       return;
     }
 
@@ -254,7 +245,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
       {poll?.answers?.map(answer => (
         <Grid key={answer.id}>
           <Badge
-            content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}
+            badgeContent={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}
           >
             <Form.Control
               name={`answer-${answer.id}`}
@@ -271,16 +262,15 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           <IconButtonTooltip caption={t('delete')}>
             <IconButton
               aria-label={t('delete')}
-              icon={<MdDelete />}
-              circle
-              size="sm"
-              appearance="ghost"
-              color="red"
+              size="small"
+              color="error"
               onClick={() => {
                 setAnswerToDelete(answer);
                 setModalOpen(true);
               }}
-            />
+            >
+              <MdDelete />
+            </IconButton>
           </IconButtonTooltip>
         </Grid>
       ))}
@@ -297,45 +287,46 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           }}
         />
 
-        <RIconButton
-          icon={<MdAdd />}
+        <Button
+          variant="contained"
+          startIcon={<MdAdd />}
           loading={loading}
-          appearance="primary"
           onClick={createAnswer}
         >
           {t('pollEditView.addAndSaveNewAnswer')}
-        </RIconButton>
+        </Button>
       </Grid>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={modalOpen}
-        size="xs"
+        maxWidth="xs"
         onClose={() => {
           setModalOpen(false);
         }}
       >
-        <Modal.Title>{t('pollAnswer.deleteModalTitle')}</Modal.Title>
+        <DialogTitle>{t('pollAnswer.deleteModalTitle')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           {t('pollAnswer.deleteModalBody', { answer: answerToDelete?.answer })}
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            appearance="primary"
+            variant="contained"
             onClick={() => deleteAnswer()}
           >
             {t('pollAnswer.deleteBtn')}
           </Button>
 
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setModalOpen(false)}
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

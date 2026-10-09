@@ -1,6 +1,14 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from '@mui/material';
+import {
   CreatePollExternalVoteSourceDocument,
   DeletePollExternalVoteSourceDocument,
   FullPollFragment,
@@ -11,20 +19,12 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import {
-  Button,
-  Col,
-  IconButton,
-  Message,
-  Modal,
-  NumberInput,
-  Row as RRow,
-  Table,
-  toaster,
-} from 'rsuite';
+import { Col, NumberInput, Row as RRow, Table } from 'rsuite';
 import FormControl from 'rsuite/FormControl';
 import { RowDataType } from 'rsuite-table';
+
 import { humanizeError } from '../../humanizeError';
+import { enqueueSnackbar } from '../../snackbar';
 import { IconButtonTooltip } from '../iconButtonTooltip';
 
 const Row = styled(RRow)`
@@ -145,16 +145,15 @@ export function ExternalVoteTable({
           {(voteSource: RowDataType<PollExternalVoteSourceFragment>) => (
             <IconButtonTooltip caption={t('delete')}>
               <IconButton
-                circle
-                size="sm"
-                appearance="ghost"
-                color="red"
+                size="small"
+                color="error"
                 aria-label={t('delete')}
-                icon={<MdDelete />}
                 onClick={() =>
                   onClickDeleteBtn(voteSource as PollExternalVoteSourceFragment)
                 }
-              />
+              >
+                <MdDelete />
+              </IconButton>
             </IconButtonTooltip>
           )}
         </Table.Cell>
@@ -182,43 +181,25 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
   }, [loading]);
 
   const onErrorToast = (error: Error) => {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   };
 
   async function createPoll() {
     if (!newSource) {
-      toaster.push(
-        <Message
-          showIcon
-          type="error"
-          closable
-          duration={8000}
-        >
-          {t('pollExternalVotes.emptySource')}
-        </Message>
-      );
+      enqueueSnackbar(t('pollExternalVotes.emptySource'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       return;
     }
     if (!poll) {
-      toaster.push(
-        <Message
-          showIcon
-          type="error"
-          closable
-          duration={8000}
-        >
-          {t('pollExternalVotes.noPollAvailable')}
-        </Message>
-      );
+      enqueueSnackbar(t('pollExternalVotes.noPollAvailable'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       return;
     }
 
@@ -252,13 +233,13 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
         />
       </Col>
       <Col xs={12}>
-        <IconButton
-          icon={<MdAdd />}
-          appearance="primary"
+        <Button
+          variant="contained"
+          startIcon={<MdAdd />}
           onClick={createPoll}
         >
           {t('pollExternalVotes.addSourceBtn')}
-        </IconButton>
+        </Button>
       </Col>
     </Row>
   );
@@ -316,14 +297,14 @@ export function DeleteModal({
   }
 
   return (
-    <Modal open={openModal}>
-      <Modal.Title>{t('pollExternalVotes.deleteTitle')}</Modal.Title>
-      <Modal.Body>
+    <Dialog open={openModal}>
+      <DialogTitle>{t('pollExternalVotes.deleteTitle')}</DialogTitle>
+      <DialogContent>
         {t('pollExternalVotes.deleteBody', { source: sourceToDelete?.source })}
-      </Modal.Body>
-      <Modal.Footer>
+      </DialogContent>
+      <DialogActions>
         <Button
-          appearance="primary"
+          variant="contained"
           onClick={async () => {
             await deletePoll();
           }}
@@ -331,15 +312,15 @@ export function DeleteModal({
           {t('pollExternalVotes.deleteExternalVoteBtn')}
         </Button>
         <Button
-          appearance="subtle"
+          variant="text"
           onClick={() => {
             closeModal();
           }}
         >
           {t('cancel')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 }
 

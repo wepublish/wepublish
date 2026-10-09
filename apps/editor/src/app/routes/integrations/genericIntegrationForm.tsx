@@ -7,23 +7,19 @@ import {
   CardActions,
   CardContent,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Typography,
 } from '@mui/material';
 import { SettingProvider } from '@wepublish/editor/api';
-import { InfoTooltip, Textarea } from '@wepublish/ui/editor';
+import { enqueueSnackbar, InfoTooltip, Textarea } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
 import { ComponentType, ReactNode, useMemo, useState } from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  Checkbox,
-  CheckPicker,
-  Form,
-  Message,
-  Modal,
-  SelectPicker,
-  toaster,
-} from 'rsuite';
+import { Checkbox, CheckPicker, Form, SelectPicker } from 'rsuite';
 import { z } from 'zod';
 
 const HeaderWrapper = styled.div`
@@ -169,13 +165,9 @@ export function SingleGenericIntegrationForm<
         },
       });
 
-      toaster.push(
-        <Message type="success">{t('integrations.updateSuccess')}</Message>
-      );
+      enqueueSnackbar(t('integrations.updateSuccess'), { variant: 'success' });
     } catch (e) {
-      toaster.push(
-        <Message type="error">{t('integrations.updateError')}</Message>
-      );
+      enqueueSnackbar(t('integrations.updateError'), { variant: 'error' });
 
       console.error(e);
     }
@@ -369,17 +361,15 @@ export function SingleGenericIntegrationForm<
         </Card>
       </Form.Stack>
 
-      <Modal
+      <Dialog
         open={!!pendingTypeChange}
         onClose={() => setPendingTypeChange(null)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('integrations.typeChangeTitle')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('integrations.typeChangeTitle')}</DialogTitle>
 
-        <Modal.Body>{t('integrations.typeChangeWarning')}</Modal.Body>
+        <DialogContent>{t('integrations.typeChangeWarning')}</DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
             variant="text"
             onClick={() => setPendingTypeChange(null)}
@@ -402,8 +392,8 @@ export function SingleGenericIntegrationForm<
           >
             {t('integrations.typeChangeConfirm')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </Form>
   );
 }

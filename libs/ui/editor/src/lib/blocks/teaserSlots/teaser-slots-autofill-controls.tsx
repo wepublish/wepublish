@@ -2,6 +2,14 @@
 
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import {
+  Button,
+  Card as MuiCard,
+  CardContent,
+  Chip,
+  FormControlLabel,
+  Switch,
+} from '@mui/material';
 import GearIcon from '@rsuite/icons/Gear';
 import {
   TagListDocument,
@@ -10,7 +18,6 @@ import {
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Panel, Tag, Toggle } from 'rsuite';
 
 import { InfoTooltip } from '../../atoms/infoTooltip';
 import { TeaserSlotsAutofillDialog } from './teaser-slots-autofill-dialog';
@@ -22,7 +29,7 @@ interface TeaserSlotsContorlsProps {
   onConfigChange: (config: TeaserSlotsAutofillConfigInput) => void;
 }
 
-const ControlsContainer = styled(Panel)`
+const ControlsContainer = styled(MuiCard)`
   margin-bottom: 16px;
   border-radius: var(--rs-radius-lg);
   background-color: var(--rs-bg-well);
@@ -90,68 +97,83 @@ export function TeaserSlotsAutofillControls({
   };
 
   return (
-    <ControlsContainer bordered>
-      <ControlsSection>
-        <ToggleRow>
-          <Toggle
-            checked={config.enabled}
-            onChange={handleToggleChange}
-            label={
-              <>
-                {t('blocks.teaserSlots.autoLoadingToggle')}{' '}
-                <InfoTooltip text={t('blocks.teaserSlots.autoLoadingHelp')} />
-              </>
-            }
+    <ControlsContainer>
+      <CardContent>
+        <CardContent>
+          <ControlsSection>
+            <ToggleRow>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={config.enabled}
+                    onChange={(_event, checked) => handleToggleChange(checked)}
+                  />
+                }
+                label={
+                  <>
+                    {t('blocks.teaserSlots.autoLoadingToggle')}{' '}
+                    <InfoTooltip
+                      text={t('blocks.teaserSlots.autoLoadingHelp')}
+                    />
+                  </>
+                }
+              />
+
+              {config.enabled && (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => setConfigDialogOpen(true)}
+                >
+                  <GearIcon style={{ marginRight: '4px' }} />
+                  {t('blocks.teaserSlots.configure')}
+                </Button>
+              )}
+            </ToggleRow>
+            <SummarySection>
+              {config.enabled ?
+                <>
+                  {tagsData?.tags && tagsData.tags.nodes.length > 0 ?
+                    <TagsContainer>
+                      {tagsData.tags.nodes
+                        .filter(tag => config.filter?.tags?.includes(tag.id))
+                        .map((tag, index) => (
+                          <Chip
+                            key={index}
+                            color="primary"
+                            label={tag.tag}
+                          />
+                        ))}
+                    </TagsContainer>
+                  : <Chip
+                      color="success"
+                      label={t('blocks.teaserSlots.latest')}
+                    />
+                  }
+                  <span style={{ marginLeft: '8px' }}>
+                    {loadedTeasers}
+                    {loadedTeasers < autofillSlots ?
+                      `/${autofillSlots}`
+                    : ``}{' '}
+                    {t('blocks.teaserSlots.teasersLoaded')}{' '}
+                  </span>
+                </>
+              : <span style={{ color: 'var(--rs-text-secondary)' }}>
+                  {t('blocks.teaserSlots.fillManually')}
+                </span>
+              }
+            </SummarySection>
+          </ControlsSection>
+
+          <TeaserSlotsAutofillDialog
+            open={configDialogOpen}
+            onOpenChange={setConfigDialogOpen}
+            config={config}
+            onSave={handleConfigSave}
+            onCancel={handleConfigCancel}
           />
-
-          {config.enabled && (
-            <Button
-              appearance="ghost"
-              size="sm"
-              onClick={() => setConfigDialogOpen(true)}
-            >
-              <GearIcon style={{ marginRight: '4px' }} />
-              {t('blocks.teaserSlots.configure')}
-            </Button>
-          )}
-        </ToggleRow>
-        <SummarySection>
-          {config.enabled ?
-            <>
-              {tagsData?.tags && tagsData.tags.nodes.length > 0 ?
-                <TagsContainer>
-                  {tagsData.tags.nodes
-                    .filter(tag => config.filter?.tags?.includes(tag.id))
-                    .map((tag, index) => (
-                      <Tag
-                        key={index}
-                        color="blue"
-                      >
-                        {tag.tag}
-                      </Tag>
-                    ))}
-                </TagsContainer>
-              : <Tag color="green">{t('blocks.teaserSlots.latest')}</Tag>}
-              <span style={{ marginLeft: '8px' }}>
-                {loadedTeasers}
-                {loadedTeasers < autofillSlots ? `/${autofillSlots}` : ``}{' '}
-                {t('blocks.teaserSlots.teasersLoaded')}{' '}
-              </span>
-            </>
-          : <span style={{ color: 'var(--rs-text-secondary)' }}>
-              {t('blocks.teaserSlots.fillManually')}
-            </span>
-          }
-        </SummarySection>
-      </ControlsSection>
-
-      <TeaserSlotsAutofillDialog
-        open={configDialogOpen}
-        onOpenChange={setConfigDialogOpen}
-        config={config}
-        onSave={handleConfigSave}
-        onCancel={handleConfigCancel}
-      />
+        </CardContent>
+      </CardContent>
     </ControlsContainer>
   );
 }

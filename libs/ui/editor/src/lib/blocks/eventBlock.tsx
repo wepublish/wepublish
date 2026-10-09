@@ -1,11 +1,12 @@
+import { Button, Card, CardContent, Drawer } from '@mui/material';
 import { FullEventFragment } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
-import { Drawer, IconButton, Panel } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { PlaceholderInput } from '../atoms/placeholderInput';
+import { DRAWER_WIDTHS } from '../drawer';
 import { SelectEventPanel } from '../panel/selectEventsPanel';
 import { EventBlockValue } from './types';
 
@@ -31,48 +32,50 @@ export function EventEndsAtView({
 }
 
 const EventPreview = ({ event }: { event: FullEventFragment }) => (
-  <Panel
+  <Card
+    variant="outlined"
     key={event.id}
-    bordered
     style={{
       background: 'var(--rs-bg-card)',
       display: 'grid',
       alignItems: 'center',
     }}
   >
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 2fr',
-        gap: '12px',
-        alignItems: 'center',
-      }}
-    >
-      <img
-        src={event.image?.previewURL ?? '/static/placeholder-240x240.png'}
-        alt={event.image?.description ?? ''}
-        height={event.image?.height}
-        width={event.image?.width}
+    <CardContent>
+      <div
         style={{
-          width: '100%',
-          height: 'auto',
-          borderRadius: 'var(--rs-radius-md)',
+          display: 'grid',
+          gridTemplateColumns: '1fr 2fr',
+          gap: '12px',
+          alignItems: 'center',
         }}
-      />
+      >
+        <img
+          src={event.image?.previewURL ?? '/static/placeholder-240x240.png'}
+          alt={event.image?.description ?? ''}
+          height={event.image?.height}
+          width={event.image?.width}
+          style={{
+            width: '100%',
+            height: 'auto',
+            borderRadius: 'var(--rs-radius-md)',
+          }}
+        />
 
-      <div style={{ display: 'grid' }}>
-        {event.name}
+        <div style={{ display: 'grid' }}>
+          {event.name}
 
-        <small>
-          <EventStartsAtView startsAt={event.startsAt} />
-        </small>
+          <small>
+            <EventStartsAtView startsAt={event.startsAt} />
+          </small>
 
-        <small>
-          <EventEndsAtView endsAt={event.endsAt} />
-        </small>
+          <small>
+            <EventEndsAtView endsAt={event.endsAt} />
+          </small>
+        </div>
       </div>
-    </div>
-  </Panel>
+    </CardContent>
+  </Card>
 );
 
 export const EventBlock = ({
@@ -94,9 +97,8 @@ export const EventBlock = ({
 
   return (
     <>
-      <Panel
-        bodyFill
-        bordered
+      <Card
+        variant="outlined"
         style={{
           minHeight: 150,
           overflow: 'hidden',
@@ -104,65 +106,78 @@ export const EventBlock = ({
           display: 'grid',
         }}
       >
-        <PlaceholderInput
-          onAddClick={() => setIsDialogOpen(true)}
-          addLabel={t('blocks.event.chooseEvents')}
-        >
-          {!isEmpty && (
-            <div
-              style={{
-                position: 'relative',
-                width: '100%',
-              }}
-            >
+        <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+          <PlaceholderInput
+            onAddClick={() => setIsDialogOpen(true)}
+            addLabel={t('blocks.event.chooseEvents')}
+          >
+            {!isEmpty && (
               <div
                 style={{
-                  position: 'absolute',
-                  zIndex: 100,
-                  height: '100%',
-                  right: 0,
+                  position: 'relative',
+                  width: '100%',
                 }}
               >
-                <IconButton
-                  size={'lg'}
-                  icon={<MdEdit />}
-                  onClick={() => setIsDialogOpen(true)}
+                <div
+                  style={{
+                    position: 'absolute',
+                    zIndex: 100,
+                    height: '100%',
+                    right: 0,
+                  }}
                 >
-                  {t('blocks.event.edit')}
-                </IconButton>
-              </div>
+                  <Button
+                    variant="outlined"
+                    startIcon={<MdEdit />}
+                    size="large"
+                    onClick={() => setIsDialogOpen(true)}
+                  >
+                    {t('blocks.event.edit')}
+                  </Button>
+                </div>
 
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '12px',
-                  padding: '24px',
-                }}
-              >
-                {eventsToDisplay.map(event => (
-                  <EventPreview
-                    key={event.id}
-                    event={event}
-                  />
-                ))}
-              </div>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '12px',
+                    padding: '24px',
+                  }}
+                >
+                  {eventsToDisplay.map(event => (
+                    <EventPreview
+                      key={event.id}
+                      event={event}
+                    />
+                  ))}
+                </div>
 
-              <p style={{ marginBottom: '12px', textAlign: 'center' }}>
-                {t('blocks.event.events', {
-                  count:
-                    events.length ?
-                      events.length
-                    : (filter.events?.length ?? 0),
-                })}
-              </p>
-            </div>
-          )}
-        </PlaceholderInput>
-      </Panel>
+                <p style={{ marginBottom: '12px', textAlign: 'center' }}>
+                  {t('blocks.event.events', {
+                    count:
+                      events.length ?
+                        events.length
+                      : (filter.events?.length ?? 0),
+                  })}
+                </p>
+              </div>
+            )}
+          </PlaceholderInput>
+        </CardContent>
+      </Card>
 
       <Drawer
-        size="lg"
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.lg,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       >

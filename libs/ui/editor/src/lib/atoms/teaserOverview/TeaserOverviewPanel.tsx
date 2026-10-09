@@ -10,7 +10,15 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import styled from '@emotion/styled';
-import { Chip, Collapse, css, Typography } from '@mui/material';
+import {
+  Button,
+  Chip,
+  Collapse,
+  css,
+  Drawer,
+  IconButton,
+  Typography,
+} from '@mui/material';
 import { BlockStylesDocument, TeaserType } from '@wepublish/editor/api';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,9 +33,9 @@ import {
   MdVisibility,
   MdVisibilityOff,
 } from 'react-icons/md';
-import { Drawer, IconButton } from 'rsuite';
 
 import { BlockValue, Teaser } from '../../blocks/types';
+import { DRAWER_WIDTHS } from '../../drawer';
 import { useRegisterValidator } from '../../hooks/useEditorValidation';
 import { TeaserSelectAndEditPanel } from '../../panel/teaserSelectAndEditPanel';
 import { teaserContentKey } from './extractTeasers';
@@ -780,9 +788,7 @@ export function TeaserOverviewPanel({
                 {!selected && (
                   <StickyHideAllBtnWrap>
                     <IconButton
-                      size="xs"
-                      appearance="subtle"
-                      icon={canHideAll ? <MdVisibilityOff /> : <MdVisibility />}
+                      size="small"
                       disabled={!canHideAll && !canUnhideAll}
                       onClick={canHideAll ? hideAll : unhideAll}
                       title={t(
@@ -795,7 +801,11 @@ export function TeaserOverviewPanel({
                           'teaserOverview.hideAllBlocks'
                         : 'teaserOverview.unhideAllBlocks'
                       )}
-                    />
+                    >
+                      {canHideAll ?
+                        <MdVisibilityOff />
+                      : <MdVisibility />}
+                    </IconButton>
                   </StickyHideAllBtnWrap>
                 )}
               </StickyActionBarLeft>
@@ -808,10 +818,10 @@ export function TeaserOverviewPanel({
                       : t('teaserOverview.hintTextLoad')}
                     </HintText>
                     <HintActions>
-                      <IconButton
-                        size="xs"
-                        appearance="ghost"
-                        icon={<MdClose />}
+                      <Button
+                        variant="outlined"
+                        startIcon={<MdClose />}
+                        size="small"
                         onClick={handleCancelSelection}
                         title={
                           selectedWorking?.teaser ?
@@ -822,11 +832,11 @@ export function TeaserOverviewPanel({
                         {selectedWorking?.teaser ?
                           t('teaserOverview.cancelReplace')
                         : t('teaserOverview.cancelLoad')}
-                      </IconButton>
-                      <IconButton
-                        size="xs"
-                        appearance="primary"
-                        icon={<MdEditNote />}
+                      </Button>
+                      <Button
+                        variant="contained"
+                        startIcon={<MdEditNote />}
+                        size="small"
                         onClick={handleReplaceClick}
                         title={
                           selectedWorking?.teaser ?
@@ -837,15 +847,13 @@ export function TeaserOverviewPanel({
                         {selectedWorking?.teaser ?
                           t('teaserOverview.replaceButton')
                         : t('teaserOverview.loadButton')}
-                      </IconButton>
+                      </Button>
                     </HintActions>
                   </>
                 : <>
                     <StickyHistoryBtnWrap>
                       <IconButton
-                        size="xs"
-                        appearance="subtle"
-                        icon={<MdUndo />}
+                        size="small"
                         disabled={!canUndo}
                         onClick={undo}
                         title={t(
@@ -854,13 +862,13 @@ export function TeaserOverviewPanel({
                           : 'teaserOverview.undoEmpty'
                         )}
                         aria-label={t('teaserOverview.undo')}
-                      />
+                      >
+                        <MdUndo />
+                      </IconButton>
                     </StickyHistoryBtnWrap>
                     <StickyHistoryBtnWrap>
                       <IconButton
-                        size="xs"
-                        appearance="subtle"
-                        icon={<MdRedo />}
+                        size="small"
                         disabled={!canRedo}
                         onClick={redo}
                         title={t(
@@ -869,7 +877,9 @@ export function TeaserOverviewPanel({
                           : 'teaserOverview.redoEmpty'
                         )}
                         aria-label={t('teaserOverview.redo')}
-                      />
+                      >
+                        <MdRedo />
+                      </IconButton>
                     </StickyHistoryBtnWrap>
                   </>
                 }
@@ -951,8 +961,18 @@ export function TeaserOverviewPanel({
       </PanelWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={replaceSlot !== null}
-        size="sm"
         onClose={handleReplaceClose}
       >
         <TeaserSelectAndEditPanel
