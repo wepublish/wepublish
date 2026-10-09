@@ -1877,10 +1877,13 @@ export type MailLogRecipient = {
 export enum MailLogState {
   Accepted = 'accepted',
   Bounced = 'bounced',
+  Canceled = 'canceled',
   Deferred = 'deferred',
   Delivered = 'delivered',
+  Dispatched = 'dispatched',
   Rejected = 'rejected',
-  Submitted = 'submitted'
+  Submitted = 'submitted',
+  Undeliverable = 'undeliverable'
 }
 
 export type MailLogSyncModel = {
@@ -6936,6 +6939,7 @@ export enum SettingName {
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  LoginCodeEnabled = 'LOGIN_CODE_ENABLED',
   LoginCodeMaxUses = 'LOGIN_CODE_MAX_USES',
   LoginCodeSecondFactor = 'LOGIN_CODE_SECOND_FACTOR',
   LoginCodeValidDays = 'LOGIN_CODE_VALID_DAYS',

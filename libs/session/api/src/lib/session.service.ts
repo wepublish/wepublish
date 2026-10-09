@@ -33,6 +33,7 @@ import {
 } from '@wepublish/authentication/api';
 import { ChallengeInput, ChallengeService } from '@wepublish/challenge/api';
 import {
+  LoginCodeDisabledError,
   LoginCodeRateLimiter,
   LoginCodeService,
 } from '@wepublish/login-code/api';
@@ -68,6 +69,12 @@ export class SessionService {
     fingerprint: string | null,
     challengeAnswer?: ChallengeInput
   ) {
+    // Checked first, so a medium without login codes neither asks for a
+    // challenge nor counts the attempt against the client.
+    if (!(await this.loginCodeService.isEnabled())) {
+      throw new LoginCodeDisabledError();
+    }
+
     const challengeValid =
       challengeAnswer ?
         (

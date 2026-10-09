@@ -1839,10 +1839,13 @@ type MailLogRecipient {
 enum MailLogState {
   accepted
   bounced
+  canceled
   deferred
   delivered
+  dispatched
   rejected
   submitted
+  undeliverable
 }
 
 type MailLogSyncModel {
@@ -4988,6 +4991,7 @@ enum SettingName {
   ALLOW_GUEST_COMMENT_RATING
   ALLOW_GUEST_POLL_VOTING
   COMMENT_CHAR_LIMIT
+  LOGIN_CODE_ENABLED
   LOGIN_CODE_MAX_USES
   LOGIN_CODE_SECOND_FACTOR
   LOGIN_CODE_VALID_DAYS

@@ -14,6 +14,11 @@ const STATE_COLORS: Record<MailLogState, 'green' | 'yellow' | 'red' | 'blue'> =
     [MailLogState.Deferred]: 'yellow',
     [MailLogState.Bounced]: 'red',
     [MailLogState.Rejected]: 'red',
+    // Letter-only. A letter is handed to a print vendor, so it passes through
+    // states a mail has no equivalent for.
+    [MailLogState.Dispatched]: 'blue',
+    [MailLogState.Undeliverable]: 'red',
+    [MailLogState.Canceled]: 'yellow',
   };
 
 /**

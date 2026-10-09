@@ -1260,6 +1260,60 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
+                        class="rs-toggle"
+                        data-checked="false"
+                        data-disabled="false"
+                        data-loading="false"
+                        data-placement="end"
+                        data-size="md"
+                      >
+                        <input
+                          aria-checked="false"
+                          aria-disabled="false"
+                          aria-labelledby="rs-label_r_3m_"
+                          class="rs-toggle-input"
+                          role="switch"
+                          type="checkbox"
+                        />
+                        <span
+                          class="rs-toggle-track"
+                        />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_3m_"
+                        >
+                          settingList.loginCodeEnabled 
+                          <button
+                            aria-label="settingList.warnings.loginCodeEnabled"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
+                      </label>
+                    </div>
+                    <div
+                      class="rs-form-group"
+                      role="group"
+                    >
+                      <label
                         class="rs-form-control-label"
                         for="LOGIN_CODE_MAX_USES"
                         id="LOGIN_CODE_MAX_USES-label"
@@ -1605,7 +1659,7 @@ exports[`SettingList > renders successfully 1`] = `
                               class="rs-picker-toggle-stack rs-stack"
                             >
                               <div
-                                class="rs-stack-item rs-box-_r_4o_"
+                                class="rs-stack-item rs-box-_r_4s_"
                                 data-rs="box"
                                 overflow="hidden"
                               >
@@ -1628,7 +1682,7 @@ exports[`SettingList > renders successfully 1`] = `
                                 </span>
                               </div>
                               <div
-                                class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_4p_"
+                                class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_4t_"
                                 data-rs="box"
                               >
                                 <svg
@@ -2056,7 +2110,7 @@ exports[`SettingList > renders successfully 1`] = `
                       <input
                         aria-checked="false"
                         aria-disabled="false"
-                        aria-labelledby="rs-label_r_68_"
+                        aria-labelledby="rs-label_r_6c_"
                         class="rs-toggle-input"
                         role="switch"
                         type="checkbox"
@@ -2066,7 +2120,7 @@ exports[`SettingList > renders successfully 1`] = `
                       />
                       <span
                         class="rs-toggle-label"
-                        id="rs-label_r_68_"
+                        id="rs-label_r_6c_"
                       >
                         settingList.newArticlePeering 
                         <button
@@ -2137,8 +2191,8 @@ exports[`SettingList > renders successfully 1`] = `
                       data-testid="picker"
                     >
                       <div
-                        aria-controls="rs-_r_6e_-listbox"
-                        aria-describedby="rs-_r_6e_-describe"
+                        aria-controls="rs-_r_6i_-listbox"
+                        aria-describedby="rs-_r_6i_-describe"
                         aria-disabled="false"
                         aria-expanded="false"
                         aria-haspopup="listbox"
@@ -2148,7 +2202,7 @@ exports[`SettingList > renders successfully 1`] = `
                         data-cleanable="true"
                         data-disabled="false"
                         data-has-value="false"
-                        id="rs-_r_6e_"
+                        id="rs-_r_6i_"
                         role="combobox"
                         tabindex="0"
                       >
@@ -2156,7 +2210,7 @@ exports[`SettingList > renders successfully 1`] = `
                           class="rs-picker-toggle-stack rs-stack"
                         >
                           <div
-                            class="rs-stack-item rs-box-_r_6i_"
+                            class="rs-stack-item rs-box-_r_6m_"
                             data-rs="box"
                             overflow="hidden"
                           >
@@ -2172,13 +2226,13 @@ exports[`SettingList > renders successfully 1`] = `
                             <span
                               class="rs-picker-toggle-placeholder"
                               data-testid="picker-describe"
-                              id="rs-_r_6e_-describe"
+                              id="rs-_r_6i_-describe"
                             >
                               Select
                             </span>
                           </div>
                           <div
-                            class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_6j_"
+                            class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_6n_"
                             data-rs="box"
                           >
                             <svg
@@ -2218,7 +2272,7 @@ exports[`SettingList > renders successfully 1`] = `
                       <input
                         aria-checked="false"
                         aria-disabled="false"
-                        aria-labelledby="rs-label_r_6m_"
+                        aria-labelledby="rs-label_r_6q_"
                         class="rs-toggle-input"
                         role="switch"
                         type="checkbox"
@@ -2228,7 +2282,7 @@ exports[`SettingList > renders successfully 1`] = `
                       />
                       <span
                         class="rs-toggle-label"
-                        id="rs-label_r_6m_"
+                        id="rs-label_r_6q_"
                       >
                         settingList.showPendingWhenNotPublished 
                         <button
