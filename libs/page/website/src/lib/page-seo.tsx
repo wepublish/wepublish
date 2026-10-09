@@ -4,6 +4,7 @@ import {
   isTitleBlock,
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
+import { stripQueryAndHash } from '@wepublish/utils';
 import {
   FullImageBlockFragment,
   FullImageFragment,
@@ -45,7 +46,7 @@ export const getPageSEO = (page: FullPageFragment) => {
   const socialMediaTitle =
     page.latest.socialMediaTitle || page.latest.title || firstTitle?.title;
   const headline = firstTitle?.title || page.latest.title;
-  const url = page.url;
+  const url = stripQueryAndHash(page.url);
 
   return {
     type: 'website',
