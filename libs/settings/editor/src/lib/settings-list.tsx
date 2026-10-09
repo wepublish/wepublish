@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import {
   Setting,
   SettingName,
+  LoginCodeSecondFactor,
   SettingsListDocument,
   UpdateSettingDocument,
 } from '@wepublish/editor/api';
@@ -29,6 +30,7 @@ import {
   Form,
   Grid,
   IconButton,
+  Input,
   InputGroup,
   NumberInput,
   Modal,
@@ -36,6 +38,7 @@ import {
   Panel as RPanel,
   Row,
   Schema,
+  SelectPicker,
   toaster,
   Toggle,
 } from 'rsuite';
@@ -136,6 +139,31 @@ function SettingList() {
       value: 0,
       name: SettingName.ResetPasswordJwtExpiresMin,
       label: 'settingList.passwordToken',
+    },
+    [SettingName.LoginCodeEnabled]: {
+      value: false,
+      name: SettingName.LoginCodeEnabled,
+      label: 'settingList.loginCodeEnabled',
+    },
+    [SettingName.LoginCodeMaxUses]: {
+      value: 0,
+      name: SettingName.LoginCodeMaxUses,
+      label: 'settingList.loginCodeMaxUses',
+    },
+    [SettingName.LoginCodeValidDays]: {
+      value: 0,
+      name: SettingName.LoginCodeValidDays,
+      label: 'settingList.loginCodeValidDays',
+    },
+    [SettingName.LoginCodeSecondFactor]: {
+      value: LoginCodeSecondFactor.None,
+      name: SettingName.LoginCodeSecondFactor,
+      label: 'settingList.loginCodeSecondFactor',
+    },
+    [SettingName.PlaceholderEmailPatterns]: {
+      value: '',
+      name: SettingName.PlaceholderEmailPatterns,
+      label: 'settingList.placeholderEmailPatterns',
     },
     [SettingName.PeeringTimeoutMs]: {
       value: 0,
@@ -282,6 +310,38 @@ function SettingList() {
   const { NumberType } = Schema.Types;
 
   const validationModel = Schema.Model({
+    [SettingName.LoginCodeMaxUses]: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        settings[SettingName.LoginCodeMaxUses].settingRestriction?.minValue ??
+          1,
+        settings[SettingName.LoginCodeMaxUses].settingRestriction?.maxValue ??
+          100,
+        t('errorMessages.invalidRange', {
+          min:
+            settings[SettingName.LoginCodeMaxUses].settingRestriction
+              ?.minValue ?? 1,
+          max:
+            settings[SettingName.LoginCodeMaxUses].settingRestriction
+              ?.maxValue ?? 100,
+        })
+      ),
+    [SettingName.LoginCodeValidDays]: NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        settings[SettingName.LoginCodeValidDays].settingRestriction?.minValue ??
+          1,
+        settings[SettingName.LoginCodeValidDays].settingRestriction?.maxValue ??
+          365,
+        t('errorMessages.invalidRange', {
+          min:
+            settings[SettingName.LoginCodeValidDays].settingRestriction
+              ?.minValue ?? 1,
+          max:
+            settings[SettingName.LoginCodeValidDays].settingRestriction
+              ?.maxValue ?? 365,
+        })
+      ),
     [SettingName.SessionTtlDays]: NumberType()
       .isRequired(t('errorMessages.required'))
       .range(
@@ -613,6 +673,99 @@ function SettingList() {
                           t('settingList.info.loginMinutes'),
                           t('settingList.minutes')
                         )}
+
+                        {renderToggle(
+                          SettingName.LoginCodeEnabled,
+                          t('settingList.warnings.loginCodeEnabled')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.LoginCodeMaxUses,
+                          t('settingList.warnings.loginCodeMaxUses'),
+                          t('settingList.loginCodeUses')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.LoginCodeValidDays,
+                          t('settingList.warnings.loginCodeValidDays'),
+                          t('settingList.days')
+                        )}
+
+                        <Form.Group
+                          controlId={SettingName.LoginCodeSecondFactor}
+                        >
+                          <Form.Label>
+                            <SettingLabel
+                              label={t(
+                                settings[SettingName.LoginCodeSecondFactor]
+                                  .label
+                              )}
+                              info={t(
+                                'settingList.warnings.loginCodeSecondFactor'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <Form.Control
+                            name={SettingName.LoginCodeSecondFactor}
+                            accepter={SelectPicker}
+                            searchable={false}
+                            cleanable={false}
+                            block
+                            data={Object.values(LoginCodeSecondFactor).map(
+                              value => ({
+                                value,
+                                label: t(
+                                  `settingList.loginCodeSecondFactorOptions.${value}`
+                                ),
+                              })
+                            )}
+                            value={
+                              settings[SettingName.LoginCodeSecondFactor].value
+                            }
+                            onChange={(value: unknown) => {
+                              setSetting({
+                                ...settings[SettingName.LoginCodeSecondFactor],
+                                value:
+                                  (value as LoginCodeSecondFactor | null) ??
+                                  LoginCodeSecondFactor.None,
+                              });
+                            }}
+                          />
+                        </Form.Group>
+
+                        <Form.Group
+                          controlId={SettingName.PlaceholderEmailPatterns}
+                        >
+                          <Form.Label>
+                            <SettingLabel
+                              label={t(
+                                settings[SettingName.PlaceholderEmailPatterns]
+                                  .label
+                              )}
+                              info={t(
+                                'settingList.warnings.placeholderEmailPatterns'
+                              )}
+                            />
+                          </Form.Label>
+
+                          <Form.Control
+                            name={SettingName.PlaceholderEmailPatterns}
+                            accepter={Input}
+                            value={
+                              settings[SettingName.PlaceholderEmailPatterns]
+                                .value ?? ''
+                            }
+                            onChange={(value: string) => {
+                              setSetting({
+                                ...settings[
+                                  SettingName.PlaceholderEmailPatterns
+                                ],
+                                value,
+                              });
+                            }}
+                          />
+                        </Form.Group>
 
                         {renderNumberInput(
                           SettingName.ResetPasswordJwtExpiresMin,

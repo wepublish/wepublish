@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { differenceInMinutes } from 'date-fns';
+import { differenceInMinutes, differenceInSeconds } from 'date-fns';
 import {
   CommentItemType,
   Prisma,
@@ -13,6 +13,7 @@ import {
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
 import {
+  AuthenticationService,
   SessionCacheInvalidator,
   unselectPassword,
 } from '@wepublish/authentication/api';
@@ -53,6 +54,7 @@ export class UserService {
     private mailContext: MailContext,
     private hibpService: HibpService,
     private mailchimpContactService: MailchimpContactService,
+    private authenticationService: AuthenticationService,
     private sessionCache: SessionCacheInvalidator,
     private publicContentCache: PublicContentCacheInvalidator
   ) {}
@@ -217,7 +219,36 @@ export class UserService {
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async updateUser({ id, address, properties, ...input }: UpdateUserInput) {
+  async updateUser({
+    id,
+    address,
+    properties,
+    firstName,
+    name,
+    birthday,
+    email,
+    emailVerifiedAt,
+    userImageID,
+    roleIDs,
+    flair,
+    active,
+    note,
+    totpExempt,
+  }: UpdateUserInput) {
+    const input = {
+      firstName,
+      name,
+      birthday,
+      email,
+      emailVerifiedAt,
+      userImageID,
+      roleIDs,
+      flair,
+      active,
+      note,
+      totpExempt,
+    };
+
     if (input.email) {
       input.email = (input.email as string).toLowerCase();
     }
@@ -274,6 +305,10 @@ export class UserService {
         previousUser.email,
         user.email
       );
+    }
+
+    if (active === false) {
+      await this.authenticationService.revokeUserSessions(user.id);
     }
 
     return user;
@@ -344,6 +379,68 @@ export class UserService {
 
   private static readonly EMAIL_CHANGE_EXPIRY_MINUTES = 60;
 
+  private static readonly EMAIL_CHANGE_REQUEST_COOLDOWN_SECONDS = 60;
+
+  private hashEmailChangeToken(token: string) {
+    return crypto.createHash('sha256').update(token).digest('hex');
+  }
+
+  private async sendEmailConfirmation(
+    userId: string,
+    targetEmail: string,
+    event: typeof UserEvent.EMAIL_CHANGE | typeof UserEvent.EMAIL_VERIFICATION
+  ) {
+    const mailTemplateId = await this.mailContext.getUserTemplateId(
+      event,
+      false
+    );
+
+    if (!mailTemplateId) {
+      throw new BadRequestException(
+        'Email confirmation is not configured. Please contact your administrator.'
+      );
+    }
+
+    const current = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { pendingEmailAt: true },
+    });
+
+    if (
+      current?.pendingEmailAt &&
+      differenceInSeconds(new Date(), current.pendingEmailAt) <
+        UserService.EMAIL_CHANGE_REQUEST_COOLDOWN_SECONDS
+    ) {
+      throw new BadRequestException(
+        'Please wait a moment before requesting another confirmation email.'
+      );
+    }
+
+    const token = crypto.randomBytes(32).toString('base64url');
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        pendingEmail: targetEmail,
+        pendingEmailAt: new Date(),
+        pendingEmailTokenHash: this.hashEmailChangeToken(token),
+      },
+      select: unselectPassword,
+    });
+    await this.sessionCache.invalidate();
+
+    await this.mailContext.sendMail({
+      mailTemplateId,
+      recipient: user,
+      recipientEmailOverride: targetEmail,
+      optionalData: { newEmail: targetEmail },
+      mailType: mailLogType.UserFlow,
+      jwtOverride: token,
+    });
+
+    return user;
+  }
+
   @PrimeDataLoader(UserDataloaderService)
   async requestEmailChange(userId: string, newEmail: string) {
     newEmail = newEmail.toLowerCase();
@@ -359,58 +456,51 @@ export class UserService {
       throw new BadRequestException('Email is already in use.');
     }
 
-    const user = await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        pendingEmail: newEmail,
-        pendingEmailAt: new Date(),
-      },
-      select: unselectPassword,
-    });
-    await this.sessionCache.invalidate();
-
-    const mailTemplateId = await this.mailContext.getUserTemplateId(
-      UserEvent.EMAIL_CHANGE,
-      false
-    );
-
-    await this.mailContext.sendMail({
-      mailTemplateId,
-      recipient: user,
-      optionalData: { newEmail },
-      mailType: mailLogType.UserFlow,
-    });
-
-    return user;
+    return this.sendEmailConfirmation(userId, newEmail, UserEvent.EMAIL_CHANGE);
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async confirmEmailChange(userId: string, newEmail: string) {
+  async requestEmailVerification(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: unselectPassword,
+      select: { email: true },
     });
 
     if (!user) {
       throw new NotFoundException('User not found.');
     }
 
-    if (!user.pendingEmail || !user.pendingEmailAt) {
-      throw new BadRequestException('No pending email change.');
-    }
+    return this.sendEmailConfirmation(
+      userId,
+      user.email,
+      UserEvent.EMAIL_VERIFICATION
+    );
+  }
 
-    if (user.pendingEmail.toLowerCase() !== newEmail.toLowerCase()) {
-      throw new BadRequestException(
-        'Email address does not match the pending email change.'
-      );
+  @PrimeDataLoader(UserDataloaderService)
+  async confirmEmailChange(
+    token: string,
+    options?: { exceptSessionToken?: string }
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: { pendingEmailTokenHash: this.hashEmailChangeToken(token) },
+      select: unselectPassword,
+    });
+
+    if (!user?.pendingEmail || !user.pendingEmailAt) {
+      throw new BadRequestException('Invalid or expired confirmation link.');
     }
 
     const minutesElapsed = differenceInMinutes(new Date(), user.pendingEmailAt);
 
     if (minutesElapsed > UserService.EMAIL_CHANGE_EXPIRY_MINUTES) {
       await this.prisma.user.update({
-        where: { id: userId },
-        data: { pendingEmail: null, pendingEmailAt: null },
+        where: { id: user.id },
+        data: {
+          pendingEmail: null,
+          pendingEmailAt: null,
+          pendingEmailTokenHash: null,
+        },
       });
       await this.sessionCache.invalidate();
 
@@ -419,23 +509,43 @@ export class UserService {
       );
     }
 
-    const updatedUser = await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        email: user.pendingEmail,
-        emailVerifiedAt: new Date(),
-        pendingEmail: null,
-        pendingEmailAt: null,
-      },
-      select: unselectPassword,
+    let updatedUser;
+
+    try {
+      updatedUser = await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          email: user.pendingEmail,
+          emailVerifiedAt: new Date(),
+          pendingEmail: null,
+          pendingEmailAt: null,
+          pendingEmailTokenHash: null,
+        },
+        select: unselectPassword,
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new BadRequestException('Email is already in use.');
+      }
+
+      throw error;
+    }
+
+    await this.authenticationService.revokeUserSessions(user.id, {
+      exceptToken: options?.exceptSessionToken,
     });
     await this.sessionCache.invalidate();
 
-    await this.mailchimpContactService.updateContactEmail(
-      updatedUser.id,
-      user.email,
-      updatedUser.email
-    );
+    if (user.email !== updatedUser.email) {
+      await this.mailchimpContactService.updateContactEmail(
+        updatedUser.id,
+        user.email,
+        updatedUser.email
+      );
+    }
 
     return updatedUser;
   }

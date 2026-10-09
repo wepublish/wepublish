@@ -6,6 +6,7 @@ export * from './lib/payment-period-to-months';
 export * from './lib/periodicity-pricing';
 export * from './lib/max-payload-size';
 export * from './lib/constants';
+export * from './lib/placeholder-email';
 export * from './lib/error-context';
 
 export * from './lib/dataloader/create-optionals-array';
@@ -18,3 +19,4 @@ export * from './lib/graphql/paginated-type';
 export * from './lib/graphql/date-comparison';
 export * from './lib/graphql/slug';
 export * from './lib/graphql/color.scalar';
+export * from './lib/qr-svg';

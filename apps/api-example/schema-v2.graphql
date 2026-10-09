@@ -1724,6 +1724,17 @@ input ListicleItemInput {
   title: String
 }
 
+"""
+Attribute printed on the letter that a restricted session must confirm before it can claim the account with a real email address.
+"""
+enum LoginCodeSecondFactor {
+  city
+  firstName
+  lastName
+  none
+  postalCode
+}
+
 enum LoginStatus {
   ALL
   LOGGED_IN
@@ -1828,10 +1839,13 @@ type MailLogRecipient {
 enum MailLogState {
   accepted
   bounced
+  canceled
   deferred
   delivered
+  dispatched
   rejected
   submitted
+  undeliverable
 }
 
 type MailLogSyncModel {
@@ -2610,8 +2624,10 @@ type Mutation {
   """
   confirmChangelogEntry(id: String!, locale: String): ChangelogEntry!
 
-  """Confirms a pending email change for the logged-in user."""
-  confirmEmailChange(newEmail: String!): SensitiveDataUser!
+  """
+  Confirms a pending email change with the token from the confirmation email.
+  """
+  confirmEmailChange(token: String!): SensitiveDataUser!
 
   """
   Confirms a notification for the whole instance, recording who confirmed it. Requires authentication.
@@ -2726,6 +2742,11 @@ type Mutation {
   createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
   createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
   createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
+
+  """
+  Logs in with a personal login code (PURL). Limited uses, expiring and revocable; rate limited per client.
+  """
+  createSessionWithLoginCode(challengeAnswer: ChallengeInput, code: String!, totpToken: String): SessionWithToken!
 
   """Creates a new subscription."""
   createSubscription(
@@ -3011,6 +3032,11 @@ type Mutation {
   """
   registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, flair: String, name: String!, password: String): Registration!
 
+  """
+  Revokes existing personal login links of a user and issues a new one. The code is returned exactly once.
+  """
+  reissueUserLoginCode(userId: String!): UserLoginCodeIssue!
+
   """Rejects a comment"""
   rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
@@ -3026,9 +3052,12 @@ type Mutation {
   requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
   """
-  Requests an email change. A confirmation link is sent to the current email address.
+  Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter.
   """
-  requestEmailChange(newEmail: String!): Boolean!
+  requestEmailChange(newEmail: String!, secondFactor: String): Boolean!
+
+  """Sends a confirmation link to the current email address to verify it."""
+  requestEmailVerification: Boolean!
 
   """Resets the password of a user."""
   resetPassword(id: String!, password: String): SensitiveDataUser!
@@ -3062,6 +3091,9 @@ type Mutation {
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
   revokeImpersonationSessions(ids: [String!]): Int!
+
+  """Revokes all personal login links of a user."""
+  revokeUserLoginCode(userId: String!): Boolean!
 
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address
@@ -3133,7 +3165,7 @@ type Mutation {
   updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates the current logged in user."""
-  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
+  updateCurrentUser(address: UserAddressInput, birthday: DateTime, firstName: String, flair: String, name: String): SensitiveDataUser!
 
   """Updates an existing discountCode."""
   updateDiscountCode(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): DiscountCode!
@@ -4279,6 +4311,11 @@ type Query {
   """Returns a list of crowdfundings."""
   crowdfundings: [Crowdfunding!]!
 
+  """
+  Origin and restriction state of the current session. Restricted sessions may only complete onboarding.
+  """
+  currentSession: SessionInfo!
+
   "\n      Returns daily stats in a given timeframe.\n    "
   dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
 
@@ -4655,6 +4692,9 @@ type Query {
 
   """Get all invoices for the authenticated user"""
   userInvoices: [Invoice!]!
+
+  """The current personal login link of a user, without the code itself."""
+  userLoginCode(userId: String!): UserLoginCodeStatus
   userPollVote(pollId: String!): String
 
   """Returns a userrole by id."""
@@ -4799,6 +4839,28 @@ type SensitiveDataUser implements BaseUser {
   userImageID: String
 }
 
+type SessionInfo {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  origin: SessionOrigin!
+  placeholderEmail: Boolean!
+  restricted: Boolean!
+
+  """
+  Attribute from the letter a restricted session must confirm when it claims the account with a real email address.
+  """
+  secondFactor: LoginCodeSecondFactor!
+}
+
+enum SessionOrigin {
+  impersonation
+  jwt
+  password
+  preview
+  purl
+  register
+}
+
 type SessionWithToken {
   createdAt: DateTime!
   expiresAt: DateTime!
@@ -4807,6 +4869,14 @@ type SessionWithToken {
   Whether this session was created by redeeming an impersonation grant from the One dashboard. Clients must never treat an ordinary JWT login as impersonation.
   """
   impersonated: Boolean!
+
+  """How this session was created."""
+  origin: SessionOrigin!
+
+  """
+  Whether this session is limited to onboarding until a real email address has been confirmed.
+  """
+  restricted: Boolean!
   token: String!
 
   """
@@ -4921,6 +4991,10 @@ enum SettingName {
   ALLOW_GUEST_COMMENT_RATING
   ALLOW_GUEST_POLL_VOTING
   COMMENT_CHAR_LIMIT
+  LOGIN_CODE_ENABLED
+  LOGIN_CODE_MAX_USES
+  LOGIN_CODE_SECOND_FACTOR
+  LOGIN_CODE_VALID_DAYS
   MAIL_PROVIDER_NAME
   MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
   MAKE_EXPECTED_REVENUE_API_PUBLIC
@@ -4931,6 +5005,7 @@ enum SettingName {
   NEW_ARTICLE_PAYWALL
   NEW_ARTICLE_PEERING
   PEERING_TIMEOUT_MS
+  PLACEHOLDER_EMAIL_PATTERNS
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
   SESSION_TTL_DAYS
@@ -5682,6 +5757,7 @@ type UserConsent {
 enum UserEvent {
   ACCOUNT_CREATION
   EMAIL_CHANGE
+  EMAIL_VERIFICATION
   LOGIN_LINK
   PASSWORD_RESET
   TEST_MAIL
@@ -5691,6 +5767,29 @@ input UserFilter {
   name: String
   text: String
   userRole: [String!]
+}
+
+type UserLoginCodeIssue {
+  code: String!
+  purl: String!
+  status: UserLoginCodeStatus!
+}
+
+type UserLoginCodeStatus {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  id: String!
+  issuedBy: String
+  lastUsedAt: DateTime
+  maxUses: Float!
+  revokedAt: DateTime
+  secondFactor: LoginCodeSecondFactor!
+
+  """
+  Whether the user record holds the attribute the configured second factor asks for.
+  """
+  secondFactorAvailable: Boolean!
+  usesRemaining: Float!
 }
 
 type UserRole {

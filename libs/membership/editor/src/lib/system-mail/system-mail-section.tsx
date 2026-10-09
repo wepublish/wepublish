@@ -34,6 +34,7 @@ const ACCOUNT_EVENT_ORDER: UserEvent[] = [
   UserEvent.LoginLink,
   UserEvent.PasswordReset,
   UserEvent.EmailChange,
+  UserEvent.EmailVerification,
   UserEvent.TestMail,
 ];
 

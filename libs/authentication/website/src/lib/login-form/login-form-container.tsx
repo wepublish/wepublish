@@ -1,8 +1,11 @@
-import { useLazyQuery, useMutation } from '@apollo/client/react';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import {
   CheckLoginOtpDocument,
+  LoginWithCodeDocument,
   LoginWithCredentialsDocument,
   LoginWithEmailDocument,
+  SettingListDocument,
+  SettingName,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -34,6 +37,26 @@ export function LoginFormContainer({
   const [otpRequired, setOtpRequired] = useState(false);
   const [totpRedirectToPassword, setTotpRedirectToPassword] = useState(false);
   const [loginLinkCooldownSeconds, markLoginLinkSent] = useLoginLinkCooldown();
+  // Login codes are opt-in per medium; the API refuses them while off.
+  const { data: settingsData } = useQuery(SettingListDocument);
+  const loginCodeEnabled =
+    settingsData?.settings.find(
+      setting => setting.name === SettingName.LoginCodeEnabled
+    )?.value === true;
+  const [codeChallengeRequired, setCodeChallengeRequired] = useState(false);
+  const [loginWithCode, withCode] = useMutation(LoginWithCodeDocument, {
+    onCompleted(data) {
+      setToken({
+        __typename: 'SessionWithTokenWithoutUser',
+        createdAt: data.createSessionWithLoginCode.createdAt,
+        expiresAt: data.createSessionWithLoginCode.expiresAt,
+        token: data.createSessionWithLoginCode.token,
+      });
+    },
+    onError(error) {
+      setCodeChallengeRequired(error.message.includes('CHALLENGE_REQUIRED'));
+    },
+  });
 
   // Check if redirected from a failed JWT login (2FA user)
   useEffect(() => {
@@ -95,6 +118,9 @@ export function LoginFormContainer({
 
   return (
     <LoginForm
+      // The form reads `defaults` once, so it starts over when the setting
+      // arrives and a link carrying a code can open the code form.
+      key={loginCodeEnabled ? 'with-login-code' : 'without-login-code'}
       className={className}
       onSubmitLoginWithCredentials={async (email, password, totpToken) => {
         setTotpRedirectToPassword(false);
@@ -107,10 +133,32 @@ export function LoginFormContainer({
         }
       }}
       loginWithCredentials={withCredentials}
+      loginWithCode={withCode}
+      codeChallengeRequired={codeChallengeRequired}
+      onSubmitLoginWithCode={
+        loginCodeEnabled ?
+          async (code, totpToken) => {
+            const result = await loginWithCode({
+              variables: { code, totpToken },
+            }).catch(() => null);
+
+            if (
+              result?.data?.createSessionWithLoginCode &&
+              afterLoginCallback
+            ) {
+              afterLoginCallback();
+            }
+          }
+        : undefined
+      }
       onSubmitLoginWithEmail={handleSubmitLoginWithEmail}
       loginWithEmail={withEmail}
       loginLinkCooldownSeconds={loginLinkCooldownSeconds}
-      defaults={defaults}
+      defaults={
+        loginCodeEnabled ? defaults : (
+          { ...defaults, useLoginCode: false, loginCode: undefined }
+        )
+      }
       disablePasswordLogin={disablePasswordLogin}
       otpRequired={otpRequired}
       onEmailChange={handleEmailChange}

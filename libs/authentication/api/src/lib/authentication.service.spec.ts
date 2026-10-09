@@ -24,6 +24,8 @@ describe('AuthenticationService', () => {
     prisma = module.get<PrismaClient>(PrismaClient);
     kv = module.get(KvTtlCacheService);
     service = module.get<AuthenticationService>(AuthenticationService);
+
+    vi.spyOn(prisma.setting, 'findUnique').mockResolvedValue(null as any);
   });
 
   it('should return a token session', async () => {
@@ -49,8 +51,11 @@ describe('AuthenticationService', () => {
     const sessionSpy = vi.spyOn(prisma.session, 'findFirst').mockReturnValue(
       Promise.resolve({
         userID: '12345',
+        origin: 'password',
+        createdAt: new Date('2026-01-01T00:00:00.000Z'),
         user: {
           id: '12345',
+          email: 'test@example.com',
         },
       }) as any
     );
@@ -95,6 +100,21 @@ describe('AuthenticationService', () => {
     expect(result).toBeTruthy();
   });
 
+  it('should return that the session is invalid if the user is inactive', () => {
+    const today = new Date();
+    const future = new Date(today);
+    future.setDate(future.getDate() + 5000);
+
+    const session = {
+      type: AuthSessionType.User,
+      expiresAt: future,
+      user: { active: false },
+    } as AuthSession;
+
+    const result = service.isSessionValid(session);
+    expect(result).toBeFalsy();
+  });
+
   it("should return that the session is valid if it's a token session", () => {
     const session = {
       type: AuthSessionType.Token,
@@ -112,6 +132,7 @@ describe('AuthenticationService', () => {
     const session = {
       type: AuthSessionType.User,
       expiresAt: past,
+      user: { active: true },
     } as AuthSession;
 
     const result = service.isSessionValid(session);
@@ -134,6 +155,27 @@ describe('AuthenticationService', () => {
   });
 
   describe('session cache', () => {
+    it("drops cached sessions when a user's sessions are revoked", async () => {
+      const sessionSpy = vi
+        .spyOn(prisma.session, 'findFirst')
+        .mockResolvedValue({
+          id: 'session-1',
+          token: 'secret-token',
+          createdAt: new Date('2026-01-01T00:00:00.000Z'),
+          expiresAt: new Date('2030-01-01T00:00:00.000Z'),
+          impersonatedBy: null,
+          user: { id: 'user-1', roleIDs: [] },
+        } as any);
+      vi.spyOn(prisma.userRole, 'findMany').mockResolvedValue([]);
+      vi.spyOn(prisma.session, 'deleteMany').mockResolvedValue({ count: 1 });
+
+      await service.getUserSession('secret-token');
+      await service.revokeUserSessions('user-1');
+      sessionSpy.mockResolvedValue(null);
+
+      expect(await service.getUserSession('secret-token')).toBeNull();
+    });
+
     const userSession = {
       id: 'session-1',
       token: 'secret-token',

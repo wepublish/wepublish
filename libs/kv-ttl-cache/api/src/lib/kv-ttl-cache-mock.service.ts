@@ -4,6 +4,18 @@ export function createKvMock(): KvTtlCacheService {
   const store = new Map<string, unknown>();
 
   return {
+    async get<T>(key: string): Promise<T | undefined> {
+      return store.get(key) as T | undefined;
+    },
+
+    async set<T>(key: string, value: T) {
+      store.set(key, value);
+    },
+
+    async del(key: string) {
+      store.delete(key);
+    },
+
     async setNs(ns: string, key: string, value: any) {
       const k = `${ns}:${key}`;
       store.set(k, typeof value === 'string' ? JSON.parse(value) : value);

@@ -1334,6 +1334,9 @@
         "user_lastLogin": "Letzter Login",
         "user_createdAt": "Konto erstellt am",
         "jwt": "Login-Token (JWT)",
+        "purl": "Persönlicher Login-Link",
+        "purlCode": "Persönlicher Login-Code",
+        "purlQr": "Persönlicher Login-QR-Code",
         "currentDate": "Aktuelles Datum",
         "optional_subscription_id": "Abo-ID",
         "optional_subscription_monthlyAmount": "Monatlicher Betrag",
@@ -1951,6 +1954,19 @@
       "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen",
       "login": "Login",
       "loginMinutes": "Gültigkeitsdauer E-Mail-Login-Token",
+      "loginCodeEnabled": "Persönliche Login-Codes aktivieren",
+      "loginCodeMaxUses": "Persönlicher Login-Code: maximale Verwendungen",
+      "loginCodeValidDays": "Persönlicher Login-Code: Gültigkeitsdauer",
+      "loginCodeSecondFactor": "Persönlicher Login-Code: zweiter Faktor",
+      "placeholderEmailPatterns": "Platzhalter-E-Mail-Adressen (Muster)",
+      "loginCodeSecondFactorOptions": {
+        "none": "Keiner",
+        "postalCode": "Postleitzahl",
+        "city": "Ort",
+        "firstName": "Vorname",
+        "lastName": "Nachname"
+      },
+      "loginCodeUses": "Verwendungen",
       "minutes": "Minuten",
       "ms": "Millisekunden",
       "passwordToken": "Gültigkeitsdauer E-Mail-Passwort-Reset-Token",
@@ -1971,6 +1987,11 @@
         "guestCommentRating": "Erlaube (nicht eingeloggten) Gastbesuchern, die Kommentare anderer Personen zu bewerten.",
         "guestPollVote": "Erlaube Gastbesuchern (nicht eingeloggt), an Umfragen teilzunehmen.",
         "invoiceReminders": "Wie oft der Benutzer daran erinnert wird, das Abonnement zu bezahlen (einmal pro Tag).",
+        "loginCodeEnabled": "Erlaubt das Anmelden mit persönlichen Login-Codes aus E-Mails und Briefen ({{purl}}, {{purlCode}}, {{purlQr}}). Ausgeschaltet bleiben diese Platzhalter leer, es werden keine Codes ausgestellt und die Login-Seite bietet die Anmeldung mit Code nicht an. Login-Links per E-Mail ({{jwt}}) sind davon nicht betroffen und funktionieren immer.",
+        "loginCodeMaxUses": "Wie oft ein persönlicher Login-Code (z. B. aus einem Brief, {{purl}}) verwendet werden darf, bevor er erlischt. Standard: 5.",
+        "loginCodeValidDays": "Wie viele Tage ein persönlicher Login-Code gültig bleibt. Standard: 90.",
+        "loginCodeSecondFactor": "Angabe aus dem Brief, die zusätzlich abgefragt wird, wenn jemand nach dem Login mit einem persönlichen Login-Code eine echte E-Mail-Adresse hinterlegt (nur bei Konten mit Platzhalter-E-Mail). Schützt vor erratenen Codes – Postleitzahl empfohlen. Nach 5 Fehlversuchen wird die Sitzung beendet.",
+        "placeholderEmailPatterns": "Kommagetrennte Textmuster, z. B. @platzhalter.zwoelf.ch. Konten, deren E-Mail-Adresse eines der Muster enthält, gelten als Platzhalter: an sie wird keine E-Mail versendet, und ihre Sitzungen bleiben eingeschränkt, bis eine echte Adresse bestätigt ist.",
         "newArticlePeering": "Hat keinen Einfluss auf bereits erstellte Artikel",
         "newArticlePaywall": "Hat keinen Einfluss auf bereits erstellte Artikel",
         "subscriptionUpgradeModel": "Wenn aktiviert, wird bei einem Upgrade immer die Differenz zwischen dem neuen und dem aktuellen Plan-Preis verrechnet, unabhängig davon, wie viel Zeit in der aktuellen Periode noch verbleibt. Wenn deaktiviert, wird nur das ungenutzte (anteilige) Restguthaben der aktuellen Periode angerechnet.",
@@ -2187,6 +2208,17 @@
       "passwordChangeSuccess": "Passwort erfolgreich geändert!",
       "passwordHeader": "Passwörter & Zugänge",
       "totpHeader": "Zwei-Faktor-Authentifizierung",
+      "loginCode": {
+        "header": "Persönlicher Login-Code",
+        "status": "Gültig bis {{expiresAt}} · noch {{usesRemaining}} von {{maxUses}} Verwendungen · zuletzt genutzt: {{lastUsedAt}}",
+        "never": "nie",
+        "none": "Für diese Person wurde noch kein persönlicher Login-Code ausgestellt. Er entsteht automatisch beim ersten Versand einer E-Mail oder eines Briefs mit {{purl}}.",
+        "revoke": "Widerrufen",
+        "reissue": "Neu ausstellen",
+        "issued": "Neuer Code (wird nur einmal angezeigt):",
+        "secondFactorAvailable": "Zweiter Faktor «{{factor}}» ist bei dieser Person hinterlegt.",
+        "secondFactorMissing": "Zweiter Faktor «{{factor}}» fehlt bei dieser Person – ohne diese Angabe kann sie keine E-Mail-Adresse hinterlegen."
+      },
       "totpEnabled": "Zwei-Faktor-Authentifizierung ist für diesen Benutzer aktiviert.",
       "totpDisabled": "Zwei-Faktor-Authentifizierung ist noch nicht eingerichtet. Der Benutzer wird beim nächsten Editor-Login aufgefordert, diese einzurichten.",
       "totpExemptInfo": "Dieser Benutzer ist von der Zwei-Faktor-Authentifizierungspflicht befreit.",
@@ -3328,6 +3360,7 @@
         "login_link": "Login-Link",
         "password_reset": "Passwort zurücksetzen",
         "email_change": "E-Mail-Adresse geändert",
+        "email_verification": "E-Mail-Adresse bestätigt",
         "test_mail": "Test-E-Mail"
       },
       "eventInfo": {
@@ -3350,6 +3383,11 @@
           "short": "Neue Adresse bestätigen.",
           "description": "Geht an die neue Adresse, wenn jemand seine E-Mail-Adresse ändert. Die Änderung gilt erst nach der Bestätigung.",
           "example": "«Bitte bestätige deine neue E-Mail-Adresse.»"
+        },
+        "email_verification": {
+          "short": "Aktuelle Adresse bestätigen.",
+          "description": "Geht an die aktuelle Adresse, wenn jemand sie bestätigt – zum Beispiel nach dem Login mit einem persönlichen Link aus einem Brief.",
+          "example": "«Bitte bestätigen Sie Ihre E-Mail-Adresse.»"
         },
         "test_mail": {
           "short": "Nur für deine eigenen Tests.",

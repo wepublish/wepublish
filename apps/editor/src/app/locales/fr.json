@@ -1333,6 +1333,9 @@
         "user_lastLogin": "Dernière connexion",
         "user_createdAt": "Compte créé le",
         "jwt": "Jeton de connexion (JWT)",
+        "purl": "Lien de connexion personnel",
+        "purlCode": "Code de connexion personnel",
+        "purlQr": "Code QR de connexion personnel",
         "currentDate": "Date actuelle",
         "optional_subscription_id": "ID d’abonnement",
         "optional_subscription_monthlyAmount": "Montant mensuel",
@@ -1951,6 +1954,19 @@
       "guestPollVote": "Autoriser les votes anonymes dans les sondages",
       "login": "Connexion",
       "loginMinutes": "Durée de validité du token de connexion par e-mail",
+      "loginCodeEnabled": "Activer les codes de connexion personnels",
+      "loginCodeMaxUses": "Code de connexion personnel : utilisations maximales",
+      "loginCodeValidDays": "Code de connexion personnel : durée de validité",
+      "loginCodeSecondFactor": "Code de connexion personnel : deuxième facteur",
+      "placeholderEmailPatterns": "Adresses e-mail de substitution (motifs)",
+      "loginCodeSecondFactorOptions": {
+        "none": "Aucun",
+        "postalCode": "Code postal",
+        "city": "Localité",
+        "firstName": "Prénom",
+        "lastName": "Nom"
+      },
+      "loginCodeUses": "utilisations",
       "minutes": "minutes",
       "ms": "millisecondes",
       "passwordToken": "Durée de validité du token de réinitialisation du mot de passe par e-mail",
@@ -1969,6 +1985,11 @@
         "guestCommentRating": "Autoriser les votes des utilisateur·trice·s non authentifié·e·s sur les commentaires.",
         "guestPollVote": "Autoriser les votes des utilisateur·trice·s non authentifié·e·s pour les sondages.",
         "invoiceReminders": "Nombre de rappels de paiement par facture (un rappel par jour).",
+        "loginCodeEnabled": "Permet de se connecter avec des codes de connexion personnels envoyés par e-mail ou par courrier ({{purl}}, {{purlCode}}, {{purlQr}}). Désactivé, ces espaces réservés restent vides, aucun code n’est émis et la page de connexion ne propose pas la connexion avec un code. Les liens de connexion envoyés par e-mail ({{jwt}}) ne sont pas concernés et fonctionnent toujours.",
+        "loginCodeMaxUses": "Nombre d’utilisations d’un code de connexion personnel (p. ex. reçu par courrier, {{purl}}) avant expiration. Par défaut : 5.",
+        "loginCodeValidDays": "Nombre de jours pendant lesquels un code de connexion personnel reste valable. Par défaut : 90.",
+        "loginCodeSecondFactor": "Information figurant sur le courrier, demandée en plus lorsqu’une personne connectée avec un code de connexion personnel enregistre une véritable adresse e-mail (uniquement pour les comptes avec e-mail de substitution). Protège contre les codes devinés – code postal recommandé. Après 5 échecs, la session est terminée.",
+        "placeholderEmailPatterns": "Motifs de texte séparés par des virgules, p. ex. @substitution.exemple.org. Les comptes dont l’adresse e-mail contient l’un des motifs sont considérés comme des substituts : aucun e-mail ne leur est envoyé et leurs sessions restent limitées jusqu’à la confirmation d’une véritable adresse.",
         "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu’elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
         "newArticlePaywall": "N’affectera pas les articles déjà créés",
@@ -2187,6 +2208,17 @@
       "passwordChangeSuccess": "Le mot de passe a été changé avec succès !",
       "passwordHeader": "Mots de passe & accès",
       "totpHeader": "Authentification à deux facteurs",
+      "loginCode": {
+        "header": "Code de connexion personnel",
+        "status": "Valable jusqu’au {{expiresAt}} · {{usesRemaining}} utilisations restantes sur {{maxUses}} · dernière utilisation : {{lastUsedAt}}",
+        "never": "jamais",
+        "none": "Aucun code de connexion personnel n’a encore été émis pour cette personne. Il est créé automatiquement lors du premier envoi d’un e-mail ou d’un courrier contenant {{purl}}.",
+        "revoke": "Révoquer",
+        "reissue": "Réémettre",
+        "issued": "Nouveau code (affiché une seule fois) :",
+        "secondFactorAvailable": "Le deuxième facteur « {{factor}} » est renseigné pour cette personne.",
+        "secondFactorMissing": "Le deuxième facteur « {{factor}} » manque pour cette personne – sans cette information, elle ne peut pas enregistrer d’adresse e-mail."
+      },
       "totpEnabled": "L’authentification à deux facteurs est activée pour cet utilisateur.",
       "totpDisabled": "L’authentification à deux facteurs n’est pas encore configurée. L’utilisateur sera invité à la configurer lors de sa prochaine connexion à l’éditeur.",
       "totpExemptInfo": "Cet utilisateur est exempté de l’exigence d’authentification à deux facteurs.",
@@ -3320,6 +3352,7 @@
         "login_link": "Lien de connexion",
         "password_reset": "Réinitialisation du mot de passe",
         "email_change": "Adresse e-mail modifiée",
+        "email_verification": "Adresse e-mail confirmée",
         "test_mail": "E-mail de test"
       },
       "eventInfo": {
@@ -3342,6 +3375,11 @@
           "short": "Confirmer la nouvelle adresse.",
           "description": "Part à la nouvelle adresse lorsque quelqu’un modifie son adresse e-mail. Le changement n’est effectif qu’après confirmation.",
           "example": "« Merci de confirmer votre nouvelle adresse e-mail. »"
+        },
+        "email_verification": {
+          "short": "Confirmer l’adresse actuelle.",
+          "description": "Part à l’adresse actuelle lorsque quelqu’un la confirme, par exemple après une connexion avec un lien personnel reçu par courrier.",
+          "example": "« Merci de confirmer votre adresse e-mail. »"
         },
         "test_mail": {
           "short": "Uniquement pour vos tests.",
