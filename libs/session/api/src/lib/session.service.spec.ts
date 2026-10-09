@@ -189,3 +189,41 @@ describe('SessionService.createSessionWithLoginCode', () => {
     expect(limiter.assertAllowed).toHaveBeenCalledWith('fp', true);
   });
 });
+
+describe('SessionService.createSessionWithJWT', () => {
+  it('logs in with a login link (jwt) without asking whether personal login codes are switched on', async () => {
+    const user = activeUser();
+    const loginCodes = createMock(LoginCodeService);
+    loginCodes.isEnabled!.mockResolvedValue(false);
+
+    const service = new SessionService(
+      { user: { findUnique: vi.fn() } } as never,
+      1000,
+      {} as never,
+      {} as never,
+      { authenticateUserWithJWT: vi.fn().mockResolvedValue(user) } as never,
+      {
+        verifyImpersonationGrant: vi.fn().mockResolvedValue(null),
+        verifyJWT: vi.fn().mockRejectedValue(new Error('not a preview jwt')),
+      } as never,
+      {} as never,
+      {} as never,
+      {} as never,
+      {} as never,
+      loginCodes as never,
+      {} as never,
+      {} as never
+    );
+    const createUserSession = vi
+      .spyOn(service, 'createUserSession')
+      .mockResolvedValue({ token: 'session-token' } as never);
+
+    await expect(
+      service.createSessionWithJWT('login-link-jwt')
+    ).resolves.toEqual({ token: 'session-token' });
+    expect(createUserSession).toHaveBeenCalledWith(user, {
+      origin: SessionOrigin.jwt,
+    });
+    expect(loginCodes.isEnabled).not.toHaveBeenCalled();
+  });
+});
