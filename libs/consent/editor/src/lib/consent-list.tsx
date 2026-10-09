@@ -66,6 +66,17 @@ export function ConsentList(props: ConsentListProps) {
 
   const { t } = useTranslation();
 
+  const consentValues = [
+    {
+      value: true,
+      label: t('consents.accepted'),
+    },
+    {
+      value: false,
+      label: t('consents.rejected'),
+    },
+  ];
+
   const onDeleteConsent = (id: string) => {
     deleteConsent({
       variables: {

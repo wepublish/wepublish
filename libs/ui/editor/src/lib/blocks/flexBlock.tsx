@@ -4,7 +4,7 @@ import 'react-resizable/css/styles.css';
 import styled from '@emotion/styled';
 import { BlockType } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
-import i18next from 'i18next';
+import i18next, { TFunction } from 'i18next';
 import nanoid from 'nanoid';
 import React, {
   ComponentType,
@@ -257,46 +257,49 @@ const ContentForFlexBlockWrapper = styled('div')`
   word-wrap: break-word;
 `;
 
-const getContentHintForFlexBlockNestedBlock = (block: BlockListValue) => {
+const getContentHintForFlexBlockNestedBlock = (
+  block: BlockListValue,
+  t: TFunction
+) => {
   if (!block) return '';
 
   if (block.type === 'TeaserSlots') {
-    return block.value?.title || 'Teaser Slots';
+    return block.value?.title || t('blocks.teaserSlots.label');
   }
   if (block.type === 'Image') {
-    return block.value?.image?.filename || 'Image';
+    return block.value?.image?.filename || t('blocks.image.label');
   }
   if (block.type === 'Embed') {
     const embed = block.value as EmbedBlockValue | undefined;
-    if (!embed) return 'Embed';
+    if (!embed) return t('blocks.embeds.label');
 
     switch (embed.type) {
       case EmbedType.YouTubeVideo:
-        return `YouTube: ${embed.videoID || 'no ID'}`;
+        return `YouTube: ${embed.videoID || t('blocks.flexBlock.noId')}`;
       case EmbedType.VimeoVideo:
-        return `Vimeo: ${embed.videoID || 'no ID'}`;
+        return `Vimeo: ${embed.videoID || t('blocks.flexBlock.noId')}`;
       case EmbedType.TikTokVideo:
-        return `TikTok: ${embed.videoID || 'no ID'}`;
+        return `TikTok: ${embed.videoID || t('blocks.flexBlock.noId')}`;
       case EmbedType.SoundCloudTrack:
-        return `SoundCloud: ${embed.trackID || 'no ID'}`;
+        return `SoundCloud: ${embed.trackID || t('blocks.flexBlock.noId')}`;
       case EmbedType.InstagramPost:
-        return `Instagram: ${embed.postID || 'no ID'}`;
+        return `Instagram: ${embed.postID || t('blocks.flexBlock.noId')}`;
       case EmbedType.TwitterTweet:
-        return `Twitter: ${embed.tweetID || 'no ID'}`;
+        return `Twitter: ${embed.tweetID || t('blocks.flexBlock.noId')}`;
       case EmbedType.FacebookPost:
-        return `Facebook Post: ${embed.postID || 'no ID'}`;
+        return `Facebook Post: ${embed.postID || t('blocks.flexBlock.noId')}`;
       case EmbedType.FacebookVideo:
-        return `Facebook Video: ${embed.videoID || 'no ID'}`;
+        return `Facebook Video: ${embed.videoID || t('blocks.flexBlock.noId')}`;
       case EmbedType.Other:
-        return embed.title || embed.url || 'Embed';
+        return embed.title || embed.url || t('blocks.embeds.label');
       default:
-        return 'Embed';
+        return t('blocks.embeds.label');
     }
   }
   if (block.type === 'RichText') {
     const text = toPlaintext(block.value?.richText);
     if (!text) {
-      return 'Rich Text';
+      return t('blocks.richText.label');
     }
     if (text.length > 25) {
       return text.slice(0, 25) + '...';
@@ -306,7 +309,7 @@ const getContentHintForFlexBlockNestedBlock = (block: BlockListValue) => {
   if (block.type === 'Crowdfunding') {
     const name = block.value?.crowdfunding?.name;
     if (!name) {
-      return 'Crowdfunding';
+      return t('blocks.crowdfunding.label');
     }
     if (name.length > 25) {
       return name.slice(0, 25) + '...';
@@ -315,14 +318,14 @@ const getContentHintForFlexBlockNestedBlock = (block: BlockListValue) => {
   }
 
   if (block.type === 'Crowdfunding') {
-    return block.value?.crowdfunding?.name || 'Crowdfunding';
+    return block.value?.crowdfunding?.name || t('blocks.crowdfunding.label');
   }
 
   if (block.type === 'LinkPageBreak') {
-    return block.value?.text || 'Break';
+    return block.value?.text || t('blocks.linkPageBreak.label');
   }
 
-  return 'unknown block value';
+  return t('blocks.flexBlock.unknownBlock');
 };
 
 const oEmbedUrlForEmbed = (embed: EmbedBlockValue): string | null => {
@@ -375,11 +378,12 @@ export const ContentForFlexBlock = ({ block }: { block: BlockListValue }) => {
       (block.value as EmbedBlockValue | undefined)
     : undefined;
   const embedTitle = useEmbedTitle(embed);
+  const { t } = useTranslation();
 
   const hint =
     embedTitle ?
-      `${getContentHintForFlexBlockNestedBlock(block).split(':')[0]}: ${embedTitle}`
-    : getContentHintForFlexBlockNestedBlock(block);
+      `${getContentHintForFlexBlockNestedBlock(block, t).split(':')[0]}: ${embedTitle}`
+    : getContentHintForFlexBlockNestedBlock(block, t);
 
   return <ContentForFlexBlockWrapper>{hint}</ContentForFlexBlockWrapper>;
 };

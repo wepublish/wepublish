@@ -53,8 +53,8 @@ export const EditBannerForm = () => {
 
   const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
-    title: StringType().isRequired(),
-    text: StringType().isRequired(),
+    title: StringType().isRequired(t('errorMessages.required')),
+    text: StringType().isRequired(t('errorMessages.required')),
   });
 
   const [shouldClose, setShouldClose] = useState(false);

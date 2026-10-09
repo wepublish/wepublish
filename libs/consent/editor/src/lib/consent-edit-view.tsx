@@ -131,9 +131,9 @@ export const ConsentEditView = () => {
 
   const { StringType, BooleanType } = Schema.Types;
   const validationModel = Schema.Model({
-    name: StringType().isRequired(),
-    slug: StringType().isRequired(),
-    defaultValue: BooleanType().isRequired(),
+    name: StringType().isRequired(t('errorMessages.required')),
+    slug: StringType().isRequired(t('errorMessages.required')),
+    defaultValue: BooleanType().isRequired(t('errorMessages.required')),
   });
 
   return (

@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import { MailTemplateContext } from '@wepublish/editor/api';
 import { InfoTooltip } from '@wepublish/ui/editor';
+import { TFunction } from 'i18next';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Tooltip, Whisper } from 'rsuite';
@@ -71,6 +72,18 @@ const AMOUNT_FORMATS = [
   },
 ];
 
+/**
+ * The description is shown in the tooltip and searched, so both use the
+ * translated text. The code default stays as the fallback.
+ */
+const describePlaceholder = (t: TFunction, placeholder: MailPlaceholder) =>
+  t(`mailTemplates.placeholderDescriptions.${placeholder.key}`, {
+    defaultValue: placeholder.description,
+    // The description of the login token contains a literal `{{jwt}}`; passing
+    // it as a value keeps i18next from treating it as an interpolation.
+    jwt: '{{jwt}}',
+  });
+
 export function PlaceholderPicker({
   onInsert,
   context,
@@ -106,7 +119,7 @@ export function PlaceholderPicker({
       return (
         p.key.toLowerCase().includes(term) ||
         name.includes(term) ||
-        p.description.toLowerCase().includes(term)
+        describePlaceholder(t, p).toLowerCase().includes(term)
       );
     });
   }, [search, scopedPlaceholders, t]);
@@ -161,7 +174,7 @@ export function PlaceholderPicker({
                 trigger="hover"
                 placement="left"
                 speaker={tooltip(
-                  placeholder.description,
+                  describePlaceholder(t, placeholder),
                   `{{${placeholder.key}${format.suffix}}}`,
                   format.example
                 )}
@@ -192,7 +205,7 @@ export function PlaceholderPicker({
         trigger="hover"
         placement="left"
         speaker={tooltip(
-          placeholder.description,
+          describePlaceholder(t, placeholder),
           `{{${placeholder.key}}}`,
           placeholder.example
         )}

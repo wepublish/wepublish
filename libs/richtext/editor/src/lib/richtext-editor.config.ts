@@ -92,8 +92,11 @@ const extensions = [
   TableHeaderWithBorder,
   LinkVariant.configure({
     variants: [
-      { value: 'buttonLinkMain', label: 'Button (Main)' },
-      { value: 'buttonLinkSecondary', label: 'Button (Secondary)' },
+      { value: 'buttonLinkMain', labelKey: 'richtext.link.variantButtonMain' },
+      {
+        value: 'buttonLinkSecondary',
+        labelKey: 'richtext.link.variantButtonSecondary',
+      },
     ],
   }),
 ];

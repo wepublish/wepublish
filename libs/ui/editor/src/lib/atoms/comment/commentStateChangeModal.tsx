@@ -65,6 +65,17 @@ export function mapCommentActionToBtnTitle(commentState: CommentState) {
   }
 }
 
+export function mapRejectionReasonToLabel(
+  rejectionReason: CommentRejectionReason
+) {
+  switch (rejectionReason) {
+    case CommentRejectionReason.Spam:
+      return 'comments.panels.rejectionReasons.spam';
+    case CommentRejectionReason.Misconduct:
+      return 'comments.panels.rejectionReasons.misconduct';
+  }
+}
+
 interface CommentStateChangeModalProps {
   comment: FullCommentFragment;
   newCommentState: CommentState;
@@ -266,10 +277,10 @@ export function CommentStateChangeModal({
             >
               <Dropdown
                 title={t(
-                  rejectionReason ||
-                    (newCommentState === CommentState.Rejected ?
-                      'comments.panels.rejectionReason'
-                    : 'comments.panels.requestChangesReason')
+                  rejectionReason ? mapRejectionReasonToLabel(rejectionReason)
+                  : newCommentState === CommentState.Rejected ?
+                    'comments.panels.rejectionReason'
+                  : 'comments.panels.requestChangesReason'
                 )}
                 placement="topEnd"
               >
@@ -280,7 +291,7 @@ export function CommentStateChangeModal({
                     setRejectionReason(CommentRejectionReason.Spam)
                   }
                 >
-                  {CommentRejectionReason.Spam}
+                  {t(mapRejectionReasonToLabel(CommentRejectionReason.Spam))}
                 </Dropdown.Item>
                 <Dropdown.Item
                   key={CommentRejectionReason.Misconduct}
@@ -289,7 +300,9 @@ export function CommentStateChangeModal({
                     setRejectionReason(CommentRejectionReason.Misconduct);
                   }}
                 >
-                  {CommentRejectionReason.Misconduct}
+                  {t(
+                    mapRejectionReasonToLabel(CommentRejectionReason.Misconduct)
+                  )}
                 </Dropdown.Item>
               </Dropdown>
             </DescriptionListItem>

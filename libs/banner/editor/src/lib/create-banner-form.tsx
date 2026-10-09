@@ -31,10 +31,12 @@ export const CreateBannerForm = () => {
 
   const { StringType, NumberType } = Schema.Types;
   const validationModel = Schema.Model({
-    title: StringType().isRequired(),
-    text: StringType().isRequired(),
-    delay: NumberType().min(0),
-    hideForMinutes: NumberType().min(0).isRequired(),
+    title: StringType().isRequired(t('errorMessages.required')),
+    text: StringType().isRequired(t('errorMessages.required')),
+    delay: NumberType().min(0, t('banner.form.mustNotBeNegative')),
+    hideForMinutes: NumberType()
+      .min(0, t('banner.form.mustNotBeNegative'))
+      .isRequired(t('errorMessages.required')),
   });
 
   const [shouldClose, setShouldClose] = useState(false);
