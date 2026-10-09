@@ -72,4 +72,18 @@ describe('SupportLoginButton', () => {
       origin: window.location.origin,
     });
   });
+
+  it('stays on the login page when the ONE address is refused', async () => {
+    (useQuery as Mock).mockReturnValue({ data: { supportLoginEnabled: true } });
+    (startSupportLogin as Mock).mockRejectedValue(new Error('refused'));
+    const navigate = vi.fn();
+
+    render(<SupportLoginButton navigate={navigate} />);
+    const button = screen.getByRole('button', { name: 'login.support.button' });
+    fireEvent.click(button);
+
+    await waitFor(() => expect(startSupportLogin).toHaveBeenCalled());
+    await waitFor(() => expect(button.hasAttribute('disabled')).toBe(false));
+    expect(navigate).not.toHaveBeenCalled();
+  });
 });

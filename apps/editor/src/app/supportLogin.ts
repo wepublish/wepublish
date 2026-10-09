@@ -2,6 +2,8 @@ export const SUPPORT_LOGIN_PATH = '/login/support';
 
 const STORAGE_KEY = 'wepublish/support-login';
 
+const ONE_URL_PROTOCOLS = ['https:', 'http:'];
+
 export type SupportLoginAttempt = { state: string; verifier: string };
 
 export type SupportLoginResult = { code: string; state: string };
@@ -56,6 +58,16 @@ export async function startSupportLogin({
   oneUrl: string;
   origin: string;
 }): Promise<string> {
+  const target = new URL(
+    `${oneUrl.replace(/\/+$/, '')}/impersonation/support-login`
+  );
+
+  if (!ONE_URL_PROTOCOLS.includes(target.protocol)) {
+    throw new Error(
+      `Support login needs an http(s) address for ONE, got ${target.protocol}`
+    );
+  }
+
   const attempt: SupportLoginAttempt = {
     state: randomToken(),
     verifier: randomToken(),
@@ -63,14 +75,14 @@ export async function startSupportLogin({
 
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify(attempt));
 
-  const params = new URLSearchParams({
+  target.search = new URLSearchParams({
     redirect_uri: `${origin}${SUPPORT_LOGIN_PATH}`,
     state: attempt.state,
     code_challenge: await codeChallengeFor(attempt.verifier),
     code_challenge_method: 'S256',
-  });
+  }).toString();
 
-  return `${oneUrl.replace(/\/+$/, '')}/impersonation/support-login?${params}`;
+  return target.toString();
 }
 
 export function takeSupportLoginAttempt(

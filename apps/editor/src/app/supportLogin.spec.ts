@@ -87,6 +87,30 @@ describe('support login', () => {
     expect(takeSupportLoginAttempt('state-of-someone-else')).toBeNull();
     expect(takeSupportLoginAttempt(null)).toBeNull();
   });
+
+  it('keeps the path of the ONE address and allows plain http for local development', async () => {
+    const url = new URL(
+      await startSupportLogin({
+        oneUrl: 'http://localhost:8055/directus/',
+        origin: 'http://localhost:3000',
+      })
+    );
+
+    expect(url.origin + url.pathname).toBe(
+      'http://localhost:8055/directus/impersonation/support-login'
+    );
+  });
+
+  it.each([
+    'javascript:alert(document.domain)//',
+    'data:text/html,<script>alert(1)</script>',
+    'not an address',
+  ])('refuses to send the browser to %s', async oneUrl => {
+    await expect(
+      startSupportLogin({ oneUrl, origin: 'https://editor.medium.ch' })
+    ).rejects.toThrow();
+    expect(sessionStorage.length).toBe(0);
+  });
 });
 
 describe('capturing the code the support login sends back', () => {
