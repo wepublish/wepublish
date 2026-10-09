@@ -107,7 +107,7 @@ const mailTemplateServiceMock = {
   preview: vi.fn(async () => ({ subject: 's', html: 'h', text: undefined })),
   sendTest: vi.fn(async () => undefined),
   previewLetter: vi.fn(async () => ({ pdf: 'cGRm' })),
-  isLetterChannelAvailable: vi.fn(() => true),
+  isLetterChannelAvailable: vi.fn(async () => true),
 };
 
 @Module({
@@ -278,8 +278,8 @@ describe('MailTemplatesResolver', () => {
     expect(result).toEqual({ pdf: 'cGRm' });
   });
 
-  it('reports whether the letter channel is available', () => {
-    expect(resolver.letterChannelAvailable()).toBe(true);
+  it('reports whether the letter channel is available', async () => {
+    expect(await resolver.letterChannelAvailable()).toBe(true);
     expect(mailTemplateServiceMock.isLetterChannelAvailable).toHaveBeenCalled();
   });
 

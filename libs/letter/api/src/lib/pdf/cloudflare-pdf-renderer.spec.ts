@@ -65,6 +65,30 @@ describe('CloudflarePdfRenderer', () => {
     return renderer;
   }
 
+  describe('isConfigured', () => {
+    it('is configured with an account and a token', async () => {
+      expect(await createRenderer().isConfigured()).toBe(true);
+    });
+
+    it('is configured with only the fallback credentials', async () => {
+      expect(
+        await createRenderer(
+          { ...config, cloudflare_accountId: null, cloudflare_apiToken: null },
+          { accountId: 'account-2', apiToken: 'token-2' }
+        ).isConfigured()
+      ).toBe(true);
+    });
+
+    it.each(['cloudflare_accountId', 'cloudflare_apiToken'] as const)(
+      'is not configured without %s',
+      async field => {
+        expect(
+          await createRenderer({ ...config, [field]: null }).isConfigured()
+        ).toBe(false);
+      }
+    );
+  });
+
   it('posts the html and takes the page size from the css', async () => {
     fetchMock.mockResolvedValue(response(PDF));
 

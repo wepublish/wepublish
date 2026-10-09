@@ -43,6 +43,7 @@ export abstract class BaseLetterProvider implements LetterProvider {
   abstract webhookForSendLetter(
     props: WebhookForSendLetterProps
   ): Promise<LetterLogStatus[]>;
+  abstract isConfigured(): Promise<boolean>;
   abstract sendLetter(props: SendLetterProps): Promise<SendLetterResult>;
   abstract dispatchLetter(props: DispatchLetterProps): Promise<void>;
   abstract cancelLetter(providerLetterID: string): Promise<void>;

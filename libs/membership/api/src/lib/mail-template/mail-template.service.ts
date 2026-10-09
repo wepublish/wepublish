@@ -207,8 +207,11 @@ export class MailTemplateService {
     };
   }
 
-  /** Whether a letter integration is set up, so letters can be offered at all. */
-  isLetterChannelAvailable(): boolean {
+  /**
+   * Whether letters can be offered at all: a letter provider and a pdf renderer
+   * are both set up with their credentials.
+   */
+  isLetterChannelAvailable(): Promise<boolean> {
     return this.letterContext.isConfigured();
   }
 

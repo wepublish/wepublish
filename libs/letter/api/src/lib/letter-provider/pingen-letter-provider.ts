@@ -164,6 +164,12 @@ export class PingenLetterProvider extends BaseLetterProvider {
     return (await this.getConfig())?.name ?? 'unknown';
   }
 
+  async isConfigured(): Promise<boolean> {
+    const config = await this.getConfig();
+
+    return !!(config?.clientId && config.clientSecret && config.organisationId);
+  }
+
   async sendLetter(props: SendLetterProps): Promise<SendLetterResult> {
     const config = await this.requireConfig();
     const { letters, fileUpload } = await this.connect(config);

@@ -102,6 +102,9 @@ export interface LetterProvider {
     props: WebhookForSendLetterProps
   ): Promise<LetterLogStatus[]>;
 
+  /** Whether everything needed to send is set, so letters can be offered. */
+  isConfigured(): Promise<boolean>;
+
   sendLetter(props: SendLetterProps): Promise<SendLetterResult>;
 
   dispatchLetter(props: DispatchLetterProps): Promise<void>;

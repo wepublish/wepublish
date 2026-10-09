@@ -61,6 +61,27 @@ describe('GotenbergPdfRenderer', () => {
     return renderer;
   }
 
+  describe('isConfigured', () => {
+    it('is configured with a url in the setting', async () => {
+      expect(await createRenderer().isConfigured()).toBe(true);
+    });
+
+    it('is configured with only the fallback url', async () => {
+      expect(
+        await createRenderer(
+          { ...config, gotenberg_url: null },
+          { url: 'http://fallback:3000' }
+        ).isConfigured()
+      ).toBe(true);
+    });
+
+    it('is not configured without any url', async () => {
+      expect(
+        await createRenderer({ ...config, gotenberg_url: null }).isConfigured()
+      ).toBe(false);
+    });
+  });
+
   it('posts the html as index.html and takes the page size from the css', async () => {
     fetchMock.mockResolvedValue(response(PDF));
 
