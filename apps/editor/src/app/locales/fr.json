@@ -3804,6 +3804,171 @@
     "listInput": {
       "dragToReorder": "Glisser pour modifier l’ordre",
       "add": "Ajouter une entrée"
+    },
+    "newsletter": {
+      "blocks": {
+        "button": {
+          "href": "Cible",
+          "label": "Bouton",
+          "text": "Libellé"
+        },
+        "condition": "Contenu dynamique (facultatif)",
+        "divider": {
+          "label": "Séparateur"
+        },
+        "footer": {
+          "label": "Pied de page",
+          "legal": "Mentions obligatoires (lien de désinscription et adresse)",
+          "lines": "Mentions légales : texte",
+          "title": "Mentions légales : titre"
+        },
+        "gutter": {
+          "article": "Article ({{size}})",
+          "intro": "Intro ({{size}})",
+          "label": "Retrait",
+          "none": "Aucun ({{size}})"
+        },
+        "heading": {
+          "label": "Titre",
+          "text": "Titre"
+        },
+        "image": {
+          "alt": "Texte alternatif",
+          "caption": "Légende (facultatif)",
+          "href": "Lien vers (facultatif)",
+          "image": "Image",
+          "label": "Image"
+        },
+        "meta": {
+          "label": "Ligne d’en-tête (libellé / date)",
+          "left": "Gauche",
+          "right": "Droite"
+        },
+        "panel": {
+          "image": "Image à gauche (facultatif)",
+          "label": "Encadré",
+          "linkHref": "Cible du lien (facultatif)",
+          "linkLabel": "Texte du lien (facultatif)",
+          "title": "Titre"
+        },
+        "preheader": "Texte d’aperçu (affiché à côté de l’objet)",
+        "rubric": {
+          "label": "Barre de rubrique",
+          "name": "Rubrique"
+        },
+        "teaser": {
+          "allTags": "Tous les tags",
+          "article": "Article",
+          "big": "Grand (avec image)",
+          "count": "{{count}} sur {{total}} articles",
+          "label": "Teaser d’article",
+          "pick": "Choisir un article …",
+          "short": "Court",
+          "tag": "Tag",
+          "variant": "Présentation"
+        },
+        "text": {
+          "body": "Texte",
+          "label": "Bloc de texte"
+        }
+      },
+      "categories": {
+        "articles": "Articles",
+        "content": "Contenu",
+        "footer": "Pied de page",
+        "header": "En-tête"
+      },
+      "condition": {
+        "always": "Toujours afficher (aucune condition)",
+        "evaluatedAtSend": "Mailchimp n’évalue la condition qu’à l’envoi. Le bloc reste visible dans l’éditeur, l’aperçu et le brouillon Mailchimp.",
+        "interests": "Groupes d’intérêt",
+        "is": "est",
+        "noValue": "Sans valeur, aucune condition ne s’applique — le bloc est envoyé à tous les destinataires.",
+        "not": "n'est pas",
+        "nothingToCompare": "L’audience Mailchimp n’a ni champs de contact ni groupes d’intérêt propres — aucune condition n’est possible.",
+        "pickGroup": "Choisir un groupe …",
+        "stored": "Enregistré dans le document",
+        "value": "Valeur"
+      },
+      "delete": {
+        "body": "«{{title}}» sera supprimé. Un brouillon Mailchimp déjà créé est conservé.",
+        "delete": "Supprimer",
+        "title": "Supprimer le numéro ?"
+      },
+      "editor": {
+        "back": "Retour à l’aperçu général",
+        "createdAt": "Campagne créée à {{time}}.",
+        "loading": "Chargement …",
+        "notPushed": "Pas transféré vers Mailchimp",
+        "notSaved": "Non enregistré",
+        "openInMailchimp": "Ouvrir dans Mailchimp",
+        "pickImage": "Choisir une image de la médiathèque ({{alt}})",
+        "preview": "Aperçu",
+        "publishing": "Transfert vers Mailchimp …",
+        "pushed": "Transféré vers Mailchimp",
+        "save": "Enregistrer",
+        "savedAt": "Enregistré à {{time}}.",
+        "savedNotSynced": "Enregistré, mais pas transféré vers Mailchimp : {{reason}}",
+        "saving": "Enregistrement …",
+        "unknownBlock": "Bloc inconnu : {{type}}",
+        "updatedAt": "Campagne mise à jour à {{time}}."
+      },
+      "list": {
+        "actions": "Actions",
+        "blocks": "Blocs",
+        "createNew": "Nouveau numéro",
+        "duplicate": "Dupliquer",
+        "mailchimp": "Mailchimp",
+        "modified": "Dernière modification",
+        "name": "Titre",
+        "openDraft": "Brouillon Mailchimp",
+        "title": "Newsletters",
+        "titlePlaceholder": "Titre du numéro, p. ex. Newsletter 21.8.26"
+      },
+      "mergeTags": {
+        "fields": "Champs de contact",
+        "system": "Balises système"
+      },
+      "navbar": "Newsletter",
+      "prose": {
+        "apply": "Appliquer",
+        "bold": "G",
+        "boldTitle": "Gras (Ctrl/Cmd+B)",
+        "hint": "Entrée commence un nouveau paragraphe. Les balises de fusion ne sont remplacées que par Mailchimp — l’éditeur et l’aperçu affichent la balise elle-même.",
+        "link": "Lien",
+        "list": "Liste",
+        "listTitle": "Liste à puces",
+        "loadingTags": "Chargement des balises …",
+        "mergeTag": "Balise de fusion",
+        "mergeTagTitle": "Insérer une balise de fusion Mailchimp",
+        "noTag": "Aucune balise trouvée.",
+        "remove": "Retirer",
+        "searchTag": "Rechercher une balise …"
+      },
+      "report": {
+        "clipped": "Gmail tronque ce numéro et cache la fin — mentions légales, lien de désinscription et adresse — derrière «Message tronqué».",
+        "heading": "Vérification",
+        "measuring": "Calcul de la taille …",
+        "missingArticles_one": "{{count}} article n’est plus disponible ({{ids}}). Le transfert vers Mailchimp est refusé tant que le teaser n’est pas remplacé ou supprimé.",
+        "missingArticles_other": "{{count}} articles ne sont plus disponibles ({{ids}}). Le transfert vers Mailchimp est refusé tant que les teasers ne sont pas remplacés ou supprimés.",
+        "missingFooter": "Il manque {{missing}} dans le pied de page. Mailchimp refuse d’envoyer une campagne sans cette mention.",
+        "nearLimit": "Proche de la limite. L’envoi ajoute du poids : Mailchimp remplace chaque balise de fusion et chaque lien par une adresse de suivi plus longue.",
+        "ok": "tout est en ordre",
+        "problems_one": "{{count}} problème",
+        "problems_other": "{{count}} problèmes",
+        "room": "Encore {{size}} avant que Gmail ne tronque.",
+        "size": "{{size}} sur {{limit}} ({{percent}} %)",
+        "sizeFailed": "La taille n’a pas pu être calculée : {{error}}",
+        "stale": "dernière version enregistrée",
+        "unsaved": "Les modifications depuis le dernier enregistrement ne sont pas comptées — enregistrer recalcule.",
+        "warnings_one": "{{count}} remarque",
+        "warnings_other": "{{count}} remarques"
+      },
+      "settings": {
+        "heading": "Paramètres",
+        "title": "Titre",
+        "titleHint": "Sert aussi d’objet au brouillon Mailchimp. Pris en compte à l’enregistrement."
+      }
     }
   }
 }
