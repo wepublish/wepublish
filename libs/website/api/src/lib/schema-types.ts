@@ -5994,6 +5994,11 @@ export type Query = {
 };
 
 
+export type QueryActionsArgs = {
+  types?: InputMaybe<Array<ActionType>>;
+};
+
+
 export type QueryAiSettingArgs = {
   id: Scalars['String']['input'];
 };

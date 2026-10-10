@@ -1,6 +1,6 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { ActionService } from './action.service';
-import { Action } from './action.model';
+import { Action, ActionType } from './action.model';
 import {
   CanGetArticle,
   CanGetPage,
@@ -28,7 +28,14 @@ export class ActionResolver {
     CanGetEvent
   )
   @Query(() => [Action], { description: `Returns latest actions` })
-  async actions() {
-    return this.actionService.getActions();
+  async actions(
+    @Args('types', {
+      type: () => [ActionType],
+      nullable: true,
+      description: 'Only these kinds of actions. Empty or omitted means all.',
+    })
+    types?: ActionType[] | null
+  ) {
+    return this.actionService.getActions(types);
   }
 }

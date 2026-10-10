@@ -447,6 +447,7 @@ export type {
   PublicSubscription,
   PublicSubscriptionConnection,
   Query,
+  QueryActionsArgs,
   QueryAiSettingArgs,
   QueryAiSettingsArgs,
   QueryAnalyticsProviderSettingArgs,
@@ -647,7 +648,6 @@ export type {
 } from './lib/schema-types';
 
 export {
-  ActionType,
   BannerDocumentType,
   CaptchaType,
   CommentAuthorType,

@@ -517,6 +517,7 @@ export type {
   PublicSubscription,
   PublicSubscriptionConnection,
   Query,
+  QueryActionsArgs,
   QueryAiSettingArgs,
   QueryAiSettingsArgs,
   QueryAnalyticsProviderSettingArgs,

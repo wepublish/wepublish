@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ActionService } from './action.service';
+import { ActionType } from './action.model';
 import { PrismaClient } from '@prisma/client';
 
 describe('ActionService', () => {
@@ -84,5 +85,24 @@ describe('ActionService', () => {
     expect(prismaMock.user.findMany).toHaveBeenCalled();
     expect(prismaMock.event.findMany).toHaveBeenCalled();
     expect(actions).toMatchSnapshot();
+  });
+
+  it('only queries and returns the requested types', async () => {
+    prismaMock.comment.findMany.mockResolvedValueOnce([
+      { id: '3', createdAt: new Date('2023-01-03T00:00:00Z') },
+    ]);
+
+    const actions = await service.getActions([ActionType.CommentCreated]);
+
+    expect(prismaMock.comment.findMany).toHaveBeenCalled();
+    expect(prismaMock.article.findMany).not.toHaveBeenCalled();
+    expect(prismaMock.user.findMany).not.toHaveBeenCalled();
+    expect(actions).toEqual([
+      {
+        date: new Date('2023-01-03T00:00:00Z'),
+        actionType: ActionType.CommentCreated,
+        commentId: '3',
+      },
+    ]);
   });
 });

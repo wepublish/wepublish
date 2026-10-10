@@ -16,7 +16,11 @@ import { AudienceDashboard } from '../audience/audience-dashboard';
 import { ScrollContainer } from '../networkContent/networkContent.styles';
 import NetworkContentDashboard from '../networkContent/networkContentDashboard';
 import { DashboardConfig } from './dashboardConfig';
-import { DashboardCardId, visibleDashboardCards } from './dashboardLayout';
+import {
+  DashboardCardId,
+  isDashboardCardFullWidth,
+  visibleDashboardCards,
+} from './dashboardLayout';
 import { DashboardNotifications } from './dashboardNotifications';
 import { ExternalAppsDashboard } from './externalAppsDashboard';
 import { useDashboardLayout } from './useDashboardLayout';
@@ -28,50 +32,50 @@ const DashboardToolbar = styled.div`
 `;
 
 // Row-major grid: card 1 → row 1 col 1, card 2 → row 1 col 2, … and one
-// column on smaller screens, in the same order.
+// column on smaller screens, in the same order. On desktop the cards of a row
+// stretch to the tallest one, so card bottoms line up; the floor keeps rows of
+// internally scrolling cards (network, apps) from collapsing.
 const DashboardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(240px, auto);
   gap: 20px;
-  align-items: start;
 
   @media (max-width: 1199px) {
     grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
   }
 `;
 
 const DashboardCard = styled.div`
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 
   &:empty {
     display: none;
   }
 
-  /* The sticky first row shares one height, at least 480px on desktop.
-     Longer Mitteilungen raise it; the network list never does - it scrolls
-     inside its own list instead of stretching the row. */
-  &[data-dashboard-card='notifications'],
-  &[data-dashboard-card='network'] {
-    align-self: stretch;
-    display: flex;
-    flex-direction: column;
-
-    @media (min-width: 1200px) {
-      min-height: 480px;
-    }
+  &[data-full-width='true'] {
+    grid-column: 1 / -1;
   }
 
-  &[data-dashboard-card='notifications'] > .rs-panel,
-  &[data-dashboard-card='network'] > .rs-panel {
+  > .rs-panel {
     flex: 1;
     display: flex;
     flex-direction: column;
   }
 
+  .rs-panel-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* These cards never make their row taller - Mitteilungen and Audience
+     set the height, the rest scrolls inside its card. */
   &[data-dashboard-card='network'] .rs-panel-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
     min-height: 360px;
     overflow: hidden;
     contain: size;
@@ -83,11 +87,11 @@ const DashboardCard = styled.div`
     max-height: none;
   }
 
-  /* Up to 50 entries with full comment texts would make the row - and
-     everything below it - several screens tall. */
-  &[data-dashboard-card='activity'] .rs-panel-body {
-    max-height: 640px;
-    overflow: auto;
+  @media (min-width: 1200px) {
+    &[data-dashboard-card='externalApps'] .rs-panel-body {
+      overflow: auto;
+      contain: size;
+    }
   }
 `;
 
@@ -206,6 +210,7 @@ export function Dashboard() {
           <DashboardCard
             key={id}
             data-dashboard-card={id}
+            data-full-width={isDashboardCardFullWidth(layout, id)}
           >
             {cards[id]}
           </DashboardCard>

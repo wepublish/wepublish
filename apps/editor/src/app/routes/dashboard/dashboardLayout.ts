@@ -9,13 +9,15 @@ export type DashboardCardDefinition = {
   id: DashboardCardId;
   /** Sticky cards are always shown, in this slot of the two-column grid. */
   sticky?: { row: number; col: number };
+  /** May span both columns instead of one. */
+  canSpanFullWidth?: true;
 };
 
 // Sticky cards in slot order, then the default order of the configurable ones.
 export const DASHBOARD_CARDS: DashboardCardDefinition[] = [
   { id: 'notifications', sticky: { row: 1, col: 1 } },
   { id: 'network', sticky: { row: 1, col: 2 } },
-  { id: 'activity' },
+  { id: 'activity', canSpanFullWidth: true },
   { id: 'audience' },
   { id: 'externalApps' },
 ];
@@ -23,8 +25,11 @@ export const DASHBOARD_CARDS: DashboardCardDefinition[] = [
 export type DashboardLayout = {
   version: 1;
   /** Configurable cards only, in display order. */
-  cards: { id: DashboardCardId; visible: boolean }[];
+  cards: { id: DashboardCardId; visible: boolean; fullWidth?: true }[];
 };
+
+const canSpanFullWidth = (id: DashboardCardId) =>
+  DASHBOARD_CARDS.some(card => card.id === id && card.canSpanFullWidth);
 
 const stickyCards = DASHBOARD_CARDS.filter(card => card.sticky).sort(
   (a, b) => a.sticky!.row - b.sticky!.row || a.sticky!.col - b.sticky!.col
@@ -58,7 +63,13 @@ export const normalizeDashboardLayout = (stored: unknown): DashboardLayout => {
 
     if (configurableIds.includes(id) && !known.has(id)) {
       known.add(id);
-      result.push({ id, visible: card.visible !== false });
+      result.push({
+        id,
+        visible: card.visible !== false,
+        ...(card.fullWidth === true && canSpanFullWidth(id) ?
+          { fullWidth: true as const }
+        : {}),
+      });
     }
   }
 
@@ -88,6 +99,27 @@ export const setDashboardCardVisible = (
     card.id === id ? { ...card, visible } : card
   ),
 });
+
+export const isDashboardCardFullWidth = (
+  layout: DashboardLayout,
+  id: DashboardCardId
+) => !!layout.cards.find(card => card.id === id)?.fullWidth;
+
+export const setDashboardCardFullWidth = (
+  layout: DashboardLayout,
+  id: DashboardCardId,
+  fullWidth: boolean
+): DashboardLayout =>
+  canSpanFullWidth(id) ?
+    {
+      ...layout,
+      cards: layout.cards.map(card =>
+        card.id !== id ? card
+        : fullWidth ? { ...card, fullWidth: true }
+        : { id: card.id, visible: card.visible }
+      ),
+    }
+  : layout;
 
 export const moveDashboardCard = (
   layout: DashboardLayout,

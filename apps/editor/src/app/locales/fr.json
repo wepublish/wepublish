@@ -869,6 +869,23 @@
       "chf": "chf"
     },
     "dashboard": {
+      "activityFilter": "Filtrer l’activité",
+      "activityFilterAll": "Tout afficher",
+      "activityTypes": {
+        "ArticleCreated": "Articles",
+        "PageCreated": "Pages",
+        "CommentCreated": "Commentaires",
+        "SubscriptionCreated": "Abonnements",
+        "UserCreated": "Utilisateur·trice·s",
+        "AuthorCreated": "Auteur·trice·s",
+        "PollStarted": "Sondages",
+        "EventCreated": "Événements"
+      },
+      "fullWidth": "Pleine largeur",
+      "newerActivity": "Activité plus récente",
+      "olderActivity": "Activité plus ancienne",
+      "activityUnavailable": "La dernière activité ne peut pas être affichée pour votre rôle.",
+      "noActivity": "Aucune activité pour l’instant.",
       "configure": "Personnaliser le tableau de bord",
       "configureTitle": "Personnaliser le tableau de bord",
       "configureFixedInfo": "Ces cartes restent toujours en haut.",

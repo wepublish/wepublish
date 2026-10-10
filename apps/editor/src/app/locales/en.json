@@ -869,6 +869,23 @@
       "chf": "chf"
     },
     "dashboard": {
+      "activityFilter": "Filter activity",
+      "activityFilterAll": "Show all",
+      "activityTypes": {
+        "ArticleCreated": "Articles",
+        "PageCreated": "Pages",
+        "CommentCreated": "Comments",
+        "SubscriptionCreated": "Subscriptions",
+        "UserCreated": "Users",
+        "AuthorCreated": "Authors",
+        "PollStarted": "Polls",
+        "EventCreated": "Events"
+      },
+      "fullWidth": "Full width",
+      "newerActivity": "Newer activity",
+      "olderActivity": "Older activity",
+      "activityUnavailable": "The latest activity cannot be shown for your role.",
+      "noActivity": "No activity yet.",
       "configure": "Customize dashboard",
       "configureTitle": "Customize dashboard",
       "configureFixedInfo": "These cards always stay at the top.",

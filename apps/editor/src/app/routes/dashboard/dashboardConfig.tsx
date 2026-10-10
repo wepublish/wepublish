@@ -19,6 +19,7 @@ import {
   MdArrowUpward,
   MdDragIndicator,
   MdPushPin,
+  MdWidthFull,
 } from 'react-icons/md';
 import { Button, Checkbox, IconButton, Modal } from 'rsuite';
 
@@ -28,6 +29,7 @@ import {
   DashboardLayout,
   defaultDashboardLayout,
   moveDashboardCard,
+  setDashboardCardFullWidth,
   setDashboardCardVisible,
 } from './dashboardLayout';
 
@@ -49,7 +51,8 @@ const CardList = styled.ul`
 
 const CardRow = styled.li`
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  /* fixed last column so the arrows line up in rows without the full-width switch */
+  grid-template-columns: auto 1fr auto auto 30px;
   align-items: center;
   gap: 8px;
   padding: 4px 8px;
@@ -78,9 +81,12 @@ const SectionInfo = styled.p`
 type SortableCardProps = {
   id: DashboardCardId;
   visible: boolean;
+  fullWidth: boolean;
+  canSpanFullWidth: boolean;
   isFirst: boolean;
   isLast: boolean;
   onVisibleChange: (visible: boolean) => void;
+  onFullWidthChange: (fullWidth: boolean) => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
 };
@@ -88,9 +94,12 @@ type SortableCardProps = {
 function SortableCard({
   id,
   visible,
+  fullWidth,
+  canSpanFullWidth,
   isFirst,
   isLast,
   onVisibleChange,
+  onFullWidthChange,
   onMoveUp,
   onMoveDown,
 }: SortableCardProps) {
@@ -138,6 +147,20 @@ function SortableCard({
         title={t('dashboard.moveDown')}
         onClick={onMoveDown}
       />
+
+      {canSpanFullWidth ?
+        <IconButton
+          size="sm"
+          appearance={fullWidth ? 'primary' : 'subtle'}
+          icon={<MdWidthFull />}
+          active={fullWidth}
+          disabled={!visible}
+          aria-pressed={fullWidth}
+          aria-label={t('dashboard.fullWidth')}
+          title={t('dashboard.fullWidth')}
+          onClick={() => onFullWidthChange(!fullWidth)}
+        />
+      : <span />}
     </CardRow>
   );
 }
@@ -178,7 +201,7 @@ export function DashboardConfig({
     <Modal
       open={open}
       onClose={onClose}
-      size="xs"
+      size="sm"
     >
       <Modal.Header>
         <Modal.Title>{t('dashboard.configureTitle')}</Modal.Title>
@@ -213,10 +236,20 @@ export function DashboardConfig({
                   key={card.id}
                   id={card.id}
                   visible={card.visible}
+                  fullWidth={!!card.fullWidth}
+                  canSpanFullWidth={DASHBOARD_CARDS.some(
+                    definition =>
+                      definition.id === card.id && definition.canSpanFullWidth
+                  )}
                   isFirst={index === 0}
                   isLast={index === layout.cards.length - 1}
                   onVisibleChange={visible =>
                     onChange(setDashboardCardVisible(layout, card.id, visible))
+                  }
+                  onFullWidthChange={fullWidth =>
+                    onChange(
+                      setDashboardCardFullWidth(layout, card.id, fullWidth)
+                    )
                   }
                   onMoveUp={() =>
                     onChange(

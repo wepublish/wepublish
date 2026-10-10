@@ -4250,7 +4250,10 @@ type Query {
   accountCreationMail: ActionMail!
 
   """Returns latest actions"""
-  actions: [Action!]!
+  actions(
+    """Only these kinds of actions. Empty or omitted means all."""
+    types: [ActionType!]
+  ): [Action!]!
 
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!

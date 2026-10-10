@@ -869,6 +869,23 @@
       "chf": "chf"
     },
     "dashboard": {
+      "activityFilter": "Aktivitäten filtern",
+      "activityFilterAll": "Alle anzeigen",
+      "activityTypes": {
+        "ArticleCreated": "Artikel",
+        "PageCreated": "Seiten",
+        "CommentCreated": "Kommentare",
+        "SubscriptionCreated": "Abos",
+        "UserCreated": "User",
+        "AuthorCreated": "Autor*innen",
+        "PollStarted": "Umfragen",
+        "EventCreated": "Events"
+      },
+      "fullWidth": "Volle Breite",
+      "newerActivity": "Neuere Aktivitäten",
+      "olderActivity": "Ältere Aktivitäten",
+      "activityUnavailable": "Die letzten Aktivitäten können für deine Rolle nicht angezeigt werden.",
+      "noActivity": "Noch keine Aktivitäten.",
       "configure": "Dashboard anpassen",
       "configureTitle": "Dashboard anpassen",
       "configureFixedInfo": "Diese Karten stehen immer oben.",

@@ -1,8 +1,10 @@
 import {
   DASHBOARD_CARDS,
   defaultDashboardLayout,
+  isDashboardCardFullWidth,
   moveDashboardCard,
   normalizeDashboardLayout,
+  setDashboardCardFullWidth,
   setDashboardCardVisible,
   visibleDashboardCards,
 } from './dashboardLayout';
@@ -102,6 +104,34 @@ describe('dashboard layout', () => {
       );
     }
   );
+
+  it('lets the activity feed span the full width, and only the activity feed', () => {
+    let layout = setDashboardCardFullWidth(
+      defaultDashboardLayout(),
+      'activity',
+      true
+    );
+    layout = setDashboardCardFullWidth(layout, 'audience', true);
+
+    expect(isDashboardCardFullWidth(layout, 'activity')).toBe(true);
+    expect(isDashboardCardFullWidth(layout, 'audience')).toBe(false);
+    expect(
+      DASHBOARD_CARDS.filter(card => card.canSpanFullWidth).map(card => card.id)
+    ).toEqual(['activity']);
+  });
+
+  it('keeps the full width of the activity feed in storage, but not of other cards', () => {
+    const layout = normalizeDashboardLayout({
+      version: 1,
+      cards: [
+        { id: 'activity', visible: true, fullWidth: true },
+        { id: 'audience', visible: true, fullWidth: true },
+      ],
+    });
+
+    expect(isDashboardCardFullWidth(layout, 'activity')).toBe(true);
+    expect(isDashboardCardFullWidth(layout, 'audience')).toBe(false);
+  });
 
   it('moves a card to another position', () => {
     const [first, second] = configurable;

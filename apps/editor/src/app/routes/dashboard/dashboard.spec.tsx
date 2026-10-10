@@ -132,6 +132,42 @@ describe('Dashboard', () => {
     ]);
   });
 
+  it('lets the activity feed span both columns, set in the configuration dialog', () => {
+    const { container } = renderDashboard();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'dashboard.configure' })
+    );
+    const dialog = screen.getByRole('dialog');
+
+    expect(
+      within(dialog).getAllByRole('button', { name: 'dashboard.fullWidth' })
+    ).toHaveLength(1);
+
+    const activityRow = within(dialog)
+      .getByRole('checkbox', { name: 'dashboard.activity' })
+      .closest('[data-dashboard-config-card]') as HTMLElement;
+    const fullWidth = within(activityRow).getByRole('button', {
+      name: 'dashboard.fullWidth',
+    });
+    expect(fullWidth.getAttribute('aria-pressed')).toBe('false');
+
+    fireEvent.click(fullWidth);
+
+    expect(fullWidth.getAttribute('aria-pressed')).toBe('true');
+
+    expect(
+      container
+        .querySelector("[data-dashboard-card='activity']")
+        ?.getAttribute('data-full-width')
+    ).toBe('true');
+    expect(storedLayout().cards).toContainEqual({
+      id: 'activity',
+      visible: true,
+      fullWidth: true,
+    });
+  });
+
   it('keeps working when the stored layout is unreadable', () => {
     localStorage.setItem(DASHBOARD_LAYOUT_STORAGE_KEY, '{not json');
 
