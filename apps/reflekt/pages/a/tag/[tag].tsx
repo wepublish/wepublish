@@ -3,6 +3,7 @@ import { getApiUrl } from '@wepublish/utils/website';
 import {
   ArticleListDocument,
   NavigationListDocument,
+  PageDocument,
   PeerProfileDocument,
   TagDocument,
   TagType,
@@ -93,6 +94,12 @@ export const getStaticProps = (async ({ params }) => {
     }),
     client.query({
       query: NavigationListDocument,
+    }),
+    client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'footer',
+      },
     }),
     client.query({
       query: PeerProfileDocument,

@@ -24,6 +24,9 @@ const relativeToAbsolute = (url: string) => {
   return `${window.location.origin}${url}`;
 };
 
+const withConversion = (url: string, conversion: string) =>
+  `${url}${url.includes('?') ? '&' : '?'}wepConversion=${conversion}`;
+
 export const useSubscribe = (
   ...params: [
     options?: useMutation.Options<
@@ -44,8 +47,9 @@ export const useSubscribe = (
       memberPlan: FullMemberPlanFragment | undefined | null,
       ...callbackParams: Parameters<typeof result>
     ) => {
-      const successUrl = relativeToAbsolute(
-        memberPlan?.successPage?.url ?? '/profile'
+      const successUrl = withConversion(
+        relativeToAbsolute(memberPlan?.successPage?.url ?? '/profile'),
+        'subscription'
       );
       const failUrl = relativeToAbsolute(
         memberPlan?.failPage?.url ?? '/profile'
@@ -103,8 +107,9 @@ export const useUpgrade = (
       memberPlan: FullMemberPlanFragment | undefined | null,
       ...callbackParams: Parameters<typeof result>
     ) => {
-      const successUrl = relativeToAbsolute(
-        memberPlan?.successPage?.url ?? '/profile'
+      const successUrl = withConversion(
+        relativeToAbsolute(memberPlan?.successPage?.url ?? '/profile'),
+        'upgrade'
       );
       const failUrl = relativeToAbsolute(
         memberPlan?.failPage?.url ?? '/profile'
@@ -165,8 +170,10 @@ export const usePayInvoice = (
       memberPlan: FullMemberPlanFragment | undefined | null,
       ...callbackParams: Parameters<typeof result>
     ) => {
-      const successUrl =
-        memberPlan?.successPage?.url ?? window.location.origin + '/profile';
+      const successUrl = withConversion(
+        memberPlan?.successPage?.url ?? window.location.origin + '/profile',
+        'invoice'
+      );
       const failUrl =
         memberPlan?.failPage?.url ?? window.location.origin + '/profile';
 

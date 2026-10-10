@@ -6,11 +6,18 @@ import {
   isSubscribeBlock,
 } from '@wepublish/block-content/website';
 import {
+  calculatePeriodAmount,
   CurrencyNumberSpinner,
+  getPeriodPriceRange,
+  isFixedAmountLayout,
+  MemberPlanOfferPickerRadios,
   MemberPlanPickerRadios,
+  monthlyAmountFromPeriodAmount,
+  showsAmountInput,
 } from '@wepublish/membership/website';
 import {
   FullBlockFragment,
+  PaymentPeriodicity,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 import {
@@ -33,6 +40,7 @@ import {
 import { useFormContext } from 'react-hook-form';
 
 import { euclidCircularB, robotoMono } from '../theme';
+import { useForceUpgradeRedirect } from './hooks/use-force-upgrade-redirect';
 import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 import { StyledReflektSubscribeBlock } from './reflekt-subscribe';
 
@@ -242,6 +250,23 @@ const ItemFreeAmountSpinner = styled(CurrencyNumberSpinner, {
       }
     }
   }
+
+  ${({ theme }) => theme.breakpoints.down('sm')} {
+    > div > div {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+
+    button {
+      width: 28px;
+    }
+
+    input {
+      font-size: clamp(1rem, 8cqi, 1.75rem);
+      margin-left: 0;
+      padding: ${({ theme }) => theme.spacing(1)} 0;
+    }
+  }
 `;
 
 const ItemPerYear = styled('span')`
@@ -265,6 +290,13 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     slug,
     shortDescription,
     periodicityPricing,
+    paymentPeriodicity,
+    showPeriodicity,
+    amountLayout,
+    amount,
+    onAmountChange,
+    availablePaymentMethods,
+    defaultPaymentPeriodicity,
     currency,
     extendable,
     goodies,
@@ -279,19 +311,23 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const radioInputRef = useRef<HTMLInputElement>(null);
-  const {
-    formState: { errors },
-    setValue,
-  } = useFormContext();
+  const form = useFormContext() as ReturnType<typeof useFormContext> | null;
+  const errors = form?.formState.errors;
 
   const { goodieMinValue, baselineMonthlyAmount } = useContext(
     CrowdfundingGoodieContext
   );
 
-  const hasFreePricing = tags?.includes('inline-slider');
+  const hasFreePricing =
+    isFixedAmountLayout(amountLayout) && showsAmountInput(amountLayout);
   const hasMinValue = amountPerMonthMin > 0;
 
-  const yearlyMinChf = Math.round((amountPerMonthMin * 12) / 100);
+  const memberPlan = { periodicityPricing };
+  const yearlyMinCents = getPeriodPriceRange(
+    memberPlan,
+    PaymentPeriodicity.Yearly
+  ).amountMin;
+  const yearlyMinChf = Math.round(yearlyMinCents / 100);
 
   const [freeAmountYearly, setFreeAmountYearly] = useState<number | null>(
     hasMinValue ? yearlyMinChf : null
@@ -300,8 +336,8 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
   const yearlyChf =
     hasFreePricing ? (freeAmountYearly ?? yearlyMinChf) : yearlyMinChf;
   const tileYearlyValue =
-    (hasFreePricing ? (freeAmountYearly ?? 0) * 100 : amountPerMonthMin * 12) -
-    baselineMonthlyAmount * 12;
+    (hasFreePricing ? (freeAmountYearly ?? 0) * 100 : yearlyMinCents) -
+    calculatePeriodAmount(baselineMonthlyAmount, PaymentPeriodicity.Yearly);
   const hasGoodie =
     goodieMinValue != null ?
       tileYearlyValue >= goodieMinValue
@@ -313,17 +349,26 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
     }
 
     const touched = freeAmountYearly != null;
-    const monthlyAmount =
-      touched ? Math.round((freeAmountYearly * 100) / 12) : 0;
+    const targetMonthlyAmount =
+      touched ?
+        monthlyAmountFromPeriodAmount(
+          freeAmountYearly * 100,
+          PaymentPeriodicity.Yearly
+        )
+      : 0;
 
-    setValue('monthlyAmount', monthlyAmount);
-  }, [hasFreePricing, isChecked, freeAmountYearly, setValue]);
+    if (amount !== targetMonthlyAmount) {
+      onAmountChange?.(targetMonthlyAmount);
+    }
+  }, [hasFreePricing, isChecked, freeAmountYearly, amount, onAmountChange]);
 
   return (
     <ItemWrapper className={className}>
       <ItemImage
-        src={hasGoodie ? '/with_goodie.png' : '/no_goodie.png'}
+        src={hasGoodie ? '/with_goodie.webp' : '/no_goodie.webp'}
         alt=""
+        loading="lazy"
+        decoding="async"
       />
       <ItemCard>
         <ItemAmountArea>
@@ -356,7 +401,7 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
                     </ItemFreeAmountSpinnerPlaceholder>
                   )}
 
-                  {errors.monthlyAmount && (
+                  {errors?.monthlyAmount && (
                     <ItemFreeAmountError>
                       {errors.monthlyAmount.message?.toString()}
                     </ItemFreeAmountError>
@@ -393,7 +438,8 @@ export const ReflektCrowdfundingMemberPlanItem = forwardRef<
 });
 
 const CrowdfundingSubscribeBlock = styled(StyledReflektSubscribeBlock)`
-  ${MemberPlanPickerRadios} {
+  ${MemberPlanPickerRadios},
+  ${MemberPlanOfferPickerRadios} {
     row-gap: ${({ theme }) => theme.spacing(8)};
     margin-top: ${({ theme }) => theme.spacing(10)};
     overflow: visible;
@@ -403,6 +449,8 @@ const CrowdfundingSubscribeBlock = styled(StyledReflektSubscribeBlock)`
 export const ReflektSubscribeCrowdfunding = (
   props: BuilderSubscribeBlockProps
 ) => {
+  useForceUpgradeRedirect(props.memberPlans);
+
   const {
     query: { upgradeSubscriptionId },
   } = useContext(BuilderRouterContext);
