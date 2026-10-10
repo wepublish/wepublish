@@ -27,10 +27,6 @@ import {
 } from './changelogDashboard';
 import { useOneChannelNotifications } from './oneChannelAlert';
 
-const NotificationsPanel = styled(Panel)`
-  margin-bottom: 20px;
-`;
-
 // Every source renders its own stack of notification items. Dissolving those
 // stacks puts all items into this one flex column, where the `order` each
 // NotificationItem carries sorts them by severity across sources — so a failing
@@ -137,7 +133,7 @@ export function DashboardNotifications() {
   );
 
   return (
-    <NotificationsPanel
+    <Panel
       hidden={!items.length}
       header={
         <ListViewContainer>
@@ -163,6 +159,6 @@ export function DashboardNotifications() {
 
       {actionRequired.overlay}
       {news.overlay}
-    </NotificationsPanel>
+    </Panel>
   );
 }
