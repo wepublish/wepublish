@@ -7,6 +7,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 import { PrismaClient } from '@prisma/client';
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
+import { ActionModule } from '@wepublish/action/api';
 import { AuditLogModule } from '@wepublish/audit-log/api';
 import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
@@ -273,6 +274,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     BlockContentModule,
     PollModule,
     PhraseModule,
+    ActionModule,
     UserModule,
     UserSubscriptionModule,
     ChallengeModule.registerAsync({
