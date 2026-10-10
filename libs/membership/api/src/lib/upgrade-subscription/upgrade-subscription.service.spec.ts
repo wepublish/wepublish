@@ -462,6 +462,73 @@ describe('UpgradeSubscriptionService', () => {
     });
   });
 
+  describe('imported periods that stored the monthly amount', () => {
+    const importedSubscription = {
+      id: 'subscriptionId',
+      userID: 'userId',
+      currency: Currency.CHF,
+      paymentPeriodicity: PaymentPeriodicity.yearly,
+      monthlyAmount: 500,
+      extendable: true,
+      autoRenew: true,
+      periods: [
+        {
+          id: '1',
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          amount: 500,
+          startsAt: new Date('2024-07-01'),
+          endsAt: new Date('2025-07-01'),
+          createdAt: new Date('2024-07-01'),
+          invoice: {
+            paidAt: new Date('2024-07-01'),
+          },
+        },
+      ],
+    };
+
+    const memberPlan = {
+      currency: Currency.CHF,
+      availablePaymentMethods: [
+        {
+          paymentMethodIDs: ['paymentMethodId'],
+          paymentPeriodicities: [PaymentPeriodicity.yearly],
+          forceAutoRenewal: true,
+        },
+      ],
+    };
+
+    const getInfoArgs = {
+      subscriptionId: 'subscriptionId',
+      memberPlanId: 'memberPlanId',
+      userId: 'userId',
+    };
+
+    it('credits the full yearly amount when the period stored only the monthly amount', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue(
+        importedSubscription
+      );
+      prismaMock.memberPlan.findUnique.mockResolvedValue(memberPlan);
+      settingsServiceMock.settingByName.mockResolvedValueOnce({ value: true });
+
+      const result = await service.getInfo(getInfoArgs);
+
+      expect(result.discountAmount).toBe(6000);
+    });
+
+    it('keeps a genuine period amount that differs from the monthly amount', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue({
+        ...importedSubscription,
+        periods: [{ ...importedSubscription.periods[0], amount: 4800 }],
+      });
+      prismaMock.memberPlan.findUnique.mockResolvedValue(memberPlan);
+      settingsServiceMock.settingByName.mockResolvedValueOnce({ value: true });
+
+      const result = await service.getInfo(getInfoArgs);
+
+      expect(result.discountAmount).toBe(4800);
+    });
+  });
+
   describe('unhappy path', () => {
     it('should throw an error if the payment method belongs to a deleted provider', async () => {
       prismaMock.subscription.findUnique.mockResolvedValue({
