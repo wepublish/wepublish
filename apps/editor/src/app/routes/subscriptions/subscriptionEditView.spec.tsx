@@ -33,6 +33,8 @@ vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(),
   useLazyQuery: () => [vi.fn(), { loading: false }],
+  // only the create and cancel flows query through the client (their mails)
+  useApolloClient: () => ({ query: vi.fn(async () => ({ data: {} })) }),
   useMutation: (document: unknown) => [
     mutationFor(document),
     { loading: false },
