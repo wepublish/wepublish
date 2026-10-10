@@ -1,4 +1,5 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
+import { AuditLogModule } from '@wepublish/audit-log/api';
 import { SESSION_TTL_TOKEN, SessionService } from './session.service';
 import { SessionResolver } from './session.resolver';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
@@ -47,6 +48,7 @@ export interface SessionModuleAsyncOptions
 @Module({
   imports: [
     PrismaModule,
+    AuditLogModule,
     UserModule,
     ChallengeModule,
     SettingModule,

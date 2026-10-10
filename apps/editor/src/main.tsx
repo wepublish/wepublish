@@ -15,10 +15,18 @@ import { createRoot } from 'react-dom/client';
 import { IconContext } from 'react-icons';
 
 import { App } from './app/app';
+import {
+  scrubBreadcrumb,
+  scrubEvent,
+  scrubRecordingEvent,
+} from './app/sentryScrub';
+import { captureSupportLoginResult } from './app/supportLogin';
 import { ColorModeProvider, useColorMode } from './app/colorMode';
 import { initI18N } from './app/i18n';
 import { createEditorTheme } from './app/theme';
 import { ElementID } from './shared/elementID';
+
+captureSupportLoginResult();
 
 const { sentryDSN, apiURL, appName, appEnvironment } = getSettings();
 
@@ -36,12 +44,16 @@ if (sentryDSN) {
         maskAllText: false,
         blockAllMedia: false,
         maskAllInputs: true,
+        beforeAddRecordingEvent: scrubRecordingEvent,
       }),
       Sentry.graphqlClientIntegration({ endpoints: [apiEndpoint] }),
     ],
     tracesSampleRate: 1.0,
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
+    beforeSend: scrubEvent,
+    beforeSendTransaction: scrubEvent,
+    beforeBreadcrumb: scrubBreadcrumb,
   });
 
   Sentry.setTag('app_name', appName);

@@ -1148,6 +1148,12 @@
       "title": "Einstellungen"
     },
     "login": {
+      "support": {
+        "backToLogin": "Zurück zum Login",
+        "button": "We.Publish Support Login",
+        "failed": "Der Support-Login hat nicht geklappt. Bitte starte ihn nochmals.",
+        "pending": "Anmeldung über den We.Publish Support …"
+      },
       "email": "E-Mail",
       "login": "Login",
       "next": "Weiter",

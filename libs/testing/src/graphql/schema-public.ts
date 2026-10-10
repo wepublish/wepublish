@@ -3225,9 +3225,10 @@ export type MutationCreateGoodieArgs = {
 
 
 export type MutationCreateImpersonationGrantArgs = {
+  codeChallenge?: InputMaybe<Scalars['String']['input']>;
   durationMinutes: Scalars['Int']['input'];
   impersonatedBy: Scalars['String']['input'];
-  reason: Scalars['String']['input'];
+  reason?: InputMaybe<Scalars['String']['input']>;
   userId: Scalars['String']['input'];
 };
 
@@ -3436,6 +3437,7 @@ export type MutationCreateSessionArgs = {
 
 
 export type MutationCreateSessionWithJwtArgs = {
+  codeVerifier?: InputMaybe<Scalars['String']['input']>;
   jwt: Scalars['String']['input'];
   totpToken?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5838,6 +5840,8 @@ export type Query = {
   subscriptions: PublicSubscriptionConnection;
   /** Returns a paginated list of subscriptions based on the filters given. */
   subscriptionsAsCsv: Scalars['String']['output'];
+  /** Whether the editor offers the We.Publish support login on its login page. */
+  supportLoginEnabled: Scalars['Boolean']['output'];
   /** Returns a single sync provider setting by id. */
   syncProviderSetting: SettingSyncProvider;
   /** Returns all sync provider settings. */

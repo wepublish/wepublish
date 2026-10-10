@@ -2667,7 +2667,18 @@ type Mutation {
 
   """Creates a new goodie."""
   createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
-  createImpersonationGrant(durationMinutes: Int!, impersonatedBy: String!, reason: String!, userId: String!): ImpersonationGrantResult!
+  createImpersonationGrant(
+    """
+    S256 PKCE challenge of a support login; the grant then redeems only with its verifier.
+    """
+    codeChallenge: String
+    durationMinutes: Int!
+    impersonatedBy: String!
+
+    """Required, except for signing in as the We.Publish support account."""
+    reason: String
+    userId: String!
+  ): ImpersonationGrantResult!
 
   """Creates a new invoice."""
   createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
@@ -2725,7 +2736,14 @@ type Mutation {
   """Creates a rating system answer."""
   createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
   createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
-  createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
+  createSessionWithJWT(
+    """
+    The PKCE verifier of a support login, required when its grant carries a code challenge.
+    """
+    codeVerifier: String
+    jwt: String!
+    totpToken: String
+  ): SessionWithToken!
 
   """Creates a new subscription."""
   createSubscription(
@@ -4621,6 +4639,11 @@ type Query {
 
   """Returns a paginated list of subscriptions based on the filters given."""
   subscriptionsAsCsv(activeAt: DateTime, autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
+
+  """
+  Whether the editor offers the We.Publish support login on its login page.
+  """
+  supportLoginEnabled: Boolean!
 
   """Returns a single sync provider setting by id."""
   syncProviderSetting(id: String!): SettingSyncProvider!
