@@ -79,6 +79,20 @@ const prismaServiceMock = {
   },
 };
 
+const letterPreviewQuery = `
+  query MailTemplateLetterPreview($input: MailTemplatePreviewInput!) {
+    mailTemplateLetterPreview(input: $input) {
+      pdf
+    }
+  }
+`;
+
+const letterChannelAvailableQuery = `
+  query LetterChannelAvailable {
+    letterChannelAvailable
+  }
+`;
+
 const mailProviderServiceMock = {
   getName: vi.fn(async () => 'MockProvider'),
 };
@@ -92,6 +106,8 @@ const mailTemplateServiceMock = {
   deleteMailTemplate: vi.fn(async () => undefined),
   preview: vi.fn(async () => ({ subject: 's', html: 'h', text: undefined })),
   sendTest: vi.fn(async () => undefined),
+  previewLetter: vi.fn(async () => ({ pdf: 'cGRm' })),
+  isLetterChannelAvailable: vi.fn(async () => true),
 };
 
 @Module({
@@ -242,9 +258,69 @@ describe('MailTemplatesResolver', () => {
     expect(mailContextMock.getUsedTemplateIdentifiers).toHaveBeenCalledTimes(1);
   });
 
+  it('renders a draft as a letter via the service', async () => {
+    const result = await resolver.mailTemplateLetterPreview(
+      { user: { id: 'editor-1' } } as any,
+      {
+        contextId: 'renewal',
+        subscriptionId: 'sub-1',
+        subject: 'ignored',
+        htmlContent: '<p>Hi</p>',
+      }
+    );
+
+    expect(mailTemplateServiceMock.previewLetter).toHaveBeenCalledWith({
+      contextId: 'renewal',
+      subscriptionId: 'sub-1',
+      currentUserId: 'editor-1',
+      html: '<p>Hi</p>',
+    });
+    expect(result).toEqual({ pdf: 'cGRm' });
+  });
+
+  it('reports whether the letter channel is available', async () => {
+    expect(await resolver.letterChannelAvailable()).toBe(true);
+    expect(mailTemplateServiceMock.isLetterChannelAvailable).toHaveBeenCalled();
+  });
+
   /**
    * Test if endpoints are not exposed to public
    */
+  it('letterChannelAvailable is not public', () => {
+    return request(app.getHttpServer())
+      .post('')
+      .send({ query: letterChannelAvailableQuery })
+      .expect(200)
+      .expect(({ body }) => {
+        expect(
+          !!body.errors.find(
+            (error: any) => error.message === 'Forbidden resource'
+          )
+        ).toEqual(true);
+        expect(body.data).toBeNull();
+      });
+  });
+
+  it('mailTemplateLetterPreview is not public', () => {
+    return request(app.getHttpServer())
+      .post('')
+      .send({
+        query: letterPreviewQuery,
+        variables: {
+          input: { contextId: 'custom', subject: 's', htmlContent: 'h' },
+        },
+      })
+      .expect(200)
+      .expect(({ body }) => {
+        expect(
+          !!body.errors.find(
+            (error: any) => error.message === 'Forbidden resource'
+          )
+        ).toEqual(true);
+        expect(body.data).toBeNull();
+      });
+  });
+
   it('mailTemplates is not public', () => {
     return request(app.getHttpServer())
       .post('')

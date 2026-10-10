@@ -12,12 +12,14 @@ import {
   CanCreateMailTemplates,
   CanDeleteMailTemplates,
   CanGetMailTemplates,
+  CanSendMailTemplates,
   CanSendTestMailTemplates,
   CanUpdateMailTemplates,
 } from '@wepublish/permissions';
 import {
   MailProviderModel,
   MailTemplateInput,
+  MailTemplateLetterPreviewModel,
   MailTemplateModel,
   MailTemplatePreviewInput,
   MailTemplatePreviewModel,
@@ -119,6 +121,32 @@ export class MailTemplatesResolver {
     });
 
     return { subject: result.subject, html: result.html, text: result.text };
+  }
+
+  // Asked by both the template editor and the send page, so either permission
+  // is enough.
+  @Permissions(CanGetMailTemplates, CanSendMailTemplates)
+  @Query(() => Boolean, {
+    description: `Whether a letter integration is configured, so letters can be previewed and sent`,
+  })
+  letterChannelAvailable(): Promise<boolean> {
+    return this.mailTemplateService.isLetterChannelAvailable();
+  }
+
+  @Permissions(CanGetMailTemplates)
+  @Query(() => MailTemplateLetterPreviewModel, {
+    description: `Render a draft mail template as the letter a send would print`,
+  })
+  async mailTemplateLetterPreview(
+    @CurrentUser() user: UserSession,
+    @Args('input') input: MailTemplatePreviewInput
+  ): Promise<MailTemplateLetterPreviewModel> {
+    return this.mailTemplateService.previewLetter({
+      contextId: input.contextId as MailTemplateContextId,
+      subscriptionId: input.subscriptionId,
+      currentUserId: user.user.id,
+      html: input.htmlContent,
+    });
   }
 
   @Permissions(CanCreateMailTemplates)
