@@ -9,6 +9,7 @@ lead: Les abonnements d'un·e utilisateur·trice forment désormais un tableau a
 - **Un statut conforme à la réalité.** «Actif» signifie désormais commencé et payé au-delà d'aujourd'hui. Sinon, l'abonnement est «Prévu», «Impayé», «Expiré» (même sans désactivation, p. ex. des abonnements importés arrivés à échéance) ou «Désactivé». C'est le même statut que dans la liste des utilisateur·trice·s.
 - **Les périodes sous chaque abonnement.** Un clic sur un abonnement affiche ses périodes, la plus récente en premier, chacune avec sa facture et l'indication si elle est payée.
 - **Les abonnements actifs viennent en premier**, puis les autres selon leur date «Payé jusqu'au» la plus tardive.
+- **Cartes réorganisées:** les données personnelles à gauche; les rôles, le mot de passe et les propriétés à droite; en dessous les abonnements, puis l'envoi d'un e-mail et l'historique des e-mails côte à côte.
 
 **Historique de facturation** (vue de l'abonnement)
 

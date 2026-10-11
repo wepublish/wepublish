@@ -178,6 +178,7 @@
         "properties": "Propriétés",
         "propertiesInfo": "Les propriétés peuvent être définies par article. Les propriétés publiques sont accessibles via l’API publique.",
         "public": "Public",
+        "private": "Privé",
         "publishArticle": "Publier l’article",
         "publishAt": "Disponible en ligne à partir du",
         "publishAtDateCheckbox": "Fixer une date différente pour la disponibilité en ligne",

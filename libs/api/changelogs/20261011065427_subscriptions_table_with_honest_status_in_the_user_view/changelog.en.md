@@ -9,6 +9,7 @@ lead: A user's subscriptions are now a table with their real status and the invo
 - **A status that matches reality.** "Active" now means started and paid beyond today. Otherwise the subscription shows as "Planned", "Unpaid", "Expired" (also without a deactivation, e.g. imported subscriptions that ran out) or "Deactivated". It is the same status the user list shows.
 - **Periods under each subscription.** Click a subscription to show its periods, newest first, each with its invoice and whether it is paid.
 - **Active subscriptions come first**, then the others by their latest paid-until date.
+- **Rearranged cards:** personal data on the left; roles, password and properties on the right; below them the subscriptions, then sending a mail and the mail history side by side.
 
 **Invoice history** (subscription view)
 

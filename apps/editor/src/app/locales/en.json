@@ -178,6 +178,7 @@
         "properties": "Properties",
         "propertiesInfo": "Properties can be set per article. Public properties are accessible through the public API.",
         "public": "Public",
+        "private": "Private",
         "publishArticle": "Publish Article",
         "publishAt": "Available online from",
         "publishAtDateCheckbox": "Set a different date for online availability",

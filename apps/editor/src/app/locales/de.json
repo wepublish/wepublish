@@ -178,6 +178,7 @@
         "properties": "Eigenschaften",
         "propertiesInfo": "Eigenschaften können pro Artikel eingestellt werden. Öffentliche Eigenschaften sind über die öffentliche API zugänglich.",
         "public": "Öffentlich",
+        "private": "Privat",
         "publishArticle": "Artikel publizieren",
         "publishAt": "Online verfügbar ab",
         "publishAtDateCheckbox": "Wähle ein anderes Datum für die Online-Verfügbarkeit",
