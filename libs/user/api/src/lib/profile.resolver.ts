@@ -9,6 +9,7 @@ import {
   UserSession,
 } from '@wepublish/authentication/api';
 import {
+  codeSessionMayReplaceEmail,
   LoginCodeSecondFactorService,
   TooManyAttemptsError,
 } from '@wepublish/login-code/api';
@@ -84,18 +85,23 @@ export class ProfileResolver {
   @Authenticated()
   @Mutation(() => Boolean, {
     description:
-      'Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter.',
+      'Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter; without one it may only replace a placeholder address.',
   })
   async requestEmailChange(
     @Args('newEmail') newEmail: string,
     @CurrentUser() session: UserSession,
     @Args('secondFactor', { nullable: true }) secondFactor?: string
   ): Promise<boolean> {
-    if (session.restricted && !session.placeholderEmail) {
-      throw new ForbiddenException(EMAIL_VERIFICATION_REQUIRED);
-    }
-
     if (session.restricted) {
+      const mayReplace = codeSessionMayReplaceEmail({
+        placeholderEmail: session.placeholderEmail,
+        secondFactor: await this.secondFactorService.getFactor(),
+      });
+
+      if (!mayReplace) {
+        throw new ForbiddenException(EMAIL_VERIFICATION_REQUIRED);
+      }
+
       await this.assertSecondFactor(session, secondFactor);
     }
 

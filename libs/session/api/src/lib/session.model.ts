@@ -70,6 +70,12 @@ export class SessionInfo {
   })
   secondFactor!: LoginCodeSecondFactor;
 
+  @Field(() => Boolean, {
+    description:
+      'Whether a restricted session may replace the address on file, instead of having to confirm it first.',
+  })
+  canReplaceEmail!: boolean;
+
   @Field()
   createdAt!: Date;
 

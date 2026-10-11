@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client/react';
+import { useAccountSetupPending } from '@wepublish/authentication/website';
 import {
   useHasRunningSubscription,
   useHasUnpaidInvoices,
@@ -53,6 +54,7 @@ export function NavbarContainer({
   });
   const hasUnpaidInvoices = useHasUnpaidInvoices();
   const hasRunningSubscription = useHasRunningSubscription();
+  const accountSetupPending = useAccountSetupPending();
 
   const logo = peerInfoData?.peerProfile.logo;
 
@@ -73,6 +75,7 @@ export function NavbarContainer({
         logo={logo}
         hasUnpaidInvoices={!!hasUnpaidInvoices}
         hasRunningSubscription={!!hasRunningSubscription}
+        accountSetupPending={accountSetupPending}
         navbarActions={navbarActions}
         paperActions={paperActions}
       >

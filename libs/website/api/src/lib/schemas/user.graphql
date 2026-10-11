@@ -71,6 +71,7 @@ query CurrentSession {
     restricted
     placeholderEmail
     secondFactor
+    canReplaceEmail
     createdAt
     expiresAt
   }

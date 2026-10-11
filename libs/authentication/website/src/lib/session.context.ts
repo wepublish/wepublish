@@ -32,7 +32,10 @@ export const useUser = () => {
 
   const logout = async () => {
     await setToken(null);
-    await client.resetStore();
+    // Refreshes the page's data for the logged-out visitor. A query still
+    // running for the user who just left is cancelled or refused, which does
+    // not undo the logout.
+    await client.resetStore().catch(() => undefined);
   };
 
   return { user, hasUser, setToken, logout };

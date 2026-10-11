@@ -534,9 +534,15 @@ export class UserService {
       throw error;
     }
 
-    await this.authenticationService.revokeUserSessions(user.id, {
-      exceptToken: options?.exceptSessionToken,
-    });
+    // A new address ends the other sessions, in case someone else got in.
+    // Merely confirming the address on file changes nothing that would need
+    // it, and the session waiting on the welcome page has to stay alive.
+    if (user.email !== updatedUser.email) {
+      await this.authenticationService.revokeUserSessions(user.id, {
+        exceptToken: options?.exceptSessionToken,
+      });
+    }
+    // Cached sessions still carry the old restriction and address.
     await this.sessionCache.invalidate();
 
     if (user.email !== updatedUser.email) {

@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import {
   IntendedRouteStorageKey,
   LoginFormContainer,
@@ -14,11 +13,7 @@ import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-
-const LoginWrapper = styled('div')`
-  display: grid;
-  justify-content: center;
-`;
+import { LoginWrapper } from '../src/login-wrapper';
 
 type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 

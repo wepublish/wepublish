@@ -6,7 +6,8 @@ import {
   getApiClient,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import styled from '@emotion/styled';
+import { Button, useWebsiteBuilder } from '@wepublish/website/builder';
 import { setCookie } from 'cookies-next';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -15,23 +16,57 @@ import { useTranslation } from 'react-i18next';
 import { getApiUrl } from '../api-url';
 import { redeemLoginCode } from '../handle-login-code';
 
-export type LoginCodePageProps = {
-  sessionToken: SessionWithTokenWithoutUser;
-  next: string;
+export type LoginCodeFailure =
+  | 'invalid'
+  | 'disabled'
+  | 'inactive'
+  | 'tooManyAttempts';
+
+/** Why the API refused a login code, as far as the reader needs to know. */
+export const loginCodeFailure = (message: string): LoginCodeFailure => {
+  if (message.includes('LOGIN_CODE_DISABLED')) {
+    return 'disabled';
+  }
+
+  if (message.includes('not active')) {
+    return 'inactive';
+  }
+
+  if (message.includes('TOO_MANY_ATTEMPTS')) {
+    return 'tooManyAttempts';
+  }
+
+  // Used up, revoked, expired or mistyped: the reader can't tell them apart
+  // and has the same way out.
+  return 'invalid';
 };
+
+export type LoginCodePageProps =
+  | { sessionToken: SessionWithTokenWithoutUser; next: string }
+  | { failure: LoginCodeFailure };
 
 export type LoginCodePageOptions = {
   next?: string;
   loginPath?: string;
 };
 
+const FailedActions = styled('div')`
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
+
 export const createLoginCodePage = ({
   next = '/welcome?src=purl',
   loginPath = '/login',
 }: LoginCodePageOptions = {}) => {
-  const Page: NextPage<LoginCodePageProps> = ({
+  const Redeemed = ({
     sessionToken,
     next: target,
+  }: {
+    sessionToken: SessionWithTokenWithoutUser;
+    next: string;
   }) => {
     const { setToken } = useUser();
     const router = useRouter();
@@ -46,6 +81,47 @@ export const createLoginCodePage = ({
 
     return <Paragraph>{t('welcome.redirecting')}</Paragraph>;
   };
+
+  // Says why the link didn't work instead of passing the reader on: an open
+  // session is offered, not silently continued.
+  const Failed = ({ failure }: { failure: LoginCodeFailure }) => {
+    const { hasUser } = useUser();
+    const { t } = useTranslation();
+    const {
+      elements: { H4, Paragraph, Link },
+    } = useWebsiteBuilder();
+
+    return (
+      <>
+        <H4 component="h1">{t('login.code.failed.title')}</H4>
+        <Paragraph>{t(`login.code.failed.${failure}`)}</Paragraph>
+
+        <FailedActions>
+          {hasUser && (
+            <Button
+              LinkComponent={Link}
+              href="/"
+            >
+              {t('login.code.failed.continue')}
+            </Button>
+          )}
+
+          <Button
+            LinkComponent={Link}
+            href={loginPath}
+            variant={hasUser ? 'text' : 'contained'}
+          >
+            {t('login.code.failed.toLogin')}
+          </Button>
+        </FailedActions>
+      </>
+    );
+  };
+
+  const Page: NextPage<LoginCodePageProps> = props =>
+    'failure' in props ?
+      <Failed failure={props.failure} />
+    : <Redeemed {...props} />;
 
   const getServerSideProps: GetServerSideProps<LoginCodePageProps> = async ({
     params,
@@ -75,12 +151,7 @@ export const createLoginCodePage = ({
     }
 
     if (result.kind === 'failed') {
-      return {
-        redirect: {
-          destination: `${loginPath}?error=${encodeURIComponent(result.message)}`,
-          permanent: false,
-        },
-      };
+      return { props: { failure: loginCodeFailure(result.message) } };
     }
 
     const sessionToken: SessionWithTokenWithoutUser = {
