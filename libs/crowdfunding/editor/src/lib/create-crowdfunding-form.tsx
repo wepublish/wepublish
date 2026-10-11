@@ -46,7 +46,7 @@ export const CreateCrowdfundingForm = () => {
 
   const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
-    name: StringType().isRequired(),
+    name: StringType().isRequired(t('errorMessages.required')),
   });
 
   const [createCrowdfunding, { loading }] = useMutation(

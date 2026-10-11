@@ -21,6 +21,7 @@ import {
 } from '@wepublish/tracking-pixel/api';
 import { ProviderSettingsChangedListener } from '@wepublish/settings/api';
 import { createSwappableProvider } from './swappable-provider';
+import { withProviderErrorContext } from './provider-error-context';
 
 export const PROVIDER_REGISTRY_BOOTSTRAP = 'PROVIDER_REGISTRY_BOOTSTRAP';
 
@@ -161,12 +162,35 @@ export class ProviderRegistryService
 
     const [payment, trackingPixel, mail, challenge, letter, pdfRenderer] =
       await Promise.all([
-        loadPaymentProviders(deps),
-        loadTrackingPixelProviders({ ...deps, httpClient: this.httpClient }),
-        loadMailProvider(deps),
-        loadChallengeProvider(deps),
-        loadLetterProvider(deps),
-        loadPdfRenderer(deps),
+        loadPaymentProviders(deps).then(providers =>
+          providers.map(provider =>
+            withProviderErrorContext('Payment provider', provider)
+          )
+        ),
+        loadTrackingPixelProviders({
+          ...deps,
+          httpClient: this.httpClient,
+        }).then(providers =>
+          providers.map(provider =>
+            withProviderErrorContext('Tracking pixel provider', provider)
+          )
+        ),
+        loadMailProvider(deps).then(
+          provider =>
+            provider && withProviderErrorContext('Mail provider', provider)
+        ),
+        loadChallengeProvider(deps).then(
+          provider =>
+            provider && withProviderErrorContext('Challenge provider', provider)
+        ),
+        loadLetterProvider(deps).then(
+          provider =>
+            provider && withProviderErrorContext('Letter provider', provider)
+        ),
+        loadPdfRenderer(deps).then(
+          renderer =>
+            renderer && withProviderErrorContext('Pdf renderer', renderer)
+        ),
       ]);
 
     this.paymentProviders.splice(0, this.paymentProviders.length, ...payment);

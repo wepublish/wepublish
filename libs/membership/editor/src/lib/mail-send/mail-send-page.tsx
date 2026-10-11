@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import {
   CreateMailSendJobDocument,
   LetterAddressPosition,
+  LetterChannelAvailableDocument,
   LetterDeliveryProduct,
   LetterPrintMode,
   LetterPrintSpectrum,
@@ -212,6 +213,13 @@ function MailSendPage() {
     refetch: refetchTemplates,
     error: templateError,
   } = useQuery(MailTemplateDocument);
+  // Without a letter integration every send is a mail, so there is no channel
+  // to choose and nothing to say about it.
+  const { data: letterChannelData, error: letterChannelError } = useQuery(
+    LetterChannelAvailableDocument
+  );
+  useShowErrors(letterChannelError);
+  const letterAvailable = !!letterChannelData?.letterChannelAvailable;
   const { data: memberPlanData, error: memberPlanError } = useQuery(
     MemberPlanListDocument,
     {
@@ -514,12 +522,14 @@ function MailSendPage() {
                 </div>
               </Panel>
 
-              <ChannelPanel
-                channel={channel}
-                onChannelChange={setChannel}
-                print={print}
-                onPrintChange={setPrint}
-              />
+              {letterAvailable && (
+                <ChannelPanel
+                  channel={channel}
+                  onChannelChange={setChannel}
+                  print={print}
+                  onPrintChange={setPrint}
+                />
+              )}
 
               <StepNav
                 onNext={() => setStep(STEP_AUDIENCE)}
@@ -928,16 +938,18 @@ function MailSendPage() {
                   <strong>{t('mailSend.template')}:</strong>
                   <span>{templateName ?? '—'}</span>
                 </Stack>
-                <Stack
-                  spacing={8}
-                  alignItems="center"
-                  style={{ marginTop: 8 }}
-                >
-                  <strong>{t('mailSend.channel.label')}:</strong>
-                  <span>
-                    {t(`mailSend.channel.${isLetter ? 'letter' : 'mail'}`)}
-                  </span>
-                </Stack>
+                {letterAvailable && (
+                  <Stack
+                    spacing={8}
+                    alignItems="center"
+                    style={{ marginTop: 8 }}
+                  >
+                    <strong>{t('mailSend.channel.label')}:</strong>
+                    <span>
+                      {t(`mailSend.channel.${isLetter ? 'letter' : 'mail'}`)}
+                    </span>
+                  </Stack>
+                )}
               </Panel>
 
               {recipientSummary({
@@ -1216,7 +1228,9 @@ function ChannelPanel({
         <>
           <MuiStack
             direction="row"
-            sx={{ flexWrap: 'wrap', gap: 2, marginTop: 2 }}
+            spacing={2}
+            useFlexGap
+            sx={{ marginTop: 2, flexWrap: 'wrap' }}
           >
             <PrintOption
               label={t('mailSend.print.addressPosition.label')}

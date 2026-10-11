@@ -6,6 +6,7 @@ import {
   TrackingPixelSettingsDocument,
   UpdateTrackingPixelSettingDocument,
 } from '@wepublish/editor/api';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
@@ -13,32 +14,61 @@ import proLitterisLogo from './assets/proLitteris.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 
-const trackingPixelSettingsSchema = z.object({
-  name: z.string().nullish().or(z.literal('')),
-  type: z.nativeEnum(TrackingPixelProviderType).nullish(),
+// The stored password is never sent to the editor and an empty one keeps it,
+// so only the fields the provider cannot work without are required.
+export const createTrackingPixelSettingsSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      name: z.string().nullish().or(z.literal('')),
+      type: z.nativeEnum(TrackingPixelProviderType).nullish(),
 
-  prolitteris_memberNr: z.string().nullish().or(z.literal('')),
-  prolitteris_onlyPaidContentAccess: z.boolean().nullish(),
-  prolitteris_password: z.string().nullish().or(z.literal('')),
-  prolitteris_publisherInternalKeyDomain: z
-    .string()
-    .nullish()
-    .or(z.literal('')),
-  prolitteris_usePublisherInternalKey: z.boolean().nullish(),
-  prolitteris_username: z.string().nullish().or(z.literal('')),
-});
+      prolitteris_memberNr: z.string().nullish().or(z.literal('')),
+      prolitteris_onlyPaidContentAccess: z.boolean().nullish(),
+      prolitteris_password: z.string().nullish().or(z.literal('')),
+      prolitteris_publisherInternalKeyDomain: z
+        .string()
+        .nullish()
+        .or(z.literal('')),
+      prolitteris_usePublisherInternalKey: z.boolean().nullish(),
+      prolitteris_username: z.string().nullish().or(z.literal('')),
+    })
+    .superRefine((values, ctx) => {
+      if (values.type !== TrackingPixelProviderType.Prolitteris) {
+        return;
+      }
 
-type IntegrationFormValues = z.infer<typeof trackingPixelSettingsSchema>;
+      const required: (keyof typeof values)[] = [
+        'prolitteris_memberNr',
+        values.prolitteris_usePublisherInternalKey ?
+          'prolitteris_publisherInternalKeyDomain'
+        : 'prolitteris_username',
+      ];
+
+      for (const field of required) {
+        if (!values[field]) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: [field],
+            message: t('errorMessages.required'),
+          });
+        }
+      }
+    });
+
+type IntegrationFormValues = z.infer<
+  ReturnType<typeof createTrackingPixelSettingsSchema>
+>;
 
 export function TrackingPixelIntegrationForm() {
   const { t } = useTranslation();
+  const schema = useMemo(() => createTrackingPixelSettingsSchema(t), [t]);
 
   return (
     <GenericIntegrationList<SettingTrackingPixelProvider, IntegrationFormValues>
       query={TrackingPixelSettingsDocument}
       mutation={UpdateTrackingPixelSettingDocument}
       dataKey="trackingPixelSettings"
-      schema={trackingPixelSettingsSchema}
+      schema={schema}
       registry={{
         createMutation: CreateTrackingPixelSettingDocument,
         deleteMutation: DeleteTrackingPixelSettingDocument,

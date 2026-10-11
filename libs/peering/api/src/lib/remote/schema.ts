@@ -31,6 +31,8 @@ export enum AiProviderType {
   V0 = 'V0'
 }
 
+export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
+
 /** The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action. */
 export type ActionMail = {
   __typename?: 'ActionMail';
@@ -51,6 +53,17 @@ export enum ActionMailNoMailReason {
   FirstPeriod = 'firstPeriod',
   NoTemplate = 'noTemplate',
   NotApplicable = 'notApplicable'
+}
+
+export enum ActionType {
+  ArticleCreated = 'ArticleCreated',
+  AuthorCreated = 'AuthorCreated',
+  CommentCreated = 'CommentCreated',
+  EventCreated = 'EventCreated',
+  PageCreated = 'PageCreated',
+  PollStarted = 'PollStarted',
+  SubscriptionCreated = 'SubscriptionCreated',
+  UserCreated = 'UserCreated'
 }
 
 export type AllowedSettingVals = {
@@ -87,6 +100,14 @@ export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   tags: Array<Tag>;
   trackingPixels: Array<TrackingPixel>;
   url: Scalars['String']['output'];
+};
+
+export type ArticleCreatedAction = BaseAction & HasArticleLc & {
+  __typename?: 'ArticleCreatedAction';
+  actionType: ActionType;
+  article: Article;
+  articleId: Scalars['String']['output'];
+  date: Scalars['DateTime']['output'];
 };
 
 export type ArticleFilter = {
@@ -265,6 +286,14 @@ export type Author = HasImage & HasOptionalPeerLc & {
   url: Scalars['String']['output'];
 };
 
+export type AuthorCreatedAction = BaseAction & HasAuthor & {
+  __typename?: 'AuthorCreatedAction';
+  actionType: ActionType;
+  author: Author;
+  authorId: Scalars['String']['output'];
+  date: Scalars['DateTime']['output'];
+};
+
 export type AuthorFilter = {
   hideOnTeam?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -342,6 +371,11 @@ export enum BannerDocumentType {
   Article = 'ARTICLE',
   Page = 'PAGE'
 }
+
+export type BaseAction = {
+  actionType: ActionType;
+  date: Scalars['DateTime']['output'];
+};
 
 export type BaseBlock = {
   blockStyle?: Maybe<Scalars['String']['output']>;
@@ -691,6 +725,14 @@ export type CommentBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']['input']>;
   disabled?: InputMaybe<Scalars['Boolean']['input']>;
   filter: CommentBlockFilterInput;
+};
+
+export type CommentCreatedAction = BaseAction & HasComment & {
+  __typename?: 'CommentCreatedAction';
+  actionType: ActionType;
+  comment: Comment;
+  commentId: Scalars['String']['output'];
+  date: Scalars['DateTime']['output'];
 };
 
 export type CommentFilter = {
@@ -1138,6 +1180,14 @@ export type EventBlockInput = {
   filter: EventBlockFilterInput;
 };
 
+export type EventCreatedAction = BaseAction & HasEventLc & {
+  __typename?: 'EventCreatedAction';
+  actionType: ActionType;
+  date: Scalars['DateTime']['output'];
+  event: Event;
+  eventId: Scalars['String']['output'];
+};
+
 export type EventFilter = {
   from?: InputMaybe<Scalars['DateTime']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
@@ -1397,8 +1447,28 @@ export type HasArticle = {
   articleID: Scalars['String']['output'];
 };
 
+export type HasArticleLc = {
+  article: Article;
+  articleId: Scalars['String']['output'];
+};
+
+export type HasAuthor = {
+  author: Author;
+  authorId: Scalars['String']['output'];
+};
+
 export type HasBlockContent = {
   blocks: Array<BlockContent>;
+};
+
+export type HasComment = {
+  comment: Comment;
+  commentId: Scalars['String']['output'];
+};
+
+export type HasEventLc = {
+  event: Event;
+  eventId: Scalars['String']['output'];
 };
 
 export type HasImage = {
@@ -1480,14 +1550,34 @@ export type HasPage = {
   pageID: Scalars['String']['output'];
 };
 
+export type HasPageLc = {
+  page: Page;
+  pageId: Scalars['String']['output'];
+};
+
 export type HasPaymentMethod = {
   paymentMethod: PaymentMethod;
   paymentMethodID: Scalars['String']['output'];
 };
 
+export type HasPoll = {
+  poll: FullPoll;
+  pollId: Scalars['String']['output'];
+};
+
+export type HasSubscriptionLc = {
+  subscription: PublicSubscription;
+  subscriptionId: Scalars['String']['output'];
+};
+
 export type HasUser = {
   user: User;
   userID: Scalars['String']['output'];
+};
+
+export type HasUserLc = {
+  user: User;
+  userId: Scalars['String']['output'];
 };
 
 export type IFrameBlock = BaseBlock & {
@@ -2134,6 +2224,12 @@ export type MailTemplateInput = {
   name: Scalars['String']['input'];
   subject: Scalars['String']['input'];
   textContent?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MailTemplateLetterPreviewModel = {
+  __typename?: 'MailTemplateLetterPreviewModel';
+  /** The rendered letter as a base64 encoded pdf. */
+  pdf: Scalars['String']['output'];
 };
 
 export type MailTemplateModel = {
@@ -2948,6 +3044,10 @@ export type Mutation = {
   publishPage: Page;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
   rateComment: Comment;
+  /** Reactivates a deactivated subscription. */
+  reactivateSubscription: PublicSubscription;
+  /** Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created. */
+  reactivateUserSubscription: PublicSubscription;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
   /** Rejects a comment */
@@ -2972,6 +3072,12 @@ export type Mutation = {
   restorePageRevision: Page;
   /** Continue a send job that stopped early. Recipients already sent are skipped. */
   resumeMailSendJob: MailSendJobModel;
+  /** Retries the failed periodic job and then catches up every run up to today. Answers once the failed run is taken over; the runs go on in the background. Refused while a run is going on. */
+  retryPeriodicJob: PeriodicJob;
+  /** Undoes an upgrade of a subscription as long as the new subscription has not been paid for. */
+  revertSubscriptionUpgrade: PublicSubscription;
+  /** Undoes an upgrade of one of the authenticated user's own subscriptions as long as the new subscription has not been paid for. The replacement subscription is removed and the original one continues. */
+  revertUserSubscriptionUpgrade: PublicSubscription;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean']['output'];
   revokeImpersonationSessions: Scalars['Int']['output'];
@@ -4026,6 +4132,16 @@ export type MutationRateCommentArgs = {
 };
 
 
+export type MutationReactivateSubscriptionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationReactivateUserSubscriptionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationRegisterMemberArgs = {
   address?: InputMaybe<UserAddressInput>;
   birthday?: InputMaybe<Scalars['DateTime']['input']>;
@@ -4092,6 +4208,16 @@ export type MutationRestorePageRevisionArgs = {
 export type MutationResumeMailSendJobArgs = {
   id: Scalars['String']['input'];
   retryUnfinished?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationRevertSubscriptionUpgradeArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationRevertUserSubscriptionUpgradeArgs = {
+  subscriptionId: Scalars['String']['input'];
 };
 
 
@@ -4847,6 +4973,14 @@ export type Page = {
   url: Scalars['String']['output'];
 };
 
+export type PageCreatedAction = BaseAction & HasPageLc & {
+  __typename?: 'PageCreatedAction';
+  actionType: ActionType;
+  date: Scalars['DateTime']['output'];
+  page: Page;
+  pageId: Scalars['String']['output'];
+};
+
 export type PageFilter = {
   description?: InputMaybe<Scalars['String']['input']>;
   draft?: InputMaybe<Scalars['Boolean']['input']>;
@@ -5464,6 +5598,7 @@ export type PeriodicJob = {
   finishedWithError?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
+  running: Scalars['Boolean']['output'];
   successfullyFinished?: Maybe<Scalars['DateTime']['output']>;
   tries: Scalars['Float']['output'];
 };
@@ -5594,6 +5729,14 @@ export enum PollSort {
   OpensAt = 'OpensAt'
 }
 
+export type PollStartedAction = BaseAction & HasPoll & {
+  __typename?: 'PollStartedAction';
+  actionType: ActionType;
+  date: Scalars['DateTime']['output'];
+  poll: FullPoll;
+  pollId: Scalars['String']['output'];
+};
+
 export type PollVote = {
   __typename?: 'PollVote';
   answer: PollAnswerInVote;
@@ -5642,6 +5785,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   __typename?: 'PublicSubscription';
   autoRenew: Scalars['Boolean']['output'];
   canExtend: Scalars['Boolean']['output'];
+  /** Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet. */
+  canRevertUpgrade: Scalars['Boolean']['output'];
   confirmed: Scalars['Boolean']['output'];
   createdAt: Scalars['DateTime']['output'];
   currency: Currency;
@@ -5678,6 +5823,8 @@ export type Query = {
   __typename?: 'Query';
   /** The mail createUser would send, or why it sends none. */
   accountCreationMail: ActionMail;
+  /** Returns latest actions */
+  actions: Array<Action>;
   /**
    *
    *       Returns all active subscribers.
@@ -5831,6 +5978,8 @@ export type Query = {
   invoicePaymentMail: ActionMail;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
+  /** Whether a letter integration is configured, so letters can be previewed and sent */
+  letterChannelAvailable: Scalars['Boolean']['output'];
   /** Returns a single letter provider setting by id. */
   letterProviderSetting: SettingLetterProvider;
   /** Returns all letter provider settings. */
@@ -5855,6 +6004,8 @@ export type Query = {
   mailSendRecipients: PaginatedMailSendRecipient;
   /** Return a single mail template, including its html and text body. */
   mailTemplate?: Maybe<MailTemplateModel>;
+  /** Render a draft mail template as the letter a send would print */
+  mailTemplateLetterPreview: MailTemplateLetterPreviewModel;
   /** Placeholders a template uses that would render empty for the given send (empty = none missing) */
   mailTemplateMissingPlaceholders: Array<Scalars['String']['output']>;
   /** Render a draft mail template with a mail type's sample data */
@@ -6046,6 +6197,11 @@ export type Query = {
   versionInformation: VersionInformation;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
+};
+
+
+export type QueryActionsArgs = {
+  types?: InputMaybe<Array<ActionType>>;
 };
 
 
@@ -6440,6 +6596,11 @@ export type QueryMailSendRecipientsArgs = {
 
 export type QueryMailTemplateArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryMailTemplateLetterPreviewArgs = {
+  input: MailTemplatePreviewInput;
 };
 
 
@@ -7430,6 +7591,14 @@ export enum SubscribePeriodicityDisplay {
   Toggle = 'Toggle'
 }
 
+export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {
+  __typename?: 'SubscriptionCreatedAction';
+  actionType: ActionType;
+  date: Scalars['DateTime']['output'];
+  subscription: PublicSubscription;
+  subscriptionId: Scalars['String']['output'];
+};
+
 export type SubscriptionDeactivation = {
   __typename?: 'SubscriptionDeactivation';
   date: Scalars['DateTime']['output'];
@@ -7923,6 +8092,14 @@ export type UserConsent = {
   value: Scalars['Boolean']['output'];
 };
 
+export type UserCreatedAction = BaseAction & HasUserLc & {
+  __typename?: 'UserCreatedAction';
+  actionType: ActionType;
+  date: Scalars['DateTime']['output'];
+  user: User;
+  userId: Scalars['String']['output'];
+};
+
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   EmailChange = 'EMAIL_CHANGE',
@@ -8082,6 +8259,26 @@ export type YouTubeVideoBlockInput = {
       }
       const result: PossibleTypesResultData = {
   "possibleTypes": {
+    "Action": [
+      "ArticleCreatedAction",
+      "AuthorCreatedAction",
+      "CommentCreatedAction",
+      "EventCreatedAction",
+      "PageCreatedAction",
+      "PollStartedAction",
+      "SubscriptionCreatedAction",
+      "UserCreatedAction"
+    ],
+    "BaseAction": [
+      "ArticleCreatedAction",
+      "AuthorCreatedAction",
+      "CommentCreatedAction",
+      "EventCreatedAction",
+      "PageCreatedAction",
+      "PollStartedAction",
+      "SubscriptionCreatedAction",
+      "UserCreatedAction"
+    ],
     "BaseBlock": [
       "BildwurfAdBlock",
       "BlockTemplateBlock",
@@ -8178,10 +8375,22 @@ export type YouTubeVideoBlockInput = {
     "HasArticle": [
       "ArticleNavigationLink"
     ],
+    "HasArticleLc": [
+      "ArticleCreatedAction"
+    ],
+    "HasAuthor": [
+      "AuthorCreatedAction"
+    ],
     "HasBlockContent": [
       "ArticleRevision",
       "BlockTemplate",
       "PageRevision"
+    ],
+    "HasComment": [
+      "CommentCreatedAction"
+    ],
+    "HasEventLc": [
+      "EventCreatedAction"
     ],
     "HasImage": [
       "ArticleTeaser",
@@ -8247,12 +8456,24 @@ export type YouTubeVideoBlockInput = {
     "HasPage": [
       "PageNavigationLink"
     ],
+    "HasPageLc": [
+      "PageCreatedAction"
+    ],
     "HasPaymentMethod": [
       "Payment",
       "PublicSubscription"
     ],
+    "HasPoll": [
+      "PollStartedAction"
+    ],
+    "HasSubscriptionLc": [
+      "SubscriptionCreatedAction"
+    ],
     "HasUser": [
       "PublicSubscription"
+    ],
+    "HasUserLc": [
+      "UserCreatedAction"
     ],
     "SettingProvider": [
       "SettingAIProvider",

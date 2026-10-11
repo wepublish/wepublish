@@ -14,6 +14,7 @@ import {
   KvAtomicStore,
   MemoryAtomicStore,
 } from './kv-ttl-cache-atomic-store';
+import { KvLock } from './kv-ttl-cache-lock';
 import { LruMap } from './kv-ttl-cache-lru-map';
 import {
   deserializeCacheValueIfPossible,
@@ -850,6 +851,29 @@ export class KvTtlCacheService implements OnModuleDestroy {
 
       await new Promise(resolve => setTimeout(resolve, CLAIM_RETRY_MS));
     }
+  }
+
+  async lock(name: string, ttlMs: number): Promise<KvLock | false | undefined> {
+    const token = `${hostname()}:${process.pid}:${randomBytes(8).toString(
+      'hex'
+    )}`;
+    const claimed = await this.claimOnce(name, ttlMs, token);
+
+    if (!claimed) {
+      return claimed === false ? false : undefined;
+    }
+
+    return new KvLock(this.atomic, `lock:${name}`, token, ttlMs);
+  }
+
+  async isLocked(name: string): Promise<boolean | undefined> {
+    if (!this.atomic.shared || !this.atomic.isAvailable()) {
+      return undefined;
+    }
+
+    const holder = await this.atomic.getRaw(`lock:${name}`);
+
+    return this.atomic.isAvailable() ? holder !== undefined : undefined;
   }
 
   async increment(name: string, ttlMs: number): Promise<number | undefined> {

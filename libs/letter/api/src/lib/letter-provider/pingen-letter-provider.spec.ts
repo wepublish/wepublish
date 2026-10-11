@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { PrismaClient, SettingLetterProvider } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { createHmac } from 'crypto';
@@ -130,6 +131,32 @@ describe('PingenLetterProvider', () => {
     });
 
     oauthMock.getAccessToken.mockResolvedValue('token-1');
+  });
+
+  describe('isConfigured', () => {
+    it('is configured once client credentials and the organisation are set', async () => {
+      expect(await createProvider().isConfigured()).toBe(true);
+    });
+
+    it.each(['clientId', 'clientSecret', 'organisationId'] as const)(
+      'is not configured without %s',
+      async field => {
+        const provider = createProvider();
+        vi.spyOn(provider, 'getConfig').mockResolvedValue({
+          ...config,
+          [field]: null,
+        });
+
+        expect(await provider.isConfigured()).toBe(false);
+      }
+    );
+
+    it('is not configured without a setting', async () => {
+      const provider = createProvider();
+      vi.spyOn(provider, 'getConfig').mockResolvedValue(null);
+
+      expect(await provider.isConfigured()).toBe(false);
+    });
   });
 
   describe('sendLetter', () => {

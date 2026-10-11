@@ -27,6 +27,12 @@ export class GotenbergPdfRenderer extends BasePdfRenderer {
     this.fallback = props.fallback ?? {};
   }
 
+  async isConfigured(): Promise<boolean> {
+    const config = await this.getConfig();
+
+    return !!(config?.gotenberg_url || this.fallback.url);
+  }
+
   async render(html: string): Promise<Buffer> {
     const config = await this.getConfig();
     const url = config?.gotenberg_url || this.fallback.url;

@@ -1,14 +1,18 @@
-import { useLazyQuery, useMutation } from '@apollo/client/react';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { Typography } from '@mui/material';
 import { useApolloClient } from '@apollo/client/react';
 import {
   CreateMailTemplateDocument,
   MailTemplateByIdDocument,
   MailTemplateContext,
+  MailTemplateLetterPreviewDocument,
+  MailTemplateLetterPreviewQuery,
+  MailTemplateLetterPreviewQueryVariables,
   MailTemplatePreviewDocument,
   MailTemplatePreviewInput,
   MailTemplatePreviewQuery,
   MailTemplatePreviewQueryVariables,
+  LetterChannelAvailableDocument,
   MailTemplateSubscriptionsDocument,
   SendTestMailTemplateDocument,
   UpdateMailTemplateDocument,
@@ -47,6 +51,7 @@ import {
   readShellSettings,
 } from './mail-html';
 import { MailColorPicker } from './color-picker';
+import { LetterPreview } from './letter-preview';
 import { MailPreview } from './mail-preview';
 import { MAIL_PLACEHOLDER_CONTEXTS } from './mail-placeholders';
 import { PlaceholderPicker } from './placeholder-picker';
@@ -129,6 +134,11 @@ function MailTemplateEdit() {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [letterPdf, setLetterPdf] = useState<string | null>(null);
+  const [letterLoading, setLetterLoading] = useState(false);
+  // Without a letter integration there is nothing to render a letter with.
+  const { data: letterChannelData } = useQuery(LetterChannelAvailableDocument);
+  const letterAvailable = !!letterChannelData?.letterChannelAvailable;
   const [sendTest, { loading: testLoading }] = useMutation(
     SendTestMailTemplateDocument,
     DEFAULT_MUTATION_OPTIONS(t)
@@ -315,6 +325,35 @@ function MailTemplateEdit() {
       toaster.push(<Message type="error">{message}</Message>);
     } finally {
       setPreviewLoading(false);
+    }
+  };
+
+  // Rendered by the same pdf renderer a letter send uses, so the sheet shows
+  // exactly what would be printed.
+  const doPreviewLetter = async () => {
+    const ctx = effectiveContext();
+    setLetterLoading(true);
+    setPreviewError(null);
+    try {
+      const { data, error } = await client.query<
+        MailTemplateLetterPreviewQuery,
+        MailTemplateLetterPreviewQueryVariables
+      >({
+        query: MailTemplateLetterPreviewDocument,
+        variables: { input: previewInput(ctx) },
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all',
+      });
+      if (error) {
+        throw error;
+      }
+      setLetterPdf(data!.mailTemplateLetterPreview.pdf);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setPreviewError(message);
+      toaster.push(<Message type="error">{message}</Message>);
+    } finally {
+      setLetterLoading(false);
     }
   };
 
@@ -514,6 +553,15 @@ function MailTemplateEdit() {
               >
                 {t('mailTemplates.edit.preview')}
               </Button>
+              {letterAvailable && (
+                <Button
+                  appearance="default"
+                  loading={letterLoading}
+                  onClick={doPreviewLetter}
+                >
+                  {t('mailTemplates.edit.previewLetter')}
+                </Button>
+              )}
               <Button
                 appearance="default"
                 loading={testLoading}
@@ -722,6 +770,21 @@ function MailTemplateEdit() {
         </Modal.Header>
         <Modal.Body style={{ height: '85vh' }}>
           <MailPreview html={previewHtml ?? ''} />
+        </Modal.Body>
+      </Modal>
+
+      <Modal
+        open={!!letterPdf}
+        onClose={() => setLetterPdf(null)}
+        size="full"
+      >
+        <Modal.Header>
+          <Modal.Title>
+            {t('mailTemplates.edit.letterPreviewTitle')}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ height: '85vh' }}>
+          {letterPdf && <LetterPreview pdf={letterPdf} />}
         </Modal.Body>
       </Modal>
     </div>

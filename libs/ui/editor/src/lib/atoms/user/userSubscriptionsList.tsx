@@ -272,7 +272,7 @@ function UserSubscriptionsList({
       case PaymentPeriodicity.Lifetime:
         return t('memberPlanList.paymentPeriodicity.lifetime');
       default:
-        return 'Unknown Error';
+        return t('subscriptionList.panels.unknown');
     }
   }
 

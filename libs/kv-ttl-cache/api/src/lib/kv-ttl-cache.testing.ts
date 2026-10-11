@@ -8,6 +8,8 @@ export const INTEGRATION_NAMESPACES = [
   'settings:ai',
   'settings:analyticsprovider',
   'settings:syncprovider',
+  'settings:letterprovider',
+  'settings:pdfrenderer',
 ];
 
 export class FakeDragonfly extends MemoryAtomicStore {
@@ -43,6 +45,10 @@ export class FakeDragonfly extends MemoryAtomicStore {
 
   override async incrementRaw(key: string, ttlMs: number) {
     return this.down ? undefined : super.incrementRaw(key, ttlMs);
+  }
+
+  override async expireRaw(key: string, ttlMs: number) {
+    return this.down ? false : super.expireRaw(key, ttlMs);
   }
 
   override async delRaw(key: string) {

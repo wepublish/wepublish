@@ -6,3 +6,7 @@ export function isValidUrl(input: string): boolean {
     return false;
   }
 }
+
+export function stripQueryAndHash(url: string): string {
+  return url.split(/[?#]/, 1)[0];
+}

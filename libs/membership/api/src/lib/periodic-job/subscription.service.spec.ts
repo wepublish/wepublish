@@ -19,6 +19,29 @@ import {
 import { SubscriptionService } from './subscription.service';
 import type { Mock } from 'vitest';
 
+const { loggerError } = vi.hoisted(() => ({ loggerError: vi.fn() }));
+
+vi.mock('@wepublish/utils/api', async importOriginal => {
+  const original =
+    await importOriginal<typeof import('@wepublish/utils/api')>();
+
+  return {
+    ...original,
+    logger: (name: string) => {
+      const log = original.logger(name);
+
+      return {
+        ...log,
+        error: (...args: unknown[]) => {
+          loggerError(...args);
+        },
+        warn: log.warn.bind(log),
+        info: log.info.bind(log),
+      };
+    },
+  };
+});
+
 describe('SubscriptionPaymentsService', () => {
   let subscriptionService: SubscriptionService;
   let prismaMock: {
@@ -815,6 +838,93 @@ describe('SubscriptionPaymentsService', () => {
     expect(updatePaymentWithIntentState).toHaveBeenCalledWith({
       intentState: 'payrexx-state',
     });
+  });
+
+  it('checkInvoiceState logs readably why a payment check failed', async () => {
+    const paymentProvider = {
+      checkIntentStatus: vi
+        .fn()
+        .mockRejectedValue({ code: 401, message: { message: 'Unauthorized' } }),
+      updatePaymentWithIntentState: vi.fn(),
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as never,
+      {
+        findByInvoiceId: vi
+          .fn()
+          .mockResolvedValue([
+            { id: 'pay-1', intentID: 'pi_1', paymentMethodID: 'bexio-method' },
+          ]),
+        findPaymentProviderByPaymentMethodeId: vi
+          .fn()
+          .mockResolvedValue(paymentProvider),
+      } as never,
+      { notify: vi.fn().mockResolvedValue(undefined) } as never
+    );
+
+    await subscriptionService.checkInvoiceState({
+      id: 'invoice-1',
+      subscription: {},
+    } as never);
+
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.any(String),
+      'pay-1',
+      'pi_1',
+      'bexio-method',
+      '401 Unauthorized'
+    );
+  });
+
+  it('keeps and logs readably why charging an invoice failed, but sends the customer only a code', async () => {
+    prismaMock.payment.create = vi.fn().mockResolvedValue({
+      id: 'pay-1',
+      paymentMethodID: 'bexio-method',
+      invoiceID: 'invoice-1',
+    });
+    prismaMock.payment.update = vi.fn();
+    const paymentProvider = {
+      createIntent: vi
+        .fn()
+        .mockRejectedValue({ code: 401, message: { message: 'Unauthorized' } }),
+    };
+
+    const status = await subscriptionService['offSessionPayment'](
+      {
+        id: 'invoice-1',
+        paidAt: null,
+        canceledAt: null,
+        currency: Currency.CHF,
+        subscription: {
+          id: 'sub-1',
+          memberPlan: mockMemberPlan,
+          paymentMethod: { id: 'bexio-method', paymentProviderID: 'bexio' },
+          user: {
+            ...mockUser,
+            paymentProviderCustomers: [
+              { paymentProviderID: 'bexio', customerID: 'cus-1' },
+            ],
+          },
+        },
+      } as never,
+      paymentProvider as never,
+      []
+    );
+
+    expect(prismaMock.payment.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          paymentData: JSON.stringify({ error: '401 Unauthorized' }),
+        }),
+      })
+    );
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.any(String),
+      'invoice-1',
+      'pay-1',
+      '401 Unauthorized'
+    );
+    expect(status.errorCode).toBe('payment-provider-error');
   });
 
   it('checkInvoiceState notifies that the invoice is paid after checking its payments', async () => {

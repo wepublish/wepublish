@@ -58,6 +58,7 @@ function createContext(
   const rendered: string[] = [];
 
   const pdfRenderer: PdfRenderer = {
+    isConfigured: async () => true,
     render: async (html: string) => {
       rendered.push(html);
 
@@ -82,6 +83,7 @@ function createContext(
     letterProvider: {
       id: 'pingen',
       sendLetter,
+      isConfigured: async () => true,
     } as unknown as BaseLetterProvider,
     prisma,
     pdfRenderer,
@@ -190,5 +192,43 @@ describe('LetterContext.sendLetter', () => {
         print,
       })
     ).rejects.toThrow('has no address');
+  });
+});
+
+describe('LetterContext.isConfigured', () => {
+  // The registry hands in proxies that answer `in` with false while nothing is
+  // loaded, so an empty object behaves like an unconfigured integration.
+  const unconfigured = {} as never;
+
+  it('is configured with a set up letter provider and pdf renderer', async () => {
+    expect(await createContext().context.isConfigured()).toBe(true);
+  });
+
+  it('is not configured without a letter provider', async () => {
+    const { context } = createContext();
+    context.letterProvider = unconfigured;
+
+    expect(await context.isConfigured()).toBe(false);
+  });
+
+  it('is not configured without a pdf renderer', async () => {
+    const { context } = createContext();
+    context.pdfRenderer = unconfigured;
+
+    expect(await context.isConfigured()).toBe(false);
+  });
+
+  it('is not configured while the letter provider lacks its credentials', async () => {
+    const { context } = createContext();
+    context.letterProvider.isConfigured = async () => false;
+
+    expect(await context.isConfigured()).toBe(false);
+  });
+
+  it('is not configured while the pdf renderer lacks its credentials', async () => {
+    const { context } = createContext();
+    context.pdfRenderer.isConfigured = async () => false;
+
+    expect(await context.isConfigured()).toBe(false);
   });
 });

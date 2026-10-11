@@ -27,6 +27,7 @@ export abstract class BasePdfRenderer implements PdfRenderer {
     this.kv = props.kv;
   }
 
+  abstract isConfigured(): Promise<boolean>;
   abstract render(html: string): Promise<Buffer>;
 
   /**

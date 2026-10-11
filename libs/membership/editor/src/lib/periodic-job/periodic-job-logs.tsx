@@ -1,22 +1,34 @@
-import { useQuery } from '@apollo/client/react';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   FullPeriodicJobFragment,
   PeriodicJobLogsDocument,
+  RetryPeriodicJobDocument,
 } from '@wepublish/editor/api';
-import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
+import {
+  NotificationItem,
+  NotificationSeverity,
+  useHasPermission,
+} from '@wepublish/ui/editor';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button, Tooltip, Whisper } from 'rsuite';
+
+import { showErrors } from '../common';
+
+const RETRY_PERMISSION = ['CAN_RETRY_PERIODIC_JOB'];
+
+const POLL_WHILE_RUNNING_MS = 10_000;
 
 function getSeverity(
   periodicJob: FullPeriodicJobFragment
 ): NotificationSeverity {
-  if (periodicJob.finishedWithError && periodicJob.successfullyFinished) {
-    return 'warning';
+  if (periodicJob.running) {
+    return 'info';
   }
 
-  if (!periodicJob.successfullyFinished && !periodicJob.finishedWithError) {
-    return 'info';
+  if (periodicJob.finishedWithError && periodicJob.successfullyFinished) {
+    return 'warning';
   }
 
   if (periodicJob.successfullyFinished) {
@@ -38,7 +50,7 @@ function getStatusText(
     case 'success':
       return 'OK';
     default:
-      return 'Running...';
+      return t('periodicJobsLog.running');
   }
 }
 
@@ -75,12 +87,33 @@ export function usePeriodicJobNotifications({
 }: PeriodicJobsLogProps): ReactElement[] {
   const { t } = useTranslation();
 
-  const { data, loading } = useQuery(PeriodicJobLogsDocument, {
-    skip,
-    variables: {
-      take,
-    },
-  });
+  const { data, loading, startPolling, stopPolling } = useQuery(
+    PeriodicJobLogsDocument,
+    {
+      skip,
+      variables: {
+        take,
+      },
+    }
+  );
+
+  const mayRetry = useHasPermission(RETRY_PERMISSION);
+  const [retryPeriodicJob, { loading: retrying }] = useMutation(
+    RetryPeriodicJobDocument,
+    {
+      onError: showErrors,
+    }
+  );
+
+  const isRunning = !!data?.periodicJobLog?.some(job => job.running);
+
+  useEffect(() => {
+    if (isRunning) {
+      startPolling?.(POLL_WHILE_RUNNING_MS);
+    } else {
+      stopPolling?.();
+    }
+  }, [isRunning, startPolling, stopPolling]);
 
   /**
    * If all jobs were successfully (no finished with error), return only first periodic job log entry.
@@ -121,7 +154,9 @@ export function usePeriodicJobNotifications({
   // Runs that were successful in the end (including "successful after
   // retries") only matter in the archive, not as a dashboard notification.
   const visibleJobs =
-    onlyProblems ? jobs.filter(job => getSeverity(job) === 'error') : jobs;
+    onlyProblems ?
+      jobs.filter(job => job.running || getSeverity(job) === 'error')
+    : jobs;
 
   const hasVisibleProblems =
     showDidNotRun || showNeverRan || visibleJobs.length > 0;
@@ -172,6 +207,24 @@ export function usePeriodicJobNotifications({
           severity={severity}
           sourceTag={sourceTag}
           title={title}
+          actions={
+            mayRetry && severity === 'error' && periodicJob === jobs[0] ?
+              <Whisper
+                trigger={['hover', 'focus']}
+                placement="top"
+                speaker={<Tooltip>{t('periodicJobsLog.retryHint')}</Tooltip>}
+              >
+                <Button
+                  size="sm"
+                  appearance="primary"
+                  loading={retrying}
+                  onClick={() => retryPeriodicJob()}
+                >
+                  {t('periodicJobsLog.retry')}
+                </Button>
+              </Whisper>
+            : undefined
+          }
         >
           <Information>
             {periodicJob?.executionTime && (
@@ -192,7 +245,7 @@ export function usePeriodicJobNotifications({
 
             {periodicJob?.finishedWithError && (
               <span>
-                {t('periodicJobsLog.successTime', {
+                {t('periodicJobsLog.errorTime', {
                   date: new Date(periodicJob.finishedWithError),
                 })}
               </span>
@@ -208,6 +261,10 @@ export function usePeriodicJobNotifications({
               <span>
                 <i>{periodicJob.error}</i>
               </span>
+            )}
+
+            {periodicJob.running && (
+              <span>{t('periodicJobsLog.runningHint')}</span>
             )}
           </Information>
         </NotificationItem>

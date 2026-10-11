@@ -26,6 +26,11 @@ export class FakeLetterProvider extends BaseLetterProvider {
     return (await this.getConfig())?.name ?? 'Fake letter provider';
   }
 
+  // Needs no credentials.
+  async isConfigured(): Promise<boolean> {
+    return true;
+  }
+
   async sendLetter(props: SendLetterProps): Promise<SendLetterResult> {
     const providerLetterID = randomUUID();
     this.letters.set(providerLetterID, props.file);

@@ -111,11 +111,23 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
 - Every new website component needs a Storybook story; stories are how these
   components are tested. See [testing.md](testing.md).
 - Forms use React Hook Form with Zod resolvers. Icons come from React Icons.
-  User-facing strings go through react-i18next — never hardcode copy.
-- **Editor copy** lives in `apps/editor/src/app/locales/{en,de,fr}.json`; add
-  every key to all three. German is Swiss Standard German (no «ß») and says
-  lowercase «du»; French says «vous». `locales.spec.ts` fails when a literal
-  `t('…')` key is missing or the three catalogs drift apart.
+  User-facing strings go through react-i18next — never hardcode copy; see
+  [Translations](#translations).
+
+## Translations
+
+Editor copy lives in `apps/editor/src/app/locales/{en,de,fr}.json`; add every
+key to all three. `locales.spec.ts` fails when a literal `t('…')` key is
+missing or the three catalogs drift apart. Zod messages live at module level,
+so use `lazyMessage('key')` from `apps/editor/src/app/utility.ts` instead of
+`t()`.
+
+- **German:** Swiss Standard German (no `ß`), lowercase `du`. `E-Mail`, never
+  `Mail` — compounds too (`E-Mail-Vorlage`, `Test-E-Mail`, `E-Mail-Server`).
+  Brand names (Mailchimp, Mailgun, Mailpit) stay as they are. Quote with
+  guillemets `«…»` (no inner spaces), never `„…“` or `"…"`.
+- **French:** `vous`. The typographic apostrophe `’`, never `'`. Quote with
+  `« … »` (spaces inside), never `"…"`.
 
 ## Nest
 
@@ -133,5 +145,16 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   `BadRequestException`) rather than returning null-ish sentinels.
 - Log with Pino; report to Sentry. Never log tokens, passwords, or payment
   payloads.
+- **API errors say where they come from.** Every payment, mail, challenge and
+  tracking-pixel provider the `ProviderRegistryService` builds is wrapped by
+  `withProviderErrorContext`, so its errors read `Payment provider "<name>"
+  (<class>, id <id>) failed in <method>: …`; the error keeps its class
+  (`instanceof MailProviderRecipientError` still works). Turn unknown errors
+  into text with `describeError` and prefix context with `addErrorContext`
+  (`@wepublish/utils/api`), never `e instanceof Error ? e.message : String(e)`
+  or `JSON.stringify(e)`: SDKs like `bexio` reject with plain objects, which
+  print as `[object Object]` / `{}`. The periodic job adds the subscription or
+  invoice it was working on; that text is what the editor job log and ONE
+  (`mediumStats.operations.periodicJobError`) show.
 
 See [graphql-prisma.md](graphql-prisma.md) for the full schema workflow.

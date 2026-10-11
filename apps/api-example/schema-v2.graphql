@@ -6,6 +6,8 @@ enum AIProviderType {
   V0
 }
 
+union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
+
 """
 The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action.
 """
@@ -35,6 +37,17 @@ enum ActionMailNoMailReason {
   firstPeriod
   noTemplate
   notApplicable
+}
+
+enum ActionType {
+  ArticleCreated
+  AuthorCreated
+  CommentCreated
+  EventCreated
+  PageCreated
+  PollStarted
+  SubscriptionCreated
+  UserCreated
 }
 
 type AllowedSettingVals {
@@ -69,6 +82,13 @@ type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   tags: [Tag!]!
   trackingPixels: [TrackingPixel!]!
   url: String!
+}
+
+type ArticleCreatedAction implements BaseAction & HasArticleLc {
+  actionType: ActionType!
+  article: Article!
+  articleId: String!
+  date: DateTime!
 }
 
 input ArticleFilter {
@@ -245,6 +265,13 @@ type Author implements HasImage & HasOptionalPeerLc {
   url: String!
 }
 
+type AuthorCreatedAction implements BaseAction & HasAuthor {
+  actionType: ActionType!
+  author: Author!
+  authorId: String!
+  date: DateTime!
+}
+
 input AuthorFilter {
   hideOnTeam: Boolean
   name: String
@@ -317,6 +344,11 @@ enum BannerActionRole {
 enum BannerDocumentType {
   ARTICLE
   PAGE
+}
+
+interface BaseAction {
+  actionType: ActionType!
+  date: DateTime!
 }
 
 interface BaseBlock {
@@ -657,6 +689,13 @@ input CommentBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: CommentBlockFilterInput!
+}
+
+type CommentCreatedAction implements BaseAction & HasComment {
+  actionType: ActionType!
+  comment: Comment!
+  commentId: String!
+  date: DateTime!
 }
 
 input CommentFilter {
@@ -1093,6 +1132,13 @@ input EventBlockInput {
   filter: EventBlockFilterInput!
 }
 
+type EventCreatedAction implements BaseAction & HasEventLc {
+  actionType: ActionType!
+  date: DateTime!
+  event: Event!
+  eventId: String!
+}
+
 input EventFilter {
   from: DateTime
   location: String
@@ -1342,8 +1388,28 @@ interface HasArticle {
   articleID: String!
 }
 
+interface HasArticleLc {
+  article: Article!
+  articleId: String!
+}
+
+interface HasAuthor {
+  author: Author!
+  authorId: String!
+}
+
 interface HasBlockContent {
   blocks: [BlockContent!]!
+}
+
+interface HasComment {
+  comment: Comment!
+  commentId: String!
+}
+
+interface HasEventLc {
+  event: Event!
+  eventId: String!
 }
 
 interface HasImage {
@@ -1425,14 +1491,34 @@ interface HasPage {
   pageID: String!
 }
 
+interface HasPageLc {
+  page: Page!
+  pageId: String!
+}
+
 interface HasPaymentMethod {
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
 }
 
+interface HasPoll {
+  poll: FullPoll!
+  pollId: String!
+}
+
+interface HasSubscriptionLc {
+  subscription: PublicSubscription!
+  subscriptionId: String!
+}
+
 interface HasUser {
   user: User!
   userID: String!
+}
+
+interface HasUserLc {
+  user: User!
+  userId: String!
 }
 
 type IFrameBlock implements BaseBlock {
@@ -2126,6 +2212,11 @@ input MailTemplateInput {
   name: String!
   subject: String!
   textContent: String
+}
+
+type MailTemplateLetterPreviewModel {
+  """The rendered letter as a base64 encoded pdf."""
+  pdf: String!
 }
 
 type MailTemplateModel {
@@ -3158,6 +3249,14 @@ type Mutation {
   """
   rateComment(answerId: String!, commentId: String!, value: Int!): Comment!
 
+  """Reactivates a deactivated subscription."""
+  reactivateSubscription(id: String!): PublicSubscription!
+
+  """
+  Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created.
+  """
+  reactivateUserSubscription(id: String!): PublicSubscription!
+
   """
   This mutation registers a new member by providing name, email, and other required information.
   """
@@ -3205,6 +3304,21 @@ type Mutation {
   Continue a send job that stopped early. Recipients already sent are skipped.
   """
   resumeMailSendJob(id: String!, retryUnfinished: Boolean): MailSendJobModel!
+
+  """
+  Retries the failed periodic job and then catches up every run up to today. Answers once the failed run is taken over; the runs go on in the background. Refused while a run is going on.
+  """
+  retryPeriodicJob: PeriodicJob!
+
+  """
+  Undoes an upgrade of a subscription as long as the new subscription has not been paid for.
+  """
+  revertSubscriptionUpgrade(id: String!): PublicSubscription!
+
+  """
+  Undoes an upgrade of one of the authenticated user's own subscriptions as long as the new subscription has not been paid for. The replacement subscription is removed and the original one continues.
+  """
+  revertUserSubscriptionUpgrade(subscriptionId: String!): PublicSubscription!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -3524,6 +3638,13 @@ type Page {
   slug: String
   tags: [Tag!]!
   url: String!
+}
+
+type PageCreatedAction implements BaseAction & HasPageLc {
+  actionType: ActionType!
+  date: DateTime!
+  page: Page!
+  pageId: String!
 }
 
 input PageFilter {
@@ -4103,6 +4224,7 @@ type PeriodicJob {
   finishedWithError: DateTime
   id: String!
   modifiedAt: DateTime!
+  running: Boolean!
   successfullyFinished: DateTime
   tries: Float!
 }
@@ -4223,6 +4345,13 @@ enum PollSort {
   OpensAt
 }
 
+type PollStartedAction implements BaseAction & HasPoll {
+  actionType: ActionType!
+  date: DateTime!
+  poll: FullPoll!
+  pollId: String!
+}
+
 type PollVote {
   answer: PollAnswerInVote!
   answerId: String!
@@ -4268,6 +4397,11 @@ input PropertyInput {
 type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
+
+  """
+  Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet.
+  """
+  canRevertUpgrade: Boolean!
   confirmed: Boolean!
   createdAt: DateTime!
   currency: Currency!
@@ -4302,6 +4436,12 @@ type PublicSubscriptionConnection {
 type Query {
   """The mail createUser would send, or why it sends none."""
   accountCreationMail: ActionMail!
+
+  """Returns latest actions"""
+  actions(
+    """Only these kinds of actions. Empty or omitted means all."""
+    types: [ActionType!]
+  ): [Action!]!
 
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
@@ -4569,6 +4709,11 @@ type Query {
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
+  """
+  Whether a letter integration is configured, so letters can be previewed and sent
+  """
+  letterChannelAvailable: Boolean!
+
   """Returns a single letter provider setting by id."""
   letterProviderSetting(id: String!): SettingLetterProvider!
 
@@ -4606,6 +4751,9 @@ type Query {
 
   """Return a single mail template, including its html and text body."""
   mailTemplate(id: String!): MailTemplateModel
+
+  """Render a draft mail template as the letter a send would print"""
+  mailTemplateLetterPreview(input: MailTemplatePreviewInput!): MailTemplateLetterPreviewModel!
 
   """
   Placeholders a template uses that would render empty for the given send (empty = none missing)
@@ -5445,6 +5593,13 @@ enum SubscribePeriodicityDisplay {
   Toggle
 }
 
+type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
+  actionType: ActionType!
+  date: DateTime!
+  subscription: PublicSubscription!
+  subscriptionId: String!
+}
+
 type SubscriptionDeactivation {
   date: DateTime!
   reason: SubscriptionDeactivationReason!
@@ -5909,6 +6064,13 @@ type UserConsent {
   modifiedAt: DateTime!
   user: User!
   value: Boolean!
+}
+
+type UserCreatedAction implements BaseAction & HasUserLc {
+  actionType: ActionType!
+  date: DateTime!
+  user: User!
+  userId: String!
 }
 
 enum UserEvent {

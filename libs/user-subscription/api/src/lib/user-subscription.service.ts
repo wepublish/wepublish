@@ -38,6 +38,7 @@ import {
   GoodieService,
   MemberContextService,
   DiscountCodeService,
+  SubscriptionService,
 } from '@wepublish/membership/api';
 
 export type SubscriptionWithRelations = Subscription & {
@@ -54,7 +55,8 @@ export class UserSubscriptionService {
     private memberPlanDataloader: MemberPlanDataloader,
     private memberContext: MemberContextService,
     private discountCodeservice: DiscountCodeService,
-    private goodieService: GoodieService
+    private goodieService: GoodieService,
+    private subscriptionService: SubscriptionService
   ) {}
 
   public async getUserSubscriptions(userId: string) {
@@ -544,6 +546,28 @@ export class UserSubscriptionService {
     }
 
     return updatedSubscription;
+  }
+
+  async reactivateUserSubscription(userId: string, subscriptionId: string) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: {
+        id: subscriptionId,
+        userID: userId,
+      },
+      include: {
+        deactivation: true,
+      },
+    });
+
+    if (!subscription) {
+      throw new BadRequestException(`Subscription not found ${subscriptionId}`);
+    }
+
+    if (!subscription.deactivation) {
+      throw new BadRequestException('Subscription is not canceled');
+    }
+
+    return this.subscriptionService.reactivateSubscription(subscriptionId);
   }
 
   private async validateSubscriptionInput({

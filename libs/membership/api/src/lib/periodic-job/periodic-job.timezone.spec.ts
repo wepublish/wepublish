@@ -74,6 +74,25 @@ class PeriodicJobTable {
 
     return row;
   };
+
+  updateManyAndReturn = async ({
+    where,
+    data,
+  }: {
+    where: Partial<JobRow>;
+    data: Partial<JobRow>;
+  }) =>
+    [...this.rows.values()]
+      .filter(row =>
+        Object.entries(where).every(([field, expected]) => {
+          const actual = row[field as keyof JobRow];
+
+          return expected instanceof Date ?
+              actual instanceof Date && actual.getTime() === expected.getTime()
+            : actual === expected;
+        })
+      )
+      .map(row => Object.assign(row, data));
 }
 
 describe('PeriodicJobService outside UTC', () => {
@@ -99,7 +118,7 @@ describe('PeriodicJobService outside UTC', () => {
 
     for (const run of runs) {
       if (run.isRetry) {
-        await service['retryFailedJob'](run.date);
+        await service['retryFailedJob'](run);
       } else {
         await service['markJobStarted'](run.date);
       }
@@ -115,6 +134,7 @@ describe('PeriodicJobService outside UTC', () => {
     jobs = new PeriodicJobTable();
     service = new PeriodicJobService(
       { periodicJob: jobs } as unknown as PrismaClient,
+      {} as never,
       {} as never,
       {} as never,
       {} as never,

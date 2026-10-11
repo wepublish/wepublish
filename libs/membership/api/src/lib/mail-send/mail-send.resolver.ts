@@ -89,7 +89,7 @@ export class MailSendResolver {
 
     const [totalCount, recipients] = await Promise.all([
       this.recipientService.count(audience, channel),
-      this.recipientService.resolvePage(
+      this.recipientService.resolvePreviewPage(
         audience,
         skip,
         boundedTake + 1,

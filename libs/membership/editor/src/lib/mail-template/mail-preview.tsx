@@ -108,7 +108,7 @@ export function MailPreview({
         }}
       >
         <iframe
-          title="mail-preview"
+          title={t('mailTemplates.edit.preview')}
           srcDoc={withPreviewStyles(html)}
           style={{
             width: DEVICE_WIDTH[device],
