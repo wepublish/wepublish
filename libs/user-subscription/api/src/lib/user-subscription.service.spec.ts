@@ -6,6 +6,7 @@ import {
   MemberContextService,
   DiscountCodeDataloader,
   DiscountCodeService,
+  SubscriptionService,
 } from '@wepublish/membership/api';
 import { PaymentsService } from '@wepublish/payment/api';
 import {
@@ -44,6 +45,10 @@ describe('UserSubscriptionService', () => {
   let paymentsMock: {
     createPaymentWithProvider: Mock;
     getProviders: Mock;
+  };
+
+  let subscriptionServiceMock: {
+    reactivateSubscription: Mock;
   };
 
   beforeAll(() => {
@@ -102,6 +107,10 @@ describe('UserSubscriptionService', () => {
       getProviders: vi.fn().mockReturnValue([]),
     };
 
+    subscriptionServiceMock = {
+      reactivateSubscription: vi.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserSubscriptionService,
@@ -122,6 +131,7 @@ describe('UserSubscriptionService', () => {
           useValue: { getValidGoodie: vi.fn() },
         },
         { provide: PrismaClient, useValue: prismaMock },
+        { provide: SubscriptionService, useValue: subscriptionServiceMock },
       ],
     }).compile();
 
@@ -339,6 +349,67 @@ describe('UserSubscriptionService', () => {
           data: expect.objectContaining({ paymentMethodID: 'currentPm' }),
         })
       );
+    });
+  });
+
+  describe('reactivateUserSubscription', () => {
+    it('reactivates a subscription of the requesting user', async () => {
+      const deactivated = {
+        id: 'subscriptionId',
+        userID: 'userId',
+        deactivation: { id: 'deactivationId' },
+      };
+      prismaMock.subscription.findUnique.mockResolvedValue(deactivated);
+      subscriptionServiceMock.reactivateSubscription.mockResolvedValue({
+        ...deactivated,
+        deactivation: null,
+      });
+
+      const result = await service.reactivateUserSubscription(
+        'userId',
+        'subscriptionId'
+      );
+
+      // the lookup has to be scoped to the user, otherwise anybody could
+      // reactivate a foreign subscription
+      expect(prismaMock.subscription.findUnique).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            id: 'subscriptionId',
+            userID: 'userId',
+          }),
+        })
+      );
+      expect(
+        subscriptionServiceMock.reactivateSubscription
+      ).toHaveBeenCalledWith('subscriptionId');
+      expect(result).toMatchObject({ deactivation: null });
+    });
+
+    it('throws when the subscription does not belong to the user', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.reactivateUserSubscription('userId', 'foreignSubscriptionId')
+      ).rejects.toThrow();
+      expect(
+        subscriptionServiceMock.reactivateSubscription
+      ).not.toHaveBeenCalled();
+    });
+
+    it('throws when the subscription is not deactivated', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue({
+        id: 'subscriptionId',
+        userID: 'userId',
+        deactivation: null,
+      });
+
+      await expect(
+        service.reactivateUserSubscription('userId', 'subscriptionId')
+      ).rejects.toThrow();
+      expect(
+        subscriptionServiceMock.reactivateSubscription
+      ).not.toHaveBeenCalled();
     });
   });
 });
