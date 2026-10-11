@@ -90,6 +90,11 @@ const PageColumns = styled.div`
   }
 `;
 
+/* below the columns: the subscriptions table needs the full width */
+const FullWidthRow = styled.div`
+  padding-bottom: 20px;
+`;
+
 const PanelStack = styled.div`
   display: flex;
   flex-direction: column;
@@ -502,7 +507,7 @@ function UserEditView() {
           setCloseFn={setCloseAfterSave}
         />
         <UserFormGrid>
-          <PageColumns>
+          <PageColumns data-testid="user-columns">
             <PanelStack>
               {/* general user data */}
               <RPanel
@@ -536,7 +541,7 @@ function UserEditView() {
                       </Form.Label>
                       <Form.Control
                         name="firstName"
-                        value={firstName || undefined}
+                        value={firstName ?? ''}
                         disabled={isDisabled}
                         onChange={(value: string) => {
                           setFirstName(value);
@@ -1046,40 +1051,38 @@ function UserEditView() {
                 </RPanel>
               )}
             </PanelStack>
-            {/* subscriptions + sent-mail history + manual mail sending */}
-            {(subscriptionData?.subscriptions.nodes ||
-              (isEditRoute && userId)) && (
+            {/* sent-mail history + manual mail sending */}
+            {isEditRoute && userId && (
               <PanelStack>
-                {subscriptionData?.subscriptions.nodes && (
-                  <RPanel
-                    bordered
-                    header={t('userCreateOrEditView.subscriptionsHeader')}
-                  >
-                    <UserSubscriptionsList
-                      subscriptions={subscriptionData.subscriptions.nodes}
-                      userId={user?.id}
-                    />
-                  </RPanel>
-                )}
-                {isEditRoute && userId && (
-                  <>
-                    <RPanel
-                      bordered
-                      header={t('userMail.logTitle')}
-                    >
-                      <UserMailLogPanel userId={userId} />
-                    </RPanel>
-                    <RPanel
-                      bordered
-                      header={t('userMail.sendTitle')}
-                    >
-                      <SendMailToUserPanel userId={userId} />
-                    </RPanel>
-                  </>
-                )}
+                <RPanel
+                  bordered
+                  header={t('userMail.logTitle')}
+                >
+                  <UserMailLogPanel userId={userId} />
+                </RPanel>
+                <RPanel
+                  bordered
+                  header={t('userMail.sendTitle')}
+                >
+                  <SendMailToUserPanel userId={userId} />
+                </RPanel>
               </PanelStack>
             )}
           </PageColumns>
+          {/* subscriptions */}
+          {subscriptionData?.subscriptions.nodes && (
+            <FullWidthRow>
+              <RPanel
+                bordered
+                header={t('userCreateOrEditView.subscriptionsHeader')}
+              >
+                <UserSubscriptionsList
+                  subscriptions={subscriptionData.subscriptions.nodes}
+                  userId={user?.id}
+                />
+              </RPanel>
+            </FullWidthRow>
+          )}
         </UserFormGrid>
       </Form>
 
