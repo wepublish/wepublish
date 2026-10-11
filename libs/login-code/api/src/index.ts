@@ -8,3 +8,4 @@ export * from './lib/login-code.service';
 export * from './lib/login-code.util';
 export * from './lib/login-code-second-factor';
 export * from './lib/login-code-second-factor.service';
+export * from './lib/email-replacement-policy';

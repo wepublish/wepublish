@@ -3057,7 +3057,7 @@ export type Mutation = {
   renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
   requestChangesOnComment: Comment;
-  /** Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter. */
+  /** Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter; without one it may only replace a placeholder address. */
   requestEmailChange: Scalars['Boolean']['output'];
   /** Sends a confirmation link to the current email address to verify it. */
   requestEmailVerification: Scalars['Boolean']['output'];
@@ -7138,6 +7138,8 @@ export type SensitiveDataUser = BaseUser & {
 
 export type SessionInfo = {
   __typename: 'SessionInfo';
+  /** Whether a restricted session may replace the address on file, instead of having to confirm it first. */
+  canReplaceEmail: Scalars['Boolean']['output'];
   createdAt: Scalars['DateTime']['output'];
   expiresAt: Scalars['DateTime']['output'];
   origin: SessionOrigin;

@@ -19,6 +19,10 @@ import { withAuthGuard } from '../../auth-guard';
 import { ssrAuthLink } from '../../auth-link';
 import { getSessionTokenProps } from '../../get-session-token-props';
 import { getApiUrl } from '../../api-url';
+import { WelcomeEmailInfo } from './welcome-email-info';
+import { WelcomeIntro } from './welcome-intro';
+import { WelcomeText } from './welcome-text';
+import { useResendCountdown } from './use-resend-countdown';
 
 type Step = 'intro' | 'email' | 'emailSent' | 'password' | 'done';
 
@@ -48,8 +52,11 @@ const WelcomeForm = styled('form')`
   gap: ${({ theme }) => theme.spacing(2)};
 `;
 
+// Right-aligned and laid out right to left: the main action comes first in
+// each row (and keeps the first tab stop) but sits furthest right.
 const WelcomeActions = styled('div')`
   display: flex;
+  flex-direction: row-reverse;
   flex-wrap: wrap;
   gap: ${({ theme }) => theme.spacing(2)};
 `;
@@ -85,15 +92,20 @@ function WelcomePageComponent({
   const [password, setPassword] = useState('');
   const [passwordRepeated, setPasswordRepeated] = useState('');
   const [sentTo, setSentTo] = useState<string | null>(null);
+  const [resendSeconds, markSent] = useResendCountdown();
 
   const session = sessionData?.currentSession;
   const placeholderEmail = session?.placeholderEmail ?? false;
   const restricted = session?.restricted ?? false;
   const secondFactor = session?.secondFactor ?? LoginCodeSecondFactor.None;
+  // A session from a personal login code proves it holds the letter whenever
+  // it enters a new address, placeholder or real.
   const needsSecondFactor =
     restricted &&
-    placeholderEmail &&
+    (placeholderEmail || changeEmail) &&
     secondFactor !== LoginCodeSecondFactor.None;
+  // Decided by the API, which enforces the same rule on the change itself.
+  const canReplaceEmail = session?.canReplaceEmail ?? false;
   const currentEmail = meData?.me?.email ?? '';
 
   useEffect(() => {
@@ -126,20 +138,42 @@ function WelcomePageComponent({
   const submitEmail = async (event: FormEvent) => {
     event.preventDefault();
 
-    if (placeholderEmail || changeEmail) {
-      await requestEmailChange({
-        variables: {
-          newEmail,
-          secondFactor: needsSecondFactor ? secondFactorAnswer : undefined,
-        },
-      });
-      setSentTo(newEmail);
-    } else {
-      await requestEmailVerification();
-      setSentTo(currentEmail);
+    // A refused request stays on this step, where its message is shown; only
+    // a mail that actually went out may be announced as sent.
+    const sent = await (
+      placeholderEmail || changeEmail ?
+        requestEmailChange({
+          variables: {
+            newEmail,
+            secondFactor: needsSecondFactor ? secondFactorAnswer : undefined,
+          },
+        })
+      : requestEmailVerification()).then(
+      ({ error }) => !error,
+      () => false
+    );
+
+    if (!sent) {
+      return;
     }
 
+    setSentTo(placeholderEmail || changeEmail ? newEmail : currentEmail);
+    markSent();
     setStep('emailSent');
+  };
+
+  // Back to where the address entry was opened from: the intro for a
+  // placeholder address, the confirmation of the current one otherwise.
+  const cancelEmailEntry = () => {
+    setNewEmail('');
+    setSecondFactorAnswer('');
+    emailChange.reset();
+
+    if (changeEmail) {
+      setChangeEmail(false);
+    } else {
+      setStep('intro');
+    }
   };
 
   const submitPassword = async (event: FormEvent) => {
@@ -149,8 +183,14 @@ function WelcomePageComponent({
   };
 
   const emailError = emailChange.error ?? emailVerification.error;
+  // The API allows one confirmation mail a minute. Being asked to wait is
+  // not a mistake, so it reads as a note rather than an error.
+  const emailCoolingDown = !!emailError?.message.includes(
+    'Please wait a moment'
+  );
   const emailErrorMessage =
-    emailError?.message.includes('SECOND_FACTOR_INVALID') ?
+    emailCoolingDown ? null
+    : emailError?.message.includes('SECOND_FACTOR_INVALID') ?
       t('welcome.secondFactorInvalid')
     : emailError?.message.includes('TOO_MANY_ATTEMPTS') ?
       t('welcome.tooManyAttempts')
@@ -162,9 +202,7 @@ function WelcomePageComponent({
         <>
           <H4 component="h1">{t('welcome.title')}</H4>
           <Paragraph>
-            {placeholderEmail ?
-              t('welcome.introPlaceholder')
-            : t('welcome.intro')}
+            <WelcomeIntro placeholderEmail={placeholderEmail} />
           </Paragraph>
 
           <WelcomeActions>
@@ -216,9 +254,13 @@ function WelcomePageComponent({
               )}
             </>
           : <Paragraph>
-              {t('welcome.emailVerifyInfo', { email: currentEmail })}
+              <WelcomeEmailInfo email={currentEmail} />
             </Paragraph>
           }
+
+          {emailCoolingDown && (
+            <Alert severity="info">{t('welcome.resendTooSoon')}</Alert>
+          )}
 
           {emailErrorMessage && (
             <Alert severity="error">{emailErrorMessage}</Alert>
@@ -239,14 +281,22 @@ function WelcomePageComponent({
               : t('welcome.emailVerify')}
             </Button>
 
-            {!placeholderEmail && !changeEmail && (
-              <Button
-                variant="text"
-                onClick={() => setChangeEmail(true)}
-              >
-                {t('welcome.emailChange')}
-              </Button>
-            )}
+            {/* A session from a personal login code may replace a real address
+                only where the API allows it (with the second factor from the
+                letter), so a stranger holding the letter can't take the
+                account over. */}
+            {!placeholderEmail &&
+              !changeEmail &&
+              (!restricted || canReplaceEmail) && (
+                <Button
+                  variant="text"
+                  onClick={() => setChangeEmail(true)}
+                >
+                  {restricted ?
+                    t('welcome.emailOutdated')
+                  : t('welcome.emailChange')}
+                </Button>
+              )}
 
             {!restricted && (
               <Button
@@ -256,6 +306,15 @@ function WelcomePageComponent({
                 {t('welcome.skip')}
               </Button>
             )}
+
+            {(placeholderEmail || changeEmail) && (
+              <Button
+                variant="text"
+                onClick={cancelEmailEntry}
+              >
+                {t('welcome.back')}
+              </Button>
+            )}
           </WelcomeActions>
         </WelcomeForm>
       )}
@@ -263,14 +322,22 @@ function WelcomePageComponent({
       {step === 'emailSent' && (
         <>
           <H4 component="h1">{t('welcome.emailSentTitle')}</H4>
-          <Paragraph>{t('welcome.emailSent', { email: sentTo })}</Paragraph>
+          <Paragraph>
+            <WelcomeEmailInfo
+              i18nKey="welcome.emailSent"
+              email={sentTo ?? ''}
+            />
+          </Paragraph>
 
           <WelcomeActions>
             <Button
               variant="text"
+              disabled={resendSeconds > 0}
               onClick={() => setStep('email')}
             >
-              {t('welcome.resend')}
+              {resendSeconds > 0 ?
+                t('welcome.resendIn', { seconds: resendSeconds })
+              : t('welcome.resend')}
             </Button>
           </WelcomeActions>
         </>
@@ -279,7 +346,9 @@ function WelcomePageComponent({
       {step === 'password' && (
         <WelcomeForm onSubmit={submitPassword}>
           <H4 component="h1">{t('welcome.passwordTitle')}</H4>
-          <Paragraph>{t('welcome.passwordInfo')}</Paragraph>
+          <Paragraph>
+            <WelcomeText i18nKey="welcome.passwordInfo" />
+          </Paragraph>
 
           <TextField
             value={password}

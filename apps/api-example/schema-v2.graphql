@@ -3269,7 +3269,7 @@ type Mutation {
   requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
   """
-  Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter.
+  Requests an email change. A confirmation link is sent to the new email address. A restricted session must also confirm the configured second factor from the letter; without one it may only replace a placeholder address.
   """
   requestEmailChange(newEmail: String!, secondFactor: String): Boolean!
 
@@ -5139,6 +5139,10 @@ type SensitiveDataUser implements BaseUser {
 }
 
 type SessionInfo {
+  """
+  Whether a restricted session may replace the address on file, instead of having to confirm it first.
+  """
+  canReplaceEmail: Boolean!
   createdAt: DateTime!
   expiresAt: DateTime!
   origin: SessionOrigin!

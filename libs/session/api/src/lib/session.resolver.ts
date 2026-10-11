@@ -10,6 +10,7 @@ import {
 } from '@wepublish/authentication/api';
 import { ChallengeInput } from '@wepublish/challenge/api';
 import {
+  codeSessionMayReplaceEmail,
   LoginCodeSecondFactorService,
   SecondFactorUser,
 } from '@wepublish/login-code/api';
@@ -46,11 +47,19 @@ export class SessionResolver {
   async currentSession(
     @CurrentUser() session: UserSession
   ): Promise<SessionInfo> {
+    const secondFactor = await this.secondFactorService.getFactor();
+
     return {
       origin: session.origin,
       restricted: session.restricted,
       placeholderEmail: session.placeholderEmail,
-      secondFactor: await this.secondFactorService.getFactor(),
+      secondFactor,
+      // The same decision `requestEmailChange` enforces, so the website only
+      // offers what the API allows.
+      canReplaceEmail: codeSessionMayReplaceEmail({
+        placeholderEmail: session.placeholderEmail,
+        secondFactor,
+      }),
       createdAt: session.createdAt,
       expiresAt: session.expiresAt,
     };

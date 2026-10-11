@@ -1,25 +1,26 @@
-import {
-  ConfirmEmailChangeDocument,
-  getApiClient,
-} from '@wepublish/website/api';
+import { useMutation } from '@apollo/client/react';
+import { AuthTokenStorageKey } from '@wepublish/authentication/website';
+import { ConfirmEmailChangeDocument } from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
+import { getCookie } from 'cookies-next';
 import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ssrAuthLink } from '../auth-link';
-import { getSessionTokenProps } from '../get-session-token-props';
-import { getApiUrl } from '../api-url';
 
 export type ConfirmEmailPageProps = {
-  confirmed?: boolean;
-  error?: string | null;
+  token?: string | null;
 };
 
 export type ConfirmEmailPageOptions = {
   redirectTo?: string;
   loginPath?: string;
 };
+
+type Outcome =
+  | { state: 'confirming' }
+  | { state: 'confirmed' }
+  | { state: 'failed'; error: string };
 
 const redirect = (ctx: NextPageContext, location: string) => {
   if (ctx.res && !ctx.res.headersSent) {
@@ -32,34 +33,72 @@ export const createConfirmEmailPage = ({
   redirectTo = '/profile?emailConfirmed=1',
   loginPath = '/login',
 }: ConfirmEmailPageOptions = {}) => {
-  const ConfirmEmailPage: NextPage<ConfirmEmailPageProps> = ({
-    confirmed,
-    error,
-  }) => {
+  const ConfirmEmailPage: NextPage<ConfirmEmailPageProps> = ({ token }) => {
     const {
-      elements: { Alert },
+      elements: { Alert, Paragraph },
     } = useWebsiteBuilder();
     const { t } = useTranslation();
     const router = useRouter();
+    const [confirm] = useMutation(ConfirmEmailChangeDocument);
+    const [outcome, setOutcome] = useState<Outcome>({ state: 'confirming' });
+    const started = useRef(false);
 
+    // Confirmed from the browser, not the server: the link comes from a mail
+    // program, a cross-site visit that doesn't send the strict session cookie
+    // along. Here the request carries the session, so the API keeps it and
+    // the reader can go straight on.
     useEffect(() => {
-      if (router.query.token) {
-        const { token: _, ...query } = router.query;
-        router.replace({ pathname: router.pathname, query }, undefined, {
-          shallow: true,
-        });
+      if (!token || started.current) {
+        return;
       }
-    }, [router]);
+
+      started.current = true;
+
+      const { token: _, ...query } = router.query;
+      router.replace({ pathname: router.pathname, query }, undefined, {
+        shallow: true,
+      });
+
+      confirm({ variables: { token } }).then(
+        ({ data, error }) => {
+          if (error || !data?.confirmEmailChange) {
+            setOutcome({
+              state: 'failed',
+              error: error?.message || 'Invalid or expired confirmation link.',
+            });
+
+            return;
+          }
+
+          if (getCookie(AuthTokenStorageKey)) {
+            router.replace(redirectTo);
+
+            return;
+          }
+
+          setOutcome({ state: 'confirmed' });
+        },
+        (error: Error) => setOutcome({ state: 'failed', error: error.message })
+      );
+    }, [token, confirm, router]);
 
     return (
       <>
-        {confirmed && (
-          <Alert severity="success">{t('user.emailChangeConfirmed')}</Alert>
+        {outcome.state === 'confirming' && (
+          <Paragraph>{t('user.emailConfirming')}</Paragraph>
         )}
 
-        {error && <Alert severity="error">{error}</Alert>}
+        {outcome.state === 'confirmed' && (
+          <Alert severity="success">{t('user.emailConfirmed')}</Alert>
+        )}
 
-        <Link href={loginPath}>{t('user.emailConfirmedLogin')}</Link>
+        {outcome.state === 'failed' && (
+          <Alert severity="error">{outcome.error}</Alert>
+        )}
+
+        {outcome.state !== 'confirming' && (
+          <Link href={loginPath}>{t('user.emailConfirmedLogin')}</Link>
+        )}
       </>
     );
   };
@@ -67,39 +106,13 @@ export const createConfirmEmailPage = ({
   ConfirmEmailPage.getInitialProps = async (
     ctx: NextPageContext
   ): Promise<ConfirmEmailPageProps> => {
-    if (typeof window !== 'undefined') {
-      return {};
-    }
-
     const token = typeof ctx.query.token === 'string' ? ctx.query.token : null;
 
     if (!token) {
       redirect(ctx, loginPath);
-      return {};
     }
 
-    const { sessionToken } = await getSessionTokenProps(ctx);
-    const client = getApiClient(getApiUrl(), [
-      ssrAuthLink(sessionToken?.token),
-    ]);
-
-    const { data, error } = await client.mutate({
-      mutation: ConfirmEmailChangeDocument,
-      variables: { token },
-      errorPolicy: 'all',
-    });
-
-    if (error || !data?.confirmEmailChange) {
-      return {
-        error: error?.message || 'Invalid or expired confirmation link.',
-      };
-    }
-
-    if (sessionToken) {
-      redirect(ctx, redirectTo);
-    }
-
-    return { confirmed: true };
+    return { token };
   };
 
   return ConfirmEmailPage;
