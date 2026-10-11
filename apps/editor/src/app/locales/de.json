@@ -869,6 +869,43 @@
       "chf": "chf"
     },
     "dashboard": {
+      "activityFilter": "Aktivitäten filtern",
+      "activityFilterAll": "Alle anzeigen",
+      "activityTypes": {
+        "ArticleCreated": "Artikel",
+        "PageCreated": "Seiten",
+        "CommentCreated": "Kommentare",
+        "SubscriptionCreated": "Abos",
+        "UserCreated": "User",
+        "AuthorCreated": "Autor*innen",
+        "PollStarted": "Umfragen",
+        "EventCreated": "Events"
+      },
+      "fullWidth": "Volle Breite",
+      "newerActivity": "Neuere Aktivitäten",
+      "olderActivity": "Ältere Aktivitäten",
+      "activityUnavailable": "Die letzten Aktivitäten können für deine Rolle nicht angezeigt werden.",
+      "noActivity": "Noch keine Aktivitäten.",
+      "configure": "Dashboard anpassen",
+      "configureTitle": "Dashboard anpassen",
+      "configureFixedInfo": "Diese Karten stehen immer oben.",
+      "configureInfo": "Wähle, welche Karten du sehen willst, und ziehe sie in die gewünschte Reihenfolge. Die Einstellung gilt für diesen Browser.",
+      "fixedCard": "Fixiert",
+      "dragToMove": "Zum Verschieben ziehen",
+      "moveUp": "Nach oben",
+      "moveDown": "Nach unten",
+      "resetLayout": "Standard wiederherstellen",
+      "configureDone": "Fertig",
+      "activity": "Letzte Aktivitäten",
+      "activityInfo": "Die neusten Artikel, Seiten, Kommentare, Abos, User, Autor*innen, Umfragen und Events – jeweils mit Link zum Bearbeiten.",
+      "newArticle": "Neuer <0>Artikel</0> erstellt",
+      "newAuthor": "Neue*r <0>Autor*in</0> erfasst",
+      "newComment": "Neuer <0>Kommentar</0>",
+      "newEvent": "Neuer <0>Event</0> erfasst",
+      "newPage": "Neue <0>Seite</0> erstellt",
+      "newPoll": "Neue <0>Umfrage</0> gestartet",
+      "newSubscription": "Neues <0>Abo</0>",
+      "newUser": "Neuer <0>User</0> erfasst",
       "dashboard": "Dashboard",
       "notifications": "Mitteilungen",
       "showAllNotifications": "Alle anzeigen",
@@ -893,6 +930,7 @@
       "today": "Heute",
       "tomorrow": "Morgen"
     },
+    "deactivated": "Deaktiviert",
     "delete": "Löschen",
     "deleteBlockTemplateModal": {
       "body": "Willst du die Block-Vorlage «{{name}}» wirklich löschen?",
@@ -2110,6 +2148,7 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
         "newSubscription": "Neues Abo",
+        "reactivate": "Reaktivieren",
         "subscription": "Abo"
       },
       "panels": {
@@ -2282,8 +2321,8 @@
           "activated": "Deaktivieren"
         },
         "date": "Deaktivierungsdatum",
-        "help": "Deaktivierte Abonnements können bis zum «bezahlt bis»-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert, auch wenn die automatische Erneuerung gewählt ist. Einmal deaktiviert, kann das Abo nicht reaktiviert werden.",
-        "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Grund: {{reason}}. Allenfalls kann ein neues Abo gelöst werden.",
+        "help": "Deaktivierte Abonnements können bis zum «bezahlt bis»-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert, auch wenn die automatische Erneuerung gewählt ist. Eine Deaktivierung kann im Editor wieder aufgehoben werden.",
+        "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Grund: {{reason}}. Es kann reaktiviert werden oder es kann ein neues Abo gelöst werden.",
         "cancellation": "Stornierungsdatum",
         "modalMessage": {
           "activated": "Willst du das Abonnement von «{{userName}}» mit der E-Mail-Adresse «{{userEmail}}» deaktivieren?"
@@ -2301,6 +2340,22 @@
           "activated": "Abonnement deaktivieren"
         },
         "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
+      },
+      "revertUpgrade": {
+        "title": "Upgrade rückgängig",
+        "modalTitle": "Upgrade rückgängig machen?",
+        "modalMessage": "Das neue Abo wird samt seinen Rechnungen gelöscht und das ersetzte Abo läuft normal weiter. Das geht nur, solange das neue Abo nicht bezahlt wurde.",
+        "confirm": "Rückgängig machen"
+      },
+      "reactivation": {
+        "deactivatedSince": "Deaktiviert seit {{date, ccc PP p}} · Grund: {{reason}}",
+        "deactivatedOn": "Deaktivierung am {{date, ccc PP p}} · Grund: {{reason}}",
+        "date": "{{date, ccc PP p}}",
+        "hint": "Mit dem Reaktivieren wird diese Deaktivierung entfernt. Ist die Laufzeit bereits abgelaufen, wird eine neue Rechnung erstellt.",
+        "title": "Abo reaktivieren",
+        "modalTitle": "Abonnement reaktivieren?",
+        "modalMessage": "Willst du die Deaktivierung des Abonnements von \"{{userName}}\" aufheben? Das Abo läuft danach normal weiter.",
+        "confirm": "Reaktivieren"
       },
       "editTitle": "Abonnement bearbeiten",
       "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",

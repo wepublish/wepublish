@@ -869,6 +869,43 @@
       "chf": "chf"
     },
     "dashboard": {
+      "activityFilter": "Filtrer l’activité",
+      "activityFilterAll": "Tout afficher",
+      "activityTypes": {
+        "ArticleCreated": "Articles",
+        "PageCreated": "Pages",
+        "CommentCreated": "Commentaires",
+        "SubscriptionCreated": "Abonnements",
+        "UserCreated": "Utilisateur·trice·s",
+        "AuthorCreated": "Auteur·trice·s",
+        "PollStarted": "Sondages",
+        "EventCreated": "Événements"
+      },
+      "fullWidth": "Pleine largeur",
+      "newerActivity": "Activité plus récente",
+      "olderActivity": "Activité plus ancienne",
+      "activityUnavailable": "La dernière activité ne peut pas être affichée pour votre rôle.",
+      "noActivity": "Aucune activité pour l’instant.",
+      "configure": "Personnaliser le tableau de bord",
+      "configureTitle": "Personnaliser le tableau de bord",
+      "configureFixedInfo": "Ces cartes restent toujours en haut.",
+      "configureInfo": "Choisissez les cartes à afficher et faites-les glisser dans l’ordre souhaité. Le réglage s’applique à ce navigateur.",
+      "fixedCard": "Épinglée",
+      "dragToMove": "Glisser pour déplacer",
+      "moveUp": "Monter",
+      "moveDown": "Descendre",
+      "resetLayout": "Rétablir par défaut",
+      "configureDone": "Terminé",
+      "activity": "Dernière activité",
+      "activityInfo": "Les derniers articles, pages, commentaires, abonnements, utilisateur·trice·s, auteur·trice·s, sondages et événements, avec un lien vers leur édition.",
+      "newArticle": "Nouvel <0>article</0> créé",
+      "newAuthor": "Nouvel·le <0>auteur·trice</0> ajouté·e",
+      "newComment": "Nouveau <0>commentaire</0> ajouté",
+      "newEvent": "Nouvel <0>événement</0> ajouté",
+      "newPage": "Nouvelle <0>page</0> créée",
+      "newPoll": "Nouveau <0>sondage</0> ouvert",
+      "newSubscription": "Nouvel <0>abonnement</0>",
+      "newUser": "Nouvel·le <0>utilisateur·trice</0> ajouté·e",
       "dashboard": "Tableau de bord",
       "notifications": "Notifications",
       "showAllNotifications": "Tout afficher",
@@ -893,6 +930,7 @@
       "today": "Aujourd’hui",
       "tomorrow": "Demain"
     },
+    "deactivated": "Désactivé",
     "delete": "Supprimer",
     "deleteBlockTemplateModal": {
       "body": "Voulez-vous vraiment supprimer le modèle de bloc « {{name}} » ?",
@@ -2110,6 +2148,7 @@
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Nom",
         "newSubscription": "Nouvel abonnement",
+        "reactivate": "Réactiver",
         "subscription": "Abonnement"
       },
       "panels": {
@@ -2282,9 +2321,9 @@
           "activated": "Désactiver"
         },
         "date": "Date de désactivation",
-        "help": "Les abonnements désactivés peuvent encore être utilisés jusqu’à la date « payée jusqu’à ». Mais ils ne seront pas renouvelés automatiquement, même si l’option de renouvellement automatique est activée. Une fois désactivé, l’abonnement ne peut pas être réactivé.",
+        "help": "Les abonnements désactivés peuvent encore être utilisés jusqu’à la date « payée jusqu’à ». Mais ils ne seront pas renouvelés automatiquement, même si l’option de renouvellement automatique est activée. Une désactivation peut être annulée dans l’éditeur.",
         "cancellation": "Date d’annulation",
-        "isDeactivated": "L’abonnement est désactivé depuis {{date, ccc PP p}} et ne peut plus être modifié. Raison : {{reason}}. Le cas échéant, un nouvel abonnement peut être souscrit.",
+        "isDeactivated": "L’abonnement est désactivé depuis {{date, ccc PP p}} et ne peut plus être modifié. Raison : {{reason}}. Il peut être réactivé ou un nouvel abonnement peut être souscrit.",
         "modalMessage": {
           "activated": "Voulez-vous désactiver l’abonnement de « {{userName}} » avec l’adresse e-mail « {{userEmail}} » ?"
         },
@@ -2301,6 +2340,22 @@
           "activated": "Désactiver l’abonnement"
         },
         "willBeDeactivated": "L’abonnement sera désactivé le {{date, ccc PP p}}"
+      },
+      "revertUpgrade": {
+        "title": "Annuler le changement",
+        "modalTitle": "Annuler le changement ?",
+        "modalMessage": "Le nouvel abonnement et ses factures sont supprimés et l’abonnement remplacé se poursuit normalement. Cela n’est possible que tant que le nouvel abonnement n’a pas été payé.",
+        "confirm": "Annuler le changement"
+      },
+      "reactivation": {
+        "deactivatedSince": "Désactivé depuis le {{date, ccc PP p}} · Motif : {{reason}}",
+        "deactivatedOn": "Désactivation le {{date, ccc PP p}} · Motif : {{reason}}",
+        "date": "{{date, ccc PP p}}",
+        "hint": "La réactivation supprime cette désactivation. Si la période est déjà écoulée, une nouvelle facture est créée.",
+        "title": "Réactiver l’abonnement",
+        "modalTitle": "Réactiver l’abonnement ?",
+        "modalMessage": "Voulez-vous annuler la désactivation de l’abonnement de « {{userName}} » ? L’abonnement se poursuivra normalement.",
+        "confirm": "Réactiver"
       },
       "editTitle": "Modifier l’abonnement",
       "memberPlanMonthlyAmount": "Montant mensuel minimum ({{currency}})",

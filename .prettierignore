@@ -3,14 +3,20 @@ static/
 .nx/
 .next/
 
-libs/editor/api/src/lib/graphql.ts
+libs/editor/api/src/lib/gql/
+libs/editor/api/src/lib/schema-types.ts
+libs/editor/api/src/lib/possible-types.ts
 libs/editor/api/src/lib/schemas/index.ts
 *.generated.ts
 libs/api/__tests__/api/private/index.ts
 libs/api/__tests__/api/public/index.ts
-libs/website/api/src/lib/graphql.ts
+libs/website/api/src/lib/gql/
+libs/website/api/src/lib/schema-types.ts
+libs/website/api/src/lib/possible-types.ts
 libs/peering/api/src/lib/remote/graphql.ts
+libs/peering/api/src/lib/remote/schema.ts
 libs/testing/src/graphql/graphql-public.ts
+libs/testing/src/graphql/schema-public.ts
 
 # graphql-codegen output (codegen.yml), kept exactly as generated so that
 # regenerating never shows up as a reformat of the whole file
