@@ -157,7 +157,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
         message: t('user.form.passwordsDoNotMatch'),
         path: ['passwordRepeated'],
       }),
-    [fieldsToDisplay, schema]
+    [t, fieldsToDisplay, schema]
   );
 
   const { handleSubmit, control, setValue, watch } = useForm<

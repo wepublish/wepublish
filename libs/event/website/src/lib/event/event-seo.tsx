@@ -1,4 +1,5 @@
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
+import { stripQueryAndHash } from '@wepublish/utils';
 import { FullEventFragment, FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderEventSEOProps,
@@ -27,7 +28,7 @@ export const getEventSEO = (event: FullEventFragment) => {
     type: 'website',
     title: event.name,
     description,
-    url: event.url,
+    url: stripQueryAndHash(event.url),
     image,
     schema: {
       '@context': 'http://schema.org',
