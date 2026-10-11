@@ -10,6 +10,7 @@ lead: Les abonnements d'un·e utilisateur·trice forment désormais un tableau a
 - **Les périodes sous chaque abonnement.** Un clic sur un abonnement affiche ses périodes, la plus récente en premier, chacune avec sa facture et l'indication si elle est payée.
 - **Les abonnements actifs viennent en premier**, puis les autres selon leur date «Payé jusqu'au» la plus tardive.
 - **Cartes réorganisées:** les données personnelles à gauche; les rôles, le mot de passe et les propriétés à droite; en dessous les abonnements, puis l'envoi d'un e-mail et l'historique des e-mails côte à côte.
+- **Une carte «E-mails envoyés» compacte:** un long historique d'e-mails défile à l'intérieur de la carte, et les titres des colonnes restent visibles pendant le défilement.
 
 **Historique de facturation** (vue de l'abonnement)
 

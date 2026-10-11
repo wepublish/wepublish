@@ -10,6 +10,7 @@ lead: Die Abos eines Mitglieds erscheinen neu als Tabelle, mit ihrem tatsächlic
 - **Die Perioden jedes Abos.** Ein Klick auf ein Abo klappt seine Perioden auf, die neuste zuoberst, jeweils mit Rechnung und ob sie bezahlt ist.
 - **Laufende Abos stehen zuoberst**, danach die übrigen, sortiert nach dem spätesten «Bezahlt bis».
 - **Neu angeordnete Karten:** links die Personendaten; rechts Rollen, Passwort und Eigenschaften; darunter die Abos, dann Mail senden und Mail-Verlauf nebeneinander.
+- **Eine kompakte Karte «Gesendete E-Mails»:** Ein langer Mail-Verlauf scrollt innerhalb der Karte, und die Spaltentitel bleiben beim Scrollen sichtbar.
 
 **Rechnungsverlauf** (in der Ansicht eines Abos)
 

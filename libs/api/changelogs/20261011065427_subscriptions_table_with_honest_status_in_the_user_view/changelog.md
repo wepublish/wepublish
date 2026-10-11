@@ -11,6 +11,7 @@ actionRequired: false
 - **Periods under each subscription.** Click a subscription to show its periods, newest first, each with its invoice and whether it is paid.
 - **Active subscriptions come first**, then the others by their latest paid-until date.
 - **Rearranged cards:** personal data on the left; roles, password and properties on the right; below them the subscriptions, then sending a mail and the mail history side by side.
+- **A compact "Sent emails" card:** a long mail history scrolls inside the card, and the column titles stay visible while scrolling.
 
 **Invoice history** (subscription view)
 
