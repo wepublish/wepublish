@@ -41,6 +41,17 @@ export interface UserConsentListProps {}
 export function UserConsentList(props: UserConsentListProps) {
   const { t } = useTranslation();
 
+  const consentValues = [
+    {
+      value: true,
+      label: t('consents.accepted'),
+    },
+    {
+      value: false,
+      label: t('consents.rejected'),
+    },
+  ];
+
   const { loading, data, refetch, error } = useQuery(UserConsentsDocument);
 
   useEffect(() => {

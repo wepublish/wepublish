@@ -23,7 +23,7 @@ import {
 } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 
-import { createCheckedPermissionComponent } from '../atoms';
+import { createCheckedPermissionComponent, SingleLineTooltip } from '../atoms';
 import { useActionMailQuestion } from '../hooks';
 import { ColumnConfigurator } from '../listView/column-configurator';
 import { ListColumn, renderListColumns } from '../listView/list-columns';
@@ -75,6 +75,26 @@ const formatDate = (date: string | Date) =>
     timeZone: 'europe/zurich',
   });
 
+/**
+ * dueAt is the billing date: imported history carries its real period start
+ * there, while createdAt is the moment of the import.
+ */
+const billingDate = (invoice: Pick<InvoiceFragment, 'createdAt' | 'dueAt'>) =>
+  invoice.dueAt ?? invoice.createdAt;
+
+export const sortByBillingDate = <
+  T extends Pick<InvoiceFragment, 'createdAt' | 'dueAt'>,
+>(
+  invoices: T[],
+  sortType: 'asc' | 'desc' = 'desc'
+) =>
+  [...invoices].sort((a, b) => {
+    const difference =
+      new Date(billingDate(a)).getTime() - new Date(billingDate(b)).getTime();
+
+    return sortType === 'asc' ? difference : -difference;
+  });
+
 const findGoodieItem = (invoice: InvoiceFragment) =>
   invoice.items?.find(({ goodieId }) => goodieId);
 
@@ -102,6 +122,12 @@ function InvoiceListPanel({
   const { data: me } = useQuery(MeDocument, {});
   const { t } = useTranslation();
   const [invoiceToPay, setInvoiceToPay] = useState<InvoiceFragment>();
+  // latest first by default; the date column header toggles
+  const [sortType, setSortType] = useState<'asc' | 'desc'>('desc');
+  const sortedInvoices = useMemo(
+    () => sortByBillingDate(invoices ?? [], sortType),
+    [invoices, sortType]
+  );
   const client = useApolloClient();
   const { askMail, actionMailDialog } = useActionMailQuestion();
   const columns = useMemo<ListColumn<InvoiceFragment>[]>(
@@ -114,7 +140,7 @@ function InvoiceListPanel({
           <Whisper
             placement="top"
             trigger="hover"
-            speaker={<Tooltip>{invoice.id}</Tooltip>}
+            speaker={<SingleLineTooltip>{invoice.id}</SingleLineTooltip>}
           >
             <IdButton
               type="button"
@@ -141,7 +167,9 @@ function InvoiceListPanel({
         label: t('invoice.table.date'),
         width: 100,
         alwaysVisible: true,
-        render: invoice => formatDate(invoice.createdAt),
+        sortable: true,
+        dataKey: 'dueAt',
+        render: invoice => formatDate(billingDate(invoice)),
       },
       {
         id: 'description',
@@ -318,7 +346,10 @@ function InvoiceListPanel({
       <Table
         autoHeight
         wordWrap="break-word"
-        data={invoices}
+        data={sortedInvoices}
+        sortColumn="dueAt"
+        sortType={sortType}
+        onSortColumn={(_, type) => setSortType(type ?? 'desc')}
       >
         {renderListColumns(columns, isVisible)}
 

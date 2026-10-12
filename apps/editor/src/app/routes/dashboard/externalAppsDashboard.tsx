@@ -99,9 +99,7 @@ export function ExternalAppsDashboard() {
   if (apps.length === 0) {
     return (
       <EmptyText color="textSecondary">
-        {t('externalApps.noAppsFound', {
-          defaultValue: 'No external apps configured.',
-        })}
+        {t('externalApps.noAppsFound')}
       </EmptyText>
     );
   }

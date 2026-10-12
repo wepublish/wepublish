@@ -7,6 +7,9 @@ import {
 } from '@wepublish/authentication/api';
 import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 import { Payment } from '@wepublish/payment/api';
+import { PublicSubscription } from '../subscription/subscription.model';
+import { Permissions } from '@wepublish/permissions/api';
+import { CanCreateSubscription } from '@wepublish/permissions';
 
 @Resolver(() => UpgradeSubscription)
 export class UpgradeSubscriptionResolver {
@@ -40,6 +43,31 @@ export class UpgradeSubscriptionResolver {
       failureURL,
       successURL,
       discountCode,
+    });
+  }
+
+  @Authenticated()
+  @Mutation(() => PublicSubscription, {
+    description: `Undoes an upgrade of one of the authenticated user's own subscriptions as long as the new subscription has not been paid for. The replacement subscription is removed and the original one continues.`,
+  })
+  async revertUserSubscriptionUpgrade(
+    @CurrentUser() session: UserSession,
+    @Args('subscriptionId') subscriptionId: string
+  ) {
+    return this.upgradeSubscriptionService.revertUpgrade({
+      subscriptionId,
+      userId: session.user.id,
+    });
+  }
+
+  @Permissions(CanCreateSubscription)
+  @Mutation(() => PublicSubscription, {
+    description: `Undoes an upgrade of a subscription as long as the new subscription has not been paid for.`,
+  })
+  async revertSubscriptionUpgrade(@Args('id') id: string) {
+    return this.upgradeSubscriptionService.revertUpgrade({
+      subscriptionId: id,
+      userId: null,
     });
   }
 

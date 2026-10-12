@@ -23,17 +23,17 @@ import { Link } from 'react-router-dom';
 import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
+import { lazyMessage } from '../../utility';
 import { Explainer, WebsiteAnalyticsWrapper } from './website-analytics';
 
 const adsSchema = z.object({
   sparkLoop: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(
-        /^pub_[a-f0-9]{12}$/,
-        'Must be a valid SparkLoop ID (e.g., pub_xxxxxxxxxxxx)'
-      )
+      .string({
+        errorMap: lazyMessage('websiteSettings.ads.sparkLoop.idInvalid'),
+      })
+      .regex(/^pub_[a-f0-9]{12}$/)
       .or(z.literal(''))
       .nullish(),
   }),

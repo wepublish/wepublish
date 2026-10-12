@@ -52,6 +52,7 @@ import { MdAdd, MdDelete, MdExpandMore, MdSync } from 'react-icons/md';
 import { Checkbox, Form, Loader, Message, toaster, Toggle } from 'rsuite';
 import { z } from 'zod';
 
+import { lazyMessage } from '../../utility';
 import mailChimpLogo from './assets/mailchimp.webp';
 import { CreateFixedIntegrationButton } from './integrationRegistryActions';
 
@@ -84,18 +85,15 @@ const clickTrackingExtensionSchema = z.object({
     .object({
       urlPattern: z
         .string()
-        .refine(
-          value => {
-            if (!value) return true;
-            try {
-              new RegExp(value);
-              return true;
-            } catch {
-              return false;
-            }
-          },
-          { message: 'Invalid regular expression' }
-        )
+        .refine(value => {
+          if (!value) return true;
+          try {
+            new RegExp(value);
+            return true;
+          } catch {
+            return false;
+          }
+        }, lazyMessage('integrations.mailchimpSyncSettings.clickTracking.urlPatternInvalid'))
         .optional()
         .default(''),
       pathSegmentIndex: z.number().int().min(0).max(10).optional().default(2),
@@ -252,7 +250,7 @@ function InterestExpressionEditor({
             <TextField
               {...params}
               size="small"
-              placeholder="Slug"
+              placeholder={t('articleEditor.panels.slug')}
             />
           )}
         />
@@ -263,7 +261,7 @@ function InterestExpressionEditor({
           placeholder={
             op === 'contains_any' ?
               t('integrations.mailchimpSyncSettings.containsAnyPlaceholder')
-            : 'Slug'
+            : t('articleEditor.panels.slug')
           }
           sx={{ flex: 1 }}
         />
@@ -394,7 +392,11 @@ function MergeFieldExpressionEditor({
             key={type}
             value={type}
           >
-            {t(`integrations.mailchimpSyncSettings.mf_${type}`)}
+            {t(`integrations.mailchimpSyncSettings.mf_${type}`, {
+              // some of the type keys contain a colon (`slug:equals`), which
+              // i18next would otherwise read as a namespace separator
+              nsSeparator: false,
+            })}
           </MenuItem>
         ))}
       </Select>
@@ -426,7 +428,7 @@ function MergeFieldExpressionEditor({
             <TextField
               {...params}
               size="small"
-              placeholder="Slug"
+              placeholder={t('articleEditor.panels.slug')}
             />
           )}
         />
@@ -441,7 +443,7 @@ function MergeFieldExpressionEditor({
           placeholder={
             parsed.type === 'slug:contains_any' ?
               t('integrations.mailchimpSyncSettings.containsAnyPlaceholder')
-            : 'Slug'
+            : t('articleEditor.panels.slug')
           }
           sx={{ flex: 1 }}
         />
@@ -976,7 +978,9 @@ function SyncProviderSettingCard({
               marginBottom: 2,
             }}
           >
-            {setting.name || setting.type || 'Sync Provider'}
+            {setting.name ||
+              setting.type ||
+              t('integrations.mailchimpSyncSettings.syncProvider')}
             <HeaderLogo
               src={mailChimpLogo}
               alt=""
@@ -1061,7 +1065,7 @@ function SyncProviderSettingCard({
                   getOptionLabel={id => {
                     const list = availableLists.find(l => l.id === id);
                     return list ?
-                        `${list.name} (${list.memberCount} members)`
+                        `${list.name} (${t('integrations.mailchimpSyncSettings.memberCount', { count: list.memberCount })})`
                       : id;
                   }}
                   filterOptions={(options, { inputValue }) =>

@@ -92,12 +92,7 @@ export class ProlitterisTrackingPixelProvider implements TrackingPixelProvider {
       this.kv,
       this.id
     ).getConfig();
-    return (
-        this.assertProperty(
-          'prolitteris_usePublisherInternalKey',
-          config.prolitteris_usePublisherInternalKey
-        )
-      ) ?
+    return config.prolitteris_usePublisherInternalKey ?
         new InternalKey(
           this.assertProperty(
             'prolitteris_memberNr',

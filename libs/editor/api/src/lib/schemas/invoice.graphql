@@ -15,6 +15,7 @@ fragment Invoice on Invoice {
       name
     }
   }
+  dueAt
   paidAt
   description
   mail

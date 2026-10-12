@@ -34,6 +34,7 @@ import { MdAdd, MdDelete, MdSave } from 'react-icons/md';
 import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
+import { lazyMessage } from '../../utility';
 import { IconPickerSelect } from './iconPicker';
 
 const Form = styled('form')`
@@ -55,9 +56,13 @@ const FormRow = styled('div')`
 `;
 
 const validationSchema = z.object({
-  name: z.string().min(1),
+  name: z
+    .string({ errorMap: lazyMessage('errorMessages.noNameErrorMessage') })
+    .min(1),
   description: z.string().optional(),
-  url: z.string().url(),
+  url: z
+    .string({ errorMap: lazyMessage('errorMessages.invalidUrlErrorMessage') })
+    .url(),
   target: z.nativeEnum(ExternalAppsTarget),
   icon: z.string().optional(),
 });
@@ -120,9 +125,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             closable
             duration={3000}
           >
-            {t('externalAppForm.successDelete', {
-              defaultValue: 'External app deleted successfully',
-            })}
+            {t('externalAppForm.successDelete')}
           </Message>,
           { placement: 'topCenter' }
         );
@@ -164,9 +167,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
               closable
               duration={3000}
             >
-              {t('externalAppForm.successUpdate', {
-                defaultValue: 'External app updated successfully',
-              })}
+              {t('externalAppForm.successUpdate')}
             </Message>,
             { placement: 'topCenter' }
           );
@@ -206,9 +207,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
               closable
               duration={3000}
             >
-              {t('externalAppForm.successCreate', {
-                defaultValue: 'External app created successfully',
-              })}
+              {t('externalAppForm.successCreate')}
             </Message>,
             { placement: 'topCenter' }
           );
@@ -258,9 +257,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
           render={({ field, fieldState }) => (
             <TextField
               {...field}
-              label={t('externalAppForm.description', {
-                defaultValue: 'Description',
-              })}
+              label={t('externalAppForm.description')}
               variant="outlined"
               fullWidth
               multiline
@@ -372,7 +369,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             >
               {loading && isDeleting ?
                 <CircularProgress size={24} />
-              : t('externalAppForm.delete', { defaultValue: 'Delete' })}
+              : t('externalAppForm.delete')}
             </Button>
           )}
         </Box>
@@ -384,16 +381,11 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
         aria-describedby="delete-dialog-description"
       >
         <DialogTitle id="delete-dialog-title">
-          {t('externalAppForm.deleteConfirmationTitle', {
-            defaultValue: 'Delete External App',
-          })}
+          {t('externalAppForm.deleteConfirmationTitle')}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-dialog-description">
-            {t('externalAppForm.deleteConfirmationText', {
-              defaultValue:
-                'Are you sure you want to delete this external app? This action cannot be undone.',
-            })}
+            {t('externalAppForm.deleteConfirmationText')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -401,7 +393,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             onClick={() => setDeleteDialogOpen(false)}
             disabled={loading}
           >
-            {t('cancel', { defaultValue: 'Cancel' })}
+            {t('cancel')}
           </Button>
           <Button
             onClick={handleDelete}
@@ -409,7 +401,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             autoFocus
             disabled={loading}
           >
-            {t('externalAppForm.delete', { defaultValue: 'Delete' })}
+            {t('externalAppForm.delete')}
           </Button>
         </DialogActions>
       </Dialog>
