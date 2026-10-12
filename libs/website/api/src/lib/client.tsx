@@ -18,6 +18,7 @@ import possibleTypes from './possible-types';
 import { ComponentType, createElement, memo, useMemo } from 'react';
 import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';
 import { absoluteUrlToRelative } from './absolute-url-to-relative';
+import { flattenBlockTemplates } from './flatten-block-templates';
 import { omitDisabledBlocks } from './omit-disabled-blocks';
 import { omitSensitiveData } from './omit-sensitive-data';
 
@@ -127,7 +128,10 @@ const createApiClient = (
           absoluteUrlToRelative
         : ({} as TypePolicies),
         mergeDeepRight(
-          mergeDeepRight(omitDisabledBlocks, omitSensitiveData),
+          mergeDeepRight(
+            mergeDeepRight(omitDisabledBlocks, flattenBlockTemplates),
+            omitSensitiveData
+          ),
           cacheConfig?.typePolicies ?? ({} as TypePolicies)
         )
       ) as TypePolicies,

@@ -25,7 +25,6 @@ export const BkaQuoteBlock = styled(QuoteBlock)`
     font-weight: 400;
     font-style: italic;
     line-height: 1.2;
-    text-wrap: wrap;
 
     ${({ theme }) => theme.breakpoints.up('lg')} {
       font-size: 2.125rem;

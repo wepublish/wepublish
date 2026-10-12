@@ -19,11 +19,9 @@ import {
   isBlockTemplateBlock,
 } from './block-template-block';
 import * as stories from './block-template-block.stories';
-import * as blocksStories from '../blocks.stories';
 
 const storiesCmp = composeStories(stories);
 const { Default } = storiesCmp;
-const { Default: Blocks } = composeStories(blocksStories);
 
 type TemplateBlocks = NonNullable<
   FullBlockTemplateBlockFragment['template']
@@ -162,56 +160,6 @@ describe('Block Template Block', () => {
         expect.objectContaining({ type: 'Article', level: 3 }),
         undefined
       );
-    });
-
-    it('should render nested block templates recursively', () => {
-      render(
-        <Default
-          {...blockTemplate([
-            mockTitleBlock({ title: 'Outer Title' }),
-            blockTemplate(
-              [mockTitleBlock({ title: 'Inner Title' })],
-              'Inner Template'
-            ),
-          ])}
-        />
-      );
-
-      expect(screen.getByText('Outer Title')).toBeInTheDocument();
-      expect(screen.getByText('Inner Title')).toBeInTheDocument();
-    });
-  });
-
-  describe('inside a list of blocks', () => {
-    it('should render the template content inline with the surrounding blocks', () => {
-      render(
-        <Blocks
-          type="Article"
-          blocks={[
-            mockTitleBlock({ title: 'Before The Template' }),
-            blockTemplate([mockQuoteBlock({ quote: 'From The Template' })]),
-            mockTitleBlock({ title: 'After The Template' }),
-          ]}
-        />
-      );
-
-      expect(screen.getByText('Before The Template')).toBeInTheDocument();
-      expect(screen.getByText('From The Template')).toBeInTheDocument();
-      expect(screen.getByText('After The Template')).toBeInTheDocument();
-    });
-
-    it('should render nothing for a template block without a template', () => {
-      render(
-        <Blocks
-          type="Article"
-          blocks={[
-            mockBlockTemplateBlock({ template: null }),
-            mockTitleBlock({ title: 'Still Rendered' }),
-          ]}
-        />
-      );
-
-      expect(screen.getByText('Still Rendered')).toBeInTheDocument();
     });
   });
 

@@ -7,13 +7,9 @@ import {
 } from '@wepublish/block-content/website';
 
 export const BkaImageBlock = styled(ImageBlock)`
-  margin-inline: -${({ theme }) => theme.spacing(3)};
-
   ${ImageBlockImage} {
     width: 100%;
     height: auto;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
   }
 
   ${ImageBlockCaption} {
@@ -22,11 +18,7 @@ export const BkaImageBlock = styled(ImageBlock)`
     line-height: 1.25;
   }
 
-  ${ImageBlockSource} {
+  /* ${ImageBlockSource} {
     display: none;
-  }
-
-  ${({ theme }) => theme.breakpoints.up('lg')} {
-    margin-inline: 0;
-  }
+  } */
 `;

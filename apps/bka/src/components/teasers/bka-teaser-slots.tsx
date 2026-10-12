@@ -1,31 +1,15 @@
-import styled from '@emotion/styled';
-import {
-  TeaserSlotsBlock,
-  TeaserSlotsBlockTeasers,
-} from '@wepublish/block-content/website';
+import { hasBlockStyle } from '@wepublish/block-content/website';
+import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
+import { cond, T } from 'ramda';
 
-export const BkaTeaserSlots = styled(TeaserSlotsBlock)`
-  gap: ${({ theme }) => theme.spacing(2)};
+import { BkaBlockStyle } from '../block-styles/bka-block-styles';
+import { BkaArchiveTeaserSlots } from './bka-archive-teaser-slots';
+import { BkaDefaultTeaserSlots } from './bka-default-teaser-slots';
 
-  & > h1 {
-    margin: 0;
-    font-family: ${({ theme }) => theme.typography.body1.fontFamily};
-    font-size: ${({ theme }) => theme.typography.subtitle1.fontSize};
-    font-weight: 400;
-    line-height: ${({ theme }) => theme.typography.h1.lineHeight};
-    text-align: center;
-  }
+export const isBkaArchivTeaserSlots = (props: BuilderTeaserSlotsBlockProps) =>
+  hasBlockStyle(BkaBlockStyle.Archiv)(props);
 
-  ${TeaserSlotsBlockTeasers} {
-    grid-template-columns: 1fr;
-    row-gap: ${({ theme }) => theme.spacing(1.875)};
-
-    ${({ theme }) => theme.breakpoints.up('sm')} {
-      grid-template-columns: 1fr;
-    }
-
-    ${({ theme }) => theme.breakpoints.up('md')} {
-      grid-template-columns: 1fr;
-    }
-  }
-`;
+export const BkaTeaserSlots = cond([
+  [isBkaArchivTeaserSlots, props => <BkaArchiveTeaserSlots {...props} />],
+  [T, props => <BkaDefaultTeaserSlots {...props} />],
+]);

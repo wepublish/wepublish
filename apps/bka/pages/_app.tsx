@@ -1,6 +1,6 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import { css, CssBaseline, ThemeProvider } from '@mui/material';
+import { css, CssBaseline, GlobalStyles, ThemeProvider } from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -39,13 +39,15 @@ import { zodI18nMap } from 'zod-i18n-map';
 import { BkaArticle } from '../src/components/article/bka-article';
 import { BkaArticleList } from '../src/components/article/bka-article-list';
 import { BkaAuthorBlock } from '../src/components/blocks/bka-author-block';
+import { BkaBreakBlock } from '../src/components/blocks/bka-break-block';
 import { BkaImageBlock } from '../src/components/blocks/bka-image-block';
-import { BkaContentWrapper } from '../src/components/content/bka-content-wrapper';
 import { BkaQuoteBlock } from '../src/components/blocks/bka-quote-block';
 import { BkaRichTextBlock } from '../src/components/blocks/bka-richtext-block';
-import { BkaTextField } from '../src/components/form/bka-text-field';
 import { BkaTitleBlock } from '../src/components/blocks/bka-title-block';
+import { BkaContentWrapper } from '../src/components/content/bka-content-wrapper';
+import { BkaTextField } from '../src/components/form/bka-text-field';
 import { BkaNavbar } from '../src/components/navbar/bka-navbar';
+import { BkaPage } from '../src/components/page/bka-page';
 import { BkaTeaser } from '../src/components/teasers/bka-teaser';
 import { BkaTeaserSlots } from '../src/components/teasers/bka-teaser-slots';
 import { createBkaTheme, sidebarWidth } from '../src/theme';
@@ -136,11 +138,13 @@ function CustomApp({
               Navbar={BkaNavbar}
               Article={BkaArticle}
               ContentWrapper={BkaContentWrapper}
+              Page={BkaPage}
               ArticleList={BkaArticleList}
               blocks={{
                 Teaser: BkaTeaser,
                 TeaserSlots: BkaTeaserSlots,
                 Image: BkaImageBlock,
+                Break: BkaBreakBlock,
                 Quote: BkaQuoteBlock,
                 RichText: BkaRichTextBlock,
                 Title: BkaTitleBlock,
@@ -151,6 +155,13 @@ function CustomApp({
               meta={{ siteTitle }}
             >
               <CssBaseline />
+
+              <GlobalStyles
+                styles={{
+                  '*': { textWrap: 'initial' },
+                  'h1, h2, h3, h4, h5, h6': { textWrap: 'initial' },
+                }}
+              />
 
               <Head>
                 <title key="title">{siteTitle}</title>
