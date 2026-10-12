@@ -178,6 +178,7 @@
         "properties": "Eigenschaften",
         "propertiesInfo": "Eigenschaften können pro Artikel eingestellt werden. Öffentliche Eigenschaften sind über die öffentliche API zugänglich.",
         "public": "Öffentlich",
+        "private": "Privat",
         "publishArticle": "Artikel publizieren",
         "publishAt": "Online verfügbar ab",
         "publishAtDateCheckbox": "Wähle ein anderes Datum für die Online-Verfügbarkeit",
@@ -1163,6 +1164,7 @@
       "unpaid": "unbezahlt",
       "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden.",
       "table": {
+        "action": "Aktion",
         "date": "Datum",
         "description": "Beschreibung",
         "goodie": "Goodie",
@@ -2371,6 +2373,24 @@
       "paidUntilInfo": "Wird automatisch gesetzt, sobald eine Rechnung bezahlt ist. Bis zu diesem Datum ist das Abo bezahlt."
     },
     "userSubscriptionList": {
+      "periodRange": "Zeitraum",
+      "table": {
+        "active": "Aktiv",
+        "confirmed": "Bestätigt",
+        "created": "Erstellt",
+        "deactivated": "Deaktiviert",
+        "expired": "Abgelaufen",
+        "expires": "Läuft aus",
+        "paidUntil": "Bezahlt bis",
+        "perMonthSuffix": "/Mt.",
+        "periodicity": "Zahlungsintervall",
+        "planned": "Geplant",
+        "renewal": "Erneuerung",
+        "renewsAutomatically": "Automatisch",
+        "start": "Start",
+        "subscription": "Abo",
+        "unpaid": "Unbezahlt"
+      },
       "addSubscription": "Abonnement hinzufügen",
       "subscriptionNumber": "Nr. {{subscriptionId}}",
       "periodTitle": "Periode {{date}}",
@@ -3770,7 +3790,6 @@
       "message": "Deine Änderungen werden möglicherweise nicht gespeichert."
     },
     "action": "Aktionen",
-    "deactivated": "Deaktiviert",
     "blockStyles": {
       "areYouSure": "Bist du sicher?",
       "areYouSureBody": "Der Stil «{{ blockStyle }}» wird für immer gelöscht und kann nicht rückgängig gemacht werden.",

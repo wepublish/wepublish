@@ -36,9 +36,16 @@ const ChildrenWrapper = styled.div`
   }
 `;
 
+/* only a layout wrapper: rsuite's .rs-panel clips its content to its
+   (larger) border radius, which cut off the rounded corners and focus rings
+   of the fields at its edges; && beats .rs-panel regardless of sheet order */
 const Panel = styled(RPanel)`
   flex: 1 1 auto;
   min-width: 0;
+
+  && {
+    overflow: visible;
+  }
 `;
 
 const DragHandleWrapper = styled.div`

@@ -178,6 +178,7 @@
         "properties": "Propriétés",
         "propertiesInfo": "Les propriétés peuvent être définies par article. Les propriétés publiques sont accessibles via l’API publique.",
         "public": "Public",
+        "private": "Privé",
         "publishArticle": "Publier l’article",
         "publishAt": "Disponible en ligne à partir du",
         "publishAtDateCheckbox": "Fixer une date différente pour la disponibilité en ligne",
@@ -1163,6 +1164,7 @@
       "unpaid": "non payé",
       "userNotLoaded": "Erreur inattendue : vos données d’utilisateur·trice n’ont pas pu être chargées.",
       "table": {
+        "action": "Action",
         "date": "Date",
         "description": "Description",
         "goodie": "Goodie",
@@ -2371,6 +2373,24 @@
       "paidUntilInfo": "Défini automatiquement dès qu’une facture est payée. L’abonnement est payé jusqu’à cette date."
     },
     "userSubscriptionList": {
+      "periodRange": "Période",
+      "table": {
+        "active": "Actif",
+        "confirmed": "Confirmé",
+        "created": "Créé",
+        "deactivated": "Désactivé",
+        "expired": "Expiré",
+        "expires": "Expire",
+        "paidUntil": "Payé jusqu’au",
+        "perMonthSuffix": "/mois",
+        "periodicity": "Intervalle de paiement",
+        "planned": "Prévu",
+        "renewal": "Renouvellement",
+        "renewsAutomatically": "Automatique",
+        "start": "Début",
+        "subscription": "Abonnement",
+        "unpaid": "Impayé"
+      },
       "addSubscription": "Ajouter un abonnement",
       "subscriptionNumber": "N° {{subscriptionId}}",
       "periodTitle": "Période {{date}}",
@@ -3762,7 +3782,6 @@
       "message": "Les modifications que vous avez apportées ne seront peut-être pas enregistrées."
     },
     "action": "Actions",
-    "deactivated": "Désactivé",
     "trackingPixels": {
       "errorHeader": "Erreur",
       "noPixelInfoDescription": "C’est le cas, par exemple, si aucun suivi n’est configuré ou pour les anciens articles.",
