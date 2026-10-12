@@ -10,6 +10,7 @@ import {
   RequestEmailVerificationDocument,
   UpdatePasswordDocument,
 } from '@wepublish/website/api';
+import { useUser } from '@wepublish/authentication/website';
 import { Button, useWebsiteBuilder } from '@wepublish/website/builder';
 import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
@@ -70,6 +71,7 @@ function WelcomePageComponent({
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const router = useRouter();
+  const { refreshUser } = useUser();
   const { data: meData } = useQuery(MeDocument);
   const { data: sessionData, refetch: refetchSession } = useQuery(
     CurrentSessionDocument,
@@ -129,11 +131,13 @@ function WelcomePageComponent({
     }
   }, [step, session, restricted]);
 
+  // The profile reads the user from the session provider, which fetched them
+  // when this page opened; the address confirmed since then is not in there.
   useEffect(() => {
     if (step === 'done') {
-      router.replace(profilePath);
+      refreshUser().finally(() => router.replace(profilePath));
     }
-  }, [step, router, profilePath]);
+  }, [step, router, profilePath, refreshUser]);
 
   const submitEmail = async (event: FormEvent) => {
     event.preventDefault();
