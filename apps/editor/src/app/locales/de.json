@@ -3574,15 +3574,8 @@
       },
       "endedWithinDays": "Deaktiviert innerhalb der letzten … Tage",
       "endedWithinDaysHint": "Nur Abos, die in diesem Zeitraum deaktiviert wurden.",
-      "emailFilter": {
-        "label": "E-Mail-Adresse",
-        "all": "Alle",
-        "placeholder": "Nur Platzhalter",
-        "real": "Nur echt",
-        "hint": "Platzhalter-Adressen werden in der Brief-Integration festgelegt."
-      },
       "emailSegments": {
-        "label": "E-Mail-Status",
+        "label": "Status der Benutzer-E-Mail Adresse",
         "placeholder": "Platzhalter-Adresse",
         "dead": "Tot (Bounce, ungültig, Beschwerde, abgemeldet)",
         "unresponsive": "Reagiert nicht",

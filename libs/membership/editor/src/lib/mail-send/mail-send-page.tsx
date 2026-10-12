@@ -8,7 +8,6 @@ import {
   LetterPrintSpectrum,
   MailAudienceInput,
   MailChannel,
-  MailEmailFilter,
   MailEmailSegment,
   MailLogState,
   MailRecipientBase,
@@ -205,9 +204,6 @@ function MailSendPage() {
   );
   const [endedMode, setEndedMode] = useState<EndedMode>('days');
   const [endedPeriod, setEndedPeriod] = useState<DateRange | null>(null);
-  const [emailFilter, setEmailFilter] = useState<MailEmailFilter>(
-    MailEmailFilter.All
-  );
   const [emailSegments, setEmailSegments] = useState<MailEmailSegment[]>([]);
 
   const [channel, setChannel] = useState<MailChannel>(MailChannel.Mail);
@@ -265,7 +261,6 @@ function MailSendPage() {
 
       return {
         base,
-        emailFilter,
         emailSegments: segments,
         // Either an explicit period or the rolling window — never both, so the
         // backend does not have to guess which one the author meant.
@@ -278,12 +273,11 @@ function MailSendPage() {
     }
 
     if (!isSubscriptionBase) {
-      return { base, emailFilter, emailSegments: segments };
+      return { base, emailSegments: segments };
     }
 
     return {
       base,
-      emailFilter,
       emailSegments: segments,
       memberPlanIDs: memberPlanIDs.length ? memberPlanIDs : undefined,
       subscriptionState: subscriptionState ?? undefined,
@@ -301,7 +295,6 @@ function MailSendPage() {
     };
   }, [
     base,
-    emailFilter,
     emailSegments,
     isSubscriptionBase,
     isWinBackBase,
@@ -614,35 +607,8 @@ function MailSendPage() {
                   </Form.Group>
 
                   <Divider />
-                  <Form.Group>
-                    <Form.ControlLabel>
-                      {t('mailSend.emailFilter.label')}
-                    </Form.ControlLabel>
-                    <RadioGroup
-                      inline
-                      value={emailFilter}
-                      onChange={value =>
-                        setEmailFilter(value as MailEmailFilter)
-                      }
-                    >
-                      {[
-                        MailEmailFilter.All,
-                        MailEmailFilter.Placeholder,
-                        MailEmailFilter.Real,
-                      ].map(option => (
-                        <Radio
-                          key={option}
-                          value={option}
-                        >
-                          {t(`mailSend.emailFilter.${option}`)}
-                        </Radio>
-                      ))}
-                    </RadioGroup>
-                    <Form.HelpText>
-                      {t('mailSend.emailFilter.hint')}
-                    </Form.HelpText>
-                  </Form.Group>
-
+                  {/* Placeholder vs real is the `placeholder` segment and its
+                      complement, so one control covers it. */}
                   <Form.Group>
                     <Form.ControlLabel>
                       {t('mailSend.emailSegments.label')}

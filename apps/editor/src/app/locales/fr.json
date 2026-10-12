@@ -3566,13 +3566,6 @@
       },
       "endedWithinDays": "Désactivé au cours des … derniers jours",
       "endedWithinDaysHint": "Uniquement les abonnements désactivés dans cette période.",
-      "emailFilter": {
-        "label": "Adresse e-mail",
-        "all": "Toutes",
-        "placeholder": "Uniquement les substituts",
-        "real": "Uniquement les réelles",
-        "hint": "Les adresses de substitution sont définies dans l’intégration courrier."
-      },
       "emailSegments": {
         "label": "Statut e-mail",
         "placeholder": "Adresse de substitution",

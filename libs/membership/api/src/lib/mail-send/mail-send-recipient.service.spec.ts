@@ -1346,6 +1346,18 @@ describe('audience filtering (semantics)', () => {
       expect(matches({ user: active }, where)).toBe(false);
     });
 
+    // Prisma's nested `not` filter has no `mode`; putting it there is a
+    // runtime validation error, not a type error, so the shape is pinned here.
+    it('spells the real-address clause in a shape Prisma accepts', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.dead]);
+      const clauses = JSON.stringify(where);
+
+      expect(clauses).toContain(
+        JSON.stringify({ mode: 'insensitive', not: { contains: PATTERN } })
+      );
+      expect(clauses).not.toMatch(/"not":\{[^}]*"mode"/);
+    });
+
     it('has no placeholders without a configured pattern, and plain levels', async () => {
       const placeholderWhere = await segmentWhereFor(
         [MailEmailSegment.placeholder],

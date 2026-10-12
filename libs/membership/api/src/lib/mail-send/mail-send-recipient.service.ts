@@ -612,10 +612,11 @@ export class MailSendRecipientService {
     };
 
     // The complement spelled out per pattern instead of `NOT`: `email` is
-    // required, so there is no NULL case to lose.
+    // required, so there is no NULL case to lose. `mode` only exists on the
+    // outer filter and applies inside `not` too: this compiles to `NOT ILIKE`.
     const isReal: Prisma.UserWhereInput = {
       AND: patterns.map(pattern => ({
-        email: { not: { contains: pattern, mode: 'insensitive' } },
+        email: { mode: 'insensitive', not: { contains: pattern } },
       })),
     };
 
