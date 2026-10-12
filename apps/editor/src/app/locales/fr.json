@@ -3569,12 +3569,12 @@
       "emailSegments": {
         "label": "Statut e-mail",
         "placeholder": "Adresse de substitution",
-        "dead": "Morte (rebond, invalide, plainte, désabonnée)",
+        "dead": "Injoignable (rebond, invalide, plainte, désabonnée)",
         "unresponsive": "Sans réaction",
         "unknown": "Inconnu",
         "active": "Active",
         "pick": "Tous les statuts",
-        "hint": "Plusieurs statuts signifient « l’un ou l’autre ». « Sans réaction » : des e-mails ont été remis, mais aucune connexion ni aucun clic depuis longtemps (réglage « Qualité des e-mails »). Joignable par courrier : substitution + morte.",
+        "hint": "Plusieurs statuts signifient « l’un ou l’autre ». « Sans réaction » : des e-mails ont été remis, mais aucune connexion ni aucun clic depuis longtemps (réglage « Qualité des e-mails »). À atteindre par courrier : substitution + injoignable.",
         "overview": "Personnes de cette audience par statut e-mail (indépendamment de la sélection)",
         "refresh": "Actualiser les statuts",
         "refreshing": "Actualisation des statuts …",
@@ -3841,10 +3841,10 @@
       },
       "outcome": {
         "title": "Résultat",
-        "hint": "Les statuts de remise et les clics viennent du fournisseur d’e-mails – les rebonds souvent des heures ou des jours plus tard. « Adresse morte » compte les destinataires dont l’adresse est désormais considérée comme morte. « Actualiser les statuts » récupère ce que le fournisseur n’a pas encore signalé.",
+        "hint": "Les statuts de remise et les clics viennent du fournisseur d’e-mails – les rebonds souvent des heures ou des jours plus tard. « Injoignable » compte les destinataires dont l’adresse est désormais considérée comme injoignable. « Actualiser les statuts » récupère ce que le fournisseur n’a pas encore signalé.",
         "delivered": "Remis",
         "bounced": "Rebonds / refusés",
-        "dead": "Adresse morte",
+        "dead": "Injoignable",
         "clicked": "Cliqués"
       },
       "recipientState": {
