@@ -9,7 +9,12 @@ import {
   ResetUserTotpDocument,
   UpdateUserDocument,
   UserAddress,
+  LoginCodeSecondFactor,
+  ReissueUserLoginCodeDocument,
+  RevokeUserLoginCodeDocument,
+  SettingsListDocument,
   UserDocument,
+  UserLoginCodeDocument,
   UserRoleListDocument,
   UserSubscriptionListDocument,
 } from '@wepublish/editor/api';
@@ -55,6 +60,7 @@ import {
   toaster,
   Toggle as RToggle,
 } from 'rsuite';
+import { isLoginCodeEnabled } from './login-code-enabled';
 
 const Grid = styled(RGrid)`
   padding-right: 0px;
@@ -262,6 +268,28 @@ function UserEditView() {
   const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
     ResetUserTotpDocument
   );
+  const { data: settingsData } = useQuery(SettingsListDocument);
+  // The panel only makes sense once the medium has login codes switched on.
+  const canManageLoginCodes =
+    useAuthorisation('CAN_MANAGE_USER_LOGIN_CODES') &&
+    isLoginCodeEnabled(settingsData?.settings);
+  const { data: loginCodeData, refetch: refetchLoginCode } = useQuery(
+    UserLoginCodeDocument,
+    {
+      variables: { userId: user?.id ?? '' },
+      skip: !user?.id || !canManageLoginCodes,
+    }
+  );
+  const [revokeUserLoginCode, { loading: isRevokingLoginCode }] = useMutation(
+    RevokeUserLoginCodeDocument
+  );
+  const [reissueUserLoginCode, { loading: isReissuingLoginCode }] = useMutation(
+    ReissueUserLoginCodeDocument
+  );
+  const [issuedLoginCode, setIssuedLoginCode] = useState<{
+    code: string;
+    purl: string;
+  } | null>(null);
 
   /**
    * Function to update address object
@@ -901,6 +929,109 @@ function UserEditView() {
                     </Col>
                   </Row>
                 </Panel>
+                {/* login code */}
+                {user && canManageLoginCodes && (
+                  <Panel
+                    bordered
+                    header={t('userCreateOrEditView.loginCode.header')}
+                  >
+                    <Row gutter={10}>
+                      <Col xs={24}>
+                        <p style={{ marginBottom: 12 }}>
+                          {loginCodeData?.userLoginCode ?
+                            t('userCreateOrEditView.loginCode.status', {
+                              usesRemaining:
+                                loginCodeData.userLoginCode.usesRemaining,
+                              maxUses: loginCodeData.userLoginCode.maxUses,
+                              expiresAt: new Date(
+                                loginCodeData.userLoginCode.expiresAt
+                              ).toLocaleDateString(),
+                              lastUsedAt:
+                                loginCodeData.userLoginCode.lastUsedAt ?
+                                  new Date(
+                                    loginCodeData.userLoginCode.lastUsedAt
+                                  ).toLocaleString()
+                                : t('userCreateOrEditView.loginCode.never'),
+                            })
+                          : t('userCreateOrEditView.loginCode.none')}
+                        </p>
+
+                        {loginCodeData?.userLoginCode &&
+                          loginCodeData.userLoginCode.secondFactor !==
+                            LoginCodeSecondFactor.None && (
+                            <p style={{ marginBottom: 12 }}>
+                              {t(
+                                (
+                                  loginCodeData.userLoginCode
+                                    .secondFactorAvailable
+                                ) ?
+                                  'userCreateOrEditView.loginCode.secondFactorAvailable'
+                                : 'userCreateOrEditView.loginCode.secondFactorMissing',
+                                {
+                                  factor: t(
+                                    `settingList.loginCodeSecondFactorOptions.${loginCodeData.userLoginCode.secondFactor}`
+                                  ),
+                                }
+                              )}
+                            </p>
+                          )}
+
+                        <RButton
+                          appearance="ghost"
+                          disabled={
+                            !loginCodeData?.userLoginCode || isRevokingLoginCode
+                          }
+                          style={{ marginBottom: 16, marginRight: 8 }}
+                          onClick={async () => {
+                            await revokeUserLoginCode({
+                              variables: { userId: user.id },
+                            });
+                            setIssuedLoginCode(null);
+                            await refetchLoginCode();
+                          }}
+                        >
+                          {t('userCreateOrEditView.loginCode.revoke')}
+                        </RButton>
+
+                        <RButton
+                          appearance="primary"
+                          disabled={isReissuingLoginCode}
+                          style={{ marginBottom: 16 }}
+                          onClick={async () => {
+                            const result = await reissueUserLoginCode({
+                              variables: { userId: user.id },
+                            });
+
+                            if (result.data?.reissueUserLoginCode) {
+                              setIssuedLoginCode({
+                                code: result.data.reissueUserLoginCode.code,
+                                purl: result.data.reissueUserLoginCode.purl,
+                              });
+                            }
+
+                            await refetchLoginCode();
+                          }}
+                        >
+                          {t('userCreateOrEditView.loginCode.reissue')}
+                        </RButton>
+
+                        {issuedLoginCode && (
+                          <Message
+                            type="info"
+                            showIcon
+                          >
+                            {t('userCreateOrEditView.loginCode.issued')}{' '}
+                            <strong>{issuedLoginCode.code}</strong>
+                            <br />
+                            <a href={issuedLoginCode.purl}>
+                              {issuedLoginCode.purl}
+                            </a>
+                          </Message>
+                        )}
+                      </Col>
+                    </Row>
+                  </Panel>
+                )}
                 {/* two-factor authentication */}
                 {user && canResetTotp && (
                   <Panel
