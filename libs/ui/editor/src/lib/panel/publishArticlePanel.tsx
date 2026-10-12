@@ -64,7 +64,7 @@ function PublishArticlePanel({
             marginTop: '0.25rem',
             marginBottom: '2rem',
             fontSize: '0.75rem',
-            color: '#555',
+            color: 'var(--rs-text-secondary)',
           }}
         >
           {firstPublishedAtDate ?
@@ -191,7 +191,7 @@ function PublishArticlePanel({
 
           <DescriptionListItemWithMessage
             label={t('articleEditor.panels.socialMediaImage')}
-            message={t('articleEditor.panels.enterSocialMediaDescription')}
+            message={t('articleEditor.panels.enterSocialMediaImage')}
             messageType={InfoColor.warning}
           >
             {metadata.socialMediaImage?.filename}

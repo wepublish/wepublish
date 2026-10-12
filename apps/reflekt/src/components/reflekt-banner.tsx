@@ -92,19 +92,16 @@ export const BannerBase = ({
       data-banner
     >
       <BannerCloseButton onClick={handleClose}>&#x2715;</BannerCloseButton>
-
       {data?.primaryBanner.image && (
         <BannerImage
           style={{ backgroundImage: `url(${data?.primaryBanner.image.url})` }}
         ></BannerImage>
       )}
-
       {htmlContent && (
         <BannerContentWrapper
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
       )}
-
       {!htmlContent && (
         <BannerContentWrapper>
           <BannerContent>
@@ -464,7 +461,6 @@ export const ReflektBanner = (props: BuilderBannerProps) => {
     <Modal
       open={modalOpen}
       onClose={handleClose}
-      disableEscapeKeyDown
       slotProps={{
         backdrop: {
           sx: {

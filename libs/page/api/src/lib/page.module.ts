@@ -1,3 +1,5 @@
+import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
+import { PagePublicationWatcher } from './page-publication.watcher';
 import { forwardRef, Module } from '@nestjs/common';
 import { ImageModule } from '@wepublish/image/api';
 import { PrismaModule } from '@wepublish/nest-modules';
@@ -17,12 +19,14 @@ import { TagModule } from '@wepublish/tag/api';
 
 @Module({
   imports: [
+    GraphqlResponseCacheModule,
     PrismaModule,
     ImageModule,
     TagModule,
     forwardRef(() => BlockContentModule),
   ],
   providers: [
+    PagePublicationWatcher,
     PageDataloaderService,
     PageRevisionDataloaderService,
     PageService,

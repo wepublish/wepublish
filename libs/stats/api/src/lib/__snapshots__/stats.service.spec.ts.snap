@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`StatsService should query for article count 1`] = `
+exports[`StatsService > should query for article count 1`] = `
 [
   {
     "where": {
@@ -16,7 +16,7 @@ exports[`StatsService should query for article count 1`] = `
 ]
 `;
 
-exports[`StatsService should query for articleRevision findFirst 1`] = `
+exports[`StatsService > should query for articleRevision findFirst 1`] = `
 [
   {
     "orderBy": {
@@ -34,4 +34,4 @@ exports[`StatsService should query for articleRevision findFirst 1`] = `
 ]
 `;
 
-exports[`StatsService should query for author count 1`] = `[]`;
+exports[`StatsService > should query for author count 1`] = `[]`;

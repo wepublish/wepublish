@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ConsentService should create a consent 1`] = `
+exports[`ConsentService > should create a consent 1`] = `
 {
   "defaultValue": true,
   "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
@@ -9,7 +9,7 @@ exports[`ConsentService should create a consent 1`] = `
 }
 `;
 
-exports[`ConsentService should create a consent 2`] = `
+exports[`ConsentService > should create a consent 2`] = `
 {
   "data": {
     "defaultValue": true,
@@ -19,7 +19,7 @@ exports[`ConsentService should create a consent 2`] = `
 }
 `;
 
-exports[`ConsentService should get a single consent by id 1`] = `
+exports[`ConsentService > should get a single consent by id 1`] = `
 {
   "defaultValue": true,
   "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
@@ -28,7 +28,7 @@ exports[`ConsentService should get a single consent by id 1`] = `
 }
 `;
 
-exports[`ConsentService should get a single consent by id 2`] = `
+exports[`ConsentService > should get a single consent by id 2`] = `
 {
   "where": {
     "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
@@ -36,7 +36,7 @@ exports[`ConsentService should get a single consent by id 2`] = `
 }
 `;
 
-exports[`ConsentService should get consents 1`] = `
+exports[`ConsentService > should get consents 1`] = `
 [
   {
     "defaultValue": true,
@@ -53,7 +53,7 @@ exports[`ConsentService should get consents 1`] = `
 ]
 `;
 
-exports[`ConsentService should get consents 2`] = `
+exports[`ConsentService > should get consents 2`] = `
 {
   "orderBy": {
     "createdAt": "desc",

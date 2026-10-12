@@ -23,9 +23,9 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithApiClient,
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
+  createWithApiClient,
 } from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
@@ -66,10 +66,16 @@ import {
   TsriBlocks,
 } from '../src/components/tsri-block-renderer';
 import { TsriCommentList } from '../src/components/tsri-comment-list';
+import { TsriEvent } from '../src/components/tsri-event';
+import {
+  TsriEventListItem,
+  TsriEventListView,
+} from '../src/components/tsri-event-list-item';
 import { TsriFooter } from '../src/components/tsri-footer';
 import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
 import { TsriImageSlider } from '../src/components/tsri-image-slider';
 import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
+import { TsriPage } from '../src/components/tsri-page';
 import { TsriPaymentAmountPicker } from '../src/components/tsri-payment-amount-picker';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
@@ -113,7 +119,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
   : format(date, 'dd. MMMM yyyy');
 
 export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
+  sessionToken?: FullSessionWithTokenWithoutUserFragment;
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
@@ -164,6 +170,10 @@ function CustomApp({
               Script={Script}
               Navbar={TsriV2Navbar}
               Article={TsriArticle}
+              Page={TsriPage}
+              Event={TsriEvent}
+              EventList={TsriEventListView}
+              EventListItem={TsriEventListItem}
               AuthorChip={TsriAuthorChip}
               ArticleDate={TsriArticleDate}
               ArticleMeta={TsriArticleMeta}

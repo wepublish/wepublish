@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   Table,
   TableBody,
@@ -10,13 +11,14 @@ import {
 import {
   MailLogState,
   MailLogType,
-  useMailLogsQuery,
-  useMailSendJobsQuery,
-  useMailTemplateQuery,
-  useSyncMailLogStatesMutation,
+  MailLogsDocument,
+  MailSendJobsDocument,
+  MailTemplateDocument,
+  SyncMailLogStatesDocument,
 } from '@wepublish/editor/api';
 import styled from '@emotion/styled';
-import { ReactNode, useState } from 'react';
+import { InfoTooltip } from '@wepublish/ui/editor';
+import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFilterList, MdSync } from 'react-icons/md';
 import { useSearchParams } from 'react-router-dom';
@@ -29,7 +31,7 @@ import {
   Stack,
   toaster,
 } from 'rsuite';
-import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
+import { DEFAULT_MUTATION_OPTIONS, showErrors, useShowErrors } from '../common';
 import {
   formatDateTime,
   MailErrorCell,
@@ -57,10 +59,12 @@ const FilterGrid = styled.div`
 
 function FilterField({
   label,
+  info,
   hint,
   children,
 }: {
   label: string;
+  info?: string;
   hint?: string;
   children: ReactNode;
 }) {
@@ -68,17 +72,31 @@ function FilterField({
     <div>
       <Typography
         variant="caption"
-        display="block"
         style={{ marginBottom: 4, fontWeight: 600 }}
+        sx={{
+          display: 'block',
+        }}
       >
         {label}
+        {info && (
+          <>
+            {' '}
+            <InfoTooltip text={info} />
+          </>
+        )}
       </Typography>
       {children}
       {hint && (
         <Typography
           variant="caption"
-          display="block"
-          style={{ marginTop: 4, color: '#8e8e93', lineHeight: 1.35 }}
+          style={{
+            marginTop: 4,
+            color: 'var(--rs-text-secondary)',
+            lineHeight: 1.35,
+          }}
+          sx={{
+            display: 'block',
+          }}
         >
           {hint}
         </Typography>
@@ -105,13 +123,19 @@ export function MailLogTable() {
   );
   const [type, setType] = useState<MailLogType | null>(null);
 
-  const { data: templateData } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
-  const { data: jobData } = useMailSendJobsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
+  const { data: templateData, error: templateError } =
+    useQuery(MailTemplateDocument);
+
+  useEffect(() => {
+    if (templateError) {
+      showErrors(templateError);
+    }
+  }, [templateError]);
+  const { data: jobData, error: jobError } = useQuery(MailSendJobsDocument, {
     variables: { take: JOB_OPTIONS_LIMIT },
   });
-  const { data } = useMailLogsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
+  useShowErrors(jobError);
+  const { data, error: logsError } = useQuery(MailLogsDocument, {
     variables: {
       filter: {
         mailTemplateId: templateId ?? undefined,
@@ -123,11 +147,15 @@ export function MailLogTable() {
       take: PAGE_SIZE,
     },
   });
+  useShowErrors(logsError);
 
-  const [syncStates, { loading: syncing }] = useSyncMailLogStatesMutation({
-    ...DEFAULT_MUTATION_OPTIONS(t),
-    refetchQueries: ['MailLogs'],
-  });
+  const [syncStates, { loading: syncing }] = useMutation(
+    SyncMailLogStatesDocument,
+    {
+      ...DEFAULT_MUTATION_OPTIONS(t),
+      refetchQueries: ['MailLogs'],
+    }
+  );
 
   // Delivery states normally arrive by provider webhook. Locally the provider
   // cannot reach this installation, so offer an explicit pull.
@@ -236,16 +264,19 @@ export function MailLogTable() {
                 appearance="ghost"
                 loading={syncing}
                 onClick={runSync}
-                title={t('mailLog.sync.hint')}
               >
                 <MdSync /> {t('mailLog.sync.action')}
               </Button>
+              <InfoTooltip text={t('mailLog.sync.hint')} />
             </Stack>
           </Stack>
         }
       >
         <FilterGrid>
-          <FilterField label={t('mailLog.filter.job')}>
+          <FilterField
+            label={t('mailLog.filter.job')}
+            info={t('mailLog.filter.jobHelp')}
+          >
             <SelectPicker
               block
               data={jobOptions}
@@ -291,11 +322,13 @@ export function MailLogTable() {
                   <div>{label}</div>
                   <Typography
                     variant="caption"
-                    display="block"
                     style={{
-                      color: '#8e8e93',
+                      color: 'var(--rs-text-secondary)',
                       whiteSpace: 'normal',
                       lineHeight: 1.35,
+                    }}
+                    sx={{
+                      display: 'block',
                     }}
                   >
                     {(item as MailTypeOption).description}
@@ -306,7 +339,6 @@ export function MailLogTable() {
           </FilterField>
         </FilterGrid>
       </Panel>
-
       <TableContainer>
         <Table size="small">
           <TableHead>
@@ -359,7 +391,6 @@ export function MailLogTable() {
           </TableBody>
         </Table>
       </TableContainer>
-
       <Pagination
         style={{ marginTop: 16 }}
         prev

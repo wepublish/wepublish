@@ -1,4 +1,5 @@
-import { useEventListQuery } from '@wepublish/website/api';
+import { useQuery } from '@apollo/client/react';
+import { EventListDocument } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
   BuilderEventListProps,
@@ -14,7 +15,7 @@ export function EventListContainer({
   onVariablesChange,
 }: EventListContainerProps) {
   const { EventList } = useWebsiteBuilder();
-  const { data, loading, error } = useEventListQuery({
+  const { data, loading, error } = useQuery(EventListDocument, {
     variables,
   });
 

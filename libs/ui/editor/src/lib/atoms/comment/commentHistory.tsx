@@ -1,11 +1,12 @@
+import { useLazyQuery } from '@apollo/client/react';
 import {
   CommentItemType,
+  CommentListDocument,
   CommentSort,
   CommentState,
   FullCommentFragment,
-  useCommentListLazyQuery,
 } from '@wepublish/editor/api';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
 import { Col, Row } from 'rsuite';
@@ -38,7 +39,7 @@ function ChildComments({
     <div
       style={{
         marginTop: '20px',
-        borderLeft: '1px lightgrey solid',
+        borderLeft: '1px var(--rs-border-primary) solid',
         paddingLeft: '20px',
       }}
     >
@@ -89,22 +90,28 @@ export function CommentHistory({
   const { t } = useTranslation();
   const [comments, setComments] = useState<FullCommentFragment[] | undefined>();
 
-  const [fetchCommentList, { data }] = useCommentListLazyQuery({
-    variables: {
-      filter: {
-        itemType: commentItemType,
-        itemID: commentItemID,
-        states: [
-          CommentState.Approved,
-          CommentState.PendingUserChanges,
-          CommentState.PendingApproval,
-          CommentState.Rejected,
-        ],
-      },
-      sort: CommentSort.CreatedAt,
-      take: 1000,
-    },
-  });
+  const [fetchCommentList, { data }] = useLazyQuery(CommentListDocument);
+
+  const fetchComments = useCallback(
+    () =>
+      fetchCommentList({
+        variables: {
+          filter: {
+            itemType: commentItemType,
+            itemID: commentItemID,
+            states: [
+              CommentState.Approved,
+              CommentState.PendingUserChanges,
+              CommentState.PendingApproval,
+              CommentState.Rejected,
+            ],
+          },
+          sort: CommentSort.CreatedAt,
+          take: 1000,
+        },
+      }),
+    [fetchCommentList, commentItemType, commentItemID]
+  );
 
   useEffect(() => {
     setComments(data?.comments?.nodes);
@@ -112,7 +119,7 @@ export function CommentHistory({
 
   // re-load comments whenever the comment id changes
   useEffect(() => {
-    fetchCommentList();
+    fetchComments();
   }, [originComment?.id]);
 
   return (
@@ -133,7 +140,7 @@ export function CommentHistory({
             appearance="ghost"
             icon={<MdAdd />}
             onCommentCreated={async () => {
-              await fetchCommentList();
+              await fetchComments();
             }}
           />
         </Col>

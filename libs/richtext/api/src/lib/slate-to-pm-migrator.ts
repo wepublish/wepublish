@@ -2,6 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma, PrismaClient } from '@prisma/client';
+import {
+  KvTtlCacheService,
+  PublicContentCacheInvalidator,
+} from '@wepublish/kv-ttl-cache/api';
 
 // Slate keeps a node's visible text in `text`, or nested in `children`.
 const slateText = (node: any): string => {
@@ -212,20 +216,83 @@ const slateToPm = (content: any): RichtextElements | [] => {
   return [];
 };
 
+const TEN_SECONDS = 10_000;
+const FIVE_SECONDS = 5_000;
+
+const PEER_PROFILE_NAMESPACE = 'peer-profile';
+const REMOTE_PEER_PROFILES_NAMESPACE = 'peering:remote-profiles';
+const MEMBER_PLANS_NAMESPACE = 'member-plans';
+
+type MigratedTable =
+  | 'authors'
+  | 'comments.revisions'
+  | 'events'
+  | 'peerProfiles'
+  | 'peers'
+  | 'polls'
+  | 'tags'
+  | 'member.plans'
+  | 'paywalls'
+  | 'articles.revisions'
+  | 'pages.revisions';
+
 @Injectable()
 export class SlateToPmMigrator {
   private readonly logger = new Logger(SlateToPmMigrator.name);
 
   constructor(
     private prisma: PrismaClient,
-    private schedulerRegistry: SchedulerRegistry
+    private schedulerRegistry: SchedulerRegistry,
+    private kv: KvTtlCacheService,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
+
+  private async isAnotherReplicasTurn(job: string, intervalMs: number) {
+    return (await this.kv.claim(job, intervalMs - 1000)) === false;
+  }
+
+  private async forgetMigrated(table: MigratedTable, changed: number) {
+    if (!changed) {
+      return;
+    }
+
+    switch (table) {
+      case 'authors':
+        return this.publicContentCache.invalidate('authors');
+      case 'comments.revisions':
+        return this.publicContentCache.invalidateComments(true);
+      case 'events':
+        return this.publicContentCache.invalidate();
+      case 'peerProfiles':
+        return this.kv.resetNamespace(PEER_PROFILE_NAMESPACE);
+      case 'peers':
+        return this.kv.resetNamespace(REMOTE_PEER_PROFILES_NAMESPACE);
+      case 'polls':
+        return this.publicContentCache.invalidate('polls');
+      case 'tags':
+        return this.publicContentCache.invalidate('articles');
+      case 'member.plans':
+        await this.kv.resetNamespace(MEMBER_PLANS_NAMESPACE);
+        return this.publicContentCache.invalidate('paywalls');
+      case 'paywalls':
+        return this.publicContentCache.invalidate('paywalls');
+      case 'articles.revisions':
+        await this.publicContentCache.invalidate('articles');
+        return this.publicContentCache.invalidateArticleLayout();
+      case 'pages.revisions':
+        return this.publicContentCache.invalidate('pages');
+    }
+  }
 
   @Cron(CronExpression.EVERY_10_SECONDS, {
     name: 'slate.migrateAuthors',
     waitForCompletion: true,
   })
   async migrateAuthors() {
+    if (await this.isAnotherReplicasTurn('slate.migrateAuthors', TEN_SECONDS)) {
+      return;
+    }
+
     const authors = await this.prisma.author.findMany({
       where: {
         slateBio: {
@@ -249,6 +316,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('authors', authors.length);
+
     if (authors.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migrateAuthors');
       this.logger.warn(
@@ -262,6 +331,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateComments() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migrateComments', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const revisions = await this.prisma.commentsRevisions.findMany({
       where: {
         slateText: {
@@ -286,6 +361,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('comments.revisions', revisions.length);
+
     if (revisions.length < 300) {
       this.schedulerRegistry.deleteCronJob('slate.migrateComments');
       this.logger.warn(
@@ -299,6 +376,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateEvents() {
+    if (await this.isAnotherReplicasTurn('slate.migrateEvents', TEN_SECONDS)) {
+      return;
+    }
+
     const events = await this.prisma.event.findMany({
       where: {
         slateDescription: {
@@ -323,6 +404,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('events', events.length);
+
     if (events.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migrateEvents');
       this.logger.warn(
@@ -336,6 +419,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePeerProfiles() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migratePeerProfiles', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const peerProfiles = await this.prisma.peerProfile.findMany({
       where: {
         slateCallToActionText: {
@@ -363,6 +452,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('peerProfiles', peerProfiles.length);
+
     if (peerProfiles.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migratePeerProfiles');
       this.logger.warn(
@@ -376,6 +467,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePeers() {
+    if (await this.isAnotherReplicasTurn('slate.migratePeers', TEN_SECONDS)) {
+      return;
+    }
+
     const peers = await this.prisma.peer.findMany({
       where: {
         slateInformation: {
@@ -401,6 +496,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('peers', peers.length);
+
     if (peers.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migratePeers');
       this.logger.warn(
@@ -414,6 +511,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePolls() {
+    if (await this.isAnotherReplicasTurn('slate.migratePolls', TEN_SECONDS)) {
+      return;
+    }
+
     const polls = await this.prisma.poll.findMany({
       where: {
         slateInfoText: {
@@ -440,6 +541,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('polls', polls.length);
+
     if (polls.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migratePolls');
       this.logger.warn(
@@ -453,6 +556,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateTags() {
+    if (await this.isAnotherReplicasTurn('slate.migrateTags', TEN_SECONDS)) {
+      return;
+    }
+
     const tags = await this.prisma.tag.findMany({
       where: {
         slateDescription: {
@@ -479,6 +586,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('tags', tags.length);
+
     if (tags.length < 30) {
       this.schedulerRegistry.deleteCronJob('slate.migrateTags');
       this.logger.warn(
@@ -492,6 +601,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateMemberPlans() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migrateMemberPlans', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const memberPlansByDescription = await this.prisma.memberPlan.findMany({
       where: {
         slateDescription: {
@@ -543,6 +658,11 @@ export class SlateToPmMigrator {
       }),
     ]);
 
+    await this.forgetMigrated(
+      'member.plans',
+      memberPlansByDescription.length + memberPlansByShortDescription.length
+    );
+
     if (
       memberPlansByDescription.length < 30 &&
       memberPlansByShortDescription.length < 30
@@ -559,6 +679,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePaywalls() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migratePaywalls', TEN_SECONDS)
+    ) {
+      return;
+    }
+
     const paywallsByDescription = await this.prisma.paywall.findMany({
       where: {
         slateDescription: {
@@ -657,6 +783,14 @@ export class SlateToPmMigrator {
       }),
     ]);
 
+    await this.forgetMigrated(
+      'paywalls',
+      paywallsByDescription.length +
+        paywallsByUpgradeDescription.length +
+        paywallsByCircumventDescription.length +
+        paywallsByUpgradeCircumventDescription.length
+    );
+
     if (
       paywallsByDescription.length < 30 &&
       paywallsByUpgradeDescription.length < 30 &&
@@ -675,6 +809,12 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migrateArticles() {
+    if (
+      await this.isAnotherReplicasTurn('slate.migrateArticles', FIVE_SECONDS)
+    ) {
+      return;
+    }
+
     const revisionIds: { id: string }[] = await this.prisma.$queryRaw`
         SELECT id from "articles.revisions" WHERE blocks::text LIKE '%"richText": null%' OR blocks::text LIKE '%"richText":null%';
     `;
@@ -716,6 +856,8 @@ export class SlateToPmMigrator {
       })
     );
 
+    await this.forgetMigrated('articles.revisions', revisions.length);
+
     if (revisions.length < 300) {
       this.schedulerRegistry.deleteCronJob('slate.migrateArticles');
       this.logger.warn(
@@ -729,6 +871,10 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async migratePages() {
+    if (await this.isAnotherReplicasTurn('slate.migratePages', FIVE_SECONDS)) {
+      return;
+    }
+
     const revisionIds: { id: string }[] = await this.prisma.$queryRaw`
         SELECT id from "pages.revisions" WHERE blocks::text LIKE '%"richText": null%' OR blocks::text LIKE '%"richText":null%';
     `;
@@ -769,6 +915,8 @@ export class SlateToPmMigrator {
         });
       })
     );
+
+    await this.forgetMigrated('pages.revisions', revisions.length);
 
     if (revisions.length < 300) {
       this.schedulerRegistry.deleteCronJob('slate.migratePages');
@@ -894,7 +1042,7 @@ export class SlateToPmMigrator {
   // `transform`, write back only changed rows, stop when none match or no progress.
   private async remigrateRevisionTable(
     cronName: string,
-    table: string,
+    table: 'articles.revisions' | 'pages.revisions',
     predicate: string,
     transform: (blocks: any[]) => any[]
   ): Promise<void> {
@@ -927,6 +1075,7 @@ export class SlateToPmMigrator {
       );
       this.logger.log(`Re-migrated ${table} ${row.id}`);
     }
+    await this.forgetMigrated(table, changed);
     if (changed === 0) {
       this.stopCron(
         cronName,
@@ -940,6 +1089,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateBuggyArticles() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateBuggyArticles',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateBuggyArticles',
       'articles.revisions',
@@ -953,6 +1111,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateBuggyPages() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateBuggyPages',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateBuggyPages',
       'pages.revisions',
@@ -966,6 +1133,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateUnmigratedArticles() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateUnmigratedArticles',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateUnmigratedArticles',
       'articles.revisions',
@@ -979,6 +1155,15 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateUnmigratedPages() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateUnmigratedPages',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     await this.remigrateRevisionTable(
       'slate.remigrateUnmigratedPages',
       'pages.revisions',
@@ -1033,8 +1218,18 @@ export class SlateToPmMigrator {
     waitForCompletion: true,
   })
   async remigrateBuggyEntities() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.remigrateBuggyEntities',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
     let matched = 0;
     let changed = 0;
+    const changedRows = new Map<MigratedTable, number>();
     for (const {
       table,
       source,
@@ -1063,6 +1258,7 @@ export class SlateToPmMigrator {
           continue;
         }
         changed++;
+        changedRows.set(table, (changedRows.get(table) ?? 0) + 1);
         await this.prisma.$executeRawUnsafe(
           `UPDATE "${table}" SET "${target}" = $1::jsonb WHERE id = $2`,
           JSON.stringify(next),
@@ -1070,6 +1266,9 @@ export class SlateToPmMigrator {
         );
         this.logger.log(`Re-migrated ${table}.${target} ${row.id}`);
       }
+    }
+    for (const [table, rows] of changedRows) {
+      await this.forgetMigrated(table, rows);
     }
     if (matched === 0) {
       this.stopCron('slate.remigrateBuggyEntities', 'none left');

@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import {
@@ -10,9 +11,9 @@ import {
   selectTeaserUrl,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserListBlockFragment,
-  useGetImagesByTagQuery,
+  GetImagesByTagDocument,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserListBlockProps,
@@ -25,7 +26,7 @@ import { allPass } from 'ramda';
 import { MdEast } from 'react-icons/md';
 
 export const isNewsTeasers = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('News'), isTeaserListBlock])(block);
 
@@ -40,7 +41,7 @@ export const NewsBlock = ({
     elements: { H2 },
   } = useWebsiteBuilder();
 
-  const { data: imagesData } = useGetImagesByTagQuery({
+  const { data: imagesData } = useQuery(GetImagesByTagDocument, {
     variables: { tag: 'news-filler' },
   });
 

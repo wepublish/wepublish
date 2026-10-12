@@ -21,7 +21,7 @@ import {
   SubscriptionIntervalCreateInput,
   SubscriptionIntervalUpdateInput,
 } from './subscription-flow.model';
-import { PrismaClient } from '@prisma/client';
+import { PaymentPeriodicity, Prisma, PrismaClient } from '@prisma/client';
 import { Permissions } from '@wepublish/permissions/api';
 
 @Resolver(() => SubscriptionFlowModel)
@@ -105,20 +105,47 @@ export class SubscriptionFlowResolver {
     description: 'Count of all subscriptions that are affected by this flow',
   })
   async numberOfSubscriptions(
-    @Parent() flow: SubscriptionFlowModel
+    @Parent() flow: SubscriptionFlowModel,
+    @Args('memberPlanId', { type: () => String, nullable: true })
+    memberPlanId?: string | null
   ): Promise<number> {
+    if (!flow.default) {
+      return await this.prismaService.subscription.count({
+        where: subscriptionsOfFlow({
+          ...flow,
+          memberPlanId: flow.memberPlan?.id,
+        }),
+      });
+    }
+
+    const otherFlows = await this.prismaService.subscriptionFlow.findMany({
+      where: { default: false, ...(memberPlanId && { memberPlanId }) },
+      include: { paymentMethods: true },
+    });
+
     return await this.prismaService.subscription.count({
       where: {
-        OR: flow.autoRenewal.map(autoRenew => ({
-          paymentMethodID: {
-            in: flow.paymentMethods.map(paymentMethod => paymentMethod.id),
-          },
-          paymentPeriodicity: {
-            in: flow.periodicities,
-          },
-          autoRenew,
-        })),
+        ...(memberPlanId && { memberPlanID: memberPlanId }),
+        ...(otherFlows.length && {
+          NOT: { OR: otherFlows.map(subscriptionsOfFlow) },
+        }),
       },
     });
   }
+}
+
+function subscriptionsOfFlow(flow: {
+  memberPlanId?: string | null;
+  paymentMethods: { id: string }[];
+  periodicities: PaymentPeriodicity[];
+  autoRenewal: boolean[];
+}): Prisma.SubscriptionWhereInput {
+  return {
+    memberPlanID: flow.memberPlanId ?? undefined,
+    paymentMethodID: {
+      in: flow.paymentMethods.map(paymentMethod => paymentMethod.id),
+    },
+    paymentPeriodicity: { in: flow.periodicities },
+    OR: flow.autoRenewal.map(autoRenew => ({ autoRenew })),
+  };
 }

@@ -1,7 +1,10 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { mockComment, mockUser } from '@wepublish/storybook/mocks';
 import { WithUserDecorator } from '@wepublish/storybook';
-import { CommentState, SensitiveDataUser } from '@wepublish/website/api';
+import {
+  CommentState,
+  FullSensitiveDataUserFragment,
+} from '@wepublish/website/api';
 import { Comment } from './comment';
 
 const anonymousComment = mockComment({
@@ -93,7 +96,9 @@ export const PendingUserChanges: StoryObj = {
     state: CommentState.PendingUserChanges,
   },
   decorators: [
-    WithUserDecorator((verifiedUserComment.user as SensitiveDataUser) ?? null),
+    WithUserDecorator(
+      (verifiedUserComment.user as FullSensitiveDataUserFragment) ?? null
+    ),
   ],
 };
 

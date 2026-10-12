@@ -110,15 +110,19 @@ export const AdblockOverlay = () => {
       >
         <Typography
           variant="h5"
-          fontWeight={700}
           gutterBottom
+          sx={{
+            fontWeight: 700,
+          }}
         >
           Warum Sie diese Seite nicht lesen können?
         </Typography>
         <Typography
           variant="body1"
           gutterBottom
-          maxWidth={600}
+          sx={{
+            maxWidth: 600,
+          }}
         >
           Sie haben einen Ad-Blocker installiert. Doch nur dank des Umsatzes aus
           der Werbung können wir Ihnen weiterhin einen kostenlosen Zugang zu

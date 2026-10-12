@@ -102,7 +102,7 @@ export function MarkBubbleMenu() {
       <ToggleButtonGroup
         tabIndex={-1}
         size="small"
-        sx={{ background: '#fff' }}
+        sx={{ background: 'var(--rs-bg-overlay)' }}
         value={Object.entries({
           bold: editorState.isBold,
           italic: editorState.isItalic,

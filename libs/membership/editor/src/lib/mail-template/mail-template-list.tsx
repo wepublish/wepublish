@@ -1,3 +1,5 @@
+import { useMutation, useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
 import {
   Table,
   TableBody,
@@ -7,17 +9,19 @@ import {
   TableRow,
 } from '@mui/material';
 import {
-  useDeleteMailTemplateMutation,
-  useImportMailTemplatesFromProviderMutation,
-  useMailTemplateQuery,
+  DeleteMailTemplateDocument,
+  ImportMailTemplatesFromProviderDocument,
+  MailTemplateDocument,
 } from '@wepublish/editor/api';
 import {
+  IconButtonTooltip,
+  InfoTooltip,
   ListViewContainer,
   ListViewHeader,
   PermissionControl,
   createCheckedPermissionComponent,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdd,
@@ -37,23 +41,46 @@ import {
   Tag,
   toaster,
 } from 'rsuite';
-import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
+import { DEFAULT_MUTATION_OPTIONS, showErrors } from '../common';
 import { mailTypeLabel } from './mail-placeholders';
+
+const StatusTag = styled(Tag)`
+  white-space: nowrap;
+
+  .rs-tag-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  svg {
+    flex-shrink: 0;
+    color: var(--wep-state-draft-text, var(--rs-state-warning));
+  }
+`;
 
 function MailTemplateList() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { data: queryData } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
-  const [deleteMailTemplate] = useDeleteMailTemplateMutation({
+  const { data: queryData, error: queryError } = useQuery(MailTemplateDocument);
+
+  useEffect(() => {
+    if (queryError) {
+      showErrors(queryError);
+    }
+  }, [queryError]);
+  const [deleteMailTemplate] = useMutation(DeleteMailTemplateDocument, {
     ...DEFAULT_MUTATION_OPTIONS(t),
     refetchQueries: ['MailTemplate'],
   });
-  const [importFromProvider, { loading: importing }] =
-    useImportMailTemplatesFromProviderMutation({
+  const [importFromProvider, { loading: importing }] = useMutation(
+    ImportMailTemplatesFromProviderDocument,
+    {
       ...DEFAULT_MUTATION_OPTIONS(t),
       refetchQueries: ['MailTemplate'],
-    });
+    }
+  );
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [importOpen, setImportOpen] = useState(false);
@@ -100,9 +127,10 @@ function MailTemplateList() {
             <Button
               appearance="ghost"
               loading={importing}
+              startIcon={<MdCloudDownload />}
               onClick={() => setImportOpen(true)}
             >
-              <MdCloudDownload /> {t('mailTemplates.importFromProvider')}
+              {t('mailTemplates.importFromProvider')}
             </Button>
           </PermissionControl>
 
@@ -112,9 +140,9 @@ function MailTemplateList() {
           >
             <Button
               appearance="primary"
+              startIcon={<MdAdd />}
               onClick={() => navigate('/mailtemplates/create')}
             >
-              <MdAdd />
               {t('mailTemplates.create')}
             </Button>
           </PermissionControl>
@@ -129,7 +157,8 @@ function MailTemplateList() {
                 <strong>{t('mailTemplates.name')}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t('mailTemplates.edit.mailType')}</strong>
+                <strong>{t('mailTemplates.edit.mailType')}</strong>{' '}
+                <InfoTooltip text={t('mailTemplates.edit.purposeHint')} />
               </TableCell>
               <TableCell>
                 <strong>{t('mailTemplates.description')}</strong>
@@ -138,9 +167,12 @@ function MailTemplateList() {
                 <strong>{t('mailTemplates.subject')}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t('mailTemplates.status')}</strong>
+                <strong>{t('mailTemplates.status')}</strong>{' '}
+                <InfoTooltip text={t('mailTemplates.statusHelp')} />
               </TableCell>
-              <TableCell />
+              <TableCell align="center">
+                <strong>{t('action')}</strong>
+              </TableCell>
             </TableRow>
           </TableHead>
 
@@ -156,35 +188,48 @@ function MailTemplateList() {
                 <TableCell>
                   {template.status === 'ok' ?
                     <MdCheck />
-                  : <Tag color="yellow">
-                      <MdWarning />{' '}
+                  : <StatusTag>
+                      <MdWarning />
                       {t(`mailTemplates.statuses.${template.status}`)}
-                    </Tag>
+                    </StatusTag>
                   }
                 </TableCell>
-                <TableCell>
-                  <Stack spacing={8}>
+                <TableCell align="center">
+                  <Stack
+                    spacing={8}
+                    justifyContent="center"
+                  >
                     <PermissionControl
                       showRejectionMessage={false}
                       qualifyingPermissions={['CAN_UPDATE_MAIL-TEMPLATES']}
                     >
-                      <IconButton
-                        icon={<MdEdit />}
-                        onClick={() =>
-                          navigate(`/mailtemplates/edit/${template.id}`)
-                        }
-                      />
+                      <IconButtonTooltip caption={t('edit')}>
+                        <IconButton
+                          icon={<MdEdit />}
+                          circle
+                          size="sm"
+                          aria-label={t('edit')}
+                          onClick={() =>
+                            navigate(`/mailtemplates/edit/${template.id}`)
+                          }
+                        />
+                      </IconButtonTooltip>
                     </PermissionControl>
                     <PermissionControl
                       showRejectionMessage={false}
                       qualifyingPermissions={['CAN_DELETE_MAIL-TEMPLATES']}
                     >
-                      <IconButton
-                        icon={<MdDelete />}
-                        color="red"
-                        appearance="primary"
-                        onClick={() => setDeleteId(template.id)}
-                      />
+                      <IconButtonTooltip caption={t('delete')}>
+                        <IconButton
+                          icon={<MdDelete />}
+                          circle
+                          size="sm"
+                          appearance="ghost"
+                          color="red"
+                          aria-label={t('delete')}
+                          onClick={() => setDeleteId(template.id)}
+                        />
+                      </IconButtonTooltip>
                     </PermissionControl>
                   </Stack>
                 </TableCell>

@@ -26,3 +26,24 @@ export const SingleImage = {
     images: [{ image: mockImage(), caption: 'ABC' }],
   },
 };
+
+export const DragDisabled = {
+  args: {
+    ...Default.args,
+    dragDisabled: true,
+  },
+};
+
+export const Animated = {
+  args: {
+    ...Default.args,
+    animationDisabled: false,
+  },
+};
+
+export const DragAnimationDisabled = {
+  args: {
+    ...Default.args,
+    dragAnimationDisabled: true,
+  },
+};

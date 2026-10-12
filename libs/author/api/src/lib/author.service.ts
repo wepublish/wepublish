@@ -1,3 +1,4 @@
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
@@ -22,7 +23,10 @@ function lowercaseFirstLetter(str: string): string {
 
 @Injectable()
 export class AuthorService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private publicContentCache: PublicContentCacheInvalidator
+  ) {}
 
   @PrimeDataLoader(AuthorDataloaderService)
   async getAuthorById(id: string) {
@@ -91,7 +95,7 @@ export class AuthorService {
 
   @PrimeDataLoader(AuthorDataloaderService)
   async updateAuthor({ id, bio, links, tagIds, ...input }: UpdateAuthorInput) {
-    return this.prisma.author.update({
+    const result = await this.prisma.author.update({
       where: {
         id,
       },
@@ -122,11 +126,14 @@ export class AuthorService {
         },
       },
     });
+    await this.publicContentCache.invalidate('authors');
+
+    return result;
   }
 
   @PrimeDataLoader(AuthorDataloaderService)
   async createAuthor({ bio, tagIds, links, ...input }: CreateAuthorInput) {
-    return this.prisma.author.create({
+    const result = await this.prisma.author.create({
       data: {
         ...input,
         bio: bio as any,
@@ -143,14 +150,20 @@ export class AuthorService {
         },
       },
     });
+    await this.publicContentCache.invalidate('authors');
+
+    return result;
   }
 
   async deleteAuthor(id: string) {
-    return this.prisma.author.delete({
+    const result = await this.prisma.author.delete({
       where: {
         id,
       },
     });
+    await this.publicContentCache.invalidate('authors', 'articles');
+
+    return result;
   }
 }
 

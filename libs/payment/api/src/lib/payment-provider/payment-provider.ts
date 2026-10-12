@@ -17,6 +17,7 @@ import DataLoader from 'dataloader';
 import { timingSafeEqual } from 'crypto';
 import { sub } from 'date-fns';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SESSION_CACHE_NAMESPACE } from '@wepublish/authentication/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 
 export type InvoiceWithItems = Invoice & {
@@ -97,6 +98,10 @@ export type WebhookResponse = {
   status: number;
   message?: string;
   paymentStates?: IntentState[];
+  /** Answer with this page instead of `message` (a provider's own checkout). */
+  html?: string;
+  /** Send the browser here once the payment states are applied. */
+  redirectUrl?: string;
 };
 
 export interface PaymentProvider {
@@ -408,6 +413,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
         },
       },
     });
+    await this.kv.resetNamespace(SESSION_CACHE_NAMESPACE);
   }
 
   protected timeConstantCompare(a: string, b: string): boolean {

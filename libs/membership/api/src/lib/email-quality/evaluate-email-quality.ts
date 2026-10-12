@@ -1,5 +1,5 @@
 import { EmailQualityEventType, EmailQualityLevel } from '@prisma/client';
-import { matchesPlaceholderPattern } from './email-quality.config';
+import { EmailQualityConfig } from './email-quality.config';
 
 export type EmailQualityEvidence = {
   type: EmailQualityEventType;
@@ -8,138 +8,125 @@ export type EmailQualityEvidence = {
   detail?: string | null;
 };
 
+export type EmailQualityInput = {
+  /** The user's current address; evidence about any other address is ignored. */
+  email: string;
+  events: EmailQualityEvidence[];
+  lastLogin: Date | null;
+  emailVerifiedAt: Date | null;
+  /** Mails delivered to the current address. */
+  mails: { count: number; earliestSentDate: Date | null };
+  now: Date;
+  config: EmailQualityConfig;
+};
+
 export type EmailQualityVerdict = {
   level: EmailQualityLevel;
-  /** Machine key of the deciding rule, e.g. `hardBounce` or `pattern`. */
+  /** Machine key of the deciding evidence, e.g. `hardBounce` or `login`. */
   reason: string;
   /** When the deciding evidence happened, null when nothing decided. */
   since: Date | null;
-  /** Set when an editor entry decided the level. */
-  manualLevel: EmailQualityLevel | null;
 };
 
-// Mandrill reject reasons (see RECIPIENT_REJECT_REASONS in the mail lib)
-const UNDELIVERABLE_REJECT_REASONS = ['hard-bounce', 'invalid'];
-const BLOCKED_REJECT_REASONS = ['spam', 'unsub', 'custom'];
+const DEAD_TYPES = new Set<EmailQualityEventType>([
+  EmailQualityEventType.hardBounce,
+  EmailQualityEventType.invalid,
+  EmailQualityEventType.blocked,
+  EmailQualityEventType.spamComplaint,
+  EmailQualityEventType.unsubscribed,
+]);
 
-const rejectReason = ({ detail }: EmailQualityEvidence) =>
-  detail?.trim().toLowerCase() ?? '';
+// Opens are deliberately absent: mail clients and scanners load tracking
+// pixels on their own.
+const PROOF_TYPES = new Set<EmailQualityEventType>([
+  EmailQualityEventType.clicked,
+  EmailQualityEventType.verified,
+]);
 
-const isBlocking = (event: EmailQualityEvidence) =>
-  event.type === EmailQualityEventType.spamComplaint ||
-  event.type === EmailQualityEventType.unsubscribed ||
-  (event.type === EmailQualityEventType.rejected &&
-    BLOCKED_REJECT_REASONS.includes(rejectReason(event)));
+const DAY_MS = 24 * 60 * 60 * 1000;
 
-const isUndeliverable = (event: EmailQualityEvidence) =>
-  event.type === EmailQualityEventType.hardBounce ||
-  event.type === EmailQualityEventType.manualInvalid ||
-  (event.type === EmailQualityEventType.rejected &&
-    UNDELIVERABLE_REJECT_REASONS.includes(rejectReason(event)));
-
-// Opens are no proof: mail clients and scanners load tracking pixels on their
-// own. They only count once the unresponsive rule exists.
-const isProofOfReach = (event: EmailQualityEvidence) =>
-  event.type === EmailQualityEventType.clicked ||
-  event.type === EmailQualityEventType.jwtLogin ||
-  event.type === EmailQualityEventType.emailConfirmed ||
-  event.type === EmailQualityEventType.manualConfirmed;
-
-const isManual = (event: EmailQualityEvidence) =>
-  event.type === EmailQualityEventType.manualConfirmed ||
-  event.type === EmailQualityEventType.manualInvalid;
-
-const latest = (
-  events: EmailQualityEvidence[],
-  predicate: (event: EmailQualityEvidence) => boolean
-) =>
-  events.reduce<EmailQualityEvidence | undefined>(
-    (found, event) =>
-      predicate(event) && (!found || event.occurredAt >= found.occurredAt) ?
-        event
-      : found,
+const newest = <T extends { at: Date }>(items: T[]) =>
+  items.reduce<T | undefined>(
+    (found, item) => (!found || item.at > found.at ? item : found),
     undefined
   );
 
-const verdict = (
-  level: EmailQualityLevel,
-  event: EmailQualityEvidence | undefined,
-  reason = event?.type ?? 'noEvidence'
-): EmailQualityVerdict => ({
-  level,
-  reason,
-  since: event?.occurredAt ?? null,
-  manualLevel: event && isManual(event) ? level : null,
-});
-
 /**
- * Derives the quality of the user's current address from recorded evidence.
- * Only evidence about that exact address counts, so an email change starts
- * over at unknown.
+ * Derives the quality of the user's current address from provider evidence
+ * and the user's own activity. Pure, so the rules can be read in one place.
  */
-export const evaluateEmailQuality = (
-  allEvents: EmailQualityEvidence[],
-  {
-    email,
-    placeholderPatterns,
-  }: { email: string; placeholderPatterns: string[] }
-): EmailQualityVerdict => {
+export const evaluateEmailQuality = ({
+  email,
+  events,
+  lastLogin,
+  emailVerifiedAt,
+  mails,
+  now,
+  config,
+}: EmailQualityInput): EmailQualityVerdict => {
   const address = email.trim().toLowerCase();
-  const forAddress = allEvents.filter(
+  const forAddress = events.filter(
     event => event.email.trim().toLowerCase() === address
   );
 
-  // An editor reset wipes everything before it.
-  const reset = latest(
-    forAddress,
-    event => event.type === EmailQualityEventType.manualReset
+  const dead = newest(
+    forAddress
+      .filter(event => DEAD_TYPES.has(event.type))
+      .map(event => ({ at: event.occurredAt, event }))
   );
-  const events =
-    reset ?
-      forAddress.filter(event => event.occurredAt > reset.occurredAt)
-    : forAddress;
+  const proof = newest([
+    ...forAddress
+      .filter(event => PROOF_TYPES.has(event.type))
+      .map(event => ({ reason: event.type as string, at: event.occurredAt })),
+    ...(lastLogin ? [{ reason: 'login', at: lastLogin }] : []),
+    ...(emailVerifiedAt ?
+      [{ reason: 'emailVerified', at: emailVerifiedAt }]
+    : []),
+  ]);
 
-  // A generated address can never be reached, whatever else happened.
-  if (matchesPlaceholderPattern(address, placeholderPatterns)) {
-    return verdict(EmailQualityLevel.placeholder, undefined, 'pattern');
+  // A refusal stands until the person proves the address works again.
+  if (dead && (!proof || proof.at <= dead.at)) {
+    const { type, detail } = dead.event;
+
+    return {
+      level: EmailQualityLevel.dead,
+      reason: detail ? `${type}: ${detail}` : type,
+      since: dead.at,
+    };
   }
 
-  const placeholder = latest(
-    events,
-    event => event.type === EmailQualityEventType.placeholderDetected
-  );
+  const windowMs = config.unresponsiveAfterDays * DAY_MS;
+  const windowStart = new Date(now.getTime() - windowMs);
 
-  if (placeholder) {
-    return verdict(EmailQualityLevel.placeholder, placeholder);
+  if (proof && proof.at >= windowStart) {
+    return {
+      level: EmailQualityLevel.active,
+      reason: proof.reason,
+      since: proof.at,
+    };
   }
 
-  const proof = latest(events, isProofOfReach);
-  const blocking = latest(events, isBlocking);
-
-  // A complaint or unsubscribe only ends when an editor confirms explicitly.
-  if (blocking) {
-    const confirmed = latest(
-      events,
-      event => event.type === EmailQualityEventType.manualConfirmed
-    );
-
-    if (!confirmed || confirmed.occurredAt <= blocking.occurredAt) {
-      return verdict(EmailQualityLevel.blocked, blocking);
-    }
-  }
-
-  const undeliverable = latest(events, isUndeliverable);
-
+  // Mails arrive, nobody reacts: the address is probably no longer read.
   if (
-    undeliverable &&
-    (!proof || proof.occurredAt <= undeliverable.occurredAt)
+    mails.earliestSentDate &&
+    mails.count >= config.minMailsForUnresponsive &&
+    mails.earliestSentDate <= windowStart
   ) {
-    return verdict(EmailQualityLevel.undeliverable, undeliverable);
+    const lastSign =
+      proof && proof.at > mails.earliestSentDate ?
+        proof.at
+      : mails.earliestSentDate;
+
+    return {
+      level: EmailQualityLevel.unresponsive,
+      reason: 'noInteraction',
+      since: new Date(lastSign.getTime() + windowMs),
+    };
   }
 
-  if (proof) {
-    return verdict(EmailQualityLevel.confirmed, proof);
-  }
-
-  return verdict(EmailQualityLevel.unknown, undefined);
+  return {
+    level: EmailQualityLevel.unknown,
+    reason: 'noEvidence',
+    since: null,
+  };
 };

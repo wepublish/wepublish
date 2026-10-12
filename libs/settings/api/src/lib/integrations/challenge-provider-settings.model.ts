@@ -62,6 +62,6 @@ export class CreateSettingChallengeProviderInput extends OmitType(
 
 @ArgsType()
 export class UpdateSettingChallengeProviderInput extends PartialType(
-  OmitType(CreateSettingChallengeProviderInput, ['type'] as const, ArgsType),
+  CreateSettingChallengeProviderInput,
   ArgsType
 ) {}

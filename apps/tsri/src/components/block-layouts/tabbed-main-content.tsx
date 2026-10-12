@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { Theme } from '@mui/material';
 import { hasBlockStyle, isFlexBlock } from '@wepublish/block-content/website';
-import { BlockContent, FullFlexBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullFlexBlockFragment,
+} from '@wepublish/website/api';
 import { allPass } from 'ramda';
 
 import { TabbedContent, TabPanel } from '../tabbed-content/tabbed-content';
@@ -9,7 +12,7 @@ import { TsriLayoutType } from '../teaser-layouts/tsri-layout';
 import { TsriTabbedContentType } from './tsri-base-tabbed-content';
 
 export const isTabbedMainContent = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullFlexBlockFragment =>
   allPass([
     hasBlockStyle(TsriTabbedContentType.TabbedMainContent),

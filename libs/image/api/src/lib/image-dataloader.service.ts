@@ -1,3 +1,8 @@
+import {
+  CONTENT_CACHE_TTL_SECONDS,
+  KvTtlCacheService,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
 import { Injectable, Scope } from '@nestjs/common';
 import { Image, PrismaClient } from '@prisma/client';
 import { createOptionalsArray, Primeable } from '@wepublish/utils/api';
@@ -9,21 +14,31 @@ import DataLoader from 'dataloader';
 export class ImageDataloaderService implements Primeable<Image> {
   private dataloader = new DataLoader<string, Image | null>(
     async (ids: readonly string[]) =>
-      createOptionalsArray(
+      this.kv.getOrLoadManyNs(
+        contentCacheNamespace('images'),
         ids as string[],
-        await this.prisma.image.findMany({
-          where: {
-            id: {
-              in: ids as string[],
-            },
-          },
-        }),
-        'id'
+        async missing =>
+          createOptionalsArray(
+            missing,
+            await this.prisma.image.findMany({
+              where: {
+                id: {
+                  in: missing,
+                },
+              },
+            }),
+            'id'
+          ),
+        CONTENT_CACHE_TTL_SECONDS,
+        'id:'
       ),
     { name: 'ImageDataLoader' }
   );
 
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
   public prime(
     ...parameters: Parameters<DataLoader<string, Image | null>['prime']>

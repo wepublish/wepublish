@@ -8,8 +8,10 @@ export default {
   title: 'UI/TextField',
   render: () => (
     <Stack
-      gap={1}
-      alignItems={'start'}
+      sx={{
+        gap: 1,
+        alignItems: 'start',
+      }}
     >
       <TextFieldCmp label={'Default'} />
       <TextFieldCmp

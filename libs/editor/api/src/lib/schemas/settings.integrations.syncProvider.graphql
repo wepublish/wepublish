@@ -134,3 +134,15 @@ query MailchimpSyncProgress($configId: String!) {
     errorMessage
   }
 }
+
+mutation CreateSyncProviderSetting(
+  $id: String!
+  $type: SyncProviderType!
+  $name: String
+) {
+  createSyncProviderSetting(id: $id, type: $type, name: $name) {
+    id
+    type
+    name
+  }
+}

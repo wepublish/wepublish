@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullSoundCloudTrackBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderSoundCloudTrackBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
 
 export const isSoundCloudTrackBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullSoundCloudTrackBlockFragment =>
   block.__typename === 'SoundCloudTrackBlock';
 

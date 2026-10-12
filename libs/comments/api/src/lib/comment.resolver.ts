@@ -85,18 +85,13 @@ export class CommentResolver {
     @Args() input: CommentsForItemArgs,
     @CurrentUser() session: UserSession | null
   ) {
-    const publicFilter = {
-      OR: [
-        session?.user.id ? { userID: session?.user.id } : {},
-        { state: CommentState.approved },
-      ],
-    };
+    if (hasPermission(CanGetComments, session?.roles ?? [])) {
+      return this.commentService.getCommentsForItem(input);
+    }
 
-    return this.commentService.getCommentsForItem(
+    return this.commentService.getPublicCommentsForItem(
       input,
-      !hasPermission(CanGetComments, session?.roles ?? []) ? publicFilter : (
-        undefined
-      )
+      session?.user?.id
     );
   }
 

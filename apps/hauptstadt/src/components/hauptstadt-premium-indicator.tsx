@@ -5,12 +5,14 @@ import {
   TeaserPreTitleWrapper,
   TitleBlockPreTitle,
 } from '@wepublish/block-content/website';
-import { MemberPlan } from '@wepublish/website/api';
+import { FullMemberPlanFragment } from '@wepublish/website/api';
 import { useContext } from 'react';
 
 import { CurrentPaywallContext } from './hauptstadt-paywall';
 
-const selectPremiumMemberplan = <T extends Pick<MemberPlan, 'tags'>>(
+const selectPremiumMemberplan = <
+  T extends Pick<FullMemberPlanFragment, 'tags'>,
+>(
   memberplans: T[]
 ) => memberplans.find(mb => mb.tags?.includes('premium'));
 

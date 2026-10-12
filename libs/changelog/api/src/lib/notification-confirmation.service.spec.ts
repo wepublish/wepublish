@@ -3,14 +3,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { NotificationConfirmationService } from './notification-confirmation.service';
 import { NotificationSource } from './notification-read.model';
+import type { Mock } from 'vitest';
 
 describe('NotificationConfirmationService', () => {
   let service: NotificationConfirmationService;
 
   const mockPrisma = {
     notificationConfirmation: {
-      findMany: jest.fn(),
-      upsert: jest.fn(),
+      findMany: vi.fn(),
+      upsert: vi.fn(),
     },
   };
 
@@ -31,7 +32,7 @@ describe('NotificationConfirmationService', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('lists all confirmations of the instance', async () => {
@@ -95,7 +96,7 @@ describe('NotificationConfirmationService', () => {
 describe('NotificationConfirmationService job logs', () => {
   it('refuses to confirm a periodic job log', async () => {
     const prisma = {
-      notificationConfirmation: { upsert: jest.fn() },
+      notificationConfirmation: { upsert: vi.fn() },
     } as unknown as PrismaClient;
     const service = new NotificationConfirmationService(prisma);
 
@@ -108,13 +109,13 @@ describe('NotificationConfirmationService job logs', () => {
     ).rejects.toThrow(/cannot be confirmed/i);
 
     expect(
-      (prisma as unknown as { notificationConfirmation: { upsert: jest.Mock } })
+      (prisma as unknown as { notificationConfirmation: { upsert: Mock } })
         .notificationConfirmation.upsert
     ).not.toHaveBeenCalled();
   });
 
   it('still allows a changelog entry to be confirmed', async () => {
-    const upsert = jest.fn().mockResolvedValue({});
+    const upsert = vi.fn().mockResolvedValue({});
     const prisma = {
       notificationConfirmation: { upsert },
     } as unknown as PrismaClient;

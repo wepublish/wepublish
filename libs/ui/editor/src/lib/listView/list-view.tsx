@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
+import { ComponentProps, useCallback, useRef, useState } from 'react';
 import { IconButton as RIconButton, Table as RTable } from 'rsuite';
 
 import { StateColor } from '../utility';
+import { fitColumnWidths } from './fit-column-widths';
 import { ListViewFilters } from './list-view-filters';
 
 const { Cell } = RTable;
@@ -48,22 +50,20 @@ interface StatusBadgeProps {
   states: string[];
 }
 
+const statusOf = (states: string[]) =>
+  states.includes('pending') ? 'pending'
+  : states.includes('published') ? 'published'
+  : states.includes('draft') ? 'draft'
+  : 'none';
+
 export const StatusBadge = styled.div<StatusBadgeProps>`
   font-size: 0.75em;
+  font-weight: 600;
   text-align: center;
-  border-radius: 15px;
+  border-radius: 999px;
   padding: 2px 8px;
-  background-color: ${props => {
-    if (props.states.includes('pending')) {
-      return StateColor.pending;
-    } else if (props.states.includes('published')) {
-      return StateColor.published;
-    } else if (props.states.includes('draft')) {
-      return StateColor.draft;
-    } else {
-      return StateColor.none;
-    }
-  }};
+  background-color: ${props => StateColor[statusOf(props.states)]};
+  color: ${props => `var(--wep-state-${statusOf(props.states)}-text, inherit)`};
 `;
 
 export const IconButtonCell = styled(RTable.Cell)`
@@ -74,7 +74,7 @@ export const IconButtonCell = styled(RTable.Cell)`
 `;
 
 export const IconButton = styled(RIconButton)`
-  && {
+  &&:not([data-with-text]) {
     width: 36px;
     height: 36px;
   }
@@ -84,6 +84,41 @@ export const IconButton = styled(RIconButton)`
   }
 `;
 
-export const Table = styled(RTable)`
-  height: 100% !important;
+const StyledTable = styled(RTable)`
+  ${({ autoHeight }) => (autoHeight ? '' : 'height: 100% !important;')}
 `;
+
+export function Table({
+  children,
+  ...props
+}: ComponentProps<typeof StyledTable>) {
+  const [width, setWidth] = useState(0);
+  const observer = useRef<ResizeObserver | null>(null);
+
+  const measure = useCallback((table: { root?: HTMLDivElement } | null) => {
+    observer.current?.disconnect();
+    observer.current = null;
+
+    const root = table?.root;
+
+    if (!root || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    observer.current = new ResizeObserver(([entry]) =>
+      setWidth(Math.floor(entry.contentRect.width))
+    );
+    observer.current.observe(root);
+  }, []);
+
+  return (
+    <StyledTable
+      {...props}
+      ref={measure}
+    >
+      {typeof children === 'function' ?
+        children
+      : fitColumnWidths(children, width)}
+    </StyledTable>
+  );
+}

@@ -1,5 +1,5 @@
-query RecentActions {
-  actions {
+query RecentActions($types: [ActionType!]) {
+  actions(types: $types) {
     ...FullAction
   }
 }

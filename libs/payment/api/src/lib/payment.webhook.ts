@@ -15,6 +15,8 @@ import {
 } from './payment-method/payment-method.config';
 import { NextFunction, Request, Response } from 'express';
 import { Public } from '@wepublish/authentication/api';
+import { PaymentState } from '@prisma/client';
+import { InvoicePaidNotifier } from './invoice-paid.listener';
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks';
 
@@ -24,7 +26,8 @@ export class PaymentWebhookController {
 
   constructor(
     @Inject(PAYMENT_METHOD_CONFIG)
-    private config: PaymentMethodConfig
+    private config: PaymentMethodConfig,
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   @Public()
@@ -56,10 +59,25 @@ export class PaymentWebhookController {
           if (response.paymentStates) {
             for (const paymentStatus of response.paymentStates) {
               // TODO: handle errors properly
-              await provider.updatePaymentWithIntentState({
+              const payment = await provider.updatePaymentWithIntentState({
                 intentState: paymentStatus,
               });
+
+              if (
+                paymentStatus.state === PaymentState.paid &&
+                payment?.invoiceID
+              ) {
+                await this.invoicePaidNotifier.notify(payment.invoiceID);
+              }
             }
+          }
+
+          if (response.redirectUrl) {
+            return await res.redirect(303, response.redirectUrl);
+          }
+
+          if (response.html) {
+            return await res.type('html').status(200).send(response.html);
           }
 
           return await res.status(200).send(response.message || 'OK');

@@ -7,4 +7,5 @@ export * from './lib/tracking-pixel.service';
 export * from './lib/tracking-pixel.dataloader';
 export * from './lib/tracking-pixel.model';
 export * from './lib/tracking-pixel-provider/tracking-pixel-provider';
+export * from './lib/tracking-pixel-provider/create-tracking-pixel-providers';
 export * from './lib/tracking-pixel.module';

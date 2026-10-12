@@ -44,8 +44,8 @@ describe('NotificationReadResolver', () => {
   let app: INestApplication;
 
   const notificationReadService = {
-    getNotificationReads: jest.fn(),
-    markNotificationRead: jest.fn(),
+    getNotificationReads: vi.fn(),
+    markNotificationRead: vi.fn(),
   };
 
   beforeAll(async () => {
@@ -76,7 +76,7 @@ describe('NotificationReadResolver', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   afterAll(async () => {

@@ -9,6 +9,7 @@ import {
   ClickTrackingExtension,
   ClickTrackingExtensionConfig,
 } from './extensions/click-tracking.extension';
+import { describeError } from '@wepublish/utils/api';
 
 interface SubscriptionLite {
   id: string;
@@ -121,8 +122,7 @@ export class MailchimpSyncService {
           `Mailchimp sync for "${config.name || config.id}" completed successfully.`
         );
       } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
+        const errorMessage = describeError(error);
         this.logger.error(
           `Mailchimp sync failed for "${config.name || config.id}": ${errorMessage}`
         );
@@ -186,8 +186,7 @@ export class MailchimpSyncService {
         if (progress) {
           progress.status = 'failed';
           progress.finishedAt = new Date();
-          progress.errorMessage =
-            error instanceof Error ? error.message : String(error);
+          progress.errorMessage = describeError(error);
         }
       });
   }
@@ -498,8 +497,7 @@ export class MailchimpSyncService {
                 });
                 updatedCount++;
               } catch (error: any) {
-                const errorMessage =
-                  error instanceof Error ? error.message : String(error);
+                const errorMessage = describeError(error);
                 const statusCode =
                   error?.response?.body?.status ?? error?.status ?? null;
                 this.logger.warn(
@@ -518,8 +516,7 @@ export class MailchimpSyncService {
           }
         } catch (error: any) {
           // Batch API itself failed — fall back to recording errors for all contacts in batch
-          const errorMessage =
-            error instanceof Error ? error.message : String(error);
+          const errorMessage = describeError(error);
           this.logger.error(`Batch API failed: ${errorMessage}`);
 
           for (const update of batch) {
@@ -577,8 +574,7 @@ export class MailchimpSyncService {
           (clickTracking.config ?? {}) as ClickTrackingExtensionConfig
         );
       } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
+        const errorMessage = describeError(error);
         this.logger.error(
           `Click tracking extension failed for "${config.name || config.id}": ${errorMessage}`
         );

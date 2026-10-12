@@ -80,6 +80,7 @@ export const EenewsTeaserGrid = ({
             blockStyle={blockStyle ?? EeNewsBlockType.DossierGrid}
             numColumns={columns}
             alignment={{
+              __typename: 'FlexAlignment',
               i: String(idx),
               x: 0,
               y: 0,

@@ -1,5 +1,6 @@
 query PaymentProviderSettings {
   paymentProviderSettings {
+    deletedAt
     bexio_accountId
     bexio_countryId
     bexio_invoiceMailBodyNewMembership
@@ -26,6 +27,7 @@ query PaymentProviderSettings {
     payrexx_pm
     payrexx_psp
     payrexx_vatrate
+    simulated_declineRenewals
     stripe_methods
     type
   }
@@ -56,6 +58,7 @@ mutation UpdatePaymentProviderSetting(
   $payrexx_pm: [PayrexxPM!]
   $payrexx_psp: [PayrexxPSP!]
   $payrexx_vatrate: String
+  $simulated_declineRenewals: Boolean
   $stripe_methods: [StripePaymentMethod!]
   $webhookEndpointSecret: String
 ) {
@@ -84,6 +87,7 @@ mutation UpdatePaymentProviderSetting(
     payrexx_pm: $payrexx_pm
     payrexx_psp: $payrexx_psp
     payrexx_vatrate: $payrexx_vatrate
+    simulated_declineRenewals: $simulated_declineRenewals
     stripe_methods: $stripe_methods
     webhookEndpointSecret: $webhookEndpointSecret
   ) {
@@ -113,7 +117,31 @@ mutation UpdatePaymentProviderSetting(
     payrexx_pm
     payrexx_psp
     payrexx_vatrate
+    simulated_declineRenewals
     stripe_methods
     type
+  }
+}
+
+mutation CreatePaymentProviderSetting(
+  $id: String!
+  $type: PaymentProviderType!
+  $name: String
+) {
+  createPaymentProviderSetting(id: $id, type: $type, name: $name) {
+    createdAt
+    deletedAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+
+mutation DeletePaymentProviderSetting($id: String!) {
+  deletePaymentProviderSetting(id: $id) {
+    deletedAt
+    id
   }
 }

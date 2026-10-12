@@ -62,8 +62,11 @@ export class AISettingsService {
     input: CreateSettingAIProviderInput
   ): Promise<SettingAIProvider> {
     const data = this.encryptSecretsIfPresent(input);
-    const returnValue = await this.prisma.settingAIProvider.create({
-      data,
+
+    const returnValue = await this.prisma.settingAIProvider.upsert({
+      where: { id: data.id },
+      create: data,
+      update: {},
     });
     await this.kv.resetNamespace('settings:ai');
     return returnValue;

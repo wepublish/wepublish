@@ -1,7 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CanGetAISettings, CanUpdateAISettings } from '@wepublish/permissions';
+import {
+  CanCreateAISettings,
+  CanGetAISettings,
+  CanUpdateAISettings,
+} from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
+  CreateSettingAIProviderInput,
   SettingAIProvider,
   UpdateSettingAIProviderInput,
   SettingAIProviderFilter,
@@ -36,7 +41,6 @@ export class AISettingsResolver {
     return this.aiSettingsDataloader.load(id);
   }
 
-  /** DISABLE FOR NOW
   @Permissions(CanCreateAISettings)
   @Mutation(returns => SettingAIProvider, {
     name: 'createAISetting',
@@ -45,7 +49,6 @@ export class AISettingsResolver {
   createAISetting(@Args() input: CreateSettingAIProviderInput) {
     return this.aiSettingsService.createAISetting(input);
   }
-   **/
 
   @Permissions(CanUpdateAISettings)
   @Mutation(returns => SettingAIProvider, {

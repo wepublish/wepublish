@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useTranslation } from 'react-i18next';
 
 const Iframe = styled.iframe`
   position: absolute;
@@ -20,6 +21,8 @@ export interface StreamableVideoEmbedProps {
 }
 
 export function StreamableVideoEmbed({ videoID }: StreamableVideoEmbedProps) {
+  const { t } = useTranslation();
+
   return (
     <StreamableEmbed>
       {videoID && (
@@ -27,7 +30,7 @@ export function StreamableVideoEmbed({ videoID }: StreamableVideoEmbedProps) {
           src={`https://streamable.com/e/${encodeURIComponent(videoID)}`}
           allowFullScreen
           allow="autoplay; encrypted-media"
-          title="Streamable video"
+          title={t('blocks.embeds.streamableVideo')}
         />
       )}
     </StreamableEmbed>

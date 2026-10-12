@@ -6,3 +6,4 @@ export * from './lib/challenge.resolver';
 export * from './lib/challenge.module';
 export * from './lib/providers/cf-turnstile.provider';
 export * from './lib/providers/h-captcha.provider';
+export * from './lib/create-challenge-provider';

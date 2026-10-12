@@ -1,12 +1,13 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { isFilledTeaser } from '@wepublish/block-content/website';
 import {
+  ArticleListDocument,
   ArticleSort,
   FullTeaserFragment,
   SortOrder,
-  useArticleListQuery,
-  useTagListQuery,
+  TagListDocument,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserSlotsBlockProps,
@@ -140,7 +141,7 @@ export const EenewsAktuellGrid = ({
   );
   const articleCount = cmsTeasers.length || 6;
 
-  const { data: tagListData } = useTagListQuery({
+  const { data: tagListData } = useQuery(TagListDocument, {
     fetchPolicy: 'cache-first',
     variables: { take: 100 },
   });
@@ -158,7 +159,7 @@ export const EenewsAktuellGrid = ({
   const activeTagId =
     activeTagName ? tagIdByName.get(activeTagName) : undefined;
 
-  const { data: articlesData, loading } = useArticleListQuery({
+  const { data: articlesData, loading } = useQuery(ArticleListDocument, {
     skip: !activeTagId,
     fetchPolicy: 'cache-first',
     variables: {
@@ -265,6 +266,7 @@ export const EenewsAktuellGrid = ({
                 blockStyle={blockStyle}
                 numColumns={3}
                 alignment={{
+                  __typename: 'FlexAlignment',
                   i: String(idx),
                   x: 0,
                   y: 0,

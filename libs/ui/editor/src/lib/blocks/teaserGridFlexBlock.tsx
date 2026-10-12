@@ -87,7 +87,10 @@ export function FlexTeaserBlock({
       bodyFill
       showGrabCursor={showGrabCursor}
     >
-      <PlaceholderInput onAddClick={onChoose}>
+      <PlaceholderInput
+        onAddClick={onChoose}
+        addLabel={i18next.t('blocks.flexTeaser.chooseTeaser')}
+      >
         {teaser && (
           <Teaser>
             <ContentForTeaser teaser={teaser} />
@@ -97,6 +100,7 @@ export function FlexTeaserBlock({
                 caption={i18next.t('blocks.flexTeaser.chooseTeaser')}
               >
                 <IconButton
+                  aria-label={i18next.t('blocks.flexTeaser.chooseTeaser')}
                   icon={<MdArticle />}
                   onClick={onChoose}
                 />
@@ -105,6 +109,7 @@ export function FlexTeaserBlock({
                 caption={i18next.t('blocks.flexTeaser.editTeaser')}
               >
                 <IconButton
+                  aria-label={i18next.t('blocks.flexTeaser.editTeaser')}
                   icon={<MdEdit />}
                   onClick={onEdit}
                 />
@@ -113,6 +118,7 @@ export function FlexTeaserBlock({
                 caption={i18next.t('blocks.flexTeaser.deleteTeaser')}
               >
                 <IconButton
+                  aria-label={i18next.t('blocks.flexTeaser.deleteTeaser')}
                   icon={<MdDelete />}
                   onClick={onRemove}
                 />
@@ -249,6 +255,7 @@ export function TeaserGridFlexBlock({
       />
       <IconButtonTooltip caption={t('blocks.flexTeaser.addBlock')}>
         <RIconButton
+          aria-label={t('blocks.flexTeaser.addBlock')}
           icon={<MdAddBox />}
           appearance="primary"
           circle
@@ -291,6 +298,7 @@ export function TeaserGridFlexBlock({
               {!flexTeaser.teaser && (
                 <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
                   <RIconButton
+                    aria-label={t('blocks.flexTeaser.removeBlock')}
                     disabled={flexTeaser.alignment.static}
                     block
                     appearance="subtle"
@@ -312,6 +320,11 @@ export function TeaserGridFlexBlock({
                 <RIconButton
                   block
                   appearance="subtle"
+                  aria-label={
+                    !flexTeaser.alignment.static ?
+                      t('blocks.flexTeaser.lockBlock')
+                    : t('blocks.flexTeaser.unlockBlock')
+                  }
                   icon={
                     flexTeaser.alignment.static ? <MdLockOpen /> : <MdLock />
                   }

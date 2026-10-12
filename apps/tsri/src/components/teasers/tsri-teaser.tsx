@@ -11,7 +11,10 @@ import {
   selectTeaserUrl,
 } from '@wepublish/block-content/website';
 import {} from '@wepublish/block-content/website';
-import { FlexAlignment, FullTeaserFragment } from '@wepublish/website/api';
+import {
+  FullFlexAlignmentFragment,
+  FullTeaserFragment,
+} from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
   Image,
@@ -42,7 +45,7 @@ export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
   }
 };
 
-export const TeaserWrapper = styled('div')<FlexAlignment>`
+export const TeaserWrapper = styled('div')<FullFlexAlignmentFragment>`
   list-style: none;
   aspect-ratio: 16/9;
   overflow: hidden;

@@ -1,5 +1,6 @@
 import {
   EditorBlockType,
+  MailchimpFormOptionsLayout,
   SubscribeBlockField,
   TeaserListBlockSort,
   TeaserSlotType,
@@ -12,6 +13,7 @@ import {
   MdCoffee,
   MdComment,
   MdEvent,
+  MdFileCopy,
   MdFilter,
   MdFilter1,
   MdFilter6,
@@ -32,6 +34,7 @@ import {
 
 import { BlockMapForValue } from '../atoms/blockList';
 import { isFunctionalUpdate } from '../utility';
+import { BlockTemplateBlock } from './blockTemplateBlock';
 import { CommentBlock } from './commentBlock';
 import { CrowdfundingBlock } from './CrowdfundingBlock';
 import { EmbedBlock } from './embedBlock';
@@ -310,6 +313,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
               urlParam: 'email',
               defaultValue: null,
               value: null,
+              optionsLayout: MailchimpFormOptionsLayout.List,
               options: [],
             },
           ],
@@ -355,7 +359,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       blocks: [
         {
-          alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
+          alignment: {
+            __typename: 'FlexAlignment',
+            i: nanoid(),
+            x: 0,
+            y: 0,
+            w: 3,
+            h: 6,
+          },
           block: null,
         },
       ],
@@ -365,5 +376,12 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       return 'blocks.flexBlock.label';
     })(),
     icon: <MdInterests />,
+  },
+
+  [EditorBlockType.BlockTemplate]: {
+    field: props => <BlockTemplateBlock {...props} />,
+    defaultValue: { template: null, blockStyle: undefined },
+    label: 'blocks.blockTemplate.label',
+    icon: <MdFileCopy />,
   },
 };

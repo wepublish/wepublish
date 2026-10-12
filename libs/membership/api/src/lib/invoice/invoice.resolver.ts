@@ -118,9 +118,11 @@ export class InvoiceResolver {
   })
   public markInvoiceAsPaid(
     @Args('id') id: string,
-    @CurrentUser() session: UserSession
+    @CurrentUser() session: UserSession,
+    @Args('sendMail', { type: () => Boolean, defaultValue: true })
+    sendMail: boolean
   ) {
-    return this.service.markInvoiceAsPaid(id, session.user.id);
+    return this.service.markInvoiceAsPaid(id, session.user.id, sendMail);
   }
 
   @ResolveField(() => [InvoiceItem])

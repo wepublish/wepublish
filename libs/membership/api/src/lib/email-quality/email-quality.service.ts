@@ -2,11 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import {
   EmailQualityEventSource,
   EmailQualityEventType,
+  MailLogState,
+  Prisma,
   PrismaClient,
 } from '@prisma/client';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
+import { EmailQualityRecorder, MailQualitySignal } from '@wepublish/mail/api';
 import {
-  DEFAULT_EMAIL_QUALITY_CONFIG,
   EmailQualityConfig,
   parseEmailQualityConfig,
 } from './email-quality.config';
@@ -21,11 +23,19 @@ export type RecordEmailQualityEvent = {
   occurredAt?: Date;
   detail?: string | null;
   mailLogId?: string | null;
-  createdById?: string | null;
+  providerEventId?: string | null;
 };
 
+/**
+ * Security scanners follow every link of a mail within seconds of its
+ * delivery. A click that early is no sign of a human reading it.
+ */
+export const SCANNER_CLICK_WINDOW_MS = 60 * 1000;
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 @Injectable()
-export class EmailQualityService {
+export class EmailQualityService implements EmailQualityRecorder {
   private logger = new Logger('EmailQualityService');
 
   constructor(
@@ -34,14 +44,22 @@ export class EmailQualityService {
   ) {}
 
   async getConfig(): Promise<EmailQualityConfig> {
-    try {
-      const setting = await this.settings.settingByName(
-        SettingName.EMAIL_QUALITY
-      );
+    const [unresponsiveAfterDays, minMailsForUnresponsive] = await Promise.all([
+      this.settingValue(SettingName.EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS),
+      this.settingValue(SettingName.EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE),
+    ]);
 
-      return parseEmailQualityConfig(setting.value);
+    return parseEmailQualityConfig({
+      unresponsiveAfterDays,
+      minMailsForUnresponsive,
+    });
+  }
+
+  private async settingValue(name: SettingName): Promise<unknown> {
+    try {
+      return (await this.settings.settingByName(name)).value;
     } catch {
-      return DEFAULT_EMAIL_QUALITY_CONFIG;
+      return undefined;
     }
   }
 
@@ -62,32 +80,126 @@ export class EmailQualityService {
       select: { id: true, email: true },
     });
     const emailByUser = new Map(users.map(({ id, email }) => [id, email]));
+    const data = events
+      .filter(({ userId }) => emailByUser.has(userId))
+      .map(event => ({
+        userId: event.userId,
+        email: (event.email ?? emailByUser.get(event.userId)!).toLowerCase(),
+        type: event.type,
+        source: event.source,
+        occurredAt: event.occurredAt ?? new Date(),
+        detail: event.detail ?? null,
+        mailLogId: event.mailLogId ?? null,
+        providerEventId: event.providerEventId ?? null,
+      }));
+
+    if (!data.length) {
+      return;
+    }
 
     await this.prisma.emailQualityEvent.createMany({
-      data: events
-        .filter(({ userId }) => emailByUser.has(userId))
-        .map(event => ({
-          userId: event.userId,
-          email: (event.email ?? emailByUser.get(event.userId)!).toLowerCase(),
-          type: event.type,
-          source: event.source,
-          occurredAt: event.occurredAt ?? new Date(),
-          detail: event.detail ?? null,
-          mailLogId: event.mailLogId ?? null,
-          createdById: event.createdById ?? null,
-        })),
+      data,
       skipDuplicates: true,
     });
 
-    for (const userId of emailByUser.keys()) {
-      await this.recompute(userId);
+    const config = await this.getConfig();
+
+    for (const userId of new Set(data.map(({ userId }) => userId))) {
+      await this.recompute(userId, config);
     }
+  }
+
+  async recordMailSignals({
+    mailLogId,
+    userId,
+    signals,
+    source,
+  }: {
+    mailLogId: string;
+    userId?: string;
+    signals: MailQualitySignal[];
+    source: EmailQualityEventSource;
+  }) {
+    if (!signals.length) {
+      return;
+    }
+
+    const mailLog = await this.prisma.mailLog.findUnique({
+      where: { id: mailLogId },
+      select: { recipientID: true, sentDate: true },
+    });
+    const recipientId = userId ?? mailLog?.recipientID;
+
+    if (!recipientId) {
+      return;
+    }
+
+    const isScannerClick = (signal: MailQualitySignal) =>
+      signal.type === EmailQualityEventType.clicked &&
+      !!mailLog &&
+      (signal.occurredAt ?? new Date()).getTime() - mailLog.sentDate.getTime() <
+        SCANNER_CLICK_WINDOW_MS;
+
+    await this.record(
+      signals
+        .filter(signal => !isScannerClick(signal))
+        .map(signal => ({
+          userId: recipientId,
+          type: signal.type,
+          source,
+          email: signal.email,
+          occurredAt: signal.occurredAt,
+          detail: signal.detail,
+          mailLogId,
+          providerEventId: signal.providerEventId,
+        }))
+    );
+  }
+
+  async recordAddressSignals({
+    email,
+    signals,
+    source,
+  }: {
+    email: string;
+    signals: MailQualitySignal[];
+    source: EmailQualityEventSource;
+  }) {
+    if (!signals.length) {
+      return;
+    }
+
+    const users = await this.prisma.user.findMany({
+      where: { email: { equals: email, mode: 'insensitive' } },
+      select: { id: true },
+    });
+
+    await this.record(
+      users.flatMap(({ id }, index) =>
+        signals.map(signal => ({
+          userId: id,
+          type: signal.type,
+          source,
+          email,
+          occurredAt: signal.occurredAt,
+          detail: signal.detail,
+          // the provider's event id is unique; a second user with the same
+          // address gets the evidence without it
+          providerEventId: index === 0 ? signal.providerEventId : null,
+        }))
+      )
+    );
   }
 
   async recompute(userId: string, config?: EmailQualityConfig) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { email: true, emailQuality: true },
+      select: {
+        email: true,
+        lastLogin: true,
+        emailVerifiedAt: true,
+        emailQuality: true,
+      },
     });
 
     if (!user) {
@@ -95,17 +207,34 @@ export class EmailQualityService {
     }
 
     const email = user.email.toLowerCase();
-    const { placeholderPatterns } = config ?? (await this.getConfig());
-    const events = await this.prisma.emailQualityEvent.findMany({
-      where: { userId, email },
-      select: { type: true, occurredAt: true, email: true, detail: true },
-    });
+    const [events, mails] = await Promise.all([
+      this.prisma.emailQualityEvent.findMany({
+        where: { userId, email },
+        select: { type: true, occurredAt: true, email: true, detail: true },
+      }),
+      // Rows from before `recipientEmail` existed count for the current
+      // address. Once letters share this table, restrict to `channel: mail`.
+      this.prisma.mailLog.aggregate({
+        _count: true,
+        _min: { sentDate: true },
+        where: {
+          recipientID: userId,
+          state: { in: [MailLogState.delivered, MailLogState.accepted] },
+          OR: [{ recipientEmail: email }, { recipientEmail: null }],
+        },
+      }),
+    ]);
 
-    const verdict = evaluateEmailQuality(events, {
-      email,
-      placeholderPatterns,
-    });
     const now = new Date();
+    const verdict = evaluateEmailQuality({
+      email,
+      events,
+      lastLogin: user.lastLogin,
+      emailVerifiedAt: user.emailVerifiedAt,
+      mails: { count: mails._count, earliestSentDate: mails._min.sentDate },
+      now,
+      config: config ?? (await this.getConfig()),
+    });
     const unchanged =
       user.emailQuality?.email === email &&
       user.emailQuality.level === verdict.level;
@@ -117,7 +246,6 @@ export class EmailQualityService {
       level: verdict.level,
       reason: verdict.reason,
       since,
-      manualLevel: verdict.manualLevel,
       lastEvaluatedAt: now,
     };
 
@@ -132,5 +260,57 @@ export class EmailQualityService {
       create: { userId, ...data },
       update: data,
     });
+  }
+
+  /**
+   * Levels age: an address becomes unresponsive by time passing, not by an
+   * event. Run nightly and on demand for everyone who has a level or got a
+   * mail recently enough to earn one.
+   */
+  async recomputeAll({ pageSize = 500 }: { pageSize?: number } = {}) {
+    const config = await this.getConfig();
+    const where: Prisma.UserWhereInput = {
+      OR: [
+        { emailQuality: { isNot: null } },
+        {
+          mailSent: {
+            some: {
+              sentDate: {
+                gte: new Date(
+                  Date.now() - config.unresponsiveAfterDays * DAY_MS
+                ),
+              },
+            },
+          },
+        },
+      ],
+    };
+    let cursor: string | undefined;
+    let recomputed = 0;
+
+    for (;;) {
+      const page = await this.prisma.user.findMany({
+        where,
+        select: { id: true },
+        orderBy: { id: 'asc' },
+        take: pageSize,
+        ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      });
+
+      if (!page.length) {
+        break;
+      }
+
+      for (const { id } of page) {
+        await this.recompute(id, config);
+        recomputed++;
+      }
+
+      cursor = page[page.length - 1].id;
+    }
+
+    this.logger.log(`Re-evaluated the email quality of ${recomputed} users`);
+
+    return { recomputed };
   }
 }

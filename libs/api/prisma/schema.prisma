@@ -508,6 +508,14 @@ model Invoice {
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
   currency                  Currency
+  // When the RENEWAL_SUCCESS mail for this invoice went out. Claimed
+  // atomically so the webhook, the nightly job and the admin path can never
+  // send it twice.
+  renewalSuccessMailSentAt   DateTime? @db.Timestamptz(3)
+
+  // Set when an admin marked the invoice as paid and explicitly asked for no
+  // mail. Blocks every later path from sending one.
+  suppressRenewalSuccessMail Boolean   @default(false)
 
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
@@ -559,6 +567,10 @@ model MailLog {
   // state be polled later (see MailLogSyncService) for providers that can't
   // reach us by webhook. Null for providers that return no id.
   mailProviderMessageID String?
+
+  // Address the mail went to, so evidence about an address can be told apart
+  // from the user's current one after an email change. Null on old rows.
+  recipientEmail String?
 
   // Origin of the mail. Nullable so pre-existing rows keep working; new sends
   // always set it.
@@ -1593,6 +1605,7 @@ enum BlockType {
   Comment        @map("comment")
   Event          @map("event")
   FlexBlock      @map("flexBlock")
+  BlockTemplate  @map("blockTemplate")
 }
 
 model BlockStyle {
@@ -1604,6 +1617,17 @@ model BlockStyle {
   blocks BlockType[]
 
   @@map("block-content.styles")
+}
+
+model BlockTemplate {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name   String @unique
+  blocks Json
+
+  @@map("block_templates")
 }
 
 model Banner {
@@ -1765,6 +1789,7 @@ enum MailProviderType {
   MAILCHIMP @map("mailchimp")
   SLACK     @map("slack")
   SMTP      @map("smtp")
+  LOG       @map("log")
 }
 
 model SettingMailProvider {
@@ -1774,6 +1799,7 @@ model SettingMailProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type                  MailProviderType
+  deletedAt             DateTime?        @db.Timestamptz(3)
   name                  String?
   fromAddress           String?
   replyToAddress        String?
@@ -1797,6 +1823,7 @@ model SettingTrackingPixel {
   modifiedAt                             DateTime                  @updatedAt @db.Timestamptz(3)
   lastLoadedAt                           DateTime                  @default(now()) @db.Timestamptz(3)
   type                                   TrackingPixelProviderType
+  deletedAt                              DateTime?                 @db.Timestamptz(3)
   name                                   String?
   prolitteris_memberNr                   String?
   prolitteris_username                   String?
@@ -1816,6 +1843,7 @@ enum PaymentProviderType {
   BEXIO                @map("bexio")
   MOLLIE               @map("mollie")
   NO_CHARGE            @map("no-charge")
+  SIMULATED            @map("simulated")
 }
 
 enum PayrexxPSP {
@@ -1961,6 +1989,7 @@ model SettingPaymentProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
 
   type                  PaymentProviderType
+  deletedAt             DateTime?           @db.Timestamptz(3)
   name                  String?
   offSessionPayments    Boolean?
   webhookEndpointSecret String? // Payrexx webhookApiKey
@@ -1972,6 +2001,7 @@ model SettingPaymentProvider {
   payrexx_psp          PayrexxPSP[]
   payrexx_pm           PayrexxPM[]
   payrexx_vatrate      Decimal?     @db.Decimal(5, 4)
+  simulated_declineRenewals Boolean  @default(false)
 
   bexio_userId                              Int?
   bexio_countryId                           Int?
@@ -2006,9 +2036,10 @@ model SettingChallengeProvider {
   lastLoadedAt DateTime @default(now()) @db.Timestamptz(3)
   name         String?
 
-  type    ChallengeProviderType
-  secret  String?
-  siteKey String?
+  type      ChallengeProviderType
+  deletedAt DateTime?             @db.Timestamptz(3)
+  secret    String?
+  siteKey   String?
 
   @@map("settings.challengeprovider")
 }
@@ -2315,48 +2346,37 @@ model AuditLog {
   @@map("audit_logs")
 }
 
-// Ordered best -> worst. unresponsive and suspect are evaluated later, the
-// values exist so that adding those rules needs no migration.
+// Ordered best -> worst. Placeholder addresses are not a level: they are
+// recognised by pattern at query time (see placeholderEmailPatterns).
 enum EmailQualityLevel {
-  confirmed     @map("confirmed")
-  unknown       @map("unknown")
-  unresponsive  @map("unresponsive")
-  suspect       @map("suspect")
-  undeliverable @map("undeliverable")
-  blocked       @map("blocked")
-  placeholder   @map("placeholder")
+  active       @map("active")
+  unknown      @map("unknown")
+  unresponsive @map("unresponsive")
+  dead         @map("dead")
 }
 
+// verified / invalid are reserved for an address verification service; nothing
+// records verified yet.
 enum EmailQualityEventType {
-  placeholderDetected @map("placeholderDetected")
-  hardBounce          @map("hardBounce")
-  softBounce          @map("softBounce")
-  rejected            @map("rejected")
-  spamComplaint       @map("spamComplaint")
-  unsubscribed        @map("unsubscribed")
-  delivered           @map("delivered")
-  opened              @map("opened")
-  clicked             @map("clicked")
-  jwtLogin            @map("jwtLogin")
-  emailConfirmed      @map("emailConfirmed")
-  manualConfirmed     @map("manualConfirmed")
-  manualInvalid       @map("manualInvalid")
-  manualReset         @map("manualReset")
-  manualNote          @map("manualNote")
+  hardBounce    @map("hardBounce")
+  invalid       @map("invalid")
+  blocked       @map("blocked")
+  spamComplaint @map("spamComplaint")
+  unsubscribed  @map("unsubscribed")
+  clicked       @map("clicked")
+  verified      @map("verified")
 }
 
 enum EmailQualityEventSource {
-  send      @map("send")
-  webhook   @map("webhook")
-  poll      @map("poll")
-  session   @map("session")
-  user      @map("user")
-  editor    @map("editor")
-  backfill  @map("backfill")
-  evaluator @map("evaluator")
+  send         @map("send")
+  webhook      @map("webhook")
+  poll         @map("poll")
+  verification @map("verification")
 }
 
-/// Append-only evidence about how usable an email address is.
+/// Append-only evidence about how usable an email address is. Logins and
+/// confirmed email changes are not stored here: the evaluator reads them from
+/// User.lastLogin and User.emailVerifiedAt.
 model EmailQualityEvent {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
@@ -2370,13 +2390,16 @@ model EmailQualityEvent {
   email  String
   type   EmailQualityEventType
   source EmailQualityEventSource
-  /// Reject reason, bounce diagnosis or an editor note. Never raw payloads.
+  /// Reject reason or bounce diagnosis. Never raw payloads.
   detail String?
 
-  mailLogId   String?
-  createdById String?
+  mailLogId String?
+  /// Provider's own id of the event, for evidence without a mail log such as
+  /// newsletter campaign bounces. Prefixed with the provider type.
+  providerEventId String?
 
   @@unique([mailLogId, type])
+  @@unique([providerEventId])
   @@index([userId, email, occurredAt])
   @@map("email_quality_events")
 }
@@ -2392,10 +2415,8 @@ model UserEmailQuality {
   reason String
   since  DateTime          @db.Timestamptz(3)
 
-  /// Set by an editor, wins until newer negative evidence arrives.
-  manualLevel     EmailQualityLevel?
-  lastEvaluatedAt DateTime           @db.Timestamptz(3)
-  modifiedAt      DateTime           @updatedAt @db.Timestamptz(3)
+  lastEvaluatedAt DateTime @db.Timestamptz(3)
+  modifiedAt      DateTime @updatedAt @db.Timestamptz(3)
 
   @@index([level])
   @@map("user_email_quality")

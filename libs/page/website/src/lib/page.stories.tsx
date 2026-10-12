@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import { Meta } from '@storybook/nextjs-vite';
 import { Page } from './page';
 import { mockPage, mockPageRevision } from '@wepublish/storybook/mocks';
@@ -37,9 +36,7 @@ export const WithError = {
       page: null,
     },
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
   },
 };
 

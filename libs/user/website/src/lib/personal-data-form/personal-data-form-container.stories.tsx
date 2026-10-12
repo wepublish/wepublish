@@ -2,7 +2,7 @@ import { action } from 'storybook/actions';
 import { StoryObj } from '@storybook/nextjs-vite';
 import { WithUserDecorator } from '@wepublish/storybook';
 import {
-  SensitiveDataUser,
+  FullSensitiveDataUserFragment,
   UpdatePasswordDocument,
   UpdateUserDocument,
 } from '@wepublish/website/api';
@@ -30,7 +30,7 @@ const mockedUser = mockUser({
   },
   image: mockImage(),
   paymentProviderCustomers: [],
-}) as SensitiveDataUser;
+}) as FullSensitiveDataUserFragment;
 
 const onUpdateVariables = {
   input: {

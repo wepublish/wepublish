@@ -4,22 +4,23 @@ import mailchimp from '@mailchimp/mailchimp_marketing';
 import { SyncProviderSettingsService } from '@wepublish/settings/api';
 import { MailchimpSyncService } from './mailchimp-sync.service';
 import { ClickTrackingExtension } from './extensions/click-tracking.extension';
+import type { Mock } from 'vitest';
 
-jest.mock('@mailchimp/mailchimp_marketing', () => ({
+vi.mock('@mailchimp/mailchimp_marketing', () => ({
   __esModule: true,
   default: {
-    setConfig: jest.fn(),
+    setConfig: vi.fn(),
     lists: {
-      getListMembersInfo: jest.fn(),
-      getListMergeFields: jest.fn(),
+      getListMembersInfo: vi.fn(),
+      getListMergeFields: vi.fn(),
     },
   },
 }));
 
 const mailchimpStub = mailchimp as unknown as {
   lists: {
-    getListMembersInfo: jest.Mock;
-    getListMergeFields: jest.Mock;
+    getListMembersInfo: Mock;
+    getListMergeFields: Mock;
   };
 };
 
@@ -89,16 +90,16 @@ const givenMailchimpContact = (overrides: Record<string, any> = {}) => {
 };
 
 const prismaMock = {
-  user: { findMany: jest.fn() },
-  subscription: { findMany: jest.fn() },
+  user: { findMany: vi.fn() },
+  subscription: { findMany: vi.fn() },
   mailchimpSyncError: {
-    findMany: jest.fn(),
+    findMany: vi.fn(),
   },
 };
 
 const syncProviderSettingsServiceMock = {
-  getEnabledSyncConfigs: jest.fn(),
-  updateSyncResult: jest.fn(),
+  getEnabledSyncConfigs: vi.fn(),
+  updateSyncResult: vi.fn(),
 };
 
 describe('MailchimpSyncService', () => {
@@ -107,7 +108,7 @@ describe('MailchimpSyncService', () => {
   const dryRun = () => service.executeSyncById(CONFIG_ID, true);
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     prismaMock.user.findMany.mockResolvedValue([mockUser]);
     prismaMock.subscription.findMany.mockResolvedValue([]);
@@ -135,12 +136,33 @@ describe('MailchimpSyncService', () => {
         },
         {
           provide: ClickTrackingExtension,
-          useValue: { execute: jest.fn() },
+          useValue: { execute: vi.fn() },
         },
       ],
     }).compile();
 
     service = module.get<MailchimpSyncService>(MailchimpSyncService);
+  });
+
+  it('keeps readably why a nightly sync failed', async () => {
+    vi.spyOn(
+      service as unknown as { executeSyncForConfig: () => Promise<void> },
+      'executeSyncForConfig'
+    ).mockRejectedValue({
+      status: 401,
+      title: 'API Key Invalid',
+      detail:
+        'Your API key may be invalid, or you have attempted to access the wrong datacenter.',
+    });
+
+    await service.executeAllSync();
+
+    expect(
+      syncProviderSettingsServiceMock.updateSyncResult
+    ).toHaveBeenCalledWith(
+      syncConfig.id,
+      '401 Your API key may be invalid, or you have attempted to access the wrong datacenter.'
+    );
   });
 
   describe('newly created CMS user', () => {

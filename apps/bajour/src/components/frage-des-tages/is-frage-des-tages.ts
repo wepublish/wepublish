@@ -4,14 +4,14 @@ import {
   isTeaserListBlock,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserGridBlockFragment,
   FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
 import { allPass, anyPass } from 'ramda';
 
 export const isFrageDesTages = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullTeaserListBlockFragment | FullTeaserGridBlockFragment =>
   allPass([
     hasBlockStyle('FrageDesTages'),

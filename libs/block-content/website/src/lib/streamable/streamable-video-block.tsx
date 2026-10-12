@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullStreamableVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderStreamableVideoBlockProps } from '@wepublish/website/builder';
@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 
 export const isStreamableVideoBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullStreamableVideoBlockFragment =>
   block.__typename === 'StreamableVideoBlock';
 
