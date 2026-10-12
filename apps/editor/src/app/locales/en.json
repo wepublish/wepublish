@@ -178,6 +178,7 @@
         "properties": "Properties",
         "propertiesInfo": "Properties can be set per article. Public properties are accessible through the public API.",
         "public": "Public",
+        "private": "Private",
         "publishArticle": "Publish Article",
         "publishAt": "Available online from",
         "publishAtDateCheckbox": "Set a different date for online availability",
@@ -229,8 +230,7 @@
         "hiddenInfo": "Hidden articles do not appear in automatic article lists on the website (e.g. latest articles or tag pages), but remain reachable via their direct link.",
         "contentUrlInfo": "The web address readers are taken to when they click on the teaser.",
         "teaserPropertiesInfo": "Additional key-value pairs your website can use for special display options. Only needed if the people who develop your website asked you to set them. Public properties are visible via the public API.",
-        "enterSocialMediaImage": "Please add an image for social media",
-        "private": "Private"
+        "enterSocialMediaImage": "Please add an image for social media"
       }
     },
     "articles": {
@@ -1164,12 +1164,12 @@
       "unpaid": "unpaid",
       "userNotLoaded": "Unexpected error: Your user data could not be loaded.",
       "table": {
+        "action": "Action",
         "date": "Date",
         "description": "Description",
         "goodie": "Goodie",
         "status": "Status",
-        "idCopied": "Invoice ID copied",
-        "action": "Action"
+        "idCopied": "Invoice ID copied"
       }
     },
     "linkPageBreakEditPanel": {
@@ -2423,6 +2423,24 @@
       "paidUntilInfo": "Set automatically as soon as an invoice is paid. The subscription is paid up to this date."
     },
     "userSubscriptionList": {
+      "periodRange": "Period",
+      "table": {
+        "active": "Active",
+        "confirmed": "Confirmed",
+        "created": "Created",
+        "deactivated": "Deactivated",
+        "expired": "Expired",
+        "expires": "Expires",
+        "paidUntil": "Paid until",
+        "perMonthSuffix": "/mo.",
+        "periodicity": "Payment interval",
+        "planned": "Planned",
+        "renewal": "Renewal",
+        "renewsAutomatically": "Automatic",
+        "start": "Start",
+        "subscription": "Subscription",
+        "unpaid": "Unpaid"
+      },
       "addSubscription": "Add subscription",
       "subscriptionNumber": "No. {{subscriptionId}}",
       "periodTitle": "Period {{date}}",
@@ -2458,25 +2476,7 @@
       "subscriptionCreatedAt": "Created at {{date}}",
       "subscriptionIsAutoRenewed": "Subscription will be renewed automatically",
       "subscriptionStartsAt": "Subscription starts at {{date}}",
-      "unexpectedErrorNoInvoice": "Unexpected error: invoice not available.",
-      "periodRange": "Period",
-      "table": {
-        "subscription": "Subscription",
-        "start": "Start",
-        "periodicity": "Payment interval",
-        "paidUntil": "Paid until",
-        "active": "Active",
-        "deactivated": "Deactivated",
-        "planned": "Planned",
-        "unpaid": "Unpaid",
-        "expired": "Expired",
-        "created": "Created",
-        "renewal": "Renewal",
-        "renewsAutomatically": "Automatic",
-        "expires": "Expires",
-        "confirmed": "Confirmed",
-        "perMonthSuffix": "/mo."
-      }
+      "unexpectedErrorNoInvoice": "Unexpected error: invoice not available."
     },
     "blockStyles": {
       "style": "Style",

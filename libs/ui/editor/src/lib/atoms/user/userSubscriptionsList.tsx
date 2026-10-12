@@ -38,6 +38,7 @@ import {
   createCheckedPermissionComponent,
   useAuthorisation,
 } from '../permissionControl';
+import { SingleLineTooltip } from '../singleLineTooltip';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
@@ -660,7 +661,11 @@ function UserSubscriptionsList({
                 <Whisper
                   placement="top"
                   trigger="hover"
-                  speaker={<Tooltip>{rowData.period.invoiceID}</Tooltip>}
+                  speaker={
+                    <SingleLineTooltip>
+                      {rowData.period.invoiceID}
+                    </SingleLineTooltip>
+                  }
                 >
                   <IdButton
                     type="button"

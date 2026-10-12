@@ -507,7 +507,10 @@ function UserEditView() {
           setCloseFn={setCloseAfterSave}
         />
         <UserFormGrid>
-          <Row gutter={10}>
+          <Row
+            gutter={10}
+            data-testid="user-columns"
+          >
             <Col xs={12}>
               <RGrid fluid>
                 {/* general user data */}

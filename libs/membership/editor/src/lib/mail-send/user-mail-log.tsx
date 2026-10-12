@@ -33,8 +33,14 @@ export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
   }
 
   return (
-    <TableContainer sx={{ overflowX: 'auto' }}>
-      <Table size="small">
+    // a long history scrolls inside the card; the column titles stay visible
+    <TableContainer
+      sx={{ overflowX: 'auto', overflowY: 'auto', maxHeight: 300 }}
+    >
+      <Table
+        size="small"
+        stickyHeader
+      >
         <TableHead>
           <TableRow>
             <TableCell>

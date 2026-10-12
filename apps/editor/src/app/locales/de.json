@@ -178,6 +178,7 @@
         "properties": "Eigenschaften",
         "propertiesInfo": "Eigenschaften können pro Artikel eingestellt werden. Öffentliche Eigenschaften sind über die öffentliche API zugänglich.",
         "public": "Öffentlich",
+        "private": "Privat",
         "publishArticle": "Artikel publizieren",
         "publishAt": "Online verfügbar ab",
         "publishAtDateCheckbox": "Wähle ein anderes Datum für die Online-Verfügbarkeit",
@@ -229,8 +230,7 @@
         "hiddenInfo": "Ausgeblendete Artikel erscheinen nicht in automatischen Artikellisten auf der Website (z.B. neueste Artikel oder Tag-Seiten), bleiben aber über ihren direkten Link erreichbar.",
         "contentUrlInfo": "Die Webadresse, zu der Leser*innen beim Klick auf den Teaser gelangen.",
         "teaserPropertiesInfo": "Zusätzliche Schlüssel-Wert-Paare, die deine Website für spezielle Darstellungen nutzen kann. Nur nötig, wenn die Entwickler*innen deiner Website dich darum gebeten haben. Öffentliche Eigenschaften sind über die öffentliche API sichtbar.",
-        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
-        "private": "Privat"
+        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
       }
     },
     "articles": {
@@ -1164,12 +1164,12 @@
       "unpaid": "unbezahlt",
       "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden.",
       "table": {
+        "action": "Aktion",
         "date": "Datum",
         "description": "Beschreibung",
         "goodie": "Goodie",
         "status": "Status",
-        "idCopied": "Rechnungs-ID kopiert",
-        "action": "Aktion"
+        "idCopied": "Rechnungs-ID kopiert"
       }
     },
     "linkPageBreakEditPanel": {
@@ -2375,6 +2375,24 @@
       "paidUntilInfo": "Wird automatisch gesetzt, sobald eine Rechnung bezahlt ist. Bis zu diesem Datum ist das Abo bezahlt."
     },
     "userSubscriptionList": {
+      "periodRange": "Zeitraum",
+      "table": {
+        "active": "Aktiv",
+        "confirmed": "Bestätigt",
+        "created": "Erstellt",
+        "deactivated": "Deaktiviert",
+        "expired": "Abgelaufen",
+        "expires": "Läuft aus",
+        "paidUntil": "Bezahlt bis",
+        "perMonthSuffix": "/Mt.",
+        "periodicity": "Zahlungsintervall",
+        "planned": "Geplant",
+        "renewal": "Erneuerung",
+        "renewsAutomatically": "Automatisch",
+        "start": "Start",
+        "subscription": "Abo",
+        "unpaid": "Unbezahlt"
+      },
       "addSubscription": "Abonnement hinzufügen",
       "subscriptionNumber": "Nr. {{subscriptionId}}",
       "periodTitle": "Periode {{date}}",
@@ -2410,25 +2428,7 @@
       "subscriptionCreatedAt": "Erstellt am {{date}}",
       "subscriptionIsAutoRenewed": "Abo wird automatisch erneuert",
       "subscriptionStartsAt": "Abo startet am {{date}}",
-      "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden.",
-      "periodRange": "Zeitraum",
-      "table": {
-        "subscription": "Abo",
-        "start": "Start",
-        "periodicity": "Zahlungsintervall",
-        "paidUntil": "Bezahlt bis",
-        "active": "Aktiv",
-        "deactivated": "Deaktiviert",
-        "planned": "Geplant",
-        "unpaid": "Unbezahlt",
-        "expired": "Abgelaufen",
-        "created": "Erstellt",
-        "renewal": "Erneuerung",
-        "renewsAutomatically": "Automatisch",
-        "expires": "Läuft aus",
-        "confirmed": "Bestätigt",
-        "perMonthSuffix": "/Mt."
-      }
+      "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
     },
     "blockTemplates": {
       "list": {
