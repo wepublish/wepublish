@@ -1,7 +1,10 @@
 import { createHmac } from 'crypto';
 import { EmailQualityEventType, MailLogState } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
-import { MailProviderError } from './mail-provider.interface';
+import {
+  MailProviderError,
+  MailWebhookSignatureError,
+} from './mail-provider.interface';
 import { MailgunMailProvider } from './mailgun-mail-provider';
 
 const { answer } = vi.hoisted(() => ({
@@ -123,7 +126,7 @@ describe('MailgunMailProvider webhook', () => {
 
     await expect(
       provider.webhookForSendMail(request({ event: 'delivered' }, 'forged'))
-    ).rejects.toThrow('Webhook signature failed');
+    ).rejects.toBeInstanceOf(MailWebhookSignatureError);
   });
 
   it('accepts a webhook signed with the webhook key', async () => {
@@ -136,16 +139,14 @@ describe('MailgunMailProvider webhook', () => {
     ]);
   });
 
-  it.each([
-    ['permanent', EmailQualityEventType.hardBounce],
-    ['temporary', EmailQualityEventType.softBounce],
-  ])('reports a %s failure', async (severity, type) => {
+  it('reports a permanent failure as a hard bounce', async () => {
     const [status] = await (
       await makeProvider()
     ).webhookForSendMail(
       request({
+        id: 'evt-1',
         event: 'failed',
-        severity,
+        severity: 'permanent',
         'delivery-status': { description: 'mailbox unavailable' },
       })
     );
@@ -153,34 +154,64 @@ describe('MailgunMailProvider webhook', () => {
     expect(status.state).toBe(MailLogState.bounced);
     expect(status.qualitySignals).toEqual([
       {
-        type,
+        type: EmailQualityEventType.hardBounce,
         email: 'jane@example.com',
         detail: 'mailbox unavailable',
         occurredAt: new Date(1790000000 * 1000),
+        providerEventId: 'mailgun:evt-1',
       },
+    ]);
+  });
+
+  // Mailgun retries a temporary failure; the mail may still get through.
+  it('reports a temporary failure only as a state', async () => {
+    const [status] = await (
+      await makeProvider()
+    ).webhookForSendMail(request({ event: 'failed', severity: 'temporary' }));
+
+    expect(status.state).toBe(MailLogState.bounced);
+    expect(status.qualitySignals).toEqual([]);
+  });
+
+  it('reports a rejection as blocked', async () => {
+    const [status] = await (
+      await makeProvider()
+    ).webhookForSendMail(request({ event: 'rejected', reason: 'suppressed' }));
+
+    expect(status.state).toBe(MailLogState.rejected);
+    expect(status.qualitySignals).toEqual([
+      expect.objectContaining({
+        type: EmailQualityEventType.blocked,
+        detail: 'suppressed',
+      }),
     ]);
   });
 
   it.each([
     ['complained', EmailQualityEventType.spamComplaint],
     ['unsubscribed', EmailQualityEventType.unsubscribed],
-    ['opened', EmailQualityEventType.opened],
     ['clicked', EmailQualityEventType.clicked],
   ])('reports %s without touching the delivery state', async (event, type) => {
     const [status] = await (
       await makeProvider()
-    ).webhookForSendMail(request({ event }));
+    ).webhookForSendMail(request({ id: 'evt-2', event }));
 
     expect(status.state).toBeNull();
-    expect(status.qualitySignals).toEqual([expect.objectContaining({ type })]);
+    expect(status.qualitySignals).toEqual([
+      expect.objectContaining({ type, providerEventId: 'mailgun:evt-2' }),
+    ]);
   });
 
-  it('reports nothing about a plain delivery', async () => {
-    const [status] = await (
-      await makeProvider()
-    ).webhookForSendMail(request({ event: 'delivered' }));
+  it('reports nothing about a plain delivery or an open', async () => {
+    const provider = await makeProvider();
+    const [delivered] = await provider.webhookForSendMail(
+      request({ event: 'delivered' })
+    );
 
-    expect(status.state).toBe(MailLogState.delivered);
-    expect(status.qualitySignals).toEqual([]);
+    expect(delivered.state).toBe(MailLogState.delivered);
+    expect(delivered.qualitySignals).toEqual([]);
+    await expect(
+      provider.webhookForSendMail(request({ event: 'opened' }))
+    ).resolves.toEqual([]);
   });
 });

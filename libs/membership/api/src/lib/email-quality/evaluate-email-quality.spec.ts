@@ -1,172 +1,211 @@
 import { EmailQualityEventType as T, EmailQualityLevel } from '@prisma/client';
 import {
   EmailQualityEvidence,
+  EmailQualityInput,
   evaluateEmailQuality,
 } from './evaluate-email-quality';
 
 const email = 'jane@example.com';
-const day = (n: number) => new Date(Date.UTC(2026, 8, n));
+// day n of a 400 day timeline; `now` is day 400, the window 180 days
+const day = (n: number) =>
+  new Date(Date.UTC(2026, 0, 1) + n * 24 * 60 * 60 * 1000);
+const now = day(400);
+const config = { unresponsiveAfterDays: 180, minMailsForUnresponsive: 1 };
+
 const event = (
   type: T,
   n: number,
   extra: Partial<EmailQualityEvidence> = {}
 ): EmailQualityEvidence => ({ type, occurredAt: day(n), email, ...extra });
 
-const levelOf = (
-  events: EmailQualityEvidence[],
-  options: { email?: string; placeholderPatterns?: string[] } = {}
-) =>
-  evaluateEmailQuality(events, {
-    email: options.email ?? email,
-    placeholderPatterns: options.placeholderPatterns ?? [],
+const evaluate = (input: Partial<EmailQualityInput> = {}) =>
+  evaluateEmailQuality({
+    email,
+    events: [],
+    lastLogin: null,
+    emailVerifiedAt: null,
+    mails: { count: 0, earliestSentDate: null },
+    now,
+    config,
+    ...input,
   });
 
 describe('evaluateEmailQuality', () => {
   it('is unknown without evidence', () => {
-    expect(levelOf([])).toEqual({
+    expect(evaluate()).toEqual({
       level: EmailQualityLevel.unknown,
       reason: 'noEvidence',
       since: null,
-      manualLevel: null,
     });
   });
 
-  describe('placeholder', () => {
-    it('matches a configured pattern case-insensitively', () => {
-      expect(
-        levelOf([], {
-          email: 'nw-42@Placeholder.Neuewege.ch',
-          placeholderPatterns: ['@placeholder.neuewege.ch'],
-        })
-      ).toMatchObject({
-        level: EmailQualityLevel.placeholder,
-        reason: 'pattern',
-      });
-    });
-
-    it('comes from an importer marker', () => {
-      expect(levelOf([event(T.placeholderDetected, 1)])).toMatchObject({
-        level: EmailQualityLevel.placeholder,
-        reason: T.placeholderDetected,
-      });
-    });
-
-    it('wins over any later click or editor confirmation', () => {
-      expect(
-        levelOf([event(T.manualConfirmed, 5)], {
-          placeholderPatterns: ['@example.com'],
-        }).level
-      ).toBe(EmailQualityLevel.placeholder);
-    });
-  });
-
-  describe('undeliverable', () => {
+  describe('dead', () => {
     it.each([
-      ['a hard bounce', event(T.hardBounce, 1)],
-      ['a hard-bounce reject', event(T.rejected, 1, { detail: 'hard-bounce' })],
-      ['an invalid reject', event(T.rejected, 1, { detail: 'invalid' })],
-      ['an editor marking it invalid', event(T.manualInvalid, 1)],
-    ])('follows %s', (_, evidence) => {
-      expect(levelOf([evidence]).level).toBe(EmailQualityLevel.undeliverable);
+      T.hardBounce,
+      T.invalid,
+      T.blocked,
+      T.spamComplaint,
+      T.unsubscribed,
+    ])('is dead after a %s', type => {
+      expect(evaluate({ events: [event(type, 300)] })).toEqual({
+        level: EmailQualityLevel.dead,
+        reason: type,
+        since: day(300),
+      });
     });
 
-    it('ignores a soft bounce for now', () => {
-      expect(levelOf([event(T.softBounce, 1)]).level).toBe(
-        EmailQualityLevel.unknown
-      );
+    it('keeps the provider diagnosis in the reason', () => {
       expect(
-        levelOf([event(T.rejected, 1, { detail: 'soft-bounce' })]).level
+        evaluate({
+          events: [event(T.hardBounce, 300, { detail: 'mailbox full' })],
+        }).reason
+      ).toBe('hardBounce: mailbox full');
+    });
+
+    it('wins over an older login, click or confirmation', () => {
+      expect(
+        evaluate({
+          events: [event(T.clicked, 390), event(T.hardBounce, 395)],
+          lastLogin: day(394),
+          emailVerifiedAt: day(393),
+        }).level
+      ).toBe(EmailQualityLevel.dead);
+    });
+
+    it('is revived by a newer login', () => {
+      expect(
+        evaluate({ events: [event(T.hardBounce, 300)], lastLogin: day(350) })
+      ).toEqual({
+        level: EmailQualityLevel.active,
+        reason: 'login',
+        since: day(350),
+      });
+    });
+
+    it('is revived by a newer click', () => {
+      expect(
+        evaluate({ events: [event(T.hardBounce, 300), event(T.clicked, 301)] })
+          .level
+      ).toBe(EmailQualityLevel.active);
+    });
+
+    it('stays dead when the only newer proof is for another address', () => {
+      expect(
+        evaluate({
+          events: [
+            event(T.hardBounce, 300),
+            event(T.clicked, 350, { email: 'old@example.com' }),
+          ],
+        }).level
+      ).toBe(EmailQualityLevel.dead);
+    });
+  });
+
+  describe('active', () => {
+    it('comes from a recent login', () => {
+      expect(evaluate({ lastLogin: day(300) })).toEqual({
+        level: EmailQualityLevel.active,
+        reason: 'login',
+        since: day(300),
+      });
+    });
+
+    it('comes from a confirmed email change', () => {
+      expect(evaluate({ emailVerifiedAt: day(300) })).toEqual({
+        level: EmailQualityLevel.active,
+        reason: 'emailVerified',
+        since: day(300),
+      });
+    });
+
+    it('comes from a click or a verification', () => {
+      expect(evaluate({ events: [event(T.clicked, 300)] })).toMatchObject({
+        level: EmailQualityLevel.active,
+        reason: 'clicked',
+      });
+      expect(evaluate({ events: [event(T.verified, 300)] })).toMatchObject({
+        level: EmailQualityLevel.active,
+        reason: 'verified',
+      });
+    });
+
+    it('reports the newest proof', () => {
+      expect(
+        evaluate({
+          events: [event(T.clicked, 310)],
+          lastLogin: day(305),
+          emailVerifiedAt: day(320),
+        })
+      ).toEqual({
+        level: EmailQualityLevel.active,
+        reason: 'emailVerified',
+        since: day(320),
+      });
+    });
+
+    it('still counts a proof exactly at the edge of the window', () => {
+      expect(evaluate({ lastLogin: day(220) }).level).toBe(
+        EmailQualityLevel.active
+      );
+    });
+
+    it('ignores clicks for another address, case-insensitively', () => {
+      expect(
+        evaluate({
+          email: 'Jane@Example.com',
+          events: [
+            event(T.clicked, 300, { email: 'JANE@example.com' }),
+            event(T.hardBounce, 350, { email: 'other@example.com' }),
+          ],
+        })
+      ).toMatchObject({ level: EmailQualityLevel.active, reason: 'clicked' });
+    });
+  });
+
+  describe('unresponsive', () => {
+    const mails = { count: 1, earliestSentDate: day(100) };
+
+    it('needs a delivered mail older than the window and no proof in it', () => {
+      expect(evaluate({ mails })).toEqual({
+        level: EmailQualityLevel.unresponsive,
+        reason: 'noInteraction',
+        since: day(280),
+      });
+    });
+
+    it('starts once the last proof fell out of the window', () => {
+      expect(evaluate({ mails, lastLogin: day(150) })).toEqual({
+        level: EmailQualityLevel.unresponsive,
+        reason: 'noInteraction',
+        since: day(330),
+      });
+    });
+
+    it('is not reached while the first mail is younger than the window', () => {
+      expect(
+        evaluate({ mails: { count: 3, earliestSentDate: day(221) } }).level
       ).toBe(EmailQualityLevel.unknown);
     });
 
-    it('is lifted by a later proof of reach', () => {
+    it('needs the configured number of mails', () => {
       expect(
-        levelOf([event(T.hardBounce, 1), event(T.jwtLogin, 2)])
-      ).toMatchObject({ level: EmailQualityLevel.confirmed, since: day(2) });
+        evaluate({
+          mails: { count: 1, earliestSentDate: day(100) },
+          config: { ...config, minMailsForUnresponsive: 2 },
+        }).level
+      ).toBe(EmailQualityLevel.unknown);
     });
 
-    it('beats an earlier proof of reach', () => {
-      expect(
-        levelOf([event(T.clicked, 1), event(T.hardBounce, 2)])
-      ).toMatchObject({
-        level: EmailQualityLevel.undeliverable,
-        since: day(2),
-      });
-    });
-  });
-
-  describe('blocked', () => {
-    it.each([
-      ['a spam complaint', event(T.spamComplaint, 1)],
-      ['an unsubscribe', event(T.unsubscribed, 1)],
-      ['a spam reject', event(T.rejected, 1, { detail: 'spam' })],
-      ['an unsub reject', event(T.rejected, 1, { detail: 'unsub' })],
-    ])('follows %s', (_, evidence) => {
-      expect(levelOf([evidence]).level).toBe(EmailQualityLevel.blocked);
-    });
-
-    it('stays blocked after a later click', () => {
-      expect(
-        levelOf([event(T.spamComplaint, 1), event(T.clicked, 2)]).level
-      ).toBe(EmailQualityLevel.blocked);
-    });
-
-    it('is lifted only by an explicit editor confirmation', () => {
-      expect(
-        levelOf([event(T.spamComplaint, 1), event(T.manualConfirmed, 2)])
-      ).toMatchObject({
-        level: EmailQualityLevel.confirmed,
-        manualLevel: EmailQualityLevel.confirmed,
-      });
-    });
-  });
-
-  describe('confirmed', () => {
-    it.each([T.clicked, T.jwtLogin, T.emailConfirmed, T.manualConfirmed])(
-      'follows %s',
-      type => {
-        expect(levelOf([event(type, 1)]).level).toBe(
-          EmailQualityLevel.confirmed
-        );
-      }
-    );
-
-    it('is not reached by an open alone', () => {
-      expect(levelOf([event(T.opened, 1)]).level).toBe(
-        EmailQualityLevel.unknown
+    it('gives way to a proof inside the window', () => {
+      expect(evaluate({ mails, lastLogin: day(300) }).level).toBe(
+        EmailQualityLevel.active
       );
     });
 
-    it('marks an editor decision as manual', () => {
-      expect(levelOf([event(T.clicked, 1)]).manualLevel).toBeNull();
-      expect(levelOf([event(T.manualConfirmed, 1)]).manualLevel).toBe(
-        EmailQualityLevel.confirmed
-      );
+    it('gives way to a bounce', () => {
+      expect(
+        evaluate({ mails, events: [event(T.hardBounce, 150)] }).level
+      ).toBe(EmailQualityLevel.dead);
     });
-  });
-
-  it('only counts evidence about the current address', () => {
-    expect(
-      levelOf([event(T.hardBounce, 1, { email: 'old@example.com' })]).level
-    ).toBe(EmailQualityLevel.unknown);
-  });
-
-  it('compares addresses case-insensitively', () => {
-    expect(
-      levelOf([event(T.hardBounce, 1, { email: 'Jane@Example.com' })]).level
-    ).toBe(EmailQualityLevel.undeliverable);
-  });
-
-  it('forgets everything before an editor reset', () => {
-    expect(
-      levelOf([
-        event(T.hardBounce, 1),
-        event(T.placeholderDetected, 1),
-        event(T.manualReset, 2),
-      ]).level
-    ).toBe(EmailQualityLevel.unknown);
-    expect(
-      levelOf([event(T.manualReset, 2), event(T.hardBounce, 3)]).level
-    ).toBe(EmailQualityLevel.undeliverable);
   });
 });

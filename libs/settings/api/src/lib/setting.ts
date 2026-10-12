@@ -33,7 +33,8 @@ export enum SettingName {
 
   SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE = 'subscriptionUpgradeBillsFullDifference',
 
-  EMAIL_QUALITY = 'emailQuality',
+  EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS = 'emailQualityUnresponsiveAfterDays',
+  EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE = 'emailQualityMinMailsForUnresponsive',
 }
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>;

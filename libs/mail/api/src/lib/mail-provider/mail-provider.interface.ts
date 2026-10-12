@@ -27,11 +27,22 @@ export interface MailQualitySignal {
   /** Reject reason or bounce diagnosis. */
   detail?: string | null;
   occurredAt?: Date;
+  /**
+   * Provider's id of the event, prefixed with the provider type, so the same
+   * event delivered twice is stored once even without a mail log.
+   */
+  providerEventId?: string;
 }
 
+/**
+ * What a provider event means for us. Either about one of our mails
+ * (`mailLogID`) or only about an address (`email`), like a newsletter
+ * campaign bounce.
+ */
 export interface MailLogStatus {
-  mailLogID: string;
-  /** Null for events that say something about the address but do not change the delivery state, like opens or complaints. */
+  mailLogID?: string;
+  email?: string;
+  /** Null for events that say something about the address but do not change the delivery state, like clicks or complaints. */
   state: MailLogState | null;
   mailData?: string;
   qualitySignals?: MailQualitySignal[];
@@ -75,6 +86,13 @@ export interface MailProviderTemplate {
 }
 
 export class MailProviderError extends Error {}
+
+/**
+ * A webhook call that did not come from the provider. The controller answers
+ * it with 401; every other error is ours and must not make the provider
+ * retry or, worse, drop the event.
+ */
+export class MailWebhookSignatureError extends MailProviderError {}
 
 /**
  * A send that failed for this one recipient only — their address bounced, they

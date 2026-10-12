@@ -1,7 +1,6 @@
 import { Logger } from '@nestjs/common';
 import {
   EmailQualityEventSource,
-  EmailQualityEventType,
   MailLogState,
   MailLogType,
   PrismaClient,
@@ -10,7 +9,10 @@ import {
 import { randomUUID } from 'crypto';
 import { MailContext } from './mail-context';
 import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
-import { recordEmailQualitySafely } from './email-quality-recorder';
+import {
+  qualityTypeForRejectReason,
+  recordEmailQualitySafely,
+} from './email-quality-recorder';
 
 export enum mailLogType {
   SubscriptionFlow,
@@ -145,9 +147,14 @@ export class MailController {
         (error as Error).message
       );
 
-      // Only a refusal of this very address says something about it.
-      if (error instanceof MailProviderRecipientError && error.reason) {
-        const reason = error.reason;
+      // Only a lasting refusal of this very address says something about it.
+      const type =
+        error instanceof MailProviderRecipientError ?
+          qualityTypeForRejectReason(error.reason)
+        : null;
+
+      if (type) {
+        const detail = (error as MailProviderRecipientError).reason;
 
         await recordEmailQualitySafely(
           this.mailContext.emailQualityRecorder,
@@ -155,13 +162,7 @@ export class MailController {
             recorder.recordMailSignals({
               mailLogId,
               userId: this.config.recipient.id,
-              signals: [
-                {
-                  type: EmailQualityEventType.rejected,
-                  email: this.config.recipient.email,
-                  detail: reason,
-                },
-              ],
+              signals: [{ type, email: this.config.recipient.email, detail }],
               source: EmailQualityEventSource.send,
             })
         );
@@ -197,6 +198,7 @@ export class MailController {
           },
           state,
           sentDate: new Date(),
+          recipientEmail: this.config.recipient.email,
           mailProviderID: this.mailContext.mailProvider?.id || '',
           mailIdentifier: this.generateMailIdentifier(),
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],

@@ -10,7 +10,6 @@ const recipient = { id: 'user-1', email: 'jane@example.com' } as any;
 const send = async (error: Error, withRecorder = true) => {
   const recorder = {
     recordMailSignals: vi.fn(async () => undefined),
-    recordUserSignal: vi.fn(),
   };
   const prisma = { mailLog: { create: vi.fn(async () => ({})) } };
   const mailContext = {
@@ -36,7 +35,7 @@ const send = async (error: Error, withRecorder = true) => {
 };
 
 describe('MailController email quality evidence', () => {
-  it('records a refusal of the address with its reason', async () => {
+  it('records a refusal of the address as what it means', async () => {
     const { recorder } = await send(
       new MailProviderRecipientError('Mandrill rejected', 'hard-bounce')
     );
@@ -46,13 +45,31 @@ describe('MailController email quality evidence', () => {
       userId: 'user-1',
       signals: [
         {
-          type: EmailQualityEventType.rejected,
+          type: EmailQualityEventType.hardBounce,
           email: 'jane@example.com',
           detail: 'hard-bounce',
         },
       ],
       source: 'send',
     });
+  });
+
+  it('records nothing for a temporary refusal', async () => {
+    const { recorder } = await send(
+      new MailProviderRecipientError('Mandrill rejected', 'soft-bounce')
+    );
+
+    expect(recorder.recordMailSignals).not.toHaveBeenCalled();
+  });
+
+  it('stores the address the mail went to on the log', async () => {
+    const { prisma } = await send(new MailProviderError('invalid-sender'));
+
+    expect(prisma.mailLog.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ recipientEmail: 'jane@example.com' }),
+      })
+    );
   });
 
   it('records nothing when the provider itself failed', async () => {
@@ -67,7 +84,6 @@ describe('MailController email quality evidence', () => {
       recordMailSignals: vi.fn(async () => {
         throw new Error('database down');
       }),
-      recordUserSignal: vi.fn(),
     };
     const mailContext = {
       sendComposedMail: vi.fn(async () => {

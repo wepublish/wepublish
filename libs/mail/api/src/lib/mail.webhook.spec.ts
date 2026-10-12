@@ -1,8 +1,10 @@
+import { UnauthorizedException } from '@nestjs/common';
 import { EmailQualityEventType, MailLogState } from '@prisma/client';
 import {
   MailWebhookController,
   shouldUpdateMailLogState,
 } from './mail.webhook';
+import { MailWebhookSignatureError } from './mail-provider/mail-provider.interface';
 
 describe('shouldUpdateMailLogState', () => {
   it('moves a mail forward', () => {
@@ -56,7 +58,8 @@ describe('MailWebhookController', () => {
     };
     const recorder = {
       recordMailSignals: vi.fn(async () => undefined),
-      recordUserSignal: vi.fn(),
+      recordAddressSignals: vi.fn(async () => undefined),
+      recompute: vi.fn(),
     };
     const provider = {
       id: 'mailchimp',
@@ -67,11 +70,14 @@ describe('MailWebhookController', () => {
       { mailProvider: provider } as any,
       recorder
     );
-    const res = { status: vi.fn(() => ({ send: vi.fn() })) };
+    const send = vi.fn();
+    const res = { status: vi.fn(() => ({ send })) };
 
     return {
       prisma,
       recorder,
+      provider,
+      res,
       receive: () =>
         controller.receiveWebhook(
           'mailchimp',
@@ -131,11 +137,50 @@ describe('MailWebhookController', () => {
   });
 
   it('keeps answering the provider when recording fails', async () => {
-    const { recorder, receive } = makeController([
+    const { recorder, receive, res } = makeController([
       { mailLogID: 'log-1', state: null, qualitySignals: [signal] },
     ]);
     recorder.recordMailSignals.mockRejectedValueOnce(new Error('db down'));
 
     await expect(receive()).resolves.toBeUndefined();
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('records an event that is only about an address, like a campaign bounce', async () => {
+    const { prisma, recorder, receive } = makeController([
+      { email: 'jane@example.com', state: null, qualitySignals: [signal] },
+    ]);
+
+    await receive();
+
+    expect(prisma.mailLog.findUnique).not.toHaveBeenCalled();
+    expect(recorder.recordMailSignals).not.toHaveBeenCalled();
+    expect(recorder.recordAddressSignals).toHaveBeenCalledWith({
+      email: 'jane@example.com',
+      signals: [signal],
+      source: 'webhook',
+    });
+  });
+
+  it('refuses a call that does not come from the provider', async () => {
+    const { provider, receive, res } = makeController([]);
+    provider.webhookForSendMail.mockRejectedValueOnce(
+      new MailWebhookSignatureError('Webhook signature failed')
+    );
+
+    await expect(receive()).rejects.toBeInstanceOf(UnauthorizedException);
+    expect(res.status).not.toHaveBeenCalled();
+  });
+
+  // Providers retry on 5xx or, like Brevo, drop the event for good. Neither
+  // helps with a payload we cannot handle, so the error stays in our log.
+  it('answers 200 to a payload it cannot handle', async () => {
+    const { provider, receive, res } = makeController([]);
+    provider.webhookForSendMail.mockRejectedValueOnce(
+      new Error('Unexpected token in JSON')
+    );
+
+    await expect(receive()).resolves.toBeUndefined();
+    expect(res.status).toHaveBeenCalledWith(200);
   });
 });

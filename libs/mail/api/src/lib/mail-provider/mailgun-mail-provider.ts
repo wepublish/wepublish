@@ -8,6 +8,7 @@ import {
   MailProviderTemplate,
   MailProviderTemplateContent,
   MailQualitySignal,
+  MailWebhookSignatureError,
   SendMailProps,
   SendMailResult,
   WebhookForSendMailProps,
@@ -36,6 +37,7 @@ function mapMailgunEventToMailLogState(event: string): MailLogState | null {
 }
 
 type MailgunEventData = {
+  id?: string;
   event?: string;
   severity?: string;
   reason?: string;
@@ -44,7 +46,11 @@ type MailgunEventData = {
   'delivery-status'?: { description?: string; message?: string };
 };
 
-/** What an event says about the recipient's address, besides the delivery state. */
+/**
+ * What an event says about the recipient's address, besides the delivery
+ * state. A temporary failure is retried by Mailgun and may still get through;
+ * an open proves nothing.
+ */
 function mapMailgunEventToQualitySignal(
   data: MailgunEventData
 ): MailQualitySignal | null {
@@ -59,32 +65,25 @@ function mapMailgunEventToQualitySignal(
       typeof data.timestamp === 'number' ?
         new Date(data.timestamp * 1000)
       : undefined,
+    providerEventId: data.id ? `mailgun:${data.id}` : undefined,
   });
 
   switch (data.event) {
-    case 'failed': {
-      const diagnosis =
-        data['delivery-status']?.description ||
-        data['delivery-status']?.message ||
-        data.reason ||
-        null;
-
-      // temporary failures are retried by Mailgun and may still get through
-      return signal(
-        data.severity === 'permanent' ?
-          EmailQualityEventType.hardBounce
-        : EmailQualityEventType.softBounce,
-        diagnosis
-      );
-    }
+    case 'failed':
+      return data.severity === 'permanent' ?
+          signal(
+            EmailQualityEventType.hardBounce,
+            data['delivery-status']?.description ||
+              data['delivery-status']?.message ||
+              data.reason
+          )
+        : null;
     case 'rejected':
-      return signal(EmailQualityEventType.rejected, data.reason);
+      return signal(EmailQualityEventType.blocked, data.reason);
     case 'complained':
       return signal(EmailQualityEventType.spamComplaint);
     case 'unsubscribed':
       return signal(EmailQualityEventType.unsubscribed);
-    case 'opened':
-      return signal(EmailQualityEventType.opened);
     case 'clicked':
       return signal(EmailQualityEventType.clicked);
     default:
@@ -127,7 +126,7 @@ export class MailgunMailProvider extends BaseMailProvider {
       !signature ||
       !(await this.verifyWebhookSignature({ timestamp, token, signature }))
     ) {
-      throw new Error('Webhook signature failed');
+      throw new MailWebhookSignatureError('Webhook signature failed');
     }
 
     if (!body['event-data']) {

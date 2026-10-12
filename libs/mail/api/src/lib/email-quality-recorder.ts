@@ -1,6 +1,22 @@
 import { Logger } from '@nestjs/common';
-import { EmailQualityEventSource } from '@prisma/client';
+import { EmailQualityEventSource, EmailQualityEventType } from '@prisma/client';
 import { MailQualitySignal } from './mail-provider/mail-provider.interface';
+
+// Mandrill's reject reasons; the other providers use the same words. A
+// soft bounce is temporary and says nothing about the address.
+const REJECT_REASON_TYPES: Record<string, EmailQualityEventType> = {
+  'hard-bounce': EmailQualityEventType.hardBounce,
+  invalid: EmailQualityEventType.invalid,
+  spam: EmailQualityEventType.spamComplaint,
+  unsub: EmailQualityEventType.unsubscribed,
+  custom: EmailQualityEventType.blocked,
+};
+
+/** What a provider's refusal of an address at send time says about it, if anything. */
+export const qualityTypeForRejectReason = (
+  reason: string | undefined | null
+): EmailQualityEventType | null =>
+  REJECT_REASON_TYPES[reason?.trim().toLowerCase() ?? ''] ?? null;
 
 /**
  * Injection token for whoever keeps track of email address quality. The mail
@@ -19,12 +35,19 @@ export interface EmailQualityRecorder {
     source: EmailQualityEventSource;
   }): Promise<void>;
 
-  /** Evidence about a user's address outside of a mail, e.g. a redeemed login link. */
-  recordUserSignal(props: {
-    userId: string;
-    signal: MailQualitySignal;
+  /**
+   * Evidence about an address without a mail of ours behind it, e.g. a
+   * newsletter campaign bounce or an address verification. Applies to every
+   * user with that address.
+   */
+  recordAddressSignals(props: {
+    email: string;
+    signals: MailQualitySignal[];
     source: EmailQualityEventSource;
   }): Promise<void>;
+
+  /** Re-derives the level, needed after the user's address changed. */
+  recompute(userId: string): Promise<unknown>;
 }
 
 const logger = new Logger('EmailQualityRecorder');

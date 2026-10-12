@@ -9,6 +9,7 @@ import {
   Param,
   Req,
   Res,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 import { NextFunction, Request, Response } from 'express';
@@ -27,6 +28,10 @@ import {
   EmailQualityRecorder,
   recordEmailQualitySafely,
 } from './email-quality-recorder';
+import {
+  MailLogStatus,
+  MailWebhookSignatureError,
+} from './mail-provider/mail-provider.interface';
 
 export const MAIL_WEBHOOK_PATH_PREFIX = 'mail-webhooks';
 
@@ -90,53 +95,76 @@ export class MailWebhookController {
       });
 
       for (const mailLogStatus of mailLogStatuses) {
-        const mailLog = await this.prisma.mailLog.findUnique({
-          where: {
-            id: mailLogStatus.mailLogID,
-          },
-        });
-
-        if (!mailLog) {
-          continue; // TODO: handle missing mailLog
-        }
-
-        if (
-          mailLogStatus.state &&
-          shouldUpdateMailLogState(mailLog.state, mailLogStatus.state)
-        ) {
-          await this.prisma.mailLog.update({
-            where: { id: mailLog.id },
-            data: {
-              subject: mailLog.subject,
-              mailProviderID: mailLog.mailProviderID,
-              state: mailLogStatus.state,
-              mailData: mailLogStatus.mailData,
-            },
-          });
-        }
-
-        if (mailLogStatus.qualitySignals?.length) {
-          await recordEmailQualitySafely(this.emailQualityRecorder, recorder =>
-            recorder.recordMailSignals({
-              mailLogId: mailLog.id,
-              userId: mailLog.recipientID,
-              signals: mailLogStatus.qualitySignals!,
-              source: EmailQualityEventSource.webhook,
-            })
-          );
-        }
+        await this.apply(mailLogStatus);
       }
     } catch (error) {
+      if (error instanceof MailWebhookSignatureError) {
+        throw new UnauthorizedException(error.message);
+      }
+
+      // Not the provider's problem: a retry would fail the same way, and
+      // some providers (Brevo) drop the event for good on any other answer.
       this.logger.error(
         (error as Error).message,
         (error as Error).stack,
         `Error during webhook update in mailProvider ${providerId}`
       );
-
-      throw error;
     }
 
     return res.status(200).send();
+  }
+
+  private async apply(mailLogStatus: MailLogStatus) {
+    const { mailLogID, email, qualitySignals } = mailLogStatus;
+
+    // An event without one of our mails behind it, e.g. a campaign bounce.
+    if (!mailLogID) {
+      if (email && qualitySignals?.length) {
+        await recordEmailQualitySafely(this.emailQualityRecorder, recorder =>
+          recorder.recordAddressSignals({
+            email,
+            signals: qualitySignals,
+            source: EmailQualityEventSource.webhook,
+          })
+        );
+      }
+
+      return;
+    }
+
+    const mailLog = await this.prisma.mailLog.findUnique({
+      where: { id: mailLogID },
+    });
+
+    if (!mailLog) {
+      return; // TODO: handle missing mailLog
+    }
+
+    if (
+      mailLogStatus.state &&
+      shouldUpdateMailLogState(mailLog.state, mailLogStatus.state)
+    ) {
+      await this.prisma.mailLog.update({
+        where: { id: mailLog.id },
+        data: {
+          subject: mailLog.subject,
+          mailProviderID: mailLog.mailProviderID,
+          state: mailLogStatus.state,
+          mailData: mailLogStatus.mailData,
+        },
+      });
+    }
+
+    if (qualitySignals?.length) {
+      await recordEmailQualitySafely(this.emailQualityRecorder, recorder =>
+        recorder.recordMailSignals({
+          mailLogId: mailLog.id,
+          userId: mailLog.recipientID,
+          signals: qualitySignals,
+          source: EmailQualityEventSource.webhook,
+        })
+      );
+    }
   }
 }
 

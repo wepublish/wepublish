@@ -12,6 +12,7 @@ import {
   MailProviderTemplate,
   MailProviderTemplateContent,
   MailQualitySignal,
+  MailWebhookSignatureError,
   SendMailProps,
   SendMailResult,
   WebhookForSendMailProps,
@@ -106,23 +107,22 @@ function mapMandrillEventToMailLogState(event: string): MailLogState | null {
   }
 }
 
-/** What a webhook event says about the recipient's address, besides the delivery state. */
+/**
+ * What a webhook event says about the recipient's address, besides the
+ * delivery state. Soft bounces are temporary and opens prove nothing.
+ */
 function mapMandrillEventToQualityType(
   event: string
 ): EmailQualityEventType | null {
   switch (event) {
     case 'hard_bounce':
       return EmailQualityEventType.hardBounce;
-    case 'soft_bounce':
-      return EmailQualityEventType.softBounce;
     case 'reject':
-      return EmailQualityEventType.rejected;
+      return EmailQualityEventType.blocked;
     case 'spam':
       return EmailQualityEventType.spamComplaint;
     case 'unsub':
       return EmailQualityEventType.unsubscribed;
-    case 'open':
-      return EmailQualityEventType.opened;
     case 'click':
       return EmailQualityEventType.clicked;
     default:
@@ -133,54 +133,40 @@ function mapMandrillEventToQualityType(
 type MandrillMessageInfo = {
   email?: string;
   state?: string;
-  opens?: number;
-  clicks?: number;
   bounce_description?: string;
   diag?: string;
 };
 
-/** What a polled message tells about the recipient's address. */
+/**
+ * What a polled message tells about the recipient's address. Polled opens and
+ * clicks carry no time, so a click cannot be told from a link scanner and
+ * neither is reported.
+ */
 function mapMandrillInfoToQualitySignals(
   info: MandrillMessageInfo
 ): MailQualitySignal[] {
   const signal = (
     type: EmailQualityEventType,
     detail?: string | null
-  ): MailQualitySignal => ({
-    type,
-    email: info.email,
-    detail: detail ?? null,
-  });
-  const diagnosis = info.bounce_description || info.diag || null;
-  const signals: MailQualitySignal[] = [];
+  ): MailQualitySignal[] => [
+    { type, email: info.email, detail: detail ?? null },
+  ];
 
   switch (info.state) {
     case 'bounced':
-      signals.push(signal(EmailQualityEventType.hardBounce, diagnosis));
-      break;
-    case 'soft-bounced':
-      signals.push(signal(EmailQualityEventType.softBounce, diagnosis));
-      break;
+      return signal(
+        EmailQualityEventType.hardBounce,
+        info.bounce_description || info.diag
+      );
     case 'invalid':
-      signals.push(signal(EmailQualityEventType.rejected, 'invalid'));
-      break;
+      return signal(EmailQualityEventType.invalid);
     case 'spam':
-      signals.push(signal(EmailQualityEventType.spamComplaint));
-      break;
+      return signal(EmailQualityEventType.spamComplaint);
     case 'unsub':
-      signals.push(signal(EmailQualityEventType.unsubscribed));
-      break;
+      return signal(EmailQualityEventType.unsubscribed);
+    default:
+      return [];
   }
-
-  if ((info.opens ?? 0) > 0) {
-    signals.push(signal(EmailQualityEventType.opened));
-  }
-
-  if ((info.clicks ?? 0) > 0) {
-    signals.push(signal(EmailQualityEventType.clicked));
-  }
-
-  return signals;
 }
 
 export class MailchimpMailProvider extends BaseMailProvider {
@@ -234,7 +220,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
         params: req.body,
       }))
     ) {
-      throw new Error('Webhook signature failed');
+      throw new MailWebhookSignatureError('Webhook signature failed');
     }
 
     const mandrillEvents = JSON.parse(req.body.mandrill_events);
@@ -266,6 +252,10 @@ export class MailchimpMailProvider extends BaseMailProvider {
                 occurredAt:
                   typeof mandrillEvent.ts === 'number' ?
                     new Date(mandrillEvent.ts * 1000)
+                  : undefined,
+                providerEventId:
+                  mandrillEvent.msg?._id ?
+                    `mailchimp:${mandrillEvent.msg._id}:${mandrillEvent.event}`
                   : undefined,
               },
             ]

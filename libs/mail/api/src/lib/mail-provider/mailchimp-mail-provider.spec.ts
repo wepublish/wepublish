@@ -7,6 +7,7 @@ import { MailchimpMailProvider } from './mailchimp-mail-provider';
 import {
   MailProviderError,
   MailProviderRecipientError,
+  MailWebhookSignatureError,
 } from './mail-provider.interface';
 
 const MANDRILL = 'https://mandrillapp.com:443';
@@ -215,7 +216,7 @@ describe('MailchimpMailProvider', () => {
         (await makeProvider()).webhookForSendMail({
           req: request(sign('not-the-secret')),
         })
-      ).rejects.toThrow('Webhook signature failed');
+      ).rejects.toBeInstanceOf(MailWebhookSignatureError);
     });
 
     const signedRequest = (events: unknown[]) => {
@@ -234,11 +235,12 @@ describe('MailchimpMailProvider', () => {
       } as any;
     };
     const msg = {
+      _id: 'msg-1',
       email: 'user@example.com',
       metadata: { mail_log_id: 'log-1' },
     };
 
-    it('tells hard and soft bounces apart and keeps the diagnosis', async () => {
+    it('reports a hard bounce with its diagnosis, a soft bounce only as a state', async () => {
       const statuses = await (
         await makeProvider()
       ).webhookForSendMail({
@@ -263,21 +265,34 @@ describe('MailchimpMailProvider', () => {
             email: 'user@example.com',
             detail: 'bad_mailbox',
             occurredAt: new Date(1790000000 * 1000),
+            providerEventId: 'mailchimp:msg-1:hard_bounce',
           },
         ],
-        [
-          expect.objectContaining({
-            type: EmailQualityEventType.softBounce,
-            detail: '452 mailbox full',
-          }),
-        ],
+        [],
+      ]);
+    });
+
+    it('reports a reject as blocked', async () => {
+      const [status] = await (
+        await makeProvider()
+      ).webhookForSendMail({
+        req: signedRequest([
+          { event: 'reject', msg: { ...msg, diag: 'blacklisted' } },
+        ]),
+      });
+
+      expect(status.state).toBe(MailLogState.rejected);
+      expect(status.qualitySignals).toEqual([
+        expect.objectContaining({
+          type: EmailQualityEventType.blocked,
+          detail: 'blacklisted',
+        }),
       ]);
     });
 
     it.each([
       ['spam', EmailQualityEventType.spamComplaint],
       ['unsub', EmailQualityEventType.unsubscribed],
-      ['open', EmailQualityEventType.opened],
       ['click', EmailQualityEventType.clicked],
     ])(
       'reports %s without touching the delivery state',
@@ -290,15 +305,22 @@ describe('MailchimpMailProvider', () => {
 
         expect(status.state).toBeNull();
         expect(status.qualitySignals).toEqual([
-          expect.objectContaining({ type, email: 'user@example.com' }),
+          expect.objectContaining({
+            type,
+            email: 'user@example.com',
+            providerEventId: `mailchimp:msg-1:${event}`,
+          }),
         ]);
       }
     );
 
-    it('drops events that say nothing', async () => {
+    it('drops events that say nothing, opens included', async () => {
       await expect(
         (await makeProvider()).webhookForSendMail({
-          req: signedRequest([{ event: 'whitelist', msg }]),
+          req: signedRequest([
+            { event: 'whitelist', msg },
+            { event: 'open', msg },
+          ]),
         })
       ).resolves.toEqual([]);
     });
@@ -365,14 +387,13 @@ describe('MailchimpMailProvider', () => {
     });
 
     it.each([
-      ['bounced', EmailQualityEventType.hardBounce, null],
-      ['soft-bounced', EmailQualityEventType.softBounce, null],
-      ['invalid', EmailQualityEventType.rejected, 'invalid'],
-      ['spam', EmailQualityEventType.spamComplaint, null],
-      ['unsub', EmailQualityEventType.unsubscribed, null],
+      ['bounced', EmailQualityEventType.hardBounce],
+      ['invalid', EmailQualityEventType.invalid],
+      ['spam', EmailQualityEventType.spamComplaint],
+      ['unsub', EmailQualityEventType.unsubscribed],
     ])(
       'reports what state %s says about the address',
-      async (mandrillState, type, detail) => {
+      async (mandrillState, type) => {
         nock(MANDRILL)
           .post('/api/1.0/messages/info')
           .reply(200, infoReply(mandrillState));
@@ -382,33 +403,31 @@ describe('MailchimpMailProvider', () => {
         ).getMessageStates(['msg-1']);
 
         expect(state.qualitySignals).toEqual([
-          { type, email: 'user@example.com', detail },
+          { type, email: 'user@example.com', detail: null },
         ]);
       }
     );
 
-    it('reports opens and clicks it has seen', async () => {
-      nock(MANDRILL)
-        .post('/api/1.0/messages/info')
-        .reply(200, { ...infoReply('sent'), opens: 2, clicks: 1 });
+    // A soft bounce is temporary; opens prove nothing and polled clicks
+    // carry no time, so they cannot be told from a link scanner.
+    it.each([
+      ['soft-bounced', {}],
+      ['sent', { opens: 2, clicks: 1 }],
+      ['sent', {}],
+    ])(
+      'reports nothing about a %s mail with %o',
+      async (mandrillState, extra) => {
+        nock(MANDRILL)
+          .post('/api/1.0/messages/info')
+          .reply(200, { ...infoReply(mandrillState), ...extra });
 
-      const [state] = await (await makeProvider()).getMessageStates(['msg-1']);
+        const [state] = await (
+          await makeProvider()
+        ).getMessageStates(['msg-1']);
 
-      expect(state.qualitySignals?.map(({ type }) => type)).toEqual([
-        EmailQualityEventType.opened,
-        EmailQualityEventType.clicked,
-      ]);
-    });
-
-    it('reports nothing about a plainly delivered mail', async () => {
-      nock(MANDRILL)
-        .post('/api/1.0/messages/info')
-        .reply(200, infoReply('sent'));
-
-      const [state] = await (await makeProvider()).getMessageStates(['msg-1']);
-
-      expect(state.qualitySignals).toEqual([]);
-    });
+        expect(state.qualitySignals).toEqual([]);
+      }
+    );
 
     it('skips a state it does not know instead of guessing', async () => {
       nock(MANDRILL)

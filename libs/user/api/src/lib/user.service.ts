@@ -6,8 +6,6 @@ import {
 import { differenceInMinutes } from 'date-fns';
 import {
   CommentItemType,
-  EmailQualityEventSource,
-  EmailQualityEventType,
   Prisma,
   PrismaClient,
   UserEvent,
@@ -277,9 +275,18 @@ export class UserService {
         previousUser.email,
         user.email
       );
+      await this.recomputeEmailQuality(user.id);
     }
 
     return user;
+  }
+
+  // The email quality belongs to an address, so a change starts it over.
+  private recomputeEmailQuality(userId: string) {
+    return recordEmailQualitySafely(
+      this.mailContext.emailQualityRecorder,
+      recorder => recorder.recompute(userId).then(() => undefined)
+    );
   }
 
   async deleteUser(id: string) {
@@ -439,20 +446,7 @@ export class UserService {
       user.email,
       updatedUser.email
     );
-
-    // the confirmation link reached the new address
-    await recordEmailQualitySafely(
-      this.mailContext.emailQualityRecorder,
-      recorder =>
-        recorder.recordUserSignal({
-          userId: updatedUser.id,
-          signal: {
-            type: EmailQualityEventType.emailConfirmed,
-            email: updatedUser.email,
-          },
-          source: EmailQualityEventSource.user,
-        })
-    );
+    await this.recomputeEmailQuality(updatedUser.id);
 
     return updatedUser;
   }

@@ -27,7 +27,11 @@ const makeService = (
       providerPresent ?
         { id: 'mailchimp', getMessageStates, getName: async () => 'Mailchimp' }
       : undefined,
-    emailQualityRecorder: { recordMailSignals, recordUserSignal: vi.fn() },
+    emailQualityRecorder: {
+      recordMailSignals,
+      recordAddressSignals: vi.fn(),
+      recompute: vi.fn(),
+    },
   };
 
   return {
