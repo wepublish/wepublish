@@ -3554,13 +3554,6 @@
       },
       "endedWithinDays": "Deactivated within the last … days",
       "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
-      "emailFilter": {
-        "label": "Email address",
-        "all": "All",
-        "placeholder": "Placeholders only",
-        "real": "Real only",
-        "hint": "Placeholder addresses are defined in the letter integration."
-      },
       "emailSegments": {
         "label": "Email status",
         "placeholder": "Placeholder address",
