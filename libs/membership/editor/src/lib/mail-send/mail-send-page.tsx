@@ -9,6 +9,7 @@ import {
   MailAudienceInput,
   MailChannel,
   MailEmailFilter,
+  MailEmailSegment,
   MailLogState,
   MailRecipientBase,
   MailSendJobDocument,
@@ -86,6 +87,14 @@ import {
 } from './mail-job-common';
 import { MailPreview } from '../mail-template/mail-preview';
 import { LetterPreview } from '../mail-template/letter-preview';
+import { EmailQualityRefreshButton } from './email-quality-refresh-button';
+
+/** Row tint for recipients a mail would not reach. */
+const SEGMENT_ROW_TINT: Partial<Record<MailEmailSegment, string>> = {
+  [MailEmailSegment.Placeholder]: 'rgba(244, 67, 54, 0.08)',
+  [MailEmailSegment.Dead]: 'rgba(244, 67, 54, 0.08)',
+  [MailEmailSegment.Unresponsive]: 'rgba(255, 152, 0, 0.1)',
+};
 
 /** Mirrors the API default for the win-back look-back window. */
 const DEFAULT_ENDED_WITHIN_DAYS = 90;
@@ -199,6 +208,7 @@ function MailSendPage() {
   const [emailFilter, setEmailFilter] = useState<MailEmailFilter>(
     MailEmailFilter.All
   );
+  const [emailSegments, setEmailSegments] = useState<MailEmailSegment[]>([]);
 
   const [channel, setChannel] = useState<MailChannel>(MailChannel.Mail);
   const [print, setPrint] = useState<PrintSettings>(DEFAULT_PRINT);
@@ -247,12 +257,16 @@ function MailSendPage() {
   const isWinBackBase = base === MailRecipientBase.EndedSubscription;
 
   const audience = useMemo<MailAudienceInput>(() => {
+    // Applies to every base: who can still be reached by mail at all.
+    const segments = emailSegments.length ? emailSegments : undefined;
+
     if (isWinBackBase) {
       const usePeriod = endedMode === 'period' && endedPeriod?.length === 2;
 
       return {
         base,
         emailFilter,
+        emailSegments: segments,
         // Either an explicit period or the rolling window — never both, so the
         // backend does not have to guess which one the author meant.
         endedWithinDays: usePeriod ? undefined : endedWithinDays,
@@ -264,12 +278,13 @@ function MailSendPage() {
     }
 
     if (!isSubscriptionBase) {
-      return { base, emailFilter };
+      return { base, emailFilter, emailSegments: segments };
     }
 
     return {
       base,
       emailFilter,
+      emailSegments: segments,
       memberPlanIDs: memberPlanIDs.length ? memberPlanIDs : undefined,
       subscriptionState: subscriptionState ?? undefined,
       autoRenew: autoRenew === 'any' ? undefined : autoRenew === 'true',
@@ -287,6 +302,7 @@ function MailSendPage() {
   }, [
     base,
     emailFilter,
+    emailSegments,
     isSubscriptionBase,
     isWinBackBase,
     endedWithinDays,
@@ -310,6 +326,7 @@ function MailSendPage() {
     data: previewData,
     loading: previewLoading,
     error: previewError,
+    refetch: refetchPreview,
   } = useQuery(MailSendRecipientPreviewDocument, {
     variables: { audience, channel },
   });
@@ -356,6 +373,7 @@ function MailSendPage() {
   // that is before the send rather than leaving it to the log.
   const withoutAddressCount =
     previewData?.mailSendRecipientPreview.withoutAddressCount ?? 0;
+  const segmentCounts = previewData?.mailSendRecipientPreview.segments ?? [];
 
   // Warn (never block) when the template uses placeholders that this audience
   // won't fill. `withSubscriptionData` mirrors whether the audience carries a
@@ -437,6 +455,16 @@ function MailSendPage() {
       userCount={userCount}
       isLetter={isLetter}
       withoutAddressCount={withoutAddressCount}
+      segmentCounts={segmentCounts}
+      selectedSegments={emailSegments}
+      onPickSegment={segment =>
+        setEmailSegments(current =>
+          current.includes(segment) ?
+            current.filter(item => item !== segment)
+          : [...current, segment]
+        )
+      }
+      onRefreshed={() => refetchPreview()}
       missing={showMissing ? missing : []}
       onShowRecipients={() => setRecipientsOpen(true)}
       action={action}
@@ -612,6 +640,28 @@ function MailSendPage() {
                     </RadioGroup>
                     <Form.HelpText>
                       {t('mailSend.emailFilter.hint')}
+                    </Form.HelpText>
+                  </Form.Group>
+
+                  <Form.Group>
+                    <Form.ControlLabel>
+                      {t('mailSend.emailSegments.label')}
+                    </Form.ControlLabel>
+                    <CheckPicker
+                      block
+                      searchable={false}
+                      data={Object.values(MailEmailSegment).map(segment => ({
+                        label: t(`mailSend.emailSegments.${segment}`),
+                        value: segment,
+                      }))}
+                      value={emailSegments}
+                      onChange={value =>
+                        setEmailSegments((value ?? []) as MailEmailSegment[])
+                      }
+                      placeholder={t('mailSend.emailSegments.pick')}
+                    />
+                    <Form.HelpText>
+                      {t('mailSend.emailSegments.hint')}
                     </Form.HelpText>
                   </Form.Group>
 
@@ -1047,6 +1097,10 @@ function RecipientSummary({
   userCount,
   isLetter,
   withoutAddressCount,
+  segmentCounts,
+  selectedSegments,
+  onPickSegment,
+  onRefreshed,
   missing,
   onShowRecipients,
   action,
@@ -1056,6 +1110,10 @@ function RecipientSummary({
   userCount: number;
   isLetter: boolean;
   withoutAddressCount: number;
+  segmentCounts: { segment: MailEmailSegment; userCount: number }[];
+  selectedSegments: MailEmailSegment[];
+  onPickSegment: (segment: MailEmailSegment) => void;
+  onRefreshed: () => void;
   missing: string[];
   onShowRecipients: () => void;
   action?: ReactElement;
@@ -1098,6 +1156,40 @@ function RecipientSummary({
 
         {action}
       </Stack>
+
+      {/* The split of the audience by email status: the analog people are
+          placeholder + dead, and a tile toggles its segment in the filter. */}
+      {segmentCounts.length > 0 && (
+        <Stack
+          spacing={8}
+          alignItems="center"
+          wrap
+          style={{ marginTop: 12 }}
+        >
+          <Typography
+            variant="caption"
+            style={{ color: 'var(--rs-text-secondary)' }}
+          >
+            {t('mailSend.emailSegments.overview')}
+          </Typography>
+          {segmentCounts.map(({ segment, userCount: people }) => (
+            <Button
+              key={segment}
+              size="xs"
+              appearance={
+                selectedSegments.includes(segment) ? 'primary' : 'ghost'
+              }
+              onClick={() => onPickSegment(segment)}
+            >
+              {t(`mailSend.emailSegments.${segment}`)}: {people}
+            </Button>
+          ))}
+          <EmailQualityRefreshButton
+            size="xs"
+            onDone={onRefreshed}
+          />
+        </Stack>
+      )}
 
       {isLetter && withoutAddressCount > 0 && (
         <Message
@@ -1509,6 +1601,9 @@ function RecipientListModal({
                 <TableCell>
                   <strong>{t('mailSend.recipientList.memberPlan')}</strong>
                 </TableCell>
+                <TableCell>
+                  <strong>{t('mailSend.recipientList.emailSegment')}</strong>
+                </TableCell>
                 {isLetter && (
                   <TableCell align="center">
                     <strong>{t('mailSend.recipientList.address')}</strong>
@@ -1520,11 +1615,15 @@ function RecipientListModal({
               {recipients.map(recipient => (
                 <TableRow
                   key={recipient.id}
-                  sx={
-                    isLetter && !recipient.hasAddress ?
-                      { backgroundColor: 'rgba(244, 67, 54, 0.08)' }
-                    : undefined
-                  }
+                  sx={{
+                    // for a letter the address decides; for a mail the status
+                    backgroundColor:
+                      isLetter ?
+                        recipient.hasAddress ?
+                          undefined
+                        : 'rgba(244, 67, 54, 0.08)'
+                      : SEGMENT_ROW_TINT[recipient.emailSegment],
+                  }}
                 >
                   <TableCell>{recipient.email}</TableCell>
                   <TableCell>
@@ -1533,6 +1632,9 @@ function RecipientListModal({
                       .join(' ') || '—'}
                   </TableCell>
                   <TableCell>{recipient.memberPlanName ?? '—'}</TableCell>
+                  <TableCell>
+                    {t(`mailSend.emailSegments.${recipient.emailSegment}`)}
+                  </TableCell>
                   {isLetter && (
                     <TableCell align="center">
                       {recipient.hasAddress ?

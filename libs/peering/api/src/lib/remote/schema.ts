@@ -1132,6 +1132,24 @@ export enum EditorBlockType {
   Title = 'Title'
 }
 
+/** active: logged in or clicked recently. unknown: nothing decided. unresponsive: mails delivered, no reaction for a long time. dead: bounced, invalid, complained or unsubscribed. */
+export enum EmailQualityLevel {
+  Active = 'active',
+  Dead = 'dead',
+  Unknown = 'unknown',
+  Unresponsive = 'unresponsive'
+}
+
+export type EmailQualityRefreshModel = {
+  __typename?: 'EmailQualityRefreshModel';
+  /** Mails that were still in an open state and could be looked up at the provider. */
+  checked: Scalars['Int']['output'];
+  /** People whose email level was re-evaluated. */
+  recomputed: Scalars['Int']['output'];
+  /** Mails whose state the provider reported differently. */
+  updated: Scalars['Int']['output'];
+};
+
 export type Event = {
   __typename?: 'Event';
   createdAt: Scalars['DateTime']['output'];
@@ -1938,6 +1956,8 @@ export type MailAudienceInput = {
   base: MailRecipientBase;
   /** Restrict to placeholder or real email addresses. Defaults to all. */
   emailFilter?: InputMaybe<MailEmailFilter>;
+  /** Restrict to people in any of these email segments. Empty or absent means everyone. */
+  emailSegments?: InputMaybe<Array<MailEmailSegment>>;
   /** Win-back audience only: start of an explicit period the subscription ended in. */
   endedFrom?: InputMaybe<Scalars['DateTime']['input']>;
   /** Win-back audience only: end of an explicit period the subscription ended in. */
@@ -1975,6 +1995,15 @@ export enum MailEmailFilter {
   All = 'all',
   Placeholder = 'placeholder',
   Real = 'real'
+}
+
+/** placeholder: generated address, reachable by letter only. dead: bounced, invalid, complained or unsubscribed. unresponsive: mails delivered, no login or click for a long time. unknown: nothing decided yet. active: logged in or clicked recently. */
+export enum MailEmailSegment {
+  Active = 'active',
+  Dead = 'dead',
+  Placeholder = 'placeholder',
+  Unknown = 'unknown',
+  Unresponsive = 'unresponsive'
 }
 
 export type MailLogFilter = {
@@ -2070,6 +2099,12 @@ export enum MailRecipientBase {
   NoActiveSubscription = 'noActiveSubscription'
 }
 
+export type MailSegmentCount = {
+  __typename?: 'MailSegmentCount';
+  segment: MailEmailSegment;
+  userCount: Scalars['Int']['output'];
+};
+
 export enum MailSendAudience {
   AllUsers = 'allUsers',
   FilteredSubscriptions = 'filteredSubscriptions',
@@ -2100,6 +2135,8 @@ export type MailSendJobModel = {
   mailTemplate?: Maybe<MailLogTemplate>;
   mailTemplateId: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
+  /** What became of the mails after sending. Bounces arrive over hours or days; refresh to pull late ones. */
+  outcome: MailSendJobOutcome;
   /** How often the job was picked up again after an interruption. */
   resumeCount: Scalars['Int']['output'];
   /** Mails handed to the provider whose outcome never came back — left over after an interruption. Never re-sent on their own. */
@@ -2108,6 +2145,18 @@ export type MailSendJobModel = {
   startedAt?: Maybe<Scalars['DateTime']['output']>;
   status: MailSendJobState;
   totalCount: Scalars['Int']['output'];
+};
+
+export type MailSendJobOutcome = {
+  __typename?: 'MailSendJobOutcome';
+  /** Mails that bounced or were rejected by the provider. */
+  bounced: Scalars['Int']['output'];
+  /** Mails somebody clicked a link in. */
+  clicked: Scalars['Int']['output'];
+  /** Recipients whose address counts as dead by now, from this or a later mail. */
+  dead: Scalars['Int']['output'];
+  /** Mails the provider reported as delivered. */
+  delivered: Scalars['Int']['output'];
 };
 
 export type MailSendJobRecipientModel = {
@@ -2165,6 +2214,8 @@ export type MailSendPreviewModel = {
 export type MailSendRecipientModel = {
   __typename?: 'MailSendRecipientModel';
   email: Scalars['String']['output'];
+  /** Which email segment the recipient falls into. */
+  emailSegment: MailEmailSegment;
   firstName?: Maybe<Scalars['String']['output']>;
   /** Whether the user has a postal address a letter can be sent to. A letter send skips recipients without one. */
   hasAddress: Scalars['Boolean']['output'];
@@ -2182,6 +2233,8 @@ export type MailSendRecipientPreview = {
   allowsSubscriptionTemplates: Scalars['Boolean']['output'];
   /** Number of messages that would be sent over the given channel. A letter send reaches every person once, so it equals `userCount`. */
   count: Scalars['Int']['output'];
+  /** How the people of this audience split into email segments, ignoring the segments picked, so the split stays visible while choosing. */
+  segments: Array<MailSegmentCount>;
   /** Number of distinct people reached. Lower than `count` when someone has several matching subscriptions. */
   userCount: Scalars['Int']['output'];
   /** How many of the recipients have no usable postal address and would be skipped by a letter send. */
@@ -3034,6 +3087,8 @@ export type Mutation = {
   reactivateSubscription: PublicSubscription;
   /** Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created. */
   reactivateUserSubscription: PublicSubscription;
+  /** Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now. */
+  refreshEmailQuality: EmailQualityRefreshModel;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
   /** Rejects a comment */
@@ -7070,6 +7125,8 @@ export type SensitiveDataUser = BaseUser & {
   birthday?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
+  /** How usable the address is, derived from bounces, logins and clicks. Null until evaluated, which counts as unknown. */
+  emailQuality?: Maybe<UserEmailQualityModel>;
   emailVerifiedAt?: Maybe<Scalars['DateTime']['output']>;
   firstName?: Maybe<Scalars['String']['output']>;
   flair?: Maybe<Scalars['String']['output']>;
@@ -7239,7 +7296,8 @@ export enum SettingName {
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
-  EmailQuality = 'EMAIL_QUALITY',
+  EmailQualityMinMailsForUnresponsive = 'EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE',
+  EmailQualityUnresponsiveAfterDays = 'EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS',
   MailProviderName = 'MAIL_PROVIDER_NAME',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
@@ -8070,6 +8128,15 @@ export type UserCreatedAction = BaseAction & HasUserLc & {
   date: Scalars['DateTime']['output'];
   user: User;
   userId: Scalars['String']['output'];
+};
+
+export type UserEmailQualityModel = {
+  __typename?: 'UserEmailQualityModel';
+  level: EmailQualityLevel;
+  /** The deciding evidence, e.g. hardBounce or login. */
+  reason: Scalars['String']['output'];
+  /** When the level was first reached. */
+  since: Scalars['DateTime']['output'];
 };
 
 export enum UserEvent {

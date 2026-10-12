@@ -2,6 +2,7 @@ import {
   EmailQualityEventSource,
   EmailQualityEventType,
   EmailQualityLevel,
+  MailChannel,
   MailLogState,
 } from '@prisma/client';
 import { SettingName } from '@wepublish/settings/api';
@@ -156,7 +157,7 @@ describe('EmailQualityService', () => {
       expect(prisma.userEmailQuality.upsert).not.toHaveBeenCalled();
     });
 
-    it('counts the mails delivered to the current address, legacy rows included', async () => {
+    it('counts the mails delivered to the current address, legacy rows included, letters excluded', async () => {
       const { prisma, service } = makeService();
 
       await service.recompute('user-1');
@@ -166,6 +167,7 @@ describe('EmailQualityService', () => {
         _min: { sentDate: true },
         where: {
           recipientID: 'user-1',
+          channel: MailChannel.mail,
           state: { in: [MailLogState.delivered, MailLogState.accepted] },
           OR: [
             { recipientEmail: 'jane@example.com' },

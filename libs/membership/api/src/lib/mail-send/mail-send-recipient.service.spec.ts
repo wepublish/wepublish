@@ -1,7 +1,11 @@
-import { MailChannel, PrismaClient } from '@prisma/client';
-import { MailSendRecipientService } from './mail-send-recipient.service';
+import { EmailQualityLevel, MailChannel, PrismaClient } from '@prisma/client';
+import {
+  emailSegmentOf,
+  MailSendRecipientService,
+} from './mail-send-recipient.service';
 import {
   MailEmailFilter,
+  MailEmailSegment,
   MailRecipientBase,
   MailSubscriptionState,
 } from './mail-send.model';
@@ -1206,6 +1210,226 @@ describe('audience filtering (semantics)', () => {
 
       expect(matches({ user: placeholder }, where)).toBe(true);
       expect(matches({ user: real }, where)).toBe(false);
+    });
+  });
+
+  describe('email segments', () => {
+    const PATTERN = '@placeholder.neuewege.ch';
+    const segmentWhereFor = async (
+      emailSegments: MailEmailSegment[],
+      {
+        patterns = [PATTERN] as (string | null)[],
+        base = MailRecipientBase.allUsers,
+        emailFilter = undefined as MailEmailFilter | undefined,
+      } = {}
+    ) => {
+      const prisma = {
+        user: { count: vi.fn(async () => 0) },
+        subscription: { count: vi.fn(async () => 0) },
+        settingLetterProvider: {
+          findMany: vi.fn(async () =>
+            patterns.map(placeholderEmailContains => ({
+              placeholderEmailContains,
+            }))
+          ),
+        },
+      };
+
+      await makeService(prisma).count({ base, emailSegments, emailFilter });
+
+      return base === MailRecipientBase.allUsers ?
+          (prisma.user.count as Mock).mock.calls[0][0].where
+        : (prisma.subscription.count as Mock).mock.calls[0][0].where;
+    };
+
+    const level = (level: EmailQualityLevel) => ({ level });
+    const placeholder = {
+      email: 'nw-1@Placeholder.neuewege.ch',
+      emailQuality: null,
+    };
+    // a generated address that once bounced: still a placeholder
+    const placeholderDead = {
+      email: 'nw-2@placeholder.neuewege.ch',
+      emailQuality: level(EmailQualityLevel.dead),
+    };
+    const dead = {
+      email: 'jane@example.com',
+      emailQuality: level(EmailQualityLevel.dead),
+    };
+    const unresponsive = {
+      email: 'jo@example.com',
+      emailQuality: level(EmailQualityLevel.unresponsive),
+    };
+    const active = {
+      email: 'al@example.com',
+      emailQuality: level(EmailQualityLevel.active),
+    };
+    const neverEvaluated = { email: 'bob@example.com', emailQuality: null };
+    const unknown = {
+      email: 'kim@example.com',
+      emailQuality: level(EmailQualityLevel.unknown),
+    };
+
+    it('does not restrict without segments', async () => {
+      const prisma = {
+        user: { count: vi.fn(async () => 5) },
+        settingLetterProvider: { findMany: vi.fn() },
+      };
+
+      await makeService(prisma).count({
+        base: MailRecipientBase.allUsers,
+        emailSegments: [],
+      });
+
+      expect(prisma.settingLetterProvider.findMany).not.toHaveBeenCalled();
+      expect(prisma.user.count).toHaveBeenCalledWith();
+    });
+
+    it('keeps generated addresses for the placeholder segment, whatever their level', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.placeholder]);
+
+      expect(matches(placeholder, where)).toBe(true);
+      expect(matches(placeholderDead, where)).toBe(true);
+      expect(matches(dead, where)).toBe(false);
+      expect(matches(neverEvaluated, where)).toBe(false);
+    });
+
+    it('keeps the stored level for a level segment, but never a generated address', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.dead]);
+
+      expect(matches(dead, where)).toBe(true);
+      expect(matches(placeholderDead, where)).toBe(false);
+      expect(matches(unresponsive, where)).toBe(false);
+      expect(matches(neverEvaluated, where)).toBe(false);
+    });
+
+    it('counts people never evaluated as unknown', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.unknown]);
+
+      expect(matches(neverEvaluated, where)).toBe(true);
+      expect(matches(unknown, where)).toBe(true);
+      expect(matches(placeholder, where)).toBe(false);
+      expect(matches(active, where)).toBe(false);
+    });
+
+    // The analog campaign: everyone who certainly cannot be reached by mail.
+    it('takes anyone in one of several segments', async () => {
+      const where = await segmentWhereFor([
+        MailEmailSegment.placeholder,
+        MailEmailSegment.dead,
+      ]);
+
+      expect(matches(placeholder, where)).toBe(true);
+      expect(matches(dead, where)).toBe(true);
+      expect(matches(unresponsive, where)).toBe(false);
+      expect(matches(neverEvaluated, where)).toBe(false);
+    });
+
+    it('narrows the email filter further instead of replacing it', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.dead], {
+        emailFilter: MailEmailFilter.placeholder,
+      });
+
+      expect(matches(dead, where)).toBe(false);
+      expect(matches(placeholderDead, where)).toBe(false);
+    });
+
+    it('filters subscription audiences on the owner', async () => {
+      const where = await segmentWhereFor([MailEmailSegment.unresponsive], {
+        base: MailRecipientBase.hasSubscription,
+      });
+
+      expect(matches({ user: unresponsive }, where)).toBe(true);
+      expect(matches({ user: active }, where)).toBe(false);
+    });
+
+    it('has no placeholders without a configured pattern, and plain levels', async () => {
+      const placeholderWhere = await segmentWhereFor(
+        [MailEmailSegment.placeholder],
+        { patterns: [null] }
+      );
+      const deadWhere = await segmentWhereFor([MailEmailSegment.dead], {
+        patterns: [null],
+      });
+
+      expect(matches(placeholder, placeholderWhere)).toBe(false);
+      expect(matches(dead, deadWhere)).toBe(true);
+      expect(matches(placeholderDead, deadWhere)).toBe(true);
+    });
+
+    it('counts the people of every segment, whatever segments are picked', async () => {
+      const service = makeService({});
+      const countUsers = vi
+        .spyOn(service, 'countUsers')
+        .mockImplementation(async ({ emailSegments }) =>
+          emailSegments?.[0] === MailEmailSegment.dead ? 7 : 1
+        );
+
+      await expect(
+        service.countUsersBySegment({
+          base: MailRecipientBase.hasSubscription,
+          emailSegments: [MailEmailSegment.placeholder],
+        })
+      ).resolves.toEqual([
+        { segment: MailEmailSegment.placeholder, userCount: 1 },
+        { segment: MailEmailSegment.dead, userCount: 7 },
+        { segment: MailEmailSegment.unresponsive, userCount: 1 },
+        { segment: MailEmailSegment.unknown, userCount: 1 },
+        { segment: MailEmailSegment.active, userCount: 1 },
+      ]);
+      expect(countUsers).toHaveBeenCalledWith({
+        base: MailRecipientBase.hasSubscription,
+        emailSegments: [MailEmailSegment.dead],
+      });
+    });
+
+    it('loads the trimmed patterns once for the recipient rows', async () => {
+      const prisma = {
+        settingLetterProvider: {
+          findMany: vi.fn(async () => [
+            { placeholderEmailContains: ` ${PATTERN} ` },
+            { placeholderEmailContains: null },
+          ]),
+        },
+      };
+
+      await expect(makeService(prisma).placeholderPatterns()).resolves.toEqual([
+        PATTERN,
+      ]);
+    });
+  });
+
+  describe('emailSegmentOf', () => {
+    const patterns = ['@placeholder.neuewege.ch'];
+
+    it('is the stored level for a real address', () => {
+      expect(
+        emailSegmentOf(
+          { email: 'jane@example.com', emailQuality: { level: 'dead' } },
+          patterns
+        )
+      ).toBe(MailEmailSegment.dead);
+    });
+
+    it('is unknown for a real address never evaluated', () => {
+      expect(
+        emailSegmentOf(
+          { email: 'jane@example.com', emailQuality: null },
+          patterns
+        )
+      ).toBe(MailEmailSegment.unknown);
+    });
+
+    it('is placeholder for a generated address, whatever its level', () => {
+      expect(
+        emailSegmentOf(
+          {
+            email: 'NW-1@Placeholder.neuewege.ch',
+            emailQuality: { level: 'active' },
+          },
+          patterns
+        )
+      ).toBe(MailEmailSegment.placeholder);
     });
   });
 });

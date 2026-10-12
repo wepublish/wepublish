@@ -18,6 +18,12 @@ fragment FullMailSendJob on MailSendJobModel {
     id
     name
   }
+  outcome {
+    delivered
+    bounced
+    dead
+    clicked
+  }
 }
 
 query MailSendRecipientPreview(
@@ -29,6 +35,10 @@ query MailSendRecipientPreview(
     userCount
     withoutAddressCount
     allowsSubscriptionTemplates
+    segments {
+      segment
+      userCount
+    }
   }
 }
 
@@ -53,12 +63,21 @@ query MailSendRecipients(
       subscriptionId
       memberPlanName
       hasAddress
+      emailSegment
     }
     totalCount
     pageInfo {
       hasNextPage
       hasPreviousPage
     }
+  }
+}
+
+mutation RefreshEmailQuality {
+  refreshEmailQuality {
+    checked
+    updated
+    recomputed
   }
 }
 

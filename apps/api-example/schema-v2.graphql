@@ -1087,6 +1087,29 @@ enum EditorBlockType {
   Title
 }
 
+"""
+active: logged in or clicked recently. unknown: nothing decided. unresponsive: mails delivered, no reaction for a long time. dead: bounced, invalid, complained or unsubscribed.
+"""
+enum EmailQualityLevel {
+  active
+  dead
+  unknown
+  unresponsive
+}
+
+type EmailQualityRefreshModel {
+  """
+  Mails that were still in an open state and could be looked up at the provider.
+  """
+  checked: Int!
+
+  """People whose email level was re-evaluated."""
+  recomputed: Int!
+
+  """Mails whose state the provider reported differently."""
+  updated: Int!
+}
+
 type Event {
   createdAt: DateTime!
   description: RichText
@@ -1867,6 +1890,11 @@ input MailAudienceInput {
   emailFilter: MailEmailFilter
 
   """
+  Restrict to people in any of these email segments. Empty or absent means everyone.
+  """
+  emailSegments: [MailEmailSegment!]
+
+  """
   Win-back audience only: start of an explicit period the subscription ended in.
   """
   endedFrom: DateTime
@@ -1933,6 +1961,17 @@ enum MailEmailFilter {
   all
   placeholder
   real
+}
+
+"""
+placeholder: generated address, reachable by letter only. dead: bounced, invalid, complained or unsubscribed. unresponsive: mails delivered, no login or click for a long time. unknown: nothing decided yet. active: logged in or clicked recently.
+"""
+enum MailEmailSegment {
+  active
+  dead
+  placeholder
+  unknown
+  unresponsive
 }
 
 input MailLogFilter {
@@ -2028,6 +2067,11 @@ enum MailRecipientBase {
   noActiveSubscription
 }
 
+type MailSegmentCount {
+  segment: MailEmailSegment!
+  userCount: Int!
+}
+
 enum MailSendAudience {
   allUsers
   filteredSubscriptions
@@ -2061,6 +2105,11 @@ type MailSendJobModel {
   mailTemplateId: String!
   modifiedAt: DateTime!
 
+  """
+  What became of the mails after sending. Bounces arrive over hours or days; refresh to pull late ones.
+  """
+  outcome: MailSendJobOutcome!
+
   """How often the job was picked up again after an interruption."""
   resumeCount: Int!
 
@@ -2072,6 +2121,22 @@ type MailSendJobModel {
   startedAt: DateTime
   status: MailSendJobState!
   totalCount: Int!
+}
+
+type MailSendJobOutcome {
+  """Mails that bounced or were rejected by the provider."""
+  bounced: Int!
+
+  """Mails somebody clicked a link in."""
+  clicked: Int!
+
+  """
+  Recipients whose address counts as dead by now, from this or a later mail.
+  """
+  dead: Int!
+
+  """Mails the provider reported as delivered."""
+  delivered: Int!
 }
 
 type MailSendJobRecipientModel {
@@ -2135,6 +2200,9 @@ type MailSendPreviewModel {
 
 type MailSendRecipientModel {
   email: String!
+
+  """Which email segment the recipient falls into."""
+  emailSegment: MailEmailSegment!
   firstName: String
 
   """
@@ -2162,6 +2230,11 @@ type MailSendRecipientPreview {
   Number of messages that would be sent over the given channel. A letter send reaches every person once, so it equals `userCount`.
   """
   count: Int!
+
+  """
+  How the people of this audience split into email segments, ignoring the segments picked, so the split stays visible while choosing.
+  """
+  segments: [MailSegmentCount!]!
 
   """
   Number of distinct people reached. Lower than `count` when someone has several matching subscriptions.
@@ -3227,6 +3300,11 @@ type Mutation {
   reactivateUserSubscription(id: String!): PublicSubscription!
 
   """
+  Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now.
+  """
+  refreshEmailQuality: EmailQualityRefreshModel!
+
+  """
   This mutation registers a new member by providing name, email, and other required information.
   """
   registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, flair: String, name: String!, password: String): Registration!
@@ -3403,7 +3481,6 @@ type Mutation {
     type: LetterProviderType
     webhookSigningKey: String
   ): SettingLetterProvider!
-
 
   """Updates an existing mail provider setting."""
   updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType, webhookEndpointSecret: String): SettingMailProvider!
@@ -5073,6 +5150,11 @@ type SensitiveDataUser implements BaseUser {
   birthday: DateTime
   createdAt: DateTime!
   email: String!
+
+  """
+  How usable the address is, derived from bounces, logins and clicks. Null until evaluated, which counts as unknown.
+  """
+  emailQuality: UserEmailQualityModel
   emailVerifiedAt: DateTime
   firstName: String
   flair: String
@@ -5247,7 +5329,8 @@ enum SettingName {
   ALLOW_GUEST_COMMENT_RATING
   ALLOW_GUEST_POLL_VOTING
   COMMENT_CHAR_LIMIT
-  EMAIL_QUALITY
+  EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE
+  EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS
   MAIL_PROVIDER_NAME
   MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
   MAKE_EXPECTED_REVENUE_API_PUBLIC
@@ -6037,6 +6120,16 @@ type UserCreatedAction implements BaseAction & HasUserLc {
   date: DateTime!
   user: User!
   userId: String!
+}
+
+type UserEmailQualityModel {
+  level: EmailQualityLevel!
+
+  """The deciding evidence, e.g. hardBounce or login."""
+  reason: String!
+
+  """When the level was first reached."""
+  since: DateTime!
 }
 
 enum UserEvent {

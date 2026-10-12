@@ -2029,9 +2029,14 @@
         "newArticlePeering": "Will not affect already created articles",
         "newArticlePaywall": "Will not affect already created articles",
         "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
-        "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime."
+        "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime.",
+        "emailQualityUnresponsiveAfterDays": "An email address counts as “unresponsive” when this many days passed without a login or a click in a mail, although mails were delivered. Re-evaluated nightly and via “Refresh statuses”.",
+        "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”."
       },
       "sessionTtlDays": "Session lifetime",
+      "emailQuality": "Email quality",
+      "emailQualityUnresponsiveAfterDays": "“Unresponsive” after … days",
+      "emailQualityMinMailsForUnresponsive": "… delivered mails",
       "info": {
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
@@ -2264,6 +2269,7 @@
       "confirm": "Confirm",
       "country": "Country",
       "createNewUser": "Create new user",
+      "emailQuality": "Email status: {{level}} – {{reason}}, since {{since}}",
       "deleteUser": "Delete User?",
       "email": "Email",
       "errorCreatingUser": "User could not be created. Unexpected error: {{error}}",
@@ -3543,7 +3549,8 @@
         "memberPlan": "Subscription plan",
         "address": "Address",
         "withAddress": "Address present",
-        "withoutAddress": "No valid address – will be skipped"
+        "withoutAddress": "No valid address – will be skipped",
+        "emailSegment": "Email status"
       },
       "endedWithinDays": "Deactivated within the last … days",
       "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
@@ -3553,6 +3560,20 @@
         "placeholder": "Placeholders only",
         "real": "Real only",
         "hint": "Placeholder addresses are defined in the letter integration."
+      },
+      "emailSegments": {
+        "label": "Email status",
+        "placeholder": "Placeholder address",
+        "dead": "Dead (bounce, invalid, complaint, unsubscribed)",
+        "unresponsive": "Unresponsive",
+        "unknown": "Unknown",
+        "active": "Active",
+        "pick": "Any status",
+        "hint": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”). Reachable by letter: placeholder + dead.",
+        "overview": "People in this audience by email status (regardless of the selection)",
+        "refresh": "Refresh statuses",
+        "refreshing": "Refreshing statuses …",
+        "refreshed": "{{updated}} delivery states fetched from the provider ({{checked}} checked), {{recomputed}} people re-evaluated."
       },
       "endedWindow": {
         "label": "When the subscription was deactivated",
@@ -3812,6 +3833,14 @@
         "failed": "Failed",
         "sending": "Delivering",
         "interrupted": "Interrupted"
+      },
+      "outcome": {
+        "title": "Result",
+        "hint": "Delivery states and clicks come from the mail provider – bounces often hours or days later. “Address dead” counts the recipients whose address is considered dead by now. “Refresh statuses” pulls what the provider has not reported yet.",
+        "delivered": "Delivered",
+        "bounced": "Bounced / rejected",
+        "dead": "Address dead",
+        "clicked": "Clicked"
       },
       "recipientState": {
         "pending": "Pending",

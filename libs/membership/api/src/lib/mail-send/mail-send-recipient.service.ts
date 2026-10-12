@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  EmailQualityLevel,
   MailChannel,
   Prisma,
   PrismaClient,
@@ -10,6 +11,7 @@ import {
   DEFAULT_ENDED_WITHIN_DAYS,
   MailAudienceInput,
   MailEmailFilter,
+  MailEmailSegment,
   MailRecipientBase,
   MailSubscriptionState,
 } from './mail-send.model';
@@ -49,7 +51,32 @@ const subscriptionInclude = {
   periods: true,
 } satisfies Prisma.SubscriptionInclude;
 
-const userInclude = { address: true } satisfies Prisma.UserInclude;
+const userInclude = {
+  address: true,
+  emailQuality: { select: { level: true } },
+} satisfies Prisma.UserInclude;
+
+/** A user as the audience queries load it, enough to tell the segment. */
+export type UserWithEmailQuality = {
+  email: string;
+  emailQuality?: { level: EmailQualityLevel | string } | null;
+};
+
+/** Which segment a loaded recipient falls into; the query-side twin of {@link MailSendRecipientService.buildSegmentWhere}. */
+export const emailSegmentOf = (
+  { email, emailQuality }: UserWithEmailQuality,
+  placeholderPatterns: readonly string[]
+): MailEmailSegment => {
+  const address = email.toLowerCase();
+
+  if (
+    placeholderPatterns.some(pattern => address.includes(pattern.toLowerCase()))
+  ) {
+    return MailEmailSegment.placeholder;
+  }
+
+  return (emailQuality?.level as MailEmailSegment) ?? MailEmailSegment.unknown;
+};
 
 /** A field that is either unset or empty. */
 const blank = (field: keyof Prisma.UserAddressWhereInput) => [
@@ -265,6 +292,24 @@ export class MailSendRecipientService {
     return this.prisma.user.count({
       where: withUser(this.buildUserWhere(audience), email),
     });
+  }
+
+  /**
+   * How the people of the audience split into email segments, ignoring the
+   * segments picked: the split is what helps choosing them.
+   */
+  async countUsersBySegment(
+    audience: MailAudienceInput
+  ): Promise<{ segment: MailEmailSegment; userCount: number }[]> {
+    return Promise.all(
+      Object.values(MailEmailSegment).map(async segment => ({
+        segment,
+        userCount: await this.countUsers({
+          ...audience,
+          emailSegments: [segment],
+        }),
+      }))
+    );
   }
 
   /**
@@ -532,20 +577,35 @@ export class MailSendRecipientService {
     }
   }
 
-  private async buildEmailWhere(
-    audience: MailAudienceInput
-  ): Promise<Prisma.UserWhereInput | null> {
-    if (!audience.emailFilter || audience.emailFilter === MailEmailFilter.all) {
-      return null;
-    }
-
+  /** The substrings marking a generated address, from the letter integration. */
+  async placeholderPatterns(): Promise<string[]> {
     const settings = await this.prisma.settingLetterProvider.findMany({
       select: { placeholderEmailContains: true },
     });
 
-    const patterns = settings
+    return settings
       .map(({ placeholderEmailContains }) => placeholderEmailContains?.trim())
       .filter((pattern): pattern is string => !!pattern);
+  }
+
+  /**
+   * The user-level part of the audience: the placeholder/real filter and the
+   * email segments, both on top of whatever the base selects.
+   */
+  private async buildEmailWhere(
+    audience: MailAudienceInput
+  ): Promise<Prisma.UserWhereInput | null> {
+    const filter =
+      audience.emailFilter && audience.emailFilter !== MailEmailFilter.all ?
+        audience.emailFilter
+      : null;
+    const segments = [...new Set(audience.emailSegments ?? [])];
+
+    if (!filter && !segments.length) {
+      return null;
+    }
+
+    const patterns = await this.placeholderPatterns();
 
     const isPlaceholder: Prisma.UserWhereInput = {
       OR: patterns.map(pattern => ({
@@ -561,9 +621,54 @@ export class MailSendRecipientService {
       })),
     };
 
-    return audience.emailFilter === MailEmailFilter.placeholder ?
-        isPlaceholder
-      : isReal;
+    const parts: Prisma.UserWhereInput[] = [];
+
+    if (filter) {
+      parts.push(
+        filter === MailEmailFilter.placeholder ? isPlaceholder : isReal
+      );
+    }
+
+    if (segments.length) {
+      parts.push(this.buildSegmentWhere(segments, isPlaceholder, isReal));
+    }
+
+    return parts.length === 1 ? parts[0] : { AND: parts };
+  }
+
+  /**
+   * Any of the picked segments. A generated address is a placeholder whatever
+   * level it may have earned, so the level segments only apply to real ones;
+   * people never evaluated count as unknown.
+   */
+  private buildSegmentWhere(
+    segments: MailEmailSegment[],
+    isPlaceholder: Prisma.UserWhereInput,
+    isReal: Prisma.UserWhereInput
+  ): Prisma.UserWhereInput {
+    const levels = segments.filter(
+      (segment): segment is Exclude<MailEmailSegment, 'placeholder'> =>
+        segment !== MailEmailSegment.placeholder
+    ) as EmailQualityLevel[];
+    const any: Prisma.UserWhereInput[] = [];
+
+    if (segments.includes(MailEmailSegment.placeholder)) {
+      any.push(isPlaceholder);
+    }
+
+    if (levels.length) {
+      const byLevel: Prisma.UserWhereInput[] = [
+        { emailQuality: { is: { level: { in: levels } } } },
+      ];
+
+      if (levels.includes(EmailQualityLevel.unknown)) {
+        byLevel.push({ emailQuality: { is: null } });
+      }
+
+      any.push({ AND: [isReal, { OR: byLevel }] });
+    }
+
+    return any.length === 1 ? any[0] : { OR: any };
   }
 
   /** The audience expressed as a filter on people rather than subscriptions. */

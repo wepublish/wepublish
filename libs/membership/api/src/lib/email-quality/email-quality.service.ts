@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import {
   EmailQualityEventSource,
   EmailQualityEventType,
+  MailChannel,
   MailLogState,
   Prisma,
   PrismaClient,
@@ -213,12 +214,13 @@ export class EmailQualityService implements EmailQualityRecorder {
         select: { type: true, occurredAt: true, email: true, detail: true },
       }),
       // Rows from before `recipientEmail` existed count for the current
-      // address. Once letters share this table, restrict to `channel: mail`.
+      // address. Letters share this table and say nothing about the inbox.
       this.prisma.mailLog.aggregate({
         _count: true,
         _min: { sentDate: true },
         where: {
           recipientID: userId,
+          channel: MailChannel.mail,
           state: { in: [MailLogState.delivered, MailLogState.accepted] },
           OR: [{ recipientEmail: email }, { recipientEmail: null }],
         },

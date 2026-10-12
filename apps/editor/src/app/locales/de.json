@@ -2015,9 +2015,14 @@
         "newArticlePaywall": "Hat keinen Einfluss auf bereits erstellte Artikel",
         "subscriptionUpgradeModel": "Wenn aktiviert, wird bei einem Upgrade immer die Differenz zwischen dem neuen und dem aktuellen Plan-Preis verrechnet, unabhängig davon, wie viel Zeit in der aktuellen Periode noch verbleibt. Wenn deaktiviert, wird nur das ungenutzte (anteilige) Restguthaben der aktuellen Periode angerechnet.",
         "sessionTtlDays": "Wie lange eine Anmeldung gültig bleibt, bevor man sich neu anmelden muss. Gilt ab der nächsten Anmeldung; bestehende Sitzungen behalten ihre Laufzeit.",
+        "emailQualityUnresponsiveAfterDays": "Eine E-Mail-Adresse gilt als «reagiert nicht», wenn so viele Tage lang weder ein Login noch ein Klick in einer Mail erfolgt ist, obwohl Mails zugestellt wurden. Wird nächtlich und über «Status aktualisieren» neu bewertet.",
+        "emailQualityMinMailsForUnresponsive": "So viele Mails müssen an die Adresse zugestellt worden sein, bevor sie als «reagiert nicht» gelten kann.",
         "showPendingWhenNotPublished": "Dadurch werden geplante Artikel und Seiten öffentlich sichtbar (und damit auch für Crawler), obwohl sie noch nie publiziert wurden."
       },
       "sessionTtlDays": "Gültigkeitsdauer der Anmeldung",
+      "emailQuality": "E-Mail-Qualität",
+      "emailQualityUnresponsiveAfterDays": "«Reagiert nicht» nach … Tagen",
+      "emailQualityMinMailsForUnresponsive": "… zugestellten Mails",
       "activeSubscriptionsApiPublic": "API für aktive Abos öffentlich zugänglich machen",
       "expectedRevenueApiPublic": "API für erwartete Einnahmen öffentlich zugänglich machen",
       "newDeactivationsApiPublic": "API für neue Deaktivierungen öffentlich zugänglich machen",
@@ -2216,6 +2221,7 @@
       "confirm": "Bestätigen",
       "country": "Land",
       "createNewUser": "Neue:n Benutzer:in erstellen",
+      "emailQuality": "E-Mail-Status: {{level}} – {{reason}}, seit {{since}}",
       "deleteUser": "Benutzer:in löschen?",
       "email": "E-Mail",
       "errorCreatingUser": "Benutzer:in konnte nicht erstellt werden. Unerwarteter Fehler: {{error}}",
@@ -3525,7 +3531,8 @@
         "memberPlan": "Abo-Plan",
         "address": "Adresse",
         "withAddress": "Adresse vorhanden",
-        "withoutAddress": "Keine gültige Adresse – wird nicht verschickt"
+        "withoutAddress": "Keine gültige Adresse – wird nicht verschickt",
+        "emailSegment": "E-Mail-Status"
       },
       "endedWithinDays": "Deaktiviert innerhalb der letzten … Tage",
       "endedWithinDaysHint": "Nur Abos, die in diesem Zeitraum deaktiviert wurden.",
@@ -3535,6 +3542,20 @@
         "placeholder": "Nur Platzhalter",
         "real": "Nur echt",
         "hint": "Platzhalter-Adressen werden in der Brief-Integration festgelegt."
+      },
+      "emailSegments": {
+        "label": "E-Mail-Status",
+        "placeholder": "Platzhalter-Adresse",
+        "dead": "Tot (Bounce, ungültig, Beschwerde, abgemeldet)",
+        "unresponsive": "Reagiert nicht",
+        "unknown": "Unbekannt",
+        "active": "Aktiv",
+        "pick": "Alle Status",
+        "hint": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»). Per Brief erreichbar: Platzhalter + Tot.",
+        "overview": "Personen dieser Zielgruppe nach E-Mail-Status (unabhängig von der Auswahl)",
+        "refresh": "Status aktualisieren",
+        "refreshing": "Status werden aktualisiert …",
+        "refreshed": "{{updated}} Zustellstatus vom Provider geholt ({{checked}} geprüft), {{recomputed}} Personen neu bewertet."
       },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
@@ -3794,6 +3815,14 @@
         "failed": "Fehlgeschlagen",
         "sending": "In Zustellung",
         "interrupted": "Unterbrochen"
+      },
+      "outcome": {
+        "title": "Ergebnis",
+        "hint": "Zustellstatus und Klicks meldet der Mail-Provider – Bounces oft erst nach Stunden oder Tagen. «Tot» zählt die Empfänger:innen, deren Adresse inzwischen als tot gilt. «Status aktualisieren» holt nach, was der Provider noch nicht gemeldet hat.",
+        "delivered": "Zugestellt",
+        "bounced": "Bounces / abgelehnt",
+        "dead": "Adresse tot",
+        "clicked": "Geklickt"
       },
       "recipientState": {
         "pending": "Ausstehend",
