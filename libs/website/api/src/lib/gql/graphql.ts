@@ -319,6 +319,8 @@ export enum SettingName {
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  EmailQualityMinMailsForUnresponsive = 'EMAIL_QUALITY_MIN_MAILS_FOR_UNRESPONSIVE',
+  EmailQualityUnresponsiveAfterDays = 'EMAIL_QUALITY_UNRESPONSIVE_AFTER_DAYS',
   LoginCodeEnabled = 'LOGIN_CODE_ENABLED',
   LoginCodeMaxUses = 'LOGIN_CODE_MAX_USES',
   LoginCodeSecondFactor = 'LOGIN_CODE_SECOND_FACTOR',

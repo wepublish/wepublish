@@ -12,6 +12,11 @@ export const SessionTokenContext = createContext<
       FullSensitiveDataUserFragment | null | undefined,
       boolean,
       (value: FullSessionWithTokenWithoutUserFragment | null) => Promise<void>,
+      /**
+       * Fetches the user again. For pages that change the user on the API
+       * and go on to a page that reads them from this context.
+       */
+      (() => Promise<void>)?,
     ]
   | null
 >(null);
@@ -26,9 +31,12 @@ const useSessionContext = () => {
   return context;
 };
 
+const noRefresh = async () => undefined;
+
 export const useUser = () => {
   const client = useApolloClient();
-  const [user, hasUser, setToken] = useSessionContext();
+  const [user, hasUser, setToken, refreshUser = noRefresh] =
+    useSessionContext();
 
   const logout = async () => {
     await setToken(null);
@@ -38,5 +46,5 @@ export const useUser = () => {
     await client.resetStore().catch(() => undefined);
   };
 
-  return { user, hasUser, setToken, logout };
+  return { user, hasUser, setToken, refreshUser, logout };
 };

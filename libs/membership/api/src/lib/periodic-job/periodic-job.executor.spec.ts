@@ -1,5 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { PeriodicJobExecutor } from './periodic-job.executor';
+import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
+import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
+import { EmailQualityService } from '../email-quality/email-quality.service';
 
 describe('PeriodicJobExecutor', () => {
   afterEach(() => {
@@ -24,25 +27,57 @@ describe('PeriodicJobExecutor', () => {
         ran.push('mailchimp sync');
       }),
     };
+    const mailLogSync = {
+      syncOpenStates: vi.fn(async () => {
+        ran.push('mail log sync');
+      }),
+    };
+    const emailQuality = {
+      recomputeAll: vi.fn(async () => {
+        ran.push('email quality');
+      }),
+    };
+    const services = new Map<unknown, unknown>([
+      [MailchimpSyncService, mailchimpSync],
+      [MailLogSyncService, mailLogSync],
+      [EmailQualityService, emailQuality],
+    ]);
     const kv = {
       claim: vi.fn().mockResolvedValue(claimed),
       dragonflyStatus: vi.fn().mockResolvedValue(dragonfly),
     };
     const executor = new PeriodicJobExecutor(
       periodicJobs as any,
-      { resolve: vi.fn().mockResolvedValue(mailchimpSync) } as any,
+      {
+        resolve: vi.fn(async (token: unknown) => services.get(token)),
+      } as any,
       kv as any
     );
 
-    return { executor, ran, kv, periodicJobs };
+    return { executor, ran, kv, periodicJobs, mailLogSync };
   };
 
-  it('runs the periodic jobs and then the Mailchimp sync on the replica that claims the night', async () => {
+  it('runs the periodic jobs, the Mailchimp sync, the mail log sync and the email quality on the replica that claims the night', async () => {
     const { executor, ran } = setup(true);
 
     await executor.handleCron();
 
-    expect(ran).toEqual(['periodic jobs', 'mailchimp sync']);
+    expect(ran).toEqual([
+      'periodic jobs',
+      'mailchimp sync',
+      'mail log sync',
+      'email quality',
+    ]);
+  });
+
+  it('still re-evaluates the email quality when the mail log sync fails', async () => {
+    vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+    const { executor, ran, mailLogSync } = setup(true);
+    mailLogSync.syncOpenStates.mockRejectedValue(new Error('provider down'));
+
+    await executor.handleCron();
+
+    expect(ran).toEqual(['periodic jobs', 'mailchimp sync', 'email quality']);
   });
 
   it('leaves the night to the replica that claimed it', async () => {
@@ -77,11 +112,13 @@ describe('PeriodicJobExecutor', () => {
     expect(ran).toEqual([
       'periodic jobs guarded by the database',
       'mailchimp sync',
+      'mail log sync',
+      'email quality',
     ]);
     expect(failed).not.toHaveBeenCalled();
   });
 
-  it('still runs the Mailchimp sync when the database guarded run fails', async () => {
+  it('still runs the rest of the night when the database guarded run fails', async () => {
     vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
     const { executor, ran, periodicJobs } = setup(undefined, 'not-configured');
     periodicJobs.concurrentExecute.mockRejectedValue(
@@ -90,7 +127,7 @@ describe('PeriodicJobExecutor', () => {
 
     await executor.handleCron();
 
-    expect(ran).toEqual(['mailchimp sync']);
+    expect(ran).toEqual(['mailchimp sync', 'mail log sync', 'email quality']);
   });
 
   it('does not ask Dragonfly for its status when the night was claimed', async () => {

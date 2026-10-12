@@ -544,6 +544,25 @@ check-then-write at boot (`findUnique` then `create`) and even Prisma's
 Pinned by `google-analytics-db-config.spec.ts` and the "several replicas" cases
 in `reconcile-provider-registry.spec.ts`, whose fakes race like Prisma does.
 
+### ⚠️ The mail webhook answers 200 to a payload it cannot process — only a bad signature is a 401
+
+[mail.webhook.ts](../../libs/mail/api/src/lib/mail.webhook.ts) catches every
+error after `webhookForSendMail` and still returns 200; a
+`MailWebhookSignatureError` becomes 401. Returning 500 looks more honest but
+is wrong for every provider we have or plan: Mandrill and Mailgun retry on 5xx
+and fail the same way again, and Brevo retries only 429/timeouts and **drops
+the event for good** on any other answer (verified in Brevo's retry docs,
+2026-10-11), so a 500 would lose a bounce forever. Evidence stays in our log,
+and the nightly `MailLogSyncService` poll reconciles what a webhook missed.
+
+**Load-bearing:** the `catch` that logs and falls through to
+`res.status(200)`, and the `instanceof MailWebhookSignatureError` → 401 branch.
+Providers must throw `MailWebhookSignatureError`, not a plain `Error`, for a
+failed signature.
+
+Pinned by `libs/mail/api/src/lib/mail.webhook.spec.ts` ("refuses a call that
+does not come from the provider", "answers 200 to a payload it cannot handle").
+
 ---
 
 ## Adding an entry

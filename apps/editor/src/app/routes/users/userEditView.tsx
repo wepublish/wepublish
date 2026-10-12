@@ -604,6 +604,20 @@ function UserEditView() {
                           setEmail(value);
                         }}
                       />
+                      {/* derived from bounces, logins and clicks; read-only */}
+                      {user?.emailQuality && (
+                        <Form.HelpText>
+                          {t('userCreateOrEditView.emailQuality', {
+                            level: t(
+                              `mailSend.emailSegments.${user.emailQuality.level}`
+                            ),
+                            reason: user.emailQuality.reason,
+                            since: new Date(
+                              user.emailQuality.since
+                            ).toLocaleDateString(),
+                          })}
+                        </Form.HelpText>
+                      )}
                     </Form.Group>
                   </Col>
                   {/* birthday */}

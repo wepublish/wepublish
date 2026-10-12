@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client/react';
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { ConfirmEmailChangeDocument } from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
+import { useUser } from '@wepublish/authentication/website';
 import { getCookie } from 'cookies-next';
 import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
@@ -40,6 +41,7 @@ export const createConfirmEmailPage = ({
     const { t } = useTranslation();
     const router = useRouter();
     const [confirm] = useMutation(ConfirmEmailChangeDocument);
+    const { refreshUser } = useUser();
     const [outcome, setOutcome] = useState<Outcome>({ state: 'confirming' });
     const started = useRef(false);
 
@@ -71,7 +73,9 @@ export const createConfirmEmailPage = ({
           }
 
           if (getCookie(AuthTokenStorageKey)) {
-            router.replace(redirectTo);
+            // The session provider fetched the reader when this page opened,
+            // before the address changed. The next page reads them from there.
+            refreshUser().finally(() => router.replace(redirectTo));
 
             return;
           }
@@ -80,7 +84,7 @@ export const createConfirmEmailPage = ({
         },
         (error: Error) => setOutcome({ state: 'failed', error: error.message })
       );
-    }, [token, confirm, router]);
+    }, [token, confirm, router, refreshUser]);
 
     return (
       <>

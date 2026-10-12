@@ -8,21 +8,28 @@ import {
 } from '@testing-library/react';
 import * as config from '@wepublish/storybook';
 import { WithUserDecorator } from '@wepublish/storybook';
+import { SessionTokenContext } from '@wepublish/authentication/website';
 import { actWait } from '@wepublish/testing';
 import {
   CurrentSessionDocument,
   RequestEmailChangeDocument,
 } from '@wepublish/website/api';
 import { GraphQLError } from 'graphql';
+import { ComponentType } from 'react';
 import de from '@wepublish/website/translations/de.json';
 import { WelcomePage } from './welcome-page';
 
+const router = vi.hoisted(() => ({
+  query: {} as Record<string, string>,
+  replace: vi.fn(),
+}));
+
 vi.mock('next/router', () => ({
   useRouter: () => ({
-    query: {},
+    query: router.query,
     asPath: '/welcome',
     push: vi.fn(),
-    replace: vi.fn(),
+    replace: router.replace,
   }),
 }));
 
@@ -63,12 +70,28 @@ const renderWelcome = async (
   placeholderEmail: boolean,
   mocks: object[] = [],
   restricted = true,
-  sessionOptions: Parameters<typeof session>[2] = {}
+  sessionOptions: Parameters<typeof session>[2] = {},
+  refreshUser?: () => Promise<void>
 ) => {
   const Welcome = composeStory(
     {
       render: () => <WelcomePage />,
-      decorators: [WithUserDecorator({ id: 'user-1' } as never)],
+      decorators: [
+        refreshUser ?
+          (Story: ComponentType) => (
+            <SessionTokenContext.Provider
+              value={[
+                { id: 'user-1' } as never,
+                true,
+                async () => undefined,
+                refreshUser,
+              ]}
+            >
+              <Story />
+            </SessionTokenContext.Provider>
+          )
+        : WithUserDecorator({ id: 'user-1' } as never),
+      ],
       parameters: {
         apolloClient: {
           mocks: [
@@ -90,7 +113,30 @@ const click = (name: string) =>
   act(() => fireEvent.click(screen.getByRole('button', { name })));
 
 describe('WelcomePage', () => {
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
+    router.query = {};
+    router.replace.mockReset();
+  });
+
+  // The profile reads the user from the session provider, which fetched them
+  // when the page was opened. By now the address was confirmed, so the user
+  // is fetched again before the profile gets to show them.
+  it('fetches the reader again before moving on to the profile', async () => {
+    router.query = { emailConfirmed: '1' };
+    const order: string[] = [];
+    const refreshUser = vi.fn(async () => {
+      order.push('refresh');
+    });
+    router.replace.mockImplementation(() => order.push('replace'));
+
+    await renderWelcome(false, [], false, {}, refreshUser);
+    await click(de.welcome.skip);
+    await actWait();
+
+    expect(order).toEqual(['refresh', 'replace']);
+    expect(router.replace).toHaveBeenCalledWith('/profile');
+  });
 
   it('goes back to the intro when entering an address is cancelled', async () => {
     await renderWelcome(true);

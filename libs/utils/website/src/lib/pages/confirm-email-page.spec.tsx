@@ -1,6 +1,7 @@
 import { composeStory } from '@storybook/react';
 import { act, cleanup, render, screen } from '@testing-library/react';
 import * as config from '@wepublish/storybook';
+import { SessionTokenContext } from '@wepublish/authentication/website';
 import { actWait } from '@wepublish/testing';
 import de from '@wepublish/website/translations/de.json';
 import { createConfirmEmailPage } from './confirm-email-page';
@@ -29,12 +30,21 @@ vi.mock('cookies-next', async importOriginal => ({
   getCookie: () => cookie.value,
 }));
 
-const renderPage = async () => {
+const renderPage = async (refreshUser?: () => Promise<void>) => {
   const ConfirmEmailPage = createConfirmEmailPage({
     redirectTo: '/welcome?emailConfirmed=1',
   });
   const Story = composeStory(
-    { render: () => <ConfirmEmailPage token="confirm-token" /> },
+    {
+      render: () =>
+        refreshUser ?
+          <SessionTokenContext.Provider
+            value={[null, true, async () => undefined, refreshUser]}
+          >
+            <ConfirmEmailPage token="confirm-token" />
+          </SessionTokenContext.Provider>
+        : <ConfirmEmailPage token="confirm-token" />,
+    },
     { title: 'Confirm email page' },
     config
   );
@@ -72,6 +82,27 @@ describe('ConfirmEmailPage', () => {
     await renderPage();
 
     expect(replace).toHaveBeenCalledWith('/welcome?emailConfirmed=1');
+  });
+
+  // The profile shows the user the session provider fetched when the page was
+  // opened, which still carries the old address and the pending change.
+  it('fetches the reader again before going on, so the profile shows the new address', async () => {
+    cookie.value = JSON.stringify({ token: 'session' });
+    confirm.mockResolvedValue({ data: { confirmEmailChange: { id: 'u1' } } });
+    const order: string[] = [];
+    const refreshUser = vi.fn(async () => {
+      order.push('refresh');
+    });
+    // The page also rewrites its own url once to drop the token.
+    replace.mockImplementation((to: unknown) => {
+      if (to === '/welcome?emailConfirmed=1') {
+        order.push('replace');
+      }
+    });
+
+    await renderPage(refreshUser);
+
+    expect(order).toEqual(['refresh', 'replace']);
   });
 
   it('says the address is confirmed, whether it changed or not, and offers to log in', async () => {

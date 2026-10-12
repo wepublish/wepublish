@@ -2032,11 +2032,16 @@
         "placeholderEmailPatterns": "Motifs de texte séparés par des virgules, p. ex. @substitution.exemple.org. Les comptes dont l’adresse e-mail contient l’un des motifs sont considérés comme des substituts : aucun e-mail ne leur est envoyé et leurs sessions restent limitées jusqu’à la confirmation d’une véritable adresse. S’applique en plus du motif du prestataire de courrier.",
         "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu’elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
+        "emailQualityUnresponsiveAfterDays": "Une adresse e-mail est considérée « sans réaction » lorsque ce nombre de jours s’est écoulé sans connexion ni clic dans un e-mail, alors que des e-mails ont été remis. Réévalué chaque nuit et via « Actualiser les statuts ».",
+        "emailQualityMinMailsForUnresponsive": "Ce nombre d’e-mails doit avoir été remis à l’adresse avant qu’elle puisse être considérée « sans réaction ».",
         "newArticlePaywall": "N’affectera pas les articles déjà créés",
         "newArticlePeering": "N’affectera pas les articles déjà créés",
         "showPendingWhenNotPublished": "Cela exposera publiquement les articles et pages en attente (et donc aussi les robots d’indexation), même s’ils n’ont encore jamais été publiés."
       },
       "sessionTtlDays": "Durée de validité de la connexion",
+      "emailQuality": "Qualité des e-mails",
+      "emailQualityUnresponsiveAfterDays": "« Sans réaction » après … jours",
+      "emailQualityMinMailsForUnresponsive": "… e-mails remis",
       "activeSubscriptionsApiPublic": "Rendre l’API des abonnements actifs accessible au public",
       "expectedRevenueApiPublic": "Rendre l’API des revenus attendus accessible au public",
       "newDeactivationsApiPublic": "Rendre l’API des nouvelles désactivations accessible au public",
@@ -2237,6 +2242,7 @@
       "confirm": "Confirmer",
       "country": "Pays",
       "createNewUser": "Créer un·e nouvel·le utilisateur·trice",
+      "emailQuality": "Statut e-mail : {{level}} – {{reason}}, depuis {{since}}",
       "deleteUser": "Supprimer l’utilisateur·trice ?",
       "email": "E-mail",
       "errorCreatingUser": "L’utilisateur·trice n’a pas pu être créé·e. Erreur inattendue : {{error}}",
@@ -3555,7 +3561,8 @@
         "memberPlan": "Plan d’abonnement",
         "address": "Adresse",
         "withAddress": "Adresse disponible",
-        "withoutAddress": "Pas d’adresse valide – ne sera pas envoyé"
+        "withoutAddress": "Pas d’adresse valide – ne sera pas envoyé",
+        "emailSegment": "Statut e-mail"
       },
       "endedWithinDays": "Désactivé au cours des … derniers jours",
       "endedWithinDaysHint": "Uniquement les abonnements désactivés dans cette période.",
@@ -3565,6 +3572,20 @@
         "placeholder": "Uniquement les substituts",
         "real": "Uniquement les réelles",
         "hint": "Les adresses de substitution sont définies dans l’intégration courrier."
+      },
+      "emailSegments": {
+        "label": "Statut e-mail",
+        "placeholder": "Adresse de substitution",
+        "dead": "Morte (rebond, invalide, plainte, désabonnée)",
+        "unresponsive": "Sans réaction",
+        "unknown": "Inconnu",
+        "active": "Active",
+        "pick": "Tous les statuts",
+        "hint": "Plusieurs statuts signifient « l’un ou l’autre ». « Sans réaction » : des e-mails ont été remis, mais aucune connexion ni aucun clic depuis longtemps (réglage « Qualité des e-mails »). Joignable par courrier : substitution + morte.",
+        "overview": "Personnes de cette audience par statut e-mail (indépendamment de la sélection)",
+        "refresh": "Actualiser les statuts",
+        "refreshing": "Actualisation des statuts …",
+        "refreshed": "{{updated}} statuts de remise récupérés chez le fournisseur ({{checked}} vérifiés), {{recomputed}} personnes réévaluées."
       },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
@@ -3824,6 +3845,14 @@
         "failed": "En échec",
         "sending": "En cours de remise",
         "interrupted": "Interrompus"
+      },
+      "outcome": {
+        "title": "Résultat",
+        "hint": "Les statuts de remise et les clics viennent du fournisseur d’e-mails – les rebonds souvent des heures ou des jours plus tard. « Adresse morte » compte les destinataires dont l’adresse est désormais considérée comme morte. « Actualiser les statuts » récupère ce que le fournisseur n’a pas encore signalé.",
+        "delivered": "Remis",
+        "bounced": "Rebonds / refusés",
+        "dead": "Adresse morte",
+        "clicked": "Cliqués"
       },
       "recipientState": {
         "pending": "En attente",
