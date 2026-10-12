@@ -59,7 +59,7 @@ const Panel = styled(RPanel)`
   display: grid;
   min-height: 200px;
   padding: 0;
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
 `;
 
 export const PollBlock = ({
@@ -90,7 +90,10 @@ export const PollBlock = ({
         bodyFill
         bordered
       >
-        <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
+        <PlaceholderInput
+          onAddClick={() => setIsDialogOpen(true)}
+          addLabel={t('blocks.poll.choosePoll')}
+        >
           {poll && (
             <Poll>
               <IconWrapper>

@@ -21,7 +21,8 @@ import {
   createCheckedPermissionComponent,
   EditorTemplate,
   mapBlockValueToBlockInput,
-  NavigationBar,
+  EditorHeader,
+  EditorHeaderButton,
   PermissionControl,
   StateColor,
   TypographicTextArea,
@@ -32,29 +33,15 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdKeyboardBackspace, MdSave } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import {
-  Badge,
-  IconButton,
-  Message,
-  Notification,
-  Tag as RTag,
-  toaster,
-} from 'rsuite';
-
-const FieldSet = styled('fieldset')``;
-
-const Legend = styled.legend`
-  width: auto;
-  margin: 0px auto;
-`;
-
-const Tag = styled(RTag, {
-  shouldForwardProp: prop => prop !== 'stateColor',
-})<{ stateColor: string }>`
-  background-color: ${({ stateColor }) => stateColor};
-`;
+import { Badge, IconButton, Message, Notification, toaster } from 'rsuite';
 
 const NameInput = styled(TypographicTextArea)``;
+
+const TemplateContent = styled.div`
+  display: grid;
+  gap: 24px;
+  width: 100%;
+`;
 
 const initialBlocks: BlockValue[] = [];
 
@@ -193,78 +180,79 @@ function BlockTemplateEditView() {
   }
 
   return (
-    <FieldSet>
-      <Legend>
-        <Tag stateColor={stateColor}>{tagTitle}</Tag>
-      </Legend>
+    <>
       <EditorTemplate
         navigationChildren={
-          <NavigationBar
-            leftChildren={
+          <EditorHeader
+            state={stateColor}
+            stateLabel={tagTitle}
+            back={
               <Link to="/block-content/templates">
                 <IconButton
-                  size="lg"
+                  circle
+                  appearance="subtle"
                   icon={<MdKeyboardBackspace />}
+                  title={t('blockTemplates.edit.backToList')}
+                  aria-label={t('blockTemplates.edit.backToList')}
                   onClick={e => {
                     if (!unsavedChangesDialog()) e.preventDefault();
                   }}
-                >
-                  {t('blockTemplates.edit.backToList')}
-                </IconButton>
+                />
               </Link>
             }
-            centerChildren={
-              <NameInput
-                value={name}
-                disabled={isDisabled}
-                variant="title"
-                align="center"
-                placeholder={t('blockTemplates.edit.name')}
-                onChange={e => {
-                  setName(e?.target?.value);
-                  setChanged(true);
-                }}
-              />
-            }
-            rightChildren={
+            primaryActions={
               isNew && createData == null ?
                 <PermissionControl
                   qualifyingPermissions={[CanCreateBlockTemplate.id]}
                 >
-                  <IconButton
-                    size="lg"
+                  <EditorHeaderButton
+                    appearance="primary"
                     icon={<MdSave />}
+                    label={t('create')}
+                    collapse={false}
                     disabled={isDisabled}
                     onClick={() => handleSave()}
-                  >
-                    {t('create')}
-                  </IconButton>
+                  />
                 </PermissionControl>
               : <PermissionControl
                   qualifyingPermissions={[CanUpdateBlockTemplate.id]}
                 >
                   <Badge className={hasChanged ? 'unsaved' : 'saved'}>
-                    <IconButton
-                      size="lg"
+                    <EditorHeaderButton
+                      appearance="primary"
                       icon={<MdSave />}
+                      label={t('save')}
+                      collapse={false}
                       disabled={isDisabled}
                       onClick={() => setSaveConfirmOpen(true)}
-                    >
-                      {t('save')}
-                    </IconButton>
+                    />
                   </Badge>
                 </PermissionControl>
             }
-          ></NavigationBar>
+          />
         }
       >
-        <BlockList
-          itemId={blockTemplateId}
-          blockMap={BlockMap}
-          value={blocks}
-          disabled={isLoading || isDisabled || !isAuthorized}
-          onChange={handleChange}
-        />
+        <TemplateContent>
+          <NameInput
+            value={name}
+            disabled={isDisabled}
+            variant="title"
+            align="center"
+            placeholder={t('blockTemplates.edit.name')}
+            onChange={e => {
+              setName(e?.target?.value);
+              setChanged(true);
+            }}
+          />
+
+          <BlockList
+            itemId={blockTemplateId}
+            blockMap={BlockMap}
+            value={blocks}
+            disabled={isLoading || isDisabled || !isAuthorized}
+            onChange={handleChange}
+          />
+        </TemplateContent>
       </EditorTemplate>
 
       {isSaveConfirmOpen && (
@@ -278,7 +266,7 @@ function BlockTemplateEditView() {
           onClose={() => setSaveConfirmOpen(false)}
         />
       )}
-    </FieldSet>
+    </>
   );
 }
 

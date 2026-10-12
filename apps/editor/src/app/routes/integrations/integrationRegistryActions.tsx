@@ -85,11 +85,13 @@ export function AddIntegrationButton({
   mutation,
   refetchQuery,
   existingIds,
+  label,
 }: {
   types: ProviderTypeOption[];
   mutation: DocumentNode;
   refetchQuery: DocumentNode;
   existingIds: string[];
+  label?: string;
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -138,11 +140,11 @@ export function AddIntegrationButton({
   return (
     <>
       <Button
-        variant="outlined"
+        variant={label ? 'contained' : 'outlined'}
         startIcon={<MdAdd />}
         onClick={() => setOpen(true)}
       >
-        {t('integrations.add')}
+        {label ?? t('integrations.add')}
       </Button>
 
       <Modal
@@ -150,7 +152,7 @@ export function AddIntegrationButton({
         onClose={close}
       >
         <Modal.Header>
-          <Modal.Title>{t('integrations.add')}</Modal.Title>
+          <Modal.Title>{label ?? t('integrations.add')}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -203,7 +205,7 @@ export function AddIntegrationButton({
             disabled={loading || !id || !type || existingIds.includes(id)}
             onClick={onConfirm}
           >
-            {t('integrations.add')}
+            {label ?? t('integrations.add')}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -217,12 +219,14 @@ export function CreateFixedIntegrationButton({
   name,
   mutation,
   refetchQuery,
+  label,
 }: {
   id: string;
   type: string;
   name: string;
   mutation: DocumentNode;
   refetchQuery: DocumentNode;
+  label?: string;
 }) {
   const { t } = useTranslation();
   const [create, { loading }] = useMutation(mutation, {
@@ -246,7 +250,7 @@ export function CreateFixedIntegrationButton({
       disabled={loading}
       onClick={onClick}
     >
-      {t('integrations.add')}
+      {label ?? t('integrations.add')}
     </Button>
   );
 }

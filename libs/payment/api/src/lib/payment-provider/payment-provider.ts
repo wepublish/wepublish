@@ -98,6 +98,10 @@ export type WebhookResponse = {
   status: number;
   message?: string;
   paymentStates?: IntentState[];
+  /** Answer with this page instead of `message` (a provider's own checkout). */
+  html?: string;
+  /** Send the browser here once the payment states are applied. */
+  redirectUrl?: string;
 };
 
 export interface PaymentProvider {

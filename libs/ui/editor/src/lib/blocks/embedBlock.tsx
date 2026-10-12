@@ -27,7 +27,7 @@ const Panel = styled(RPanel, {
   height: ${({ isEmpty }) => (isEmpty ? '300px' : undefined)};
   padding: 0;
   overflow: hidden;
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
 `;
 
 const Wrapper = styled.div`
@@ -65,7 +65,10 @@ export function EmbedBlock({
         bordered
         isEmpty={isEmpty}
       >
-        <PlaceholderInput onAddClick={() => setEmbedDialogOpen(true)}>
+        <PlaceholderInput
+          onAddClick={() => setEmbedDialogOpen(true)}
+          addLabel={t('blocks.embeds.overview.editEmbed')}
+        >
           {!isEmpty && (
             <Wrapper>
               <IconWrapper>

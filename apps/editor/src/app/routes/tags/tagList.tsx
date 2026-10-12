@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import styled from '@emotion/styled';
 import {
   DeleteTagDocument,
   FullTagFragment,
@@ -17,6 +16,8 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  IconButton,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewFilterArea,
@@ -40,13 +41,6 @@ import {
   Table as RTable,
 } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
-
-const IconButton = styled(RIconButton)`
-  && {
-    width: 36px;
-    height: 36px;
-  }
-`;
 
 export type TagListProps = {
   type: TagType;
@@ -95,13 +89,12 @@ function TagList({ type }: TagListProps) {
 
         <ListViewActions>
           <Link to="create">
-            <IconButton
+            <RIconButton
               appearance="primary"
-              loading={false}
+              icon={<MdAdd />}
             >
-              <MdAdd />
               {t('tags.overview.createTag')}
-            </IconButton>
+            </RIconButton>
           </Link>
         </ListViewActions>
 
@@ -136,28 +129,31 @@ function TagList({ type }: TagListProps) {
             <RCell>
               {(rowData: RowDataType<FullTagFragment>) => (
                 <Link to={`edit/${rowData.id}`}>
-                  {rowData.tag || 'FullTagFragment ohne Namen'}
+                  {rowData.tag || t('untitled')}
                 </Link>
               )}
             </RCell>
           </Column>
 
           <Column
-            resizable
-            width={75}
+            width={100}
+            align="center"
             fixed="right"
           >
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell align="center">
               {(tag: RowDataType<FullTagFragment>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() => setTagToDelete(tag as FullTagFragment)}
-                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    onClick={() => setTagToDelete(tag as FullTagFragment)}
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

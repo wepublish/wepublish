@@ -149,7 +149,8 @@ function PageList() {
       {
         id: 'states',
         label: t('pages.overview.states'),
-        width: 125,
+        width: 190,
+        resizable: false,
         alwaysVisible: true,
         render: page => {
           const states: State[] = [];
@@ -303,7 +304,7 @@ function PageList() {
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('pages.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <IconButtonCell>
               {(rowData: RowDataType<FullPageFragment>) => (
                 <>
@@ -314,6 +315,7 @@ function PageList() {
                       caption={t('pageEditor.overview.unpublish')}
                     >
                       <IconButton
+                        aria-label={t('pageEditor.overview.unpublish')}
                         icon={<MdUnpublished />}
                         circle
                         disabled={!(rowData.published || rowData.pending)}
@@ -334,6 +336,7 @@ function PageList() {
                       caption={t('pageEditor.overview.duplicate')}
                     >
                       <IconButton
+                        aria-label={t('pageEditor.overview.duplicate')}
                         icon={<MdContentCopy />}
                         circle
                         size="sm"
@@ -353,6 +356,7 @@ function PageList() {
                       caption={t('pageEditor.overview.createComment')}
                     >
                       <IconButton
+                        aria-label={t('pageEditor.overview.createComment')}
                         icon={<MdComment />}
                         circle
                         size="sm"
@@ -360,7 +364,7 @@ function PageList() {
                           createComment({
                             variables: {
                               itemID: rowData.id,
-                              itemType: CommentItemType.Article,
+                              itemType: CommentItemType.Page,
                             },
                             onCompleted(data) {
                               navigate(
@@ -378,6 +382,7 @@ function PageList() {
                   >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
+                        aria-label={t('delete')}
                         icon={<MdDelete />}
                         circle
                         size="sm"

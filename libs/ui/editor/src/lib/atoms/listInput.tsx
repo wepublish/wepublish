@@ -15,32 +15,49 @@ import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
 import nanoid from 'nanoid';
 import React, { JSX, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MdAddCircle, MdDelete, MdDragIndicator } from 'react-icons/md';
 import { IconButton, Panel as RPanel } from 'rsuite';
 
 import { generateID, isFunctionalUpdate } from '../utility';
+import { IconButtonTooltip } from './iconButtonTooltip';
 
 const IconButtonWrapper = styled.div`
-  margin-left: 10px;
+  flex-shrink: 0;
 `;
 
 const ChildrenWrapper = styled.div`
   min-height: 100%;
   display: flex;
+
+  > * {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
 `;
 
+/* only a layout wrapper: rsuite's .rs-panel clips its content to its
+   (larger) border radius, which cut off the rounded corners and focus rings
+   of the fields at its edges; && beats .rs-panel regardless of sheet order */
 const Panel = styled(RPanel)`
-  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+
+  && {
+    overflow: visible;
+  }
 `;
 
 const DragHandleWrapper = styled.div`
-  margin-right: 10px;
+  flex-shrink: 0;
 `;
 
 const ListItemWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  margin-bottom: 10px;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
 `;
 
 export interface FieldProps<V = any> {
@@ -101,6 +118,7 @@ function ListItem({
   onRemove,
   children,
 }: ListItemProps) {
+  const { t } = useTranslation();
   const {
     attributes,
     listeners,
@@ -138,10 +156,13 @@ function ListItem({
         {...attributes}
         {...listeners}
       >
-        <IconButton
-          icon={<MdDragIndicator />}
-          disabled={itemDisabled}
-        />
+        <IconButtonTooltip caption={t('listInput.dragToReorder')}>
+          <IconButton
+            aria-label={t('listInput.dragToReorder')}
+            icon={<MdDragIndicator />}
+            disabled={itemDisabled}
+          />
+        </IconButtonTooltip>
       </DragHandleWrapper>
       <Panel bodyFill>
         <ChildrenWrapper>
@@ -149,11 +170,14 @@ function ListItem({
         </ChildrenWrapper>
       </Panel>
       <IconButtonWrapper>
-        <IconButton
-          icon={<MdDelete />}
-          onClick={handleRemove}
-          disabled={itemDisabled}
-        />
+        <IconButtonTooltip caption={t('delete')}>
+          <IconButton
+            aria-label={t('delete')}
+            icon={<MdDelete />}
+            onClick={handleRemove}
+            disabled={itemDisabled}
+          />
+        </IconButtonTooltip>
       </IconButtonWrapper>
     </ListItemWrapper>
   );
@@ -167,6 +191,7 @@ export function ListInput<T>({
   children,
   onChange,
 }: ListFieldProps<T>) {
+  const { t } = useTranslation();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
   );
@@ -233,12 +258,15 @@ export function ListInput<T>({
           ))}
         </SortableContext>
       </DndContext>
-      <IconButton
-        icon={<MdAddCircle />}
-        onClick={handleAdd}
-        disabled={disabled}
-        data-testid="addProperty"
-      />
+      <IconButtonTooltip caption={t('listInput.add')}>
+        <IconButton
+          aria-label={t('listInput.add')}
+          icon={<MdAddCircle />}
+          onClick={handleAdd}
+          disabled={disabled}
+          data-testid="addProperty"
+        />
+      </IconButtonTooltip>
     </div>
   );
 }

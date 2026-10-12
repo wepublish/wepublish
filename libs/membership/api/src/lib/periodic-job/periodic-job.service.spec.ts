@@ -1,3 +1,8 @@
+import {
+  BadRequestException,
+  ConflictException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   Currency,
@@ -6,11 +11,15 @@ import {
   User,
 } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
-import { add, startOfDay, sub } from 'date-fns';
+import { add, set, startOfDay, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionService } from './subscription.service';
-import { PeriodicJobService } from './periodic-job.service';
+import {
+  isPeriodicJobRunning,
+  PeriodicJobService,
+} from './periodic-job.service';
 import { InvoicePaidNotifier, PaymentsService } from '@wepublish/payment/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import {
   MailContext,
   MailProviderError,
@@ -110,6 +119,11 @@ const createMockPrisma = () => ({
       ...data,
     })),
     updateMany: vi.fn(),
+    updateManyAndReturn: vi
+      .fn()
+      .mockImplementation(({ where, data }) => [
+        { id: 'job-1', date: where.date, tries: 0, ...data },
+      ]),
   },
   subscription: {
     findMany: vi.fn().mockResolvedValue([]),
@@ -178,6 +192,43 @@ const createMockInvoicePaidNotifier = () => ({
   notify: vi.fn().mockResolvedValue(undefined),
 });
 
+type FakeLock = { lost: boolean; release: () => Promise<void> };
+
+const createDragonflyLocks = () => {
+  const held = new Map<string, FakeLock>();
+
+  return {
+    held,
+    lock: vi.fn(async (name: string) => {
+      if (held.has(name)) {
+        return false;
+      }
+
+      const lock: FakeLock = {
+        lost: false,
+        release: async () => {
+          if (held.get(name) === lock) {
+            held.delete(name);
+          }
+        },
+      };
+      held.set(name, lock);
+
+      return lock;
+    }),
+    isLocked: vi.fn(async (name: string) => held.has(name)),
+    dragonflyStatus: vi.fn(async () => 'reachable'),
+  };
+};
+
+const createLocksWithoutDragonfly = (
+  status: 'not-configured' | 'unreachable' = 'not-configured'
+) => ({
+  lock: vi.fn(async () => undefined),
+  isLocked: vi.fn(async () => undefined),
+  dragonflyStatus: vi.fn(async () => status),
+});
+
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
   let mockPrisma: ReturnType<typeof createMockPrisma>;
@@ -187,9 +238,11 @@ describe('PeriodicJobService', () => {
   let mockMailContext: ReturnType<typeof createMockMailContext>;
   let mockPaymentsService: ReturnType<typeof createMockPaymentsService>;
   let mockInvoicePaidNotifier: ReturnType<typeof createMockInvoicePaidNotifier>;
+  let locks: ReturnType<typeof createDragonflyLocks>;
 
   beforeEach(async () => {
     mockPrisma = createMockPrisma();
+    locks = createDragonflyLocks();
     mockSubscriptionController = createMockSubscriptionController();
     mockMailContext = createMockMailContext();
     mockPaymentsService = createMockPaymentsService();
@@ -206,6 +259,7 @@ describe('PeriodicJobService', () => {
           provide: InvoicePaidNotifier,
           useValue: mockInvoicePaidNotifier,
         },
+        { provide: KvTtlCacheService, useValue: locks },
       ],
     }).compile();
 
@@ -812,7 +866,11 @@ describe('PeriodicJobService', () => {
     const runs = await service['getOutstandingRuns'](today);
 
     expect(runs).toEqual([
-      { isRetry: true, date: startOfDay(sub(today, { days: 1 })) },
+      {
+        isRetry: true,
+        date: startOfDay(sub(today, { days: 1 })),
+        lastStartedAt: sub(today, { days: 1 }),
+      },
       { isRetry: false, date: startOfDay(today) },
     ]);
   });
@@ -837,26 +895,30 @@ describe('PeriodicJobService', () => {
   it('reruns an aborted night on the row it left behind and marks it successful', async () => {
     const today = new Date();
     const abortedDate = startOfDay(sub(today, { days: 1 }));
+    const abortedStart = sub(today, { days: 1 });
     mockPrisma.periodicJob.findFirst.mockResolvedValue({
       id: 'job-aborted',
       date: abortedDate,
-      executionTime: sub(today, { days: 1 }),
+      executionTime: abortedStart,
       successfullyFinished: null,
       finishedWithError: null,
       tries: 0,
       error: null,
     });
-    mockPrisma.periodicJob.update.mockImplementation(({ where, data }) => ({
-      id: 'job-aborted',
-      date: where.date ?? abortedDate,
-      tries: 0,
-      ...data,
-    }));
+    mockPrisma.periodicJob.updateManyAndReturn.mockImplementation(
+      ({ where, data }) => [
+        { id: 'job-aborted', date: where.date, tries: 0, ...data },
+      ]
+    );
 
     await service.execute(today);
 
-    expect(mockPrisma.periodicJob.update).toHaveBeenCalledWith({
-      where: { date: abortedDate },
+    expect(mockPrisma.periodicJob.updateManyAndReturn).toHaveBeenCalledWith({
+      where: {
+        date: abortedDate,
+        executionTime: abortedStart,
+        successfullyFinished: null,
+      },
       data: { executionTime: expect.any(Date) },
     });
     expect(mockPrisma.periodicJob.update).toHaveBeenCalledWith({
@@ -897,13 +959,19 @@ describe('PeriodicJobService', () => {
     mockPrisma.periodicJob.findMany.mockResolvedValue([]);
     expect(await service['isAlreadyAJobRunning']()).toBeFalsy();
 
-    mockPrisma.periodicJob.update.mockResolvedValue({
-      id: 'job-1',
+    mockPrisma.periodicJob.updateManyAndReturn.mockResolvedValue([
+      {
+        id: 'job-1',
+        date: runs[0].date,
+        executionTime: new Date(),
+        tries: 2,
+      },
+    ]);
+    await service['retryFailedJob']({
+      isRetry: true,
       date: runs[0].date,
-      executionTime: new Date(),
-      tries: 2,
+      lastStartedAt: null,
     });
-    await service['retryFailedJob'](runs[0].date);
 
     mockPrisma.periodicJob.findMany.mockResolvedValue([{ id: 'job-1' }]);
     expect(await service['isAlreadyAJobRunning']()).toBeTruthy();
@@ -1280,5 +1348,484 @@ describe('PeriodicJobService', () => {
     await expect(service['checkInvoiceState'](invoice)).rejects.toThrow(
       `Invoice ${invoice.id} has no subscription assigned!`
     );
+  });
+  describe('a run that fails', () => {
+    const unauthorized = { code: 401, message: { message: 'Unauthorized' } };
+    const user = { id: 'user-1', email: 'dev-mail@test.wepublish.com' };
+    const subscription = {
+      id: 'sub-1',
+      memberPlanID: 'plan-yearly',
+      paymentMethodID: 'stripe',
+      paymentPeriodicity: PaymentPeriodicity.yearly,
+      paidUntil: add(new Date(), { days: 13 }),
+      autoRenew: true,
+      monthlyAmount: 200,
+      currency: Currency.CHF,
+      user,
+      memberPlan: { name: 'yearly', slug: 'yearly' },
+      periods: [],
+    };
+    const invoice = {
+      id: 'inv-1',
+      dueAt: new Date(),
+      paidAt: null,
+      canceledAt: null,
+      items: [],
+      subscriptionPeriods: [],
+      subscription,
+    };
+
+    it.each([
+      [
+        'Sending custom mails for subscription sub-1 failed',
+        () => {
+          mockPrisma.subscription.findMany.mockResolvedValueOnce([
+            { ...subscription, paidUntil: add(new Date(), { days: 15 }) },
+          ]);
+          mockPrisma.invoice.findMany.mockRejectedValueOnce(unauthorized);
+        },
+      ],
+      [
+        'Checking the state of invoice inv-1 failed',
+        () => {
+          mockSubscriptionController.findAllOpenInvoices.mockResolvedValue([
+            invoice,
+          ]);
+          mockSubscriptionController.checkInvoiceState.mockRejectedValue(
+            unauthorized
+          );
+        },
+      ],
+      [
+        'Creating the invoice for subscription sub-1 failed',
+        () => {
+          mockSubscriptionController.getActiveSubscriptionsWithoutInvoice.mockResolvedValue(
+            [subscription]
+          );
+          mockSubscriptionController.createInvoice.mockRejectedValue(
+            unauthorized
+          );
+        },
+      ],
+      [
+        'Charging invoice inv-1 failed',
+        () => {
+          mockSubscriptionController.findUnpaidDueInvoices.mockResolvedValue([
+            invoice,
+          ]);
+          mockSubscriptionController.chargeInvoice.mockRejectedValue(
+            unauthorized
+          );
+        },
+      ],
+      [
+        'Deactivating subscription sub-1 for unpaid invoice inv-1 failed',
+        () => {
+          mockSubscriptionController.findUnpaidScheduledForDeactivationInvoices.mockResolvedValue(
+            [invoice]
+          );
+          mockSubscriptionController.deactivateSubscription.mockRejectedValue(
+            unauthorized
+          );
+        },
+      ],
+    ])('says what it was doing: %s', async (context, failOnce) => {
+      failOnce();
+
+      await expect(service.execute()).rejects.toThrow(
+        `${context}: 401 Unauthorized`
+      );
+      expect(mockPrisma.periodicJob.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            error: expect.stringContaining(`${context}: 401 Unauthorized`),
+          }),
+        })
+      );
+    });
+  });
+
+  describe('retrying a failed run from the editor', () => {
+    type JobRow = {
+      id: string;
+      date: Date;
+      executionTime: Date | null;
+      successfullyFinished: Date | null;
+      finishedWithError: Date | null;
+      tries: number;
+      error: string | null;
+    };
+
+    const dbDate = (day: Date) =>
+      new Date(Date.UTC(day.getFullYear(), day.getMonth(), day.getDate()));
+    const daysAgo = (days: number) => startOfDay(sub(new Date(), { days }));
+    const minutesAgo = (minutes: number) => sub(new Date(), { minutes });
+
+    let rows: JobRow[];
+    let otherPod: PeriodicJobService;
+
+    const matches = (row: JobRow, where: Partial<JobRow>) =>
+      Object.entries(where).every(([field, expected]) => {
+        const actual = row[field as keyof JobRow];
+
+        return expected instanceof Date ?
+            actual instanceof Date && actual.getTime() === expected.getTime()
+          : actual === expected;
+      });
+
+    const seed = (row: Partial<JobRow> & { date: Date }) => {
+      rows.push({
+        id: `job-${rows.length + 1}`,
+        executionTime: null,
+        successfullyFinished: null,
+        finishedWithError: null,
+        tries: 1,
+        error: null,
+        ...row,
+        date: dbDate(row.date),
+      });
+    };
+
+    const failedNight = (day: Date) =>
+      seed({
+        date: day,
+        executionTime: set(day, { hours: 3 }),
+        finishedWithError: set(day, { hours: 3, minutes: 5 }),
+        error: 'provider down',
+      });
+
+    const startPod = (kv: object = locks) =>
+      new PeriodicJobService(
+        mockPrisma as unknown as PrismaClient,
+        mockMailContext as unknown as MailContext,
+        mockSubscriptionController as unknown as SubscriptionService,
+        mockPaymentsService as unknown as PaymentsService,
+        mockInvoicePaidNotifier as unknown as InvoicePaidNotifier,
+        kv as unknown as KvTtlCacheService
+      );
+
+    const holdFirstRun = () => {
+      let finish = () => undefined as void;
+      const held = new Promise<never[]>(resolve => {
+        finish = () => resolve([]);
+      });
+      mockSubscriptionController.findAllOpenInvoices.mockImplementationOnce(
+        () => held
+      );
+
+      return finish;
+    };
+
+    const lockReleased = () =>
+      vi.waitFor(() => expect(locks.held.size).toBe(0));
+
+    const allRunsFinished = () =>
+      vi.waitFor(() =>
+        expect(rows.every(row => row.successfullyFinished)).toBe(true)
+      );
+
+    beforeEach(() => {
+      rows = [];
+
+      Object.assign(mockPrisma.periodicJob, {
+        findFirst: vi.fn(async () => {
+          const [latest] = [...rows].sort(
+            (a, b) => b.date.getTime() - a.date.getTime()
+          );
+
+          return latest ? { ...latest } : null;
+        }),
+        create: vi.fn(
+          async ({
+            data,
+          }: {
+            data: Pick<JobRow, 'date'> & Partial<JobRow>;
+          }) => {
+            if (rows.some(row => row.date.getTime() === data.date.getTime())) {
+              throw Object.assign(new Error('Unique constraint failed'), {
+                code: 'P2002',
+              });
+            }
+
+            const row: JobRow = {
+              id: `job-${rows.length + 1}`,
+              date: data.date,
+              executionTime: data.executionTime ?? null,
+              successfullyFinished: null,
+              finishedWithError: null,
+              tries: 0,
+              error: null,
+            };
+            rows.push(row);
+
+            return { ...row };
+          }
+        ),
+        update: vi.fn(
+          async ({
+            where,
+            data,
+          }: {
+            where: Partial<JobRow>;
+            data: Partial<JobRow>;
+          }) => {
+            const row = rows.find(candidate => matches(candidate, where));
+
+            if (!row) {
+              throw Object.assign(new Error('Record to update not found'), {
+                code: 'P2025',
+              });
+            }
+
+            return { ...Object.assign(row, data) };
+          }
+        ),
+        updateManyAndReturn: vi.fn(
+          async ({
+            where,
+            data,
+          }: {
+            where: Partial<JobRow>;
+            data: Partial<JobRow>;
+          }) =>
+            rows
+              .filter(row => matches(row, where))
+              .map(row => ({ ...Object.assign(row, data) }))
+        ),
+      });
+
+      otherPod = startPod();
+    });
+
+    it('retries the failed night and then runs every night up to today', async () => {
+      failedNight(daysAgo(2));
+
+      await service.retryAndCatchUp();
+      await lockReleased();
+
+      expect(rows.map(row => [row.date, !!row.successfullyFinished])).toEqual([
+        [dbDate(daysAgo(2)), true],
+        [dbDate(daysAgo(1)), true],
+        [dbDate(daysAgo(0)), true],
+      ]);
+    });
+
+    it('answers as soon as the failed night is taken over and reports it as running until done', async () => {
+      failedNight(daysAgo(1));
+      const finish = holdFirstRun();
+
+      const job = await service.retryAndCatchUp();
+
+      expect(job.date).toEqual(dbDate(daysAgo(1)));
+      await expect(otherPod.isRunning(job)).resolves.toBe(true);
+
+      finish();
+      await lockReleased();
+
+      await expect(otherPod.isRunning(rows[0])).resolves.toBe(false);
+    });
+
+    it.each([
+      ['the nightly run', (pod: PeriodicJobService) => pod.execute()],
+      [
+        'a retry started from the editor',
+        (pod: PeriodicJobService) => pod.retryAndCatchUp(),
+      ],
+    ])(
+      'refuses a second run while %s is going on on another pod',
+      async (_, startRun) => {
+        failedNight(daysAgo(1));
+        const finish = holdFirstRun();
+        const running = startRun(otherPod);
+        await vi.waitFor(() => expect(locks.held.size).toBe(1));
+
+        await expect(service.retryAndCatchUp()).rejects.toBeInstanceOf(
+          ConflictException
+        );
+
+        finish();
+        await running;
+        await lockReleased();
+      }
+    );
+
+    it('keeps the nightly run away while a retry started from the editor goes on on another pod', async () => {
+      failedNight(daysAgo(1));
+      const finish = holdFirstRun();
+      await otherPod.retryAndCatchUp();
+
+      await service.execute();
+
+      expect(rows).toHaveLength(1);
+      finish();
+      await lockReleased();
+      expect(rows).toHaveLength(2);
+    });
+
+    it.each([
+      [
+        'the last night succeeded',
+        () =>
+          seed({
+            date: daysAgo(1),
+            executionTime: daysAgo(1),
+            successfullyFinished: daysAgo(1),
+          }),
+      ],
+      ['no night ran yet', () => undefined],
+    ])('refuses when %s and frees the lock again', async (_, seedJobs) => {
+      seedJobs();
+
+      await expect(service.retryAndCatchUp()).rejects.toBeInstanceOf(
+        BadRequestException
+      );
+      expect(locks.held.size).toBe(0);
+    });
+
+    it('lets only one of two pods through when both retry at the same moment', async () => {
+      failedNight(daysAgo(1));
+
+      const results = await Promise.allSettled([
+        service.retryAndCatchUp(),
+        otherPod.retryAndCatchUp(),
+      ]);
+      await lockReleased();
+
+      expect(results.map(result => result.status).sort()).toEqual([
+        'fulfilled',
+        'rejected',
+      ]);
+      expect(
+        results.find(
+          (result): result is PromiseRejectedResult =>
+            result.status === 'rejected'
+        )?.reason
+      ).toBeInstanceOf(ConflictException);
+      expect(rows.map(row => row.date)).toEqual([
+        dbDate(daysAgo(1)),
+        dbDate(daysAgo(0)),
+      ]);
+    });
+
+    it('takes over a run whose pod died as soon as its lock ran out', async () => {
+      seed({ date: daysAgo(0), executionTime: minutesAgo(5), tries: 0 });
+
+      await expect(service.isRunning(rows[0])).resolves.toBe(false);
+      const job = await service.retryAndCatchUp();
+      await lockReleased();
+
+      expect(job.date).toEqual(dbDate(daysAgo(0)));
+      expect(rows).toHaveLength(1);
+      expect(rows[0].successfullyFinished).toBeTruthy();
+    });
+
+    it('stops before the next night once it lost its lock', async () => {
+      failedNight(daysAgo(2));
+      const finish = holdFirstRun();
+      await service.retryAndCatchUp();
+
+      [...locks.held.values()][0].lost = true;
+      finish();
+      await lockReleased();
+
+      expect(rows).toHaveLength(1);
+      expect(rows[0].successfullyFinished).toBeTruthy();
+    });
+
+    it('keeps the nightly run from taking over a failed night another pod has just claimed', async () => {
+      failedNight(daysAgo(1));
+      const [failedRun] = await otherPod['getOutstandingRuns'](new Date());
+
+      await service.retryAndCatchUp();
+
+      await expect(
+        otherPod['retryFailedJob'](failedRun as never)
+      ).rejects.toBeInstanceOf(ConflictException);
+      await lockReleased();
+    });
+
+    describe('without Dragonfly', () => {
+      it('refuses while the last run started recently and has not finished', async () => {
+        const pod = startPod(createLocksWithoutDragonfly());
+        seed({
+          date: daysAgo(1),
+          executionTime: minutesAgo(10),
+          finishedWithError: minutesAgo(600),
+          error: 'provider down',
+        });
+
+        await expect(pod.isRunning(rows[0])).resolves.toBe(true);
+        await expect(pod.retryAndCatchUp()).rejects.toBeInstanceOf(
+          ConflictException
+        );
+      });
+
+      it('still lets only one of two pods through', async () => {
+        const first = startPod(createLocksWithoutDragonfly());
+        const second = startPod(createLocksWithoutDragonfly());
+        failedNight(daysAgo(1));
+
+        const results = await Promise.allSettled([
+          first.retryAndCatchUp(),
+          second.retryAndCatchUp(),
+        ]);
+        await allRunsFinished();
+
+        expect(results.map(result => result.status).sort()).toEqual([
+          'fulfilled',
+          'rejected',
+        ]);
+        expect(rows).toHaveLength(2);
+      });
+
+      it('refuses while Dragonfly is configured but unreachable', async () => {
+        const pod = startPod(createLocksWithoutDragonfly('unreachable'));
+        failedNight(daysAgo(1));
+
+        await expect(pod.retryAndCatchUp()).rejects.toBeInstanceOf(
+          ServiceUnavailableException
+        );
+        expect(
+          mockPrisma.periodicJob.updateManyAndReturn
+        ).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('isPeriodicJobRunning', () => {
+    const now = new Date();
+    const ago = (minutes: number) => sub(now, { minutes });
+
+    it.each([
+      ['started and not finished yet', { executionTime: ago(10) }, true],
+      [
+        'started again after it failed',
+        { executionTime: ago(10), finishedWithError: ago(600) },
+        true,
+      ],
+      ['failed', { executionTime: ago(60), finishedWithError: ago(55) }, false],
+      [
+        'successful',
+        { executionTime: ago(60), successfullyFinished: ago(55) },
+        false,
+      ],
+      [
+        'successful after a retry',
+        {
+          executionTime: ago(30),
+          finishedWithError: ago(600),
+          successfullyFinished: ago(20),
+        },
+        false,
+      ],
+      [
+        'started longer ago than a night and never finished',
+        { executionTime: sub(now, { hours: 13 }) },
+        false,
+      ],
+      ['never started', {}, false],
+    ])('%s', (_, job, running) => {
+      expect(isPeriodicJobRunning(job, now.getTime())).toBe(running);
+    });
   });
 });

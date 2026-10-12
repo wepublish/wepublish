@@ -24,7 +24,7 @@ const GroupWrapper = styled('div', {
     css`
       outline: 1px solid ${theme.palette.error.main};
       outline-offset: 4px;
-      border-radius: 4px;
+      border-radius: var(--rs-radius-md);
     `}
 `;
 
@@ -240,6 +240,9 @@ export function TeaserBlockGroup({
             !canHide && !isHidden ? 'teaserOverview.hideBlockDisabled'
             : isHidden ? 'teaserOverview.showBlock'
             : 'teaserOverview.hideBlock'
+          )}
+          aria-label={t(
+            isHidden ? 'teaserOverview.showBlock' : 'teaserOverview.hideBlock'
           )}
         />
         <GroupLabel variant="caption">

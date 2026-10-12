@@ -33,6 +33,28 @@ export enum AiProviderType {
 
 export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
 
+/** The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action. */
+export type ActionMail = {
+  __typename: 'ActionMail';
+  /** The SubscriptionEvent or UserEvent of the mail, e.g. SUBSCRIBE or ACCOUNT_CREATION. */
+  event: Scalars['String']['output'];
+  /** Set when a mail would be sent. */
+  mailTemplateId?: Maybe<Scalars['String']['output']>;
+  /** Set when a mail would be sent. */
+  mailTemplateName?: Maybe<Scalars['String']['output']>;
+  /** Set when no mail would be sent. */
+  noMailReason?: Maybe<ActionMailNoMailReason>;
+  /** The address the mail would go to; null while the user does not exist yet (createUser). */
+  recipientEmail?: Maybe<Scalars['String']['output']>;
+};
+
+export enum ActionMailNoMailReason {
+  AlreadyHandled = 'alreadyHandled',
+  FirstPeriod = 'firstPeriod',
+  NoTemplate = 'noTemplate',
+  NotApplicable = 'notApplicable'
+}
+
 export enum ActionType {
   ArticleCreated = 'ArticleCreated',
   AuthorCreated = 'AuthorCreated',
@@ -2698,6 +2720,8 @@ export type Mutation = {
   createBlockStyle: BlockStyle;
   /** Creates a new block template. */
   createBlockTemplate: BlockTemplate;
+  /** Sets up the challenge provider. Only possible while none is configured. */
+  createChallengeProviderSetting: SettingChallengeProvider;
   /** Creates a comment for any user */
   createComment: Comment;
   /**
@@ -2723,6 +2747,8 @@ export type Mutation = {
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Sets up the mail provider. Only possible while none is configured. */
+  createMailProviderSetting: SettingMailProvider;
   /** Start a background job sending a template to a filtered audience */
   createMailSendJob: MailSendJobModel;
   /** Create a new mail template */
@@ -2761,6 +2787,8 @@ export type Mutation = {
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Sets up the sync provider. Only possible while none is configured. */
+  createSyncProviderSetting: SettingSyncProvider;
   /** Creates a new tag. */
   createTag: Tag;
   /** Creates a token and returns it's secret once. */
@@ -2910,6 +2938,10 @@ export type Mutation = {
   publishPage: Page;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
   rateComment: Comment;
+  /** Reactivates a deactivated subscription. */
+  reactivateSubscription: PublicSubscription;
+  /** Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created. */
+  reactivateUserSubscription: PublicSubscription;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
   /** Rejects a comment */
@@ -2934,6 +2966,12 @@ export type Mutation = {
   restorePageRevision: Page;
   /** Continue a send job that stopped early. Recipients already sent are skipped. */
   resumeMailSendJob: MailSendJobModel;
+  /** Retries the failed periodic job and then catches up every run up to today. Answers once the failed run is taken over; the runs go on in the background. Refused while a run is going on. */
+  retryPeriodicJob: PeriodicJob;
+  /** Undoes an upgrade of a subscription as long as the new subscription has not been paid for. */
+  revertSubscriptionUpgrade: PublicSubscription;
+  /** Undoes an upgrade of one of the authenticated user's own subscriptions as long as the new subscription has not been paid for. The replacement subscription is removed and the original one continues. */
+  revertUserSubscriptionUpgrade: PublicSubscription;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean']['output'];
   revokeImpersonationSessions: Scalars['Int']['output'];
@@ -3202,6 +3240,15 @@ export type MutationCreateBlockTemplateArgs = {
 };
 
 
+export type MutationCreateChallengeProviderSettingArgs = {
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  secret?: InputMaybe<Scalars['String']['input']>;
+  siteKey?: InputMaybe<Scalars['String']['input']>;
+  type: ChallengeProviderType;
+};
+
+
 export type MutationCreateCommentArgs = {
   itemID: Scalars['String']['input'];
   itemType: CommentItemType;
@@ -3284,6 +3331,25 @@ export type MutationCreateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']['input']>;
   scheduledDeactivationAt: Scalars['DateTime']['input'];
   subscriptionID?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateMailProviderSettingArgs = {
+  apiKey?: InputMaybe<Scalars['String']['input']>;
+  fromAddress?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  mailchimp_baseURL?: InputMaybe<Scalars['String']['input']>;
+  mailgun_baseDomain?: InputMaybe<Scalars['String']['input']>;
+  mailgun_mailDomain?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  replyToAddress?: InputMaybe<Scalars['String']['input']>;
+  slack_webhookURL?: InputMaybe<Scalars['String']['input']>;
+  smtp_host?: InputMaybe<Scalars['String']['input']>;
+  smtp_port?: InputMaybe<Scalars['Int']['input']>;
+  smtp_secure?: InputMaybe<Scalars['Boolean']['input']>;
+  smtp_user?: InputMaybe<Scalars['String']['input']>;
+  type: MailProviderType;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3392,6 +3458,7 @@ export type MutationCreatePaymentProviderSettingArgs = {
   payrexx_pm?: InputMaybe<Array<PayrexxPm>>;
   payrexx_psp?: InputMaybe<Array<PayrexxPsp>>;
   payrexx_vatrate?: InputMaybe<Scalars['String']['input']>;
+  simulated_declineRenewals?: InputMaybe<Scalars['Boolean']['input']>;
   stripe_methods?: InputMaybe<Array<StripePaymentMethod>>;
   type: PaymentProviderType;
   webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
@@ -3473,6 +3540,7 @@ export type MutationCreateSubscriptionArgs = {
   paymentMethodID: Scalars['String']['input'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertyInput>;
+  skipMail?: InputMaybe<Scalars['Boolean']['input']>;
   startsAt: Scalars['DateTime']['input'];
   userID: Scalars['String']['input'];
 };
@@ -3491,6 +3559,20 @@ export type MutationCreateSubscriptionIntervalArgs = {
   event: SubscriptionEvent;
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
   subscriptionFlowId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateSyncProviderSettingArgs = {
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['String']['input'];
+  mailchimp_apiKey?: InputMaybe<Scalars['String']['input']>;
+  mailchimp_defaultInterestGroupIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  mailchimp_extensions?: InputMaybe<Scalars['JSONObject']['input']>;
+  mailchimp_interestGroupMappings?: InputMaybe<Array<Scalars['JSONObject']['input']>>;
+  mailchimp_listId?: InputMaybe<Scalars['String']['input']>;
+  mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']['input']>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  type: SyncProviderType;
 };
 
 
@@ -3893,6 +3975,16 @@ export type MutationRateCommentArgs = {
 };
 
 
+export type MutationReactivateSubscriptionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationReactivateUserSubscriptionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationRegisterMemberArgs = {
   address?: InputMaybe<UserAddressInput>;
   birthday?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3959,6 +4051,16 @@ export type MutationRestorePageRevisionArgs = {
 export type MutationResumeMailSendJobArgs = {
   id: Scalars['String']['input'];
   retryUnfinished?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationRevertSubscriptionUpgradeArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationRevertUserSubscriptionUpgradeArgs = {
+  subscriptionId: Scalars['String']['input'];
 };
 
 
@@ -4341,6 +4443,7 @@ export type MutationUpdatePaymentProviderSettingArgs = {
   payrexx_pm?: InputMaybe<Array<PayrexxPm>>;
   payrexx_psp?: InputMaybe<Array<PayrexxPsp>>;
   payrexx_vatrate?: InputMaybe<Scalars['String']['input']>;
+  simulated_declineRenewals?: InputMaybe<Scalars['Boolean']['input']>;
   stripe_methods?: InputMaybe<Array<StripePaymentMethod>>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5058,6 +5161,7 @@ export enum PaymentProviderType {
   NoCharge = 'NO_CHARGE',
   Payrexx = 'PAYREXX',
   PayrexxSubscription = 'PAYREXX_SUBSCRIPTION',
+  Simulated = 'SIMULATED',
   Stripe = 'STRIPE',
   StripeCheckout = 'STRIPE_CHECKOUT'
 }
@@ -5300,6 +5404,7 @@ export type PeriodicJob = {
   finishedWithError?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
+  running: Scalars['Boolean']['output'];
   successfullyFinished?: Maybe<Scalars['DateTime']['output']>;
   tries: Scalars['Float']['output'];
 };
@@ -5486,6 +5591,8 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   __typename: 'PublicSubscription';
   autoRenew: Scalars['Boolean']['output'];
   canExtend: Scalars['Boolean']['output'];
+  /** Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet. */
+  canRevertUpgrade: Scalars['Boolean']['output'];
   confirmed: Scalars['Boolean']['output'];
   createdAt: Scalars['DateTime']['output'];
   currency: Currency;
@@ -5520,6 +5627,8 @@ export type PublicSubscriptionConnection = {
 
 export type Query = {
   __typename: 'Query';
+  /** The mail createUser would send, or why it sends none. */
+  accountCreationMail: ActionMail;
   /** Returns latest actions */
   actions: Array<Action>;
   /**
@@ -5671,6 +5780,8 @@ export type Query = {
   importedEventsIds: Array<Scalars['String']['output']>;
   /** Returns a invoice by id. */
   invoice: Invoice;
+  /** The mail markInvoiceAsPaid would send for this invoice, or why it sends none. */
+  invoicePaymentMail: ActionMail;
   /** Returns a paginated list of invoices based on the filters given. */
   invoices: InvoiceConnection;
   /** Paginated list of sent mails */
@@ -5825,6 +5936,10 @@ export type Query = {
   stats?: Maybe<Stats>;
   /** Returns a subscription by id. */
   subscription: PublicSubscription;
+  /** The mail cancelSubscription would send for this subscription and reason, or why it sends none. */
+  subscriptionCancellationMail: ActionMail;
+  /** The mail createSubscription would send for a subscription with these settings, or why it sends none. */
+  subscriptionCreationMail: ActionMail;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
   /** Returns a paginated list of subscriptions based on the filters given. */
@@ -5876,6 +5991,11 @@ export type Query = {
   versionInformation: VersionInformation;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
+};
+
+
+export type QueryActionsArgs = {
+  types?: InputMaybe<Array<ActionType>>;
 };
 
 
@@ -6185,6 +6305,11 @@ export type QueryImportedEventsArgs = {
 
 export type QueryInvoiceArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryInvoicePaymentMailArgs = {
+  invoiceId: Scalars['String']['input'];
 };
 
 
@@ -6514,6 +6639,21 @@ export type QuerySettingsArgs = {
 
 export type QuerySubscriptionArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QuerySubscriptionCancellationMailArgs = {
+  id: Scalars['String']['input'];
+  reason: SubscriptionDeactivationReason;
+};
+
+
+export type QuerySubscriptionCreationMailArgs = {
+  autoRenew: Scalars['Boolean']['input'];
+  memberPlanID: Scalars['String']['input'];
+  paymentMethodID: Scalars['String']['input'];
+  paymentPeriodicity: PaymentPeriodicity;
+  userID: Scalars['String']['input'];
 };
 
 
@@ -6919,6 +7059,7 @@ export type SettingPaymentProvider = SettingProvider & {
   payrexx_pm?: Maybe<Array<PayrexxPm>>;
   payrexx_psp?: Maybe<Array<PayrexxPsp>>;
   payrexx_vatrate?: Maybe<Scalars['String']['output']>;
+  simulated_declineRenewals?: Maybe<Scalars['Boolean']['output']>;
   stripe_methods?: Maybe<Array<StripePaymentMethod>>;
   type: PaymentProviderType;
 };
@@ -7240,6 +7381,11 @@ export type SubscriptionFlowModel = {
   numberOfSubscriptions: Scalars['Int']['output'];
   paymentMethods: Array<PaymentMethod>;
   periodicities: Array<PaymentPeriodicity>;
+};
+
+
+export type SubscriptionFlowModelNumberOfSubscriptionsArgs = {
+  memberPlanId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SubscriptionInterval = {

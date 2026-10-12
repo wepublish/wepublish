@@ -12,6 +12,7 @@ import {
   DescriptionList,
   DescriptionListItem,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -49,7 +50,7 @@ const MarginTop = styled.div`
 `;
 
 const Avatar = styled(RAvatar)`
-  border: solid 2px #3498ff;
+  border: solid 2px var(--rs-primary-500);
 `;
 
 const AvatarWrapper = styled.div`
@@ -57,9 +58,9 @@ const AvatarWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
-  border: solid 2px #3498ff;
-  padding: 10px;
-  border-radius: 5px;
+  border: solid 2px var(--rs-primary-500);
+  padding: 12px;
+  border-radius: var(--rs-radius-lg);
   margin: 1rem 0 2rem 0;
 `;
 
@@ -210,6 +211,7 @@ function PeerList() {
                     size="sm"
                     appearance="ghost"
                     color="red"
+                    aria-label={t('delete')}
                     onClick={e => {
                       e.preventDefault();
                       setConfirmationDialogOpen(true);
@@ -228,7 +230,10 @@ function PeerList() {
   return (
     <>
       <PermissionControl qualifyingPermissions={['CAN_GET_PEER_PROFILE']}>
-        <h3>{t('peerList.overview.myPeerProfile')}</h3>
+        <h3>
+          {t('peerList.overview.myPeerProfile')}{' '}
+          <InfoTooltip text={t('peerList.overview.myPeerProfileInfo')} />
+        </h3>
         <Wrapper>
           <NavigationBar
             centerChildren={
@@ -271,6 +276,7 @@ function PeerList() {
                       appearance="link"
                       icon={<MdSettings />}
                       circle
+                      aria-label={t('peerList.overview.editProfile')}
                     />
                   </Link>
                 </IconButtonTooltip>
@@ -282,7 +288,10 @@ function PeerList() {
 
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('peerList.overview.peers')}</h2>
+          <h2>
+            {t('peerList.overview.peers')}{' '}
+            <InfoTooltip text={t('peerList.overview.peersInfo')} />
+          </h2>
         </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
           <ListViewActions>

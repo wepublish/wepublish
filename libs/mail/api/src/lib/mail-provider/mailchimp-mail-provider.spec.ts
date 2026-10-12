@@ -1,4 +1,5 @@
 import bodyParser from 'body-parser';
+import { createHmac } from 'crypto';
 import nock from 'nock';
 import { MailLogState } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
@@ -22,6 +23,7 @@ const makeProvider = async () => {
       name: 'Mailchimp',
       fromAddress: 'dev@wepublish.ch',
       apiKey: 'key',
+      webhookEndpointSecret: 'webhook-key',
     })
   );
 
@@ -254,6 +256,53 @@ describe('MailchimpMailProvider', () => {
         providerMessageID: 'msg-2',
         state: MailLogState.delivered,
       });
+    });
+  });
+
+  describe('webhook', () => {
+    const url = 'https://api.example.com/v1/mail-webhook/mailchimp';
+    const body = {
+      mandrill_events: JSON.stringify([
+        { event: 'send', msg: { metadata: { mail_log_id: 'log-1' } } },
+      ]),
+    };
+
+    const signedWith = (key: string) =>
+      createHmac('sha1', key)
+        .update(`${url}mandrill_events${body.mandrill_events}`)
+        .digest('base64');
+
+    const webhook = (signature: string) => ({
+      req: {
+        method: 'POST',
+        headers: {
+          'x-mandrill-signature': signature,
+          host: 'api.example.com',
+        },
+        originalUrl: '/v1/mail-webhook/mailchimp',
+        body,
+      },
+    });
+
+    it('refuses a webhook that was not signed with the webhook key', async () => {
+      const provider = await makeProvider();
+
+      await expect(
+        provider.webhookForSendMail(webhook(signedWith('forged')) as never)
+      ).rejects.toThrow('Webhook signature failed');
+    });
+
+    it('accepts a webhook signed with the webhook key', async () => {
+      const provider = await makeProvider();
+
+      await expect(
+        provider.webhookForSendMail(webhook(signedWith('webhook-key')) as never)
+      ).resolves.toEqual([
+        expect.objectContaining({
+          mailLogID: 'log-1',
+          state: MailLogState.delivered,
+        }),
+      ]);
     });
   });
 

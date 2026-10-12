@@ -1,0 +1,41 @@
+---
+title: Fresh editor design with dark mode
+lead: The editor has a cleaner, more modern look, switches to dark mode automatically when your device does, and now also works on phones and tablets.
+actionRequired: false
+---
+
+**What you'll notice**
+
+- **Dark mode:** The editor follows the light or dark setting of your device. You can also choose Light, Dark or System yourself in the menu at the bottom of the sidebar.
+- **Lists fit the screen:** Columns adapt to the available width, so nothing is cut off on the right anymore. Long texts end with "…".
+- **Phones and tablets:** On small screens the menu opens with the button at the top left, and forms are shown in a single column.
+- **Sidebar:** Only one section of the menu is open at a time.
+- **Clearer error messages:** Instead of technical details you now see what went wrong, for example "This email address is already in use". Messages appear at the bottom right and stay visible longer.
+
+**User page**
+
+Subscriptions are listed with the newest first, each marked "Active" or "Expired". The newest period is at the top; older periods and further subscriptions can be scrolled.
+
+**Audience dashboard**
+
+"Total active & paid subscriptions" now has its own chart with the current number and the change in the selected period. Gains and losses are shown per day or month as bars above and below the zero line. Hover over a day to see all values and the net change.
+
+**Dashboard**
+
+The "Latest Activity" list has been removed.
+
+**Automatic emails**
+
+The page is split into blocks: "Subscription events" and "Account & login" sit side by side, stacked on phones. The timeline runs top to bottom, one day per row. On a subscription plan's page, every flow has its own block.
+
+- **Several emails per day:** "Add email" adds more emails to a day.
+- **Remove an email:** The bin next to an email removes it. If the day is left empty, it disappears too.
+- **Correct subscription counts:** A flow only counts the subscriptions of its own plan. The default flow counts the plan's subscriptions that no other flow covers – it used to always show 0.
+
+**Easier to understand, more consistent**
+
+- **Explanations everywhere:** a small (i) next to fields and settings explains what they do. Buttons that only show an icon reveal their purpose on hover.
+- **Consistent controls:** toggles carry their label on the right, lists share the same «Actions» column, and cards and fields have the same rounded corners everywhere.
+- **New header in the article and page editor:** status and last save on the left, «Save» and «Publish» highlighted on the right. The header stays visible while you scroll.
+- **Network page:** articles and media sit in two tidy cards.
+- **Set up integrations:** mail, captcha and Mailchimp sync can now be set up in the editor when none exists yet. There is always exactly one of each – it can be changed but not deleted.

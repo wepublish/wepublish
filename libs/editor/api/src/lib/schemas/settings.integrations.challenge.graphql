@@ -31,3 +31,15 @@ mutation UpdateSettingsIntegrationsChallenge(
     type
   }
 }
+
+mutation CreateSettingsIntegrationsChallenge(
+  $id: String!
+  $type: ChallengeProviderType!
+  $name: String
+) {
+  createChallengeProviderSetting(id: $id, type: $type, name: $name) {
+    id
+    type
+    name
+  }
+}

@@ -15,6 +15,7 @@ import {
   UpdateWebsiteSettingsDocument,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
@@ -22,17 +23,17 @@ import { Link } from 'react-router-dom';
 import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
+import { lazyMessage } from '../../utility';
 import { Explainer, WebsiteAnalyticsWrapper } from './website-analytics';
 
 const adsSchema = z.object({
   sparkLoop: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(
-        /^pub_[a-f0-9]{12}$/,
-        'Must be a valid SparkLoop ID (e.g., pub_xxxxxxxxxxxx)'
-      )
+      .string({
+        errorMap: lazyMessage('websiteSettings.ads.sparkLoop.idInvalid'),
+      })
+      .regex(/^pub_[a-f0-9]{12}$/)
       .or(z.literal(''))
       .nullish(),
   }),
@@ -62,9 +63,9 @@ export const WebsiteAds = () => {
             type="error"
             showIcon
             closable
-            duration={3000}
+            duration={8000}
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>
         );
       },

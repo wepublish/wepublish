@@ -7,6 +7,8 @@ import {
   MutationUpdatePaywallArgs,
 } from '@wepublish/editor/api';
 import {
+  IconButtonTooltip,
+  InfoTooltip,
   RichTextBlock,
   RichTextBlockValue,
   SelectMemberPlans,
@@ -51,13 +53,13 @@ const PaywallFormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: start;
-  gap: 12px;
+  gap: 16px;
 `;
 
 const PaywallFormSection = styled.div`
   display: grid;
   align-items: start;
-  gap: 12px;
+  gap: 16px;
 `;
 
 const QRCodeContainer = styled.div`
@@ -66,8 +68,8 @@ const QRCodeContainer = styled.div`
   align-items: center;
   max-width: 100%;
   height: auto;
-  border: 1px solid #ddd;
-  border-radius: 12px;
+  border: 1px solid var(--rs-border-primary);
+  border-radius: var(--rs-radius-md);
   padding: 16px;
   background: #ffffff;
 
@@ -83,8 +85,9 @@ const TokenUrl = styled.p`
   padding-top: ${({ theme }) => theme.spacing(2)};
 `;
 
-const BaseUrlInput = styled(Input)`
+const BaseUrlGroup = styled(Form.Group)`
   margin-bottom: ${({ theme }) => theme.spacing(2)};
+  text-align: left;
 `;
 
 export const PaywallForm = ({
@@ -322,7 +325,10 @@ export const PaywallForm = ({
 
         <Panel bordered>
           <Form.Group>
-            <Form.Label>{t('paywall.form.bypasses')}</Form.Label>
+            <Form.Label>
+              {t('paywall.form.bypasses')}{' '}
+              <InfoTooltip text={t('paywall.form.bypassesInfo')} />
+            </Form.Label>
 
             {(paywall.bypasses || []).map((bypass, index) => (
               <Stack
@@ -338,23 +344,29 @@ export const PaywallForm = ({
                   />
                 </Stack.Item>
                 <Stack.Item>
-                  <IconButton
-                    icon={<MdQrCode />}
-                    size="sm"
-                    color="blue"
-                    appearance="ghost"
-                    onClick={() => showQRCode(bypass.token)}
-                    disabled={!bypass.token}
-                  />
+                  <IconButtonTooltip caption={t('paywall.form.showQrCode')}>
+                    <IconButton
+                      icon={<MdQrCode />}
+                      size="sm"
+                      color="blue"
+                      appearance="ghost"
+                      aria-label={t('paywall.form.showQrCode')}
+                      onClick={() => showQRCode(bypass.token)}
+                      disabled={!bypass.token}
+                    />
+                  </IconButtonTooltip>
                 </Stack.Item>
                 <Stack.Item>
-                  <IconButton
-                    icon={<TrashIcon />}
-                    size="sm"
-                    color="red"
-                    appearance="ghost"
-                    onClick={() => removeBypass(index)}
-                  />
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      icon={<TrashIcon />}
+                      size="sm"
+                      color="red"
+                      appearance="ghost"
+                      aria-label={t('delete')}
+                      onClick={() => removeBypass(index)}
+                    />
+                  </IconButtonTooltip>
                 </Stack.Item>
               </Stack>
             ))}
@@ -393,7 +405,10 @@ export const PaywallForm = ({
         >
           <Form.Stack fluid>
             <Form.Group controlId="hideContentAfter">
-              <Form.Label>{t('paywall.form.hideContentAfter')}</Form.Label>
+              <Form.Label>
+                {t('paywall.form.hideContentAfter')}{' '}
+                <InfoTooltip text={t('paywall.form.hideContentAfterInfo')} />
+              </Form.Label>
 
               <Form.Control
                 name="hideContentAfter"
@@ -432,11 +447,15 @@ export const PaywallForm = ({
         </Modal.Header>
 
         <Modal.Body style={{ textAlign: 'center' }}>
-          <BaseUrlInput
-            value={qrBaseUrl}
-            onChange={newUrl => setQrBaseUrl(newUrl)}
-            placeholder={t('paywall.form.baseUrl')}
-          />
+          <BaseUrlGroup controlId="qrBaseUrl">
+            <Form.Label>{t('paywall.form.baseUrl')}</Form.Label>
+            <Input
+              id="qrBaseUrl"
+              value={qrBaseUrl}
+              onChange={newUrl => setQrBaseUrl(newUrl)}
+              placeholder={t('paywall.form.baseUrl')}
+            />
+          </BaseUrlGroup>
           <QRCodeContainer>
             <div ref={qrContainerRef} />
           </QRCodeContainer>

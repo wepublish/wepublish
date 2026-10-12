@@ -27,7 +27,7 @@ import { getImgMinSizeToCompress } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 
 const ImgWrapper = styled.div`
-  background-color: #f7f7fa;
+  background-color: var(--rs-bg-well);
 `;
 
 const Panel = styled(RPanel)`

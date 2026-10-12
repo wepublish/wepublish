@@ -1,4 +1,5 @@
 import { toPlaintext } from '@wepublish/richtext';
+import { stripQueryAndHash } from '@wepublish/utils';
 import { FullTagFragment } from '@wepublish/website/api';
 import {
   BuilderTagSEOProps,
@@ -11,7 +12,7 @@ export const getTagSEO = (tag: FullTagFragment) => {
   const description = tagBody;
 
   const title = tag.tag;
-  const url = tag.url;
+  const url = stripQueryAndHash(tag.url);
 
   return {
     title,
