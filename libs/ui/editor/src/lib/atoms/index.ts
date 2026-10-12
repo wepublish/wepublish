@@ -30,6 +30,7 @@ export * from './focalPointInput';
 export * from './helpers';
 export * from './iconButtonTooltip';
 export * from './infoTooltip';
+export * from './singleLineTooltip';
 export * from './imageMetaData';
 export * from './infoMessage';
 export * from './listInput';

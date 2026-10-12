@@ -71,6 +71,15 @@ libs/<domain>/
 
 `article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `banner`, `richtext`, `feed`
 
+**Sitemaps:** every website serves `/api/sitemap` (plus `/api/sitemap/[chunk]`:
+`news`, `pages`, `articles-YYYY` per past year, `articles-YYYY-MM` per month
+of the current year in `index` mode) through
+`createSitemapHandlers` from `@wepublish/feed/website`. Per-media settings
+(`mode: 'single' | 'index'`, `pageUrls`, `homepageSlug`, `filterArticle`, url
+hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
+documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
+`ArticleList`, and leave peered articles out. `generateSitemap` is deprecated.
+
 ### Business Domain Libraries
 
 `membership`, `payment`, `user-subscription`, `member-plan`, `crowdfunding`, `mail`, `event`, `consent`
