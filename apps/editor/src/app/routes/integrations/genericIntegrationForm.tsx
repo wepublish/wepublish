@@ -319,7 +319,12 @@ export function SingleGenericIntegrationForm<
                     return (
                       <Form.Control
                         value={value}
-                        onChange={onChange}
+                        onChange={
+                          field.type === 'number' ?
+                            (text: string) =>
+                              onChange(text === '' ? null : Number(text))
+                          : onChange
+                        }
                         errorMessage={fieldState.error?.message}
                         accepter={
                           field.type === 'textarea' ? Textarea : undefined

@@ -3,7 +3,10 @@ import { stripQueryAndHash } from './url';
 describe('stripQueryAndHash', () => {
   it.each([
     ['https://example.com/a/slug?articleId=abc', 'https://example.com/a/slug'],
-    ['https://example.com/a/slug?a=1&b=2&preview', 'https://example.com/a/slug'],
+    [
+      'https://example.com/a/slug?a=1&b=2&preview',
+      'https://example.com/a/slug',
+    ],
     ['https://example.com/a/slug#comments', 'https://example.com/a/slug'],
     ['https://example.com/a/slug?a=1#comments', 'https://example.com/a/slug'],
     ['https://example.com/a/slug?', 'https://example.com/a/slug'],

@@ -2404,6 +2404,1297 @@ export type SensitiveWebsiteSettingsQuery = { __typename: 'Query', websiteSettin
     & SensitiveWebsiteSettingsFragment
   ) };
 
+export type SitemapArticleFragment = { __typename: 'Article', id: string, slug: string | null, url: string, peerId: string | null, publishedAt: string | null, tags: Array<{ __typename: 'Tag', id: string, tag: string | null }>, latest: { __typename: 'ArticleRevision', publishedAt: string | null, title: string | null, seoTitle: string | null, socialMediaTitle: string | null } };
+
+export type SitemapPageFragment = { __typename: 'Page', id: string, slug: string | null, url: string, publishedAt: string | null, latest: { __typename: 'PageRevision', publishedAt: string | null } };
+
+export type SitemapArticlesQueryVariables = Exact<{
+  filter?: ArticleFilter | null | undefined;
+  take?: number | null | undefined;
+  skip?: number | null | undefined;
+  order?: SortOrder | null | undefined;
+  sort?: ArticleSort | null | undefined;
+}>;
+
+
+export type SitemapArticlesQuery = { __typename: 'Query', articles: { __typename: 'PaginatedArticles', nodes: Array<(
+      { __typename: 'Article' }
+      & SitemapArticleFragment
+    )>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean } } };
+
+export type SitemapPagesQueryVariables = Exact<{
+  filter?: PageFilter | null | undefined;
+  take?: number | null | undefined;
+  skip?: number | null | undefined;
+  order?: SortOrder | null | undefined;
+  sort?: PageSort | null | undefined;
+}>;
+
+
+export type SitemapPagesQuery = { __typename: 'Query', pages: { __typename: 'PaginatedPages', nodes: Array<(
+      { __typename: 'Page' }
+      & SitemapPageFragment
+    )>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean } } };
+
+type SitemapTeaser_ArticleTeaser_Fragment = { __typename: 'ArticleTeaser', article: { __typename: 'Article', id: string, latest: { __typename: 'ArticleRevision', publishedAt: string | null } } | null };
+
+type SitemapTeaser_CustomTeaser_Fragment = { __typename: 'CustomTeaser' };
+
+type SitemapTeaser_EventTeaser_Fragment = { __typename: 'EventTeaser', event: { __typename: 'Event', id: string, modifiedAt: string } | null };
+
+type SitemapTeaser_PageTeaser_Fragment = { __typename: 'PageTeaser', page: { __typename: 'Page', id: string, latest: { __typename: 'PageRevision', publishedAt: string | null } } | null };
+
+export type SitemapTeaserFragment =
+  | SitemapTeaser_ArticleTeaser_Fragment
+  | SitemapTeaser_CustomTeaser_Fragment
+  | SitemapTeaser_EventTeaser_Fragment
+  | SitemapTeaser_PageTeaser_Fragment
+;
+
+type SitemapTeaserBlock_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock' };
+
+type SitemapTeaserBlock_BlockTemplateBlock_Fragment = { __typename: 'BlockTemplateBlock' };
+
+type SitemapTeaserBlock_BreakBlock_Fragment = { __typename: 'BreakBlock' };
+
+type SitemapTeaserBlock_CommentBlock_Fragment = { __typename: 'CommentBlock' };
+
+type SitemapTeaserBlock_CrowdfundingBlock_Fragment = { __typename: 'CrowdfundingBlock' };
+
+type SitemapTeaserBlock_EventBlock_Fragment = { __typename: 'EventBlock' };
+
+type SitemapTeaserBlock_FacebookPostBlock_Fragment = { __typename: 'FacebookPostBlock' };
+
+type SitemapTeaserBlock_FacebookVideoBlock_Fragment = { __typename: 'FacebookVideoBlock' };
+
+type SitemapTeaserBlock_FlexBlock_Fragment = { __typename: 'FlexBlock' };
+
+type SitemapTeaserBlock_HtmlBlock_Fragment = { __typename: 'HTMLBlock' };
+
+type SitemapTeaserBlock_IFrameBlock_Fragment = { __typename: 'IFrameBlock' };
+
+type SitemapTeaserBlock_ImageBlock_Fragment = { __typename: 'ImageBlock' };
+
+type SitemapTeaserBlock_ImageGalleryBlock_Fragment = { __typename: 'ImageGalleryBlock' };
+
+type SitemapTeaserBlock_InstagramPostBlock_Fragment = { __typename: 'InstagramPostBlock' };
+
+type SitemapTeaserBlock_ListicleBlock_Fragment = { __typename: 'ListicleBlock' };
+
+type SitemapTeaserBlock_MailchimpFormBlock_Fragment = { __typename: 'MailchimpFormBlock' };
+
+type SitemapTeaserBlock_PolisConversationBlock_Fragment = { __typename: 'PolisConversationBlock' };
+
+type SitemapTeaserBlock_PollBlock_Fragment = { __typename: 'PollBlock' };
+
+type SitemapTeaserBlock_QuoteBlock_Fragment = { __typename: 'QuoteBlock' };
+
+type SitemapTeaserBlock_RichTextBlock_Fragment = { __typename: 'RichTextBlock' };
+
+type SitemapTeaserBlock_SoundCloudTrackBlock_Fragment = { __typename: 'SoundCloudTrackBlock' };
+
+type SitemapTeaserBlock_StreamableVideoBlock_Fragment = { __typename: 'StreamableVideoBlock' };
+
+type SitemapTeaserBlock_SubscribeBlock_Fragment = { __typename: 'SubscribeBlock' };
+
+type SitemapTeaserBlock_TeaserGridBlock_Fragment = { __typename: 'TeaserGridBlock', teasers: Array<
+    | (
+      { __typename: 'ArticleTeaser' }
+      & SitemapTeaser_ArticleTeaser_Fragment
+    )
+    | (
+      { __typename: 'CustomTeaser' }
+      & SitemapTeaser_CustomTeaser_Fragment
+    )
+    | (
+      { __typename: 'EventTeaser' }
+      & SitemapTeaser_EventTeaser_Fragment
+    )
+    | (
+      { __typename: 'PageTeaser' }
+      & SitemapTeaser_PageTeaser_Fragment
+    )
+   | null> };
+
+type SitemapTeaserBlock_TeaserGridFlexBlock_Fragment = { __typename: 'TeaserGridFlexBlock', flexTeasers: Array<{ __typename: 'FlexTeaser', teaser:
+      | (
+        { __typename: 'ArticleTeaser' }
+        & SitemapTeaser_ArticleTeaser_Fragment
+      )
+      | (
+        { __typename: 'CustomTeaser' }
+        & SitemapTeaser_CustomTeaser_Fragment
+      )
+      | (
+        { __typename: 'EventTeaser' }
+        & SitemapTeaser_EventTeaser_Fragment
+      )
+      | (
+        { __typename: 'PageTeaser' }
+        & SitemapTeaser_PageTeaser_Fragment
+      )
+     | null }> };
+
+type SitemapTeaserBlock_TeaserListBlock_Fragment = { __typename: 'TeaserListBlock', teasers: Array<
+    | (
+      { __typename: 'ArticleTeaser' }
+      & SitemapTeaser_ArticleTeaser_Fragment
+    )
+    | (
+      { __typename: 'CustomTeaser' }
+      & SitemapTeaser_CustomTeaser_Fragment
+    )
+    | (
+      { __typename: 'EventTeaser' }
+      & SitemapTeaser_EventTeaser_Fragment
+    )
+    | (
+      { __typename: 'PageTeaser' }
+      & SitemapTeaser_PageTeaser_Fragment
+    )
+   | null> };
+
+type SitemapTeaserBlock_TeaserSlotsBlock_Fragment = { __typename: 'TeaserSlotsBlock', teasers: Array<
+    | (
+      { __typename: 'ArticleTeaser' }
+      & SitemapTeaser_ArticleTeaser_Fragment
+    )
+    | (
+      { __typename: 'CustomTeaser' }
+      & SitemapTeaser_CustomTeaser_Fragment
+    )
+    | (
+      { __typename: 'EventTeaser' }
+      & SitemapTeaser_EventTeaser_Fragment
+    )
+    | (
+      { __typename: 'PageTeaser' }
+      & SitemapTeaser_PageTeaser_Fragment
+    )
+   | null> };
+
+type SitemapTeaserBlock_TikTokVideoBlock_Fragment = { __typename: 'TikTokVideoBlock' };
+
+type SitemapTeaserBlock_TitleBlock_Fragment = { __typename: 'TitleBlock' };
+
+type SitemapTeaserBlock_TwitterTweetBlock_Fragment = { __typename: 'TwitterTweetBlock' };
+
+type SitemapTeaserBlock_UnknownBlock_Fragment = { __typename: 'UnknownBlock' };
+
+type SitemapTeaserBlock_VimeoVideoBlock_Fragment = { __typename: 'VimeoVideoBlock' };
+
+type SitemapTeaserBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock' };
+
+export type SitemapTeaserBlockFragment =
+  | SitemapTeaserBlock_BildwurfAdBlock_Fragment
+  | SitemapTeaserBlock_BlockTemplateBlock_Fragment
+  | SitemapTeaserBlock_BreakBlock_Fragment
+  | SitemapTeaserBlock_CommentBlock_Fragment
+  | SitemapTeaserBlock_CrowdfundingBlock_Fragment
+  | SitemapTeaserBlock_EventBlock_Fragment
+  | SitemapTeaserBlock_FacebookPostBlock_Fragment
+  | SitemapTeaserBlock_FacebookVideoBlock_Fragment
+  | SitemapTeaserBlock_FlexBlock_Fragment
+  | SitemapTeaserBlock_HtmlBlock_Fragment
+  | SitemapTeaserBlock_IFrameBlock_Fragment
+  | SitemapTeaserBlock_ImageBlock_Fragment
+  | SitemapTeaserBlock_ImageGalleryBlock_Fragment
+  | SitemapTeaserBlock_InstagramPostBlock_Fragment
+  | SitemapTeaserBlock_ListicleBlock_Fragment
+  | SitemapTeaserBlock_MailchimpFormBlock_Fragment
+  | SitemapTeaserBlock_PolisConversationBlock_Fragment
+  | SitemapTeaserBlock_PollBlock_Fragment
+  | SitemapTeaserBlock_QuoteBlock_Fragment
+  | SitemapTeaserBlock_RichTextBlock_Fragment
+  | SitemapTeaserBlock_SoundCloudTrackBlock_Fragment
+  | SitemapTeaserBlock_StreamableVideoBlock_Fragment
+  | SitemapTeaserBlock_SubscribeBlock_Fragment
+  | SitemapTeaserBlock_TeaserGridBlock_Fragment
+  | SitemapTeaserBlock_TeaserGridFlexBlock_Fragment
+  | SitemapTeaserBlock_TeaserListBlock_Fragment
+  | SitemapTeaserBlock_TeaserSlotsBlock_Fragment
+  | SitemapTeaserBlock_TikTokVideoBlock_Fragment
+  | SitemapTeaserBlock_TitleBlock_Fragment
+  | SitemapTeaserBlock_TwitterTweetBlock_Fragment
+  | SitemapTeaserBlock_UnknownBlock_Fragment
+  | SitemapTeaserBlock_VimeoVideoBlock_Fragment
+  | SitemapTeaserBlock_YouTubeVideoBlock_Fragment
+;
+
+type SitemapNestedBlock_BildwurfAdBlock_Fragment = (
+  { __typename: 'BildwurfAdBlock' }
+  & SitemapTeaserBlock_BildwurfAdBlock_Fragment
+);
+
+type SitemapNestedBlock_BlockTemplateBlock_Fragment = (
+  { __typename: 'BlockTemplateBlock', template: { __typename: 'BlockTemplate', modifiedAt: string, blocks: Array<
+      | (
+        { __typename: 'BildwurfAdBlock' }
+        & SitemapTeaserBlock_BildwurfAdBlock_Fragment
+      )
+      | (
+        { __typename: 'BlockTemplateBlock' }
+        & SitemapTeaserBlock_BlockTemplateBlock_Fragment
+      )
+      | (
+        { __typename: 'BreakBlock' }
+        & SitemapTeaserBlock_BreakBlock_Fragment
+      )
+      | (
+        { __typename: 'CommentBlock' }
+        & SitemapTeaserBlock_CommentBlock_Fragment
+      )
+      | (
+        { __typename: 'CrowdfundingBlock' }
+        & SitemapTeaserBlock_CrowdfundingBlock_Fragment
+      )
+      | (
+        { __typename: 'EventBlock' }
+        & SitemapTeaserBlock_EventBlock_Fragment
+      )
+      | (
+        { __typename: 'FacebookPostBlock' }
+        & SitemapTeaserBlock_FacebookPostBlock_Fragment
+      )
+      | (
+        { __typename: 'FacebookVideoBlock' }
+        & SitemapTeaserBlock_FacebookVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'FlexBlock' }
+        & SitemapTeaserBlock_FlexBlock_Fragment
+      )
+      | (
+        { __typename: 'HTMLBlock' }
+        & SitemapTeaserBlock_HtmlBlock_Fragment
+      )
+      | (
+        { __typename: 'IFrameBlock' }
+        & SitemapTeaserBlock_IFrameBlock_Fragment
+      )
+      | (
+        { __typename: 'ImageBlock' }
+        & SitemapTeaserBlock_ImageBlock_Fragment
+      )
+      | (
+        { __typename: 'ImageGalleryBlock' }
+        & SitemapTeaserBlock_ImageGalleryBlock_Fragment
+      )
+      | (
+        { __typename: 'InstagramPostBlock' }
+        & SitemapTeaserBlock_InstagramPostBlock_Fragment
+      )
+      | (
+        { __typename: 'ListicleBlock' }
+        & SitemapTeaserBlock_ListicleBlock_Fragment
+      )
+      | (
+        { __typename: 'MailchimpFormBlock' }
+        & SitemapTeaserBlock_MailchimpFormBlock_Fragment
+      )
+      | (
+        { __typename: 'PolisConversationBlock' }
+        & SitemapTeaserBlock_PolisConversationBlock_Fragment
+      )
+      | (
+        { __typename: 'PollBlock' }
+        & SitemapTeaserBlock_PollBlock_Fragment
+      )
+      | (
+        { __typename: 'QuoteBlock' }
+        & SitemapTeaserBlock_QuoteBlock_Fragment
+      )
+      | (
+        { __typename: 'RichTextBlock' }
+        & SitemapTeaserBlock_RichTextBlock_Fragment
+      )
+      | (
+        { __typename: 'SoundCloudTrackBlock' }
+        & SitemapTeaserBlock_SoundCloudTrackBlock_Fragment
+      )
+      | (
+        { __typename: 'StreamableVideoBlock' }
+        & SitemapTeaserBlock_StreamableVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'SubscribeBlock' }
+        & SitemapTeaserBlock_SubscribeBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserGridBlock' }
+        & SitemapTeaserBlock_TeaserGridBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserGridFlexBlock' }
+        & SitemapTeaserBlock_TeaserGridFlexBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserListBlock' }
+        & SitemapTeaserBlock_TeaserListBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserSlotsBlock' }
+        & SitemapTeaserBlock_TeaserSlotsBlock_Fragment
+      )
+      | (
+        { __typename: 'TikTokVideoBlock' }
+        & SitemapTeaserBlock_TikTokVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'TitleBlock' }
+        & SitemapTeaserBlock_TitleBlock_Fragment
+      )
+      | (
+        { __typename: 'TwitterTweetBlock' }
+        & SitemapTeaserBlock_TwitterTweetBlock_Fragment
+      )
+      | (
+        { __typename: 'UnknownBlock' }
+        & SitemapTeaserBlock_UnknownBlock_Fragment
+      )
+      | (
+        { __typename: 'VimeoVideoBlock' }
+        & SitemapTeaserBlock_VimeoVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'YouTubeVideoBlock' }
+        & SitemapTeaserBlock_YouTubeVideoBlock_Fragment
+      )
+    > } | null }
+  & SitemapTeaserBlock_BlockTemplateBlock_Fragment
+);
+
+type SitemapNestedBlock_BreakBlock_Fragment = (
+  { __typename: 'BreakBlock' }
+  & SitemapTeaserBlock_BreakBlock_Fragment
+);
+
+type SitemapNestedBlock_CommentBlock_Fragment = (
+  { __typename: 'CommentBlock' }
+  & SitemapTeaserBlock_CommentBlock_Fragment
+);
+
+type SitemapNestedBlock_CrowdfundingBlock_Fragment = (
+  { __typename: 'CrowdfundingBlock' }
+  & SitemapTeaserBlock_CrowdfundingBlock_Fragment
+);
+
+type SitemapNestedBlock_EventBlock_Fragment = (
+  { __typename: 'EventBlock' }
+  & SitemapTeaserBlock_EventBlock_Fragment
+);
+
+type SitemapNestedBlock_FacebookPostBlock_Fragment = (
+  { __typename: 'FacebookPostBlock' }
+  & SitemapTeaserBlock_FacebookPostBlock_Fragment
+);
+
+type SitemapNestedBlock_FacebookVideoBlock_Fragment = (
+  { __typename: 'FacebookVideoBlock' }
+  & SitemapTeaserBlock_FacebookVideoBlock_Fragment
+);
+
+type SitemapNestedBlock_FlexBlock_Fragment = (
+  { __typename: 'FlexBlock', blocks: Array<{ __typename: 'BlockWithAlignment', block:
+      | (
+        { __typename: 'BildwurfAdBlock' }
+        & SitemapTeaserBlock_BildwurfAdBlock_Fragment
+      )
+      | (
+        { __typename: 'BlockTemplateBlock' }
+        & SitemapTeaserBlock_BlockTemplateBlock_Fragment
+      )
+      | (
+        { __typename: 'BreakBlock' }
+        & SitemapTeaserBlock_BreakBlock_Fragment
+      )
+      | (
+        { __typename: 'CommentBlock' }
+        & SitemapTeaserBlock_CommentBlock_Fragment
+      )
+      | (
+        { __typename: 'CrowdfundingBlock' }
+        & SitemapTeaserBlock_CrowdfundingBlock_Fragment
+      )
+      | (
+        { __typename: 'EventBlock' }
+        & SitemapTeaserBlock_EventBlock_Fragment
+      )
+      | (
+        { __typename: 'FacebookPostBlock' }
+        & SitemapTeaserBlock_FacebookPostBlock_Fragment
+      )
+      | (
+        { __typename: 'FacebookVideoBlock' }
+        & SitemapTeaserBlock_FacebookVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'FlexBlock' }
+        & SitemapTeaserBlock_FlexBlock_Fragment
+      )
+      | (
+        { __typename: 'HTMLBlock' }
+        & SitemapTeaserBlock_HtmlBlock_Fragment
+      )
+      | (
+        { __typename: 'IFrameBlock' }
+        & SitemapTeaserBlock_IFrameBlock_Fragment
+      )
+      | (
+        { __typename: 'ImageBlock' }
+        & SitemapTeaserBlock_ImageBlock_Fragment
+      )
+      | (
+        { __typename: 'ImageGalleryBlock' }
+        & SitemapTeaserBlock_ImageGalleryBlock_Fragment
+      )
+      | (
+        { __typename: 'InstagramPostBlock' }
+        & SitemapTeaserBlock_InstagramPostBlock_Fragment
+      )
+      | (
+        { __typename: 'ListicleBlock' }
+        & SitemapTeaserBlock_ListicleBlock_Fragment
+      )
+      | (
+        { __typename: 'MailchimpFormBlock' }
+        & SitemapTeaserBlock_MailchimpFormBlock_Fragment
+      )
+      | (
+        { __typename: 'PolisConversationBlock' }
+        & SitemapTeaserBlock_PolisConversationBlock_Fragment
+      )
+      | (
+        { __typename: 'PollBlock' }
+        & SitemapTeaserBlock_PollBlock_Fragment
+      )
+      | (
+        { __typename: 'QuoteBlock' }
+        & SitemapTeaserBlock_QuoteBlock_Fragment
+      )
+      | (
+        { __typename: 'RichTextBlock' }
+        & SitemapTeaserBlock_RichTextBlock_Fragment
+      )
+      | (
+        { __typename: 'SoundCloudTrackBlock' }
+        & SitemapTeaserBlock_SoundCloudTrackBlock_Fragment
+      )
+      | (
+        { __typename: 'StreamableVideoBlock' }
+        & SitemapTeaserBlock_StreamableVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'SubscribeBlock' }
+        & SitemapTeaserBlock_SubscribeBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserGridBlock' }
+        & SitemapTeaserBlock_TeaserGridBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserGridFlexBlock' }
+        & SitemapTeaserBlock_TeaserGridFlexBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserListBlock' }
+        & SitemapTeaserBlock_TeaserListBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserSlotsBlock' }
+        & SitemapTeaserBlock_TeaserSlotsBlock_Fragment
+      )
+      | (
+        { __typename: 'TikTokVideoBlock' }
+        & SitemapTeaserBlock_TikTokVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'TitleBlock' }
+        & SitemapTeaserBlock_TitleBlock_Fragment
+      )
+      | (
+        { __typename: 'TwitterTweetBlock' }
+        & SitemapTeaserBlock_TwitterTweetBlock_Fragment
+      )
+      | (
+        { __typename: 'UnknownBlock' }
+        & SitemapTeaserBlock_UnknownBlock_Fragment
+      )
+      | (
+        { __typename: 'VimeoVideoBlock' }
+        & SitemapTeaserBlock_VimeoVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'YouTubeVideoBlock' }
+        & SitemapTeaserBlock_YouTubeVideoBlock_Fragment
+      )
+     | null }> }
+  & SitemapTeaserBlock_FlexBlock_Fragment
+);
+
+type SitemapNestedBlock_HtmlBlock_Fragment = (
+  { __typename: 'HTMLBlock' }
+  & SitemapTeaserBlock_HtmlBlock_Fragment
+);
+
+type SitemapNestedBlock_IFrameBlock_Fragment = (
+  { __typename: 'IFrameBlock' }
+  & SitemapTeaserBlock_IFrameBlock_Fragment
+);
+
+type SitemapNestedBlock_ImageBlock_Fragment = (
+  { __typename: 'ImageBlock' }
+  & SitemapTeaserBlock_ImageBlock_Fragment
+);
+
+type SitemapNestedBlock_ImageGalleryBlock_Fragment = (
+  { __typename: 'ImageGalleryBlock' }
+  & SitemapTeaserBlock_ImageGalleryBlock_Fragment
+);
+
+type SitemapNestedBlock_InstagramPostBlock_Fragment = (
+  { __typename: 'InstagramPostBlock' }
+  & SitemapTeaserBlock_InstagramPostBlock_Fragment
+);
+
+type SitemapNestedBlock_ListicleBlock_Fragment = (
+  { __typename: 'ListicleBlock' }
+  & SitemapTeaserBlock_ListicleBlock_Fragment
+);
+
+type SitemapNestedBlock_MailchimpFormBlock_Fragment = (
+  { __typename: 'MailchimpFormBlock' }
+  & SitemapTeaserBlock_MailchimpFormBlock_Fragment
+);
+
+type SitemapNestedBlock_PolisConversationBlock_Fragment = (
+  { __typename: 'PolisConversationBlock' }
+  & SitemapTeaserBlock_PolisConversationBlock_Fragment
+);
+
+type SitemapNestedBlock_PollBlock_Fragment = (
+  { __typename: 'PollBlock' }
+  & SitemapTeaserBlock_PollBlock_Fragment
+);
+
+type SitemapNestedBlock_QuoteBlock_Fragment = (
+  { __typename: 'QuoteBlock' }
+  & SitemapTeaserBlock_QuoteBlock_Fragment
+);
+
+type SitemapNestedBlock_RichTextBlock_Fragment = (
+  { __typename: 'RichTextBlock' }
+  & SitemapTeaserBlock_RichTextBlock_Fragment
+);
+
+type SitemapNestedBlock_SoundCloudTrackBlock_Fragment = (
+  { __typename: 'SoundCloudTrackBlock' }
+  & SitemapTeaserBlock_SoundCloudTrackBlock_Fragment
+);
+
+type SitemapNestedBlock_StreamableVideoBlock_Fragment = (
+  { __typename: 'StreamableVideoBlock' }
+  & SitemapTeaserBlock_StreamableVideoBlock_Fragment
+);
+
+type SitemapNestedBlock_SubscribeBlock_Fragment = (
+  { __typename: 'SubscribeBlock' }
+  & SitemapTeaserBlock_SubscribeBlock_Fragment
+);
+
+type SitemapNestedBlock_TeaserGridBlock_Fragment = (
+  { __typename: 'TeaserGridBlock' }
+  & SitemapTeaserBlock_TeaserGridBlock_Fragment
+);
+
+type SitemapNestedBlock_TeaserGridFlexBlock_Fragment = (
+  { __typename: 'TeaserGridFlexBlock' }
+  & SitemapTeaserBlock_TeaserGridFlexBlock_Fragment
+);
+
+type SitemapNestedBlock_TeaserListBlock_Fragment = (
+  { __typename: 'TeaserListBlock' }
+  & SitemapTeaserBlock_TeaserListBlock_Fragment
+);
+
+type SitemapNestedBlock_TeaserSlotsBlock_Fragment = (
+  { __typename: 'TeaserSlotsBlock' }
+  & SitemapTeaserBlock_TeaserSlotsBlock_Fragment
+);
+
+type SitemapNestedBlock_TikTokVideoBlock_Fragment = (
+  { __typename: 'TikTokVideoBlock' }
+  & SitemapTeaserBlock_TikTokVideoBlock_Fragment
+);
+
+type SitemapNestedBlock_TitleBlock_Fragment = (
+  { __typename: 'TitleBlock' }
+  & SitemapTeaserBlock_TitleBlock_Fragment
+);
+
+type SitemapNestedBlock_TwitterTweetBlock_Fragment = (
+  { __typename: 'TwitterTweetBlock' }
+  & SitemapTeaserBlock_TwitterTweetBlock_Fragment
+);
+
+type SitemapNestedBlock_UnknownBlock_Fragment = (
+  { __typename: 'UnknownBlock' }
+  & SitemapTeaserBlock_UnknownBlock_Fragment
+);
+
+type SitemapNestedBlock_VimeoVideoBlock_Fragment = (
+  { __typename: 'VimeoVideoBlock' }
+  & SitemapTeaserBlock_VimeoVideoBlock_Fragment
+);
+
+type SitemapNestedBlock_YouTubeVideoBlock_Fragment = (
+  { __typename: 'YouTubeVideoBlock' }
+  & SitemapTeaserBlock_YouTubeVideoBlock_Fragment
+);
+
+export type SitemapNestedBlockFragment =
+  | SitemapNestedBlock_BildwurfAdBlock_Fragment
+  | SitemapNestedBlock_BlockTemplateBlock_Fragment
+  | SitemapNestedBlock_BreakBlock_Fragment
+  | SitemapNestedBlock_CommentBlock_Fragment
+  | SitemapNestedBlock_CrowdfundingBlock_Fragment
+  | SitemapNestedBlock_EventBlock_Fragment
+  | SitemapNestedBlock_FacebookPostBlock_Fragment
+  | SitemapNestedBlock_FacebookVideoBlock_Fragment
+  | SitemapNestedBlock_FlexBlock_Fragment
+  | SitemapNestedBlock_HtmlBlock_Fragment
+  | SitemapNestedBlock_IFrameBlock_Fragment
+  | SitemapNestedBlock_ImageBlock_Fragment
+  | SitemapNestedBlock_ImageGalleryBlock_Fragment
+  | SitemapNestedBlock_InstagramPostBlock_Fragment
+  | SitemapNestedBlock_ListicleBlock_Fragment
+  | SitemapNestedBlock_MailchimpFormBlock_Fragment
+  | SitemapNestedBlock_PolisConversationBlock_Fragment
+  | SitemapNestedBlock_PollBlock_Fragment
+  | SitemapNestedBlock_QuoteBlock_Fragment
+  | SitemapNestedBlock_RichTextBlock_Fragment
+  | SitemapNestedBlock_SoundCloudTrackBlock_Fragment
+  | SitemapNestedBlock_StreamableVideoBlock_Fragment
+  | SitemapNestedBlock_SubscribeBlock_Fragment
+  | SitemapNestedBlock_TeaserGridBlock_Fragment
+  | SitemapNestedBlock_TeaserGridFlexBlock_Fragment
+  | SitemapNestedBlock_TeaserListBlock_Fragment
+  | SitemapNestedBlock_TeaserSlotsBlock_Fragment
+  | SitemapNestedBlock_TikTokVideoBlock_Fragment
+  | SitemapNestedBlock_TitleBlock_Fragment
+  | SitemapNestedBlock_TwitterTweetBlock_Fragment
+  | SitemapNestedBlock_UnknownBlock_Fragment
+  | SitemapNestedBlock_VimeoVideoBlock_Fragment
+  | SitemapNestedBlock_YouTubeVideoBlock_Fragment
+;
+
+type SitemapBlock_BildwurfAdBlock_Fragment = (
+  { __typename: 'BildwurfAdBlock' }
+  & SitemapTeaserBlock_BildwurfAdBlock_Fragment
+);
+
+type SitemapBlock_BlockTemplateBlock_Fragment = (
+  { __typename: 'BlockTemplateBlock', template: { __typename: 'BlockTemplate', modifiedAt: string, blocks: Array<
+      | (
+        { __typename: 'BildwurfAdBlock' }
+        & SitemapNestedBlock_BildwurfAdBlock_Fragment
+      )
+      | (
+        { __typename: 'BlockTemplateBlock' }
+        & SitemapNestedBlock_BlockTemplateBlock_Fragment
+      )
+      | (
+        { __typename: 'BreakBlock' }
+        & SitemapNestedBlock_BreakBlock_Fragment
+      )
+      | (
+        { __typename: 'CommentBlock' }
+        & SitemapNestedBlock_CommentBlock_Fragment
+      )
+      | (
+        { __typename: 'CrowdfundingBlock' }
+        & SitemapNestedBlock_CrowdfundingBlock_Fragment
+      )
+      | (
+        { __typename: 'EventBlock' }
+        & SitemapNestedBlock_EventBlock_Fragment
+      )
+      | (
+        { __typename: 'FacebookPostBlock' }
+        & SitemapNestedBlock_FacebookPostBlock_Fragment
+      )
+      | (
+        { __typename: 'FacebookVideoBlock' }
+        & SitemapNestedBlock_FacebookVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'FlexBlock' }
+        & SitemapNestedBlock_FlexBlock_Fragment
+      )
+      | (
+        { __typename: 'HTMLBlock' }
+        & SitemapNestedBlock_HtmlBlock_Fragment
+      )
+      | (
+        { __typename: 'IFrameBlock' }
+        & SitemapNestedBlock_IFrameBlock_Fragment
+      )
+      | (
+        { __typename: 'ImageBlock' }
+        & SitemapNestedBlock_ImageBlock_Fragment
+      )
+      | (
+        { __typename: 'ImageGalleryBlock' }
+        & SitemapNestedBlock_ImageGalleryBlock_Fragment
+      )
+      | (
+        { __typename: 'InstagramPostBlock' }
+        & SitemapNestedBlock_InstagramPostBlock_Fragment
+      )
+      | (
+        { __typename: 'ListicleBlock' }
+        & SitemapNestedBlock_ListicleBlock_Fragment
+      )
+      | (
+        { __typename: 'MailchimpFormBlock' }
+        & SitemapNestedBlock_MailchimpFormBlock_Fragment
+      )
+      | (
+        { __typename: 'PolisConversationBlock' }
+        & SitemapNestedBlock_PolisConversationBlock_Fragment
+      )
+      | (
+        { __typename: 'PollBlock' }
+        & SitemapNestedBlock_PollBlock_Fragment
+      )
+      | (
+        { __typename: 'QuoteBlock' }
+        & SitemapNestedBlock_QuoteBlock_Fragment
+      )
+      | (
+        { __typename: 'RichTextBlock' }
+        & SitemapNestedBlock_RichTextBlock_Fragment
+      )
+      | (
+        { __typename: 'SoundCloudTrackBlock' }
+        & SitemapNestedBlock_SoundCloudTrackBlock_Fragment
+      )
+      | (
+        { __typename: 'StreamableVideoBlock' }
+        & SitemapNestedBlock_StreamableVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'SubscribeBlock' }
+        & SitemapNestedBlock_SubscribeBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserGridBlock' }
+        & SitemapNestedBlock_TeaserGridBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserGridFlexBlock' }
+        & SitemapNestedBlock_TeaserGridFlexBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserListBlock' }
+        & SitemapNestedBlock_TeaserListBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserSlotsBlock' }
+        & SitemapNestedBlock_TeaserSlotsBlock_Fragment
+      )
+      | (
+        { __typename: 'TikTokVideoBlock' }
+        & SitemapNestedBlock_TikTokVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'TitleBlock' }
+        & SitemapNestedBlock_TitleBlock_Fragment
+      )
+      | (
+        { __typename: 'TwitterTweetBlock' }
+        & SitemapNestedBlock_TwitterTweetBlock_Fragment
+      )
+      | (
+        { __typename: 'UnknownBlock' }
+        & SitemapNestedBlock_UnknownBlock_Fragment
+      )
+      | (
+        { __typename: 'VimeoVideoBlock' }
+        & SitemapNestedBlock_VimeoVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'YouTubeVideoBlock' }
+        & SitemapNestedBlock_YouTubeVideoBlock_Fragment
+      )
+    > } | null }
+  & SitemapTeaserBlock_BlockTemplateBlock_Fragment
+);
+
+type SitemapBlock_BreakBlock_Fragment = (
+  { __typename: 'BreakBlock' }
+  & SitemapTeaserBlock_BreakBlock_Fragment
+);
+
+type SitemapBlock_CommentBlock_Fragment = (
+  { __typename: 'CommentBlock' }
+  & SitemapTeaserBlock_CommentBlock_Fragment
+);
+
+type SitemapBlock_CrowdfundingBlock_Fragment = (
+  { __typename: 'CrowdfundingBlock' }
+  & SitemapTeaserBlock_CrowdfundingBlock_Fragment
+);
+
+type SitemapBlock_EventBlock_Fragment = (
+  { __typename: 'EventBlock' }
+  & SitemapTeaserBlock_EventBlock_Fragment
+);
+
+type SitemapBlock_FacebookPostBlock_Fragment = (
+  { __typename: 'FacebookPostBlock' }
+  & SitemapTeaserBlock_FacebookPostBlock_Fragment
+);
+
+type SitemapBlock_FacebookVideoBlock_Fragment = (
+  { __typename: 'FacebookVideoBlock' }
+  & SitemapTeaserBlock_FacebookVideoBlock_Fragment
+);
+
+type SitemapBlock_FlexBlock_Fragment = (
+  { __typename: 'FlexBlock', blocks: Array<{ __typename: 'BlockWithAlignment', block:
+      | (
+        { __typename: 'BildwurfAdBlock' }
+        & SitemapNestedBlock_BildwurfAdBlock_Fragment
+      )
+      | (
+        { __typename: 'BlockTemplateBlock' }
+        & SitemapNestedBlock_BlockTemplateBlock_Fragment
+      )
+      | (
+        { __typename: 'BreakBlock' }
+        & SitemapNestedBlock_BreakBlock_Fragment
+      )
+      | (
+        { __typename: 'CommentBlock' }
+        & SitemapNestedBlock_CommentBlock_Fragment
+      )
+      | (
+        { __typename: 'CrowdfundingBlock' }
+        & SitemapNestedBlock_CrowdfundingBlock_Fragment
+      )
+      | (
+        { __typename: 'EventBlock' }
+        & SitemapNestedBlock_EventBlock_Fragment
+      )
+      | (
+        { __typename: 'FacebookPostBlock' }
+        & SitemapNestedBlock_FacebookPostBlock_Fragment
+      )
+      | (
+        { __typename: 'FacebookVideoBlock' }
+        & SitemapNestedBlock_FacebookVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'FlexBlock' }
+        & SitemapNestedBlock_FlexBlock_Fragment
+      )
+      | (
+        { __typename: 'HTMLBlock' }
+        & SitemapNestedBlock_HtmlBlock_Fragment
+      )
+      | (
+        { __typename: 'IFrameBlock' }
+        & SitemapNestedBlock_IFrameBlock_Fragment
+      )
+      | (
+        { __typename: 'ImageBlock' }
+        & SitemapNestedBlock_ImageBlock_Fragment
+      )
+      | (
+        { __typename: 'ImageGalleryBlock' }
+        & SitemapNestedBlock_ImageGalleryBlock_Fragment
+      )
+      | (
+        { __typename: 'InstagramPostBlock' }
+        & SitemapNestedBlock_InstagramPostBlock_Fragment
+      )
+      | (
+        { __typename: 'ListicleBlock' }
+        & SitemapNestedBlock_ListicleBlock_Fragment
+      )
+      | (
+        { __typename: 'MailchimpFormBlock' }
+        & SitemapNestedBlock_MailchimpFormBlock_Fragment
+      )
+      | (
+        { __typename: 'PolisConversationBlock' }
+        & SitemapNestedBlock_PolisConversationBlock_Fragment
+      )
+      | (
+        { __typename: 'PollBlock' }
+        & SitemapNestedBlock_PollBlock_Fragment
+      )
+      | (
+        { __typename: 'QuoteBlock' }
+        & SitemapNestedBlock_QuoteBlock_Fragment
+      )
+      | (
+        { __typename: 'RichTextBlock' }
+        & SitemapNestedBlock_RichTextBlock_Fragment
+      )
+      | (
+        { __typename: 'SoundCloudTrackBlock' }
+        & SitemapNestedBlock_SoundCloudTrackBlock_Fragment
+      )
+      | (
+        { __typename: 'StreamableVideoBlock' }
+        & SitemapNestedBlock_StreamableVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'SubscribeBlock' }
+        & SitemapNestedBlock_SubscribeBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserGridBlock' }
+        & SitemapNestedBlock_TeaserGridBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserGridFlexBlock' }
+        & SitemapNestedBlock_TeaserGridFlexBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserListBlock' }
+        & SitemapNestedBlock_TeaserListBlock_Fragment
+      )
+      | (
+        { __typename: 'TeaserSlotsBlock' }
+        & SitemapNestedBlock_TeaserSlotsBlock_Fragment
+      )
+      | (
+        { __typename: 'TikTokVideoBlock' }
+        & SitemapNestedBlock_TikTokVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'TitleBlock' }
+        & SitemapNestedBlock_TitleBlock_Fragment
+      )
+      | (
+        { __typename: 'TwitterTweetBlock' }
+        & SitemapNestedBlock_TwitterTweetBlock_Fragment
+      )
+      | (
+        { __typename: 'UnknownBlock' }
+        & SitemapNestedBlock_UnknownBlock_Fragment
+      )
+      | (
+        { __typename: 'VimeoVideoBlock' }
+        & SitemapNestedBlock_VimeoVideoBlock_Fragment
+      )
+      | (
+        { __typename: 'YouTubeVideoBlock' }
+        & SitemapNestedBlock_YouTubeVideoBlock_Fragment
+      )
+     | null }> }
+  & SitemapTeaserBlock_FlexBlock_Fragment
+);
+
+type SitemapBlock_HtmlBlock_Fragment = (
+  { __typename: 'HTMLBlock' }
+  & SitemapTeaserBlock_HtmlBlock_Fragment
+);
+
+type SitemapBlock_IFrameBlock_Fragment = (
+  { __typename: 'IFrameBlock' }
+  & SitemapTeaserBlock_IFrameBlock_Fragment
+);
+
+type SitemapBlock_ImageBlock_Fragment = (
+  { __typename: 'ImageBlock' }
+  & SitemapTeaserBlock_ImageBlock_Fragment
+);
+
+type SitemapBlock_ImageGalleryBlock_Fragment = (
+  { __typename: 'ImageGalleryBlock' }
+  & SitemapTeaserBlock_ImageGalleryBlock_Fragment
+);
+
+type SitemapBlock_InstagramPostBlock_Fragment = (
+  { __typename: 'InstagramPostBlock' }
+  & SitemapTeaserBlock_InstagramPostBlock_Fragment
+);
+
+type SitemapBlock_ListicleBlock_Fragment = (
+  { __typename: 'ListicleBlock' }
+  & SitemapTeaserBlock_ListicleBlock_Fragment
+);
+
+type SitemapBlock_MailchimpFormBlock_Fragment = (
+  { __typename: 'MailchimpFormBlock' }
+  & SitemapTeaserBlock_MailchimpFormBlock_Fragment
+);
+
+type SitemapBlock_PolisConversationBlock_Fragment = (
+  { __typename: 'PolisConversationBlock' }
+  & SitemapTeaserBlock_PolisConversationBlock_Fragment
+);
+
+type SitemapBlock_PollBlock_Fragment = (
+  { __typename: 'PollBlock' }
+  & SitemapTeaserBlock_PollBlock_Fragment
+);
+
+type SitemapBlock_QuoteBlock_Fragment = (
+  { __typename: 'QuoteBlock' }
+  & SitemapTeaserBlock_QuoteBlock_Fragment
+);
+
+type SitemapBlock_RichTextBlock_Fragment = (
+  { __typename: 'RichTextBlock' }
+  & SitemapTeaserBlock_RichTextBlock_Fragment
+);
+
+type SitemapBlock_SoundCloudTrackBlock_Fragment = (
+  { __typename: 'SoundCloudTrackBlock' }
+  & SitemapTeaserBlock_SoundCloudTrackBlock_Fragment
+);
+
+type SitemapBlock_StreamableVideoBlock_Fragment = (
+  { __typename: 'StreamableVideoBlock' }
+  & SitemapTeaserBlock_StreamableVideoBlock_Fragment
+);
+
+type SitemapBlock_SubscribeBlock_Fragment = (
+  { __typename: 'SubscribeBlock' }
+  & SitemapTeaserBlock_SubscribeBlock_Fragment
+);
+
+type SitemapBlock_TeaserGridBlock_Fragment = (
+  { __typename: 'TeaserGridBlock' }
+  & SitemapTeaserBlock_TeaserGridBlock_Fragment
+);
+
+type SitemapBlock_TeaserGridFlexBlock_Fragment = (
+  { __typename: 'TeaserGridFlexBlock' }
+  & SitemapTeaserBlock_TeaserGridFlexBlock_Fragment
+);
+
+type SitemapBlock_TeaserListBlock_Fragment = (
+  { __typename: 'TeaserListBlock' }
+  & SitemapTeaserBlock_TeaserListBlock_Fragment
+);
+
+type SitemapBlock_TeaserSlotsBlock_Fragment = (
+  { __typename: 'TeaserSlotsBlock' }
+  & SitemapTeaserBlock_TeaserSlotsBlock_Fragment
+);
+
+type SitemapBlock_TikTokVideoBlock_Fragment = (
+  { __typename: 'TikTokVideoBlock' }
+  & SitemapTeaserBlock_TikTokVideoBlock_Fragment
+);
+
+type SitemapBlock_TitleBlock_Fragment = (
+  { __typename: 'TitleBlock' }
+  & SitemapTeaserBlock_TitleBlock_Fragment
+);
+
+type SitemapBlock_TwitterTweetBlock_Fragment = (
+  { __typename: 'TwitterTweetBlock' }
+  & SitemapTeaserBlock_TwitterTweetBlock_Fragment
+);
+
+type SitemapBlock_UnknownBlock_Fragment = (
+  { __typename: 'UnknownBlock' }
+  & SitemapTeaserBlock_UnknownBlock_Fragment
+);
+
+type SitemapBlock_VimeoVideoBlock_Fragment = (
+  { __typename: 'VimeoVideoBlock' }
+  & SitemapTeaserBlock_VimeoVideoBlock_Fragment
+);
+
+type SitemapBlock_YouTubeVideoBlock_Fragment = (
+  { __typename: 'YouTubeVideoBlock' }
+  & SitemapTeaserBlock_YouTubeVideoBlock_Fragment
+);
+
+export type SitemapBlockFragment =
+  | SitemapBlock_BildwurfAdBlock_Fragment
+  | SitemapBlock_BlockTemplateBlock_Fragment
+  | SitemapBlock_BreakBlock_Fragment
+  | SitemapBlock_CommentBlock_Fragment
+  | SitemapBlock_CrowdfundingBlock_Fragment
+  | SitemapBlock_EventBlock_Fragment
+  | SitemapBlock_FacebookPostBlock_Fragment
+  | SitemapBlock_FacebookVideoBlock_Fragment
+  | SitemapBlock_FlexBlock_Fragment
+  | SitemapBlock_HtmlBlock_Fragment
+  | SitemapBlock_IFrameBlock_Fragment
+  | SitemapBlock_ImageBlock_Fragment
+  | SitemapBlock_ImageGalleryBlock_Fragment
+  | SitemapBlock_InstagramPostBlock_Fragment
+  | SitemapBlock_ListicleBlock_Fragment
+  | SitemapBlock_MailchimpFormBlock_Fragment
+  | SitemapBlock_PolisConversationBlock_Fragment
+  | SitemapBlock_PollBlock_Fragment
+  | SitemapBlock_QuoteBlock_Fragment
+  | SitemapBlock_RichTextBlock_Fragment
+  | SitemapBlock_SoundCloudTrackBlock_Fragment
+  | SitemapBlock_StreamableVideoBlock_Fragment
+  | SitemapBlock_SubscribeBlock_Fragment
+  | SitemapBlock_TeaserGridBlock_Fragment
+  | SitemapBlock_TeaserGridFlexBlock_Fragment
+  | SitemapBlock_TeaserListBlock_Fragment
+  | SitemapBlock_TeaserSlotsBlock_Fragment
+  | SitemapBlock_TikTokVideoBlock_Fragment
+  | SitemapBlock_TitleBlock_Fragment
+  | SitemapBlock_TwitterTweetBlock_Fragment
+  | SitemapBlock_UnknownBlock_Fragment
+  | SitemapBlock_VimeoVideoBlock_Fragment
+  | SitemapBlock_YouTubeVideoBlock_Fragment
+;
+
+export type SitemapHomepageQueryVariables = Exact<{
+  slug: string;
+}>;
+
+
+export type SitemapHomepageQuery = { __typename: 'Query', page: { __typename: 'Page', id: string, latest: { __typename: 'PageRevision', publishedAt: string | null, blocks: Array<
+        | (
+          { __typename: 'BildwurfAdBlock' }
+          & SitemapBlock_BildwurfAdBlock_Fragment
+        )
+        | (
+          { __typename: 'BlockTemplateBlock' }
+          & SitemapBlock_BlockTemplateBlock_Fragment
+        )
+        | (
+          { __typename: 'BreakBlock' }
+          & SitemapBlock_BreakBlock_Fragment
+        )
+        | (
+          { __typename: 'CommentBlock' }
+          & SitemapBlock_CommentBlock_Fragment
+        )
+        | (
+          { __typename: 'CrowdfundingBlock' }
+          & SitemapBlock_CrowdfundingBlock_Fragment
+        )
+        | (
+          { __typename: 'EventBlock' }
+          & SitemapBlock_EventBlock_Fragment
+        )
+        | (
+          { __typename: 'FacebookPostBlock' }
+          & SitemapBlock_FacebookPostBlock_Fragment
+        )
+        | (
+          { __typename: 'FacebookVideoBlock' }
+          & SitemapBlock_FacebookVideoBlock_Fragment
+        )
+        | (
+          { __typename: 'FlexBlock' }
+          & SitemapBlock_FlexBlock_Fragment
+        )
+        | (
+          { __typename: 'HTMLBlock' }
+          & SitemapBlock_HtmlBlock_Fragment
+        )
+        | (
+          { __typename: 'IFrameBlock' }
+          & SitemapBlock_IFrameBlock_Fragment
+        )
+        | (
+          { __typename: 'ImageBlock' }
+          & SitemapBlock_ImageBlock_Fragment
+        )
+        | (
+          { __typename: 'ImageGalleryBlock' }
+          & SitemapBlock_ImageGalleryBlock_Fragment
+        )
+        | (
+          { __typename: 'InstagramPostBlock' }
+          & SitemapBlock_InstagramPostBlock_Fragment
+        )
+        | (
+          { __typename: 'ListicleBlock' }
+          & SitemapBlock_ListicleBlock_Fragment
+        )
+        | (
+          { __typename: 'MailchimpFormBlock' }
+          & SitemapBlock_MailchimpFormBlock_Fragment
+        )
+        | (
+          { __typename: 'PolisConversationBlock' }
+          & SitemapBlock_PolisConversationBlock_Fragment
+        )
+        | (
+          { __typename: 'PollBlock' }
+          & SitemapBlock_PollBlock_Fragment
+        )
+        | (
+          { __typename: 'QuoteBlock' }
+          & SitemapBlock_QuoteBlock_Fragment
+        )
+        | (
+          { __typename: 'RichTextBlock' }
+          & SitemapBlock_RichTextBlock_Fragment
+        )
+        | (
+          { __typename: 'SoundCloudTrackBlock' }
+          & SitemapBlock_SoundCloudTrackBlock_Fragment
+        )
+        | (
+          { __typename: 'StreamableVideoBlock' }
+          & SitemapBlock_StreamableVideoBlock_Fragment
+        )
+        | (
+          { __typename: 'SubscribeBlock' }
+          & SitemapBlock_SubscribeBlock_Fragment
+        )
+        | (
+          { __typename: 'TeaserGridBlock' }
+          & SitemapBlock_TeaserGridBlock_Fragment
+        )
+        | (
+          { __typename: 'TeaserGridFlexBlock' }
+          & SitemapBlock_TeaserGridFlexBlock_Fragment
+        )
+        | (
+          { __typename: 'TeaserListBlock' }
+          & SitemapBlock_TeaserListBlock_Fragment
+        )
+        | (
+          { __typename: 'TeaserSlotsBlock' }
+          & SitemapBlock_TeaserSlotsBlock_Fragment
+        )
+        | (
+          { __typename: 'TikTokVideoBlock' }
+          & SitemapBlock_TikTokVideoBlock_Fragment
+        )
+        | (
+          { __typename: 'TitleBlock' }
+          & SitemapBlock_TitleBlock_Fragment
+        )
+        | (
+          { __typename: 'TwitterTweetBlock' }
+          & SitemapBlock_TwitterTweetBlock_Fragment
+        )
+        | (
+          { __typename: 'UnknownBlock' }
+          & SitemapBlock_UnknownBlock_Fragment
+        )
+        | (
+          { __typename: 'VimeoVideoBlock' }
+          & SitemapBlock_VimeoVideoBlock_Fragment
+        )
+        | (
+          { __typename: 'YouTubeVideoBlock' }
+          & SitemapBlock_YouTubeVideoBlock_Fragment
+        )
+      > } } };
+
 export type SlimArticleRevisionFragment = { __typename: 'ArticleRevision', id: string, publishedAt: string | null, preTitle: string | null, title: string | null, lead: string | null, breaking: boolean, hideAuthor: boolean, authors: Array<{ __typename: 'ArticleRevisionAuthor', role: string | null, author: (
       { __typename: 'Author' }
       & SlimAuthorFragment
@@ -2764,6 +4055,12 @@ export const FullPeerProfileFragmentDoc = {"kind":"Document","definitions":[{"ki
 export const FullSettingFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FullSetting"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Setting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<FullSettingFragment, unknown>;
 export const WebsiteSettingsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"WebsiteSettings"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"WebsiteSettings"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"analytics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"googleAnalytics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}},{"kind":"Field","name":{"kind":"Name","value":"googleTagManager"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}},{"kind":"Field","name":{"kind":"Name","value":"plausible"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}},{"kind":"Field","name":{"kind":"Name","value":"piwik"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"ads"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sparkLoop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"theme"}},{"kind":"Field","name":{"kind":"Name","value":"fonts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"weight"}},{"kind":"Field","name":{"kind":"Name","value":"style"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<WebsiteSettingsFragment, unknown>;
 export const SensitiveWebsiteSettingsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SensitiveWebsiteSettings"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"WebsiteSettings"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mailchimp"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}}]}}]}}]} as unknown as DocumentNode<SensitiveWebsiteSettingsFragment, unknown>;
+export const SitemapArticleFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapArticle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Article"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"peerId"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tag"}}]}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"seoTitle"}},{"kind":"Field","name":{"kind":"Name","value":"socialMediaTitle"}}]}}]}}]} as unknown as DocumentNode<SitemapArticleFragment, unknown>;
+export const SitemapPageFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapPage"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Page"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]} as unknown as DocumentNode<SitemapPageFragment, unknown>;
+export const SitemapTeaserFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapTeaser"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Teaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArticleTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"article"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PageTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}}]}}]}}]}}]} as unknown as DocumentNode<SitemapTeaserFragment, unknown>;
+export const SitemapTeaserBlockFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapTeaserBlock"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockContent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserGridBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserGridFlexBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flexTeasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teaser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserListBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserSlotsBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapTeaser"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Teaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArticleTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"article"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PageTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}}]}}]}}]}}]} as unknown as DocumentNode<SitemapTeaserBlockFragment, unknown>;
+export const SitemapNestedBlockFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapNestedBlock"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockContent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaserBlock"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FlexBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"block"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaserBlock"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockTemplateBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"template"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}},{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaserBlock"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapTeaser"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Teaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArticleTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"article"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PageTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapTeaserBlock"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockContent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserGridBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserGridFlexBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flexTeasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teaser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserListBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserSlotsBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}}]}}]} as unknown as DocumentNode<SitemapNestedBlockFragment, unknown>;
+export const SitemapBlockFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapBlock"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockContent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaserBlock"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FlexBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"block"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapNestedBlock"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockTemplateBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"template"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}},{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapNestedBlock"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapTeaser"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Teaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArticleTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"article"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PageTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapTeaserBlock"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockContent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserGridBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserGridFlexBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flexTeasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teaser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserListBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserSlotsBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapNestedBlock"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockContent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaserBlock"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FlexBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"block"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaserBlock"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockTemplateBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"template"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}},{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaserBlock"}}]}}]}}]}}]}}]} as unknown as DocumentNode<SitemapBlockFragment, unknown>;
 export const FullTrackingPixelMethodFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FullTrackingPixelMethod"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TrackingPixelMethod"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trackingPixelProviderType"}}]}}]} as unknown as DocumentNode<FullTrackingPixelMethodFragment, unknown>;
 export const FullAddressFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FullAddress"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAddress"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"company"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddress"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddressNumber"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddress2"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddress2Number"}},{"kind":"Field","name":{"kind":"Name","value":"zipCode"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"country"}}]}}]} as unknown as DocumentNode<FullAddressFragment, unknown>;
 export const FullPaymentProviderCustomerFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FullPaymentProviderCustomer"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PaymentProviderCustomer"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paymentProviderID"}},{"kind":"Field","name":{"kind":"Name","value":"customerID"}}]}}]} as unknown as DocumentNode<FullPaymentProviderCustomerFragment, unknown>;
@@ -2818,6 +4115,9 @@ export const SettingListDocument = {"kind":"Document","definitions":[{"kind":"Op
 export const SettingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Setting"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setting"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FullSetting"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FullSetting"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Setting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<SettingQuery, SettingQueryVariables>;
 export const WebsiteSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"WebsiteSettings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"websiteSettings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"WebsiteSettings"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"WebsiteSettings"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"WebsiteSettings"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"analytics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"googleAnalytics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}},{"kind":"Field","name":{"kind":"Name","value":"googleTagManager"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}},{"kind":"Field","name":{"kind":"Name","value":"plausible"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}},{"kind":"Field","name":{"kind":"Name","value":"piwik"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"ads"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sparkLoop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"theme"}},{"kind":"Field","name":{"kind":"Name","value":"fonts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"weight"}},{"kind":"Field","name":{"kind":"Name","value":"style"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>;
 export const SensitiveWebsiteSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SensitiveWebsiteSettings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"websiteSettings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SensitiveWebsiteSettings"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SensitiveWebsiteSettings"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"WebsiteSettings"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mailchimp"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"key"}}]}}]}}]}}]} as unknown as DocumentNode<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>;
+export const SitemapArticlesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SitemapArticles"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ArticleFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"take"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"SortOrder"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ArticleSort"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"articles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"take"},"value":{"kind":"Variable","name":{"kind":"Name","value":"take"}}},{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"order"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapArticle"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapArticle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Article"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"peerId"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tag"}}]}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"seoTitle"}},{"kind":"Field","name":{"kind":"Name","value":"socialMediaTitle"}}]}}]}}]} as unknown as DocumentNode<SitemapArticlesQuery, SitemapArticlesQueryVariables>;
+export const SitemapPagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SitemapPages"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PageFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"take"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"SortOrder"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PageSort"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"take"},"value":{"kind":"Variable","name":{"kind":"Name","value":"take"}}},{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"order"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapPage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapPage"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Page"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]} as unknown as DocumentNode<SitemapPagesQuery, SitemapPagesQueryVariables>;
+export const SitemapHomepageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SitemapHomepage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"slug"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapBlock"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapTeaser"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Teaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArticleTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"article"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PageTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventTeaser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapTeaserBlock"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockContent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserGridBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserGridFlexBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"flexTeasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teaser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserListBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TeaserSlotsBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"teasers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaser"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapNestedBlock"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockContent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaserBlock"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FlexBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"block"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaserBlock"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockTemplateBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"template"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}},{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaserBlock"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SitemapBlock"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockContent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapTeaserBlock"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FlexBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"block"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapNestedBlock"}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"BlockTemplateBlock"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"template"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"modifiedAt"}},{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SitemapNestedBlock"}}]}}]}}]}}]}}]} as unknown as DocumentNode<SitemapHomepageQuery, SitemapHomepageQueryVariables>;
 export const StatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Stats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"stats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"articlesCount"}},{"kind":"Field","name":{"kind":"Name","value":"authorsCount"}},{"kind":"Field","name":{"kind":"Name","value":"firstArticleDate"}}]}}]}}]} as unknown as DocumentNode<StatsQuery, StatsQueryVariables>;
 export const TagDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Tag"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tag"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TagType"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tag"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"tag"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tag"}}},{"kind":"Argument","name":{"kind":"Name","value":"type"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FullTag"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FullTag"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Tag"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tag"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"main"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]} as unknown as DocumentNode<TagQuery, TagQueryVariables>;
 export const TagListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"TagList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"TagFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"cursorId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"take"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"SortOrder"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"TagSort"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"cursorId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cursorId"}}},{"kind":"Argument","name":{"kind":"Name","value":"take"},"value":{"kind":"Variable","name":{"kind":"Name","value":"take"}}},{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"order"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FullTag"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startCursor"}},{"kind":"Field","name":{"kind":"Name","value":"endCursor"}},{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"hasPreviousPage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FullTag"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Tag"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tag"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"main"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]} as unknown as DocumentNode<TagListQuery, TagListQueryVariables>;
