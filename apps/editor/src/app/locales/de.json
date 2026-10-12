@@ -3539,12 +3539,12 @@
       "emailSegments": {
         "label": "E-Mail-Status",
         "placeholder": "Platzhalter-Adresse",
-        "dead": "Tot (Bounce, ungültig, Beschwerde, abgemeldet)",
+        "dead": "Nicht erreichbar (Bounce, ungültig, Beschwerde, abgemeldet)",
         "unresponsive": "Reagiert nicht",
         "unknown": "Unbekannt",
         "active": "Aktiv",
         "pick": "Alle Status",
-        "hint": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»). Per Brief erreichbar: Platzhalter + Tot.",
+        "hint": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»). Per Brief erreichen: Platzhalter + Nicht erreichbar.",
         "overview": "Personen dieser Zielgruppe nach E-Mail-Status (unabhängig von der Auswahl)",
         "refresh": "Status aktualisieren",
         "refreshing": "Status werden aktualisiert …",
@@ -3811,10 +3811,10 @@
       },
       "outcome": {
         "title": "Ergebnis",
-        "hint": "Zustellstatus und Klicks meldet der Mail-Provider – Bounces oft erst nach Stunden oder Tagen. «Tot» zählt die Empfänger:innen, deren Adresse inzwischen als tot gilt. «Status aktualisieren» holt nach, was der Provider noch nicht gemeldet hat.",
+        "hint": "Zustellstatus und Klicks meldet der Mail-Provider – Bounces oft erst nach Stunden oder Tagen. «Nicht erreichbar» zählt die Empfänger:innen, deren Adresse inzwischen als nicht erreichbar gilt. «Status aktualisieren» holt nach, was der Provider noch nicht gemeldet hat.",
         "delivered": "Zugestellt",
         "bounced": "Bounces / abgelehnt",
-        "dead": "Adresse tot",
+        "dead": "Nicht erreichbar",
         "clicked": "Geklickt"
       },
       "recipientState": {
