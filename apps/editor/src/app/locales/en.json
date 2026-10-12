@@ -178,6 +178,7 @@
         "properties": "Properties",
         "propertiesInfo": "Properties can be set per article. Public properties are accessible through the public API.",
         "public": "Public",
+        "private": "Private",
         "publishArticle": "Publish Article",
         "publishAt": "Available online from",
         "publishAtDateCheckbox": "Set a different date for online availability",
@@ -1163,6 +1164,7 @@
       "unpaid": "unpaid",
       "userNotLoaded": "Unexpected error: Your user data could not be loaded.",
       "table": {
+        "action": "Action",
         "date": "Date",
         "description": "Description",
         "goodie": "Goodie",
@@ -2465,6 +2467,24 @@
       "paidUntilInfo": "Set automatically as soon as an invoice is paid. The subscription is paid up to this date."
     },
     "userSubscriptionList": {
+      "periodRange": "Period",
+      "table": {
+        "active": "Active",
+        "confirmed": "Confirmed",
+        "created": "Created",
+        "deactivated": "Deactivated",
+        "expired": "Expired",
+        "expires": "Expires",
+        "paidUntil": "Paid until",
+        "perMonthSuffix": "/mo.",
+        "periodicity": "Payment interval",
+        "planned": "Planned",
+        "renewal": "Renewal",
+        "renewsAutomatically": "Automatic",
+        "start": "Start",
+        "subscription": "Subscription",
+        "unpaid": "Unpaid"
+      },
       "addSubscription": "Add subscription",
       "subscriptionNumber": "No. {{subscriptionId}}",
       "periodTitle": "Period {{date}}",
@@ -3935,7 +3955,6 @@
       "message": "Changes you made may not be saved."
     },
     "action": "Actions",
-    "deactivated": "Deactivated",
     "blockList": {
       "addBlock": "Add block",
       "hideBlock": "Hide block on the website",

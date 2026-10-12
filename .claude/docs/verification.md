@@ -94,4 +94,6 @@ patch: a test you weakened to make it green is a regression you shipped.
 
 Do **not** run Prettier manually. A Husky `pre-commit` hook runs
 `pretty-quick --staged` over `{apps,libs}/**/*.{js,ts,tsx,json}`. Formatting-only
-diffs from a manual run create noise in the review.
+diffs from a manual run create noise in the review. It skips what
+`.prettierignore` lists, which must include all generated code (see
+[graphql-prisma.md](graphql-prisma.md)).
