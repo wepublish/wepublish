@@ -22,6 +22,7 @@ import {
   BaseLetterProvider,
   LetterProviderProps,
 } from './base-letter-provider';
+import { countryName } from '../letter-recipient';
 import {
   DispatchLetterProps,
   LetterAddress,
@@ -137,6 +138,8 @@ export function mapPingenStatusToLetterState(
   return LETTER_STATES[status.toLowerCase()] ?? null;
 }
 
+// Pingen wants the country spelled out, in the api as on the sheet; it does
+// not accept the iso code the address carries internally.
 function toAddressPayload(address: LetterAddress) {
   return {
     name: address.name,
@@ -145,7 +148,7 @@ function toAddressPayload(address: LetterAddress) {
     number: address.number ?? '',
     zip: address.zip,
     city: address.city,
-    country: address.country,
+    country: countryName(address.country),
   };
 }
 
