@@ -1231,7 +1231,7 @@
       "goToLogin": "Zum Login"
     },
     "mailTemplates": {
-      "availableTemplates": "Verfügbare E-Mail-Vorlagen",
+      "availableTemplates": "Sendungsvorlagen",
       "cancel": "Abbrechen",
       "content": "Inhalt",
       "create": "Vorlage erstellen",
@@ -1251,6 +1251,8 @@
         "testRecipientPlaceholder": "Deine Konto-E-Mail",
         "preview": "Vorschau",
         "sendTest": "Test senden",
+        "previewLetter": "Als Brief anzeigen",
+        "letterPreviewTitle": "Briefvorschau",
         "selectMailType": "Bitte zuerst einen Verwendungszweck wählen.",
         "selectMailTypePlaceholder": "Verwendungszweck wählen …",
         "testRecipientHint": "Test-E-Mails werden immer an dein eigenes Konto gesendet.",
@@ -1439,7 +1441,7 @@
         "subscription": "Rund um das Abo selbst: neu abgeschlossen, bestätigt oder deaktiviert. Zusätzlich verfügbar: Abo-Stammdaten wie Betrag und Laufzeit.",
         "renewal": "Automatische Verlängerung – erfolgreich oder fehlgeschlagen. Zusätzlich verfügbar: Plan- und Zahlungsmethoden-Name sowie die Rechnungsdaten.",
         "invoiceCreation": "Sobald eine neue Rechnung erstellt wurde. Zusätzlich verfügbar: die Rechnung und das zugehörige Abo.",
-        "custom": "Frei verschickbare E-Mail an Abonnent:innen, z.B. ein Newsletter über «E-Mail senden». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
+        "custom": "Frei verschickbare E-Mail an Abonnent:innen, z.B. ein Newsletter über «Manuelle Sendungen». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
         "customNoSubscription": "Frei verschickbare E-Mail an Personen ohne Abo, z.B. eine Einladung oder Reaktivierung. Verfügbar sind nur die Empfänger-Felder – Abo-Platzhalter bleiben leer."
       },
       "placeholderDescriptions": {
@@ -1488,7 +1490,7 @@
         "optional_invoices_0_id": "ID der neuesten Rechnung (Array, Index 0).",
         "optional_invoices_0_description": "Beschreibung der neuesten Rechnung."
       },
-      "statusHelp": "Ein Häkchen bedeutet: Eine automatische E-Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische E-Mail nutzt sie – über «E-Mail senden» kannst du sie trotzdem von Hand verschicken.",
+      "statusHelp": "Ein Häkchen bedeutet: Eine automatische E-Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische E-Mail nutzt sie – über «Manuelle Sendungen» kannst du sie trotzdem von Hand verschicken.",
       "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die Daten der jeweiligen Person ersetzt, z. B. durch ihren Vornamen. So wird jede E-Mail persönlich."
     },
     "mailTemplateSelect": {
@@ -1587,7 +1589,7 @@
         "system": "Wie System"
       },
       "logout": "Logout",
-      "mailTemplates": "E-Mail-Vorlagen",
+      "mailTemplates": "Sendungsvorlagen",
       "memberPlans": "Abo-Pläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
@@ -1609,8 +1611,8 @@
       "audienceDashboard": "Dashboard",
       "integrations": "Integrationen",
       "apps": "Apps",
-      "mailSend": "E-Mail senden",
-      "mailLog": "Gesendete E-Mails",
+      "mailSend": "Manuelle Sendungen",
+      "mailLog": "Abgeschlossene Sendungen",
       "communication": "Kommunikation",
       "auditLog": "Audit-Log"
     },
@@ -2828,6 +2830,8 @@
       "paymentProvider": "Zahlungsanbieter",
       "trackingPixel": "Tracking-Pixel",
       "mailProvider": "E-Mail-Provider",
+      "letterProvider": "Brief-Provider",
+      "pdfRenderer": "PDF-Renderer",
       "back": "Zurück zu Integrationen",
       "unknown": "Unbekannte Integration",
       "notFound": "Integration nicht gefunden",
@@ -2897,6 +2901,25 @@
         "bexioMarkInvoiceAsOpenInfo": "Wenn aktiv, setzt Bexio die Rechnung nach dem Versand auf «offen», statt sie als Entwurf zu belassen."
       },
       "placeholderSecret": "Unverändert (versteckt)",
+      "pdfRendererSettings": {
+        "type": "Typ",
+        "cloudflareAccountId": "Cloudflare Account-ID",
+        "cloudflareApiToken": "Cloudflare API-Token",
+        "gotenbergUrl": "Gotenberg-URL",
+        "gotenbergUsername": "Gotenberg-Benutzername",
+        "gotenbergPassword": "Gotenberg-Passwort",
+        "timeoutMs": "Timeout (ms)"
+      },
+      "letterSettings": {
+        "type": "Typ",
+        "environment": "Umgebung",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "organisationId": "Organisations-ID",
+        "webhookSigningKey": "Webhook Signing Key",
+        "autoSend": "Briefe automatisch versenden",
+        "placeholderEmailContains": "Platzhalter-E-Mail enthält"
+      },
       "mailSettings": {
         "type": "Typ",
         "fromAddress": "Absenderadresse",
@@ -3420,8 +3443,8 @@
           "description": "Empfängergruppe und Filter"
         },
         "content": {
-          "title": "E-Mail-Inhalt",
-          "description": "Vorlage und Vorschau"
+          "title": "Inhalt & Versandart",
+          "description": "Vorlage, E-Mail oder Brief"
         },
         "send": {
           "title": "E-Mail senden",
@@ -3434,8 +3457,8 @@
       "summary": {
         "title": "Zusammenfassung"
       },
-      "title": "E-Mail senden",
-      "template": "E-Mail-Vorlage",
+      "title": "Manuelle Sendungen",
+      "template": "Sendungsvorlage",
       "selectTemplate": "Vorlage auswählen",
       "audience": {
         "title": "Empfänger"
@@ -3467,7 +3490,6 @@
       "yes": "Ja",
       "no": "Nein",
       "counting": "Empfänger werden gezählt …",
-      "recipientsCount": "{{count}} Empfänger",
       "send": "Senden",
       "templateNeedsSubscription": "Diese Vorlage benötigt eine Abo-basierte Empfängergruppe, damit die Abo-Platzhalter gefüllt werden können.",
       "confirmTitle": "E-Mail senden",
@@ -3500,10 +3522,20 @@
         "loading": "Empfänger werden geladen …",
         "email": "E-Mail",
         "name": "Name",
-        "memberPlan": "Abo-Plan"
+        "memberPlan": "Abo-Plan",
+        "address": "Adresse",
+        "withAddress": "Adresse vorhanden",
+        "withoutAddress": "Keine gültige Adresse – wird nicht verschickt"
       },
       "endedWithinDays": "Deaktiviert innerhalb der letzten … Tage",
       "endedWithinDaysHint": "Nur Abos, die in diesem Zeitraum deaktiviert wurden.",
+      "emailFilter": {
+        "label": "E-Mail-Adresse",
+        "all": "Alle",
+        "placeholder": "Nur Platzhalter",
+        "real": "Nur echt",
+        "hint": "Platzhalter-Adressen werden in der Brief-Integration festgelegt."
+      },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
         "relative": "Letzte … Tage",
@@ -3518,7 +3550,8 @@
         "firstRecipient": "Erste:r Empfänger:in",
         "hint": "So sieht die E-Mail für diese Person aus – mit ihren echten Daten.",
         "loading": "Vorschau wird geladen …",
-        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen."
+        "noRecipients": "Keine Empfänger:innen – bitte zuerst die Empfängergruppe anpassen.",
+        "letterTitle": "Briefvorschau"
       },
       "recipientsCountPerPerson": "{{count}} E-Mails an {{people}} Personen",
       "endsAtHint": "Kündigungsdatum, sonst das Datum, bis zu dem bezahlt ist.",
@@ -3532,11 +3565,44 @@
       "endsAt": "Abo-Ende",
       "from": "ab",
       "to": "bis",
+      "lettersCount": "{{count}} Briefe an {{people}} Personen",
+      "confirmTextLetter": "Diesen Brief an {{count}} Empfänger:innen senden?",
+      "channel": {
+        "label": "Versand",
+        "mail": "E-Mail",
+        "letter": "Brief",
+        "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Adressfenster",
+          "left": "Links",
+          "right": "Rechts"
+        },
+        "deliveryProduct": {
+          "label": "Zustellung",
+          "cheap": "Günstig (B-Post)",
+          "fast": "Schnell (A-Post)",
+          "premium": "Premium",
+          "registered": "Eingeschrieben",
+          "bulk": "Massensendung"
+        },
+        "printMode": {
+          "label": "Druck",
+          "simplex": "Einseitig",
+          "duplex": "Beidseitig"
+        },
+        "printSpectrum": {
+          "label": "Farbe",
+          "grayscale": "Graustufen",
+          "color": "Farbig"
+        }
+      },
       "stateHelp": "Aktiv: bestätigt, nicht deaktiviert und bezahlt. Ausstehend: abgeschlossen, aber noch nicht bestätigt – z. B. weil die erste Zahlung noch fehlt. Deaktiviert: Das Abo wurde beendet oder die Beendigung ist bereits eingetragen.",
       "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst."
     },
     "mailLog": {
-      "title": "Gesendete E-Mails",
+      "title": "Abgeschlossene Sendungen",
       "empty": "Keine E-Mails gefunden.",
       "sentDate": "Datum",
       "template": "Vorlage",
@@ -3554,7 +3620,8 @@
         "title": "Filter",
         "reset": "Filter zurücksetzen",
         "typeHint": "Wodurch der Versand angestossen wurde.",
-        "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «E-Mail senden» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."
+        "channel": "Versand",
+        "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «Manuelle Sendungen» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."
       },
       "types": {
         "subscriptionFlow": "Abo-E-Mail",
@@ -3564,7 +3631,7 @@
       },
       "error": "Fehler",
       "typeDescriptions": {
-        "manual": "Von Hand über «E-Mail senden» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
+        "manual": "Von Hand über «Manuelle Sendungen» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
         "subscriptionFlow": "Zeitgesteuert aus «Automatische E-Mails», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
         "userFlow": "Sofort ausgelöst durch eine konkrete Aktion oder ein Ereignis. Beispiele: Login-Link angefordert, E-Mail-Adresse geändert, Zahlung für die Verlängerung fehlgeschlagen.",
         "systemMail": "Konto-E-Mails, konfiguriert unter «Automatische E-Mails» im Abschnitt «Konto & Login». Beispiele: Willkommens-E-Mail nach Registrierung, Passwort zurücksetzen."
@@ -3606,8 +3673,8 @@
           "fix": "Richte unter Einstellungen › Integrationen › E-Mail-Provider einen Anbieter ein (SMTP, Mailgun, Mailchimp oder Slack)."
         },
         "templateMissing": {
-          "cause": "Die verwendete E-Mail-Vorlage existiert nicht mehr.",
-          "fix": "Wähle unter «E-Mail-Vorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
+          "cause": "Die verwendete Sendungsvorlage existiert nicht mehr.",
+          "fix": "Wähle unter «Sendungsvorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
         },
         "generic": {
           "cause": "Der E-Mail-Server hat den Versand mit der unten stehenden Meldung abgelehnt.",
@@ -3657,12 +3724,32 @@
           "name": "rejected – Abgewiesen",
           "meaning": "Die E-Mail wurde nie verschickt. Entweder konnte We.Publish sie nicht übergeben (fehlende oder falsche Anbieter-Konfiguration), oder der Anbieter hat sie von vornherein verweigert: nicht verifizierte Absenderdomain («unsigned»), Adresse auf der Sperrliste des Anbieters nach früherem Hard Bounce oder Spam-Beschwerde, abgemeldeter Empfänger, oder das Sendelimit des Kontos ist erreicht.",
           "next": "Die Spalte «Fehler» nennt den Grund – fahre mit der Maus darüber für Ursache und Behebung. Ursache beheben und erneut senden: automatisch wiederholt wird nichts."
+        },
+        "dispatched": {
+          "name": "Aufgegeben",
+          "meaning": "Der Druckdienstleister hat den Brief gedruckt und der Post übergeben.",
+          "next": "Nichts zu tun. Der Status wechselt auf zugestellt, sobald die Post die Zustellung meldet."
+        },
+        "undeliverable": {
+          "name": "Unzustellbar",
+          "meaning": "Die Post konnte den Brief nicht zustellen und hat ihn retourniert.",
+          "next": "Adresse der Empfängerin oder des Empfängers prüfen und den Brief erneut senden."
+        },
+        "canceled": {
+          "name": "Storniert",
+          "meaning": "Der Brief wurde zurückgezogen, bevor er gedruckt wurde.",
+          "next": "Nichts zu tun. Es wurde nichts gedruckt und nichts verrechnet."
         }
+      },
+      "channel": "Versand",
+      "channels": {
+        "mail": "E-Mail",
+        "letter": "Brief"
       }
     },
     "userMail": {
       "sendTitle": "E-Mail senden",
-      "logTitle": "Gesendete E-Mails",
+      "logTitle": "Abgeschlossene Sendungen",
       "customOnlyHint": "An einen einzelnen Benutzer können nur benutzerdefinierte Vorlagen gesendet werden.",
       "selectTemplate": "Vorlage auswählen",
       "send": "Senden",

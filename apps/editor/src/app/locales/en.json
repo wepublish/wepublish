@@ -1232,7 +1232,7 @@
     },
     "name": "Name",
     "mailTemplates": {
-      "availableTemplates": "Available templates",
+      "availableTemplates": "Mailing templates",
       "cancel": "Cancel",
       "content": "Content",
       "create": "Create template",
@@ -1252,6 +1252,8 @@
         "testRecipientPlaceholder": "Your account email",
         "preview": "Preview",
         "sendTest": "Send test",
+        "previewLetter": "Preview as letter",
+        "letterPreviewTitle": "Letter preview",
         "selectMailType": "Please choose a purpose first.",
         "selectMailTypePlaceholder": "Choose a purpose …",
         "testRecipientHint": "Test mails are always sent to your own account.",
@@ -1440,7 +1442,7 @@
         "subscription": "Covers the subscription itself: newly started, confirmed or deactivated. Additionally available: subscription data such as amount and term.",
         "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
         "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
-        "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Send email”. Additionally available: the subscription and the latest invoices.",
+        "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Manual mailings”. Additionally available: the subscription and the latest invoices.",
         "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty."
       },
       "placeholderDescriptions": {
@@ -1489,7 +1491,7 @@
         "optional_invoices_0_id": "ID of the latest invoice (array, index 0).",
         "optional_invoices_0_description": "Description of the latest invoice."
       },
-      "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Send email».",
+      "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual mailings».",
       "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal."
     },
     "mailTemplateSelect": {
@@ -1588,7 +1590,7 @@
         "system": "Match system"
       },
       "logout": "Logout",
-      "mailTemplates": "Email Templates",
+      "mailTemplates": "Mailing templates",
       "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
       "pages": "Pages",
@@ -1610,8 +1612,8 @@
       "audienceDashboard": "Dashboard",
       "integrations": "Integrations",
       "apps": "Apps",
-      "mailSend": "Send email",
-      "mailLog": "Sent emails",
+      "mailSend": "Manual mailings",
+      "mailLog": "Completed mailings",
       "communication": "Communication",
       "auditLog": "Audit log"
     },
@@ -2888,6 +2890,8 @@
       "trackingPixel": "Tracking Pixel",
       "analytics": "Hot & Trending Provider",
       "mailProvider": "Mail Provider",
+      "letterProvider": "Letter Provider",
+      "pdfRenderer": "PDF Renderer",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
       "notFound": "Integration not found",
@@ -2957,6 +2961,25 @@
         "bexioMarkInvoiceAsOpenInfo": "When enabled, Bexio sets the invoice to «open» after sending it, instead of leaving it as a draft."
       },
       "placeholderSecret": "Unchanged (Hidden)",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "Cloudflare Account ID",
+        "cloudflareApiToken": "Cloudflare API Token",
+        "gotenbergUrl": "Gotenberg URL",
+        "gotenbergUsername": "Gotenberg Username",
+        "gotenbergPassword": "Gotenberg Password",
+        "timeoutMs": "Timeout (ms)"
+      },
+      "letterSettings": {
+        "type": "Type",
+        "environment": "Environment",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "organisationId": "Organisation ID",
+        "webhookSigningKey": "Webhook Signing Key",
+        "autoSend": "Send letters automatically",
+        "placeholderEmailContains": "Placeholder email contains"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "From Address",
@@ -3438,8 +3461,8 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Mail content",
-          "description": "Template and preview"
+          "title": "Content & delivery",
+          "description": "Template, email or letter"
         },
         "send": {
           "title": "Send email",
@@ -3452,8 +3475,8 @@
       "summary": {
         "title": "Summary"
       },
-      "title": "Send email",
-      "template": "Mail template",
+      "title": "Manual mailings",
+      "template": "Mailing template",
       "selectTemplate": "Select template",
       "audience": {
         "title": "Audience"
@@ -3485,7 +3508,6 @@
       "yes": "Yes",
       "no": "No",
       "counting": "Counting recipients …",
-      "recipientsCount": "{{count}} recipients",
       "send": "Send",
       "templateNeedsSubscription": "This template needs a subscription-based audience so its subscription placeholders can be filled.",
       "confirmTitle": "Send email",
@@ -3518,10 +3540,20 @@
         "loading": "Loading recipients …",
         "email": "Email",
         "name": "Name",
-        "memberPlan": "Subscription plan"
+        "memberPlan": "Subscription plan",
+        "address": "Address",
+        "withAddress": "Address present",
+        "withoutAddress": "No valid address – will be skipped"
       },
       "endedWithinDays": "Deactivated within the last … days",
       "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
+      "emailFilter": {
+        "label": "Email address",
+        "all": "All",
+        "placeholder": "Placeholders only",
+        "real": "Real only",
+        "hint": "Placeholder addresses are defined in the letter integration."
+      },
       "endedWindow": {
         "label": "When the subscription was deactivated",
         "relative": "Last … days",
@@ -3536,7 +3568,8 @@
         "firstRecipient": "First recipient",
         "hint": "How the mail looks for this person — with their real data.",
         "loading": "Loading preview …",
-        "noRecipients": "No recipients — adjust the audience first."
+        "noRecipients": "No recipients — adjust the audience first.",
+        "letterTitle": "Letter preview"
       },
       "recipientsCountPerPerson": "{{count}} mails to {{people}} people",
       "endsAtHint": "Cancellation date, otherwise the paid-until date.",
@@ -3550,11 +3583,44 @@
       "endsAt": "Subscription end",
       "from": "From",
       "to": "Until",
+      "lettersCount": "{{count}} letters to {{people}} people",
+      "confirmTextLetter": "Send this letter to {{count}} recipients?",
+      "channel": {
+        "label": "Delivery",
+        "mail": "Email",
+        "letter": "Letter",
+        "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Address window",
+          "left": "Left",
+          "right": "Right"
+        },
+        "deliveryProduct": {
+          "label": "Delivery",
+          "cheap": "Cheap (B-Post)",
+          "fast": "Fast (A-Post)",
+          "premium": "Premium",
+          "registered": "Registered",
+          "bulk": "Bulk"
+        },
+        "printMode": {
+          "label": "Print",
+          "simplex": "Single sided",
+          "duplex": "Double sided"
+        },
+        "printSpectrum": {
+          "label": "Colour",
+          "grayscale": "Grayscale",
+          "color": "Colour"
+        }
+      },
       "stateHelp": "Active: confirmed, not deactivated and paid. Pending: taken out but not confirmed yet, e.g. because the first payment is still missing. Deactivated: the subscription has ended or its end is already scheduled.",
       "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves."
     },
     "mailLog": {
-      "title": "Sent emails",
+      "title": "Completed mailings",
       "empty": "No emails found.",
       "sentDate": "Date",
       "template": "Template",
@@ -3572,7 +3638,8 @@
         "title": "Filter",
         "reset": "Reset filters",
         "typeHint": "What triggered this send.",
-        "jobHelp": "A send job groups all emails sent with one click via «Send email». Pick one to see only its emails."
+        "channel": "Delivery",
+        "jobHelp": "A send job groups all emails sent with one click via «Manual mailings». Pick one to see only its emails."
       },
       "types": {
         "subscriptionFlow": "Subscription mailing",
@@ -3582,7 +3649,7 @@
       },
       "error": "Error",
       "typeDescriptions": {
-        "manual": "Sent by hand via “Send email” or “Send test”. Example: a newsletter to all subscribers.",
+        "manual": "Sent by hand via “Manual mailings” or “Send test”. Example: a newsletter to all subscribers.",
         "subscriptionFlow": "Time-based, from “Automatic emails”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
         "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
         "systemMail": "Account mails, configured under “Automatic emails” in the “Account & login” section. Examples: welcome mail after registration, password reset."
@@ -3624,8 +3691,8 @@
           "fix": "Set up a provider under Settings › Integrations › Mail (SMTP, Mailgun, Mailchimp or Slack)."
         },
         "templateMissing": {
-          "cause": "The mail template used here no longer exists.",
-          "fix": "Pick an existing template under “Mail templates” or create it again, then start the send once more."
+          "cause": "The mailing template used here no longer exists.",
+          "fix": "Pick an existing template under “Mailing templates” or create it again, then start the send once more."
         },
         "generic": {
           "cause": "The mail server rejected the send with the message below.",
@@ -3675,12 +3742,32 @@
           "name": "rejected",
           "meaning": "The mail was never sent. Either We.Publish could not hand it over (missing or wrong provider configuration), or the provider refused it up front: unverified sending domain (“unsigned”), address on the provider's suppression list after an earlier hard bounce or spam complaint, unsubscribed recipient, or the account's sending limit was reached.",
           "next": "The “Error” column names the reason — hover it for cause and remedy. Fix the cause and send again: nothing is retried automatically."
+        },
+        "dispatched": {
+          "name": "Dispatched",
+          "meaning": "The print vendor has printed the letter and handed it to the post.",
+          "next": "Nothing to do. The state changes to delivered once the post reports the delivery."
+        },
+        "undeliverable": {
+          "name": "Undeliverable",
+          "meaning": "The post could not deliver the letter and returned it.",
+          "next": "Check the address on the recipient and send the letter again."
+        },
+        "canceled": {
+          "name": "Canceled",
+          "meaning": "The letter was withdrawn before it was printed.",
+          "next": "Nothing to do. Nothing was printed and nothing was charged."
         }
+      },
+      "channel": "Delivery",
+      "channels": {
+        "mail": "Email",
+        "letter": "Letter"
       }
     },
     "userMail": {
       "sendTitle": "Send email",
-      "logTitle": "Sent emails",
+      "logTitle": "Completed mailings",
       "customOnlyHint": "Only custom templates can be sent to a single user.",
       "selectTemplate": "Select template",
       "send": "Send",
