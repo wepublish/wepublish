@@ -1,4 +1,4 @@
-import { MockedProvider as MockedProviderBase } from '@apollo/client/testing';
+import { MockedProvider as MockedProviderBase } from '@apollo/client/testing/react';
 import '@testing-library/jest-dom/vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import {
@@ -105,7 +105,26 @@ describe('SettingList', () => {
       </AuthContext.Provider>
     );
 
-    await actWait();
+    // Apollo Client 4 delivers the first result a tick later than v3, so wait
+    // for rendered content instead of a fixed tick — otherwise the snapshot
+    // captures an empty fragment.
+    await waitFor(() =>
+      expect(
+        screen.getByText('settingList.guestCommenting')
+      ).toBeInTheDocument()
+    );
+
+    // Rendering the list is not the last state change: one effect copies the
+    // loaded settings into the reducer, a second then diffs them and empties
+    // `changedSetting`, which disables save and reset. Snapshot before those
+    // flush and the buttons are still enabled — that is the frame a fast
+    // machine caught, and why this snapshot disagreed with CI.
+    await waitFor(() => {
+      const save = baseElement.querySelector('button[type="submit"]');
+
+      expect(save).toBeTruthy();
+      expect(save).toBeDisabled();
+    });
 
     expect(baseElement).toBeTruthy();
     expect(asFragment()).toMatchSnapshot();

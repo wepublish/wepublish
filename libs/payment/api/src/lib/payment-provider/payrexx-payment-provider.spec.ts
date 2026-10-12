@@ -4,15 +4,15 @@ import { PayrexxPaymentProvider } from './payrexx-payment-provider';
 import { IntentState, InvoiceWithItems } from './payment-provider';
 import express from 'express';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
-import Mock = jest.Mock;
 import { PartialDeep } from 'type-fest';
 import { Currency, Prisma, PrismaClient } from '@prisma/client';
 import { PayrexxFactoryProps } from '../payrexx/payrexx-factory';
 
 function mockInstance<Type = unknown>(implementation?: PartialDeep<Type>) {
-  return new (jest
-    .fn()
-    .mockImplementation(() => implementation) as Mock<Type>)() as Type;
+  // vi.fn with a `function` implementation so it can be called with `new`
+  return new (vi.fn(function () {
+    return implementation;
+  }) as unknown as new () => Type)();
 }
 
 describe('PayrexxPaymentProvider', () => {
@@ -22,12 +22,12 @@ describe('PayrexxPaymentProvider', () => {
 
   beforeEach(async () => {
     gatewayClient = mockInstance<GatewayClient>({
-      createGateway: jest.fn(),
-      getGateway: jest.fn(),
+      createGateway: vi.fn(),
+      getGateway: vi.fn(),
     });
     transactionClient = mockInstance<TransactionClient>({
-      retrieveTransaction: jest.fn(),
-      chargePreAuthorizedTransaction: jest.fn(),
+      retrieveTransaction: vi.fn(),
+      chargePreAuthorizedTransaction: vi.fn(),
     });
     class PayrexxFactoryMock {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -231,7 +231,7 @@ describe('PayrexxPaymentProvider', () => {
 
   describe('createIntent', () => {
     it('should create gateway for user without customerId', async () => {
-      gatewayClient.createGateway = jest.fn().mockResolvedValue({
+      gatewayClient.createGateway = vi.fn().mockResolvedValue({
         id: 1,
         link: 'https://payrexx/gateway-link',
       } as Partial<Gateway>);
@@ -261,7 +261,7 @@ describe('PayrexxPaymentProvider', () => {
     });
 
     it('should charge transaction for user with customerId', async () => {
-      transactionClient.chargePreAuthorizedTransaction = jest
+      transactionClient.chargePreAuthorizedTransaction = vi
         .fn()
         .mockResolvedValue({
           id: 2,
@@ -294,14 +294,14 @@ describe('PayrexxPaymentProvider', () => {
     });
 
     it('should create gateway for user with customer id and unsuccessful transaction', async () => {
-      transactionClient.chargePreAuthorizedTransaction = jest
+      transactionClient.chargePreAuthorizedTransaction = vi
         .fn()
         .mockResolvedValue({
           id: 3,
           status: 'declined',
         } as Partial<Transaction>);
 
-      gatewayClient.createGateway = jest.fn().mockResolvedValue({
+      gatewayClient.createGateway = vi.fn().mockResolvedValue({
         id: 4,
         link: 'https://payrexx/gateway-link',
       } as Partial<Gateway>);
@@ -338,7 +338,7 @@ describe('PayrexxPaymentProvider', () => {
         status: 'refunded',
         referenceId: 'subscription-1',
       } as Transaction;
-      transactionClient.retrieveTransaction = jest
+      transactionClient.retrieveTransaction = vi
         .fn()
         .mockResolvedValue(transaction);
 
@@ -351,7 +351,7 @@ describe('PayrexxPaymentProvider', () => {
       const transaction = {
         status: 'confirmed',
       } as Transaction;
-      transactionClient.retrieveTransaction = jest
+      transactionClient.retrieveTransaction = vi
         .fn()
         .mockResolvedValue(transaction);
 
@@ -365,7 +365,7 @@ describe('PayrexxPaymentProvider', () => {
         status: 'confirmed',
         referenceId: '135',
       } as Transaction;
-      transactionClient.retrieveTransaction = jest
+      transactionClient.retrieveTransaction = vi
         .fn()
         .mockResolvedValue(transaction);
 
@@ -384,8 +384,8 @@ describe('PayrexxPaymentProvider', () => {
       const gateway = {
         status: 'unknown status' as any,
       } as Gateway;
-      transactionClient.retrieveTransaction = jest.fn().mockResolvedValue(null);
-      gatewayClient.getGateway = jest.fn().mockResolvedValue(gateway);
+      transactionClient.retrieveTransaction = vi.fn().mockResolvedValue(null);
+      gatewayClient.getGateway = vi.fn().mockResolvedValue(gateway);
 
       await expect(
         payrexx.checkIntentStatus({ intentID: '6', paymentID: '123' })
@@ -397,8 +397,8 @@ describe('PayrexxPaymentProvider', () => {
         status: 'waiting',
         invoices: [],
       } as Gateway;
-      transactionClient.retrieveTransaction = jest.fn().mockResolvedValue(null);
-      gatewayClient.getGateway = jest.fn().mockResolvedValue(gateway);
+      transactionClient.retrieveTransaction = vi.fn().mockResolvedValue(null);
+      gatewayClient.getGateway = vi.fn().mockResolvedValue(gateway);
 
       await expect(
         payrexx.checkIntentStatus({ intentID: '6', paymentID: '123' })
@@ -414,8 +414,8 @@ describe('PayrexxPaymentProvider', () => {
         referenceId: '246',
         invoices: [{ transactions: [transaction] }],
       } as Gateway;
-      transactionClient.retrieveTransaction = jest.fn().mockResolvedValue(null);
-      gatewayClient.getGateway = jest.fn().mockResolvedValue(gateway);
+      transactionClient.retrieveTransaction = vi.fn().mockResolvedValue(null);
+      gatewayClient.getGateway = vi.fn().mockResolvedValue(gateway);
 
       const result = await payrexx.checkIntentStatus({
         intentID: '6',
@@ -429,8 +429,8 @@ describe('PayrexxPaymentProvider', () => {
     });
 
     it('should throw if intent is not related to transaction or gateway', async () => {
-      transactionClient.retrieveTransaction = jest.fn().mockResolvedValue(null);
-      gatewayClient.getGateway = jest.fn().mockResolvedValue(null);
+      transactionClient.retrieveTransaction = vi.fn().mockResolvedValue(null);
+      gatewayClient.getGateway = vi.fn().mockResolvedValue(null);
       await expect(
         payrexx.checkIntentStatus({ intentID: '6', paymentID: '123' })
       ).rejects.toThrow('Payrexx Gateway/Transaction not found');

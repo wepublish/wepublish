@@ -1,11 +1,12 @@
-import { FullBlockFragment, usePageQuery } from '@wepublish/website/api';
+import { useQuery } from '@apollo/client/react';
+import { FullBlockFragment, PageDocument } from '@wepublish/website/api';
 
 export type FooterContent = {
   blocks: FullBlockFragment[];
 } | null;
 
 export const useGetFooterContent = (): FooterContent => {
-  const { data: pageData } = usePageQuery({
+  const { data: pageData } = useQuery(PageDocument, {
     fetchPolicy: 'cache-first',
     variables: {
       slug: 'footer',

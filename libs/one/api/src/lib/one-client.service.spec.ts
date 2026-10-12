@@ -1,16 +1,17 @@
 import { JwtService } from '@wepublish/session/api';
 import { OneClientService } from './one-client.service';
+import type { Mock } from 'vitest';
 
 describe('OneClientService', () => {
-  let jwtService: { generateScopedJWT: jest.Mock };
-  let fetchMock: jest.Mock;
+  let jwtService: { generateScopedJWT: Mock };
+  let fetchMock: Mock;
   let service: OneClientService;
 
   beforeEach(() => {
     jwtService = {
-      generateScopedJWT: jest.fn().mockResolvedValue('signed.jwt'),
+      generateScopedJWT: vi.fn().mockResolvedValue('signed.jwt'),
     };
-    fetchMock = jest
+    fetchMock = vi
       .fn()
       .mockResolvedValue({ ok: true, status: 200, statusText: 'OK' });
     global.fetch = fetchMock as unknown as typeof fetch;

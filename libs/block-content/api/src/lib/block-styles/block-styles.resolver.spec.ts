@@ -12,6 +12,7 @@ import {
 } from './block-styles.model';
 import { BlockStylesResolver } from './block-styles.resolver';
 import { BlockStylesService } from './block-styles.service';
+import type { Mock } from 'vitest';
 
 const mockBlockStyle = {
   id: '1234',
@@ -78,22 +79,22 @@ const deleteBlockStyleQuery = `
 describe('BlockStyleService', () => {
   let app: INestApplication;
   let blockstyleServiceMock: {
-    [method in keyof BlockStylesService]?: jest.Mock;
+    [method in keyof BlockStylesService]?: Mock;
   };
   let BlockStylesDataloaderServiceMock: {
-    [method in keyof BlockStylesDataloaderService]?: jest.Mock;
+    [method in keyof BlockStylesDataloaderService]?: Mock;
   };
 
   beforeEach(async () => {
     blockstyleServiceMock = {
-      getBlockStyles: jest.fn(),
-      createBlockStyle: jest.fn(),
-      deleteBlockStyle: jest.fn(),
-      updateBlockStyle: jest.fn(),
+      getBlockStyles: vi.fn(),
+      createBlockStyle: vi.fn(),
+      deleteBlockStyle: vi.fn(),
+      updateBlockStyle: vi.fn(),
     };
 
     BlockStylesDataloaderServiceMock = {
-      load: jest.fn(),
+      load: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -117,7 +118,7 @@ describe('BlockStyleService', () => {
         },
         {
           provide: PrismaClient,
-          useValue: jest.fn(), // not used due to mocks but needs to be provided
+          useValue: vi.fn(), // not used due to mocks but needs to be provided
         },
         {
           provide: APP_GUARD,

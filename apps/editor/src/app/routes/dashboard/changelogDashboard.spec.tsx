@@ -1,18 +1,19 @@
 import type { Mock } from 'vitest';
+import { useQuery } from '@apollo/client/react';
 import { render, screen } from '@testing-library/react';
 import type { ChangelogEntryFragment } from '@wepublish/editor/api';
-import { useChangelogEntriesQuery } from '@wepublish/editor/api';
 
 import {
   ChangelogActionRequired,
   ChangelogDashboard,
 } from './changelogDashboard';
 
-// Partial mock: the UI library imports enums from the same module.
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
-  useChangelogEntriesQuery: vi.fn(),
-  useConfirmChangelogEntryMutation: () => [vi.fn(), { loading: false }],
+// The components call Apollo's hooks with generated documents, so the mock
+// sits at the Apollo boundary.
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: vi.fn(),
+  useMutation: () => [vi.fn(), { loading: false }],
 }));
 
 vi.mock('react-i18next', () => ({
@@ -22,7 +23,7 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const mockedUseChangelogEntriesQuery = useChangelogEntriesQuery as Mock;
+const mockedUseQuery = useQuery as Mock;
 
 const entry = (
   overrides: Partial<ChangelogEntryFragment> = {}
@@ -43,7 +44,7 @@ const mockQuery = (
   nodes: ChangelogEntryFragment[] | undefined,
   loading = false
 ) => {
-  mockedUseChangelogEntriesQuery.mockReturnValue({
+  mockedUseQuery.mockReturnValue({
     data:
       nodes ?
         {
@@ -60,7 +61,7 @@ const mockQuery = (
 };
 
 beforeEach(() => {
-  mockedUseChangelogEntriesQuery.mockReset();
+  mockedUseQuery.mockReset();
 });
 
 describe('ChangelogDashboard', () => {

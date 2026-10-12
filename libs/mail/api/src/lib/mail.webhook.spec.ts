@@ -50,24 +50,24 @@ describe('MailWebhookController', () => {
   ) => {
     const prisma = {
       mailLog: {
-        findUnique: jest.fn(async () => mailLog),
-        update: jest.fn(async () => ({})),
+        findUnique: vi.fn(async () => mailLog),
+        update: vi.fn(async () => ({})),
       },
     };
     const recorder = {
-      recordMailSignals: jest.fn(async () => undefined),
-      recordUserSignal: jest.fn(),
+      recordMailSignals: vi.fn(async () => undefined),
+      recordUserSignal: vi.fn(),
     };
     const provider = {
       id: 'mailchimp',
-      webhookForSendMail: jest.fn(async () => statuses),
+      webhookForSendMail: vi.fn(async () => statuses),
     };
     const controller = new MailWebhookController(
       prisma as any,
       { mailProvider: provider } as any,
       recorder
     );
-    const res = { status: jest.fn(() => ({ send: jest.fn() })) };
+    const res = { status: vi.fn(() => ({ send: vi.fn() })) };
 
     return {
       prisma,

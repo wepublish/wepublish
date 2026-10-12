@@ -13,25 +13,25 @@ const makeService = ({
 } = {}) => {
   const prisma = {
     user: {
-      findMany: jest.fn(async () => [{ id: 'user-1', email }]),
-      findUnique: jest.fn(async () => ({ email, emailQuality: snapshot })),
+      findMany: vi.fn(async () => [{ id: 'user-1', email }]),
+      findUnique: vi.fn(async () => ({ email, emailQuality: snapshot })),
     },
     emailQualityEvent: {
-      createMany: jest.fn(async () => ({ count: 1 })),
-      findMany: jest.fn(async () => events),
+      createMany: vi.fn(async () => ({ count: 1 })),
+      findMany: vi.fn(async () => events),
     },
     userEmailQuality: {
-      upsert: jest.fn(async ({ create }) => create),
+      upsert: vi.fn(async ({ create }) => create),
     },
     mailLog: {
-      findUnique: jest.fn(async () => ({
+      findUnique: vi.fn(async () => ({
         recipientID: 'user-1',
         sentDate: new Date('2026-09-28T10:00:00Z'),
       })),
     },
   };
   const settings = {
-    settingByName: jest.fn(async () => {
+    settingByName: vi.fn(async () => {
       if (!setting) {
         throw new Error('Setting with name emailQuality not found');
       }
@@ -211,8 +211,9 @@ describe('EmailQualityService', () => {
         source: EmailQualityEventSource.webhook,
       });
 
-      const [{ data }] = (prisma.emailQualityEvent.createMany as jest.Mock).mock
-        .calls[0];
+      const [{ data }] = (
+        prisma.emailQualityEvent.createMany as ReturnType<typeof vi.fn>
+      ).mock.calls[0];
 
       expect(data.map(({ type, detail }: any) => ({ type, detail }))).toEqual([
         { type: EmailQualityEventType.opened, detail: 'probableScannerClick' },

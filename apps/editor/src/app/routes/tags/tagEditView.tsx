@@ -1,30 +1,31 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   MutationUpdateTagArgs,
-  useTagQuery,
-  useUpdateTagMutation,
+  TagDocument,
+  UpdateTagDocument,
 } from '@wepublish/editor/api';
 import { CanUpdateTag } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { TagForm } from './tagForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -38,33 +39,46 @@ const TagEditView = () => {
   const params = useParams();
   const { id } = params;
 
-  const { loading: dataLoading } = useTagQuery({
+  const {
+    loading: dataLoading,
+    data,
+    error,
+  } = useQuery(TagDocument, {
     variables: {
       id: id!,
     },
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.tag) {
-        setTag(data.tag);
-      }
-    },
   });
 
-  const [updateTag, { loading: updateLoading }] = useUpdateTagMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.updateTag) {
-        if (shouldClose) {
-          navigate(closePath);
-        } else {
-          setTag(data.updateTag);
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (data?.tag) {
+      setTag(data.tag);
+    }
+  }, [data]);
+
+  const [updateTag, { loading: updateLoading }] = useMutation(
+    UpdateTagDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.updateTag) {
+          if (shouldClose) {
+            navigate(closePath);
+          } else {
+            setTag(data.updateTag);
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   const loading = dataLoading || updateLoading;
-  const onSubmit = () => updateTag({ variables: tag });
+  const onSubmit = () => updateTag({ variables: tag! });
 
   const { StringType, BooleanType } = Schema.Types;
   const validationModel = Schema.Model({

@@ -1,8 +1,8 @@
 import { Blocks, isRichTextBlock } from '@wepublish/block-content/website';
 import {
   BlockType,
-  CustomTeaser,
   FullBlockFragment,
+  FullTeaserFragment,
   FullTeaserGridBlockFragment,
   TeaserType,
 } from '@wepublish/website/api';
@@ -12,10 +12,18 @@ import { useMemo } from 'react';
 
 import { isContentBoxBlock } from './mannschaft-content-box';
 
+type FullCustomTeaserFragment = Extract<
+  FullTeaserFragment,
+  { __typename: 'CustomTeaser' }
+>;
+
 export const createNewAdTeaser = (): FullBlockFragment =>
   ({
     __typename: 'TeaserGridBlock',
     type: BlockType.TeaserGrid,
+    title: null,
+    disabled: false,
+    blockStyle: null,
     numColumns: 1,
     teasers: [
       {
@@ -28,7 +36,7 @@ export const createNewAdTeaser = (): FullBlockFragment =>
         title: null,
         lead: null,
         image: null,
-      } as CustomTeaser,
+      } satisfies FullCustomTeaserFragment,
     ],
   }) satisfies FullTeaserGridBlockFragment;
 

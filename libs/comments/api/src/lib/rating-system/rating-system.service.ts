@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import {
   CreateCommentRatingSystemAnswerInput,
   UpdateCommentRatingSystemInput,
@@ -7,7 +8,10 @@ import {
 
 @Injectable()
 export class RatingSystemService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private publicContentCache: PublicContentCacheInvalidator
+  ) {}
 
   getRatingSystem() {
     return this.prisma.commentRatingSystem.findFirst({
@@ -17,12 +21,12 @@ export class RatingSystemService {
     });
   }
 
-  updateRatingSystem({
+  async updateRatingSystem({
     id,
     answers,
     ...input
   }: UpdateCommentRatingSystemInput) {
-    return this.prisma.commentRatingSystem.update({
+    const ratingSystem = await this.prisma.commentRatingSystem.update({
       where: { id },
       data: {
         ...input,
@@ -37,17 +41,26 @@ export class RatingSystemService {
         answers: true,
       },
     });
+    await this.publicContentCache.invalidateComments();
+
+    return ratingSystem;
   }
 
-  deleteRatingSystemAnswer(id: string) {
-    return this.prisma.commentRatingSystemAnswer.delete({
+  async deleteRatingSystemAnswer(id: string) {
+    const answer = await this.prisma.commentRatingSystemAnswer.delete({
       where: { id },
     });
+    await this.publicContentCache.invalidateComments();
+
+    return answer;
   }
 
-  createRatingSystemAnswer(input: CreateCommentRatingSystemAnswerInput) {
-    return this.prisma.commentRatingSystemAnswer.create({
+  async createRatingSystemAnswer(input: CreateCommentRatingSystemAnswerInput) {
+    const answer = await this.prisma.commentRatingSystemAnswer.create({
       data: input,
     });
+    await this.publicContentCache.invalidateComments();
+
+    return answer;
   }
 }

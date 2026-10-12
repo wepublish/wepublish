@@ -8,6 +8,7 @@ import {
   IconButton,
   Slide,
   Toolbar,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
@@ -74,7 +75,9 @@ export function RevisionContentPreview({
       fullScreen
       open={open}
       onClose={onClose}
-      TransitionComponent={Transition}
+      slots={{
+        transition: Transition,
+      }}
     >
       <AppBar
         sx={{ position: 'sticky' }}
@@ -89,7 +92,9 @@ export function RevisionContentPreview({
             {title && (
               <Typography
                 variant="body2"
-                color="text.secondary"
+                sx={{
+                  color: 'text.secondary',
+                }}
               >
                 {title}
               </Typography>
@@ -103,16 +108,17 @@ export function RevisionContentPreview({
             sx={{ mr: 1 }}
           />
 
-          <IconButton
-            edge="end"
-            onClick={onClose}
-            aria-label={t('versionHistory.close')}
-          >
-            <MdClose />
-          </IconButton>
+          <Tooltip title={t('versionHistory.close')}>
+            <IconButton
+              edge="end"
+              onClick={onClose}
+              aria-label={t('versionHistory.close')}
+            >
+              <MdClose />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </AppBar>
-
       {loading ?
         <Box
           sx={{

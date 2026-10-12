@@ -1,8 +1,8 @@
-import { ApolloError } from '@apollo/client';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import {
   BaseNavigationLink,
-  Navigation,
+  FullNavigationFragment,
+  MeDocument,
   NavigationLinkType,
 } from '@wepublish/website/api';
 import { Navbar } from './navbar';
@@ -14,7 +14,6 @@ import React from 'react';
 import { userEvent, within } from 'storybook/test';
 import { wait } from '@wepublish/testing';
 import { mockUser } from '@wepublish/storybook/mocks';
-import { MeDocument } from '@wepublish/website/api';
 
 const navigations = [
   {
@@ -217,7 +216,7 @@ const navigations = [
       },
     ],
   },
-] as Navigation[];
+] as FullNavigationFragment[];
 
 const logo = mockImage();
 
@@ -390,9 +389,7 @@ export const WithError = {
       navigations: null,
     },
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
   },
 };
 

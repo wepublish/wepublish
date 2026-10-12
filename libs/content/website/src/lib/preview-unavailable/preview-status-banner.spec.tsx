@@ -5,7 +5,7 @@ import {
   setPreviewHandshakeState,
 } from '@wepublish/authentication/website';
 import { CanPreview } from '@wepublish/permissions';
-import { SensitiveDataUser } from '@wepublish/website/api';
+import { FullSensitiveDataUserFragment } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { ComponentProps, ReactNode } from 'react';
 
@@ -24,7 +24,10 @@ const renderBanner = (ui: ReactNode = <PreviewStatusBanner />) =>
     </ThemeProvider>
   );
 
-const withUser = (user: SensitiveDataUser | null, hasUser: boolean) => (
+const withUser = (
+  user: FullSensitiveDataUserFragment | null,
+  hasUser: boolean
+) => (
   <SessionTokenContext.Provider
     value={[user, hasUser, vi.fn().mockResolvedValue(undefined)]}
   >
@@ -33,6 +36,13 @@ const withUser = (user: SensitiveDataUser | null, hasUser: boolean) => (
 );
 
 describe('PreviewStatusBanner', () => {
+  // The handshake window is measured against performance.now(), which keeps
+  // counting across all files sharing a vitest worker - pin it so the pending
+  // state stays reachable no matter how long the suite has been running.
+  beforeEach(() => {
+    vi.spyOn(performance, 'now').mockReturnValue(0);
+  });
+
   afterEach(() => {
     window.history.replaceState(null, '', '/');
     Object.defineProperty(window, 'opener', {
@@ -40,8 +50,15 @@ describe('PreviewStatusBanner', () => {
       configurable: true,
       writable: true,
     });
+    Object.defineProperty(window, 'parent', {
+      value: window,
+      configurable: true,
+      writable: true,
+    });
     document.cookie = 'auth.token=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    sessionStorage.clear();
     setPreviewHandshakeState('unknown');
+    vi.restoreAllMocks();
   });
 
   it('renders nothing without ?preview in the url', () => {
@@ -54,7 +71,7 @@ describe('PreviewStatusBanner', () => {
     window.history.replaceState(null, '', '/a/foobar?preview');
     const user = {
       permissions: [CanPreview.id],
-    } as unknown as SensitiveDataUser;
+    } as unknown as FullSensitiveDataUserFragment;
 
     const { container } = renderBanner(withUser(user, true));
 
@@ -92,10 +109,39 @@ describe('PreviewStatusBanner', () => {
     expect(screen.queryByText('Vorschau wird geladen …')).toBeNull();
   });
 
+  it('shows the loading state while a framed preview restores its session from sessionStorage', () => {
+    window.history.replaceState(null, '', '/a/foobar?preview');
+    Object.defineProperty(window, 'parent', {
+      value: {},
+      configurable: true,
+      writable: true,
+    });
+    sessionStorage.setItem('auth.token', '{"token":"framed-token"}');
+    setPreviewHandshakeState('failed');
+
+    renderBanner(withUser(null, false));
+
+    expect(screen.getByText('Vorschau wird geladen …')).toBeDefined();
+  });
+
+  it('ignores a sessionStorage session outside of a frame', () => {
+    window.history.replaceState(null, '', '/a/foobar?preview');
+    sessionStorage.setItem('auth.token', '{"token":"stale-token"}');
+
+    renderBanner(withUser(null, false));
+
+    expect(
+      screen.getByText(/Du siehst die veröffentlichte Version/)
+    ).toBeDefined();
+    expect(screen.queryByText('Vorschau wird geladen …')).toBeNull();
+  });
+
   it('shows the published-version hint when the user lacks the preview permission', () => {
     window.history.replaceState(null, '', '/a/foobar?preview');
     document.cookie = 'auth.token=some-token';
-    const user = { permissions: [] } as unknown as SensitiveDataUser;
+    const user = {
+      permissions: [],
+    } as unknown as FullSensitiveDataUserFragment;
 
     renderBanner(withUser(user, true));
 

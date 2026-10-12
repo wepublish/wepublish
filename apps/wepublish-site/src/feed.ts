@@ -1,7 +1,6 @@
 import { generateFeed } from '@wepublish/feed/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  Article,
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
@@ -43,7 +42,7 @@ export const getFeed = async (req: NextApiRequest) => {
     } as ArticleListQueryVariables,
   });
 
-  const articles = (data.articles.nodes ?? []).map((article: Article) => ({
+  const articles = (data?.articles.nodes ?? []).map(article => ({
     ...article,
     url: localizeUrl(siteUrl, article.slug, 'article'),
   }));

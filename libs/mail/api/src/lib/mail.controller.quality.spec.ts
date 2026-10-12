@@ -9,15 +9,15 @@ const recipient = { id: 'user-1', email: 'jane@example.com' } as any;
 
 const send = async (error: Error, withRecorder = true) => {
   const recorder = {
-    recordMailSignals: jest.fn(async () => undefined),
-    recordUserSignal: jest.fn(),
+    recordMailSignals: vi.fn(async () => undefined),
+    recordUserSignal: vi.fn(),
   };
-  const prisma = { mailLog: { create: jest.fn(async () => ({})) } };
+  const prisma = { mailLog: { create: vi.fn(async () => ({})) } };
   const mailContext = {
-    sendComposedMail: jest.fn(async () => {
+    sendComposedMail: vi.fn(async () => {
       throw error;
     }),
-    jwtGenerator: jest.fn(async () => 'jwt'),
+    jwtGenerator: vi.fn(async () => 'jwt'),
     mailProvider: { id: 'mailchimp' },
     emailQualityRecorder: withRecorder ? recorder : undefined,
   };
@@ -64,23 +64,23 @@ describe('MailController email quality evidence', () => {
   it('still fails the send with its own error when recording breaks', async () => {
     const error = new MailProviderRecipientError('rejected', 'spam');
     const recorder = {
-      recordMailSignals: jest.fn(async () => {
+      recordMailSignals: vi.fn(async () => {
         throw new Error('database down');
       }),
-      recordUserSignal: jest.fn(),
+      recordUserSignal: vi.fn(),
     };
     const mailContext = {
-      sendComposedMail: jest.fn(async () => {
+      sendComposedMail: vi.fn(async () => {
         throw error;
       }),
-      jwtGenerator: jest.fn(async () => 'jwt'),
+      jwtGenerator: vi.fn(async () => 'jwt'),
       mailProvider: { id: 'mailchimp' },
       emailQualityRecorder: recorder,
     };
 
     await expect(
       new MailController(
-        { mailLog: { create: jest.fn() } } as any,
+        { mailLog: { create: vi.fn() } } as any,
         mailContext as any,
         {
           mailTemplateId: 'template-1',

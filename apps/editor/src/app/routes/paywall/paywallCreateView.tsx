@@ -1,11 +1,12 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
+  CreatePaywallDocument,
   MutationCreatePaywallArgs,
-  useCreatePaywallMutation,
 } from '@wepublish/editor/api';
 import { CanCreatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
@@ -15,15 +16,15 @@ import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { PaywallForm } from './paywallForm';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -47,18 +48,21 @@ const PaywallCreateView = () => {
     hideContentAfter: 3,
   }));
 
-  const [createPaywall, { loading: updateLoading }] = useCreatePaywallMutation({
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.createPaywall) {
-        if (shouldClose) {
-          navigate(`./..`);
-        } else {
-          navigate(`./../edit/${data.createPaywall.id}`);
+  const [createPaywall, { loading: updateLoading }] = useMutation(
+    CreatePaywallDocument,
+    {
+      onError: onErrorToast,
+      onCompleted: data => {
+        if (data.createPaywall) {
+          if (shouldClose) {
+            navigate(`./..`);
+          } else {
+            navigate(`./../edit/${data.createPaywall.id}`);
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   const loading = updateLoading;
   const onSubmit = () => createPaywall({ variables: paywall });

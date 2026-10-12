@@ -1,8 +1,9 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  MarkNotificationReadDocument,
+  NotificationReadsDocument,
   NotificationSource,
-  useMarkNotificationReadMutation,
-  useNotificationReadsQuery,
 } from '@wepublish/editor/api';
 import { usePeriodicJobNotifications } from '@wepublish/membership/editor';
 import {
@@ -25,10 +26,6 @@ import {
   useChangelogNewsNotifications,
 } from './changelogDashboard';
 import { useOneChannelNotifications } from './oneChannelAlert';
-
-const NotificationsPanel = styled(Panel)`
-  margin-bottom: 12px;
-`;
 
 // Every source renders its own stack of notification items. Dissolving those
 // stacks puts all items into this one flex column, where the `order` each
@@ -58,10 +55,10 @@ const JOB_LOG_PERMISSION = ['CAN_GET_PERIODIC_JOB_LOG'];
 export function DashboardNotifications() {
   const { t } = useTranslation();
 
-  const { data } = useNotificationReadsQuery({
+  const { data } = useQuery(NotificationReadsDocument, {
     fetchPolicy: 'cache-and-network',
   });
-  const [markNotificationRead] = useMarkNotificationReadMutation({
+  const [markNotificationRead] = useMutation(MarkNotificationReadDocument, {
     refetchQueries: ['NotificationReads'],
   });
 
@@ -136,7 +133,7 @@ export function DashboardNotifications() {
   );
 
   return (
-    <NotificationsPanel
+    <Panel
       hidden={!items.length}
       header={
         <ListViewContainer>
@@ -162,6 +159,6 @@ export function DashboardNotifications() {
 
       {actionRequired.overlay}
       {news.overlay}
-    </NotificationsPanel>
+    </Panel>
   );
 }

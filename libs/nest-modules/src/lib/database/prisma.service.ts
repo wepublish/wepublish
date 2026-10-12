@@ -15,7 +15,7 @@ export class PrismaService
       options: '-c timezone=UTC',
       max: parseInt(process.env['DATABASE_POOL_SIZE'] ?? '20'),
       connectionTimeoutMillis: 5_000,
-      idleTimeoutMillis: 10_000,
+      idleTimeoutMillis: 300_000,
     });
 
     super({ adapter });

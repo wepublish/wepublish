@@ -3,7 +3,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
-import { BlockContent } from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import {
   BuilderBreakBlockProps,
   useWebsiteBuilder,
@@ -40,7 +40,7 @@ export const ExpandIcon = styled(MdArrowDownward)`
 `;
 
 export const isCollapsibleContent = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderBreakBlockProps =>
   allPass([hasBlockStyle(ReflektBlockStyles.CollapsibleContent), isBreakBlock])(
     block

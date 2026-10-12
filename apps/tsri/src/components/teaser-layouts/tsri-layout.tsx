@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { isFilledTeaser } from '@wepublish/block-content/website';
-import { FlexAlignment } from '@wepublish/website/api';
+import { FullFlexAlignmentFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
@@ -53,10 +53,10 @@ export const TeaserLayoutWrapper = styled('div')`
 export const alignmentForTeaserBlock = (
   index: number,
   count?: number
-): FlexAlignment => {
+): FullFlexAlignmentFragment => {
   const alignment = {
+    __typename: 'FlexAlignment' as const,
     i: index.toString(),
-    static: false,
     h: 1, // how many rows high
     w: 4, // how many columns wide
     x: 0, // starting column - 1
@@ -78,7 +78,10 @@ export const TeaserSlots = ({
   children,
 }: PropsWithChildren<
   BuilderTeaserSlotsBlockProps & {
-    alignmentForTeaserBlock: (index: number, count?: number) => FlexAlignment;
+    alignmentForTeaserBlock: (
+      index: number,
+      count?: number
+    ) => FullFlexAlignmentFragment;
     teaserBlockStyleByIndex?: (index: number, count?: number) => string;
   }
 >) => {

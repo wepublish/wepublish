@@ -15,6 +15,7 @@ export enum SettingName {
   SEND_LOGIN_JWT_EXPIRES_MIN = 'sendLoginJwtExpiresMin',
   RESET_PASSWORD_JWT_EXPIRES_MIN = 'resetPasswordJwtExpiresMin',
   PEERING_TIMEOUT_MS = 'peeringTimeoutInMs',
+  SESSION_TTL_DAYS = 'sessionTtlDays',
   MAIL_PROVIDER_NAME = 'mailProviderName',
 
   MAKE_NEW_SUBSCRIBERS_API_PUBLIC = 'makeNewSubscribersApiPublic',

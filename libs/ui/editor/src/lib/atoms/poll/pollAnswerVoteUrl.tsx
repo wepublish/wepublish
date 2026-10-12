@@ -1,5 +1,6 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { usePeerProfileQuery } from '@wepublish/editor/api';
+import { PeerProfileDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { MdContentCopy } from 'react-icons/md';
 import {
@@ -13,7 +14,7 @@ import {
 import { useDocumentUrl } from '../../hooks/useDocumentUrl';
 
 const IconButton = styled(RIconButton)`
-  && {
+  &&:not([data-with-text]) {
     width: 28px;
     height: 28px;
   }
@@ -23,7 +24,7 @@ export function usePollAnswerVoteUrl(): (
   answerId: string
 ) => string | undefined {
   const documentUrl = useDocumentUrl();
-  const { data } = usePeerProfileQuery();
+  const { data } = useQuery(PeerProfileDocument);
   const websiteUrl = data?.peerProfile?.websiteURL;
 
   return (answerId: string) => {
@@ -75,7 +76,7 @@ export function CopyPollAnswerVoteUrlButton({
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollAnswer.urlCopyingFailed')}
         </Message>
@@ -99,6 +100,7 @@ export function CopyPollAnswerVoteUrlButton({
       }
     >
       <IconButton
+        aria-label={t('pollAnswer.copyVoteUrl')}
         icon={<MdContentCopy />}
         circle
         size="xs"

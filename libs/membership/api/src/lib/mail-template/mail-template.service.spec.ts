@@ -17,8 +17,8 @@ describe('MailTemplateService', () => {
       mailLog: number;
     }) => ({
       mailTemplate: {
-        findUnique: jest.fn(async () => ({ id: 't1', _count: counts })),
-        delete: jest.fn(async () => undefined),
+        findUnique: vi.fn(async () => ({ id: 't1', _count: counts })),
+        delete: vi.fn(async () => undefined),
       },
     });
 
@@ -71,11 +71,11 @@ describe('MailTemplateService', () => {
 
   describe('importFromProvider', () => {
     const makeImportService = (remoteTemplates: any[]) => {
-      const upsert = jest.fn(async (args: any) => args);
+      const upsert = vi.fn(async (args: any) => args);
       const service = makeService(
         { mailTemplate: { upsert } },
         {
-          mailProvider: { listTemplates: jest.fn(async () => remoteTemplates) },
+          mailProvider: { listTemplates: vi.fn(async () => remoteTemplates) },
         }
       );
 
@@ -152,10 +152,10 @@ describe('MailTemplateService', () => {
 
     it('surfaces a provider failure instead of reporting zero imports', async () => {
       const service = makeService(
-        { mailTemplate: { upsert: jest.fn() } },
+        { mailTemplate: { upsert: vi.fn() } },
         {
           mailProvider: {
-            listTemplates: jest.fn(async () => {
+            listTemplates: vi.fn(async () => {
               throw new Error('Invalid API key');
             }),
           },

@@ -28,6 +28,7 @@ import {
 
 import {
   IconButtonTooltip,
+  InfoTooltip,
   PlaceholderInput,
   TypographicTextArea,
 } from '../atoms';
@@ -68,8 +69,9 @@ const Teaser = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  border: 2px dashed #ccc;
-  background: #fcfcfc;
+  border: 2px dashed var(--rs-border-primary);
+  border-radius: var(--rs-radius-lg);
+  background: var(--rs-bg-well);
 `;
 
 const TeaserWrapper = styled('div', {
@@ -87,10 +89,10 @@ export const TeaserToolbar = styled.div`
   bottom: 4px;
   display: flex;
   align-items: center;
-  gap: 3px;
-  background-color: #fff;
-  padding: 5px;
-  border-radius: 3px;
+  gap: 4px;
+  background-color: var(--rs-bg-overlay);
+  padding: 4px;
+  border-radius: var(--rs-radius-md);
   font-size: 0.875rem;
 `;
 export const SlotToolbar = styled.div`
@@ -100,10 +102,10 @@ export const SlotToolbar = styled.div`
   top: 4px;
   display: flex;
   align-items: center;
-  gap: 3px;
-  background-color: #fff;
-  padding: 5px;
-  border-radius: 3px;
+  gap: 4px;
+  background-color: var(--rs-bg-overlay);
+  padding: 4px;
+  border-radius: var(--rs-radius-md);
   font-size: 0.875rem;
 `;
 
@@ -389,7 +391,10 @@ export function TeaserSlot({
       <Teaser>
         <TeaserWrapper autofill={!manualOverride}>
           {manualOverride && !teaser && (
-            <PlaceholderInput onAddClick={onChoose} />
+            <PlaceholderInput
+              onAddClick={onChoose}
+              addLabel={t('blocks.flexTeaser.chooseTeaser')}
+            />
           )}
           {/*{!manualOverride && <span>Autofilled</span>}*/}
           {teaser && (
@@ -404,6 +409,7 @@ export function TeaserSlot({
             <>
               <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
                 <IconButton
+                  aria-label={t('blocks.flexTeaser.chooseTeaser')}
                   icon={<MdArticle />}
                   onClick={onChoose}
                   appearance={'subtle'}
@@ -411,6 +417,7 @@ export function TeaserSlot({
               </IconButtonTooltip>
               <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
                 <IconButton
+                  aria-label={t('blocks.flexTeaser.editTeaser')}
                   icon={<MdEdit />}
                   onClick={onEdit}
                   appearance={'subtle'}
@@ -418,6 +425,7 @@ export function TeaserSlot({
               </IconButtonTooltip>
               <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
                 <IconButton
+                  aria-label={t('blocks.flexTeaser.deleteTeaser')}
                   icon={<MdDelete />}
                   onClick={onRemove}
                   appearance={'subtle'}
@@ -426,19 +434,23 @@ export function TeaserSlot({
             </>
           )}
           {autofillEnabled && (
-            <>
-              <span>{manualOverride ? 'Manual' : 'Auto'}</span>
-              <Toggle
-                onClick={toggleSlotType}
-                checked={manualOverride}
-              />
-            </>
+            <Toggle
+              checked={manualOverride}
+              onChange={toggleSlotType}
+              label={
+                <>
+                  {t('blocks.teaserSlots.manualSlot')}{' '}
+                  <InfoTooltip text={t('blocks.teaserSlots.manualSlotHelp')} />
+                </>
+              }
+            />
           )}
         </TeaserToolbar>
 
         <SlotToolbar>
-          <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
+          <IconButtonTooltip caption={t('blocks.teaserSlots.deleteSlot')}>
             <IconButton
+              aria-label={t('blocks.teaserSlots.deleteSlot')}
               icon={<MdDelete />}
               onClick={onDelete}
               appearance={'subtle'}

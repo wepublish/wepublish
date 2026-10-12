@@ -19,7 +19,7 @@ import { ColorPicker } from './color-picker';
 const ThemeColorReel = styled.div`
   display: flex;
   flex-flow: row wrap;
-  gap: 2px;
+  gap: 4px;
   margin-right: 12px;
 `;
 

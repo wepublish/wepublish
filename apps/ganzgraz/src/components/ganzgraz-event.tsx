@@ -212,7 +212,6 @@ export const GanzGrazEvent = ({
   return (
     <EventWrapper className={className}>
       {<EventSEO event={event} />}
-
       {event.image && (
         // eslint-disable-next-line jsx-a11y/alt-text
         <Image
@@ -270,7 +269,6 @@ export const GanzGrazEvent = ({
           </EventLocation>
         </EventLocationWrapper>
       </EventHeader>
-
       <EventBody>
         <RichText richText={data?.event.description} />
       </EventBody>

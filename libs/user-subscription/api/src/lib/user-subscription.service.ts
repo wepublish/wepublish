@@ -23,7 +23,10 @@ import {
   CreateSubscriptionWithConfirmationArgs,
   ExtendSubscriptionArgs,
 } from './subscription.model';
-import { PaymentsService } from '@wepublish/payment/api';
+import {
+  isPaymentMethodRetired,
+  PaymentsService,
+} from '@wepublish/payment/api';
 import {
   calculatePeriodAmount,
   getPeriodPriceRange,
@@ -35,6 +38,7 @@ import {
   GoodieService,
   MemberContextService,
   DiscountCodeService,
+  SubscriptionService,
 } from '@wepublish/membership/api';
 
 export type SubscriptionWithRelations = Subscription & {
@@ -51,7 +55,8 @@ export class UserSubscriptionService {
     private memberPlanDataloader: MemberPlanDataloader,
     private memberContext: MemberContextService,
     private discountCodeservice: DiscountCodeService,
-    private goodieService: GoodieService
+    private goodieService: GoodieService,
+    private subscriptionService: SubscriptionService
   ) {}
 
   public async getUserSubscriptions(userId: string) {
@@ -418,6 +423,15 @@ export class UserSubscriptionService {
       throw new NotFoundException('PaymentMethod', paymentMethodID as string);
     }
 
+    if (
+      paymentMethod.id !== subscription.paymentMethodID &&
+      (await isPaymentMethodRetired(this.prisma, paymentMethod))
+    ) {
+      throw new BadRequestException(
+        `PaymentMethod ${paymentMethod.id} is no longer offered`
+      );
+    }
+
     const effectivePeriodicity =
       (paymentPeriodicity as PaymentPeriodicity | undefined) ??
       subscription.paymentPeriodicity;
@@ -534,6 +548,28 @@ export class UserSubscriptionService {
     return updatedSubscription;
   }
 
+  async reactivateUserSubscription(userId: string, subscriptionId: string) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: {
+        id: subscriptionId,
+        userID: userId,
+      },
+      include: {
+        deactivation: true,
+      },
+    });
+
+    if (!subscription) {
+      throw new BadRequestException(`Subscription not found ${subscriptionId}`);
+    }
+
+    if (!subscription.deactivation) {
+      throw new BadRequestException('Subscription is not canceled');
+    }
+
+    return this.subscriptionService.reactivateSubscription(subscriptionId);
+  }
+
   private async validateSubscriptionInput({
     memberPlanID,
     memberPlanSlug,
@@ -580,6 +616,12 @@ export class UserSubscriptionService {
     if (!paymentMethod) {
       throw new BadRequestException(
         `PaymentMethod not found ${paymentMethodID || paymentMethodSlug}`
+      );
+    }
+
+    if (await isPaymentMethodRetired(this.prisma, paymentMethod)) {
+      throw new BadRequestException(
+        `PaymentMethod ${paymentMethod.id} is no longer offered`
       );
     }
 

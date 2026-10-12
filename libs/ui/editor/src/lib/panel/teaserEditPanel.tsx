@@ -3,17 +3,11 @@ import { TeaserType } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Drawer,
-  Form,
-  Input,
-  Panel as RPanel,
-  Toggle as RToggle,
-} from 'rsuite';
+import { Button, Drawer, Form, Input, Panel as RPanel, Toggle } from 'rsuite';
 
 import { ChooseEditImage } from '../atoms/chooseEditImage';
 import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { ListInput, ListValue } from '../atoms/listInput';
 import { Teaser } from '../blocks/types';
 import { generateID } from '../utility';
@@ -31,18 +25,13 @@ const Panel = styled(RPanel)<{ imageUrl?: string | null }>`
     `url(${imageUrl || 'https://via.placeholder.com/240x240'})`};
 `;
 
-const Toggle = styled(RToggle)`
-  max-width: 70px;
-  min-width: 70px;
-`;
-
 const InputWidth60 = styled(Input)`
   width: 60%;
 `;
 
 const InputWidth40 = styled(Input)`
   width: 40%;
-  margin-right: 10px;
+  margin-right: 8px;
 `;
 
 const InputsWrapper = styled.div`
@@ -51,8 +40,10 @@ const InputsWrapper = styled.div`
 `;
 
 const FormGroup = styled(Group)`
+  flex-shrink: 0;
   padding-top: 6px;
   padding-left: 8px;
+  white-space: nowrap;
 `;
 
 export interface TeaserMetadataProperty {
@@ -75,7 +66,7 @@ export function TeaserEditPanel({
   initialTeaser,
   onClose,
   onConfirm,
-  closeLabel = 'Close',
+  closeLabel,
 }: TeaserEditPanelProps) {
   const [image, setImage] = useState(initialTeaser.image);
   const [contentUrl, setContentUrl] = useState(
@@ -137,7 +128,7 @@ export function TeaserEditPanel({
             appearance={'subtle'}
             onClick={() => onClose?.()}
           >
-            {closeLabel}
+            {closeLabel ?? t('articleEditor.panels.close')}
           </Button>
         </Drawer.Actions>
       </Drawer.Header>
@@ -178,7 +169,12 @@ export function TeaserEditPanel({
               {initialTeaser.type === TeaserType.Custom && (
                 <>
                   <Group controlId="contentUrl">
-                    <Label>{t('articleEditor.panels.contentUrl')}</Label>
+                    <Label>
+                      {t('articleEditor.panels.contentUrl')}{' '}
+                      <InfoTooltip
+                        text={t('articleEditor.panels.contentUrlInfo')}
+                      />
+                    </Label>
 
                     <Control
                       name="content-url"
@@ -190,20 +186,22 @@ export function TeaserEditPanel({
                   </Group>
 
                   <Group controlId="openInNewTab">
-                    <Label>{t('articleEditor.panels.openInNewTab')}</Label>
-
                     <Toggle
                       checked={!!openInNewTab}
                       onChange={(isChecked: boolean) =>
                         setOpenInNewTab(isChecked)
                       }
-                      checkedChildren={t('articleEditor.panels.yes')}
-                      unCheckedChildren={t('articleEditor.panels.no')}
+                      label={t('articleEditor.panels.openInNewTab')}
                     />
                   </Group>
 
                   <Group controlId="properties">
-                    <Label>{t('articleEditor.panels.properties')}</Label>
+                    <Label>
+                      {t('articleEditor.panels.properties')}{' '}
+                      <InfoTooltip
+                        text={t('articleEditor.panels.teaserPropertiesInfo')}
+                      />
+                    </Label>
 
                     <ListInput
                       value={metaDataProperties}
@@ -232,14 +230,11 @@ export function TeaserEditPanel({
 
                           <FormGroup controlId="articleProperty">
                             <Toggle
-                              checkedChildren={t('articleEditor.panels.public')}
-                              unCheckedChildren={t(
-                                'articleEditor.panels.private'
-                              )}
                               checked={value.public}
                               onChange={isPublic =>
                                 onChange({ ...value, public: isPublic })
                               }
+                              label={t('articleEditor.panels.public')}
                             />
                           </FormGroup>
                         </InputsWrapper>
@@ -292,7 +287,7 @@ export function TeaserEditPanel({
 }
 
 export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
-  let type: string;
+  let type: 'Article' | 'Page' | 'Event' | 'Custom' | undefined;
   let imageURL: string | undefined | null;
   let contentUrl: string | undefined | null;
   let openInNewTab: boolean | undefined | null;
@@ -354,7 +349,7 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
           </DescriptionListItem>
         )}
         <DescriptionListItem label={t('articleEditor.panels.type')}>
-          {type || '-'}
+          {type ? t(`teaserOverview.teaserTypes.${type}`) : '-'}
         </DescriptionListItem>
         <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
           {preTitle || '-'}

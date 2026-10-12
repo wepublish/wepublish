@@ -7,11 +7,11 @@ import {
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
+  FullSessionWithTokenWithoutUserFragment,
   PageDocument,
-  SessionWithTokenWithoutUser,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
-import { getApiClient } from '@wepublish/website/api';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import { add } from 'date-fns';
 import { NextPageContext } from 'next';
@@ -20,7 +20,7 @@ import { useEffect, useRef } from 'react';
 
 import { HauptstadtContentFullWidth } from '../src/components/hauptstadt-content-wrapper';
 
-type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
+type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 
 export default function Login({ sessionToken }: LoginProps) {
   const { hasUser, setToken } = useUser();

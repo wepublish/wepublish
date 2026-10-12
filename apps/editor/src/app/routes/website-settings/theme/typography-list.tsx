@@ -1,4 +1,5 @@
 import { FormControl, FormLabel, List, Stack } from '@mui/material';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { memo, useCallback, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -33,10 +34,10 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
   return (
     <List>
       <Stack
-        gap={5}
         sx={{
-          borderRadius: '6px',
-          bgcolor: '#00000008',
+          gap: 5,
+          borderRadius: 'var(--rs-radius-md)',
+          bgcolor: 'action.hover',
           p: 3,
           mb: 2,
         }}
@@ -51,7 +52,10 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
             render={({ field }) => (
               <FormControl fullWidth>
                 <FormLabel>
-                  {t('websiteSettings.theme.typography.fontFamily')}
+                  {t('websiteSettings.theme.typography.fontFamily')}{' '}
+                  <InfoTooltip
+                    text={t('websiteSettings.theme.typography.fontFamilyInfo')}
+                  />
                 </FormLabel>
 
                 <AvailableFontsPicker {...field} />
@@ -87,7 +91,10 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
             render={({ field }) => (
               <FormControl fullWidth>
                 <FormLabel>
-                  {t('websiteSettings.theme.typography.lineHeight')}
+                  {t('websiteSettings.theme.typography.lineHeight')}{' '}
+                  <InfoTooltip
+                    text={t('websiteSettings.theme.typography.lineHeightInfo')}
+                  />
                 </FormLabel>
 
                 <LengthSlider
@@ -105,7 +112,12 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
             render={({ field }) => (
               <FormControl fullWidth>
                 <FormLabel>
-                  {t('websiteSettings.theme.typography.letterSpacing')}
+                  {t('websiteSettings.theme.typography.letterSpacing')}{' '}
+                  <InfoTooltip
+                    text={t(
+                      'websiteSettings.theme.typography.letterSpacingInfo'
+                    )}
+                  />
                 </FormLabel>
 
                 <LengthSlider
@@ -118,154 +130,132 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
           />
         </Stack>
       </Stack>
-
       <TypographyListItem
         parentName={name}
         name={`${name}.h1`}
         onOpen={handleOpenTypography('h1')}
         isOpen={openTypography === 'h1'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.h2`}
         onOpen={handleOpenTypography('h2')}
         isOpen={openTypography === 'h2'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.h3`}
         onOpen={handleOpenTypography('h3')}
         isOpen={openTypography === 'h3'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.h4`}
         onOpen={handleOpenTypography('h4')}
         isOpen={openTypography === 'h4'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.h5`}
         onOpen={handleOpenTypography('h5')}
         isOpen={openTypography === 'h5'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.h6`}
         onOpen={handleOpenTypography('h6')}
         isOpen={openTypography === 'h6'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.body1`}
         onOpen={handleOpenTypography('body1')}
         isOpen={openTypography === 'body1'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.body2`}
         onOpen={handleOpenTypography('body2')}
         isOpen={openTypography === 'body2'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.caption`}
         onOpen={handleOpenTypography('caption')}
         isOpen={openTypography === 'caption'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.teaserPretitle`}
         onOpen={handleOpenTypography('teaserPretitle')}
         isOpen={openTypography === 'teaserPretitle'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.teaserTitle`}
         onOpen={handleOpenTypography('teaserTitle')}
         isOpen={openTypography === 'teaserTitle'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.teaserLead`}
         onOpen={handleOpenTypography('teaserLead')}
         isOpen={openTypography === 'teaserLead'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.teaserMeta`}
         onOpen={handleOpenTypography('teaserMeta')}
         isOpen={openTypography === 'teaserMeta'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.articleAuthors`}
         onOpen={handleOpenTypography('articleAuthors')}
         isOpen={openTypography === 'articleAuthors'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.peerInformation`}
         onOpen={handleOpenTypography('peerInformation')}
         isOpen={openTypography === 'peerInformation'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.bannerTitle`}
         onOpen={handleOpenTypography('bannerTitle')}
         isOpen={openTypography === 'bannerTitle'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.bannerText`}
         onOpen={handleOpenTypography('bannerText')}
         isOpen={openTypography === 'bannerText'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.bannerCta`}
         onOpen={handleOpenTypography('bannerCta')}
         isOpen={openTypography === 'bannerCta'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.blockBreakTitle`}
         onOpen={handleOpenTypography('blockBreakTitle')}
         isOpen={openTypography === 'blockBreakTitle'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.blockBreakBody`}
         onOpen={handleOpenTypography('blockBreakBody')}
         isOpen={openTypography === 'blockBreakBody'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.blockTitlePreTitle`}
         onOpen={handleOpenTypography('blockTitlePreTitle')}
         isOpen={openTypography === 'blockTitlePreTitle'}
       />
-
       <TypographyListItem
         parentName={name}
         name={`${name}.blockQuote`}

@@ -17,12 +17,19 @@ import {
 } from '@nestjs/common';
 import { AnonymousPollVotingDisabledError } from '@wepublish/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
+import {
+  KvTtlCacheService,
+  PublicContentCacheInvalidator,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
 
 @Injectable()
 export class PollVoteService {
   constructor(
     readonly settings: SettingsService,
-    readonly prisma: PrismaClient
+    readonly prisma: PrismaClient,
+    private kv: KvTtlCacheService,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   async userPollVote(pollId: string, userId: string): Promise<string | null> {
@@ -86,13 +93,16 @@ export class PollVoteService {
   }
 
   async deletePollVotes({ ids }: PoleVoteByIdArgs) {
-    return this.prisma.pollVote.deleteMany({
+    const deleted = await this.prisma.pollVote.deleteMany({
       where: {
         id: {
           in: ids,
         },
       },
     });
+    await this.publicContentCache.invalidate('polls');
+
+    return deleted;
   }
 
   async voteOnPoll(
@@ -131,7 +141,7 @@ export class PollVoteService {
       throw new BadRequestException('Poll voting has been closed already!');
     }
 
-    return this.prisma.pollVote.upsert({
+    const vote = await this.prisma.pollVote.upsert({
       where: {
         pollId_userId: {
           pollId: poll.id,
@@ -152,6 +162,9 @@ export class PollVoteService {
         answer: true,
       },
     });
+    await this.kv.delNs(contentCacheNamespace('polls'), `id:${poll.id}`);
+
+    return vote;
   }
 }
 

@@ -7,6 +7,7 @@ import {
   TextField,
 } from '@mui/material';
 import { Sketch } from '@uiw/react-color';
+import { IconButtonTooltip } from '@wepublish/ui/editor';
 import {
   ChangeEventHandler,
   FocusEventHandler,
@@ -16,6 +17,7 @@ import {
   useState,
 } from 'react';
 import { FieldError } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 type ColorPickerProps = {
   name: string;
@@ -33,6 +35,7 @@ const ElevatedPopper = styled(Popper)`
 
 export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
   (props, ref) => {
+    const { t } = useTranslation();
     const boxRef = useRef<HTMLElement>(null);
     const [open, setOpen] = useState(false);
 
@@ -47,17 +50,25 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
           alignItems: 'center',
         }}
       >
-        <Box
-          sx={theme => ({
-            width: 25,
-            height: 25,
-            cursor: 'pointer',
-            borderRadius: `3px`,
-            bgcolor: props.value ?? '#000',
-            border: `1px solid ${theme.palette.divider}`,
-          })}
-          onClick={() => setOpen(true)}
-        />
+        <IconButtonTooltip
+          caption={t('websiteSettings.theme.palette.pickColor')}
+        >
+          <Box
+            component="button"
+            type="button"
+            aria-label={t('websiteSettings.theme.palette.pickColor')}
+            sx={theme => ({
+              width: 25,
+              height: 25,
+              p: 0,
+              cursor: 'pointer',
+              borderRadius: `3px`,
+              bgcolor: props.value ?? '#000',
+              border: `1px solid ${theme.palette.divider}`,
+            })}
+            onClick={() => setOpen(true)}
+          />
+        </IconButtonTooltip>
 
         <TextField
           ref={ref}

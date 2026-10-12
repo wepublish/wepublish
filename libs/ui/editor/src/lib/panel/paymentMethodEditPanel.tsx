@@ -1,12 +1,13 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CreatePaymentMethodDocument,
   FullImageFragment,
   FullPaymentMethodFragment,
   FullPaymentProviderFragment,
-  useCreatePaymentMethodMutation,
-  usePaymentMethodQuery,
-  usePaymentProviderListQuery,
-  useUpdatePaymentMethodMutation,
+  PaymentMethodDocument,
+  PaymentProviderListDocument,
+  UpdatePaymentMethodDocument,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
@@ -30,6 +31,7 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '../atoms';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { ImageSelectPanel } from './imageSelectPanel';
 
@@ -75,7 +77,7 @@ function PaymentMethodEditPanel({
     data,
     loading: isLoading,
     error: loadError,
-  } = usePaymentMethodQuery({
+  } = useQuery(PaymentMethodDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
@@ -84,13 +86,13 @@ function PaymentMethodEditPanel({
     data: paymentProviderData,
     loading: isLoadingPaymentProvider,
     error: loadPaymentProviderError,
-  } = usePaymentProviderListQuery({});
+  } = useQuery(PaymentProviderListDocument, {});
 
   const [createPaymentMethod, { loading: isCreating, error: createError }] =
-    useCreatePaymentMethodMutation();
+    useMutation(CreatePaymentMethodDocument);
 
   const [updatePaymentMethod, { loading: isUpdating, error: updateError }] =
-    useUpdatePaymentMethodMutation();
+    useMutation(UpdatePaymentMethodDocument);
 
   const isDisabled =
     isLoading ||
@@ -254,7 +256,10 @@ function PaymentMethodEditPanel({
               </RForm.Group>
 
               <RForm.Group controlId="paymentMethodSlug">
-                <RForm.Label>{t('paymentMethodList.slug')}</RForm.Label>
+                <RForm.Label>
+                  {t('paymentMethodList.slug')}{' '}
+                  <InfoTooltip text={t('paymentMethodList.slugInfo')} />
+                </RForm.Label>
 
                 <RForm.Control
                   name={t('paymentMethodList.slug')}
@@ -264,22 +269,25 @@ function PaymentMethodEditPanel({
               </RForm.Group>
 
               <RForm.Group controlId="paymentMethodIsActive">
-                <RForm.Label>{t('paymentMethodList.active')}</RForm.Label>
-
                 <Toggle
                   checked={active}
                   disabled={isDisabled}
                   onChange={value => setActive(value)}
+                  label={
+                    <>
+                      {t('paymentMethodList.active')}{' '}
+                      <InfoTooltip
+                        text={t('paymentMethodList.activeDescription')}
+                      />
+                    </>
+                  }
                 />
-
-                <RForm.Text>
-                  {t('paymentMethodList.activeDescription')}
-                </RForm.Text>
               </RForm.Group>
 
               <RForm.Group controlId="paymentMethodAdapter">
                 <RForm.Label>
-                  {toggleRequiredLabel(t('paymentMethodList.adapter'))}
+                  {toggleRequiredLabel(t('paymentMethodList.adapter'))}{' '}
+                  <InfoTooltip text={t('paymentMethodList.adapterInfo')} />
                 </RForm.Label>
 
                 <RForm.Control

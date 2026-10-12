@@ -1,4 +1,11 @@
-import { ApolloLink, execute, gql, Observable } from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloLink,
+  execute,
+  gql,
+  InMemoryCache,
+} from '@apollo/client';
+import { of } from 'rxjs';
 
 import { previewLink, PREVIEW_MODE_KEY } from './preview-link';
 
@@ -13,12 +20,20 @@ const getPreviewHeader = () =>
     const terminatingLink = new ApolloLink(operation => {
       resolve(operation.getContext().headers.preview);
 
-      return Observable.of({ data: { __typename: 'Query' } });
+      return of({ data: { __typename: 'Query' } });
     });
 
-    execute(ApolloLink.from([previewLink, terminatingLink]), {
-      query,
-    }).subscribe(() => undefined);
+    // Apollo Client 4 requires the executing client as a third argument.
+    execute(
+      ApolloLink.from([previewLink, terminatingLink]),
+      { query },
+      {
+        client: new ApolloClient({
+          cache: new InMemoryCache(),
+          link: ApolloLink.empty(),
+        }),
+      }
+    ).subscribe(() => undefined);
   });
 
 describe('previewLink', () => {

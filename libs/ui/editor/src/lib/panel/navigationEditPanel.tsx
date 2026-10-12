@@ -1,16 +1,17 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  ArticleListDocument,
   ArticleWithoutBlocksFragment,
+  CreateNavigationDocument,
   FullNavigationFragment,
+  NavigationDocument,
   NavigationLinkInput,
   NavigationLinkType,
   NavigationListDocument,
+  PageListDocument,
   PageWithoutBlocksFragment,
-  useArticleListQuery,
-  useCreateNavigationMutation,
-  useNavigationQuery,
-  usePageListQuery,
-  useUpdateNavigationMutation,
+  UpdateNavigationDocument,
 } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +33,7 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '../atoms';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { generateID, getOperationNameFromDocument } from '../utility';
 
 const SelectPicker = styled(RSelectPicker)`
@@ -71,17 +73,25 @@ function NavigationEditPanel({
   const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([]);
   const [articles, setArticles] = useState<ArticleWithoutBlocksFragment[]>([]);
 
+  const { t } = useTranslation();
+
   const linkTypes = [
-    { label: 'Article', value: 'ArticleNavigationLink' },
-    { label: 'Page', value: 'PageNavigationLink' },
-    { label: 'External Link', value: 'ExternalNavigationLink' },
+    {
+      label: t('navigation.panels.linkTypeArticle'),
+      value: 'ArticleNavigationLink',
+    },
+    { label: t('navigation.panels.linkTypePage'), value: 'PageNavigationLink' },
+    {
+      label: t('navigation.panels.linkTypeExternal'),
+      value: 'ExternalNavigationLink',
+    },
   ];
 
   const {
     data,
     loading: isLoading,
     error: loadError,
-  } = useNavigationQuery({
+  } = useQuery(NavigationDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
@@ -90,7 +100,7 @@ function NavigationEditPanel({
     data: pageData,
     loading: isLoadingPageData,
     error: pageLoadError,
-  } = usePageListQuery({
+  } = useQuery(PageListDocument, {
     variables: { take: 50 },
   });
 
@@ -98,17 +108,17 @@ function NavigationEditPanel({
     data: articleData,
     loading: isLoadingArticleData,
     error: articleLoadError,
-  } = useArticleListQuery({
+  } = useQuery(ArticleListDocument, {
     variables: { take: 50 },
   });
 
   const [createNavigation, { loading: isCreating, error: createError }] =
-    useCreateNavigationMutation({
+    useMutation(CreateNavigationDocument, {
       refetchQueries: [getOperationNameFromDocument(NavigationListDocument)],
     });
 
   const [updateNavigation, { loading: isUpdating, error: updateError }] =
-    useUpdateNavigationMutation();
+    useMutation(UpdateNavigationDocument);
 
   const isDisabled =
     isLoading ||
@@ -120,8 +130,6 @@ function NavigationEditPanel({
     isLoadingArticleData ||
     articleLoadError !== undefined ||
     !isAuthorized;
-
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (data?.navigation) {
@@ -286,7 +294,10 @@ function NavigationEditPanel({
               </Form.Group>
 
               <Form.Group controlId="navigationKey">
-                <Form.Label>{t('navigation.panels.key')}</Form.Label>
+                <Form.Label>
+                  {t('navigation.panels.key')}{' '}
+                  <InfoTooltip text={t('navigation.panels.keyInfo')} />
+                </Form.Label>
 
                 <Form.Control
                   name="key"

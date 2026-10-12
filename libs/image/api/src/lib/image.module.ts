@@ -1,3 +1,4 @@
+import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { forwardRef, Module } from '@nestjs/common';
 import { ImageResolver } from './image.resolver';
 import { PrismaModule } from '@wepublish/nest-modules';
@@ -11,7 +12,11 @@ import { ImageUploadService } from './image-upload.service';
 import { PeerModule } from '@wepublish/peering/api';
 
 @Module({
-  imports: [PrismaModule, forwardRef(() => PeerModule)],
+  imports: [
+    GraphqlResponseCacheModule,
+    PrismaModule,
+    forwardRef(() => PeerModule),
+  ],
   providers: [
     ImageResolver,
     ImageDataloaderService,

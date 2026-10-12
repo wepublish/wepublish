@@ -1,5 +1,5 @@
 import bodyParser from 'body-parser';
-import crypto from 'crypto';
+import { createHmac } from 'crypto';
 import nock from 'nock';
 import { EmailQualityEventType, MailLogState } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
@@ -23,6 +23,7 @@ const makeProvider = async () => {
       name: 'Mailchimp',
       fromAddress: 'dev@wepublish.ch',
       apiKey: 'key',
+      webhookEndpointSecret: 'webhook-key',
     })
   );
 
@@ -89,8 +90,13 @@ describe('MailchimpMailProvider', () => {
         },
       ]);
 
-    await expect((await makeProvider()).sendMail(sendProps)).rejects.toThrow(
-      new MailProviderError('Mandrill rejected user@example.com: hard-bounce')
+    const error = await (await makeProvider())
+      .sendMail(sendProps)
+      .catch(e => e);
+
+    expect(error).toBeInstanceOf(MailProviderRecipientError);
+    expect(error.message).toBe(
+      'Mandrill rejected user@example.com: hard-bounce'
     );
   });
 
@@ -193,8 +199,7 @@ describe('MailchimpMailProvider', () => {
     };
     // Mandrill signs the webhook url followed by every POST key and value
     const sign = (secret: string) =>
-      crypto
-        .createHmac('sha1', secret)
+      createHmac('sha1', secret)
         .update(url + 'mandrill_events' + body.mandrill_events)
         .digest('base64');
     const request = (signature: string) =>
@@ -219,8 +224,7 @@ describe('MailchimpMailProvider', () => {
       return {
         method: 'POST',
         headers: {
-          'x-mandrill-signature': crypto
-            .createHmac('sha1', '')
+          'x-mandrill-signature': createHmac('sha1', 'webhook-key')
             .update(url + 'mandrill_events' + mandrill_events)
             .digest('base64'),
           host: 'api.example.com',
@@ -300,9 +304,10 @@ describe('MailchimpMailProvider', () => {
     });
 
     it('accepts a correctly signed webhook', async () => {
-      // the test provider has no webhookEndpointSecret, so it signs with ''
       await expect(
-        (await makeProvider()).webhookForSendMail({ req: request(sign('')) })
+        (await makeProvider()).webhookForSendMail({
+          req: request(sign('webhook-key')),
+        })
       ).resolves.toEqual([
         expect.objectContaining({
           mailLogID: 'log-1',
@@ -431,6 +436,53 @@ describe('MailchimpMailProvider', () => {
         providerMessageID: 'msg-2',
         state: MailLogState.delivered,
       });
+    });
+  });
+
+  describe('webhook', () => {
+    const url = 'https://api.example.com/v1/mail-webhook/mailchimp';
+    const body = {
+      mandrill_events: JSON.stringify([
+        { event: 'send', msg: { metadata: { mail_log_id: 'log-1' } } },
+      ]),
+    };
+
+    const signedWith = (key: string) =>
+      createHmac('sha1', key)
+        .update(`${url}mandrill_events${body.mandrill_events}`)
+        .digest('base64');
+
+    const webhook = (signature: string) => ({
+      req: {
+        method: 'POST',
+        headers: {
+          'x-mandrill-signature': signature,
+          host: 'api.example.com',
+        },
+        originalUrl: '/v1/mail-webhook/mailchimp',
+        body,
+      },
+    });
+
+    it('refuses a webhook that was not signed with the webhook key', async () => {
+      const provider = await makeProvider();
+
+      await expect(
+        provider.webhookForSendMail(webhook(signedWith('forged')) as never)
+      ).rejects.toThrow('Webhook signature failed');
+    });
+
+    it('accepts a webhook signed with the webhook key', async () => {
+      const provider = await makeProvider();
+
+      await expect(
+        provider.webhookForSendMail(webhook(signedWith('webhook-key')) as never)
+      ).resolves.toEqual([
+        expect.objectContaining({
+          mailLogID: 'log-1',
+          state: MailLogState.delivered,
+        }),
+      ]);
     });
   });
 

@@ -52,8 +52,8 @@ query Invoices(
   }
 }
 
-mutation MarkInvoiceAsPaid($id: String!) {
-  markInvoiceAsPaid(id: $id) {
+mutation MarkInvoiceAsPaid($id: String!, $sendMail: Boolean) {
+  markInvoiceAsPaid(id: $id, sendMail: $sendMail) {
     ...Invoice
   }
 }

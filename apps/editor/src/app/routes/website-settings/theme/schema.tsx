@@ -1,14 +1,14 @@
+import i18n from 'i18next';
 import { parseToRgb } from 'polished';
 import { RgbaColor } from 'polished/lib/types/color';
 import { CSSProperties } from 'react';
 import { z } from 'zod';
 
+import { lazyMessage } from '../../../utility';
+
 const hexColor = z
-  .string()
-  .regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, {
-    message:
-      'Invalid color format. Must be a 3, 6 or 8-character hex code (e.g., #RRGGBBBAA #RRGGBB or #RGB).',
-  })
+  .string({ errorMap: lazyMessage('websiteSettings.theme.invalidColor') })
+  .regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/)
   .nullish();
 
 export const paletteSchema = z.object({
@@ -69,10 +69,8 @@ type UnitRanges = Record<CssUnit, { min: number; max: number }>;
 
 function cssLengthValue(ranges: UnitRanges) {
   return z
-    .string()
-    .regex(/^-?(\d+\.?\d*|\.\d+)(em|rem|px)$/, {
-      message: 'Must be a value with unit (e.g., "1em", "16px", "1rem").',
-    })
+    .string({ errorMap: lazyMessage('websiteSettings.theme.invalidLength') })
+    .regex(/^-?(\d+\.?\d*|\.\d+)(em|rem|px)$/)
     .refine(
       val => {
         const match = val.match(/^(-?[\d.]+)(em|rem|px)$/);
@@ -91,7 +89,10 @@ function cssLengthValue(ranges: UnitRanges) {
         const unit = (match?.[2] ?? 'em') as CssUnit;
 
         return {
-          message: `Value must be between ${ranges[unit].min}${unit} and ${ranges[unit].max}${unit}.`,
+          message: i18n.t('websiteSettings.theme.lengthOutOfRange', {
+            min: `${ranges[unit].min}${unit}`,
+            max: `${ranges[unit].max}${unit}`,
+          }),
         };
       }
     )

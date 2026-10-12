@@ -1,10 +1,10 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   CommentBlockCommentFragment,
+  CommentListDocument,
   FullCommentFragment,
   TagType,
-  useCommentListLazyQuery,
 } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
 import { TFunction } from 'i18next';
@@ -20,15 +20,18 @@ import {
   IconButton,
   Message as RMessage,
   Pagination,
-  Table,
+  Table as RTable,
   toaster,
   Toggle,
 } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
 
 import { IconButtonTooltip, PermissionControl, SelectTags } from '../atoms';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { CommentBlockValue } from '../blocks/types';
 import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
+import { humanizeError } from '../humanizeError';
+import { Table } from '../listView/list-view';
 
 const CheckboxWrapper = styled.div`
   height: 46px;
@@ -55,24 +58,24 @@ const DrawerBody = styled(Drawer.Body)`
   padding: 24px;
 `;
 
-const TableCellNoPadding = styled(Table.Cell)`
+const TableCellNoPadding = styled(RTable.Cell)`
   padding: 0;
 `;
 
-const PermissionControlWrapper = styled(Table.Cell)`
+const PermissionControlWrapper = styled(RTable.Cell)`
   padding: 6px 0;
 `;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <RMessage
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </RMessage>
     );
   }
@@ -110,9 +113,14 @@ export function SelectCommentPanel({
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
 
-  const [fetchComments, { data, loading }] = useCommentListLazyQuery({
-    onError: onErrorToast,
-  });
+  const [fetchComments, { data, loading, error: commentListError }] =
+    useLazyQuery(CommentListDocument);
+
+  useEffect(() => {
+    if (commentListError) {
+      onErrorToast(commentListError);
+    }
+  }, [commentListError]);
 
   const getUsername = useMemo(() => commentUsernameGenerator(t), [t]);
 
@@ -124,28 +132,31 @@ export function SelectCommentPanel({
           comments: commentFilter || [],
         },
         (data?.comments.nodes.filter(({ id }) => commentFilter?.includes(id)) ??
-          []) as CommentBlockCommentFragment[]
+          []) as unknown as CommentBlockCommentFragment[]
       );
     } else {
       onSelect(
         { item: itemId, tags: tagFilter || [] },
-        (data?.comments.nodes ?? []) as CommentBlockCommentFragment[]
+        (data?.comments.nodes ?? []) as unknown as CommentBlockCommentFragment[]
       );
     }
   };
 
   useEffect(() => {
-    itemId &&
-      fetchComments({
-        variables: {
-          take: limit,
-          skip: (page - 1) * limit,
-          filter: {
-            item: itemId,
-            tags: tagFilter,
-          },
+    if (!itemId) {
+      return;
+    }
+
+    fetchComments({
+      variables: {
+        take: limit,
+        skip: (page - 1) * limit,
+        filter: {
+          item: itemId,
+          tags: tagFilter,
         },
-      });
+      },
+    });
   }, [page, limit, tagFilter, fetchComments, itemId]);
 
   return (
@@ -198,8 +209,13 @@ export function SelectCommentPanel({
           <Toggle
             defaultChecked={allowCherryPicking}
             onChange={toggleCherryPicking}
+            label={
+              <>
+                {t('blocks.comment.cherryPick')}{' '}
+                <InfoTooltip text={t('blocks.comment.cherryPickInfo')} />
+              </>
+            }
           />
-          {t('blocks.comment.cherryPick')}
         </ToggleWrapper>
 
         <Table
@@ -212,8 +228,8 @@ export function SelectCommentPanel({
           }
         >
           {allowCherryPicking && (
-            <Table.Column width={36}>
-              <Table.HeaderCell>{''}</Table.HeaderCell>
+            <RTable.Column width={36}>
+              <RTable.HeaderCell>{''}</RTable.HeaderCell>
               <TableCellNoPadding>
                 {(rowData: RowDataType<CommentBlockCommentFragment>) => (
                   <CheckboxWrapper>
@@ -234,30 +250,30 @@ export function SelectCommentPanel({
                   </CheckboxWrapper>
                 )}
               </TableCellNoPadding>
-            </Table.Column>
+            </RTable.Column>
           )}
 
-          <Table.Column
+          <RTable.Column
             width={250}
             resizable
           >
-            <Table.HeaderCell>
+            <RTable.HeaderCell>
               {t('blocks.comment.displayName')}
-            </Table.HeaderCell>
-            <Table.Cell>
+            </RTable.HeaderCell>
+            <RTable.Cell>
               {(rowData: RowDataType<CommentBlockCommentFragment>) =>
                 getUsername(rowData as CommentBlockCommentFragment)
               }
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column
+          <RTable.Column
             width={350}
             align="left"
             resizable
           >
-            <Table.HeaderCell>{t('comments.overview.text')}</Table.HeaderCell>
-            <Table.Cell dataKey="revisions">
+            <RTable.HeaderCell>{t('comments.overview.text')}</RTable.HeaderCell>
+            <RTable.Cell dataKey="revisions">
               {(rowData: RowDataType<FullCommentFragment>) =>
                 rowData?.revisions?.length ?
                   toPlaintext(
@@ -266,15 +282,15 @@ export function SelectCommentPanel({
                   )
                 : null
               }
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column
-            width={150}
+          <RTable.Column
+            width={100}
             align="center"
             fixed="right"
           >
-            <Table.HeaderCell>{t('comments.overview.edit')}</Table.HeaderCell>
+            <RTable.HeaderCell align="center">{t('action')}</RTable.HeaderCell>
             <PermissionControlWrapper>
               {(rowData: RowDataType<FullCommentFragment>) => (
                 <PermissionControl
@@ -286,6 +302,7 @@ export function SelectCommentPanel({
                       to={`/comments/edit/${rowData.id}`}
                     >
                       <IconButton
+                        aria-label={t('comments.overview.edit')}
                         icon={<MdEdit />}
                         circle
                         size="sm"
@@ -295,7 +312,7 @@ export function SelectCommentPanel({
                 </PermissionControl>
               )}
             </PermissionControlWrapper>
-          </Table.Column>
+          </RTable.Column>
         </Table>
 
         <Pagination

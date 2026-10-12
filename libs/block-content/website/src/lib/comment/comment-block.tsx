@@ -1,12 +1,15 @@
 import styled from '@emotion/styled';
-import { BlockContent, FullCommentBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullCommentBlockFragment,
+} from '@wepublish/website/api';
 import {
   BuilderCommentBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 
 export const isCommentBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullCommentBlockFragment => block.__typename === 'CommentBlock';
 
 export const CommentBlockWrapper = styled('article')`

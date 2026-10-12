@@ -1,0 +1,2 @@
+user default on >dragonfly ~* &* +@all
+user wepublish-local on >wepublish-local ~wepublish-local:* ~{wepublish-local}:* resetchannels &wepublish-local:* -@all +@all -@dangerous -@admin +info -client -script -function -memory -pubsub -scan -randomkey -dbsize $0

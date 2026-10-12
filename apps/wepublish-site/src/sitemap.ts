@@ -1,12 +1,10 @@
 import { generateSitemap } from '@wepublish/feed/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  Article,
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
   getApiClient,
-  Page,
   PageListDocument,
   PageListQueryVariables,
   PageSort,
@@ -47,13 +45,11 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     }),
   ]);
 
-  const articles = (articleData.articles.nodes ?? []).map(
-    (article: Article) => ({
-      ...article,
-      url: localizeUrl(siteUrl, article.slug, 'article'),
-    })
-  );
-  const pages = (pageData.pages.nodes ?? []).map((page: Page) => ({
+  const articles = (articleData?.articles.nodes ?? []).map(article => ({
+    ...article,
+    url: localizeUrl(siteUrl, article.slug, 'article'),
+  }));
+  const pages = (pageData?.pages.nodes ?? []).map(page => ({
     ...page,
     url: localizeUrl(siteUrl, page.slug, 'page'),
   }));

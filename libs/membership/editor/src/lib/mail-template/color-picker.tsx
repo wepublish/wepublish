@@ -1,7 +1,8 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Box, ClickAwayListener, Popper, Tooltip } from '@mui/material';
 import { Sketch } from '@uiw/react-color';
-import { useWebsiteSettingsQuery } from '@wepublish/editor/api';
+import { WebsiteSettingsDocument } from '@wepublish/editor/api';
 import { useMemo, useRef, useState } from 'react';
 
 const ElevatedPopper = styled(Popper)`
@@ -14,7 +15,7 @@ const ElevatedPopper = styled(Popper)`
  * to look up a hex value.
  */
 export const useThemePresetColors = (): string[] => {
-  const { data } = useWebsiteSettingsQuery();
+  const { data } = useQuery(WebsiteSettingsDocument);
 
   return useMemo(() => {
     const theme = data?.websiteSettings?.theme as
@@ -53,6 +54,7 @@ export interface MailColorPickerProps {
   /** Called before the picker opens — used to snapshot the editor selection. */
   onOpen?: () => void;
   title?: string;
+  label?: string;
   size?: number;
 }
 
@@ -66,6 +68,7 @@ export function MailColorPicker({
   onChange,
   onOpen,
   title,
+  label,
   size = 32,
 }: MailColorPickerProps) {
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -75,12 +78,23 @@ export function MailColorPicker({
   const swatch = (
     <Box
       ref={anchorRef}
+      role="button"
+      tabIndex={0}
+      aria-label={title ?? label}
+      aria-expanded={open}
       onMouseDown={event => {
         // Keep the caret in the editor: opening the picker must not steal it.
         event.preventDefault();
         onOpen?.();
       }}
       onClick={() => setOpen(current => !current)}
+      onKeyDown={event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onOpen?.();
+          setOpen(current => !current);
+        }
+      }}
       sx={theme => ({
         width: size,
         height: size,

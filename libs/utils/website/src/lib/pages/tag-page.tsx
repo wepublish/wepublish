@@ -1,12 +1,12 @@
 import { TagContainer } from '@wepublish/tag/website';
-import { TagType } from '@wepublish/website/api';
 import {
-  addClientCacheToProps,
   ArticleListDocument,
-  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   TagDocument,
+  TagType,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
@@ -57,7 +57,7 @@ export const TagPageGetStaticPaths = () => ({
 });
 
 export const TagPageGetStaticProps = (async ({ params }) => {
-  const { tag } = params || {};
+  const tag = params!.tag!.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const tagResult = await client.query({
@@ -68,7 +68,7 @@ export const TagPageGetStaticProps = (async ({ params }) => {
     },
   });
 
-  if (tagResult.errors?.length || !tagResult.data?.tag) {
+  if (tagResult.error || !tagResult.data?.tag) {
     return {
       notFound: true,
       revalidate: 1,
@@ -97,7 +97,7 @@ export const TagPageGetStaticProps = (async ({ params }) => {
   ]);
 
   const props = addClientCacheToProps(client, {
-    tag: tag as string,
+    tag,
   });
 
   return {

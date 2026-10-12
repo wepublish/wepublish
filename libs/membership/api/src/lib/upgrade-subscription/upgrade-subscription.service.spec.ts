@@ -4,81 +4,132 @@ import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 
 import { MemberContextService } from '../legacy/member-context.service';
 import { GoodieService } from '../goodie/goodie.service';
-import { PaymentsService } from '@wepublish/payment/api';
+import {
+  isPaymentMethodRetired,
+  PaymentsService,
+} from '@wepublish/payment/api';
 import { DiscountCodeService } from '../discountCode/discountCode.service';
 import { SettingsService } from '@wepublish/settings/api';
+import type { Mock } from 'vitest';
 
-jest.mock('../legacy/member-context.service');
-jest.mock('@wepublish/payment/api');
+vi.mock('../legacy/member-context.service');
+vi.mock('@wepublish/payment/api');
 
 describe('UpgradeSubscriptionService', () => {
   let service: UpgradeSubscriptionService;
   let prismaMock: {
     subscription: {
-      findUnique: jest.Mock;
-      update: jest.Mock;
+      findUnique: Mock;
+      findMany: Mock;
+      update: Mock;
+      delete: Mock;
+    };
+    invoice: {
+      findMany: Mock;
+      deleteMany: Mock;
+    };
+    invoiceItem: {
+      deleteMany: Mock;
+    };
+    payment: {
+      deleteMany: Mock;
+    };
+    subscriptionPeriod: {
+      update: Mock;
+      deleteMany: Mock;
+    };
+    subscriptionDeactivation: {
+      delete: Mock;
     };
     memberPlan: {
-      findUnique: jest.Mock;
+      findUnique: Mock;
+    };
+    paymentMethod: {
+      findUnique: Mock;
     };
   };
   let memberContextMock: {
-    cancelInvoicesForSubscription: jest.Mock;
-    cancelRemoteSubscription: jest.Mock;
-    createSubscription: jest.Mock;
+    cancelInvoicesForSubscription: Mock;
+    cancelRemoteSubscription: Mock;
+    createSubscription: Mock;
   };
 
   let paymentServiceMock: {
-    createPaymentWithProvider: jest.Mock;
+    createPaymentWithProvider: Mock;
   };
 
   let discountCodeserviceMock: {
-    getValidDiscountCode: jest.Mock;
+    getValidDiscountCode: Mock;
   };
 
   let goodieServiceMock: {
-    getValidGoodie: jest.Mock;
+    getValidGoodie: Mock;
   };
 
   let settingsServiceMock: {
-    settingByName: jest.Mock;
+    settingByName: Mock;
   };
 
   beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2025-01-01'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2025-01-01'));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   beforeAll(async () => {
     prismaMock = {
       subscription: {
-        findUnique: jest.fn(),
-        update: jest.fn(),
+        findUnique: vi.fn(),
+        findMany: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+      },
+      invoice: {
+        findMany: vi.fn(),
+        deleteMany: vi.fn(),
+      },
+      invoiceItem: {
+        deleteMany: vi.fn(),
+      },
+      payment: {
+        deleteMany: vi.fn(),
+      },
+      subscriptionPeriod: {
+        deleteMany: vi.fn(),
+      },
+      subscriptionPeriod: {
+        update: vi.fn(),
+        deleteMany: vi.fn(),
+      },
+      subscriptionDeactivation: {
+        delete: vi.fn(),
       },
       memberPlan: {
-        findUnique: jest.fn(),
+        findUnique: vi.fn(),
+      },
+      paymentMethod: {
+        findUnique: vi.fn(),
       },
     };
     memberContextMock = {
-      cancelInvoicesForSubscription: jest.fn(),
-      cancelRemoteSubscription: jest.fn(),
-      createSubscription: jest.fn(),
+      cancelInvoicesForSubscription: vi.fn(),
+      cancelRemoteSubscription: vi.fn(),
+      createSubscription: vi.fn(),
     };
     paymentServiceMock = {
-      createPaymentWithProvider: jest.fn(),
+      createPaymentWithProvider: vi.fn(),
     };
     discountCodeserviceMock = {
-      getValidDiscountCode: jest.fn(),
+      getValidDiscountCode: vi.fn(),
     };
     goodieServiceMock = {
-      getValidGoodie: jest.fn(),
+      getValidGoodie: vi.fn(),
     };
     settingsServiceMock = {
-      settingByName: jest.fn().mockResolvedValue({ value: false }),
+      settingByName: vi.fn().mockResolvedValue({ value: false }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -412,6 +463,47 @@ describe('UpgradeSubscriptionService', () => {
   });
 
   describe('unhappy path', () => {
+    it('should throw an error if the payment method belongs to a deleted provider', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue({
+        id: 'subscriptionId',
+        userID: 'userId',
+        memberPlanID: 'oldMemberPlanId',
+        currency: Currency.CHF,
+        paymentPeriodicity: PaymentPeriodicity.yearly,
+        periods: [],
+      });
+      prismaMock.memberPlan.findUnique.mockResolvedValue({
+        id: 'memberPlanId',
+        currency: Currency.CHF,
+        availablePaymentMethods: [
+          {
+            paymentMethodIDs: ['paymentMethodId'],
+            paymentPeriodicities: [PaymentPeriodicity.yearly],
+            forceAutoRenewal: false,
+          },
+        ],
+      });
+      prismaMock.paymentMethod.findUnique.mockResolvedValue({
+        id: 'paymentMethodId',
+        paymentProviderID: 'mollie',
+      });
+      vi.mocked(isPaymentMethodRetired).mockResolvedValueOnce(true);
+
+      await expect(
+        service.upgradeSubscription({
+          subscriptionId: 'subscriptionId',
+          memberPlanId: 'memberPlanId',
+          paymentMethodId: 'paymentMethodId',
+          userId: 'userId',
+          monthlyAmount: 80,
+        })
+      ).rejects.toThrow('is no longer offered');
+      expect(isPaymentMethodRetired).toHaveBeenCalledWith(prismaMock, {
+        id: 'paymentMethodId',
+        paymentProviderID: 'mollie',
+      });
+    });
+
     it('should throw an error if the subscription can not be found', async () => {
       prismaMock.subscription.findUnique.mockResolvedValue(null);
 
@@ -638,6 +730,161 @@ describe('UpgradeSubscriptionService', () => {
           userId: 'userId',
         });
       }).rejects.toMatchSnapshot();
+    });
+  });
+
+  describe('revertUpgrade', () => {
+    const replacedSubscription = {
+      id: 'oldSubscriptionId',
+      userID: 'userId',
+      paymentPeriodicity: PaymentPeriodicity.yearly,
+      paidUntil: new Date('2025-01-01'),
+      deactivation: {
+        id: 'deactivationId',
+        date: new Date('2025-01-01'),
+      },
+      periods: [
+        {
+          id: 'periodId',
+          startsAt: new Date('2024-06-01'),
+          // truncated by the upgrade
+          endsAt: new Date('2025-01-01'),
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+        },
+      ],
+    };
+
+    const replacement = {
+      id: 'newSubscriptionId',
+      userID: 'userId',
+      replacesSubscriptionID: 'oldSubscriptionId',
+      invoices: [{ id: 'newInvoiceId', paidAt: null }],
+    };
+
+    it('removes the replacement subscription and restores the original one', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue(
+        replacedSubscription
+      );
+      prismaMock.subscription.findMany.mockResolvedValue([replacement]);
+      prismaMock.invoice.findMany.mockResolvedValue(replacement.invoices);
+
+      await service.revertUpgrade({
+        subscriptionId: 'oldSubscriptionId',
+        userId: null,
+      });
+
+      // the invoice of the upgrade and everything hanging off it goes with it
+      expect(prismaMock.payment.deleteMany).toHaveBeenCalledWith({
+        where: { invoiceID: { in: ['newInvoiceId'] } },
+      });
+      expect(prismaMock.subscriptionPeriod.deleteMany).toHaveBeenCalledWith({
+        where: { invoiceID: { in: ['newInvoiceId'] } },
+      });
+      expect(prismaMock.invoiceItem.deleteMany).toHaveBeenCalledWith({
+        where: { invoiceId: { in: ['newInvoiceId'] } },
+      });
+      expect(prismaMock.invoice.deleteMany).toHaveBeenCalledWith({
+        where: { id: { in: ['newInvoiceId'] } },
+      });
+      expect(prismaMock.subscription.delete).toHaveBeenCalledWith({
+        where: { id: 'newSubscriptionId' },
+      });
+      expect(prismaMock.subscriptionDeactivation.delete).toHaveBeenCalledWith({
+        where: { subscriptionID: 'oldSubscriptionId' },
+      });
+    });
+
+    it('restores the period and paidUntil the upgrade cut short', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue(
+        replacedSubscription
+      );
+      prismaMock.subscription.findMany.mockResolvedValue([replacement]);
+      prismaMock.invoice.findMany.mockResolvedValue(replacement.invoices);
+
+      await service.revertUpgrade({
+        subscriptionId: 'oldSubscriptionId',
+        userId: null,
+      });
+
+      // yearly period starting 2024-06-01 originally ran until 2025-05-31
+      expect(prismaMock.subscriptionPeriod.update).toHaveBeenCalledWith({
+        where: { id: 'periodId' },
+        data: { endsAt: new Date('2025-05-31') },
+      });
+      expect(prismaMock.subscription.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'oldSubscriptionId' },
+          data: expect.objectContaining({ paidUntil: new Date('2025-05-31') }),
+        })
+      );
+    });
+
+    it('refuses to revert when the replacement has been paid', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue(
+        replacedSubscription
+      );
+      prismaMock.subscription.findMany.mockResolvedValue([
+        {
+          ...replacement,
+          invoices: [{ id: 'newInvoiceId', paidAt: new Date('2025-01-02') }],
+        },
+      ]);
+
+      await expect(
+        service.revertUpgrade({
+          subscriptionId: 'oldSubscriptionId',
+          userId: null,
+        })
+      ).rejects.toThrow();
+      expect(prismaMock.subscription.delete).not.toHaveBeenCalled();
+    });
+
+    it('refuses to revert a subscription that was never upgraded', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue(
+        replacedSubscription
+      );
+      prismaMock.subscription.findMany.mockResolvedValue([]);
+
+      await expect(
+        service.revertUpgrade({
+          subscriptionId: 'oldSubscriptionId',
+          userId: null,
+        })
+      ).rejects.toThrow();
+      expect(prismaMock.subscription.delete).not.toHaveBeenCalled();
+    });
+
+    it('reverts the upgrade of another user when run without a user', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue({
+        ...replacedSubscription,
+        userID: 'someoneElse',
+      });
+      prismaMock.subscription.findMany.mockResolvedValue([replacement]);
+      prismaMock.invoice.findMany.mockResolvedValue(replacement.invoices);
+
+      // admins revert without a user, which skips the ownership check
+      await service.revertUpgrade({
+        subscriptionId: 'oldSubscriptionId',
+        userId: null,
+      });
+
+      expect(prismaMock.subscription.delete).toHaveBeenCalledWith({
+        where: { id: 'newSubscriptionId' },
+      });
+    });
+
+    it('refuses to revert a subscription of another user', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue(
+        replacedSubscription
+      );
+
+      await expect(
+        service.revertUpgrade({
+          subscriptionId: 'oldSubscriptionId',
+          userId: 'someoneElse',
+        })
+      ).rejects.toThrow();
+      expect(prismaMock.subscription.delete).not.toHaveBeenCalled();
     });
   });
 });

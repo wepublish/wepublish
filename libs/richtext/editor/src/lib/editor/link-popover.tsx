@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import styled from '@emotion/styled';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { TbExternalLink, TbLinkPlus } from 'react-icons/tb';
 import { useHeadings } from './use-headings';
 import {
@@ -24,6 +24,7 @@ import {
 import * as z from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import {
   EditorStateSnapshot,
@@ -58,11 +59,17 @@ const Actions = styled('div')`
 `;
 
 const CancelButton = styled(Button)`
-  background-color: ${({ theme }) => theme.palette.grey[100]};
+  background-color: ${({ theme }) =>
+    theme.palette.mode === 'dark' ?
+      theme.palette.grey[800]
+    : theme.palette.grey[100]};
   color: ${({ theme }) => theme.palette.text.primary};
 
   &:hover {
-    background-color: ${({ theme }) => theme.palette.grey[200]};
+    background-color: ${({ theme }) =>
+      theme.palette.mode === 'dark' ?
+        theme.palette.grey[700]
+      : theme.palette.grey[200]};
   }
 `;
 
@@ -97,30 +104,36 @@ type LinkPopoverProps = {
   onClose: () => void;
 };
 
-const linkSchema = z.union([
-  z.object({
-    type: z.literal('web'),
-    url: z
-      .string()
-      .url()
-      .or(z.string().startsWith('#'))
-      .or(z.string().startsWith('/')),
-    newTab: z.boolean(),
-    variant: z.string().nullish(),
-  }),
-  z.object({
-    type: z.literal('email'),
-    url: z.string().email(),
-    newTab: z.boolean(),
-    variant: z.string().nullish(),
-  }),
-  z.object({
-    type: z.literal('anchor'),
-    url: z.string(),
-    newTab: z.boolean(),
-    variant: z.string().nullish(),
-  }),
-]);
+const createLinkSchema = (t: TFunction) => {
+  const invalidUrl = t('errorMessages.invalidUrlErrorMessage');
+
+  return z.union([
+    z.object({
+      type: z.literal('web'),
+      url: z
+        .string()
+        .url(invalidUrl)
+        .or(z.string().startsWith('#', invalidUrl))
+        .or(z.string().startsWith('/', invalidUrl)),
+      newTab: z.boolean(),
+      variant: z.string().nullish(),
+    }),
+    z.object({
+      type: z.literal('email'),
+      url: z.string().email(t('errorMessages.invalidEmailErrorMessage')),
+      newTab: z.boolean(),
+      variant: z.string().nullish(),
+    }),
+    z.object({
+      type: z.literal('anchor'),
+      url: z.string(),
+      newTab: z.boolean(),
+      variant: z.string().nullish(),
+    }),
+  ]);
+};
+
+type LinkFormValues = z.infer<ReturnType<typeof createLinkSchema>>;
 
 const selectLinkState = ({ editor }: EditorStateSnapshot) => {
   if (!editor || editor.isDestroyed) {
@@ -197,13 +210,14 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
       .run();
   }, [editor]);
 
-  const { control, handleSubmit, watch, formState, reset, trigger } = useForm<
-    z.infer<typeof linkSchema>
-  >({
-    resolver: zodResolver(linkSchema),
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
-  });
+  const linkSchema = useMemo(() => createLinkSchema(t), [t]);
+
+  const { control, handleSubmit, watch, formState, reset, trigger } =
+    useForm<LinkFormValues>({
+      resolver: zodResolver(linkSchema),
+      mode: 'onTouched',
+      reValidateMode: 'onChange',
+    });
 
   const onSubmit = handleSubmit(({ type, url, newTab, variant }) => {
     applyLink(type === 'email' ? `${mailTo}${url}` : url, {
@@ -221,7 +235,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
       url: stripMailto(editorState.href),
       newTab: editorState.isLink ? editorState.target === '_blank' : true,
       variant: editorState.variant ?? null,
-    } as z.infer<typeof linkSchema>);
+    } as LinkFormValues);
   }, [headings, editorState, reset]);
 
   return (
@@ -234,13 +248,14 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
         if (e.key === 'Escape') {
           onClose();
         }
+
+        if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
+          e.preventDefault();
+          onSubmit();
+        }
       }}
     >
-      <Form
-        component="form"
-        noValidate
-        onSubmit={onSubmit}
-      >
+      <Form>
         <Typography
           variant="subtitle1"
           component={Title}
@@ -328,34 +343,36 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
                   : t('richtext.link.url')
                 }
                 type={linkType === 'email' ? 'email' : 'url'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        edge="end"
-                        size="small"
-                        title={t('richtext.link.openLink')}
-                        disabled={!field.value}
-                        onClick={() => {
-                          if (!field.value) {
-                            return;
-                          }
-
-                          const url =
-                            linkType === 'email' ?
-                              `${mailTo}${field.value}`
-                            : field.value;
-
-                          window.open(url, '_blank', 'noopener,noreferrer');
-                        }}
-                      >
-                        <TbExternalLink size={18} />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
                 error={!!error}
                 helperText={error?.message}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          edge="end"
+                          size="small"
+                          title={t('richtext.link.openLink')}
+                          disabled={!field.value}
+                          onClick={() => {
+                            if (!field.value) {
+                              return;
+                            }
+
+                            const url =
+                              linkType === 'email' ?
+                                `${mailTo}${field.value}`
+                              : field.value;
+
+                            window.open(url, '_blank', 'noopener,noreferrer');
+                          }}
+                        >
+                          <TbExternalLink size={18} />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
               />
             )}
           />
@@ -402,7 +419,7 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
                       key={option.value}
                       value={option.value}
                     >
-                      {option.label}
+                      {t(option.labelKey)}
                     </MenuItem>
                   ))}
                 </Select>
@@ -438,10 +455,10 @@ export function LinkPopover({ open, anchorEl, onClose }: LinkPopoverProps) {
 
           <Button
             fullWidth
-            type="submit"
             variant="contained"
             disableElevation
             disabled={!formState.isValid}
+            onClick={onSubmit}
           >
             {t('save')}
           </Button>

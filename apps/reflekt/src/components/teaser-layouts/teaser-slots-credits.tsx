@@ -7,7 +7,10 @@ import {
   TeaserSlotsBlockTeasers as TeaserSlotsBlockTeasersDefault,
   TeaserSlotsBlockWrapper as TeaserSlotsBlockWrapperDefault,
 } from '@wepublish/block-content/website';
-import { BlockContent, FlexAlignment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullFlexAlignmentFragment,
+} from '@wepublish/website/api';
 import {
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
@@ -18,7 +21,7 @@ import { anchorId } from '../anchor-id';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const isTeaserSlotsCredits = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderTeaserSlotsBlockProps =>
   allPass([
     isTeaserSlotsBlock,
@@ -28,13 +31,13 @@ export const isTeaserSlotsCredits = (
 export const alignmentForTeaserBlock = (
   index: number,
   numColumns: number
-): FlexAlignment => {
+): FullFlexAlignmentFragment => {
   const columnIndex = index % numColumns;
   const rowIndex = Math.floor(index / numColumns);
 
   return {
+    __typename: 'FlexAlignment' as const,
     i: index.toString(),
-    static: false,
     h: 2,
     w: 12 / numColumns,
     x: (12 / numColumns) * columnIndex,

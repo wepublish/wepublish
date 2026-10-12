@@ -1,15 +1,17 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  FullPoll,
+  FullPollFragment,
+  PollDocument,
   PollExternalVote,
-  PollExternalVoteSource,
-  usePollQuery,
-  useUpdatePollMutation,
+  PollExternalVoteSourceFragment,
+  UpdatePollDocument,
 } from '@wepublish/editor/api';
 import { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
+  InfoTooltip,
   PollAnswers,
   PollExternalVotes,
   RichTextBlock,
@@ -29,7 +31,7 @@ const PollEditor = styled.div`
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
   align-items: start;
-  gap: 12px;
+  gap: 16px;
 `;
 
 const DatesWrapper = styled.div`
@@ -45,22 +47,22 @@ const DateItem = styled.div``;
 function PollEditView() {
   const params = useParams();
   const navigate = useNavigate();
-  const [poll, setPoll] = useState<FullPoll | undefined>(undefined);
+  const [poll, setPoll] = useState<FullPollFragment | undefined>(undefined);
   const [close, setClose] = useState<boolean>(false);
   const closePath = '/polls';
 
   /**
    * Handling toasts
    */
-  const onErrorToast = (error: ApolloError) => {
+  const onErrorToast = (error: Error) => {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -79,16 +81,25 @@ function PollEditView() {
 
   // get polls
 
-  const { data, loading: createLoading } = usePollQuery({
+  const {
+    data,
+    loading: createLoading,
+    error: pollError,
+  } = useQuery(PollDocument, {
     variables: {
       id: params.id!,
     },
-    onError: onErrorToast,
   });
+
+  useEffect(() => {
+    if (pollError) {
+      onErrorToast(pollError);
+    }
+  }, [pollError]);
 
   // updating poll
   const [updatePoll, { loading: updateLoading, data: updateData }] =
-    useUpdatePollMutation({
+    useMutation(UpdatePollDocument, {
       onError: onErrorToast,
       onCompleted: onCompletedToast,
     });
@@ -129,7 +140,7 @@ function PollEditView() {
     const closedAt =
       poll.closedAt ? new Date(poll.closedAt).toISOString() : null;
     const externalSources = poll.externalVoteSources?.map(
-      (voteSource: PollExternalVoteSource) => ({
+      (voteSource: PollExternalVoteSourceFragment) => ({
         ...voteSource,
         __typename: undefined,
         voteAmounts: voteSource.voteAmounts?.map(
@@ -181,7 +192,7 @@ function PollEditView() {
 
     setPoll({
       ...poll,
-      closedAt: closedAt?.toISOString(),
+      closedAt: closedAt?.toISOString() ?? null,
     });
   };
 
@@ -237,7 +248,10 @@ function PollEditView() {
               </DateItem>
 
               <DateItem>
-                <DateLabel>{t('pollEditView.closesAtLabel')}</DateLabel>
+                <DateLabel>
+                  {t('pollEditView.closesAtLabel')}{' '}
+                  <InfoTooltip text={t('pollEditView.closesAtInfo')} />
+                </DateLabel>
 
                 <DatePicker
                   value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
@@ -256,14 +270,19 @@ function PollEditView() {
         >
           <PollAnswers
             poll={poll}
-            onPollChange={(poll: FullPoll) => {
+            onPollChange={(poll: FullPollFragment) => {
               setPoll(poll);
             }}
           />
         </Panel>
 
         <Panel
-          header={t('pollEditView.infoText')}
+          header={
+            <>
+              {t('pollEditView.infoText')}{' '}
+              <InfoTooltip text={t('pollEditView.infoTextInfo')} />
+            </>
+          }
           bordered
         >
           <RichTextBlock
@@ -280,13 +299,18 @@ function PollEditView() {
         </Panel>
 
         <Panel
-          header={t('pollEditView.pollExternalVotesPanelHeader')}
+          header={
+            <>
+              {t('pollEditView.pollExternalVotesPanelHeader')}{' '}
+              <InfoTooltip text={t('pollEditView.pollExternalVotesInfo')} />
+            </>
+          }
           bordered
           css={{ gridColumn: '-1/1' }}
         >
           <PollExternalVotes
             poll={poll}
-            onPollChange={(poll: FullPoll) => {
+            onPollChange={(poll: FullPollFragment) => {
               setPoll(poll);
             }}
           />

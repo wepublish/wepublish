@@ -10,27 +10,28 @@ const user = {
 
 const makeService = ({ preview = false } = {}) => {
   const recorder = {
-    recordMailSignals: jest.fn(),
-    recordUserSignal: jest.fn(async () => undefined),
+    recordMailSignals: vi.fn(),
+    recordUserSignal: vi.fn(async () => undefined),
   };
   const jwtService = {
-    verifyImpersonationGrant: jest.fn(async () => null),
-    verifyJWT: jest.fn(async () => (preview ? user.id : null)),
+    verifyImpersonationGrant: vi.fn(async () => null),
+    verifyJWT: vi.fn(async () => (preview ? user.id : null)),
   };
   const service = new SessionService(
-    { user: { findUnique: jest.fn(async () => user) } } as any,
+    { user: { findUnique: vi.fn(async () => user) } } as any,
     7,
     {} as any,
     {} as any,
-    { authenticateUserWithJWT: jest.fn(async () => user) } as any,
+    { authenticateUserWithJWT: vi.fn(async () => user) } as any,
     jwtService as any,
     {} as any,
     { emailQualityRecorder: recorder } as any,
+    {} as any,
     {} as any
   );
-  jest
-    .spyOn(service, 'createUserSession')
-    .mockResolvedValue({ token: 'session' } as any);
+  vi.spyOn(service, 'createUserSession').mockResolvedValue({
+    token: 'session',
+  } as any);
 
   return { service, recorder };
 };

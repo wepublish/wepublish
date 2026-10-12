@@ -180,7 +180,7 @@ const Card = styled.div<{ isCurrent: boolean }>`
   border: 1px solid
     ${({ isCurrent, theme }) =>
       isCurrent ? theme.palette.primary.main : theme.palette.divider};
-  border-radius: 8px;
+  border-radius: var(--rs-radius-md);
   padding: 12px 14px;
   background: ${({ theme }) => theme.palette.background.paper};
   transition: border-color 0.15s;
@@ -216,11 +216,11 @@ const stateMeta: Record<
   RevisionState,
   { color: 'success' | 'info' | 'warning' | 'default'; hex: string }
 > = {
-  published: { color: 'success', hex: '#2e7d32' },
-  pending: { color: 'info', hex: '#0288d1' },
-  draft: { color: 'warning', hex: '#ed6c02' },
-  superseded: { color: 'default', hex: '#78909c' },
-  archived: { color: 'default', hex: '#90a4ae' },
+  published: { color: 'success', hex: 'var(--rs-state-success)' },
+  pending: { color: 'info', hex: 'var(--rs-state-info)' },
+  draft: { color: 'warning', hex: 'var(--rs-state-warning)' },
+  superseded: { color: 'default', hex: 'var(--rs-text-secondary)' },
+  archived: { color: 'default', hex: 'var(--rs-gray-400)' },
 };
 
 const stateIcon: Record<RevisionState, ReactElement> = {
@@ -323,7 +323,9 @@ export function VersionHistory({
             <Typography variant="h6">{t('versionHistory.title')}</Typography>
             <Typography
               variant="body2"
-              color="text.secondary"
+              sx={{
+                color: 'text.secondary',
+              }}
             >
               {t('versionHistory.subtitle', {
                 count: totalCount ?? revisions.length,
@@ -332,7 +334,10 @@ export function VersionHistory({
           </Box>
 
           <Tooltip title={t('versionHistory.close')}>
-            <IconButton onClick={onClose}>
+            <IconButton
+              aria-label={t('versionHistory.close')}
+              onClick={onClose}
+            >
               <MdClose />
             </IconButton>
           </Tooltip>
@@ -383,7 +388,6 @@ export function VersionHistory({
                       <Dot dotColor={meta.hex}>{stateIcon[state]}</Dot>
                       <Connector className="timeline-connector" />
                     </Rail>
-
                     <Card isCurrent={isCurrent}>
                       <CardTopRow>
                         <Chip
@@ -396,8 +400,10 @@ export function VersionHistory({
                         <Tooltip title={formatDate(revision.createdAt)}>
                           <Typography
                             variant="caption"
-                            color="text.secondary"
-                            sx={{ whiteSpace: 'nowrap' }}
+                            sx={{
+                              color: 'text.secondary',
+                              whiteSpace: 'nowrap',
+                            }}
                           >
                             {formatRelative(revision.createdAt)}
                           </Typography>
@@ -411,8 +417,8 @@ export function VersionHistory({
                       {revision.subtitle && (
                         <Typography
                           variant="caption"
-                          color="text.secondary"
                           sx={{
+                            color: 'text.secondary',
                             display: '-webkit-box',
                             WebkitLineClamp: 2,
                             WebkitBoxOrient: 'vertical',
@@ -425,9 +431,11 @@ export function VersionHistory({
 
                       <Typography
                         variant="caption"
-                        color="text.secondary"
                         component="div"
-                        sx={{ mt: 0.5 }}
+                        sx={{
+                          color: 'text.secondary',
+                          mt: 0.5,
+                        }}
                       >
                         {t('versionHistory.created', {
                           date: formatDate(revision.createdAt),
@@ -465,8 +473,8 @@ export function VersionHistory({
 
                         <Typography
                           variant="caption"
-                          color="text.secondary"
                           sx={{
+                            color: 'text.secondary',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
@@ -553,7 +561,9 @@ export function VersionHistory({
               {totalCount != null && (
                 <Typography
                   variant="caption"
-                  color="text.secondary"
+                  sx={{
+                    color: 'text.secondary',
+                  }}
                 >
                   {t('versionHistory.showing', {
                     count: revisions.length,
@@ -565,7 +575,6 @@ export function VersionHistory({
           )}
         </ScrollArea>
       </DrawerContent>
-
       <Dialog
         open={!!pendingRestore}
         onClose={() => setPendingRestore(null)}

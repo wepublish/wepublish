@@ -1,6 +1,8 @@
+import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { forwardRef, Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { PaywallDataloaderService } from './paywall-dataloader.service';
+import { PaywallMemberPlansDataloader } from './paywall-member-plans.dataloader';
 import { PaywallService } from './paywall.service';
 import { PaywallResolver } from './paywall.resolver';
 import {
@@ -10,9 +12,14 @@ import {
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 
 @Module({
-  imports: [PrismaModule, forwardRef(() => MemberPlanModule)],
+  imports: [
+    GraphqlResponseCacheModule,
+    PrismaModule,
+    forwardRef(() => MemberPlanModule),
+  ],
   providers: [
     PaywallDataloaderService,
+    PaywallMemberPlansDataloader,
     PaywallService,
     PaywallResolver,
     HasPaywallResolver,

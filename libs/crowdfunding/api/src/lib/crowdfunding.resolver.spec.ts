@@ -5,6 +5,7 @@ import { CrowdfundingService } from './crowdfunding.service';
 import { CrowdfundingDataloaderService } from './crowdfunding-dataloader.service';
 import { CrowdfundingGoalDataloader } from './crowdfunding-goal.dataloader';
 import { CrowdfundingMemberPlanDataloader } from './crowdfunding-memberplan.dataloader';
+import type { Mock } from 'vitest';
 
 const mockCrowdfunding = (
   override: Partial<Crowdfunding> = {}
@@ -22,12 +23,12 @@ const mockCrowdfunding = (
 
 describe('CrowdfundingResolver', () => {
   let resolver: CrowdfundingResolver;
-  let crowdfundingService: { getSubscriptions: jest.Mock };
-  let memberPlanDataloader: { load: jest.Mock };
+  let crowdfundingService: { getSubscriptions: Mock };
+  let memberPlanDataloader: { load: Mock };
 
   beforeEach(async () => {
-    crowdfundingService = { getSubscriptions: jest.fn() };
-    memberPlanDataloader = { load: jest.fn().mockResolvedValue([]) };
+    crowdfundingService = { getSubscriptions: vi.fn() };
+    memberPlanDataloader = { load: vi.fn().mockResolvedValue([]) };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -35,13 +36,13 @@ describe('CrowdfundingResolver', () => {
         { provide: CrowdfundingService, useValue: crowdfundingService },
         {
           provide: CrowdfundingDataloaderService,
-          useValue: { load: jest.fn() },
+          useValue: { load: vi.fn() },
         },
         {
           provide: CrowdfundingMemberPlanDataloader,
           useValue: memberPlanDataloader,
         },
-        { provide: CrowdfundingGoalDataloader, useValue: { load: jest.fn() } },
+        { provide: CrowdfundingGoalDataloader, useValue: { load: vi.fn() } },
       ],
     }).compile();
 

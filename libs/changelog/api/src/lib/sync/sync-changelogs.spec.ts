@@ -37,9 +37,9 @@ const validMarkdown = (title: string, actionRequired = false) =>
 
 const createMockClient = () => ({
   changelogEntry: {
-    findMany: jest.fn().mockResolvedValue([]),
-    create: jest.fn().mockResolvedValue({}),
-    update: jest.fn().mockResolvedValue({}),
+    findMany: vi.fn().mockResolvedValue([]),
+    create: vi.fn().mockResolvedValue({}),
+    update: vi.fn().mockResolvedValue({}),
   },
 });
 

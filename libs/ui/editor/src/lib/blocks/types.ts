@@ -8,17 +8,19 @@ import {
   FullCrowdfundingFragment,
   FullEventFragment,
   FullImageFragment,
-  FullPoll,
-  FullTeaserFragment,
-  PageWithoutBlocksFragment,
+  FullPollFragment,
   SubscribeBlock,
+  FullTagFragment,
+  FullTeaserFragment,
+  MailchimpFormOptionsLayout,
+  NestedBlockTemplateBlockFragment,
+  PageWithoutBlocksFragment,
   SubscribeBlockField,
   SubscribePeriodicityDisplay,
-  Tag,
   TeaserInput,
   TeaserListBlockSort,
-  TeaserSlotsAutofillConfigInput,
   TeaserSlotType,
+  TeaserSlotsAutofillConfigInput,
   TeaserType,
 } from '@wepublish/editor/api';
 import type { RichtextJSONDocument } from '@wepublish/richtext';
@@ -27,6 +29,36 @@ import nanoid from 'nanoid';
 import { BlockListValue } from '../atoms/blockList';
 import { ListValue } from '../atoms/listInput';
 import { TeaserMetadataProperty } from '../panel/teaserEditPanel';
+
+/**
+ * The FullTeaser fragment does not select `__typename`, so the generated
+ * union lacks a discriminant even though Apollo Client always adds the
+ * field to the response data at runtime. The per-variant fragment types are
+ * not emitted anymore either, so they get narrowed out of the combined union
+ * by the field that is unique to each variant.
+ */
+type FullTeaser_ArticleTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { article: unknown }
+>;
+type FullTeaser_CustomTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { contentUrl: unknown }
+>;
+type FullTeaser_EventTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { event: unknown }
+>;
+type FullTeaser_PageTeaser_Fragment = Extract<
+  FullTeaserFragment,
+  { page: unknown }
+>;
+
+type FullTeaserFragmentWithTypename =
+  | (FullTeaser_ArticleTeaser_Fragment & { __typename: 'ArticleTeaser' })
+  | (FullTeaser_CustomTeaser_Fragment & { __typename: 'CustomTeaser' })
+  | (FullTeaser_EventTeaser_Fragment & { __typename: 'EventTeaser' })
+  | (FullTeaser_PageTeaser_Fragment & { __typename: 'PageTeaser' });
 
 export interface BaseBlockValue {
   blockStyle?: string | null;
@@ -88,6 +120,7 @@ export interface MailchimpFormInterestOptionValue {
   id: string;
   name: string;
   description?: string | null;
+  image?: FullImageFragment | null;
 }
 
 export interface MailchimpFormFieldConfigValue {
@@ -99,6 +132,7 @@ export interface MailchimpFormFieldConfigValue {
   urlParam?: string | null;
   defaultValue?: string | null;
   value?: string | null;
+  optionsLayout: MailchimpFormOptionsLayout;
   options: MailchimpFormInterestOptionValue[];
 }
 
@@ -137,7 +171,7 @@ export interface MailchimpFormBlockValue extends BaseBlockValue {
 }
 
 export interface PollBlockValue extends BaseBlockValue {
-  poll: Pick<FullPoll, 'id' | 'question'> | null | undefined;
+  poll: Pick<FullPollFragment, 'id' | 'question'> | null | undefined;
 }
 
 export interface CrowdfundingBlockValue extends BaseBlockValue {
@@ -184,6 +218,10 @@ export type FlexBlockWithAlignment = {
 
 export interface FlexBlockValue extends BaseBlockValue {
   blocks: Array<FlexBlockWithAlignment>;
+}
+
+export interface BlockTemplateBlockValue extends BaseBlockValue {
+  template?: NestedBlockTemplateBlockFragment['template'];
 }
 
 export enum EmbedType {
@@ -346,7 +384,7 @@ export interface TeaserListBlockValue extends BaseBlockValue {
   title?: string | null;
   filter: {
     tags?: string[] | null;
-    tagObjects: Pick<Tag, 'id' | 'tag'>[];
+    tagObjects: Pick<FullTagFragment, 'id' | 'tag'>[];
   };
   teaserType: TeaserType;
   skip: number;
@@ -480,6 +518,10 @@ export type FlexBlockListValue = BlockListValue<
   EditorBlockType.FlexBlock,
   FlexBlockValue
 >;
+export type BlockTemplateListValue = BlockListValue<
+  EditorBlockType.BlockTemplate,
+  BlockTemplateBlockValue
+>;
 
 export type BlockValue =
   | TitleBlockListValue
@@ -502,7 +544,8 @@ export type BlockValue =
   | CommentBlockListValue
   | EventBlockListValue
   | TeaserListBlockListValue
-  | FlexBlockListValue;
+  | FlexBlockListValue
+  | BlockTemplateListValue;
 
 export function mapBlockValueToBlockInput(
   block: BlockValue
@@ -605,11 +648,16 @@ export function mapBlockValueToBlockInput(
               urlParam: input.urlParam,
               defaultValue: input.defaultValue,
               value: input.value,
-              options: input.options.map(option => ({
-                id: option.id,
-                name: option.name,
-                description: option.description,
-              })),
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
+              options: input.options
+                .filter(option => !!option.id)
+                .map(option => ({
+                  id: option.id,
+                  name: option.name,
+                  description: option.description,
+                  imageID: option.image?.id,
+                })),
             })),
           })),
           successPage:
@@ -933,6 +981,15 @@ export function mapBlockValueToBlockInput(
       };
 
       return { flexBlock };
+    }
+    case EditorBlockType.BlockTemplate: {
+      return {
+        blockTemplate: {
+          templateId: block.value.template?.id ?? '',
+          blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
+        },
+      };
     }
   }
 }
@@ -1293,10 +1350,13 @@ export function blockForQueryBlock(
               urlParam: input.urlParam ?? null,
               defaultValue: input.defaultValue ?? null,
               value: input.value ?? null,
+              optionsLayout:
+                input.optionsLayout ?? MailchimpFormOptionsLayout.List,
               options: (input.options ?? []).map(option => ({
                 id: option.id,
                 name: option.name,
                 description: option.description ?? null,
+                image: option.image ?? null,
               })),
             })),
           })),
@@ -1329,17 +1389,24 @@ export function blockForQueryBlock(
           take: block.take ?? 6,
           sort: block.sort,
           teaserType: block.teaserType ?? TeaserType.Article,
-          teasers: block.teasers.map((teaser, index) => [
-            `${index}`,
-            {
-              ...teaser,
-              type:
-                teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
-                : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
-                : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
-                : TeaserType.Custom,
-            } as Teaser,
-          ]),
+          teasers: block.teasers.map((rawTeaser, index) => {
+            const teaser = rawTeaser as
+              | FullTeaserFragmentWithTypename
+              | null
+              | undefined;
+
+            return [
+              `${index}`,
+              {
+                ...teaser,
+                type:
+                  teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
+                  : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
+                  : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
+                  : TeaserType.Custom,
+              } as Teaser,
+            ];
+          }),
         },
       };
 
@@ -1449,6 +1516,17 @@ export function blockForQueryBlock(
         },
       };
 
+    case 'BlockTemplateBlock':
+      return {
+        key,
+        type: EditorBlockType.BlockTemplate,
+        value: {
+          disabled: block.disabled,
+          blockStyle: block.blockStyle,
+          template: block.template,
+        },
+      };
+
     case 'PollBlock':
       return {
         key,
@@ -1502,8 +1580,10 @@ export function blockForQueryBlock(
 }
 
 const mapTeaserToQueryTeaser = (
-  teaser: FullTeaserFragment | null | undefined
+  rawTeaser: FullTeaserFragment | null | undefined
 ): Teaser | null => {
+  const teaser = rawTeaser as FullTeaserFragmentWithTypename | null | undefined;
+
   if (!teaser) {
     return null;
   }

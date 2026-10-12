@@ -1,16 +1,16 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  FullEventFragment,
+  ImportEventDocument,
   ImportedEventFilter,
+  ImportedEventListDocument,
+  ImportedEventsIdsDocument,
   createWithV2ApiClient,
-  useImportEventMutation,
-  useImportedEventListQuery,
-  useImportedEventsIdsQuery,
 } from '@wepublish/editor/api';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Pagination, Table as RTable, toaster } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
-import { Event } from '@wepublish/editor/api';
 
 import styled from '@emotion/styled';
 import {
@@ -69,7 +69,7 @@ export function EventEndsAtView({
   return <>{t('event.list.endsAtNone')}</>;
 }
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message
@@ -102,29 +102,41 @@ export default function ImportableEventListView() {
     setPage(1); // reset page to first
   };
 
-  const { data, loading: queryLoading } = useImportedEventListQuery({
+  const {
+    data,
+    loading: queryLoading,
+    error,
+  } = useQuery(ImportedEventListDocument, {
     variables: importedEventListVariables,
-    onError: onErrorToast,
   });
 
-  const [createEvent, { loading: mutationLoading }] = useImportEventMutation({
-    onCompleted: data => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.createdSuccess')}
-        </Message>
-      );
-      navigate(`/events/edit/${data.importEvent}`);
-    },
-    onError: onErrorToast,
-  });
+  useEffect(() => {
+    if (error) {
+      onErrorToast(error);
+    }
+  }, [error]);
 
-  const { data: ids } = useImportedEventsIdsQuery({});
+  const [createEvent, { loading: mutationLoading }] = useMutation(
+    ImportEventDocument,
+    {
+      onCompleted: data => {
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('toast.createdSuccess')}
+          </Message>
+        );
+        navigate(`/events/edit/${data.importEvent}`);
+      },
+      onError: onErrorToast,
+    }
+  );
+
+  const { data: ids } = useQuery(ImportedEventsIdsDocument, {});
   const alreadyImported = ids?.importedEventsIds;
 
   const importEvent = async (id: string, source: string) => {
@@ -159,7 +171,9 @@ export default function ImportableEventListView() {
             resizable
           >
             <HeaderCell>{t('event.list.name')}</HeaderCell>
-            <Cell>{(rowData: RowDataType<Event>) => rowData.name}</Cell>
+            <Cell>
+              {(rowData: RowDataType<FullEventFragment>) => rowData.name}
+            </Cell>
           </Column>
 
           <Column
@@ -168,7 +182,7 @@ export default function ImportableEventListView() {
           >
             <HeaderCell>{t('event.list.startsAtHeader')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => (
+              {(rowData: RowDataType<FullEventFragment>) => (
                 <EventStartsAtView startsAt={rowData.startsAt} />
               )}
             </Cell>
@@ -180,7 +194,7 @@ export default function ImportableEventListView() {
           >
             <HeaderCell>{t('event.list.endsAtHeader')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => (
+              {(rowData: RowDataType<FullEventFragment>) => (
                 <EventEndsAtView endsAt={rowData.endsAt} />
               )}
             </Cell>
@@ -192,7 +206,9 @@ export default function ImportableEventListView() {
           >
             <HeaderCell>{t('event.list.source')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => rowData.externalSourceName}
+              {(rowData: RowDataType<FullEventFragment>) =>
+                rowData.externalSourceName
+              }
             </Cell>
           </Column>
 
@@ -202,7 +218,7 @@ export default function ImportableEventListView() {
           >
             <HeaderCell>{t('event.list.source')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) =>
+              {(rowData: RowDataType<FullEventFragment>) =>
                 alreadyImported && alreadyImported.includes(rowData.id) ?
                   <Button
                     appearance="ghost"

@@ -7,7 +7,7 @@ import {
   useTheme,
   ThemeOptions,
 } from '@mui/material';
-import { TypographyStyleOptions } from '@mui/material/styles/createTypography';
+import { TypographyStyle } from '@mui/material/styles';
 import {
   Breakpoint,
   createBreakpoints,
@@ -17,6 +17,8 @@ import {
 } from '@mui/system';
 import { ComponentType, createElement, memo, useMemo } from 'react';
 import { PartialDeep } from 'type-fest';
+
+type TypographyStyleOptions = TypographyStyle;
 
 declare module '@emotion/react' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface

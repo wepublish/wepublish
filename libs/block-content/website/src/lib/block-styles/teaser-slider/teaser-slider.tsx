@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserGridBlockFragment,
   FullTeaserListBlockFragment,
   FullTeaserSlotsBlockFragment,
@@ -284,7 +284,7 @@ export const TeaserSlider = ({
 };
 
 export const isTeaserSliderBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is
   | FullTeaserGridBlockFragment
   | FullTeaserListBlockFragment
