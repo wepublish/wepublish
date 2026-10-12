@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ReactNode, useState } from 'react';
-
 import { FaChevronDown } from 'react-icons/fa6';
 
 export const BkaCollapsibleCardWrapper = styled('div')`
@@ -76,7 +75,7 @@ export const BkaCollapsibleCardContent = styled('div')`
   &::before {
     content: '';
     display: block;
-    height: 1.5px;
+    height: 1px;
     margin-bottom: ${({ theme }) => theme.spacing(1)};
     background-color: currentColor;
   }

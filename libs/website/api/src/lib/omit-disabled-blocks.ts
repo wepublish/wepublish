@@ -1,10 +1,7 @@
 import { InMemoryCacheConfig } from '@apollo/client';
 
-/**
- * Cache merge payload, not an operation result — codegen only emits schema
- * types that operations actually select, so the shape is declared locally.
- */
 type MergedBlock = { disabled?: boolean | null };
+type MergedFlexBlock = { block?: MergedBlock | null };
 
 type MergedFlexBlock = { block?: MergedBlock | null };
 

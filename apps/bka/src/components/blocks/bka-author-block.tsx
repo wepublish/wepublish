@@ -46,10 +46,6 @@ export const BkaAuthorBlockBio = styled('div')`
     margin: 0;
     font-size: inherit;
     line-height: inherit;
-    text-wrap: wrap;
-    hyphens: manual;
-    word-break: normal;
-    overflow-wrap: normal;
   }
 `;
 

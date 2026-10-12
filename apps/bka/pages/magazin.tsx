@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
 import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
 import { ArticleListContainer } from '@wepublish/article/website';
 import { Blocks } from '@wepublish/block-content/website';
 import { PageSEO } from '@wepublish/page/website';
@@ -11,7 +11,6 @@ import {
   getApiClient,
   NavigationListDocument,
   PageDocument,
-  PageQuery,
   PeerProfileDocument,
   SortOrder,
 } from '@wepublish/website/api';
@@ -157,7 +156,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const client = getApiClient(getApiUrl(), []);
 
   const [page] = await Promise.all([
-    client.query<PageQuery>({
+    client.query({
       query: PageDocument,
       variables: { slug: MAGAZIN_SLUG },
     }),

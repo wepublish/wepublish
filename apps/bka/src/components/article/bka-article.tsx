@@ -145,8 +145,6 @@ export const BkaArticleLead = styled('p')`
   font-size: calc(1.2674rem + 0.1292vw);
   font-weight: 300;
   line-height: 1.5;
-  text-wrap: wrap;
-  hyphens: manual;
   word-break: normal;
   overflow-wrap: normal;
 
@@ -286,12 +284,6 @@ export const BkaArticleContent = styled('div')`
       padding-left: ${({ theme }) => theme.spacing(5)};
       padding-right: ${({ theme }) => theme.spacing(11.5)};
     }
-  }
-
-  p {
-    hyphens: manual;
-    word-break: normal;
-    overflow-wrap: normal;
   }
 
   & > ${RichTextBlockWrapper}:first-of-type p:first-of-type::first-letter {

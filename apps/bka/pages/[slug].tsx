@@ -1,5 +1,4 @@
 import { CombinedGraphQLErrors } from '@apollo/client';
-import styled from '@emotion/styled';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
@@ -14,20 +13,6 @@ import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
-import { BkaSidebar } from '../src/components/cta/bka-sidebar';
-
-const PageGrid = styled('div')`
-  display: grid;
-  grid-template-columns: 1fr;
-  align-items: start;
-  gap: ${({ theme }) => theme.spacing(5)};
-
-  ${({ theme }) => theme.breakpoints.up('lg')} {
-    grid-template-columns: minmax(0, 1fr) 364px;
-    column-gap: 126px;
-  }
-`;
-
 export default function PageBySlugOrId() {
   const {
     query: { slug, id },
@@ -38,13 +23,7 @@ export default function PageBySlugOrId() {
     id,
   } as ComponentProps<typeof PageContainer>;
 
-  return (
-    <PageGrid>
-      <PageContainer {...containerProps} />
-
-      <BkaSidebar />
-    </PageGrid>
-  );
+  return <PageContainer {...containerProps} />;
 }
 
 export const getStaticPaths = () => ({
