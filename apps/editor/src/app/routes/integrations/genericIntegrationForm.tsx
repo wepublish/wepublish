@@ -321,8 +321,6 @@ export function SingleGenericIntegrationForm<
                         value={value}
                         onChange={
                           field.type === 'number' ?
-                            // The input hands over text; the form keeps a
-                            // number, or null once the field is emptied.
                             (text: string) =>
                               onChange(text === '' ? null : Number(text))
                           : onChange
