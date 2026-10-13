@@ -1,5 +1,6 @@
+import { useQuery } from '@apollo/client/react';
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { useWebsiteSettingsQuery } from '@wepublish/editor/api';
+import { WebsiteSettingsDocument } from '@wepublish/editor/api';
 import { forwardRef, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { FieldError } from 'react-hook-form';
@@ -17,7 +18,7 @@ export const AvailableFontsPicker = memo(
   forwardRef<HTMLDivElement, AvailableFontsPickerProps>(
     ({ name, value, onChange, onBlur, error }, ref) => {
       const { t } = useTranslation();
-      const { data } = useWebsiteSettingsQuery();
+      const { data } = useQuery(WebsiteSettingsDocument);
       const fonts = data?.websiteSettings.fonts ?? [];
 
       const handleChange = (e: SelectChangeEvent<string>) => {
@@ -42,7 +43,6 @@ export const AvailableFontsPicker = memo(
             )),
             document.head
           )}
-
           <Select
             ref={ref}
             name={name}

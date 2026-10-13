@@ -10,7 +10,10 @@ import {
   BuilderBlockStyleProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { BlockContent, FullBreakBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullBreakBlockFragment,
+} from '@wepublish/website/api';
 
 export const ContextBoxWrapper = styled('aside')`
   display: grid;
@@ -91,6 +94,6 @@ export const ContextBox = ({
 };
 
 export const isContextBoxBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullBreakBlockFragment =>
   allPass([hasBlockStyle('ContextBox'), isBreakBlock])(block);

@@ -8,6 +8,7 @@ npm-debug.log
 .CHANGELOG-next.md
 coverage/
 screenshots
+docs/superpowers
 
 # Nx
 tmp
@@ -29,3 +30,6 @@ tools/removed_keys.json
 tsconfig.tsbuildinfo
 
 .claude/worktrees
+/plan.json
+
+.claude/settings.local.json

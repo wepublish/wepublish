@@ -9,9 +9,8 @@ import {
   RichTextBlockWrapper,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
-  FlexAlignment,
   FullBlockFragment,
+  FullFlexAlignmentFragment,
 } from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
@@ -24,7 +23,7 @@ import { useEffect, useRef } from 'react';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const isFlexBlockFullsizeImage = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderFlexBlockProps => {
   return allPass([
     hasBlockStyle(ReflektBlockStyles.FlexBlockFullsizeImage),
@@ -52,7 +51,7 @@ export const FlexBlockFullsizeImageWrapper = styled('div')`
   }
 `;
 
-export const BlockWithAlignment = styled('div')<FlexAlignment>`
+export const BlockWithAlignment = styled('div')<FullFlexAlignmentFragment>`
   grid-column: -1 / 1;
   grid-row: 1 / 2;
   overflow: hidden;
@@ -520,7 +519,7 @@ export const FlexBlockFullsizeImage = ({
             key={index}
             data-text-block={isTextBlock ? 'true' : undefined}
             data-image-block={!isTextBlock ? 'true' : undefined}
-            {...(nestedBlock.alignment as FlexAlignment)}
+            {...(nestedBlock.alignment as FullFlexAlignmentFragment)}
           >
             <Renderer
               block={nestedBlock.block as FullBlockFragment}

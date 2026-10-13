@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { Chip, css, SxProps, Typography } from '@mui/material';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
-import { FlexAlignment, FullTeaserFragment } from '@wepublish/website/api';
+import {
+  FullFlexAlignmentFragment,
+  FullTeaserFragment,
+} from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
   Image,
@@ -164,7 +167,24 @@ export const selectTeaserLastPublishDate = (teaser: FullTeaserFragment) => {
   }
 };
 
-export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
+export const formatAuthorName = ({
+  author,
+  role,
+}: {
+  author: { name: string };
+  role?: string | null;
+}) => (role ? `${author.name} (${role})` : author.name);
+
+export const joinAuthorNames = (
+  authors: string[],
+  separator: string,
+  lastSeparator: string
+) =>
+  authors.length > 1 ?
+    `${authors.slice(0, -1).join(separator)}${lastSeparator}${authors.at(-1)}`
+  : (authors[0] ?? '');
+
+const selectTeaserAuthorEntries = (teaser: FullTeaserFragment) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return null;
@@ -175,15 +195,25 @@ export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
         return null;
       }
 
-      return teaser.article?.latest.authors
-        .filter(author => !author.hideOnTeaser)
-        .map(author => author.name);
+      return teaser.article?.latest.authors.filter(
+        ({ author }) => !author.hideOnTeaser
+      );
     }
 
     case 'EventTeaser':
     case 'CustomTeaser':
       return null;
   }
+};
+
+export const selectTeaserAuthors = (teaser: FullTeaserFragment) => {
+  return (
+    selectTeaserAuthorEntries(teaser)?.map(({ author }) => author.name) ?? null
+  );
+};
+
+export const selectTeaserAuthorsWithRole = (teaser: FullTeaserFragment) => {
+  return selectTeaserAuthorEntries(teaser)?.map(formatAuthorName) ?? null;
 };
 
 export const selectTeaserTags = (teaser: FullTeaserFragment) => {
@@ -213,7 +243,7 @@ export const selectTeaserTags = (teaser: FullTeaserFragment) => {
   return [];
 };
 
-export const TeaserWrapper = styled('article')<FlexAlignment>`
+export const TeaserWrapper = styled('article')<FullFlexAlignmentFragment>`
   display: grid;
 
   ${({ theme, w }) =>
@@ -390,12 +420,12 @@ const TeaserContent = ({
   className,
   children,
   target,
-  title,
+  label,
 }: PropsWithChildren<{
   href?: string;
   className?: string;
   target?: string;
-  title: string | null | undefined;
+  label: string;
 }>) => {
   const {
     elements: { Link },
@@ -409,7 +439,7 @@ const TeaserContent = ({
         href={href}
         target={target}
         css={stretchToParentHeight}
-        aria-label={title ?? ''}
+        aria-label={label}
       >
         <TeaserContentWrapper className={className}>
           {children}
@@ -464,7 +494,7 @@ export const BaseTeaser = ({
   const peerLogo = teaser && selectTeaserPeerImage(teaser);
   const publishDate = teaser && selectTeaserDate(teaser);
   const updatedPublishDate = teaser && selectTeaserLastPublishDate(teaser);
-  const authors = teaser && selectTeaserAuthors(teaser);
+  const authors = teaser && selectTeaserAuthorsWithRole(teaser);
   const tags =
     teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle);
 
@@ -476,10 +506,24 @@ export const BaseTeaser = ({
   const { t } = useTranslation();
   const { date } = useWebsiteBuilder();
 
+  const authorNames =
+    authors?.length ?
+      t('teaser.author.text', { authors: authors.join(', ') })
+    : null;
+
+  const ariaLabel = t('teaser.ariaLabel', {
+    hasTitle: !!title,
+    title: title ?? '',
+    hasLead: !!lead,
+    lead: lead ?? '',
+    hasAuthors: !!authors?.length,
+    authors: authors?.join(', ') ?? '',
+  }).trim();
+
   return (
     <TeaserWrapper {...alignment}>
       <TeaserContent
-        title={title}
+        label={ariaLabel}
         href={href}
         target={target}
         className={className}
@@ -518,12 +562,8 @@ export const BaseTeaser = ({
           variant="teaserMeta"
           component={TeaserMetadata}
         >
-          {authors && authors?.length ?
-            <TeaserAuthors>
-              {t('teaser.author.text', {
-                authors: authors?.join(t('teaser.author.seperator')),
-              })}
-            </TeaserAuthors>
+          {authorNames ?
+            <TeaserAuthors>{authorNames}</TeaserAuthors>
           : null}
 
           {publishDate && authors && authors?.length ?

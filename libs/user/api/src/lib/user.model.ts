@@ -137,6 +137,33 @@ export class SensitiveDataUser extends BaseUser {
   roles!: UserRole[];
 }
 
+export enum UserSubscriptionStatus {
+  Active = 'Active',
+  Deactivated = 'Deactivated',
+  Planned = 'Planned',
+  Unpaid = 'Unpaid',
+  Expired = 'Expired',
+}
+
+registerEnumType(UserSubscriptionStatus, {
+  name: 'UserSubscriptionStatus',
+});
+
+@ObjectType()
+export class UserSubscriptionOverview {
+  @Field()
+  id!: string;
+
+  @Field()
+  memberPlanName!: string;
+
+  @Field(() => UserSubscriptionStatus, {
+    description:
+      'Active means started and paid up, not merely not deactivated: imported subscriptions often expire without a deactivation.',
+  })
+  status!: UserSubscriptionStatus;
+}
+
 @ObjectType()
 export class PaginatedSensitiveDataUsers extends PaginatedType(
   SensitiveDataUser
@@ -159,6 +186,7 @@ export enum UserSort {
   ModifiedAt = 'ModifiedAt',
   Name = 'Name',
   FirstName = 'FirstName',
+  SubscriptionCount = 'SubscriptionCount',
 }
 
 registerEnumType(UserSort, {

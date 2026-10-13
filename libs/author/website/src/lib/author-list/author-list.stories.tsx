@@ -1,7 +1,6 @@
 import { Meta } from '@storybook/nextjs-vite';
 import { action } from 'storybook/actions';
 import { AuthorList } from './author-list';
-import { ApolloError } from '@apollo/client';
 import { mockAuthor } from '@wepublish/storybook/mocks';
 
 export default {
@@ -52,9 +51,7 @@ export const WithError = {
   args: {
     data: undefined,
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Author list error',
-    }),
+    error: new Error('Author list error'),
     onVariablesChange: action('onVariablesChange'),
   },
 };

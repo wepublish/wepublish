@@ -1,7 +1,9 @@
-import { Banner, useBannersQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
+import { BannersDocument, FullBannerFragment } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   IconButton,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -9,7 +11,7 @@ import {
   Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -22,19 +24,22 @@ const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function BannerList() {
   const { t } = useTranslation();
-  const [bannerDelete, setBannerDelete] = useState<Banner | undefined>(
-    undefined
-  );
+  const [bannerDelete, setBannerDelete] = useState<
+    FullBannerFragment | undefined
+  >(undefined);
 
-  const { data, loading, error, refetch } = useBannersQuery({
+  const { data, loading, error, refetch } = useQuery(BannersDocument, {
     variables: {
       take: 100,
       skip: 0,
     },
-    onError: () => {
-      console.log(error);
-    },
   });
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+    }
+  }, [error]);
 
   return (
     <>
@@ -68,7 +73,7 @@ function BannerList() {
           >
             <HeaderCell>{t('banner.list.title')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Banner>) => (
+              {(rowData: RowDataType<FullBannerFragment>) => (
                 <Link to={`/banners/edit/${rowData.id}`}>{rowData.title}</Link>
               )}
             </RCell>
@@ -79,7 +84,9 @@ function BannerList() {
           >
             <HeaderCell>{t('banner.list.text')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Banner>) => (rowData as Banner).text}
+              {(rowData: RowDataType<FullBannerFragment>) =>
+                (rowData as FullBannerFragment).text
+              }
             </RCell>
           </Column>
           <Column
@@ -88,8 +95,8 @@ function BannerList() {
           >
             <HeaderCell>{t('banner.list.active')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Banner>) =>
-                (rowData as Banner).active ? '✓' : '⨯'
+              {(rowData: RowDataType<FullBannerFragment>) =>
+                (rowData as FullBannerFragment).active ? '✓' : '⨯'
               }
             </RCell>
           </Column>
@@ -99,28 +106,34 @@ function BannerList() {
           >
             <HeaderCell>{t('banner.form.showForLoginStatus')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Banner>) =>
+              {(rowData: RowDataType<FullBannerFragment>) =>
                 t(
-                  `banner.form.loginStatus.${(rowData as Banner).showForLoginStatus}`
+                  `banner.form.loginStatus.${(rowData as FullBannerFragment).showForLoginStatus}`
                 )
               }
             </RCell>
           </Column>
           <Column
-            resizable
+            width={100}
+            align="center"
             fixed="right"
           >
-            <HeaderCell align={'center'}>{t('banner.list.delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(banner: RowDataType<Banner>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() => setBannerDelete(banner as Banner)}
-                />
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell align="center">
+              {(banner: RowDataType<FullBannerFragment>) => (
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    onClick={() =>
+                      setBannerDelete(banner as FullBannerFragment)
+                    }
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

@@ -1,8 +1,11 @@
 import { useLocalStorage } from '@wepublish/ui';
 import { useCallback, useMemo } from 'react';
 
+import { ColumnConfiguratorColumn } from './column-configurator';
+
 export type ColumnConfigColumn = {
   id: string;
+  label: string;
   alwaysVisible?: boolean;
 };
 
@@ -60,5 +63,13 @@ export const useColumnConfig = (
 
   const reset = useCallback(() => setHidden([]), [setHidden]);
 
-  return { isVisible, toggle, reset } as const;
+  const configurableColumns = useMemo<ColumnConfiguratorColumn[]>(
+    () =>
+      columns
+        .filter(column => !column.alwaysVisible)
+        .map(({ id, label }) => ({ id, label })),
+    [columns]
+  );
+
+  return { isVisible, toggle, reset, configurableColumns } as const;
 };

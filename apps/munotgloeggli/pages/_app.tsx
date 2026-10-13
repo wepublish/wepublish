@@ -31,9 +31,9 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithApiClient,
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
+  createWithApiClient,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
@@ -48,6 +48,7 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import deOverriden from '../locales/deOverriden.json';
+import { MunotgloeggliCrowdfundingBlock } from '../src/components/website-builder-overwrites/blocks/crowdfunding';
 import { MunotgloeggliBaseTeaser } from '../src/components/website-builder-overwrites/blocks/teaser';
 import fontTheme from '../src/theme';
 
@@ -88,7 +89,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
   : format(date, 'dd. MMMM yyyy');
 
 export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
+  sessionToken?: FullSessionWithTokenWithoutUserFragment;
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
@@ -138,7 +139,10 @@ function CustomApp({
               elements={{ Link: NextWepublishLink }}
               date={{ format: dateFormatter }}
               meta={{ siteTitle }}
-              blocks={{ BaseTeaser: MunotgloeggliBaseTeaser }}
+              blocks={{
+                BaseTeaser: MunotgloeggliBaseTeaser,
+                Crowdfunding: MunotgloeggliCrowdfundingBlock,
+              }}
             >
               <CssBaseline />
 

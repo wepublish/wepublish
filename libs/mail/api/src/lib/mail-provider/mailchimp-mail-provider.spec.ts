@@ -1,9 +1,13 @@
 import bodyParser from 'body-parser';
+import { createHmac } from 'crypto';
 import nock from 'nock';
 import { MailLogState } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { MailchimpMailProvider } from './mailchimp-mail-provider';
-import { MailProviderError } from './mail-provider.interface';
+import {
+  MailProviderError,
+  MailProviderRecipientError,
+} from './mail-provider.interface';
 
 const MANDRILL = 'https://mandrillapp.com:443';
 
@@ -19,6 +23,7 @@ const makeProvider = async () => {
       name: 'Mailchimp',
       fromAddress: 'dev@wepublish.ch',
       apiKey: 'key',
+      webhookEndpointSecret: 'webhook-key',
     })
   );
 
@@ -102,6 +107,82 @@ describe('MailchimpMailProvider', () => {
     );
   });
 
+  describe('classifying a refusal', () => {
+    const rejectionError = async (
+      rejection: Record<string, unknown>
+    ): Promise<Error> => {
+      nock(MANDRILL)
+        .post('/api/1.0/messages/send')
+        .reply(200, [{ email: sendProps.recipient, _id: 'x', ...rejection }]);
+
+      const provider = await makeProvider();
+
+      return provider.sendMail(sendProps).then(
+        () => {
+          throw new Error('Expected the send to be refused');
+        },
+        (error: Error) => error
+      );
+    };
+
+    // These say something about this one address only. The next recipient is
+    // unaffected, so a batch job may log the miss and carry on.
+    it.each([
+      'hard-bounce',
+      'soft-bounce',
+      'spam',
+      'unsub',
+      'custom',
+      'invalid',
+    ])('blames only the recipient for %s', async reject_reason => {
+      const error = await rejectionError({
+        status: 'rejected',
+        reject_reason,
+      });
+
+      expect(error).toBeInstanceOf(MailProviderRecipientError);
+      expect(error.message).toBe(
+        `Mandrill rejected user@example.com: ${reject_reason}`
+      );
+    });
+
+    it('blames only the recipient for an unusable address', async () => {
+      const error = await rejectionError({ status: 'invalid' });
+
+      expect(error).toBeInstanceOf(MailProviderRecipientError);
+    });
+
+    // These would refuse every other message of the run just the same, so they
+    // have to keep bringing the whole job down.
+    it.each(['invalid-sender', 'unsigned', 'test-mode-limit', 'rule'])(
+      'blames the account for %s',
+      async reject_reason => {
+        const error = await rejectionError({
+          status: 'rejected',
+          reject_reason,
+        });
+
+        expect(error).toBeInstanceOf(MailProviderError);
+        expect(error).not.toBeInstanceOf(MailProviderRecipientError);
+      }
+    );
+
+    it('blames the account for a reason it does not know', async () => {
+      const error = await rejectionError({
+        status: 'rejected',
+        reject_reason: 'something-mandrill-added-later',
+      });
+
+      expect(error).not.toBeInstanceOf(MailProviderRecipientError);
+    });
+
+    it('blames the account for a refusal without a reason', async () => {
+      const error = await rejectionError({ status: 'rejected' });
+
+      expect(error).not.toBeInstanceOf(MailProviderRecipientError);
+    });
+  });
+
   it('keeps the mandrill message id so the state can be polled later', async () => {
     nock(MANDRILL)
       .post('/api/1.0/messages/send')
@@ -175,6 +256,53 @@ describe('MailchimpMailProvider', () => {
         providerMessageID: 'msg-2',
         state: MailLogState.delivered,
       });
+    });
+  });
+
+  describe('webhook', () => {
+    const url = 'https://api.example.com/v1/mail-webhook/mailchimp';
+    const body = {
+      mandrill_events: JSON.stringify([
+        { event: 'send', msg: { metadata: { mail_log_id: 'log-1' } } },
+      ]),
+    };
+
+    const signedWith = (key: string) =>
+      createHmac('sha1', key)
+        .update(`${url}mandrill_events${body.mandrill_events}`)
+        .digest('base64');
+
+    const webhook = (signature: string) => ({
+      req: {
+        method: 'POST',
+        headers: {
+          'x-mandrill-signature': signature,
+          host: 'api.example.com',
+        },
+        originalUrl: '/v1/mail-webhook/mailchimp',
+        body,
+      },
+    });
+
+    it('refuses a webhook that was not signed with the webhook key', async () => {
+      const provider = await makeProvider();
+
+      await expect(
+        provider.webhookForSendMail(webhook(signedWith('forged')) as never)
+      ).rejects.toThrow('Webhook signature failed');
+    });
+
+    it('accepts a webhook signed with the webhook key', async () => {
+      const provider = await makeProvider();
+
+      await expect(
+        provider.webhookForSendMail(webhook(signedWith('webhook-key')) as never)
+      ).resolves.toEqual([
+        expect.objectContaining({
+          mailLogID: 'log-1',
+          state: MailLogState.delivered,
+        }),
+      ]);
     });
   });
 

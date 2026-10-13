@@ -1,58 +1,3 @@
-fragment SlimPaywall on Paywall {
-  id
-  memberPlans {
-    id
-    name
-    tags
-  }
-}
-
-fragment FullPaywall on Paywall {
-  id
-  active
-  anyMemberPlan
-  name
-  description
-  circumventDescription
-  alternativeSubscribeUrl
-  upgradeDescription
-  upgradeCircumventDescription
-  memberPlans {
-    id
-    name
-    tags
-  }
-  bypasses {
-    id
-    token
-  }
-
-  fadeout
-  hideContentAfter
-}
-
-fragment SlimArticleRevision on ArticleRevision {
-  id
-  publishedAt
-  preTitle
-  title
-  lead
-  breaking
-  hideAuthor
-
-  authors {
-    ...SlimAuthor
-  }
-
-  image {
-    ...SlimImage
-  }
-
-  properties {
-    ...FullProperty
-  }
-}
-
 fragment FullArticleRevision on ArticleRevision {
   ...SlimArticleRevision
 
@@ -76,33 +21,11 @@ fragment FullArticleRevision on ArticleRevision {
   }
 
   authors {
-    ...FullAuthor
-  }
-}
+    role
 
-fragment SlimArticle on Article {
-  id
-  publishedAt
-  url
-  slug
-  likes
-  disableComments
-
-  tags {
-    ...FullTag
-  }
-
-  latest {
-    ...SlimArticleRevision
-  }
-
-  paywall {
-    ...SlimPaywall
-  }
-
-  peerId
-  peer {
-    ...FullPeer
+    author {
+      ...FullAuthor
+    }
   }
 }
 

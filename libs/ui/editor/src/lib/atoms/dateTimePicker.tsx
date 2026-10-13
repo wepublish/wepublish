@@ -1,17 +1,17 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdInfo } from 'react-icons/md';
 import {
   Button,
   ButtonGroup,
   ButtonToolbar,
   DatePicker,
   Form,
-  IconButton,
   Popover as RPopover,
   Whisper,
 } from 'rsuite';
+
+import { InfoTrigger } from './infoTooltip';
 
 export interface DateTimePreset {
   label: string;
@@ -99,6 +99,11 @@ export function DateTimePicker({
     changeDate(day);
   };
 
+  const handleChange = (value: Date | null) => {
+    setDateSelection(value ?? null);
+    changeDate(value ?? undefined);
+  };
+
   const handleTimePresetButton = (hour: number) => {
     const day = dateSelection ? new Date(dateSelection) : new Date();
     if (hour === 0) {
@@ -129,11 +134,7 @@ export function DateTimePicker({
               </Popover>
             }
           >
-            <IconButton
-              icon={<MdInfo />}
-              circle
-              size="xs"
-            />
+            <InfoTrigger aria-label={helpInfo} />
           </Whisper>
         : ''}
       </Header>
@@ -144,10 +145,8 @@ export function DateTimePicker({
         cleanable
         format="dd.MM.yyyy HH:mm"
         value={dateSelection}
-        onChange={value => {
-          setDateSelection(value ?? null);
-          changeDate(value ?? undefined);
-        }}
+        onSelect={handleChange}
+        onChange={handleChange}
         renderExtraFooter={() => (
           <Presets>
             <ButtonToolbar>

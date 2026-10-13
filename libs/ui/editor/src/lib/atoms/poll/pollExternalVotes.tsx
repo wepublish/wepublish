@@ -1,12 +1,12 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  FullPoll,
+  CreatePollExternalVoteSourceDocument,
+  DeletePollExternalVoteSourceDocument,
+  FullPollFragment,
   PollAnswer,
   PollExternalVote,
-  PollExternalVoteSource,
-  useCreatePollExternalVoteSourceMutation,
-  useDeletePollExternalVoteSourceMutation,
+  PollExternalVoteSourceFragment,
 } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,16 +24,18 @@ import {
 } from 'rsuite';
 import FormControl from 'rsuite/FormControl';
 import { RowDataType } from 'rsuite-table';
+import { humanizeError } from '../../humanizeError';
+import { IconButtonTooltip } from '../iconButtonTooltip';
 
 const Row = styled(RRow)`
   margin-top: 20px;
 `;
 
 interface ExternalVoteTableProps {
-  poll: FullPoll | undefined;
+  poll: FullPollFragment | undefined;
   loading: boolean;
-  onPollChange(poll: FullPoll): void;
-  onClickDeleteBtn(voteSource: PollExternalVoteSource): void;
+  onPollChange(poll: FullPollFragment): void;
+  onClickDeleteBtn(voteSource: PollExternalVoteSourceFragment): void;
 }
 
 export function ExternalVoteTable({
@@ -49,7 +51,7 @@ export function ExternalVoteTable({
 
   function changeSource(
     answer: PollAnswer,
-    externalVoteSource: PollExternalVoteSource,
+    externalVoteSource: PollExternalVoteSourceFragment,
     newAmount: string | number
   ) {
     if (!poll) {
@@ -93,7 +95,9 @@ export function ExternalVoteTable({
       >
         <Table.HeaderCell>{answer.answer}</Table.HeaderCell>
         <Table.Cell>
-          {(externalVoteSource: RowDataType<PollExternalVoteSource>) => (
+          {(
+            externalVoteSource: RowDataType<PollExternalVoteSourceFragment>
+          ) => (
             <NumberInput
               value={
                 externalVoteSource.voteAmounts?.find(
@@ -104,7 +108,7 @@ export function ExternalVoteTable({
               onChange={(newValue: string | number | null) => {
                 changeSource(
                   answer,
-                  externalVoteSource as PollExternalVoteSource,
+                  externalVoteSource as PollExternalVoteSourceFragment,
                   newValue ?? 0
                 );
               }}
@@ -131,16 +135,27 @@ export function ExternalVoteTable({
       </Table.Column>
       {iterateAnswerColumns()}
       {/* delete button */}
-      <Table.Column>
-        <Table.HeaderCell>{t('delete')}</Table.HeaderCell>
+      <Table.Column
+        width={100}
+        align="center"
+        fixed="right"
+      >
+        <Table.HeaderCell align="center">{t('action')}</Table.HeaderCell>
         <Table.Cell>
-          {(voteSource: RowDataType<PollExternalVoteSource>) => (
-            <IconButton
-              icon={<MdDelete />}
-              onClick={() =>
-                onClickDeleteBtn(voteSource as PollExternalVoteSource)
-              }
-            />
+          {(voteSource: RowDataType<PollExternalVoteSourceFragment>) => (
+            <IconButtonTooltip caption={t('delete')}>
+              <IconButton
+                circle
+                size="sm"
+                appearance="ghost"
+                color="red"
+                aria-label={t('delete')}
+                icon={<MdDelete />}
+                onClick={() =>
+                  onClickDeleteBtn(voteSource as PollExternalVoteSourceFragment)
+                }
+              />
+            </IconButtonTooltip>
           )}
         </Table.Cell>
       </Table.Column>
@@ -149,31 +164,32 @@ export function ExternalVoteTable({
 }
 
 interface AddSourceProps {
-  poll: FullPoll | undefined;
+  poll: FullPollFragment | undefined;
   setLoading(loading: boolean): void;
-  onPollChange(poll: FullPoll): void;
+  onPollChange(poll: FullPollFragment): void;
 }
 
 export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
   const { t } = useTranslation();
   const [newSource, setNewSource] = useState<string | undefined>(undefined);
 
-  const [createExternalVoteSource, { loading }] =
-    useCreatePollExternalVoteSourceMutation();
+  const [createExternalVoteSource, { loading }] = useMutation(
+    CreatePollExternalVoteSourceDocument
+  );
 
   useEffect(() => {
     setLoading(loading);
   }, [loading]);
 
-  const onErrorToast = (error: ApolloError) => {
+  const onErrorToast = (error: Error) => {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -185,7 +201,7 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
           showIcon
           type="error"
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollExternalVotes.emptySource')}
         </Message>
@@ -198,7 +214,7 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
           showIcon
           type="error"
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollExternalVotes.noPollAvailable')}
         </Message>
@@ -218,7 +234,7 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
       return;
     }
 
-    const updatedPoll: FullPoll = {
+    const updatedPoll: FullPollFragment = {
       ...poll,
       externalVoteSources: [...(poll.externalVoteSources ?? []), source],
     };
@@ -249,11 +265,11 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
 }
 
 interface DeleteModalProps {
-  poll: FullPoll | undefined;
-  sourceToDelete: PollExternalVoteSource | undefined;
+  poll: FullPollFragment | undefined;
+  sourceToDelete: PollExternalVoteSourceFragment | undefined;
   openModal: boolean;
   closeModal(): void;
-  onPollChange(poll: FullPoll): void;
+  onPollChange(poll: FullPollFragment): void;
 }
 
 export function DeleteModal({
@@ -265,7 +281,8 @@ export function DeleteModal({
 }: DeleteModalProps) {
   const { t } = useTranslation();
 
-  const [deleteExternalVoteSource] = useDeletePollExternalVoteSourceMutation(
+  const [deleteExternalVoteSource] = useMutation(
+    DeletePollExternalVoteSourceDocument,
     {}
   );
 
@@ -287,7 +304,7 @@ export function DeleteModal({
       return;
     }
 
-    const updatedPoll: FullPoll = {
+    const updatedPoll: FullPollFragment = {
       ...poll,
       externalVoteSources: poll.externalVoteSources.filter(
         tmpSource => tmpSource.id !== source.id
@@ -327,15 +344,15 @@ export function DeleteModal({
 }
 
 interface PollExternalVotesProps {
-  poll?: FullPoll;
-  onPollChange(poll: FullPoll): void;
+  poll?: FullPollFragment;
+  onPollChange(poll: FullPollFragment): void;
 }
 export function PollExternalVotes({
   poll,
   onPollChange,
 }: PollExternalVotesProps) {
   const [sourceToDelete, setSourceToDelete] = useState<
-    PollExternalVoteSource | undefined
+    PollExternalVoteSourceFragment | undefined
   >(undefined);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -346,7 +363,7 @@ export function PollExternalVotes({
         poll={poll}
         loading={loading}
         onPollChange={onPollChange}
-        onClickDeleteBtn={(voteSource: PollExternalVoteSource) => {
+        onClickDeleteBtn={(voteSource: PollExternalVoteSourceFragment) => {
           setOpenModal(true);
           setSourceToDelete(voteSource);
         }}

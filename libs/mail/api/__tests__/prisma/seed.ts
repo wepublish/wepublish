@@ -94,7 +94,9 @@ async function seed() {
       tags: [],
       description: {},
       active: true,
-      amountPerMonthMin: 1,
+      periodicityPricing: {
+        create: { periodicity: 'monthly', amountMin: 1 },
+      },
       currency: Currency.CHF,
     },
   });

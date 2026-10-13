@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, PrismaClient, TagType } from '@prisma/client';
-import { ArticleDataloaderService } from '@wepublish/article/api';
+import {
+  ArticleDataloaderService,
+  mapArticleRevisionAuthors,
+} from '@wepublish/article/api';
 import {
   BlockContentInput,
   BlockType,
@@ -10,6 +13,7 @@ import {
   ListicleItemInput,
 } from '@wepublish/block-content/api';
 import { ImageFetcherService, MediaAdapter } from '@wepublish/image/api';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { createSafeHostUrl, remote } from '@wepublish/peering/api';
 import { DateFilter, PrimeDataLoader } from '@wepublish/utils/api';
 import { GraphQLClient } from 'graphql-request';
@@ -47,7 +51,8 @@ export class ImportPeerArticleService {
   constructor(
     private prisma: PrismaClient,
     private imageFetcher: ImageFetcherService,
-    private mediaAdapter: MediaAdapter
+    private mediaAdapter: MediaAdapter,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   async getArticles({
@@ -181,7 +186,7 @@ export class ImportPeerArticleService {
     const { article } = await client.request<
       remote.ArticleQuery,
       remote.ArticleQueryVariables
-    >(remote.Article, {
+    >(remote.ArticleDocument, {
       id: articleId,
     });
 
@@ -205,7 +210,7 @@ export class ImportPeerArticleService {
       data: {
         peerId,
         peerArticleId: articleId,
-        slug: article.slug,
+        slug: article.slug?.toLowerCase(),
 
         paywallId: null,
         shared: false,
@@ -236,6 +241,8 @@ export class ImportPeerArticleService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('articles');
+    await this.publicContentCache.invalidate('authors');
 
     return created;
   }
@@ -249,11 +256,11 @@ export class ImportPeerArticleService {
   ): Promise<Prisma.ArticleRevisionAuthorCreateManyRevisionInput[]> {
     const res = await Promise.all(
       authors
-        .filter(author => !author.hideOnArticle)
-        .map(async author => {
+        .filter(({ author }) => !author.hideOnArticle)
+        .map(async ({ author, role }) => {
           const imageId = await this.importImage(peerId, author.image);
 
-          return this.prisma.author.upsert({
+          const imported = await this.prisma.author.upsert({
             where: {
               slug_peerId: {
                 slug: author.slug,
@@ -274,12 +281,12 @@ export class ImportPeerArticleService {
               imageID: imageId,
             },
           });
+
+          return { authorId: imported.id, role };
         })
     );
 
-    return res.map(r => ({
-      authorId: r.id,
-    }));
+    return mapArticleRevisionAuthors(res);
   }
 
   private async importTags(

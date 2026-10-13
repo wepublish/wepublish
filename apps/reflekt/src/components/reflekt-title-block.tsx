@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import {
-  BlockContent,
+  FullBlockFragment,
   TitleBlock as TitleBlockType,
 } from '@wepublish/website/api';
 import {
@@ -14,7 +14,7 @@ import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 import { BlockSibling } from './block-siblings';
 
 export const isTitleBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is TitleBlockType => block.__typename === 'TitleBlock';
 
 export const TitleBlockWrapper = styled('div', {

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { CrowdfundingService } from './crowdfunding.service';
 import { CrowdfundingResolver } from './crowdfunding.resolver';
 import {
@@ -11,7 +12,7 @@ import { CrowdfundingGoalDataloader } from './crowdfunding-goal.dataloader';
 import { CrowdfundingMemberPlanDataloader } from './crowdfunding-memberplan.dataloader';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, KvTtlCacheModule],
   providers: [
     CrowdfundingResolver,
     CrowdfundingService,

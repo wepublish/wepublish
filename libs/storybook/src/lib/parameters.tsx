@@ -1,10 +1,10 @@
-import { DefaultOptions, InMemoryCache } from '@apollo/client';
-import { MockedProvider } from '@apollo/client/testing';
+import { InMemoryCache, ApolloClient } from '@apollo/client';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { Preview } from '@storybook/react';
 import { possibleTypes } from '@wepublish/website/api';
 import i18 from './i18next';
 
-const defaultOptions: DefaultOptions = {
+const defaultOptions: ApolloClient.DefaultOptions = {
   watchQuery: {
     fetchPolicy: 'network-only',
     errorPolicy: 'all',

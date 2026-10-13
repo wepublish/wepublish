@@ -25,9 +25,9 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithApiClient,
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
+  createWithApiClient,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
@@ -40,6 +40,7 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import { CulturBreakBlock } from '../src/components/cultur-break';
+import { CulturNavbar } from '../src/components/cultur-navbar';
 import { CulturTeaser } from '../src/components/cultur-teaser';
 import { Footer } from '../src/components/footer';
 import theme from '../src/theme';
@@ -85,7 +86,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
   : format(date, 'dd. MMMM yyyy');
 
 export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
+  sessionToken?: FullSessionWithTokenWithoutUserFragment;
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
@@ -124,6 +125,7 @@ function CustomApp({
               Head={Head}
               Script={Script}
               Footer={Footer}
+              Navbar={CulturNavbar}
               elements={{ Link: NextWepublishLink }}
               blocks={{
                 BaseTeaser: CulturTeaser,

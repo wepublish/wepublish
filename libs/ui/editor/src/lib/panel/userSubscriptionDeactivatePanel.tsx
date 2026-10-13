@@ -69,6 +69,7 @@ function UserSubscriptionDeactivatePanel({
               <Label>{t('userSubscriptionEdit.deactivation.date')}</Label>
               <DatePicker
                 block
+                oneTap
                 placement="auto"
                 value={deactivationDate}
                 onChange={value => setDeactivationDate(value)}

@@ -1,5 +1,6 @@
+import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { useDailySubscriptionStatsLazyQuery } from '@wepublish/editor/api';
+import { DailySubscriptionStatsDocument } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   ListViewContainer,
@@ -23,11 +24,10 @@ const AudienceChartWrapper = styled('div')`
   padding-top: ${({ theme }) => theme.spacing(2)};
   height: 100%;
   width: 100%;
-  min-height: 40vh;
 `;
 
 const AudienceTableExportWrapper = styled('div')`
-  margin-left: 5px;
+  margin-left: 4px;
 `;
 
 const TableWrapperStyled = styled(TableWrapper)`
@@ -49,8 +49,10 @@ function AudienceDashboard({
 }: AudienceDashboardProps) {
   const { t } = useTranslation();
 
-  const [fetchStats, { data: rawAudienceStats, loading }] =
-    useDailySubscriptionStatsLazyQuery({});
+  const [fetchStats, { data: rawAudienceStats, loading }] = useLazyQuery(
+    DailySubscriptionStatsDocument,
+    {}
+  );
 
   const {
     audienceApiFilter,

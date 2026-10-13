@@ -1,68 +1,8 @@
-fragment FullPageRevisionWithoutBlocks on PageRevision {
-  id
-  createdAt
-  publishedAt
-  archivedAt
-  title
-  description
-  seoTitle
-  seoDescription
-  socialMediaTitle
-  socialMediaDescription
-
-  image {
-    ...FullImage
-  }
-
-  socialMediaImage {
-    ...FullImage
-  }
-
-  properties {
-    key
-    value
-    public
-  }
-}
-
 fragment FullPageRevision on PageRevision {
   ...FullPageRevisionWithoutBlocks
 
   blocks {
     ...FullBlock
-  }
-}
-
-fragment PageWithoutBlocks on Page {
-  id
-  publishedAt
-  createdAt
-  modifiedAt
-  slug
-  url
-  previewUrl
-  hidden
-
-  tags {
-    ...FullTag
-  }
-
-  latest {
-    ...FullPageRevisionWithoutBlocks
-  }
-
-  draft {
-    id
-  }
-
-  pending {
-    id
-    publishedAt
-  }
-
-  published {
-    id
-    publishedAt
   }
 }
 

@@ -9,7 +9,10 @@ type ResolveInput = Parameters<typeof resolveHeroVideo>[0];
 const resolve = (block: unknown) => resolveHeroVideo(block as ResolveInput);
 
 const nested = (block: unknown): HeroNestedBlock =>
-  ({ block, alignment: { x: 0, y: 0, w: 1, h: 1 } }) as HeroNestedBlock;
+  ({
+    block,
+    alignment: { x: 0, y: 0, w: 1, h: 1 },
+  }) as HeroNestedBlock;
 
 const image = () => nested({ __typename: 'ImageBlock' });
 const vimeo = (videoID = '123456') =>

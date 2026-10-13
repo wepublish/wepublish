@@ -1,10 +1,10 @@
-import styled from '@emotion/styled';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  Tag,
+  DeleteTagDocument,
+  FullTagFragment,
+  TagListDocument,
   TagListQueryVariables,
   TagType,
-  useDeleteTagMutation,
-  useTagListQuery,
 } from '@wepublish/editor/api';
 import {
   CanCreateTag,
@@ -16,6 +16,8 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  IconButton,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewFilterArea,
@@ -23,6 +25,7 @@ import {
   PaddedCell,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,13 +42,6 @@ import {
 } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 
-const IconButton = styled(RIconButton)`
-  && {
-    width: 36px;
-    height: 36px;
-  }
-`;
-
 export type TagListProps = {
   type: TagType;
 };
@@ -54,25 +50,31 @@ const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function TagList({ type }: TagListProps) {
   const { t } = useTranslation();
-  const [tagToDelete, setTagToDelete] = useState<Tag | undefined>(undefined);
+  const [tagToDelete, setTagToDelete] = useState<FullTagFragment | undefined>(
+    undefined
+  );
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
 
-  const [tagSearch, setTagSearch] = useState<string>();
+  const {
+    filter: tagSearch,
+    setFilter: setTagSearch,
+    limit,
+    setLimit,
+  } = useListViewState<string>(`tags:${type}`, { defaultFilter: '' });
 
   const tagListVariables = {
     filter: {
       type,
-      tag: tagSearch,
+      tag: tagSearch || undefined,
     },
     take: limit,
     skip: (page - 1) * limit,
   } as TagListQueryVariables;
 
-  const { data, loading, refetch } = useTagListQuery({
+  const { data, loading, refetch } = useQuery(TagListDocument, {
     variables: tagListVariables,
   });
-  const [deleteTag] = useDeleteTagMutation({
+  const [deleteTag] = useMutation(DeleteTagDocument, {
     onCompleted() {
       refetch();
     },
@@ -87,13 +89,12 @@ function TagList({ type }: TagListProps) {
 
         <ListViewActions>
           <Link to="create">
-            <IconButton
+            <RIconButton
               appearance="primary"
-              loading={false}
+              icon={<MdAdd />}
             >
-              <MdAdd />
               {t('tags.overview.createTag')}
-            </IconButton>
+            </RIconButton>
           </Link>
         </ListViewActions>
 
@@ -101,7 +102,10 @@ function TagList({ type }: TagListProps) {
           <InputGroup>
             <Input
               value={tagSearch}
-              onChange={value => setTagSearch(value)}
+              onChange={value => {
+                setTagSearch(value);
+                setPage(1);
+              }}
             />
             <InputGroup.Addon>
               <MdSearch />
@@ -123,30 +127,33 @@ function TagList({ type }: TagListProps) {
             <HeaderCell>{t('tags.overview.name')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Tag>) => (
+              {(rowData: RowDataType<FullTagFragment>) => (
                 <Link to={`edit/${rowData.id}`}>
-                  {rowData.tag || 'Tag ohne Namen'}
+                  {rowData.tag || t('untitled')}
                 </Link>
               )}
             </RCell>
           </Column>
 
           <Column
-            resizable
-            width={75}
+            width={100}
+            align="center"
             fixed="right"
           >
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(tag: RowDataType<Tag>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() => setTagToDelete(tag as Tag)}
-                />
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell align="center">
+              {(tag: RowDataType<FullTagFragment>) => (
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    onClick={() => setTagToDelete(tag as FullTagFragment)}
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>
@@ -166,7 +173,10 @@ function TagList({ type }: TagListProps) {
           total={data?.tags?.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
 

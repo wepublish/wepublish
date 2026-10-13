@@ -25,9 +25,9 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithApiClient,
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
+  createWithApiClient,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
@@ -58,7 +58,7 @@ import {
   HauptstadtImageBlock,
   HauptstadtImageGalleryBlock,
 } from '../src/components/hauptstadt-image-block';
-import { HauptstadtImageSlider } from '../src/components/hauptstadt-image-slider';
+import { HauptstadtLightbox } from '../src/components/hauptstadt-lightbox';
 import { HauptstadtListicle } from '../src/components/hauptstadt-listicle';
 import {
   HauptstadtMemberPlanItem,
@@ -123,7 +123,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
   : format(date, 'dd. MMMM yyyy');
 
 export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
+  sessionToken?: FullSessionWithTokenWithoutUserFragment;
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
@@ -197,7 +197,7 @@ function CustomApp({
                 FocusTeaser: HauptstadtFocusTeaser,
                 AlternatingTeaser: HauptstadtAlternatingTeaser,
                 TeaserSlider: HauptstadtTeaserSlider,
-                ImageSlider: HauptstadtImageSlider,
+                Lightbox: HauptstadtLightbox,
               }}
               date={{ format: dateFormatter }}
               meta={{ siteTitle }}

@@ -1,7 +1,6 @@
 import { Meta } from '@storybook/nextjs-vite';
 import {
   FullNavigationFragment,
-  Navigation,
   NavigationListDocument,
 } from '@wepublish/website/api';
 import { NavbarContainer } from './navbar-container';
@@ -73,7 +72,7 @@ const navigations = [
       },
     ],
   },
-] as Navigation[];
+] as FullNavigationFragment[];
 
 export default {
   component: NavbarContainer,

@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   Table,
@@ -11,12 +12,13 @@ import {
 import {
   FullMailSendJobFragment,
   MailLogState,
+  MailSendJobDocument,
   MailSendJobRecipientState,
+  MailSendJobRecipientsDocument,
   MailSendJobState,
-  useMailSendJobQuery,
-  useMailSendJobRecipientsQuery,
-  useMailSendJobsQuery,
+  MailSendJobsDocument,
 } from '@wepublish/editor/api';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdMail, MdOutlineChevronRight } from 'react-icons/md';
@@ -30,7 +32,7 @@ import {
   SelectPicker,
   Stack,
 } from 'rsuite';
-import { DEFAULT_QUERY_OPTIONS } from '../common';
+import { useShowErrors } from '../common';
 import {
   formatDateTime,
   MailErrorCell,
@@ -55,7 +57,7 @@ const ClickableRow = styled(TableRow)`
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.03);
+    background-color: rgb(from var(--rs-text-primary) r g b / 0.03);
   }
 `;
 
@@ -64,7 +66,8 @@ const Stat = styled.div<{ tone: string }>`
   min-width: 110px;
   padding: 8px 12px;
   border-left: 3px solid ${({ tone }) => tone};
-  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: var(--rs-radius-md);
+  background-color: rgb(from var(--rs-text-primary) r g b / 0.02);
 `;
 
 const StatValue = styled.div`
@@ -73,10 +76,10 @@ const StatValue = styled.div`
 `;
 
 const TONE = {
-  sent: '#4caf50',
-  pending: '#8e8e93',
-  failed: '#d9534f',
-  sending: '#f5a623',
+  sent: 'var(--rs-state-success)',
+  pending: 'var(--rs-text-secondary)',
+  failed: 'var(--rs-state-error)',
+  sending: 'var(--rs-state-warning)',
 } as const;
 
 /**
@@ -94,11 +97,14 @@ export function MailSendJobList({
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
 
-  const { data, startPolling, stopPolling, refetch } = useMailSendJobsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
-    fetchPolicy: 'cache-and-network',
-    variables: { skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE },
-  });
+  const { data, error, startPolling, stopPolling, refetch } = useQuery(
+    MailSendJobsDocument,
+    {
+      fetchPolicy: 'cache-and-network',
+      variables: { skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE },
+    }
+  );
+  useShowErrors(error);
 
   const jobs = data?.mailSendJobs.nodes ?? [];
   const hasActiveJob = jobs.some(isActive);
@@ -135,8 +141,8 @@ export function MailSendJobList({
               <TableCell width="24%">
                 <strong>{t('mailJobs.progress')}</strong>
               </TableCell>
-              <TableCell align="right">
-                <strong>{t('mailJobs.actions')}</strong>
+              <TableCell align="center">
+                <strong>{t('action')}</strong>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -157,8 +163,10 @@ export function MailSendJobList({
                   <JobProgressBar job={job} />
                   <Typography
                     variant="caption"
-                    display="block"
-                    style={{ color: '#8e8e93' }}
+                    style={{ color: 'var(--rs-text-secondary)' }}
+                    sx={{
+                      display: 'block',
+                    }}
                   >
                     {t('mailJobs.progressCount', {
                       sent: job.sentCount,
@@ -170,10 +178,10 @@ export function MailSendJobList({
                       })}`}
                   </Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
                   <Stack
                     spacing={8}
-                    justifyContent="flex-end"
+                    justifyContent="center"
                   >
                     {canResume(job) && (
                       <ResumeJobButton
@@ -200,7 +208,6 @@ export function MailSendJobList({
           </TableBody>
         </Table>
       </TableContainer>
-
       {!jobs.length && (
         <Message
           type="info"
@@ -209,7 +216,6 @@ export function MailSendJobList({
           {t('mailJobs.empty')}
         </Message>
       )}
-
       <Pagination
         style={{ marginTop: 16 }}
         prev
@@ -221,7 +227,6 @@ export function MailSendJobList({
         activePage={page}
         onChangePage={setPage}
       />
-
       <MailSendJobDrawer
         jobId={selectedJobId}
         onClose={() => {
@@ -243,12 +248,15 @@ function MailSendJobDrawer({
 }) {
   const { t } = useTranslation();
 
-  const { data, startPolling, stopPolling, refetch } = useMailSendJobQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
-    skip: !jobId,
-    fetchPolicy: 'cache-and-network',
-    variables: { id: jobId as string },
-  });
+  const { data, error, startPolling, stopPolling, refetch } = useQuery(
+    MailSendJobDocument,
+    {
+      skip: !jobId,
+      fetchPolicy: 'cache-and-network',
+      variables: { id: jobId as string },
+    }
+  );
+  useShowErrors(error);
 
   const job = jobId ? data?.mailSendJob : null;
   const active = job ? isActive(job) : false;
@@ -324,9 +332,7 @@ function JobSummary({
           </Typography>
         )}
       </Stack>
-
       <JobProgressBar job={job} />
-
       <Stack
         spacing={12}
         wrap
@@ -359,7 +365,6 @@ function JobSummary({
           </Typography>
         </Stat>
       </Stack>
-
       {job.error && (
         <Message
           type={pending > 0 ? 'warning' : 'error'}
@@ -373,7 +378,6 @@ function JobSummary({
           </div>
         </Message>
       )}
-
       {pending > 0 && !isActive(job) && (
         <Message
           type="info"
@@ -383,19 +387,19 @@ function JobSummary({
           {t('mailJobs.unfinishedHint', { count: pending })}
         </Message>
       )}
-
       {job.status === MailSendJobState.Running && job.heartbeatAt && (
         <Typography
           variant="caption"
-          display="block"
-          style={{ color: '#8e8e93', marginTop: 12 }}
+          style={{ color: 'var(--rs-text-secondary)', marginTop: 12 }}
+          sx={{
+            display: 'block',
+          }}
         >
           {t('mailJobs.lastActivity', {
             time: formatDateTime(job.heartbeatAt),
           })}
         </Typography>
       )}
-
       <Stack
         spacing={8}
         wrap
@@ -449,16 +453,19 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
     setPage(1);
   }, [jobId, state]);
 
-  const { data, startPolling, stopPolling } = useMailSendJobRecipientsQuery({
-    ...DEFAULT_QUERY_OPTIONS(),
-    fetchPolicy: 'cache-and-network',
-    variables: {
-      jobId,
-      state,
-      skip: (page - 1) * RECIPIENT_PAGE_SIZE,
-      take: RECIPIENT_PAGE_SIZE,
-    },
-  });
+  const { data, error, startPolling, stopPolling } = useQuery(
+    MailSendJobRecipientsDocument,
+    {
+      fetchPolicy: 'cache-and-network',
+      variables: {
+        jobId,
+        state,
+        skip: (page - 1) * RECIPIENT_PAGE_SIZE,
+        take: RECIPIENT_PAGE_SIZE,
+      },
+    }
+  );
+  useShowErrors(error);
 
   useEffect(() => {
     if (poll) {
@@ -512,7 +519,8 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
                 <strong>{t('mailJobs.queue.sentAt')}</strong>
               </TableCell>
               <TableCell>
-                <strong>{t('mailJobs.queue.attempts')}</strong>
+                <strong>{t('mailJobs.queue.attempts')}</strong>{' '}
+                <InfoTooltip text={t('mailJobs.queue.attemptsHelp')} />
               </TableCell>
               <TableCell>
                 <strong>{t('mailLog.error')}</strong>
@@ -522,7 +530,7 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
           <TableBody>
             {entries.map(entry => (
               <TableRow key={entry.id}>
-                <TableCell style={{ color: '#8e8e93' }}>
+                <TableCell style={{ color: 'var(--rs-text-secondary)' }}>
                   {entry.position + 1}
                 </TableCell>
                 <TableCell>
@@ -530,8 +538,10 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
                   {entry.memberPlanName && (
                     <Typography
                       variant="caption"
-                      display="block"
-                      style={{ color: '#8e8e93' }}
+                      style={{ color: 'var(--rs-text-secondary)' }}
+                      sx={{
+                        display: 'block',
+                      }}
                     >
                       {entry.memberPlanName}
                     </Typography>
@@ -550,7 +560,6 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
           </TableBody>
         </Table>
       </TableContainer>
-
       {!entries.length && (
         <Message
           type="info"
@@ -559,7 +568,6 @@ function JobRecipientTable({ jobId, poll }: { jobId: string; poll: boolean }) {
           {t('mailJobs.queue.empty')}
         </Message>
       )}
-
       <Pagination
         style={{ marginTop: 12 }}
         prev

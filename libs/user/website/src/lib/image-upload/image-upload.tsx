@@ -1,5 +1,6 @@
 import { css } from '@mui/material';
 import styled from '@emotion/styled';
+import { FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderImageUploadProps,
   useWebsiteBuilder,
@@ -56,7 +57,7 @@ export const ImageUpload = forwardRef<
         {image ?
           <Image
             css={avatarStyles}
-            image={image}
+            image={image as unknown as FullImageFragment}
           />
         : <ImageUploadPlaceholder css={avatarStyles} />}
 

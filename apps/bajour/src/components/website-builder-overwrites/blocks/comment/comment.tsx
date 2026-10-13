@@ -5,9 +5,10 @@ import {
   CommentAuthor,
   CommentContent,
   CommentFlair,
+  CommentHeader,
   CommentName,
 } from '@wepublish/comments/website';
-import { Tag } from '@wepublish/website/api';
+import { FullTagFragment } from '@wepublish/website/api';
 import { BuilderCommentProps } from '@wepublish/website/builder';
 
 const bajourTags = {
@@ -16,16 +17,14 @@ const bajourTags = {
 };
 
 const highlightModeration = (theme: Theme) => css`
-  ${CommentName},
-  ${CommentFlair},
-  ${CommentAuthor},
-  ${CommentContent} {
+  > ${CommentHeader} :is(${CommentName}, ${CommentFlair}, ${CommentAuthor}),
+  > ${CommentContent} {
     color: ${theme.palette.primary.main};
   }
 `;
 
 const highlightSource = (theme: Theme) => css`
-  ${CommentFlair} {
+  > ${CommentHeader} ${CommentName} + ${CommentFlair} {
     color: ${theme.palette.primary.main};
   }
 `;
@@ -35,10 +34,10 @@ export const BajourComment = (props: BuilderCommentProps) => {
   const theme = useTheme();
 
   const highlightSourceTag = tags.some(
-    (tag: Tag) => tag.tag === bajourTags.QuelleHervorheben
+    (tag: FullTagFragment) => tag.tag === bajourTags.QuelleHervorheben
   );
   const moderationTag = tags.some(
-    (tag: Tag) => tag.tag === bajourTags.Moderation
+    (tag: FullTagFragment) => tag.tag === bajourTags.Moderation
   );
 
   const commentStyles =
@@ -49,6 +48,7 @@ export const BajourComment = (props: BuilderCommentProps) => {
   return (
     <Comment
       {...props}
+      showDateWithFlair
       css={commentStyles}
     />
   );

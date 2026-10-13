@@ -1,3 +1,8 @@
+import {
+  CONTENT_CACHE_TTL_SECONDS,
+  KvTtlCacheService,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
 import { Injectable, Scope } from '@nestjs/common';
 import { Page, PrismaClient } from '@prisma/client';
 import { Primeable, createOptionalsArray } from '@wepublish/utils/api';
@@ -9,21 +14,31 @@ import DataLoader from 'dataloader';
 export class PageDataloaderService implements Primeable<Page> {
   private dataloader = new DataLoader<string, Page | null>(
     async (ids: readonly string[]) =>
-      createOptionalsArray(
+      this.kv.getOrLoadManyNs(
+        contentCacheNamespace('pages'),
         ids as string[],
-        await this.prisma.page.findMany({
-          where: {
-            id: {
-              in: ids as string[],
-            },
-          },
-        }),
-        'id'
+        async missing =>
+          createOptionalsArray(
+            missing,
+            await this.prisma.page.findMany({
+              where: {
+                id: {
+                  in: missing,
+                },
+              },
+            }),
+            'id'
+          ),
+        CONTENT_CACHE_TTL_SECONDS,
+        'id:'
       ),
     { name: 'PageDataLoader' }
   );
 
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
   public prime(
     ...parameters: Parameters<DataLoader<string, Page | null>['prime']>

@@ -1,0 +1,87 @@
+fragment FullArticleRevisionWithoutBlocks on ArticleRevision {
+  id
+  createdAt
+  publishedAt
+  archivedAt
+  preTitle
+  title
+  lead
+  seoTitle
+  seoDescription
+  canonicalUrl
+  hideAuthor
+  breaking
+  socialMediaTitle
+  socialMediaDescription
+
+  authors {
+    role
+
+    author {
+      ...FullAuthor
+    }
+  }
+
+  socialMediaAuthors {
+    ...FullAuthor
+  }
+
+  image {
+    ...FullImage
+  }
+
+  socialMediaImage {
+    ...FullImage
+  }
+
+  properties {
+    key
+    value
+    public
+  }
+}
+
+fragment ArticleWithoutBlocks on Article {
+  id
+  publishedAt
+  createdAt
+  modifiedAt
+  shared
+  hidden
+  disableComments
+  slug
+  likes
+  url
+  previewUrl
+  paywallId
+
+  latest {
+    ...FullArticleRevisionWithoutBlocks
+  }
+
+  draft {
+    id
+  }
+
+  pending {
+    id
+    publishedAt
+  }
+
+  published {
+    id
+    publishedAt
+  }
+
+  tags {
+    ...FullTag
+  }
+
+  peer {
+    ...FullPeer
+  }
+
+  trackingPixels {
+    ...FullTrackingPixel
+  }
+}

@@ -6,8 +6,10 @@ import {
   PaymentPeriodicity,
   PrismaClient,
 } from '@prisma/client';
+import { createKvMock, KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { CrowdfundingService } from './crowdfunding.service';
 import { CrowdfundingDataloaderService } from './crowdfunding-dataloader.service';
+import type { Mock } from 'vitest';
 
 const mockCrowdfunding = (
   override: Partial<Crowdfunding> = {}
@@ -38,18 +40,18 @@ const mockGoal = (override: Partial<CrowdfundingGoal> = {}): CrowdfundingGoal =>
 describe('CrowdfundingService', () => {
   let service: CrowdfundingService;
   let prismaMock: {
-    subscription: { findMany: jest.Mock };
-    crowdfunding: { [key: string]: jest.Mock };
+    subscription: { findMany: Mock };
+    crowdfunding: { [key: string]: Mock };
   };
 
   beforeEach(async () => {
     prismaMock = {
-      subscription: { findMany: jest.fn() },
+      subscription: { findMany: vi.fn() },
       crowdfunding: {
-        findMany: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
+        findMany: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
       },
     };
 
@@ -57,9 +59,10 @@ describe('CrowdfundingService', () => {
       providers: [
         CrowdfundingService,
         { provide: PrismaClient, useValue: prismaMock },
+        { provide: KvTtlCacheService, useValue: createKvMock() },
         {
           provide: CrowdfundingDataloaderService,
-          useValue: { prime: jest.fn() },
+          useValue: { prime: vi.fn() },
         },
       ],
     }).compile();

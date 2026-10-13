@@ -6,6 +6,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "jsxImportSource": "@emotion/react",
+    "moduleResolution": "bundler",
     "ignoreDeprecations": "6.0"
   },
   "files": [],

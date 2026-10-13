@@ -13,6 +13,8 @@ import {
   BuilderMemberPlanItemProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { getMonthlyEquivalentRange } from '@wepublish/membership/website';
+import { forwardRef } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -30,24 +32,31 @@ export const MemberPlanItemAmountError = styled('small')`
   color: ${({ theme }) => theme.palette.error.main};
 `;
 
-export const MemberPlanItem = ({
-  className,
-  id,
-  name,
-  slug,
-  shortDescription,
-  amountPerMonthMax,
-  amountPerMonthMin,
-  currency,
-  extendable,
-  goodies,
-  tags,
-  ref,
-  ...props
-}: BuilderMemberPlanItemProps) => {
+export const MemberPlanItem = forwardRef<
+  HTMLButtonElement,
+  BuilderMemberPlanItemProps
+>(function MemberPlanItem(
+  {
+    className,
+    id,
+    name,
+    slug,
+    shortDescription,
+    periodicityPricing,
+    currency,
+    extendable,
+    goodies,
+    tags,
+    ...props
+  },
+  ref
+) {
   const {
     meta: { locale },
   } = useWebsiteBuilder();
+  const { amountPerMonthMin, amountPerMonthMax } = getMonthlyEquivalentRange({
+    periodicityPricing,
+  });
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const { t } = useTranslation();
@@ -127,7 +136,7 @@ export const MemberPlanItem = ({
       </MemberPlanItemPicker>
     </MemberPlanItemWrapper>
   );
-};
+});
 
 export const ReflektMemberPlanItem = styled(MemberPlanItem)`
   container-type: inline-size;

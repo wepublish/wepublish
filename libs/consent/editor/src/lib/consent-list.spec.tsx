@@ -1,7 +1,8 @@
 import { render } from '@testing-library/react';
 import { ConsentList } from './consent-list';
 import { BrowserRouter } from 'react-router-dom';
-import { MockedProvider, MockLink } from '@apollo/client/testing';
+import { MockLink } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import * as v2Client from '@wepublish/editor/api';
 

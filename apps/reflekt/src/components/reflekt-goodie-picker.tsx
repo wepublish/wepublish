@@ -24,12 +24,20 @@ const GoodieSelect = styled(TextField)`
   }
 `;
 
+const webkitOnly = '@supports (background: -webkit-canvas(squares))';
+
 const GoodieSliderArea = styled('div')`
   grid-area: goodieSlider;
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     width: 100vw;
     margin-left: calc(50% - 50vw);
+
+    ${webkitOnly} {
+      position: relative;
+      left: 50%;
+      margin-left: -50vw;
+    }
   }
 `;
 
@@ -39,6 +47,15 @@ const GoodieSliderTitle = styled(Typography)`
 
   ${({ theme }) => theme.breakpoints.down('md')} {
     padding: 0 32px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
   }
 ` as typeof Typography;
 
@@ -81,7 +98,7 @@ const GoodieSlider = memo(function GoodieSlider({
         variant="h2"
         component="h2"
       >
-        Crowdfunding-Geschenk
+        <a id="Crowdfunding-Geschenk">Crowdfunding-Geschenk</a>
       </GoodieSliderTitle>
 
       <ReflektImageSliderSlim images={images} />

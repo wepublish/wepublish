@@ -1,6 +1,11 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css, Typography } from '@mui/material';
-import { Article, ArticleInfoWrapper } from '@wepublish/article/website';
+import {
+  Article,
+  ArticleInfoWrapper,
+  selectArticleAuthors,
+} from '@wepublish/article/website';
 import {
   ImageBlockWrapper,
   TeaserGridBlockWrapper,
@@ -11,7 +16,7 @@ import {
   TitleBlockWrapper,
 } from '@wepublish/block-content/website';
 import { createWithTheme, useShare } from '@wepublish/ui';
-import { useCommentListQuery } from '@wepublish/website/api';
+import { CommentListDocument } from '@wepublish/website/api';
 import { BuilderArticleProps, Button } from '@wepublish/website/builder';
 import {
   BuilderArticleAuthorsProps,
@@ -86,8 +91,7 @@ export const HauptstadtArticleAuthors = ({
   className,
 }: BuilderArticleAuthorsProps) => {
   const { AuthorChip, ArticleDate } = useWebsiteBuilder();
-  const authors =
-    article?.latest.authors.filter(author => !author.hideOnArticle) || [];
+  const authors = selectArticleAuthors(article);
 
   if (!authors.length) {
     return;
@@ -102,10 +106,13 @@ export const HauptstadtArticleAuthors = ({
       {authors.length && (
         <>
           Von{' '}
-          {authors.map((author, index) => (
+          {authors.map(({ author, role }, index) => (
             <Fragment key={author.id}>
-              <AuthorChip author={author} />
-              {index !== authors.length - 1 ? ' und ' : ', '}
+              <AuthorChip
+                author={author}
+                role={role}
+              />
+              {index === authors.length - 2 ? ' und ' : ', '}
             </Fragment>
           ))}
         </>
@@ -142,7 +149,7 @@ export const HauptstadtArticleMeta = ({
   const {
     elements: { Link },
   } = useWebsiteBuilder();
-  const { data } = useCommentListQuery({
+  const { data } = useQuery(CommentListDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       itemId: article.id,

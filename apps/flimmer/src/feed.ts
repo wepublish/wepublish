@@ -40,5 +40,5 @@ export const getFeed = async (req: NextApiRequest) => {
     } as ArticleListQueryVariables,
   });
 
-  return generate(data.articles.nodes ?? []);
+  return generate(data?.articles.nodes ?? []);
 };

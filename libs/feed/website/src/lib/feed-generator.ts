@@ -1,4 +1,7 @@
-import { Article } from '@wepublish/website/api';
+import {
+  FullArticleFragment,
+  SlimArticleFragment,
+} from '@wepublish/website/api';
 import type { Feed, Item } from 'feed';
 import { getArticleSEO } from '@wepublish/article/website';
 import { isRichTextBlock } from '@wepublish/block-content/website';
@@ -28,15 +31,16 @@ export const generateFeed =
     },
     'generator'
   >) =>
-  async (articles: Article[]) => {
-    const items = articles.map(async (article): Promise<Item> => {
+  async (articles: (FullArticleFragment | SlimArticleFragment)[]) => {
+    const items = articles.map(async (slimArticle): Promise<Item> => {
+      const article = slimArticle as FullArticleFragment;
       const seo = getArticleSEO(article);
 
       const content = await toHtml({
         attrs: undefined,
         type: 'doc',
         content:
-          article.published?.blocks?.reduce((acc, curr) => {
+          article.latest?.blocks?.reduce((acc, curr) => {
             if (isRichTextBlock(curr)) {
               acc.push(...(curr.richText?.content ?? []));
             }
@@ -45,9 +49,10 @@ export const generateFeed =
           }, [] as RichtextElements[]) ?? [],
       });
 
-      const authors = article.latest.authors
-        .filter(Boolean)
-        .map(author => ({ name: author.name, link: author.url }));
+      const authors = article.latest.authors.map(({ author }) => ({
+        name: author.name,
+        link: author.url,
+      }));
 
       return {
         title: seo.schema.headline ?? '',

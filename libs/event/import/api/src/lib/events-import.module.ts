@@ -1,3 +1,4 @@
+import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
 import {
   DynamicModule,
   Module,
@@ -33,6 +34,7 @@ export interface EventsImportAsyncOptions
 
 @Module({
   imports: [
+    GraphqlResponseCacheModule,
     PrismaModule,
     CacheModule.register(),
     ImageFetcherModule,

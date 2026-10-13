@@ -1,6 +1,5 @@
 import { Meta } from '@storybook/nextjs-vite';
 import { EventList } from './event-list';
-import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
 import { mockEvent } from '@wepublish/storybook/mocks';
 
@@ -48,9 +47,7 @@ export const WithError = {
   args: {
     data: undefined,
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
     onVariablesChange: action('onVariablesChange'),
   },
 };

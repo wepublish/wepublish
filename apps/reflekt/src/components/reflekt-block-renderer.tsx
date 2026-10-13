@@ -34,6 +34,7 @@ import {
   FlexBlockFullsizeImage,
   isFlexBlockFullsizeImage,
 } from './block-layouts/flex-block-fullsize-image';
+import { isFlexBlockHeroCrowdfunding } from './block-layouts/flex-block-hero-crowdfunding';
 import { isFlexBlockHero } from './block-layouts/flex-block-hero';
 import { BlockSibling, collectSiblings } from './block-siblings';
 import {
@@ -141,7 +142,7 @@ export const ReflektBlockRenderer = (
     () =>
       cond([
         [
-          isFlexBlockHero,
+          anyPass([isFlexBlockHero, isFlexBlockHeroCrowdfunding]),
           () => css`
             grid-template-columns: auto !important;
             padding: 0 !important;

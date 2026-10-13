@@ -3,6 +3,8 @@ import { HttpModule } from '@nestjs/axios';
 import { ImageModule } from '@wepublish/image/api';
 import { MailchimpContactModule } from '@wepublish/mail/api';
 import { PrismaModule } from '@wepublish/nest-modules';
+import { SessionCacheModule } from '@wepublish/authentication/api';
+import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { UserDataloaderService } from './user-dataloader.service';
 import {
   HasOptionalUserLcResolver,
@@ -27,9 +29,17 @@ import {
 import { UserResolver } from './user.resolver';
 import { HibpService } from './hibp.service';
 import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
+import { UserSubscriptionOverviewDataloader } from './user-subscription-overview.dataloader';
 
 @Module({
-  imports: [PrismaModule, ImageModule, HttpModule, MailchimpContactModule],
+  imports: [
+    GraphqlResponseCacheModule,
+    PrismaModule,
+    ImageModule,
+    HttpModule,
+    MailchimpContactModule,
+    SessionCacheModule,
+  ],
   providers: [
     HibpService,
     UserDataloaderService,
@@ -42,6 +52,7 @@ import { UserSubscriptionCountDataloader } from './user-subscription-count.datal
     HasOptionalSensitiveDataUserResolver,
     HasOptionalSensitiveDataUserLcResolver,
     UserSubscriptionCountDataloader,
+    UserSubscriptionOverviewDataloader,
     UserService,
     SensitiveDataUserResolver,
     BaseUserResolver,

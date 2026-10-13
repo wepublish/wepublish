@@ -1,11 +1,14 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { lighten } from '@mui/material';
+import { alpha, lighten } from '@mui/material';
 import {
+  AnalyticsProviderType,
+  CreateAnalyticsProviderSettingDocument,
   SettingAnalyticsProvider,
   SettingsIntegrationsAnalyticsDocument,
   UpdateAnalyticsProviderSettingDocument,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { ComponentProps, forwardRef, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
@@ -39,35 +42,51 @@ const showErrors = (error: Error): void => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
 
 const CustomDropzoneWrapper = styled.div<{ dragging: boolean; valid: boolean }>`
   aspect-ratio: 16/9;
-  border: 2px dashed ${({ theme }) => theme.palette.grey['300']};
-  background-color: ${({ theme }) => theme.palette.grey['100']};
+  border: 2px dashed
+    ${({ theme }) =>
+      theme.palette.mode === 'dark' ?
+        theme.palette.grey['700']
+      : theme.palette.grey['300']};
+  background-color: ${({ theme }) =>
+    theme.palette.mode === 'dark' ?
+      theme.palette.grey['900']
+    : theme.palette.grey['100']};
   display: grid;
   align-items: center;
   justify-content: center;
   text-align: center;
+  border-radius: var(--rs-radius-md);
   cursor: pointer;
 
   ${({ valid, theme }) =>
     valid &&
     css`
-      border-color: ${lighten(theme.palette.success.light, 0.5)};
-      background-color: ${lighten(theme.palette.success.light, 0.9)};
+      border-color: ${theme.palette.mode === 'dark' ?
+        alpha(theme.palette.success.main, 0.5)
+      : lighten(theme.palette.success.light, 0.5)};
+      background-color: ${theme.palette.mode === 'dark' ?
+        alpha(theme.palette.success.main, 0.12)
+      : lighten(theme.palette.success.light, 0.9)};
     `}
 
   ${({ dragging, theme }) =>
     dragging &&
     css`
-      border-color: ${theme.palette.grey['200']};
-      background-color: ${theme.palette.grey['50']};
+      border-color: ${theme.palette.mode === 'dark' ?
+        theme.palette.grey['600']
+      : theme.palette.grey['200']};
+      background-color: ${theme.palette.mode === 'dark' ?
+        theme.palette.grey['800']
+      : theme.palette.grey['50']};
     `}
 `;
 
@@ -93,7 +112,9 @@ const CustomDropzone = forwardRef<
         }
       };
       reader.onerror = () => {
-        showErrors(new Error('Error happened while reading file'));
+        showErrors(
+          new Error(t('integrations.analyticsSettings.readFileError'))
+        );
       };
       reader.readAsText(acceptedFile);
     },
@@ -138,23 +159,32 @@ export function AnalyticsIntegrationForm() {
       mutation={UpdateAnalyticsProviderSettingDocument}
       dataKey="analyticsProviderSettings"
       schema={analyticsSettingsSchema}
+      fixedProvider={{
+        id: 'google-analytics',
+        type: AnalyticsProviderType.Google,
+        name: 'Google Analytics',
+        createMutation: CreateAnalyticsProviderSettingDocument,
+      }}
       getLogo={() => googleLogo}
       fields={[
         {
           name: 'articlePrefix',
           label: t('integrations.analyticsSettings.articlePrefix'),
+          info: t('integrations.analyticsSettings.articlePrefixInfo'),
           type: 'text',
           autoComplete: 'one-time-code',
         },
         {
           name: 'property',
           label: t('integrations.analyticsSettings.property'),
+          info: t('integrations.analyticsSettings.propertyInfo'),
           type: 'text',
           autoComplete: 'one-time-code',
         },
         {
           name: 'credentials',
           label: t('integrations.analyticsSettings.credentials'),
+          info: t('integrations.analyticsSettings.credentialsInfo'),
           type: 'custom',
           render: CustomDropzone,
         },

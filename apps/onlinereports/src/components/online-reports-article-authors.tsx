@@ -1,8 +1,12 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Button, css, IconButton } from '@mui/material';
-import { ArticleDateWrapper } from '@wepublish/article/website';
+import {
+  ArticleDateWrapper,
+  selectArticleAuthors,
+} from '@wepublish/article/website';
 import { ShareWrapper } from '@wepublish/ui';
-import { useCommentListQuery } from '@wepublish/website/api';
+import { CommentListDocument } from '@wepublish/website/api';
 import {
   BuilderArticleAuthorsProps,
   useWebsiteBuilder,
@@ -98,15 +102,14 @@ export function OnlineReportsArticleAuthors({
     elements: { Image, Link },
   } = useWebsiteBuilder();
 
-  const { data } = useCommentListQuery({
+  const { data } = useQuery(CommentListDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       itemId: article.id,
     },
   });
 
-  const authors =
-    article?.latest.authors.filter(author => !author.hideOnArticle) || [];
+  const authors = selectArticleAuthors(article).map(({ author }) => author);
 
   const scrollToComments = () => {
     const el = document.getElementById('comments');

@@ -1,8 +1,9 @@
 //@ts-check
 
 const { composePlugins, withNx } = require('@nx/next');
-const { withSentryConfig } = require('@sentry/nextjs');
+const { withSentryConfig } = require('@sentry/nextjs/config');
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config');
+const { legacyRedirects } = require('./src/redirects/legacy-redirects.cjs');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled:
     process.env.NODE_ENV === 'production' && !!process.env.ANALYZE_BUNDLE,
@@ -14,6 +15,14 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
+  async redirects() {
+    return [
+      ...((await wepNextConfig.redirects?.()) ?? []),
+      ...legacyRedirects(),
+      { source: '/event', destination: '/', permanent: false },
+      { source: '/events', destination: '/', permanent: false },
+    ];
+  },
 };
 
 const plugins = [

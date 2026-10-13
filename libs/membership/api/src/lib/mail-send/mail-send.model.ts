@@ -92,6 +92,55 @@ export class MailAudienceInput {
   @Field(() => PaymentPeriodicity, { nullable: true })
   paymentPeriodicity?: PaymentPeriodicity;
 
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      'Subscribers audience only: only subscriptions that started on or after this date.',
+  })
+  startsAtFrom?: Date;
+
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      'Subscribers audience only: only subscriptions that started on or before this date.',
+  })
+  startsAtTo?: Date;
+
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      'Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or after this date.',
+  })
+  endsAtFrom?: Date;
+
+  @Field(() => Date, {
+    nullable: true,
+    description:
+      'Subscribers audience only: only subscriptions whose effective end (cancellation date, else paidUntil) is on or before this date.',
+  })
+  endsAtTo?: Date;
+
+  @Field({
+    nullable: true,
+    description:
+      'Subscribers audience only: true keeps only subscriptions that are currently paid up (started and paidUntil in the future); false keeps the rest. Grace periods are not considered.',
+  })
+  isPaid?: boolean;
+
+  @Field({
+    nullable: true,
+    description:
+      'Subscribers audience only: true keeps only subscriptions that have given notice, including cancellations that only take effect in the future; false keeps the rest.',
+  })
+  isCanceled?: boolean;
+
+  @Field({
+    nullable: true,
+    description:
+      'Subscribers audience only: true keeps only subscriptions that replaced another one (typically an upgrade, but downgrades and lateral plan switches are included too, and manual or imported changes are not detected).',
+  })
+  hasReplacedSubscription?: boolean;
+
   @Field(() => Int, {
     nullable: true,
     description:

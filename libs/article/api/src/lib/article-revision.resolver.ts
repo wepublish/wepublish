@@ -1,5 +1,5 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { ArticleRevision } from './article.model';
+import { ArticleRevision, ArticleRevisionAuthor } from './article.model';
 import {
   ArticleAuthorDataloader,
   ArticleSocialMediaAuthorDataloader,
@@ -47,7 +47,7 @@ export class ArticleRevisionResolver {
     return this.socialMediaAuthorDataLoader.load(revision.id);
   }
 
-  @ResolveField(() => [Author])
+  @ResolveField(() => [ArticleRevisionAuthor])
   public async authors(@Parent() revision: ArticleRevision) {
     return this.authorDataLoader.load(revision.id);
   }

@@ -9,7 +9,6 @@ import { SubscriptionListItem } from './subscription-list-item';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { action } from 'storybook/actions';
 import { userEvent, within } from 'storybook/test';
-import { ApolloError } from '@apollo/client';
 import { mockMemberPlan } from '@wepublish/storybook/mocks';
 
 export default {
@@ -41,6 +40,33 @@ const clickCancel: StoryObj['play'] = async ({ canvasElement, step }) => {
     await userEvent.click(modalButton)
   })
    */
+};
+
+const clickReactivate: StoryObj['play'] = async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement);
+
+  const button = canvas.getByText('Abo reaktivieren', {
+    selector: 'button',
+  });
+
+  await step('Click Reactivate', async () => {
+    await userEvent.click(button);
+  });
+};
+
+const clickRevertUpgrade: StoryObj['play'] = async ({
+  canvasElement,
+  step,
+}) => {
+  const canvas = within(canvasElement);
+
+  const button = canvas.getByText('Upgrade rückgängig machen', {
+    selector: 'button',
+  });
+
+  await step('Click Revert Upgrade', async () => {
+    await userEvent.click(button);
+  });
 };
 
 const clickExtend: StoryObj['play'] = async ({ canvasElement, step }) => {
@@ -189,11 +215,26 @@ export const DeactivatedCancelled: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
+    reactivate: action('reactivate'),
     deactivation: {
       date: '2023-01-01',
       reason: SubscriptionDeactivationReason.UserSelfDeactivated,
     },
   },
+};
+
+export const UpgradedButUnpaid: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    canRevertUpgrade: true,
+    revertUpgrade: action('revertUpgrade'),
+    deactivation: {
+      date: '2023-01-01',
+      reason: SubscriptionDeactivationReason.UserReplacedSubscription,
+    },
+  },
+  play: clickRevertUpgrade,
 };
 
 export const DeactivatedUnpaid: StoryObj = {
@@ -238,12 +279,38 @@ export const WithCancelError: StoryObj = {
     cancel: (...args: unknown[]) => {
       action('cancel')(args);
 
-      throw new ApolloError({
-        errorMessage: 'Foobar',
-      });
+      throw new Error('Foobar');
     },
   },
   play: clickCancel,
+};
+
+export const WithReactivateLoading: StoryObj = {
+  ...DeactivatedCancelled,
+  args: {
+    ...DeactivatedCancelled.args,
+    reactivate: (...args: unknown[]) => {
+      action('reactivate')(args);
+
+      return new Promise(() => {
+        // never resolve
+      });
+    },
+  },
+  play: clickReactivate,
+};
+
+export const WithReactivateError: StoryObj = {
+  ...DeactivatedCancelled,
+  args: {
+    ...DeactivatedCancelled.args,
+    reactivate: (...args: unknown[]) => {
+      action('reactivate')(args);
+
+      throw new Error('Foobar');
+    },
+  },
+  play: clickReactivate,
 };
 
 export const WithExtendLoading: StoryObj = {
@@ -268,9 +335,7 @@ export const WithExtendError: StoryObj = {
     extend: (...args: unknown[]) => {
       action('extend')(args);
 
-      throw new ApolloError({
-        errorMessage: 'Foobar',
-      });
+      throw new Error('Foobar');
     },
   },
   play: clickExtend,

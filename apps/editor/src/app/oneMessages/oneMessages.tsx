@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
-import { useReducer } from 'react';
+import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Message } from 'rsuite';
+import { Button } from 'rsuite';
 
-import { isMinimized, setMinimized, useOneMessages } from './oneMessages.hooks';
+import { useOneMessages } from './oneMessages.hooks';
 import type { Severity } from './oneMessages.types';
 
-const SEVERITY_TYPE: Record<Severity, 'info' | 'warning' | 'error'> = {
+const SEVERITY_TYPE: Record<Severity, NotificationSeverity> = {
   info: 'info',
   warning: 'warning',
   critical: 'error',
@@ -16,20 +17,15 @@ const Stack = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-bottom: 20px;
 `;
 
 const Header = styled.h5`
   margin: 0;
 `;
 
-const MinimizedMessage = styled(Message)`
-  cursor: pointer;
-`;
-
 const Body = styled.p`
   white-space: pre-line;
-  margin: 4px 0 0;
+  margin: 0;
 `;
 
 const Link = styled.a`
@@ -37,47 +33,73 @@ const Link = styled.a`
   margin-top: 8px;
 `;
 
-export function OneMessages() {
+const EmptyText = styled.p`
+  text-align: center;
+  color: gray;
+  padding: 12px;
+`;
+
+export interface OneMessagesProps {
+  hideHeader?: boolean;
+  emptyMessage?: string;
+  sourceTag?: string;
+  /** Messages whose id is in here are hidden (already read by the user) */
+  readItemIds?: ReadonlySet<string>;
+  /** Enables marking dismissible messages as read for the current user */
+  onMarkRead?: (itemId: string) => void;
+  /** Reports whether at least one message is currently rendered */
+  onVisibilityChange?: (visible: boolean) => void;
+}
+
+export function useOneMessageNotifications({
+  hideHeader,
+  emptyMessage,
+  sourceTag,
+  readItemIds,
+  onMarkRead,
+  onVisibilityChange,
+}: OneMessagesProps) {
   const { t, i18n } = useTranslation();
   const messages = useOneMessages(i18n.language);
-  const [, forceRender] = useReducer((n: number) => n + 1, 0);
 
-  if (!messages.length) {
-    return null;
+  const visibleMessages =
+    readItemIds ?
+      messages.filter(message => !readItemIds.has(String(message.id)))
+    : messages;
+  const hasVisibleMessages = visibleMessages.length > 0;
+
+  useEffect(() => {
+    onVisibilityChange?.(hasVisibleMessages);
+  }, [onVisibilityChange, hasVisibleMessages]);
+
+  if (!hasVisibleMessages) {
+    return [];
   }
 
-  const expand = (id: number) => {
-    setMinimized(id, false);
-    forceRender();
-  };
-
-  const minimize = (id: number) => {
-    setMinimized(id, true);
-    forceRender();
-  };
-
-  return (
-    <Stack>
-      <Header>{t('oneMessages.header')}</Header>
-
-      {messages.map(message =>
-        isMinimized(message) ?
-          <MinimizedMessage
-            key={message.id}
-            showIcon
-            type={SEVERITY_TYPE[message.severity]}
-            header={<strong>{message.title}</strong>}
-            title={t('oneMessages.expand')}
-            onClick={() => expand(message.id)}
-          />
-        : <Message
-            key={message.id}
-            showIcon
-            type={SEVERITY_TYPE[message.severity]}
-            closable={message.dismissible}
-            onClose={() => minimize(message.id)}
-            header={<strong>{message.title}</strong>}
-          >
+  return [
+    ...(hideHeader ?
+      []
+    : [<Header key="one-messages-header">{t('oneMessages.header')}</Header>]),
+    ...visibleMessages.map(message => (
+      <NotificationItem
+        key={message.id}
+        severity={SEVERITY_TYPE[message.severity]}
+        title={message.title}
+        sourceTag={sourceTag}
+        actions={
+          onMarkRead && message.dismissible ?
+            <Button
+              size="sm"
+              appearance="default"
+              onClick={() => onMarkRead(String(message.id))}
+            >
+              {t('notifications.markAsRead')}
+            </Button>
+          : undefined
+        }
+      >
+        {message.body || message.link_url ?
+          <>
             {message.body && <Body>{message.body}</Body>}
 
             {message.link_url && (
@@ -86,11 +108,24 @@ export function OneMessages() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {message.link_label ?? t('oneMessages.linkFallback')}
+                {message.link_label || t('oneMessages.linkFallback')}
               </Link>
             )}
-          </Message>
-      )}
-    </Stack>
-  );
+          </>
+        : null}
+      </NotificationItem>
+    )),
+  ];
+}
+
+export function OneMessages(props: OneMessagesProps) {
+  const items = useOneMessageNotifications(props);
+
+  if (!items.length) {
+    return props.emptyMessage ?
+        <EmptyText>{props.emptyMessage}</EmptyText>
+      : null;
+  }
+
+  return <Stack>{items}</Stack>;
 }

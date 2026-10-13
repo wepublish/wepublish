@@ -15,13 +15,12 @@ import {
 } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import {
-  type FlexBlock as FlexBlockType,
-  BlockContent,
-  FlexAlignment,
   FullBlockFragment,
+  FullFlexAlignmentFragment,
   IFrameBlock as IFrameBlockType,
   VimeoVideoBlock as VimeoVideoBlockType,
   YouTubeVideoBlock as YouTubeVideoBlockType,
+  type FlexBlock as FlexBlockType,
 } from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
@@ -404,7 +403,7 @@ const HeroPosterVideoCell = ({
 };
 
 export const isFlexBlockHero = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FlexBlockType => {
   return allPass([
     hasBlockStyle(ReflektBlockStyles.FlexBlockHero),
@@ -446,7 +445,7 @@ export const FlexBlockHeroWrapper = styled('div')`
   grid-column: -1 / 1;
 `;
 
-export const BlockWithAlignment = styled('div')<FlexAlignment>`
+export const BlockWithAlignment = styled('div')<FullFlexAlignmentFragment>`
   grid-column: -1 / 1;
   grid-row: 1 / 2;
   display: none;
@@ -477,7 +476,7 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
     padding-bottom: 50px;
     box-sizing: border-box;
     overflow: hidden;
-    container-type: size;
+    container-type: inline-size;
   }
 
   ${ImageBlockWrapper}, ${YouTubeVideoBlockWrapper}, ${IFrameBlockWrapper} {
@@ -553,6 +552,17 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
     .MuiTypography-subtitle1,
     .MuiTypography-subtitle2 {
       font-size: clamp(1rem, 2.25cqw, 2.5rem);
+    }
+
+    ${({ theme }) => theme.breakpoints.down('md')} {
+      h3,
+      .MuiTypography-h3 {
+        font-size: clamp(2.25rem, 10cqw, 3.5rem);
+      }
+      h4,
+      .MuiTypography-h4 {
+        font-size: clamp(1.75rem, 7.5cqw, 2.75rem);
+      }
     }
   }
 
@@ -634,7 +644,8 @@ export const FlexBlockHero = ({
           ref={ref}
         >
           <BlockWithAlignment
-            {...(posterVideoLayout.mobileImage.alignment as FlexAlignment)}
+            {...(posterVideoLayout.mobileImage
+              .alignment as FullFlexAlignmentFragment)}
           >
             <HeroPosterVideoCell
               poster={renderNested(posterVideoLayout.mobileImage, 0)}
@@ -646,7 +657,8 @@ export const FlexBlockHero = ({
           </BlockWithAlignment>
 
           <BlockWithAlignment
-            {...(posterVideoLayout.desktopImage.alignment as FlexAlignment)}
+            {...(posterVideoLayout.desktopImage
+              .alignment as FullFlexAlignmentFragment)}
           >
             <HeroPosterVideoCell
               poster={renderNested(posterVideoLayout.desktopImage, 1)}
@@ -659,7 +671,8 @@ export const FlexBlockHero = ({
 
           {posterVideoLayout.richText && (
             <BlockWithAlignment
-              {...(posterVideoLayout.richText.alignment as FlexAlignment)}
+              {...(posterVideoLayout.richText
+                .alignment as FullFlexAlignmentFragment)}
             >
               {renderNested(posterVideoLayout.richText, 2)}
             </BlockWithAlignment>
@@ -710,7 +723,7 @@ export const FlexBlockHero = ({
           return (
             <BlockWithAlignment
               key={index}
-              {...(nestedBlock.alignment as FlexAlignment)}
+              {...(nestedBlock.alignment as FullFlexAlignmentFragment)}
             >
               {isHeroVideo && mounted ?
                 <YouTubeVideoBlockWrapper>

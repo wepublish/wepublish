@@ -47,7 +47,9 @@ export default function SignUp() {
 
           <Typography
             variant="body1"
-            paragraph
+            sx={{
+              marginBottom: '16px',
+            }}
           >
             (Falls du schon einen Account hast,{' '}
             <Link href={'/login'}>klicke hier.</Link>)

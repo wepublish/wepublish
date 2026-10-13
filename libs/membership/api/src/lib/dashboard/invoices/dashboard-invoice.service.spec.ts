@@ -66,7 +66,7 @@ describe('DashboardInvoiceService', () => {
     ]);
     const start = new Date('2023-01-01');
     const end = new Date('2023-02-01');
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.invoice, 'findMany')
       .mockReturnValue(mockValue as any);
 
@@ -134,7 +134,7 @@ describe('DashboardInvoiceService', () => {
     ]);
     const start = new Date('2023-01-01');
     const end = new Date('2023-02-01');
-    const mockFunction = jest
+    const mockFunction = vi
       .spyOn(prisma.invoice, 'findMany')
       .mockReturnValue(mockValue as any);
 

@@ -7,6 +7,7 @@ export class PaymentProviderService {
 
   async getAllPaymentProviders() {
     return this.prisma.settingPaymentProvider.findMany({
+      where: { deletedAt: null },
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,

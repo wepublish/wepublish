@@ -5,7 +5,10 @@ import { getSessionTokenProps } from '../../../get-session-token-props';
 import { handleJwtLogin } from '../../../handle-jwt-login';
 import { NextPage, NextPageContext } from 'next';
 import { ComponentProps } from 'react';
-import { SubscriptionListContainer } from '@wepublish/membership/website';
+import {
+  SubscriptionListContainer,
+  isSubscriptionDeactivated,
+} from '@wepublish/membership/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
   addClientCacheToProps,
@@ -35,11 +38,11 @@ function DeactivatedSubscriptions() {
 
       <SubscriptionListContainer
         filter={subscriptions =>
-          subscriptions.filter(subscription => subscription.deactivation)
+          subscriptions.filter(isSubscriptionDeactivated)
         }
       />
 
-      <Link href="/profile">Zurück zum Profil</Link>
+      <Link href="/profile">{t('navbar.backToProfile')}</Link>
     </SubscriptionsWrapper>
   );
 }

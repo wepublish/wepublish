@@ -1,5 +1,15 @@
 {
   "navbar": {
     "subscribe": "Mitglied werden"
+  },
+  "crowdfunding": {
+    "goal": "{type, select, Revenue {Bereits <bold>{revenue}</bold> finanziert} other {Bereits <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {Person ist} other {Personen sind}} dabei}}"
+  },
+  "subscribe": {
+    "button": {
+      "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}} {productType, select, Donation {spenden} other {Mitglied werden}}",
+      "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}} {productType, select, Donation {spenden} other {Mitglied werden}}",
+      "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}} {productType, select, Donation {spenden} other {Mitglied werden}}"
+    }
   }
 }

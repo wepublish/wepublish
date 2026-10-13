@@ -1,5 +1,9 @@
 import { Currency, Invoice, PaymentState, Subscription } from '@prisma/client';
-import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
+import {
+  calculatePeriodAmount,
+  logger,
+  mapPaymentPeriodToMonths,
+} from '@wepublish/utils/api';
 import * as crypto from 'crypto';
 import { add, parseISO, startOfDay, sub } from 'date-fns';
 import fetch, { RequestInit } from 'node-fetch';
@@ -65,9 +69,10 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       );
     }
 
-    const amount =
-      props.newAmount *
-      mapPaymentPeriodToMonths(props.subscription.paymentPeriodicity);
+    const amount = calculatePeriodAmount(
+      props.newAmount,
+      props.subscription.paymentPeriodicity
+    );
 
     await this.updateAmountUpstream(
       +isPayrexxExt.value,
@@ -172,9 +177,10 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       const payedAmount = rawSubscription.invoice.amount;
       const minPayment =
-        subscription.monthlyAmount *
-          mapPaymentPeriodToMonths(subscription.paymentPeriodicity) -
-        100; // -1CHF to ensure that imported rounding differences are no issue
+        calculatePeriodAmount(
+          subscription.monthlyAmount,
+          subscription.paymentPeriodicity
+        ) - 100; // -1CHF to ensure that imported rounding differences are no issue
       if (payedAmount < minPayment) {
         logger('payrexxSubscriptionPaymentProvider').warn(
           `Payrexx Subscription ${subscription.id} payment ${payedAmount} lower than min payment ${minPayment}`

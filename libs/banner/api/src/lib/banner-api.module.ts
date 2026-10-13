@@ -1,3 +1,4 @@
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { Module } from '@nestjs/common';
 import { BannerResolver } from './banner.resolver';
 import { BannerService } from './banner.service';
@@ -6,7 +7,7 @@ import { BannerActionService } from './banner-action.service';
 import { ImageModule } from '@wepublish/image/api';
 
 @Module({
-  imports: [PrismaModule, ImageModule],
+  imports: [PrismaModule, ImageModule, KvTtlCacheModule],
   providers: [BannerResolver, BannerService, BannerActionService],
 })
 export class BannerApiModule {}

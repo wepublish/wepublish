@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -12,9 +13,10 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
@@ -22,34 +24,36 @@ import { Link } from 'react-router-dom';
 import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
+import { lazyMessage } from '../../utility';
+
 const analyticsSchema = z.object({
   googleAnalytics: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(
-        /^(G|UA|YT|MO)-[A-Za-z0-9-]+$/,
-        'Must be a valid GA ID (e.g., G-XXXXXXXXXX or UA-XXXXXXXX-X)'
-      )
+      .string({
+        errorMap: lazyMessage('websiteSettings.analytics.google.gaInvalid'),
+      })
+      .regex(/^(G|UA|YT|MO)-[A-Za-z0-9-]+$/)
       .or(z.literal(''))
       .nullish(),
   }),
   googleTagManager: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(/^GTM-[A-Za-z0-9]+$/, 'Must be a valid GTM ID (e.g., GTM-XXXXXXX)')
+      .string({
+        errorMap: lazyMessage('websiteSettings.analytics.google.gtmInvalid'),
+      })
+      .regex(/^GTM-[A-Za-z0-9]+$/)
       .or(z.literal(''))
       .nullish(),
   }),
   plausible: z.object({
     enabled: z.boolean(),
     key: z
-      .string()
-      .regex(
-        /^PA-[A-Za-z0-9_]+$/i,
-        'Must be a valid PA ID (e.g., pa-XXXXXXXXXXXXXXXXXXXX)'
-      )
+      .string({
+        errorMap: lazyMessage('websiteSettings.analytics.plausible.paInvalid'),
+      })
+      .regex(/^PA-[A-Za-z0-9_-]+$/i)
       .or(z.literal(''))
       .nullish(),
   }),
@@ -57,8 +61,7 @@ const analyticsSchema = z.object({
     enabled: z.boolean(),
     key: z
       .string({
-        message:
-          'Must be a valid Piwik ID (e.g., xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)',
+        errorMap: lazyMessage('websiteSettings.analytics.piwik.proInvalid'),
       })
       .or(z.literal(''))
       .nullish(),
@@ -77,9 +80,10 @@ export const Explainer = styled.p`
 
 export const WebsiteAnalytics = () => {
   const { t } = useTranslation();
-  const [loadSettings] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings] = useLazyQuery(WebsiteSettingsDocument);
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
         toaster.push(
           <Message
@@ -98,13 +102,14 @@ export const WebsiteAnalytics = () => {
             type="error"
             showIcon
             closable
-            duration={3000}
+            duration={8000}
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>
         );
       },
-    });
+    }
+  );
   const {
     control,
     handleSubmit,
@@ -152,9 +157,7 @@ export const WebsiteAnalytics = () => {
           {t('websiteSettings.backToOverview')}
         </Button>
       </Link>
-
       <h3>{t('websiteSettings.analytics.google.title')}</h3>
-
       <Controller
         name="googleAnalytics.enabled"
         control={control}
@@ -191,7 +194,6 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="googleAnalytics.key"
         control={control}
@@ -218,28 +220,29 @@ export const WebsiteAnalytics = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
       <Controller
         name="googleTagManager.enabled"
         control={control}
@@ -275,7 +278,6 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="googleTagManager.key"
         control={control}
@@ -302,30 +304,30 @@ export const WebsiteAnalytics = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
       <h3>{t('websiteSettings.analytics.plausible.title')}</h3>
-
       <Controller
         name="plausible.enabled"
         control={control}
@@ -361,7 +363,6 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="plausible.key"
         control={control}
@@ -388,30 +389,30 @@ export const WebsiteAnalytics = () => {
                   />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
       <h3>{t('websiteSettings.analytics.piwik.title')}</h3>
-
       <Controller
         name="piwik.enabled"
         control={control}
@@ -447,7 +448,6 @@ export const WebsiteAnalytics = () => {
           </div>
         )}
       />
-
       <Controller
         name="piwik.key"
         control={control}
@@ -463,28 +463,29 @@ export const WebsiteAnalytics = () => {
                   <Trans i18nKey="websiteSettings.analytics.piwik.proLocator" />
                 )
               }
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ID
-                    </Typography>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
           : <></>
         }
       />
-
       <Box>
         <Button
           type="submit"

@@ -1,14 +1,12 @@
+import type { MockedResult } from './mocked-result';
 import { PollBlockContext } from '@wepublish/block-content/website';
-import {
-  PollVoteMutationResult,
-  UserPollVoteQueryResult,
-} from '@wepublish/website/api';
+import { PollVoteMutation, UserPollVoteQuery } from '@wepublish/website/api';
 import { ComponentType } from 'react';
 import { action } from 'storybook/actions';
 
 type PollDecoratorProps = Partial<{
-  fetchUserVoteResult: Pick<UserPollVoteQueryResult, 'data' | 'error'>;
-  voteResult: Pick<PollVoteMutationResult, 'data' | 'error'>;
+  fetchUserVoteResult: MockedResult<UserPollVoteQuery>;
+  voteResult: MockedResult<PollVoteMutation>;
   anonymousVoteResult: string;
   canVoteAnonymously: boolean;
 }>;

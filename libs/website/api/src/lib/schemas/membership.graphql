@@ -40,9 +40,14 @@ fragment FullMemberPlan on MemberPlan {
     ...FullImage
   }
 
-  amountPerMonthMin
-  amountPerMonthMax
-  amountPerMonthTarget
+  periodicityPricing {
+    periodicity
+    label
+    amountMin
+    amountTarget
+    amountMax
+  }
+  defaultPaymentPeriodicity
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
@@ -118,6 +123,7 @@ fragment FullSubscription on PublicSubscription {
   }
 
   canExtend
+  canRevertUpgrade
   isActive
 }
 
@@ -170,7 +176,7 @@ mutation Subscribe(
   $memberPlanSlug: Slug
   $autoRenew: Boolean!
   $paymentPeriodicity: PaymentPeriodicity!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
   $paymentMethodId: String
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
@@ -205,7 +211,7 @@ mutation Resubscribe(
   $memberPlanSlug: Slug
   $autoRenew: Boolean!
   $paymentPeriodicity: PaymentPeriodicity!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
   $paymentMethodId: String
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
@@ -231,7 +237,7 @@ mutation Upgrade(
   $subscriptionId: String!
   $memberPlanId: String!
   $paymentMethodId: String!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
   $goodieId: String
   $successURL: String
   $failureURL: String
@@ -287,6 +293,18 @@ mutation PaySubscription(
 
 mutation CancelSubscription($subscriptionId: String!) {
   cancelUserSubscription(id: $subscriptionId) {
+    ...FullSubscription
+  }
+}
+
+mutation ReactivateSubscription($subscriptionId: String!) {
+  reactivateUserSubscription(id: $subscriptionId) {
+    ...FullSubscription
+  }
+}
+
+mutation RevertSubscriptionUpgrade($subscriptionId: String!) {
+  revertUserSubscriptionUpgrade(subscriptionId: $subscriptionId) {
     ...FullSubscription
   }
 }

@@ -1,4 +1,5 @@
-import { getSettings, usePeerListQuery } from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
+import { PeerListDocument, getSettings } from '@wepublish/editor/api';
 import { useEffect, useMemo, useState } from 'react';
 
 import type {
@@ -200,7 +201,7 @@ export function useAllNetworkClients() {
 }
 
 export function usePeerMatching() {
-  const { data: peerData, loading } = usePeerListQuery({
+  const { data: peerData, loading } = useQuery(PeerListDocument, {
     errorPolicy: 'ignore',
   });
 

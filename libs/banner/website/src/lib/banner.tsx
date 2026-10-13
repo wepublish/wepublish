@@ -3,7 +3,10 @@ import IframeResizer from '@iframe-resizer/react';
 import { css, GlobalStyles, Typography } from '@mui/material';
 import { useSetIntendedRoute } from '@wepublish/authentication/website';
 import { Button } from '@wepublish/ui';
-import { BannerAction, BannerActionRole } from '@wepublish/website/api';
+import {
+  BannerActionRole,
+  FullBannerActionFragment,
+} from '@wepublish/website/api';
 import {
   BuilderBannerProps,
   useWebsiteBuilder,
@@ -218,7 +221,10 @@ export const Banner = ({
     collapseBanner();
   };
 
-  const handleActionClick = (e: React.MouseEvent, action: BannerAction) => {
+  const handleActionClick = (
+    e: React.MouseEvent,
+    action: FullBannerActionFragment
+  ) => {
     if (action.role === BannerActionRole.Cancel) {
       e.preventDefault();
       handleClose();

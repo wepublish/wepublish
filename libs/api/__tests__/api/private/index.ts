@@ -456,6 +456,7 @@ export type MutationCreateCommentArgs = {
   itemID: Scalars['String'];
   itemType: CommentItemType;
   parentID?: InputMaybe<Scalars['String']>;
+  publish?: InputMaybe<Scalars['Boolean']>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
   text?: InputMaybe<Scalars['RichText']>;
 };

@@ -30,9 +30,9 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithApiClient,
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
+  createWithApiClient,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
@@ -53,9 +53,11 @@ import { OnlineReportsFooter } from '../src/components/footer';
 import { OnlineReportsArticleAuthors } from '../src/components/online-reports-article-authors';
 import { OnlineReportsArticleList } from '../src/components/online-reports-article-list';
 import { OnlineReportsCommentListItem } from '../src/components/online-reports-comment-list-item';
+import { OnlineReportsSubscribe } from '../src/components/onlinereports-subscribe';
 import { OnlineReportsPage } from '../src/components/page';
 import { OnlineReportsPaymentAmount } from '../src/components/payment-amount';
 import { OnlineReportsQuoteBlock } from '../src/components/quote-block';
+import { ReviveScript } from '../src/components/revive-script';
 import { AdsProvider } from '../src/context/ads-context';
 import { OnlineReportsRegistrationForm } from '../src/forms/registration-form';
 import { OnlineReportsNavbar } from '../src/navigation/onlinereports-navbar';
@@ -166,7 +168,7 @@ const AdvertisementPlacer = styled('div')`
 `;
 
 export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
+  sessionToken?: FullSessionWithTokenWithoutUserFragment;
 }> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
@@ -225,6 +227,7 @@ function CustomApp({
                   TeaserGrid: OnlineReportsTeaserGridBlock,
                   Quote: OnlineReportsQuoteBlock,
                   Title: OnlineReportsTitle,
+                  Subscribe: OnlineReportsSubscribe,
                 }}
                 date={{ format: dateFormatter }}
                 meta={{ siteTitle }}
@@ -238,12 +241,18 @@ function CustomApp({
                     name="viewport"
                     content="width=device-width, initial-scale=1.0"
                   />
+                  <link
+                    rel="preconnect"
+                    href="https://servedby.revive-adserver.net"
+                    crossOrigin="anonymous"
+                  />
+                  <link
+                    rel="preconnect"
+                    href="https://cdn.revive-adserver.net"
+                  />
                 </Head>
 
-                <Script
-                  src="//servedby.revive-adserver.net/asyncjs.php"
-                  async
-                />
+                <ReviveScript />
 
                 <AdblockOverlay />
 

@@ -32,10 +32,11 @@ export const BlockList = styled('ul')`
 export const BlockListItem = styled('li')`
   margin: 0;
   padding: 0.25rem 0.5rem;
+  border-radius: var(--rs-radius-md);
 
   &:hover {
     cursor: pointer;
-    background-color: #f5f5f5;
+    background-color: var(--rs-bg-well);
   }
 `;
 

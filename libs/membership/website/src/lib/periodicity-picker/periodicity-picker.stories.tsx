@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import { action } from 'storybook/actions';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { PaymentPeriodicity } from '@wepublish/website/api';
@@ -68,8 +67,6 @@ export const WithError = {
   args: {
     ...Default.args,
     data: null,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
   },
 };

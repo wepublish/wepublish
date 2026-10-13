@@ -1,19 +1,20 @@
-import { ApolloError, MutationResult, QueryResult } from '@apollo/client';
+import type { OperationVariables } from '@apollo/client';
+import type { useMutation, useQuery } from '@apollo/client/react';
 import type { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   AddCommentMutation,
   AddCommentMutationVariables,
-  CalculatedRating,
   ChallengeQuery,
   CommentListQuery,
   CommentListQueryVariables,
   CommentWithoutNestingFragment,
   EditCommentMutation,
   EditCommentMutationVariables,
+  FullCalculatedRatingFragment,
   FullCommentFragment,
   FullCommentRatingFragment,
-  CommentRatingSystem,
-  OverriddenRating,
+  FullRatingSystemFragment,
+  FullOverriddenRatingFragment,
 } from '@wepublish/website/api';
 import { Dispatch, PropsWithChildren } from 'react';
 
@@ -45,7 +46,7 @@ export type BuilderCommentListState = Record<
 >;
 
 export type BuilderCommentListProps = Pick<
-  QueryResult<CommentListQuery>,
+  useQuery.Result<CommentListQuery, OperationVariables, 'complete' | 'empty'>,
   'data' | 'loading' | 'error'
 > & {
   className?: string;
@@ -53,14 +54,17 @@ export type BuilderCommentListProps = Pick<
   anonymousCanRate?: boolean;
   userCanEdit?: boolean;
   maxCommentLength: number;
-  challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>;
+  challenge: Pick<
+    useQuery.Result<ChallengeQuery, OperationVariables, 'complete' | 'empty'>,
+    'data' | 'loading' | 'error'
+  >;
 
   variables?: Omit<CommentListQueryVariables, 'itemId'>;
   onVariablesChange?: (
     variables: Omit<CommentListQueryVariables, 'itemId'>
   ) => void;
 
-  add: MutationResult<AddCommentMutation>;
+  add: useMutation.Result<AddCommentMutation>;
   onAddComment: (
     variables: Omit<
       AddCommentMutationVariables,
@@ -68,7 +72,7 @@ export type BuilderCommentListProps = Pick<
     >
   ) => void;
 
-  edit: MutationResult<EditCommentMutation>;
+  edit: useMutation.Result<EditCommentMutation>;
   onEditComment: (variables: EditCommentMutationVariables) => void;
 
   openEditorsState: BuilderCommentListState;
@@ -82,7 +86,7 @@ export type BuilderCommentListItemProps = (CommentWithoutNestingFragment & {
   children?: CommentWithoutNestingFragment[] | null;
 }) & {
   className?: string;
-  ratingSystem: CommentRatingSystem;
+  ratingSystem: FullRatingSystemFragment;
   signUpUrl: string;
   commentDepth?: number;
   maxCommentDepth?: number;
@@ -119,6 +123,7 @@ export type BuilderCommentProps = PropsWithChildren<
     className?: string;
     showContent?: boolean;
     includeAnchor?: boolean;
+    showDateWithFlair?: boolean;
   }
 >;
 
@@ -127,7 +132,7 @@ type CreateCommentProps = {
   title?: never;
   lead?: never;
   challenge: Pick<
-    QueryResult<ChallengeQuery>,
+    useQuery.Result<ChallengeQuery, OperationVariables, 'complete' | 'empty'>,
     'data' | 'loading' | 'error'
   > | null;
   onSubmit: (
@@ -151,7 +156,7 @@ export type BuilderCommentEditorProps = {
   className?: string;
   maxCommentLength: number;
   loading: boolean;
-  error?: ApolloError;
+  error?: Error;
   canReply: boolean;
   parentUrl?: string;
   signUpUrl?: string;
@@ -160,8 +165,8 @@ export type BuilderCommentEditorProps = {
 
 export type BuilderCommentRatingsProps = {
   commentId: string;
-  ratingSystem: CommentRatingSystem;
+  ratingSystem: FullRatingSystemFragment;
   userRatings: FullCommentRatingFragment[];
-  calculatedRatings: CalculatedRating[];
-  overriddenRatings: OverriddenRating[];
+  calculatedRatings: FullCalculatedRatingFragment[];
+  overriddenRatings: FullOverriddenRatingFragment[];
 };

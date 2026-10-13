@@ -5,15 +5,20 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/google-analytics/api",
+        "tsConfig": "libs/google-analytics/api/tsconfig.lib.json",
+        "packageJson": "libs/google-analytics/api/package.json",
+        "main": "libs/google-analytics/api/src/index.ts",
+        "rootDir": "."
+      }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/google-analytics/api/jest.config.ts"
+        "config": "../../../{projectRoot}/vitest.config.ts"
       }
     }
   }

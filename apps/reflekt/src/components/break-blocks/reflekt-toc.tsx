@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
-import { BlockContent } from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import {
   BuilderBreakBlockProps,
   BuilderRichTextBlockProps,
@@ -43,10 +43,15 @@ export const TocDetails = styled(Typography)`
     margin-left: ${({ theme }) => theme.spacing(4)};
     margin-right: ${({ theme }) => theme.spacing(4)};
   }
+
+  li,
+  li p {
+    margin-bottom: 0;
+  }
 `;
 
 export const isToc = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderBreakBlockProps =>
   allPass([hasBlockStyle(ReflektBlockStyles.TableOfContents), isBreakBlock])(
     block

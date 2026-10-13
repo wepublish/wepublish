@@ -1,7 +1,6 @@
 import { Meta } from '@storybook/nextjs-vite';
 import {
   FullNavigationFragment,
-  Navigation,
   NavigationListDocument,
 } from '@wepublish/website/api';
 import { FooterContainer } from './footer-container';
@@ -162,7 +161,7 @@ const navigations = [
       },
     ],
   },
-] as Navigation[];
+] as FullNavigationFragment[];
 
 export default {
   component: FooterContainer,

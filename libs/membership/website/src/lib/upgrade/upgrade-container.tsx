@@ -1,10 +1,11 @@
+import { useLazyQuery, useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import { PaymentForm, useUpgrade } from '@wepublish/payment/website';
 import {
   FullMemberPlanFragment,
-  useMemberPlanListQuery,
-  useSubscriptionsQuery,
-  useUpgradeSubscriptionInfoLazyQuery,
+  MemberPlanListDocument,
+  SubscriptionsDocument,
+  UpgradeSubscriptionInfoDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -12,6 +13,7 @@ import {
   Upgrade,
 } from '@wepublish/website/builder';
 import { produce } from 'immer';
+import { getMonthlyEquivalentRange } from '../formatters/format-payment-period';
 import { sortBy } from 'ramda';
 import { useCallback, useMemo } from 'react';
 
@@ -33,18 +35,23 @@ export type UpgradeContainerProps = BuilderContainerProps &
 
 export const UpgradeContainer = ({
   filter = memberPlan => memberPlan,
-  sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),
+  sort = sortBy(
+    memberPlan => getMonthlyEquivalentRange(memberPlan).amountPerMonthMin
+  ),
   upgradeSubscriptionId,
   ...props
 }: UpgradeContainerProps) => {
   const { hasUser } = useUser();
 
   const [upgrade, redirectPages, stripeClientSecret] = useUpgrade();
-  const [fetchUpgradeInfo, upgradeInfo] = useUpgradeSubscriptionInfoLazyQuery({
-    fetchPolicy: 'cache-first',
-  });
+  const [fetchUpgradeInfo, upgradeInfo] = useLazyQuery(
+    UpgradeSubscriptionInfoDocument,
+    {
+      fetchPolicy: 'cache-first',
+    }
+  );
 
-  const memberPlanList = useMemberPlanListQuery({
+  const memberPlanList = useQuery(MemberPlanListDocument, {
     variables: {
       take: 50,
       filter: {
@@ -53,7 +60,7 @@ export const UpgradeContainer = ({
     },
   });
 
-  const userSubscriptions = useSubscriptionsQuery({
+  const userSubscriptions = useQuery(SubscriptionsDocument, {
     skip: !hasUser,
   });
 
@@ -114,8 +121,8 @@ export const UpgradeContainer = ({
               },
             });
 
-            if (result.errors) {
-              throw result.errors;
+            if (result.error) {
+              throw result.error;
             }
           }}
         />

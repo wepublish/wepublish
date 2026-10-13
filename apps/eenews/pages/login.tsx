@@ -8,8 +8,8 @@ import {
 } from '@wepublish/authentication/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import {
+  FullSessionWithTokenWithoutUserFragment,
   getApiClient,
-  SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
@@ -18,12 +18,15 @@ import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 
+import { EenewsPageShell } from '../src/components/eenews-page-shell';
+
 const LoginWrapper = styled('div')`
   display: grid;
   justify-content: center;
+  gap: 28px;
 `;
 
-type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
+type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 
 export default function Login({ sessionToken }: LoginProps) {
   const { hasUser, setToken } = useUser();
@@ -62,24 +65,28 @@ export default function Login({ sessionToken }: LoginProps) {
   }
 
   return (
-    <LoginWrapper>
-      <H3 component="h1">Login für Abonnent*innen</H3>
+    <EenewsPageShell>
+      <LoginWrapper>
+        <H3 component="h1">Login für Abonnent*innen</H3>
 
-      <Typography
-        variant="body1"
-        paragraph
-      >
-        (Falls du noch keinen Account hast,{' '}
-        <Link href={'/signup'}>klicke hier.</Link>)
-      </Typography>
+        <Typography
+          variant="body1"
+          sx={{
+            marginBottom: '16px',
+          }}
+        >
+          (Falls du noch keinen Account hast,{' '}
+          <Link href={'/signup'}>klicke hier.</Link>)
+        </Typography>
 
-      <LoginFormContainer
-        defaults={{
-          email: router.query?.mail as string | undefined,
-          requirePassword: !!router.query?.requirePassword,
-        }}
-      />
-    </LoginWrapper>
+        <LoginFormContainer
+          defaults={{
+            email: router.query?.mail as string | undefined,
+            requirePassword: !!router.query?.requirePassword,
+          }}
+        />
+      </LoginWrapper>
+    </EenewsPageShell>
   );
 }
 

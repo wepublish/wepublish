@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { userEvent, within } from 'storybook/test';
 import { mockPoll, mockPollBlock } from '@wepublish/storybook/mocks';
@@ -139,15 +138,11 @@ export const WithError: StoryObj = {
     WithPollBlockDecorators({
       fetchUserVoteResult: {
         data: undefined,
-        error: new ApolloError({
-          errorMessage: 'Something went wrong with the user vote.',
-        }),
+        error: new Error('Something went wrong with the user vote.'),
       },
       voteResult: {
         data: undefined,
-        error: new ApolloError({
-          errorMessage: 'Something went wrong with the poll vote.',
-        }),
+        error: new Error('Something went wrong with the poll vote.'),
       },
     }),
   ],

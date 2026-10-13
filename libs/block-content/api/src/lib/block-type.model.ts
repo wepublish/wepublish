@@ -32,6 +32,7 @@ export enum BlockType {
   Subscribe = 'subscribe',
   MailchimpForm = 'mailchimpForm',
   FlexBlock = 'flexBlock',
+  BlockTemplate = 'blockTemplate',
 }
 
 registerEnumType(BlockType, {

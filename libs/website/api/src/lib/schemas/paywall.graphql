@@ -1,0 +1,32 @@
+fragment SlimPaywall on Paywall {
+  id
+  memberPlans {
+    id
+    name
+    tags
+  }
+}
+
+fragment FullPaywall on Paywall {
+  id
+  active
+  anyMemberPlan
+  name
+  description
+  circumventDescription
+  alternativeSubscribeUrl
+  upgradeDescription
+  upgradeCircumventDescription
+  memberPlans {
+    id
+    name
+    tags
+  }
+  bypasses {
+    id
+    token
+  }
+
+  fadeout
+  hideContentAfter
+}

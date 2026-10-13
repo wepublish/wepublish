@@ -48,7 +48,7 @@ export function AudienceTableExport({
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {(error as Error).message}
         </Message>

@@ -5,6 +5,7 @@ import {
   hasBlockStyle,
   isFilledTeaser,
   isTeaserSlotsBlock,
+  LightboxWrapper,
   SliderBallContainer,
   SliderInnerContainer,
   SliderWrapper,
@@ -12,7 +13,10 @@ import {
   TeaserSlotsBlockTeasers,
   TeaserSlotsBlockWrapper as TeaserSlotsBlockWrapperDefault,
 } from '@wepublish/block-content/website';
-import { BlockContent, FlexAlignment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullFlexAlignmentFragment,
+} from '@wepublish/website/api';
 import {
   BuilderTeaserListBlockProps,
   BuilderTeaserSlotsBlockProps,
@@ -27,7 +31,7 @@ import { reflektSliderControls } from '../reflekt-slider-controls';
 import { TeaserWrapper } from '../teasers/reflekt-teaser';
 
 export const isTeaserSlotsTopic = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderTeaserSlotsBlockProps =>
   allPass([
     isTeaserSlotsBlock,
@@ -42,7 +46,7 @@ export const isTeaserSlotsTopic = (
 export const TeaserSlotsTopicWrapper = styled(TeaserSlotsBlockWrapperDefault)<{
   blockStyle?: string;
 }>`
-  ${SliderWrapper} ${TeaserWrapper} {
+  :is(${SliderWrapper}, ${LightboxWrapper}) ${TeaserWrapper} {
     ${({ theme }) => theme.breakpoints.down('md')} {
       width: 100%;
     }
@@ -102,7 +106,7 @@ export const TeaserSlotsTopic = ({
 }: Pick<
   BuilderTeaserListBlockProps,
   'title' | 'teasers' | 'blockStyle' | 'className'
-> & { alignment?: FlexAlignment }) => {
+> & { alignment?: FullFlexAlignmentFragment }) => {
   const {
     blocks: { Teaser },
   } = useWebsiteBuilder();

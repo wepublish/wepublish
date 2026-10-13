@@ -1,8 +1,12 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { SubscribeBlock } from '@wepublish/block-content/website';
-import { SubscribeButton } from '@wepublish/membership/website';
-import { useSubscriptionsQuery } from '@wepublish/website/api';
+import {
+  getMonthlyEquivalentRange,
+  SubscribeButton,
+} from '@wepublish/membership/website';
+import { SubscriptionsDocument } from '@wepublish/website/api';
 import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { ascend, descend, prop, sortWith } from 'ramda';
@@ -25,7 +29,7 @@ export const HauptstadtSubscribe = (props: BuilderSubscribeBlockProps) => {
   const router = useRouter();
   const forceUpgrade = useContext(ForceUpgradeContext);
 
-  const { data } = useSubscriptionsQuery({
+  const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
     skip: !hasUser,
   });
@@ -42,7 +46,9 @@ export const HauptstadtSubscribe = (props: BuilderSubscribeBlockProps) => {
           isMemberplanUpgradeableTo(mb) &&
           filteredSubscriptions.every(sub => sub.memberPlan.id !== mb.id) &&
           filteredSubscriptions.some(
-            sub => mb.amountPerMonthMin > sub.memberPlan.amountPerMonthMin
+            sub =>
+              getMonthlyEquivalentRange(mb).amountPerMonthMin >
+              getMonthlyEquivalentRange(sub.memberPlan).amountPerMonthMin
           )
       ),
     [filteredSubscriptions, props.memberPlans]

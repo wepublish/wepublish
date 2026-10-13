@@ -1,18 +1,3 @@
-fragment SlimPageRevision on PageRevision {
-  id
-  publishedAt
-  description
-  title
-
-  image {
-    ...SlimImage
-  }
-
-  properties {
-    ...FullProperty
-  }
-}
-
 fragment FullPageRevision on PageRevision {
   ...SlimPageRevision
 
@@ -28,22 +13,6 @@ fragment FullPageRevision on PageRevision {
 
   blocks {
     ...FullBlock
-  }
-}
-
-fragment SlimPage on Page {
-  id
-  publishedAt
-  modifiedAt
-  url
-  slug
-
-  tags {
-    ...FullTag
-  }
-
-  latest {
-    ...SlimPageRevision
   }
 }
 

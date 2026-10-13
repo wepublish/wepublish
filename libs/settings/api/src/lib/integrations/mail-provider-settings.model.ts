@@ -89,6 +89,6 @@ export class CreateSettingMailProviderInput extends OmitType(
 
 @ArgsType()
 export class UpdateSettingMailProviderInput extends PartialType(
-  OmitType(CreateSettingMailProviderInput, ['type'] as const, ArgsType),
+  CreateSettingMailProviderInput,
   ArgsType
 ) {}

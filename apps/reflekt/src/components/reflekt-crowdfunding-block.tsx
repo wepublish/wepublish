@@ -6,7 +6,8 @@ import { BuilderCrowdfundingBlockProps } from '@wepublish/website/builder';
 import { ElementType, useEffect, useState } from 'react';
 import { Trans } from 'react-i18next';
 
-import { euclidCircularB } from '../theme';
+import theme, { euclidCircularB, robotoMono } from '../theme';
+import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 
 // Node (SSR) and the browser emit different apostrophe glyphs for the de-CH
 // grouping separator (U+2019 vs U+0027) which causes a hydration mismatch.
@@ -31,10 +32,14 @@ const Caption = styled(Typography)<{ component?: ElementType }>`
 const Bar = styled('div')`
   position: relative;
   width: 100%;
-  height: ${({ theme }) => theme.spacing(5.5)};
-  margin-top: ${({ theme }) => theme.spacing(1)};
-  background-color: ${({ theme }) => theme.palette.common.white};
+  height: ${theme.spacing(5.5)};
+  margin-top: ${theme.spacing(1)};
+  background-color: ${theme.palette.common.white};
   overflow: hidden;
+`;
+
+const HeroBar = styled(Bar)`
+  height: ${theme.spacing(4)};
 `;
 
 const BarFill = styled('div', {
@@ -43,7 +48,11 @@ const BarFill = styled('div', {
   position: absolute;
   inset: 0 auto 0 0;
   width: ${({ progress }) => Math.min(100, Math.max(0, progress))}%;
-  background-color: ${({ theme }) => theme.palette.common.black};
+  background-color: ${theme.palette.common.black};
+`;
+
+const HeroBarFill = styled(BarFill)`
+  background-color: ${theme.palette.secondary.light};
 `;
 
 const BarLabel = styled('span')`
@@ -61,8 +70,31 @@ const BarLabel = styled('span')`
   mix-blend-mode: difference;
 `;
 
+const HeroBarTitle = styled('span')`
+  position: absolute;
+  top: 50%;
+  left: ${({ theme }) => theme.spacing(2)};
+  transform: translateY(-50%);
+  font-family: ${[robotoMono.style.fontFamily, 'monospace'].join(',')};
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: ${({ theme }) => theme.palette.common.black};
+
+  ${theme.breakpoints.up('md')} {
+    font-size: 0.875rem;
+  }
+`;
+
+const HeroDays = styled(Typography)<{ component?: ElementType }>`
+  text-align: right;
+  font-family: ${[robotoMono.style.fontFamily, 'monospace'].join(',')};
+  color: ${({ theme }) => theme.palette.common.white};
+`;
+
 export const ReflektCrowdfundingBlock = ({
   crowdfunding,
+  blockStyle,
 }: BuilderCrowdfundingBlockProps) => {
   const countSubscriptionsUntil = crowdfunding?.countSubscriptionsUntil;
   const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
@@ -96,37 +128,68 @@ export const ReflektCrowdfundingBlock = ({
     return null;
   }
 
+  const isHero = blockStyle === ReflektBlockStyles.CrowdfundingHero;
+
+  const titleContent = (
+    <Trans
+      i18nKey="crowdfunding.stats.progressOfGoal"
+      values={{
+        type: crowdfunding.goalType,
+        current:
+          isRevenueGoal ?
+            formatCurrency(revenue / 100, Currency.Chf)
+          : formatNumber(subscriptions),
+        goal:
+          isRevenueGoal ?
+            formatCurrency(goalAmount / 100, Currency.Chf)
+          : formatNumber(goalAmount),
+      }}
+    />
+  );
+
+  const daysContent =
+    daysRemaining != null ?
+      <Trans
+        i18nKey="crowdfunding.stats.daysRemaining"
+        values={{ days: daysRemaining }}
+      />
+    : null;
+
+  if (isHero) {
+    return (
+      <Wrapper>
+        <HeroBar>
+          <HeroBarFill progress={progress} />
+          <HeroBarTitle>{titleContent}</HeroBarTitle>
+        </HeroBar>
+
+        {daysContent && (
+          <HeroDays
+            variant="caption"
+            component="p"
+          >
+            {daysContent}
+          </HeroDays>
+        )}
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper>
       <Title
         variant="h4"
         component="p"
       >
-        <Trans
-          i18nKey="crowdfunding.stats.progressOfGoal"
-          values={{
-            type: crowdfunding.goalType,
-            current:
-              isRevenueGoal ?
-                formatCurrency(revenue / 100, Currency.Chf)
-              : formatNumber(subscriptions),
-            goal:
-              isRevenueGoal ?
-                formatCurrency(goalAmount / 100, Currency.Chf)
-              : formatNumber(goalAmount),
-          }}
-        />
+        {titleContent}
       </Title>
 
-      {daysRemaining != null && (
+      {daysContent && (
         <Caption
           variant="caption"
           component="p"
         >
-          <Trans
-            i18nKey="crowdfunding.stats.daysRemaining"
-            values={{ days: daysRemaining }}
-          />
+          {daysContent}
         </Caption>
       )}
 

@@ -69,6 +69,7 @@ export function ChooseEditImage({
       {!image && disabled === true && <Placeholder.Graph />}
       <PlaceholderInput
         onAddClick={() => openChooseModalOpen?.()}
+        addLabel={t('chooseEditImage.chooseImage')}
         maxHeight={maxHeight}
         minHeight={minHeight}
       >
@@ -93,6 +94,8 @@ export function ChooseEditImage({
                       circle
                       size="sm"
                       appearance="primary"
+                      title={t('chooseEditImage.imageOptions')}
+                      aria-label={t('chooseEditImage.imageOptions')}
                     />
                   )}
                 >

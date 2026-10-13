@@ -1,12 +1,10 @@
-import * as Apollo from '@apollo/client';
+import type { OperationVariables } from '@apollo/client';
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { SortType } from '../utility';
 
-type ExtractQueryType<T> =
-  T extends Apollo.QueryResult<infer U, any> ? U : never;
 type ExtractQueryVariablesType<T> =
-  T extends Apollo.QueryResult<any, infer V> ? V : never;
+  T extends { variables: infer V } ? NonNullable<V> : never;
 type ExtractFilterType<T> = T extends { filter?: infer F } ? F : never;
 type ExtractSortType<T> = T extends { sort?: infer F } ? F : never;
 type ExtractOrderType<T> = T extends { order?: infer F } ? F : never;
@@ -61,7 +59,9 @@ type PaginatedContainerProps<Variables> = {
   orderMapper: (order: SortType) => ExtractOrderType<Variables> | null;
 };
 
-export function usePaginatedQueryContainer<Query extends Apollo.QueryResult>(
+export function usePaginatedQueryContainer<
+  Query extends { variables?: OperationVariables },
+>(
   props: PaginatedContainerProps<ExtractQueryVariablesType<Query>>
 ): PaginatedQueryContainer<ExtractQueryVariablesType<Query>> {
   const { staticFilter, sortMapper, orderMapper } = props;

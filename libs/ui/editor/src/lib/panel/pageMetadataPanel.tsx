@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
-import { FullImageFragment, Tag, TagType } from '@wepublish/editor/api';
+import {
+  FullImageFragment,
+  FullTagFragment,
+  TagType,
+} from '@wepublish/editor/api';
 import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdListAlt, MdSettings, MdShare } from 'react-icons/md';
@@ -12,7 +16,7 @@ import {
   Nav as RNav,
   Panel,
   TagPicker as RTagPicker,
-  Toggle as RToggle,
+  Toggle,
 } from 'rsuite';
 
 import {
@@ -25,6 +29,7 @@ import {
   SelectTags,
   useAuthorisation,
 } from '../atoms';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { MetaDataType } from '../blocks';
 import { generateID, isFunctionalUpdate } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
@@ -34,18 +39,13 @@ const Nav = styled(RNav)`
   margin-bottom: 20px;
 `;
 
-const Toggle = styled(RToggle)`
-  max-width: 70px;
-  min-width: 70px;
-`;
-
 const InputWidth60 = styled(Input)`
   width: 60%;
 `;
 
 const InputWidth40 = styled(Input)`
   width: 40%;
-  margin-right: 10px;
+  margin-right: 8px;
 `;
 
 const InputList = styled.div`
@@ -58,8 +58,10 @@ const TagPicker = styled(RTagPicker)`
 `;
 
 const FormGroup = styled(Form.Group)`
+  flex-shrink: 0;
   padding-top: 6px;
   padding-left: 8px;
+  white-space: nowrap;
 `;
 
 export interface PageMetadataProperty {
@@ -75,7 +77,7 @@ export interface PageMetadata {
   readonly seoTitle?: string;
   readonly seoDescription?: string;
   readonly tags: string[];
-  readonly defaultTags: Pick<Tag, 'id' | 'tag'>[];
+  readonly defaultTags: Pick<FullTagFragment, 'id' | 'tag'>[];
   readonly url: string;
   readonly properties: PageMetadataProperty[];
   readonly image?: FullImageFragment;
@@ -235,7 +237,12 @@ function PageMetadataPanel({
             <DeferredTextField
               controlId="pageSlug"
               name="slug"
-              label={t('pageEditor.panels.slug')}
+              label={
+                <>
+                  {t('pageEditor.panels.slug')}{' '}
+                  <InfoTooltip text={t('pageEditor.panels.slugInfo')} />
+                </>
+              }
               disabled={!isAuthorized}
               value={slug}
               onChange={slug => onChange?.({ ...value, slug })}
@@ -297,13 +304,17 @@ function PageMetadataPanel({
             </Form.Group>
 
             <Form.Group controlId="hidden">
-              <Form.Label>{t('pageEditor.panels.hidden')}</Form.Label>
               <Toggle
                 checked={hidden ? true : false}
                 disabled={!isAuthorized}
                 onChange={hidden => onChange?.({ ...value, hidden })}
+                label={
+                  <>
+                    {t('pageEditor.panels.hidden')}{' '}
+                    <InfoTooltip text={t('pageEditor.panels.hiddenInfo')} />
+                  </>
+                }
               />
-              <Form.Text>{t('pageEditor.panels.setAsHidden')}</Form.Text>
             </Form.Group>
 
             <Form.Group>
@@ -364,12 +375,11 @@ function PageMetadataPanel({
                     />
                     <FormGroup>
                       <Toggle
-                        checkedChildren={t('pageEditor.panels.public')}
-                        unCheckedChildren={t('pageEditor.panels.private')}
                         checked={value.public}
                         onChange={isPublic =>
                           onChange({ ...value, public: isPublic })
                         }
+                        label={t('pageEditor.panels.public')}
                       />
                     </FormGroup>
                   </InputList>
