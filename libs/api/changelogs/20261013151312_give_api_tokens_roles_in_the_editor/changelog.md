@@ -4,7 +4,7 @@ lead: When you generate an API token you now pick the roles whose permissions it
 actionRequired: false
 ---
 
-**API tokens** (Settings → Tokens)
+**API tokens** (Peering → Tokens)
 
 - **Roles when generating.** The «Generate Token» panel has a role picker. Programs using the token get exactly the permissions of these roles, the same roles users get. Without a role the token may do nothing; the panel says so.
 - **Roles column.** The token list shows the roles of every token, or «No roles – no permissions».

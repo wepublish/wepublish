@@ -121,7 +121,7 @@ Frontend (Apollo Client)
 - Decorators: `@Public()` (no auth), `@CurrentUser()` (inject session), `@Permissions(...)` (RBAC check)
 - Permission constants: `CanCreateArticle`, `CanDeleteArticle`, `CanPublishArticle`, `CanGetArticle`, etc.
 - `@PreviewMode()` for draft content access
-- API tokens (`libs/peering/api`, editor Settings → Tokens): a request with `Authorization: Bearer <token>` and `User-Agent: We.Publish/1.0 Peering` gets the permissions of the token's `roleIDs`; roles are set when creating or editing the token (`createToken` / `updateToken`), and a token without roles may do nothing
+- API tokens (`libs/peering/api`, editor Peering → Tokens): a request with `Authorization: Bearer <token>` and `User-Agent: We.Publish/1.0 Peering` gets the permissions of the token's `roleIDs`; roles are set when creating or editing the token (`createToken` / `updateToken`), and a token without roles may do nothing
 
 ## Import Aliases
 
