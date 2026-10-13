@@ -12,7 +12,9 @@ export const KV_ATOMIC_STORE = Symbol('KV_ATOMIC_STORE');
 
 const CONNECTION_TIMEOUT_MS = 1000;
 const UNAVAILABLE_RETRY_MS = 5000;
-const COMMAND_TIMEOUT_MS = 500;
+// Dragonfly stalls commands for about a second while it writes a snapshot.
+const COMMAND_TIMEOUT_MS = 2000;
+const SILENT_CONNECTION_MS = 5000;
 
 class DragonflyTimeout extends Error {}
 
@@ -55,6 +57,7 @@ export interface KvAtomicStore {
   getRaw(key: string): Promise<string | undefined>;
   getManyRaw(keys: string[]): Promise<Array<string | undefined>>;
   setRaw(key: string, value: string, ttlMs?: number): Promise<boolean>;
+  probe(key: string, value: string, ttlMs: number): Promise<boolean>;
   incrementRaw(key: string, ttlMs: number): Promise<number | undefined>;
   expireRaw(key: string, ttlMs: number): Promise<boolean>;
   delRaw(key: string): Promise<void>;
@@ -97,6 +100,10 @@ export class MemoryAtomicStore implements KvAtomicStore {
     this.write(key, value, ttlMs);
 
     return true;
+  }
+
+  async probe(key: string, value: string, ttlMs: number) {
+    return this.setRaw(key, value, ttlMs);
   }
 
   async incrementRaw(key: string, ttlMs: number): Promise<number | undefined> {
@@ -202,6 +209,15 @@ export class DragonflyAtomicStore implements KvAtomicStore {
     return reply === 'OK';
   }
 
+  async probe(key: string, value: string, ttlMs: number) {
+    const reply = await this.send(
+      ['SET', this.key(key), value, 'PX', String(ttlMs)],
+      { duringPause: true }
+    );
+
+    return reply === 'OK';
+  }
+
   async incrementRaw(key: string, ttlMs: number) {
     await this.send(['SET', this.key(key), '0', 'NX', 'PX', String(ttlMs)]);
     const count = await this.send(['INCR', this.key(key)]);
@@ -227,7 +243,7 @@ export class DragonflyAtomicStore implements KvAtomicStore {
     this.closed = true;
 
     try {
-      await withTimeout(this.adapter.disconnect(), COMMAND_TIMEOUT_MS);
+      await withTimeout(this.adapter.disconnect(), CONNECTION_TIMEOUT_MS);
     } catch {
       try {
         (this.adapter.client as RedisClientType).destroy();
@@ -250,11 +266,11 @@ export class DragonflyAtomicStore implements KvAtomicStore {
       });
 
       try {
-        await withTimeout(this.connecting, COMMAND_TIMEOUT_MS);
+        await withTimeout(this.connecting, CONNECTION_TIMEOUT_MS);
       } catch (error) {
         throw error instanceof DragonflyTimeout ?
             new Error(
-              `Dragonfly did not connect within ${COMMAND_TIMEOUT_MS} ms`
+              `Dragonfly did not connect within ${CONNECTION_TIMEOUT_MS} ms`
             )
           : error;
       }
@@ -284,24 +300,39 @@ export class DragonflyAtomicStore implements KvAtomicStore {
     }
   }
 
-  private async send(command: string[]): Promise<unknown> {
-    if (this.closed || !this.isAvailable()) {
+  private dropIfSilent(reply: Promise<unknown>) {
+    withTimeout(reply, SILENT_CONNECTION_MS - COMMAND_TIMEOUT_MS).catch(
+      error => {
+        if (error instanceof DragonflyTimeout) {
+          return this.adapter.disconnect(true).catch(() => undefined);
+        }
+
+        return undefined;
+      }
+    );
+  }
+
+  private async send(
+    command: string[],
+    { duringPause = false } = {}
+  ): Promise<unknown> {
+    if (this.closed || (!duringPause && !this.isAvailable())) {
       return undefined;
     }
 
+    let reply: Promise<unknown> | undefined;
+
     try {
       const client = await this.connectedClient();
+      reply = client.sendCommand(command);
 
-      return (
-        (await withTimeout(client.sendCommand(command), COMMAND_TIMEOUT_MS)) ??
-        null
-      );
+      return (await withTimeout(reply, COMMAND_TIMEOUT_MS)) ?? null;
     } catch (error) {
       const wasAvailable = this.isAvailable();
       this.unavailableUntil = Date.now() + UNAVAILABLE_RETRY_MS;
 
-      if (error instanceof DragonflyTimeout) {
-        await this.adapter.disconnect(true).catch(() => undefined);
+      if (error instanceof DragonflyTimeout && reply) {
+        this.dropIfSilent(reply);
       }
 
       if (!wasAvailable) {
