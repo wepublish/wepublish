@@ -121,6 +121,7 @@ Frontend (Apollo Client)
 - Decorators: `@Public()` (no auth), `@CurrentUser()` (inject session), `@Permissions(...)` (RBAC check)
 - Permission constants: `CanCreateArticle`, `CanDeleteArticle`, `CanPublishArticle`, `CanGetArticle`, etc.
 - `@PreviewMode()` for draft content access
+- External apps (`libs/external-apps/api`): the editor mints a 4 h EdDSA JWT per opened app (`createExternalAppToken`, audience = the app's origin) and hands it over in the URL fragment (`#token=…`, never a query parameter: fragments reach no server or log); apps verify it via `GET /external-apps/userinfo` or the JWKS at `/.well-known/jwks.json`
 
 ## Import Aliases
 

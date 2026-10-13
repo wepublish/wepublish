@@ -52,3 +52,10 @@ mutation DeleteExternalApp($deleteExternalAppId: String!) {
     ...ExternalApp
   }
 }
+
+mutation CreateExternalAppToken($externalAppId: String!) {
+  createExternalAppToken(externalAppId: $externalAppId) {
+    token
+    expiresAt
+  }
+}

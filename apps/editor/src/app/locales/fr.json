@@ -3257,7 +3257,8 @@
       "apps": "Applications",
       "noAppsFound": "Aucune application externe configurée.",
       "notFound": "Application externe introuvable",
-      "appsInfo": "Raccourcis vers des outils externes qui apparaissent sur le tableau de bord sous « We.Publish Apps ». « Cible » détermine si une app s’ouvre dans un nouvel onglet du navigateur ou directement dans l’éditeur. Certains sites ne peuvent pas être affichés dans l’éditeur – ouvrez-les dans un nouvel onglet."
+      "appsInfo": "Raccourcis vers des outils externes qui apparaissent sur le tableau de bord sous « We.Publish Apps ». « Cible » détermine si une app s’ouvre dans un nouvel onglet du navigateur ou directement dans l’éditeur. Certains sites ne peuvent pas être affichés dans l’éditeur – ouvrez-les dans un nouvel onglet.",
+      "noToken": "L’application n’a pas pu être ouverte : aucun jeton d’accès n’a été émis."
     },
     "externalAppForm": {
       "create": "Créer",
