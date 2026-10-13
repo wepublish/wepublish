@@ -1,5 +1,4 @@
-import { ApolloError } from '@apollo/client';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { Author } from './author';
 import { mockAuthor } from '@wepublish/storybook/mocks';
 
@@ -31,9 +30,7 @@ export const WithError = {
       author: null,
     },
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
   },
 };
 

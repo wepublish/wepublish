@@ -4,10 +4,19 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { differenceInMinutes } from 'date-fns';
-import { Prisma, PrismaClient, UserEvent } from '@prisma/client';
+import {
+  CommentItemType,
+  Prisma,
+  PrismaClient,
+  UserEvent,
+} from '@prisma/client';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
-import { unselectPassword } from '@wepublish/authentication/api';
+import {
+  SessionCacheInvalidator,
+  unselectPassword,
+} from '@wepublish/authentication/api';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
@@ -22,16 +31,30 @@ import {
   UserListArgs,
   UserSort,
 } from './user.model';
-import { MailContext, mailLogType } from '@wepublish/mail/api';
+import {
+  MailchimpContactService,
+  MailContext,
+  mailLogType,
+} from '@wepublish/mail/api';
 import * as crypto from 'crypto';
 import { HibpService } from './hibp.service';
+
+const COMMENT_AUTHOR_FIELDS = [
+  'name',
+  'firstName',
+  'flair',
+  'userImageID',
+] as const;
 
 @Injectable()
 export class UserService {
   constructor(
     private prisma: PrismaClient,
     private mailContext: MailContext,
-    private hibpService: HibpService
+    private hibpService: HibpService,
+    private mailchimpContactService: MailchimpContactService,
+    private sessionCache: SessionCacheInvalidator,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   @PrimeDataLoader(UserDataloaderService)
@@ -65,7 +88,6 @@ export class UserService {
     const [totalCount, users] = await Promise.all([
       this.prisma.user.count({
         where,
-        orderBy,
       }),
       this.prisma.user.findMany({
         where,
@@ -96,13 +118,30 @@ export class UserService {
     };
   }
 
-  async updateUserPassword(userId: string, password: string) {
-    return this.prisma.user.update({
+  async updateUserPassword(
+    userId: string,
+    password: string,
+    { keepSessionId }: { keepSessionId?: string } = {}
+  ) {
+    const user = await this.prisma.user.update({
       where: { id: userId },
       data: {
         password: await this.hashPassword(password),
       },
       select: unselectPassword,
+    });
+    await this.endSessions(userId, keepSessionId);
+    await this.sessionCache.invalidate();
+
+    return user;
+  }
+
+  private async endSessions(userId: string, keepSessionId?: string) {
+    await this.prisma.session.deleteMany({
+      where: {
+        userID: userId,
+        ...(keepSessionId ? { id: { not: keepSessionId } } : {}),
+      },
     });
   }
 
@@ -161,13 +200,13 @@ export class UserService {
     });
 
     if (!skipMail) {
-      const externalMailTemplateId = await this.mailContext.getUserTemplateName(
+      const mailTemplateId = await this.mailContext.getUserTemplateId(
         UserEvent.ACCOUNT_CREATION,
         false
       );
 
       await this.mailContext.sendMail({
-        externalMailTemplateId,
+        mailTemplateId,
         recipient,
         optionalData: {},
         mailType: mailLogType.SystemMail,
@@ -186,7 +225,24 @@ export class UserService {
     await Validator.updateUser.parse(input);
     await Validator.createAddress.parse(address);
 
-    return this.prisma.user.update({
+    const changesCommentAuthor = COMMENT_AUTHOR_FIELDS.some(
+      field => input[field] !== undefined
+    );
+    const previousUser =
+      input.email || changesCommentAuthor ?
+        await this.prisma.user.findUnique({
+          where: { id },
+          select: {
+            email: true,
+            name: true,
+            firstName: true,
+            flair: true,
+            userImageID: true,
+          },
+        })
+      : null;
+
+    const user = await this.prisma.user.update({
       where: { id },
       data: {
         ...input,
@@ -203,14 +259,65 @@ export class UserService {
       },
       select: unselectPassword,
     });
+    await this.sessionCache.invalidate();
+
+    if (
+      previousUser &&
+      COMMENT_AUTHOR_FIELDS.some(field => previousUser[field] !== user[field])
+    ) {
+      await this.publicContentCache.invalidateComments();
+    }
+
+    if (input.email && previousUser) {
+      await this.mailchimpContactService.updateContactEmail(
+        user.id,
+        previousUser.email,
+        user.email
+      );
+    }
+
+    return user;
   }
 
   async deleteUser(id: string) {
-    return this.prisma.user.delete({
+    const commentedItems = await this.prisma.comment.findMany({
+      where: { userID: id },
+      select: { itemID: true, itemType: true },
+      distinct: ['itemID', 'itemType'],
+    });
+
+    const user = await this.prisma.user.delete({
       where: {
         id,
       },
       select: unselectPassword,
+    });
+    await this.sessionCache.invalidate();
+
+    if (commentedItems.length) {
+      await this.publicContentCache.invalidateComments(
+        true,
+        ...(await this.commentedArticles(commentedItems))
+      );
+    }
+
+    return user;
+  }
+
+  private async commentedArticles(
+    items: { itemID: string; itemType: CommentItemType }[]
+  ) {
+    const articleIds = items
+      .filter(({ itemType }) => itemType === CommentItemType.article)
+      .map(({ itemID }) => itemID);
+
+    if (!articleIds.length) {
+      return [];
+    }
+
+    return this.prisma.article.findMany({
+      where: { id: { in: articleIds } },
+      select: { id: true, slug: true },
     });
   }
 
@@ -220,7 +327,7 @@ export class UserService {
       await this.validatePassword(password);
     }
 
-    return this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: { id },
       data: {
         password: await this.hashPassword(
@@ -229,6 +336,10 @@ export class UserService {
       },
       select: unselectPassword,
     });
+    await this.endSessions(id);
+    await this.sessionCache.invalidate();
+
+    return user;
   }
 
   private static readonly EMAIL_CHANGE_EXPIRY_MINUTES = 60;
@@ -256,14 +367,15 @@ export class UserService {
       },
       select: unselectPassword,
     });
+    await this.sessionCache.invalidate();
 
-    const externalMailTemplateId = await this.mailContext.getUserTemplateName(
+    const mailTemplateId = await this.mailContext.getUserTemplateId(
       UserEvent.EMAIL_CHANGE,
       false
     );
 
     await this.mailContext.sendMail({
-      externalMailTemplateId,
+      mailTemplateId,
       recipient: user,
       optionalData: { newEmail },
       mailType: mailLogType.UserFlow,
@@ -300,13 +412,14 @@ export class UserService {
         where: { id: userId },
         data: { pendingEmail: null, pendingEmailAt: null },
       });
+      await this.sessionCache.invalidate();
 
       throw new BadRequestException(
         'Email change request has expired. Please request a new change.'
       );
     }
 
-    return this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: { id: userId },
       data: {
         email: user.pendingEmail,
@@ -316,6 +429,15 @@ export class UserService {
       },
       select: unselectPassword,
     });
+    await this.sessionCache.invalidate();
+
+    await this.mailchimpContactService.updateContactEmail(
+      updatedUser.id,
+      user.email,
+      updatedUser.email
+    );
+
+    return updatedUser;
   }
 }
 
@@ -343,6 +465,13 @@ export const createUserOrder = (
       return {
         firstName: graphQLSortOrderToPrisma(sortOrder),
       };
+
+    case UserSort.SubscriptionCount:
+      // many users share the same count, tie-break on id for stable paging
+      return [
+        { subscriptions: { _count: graphQLSortOrderToPrisma(sortOrder) } },
+        { id: graphQLSortOrderToPrisma(sortOrder) },
+      ];
   }
 };
 

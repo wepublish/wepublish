@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { css, Typography } from '@mui/material';
+import { selectArticleAuthors } from '@wepublish/article/website';
 import {
   BuilderArticleAuthorsProps,
   useWebsiteBuilder,
@@ -27,16 +28,17 @@ export const TsriArticleAuthors = ({
   const AuthorChip = AuthorChipBase as ComponentType<
     ComponentProps<typeof AuthorChipBase> & {
       isOneOfMultipleAuthors?: boolean;
+      hideInfo?: boolean;
     }
   >;
-  const authors =
-    article?.latest.authors.filter(author => !author.hideOnArticle) || [];
+  const hideAuthor = !!article?.latest.hideAuthor;
+  const authors = selectArticleAuthors(article).map(({ author }) => author);
 
-  if (!authors.length) {
+  if (!authors.length && !article?.publishedAt) {
     return;
   }
 
-  const hasMultipleAuthors = authors.length > 1;
+  const hasMultipleAuthors = !hideAuthor && authors.length > 1;
 
   return (
     <Typography
@@ -45,7 +47,16 @@ export const TsriArticleAuthors = ({
       hasMultipleAuthors={hasMultipleAuthors}
       className={className}
     >
-      {!hasMultipleAuthors && <AuthorChip author={authors[0]} />}
+      {hideAuthor && !!authors.length && (
+        <AuthorChip
+          author={authors[0]}
+          hideInfo
+        />
+      )}
+
+      {!hideAuthor && authors.length === 1 && (
+        <AuthorChip author={authors[0]} />
+      )}
 
       {hasMultipleAuthors && (
         <AuthorChipNameJobWrapper>
@@ -53,7 +64,7 @@ export const TsriArticleAuthors = ({
           {authors.map((author, index) => (
             <Fragment key={author.id}>
               <AuthorChip
-                author={{ ...author, image: undefined, links: [] }}
+                author={{ ...author, image: null, links: [] }}
                 isOneOfMultipleAuthors
               />
               {index < authors.length - 1 && ', '}

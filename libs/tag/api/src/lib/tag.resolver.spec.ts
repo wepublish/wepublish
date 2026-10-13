@@ -73,6 +73,7 @@ describe('TagResolver', () => {
           peerId: null,
           type: TagType.Article,
           color: '#ffffff',
+          slateDescription: [],
         },
       ],
       pageInfo: {
@@ -117,6 +118,7 @@ describe('TagResolver', () => {
           peerId: null,
           type: TagType.Article,
           color: '#ffffff',
+          slateDescription: [],
         },
         {
           id: 'id3',
@@ -128,6 +130,7 @@ describe('TagResolver', () => {
           peerId: null,
           type: TagType.Article,
           color: '#ffffff',
+          slateDescription: [],
         },
       ],
       pageInfo: {

@@ -1,3 +1,4 @@
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
@@ -44,7 +45,8 @@ export const EVENT_IMPORT_PROVIDER = Symbol('Event Import Provider');
 export class EventsImportService {
   constructor(
     @Inject(EVENT_IMPORT_PROVIDER) private providers: EventsProvider[],
-    private prisma: PrismaClient
+    private prisma: PrismaClient,
+    private publicContentCache: PublicContentCacheInvalidator
   ) {}
 
   async importedEvents({
@@ -129,7 +131,12 @@ export class EventsImportService {
   }
 
   async createEventFromSource({ id, source }: ImportEventArgs) {
-    return this.providers.find(p => p.name === source)?.createEvent({ id });
+    const eventId = await this.providers
+      .find(p => p.name === source)
+      ?.createEvent({ id });
+    await this.publicContentCache.invalidate();
+
+    return eventId;
   }
 
   async importedEventsIds() {

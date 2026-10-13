@@ -1,10 +1,14 @@
+import { useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
-import { useActiveSubscriptions } from '@wepublish/membership/website';
+import {
+  getMonthlyEquivalentRange,
+  useActiveSubscriptions,
+} from '@wepublish/membership/website';
 import {
   FullMemberPlanFragment,
   FullSubscriptionFragment,
+  MemberPlanListDocument,
   ProductType,
-  useMemberPlanListQuery,
 } from '@wepublish/website/api';
 import { allPass } from 'ramda';
 import { useMemo } from 'react';
@@ -28,7 +32,7 @@ export const isSubscriptionUpgradeable = (
 export const useInformUserAboutUpgrade = () => {
   const { hasUser } = useUser();
   const userSubscriptions = useActiveSubscriptions();
-  const { data: memberPlanList } = useMemberPlanListQuery({
+  const { data: memberPlanList } = useQuery(MemberPlanListDocument, {
     skip: !hasUser,
     variables: {
       take: 50,
@@ -52,7 +56,8 @@ export const useInformUserAboutUpgrade = () => {
             isSubscriptionUpgradeable,
             (sub: FullSubscriptionFragment) => mb.id !== sub.memberPlan.id,
             (sub: FullSubscriptionFragment) =>
-              mb.amountPerMonthMin > sub.memberPlan.amountPerMonthMin,
+              getMonthlyEquivalentRange(mb).amountPerMonthMin >
+              getMonthlyEquivalentRange(sub.memberPlan).amountPerMonthMin,
           ])
         )
     );

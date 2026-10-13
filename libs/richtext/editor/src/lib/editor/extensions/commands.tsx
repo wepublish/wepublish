@@ -1,0 +1,37 @@
+import { Editor, Extension, Range } from '@tiptap/core';
+import Suggestion, { SuggestionOptions } from '@tiptap/suggestion';
+
+export type CommandItem = {
+  title: string;
+  command: (props: { editor: Editor; range: Range }) => void;
+};
+
+export type CommandOptions = SuggestionOptions<CommandItem, CommandItem>;
+
+export type CommandsExtensionOptions = {
+  suggestions: Omit<CommandOptions, 'editor'>;
+};
+
+export const Commands = Extension.create<CommandsExtensionOptions>({
+  name: 'commandList',
+
+  addOptions() {
+    return {
+      suggestions: {
+        char: '/',
+        command: ({ editor, range, props }) => {
+          props.command({ editor, range });
+        },
+      },
+    };
+  },
+
+  addProseMirrorPlugins() {
+    return [
+      Suggestion({
+        editor: this.editor,
+        ...this.options.suggestions,
+      }),
+    ];
+  },
+});

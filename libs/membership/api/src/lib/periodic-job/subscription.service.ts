@@ -19,14 +19,28 @@ import {
   SubscriptionPeriod,
   User,
 } from '@prisma/client';
-import { PaymentProvider, PaymentsService } from '@wepublish/payment/api';
-import { add, endOfDay, startOfDay } from 'date-fns';
+import {
+  InvoicePaidNotifier,
+  PaymentProvider,
+  PaymentsService,
+} from '@wepublish/payment/api';
+import { add, endOfDay, startOfDay, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
-import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
+import {
+  calculatePeriodAmount,
+  describeError,
+  logger,
+  mapPaymentPeriodToMonths,
+} from '@wepublish/utils/api';
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription;
 };
+
+const IN_FLIGHT_PAYMENT_STATES: PaymentState[] = [
+  PaymentState.submitted,
+  PaymentState.processing,
+];
 
 interface ChargeStatus {
   action: Action | undefined;
@@ -42,7 +56,8 @@ interface PeriodBounds {
 export class SubscriptionService {
   constructor(
     private prismaService: PrismaClient,
-    private payments: PaymentsService
+    private payments: PaymentsService,
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   public async getActiveSubscriptionsWithoutInvoice(
@@ -132,7 +147,7 @@ export class SubscriptionService {
    * @returns All invoices that are due.
    */
   public async findUnpaidDueInvoices(runDate: Date) {
-    return this.prismaService.invoice.findMany({
+    const invoices = await this.prismaService.invoice.findMany({
       where: {
         dueAt: {
           lte: endOfDay(runDate),
@@ -163,6 +178,8 @@ export class SubscriptionService {
         items: true,
       },
     });
+
+    return this.filterOutInvoicesWithRecentInFlightPayment(invoices, runDate);
   }
 
   /**
@@ -171,7 +188,7 @@ export class SubscriptionService {
    * @returns a list of invoices.
    */
   public async findUnpaidScheduledForDeactivationInvoices(runDate: Date) {
-    return this.prismaService.invoice.findMany({
+    const invoices = await this.prismaService.invoice.findMany({
       where: {
         scheduledDeactivationAt: {
           lte: startOfDay(runDate),
@@ -187,9 +204,49 @@ export class SubscriptionService {
         subscription: {
           include: {
             user: true,
+            paymentMethod: true,
           },
         },
       },
+    });
+
+    return this.filterOutInvoicesWithRecentInFlightPayment(invoices, runDate);
+  }
+
+  /**
+   * Drops invoices that still have a payment being confirmed by the provider
+   * within the payment method's grace period. Async methods (e.g. SEPA direct
+   * debit via Mollie) stay in a processing state for several days; the invoice
+   * must not be re-charged or deactivated until the grace period elapses, after
+   * which a stuck payment no longer protects the invoice. Payments are queried
+   * separately so no foreign key relation to invoices is required.
+   */
+  private async filterOutInvoicesWithRecentInFlightPayment<
+    T extends {
+      id: string;
+      subscription: { paymentMethod: PaymentMethod } | null;
+    },
+  >(invoices: T[], runDate: Date): Promise<T[]> {
+    if (invoices.length === 0) {
+      return invoices;
+    }
+
+    const inFlightPayments = await this.prismaService.payment.findMany({
+      where: {
+        invoiceID: { in: invoices.map(invoice => invoice.id) },
+        state: { in: IN_FLIGHT_PAYMENT_STATES },
+      },
+      select: { invoiceID: true, createdAt: true },
+    });
+
+    return invoices.filter(invoice => {
+      const gracePeriod = invoice.subscription?.paymentMethod?.gracePeriod ?? 0;
+      const cutoff = sub(runDate, { days: gracePeriod });
+
+      return !inFlightPayments.some(
+        payment =>
+          payment.invoiceID === invoice.id && payment.createdAt >= cutoff
+      );
     });
   }
 
@@ -260,9 +317,10 @@ export class SubscriptionService {
     },
     deactivationDate: Date
   ) {
-    const amount =
-      subscription.monthlyAmount *
-      mapPaymentPeriodToMonths(subscription.paymentPeriodicity);
+    const amount = calculatePeriodAmount(
+      subscription.monthlyAmount,
+      subscription.paymentPeriodicity
+    );
     const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`;
 
     return this.prismaService.invoice.create({
@@ -444,15 +502,6 @@ export class SubscriptionService {
       subscriptionPeriods: SubscriptionPeriod[];
     }
   ): Promise<undefined> {
-    const paymentProvider = this.payments.findById(
-      invoice.subscription!.paymentMethod.paymentProviderID
-    );
-
-    if (!paymentProvider) {
-      throw new NotFoundException(
-        `Payment Provider ${invoice.subscription?.paymentMethod.paymentProviderID} not found!`
-      );
-    }
     const payments = await this.payments.findByInvoiceId(invoice.id);
     for (const payment of payments) {
       if (!payment || !payment.intentID) {
@@ -460,26 +509,51 @@ export class SubscriptionService {
       }
 
       try {
+        // Resolve the provider from the payment's own payment method. An
+        // invoice can carry payments made with a different provider than the
+        // subscription's current one (e.g. the member switched payment method
+        // mid-invoice). Checking a payment against the subscription's provider
+        // is meaningless and, for some providers, throws.
+        const paymentProvider =
+          await this.payments.findPaymentProviderByPaymentMethodeId(
+            payment.paymentMethodID
+          );
+
+        if (!paymentProvider) {
+          logger('checkInvoiceState').warn(
+            'No payment provider found for payment <%s> with payment method %s, skipping intent check',
+            payment.id,
+            payment.paymentMethodID
+          );
+          continue;
+        }
+
         const intentState = await paymentProvider.checkIntentStatus({
           intentID: payment.intentID,
           paymentID: payment.id,
         });
 
+        if (!intentState) {
+          continue;
+        }
+
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
         });
       } catch (e) {
+        // A single payment's status check must never abort the whole periodic
+        // job. Log and continue with the remaining payments.
         logger('checkInvoiceState').error(
-          'Checking payment <%s> with intent %s on payment provider %s hard failed with error: %s',
+          'Checking payment <%s> with intent %s on payment method %s failed with error: %s',
           payment.id,
           payment.intentID,
-          paymentProvider.getName(),
-          e
+          payment.paymentMethodID,
+          describeError(e)
         );
-
-        throw e;
       }
     }
+
+    await this.invoicePaidNotifier.notify(invoice.id);
   }
 
   /**
@@ -594,11 +668,17 @@ export class SubscriptionService {
         errorCode: 'user-action-required',
       };
     } catch (e) {
+      logger('offSessionPayment').error(
+        'Charging invoice %s with payment %s failed: %s',
+        invoice.id,
+        payment.id,
+        describeError(e)
+      );
       await this.prismaService.payment.update({
         where: { id: payment.id },
         data: {
           state: PaymentState.requiresUserAction,
-          paymentData: JSON.stringify(e),
+          paymentData: JSON.stringify({ error: describeError(e) }),
           paymentMethodID: payment.paymentMethodID,
           invoiceID: payment.invoiceID,
         },
@@ -606,7 +686,7 @@ export class SubscriptionService {
 
       return {
         action: renewalFailedAction,
-        errorCode: JSON.stringify(e),
+        errorCode: 'payment-provider-error',
       };
     }
   }

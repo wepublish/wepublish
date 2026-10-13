@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import { isFilledTeaser } from '@wepublish/block-content/website';
-import { FlexAlignment } from '@wepublish/website/api';
+import { FullFlexAlignmentFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { PropsWithChildren } from 'react';
 
 export enum TsriLayoutType {
   // basic teaser layouts
@@ -28,6 +29,12 @@ export enum TsriLayoutType {
 
   // hero teaser layouts
   HeroTeaser = 'HeroTeaser',
+
+  // compact news layouts
+  CompactNews = 'CompactNews',
+
+  // dossier layouts
+  Dossier = 'Dossier',
 }
 
 export const TeaserLayoutWrapper = styled('div')`
@@ -46,10 +53,10 @@ export const TeaserLayoutWrapper = styled('div')`
 export const alignmentForTeaserBlock = (
   index: number,
   count?: number
-): FlexAlignment => {
+): FullFlexAlignmentFragment => {
   const alignment = {
+    __typename: 'FlexAlignment' as const,
     i: index.toString(),
-    static: false,
     h: 1, // how many rows high
     w: 4, // how many columns wide
     x: 0, // starting column - 1
@@ -68,10 +75,16 @@ export const TeaserSlots = ({
   alignmentForTeaserBlock,
   teaserBlockStyleByIndex,
   blockStyle,
-}: BuilderTeaserSlotsBlockProps & {
-  alignmentForTeaserBlock: (index: number, count?: number) => FlexAlignment;
-  teaserBlockStyleByIndex?: (index: number, count?: number) => string;
-}) => {
+  children,
+}: PropsWithChildren<
+  BuilderTeaserSlotsBlockProps & {
+    alignmentForTeaserBlock: (
+      index: number,
+      count?: number
+    ) => FullFlexAlignmentFragment;
+    teaserBlockStyleByIndex?: (index: number, count?: number) => string;
+  }
+>) => {
   const {
     blocks: { Teaser },
   } = useWebsiteBuilder();
@@ -80,6 +93,7 @@ export const TeaserSlots = ({
 
   return (
     <TeaserLayoutWrapper className={className}>
+      {children}
       {filledTeasers.map((teaser, index) => (
         <Teaser
           key={index}

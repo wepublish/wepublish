@@ -5,15 +5,9 @@
   "projectType": "library",
   "tags": ["publishable"],
   "targets": {
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
-    },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/api/jest.config.ts"
+        "config": "../../{projectRoot}/vitest.config.ts"
       }
     },
     "build": {
@@ -25,7 +19,6 @@
         "packageJson": "libs/api/package.json",
         "main": "libs/api/src/index.ts",
         "assets": ["libs/api/*.md", "libs/api/prisma/**/*"],
-        "external": "all",
         "buildableProjectDepsInPackageJsonType": "dependencies",
         "rootDir": ".",
         "updateBuildableProjectDepsInPackageJson": true

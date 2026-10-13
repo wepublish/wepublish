@@ -9,24 +9,28 @@ import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { MailchimpMailProvider } from './mail-provider/mailchimp-mail-provider';
 import { MailgunMailProvider } from './mail-provider/mailgun-mail-provider';
+import type { Mock } from 'vitest';
 const kvMock = createKvMock();
 
 describe('MailController', () => {
   let mailContext: MailContext;
   let prismaMock: {
-    mailLog: { [method in keyof PrismaClient['mailLog']]?: jest.Mock };
+    mailLog: { [method in keyof PrismaClient['mailLog']]?: Mock };
     mailTemplate: {
-      [method in keyof PrismaClient['mailTemplate']]?: jest.Mock;
+      [method in keyof PrismaClient['mailTemplate']]?: Mock;
     };
-    user: { [method in keyof PrismaClient['user']]?: jest.Mock };
+    user: { [method in keyof PrismaClient['user']]?: Mock };
   };
 
   const mockMailTemplate1: MailTemplate = {
     id: 'template-1',
     name: 'template1',
     description: 'Test Template 1',
-    externalMailTemplateId: 'template1',
-    remoteMissing: false,
+    subject: 'Hello {{user_firstName}}',
+    htmlContent: '<p>Hi {{user_firstName}}</p>',
+    textContent: null,
+    externalMailTemplateId: null,
+    context: null,
     createdAt: new Date(),
     modifiedAt: new Date(),
   };
@@ -35,8 +39,11 @@ describe('MailController', () => {
     id: 'template-2',
     name: 'template2',
     description: 'Test Template 2',
-    externalMailTemplateId: 'template2',
-    remoteMissing: false,
+    subject: 'Welcome {{user_name}}',
+    htmlContent: '<p>Welcome {{user_name}}</p>',
+    textContent: null,
+    externalMailTemplateId: null,
+    context: null,
     createdAt: new Date(),
     modifiedAt: new Date(),
   };
@@ -70,16 +77,16 @@ describe('MailController', () => {
 
     prismaMock = {
       mailLog: {
-        create: jest.fn(),
-        findFirst: jest.fn(),
-        update: jest.fn(),
-        count: jest.fn(),
+        create: vi.fn(),
+        findFirst: vi.fn(),
+        update: vi.fn(),
+        count: vi.fn(),
       },
       mailTemplate: {
-        findUnique: jest.fn(),
+        findUnique: vi.fn(),
       },
       user: {
-        findUnique: jest.fn(),
+        findUnique: vi.fn(),
       },
     };
 
@@ -170,35 +177,25 @@ describe('MailController', () => {
     prismaMock.mailLog.create!.mockResolvedValueOnce(mockMailLog2 as any);
     prismaMock.mailLog.findFirst!.mockResolvedValueOnce(mockMailLog2 as any);
 
+    prismaMock.mailTemplate.findUnique!.mockImplementation(({ where }: any) =>
+      Promise.resolve(
+        where.id === mockMailTemplate1.id ?
+          mockMailTemplate1
+        : mockMailTemplate2
+      )
+    );
+
+    // The mail is composed locally and sent fully-rendered via the raw
+    // messages/send endpoint (no provider-side template engine).
     const mandrillNockScope = await nock('https://mandrillapp.com:443')
       .post(
-        '/api/1.0/messages/send-template',
+        '/api/1.0/messages/send',
         matches({
-          template_name: 'template1',
-          template_content: [],
           message: {
-            subject: '',
+            subject: 'Hello Test',
+            html: '<p>Hi Test</p>',
             from_email: 'dev@wepublish.ch',
             to: [{ email: 'test-user@wepublish.com', type: 'to' }],
-            merge_vars: [
-              {
-                rcpt: 'test-user@wepublish.com',
-                vars: [
-                  { name: 'user_id' },
-                  { name: 'user_email', content: 'test-user@wepublish.com' },
-                  { name: 'user_name', content: 'User' },
-                  { name: 'user_firstName', content: 'Test' },
-                  { name: 'user_active', content: true },
-                  { name: 'optional_root1_n1_n2_n3_depth', content: 3 },
-                  { name: 'optional_root1_n1_n2_depth', content: 2 },
-                  { name: 'optional_root1_n1_depth', content: 1 },
-                  { name: 'optional_root1_depth', content: 0 },
-                  { name: 'optional_root2', content: 1 },
-                  { name: 'optional_root3', content: 'ok' },
-                  { name: 'jwt' },
-                ],
-              },
-            ],
           },
           key: 'key',
         })
@@ -231,7 +228,7 @@ describe('MailController', () => {
 
     await new MailController(prismaMock as any, mailContext, {
       daysAwayFromEnding: 1,
-      externalMailTemplateId: mockMailTemplate1.externalMailTemplateId,
+      mailTemplateId: mockMailTemplate1.id,
       recipient: mockUser,
       isRetry: true,
       periodicJobRunDate: new Date(),
@@ -279,7 +276,7 @@ describe('MailController', () => {
     const periodicJobRunDate = new Date();
     await new MailController(prismaMock as any, mailContext, {
       daysAwayFromEnding: 1,
-      externalMailTemplateId: mockMailTemplate2.externalMailTemplateId,
+      mailTemplateId: mockMailTemplate2.id,
       recipient: mockUser,
       isRetry: true,
       periodicJobRunDate,
@@ -301,7 +298,7 @@ describe('MailController', () => {
 
     await new MailController(prismaMock as any, mailContext, {
       daysAwayFromEnding: 1,
-      externalMailTemplateId: mockMailTemplate2.externalMailTemplateId,
+      mailTemplateId: mockMailTemplate2.id,
       recipient: mockUser,
       isRetry: true,
       periodicJobRunDate,

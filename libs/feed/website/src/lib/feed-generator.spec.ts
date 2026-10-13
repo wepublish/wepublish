@@ -1,7 +1,12 @@
-import { Article } from '@wepublish/website/api';
+import { FullArticleFragment } from '@wepublish/website/api';
 import { generateFeed } from './feed-generator';
-import { mockArticle, mockAuthor, mockImage } from '@wepublish/storybook/mocks';
-import { faker } from '@faker-js/faker/.';
+import {
+  mockArticle,
+  mockArticleRevisionAuthor,
+  mockAuthor,
+  mockImage,
+} from '@wepublish/storybook/mocks';
+import { faker } from '@faker-js/faker';
 
 const author = mockAuthor();
 
@@ -23,7 +28,7 @@ it('should setup the feed', async () => {
   const articles = [
     mockArticle({ id: '1' }),
     mockArticle({ id: '2' }),
-  ] as Article[];
+  ] as FullArticleFragment[];
 
   expect(await generate(articles)).toMatchSnapshot();
 });
@@ -32,7 +37,7 @@ it('should generate the RSS feed', async () => {
   const articles = [
     mockArticle({ id: '1' }),
     mockArticle({ id: '2' }),
-  ] as Article[];
+  ] as FullArticleFragment[];
 
   expect((await generate(articles)).rss2()).toMatchSnapshot();
 });
@@ -41,7 +46,7 @@ it('should generate the atom feed', async () => {
   const articles = [
     mockArticle({ id: '1' }),
     mockArticle({ id: '2' }),
-  ] as Article[];
+  ] as FullArticleFragment[];
 
   expect((await generate(articles)).atom1()).toMatchSnapshot();
 });
@@ -50,9 +55,36 @@ it('should generate the json feed', async () => {
   const articles = [
     mockArticle({ id: '1' }),
     mockArticle({ id: '2' }),
-  ] as Article[];
+  ] as FullArticleFragment[];
 
   expect((await generate(articles)).json1()).toMatchSnapshot();
+});
+
+it('should generate the json feed for articles with no authors', async () => {
+  const articles = [
+    mockArticle({
+      id: '1',
+      latest: {
+        __typename: 'ArticleRevision',
+        id: '1',
+        publishedAt: new Date('2023-01-01').toISOString(),
+        createdAt: new Date('2023-01-01').toISOString(),
+        blocks: [],
+        authors: [],
+        properties: [],
+        image: undefined,
+        lead: 'Test lead',
+        title: 'Test title',
+        preTitle: null,
+        socialMediaDescription: null,
+        socialMediaImage: null,
+        socialMediaTitle: null,
+        canonicalUrl: null,
+      },
+    }),
+  ] as FullArticleFragment[];
+
+  expect(() => generate(articles).then(f => f.json1())).not.toThrow();
 });
 
 it('should escape ampersands in image URLs for RSS feed', async () => {
@@ -69,7 +101,7 @@ it('should escape ampersands in image URLs for RSS feed', async () => {
         publishedAt: new Date('2023-01-01').toISOString(),
         createdAt: new Date('2023-01-01').toISOString(),
         blocks: [],
-        authors: [mockAuthor()],
+        authors: [mockArticleRevisionAuthor()],
         properties: [],
         image: imageWithSignature,
         lead: 'Test lead',
@@ -81,7 +113,7 @@ it('should escape ampersands in image URLs for RSS feed', async () => {
         canonicalUrl: 'https://example.com',
       },
     }),
-  ] as Article[];
+  ] as FullArticleFragment[];
 
   const rss = (await generate(articles)).rss2();
 

@@ -2,7 +2,13 @@ import {
   InvoiceWithItems,
   PaymentProvider,
 } from './payment-provider/payment-provider';
-import { Payment, PaymentState, PrismaClient } from '@prisma/client';
+import {
+  MemberPlan,
+  Payment,
+  PaymentState,
+  PrismaClient,
+  Subscription,
+} from '@prisma/client';
 import { sub } from 'date-fns';
 import { GraphQLError } from 'graphql/index';
 import {
@@ -14,6 +20,9 @@ import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
 } from './payment-method/payment-method.config';
+import { InvoicePaidNotifier } from './invoice-paid.listener';
+import { ErrorCode } from '@wepublish/errors';
+import { logger } from '@wepublish/utils/api';
 
 interface CreatePaymentWithProvider {
   paymentMethodID: string;
@@ -32,7 +41,8 @@ export class PaymentsService {
   constructor(
     private prisma: PrismaClient,
     @Inject(PAYMENT_METHOD_CONFIG)
-    private config: PaymentMethodConfig
+    private config: PaymentMethodConfig,
+    private invoicePaidNotifier: InvoicePaidNotifier
   ) {}
 
   getProviders() {
@@ -155,7 +165,10 @@ export class PaymentsService {
       },
     });
     if (blockingPayment) {
-      throw new BadRequestException(blockingPayment.id);
+      logger('paymentsService').warn(
+        `Blocked duplicate payment attempt for invoice ${invoiceID}: payment ${blockingPayment.id} is still pending`
+      );
+      throw new BadRequestException(ErrorCode.PaymentAlreadyRunning);
     }
 
     return await this.createPaymentWithProvider({
@@ -212,6 +225,41 @@ export class PaymentsService {
     });
   }
 
+  private decorateUrlWithSubscriptionInformation(
+    url: string | undefined,
+    subscription: Subscription & { memberPlan: MemberPlan },
+    invoice: InvoiceWithItems
+  ) {
+    let parsedUrl: URL;
+
+    try {
+      parsedUrl = new URL(url ?? '');
+    } catch {
+      return url;
+    }
+
+    parsedUrl.searchParams.set('memberPlan', subscription.memberPlan.slug);
+    parsedUrl.searchParams.set(
+      'productType',
+      subscription.memberPlan.productType
+    );
+    parsedUrl.searchParams.set(
+      'monthlyAmount',
+      (subscription.monthlyAmount / 100).toString()
+    );
+    parsedUrl.searchParams.set('currency', subscription.currency);
+    parsedUrl.searchParams.set(
+      'amount',
+      (
+        invoice.items.reduce((acc, current) => acc + current.amount, 0) / 100
+      ).toString()
+    );
+    parsedUrl.searchParams.set('periodicity', subscription.paymentPeriodicity);
+    parsedUrl.searchParams.set('subscriptionId', subscription.id);
+
+    return parsedUrl.toString();
+  }
+
   async createPaymentWithProvider({
     paymentMethodID,
     invoice,
@@ -259,18 +307,21 @@ export class PaymentsService {
         },
       });
     }
-    await this.prisma.subscription.update({
+    const subscription = await this.prisma.subscription.update({
       data: {
         confirmed: true,
       },
       where: {
         id: invoice.subscriptionID || undefined,
       },
+      include: {
+        memberPlan: true,
+      },
     });
 
     const payment = await this.prisma.payment.create({
       data: {
-        paymentMethodID,
+        paymentMethodID: paymentMethod.id,
         invoiceID: invoice.id,
         state: PaymentState.created,
       },
@@ -295,8 +346,16 @@ export class PaymentsService {
       invoice,
       currency: invoice.currency,
       saveCustomer,
-      successURL,
-      failureURL,
+      successURL: this.decorateUrlWithSubscriptionInformation(
+        successURL,
+        subscription,
+        invoice
+      ),
+      failureURL: this.decorateUrlWithSubscriptionInformation(
+        failureURL,
+        subscription,
+        invoice
+      ),
       customerID: customer?.customerID,
     });
 
@@ -320,10 +379,11 @@ export class PaymentsService {
         paymentID: updatedPayment.id,
       });
 
-      if (paymentProvider) {
+      if (intentState) {
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
         });
+        await this.invoicePaidNotifier.notify(updatedPayment.invoiceID);
       }
     }
 

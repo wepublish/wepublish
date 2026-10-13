@@ -1,0 +1,156 @@
+fragment FullMailSendJob on MailSendJobModel {
+  id
+  createdAt
+  modifiedAt
+  status
+  audience
+  totalCount
+  sentCount
+  failedCount
+  sendingCount
+  resumeCount
+  startedAt
+  finishedAt
+  heartbeatAt
+  error
+  mailTemplate {
+    id
+    name
+  }
+}
+
+query MailSendRecipientPreview($audience: MailAudienceInput!) {
+  mailSendRecipientPreview(audience: $audience) {
+    count
+    userCount
+    allowsSubscriptionTemplates
+  }
+}
+
+query MailSendRecipients(
+  $audience: MailAudienceInput!
+  $skip: Int
+  $take: Int
+) {
+  mailSendRecipients(audience: $audience, skip: $skip, take: $take) {
+    nodes {
+      id
+      userId
+      email
+      name
+      firstName
+      subscriptionId
+      memberPlanName
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+
+query MailSendPreview($input: MailSendPreviewInput!) {
+  mailSendPreview(input: $input) {
+    subject
+    html
+    recipient {
+      id
+      email
+      name
+      firstName
+      memberPlanName
+    }
+  }
+}
+
+query MailTemplateMissingPlaceholders(
+  $templateId: String!
+  $withSubscriptionData: Boolean!
+) {
+  mailTemplateMissingPlaceholders(
+    templateId: $templateId
+    withSubscriptionData: $withSubscriptionData
+  )
+}
+
+query MailSendJob($id: String!) {
+  mailSendJob(id: $id) {
+    ...FullMailSendJob
+  }
+}
+
+query MailSendJobs($skip: Int, $take: Int) {
+  mailSendJobs(skip: $skip, take: $take) {
+    nodes {
+      ...FullMailSendJob
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
+
+query MailSendJobRecipients(
+  $jobId: String!
+  $state: MailSendJobRecipientState
+  $skip: Int
+  $take: Int
+) {
+  mailSendJobRecipients(
+    jobId: $jobId
+    state: $state
+    skip: $skip
+    take: $take
+  ) {
+    nodes {
+      id
+      position
+      state
+      attempts
+      error
+      sentAt
+      mailLogId
+      memberPlanName
+      user {
+        id
+        email
+        name
+        firstName
+      }
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+
+mutation ResumeMailSendJob($id: String!, $retryUnfinished: Boolean) {
+  resumeMailSendJob(id: $id, retryUnfinished: $retryUnfinished) {
+    ...FullMailSendJob
+  }
+}
+
+mutation CancelMailSendJob($id: String!) {
+  cancelMailSendJob(id: $id) {
+    ...FullMailSendJob
+  }
+}
+
+mutation SendMailTemplateToUser($templateId: String!, $userId: String!) {
+  sendMailTemplateToUser(templateId: $templateId, userId: $userId) {
+    ...FullMailSendJob
+  }
+}
+
+mutation CreateMailSendJob($input: MailSendJobInput!) {
+  createMailSendJob(input: $input) {
+    ...FullMailSendJob
+  }
+}

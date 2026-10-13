@@ -1,11 +1,13 @@
+import { NormalizedCacheObject } from '@apollo/client';
 import { DocumentContext } from 'next/document';
 import {
   FontStyle,
   FontWeight,
+  PublicEnv,
   WebsiteSettingsDocument,
   WebsiteSettingsFragment,
+  getApiClient,
 } from '@wepublish/website/api';
-import { getApiClient } from '@wepublish/website/api';
 import {
   DocumentHeadTagsProps,
   documentGetInitialProps as muiDocumentGetInitialProps,
@@ -16,11 +18,13 @@ import { getApiUrl } from '../api-url';
 declare global {
   interface Window {
     WEBSITE_SETTINGS: WebsiteSettingsFragment | undefined;
+    PUBLIC_ENV: PublicEnv | undefined;
   }
 }
 
 export type DocumentProps = DocumentHeadTagsProps & {
   websiteSettings: WebsiteSettingsFragment | undefined;
+  publicEnv: PublicEnv;
 };
 
 const fontWeightToNumber: Record<FontWeight, number> = {
@@ -87,35 +91,47 @@ export const DocumentHeadTags = (props: DocumentProps) => {
           __html: `window.WEBSITE_SETTINGS = ${JSON.stringify(props.websiteSettings)}`,
         }}
       />
+
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.PUBLIC_ENV = ${JSON.stringify(props.publicEnv)}`,
+        }}
+      />
     </>
   );
 };
 
-export const documentGetInitialProps = async (ctx: DocumentContext) => {
+export const documentGetInitialProps = async (
+  ctx: DocumentContext,
+  getPublicEnv?: () => object
+) => {
   const client = getApiClient(getApiUrl(), []);
   await client.query({ query: WebsiteSettingsDocument });
+  const publicEnv: PublicEnv = {
+    apiUrl: process.env.API_URL ?? '',
+    ...(getPublicEnv?.() ?? {}),
+  };
 
-  const websiteSettings = client.cache.extract()['ROOT_QUERY']?.[
-    'websiteSettings'
-  ] as WebsiteSettingsFragment | undefined;
+  const websiteSettings = (client.cache.extract() as NormalizedCacheObject)[
+    'ROOT_QUERY'
+  ]?.['websiteSettings'] as WebsiteSettingsFragment | undefined;
 
   const originalRenderPage = ctx.renderPage;
   ctx.renderPage = options => {
     const opts =
-      typeof options === 'function' ? { enhanceApp: options } : (options ?? {});
+      typeof options === 'function' ?
+        { enhanceComponent: options }
+      : (options ?? {});
 
     return originalRenderPage({
       ...opts,
       enhanceApp: App => {
-        const Enhanced = opts.enhanceApp ? opts.enhanceApp(App as any) : App;
+        const Enhanced = opts.enhanceApp ? opts.enhanceApp(App) : App;
 
         return function AppWithSettings(props) {
-          return (
-            <Enhanced
-              {...(props as any)}
-              websiteSettings={websiteSettings}
-            />
-          );
+          const appProps = { ...props, websiteSettings, publicEnv };
+
+          return <Enhanced {...appProps} />;
         } as typeof App;
       },
     });
@@ -128,6 +144,7 @@ export const documentGetInitialProps = async (ctx: DocumentContext) => {
     props: {
       ...finalProps,
       websiteSettings,
+      publicEnv,
     },
   };
 };

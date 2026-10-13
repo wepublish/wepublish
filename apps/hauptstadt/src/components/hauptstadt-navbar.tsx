@@ -891,6 +891,7 @@ const NavPaper = ({
   return (
     <NavPaperWrapper
       isMenuOpen={isMenuOpen}
+      inert={!isMenuOpen}
       className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}
     >
       {children && (

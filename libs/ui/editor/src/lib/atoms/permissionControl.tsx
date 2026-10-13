@@ -1,4 +1,10 @@
-import { ComponentType, PropsWithChildren, useContext, useMemo } from 'react';
+import {
+  ComponentType,
+  createElement,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message } from 'rsuite';
 
@@ -30,14 +36,10 @@ interface PermissionControlProps {
   showRejectionMessage?: boolean;
 }
 
-export function PermissionControl({
-  children,
-  qualifyingPermissions,
-  showRejectionMessage,
-}: PropsWithChildren<PermissionControlProps>) {
+export function useHasPermission(qualifyingPermissions: string[]): boolean {
   const roles = useContext(AuthContext)?.session?.sessionRoles;
 
-  const isAuthorized = useMemo(() => {
+  return useMemo(() => {
     if (!roles) {
       return true;
     }
@@ -50,6 +52,14 @@ export function PermissionControl({
       )
     );
   }, [qualifyingPermissions, roles]);
+}
+
+export function PermissionControl({
+  children,
+  qualifyingPermissions,
+  showRejectionMessage,
+}: PropsWithChildren<PermissionControlProps>) {
+  const isAuthorized = useHasPermission(qualifyingPermissions);
 
   if (isAuthorized) {
     return <>{children}</>;
@@ -62,19 +72,14 @@ export function PermissionControl({
 
 export const createCheckedPermissionComponent =
   (permissions: string[], showRejectionMessage?: boolean) =>
-  <
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    P extends object,
-  >(
-    ControlledComponent: ComponentType<P>
-  ) =>
+  <P extends object>(ControlledComponent: ComponentType<P>) =>
   (props: P) => {
     return (
       <PermissionControl
         qualifyingPermissions={permissions}
         showRejectionMessage={showRejectionMessage ?? true}
       >
-        <ControlledComponent {...props} />
+        {createElement(ControlledComponent, props)}
       </PermissionControl>
     );
   };

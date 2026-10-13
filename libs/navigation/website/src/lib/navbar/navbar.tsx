@@ -16,7 +16,13 @@ import {
   Link,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { PropsWithChildren, useCallback, useMemo, useState } from 'react';
+import {
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import { MdClose, MdMenu, MdWarning } from 'react-icons/md';
 import { navigationLinkToUrl } from '../link-to-url';
 import { useTranslation } from 'react-i18next';
@@ -116,12 +122,20 @@ export const NavbarLink = styled(Link)`
   }
 `;
 
-export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
+export const NavbarMain = styled('div')<{
+  isMenuOpen?: boolean;
+  hideMenu?: boolean;
+}>`
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: center;
   justify-self: start;
   gap: ${({ theme }) => theme.spacing(2)};
+  ${({ hideMenu }) =>
+    hideMenu &&
+    css`
+      min-height: var(--navbar-height, 52px);
+    `}
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
@@ -190,12 +204,13 @@ export const NavbarLoginLink = styled(Link, {
     `}
 `;
 
-const buttonStyles: SxProps<Theme> = theme => ({
-  [theme.breakpoints.up('sm')]: {
-    fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
-    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
-  },
-});
+export const navbarButtonStyles = (theme: Theme) =>
+  ({
+    [theme.breakpoints.up('sm')]: {
+      fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
+      padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
+    },
+  }) satisfies SxProps<Theme>;
 
 export const NavbarLogoWrapper = styled('div')`
   fill: currentColor;
@@ -223,6 +238,7 @@ export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
   navPaperClassName?: string;
+  hideMenu?: boolean;
 }
 
 export function Navbar({
@@ -242,6 +258,9 @@ export function Navbar({
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
   navPaperClassName,
+  navbarActions,
+  paperActions,
+  hideMenu,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -297,30 +316,34 @@ export function Navbar({
         css={appBarStyles(isMenuOpen)}
       >
         <NavbarInnerWrapper>
-          <NavbarMain>
-            <NavbarIconButtonWrapper>
-              <IconButton
-                size="large"
-                aria-label="Menu"
-                onClick={toggleMenu}
-                color={'inherit'}
-              >
-                {!isMenuOpen && <MdMenu />}
-                {isMenuOpen && <MdClose />}
-              </IconButton>
-            </NavbarIconButtonWrapper>
-
-            {!!headerItems?.links.length && (
-              <NavbarLinks isMenuOpen={isMenuOpen}>
-                {headerItems.links.map((link, index) => (
-                  <NavbarLink
-                    key={index}
-                    href={navigationLinkToUrl(link)}
+          <NavbarMain hideMenu={hideMenu}>
+            {!hideMenu && (
+              <>
+                <NavbarIconButtonWrapper>
+                  <IconButton
+                    size="large"
+                    aria-label="Menu"
+                    onClick={toggleMenu}
+                    color={'inherit'}
                   >
-                    {link.label}
-                  </NavbarLink>
-                ))}
-              </NavbarLinks>
+                    {!isMenuOpen && <MdMenu />}
+                    {isMenuOpen && <MdClose />}
+                  </IconButton>
+                </NavbarIconButtonWrapper>
+
+                {!!headerItems?.links.length && (
+                  <NavbarLinks isMenuOpen={isMenuOpen}>
+                    {headerItems.links.map((link, index) => (
+                      <NavbarLink
+                        key={index}
+                        href={navigationLinkToUrl(link)}
+                      >
+                        {link.label}
+                      </NavbarLink>
+                    ))}
+                  </NavbarLinks>
+                )}
+              </>
             )}
           </NavbarMain>
 
@@ -342,41 +365,51 @@ export function Navbar({
           </NavbarLoginLink>
 
           <NavbarActions isMenuOpen={isMenuOpen}>
+            {navbarActions}
+
             {hasUnpaidInvoices && profileBtn && (
               <Button
                 LinkComponent={Link}
                 color="warning"
                 startIcon={<MdWarning />}
-                sx={buttonStyles}
+                sx={navbarButtonStyles}
                 size="medium"
                 {...profileBtn}
               >
-                <Box sx={{ display: { xs: 'none', md: 'unset' } }}>Offene</Box>
-                &nbsp;Rechnung
+                <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                  {t('navbar.unpaid')}
+                </Box>
+                &nbsp;{t('navbar.invoice')}
               </Button>
             )}
 
-            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
-              <Button
-                LinkComponent={Link}
-                sx={buttonStyles}
-                size="medium"
-                {...subscribeBtn}
-              >
-                {t('navbar.subscribe')}
-              </Button>
-            )}
+            {!hideMenu &&
+              !hasRunningSubscription &&
+              !hasUnpaidInvoices &&
+              subscribeBtn && (
+                <Button
+                  LinkComponent={Link}
+                  sx={navbarButtonStyles}
+                  size="medium"
+                  {...subscribeBtn}
+                >
+                  {t('navbar.subscribe')}
+                </Button>
+              )}
 
-            {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
-              <Button
-                LinkComponent={Link}
-                sx={buttonStyles}
-                size="medium"
-                {...profileBtn}
-              >
-                Mein Konto
-              </Button>
-            )}
+            {!hideMenu &&
+              hasRunningSubscription &&
+              !hasUnpaidInvoices &&
+              profileBtn && (
+                <Button
+                  LinkComponent={Link}
+                  sx={navbarButtonStyles}
+                  size="medium"
+                  {...profileBtn}
+                >
+                  {t('navbar.myAccount')}
+                </Button>
+              )}
           </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>
@@ -388,6 +421,7 @@ export function Navbar({
           subscribeBtn={subscribeBtn}
           profileBtn={profileBtn}
           loginBtn={loginBtn}
+          paperActions={paperActions}
           main={mainItems}
           categories={categories}
           closeMenu={toggleMenu}
@@ -538,6 +572,7 @@ const NavPaper = ({
   isMenuOpen,
   className,
   children,
+  paperActions,
 }: PropsWithChildren<{
   loginBtn?: ButtonProps | null;
   profileBtn?: ButtonProps | null;
@@ -549,6 +584,7 @@ const NavPaper = ({
   hasUnpaidInvoices: boolean;
   isMenuOpen: boolean;
   className?: string;
+  paperActions?: ReactNode;
 }>) => {
   const {
     elements: { Link, Button, H4, H6 },
@@ -565,6 +601,7 @@ const NavPaper = ({
 
   return (
     <NavPaperWrapper
+      inert={!isMenuOpen}
       className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}
     >
       {children && (
@@ -594,6 +631,8 @@ const NavPaper = ({
         })}
 
         <NavPaperActions>
+          {paperActions}
+
           {hasUnpaidInvoices && profileBtn && (
             <Button
               LinkComponent={Link}
@@ -603,7 +642,7 @@ const NavPaper = ({
               startIcon={<MdWarning />}
               {...profileBtn}
             >
-              Offene Rechnung
+              {t('navbar.unpaid')} {t('navbar.invoice')}
             </Button>
           )}
 
@@ -627,7 +666,7 @@ const NavPaper = ({
               onClick={closeMenu}
               {...profileBtn}
             >
-              Mein Konto
+              {t('navbar.myAccount')}
             </Button>
           )}
 
@@ -640,7 +679,7 @@ const NavPaper = ({
               variant="contained"
               color="primary"
             >
-              Logout
+              {t('navbar.logout')}
             </Button>
           )}
 
@@ -652,7 +691,7 @@ const NavPaper = ({
               onClick={closeMenu}
               {...loginBtn}
             >
-              Login
+              {t('navbar.login')}
             </Button>
           )}
         </NavPaperActions>

@@ -1,5 +1,5 @@
 import { Link, Stack } from '@mui/material';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { MdAdd, MdDelete } from 'react-icons/md';
 
 import { Button as ButtonCmp } from './button';
@@ -9,8 +9,10 @@ export default {
   title: 'UI/Button',
   render: () => (
     <Stack
-      gap={1}
-      alignItems={'start'}
+      sx={{
+        gap: 1,
+        alignItems: 'start',
+      }}
     >
       <ButtonCmp>Click Me</ButtonCmp>
       <ButtonCmp startIcon={<MdAdd />}>Click Me</ButtonCmp>

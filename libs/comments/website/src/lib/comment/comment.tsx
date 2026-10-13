@@ -80,6 +80,7 @@ export const Comment = ({
   createdAt,
   showContent = true,
   includeAnchor = true,
+  showDateWithFlair = false,
 }: BuilderCommentProps) => {
   const {
     elements: { Paragraph, Image },
@@ -130,8 +131,10 @@ export const Comment = ({
           {!isValidUrl(source ?? '') && flair && (
             <CommentFlair>{flair}</CommentFlair>
           )}
-          {!flair && createdAt && (
-            <CommentFlair>{date.format(new Date(createdAt))}</CommentFlair>
+          {(showDateWithFlair || !flair) && createdAt && (
+            <CommentFlair suppressHydrationWarning>
+              {date.format(new Date(createdAt))}
+            </CommentFlair>
           )}
         </CommentHeaderContent>
       </CommentHeader>
@@ -147,7 +150,7 @@ export const Comment = ({
             </Paragraph>
           )}
 
-          <RichText richText={text ?? []} />
+          <RichText richText={text} />
         </CommentContent>
       )}
 

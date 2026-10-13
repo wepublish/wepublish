@@ -13,7 +13,7 @@ export function IconButtonTooltip({
   return (
     <Whisper
       placement="top"
-      trigger="hover"
+      trigger={['hover', 'focus']}
       speaker={<Tooltip>{caption}</Tooltip>}
     >
       {children}

@@ -1,13 +1,11 @@
 import { useKeenSlider } from 'keen-slider/react';
 import { allPass } from 'ramda';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { hasBlockStyle } from '../../has-blockstyle';
 import { isImageGalleryBlock } from '../../image-gallery/image-gallery-block';
-import {
-  BuilderBlockStyleProps,
-  useWebsiteBuilder,
-} from '@wepublish/website/builder';
+import { BuilderBlockStyleProps, ImageBlock } from '@wepublish/website/builder';
 import {
   SliderArrow,
   SliderBall,
@@ -20,10 +18,19 @@ import {
   useSlidesPerView,
 } from '../teaser-slider/teaser-slider';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullImageGalleryBlockFragment,
 } from '@wepublish/website/api';
-import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
+import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
+import { ImageBlockCaption } from '../../image/image-block';
+import styled from '@emotion/styled';
+
+export const ImageSliderImage = styled(ImageBlock)`
+  ${ImageBlockCaption} {
+    width: initial;
+    justify-self: initial;
+  }
+`;
 
 export const ImageSlider = ({
   images,
@@ -32,14 +39,10 @@ export const ImageSlider = ({
   detailsChanged,
   slideGap,
   className,
-  blockStyle,
-  ...props
 }: BuilderBlockStyleProps['ImageSlider']) => {
-  const {
-    blocks: { Image },
-  } = useWebsiteBuilder();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const { t } = useTranslation();
 
   const slidesPerView = useSlidesPerView(slidesPerViewConfig);
   let slidePadding = useSlidesPadding();
@@ -83,9 +86,10 @@ export const ImageSlider = ({
                 key={index}
                 className="keen-slider__slide"
               >
-                <Image
+                <ImageSliderImage
                   caption={image.caption}
                   image={image.image}
+                  linkUrl={null}
                 />
               </div>
             ))}
@@ -99,24 +103,27 @@ export const ImageSlider = ({
                 ).keys(),
               ].map(idx => (
                 <SliderBall
+                  type="button"
                   key={idx}
                   onClick={() => sliderRef.current?.moveToIdx(idx)}
-                  aria-label={`Slide ${idx + 1}`}
+                  aria-label={t('slider.slide', { index: idx + 1 })}
                 >
                   {currentSlide === idx && <SliderBallFill />}
                 </SliderBall>
               ))}
 
               <SliderArrow
+                type="button"
                 onClick={() => sliderRef.current?.prev()}
-                aria-label="Previous slide"
+                aria-label={t('slider.previous')}
               >
-                <MdArrowBackIos size={22} />
+                <MdArrowBackIosNew size={22} />
               </SliderArrow>
 
               <SliderArrow
+                type="button"
                 onClick={() => sliderRef.current?.next()}
-                aria-label="Next slide"
+                aria-label={t('slider.next')}
               >
                 <MdArrowForwardIos size={22} />
               </SliderArrow>
@@ -129,6 +136,6 @@ export const ImageSlider = ({
 };
 
 export const isImageSliderBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullImageGalleryBlockFragment =>
   allPass([hasBlockStyle('Slider'), isImageGalleryBlock])(block);

@@ -1,12 +1,12 @@
-import { ApolloError } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  MemberPlan,
+  FullMemberPlanFragment,
+  MemberPlanListDocument,
   MemberPlanSort,
   SortOrder,
-  useMemberPlanListQuery,
 } from '@wepublish/editor/api';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Divider as RDivider,
@@ -15,9 +15,10 @@ import {
   TagPicker,
   toaster,
 } from 'rsuite';
-import { ItemDataType } from 'rsuite/esm/@types/common';
+import type { Option } from 'rsuite/esm/internals/types';
 
 import { DEFAULT_MAX_TABLE_PAGES } from '../../utility';
+import { humanizeError } from '../../humanizeError';
 
 const Divider = styled(RDivider)`
   margin: '12px 0';
@@ -31,7 +32,7 @@ interface SelectMemberPlansProps {
   className?: string;
   disabled?: boolean;
   name?: string;
-  defaultMemberPlans: Pick<MemberPlan, 'id' | 'name'>[];
+  defaultMemberPlans: Pick<FullMemberPlanFragment, 'id' | 'name'>[];
   selectedMemberPlans?: string[] | null;
   setSelectedMemberPlans(memberplans: string[]): void;
 }
@@ -50,34 +51,43 @@ export function SelectMemberPlans({
     defaultMemberPlans.map(memberplan => ({
       label: memberplan.name,
       value: memberplan.id,
-    })) as ItemDataType<string | number>[]
+    })) as Option<string | number>[]
   );
 
   /**
    * Error handling
    * @param error
    */
-  const showErrors = (error: ApolloError): void => {
+  const showErrors = (error: Error): void => {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
 
-  const { data: memberplansData, refetch } = useMemberPlanListQuery({
+  const {
+    data: memberplansData,
+    error: memberPlanListError,
+    refetch,
+  } = useQuery(MemberPlanListDocument, {
     variables: {
       sort: MemberPlanSort.CreatedAt,
       order: SortOrder.Ascending,
       take: 50,
     },
-    onError: showErrors,
   });
+
+  useEffect(() => {
+    if (memberPlanListError) {
+      showErrors(memberPlanListError);
+    }
+  }, [memberPlanListError]);
 
   /**
    * Prepare available memberplans
@@ -118,7 +128,7 @@ export function SelectMemberPlans({
       onChange={(value, item) => {
         setSelectedMemberPlans(value);
       }}
-      renderMenu={menu => {
+      renderListbox={menu => {
         return (
           <>
             {menu}

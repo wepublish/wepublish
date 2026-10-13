@@ -5,9 +5,10 @@ import styled from '@emotion/styled';
 import { useKeenSlider } from 'keen-slider/react';
 import { allPass, anyPass } from 'ramda';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
-  BlockContent,
+  FullBlockFragment,
   FullTeaserGridBlockFragment,
   FullTeaserListBlockFragment,
   FullTeaserSlotsBlockFragment,
@@ -25,7 +26,7 @@ import {
   BuilderTeaserListBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
+import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
 import { isTeaserSlotsBlock } from '../../teaser/teaser-slots-block';
 
 export const SliderWrapper = styled('section')`
@@ -170,6 +171,7 @@ export const TeaserSlider = ({
   dragDisabled = false,
   detailsChanged,
   slideGap,
+  origin = 'center',
   ...props
 }: BuilderBlockStyleProps['TeaserSlider']) => {
   const {
@@ -178,6 +180,7 @@ export const TeaserSlider = ({
   } = useWebsiteBuilder();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const { t } = useTranslation();
 
   const filledTeasers = teasers.filter(isFilledTeaser);
 
@@ -192,7 +195,7 @@ export const TeaserSlider = ({
     drag: dragDisabled ? false : true,
     detailsChanged: detailsChanged ? detailsChanged : void 0,
     slides: {
-      origin: 'center',
+      origin,
       perView: slidesPerView,
       spacing: slidePadding,
     },
@@ -248,24 +251,27 @@ export const TeaserSlider = ({
                 ).keys(),
               ].map(idx => (
                 <SliderBall
+                  type="button"
                   key={idx}
                   onClick={() => sliderRef.current?.moveToIdx(idx)}
-                  aria-label={`Slide ${idx + 1}`}
+                  aria-label={t('slider.slide', { index: idx + 1 })}
                 >
                   {currentSlide === idx && <SliderBallFill />}
                 </SliderBall>
               ))}
 
               <SliderArrow
+                type="button"
                 onClick={() => sliderRef.current?.prev()}
-                aria-label="Previous slide"
+                aria-label={t('slider.previous')}
               >
-                <MdArrowBackIos size={22} />
+                <MdArrowBackIosNew size={22} />
               </SliderArrow>
 
               <SliderArrow
+                type="button"
                 onClick={() => sliderRef.current?.next()}
-                aria-label="Next slide"
+                aria-label={t('slider.next')}
               >
                 <MdArrowForwardIos size={22} />
               </SliderArrow>
@@ -278,7 +284,7 @@ export const TeaserSlider = ({
 };
 
 export const isTeaserSliderBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is
   | FullTeaserGridBlockFragment
   | FullTeaserListBlockFragment

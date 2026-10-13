@@ -12,11 +12,16 @@ export const unselectPassword: Record<
     | 'pollVotes'
     | 'userImage'
     | 'mailSent'
+    | 'mailSendJobs'
+    | 'mailSendJobEntries'
     | 'consents'
     | 'mailSent'
     | 'articleRevisions'
     | 'pageRevisions'
     | 'mailchimpSyncErrors'
+    | 'changelogConfirmations'
+    | 'notificationReads'
+    | 'notificationConfirmations'
   >,
   boolean
 > = {

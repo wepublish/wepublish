@@ -1,18 +1,15 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
+import { PollBlockProvider } from '@wepublish/block-content/website';
 import {
-  PollBlockProvider,
-  usePollBlock,
-} from '@wepublish/block-content/website';
-import {
+  ArticleDocument,
   CommentItemType,
   CommentSort,
   SortOrder,
-  useArticleQuery,
 } from '@wepublish/website/api';
 import { BuilderPollBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
 
 import { CommentListContainer } from '../website-builder-overwrites/blocks/comment-list-container/comment-list-container-fdt';
 import { PollBlock } from '../website-builder-overwrites/blocks/poll-block/poll-block';
@@ -92,10 +89,14 @@ const StyledInfoBox = styled(InfoBox)`
   background-color: ${({ theme }) => theme.palette.secondary.light};
 `;
 
-const PollBlockStyled = styled(PollBlock)`
-  position: sticky;
-  top: ${({ theme }) => theme.spacing(14)};
+const StickyPoll = styled('div')`
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    position: sticky;
+    top: ${({ theme }) => theme.spacing(14)};
+  }
+`;
 
+const PollBlockStyled = styled(PollBlock)`
   button {
     text-transform: uppercase;
     border-width: 1px;
@@ -113,54 +114,30 @@ const PollBlockStyled = styled(PollBlock)`
 `;
 
 export const FdtPollBlock = ({ poll }: BuilderPollBlockProps) => {
-  const router = useRouter();
   const {
     query: { slug },
   } = useRouter();
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error>();
-  const { vote } = usePollBlock();
-
-  const { data: articleData } = useArticleQuery({
+  const { data: articleData } = useQuery(ArticleDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
     },
   });
 
-  const author = articleData?.article?.latest.authors[0];
-
-  const autoVote = useCallback(async () => {
-    const answerId = router.query.answerId as string;
-
-    if (!answerId || !poll?.id) {
-      return;
-    }
-
-    await vote(
-      {
-        variables: {
-          answerId,
-        },
-      },
-      poll.id
-    );
-  }, [poll?.id, router.query.answerId, vote]);
-
-  useEffect(() => {
-    autoVote();
-  }, [autoVote]);
+  const author = articleData?.article?.latest.authors[0]?.author;
 
   return (
     <PollBlockProvider>
       <FrageDesTagesContainer>
         <FrageDesTagesWrapper>
           <PollWrapper>
-            {articleData?.article?.latest.image && (
-              <FdtArticleImage image={articleData.article.latest.image} />
-            )}
-            <PollBlockStyled poll={poll} />
+            <StickyPoll>
+              {articleData?.article?.latest.image && (
+                <FdtArticleImage image={articleData.article.latest.image} />
+              )}
+              <PollBlockStyled poll={poll} />
+            </StickyPoll>
           </PollWrapper>
 
           <CommentsWrapper>
@@ -172,7 +149,7 @@ export const FdtPollBlock = ({ poll }: BuilderPollBlockProps) => {
               </div>
 
               <div>
-                <StyledInfoBox richText={poll?.infoText || []} />
+                <StyledInfoBox richText={poll?.infoText} />
               </div>
             </AuthorAndContext>
 

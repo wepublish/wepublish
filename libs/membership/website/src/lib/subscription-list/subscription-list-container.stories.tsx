@@ -1,7 +1,8 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SubscriptionListContainer } from './subscription-list-container';
 import {
   CancelSubscriptionDocument,
+  ReactivateSubscriptionDocument,
   Exact,
   ExtendSubscriptionDocument,
   FullInvoiceFragment,
@@ -16,7 +17,7 @@ import {
 
 import { mockMemberPlan, mockPaymentMethod } from '@wepublish/storybook/mocks';
 import { InvoiceListContainer } from '../invoice-list/invoice-list-container';
-import { waitFor, within } from '@storybook/test';
+import { waitFor, within } from 'storybook/test';
 import {
   WithCancelError,
   WithExtendError,
@@ -119,6 +120,22 @@ export const Default: StoryObj = {
         },
         {
           request: {
+            query: ReactivateSubscriptionDocument,
+            variables: {
+              subscriptionId: subscription.id,
+            },
+          },
+          result: {
+            data: {
+              reactivateUserSubscription: {
+                ...subscription,
+                deactivation: null,
+              },
+            },
+          },
+        },
+        {
+          request: {
             query: ExtendSubscriptionDocument,
             variables: {
               subscriptionId: subscription.id,
@@ -191,7 +208,9 @@ export const Extend: StoryObj = {
   ...Default,
   play: async ctx => {
     const canvas = within(ctx.canvasElement);
-    await waitFor(() => canvas.getByText('Jetzt verlängern'));
+    await waitFor(() => canvas.getByText('Jetzt verlängern'), {
+      timeout: 5000,
+    });
 
     await WithExtendError.play?.(ctx);
   },
@@ -219,7 +238,9 @@ export const Cancel: StoryObj = {
   ...Default,
   play: async ctx => {
     const canvas = within(ctx.canvasElement);
-    await waitFor(() => canvas.getByText('Abo kündigen'));
+    await waitFor(() => canvas.getByText('Abo kündigen'), {
+      timeout: 5000,
+    });
 
     await WithCancelError.play?.(ctx);
   },

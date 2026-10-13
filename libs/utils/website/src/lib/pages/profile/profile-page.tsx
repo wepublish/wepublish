@@ -1,6 +1,7 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
   InvoiceListContainer,
@@ -8,6 +9,8 @@ import {
   SubscriptionListContainer,
   SubscriptionListItemContent,
   SubscriptionListItemWrapper,
+  isSubscriptionActive,
+  isSubscriptionDeactivated,
   useHasUnpaidInvoices,
 } from '@wepublish/membership/website';
 import {
@@ -15,19 +18,17 @@ import {
   TotpSetupContainer,
 } from '@wepublish/user/website';
 import {
-  addClientCacheToProps,
-  getApiClient,
+  ConfirmEmailChangeDocument,
+  InvoicesDocument,
   MeDocument,
   NavigationListDocument,
-  InvoicesDocument,
-  SubscriptionsDocument,
   ProductType,
-  useConfirmEmailChangeMutation,
-  useSubscriptionsQuery,
+  SubscriptionsDocument,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { NextPage, NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -93,7 +94,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
   const router = useRouter();
   const client = useApolloClient();
   const [confirmEmailChange, { data: confirmData, error: confirmError }] =
-    useConfirmEmailChangeMutation();
+    useMutation(ConfirmEmailChangeDocument);
 
   useEffect(() => {
     const newEmail = router.query.confirmEmailChange as string | undefined;
@@ -113,23 +114,23 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
           });
         });
     }
-  }, [router.query.confirmEmailChange, confirmEmailChange, router]);
+  }, [router.query.confirmEmailChange, confirmEmailChange, router, client]);
 
-  const { data: subscriptonData } = useSubscriptionsQuery({
+  const { data: subscriptonData } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
   });
 
   const hasDeactivatedSubscriptions = subscriptonData?.userSubscriptions.some(
-    subscription => subscription.deactivation
+    isSubscriptionDeactivated
   );
   const hasActiveSubscriptions = subscriptonData?.userSubscriptions.some(
     subscription =>
-      !subscription.deactivation &&
+      isSubscriptionActive(subscription) &&
       subscription.memberPlan.productType === ProductType.Subscription
   );
   const hasActiveDonations = subscriptonData?.userSubscriptions.some(
     subscription =>
-      !subscription.deactivation &&
+      isSubscriptionActive(subscription) &&
       subscription.memberPlan.productType === ProductType.Donation
   );
 
@@ -146,7 +147,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
       <SubscriptionsWrapper className={className}>
         {hasUnpaidInvoices && (
           <SubscriptionListWrapper>
-            <H4 component={'h1'}>Offene Rechnungen</H4>
+            <H4 component={'h1'}>{t('invoice.openInvoices')}</H4>
 
             <UnpaidInvoiceListContainer
               filter={invoices =>
@@ -172,7 +173,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
             filter={subscriptions =>
               subscriptions.filter(
                 subscription =>
-                  !subscription.deactivation &&
+                  isSubscriptionActive(subscription) &&
                   subscription.memberPlan.productType ===
                     ProductType.Subscription
               )
@@ -191,7 +192,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
                 filter={subscriptions =>
                   subscriptions.filter(
                     subscription =>
-                      !subscription.deactivation &&
+                      isSubscriptionActive(subscription) &&
                       subscription.memberPlan.productType ===
                         ProductType.Donation
                   )
@@ -207,7 +208,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
                   LinkComponent={Link}
                   href={'/mitmachen'}
                 >
-                  Anderes Abo lösen
+                  {t('user.subscribeAnother')}
                 </Button>
               </SubscriptionListItemContent>
             </SubscriptionListItemWrapper>
@@ -224,7 +225,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
       </SubscriptionsWrapper>
 
       <ProfileWrapper className={className}>
-        <H4 component={'h1'}>Profil</H4>
+        <H4 component={'h1'}>{t('navbar.profile')}</H4>
 
         <PersonalDataFormContainer {...props} />
 
@@ -242,14 +243,13 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
     return {};
   }
 
-  const { publicRuntimeConfig } = getConfig();
   const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
   ]);
 
-  await handleJwtLogin(ctx, client, !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE);
+  await handleJwtLogin(ctx, client, !!process.env.HTTP_ONLY_COOKIE);
 
   const sessionProps = await getSessionTokenProps(ctx);
 

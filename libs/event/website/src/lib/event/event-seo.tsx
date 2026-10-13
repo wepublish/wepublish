@@ -1,4 +1,5 @@
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
+import { stripQueryAndHash } from '@wepublish/utils';
 import { FullEventFragment, FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderEventSEOProps,
@@ -9,7 +10,7 @@ import { useMemo } from 'react';
 
 export const getEventSEO = (event: FullEventFragment) => {
   const description =
-    event.lead ?? firstParagraphToPlaintext(event.description);
+    event.lead ?? firstParagraphToPlaintext(event.description?.content ?? []);
   const image = event.image as FullImageFragment | undefined;
   const startDate = formatISO(new Date(event.startsAt));
   const endDate = event.endsAt ? formatISO(new Date(event.endsAt)) : undefined;
@@ -27,7 +28,7 @@ export const getEventSEO = (event: FullEventFragment) => {
     type: 'website',
     title: event.name,
     description,
-    url: event.url,
+    url: stripQueryAndHash(event.url),
     image,
     schema: {
       '@context': 'http://schema.org',

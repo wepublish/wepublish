@@ -15,11 +15,12 @@ import {
   Popover as RPopover,
   Whisper,
 } from 'rsuite';
-import { TypeAttributes } from 'rsuite/cjs/@types/common';
+import type { BasicSize } from 'rsuite/esm/internals/types';
 
 import {
   CommentStateChangeModal,
   mapCommentActionToBtnTitle,
+  mapRejectionReasonToLabel,
 } from './commentStateChangeModal';
 
 const BadgeWrapper = styled.div`
@@ -61,7 +62,7 @@ export function humanReadableCommentState(commentState: CommentState) {
 
 interface CommentStateViewProps {
   comment: FullCommentFragment;
-  size?: TypeAttributes.Size;
+  size?: BasicSize;
   onStateChanged?(
     commentState: CommentState,
     rejectReason?: CommentRejectionReason | null
@@ -87,11 +88,14 @@ export function CommentStateDropdown({
     comment.state === CommentState.PendingUserChanges;
 
   const renderMenu = (
-    { onClose, className }: { className: any; onClose: () => void },
+    {
+      onClose,
+      className,
+    }: { className?: string; onClose?: (delay?: number) => void },
     ref: any
   ) => {
-    const handleSelect = (eventKey: string | undefined) => {
-      onClose();
+    const handleSelect = (eventKey: string | number | undefined) => {
+      onClose?.();
       if (eventKey) {
         setNewCommentState(eventKey as CommentState);
       }
@@ -124,7 +128,10 @@ export function CommentStateDropdown({
       {showBadge && (
         <BadgeWrapper>
           <Badge
-            content={comment.rejectionReason}
+            content={
+              comment.rejectionReason &&
+              t(mapRejectionReasonToLabel(comment.rejectionReason))
+            }
             color={mapCommentStateToColor(comment.state)}
           />
         </BadgeWrapper>
@@ -150,6 +157,8 @@ export function CommentStateDropdown({
               appearance="primary"
               color={mapCommentStateToColor(comment.state)}
               icon={<MdArrowDropDown />}
+              title={t('comments.overview.editState')}
+              aria-label={t('comments.overview.editState')}
             />
           </Whisper>
         </ButtonGroup>

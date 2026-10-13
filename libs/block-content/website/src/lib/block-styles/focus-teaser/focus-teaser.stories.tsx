@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { FocusTeaser } from './focus-teaser';
 import {
   mockArticleTeaser,

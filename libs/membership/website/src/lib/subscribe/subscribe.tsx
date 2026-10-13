@@ -1,22 +1,25 @@
+import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
-import styled from '@emotion/styled';
 import {
+  BuilderChallengeRef,
   Challenge,
   defaultRegisterSchema,
   requiredRegisterSchema,
-  UserForm,
   useUser,
   zodAlwaysRefine,
 } from '@wepublish/authentication/website';
+import { ApiAlert } from '@wepublish/errors/website';
 import {
   Currency,
-  PaymentMethod,
+  FullMemberPlanFragment,
+  FullPaymentMethodFragment,
   PaymentPeriodicity,
   ProductType,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
   SubscribeMutationVariables,
+  SubscribePeriodicityDisplay,
   UserAddressInput,
 } from '@wepublish/website/api';
 import {
@@ -24,24 +27,33 @@ import {
   BuilderUserFormFields,
   Button,
   Link,
+  Modal,
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useEffect, useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
-import {
-  formatFirstPaymentPeriod,
-  formatPaymentPeriod,
-  getPaymentPeriodicyMonths,
-} from '../formatters/format-payment-period';
-import { formatRenewalPeriod } from '../formatters/format-renewal-period';
-import { ApolloError } from '@apollo/client';
-import { ApiAlert } from '@wepublish/errors/website';
-import { Modal } from '@wepublish/website/builder';
-import { useTranslation } from 'react-i18next';
+import { ComponentProps, useEffect, useMemo, useRef, useState } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useTranslation, Trans } from 'react-i18next';
 import { MdCheck, MdError } from 'react-icons/md';
+import { z } from 'zod';
+import { roundUpTo5Cents } from '../formatters/format-currency';
+import {
+  calculatePeriodAmount,
+  getDefaultPeriodicity,
+  getPaymentPeriodicyMonths,
+  getPeriodPriceRange,
+  getPlanPeriodicities,
+  monthlyAmountFromPeriodAmount,
+} from '../formatters/format-payment-period';
+import {
+  findMemberPlanRenderSetting,
+  getAmountPickerValues,
+  isAmountPickerLayout,
+  isAmountSliderLayout,
+  isFixedAmountLayout,
+  showsAmountInput,
+} from './member-plan-render-settings';
+import { useContinuationText, usePaymentText } from './subscribe-texts';
 
 export const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
@@ -57,7 +69,8 @@ export const subscribeSchema = z.object({
     PaymentPeriodicity.Lifetime,
   ]),
   payTransactionFee: z.boolean(),
-  voucher: z.string().nullish(),
+  discountCode: z.string().nullish(),
+  goodieId: z.string().nullish(),
 });
 
 export const SubscribeWrapper = styled('form')`
@@ -70,7 +83,19 @@ export type SubscribeSectionProps = {
   area?: string;
 };
 
-export const SubscribeSection = styled('div')<SubscribeSectionProps>`
+const SubscribeSectionBase = ({
+  area,
+  ...rest
+}: SubscribeSectionProps & ComponentProps<'div'>) => (
+  <div
+    data-area={area}
+    {...rest}
+  />
+);
+
+export const SubscribeSection = styled(
+  SubscribeSectionBase
+)<SubscribeSectionProps>`
   --grid-area: ${({ area = 'auto' }) => area};
   display: grid;
   gap: ${({ theme }) => theme.spacing(3)};
@@ -93,6 +118,10 @@ export const SubscribeAmount = styled('div')`
 
 export const SubscribeAmountText = styled('p')`
   text-align: center;
+
+  ${({ theme }) => theme.breakpoints.up('xs')} {
+    margin: ${({ theme }) => theme.spacing(0, 0, 2, 0)};
+  }
 `;
 
 export const SubscribePayment = styled('div')`
@@ -119,120 +148,27 @@ export const SubscribeCancelable = styled('div')`
   justify-self: center;
 `;
 
-export const SubscribeWithDiscount = styled('div')`
-  text-align: center;
-  justify-self: center;
-  font-weight: 600;
+export const SubscribeContinuation = styled(SubscribeCancelable)`
+  margin-bottom: ${({ theme }) => theme.spacing(1)};
 `;
 
 export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
-export const VoucherSection = styled(SubscribeNarrowSection)`
-  display: none;
-`;
+export const SubscribeOpenInvoicesNotice = styled('div')``;
 
-export const usePaymentText = ({
-  type = 'button',
-  autoRenew,
-  extendable,
-  productType,
-  memberPlan,
-  paymentPeriodicity,
-  monthlyAmount,
-  currency,
-  siteTitle,
-  locale,
-}: {
-  type?: 'button' | 'support';
-  autoRenew: boolean;
-  extendable: boolean;
-  memberPlan: string;
-  productType: ProductType;
-  paymentPeriodicity: PaymentPeriodicity;
-  monthlyAmount: number;
-  currency: Currency;
-  siteTitle: string;
-  locale: string;
-}) => {
-  const { t } = useTranslation();
+export const SubscribeExistingSubscriptionNotice = styled('div')``;
 
-  return useMemo(() => {
-    const variables = {
-      productType,
-      renewalPeriod: formatRenewalPeriod(paymentPeriodicity),
-      renewalPeriodL: formatRenewalPeriod(paymentPeriodicity).toLowerCase(),
-      paymentPeriod: formatPaymentPeriod(paymentPeriodicity),
-      paymentPeriodL: formatPaymentPeriod(paymentPeriodicity).toLowerCase(),
-      formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-        currency,
-        locale
-      ),
-      monthlyAmount,
-      memberPlan,
-      siteTitle,
-    };
-
-    if (autoRenew && extendable) {
-      return t(`subscribe.${type}.subscribeForPeriod`, variables);
-    }
-
-    if (extendable) {
-      return t(`subscribe.${type}.payForPeriod`, variables);
-    }
-
-    return t(`subscribe.${type}.pay`, variables);
-  }, [
-    autoRenew,
-    currency,
-    extendable,
-    locale,
-    monthlyAmount,
-    paymentPeriodicity,
-    productType,
-    type,
-    memberPlan,
-    siteTitle,
-    t,
-  ]);
-};
-
-export const useDiscountText = ({
-  memberPlan,
-  paymentPeriodicity,
-  monthlyAmount,
-  currency,
-  locale,
-}: {
-  memberPlan: string;
-  paymentPeriodicity: PaymentPeriodicity;
-  monthlyAmount: number;
-  currency: Currency;
-  locale: string;
-}) => {
-  const { t } = useTranslation();
-
-  return useMemo(() => {
-    const variables = {
-      paymentPeriod: formatFirstPaymentPeriod(paymentPeriodicity),
-      formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-        currency,
-        locale
-      ),
-      monthlyAmount,
-      memberPlan,
-    };
-
-    return t(`subscribe.discount`, variables);
-  }, [currency, locale, monthlyAmount, paymentPeriodicity, memberPlan, t]);
-};
+export const clampMonthlyAmount = (amount: number, min: number, max?: number) =>
+  Math.min(Math.max(amount, min), max ?? Number.MAX_SAFE_INTEGER);
 
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
   memberPlans,
+  memberPlanRenderSettings,
+  showGoodies = false,
+  showDiscountCodes = false,
   challenge,
   userSubscriptions,
   userInvoices,
@@ -247,17 +183,24 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId,
+  filterGoodies,
+  goodieMinValue,
   fetchSubscribeInfo,
   subscribeInfo,
+  periodicityDisplay,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
     elements: { Alert, H5, Paragraph, TextField },
+    GoodiePicker,
     MemberPlanPicker,
+    MemberPlanOfferPicker,
     PaymentMethodPicker,
     PeriodicityPicker,
-    PaymentAmount,
+    PaymentAmountSlider,
+    PaymentAmountPicker,
     TransactionFee,
+    UserForm,
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const { hasUser } = useUser();
@@ -265,6 +208,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error>();
   const callAction = useAsyncAction(setLoading, setError);
+  const challengeRef = useRef<BuilderChallengeRef>(null);
 
   const fieldsToDisplay = useMemo(
     () =>
@@ -275,6 +219,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     [fields]
   );
   const hasUserContext = hasUser || !!returningUserId;
+
+  const useOfferCards =
+    periodicityDisplay === SubscribePeriodicityDisplay.OfferCards;
+  const usePeriodicityToggle =
+    periodicityDisplay === SubscribePeriodicityDisplay.Toggle;
+  const usesMonthlyOnlyDisplay = !usePeriodicityToggle && !useOfferCards;
 
   /**
    * Done like this to avoid type errors due to z.ZodObject vs z.ZodEffect<z.ZodObject>.
@@ -312,19 +262,45 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const loggedInSchema = subscribeSchema;
   const schem = useMemo(
     () =>
-      zodAlwaysRefine(hasUserContext ? loggedInSchema : loggedOutSchema).refine(
+      zodAlwaysRefine(
+        zodAlwaysRefine(
+          hasUserContext ? loggedInSchema : loggedOutSchema
+        ).refine(
+          data => {
+            const memberPlan = memberPlans.data?.memberPlans.nodes.find(
+              mb => mb.id === data.memberPlanId
+            );
+            const validatedPeriodicity =
+              usesMonthlyOnlyDisplay ?
+                PaymentPeriodicity.Monthly
+              : data.paymentPeriodicity;
+
+            return (
+              !memberPlan ||
+              calculatePeriodAmount(data.monthlyAmount, validatedPeriodicity) >=
+                getPeriodPriceRange(memberPlan, validatedPeriodicity).amountMin
+            );
+          },
+          {
+            message: `Betrag kleiner wie der Mindestbetrag.`,
+            path: ['monthlyAmount'],
+          }
+        )
+      ).refine(
         data => {
           const memberPlan = memberPlans.data?.memberPlans.nodes.find(
             mb => mb.id === data.memberPlanId
           );
 
           return (
-            !memberPlan || data.monthlyAmount >= memberPlan.amountPerMonthMin
+            !memberPlan ||
+            usesMonthlyOnlyDisplay ||
+            getPlanPeriodicities(memberPlan).includes(data.paymentPeriodicity)
           );
         },
         {
-          message: `Betrag kleiner wie der Mindestbetrag.`,
-          path: ['monthlyAmount'],
+          message: `Dieser Abo-Plan ist für dieses Zahlungsintervall nicht verfügbar.`,
+          path: ['memberPlanId'],
         }
       ),
     [
@@ -332,47 +308,66 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       loggedInSchema,
       loggedOutSchema,
       memberPlans.data?.memberPlans.nodes,
+      usesMonthlyOnlyDisplay,
     ]
   );
 
-  const { control, handleSubmit, watch, setValue, resetField } = useForm<
+  const defaultMemberPlan =
+    (defaults?.memberPlanSlug ?
+      memberPlans.data?.memberPlans.nodes.find(
+        memberPlan => memberPlan.slug === defaults?.memberPlanSlug
+      )
+    : undefined) ??
+    memberPlans.data?.memberPlans.nodes.find(
+      memberPlan =>
+        memberPlan.id ===
+        memberPlanRenderSettings?.find(({ isDefault }) => isDefault)
+          ?.memberPlanId
+    ) ??
+    memberPlans.data?.memberPlans.nodes[0];
+
+  const defaultPaymentPeriodicity =
+    (
+      defaults?.paymentPeriodicity &&
+      getPlanPeriodicities(defaultMemberPlan).includes(
+        defaults.paymentPeriodicity
+      )
+    ) ?
+      defaults.paymentPeriodicity
+    : getDefaultPeriodicity(defaultMemberPlan);
+
+  const form = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
     resolver: zodResolver(schem),
     defaultValues: {
       ...defaults,
-      voucher: '',
+      discountCode: defaults?.discountCode ?? '',
+      goodieId: null,
       monthlyAmount: 0,
       autoRenew: true,
       payTransactionFee: false,
-      memberPlanId:
-        defaults?.memberPlanSlug ?
-          memberPlans.data?.memberPlans.nodes.find(
-            memberPlan => memberPlan.slug === defaults?.memberPlanSlug
-          )?.id
-        : memberPlans.data?.memberPlans.nodes[0]?.id,
+      memberPlanId: defaultMemberPlan?.id,
       paymentMethodId:
-        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
-          ?.paymentMethods[0]?.id,
-      paymentPeriodicity:
-        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
-          ?.paymentPeriodicities[0],
+        defaultMemberPlan?.availablePaymentMethods[0]?.paymentMethods[0]?.id,
+      paymentPeriodicity: defaultPaymentPeriodicity,
     },
     mode: 'onTouched',
     reValidateMode: 'onChange',
   });
+  const { control, handleSubmit, watch, setValue, resetField } = form;
 
-  const voucher = watch<'voucher'>('voucher');
+  const discountCode = watch<'discountCode'>('discountCode');
+  const goodieId = watch<'goodieId'>('goodieId');
   const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId');
   const selectedPaymentPeriodicity =
     watch<'paymentPeriodicity'>('paymentPeriodicity');
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId');
   const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee');
+  const watchedMonthlyAmount = watch<'monthlyAmount'>('monthlyAmount');
   const monthlyAmount =
-    watch<'monthlyAmount'>('monthlyAmount') +
-    (payTransactionFee ?
-      transactionFee(watch<'monthlyAmount'>('monthlyAmount'))
-    : 0);
+    watchedMonthlyAmount +
+    (payTransactionFee ? transactionFee(watchedMonthlyAmount) : 0);
   const autoRenew = watch<'autoRenew'>('autoRenew');
 
   const selectedMemberPlan = useMemo(
@@ -383,29 +378,103 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     [memberPlans.data?.memberPlans.nodes, selectedMemberPlanId]
   );
 
+  const availableGoodies = useMemo(() => {
+    const goodies = selectedMemberPlan?.goodies ?? [];
+
+    const filteredGoodies =
+      filterGoodies ?
+        filterGoodies(goodies, { monthlyAmount: watchedMonthlyAmount })
+      : goodies;
+
+    const amount =
+      monthlyAmount * getPaymentPeriodicyMonths(selectedPaymentPeriodicity);
+
+    if (goodieMinValue && goodieMinValue > amount) {
+      return [];
+    }
+
+    return filteredGoodies;
+  }, [
+    selectedMemberPlan?.goodies,
+    filterGoodies,
+    watchedMonthlyAmount,
+    monthlyAmount,
+    selectedPaymentPeriodicity,
+    goodieMinValue,
+  ]);
+
+  const planPeriodicities = useMemo(
+    () => getPlanPeriodicities(selectedMemberPlan),
+    [selectedMemberPlan]
+  );
+
+  const availablePaymentMethodsForPeriodicity = useMemo(
+    () =>
+      selectedMemberPlan?.availablePaymentMethods.filter(
+        availablePaymentMethod =>
+          availablePaymentMethod.paymentPeriodicities.includes(
+            selectedPaymentPeriodicity
+          )
+      ) ?? [],
+    [selectedMemberPlan?.availablePaymentMethods, selectedPaymentPeriodicity]
+  );
+
   const selectedAvailablePaymentMethod = useMemo(
     () =>
-      selectedMemberPlan?.availablePaymentMethods.find(memberPlan =>
-        memberPlan.paymentMethods.find(
+      availablePaymentMethodsForPeriodicity.find(availablePaymentMethod =>
+        availablePaymentMethod.paymentMethods.find(
           ({ id }) => id === selectedPaymentMethodId
         )
       ),
-    [selectedMemberPlan?.availablePaymentMethods, selectedPaymentMethodId]
+    [availablePaymentMethodsForPeriodicity, selectedPaymentMethodId]
   );
 
   const allPaymentMethods = useMemo(
     () =>
-      (selectedMemberPlan?.availablePaymentMethods?.flatMap(
+      (availablePaymentMethodsForPeriodicity.flatMap(
         ({ paymentMethods }) => paymentMethods
-      ) as PaymentMethod[]) ?? [],
-    [selectedMemberPlan?.availablePaymentMethods]
+      ) as FullPaymentMethodFragment[]) ?? [],
+    [availablePaymentMethodsForPeriodicity]
   );
+
+  const amountPeriodicity =
+    usesMonthlyOnlyDisplay ?
+      PaymentPeriodicity.Monthly
+    : selectedPaymentPeriodicity;
+
+  const requiredPeriodicity =
+    usesMonthlyOnlyDisplay ? undefined : selectedPaymentPeriodicity;
+
+  const selectedPlanUnavailable =
+    !!requiredPeriodicity &&
+    !useOfferCards &&
+    !!selectedMemberPlan &&
+    !getPlanPeriodicities(selectedMemberPlan).includes(requiredPeriodicity);
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
 
+  const selectedRenderSetting = findMemberPlanRenderSetting(
+    memberPlanRenderSettings,
+    selectedMemberPlan?.id
+  );
+  const selectedLayout = selectedRenderSetting?.layout;
+
+  const periodPriceRange = useMemo(
+    () =>
+      selectedMemberPlan ?
+        getPeriodPriceRange(selectedMemberPlan, amountPeriodicity)
+      : null,
+    [selectedMemberPlan, amountPeriodicity]
+  );
+
+  const hasFixedPrice =
+    !!periodPriceRange &&
+    periodPriceRange.amountMax != null &&
+    periodPriceRange.amountMin === periodPriceRange.amountMax;
+
   const shouldHidePaymentAmount =
-    selectedMemberPlan?.amountPerMonthMin ===
-    selectedMemberPlan?.amountPerMonthMax;
+    hasFixedPrice ||
+    (selectedLayout ? isFixedAmountLayout(selectedLayout) : !periodPriceRange);
 
   const discountPercent =
     subscribeInfo.data?.createSubscriptionInfo.discountPercent ?? 0;
@@ -416,16 +485,16 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: selectedPaymentPeriodicity,
-    monthlyAmount,
+    monthlyAmount: monthlyAmount * (1 - discountPercent),
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
     locale,
   });
 
-  const discountText = useDiscountText({
+  const continuationText = useContinuationText({
     memberPlan: selectedMemberPlan?.name ?? '',
     paymentPeriodicity: selectedPaymentPeriodicity,
-    monthlyAmount: monthlyAmount * (1 - discountPercent),
+    monthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
   });
@@ -436,15 +505,20 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     memberPlan: selectedMemberPlan?.name ?? '',
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
-    paymentPeriodicity: PaymentPeriodicity.Monthly,
-    monthlyAmount: watch<'monthlyAmount'>('monthlyAmount'),
+    // the text above the amount follows the denomination of the amount input
+    paymentPeriodicity: amountPeriodicity,
+    monthlyAmount: watchedMonthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
     locale,
   });
 
   const onSubmit = handleSubmit(data => {
-    if (subscribeInfo.data?.createSubscriptionInfo.voucherValid === false) {
+    challengeRef.current?.reset();
+
+    if (
+      subscribeInfo.data?.createSubscriptionInfo.discountCodeValid === false
+    ) {
       return;
     }
 
@@ -454,7 +528,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       paymentMethodId: data.paymentMethodId,
       paymentPeriodicity: data.paymentPeriodicity,
       autoRenew: data.autoRenew,
-      voucher: data.voucher,
+      discountCode: data.discountCode,
+      goodieId: data.goodieId,
     };
 
     if (hasUser) {
@@ -496,15 +571,35 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     });
   }, console.warn);
 
+  const amountDefaultKey =
+    usesMonthlyOnlyDisplay ? selectedMemberPlanId : (
+      `${selectedMemberPlanId}:${amountPeriodicity}`
+    );
+  const appliedAmountDefaultKey = useRef<string | undefined>(undefined);
+
   useEffect(() => {
-    if (selectedMemberPlan) {
-      setValue<'monthlyAmount'>(
-        'monthlyAmount',
-        selectedMemberPlan.amountPerMonthTarget ||
-          selectedMemberPlan.amountPerMonthMin
-      );
+    if (
+      !selectedMemberPlan ||
+      appliedAmountDefaultKey.current === amountDefaultKey
+    ) {
+      return;
     }
-  }, [selectedMemberPlan, setValue]);
+
+    appliedAmountDefaultKey.current = amountDefaultKey;
+
+    const { amountMin, amountTarget } = getPeriodPriceRange(
+      selectedMemberPlan,
+      amountPeriodicity
+    );
+
+    setValue<'monthlyAmount'>(
+      'monthlyAmount',
+      monthlyAmountFromPeriodAmount(
+        amountTarget || amountMin,
+        amountPeriodicity
+      )
+    );
+  }, [amountDefaultKey, selectedMemberPlan, amountPeriodicity, setValue]);
 
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {
@@ -531,34 +626,70 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   useEffect(() => {
     if (
-      selectedPaymentMethodId &&
-      !allPaymentMethods?.find(({ id }) => id === selectedPaymentMethodId)
+      allPaymentMethods.length &&
+      !allPaymentMethods.find(({ id }) => id === selectedPaymentMethodId)
     ) {
-      resetField('paymentMethodId');
+      setValue<'paymentMethodId'>('paymentMethodId', allPaymentMethods[0].id);
     }
-  }, [resetField, allPaymentMethods, selectedPaymentMethodId]);
+  }, [setValue, allPaymentMethods, selectedPaymentMethodId]);
 
   useEffect(() => {
     if (
-      !selectedAvailablePaymentMethod?.paymentPeriodicities.includes(
-        selectedPaymentPeriodicity
-      )
+      planPeriodicities.length &&
+      !planPeriodicities.includes(selectedPaymentPeriodicity)
     ) {
-      resetField('paymentPeriodicity', {
-        defaultValue: selectedAvailablePaymentMethod
-          ?.paymentPeriodicities?.[0] as undefined, // wrong undefined typing by react-hook: https://react-hook-form.com/docs/useform/resetfield
-      });
+      setValue<'paymentPeriodicity'>(
+        'paymentPeriodicity',
+        getDefaultPeriodicity(selectedMemberPlan) ?? planPeriodicities[0]
+      );
     }
-  }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity]);
+  }, [
+    planPeriodicities,
+    selectedMemberPlan,
+    setValue,
+    selectedPaymentPeriodicity,
+  ]);
+
+  useEffect(() => {
+    if (useOfferCards || !requiredPeriodicity) {
+      return;
+    }
+
+    const offersPeriodicity = (memberPlan: FullMemberPlanFragment) =>
+      getPlanPeriodicities(memberPlan).includes(requiredPeriodicity);
+
+    if (selectedMemberPlan && offersPeriodicity(selectedMemberPlan)) {
+      return;
+    }
+
+    const fallback =
+      memberPlans.data?.memberPlans.nodes.find(offersPeriodicity);
+
+    if (fallback) {
+      setValue<'memberPlanId'>('memberPlanId', fallback.id);
+    }
+  }, [
+    useOfferCards,
+    requiredPeriodicity,
+    selectedMemberPlan,
+    memberPlans.data?.memberPlans.nodes,
+    setValue,
+  ]);
 
   useEffect(() => {
     fetchSubscribeInfo({
       variables: {
         memberPlanId: selectedMemberPlanId,
-        voucher,
+        discountCode,
       },
     });
-  }, [fetchSubscribeInfo, selectedMemberPlanId, voucher]);
+  }, [fetchSubscribeInfo, selectedMemberPlanId, discountCode]);
+
+  useEffect(() => {
+    if (goodieId && !availableGoodies.some(({ id }) => id === goodieId)) {
+      setValue<'goodieId'>('goodieId', null);
+    }
+  }, [availableGoodies, goodieId, setValue]);
 
   const alreadyHasSubscription = useMemo(() => {
     if (deactivateSubscriptionId) {
@@ -591,345 +722,496 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     );
   }, [deactivateSubscriptionId, userInvoices.data?.userInvoices]);
 
-  const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
+  const amountPerMonthMin =
+    periodPriceRange ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountMin,
+        amountPeriodicity
+      )
+    : 500;
+  const amountPerMonthMax =
+    periodPriceRange?.amountMax != null ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountMax,
+        amountPeriodicity
+      )
+    : undefined;
+  const amountPerMonthTarget =
+    periodPriceRange?.amountTarget != null ?
+      monthlyAmountFromPeriodAmount(
+        periodPriceRange.amountTarget,
+        amountPeriodicity
+      )
+    : undefined;
 
   return (
-    <SubscribeWrapper
-      className={className}
-      onSubmit={onSubmit}
-      noValidate
-    >
-      {!hasUser && returningUserId && (
-        <SubscribeSection area="returning">
-          <H5 component="h2">
-            {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}
-            , willkommen zurück!
-          </H5>
-        </SubscribeSection>
-      )}
-
-      <SubscribeSection area="memberPlans">
-        {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
-          <H5 component="h2">Abo wählen</H5>
+    <FormProvider {...form}>
+      <SubscribeWrapper
+        className={className}
+        onSubmit={onSubmit}
+        noValidate
+      >
+        {!hasUser && returningUserId && (
+          <SubscribeSection area="returning">
+            <H5 component="h2">
+              <span data-sentry-mask>
+                {t('subscribe.greeting', {
+                  name: `${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim(),
+                })}
+              </span>
+            </H5>
+          </SubscribeSection>
         )}
 
-        {hasOpenInvoices && (
-          <Alert severity="warning">
-            Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst
-            deine offenen Rechnungen in deinem{' '}
-            <Link href="/profile">Profil</Link> anschauen.
-          </Alert>
-        )}
-
-        {alreadyHasSubscription && (
-          <Alert severity="warning">
-            Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos
-            in deinem <Link href="/profile">Profil</Link> anschauen.
-          </Alert>
-        )}
-
-        <Controller
-          name={'memberPlanId'}
-          control={control}
-          render={({ field }) => (
-            <MemberPlanPicker
-              {...field}
-              onChange={memberPlanId => field.onChange(memberPlanId)}
-              memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
-            />
-          )}
-        />
-
-        {memberPlans.error && (
-          <ApiAlert
-            error={memberPlans.error}
-            severity="error"
-          />
-        )}
-      </SubscribeSection>
-
-      <SubscribeSection area="monthlyAmount">
-        {!shouldHidePaymentAmount && (
-          <Controller
-            name={'monthlyAmount'}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <SubscribeAmount>
-                <Paragraph
-                  component={SubscribeAmountText}
-                  gutterBottom={false}
-                >
-                  {supportText}
-                </Paragraph>
-
-                <PaymentAmount
-                  {...field}
-                  error={error}
-                  slug={selectedMemberPlan?.slug}
-                  donate={isDonation}
-                  amountPerMonthMin={amountPerMonthMin}
-                  amountPerMonthMax={
-                    selectedMemberPlan?.amountPerMonthMax ?? undefined
-                  }
-                  amountPerMonthTarget={
-                    selectedMemberPlan?.amountPerMonthTarget ?? undefined
-                  }
-                  currency={selectedMemberPlan?.currency ?? Currency.Chf}
+        <SubscribeSection area="notices">
+          {hasOpenInvoices && (
+            <SubscribeOpenInvoicesNotice>
+              <Alert severity="warning">
+                <Trans
+                  i18nKey="subscribe.warning.openInvoices"
+                  components={{ Link: <Link /> }}
                 />
-              </SubscribeAmount>
-            )}
-          />
-        )}
-      </SubscribeSection>
-
-      {!hasUserContext && (
-        <SubscribeSection area={'userForm'}>
-          <UserForm
-            control={control}
-            fields={fields}
-          />
-        </SubscribeSection>
-      )}
-
-      <SubscribeSection area="paymentPeriodicity">
-        {allPaymentMethods.length > 1 && (
-          <H5 component="h2">Zahlungsmethode wählen</H5>
-        )}
-
-        <SubscribePayment>
-          <Controller
-            name={'paymentMethodId'}
-            control={control}
-            render={({ field }) => (
-              <PaymentMethodPicker
-                {...field}
-                onChange={paymentMethodId => field.onChange(paymentMethodId)}
-                paymentMethods={allPaymentMethods}
-              />
-            )}
-          />
-
-          <Controller
-            name={'paymentPeriodicity'}
-            control={control}
-            render={({ field }) => (
-              <PeriodicityPicker
-                {...field}
-                onChange={periodicity => field.onChange(periodicity)}
-                periodicities={
-                  selectedAvailablePaymentMethod?.paymentPeriodicities
-                }
-              />
-            )}
-          />
-
-          {!selectedAvailablePaymentMethod?.forceAutoRenewal &&
-            selectedMemberPlan?.extendable && (
-              <Controller
-                name={'autoRenew'}
-                control={control}
-                render={({ field }) => (
-                  <FormControlLabel
-                    {...field}
-                    control={
-                      <Checkbox
-                        checked={field.value}
-                        disabled={
-                          selectedAvailablePaymentMethod?.forceAutoRenewal
-                        }
-                      />
-                    }
-                    label="Automatisch erneuern"
-                  />
-                )}
-              />
-            )}
-        </SubscribePayment>
-      </SubscribeSection>
-
-      <VoucherSection area="voucher">
-        <Controller
-          name={'voucher'}
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <div>
-              <div
-                css={{
-                  display: 'flex',
-                  flexFlow: 'row',
-                  alignItems: 'center',
-                  gap: 8,
-                }}
-              >
-                <TextField
-                  {...field}
-                  value={field.value ?? ''}
-                  label={'Gutscheincode'}
-                  error={!!error}
-                  autoComplete="voucher"
-                  sx={{ maxWidth: 200 }}
-                />
-
-                {!!subscribeInfo.data?.createSubscriptionInfo
-                  .discountPercent && (
-                  <Alert
-                    severity="success"
-                    icon={<MdCheck />}
-                  >
-                    {t('subscribe.voucher.discountApplied', {
-                      discountPercent:
-                        subscribeInfo.data?.createSubscriptionInfo
-                          .discountPercent * 100,
-                    })}
-                  </Alert>
-                )}
-
-                {subscribeInfo.data?.createSubscriptionInfo.voucherValid ===
-                  false && (
-                  <Alert
-                    severity="error"
-                    icon={<MdError />}
-                  >
-                    {t('subscribe.voucher.invalid')}
-                  </Alert>
-                )}
-              </div>
-
-              {!!error && (
-                <FormHelperText error={!!error}>
-                  {error?.message}
-                </FormHelperText>
-              )}
-            </div>
+              </Alert>
+            </SubscribeOpenInvoicesNotice>
           )}
-        />
-      </VoucherSection>
 
-      {!hasUserContext && (
-        <SubscribeSection area="challenge">
-          <H5 component="h2">Spam-Schutz</H5>
+          {alreadyHasSubscription && (
+            <SubscribeExistingSubscriptionNotice>
+              <Alert severity="warning">
+                <Trans
+                  i18nKey="subscribe.warning.alreadyHasSubscription"
+                  components={{ Link: <Link /> }}
+                />
+              </Alert>
+            </SubscribeExistingSubscriptionNotice>
+          )}
+        </SubscribeSection>
 
-          {challenge.data?.challenge && (
+        {usePeriodicityToggle && (
+          <SubscribeSection area="periodicity">
             <Controller
-              name={'challengeAnswer.challengeSolution'}
+              name={'paymentPeriodicity'}
               control={control}
-              render={({ field, fieldState: { error } }) => (
-                <Challenge
+              render={({ field }) => (
+                <PeriodicityPicker
                   {...field}
-                  value={field.value || ''}
-                  onChange={field.onChange}
-                  challenge={challenge.data!.challenge}
-                  label={'Captcha'}
-                  error={!!error}
-                  helperText={error?.message}
+                  onChange={periodicity => field.onChange(periodicity)}
+                  periodicities={planPeriodicities}
+                  variant={usePeriodicityToggle ? 'toggle' : 'select'}
+                  memberPlan={selectedMemberPlan}
                 />
               )}
             />
+          </SubscribeSection>
+        )}
+
+        <SubscribeSection area="memberPlans">
+          {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
+            <H5 component="h2">{t('subscribe.chooseSubscription')}</H5>
           )}
 
-          {challenge.error && (
+          {useOfferCards ?
+            <Controller
+              name={'memberPlanId'}
+              control={control}
+              render={({ field }) => (
+                <MemberPlanOfferPicker
+                  name={field.name}
+                  value={{
+                    memberPlanId: selectedMemberPlanId,
+                    paymentPeriodicity: selectedPaymentPeriodicity,
+                  }}
+                  onChange={offer => {
+                    field.onChange(offer.memberPlanId);
+                    setValue<'paymentPeriodicity'>(
+                      'paymentPeriodicity',
+                      offer.paymentPeriodicity
+                    );
+                  }}
+                  memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
+                  memberPlanRenderSettings={memberPlanRenderSettings}
+                  amount={watchedMonthlyAmount}
+                  onAmountChange={monthlyAmount =>
+                    setValue<'monthlyAmount'>('monthlyAmount', monthlyAmount)
+                  }
+                />
+              )}
+            />
+          : <Controller
+              name={'memberPlanId'}
+              control={control}
+              render={({ field }) => (
+                <MemberPlanPicker
+                  {...field}
+                  onChange={memberPlanId => field.onChange(memberPlanId)}
+                  memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
+                  paymentPeriodicity={amountPeriodicity}
+                  requiredPeriodicity={requiredPeriodicity}
+                  memberPlanRenderSettings={memberPlanRenderSettings}
+                  amount={watchedMonthlyAmount}
+                  onAmountChange={monthlyAmount =>
+                    setValue<'monthlyAmount'>('monthlyAmount', monthlyAmount)
+                  }
+                />
+              )}
+            />
+          }
+
+          {memberPlans.error && (
             <ApiAlert
-              error={challenge.error}
+              error={memberPlans.error}
               severity="error"
             />
           )}
         </SubscribeSection>
-      )}
 
-      {error && (
-        <ApiAlert
-          error={error as ApolloError}
-          severity="error"
-        />
-      )}
+        <SubscribeSection area="monthlyAmount">
+          {!shouldHidePaymentAmount && (
+            <Controller
+              name={'monthlyAmount'}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <SubscribeAmount>
+                  <Paragraph
+                    component={SubscribeAmountText}
+                    gutterBottom={false}
+                  >
+                    {supportText}
+                  </Paragraph>
 
-      {!!watch<'monthlyAmount'>('monthlyAmount') && (
-        <SubscribeSection area="transactionFee">
-          <Controller
-            name={'payTransactionFee'}
-            control={control}
-            render={({ field: feeField }) => (
-              <TransactionFee
-                text={transactionFeeText}
-                {...feeField}
+                  {isAmountPickerLayout(selectedLayout) && (
+                    <PaymentAmountPicker
+                      {...field}
+                      onChange={amount =>
+                        field.onChange(
+                          clampMonthlyAmount(
+                            +amount,
+                            amountPerMonthMin,
+                            amountPerMonthMax
+                          )
+                        )
+                      }
+                      error={error}
+                      donate={isDonation}
+                      amountPerMonthMin={amountPerMonthMin}
+                      amountPerMonthMax={amountPerMonthMax}
+                      amountPerMonthTarget={amountPerMonthTarget}
+                      currency={selectedMemberPlan?.currency ?? Currency.Chf}
+                      paymentPeriodicity={amountPeriodicity}
+                      presetAmounts={getAmountPickerValues(
+                        selectedLayout,
+                        amountPeriodicity
+                      )}
+                      showInput={showsAmountInput(selectedLayout)}
+                    />
+                  )}
+
+                  {isAmountSliderLayout(selectedLayout) && (
+                    <PaymentAmountSlider
+                      {...field}
+                      error={error}
+                      donate={isDonation}
+                      amountPerMonthMin={amountPerMonthMin}
+                      amountPerMonthMax={amountPerMonthMax}
+                      amountPerMonthTarget={amountPerMonthTarget}
+                      currency={selectedMemberPlan?.currency ?? Currency.Chf}
+                      paymentPeriodicity={amountPeriodicity}
+                      showInput={showsAmountInput(selectedLayout)}
+                    />
+                  )}
+                </SubscribeAmount>
+              )}
+            />
+          )}
+        </SubscribeSection>
+
+        {!hasUserContext && (
+          <SubscribeSection area={'userForm'}>
+            <UserForm
+              control={control}
+              fields={fields}
+            />
+          </SubscribeSection>
+        )}
+
+        <SubscribeSection area="paymentPeriodicity">
+          {allPaymentMethods.length > 1 && (
+            <H5 component="h2">{t('subscribe.choosePaymentMethod')}</H5>
+          )}
+
+          <SubscribePayment>
+            <Controller
+              name={'paymentMethodId'}
+              control={control}
+              render={({ field }) => (
+                <PaymentMethodPicker
+                  {...field}
+                  onChange={paymentMethodId => field.onChange(paymentMethodId)}
+                  paymentMethods={allPaymentMethods}
+                />
+              )}
+            />
+
+            {!useOfferCards && !usePeriodicityToggle && (
+              <Controller
+                name={'paymentPeriodicity'}
+                control={control}
+                render={({ field }) => (
+                  <PeriodicityPicker
+                    {...field}
+                    onChange={periodicity => field.onChange(periodicity)}
+                    periodicities={planPeriodicities}
+                    memberPlan={selectedMemberPlan}
+                  />
+                )}
               />
             )}
-          />
+
+            {!selectedAvailablePaymentMethod?.forceAutoRenewal &&
+              selectedMemberPlan?.extendable && (
+                <Controller
+                  name={'autoRenew'}
+                  control={control}
+                  render={({ field }) => (
+                    <FormControlLabel
+                      {...field}
+                      control={
+                        <Checkbox
+                          checked={field.value}
+                          disabled={
+                            selectedAvailablePaymentMethod?.forceAutoRenewal
+                          }
+                        />
+                      }
+                      label="Automatisch erneuern"
+                    />
+                  )}
+                />
+              )}
+          </SubscribePayment>
         </SubscribeSection>
-      )}
 
-      <SubscribeNarrowSection area="submit">
-        {!!subscribeInfo.data?.createSubscriptionInfo.discountPercent && (
-          <SubscribeWithDiscount>{discountText}</SubscribeWithDiscount>
+        {showGoodies && (
+          <SubscribeSection area="goodie">
+            <H5 component="h2">{t('subscribe.goodie.title')}</H5>
+
+            <Controller
+              name={'goodieId'}
+              control={control}
+              render={({ field, fieldState: { error: fieldError } }) => (
+                <div>
+                  <GoodiePicker
+                    {...field}
+                    value={field.value}
+                    onChange={goodieId => field.onChange(goodieId)}
+                    goodies={availableGoodies}
+                    disabled={!availableGoodies.length}
+                  />
+
+                  {!!fieldError && (
+                    <FormHelperText error={!!fieldError}>
+                      {fieldError?.message}
+                    </FormHelperText>
+                  )}
+                </div>
+              )}
+            />
+          </SubscribeSection>
         )}
 
-        <SubscribeButton
-          size={'large'}
-          disabled={
-            challenge.loading ||
-            userInvoices.loading ||
-            userSubscriptions.loading ||
-            loading
-          }
-          type="submit"
-          onClick={e => {
-            if (hasOpenInvoices || alreadyHasSubscription) {
-              e.preventDefault();
-              setOpenConfirm(true);
+        {showDiscountCodes && (
+          <SubscribeNarrowSection area="discountCode">
+            <Controller
+              name={'discountCode'}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <div>
+                  <div
+                    css={{
+                      display: 'flex',
+                      flexFlow: 'row',
+                      alignItems: 'center',
+                      gap: 8,
+                    }}
+                  >
+                    <TextField
+                      {...field}
+                      value={field.value ?? ''}
+                      label={t('subscribe.discountCode.label')}
+                      error={!!error}
+                      autoComplete="discountCode"
+                      sx={{ maxWidth: 200 }}
+                    />
+
+                    {!!subscribeInfo.data?.createSubscriptionInfo
+                      .discountPercent && (
+                      <Alert
+                        severity="success"
+                        icon={<MdCheck />}
+                      >
+                        {t('subscribe.discountCode.discountApplied', {
+                          discountPercent:
+                            subscribeInfo.data?.createSubscriptionInfo
+                              .discountPercent * 100,
+                        })}
+                      </Alert>
+                    )}
+
+                    {subscribeInfo.data?.createSubscriptionInfo
+                      .discountCodeValid === false && (
+                      <Alert
+                        severity="error"
+                        icon={<MdError />}
+                      >
+                        {t('subscribe.discountCode.invalid')}
+                      </Alert>
+                    )}
+                  </div>
+
+                  {!!error && (
+                    <FormHelperText error={!!error}>
+                      {error?.message}
+                    </FormHelperText>
+                  )}
+                </div>
+              )}
+            />
+          </SubscribeNarrowSection>
+        )}
+
+        {!hasUserContext && (
+          <SubscribeSection area="challenge">
+            <H5 component="h2">{t('subscribe.spamProtection')}</H5>
+
+            {challenge.data?.challenge && (
+              <Controller
+                name={'challengeAnswer.challengeSolution'}
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <Challenge
+                    {...field}
+                    challengeRef={challengeRef}
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    challenge={challenge.data!.challenge}
+                    label={t('subscribe.captcha')}
+                    error={!!error}
+                    helperText={error?.message}
+                  />
+                )}
+              />
+            )}
+
+            {challenge.error && (
+              <ApiAlert
+                error={challenge.error}
+                severity="error"
+              />
+            )}
+          </SubscribeSection>
+        )}
+
+        {error && (
+          <ApiAlert
+            error={error as Error}
+            severity="error"
+          />
+        )}
+
+        {!!watchedMonthlyAmount && (
+          <SubscribeSection area="transactionFee">
+            <Controller
+              name={'payTransactionFee'}
+              control={control}
+              render={({ field: feeField }) => (
+                <TransactionFee
+                  text={transactionFeeText}
+                  {...feeField}
+                />
+              )}
+            />
+          </SubscribeSection>
+        )}
+
+        <SubscribeNarrowSection area="submit">
+          <SubscribeButton
+            size={'large'}
+            disabled={
+              challenge.loading ||
+              userInvoices.loading ||
+              userSubscriptions.loading ||
+              loading ||
+              selectedPlanUnavailable
             }
-          }}
-        >
-          {paymentText} {isDonation ? 'spenden' : 'abonnieren'}
-        </SubscribeButton>
-
-        {autoRenew && termsOfServiceUrl ?
-          <Link
-            underline={'hover'}
-            href={termsOfServiceUrl}
+            type="submit"
+            onClick={e => {
+              if (hasOpenInvoices || alreadyHasSubscription) {
+                e.preventDefault();
+                setOpenConfirm(true);
+              }
+            }}
           >
-            <SubscribeCancelable>
-              {t('subscribe.cancellable')}
-            </SubscribeCancelable>
-          </Link>
-        : autoRenew && (
-            <SubscribeCancelable>
-              {t('subscribe.cancellable')}
-            </SubscribeCancelable>
-          )
-        }
-      </SubscribeNarrowSection>
+            {paymentText}
+          </SubscribeButton>
 
-      <Modal
-        open={openConfirm}
-        onSubmit={() => {
-          onSubmit();
-          setOpenConfirm(false);
-        }}
-        onCancel={() => setOpenConfirm(false)}
-        submitText={`${paymentText} ${isDonation ? 'Spenden' : 'Abonnieren'}`}
-      >
-        <H5
-          id="modal-modal-title"
-          component="h1"
+          {!!discountPercent &&
+            autoRenew &&
+            (selectedMemberPlan?.extendable ?? true) && (
+              <SubscribeContinuation>{continuationText}</SubscribeContinuation>
+            )}
+
+          {autoRenew && termsOfServiceUrl ?
+            <Link
+              underline={'hover'}
+              href={termsOfServiceUrl}
+            >
+              <SubscribeCancelable>
+                {t('subscribe.cancellable')}
+              </SubscribeCancelable>
+            </Link>
+          : autoRenew && (
+              <SubscribeCancelable>
+                {t('subscribe.cancellable')}
+              </SubscribeCancelable>
+            )
+          }
+        </SubscribeNarrowSection>
+
+        <Modal
+          open={openConfirm}
+          onSubmit={() => {
+            onSubmit();
+            setOpenConfirm(false);
+          }}
+          onCancel={() => setOpenConfirm(false)}
+          submitText={paymentText}
         >
-          Bist du dir sicher?
-        </H5>
+          <H5
+            id="modal-modal-title"
+            component="h1"
+          >
+            {t('subscribe.warning.confirmationTitle')}
+          </H5>
 
-        {hasOpenInvoices && (
-          <Paragraph gutterBottom={false}>
-            Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst
-            deine offenen Rechnungen in deinem{' '}
-            <Link href="/profile">Profil</Link> anschauen.
-          </Paragraph>
-        )}
+          {hasOpenInvoices && (
+            <Paragraph gutterBottom={false}>
+              <Trans
+                i18nKey="subscribe.warning.openInvoices"
+                components={{ Link: <Link /> }}
+              />
+            </Paragraph>
+          )}
 
-        {alreadyHasSubscription && (
-          <Paragraph gutterBottom={false}>
-            Du hast dieses Abo schon. Du kannst deine Abos in deinem{' '}
-            <Link href="/profile">Profil</Link> anschauen.
-          </Paragraph>
-        )}
-      </Modal>
-    </SubscribeWrapper>
+          {alreadyHasSubscription && (
+            <Paragraph gutterBottom={false}>
+              <Trans
+                i18nKey="subscribe.warning.alreadyHasSubscription"
+                components={{ Link: <Link /> }}
+              />
+            </Paragraph>
+          )}
+        </Modal>
+      </SubscribeWrapper>
+    </FormProvider>
   );
 };

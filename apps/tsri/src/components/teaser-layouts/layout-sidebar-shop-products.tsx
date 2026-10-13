@@ -31,8 +31,8 @@ export const teaserBlockStyleByIndex = (
 
 export const alignmentForTeaserBlock = (index: number) => {
   const alignment = {
+    __typename: 'FlexAlignment' as const,
     i: index.toString(),
-    static: false,
     h: 1, // how many rows high
     w: 1, // how many columns wide
     x: 0, // starting column - 1

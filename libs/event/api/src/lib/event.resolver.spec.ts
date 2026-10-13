@@ -18,11 +18,17 @@ import { EventService } from './event.service';
 import { createMock, PartialMocked } from '@wepublish/testing';
 import { EventTagDataloader } from '@wepublish/tag/api';
 import { URLAdapter } from '@wepublish/nest-modules';
+import type { Mock } from 'vitest';
 
 const mockEvent = {
   id: '1234',
   createdAt: new Date('2023-01-01'),
-  description: [],
+  description: {
+    attrs: undefined,
+    type: 'doc',
+    content: [],
+  },
+  slateDescription: [],
   lead: '',
   startsAt: new Date('2023-01-01'),
   endsAt: new Date('2023-01-01'),
@@ -166,30 +172,30 @@ const deleteEventQuery = `
 
 describe('EventResolver', () => {
   let app: INestApplication;
-  let eventServiceMock: { [method in keyof EventService]?: jest.Mock };
+  let eventServiceMock: { [method in keyof EventService]?: Mock };
   let eventDataloaderServiceMock: {
-    [method in keyof EventDataloaderService]?: jest.Mock;
+    [method in keyof EventDataloaderService]?: Mock;
   };
   let imageDataloaderServiceMock: {
-    [method in keyof EventDataloaderService]?: jest.Mock;
+    [method in keyof EventDataloaderService]?: Mock;
   };
   let urlAdapter: PartialMocked<URLAdapter>;
   let tagServiceMock: PartialMocked<EventTagDataloader>;
 
   beforeEach(async () => {
     eventServiceMock = {
-      getEvents: jest.fn(),
-      createEvent: jest.fn(),
-      deleteEvent: jest.fn(),
-      updateEvent: jest.fn(),
+      getEvents: vi.fn(),
+      createEvent: vi.fn(),
+      deleteEvent: vi.fn(),
+      updateEvent: vi.fn(),
     };
 
     eventDataloaderServiceMock = {
-      load: jest.fn(),
+      load: vi.fn(),
     };
 
     imageDataloaderServiceMock = {
-      load: jest.fn(),
+      load: vi.fn(),
     };
     urlAdapter = createMock(URLAdapter);
     tagServiceMock = createMock(EventTagDataloader);
@@ -227,7 +233,7 @@ describe('EventResolver', () => {
         },
         {
           provide: PrismaClient,
-          useValue: jest.fn(), // not used due to mocks but needs to be provided
+          useValue: vi.fn(), // not used due to mocks but needs to be provided
         },
       ],
     }).compile();
@@ -320,7 +326,11 @@ describe('EventResolver', () => {
       .send({
         query: createEventQuery,
         variables: {
-          description: [],
+          description: {
+            attrs: undefined,
+            type: 'doc',
+            content: [],
+          },
           startsAt: new Date('2023-01-01'),
           endsAt: new Date('2023-01-01'),
           imageId: '123',

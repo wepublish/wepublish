@@ -1,14 +1,21 @@
+import { useMutation } from '@apollo/client/react';
+import { useApolloClient } from '@apollo/client/react';
 import {
+  getPreviewHost,
+  setPreviewHandshakeState,
   useUser,
-  AuthTokenStorageKey,
 } from '@wepublish/authentication/website';
-import { getCookie } from 'cookies-next';
-import {
-  useLoginWithJwtMutation,
-  SessionWithTokenWithoutUser,
-} from '@wepublish/website/api';
+import { LoginWithJwtDocument } from '@wepublish/website/api';
 import styled from '@emotion/styled';
-import { ComponentType, memo, useCallback, useEffect, useState } from 'react';
+import {
+  ComponentType,
+  createElement,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const EXPIRED_JWT_MESSAGE =
   'Dieser Link ist nicht mehr gültig. Bitte hier einen neuen Link anfordern oder mit Benutzernamen und Passwort anmelden.';
@@ -69,15 +76,14 @@ const ButtonRow = styled('div')`
   justify-content: flex-end;
 `;
 
-export const withJwtHandler = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const withJwtHandler = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   memo<P>(props => {
-    const [loginWithJwt] = useLoginWithJwtMutation();
-    const { setToken } = useUser();
+    const client = useApolloClient();
+    const [loginWithJwt] = useMutation(LoginWithJwtDocument);
+    const { setToken, hasUser } = useUser();
+    const { t } = useTranslation();
 
     const [showTotpPrompt, setShowTotpPrompt] = useState(false);
     const [pendingJwt, setPendingJwt] = useState<string | null>(null);
@@ -85,35 +91,61 @@ export const withJwtHandler = <
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>();
 
+    const refreshStore = useCallback(
+      () =>
+        client.refetchQueries({ include: 'active' }).catch(err => {
+          console.warn(
+            '[jwt] refreshing the store after login failed:',
+            err?.message ?? err
+          );
+        }),
+      [client]
+    );
+
     const handleJwt = useCallback(
       (jwt: string, options?: { fromPreview?: boolean }) => {
-        // Skip if already signed in (check cookie synchronously)
-        if (getCookie(AuthTokenStorageKey)) return;
+        if (hasUser && !options?.fromPreview) {
+          return;
+        }
 
         loginWithJwt({ variables: { jwt } })
-          .then(result => {
+          .then(async result => {
             if (result?.data?.createSessionWithJWT) {
-              setToken(
-                result.data.createSessionWithJWT as SessionWithTokenWithoutUser
-              );
+              await setToken({
+                __typename: 'SessionWithTokenWithoutUser',
+                token: result.data.createSessionWithJWT.token,
+                expiresAt: result.data.createSessionWithJWT.expiresAt,
+                createdAt: result.data.createSessionWithJWT.createdAt,
+              });
+
+              if (options?.fromPreview) {
+                setPreviewHandshakeState('succeeded');
+              }
+
+              await refreshStore();
             }
           })
           .catch(err => {
             if (err?.message?.includes('TOTP_REQUIRED')) {
               setPendingJwt(jwt);
               setShowTotpPrompt(true);
+
               return;
             }
 
-            // Preview JWTs fail silently — the user can't act on them
-            if (options?.fromPreview) return;
+            if (options?.fromPreview) {
+              setPreviewHandshakeState('failed');
+              console.warn('[preview] JWT login failed:', err?.message ?? err);
+
+              return;
+            }
 
             window.location.href = `/login?error=${encodeURIComponent(
               EXPIRED_JWT_MESSAGE
             )}`;
           });
       },
-      [loginWithJwt, setToken]
+      [loginWithJwt, setToken, hasUser, refreshStore]
     );
 
     const handleTotpSubmit = useCallback(async () => {
@@ -128,12 +160,19 @@ export const withJwtHandler = <
         });
 
         if (result?.data?.createSessionWithJWT) {
-          setToken(
-            result.data.createSessionWithJWT as SessionWithTokenWithoutUser
-          );
+          await setToken({
+            __typename: 'SessionWithTokenWithoutUser',
+            token: result.data.createSessionWithJWT.token,
+            expiresAt: result.data.createSessionWithJWT.expiresAt,
+            createdAt: result.data.createSessionWithJWT.createdAt,
+          });
           setShowTotpPrompt(false);
           setPendingJwt(null);
+          setPreviewHandshakeState('succeeded');
+
+          await refreshStore();
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(
           err?.message?.includes('TOTP_REQUIRED') ?
@@ -144,7 +183,7 @@ export const withJwtHandler = <
       } finally {
         setLoading(false);
       }
-    }, [pendingJwt, totpToken, loginWithJwt, setToken]);
+    }, [pendingJwt, totpToken, loginWithJwt, setToken, refreshStore]);
 
     const handleCancel = useCallback(() => {
       setShowTotpPrompt(false);
@@ -154,9 +193,15 @@ export const withJwtHandler = <
     }, []);
 
     useEffect(() => {
-      if (window.opener) {
+      const previewHost = getPreviewHost();
+
+      if (previewHost) {
+        setPreviewHandshakeState('pending');
+
         const isTrustedMessage = (event: MessageEvent): boolean =>
-          event.source === window.opener;
+          event.source === previewHost;
+
+        let received = false;
 
         const handleMessage = (event: MessageEvent) => {
           if (!isTrustedMessage(event)) {
@@ -165,17 +210,30 @@ export const withJwtHandler = <
 
           const jwt = event.data?.previewJwt;
           if (jwt) {
+            received = true;
             window.removeEventListener('message', handleMessage);
+            clearInterval(interval);
+            previewHost.postMessage('preview-jwt-received', '*');
             handleJwt(jwt, { fromPreview: true });
           }
         };
         window.addEventListener('message', handleMessage);
 
-        const MAX_ATTEMPTS = 25;
+        const MAX_ATTEMPTS = 150;
         let attempts = 0;
         const interval = setInterval(() => {
-          window.opener.postMessage('preview-jwt-ready', '*');
-          if (++attempts >= MAX_ATTEMPTS) clearInterval(interval);
+          previewHost.postMessage('preview-jwt-ready', '*');
+
+          if (++attempts >= MAX_ATTEMPTS) {
+            clearInterval(interval);
+
+            if (!received) {
+              setPreviewHandshakeState('failed');
+              console.warn(
+                '[preview] no JWT received from the host window within 30s'
+              );
+            }
+          }
         }, 200);
 
         return () => {
@@ -196,16 +254,14 @@ export const withJwtHandler = <
 
     return (
       <>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
 
         {showTotpPrompt && (
           <TotpOverlay onClick={handleCancel}>
             <TotpDialog onClick={e => e.stopPropagation()}>
-              <TotpTitle>Zwei-Faktor-Authentifizierung</TotpTitle>
+              <TotpTitle>{t('login.totp.verifyTitle')}</TotpTitle>
 
-              <TotpInfo>
-                Bitte gib den 6-stelligen Code aus deiner Authenticator-App ein.
-              </TotpInfo>
+              <TotpInfo>{t('login.totp.verifyDescription')}</TotpInfo>
 
               <TotpInput
                 value={totpToken}
@@ -233,7 +289,7 @@ export const withJwtHandler = <
                     cursor: 'pointer',
                   }}
                 >
-                  Abbrechen
+                  {t('user.cancel')}
                 </button>
                 <button
                   disabled={loading || !totpToken}
@@ -248,7 +304,7 @@ export const withJwtHandler = <
                     cursor: loading || !totpToken ? 'default' : 'pointer',
                   }}
                 >
-                  Bestätigen
+                  {t('user.confirm')}
                 </button>
               </ButtonRow>
             </TotpDialog>

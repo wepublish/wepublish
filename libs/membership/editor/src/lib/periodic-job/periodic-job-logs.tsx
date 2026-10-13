@@ -1,17 +1,34 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Alert, AlertColor, AlertTitle } from '@mui/material';
-import { PeriodicJob, usePeriodicJobLogsQuery } from '@wepublish/editor/api';
-import { useMemo } from 'react';
+import {
+  FullPeriodicJobFragment,
+  PeriodicJobLogsDocument,
+  RetryPeriodicJobDocument,
+} from '@wepublish/editor/api';
+import {
+  NotificationItem,
+  NotificationSeverity,
+  useHasPermission,
+} from '@wepublish/ui/editor';
+import { ReactElement, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdOutlineHourglassEmpty } from 'react-icons/md';
+import { Button, Tooltip, Whisper } from 'rsuite';
 
-function getSeverity(periodicJob: PeriodicJob): AlertColor {
-  if (periodicJob.finishedWithError && periodicJob.successfullyFinished) {
-    return 'warning';
+import { showErrors } from '../common';
+
+const RETRY_PERMISSION = ['CAN_RETRY_PERIODIC_JOB'];
+
+const POLL_WHILE_RUNNING_MS = 10_000;
+
+function getSeverity(
+  periodicJob: FullPeriodicJobFragment
+): NotificationSeverity {
+  if (periodicJob.running) {
+    return 'info';
   }
 
-  if (!periodicJob.successfullyFinished && !periodicJob.finishedWithError) {
-    return 'info';
+  if (periodicJob.finishedWithError && periodicJob.successfullyFinished) {
+    return 'warning';
   }
 
   if (periodicJob.successfullyFinished) {
@@ -21,24 +38,88 @@ function getSeverity(periodicJob: PeriodicJob): AlertColor {
   return 'error';
 }
 
+function getStatusText(
+  severity: NotificationSeverity,
+  t: (key: string) => string
+) {
+  switch (severity) {
+    case 'error':
+      return t('periodicJobsLog.failedJob');
+    case 'warning':
+      return t('periodicJobsLog.lastRunSuccessful');
+    case 'success':
+      return 'OK';
+    default:
+      return t('periodicJobsLog.running');
+  }
+}
+
+const Stack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
 const Information = styled.div`
   display: grid;
 `;
 
-export function PeriodicJobsLog() {
+export interface PeriodicJobsLogProps {
+  take?: number;
+  onlyProblems?: boolean;
+  sourceTag?: string;
+  /** Skips the query entirely, for a user who may not read the logs */
+  skip?: boolean;
+  /** Reports whether at least one log item or notice is currently rendered */
+  onVisibilityChange?: (visible: boolean) => void;
+}
+
+/**
+ * The log as a list of items, so a panel mixing several sources can sort
+ * everything by severity rather than rendering one source after another.
+ */
+export function usePeriodicJobNotifications({
+  take = 5,
+  onlyProblems = false,
+  sourceTag,
+  skip = false,
+  onVisibilityChange,
+}: PeriodicJobsLogProps): ReactElement[] {
   const { t } = useTranslation();
 
-  const { data } = usePeriodicJobLogsQuery({
-    variables: {
-      take: 5,
-    },
-  });
+  const { data, loading, startPolling, stopPolling } = useQuery(
+    PeriodicJobLogsDocument,
+    {
+      skip,
+      variables: {
+        take,
+      },
+    }
+  );
+
+  const mayRetry = useHasPermission(RETRY_PERMISSION);
+  const [retryPeriodicJob, { loading: retrying }] = useMutation(
+    RetryPeriodicJobDocument,
+    {
+      onError: showErrors,
+    }
+  );
+
+  const isRunning = !!data?.periodicJobLog?.some(job => job.running);
+
+  useEffect(() => {
+    if (isRunning) {
+      startPolling?.(POLL_WHILE_RUNNING_MS);
+    } else {
+      stopPolling?.();
+    }
+  }, [isRunning, startPolling, stopPolling]);
 
   /**
    * If all jobs were successfully (no finished with error), return only first periodic job log entry.
    * Else return all job logs. This is meant to shorten the list in favor of UX.
    */
-  const jobs = useMemo<PeriodicJob[]>(() => {
+  const jobs = useMemo<FullPeriodicJobFragment[]>(() => {
     if (!data?.periodicJobLog?.length) {
       return [];
     }
@@ -67,59 +148,84 @@ export function PeriodicJobsLog() {
     return now.getTime() - warningThreshold > lastJob.getTime();
   }, [jobs]);
 
-  return (
-    <>
-      {jobDidNotRun && (
-        <Alert
-          severity={'error'}
-          variant={'filled'}
+  const showDidNotRun = jobDidNotRun;
+  const showNeverRan = !jobs.length;
+
+  // Runs that were successful in the end (including "successful after
+  // retries") only matter in the archive, not as a dashboard notification.
+  const visibleJobs =
+    onlyProblems ?
+      jobs.filter(job => job.running || getSeverity(job) === 'error')
+    : jobs;
+
+  const hasVisibleProblems =
+    showDidNotRun || showNeverRan || visibleJobs.length > 0;
+
+  // While the problems-only variant is still loading, nothing is shown yet.
+  const hasVisibleItems = hasVisibleProblems && !(onlyProblems && loading);
+
+  useEffect(() => {
+    onVisibilityChange?.(hasVisibleItems);
+  }, [onVisibilityChange, hasVisibleItems]);
+
+  if (onlyProblems && !hasVisibleItems) {
+    return [];
+  }
+
+  return [
+    ...(showDidNotRun ?
+      [
+        <NotificationItem
+          key="did-not-run"
+          severity="error"
+          title={t('periodicJobsLog.jobFailedTitle')}
+          sourceTag={sourceTag}
         >
-          <AlertTitle>
-            <strong>{t('periodicJobsLog.jobFailedTitle')}</strong>
-          </AlertTitle>
-
           {t('periodicJobsLog.concerns')}
-        </Alert>
-      )}
+        </NotificationItem>,
+      ]
+    : []),
+    ...(showNeverRan ?
+      [
+        <NotificationItem
+          key="never-ran"
+          severity="warning"
+          title={t('periodicJobsLog.noRun')}
+          sourceTag={sourceTag}
+        />,
+      ]
+    : []),
+    ...visibleJobs.map(periodicJob => {
+      const severity = getSeverity(periodicJob);
+      const title = `${new Date(periodicJob.date).toLocaleString('de', {
+        dateStyle: 'medium',
+      })}: ${getStatusText(severity, t)}`;
 
-      {!jobs.length && (
-        <Alert severity={'warning'}>
-          <AlertTitle>{t('periodicJobsLog.noRun')}</AlertTitle>
-        </Alert>
-      )}
-
-      {jobs.map(periodicJob => (
-        <Alert
+      return (
+        <NotificationItem
           key={periodicJob.id}
-          sx={{ mt: 1 }}
-          severity={getSeverity(periodicJob)}
-          variant={getSeverity(periodicJob) === 'error' ? 'filled' : 'standard'}
-          icon={
-            getSeverity(periodicJob) === 'info' ?
-              <MdOutlineHourglassEmpty />
+          severity={severity}
+          sourceTag={sourceTag}
+          title={title}
+          actions={
+            mayRetry && severity === 'error' && periodicJob === jobs[0] ?
+              <Whisper
+                trigger={['hover', 'focus']}
+                placement="top"
+                speaker={<Tooltip>{t('periodicJobsLog.retryHint')}</Tooltip>}
+              >
+                <Button
+                  size="sm"
+                  appearance="primary"
+                  loading={retrying}
+                  onClick={() => retryPeriodicJob()}
+                >
+                  {t('periodicJobsLog.retry')}
+                </Button>
+              </Whisper>
             : undefined
           }
         >
-          <AlertTitle>
-            {new Date(periodicJob.date).toLocaleString('de', {
-              dateStyle: 'medium',
-            })}
-
-            {getSeverity(periodicJob) === 'error' && (
-              <span>
-                : <strong>{t('periodicJobsLog.failedJob')}</strong>
-              </span>
-            )}
-
-            {getSeverity(periodicJob) === 'warning' && (
-              <span>: {t('periodicJobsLog.lastRunSuccessful')} </span>
-            )}
-
-            {getSeverity(periodicJob) === 'success' && <span>: OK</span>}
-
-            {getSeverity(periodicJob) === 'info' && <span>: Running...</span>}
-          </AlertTitle>
-
           <Information>
             {periodicJob?.executionTime && (
               <span>
@@ -139,7 +245,7 @@ export function PeriodicJobsLog() {
 
             {periodicJob?.finishedWithError && (
               <span>
-                {t('periodicJobsLog.successTime', {
+                {t('periodicJobsLog.errorTime', {
                   date: new Date(periodicJob.finishedWithError),
                 })}
               </span>
@@ -150,15 +256,25 @@ export function PeriodicJobsLog() {
                 tries: periodicJob.tries,
               })}
             </span>
-          </Information>
 
-          {periodicJob.error && (
-            <p>
-              <i>{periodicJob.error}</i>
-            </p>
-          )}
-        </Alert>
-      ))}
-    </>
-  );
+            {periodicJob.error && (
+              <span>
+                <i>{periodicJob.error}</i>
+              </span>
+            )}
+
+            {periodicJob.running && (
+              <span>{t('periodicJobsLog.runningHint')}</span>
+            )}
+          </Information>
+        </NotificationItem>
+      );
+    }),
+  ];
+}
+
+export function PeriodicJobsLog(props: PeriodicJobsLogProps) {
+  const items = usePeriodicJobNotifications(props);
+
+  return items.length ? <Stack>{items}</Stack> : null;
 }

@@ -1,7 +1,6 @@
-import { ApolloError } from '@apollo/client';
-import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/react';
-import { userEvent, waitFor, within } from '@storybook/test';
+import { action } from 'storybook/actions';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { userEvent, waitFor, within } from 'storybook/test';
 import {
   mockChallenge,
   mockComment,
@@ -169,8 +168,6 @@ export const WithError: StoryObj = {
     ...Default.args,
     data: undefined,
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
   },
 };

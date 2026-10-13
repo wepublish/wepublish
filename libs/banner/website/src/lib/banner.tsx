@@ -1,8 +1,12 @@
 import styled from '@emotion/styled';
+import IframeResizer from '@iframe-resizer/react';
 import { css, GlobalStyles, Typography } from '@mui/material';
 import { useSetIntendedRoute } from '@wepublish/authentication/website';
 import { Button } from '@wepublish/ui';
-import { BannerAction, BannerActionRole } from '@wepublish/website/api';
+import {
+  BannerActionRole,
+  FullBannerActionFragment,
+} from '@wepublish/website/api';
 import {
   BuilderBannerProps,
   useWebsiteBuilder,
@@ -17,6 +21,7 @@ export const BannerImage = styled('div')(
   background-position: center;
   height: ${theme.spacing(18)};
   order: 1;
+
   ${theme.breakpoints.up('md')} {
     order: 0;
     height: unset;
@@ -25,12 +30,29 @@ export const BannerImage = styled('div')(
 );
 
 export const BannerContentWrapper = styled('div')`
+  display: grid;
+  row-gap: ${({ theme }) => theme.spacing(2)};
   padding: ${({ theme }) => theme.spacing(4)};
   padding-top: ${({ theme }) => theme.spacing(5)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     padding: ${({ theme }) => theme.spacing(9)};
   }
+`;
+
+export const BannerEmbedWrapper = styled('div')`
+  padding: ${({ theme }) => theme.spacing(2)};
+  padding-top: ${({ theme }) => theme.spacing(5)};
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    padding: ${({ theme }) => theme.spacing(4)};
+    padding-top: ${({ theme }) => theme.spacing(6)};
+  }
+`;
+
+export const BannerEmbedIframe = styled(IframeResizer)`
+  width: 100%;
+  border: 0;
 `;
 
 export const BannerContent = styled('div')`
@@ -98,10 +120,25 @@ export const BannerWrapper = styled('div')<BannerWrapperProps>(
 `
 );
 
+export const buildBannerEmbedSrc = (embedUrl: string, tags?: string[]) => {
+  try {
+    const url = new URL(embedUrl);
+
+    if (tags?.length) {
+      url.searchParams.set('tags', tags.join(','));
+    }
+
+    return url.toString();
+  } catch {
+    return embedUrl;
+  }
+};
+
 export const Banner = ({
   data,
   loading,
   error,
+  tags,
   className,
 }: BuilderBannerProps) => {
   const [showBanner, setShowBanner] = useState(false);
@@ -136,12 +173,58 @@ export const Banner = ({
     setCollapsed(isClosedRecently);
   }, [data]);
 
+  useEffect(() => {
+    const embedUrl = data?.primaryBanner?.embedUrl;
+
+    if (!embedUrl) {
+      return;
+    }
+
+    let embedOrigin: string;
+
+    try {
+      embedOrigin = new URL(embedUrl).origin;
+    } catch {
+      return;
+    }
+
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== embedOrigin) {
+        return;
+      }
+
+      if (
+        event.data?.type !== 'iframe:redirect' ||
+        typeof event.data.url !== 'string'
+      ) {
+        return;
+      }
+
+      try {
+        const url = new URL(event.data.url);
+
+        if (url.protocol === 'http:' || url.protocol === 'https:') {
+          window.location.href = url.href;
+        }
+      } catch {
+        // ignore invalid redirect urls
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => window.removeEventListener('message', handleMessage);
+  }, [data?.primaryBanner?.embedUrl]);
+
   const handleClose = () => {
     setCollapsed(true);
     collapseBanner();
   };
 
-  const handleActionClick = (e: React.MouseEvent, action: BannerAction) => {
+  const handleActionClick = (
+    e: React.MouseEvent,
+    action: FullBannerActionFragment
+  ) => {
     if (action.role === BannerActionRole.Cancel) {
       e.preventDefault();
       handleClose();
@@ -161,12 +244,17 @@ export const Banner = ({
   }
 
   const htmlContent = data.primaryBanner.html;
+  const embedSrc =
+    data.primaryBanner.embedUrl ?
+      buildBannerEmbedSrc(data.primaryBanner.embedUrl, tags)
+    : null;
 
   return (
     <BannerWrapper
       hasImage={!!data.primaryBanner.image}
       className={className}
       data-collapsed={collapsed}
+      data-embed={!!embedSrc}
       data-banner
     >
       <BannerCloseButton onClick={handleClose}>&#x2715;</BannerCloseButton>
@@ -177,13 +265,23 @@ export const Banner = ({
         ></BannerImage>
       )}
 
-      {htmlContent && (
+      {embedSrc && (
+        <BannerEmbedWrapper>
+          <BannerEmbedIframe
+            license="GPLv3"
+            waitForLoad
+            src={embedSrc}
+          />
+        </BannerEmbedWrapper>
+      )}
+
+      {!embedSrc && htmlContent && (
         <BannerContentWrapper
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
       )}
 
-      {!htmlContent && (
+      {!embedSrc && !htmlContent && (
         <BannerContentWrapper>
           <BannerContent>
             <Typography

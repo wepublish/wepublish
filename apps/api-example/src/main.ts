@@ -1,6 +1,8 @@
 import './instrument.ts';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { preloadOptionalPackages } from './preload-optional-packages';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './nestapp/app.module';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -18,7 +20,13 @@ import { graphqlUploadExpress } from 'graphql-upload';
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
 
-  const nestApp = await NestFactory.create(AppModule, {
+  preloadOptionalPackages();
+
+  // The adapter is passed explicitly rather than left to Nest's default
+  // lookup: Nest 12 resolves it with `() => import('@nestjs/platform-express')`,
+  // a dynamic import webpack does not follow, so the package never makes it
+  // into the bundle and the pkg binary boots without an HTTP driver.
+  const nestApp = await NestFactory.create(AppModule, new ExpressAdapter(), {
     bodyParser: false,
   });
   nestApp.enableCors({
@@ -57,7 +65,11 @@ async function bootstrap() {
   if (process.env.RUN_SEED === 'true') {
     Logger.log('RUN_SEED=true detected, running example seed...');
     const adapter = new PrismaPg({
-      connectionString: process.env['DATABASE_URL']!,
+      connectionString: process.env.DATABASE_URL || 'postgresql://',
+      options: '-c timezone=UTC',
+      max: parseInt(process.env['DATABASE_POOL_SIZE'] ?? '20'),
+      connectionTimeoutMillis: 5_000,
+      idleTimeoutMillis: 10_000,
     });
     const prisma = new PrismaClient({ adapter });
     await prisma.$connect();

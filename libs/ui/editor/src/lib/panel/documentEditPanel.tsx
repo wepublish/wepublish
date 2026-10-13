@@ -1,10 +1,11 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DocumentDocument,
   DocumentListDocument,
   FullDocumentFragment,
-  useDocumentQuery,
-  useUpdateDocumentMutation,
-  useUploadDocumentMutation,
+  UpdateDocumentDocument,
+  UploadDocumentDocument,
 } from '@wepublish/editor/api';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
@@ -22,6 +23,7 @@ import {
 } from 'rsuite';
 
 import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import {
   createCheckedPermissionComponent,
   PermissionControl,
@@ -29,7 +31,7 @@ import {
 } from '../atoms/permissionControl';
 import { getOperationNameFromDocument } from '../utility';
 
-const { ControlLabel, Control, Group } = RForm;
+const { Label, Control, Group } = RForm;
 
 const Form = styled(RForm)`
   height: 100%;
@@ -62,16 +64,16 @@ function DocumentEditPanel({
   const [createdAt, setCreatedAt] = useState<string>();
   const [updatedAt, setUpdatedAt] = useState<string>();
 
-  const { data, error: loadingError } = useDocumentQuery({
+  const { data, error: loadingError } = useQuery(DocumentDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
 
   const [updateDocument, { loading: isUpdating, error: savingError }] =
-    useUpdateDocumentMutation();
+    useMutation(UpdateDocumentDocument);
 
   const [uploadDocument, { loading: isUploading, error: uploadError }] =
-    useUploadDocumentMutation({
+    useMutation(UploadDocumentDocument, {
       refetchQueries: [getOperationNameFromDocument(DocumentListDocument)],
     });
 
@@ -193,10 +195,7 @@ function DocumentEditPanel({
   }
 
   return (
-    <Form
-      fluid
-      onSubmit={validationPassed => validationPassed && handleSave()}
-    >
+    <Form onSubmit={validationPassed => validationPassed && handleSave()}>
       <Drawer.Header>
         <Drawer.Title>
           {isUpload ?
@@ -214,6 +213,7 @@ function DocumentEditPanel({
               {isUpload ? t('documents.panels.upload') : t('save')}
             </Button>
           </PermissionControl>
+
           <Button
             appearance={'subtle'}
             onClick={() => onClose?.()}
@@ -242,12 +242,14 @@ function DocumentEditPanel({
                 />
               </RPanel>
             )}
+
             <RPanel header={t('documents.panels.description')}>
               <DescriptionList>
                 <DescriptionListItem label={t('documents.panels.filename')}>
                   {filename || t('documents.panels.untitled')}
                   {extension}
                 </DescriptionListItem>
+
                 {createdAt && (
                   <DescriptionListItem label={t('documents.panels.created')}>
                     {t('documents.panels.createdAt', {
@@ -255,6 +257,7 @@ function DocumentEditPanel({
                     })}
                   </DescriptionListItem>
                 )}
+
                 {updatedAt && (
                   <DescriptionListItem label={t('documents.panels.updated')}>
                     {t('documents.panels.updatedAt', {
@@ -262,9 +265,11 @@ function DocumentEditPanel({
                     })}
                   </DescriptionListItem>
                 )}
+
                 <DescriptionListItem label={t('documents.panels.fileSize')}>
                   {prettyBytes(fileSize)}
                 </DescriptionListItem>
+
                 {documentURL && (
                   <DescriptionListItem label={t('documents.panels.publicLink')}>
                     <a
@@ -274,46 +279,56 @@ function DocumentEditPanel({
                     >
                       {documentURL}
                     </a>
-                    <IconButton
-                      icon={<MdContentCopy />}
-                      size="xs"
-                      appearance="subtle"
-                      style={{ marginLeft: 8 }}
-                      onClick={() => {
-                        navigator.clipboard.writeText(documentURL);
-                        toaster.push(
-                          <Notification
-                            type="success"
-                            header={t('documents.panels.linkCopied')}
-                            duration={2000}
-                          />,
-                          { placement: 'topEnd' }
-                        );
-                      }}
-                    />
+
+                    <IconButtonTooltip
+                      caption={t('documents.overview.copyLink')}
+                    >
+                      <IconButton
+                        aria-label={t('documents.overview.copyLink')}
+                        icon={<MdContentCopy />}
+                        size="xs"
+                        appearance="subtle"
+                        style={{ marginLeft: 8 }}
+                        onClick={() => {
+                          navigator.clipboard.writeText(documentURL);
+                          toaster.push(
+                            <Notification
+                              type="success"
+                              header={t('documents.panels.linkCopied')}
+                              duration={2000}
+                            />,
+                            { placement: 'topEnd' }
+                          );
+                        }}
+                      />
+                    </IconButtonTooltip>
                   </DescriptionListItem>
                 )}
               </DescriptionList>
             </RPanel>
+
             <RPanel header={t('documents.panels.information')}>
-              <Group controlId="documentTitle">
-                <ControlLabel>{t('documents.panels.title')}</ControlLabel>
-                <Control
-                  name="title"
-                  value={title}
-                  disabled={isDisabled}
-                  onChange={(value: string) => setTitle(value)}
-                />
-              </Group>
-              <Group controlId="documentDescription">
-                <ControlLabel>{t('documents.panels.description')}</ControlLabel>
-                <Control
-                  name="description"
-                  value={description}
-                  disabled={isDisabled}
-                  onChange={(value: string) => setDescription(value)}
-                />
-              </Group>
+              <RForm.Stack fluid>
+                <Group controlId="documentTitle">
+                  <Label>{t('documents.panels.title')}</Label>
+                  <Control
+                    name="title"
+                    value={title}
+                    disabled={isDisabled}
+                    onChange={(value: string) => setTitle(value)}
+                  />
+                </Group>
+
+                <Group controlId="documentDescription">
+                  <Label>{t('documents.panels.description')}</Label>
+                  <Control
+                    name="description"
+                    value={description}
+                    disabled={isDisabled}
+                    onChange={(value: string) => setDescription(value)}
+                  />
+                </Group>
+              </RForm.Stack>
             </RPanel>
           </>
         )}

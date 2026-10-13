@@ -23,4 +23,4 @@ export const FazettenBaseTeaserSlots = cond([
       </div>
     ),
   ],
-]) as (props: BuilderTeaserSlotsBlockProps) => JSX.Element;
+]);

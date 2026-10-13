@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
   ArticleFilter,
   ArticleListArgs,
+  ArticleRevisionListArgs,
   ArticleSort,
   CreateArticleInput,
   UpdateArticleInput,
@@ -17,22 +22,50 @@ import {
 } from '@wepublish/utils/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
+import {
+  CONTENT_CACHE_TTL_SECONDS,
+  KvTtlCacheService,
+  PublicContentCacheInvalidator,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
+import { uniqBy } from 'ramda';
+import { ArticlePublicationWatcher } from './article-publication.watcher';
+
+export const mapArticleRevisionAuthors = (
+  authors: { authorId: string; role?: string | null }[]
+): Prisma.ArticleRevisionAuthorCreateManyRevisionInput[] =>
+  uniqBy(({ authorId }) => authorId, authors).map(
+    ({ authorId, role }, position) => ({
+      authorId,
+      role: role?.trim() || null,
+      position,
+    })
+  );
 
 @Injectable()
 export class ArticleService {
   constructor(
     private prisma: PrismaClient,
-    private trackingPixelService: TrackingPixelService
+    private trackingPixelService: TrackingPixelService,
+    private publicContentCache: PublicContentCacheInvalidator,
+    private kv: KvTtlCacheService,
+    private publicationWatcher: ArticlePublicationWatcher
   ) {}
 
   @PrimeDataLoader(ArticleDataloaderService)
   async getArticleBySlug(slug: string) {
+    return this.kv.getOrLoadNs(
+      contentCacheNamespace('articles'),
+      `slug:${slug.toLowerCase()}`,
+      () => this.loadArticleBySlug(slug),
+      CONTENT_CACHE_TTL_SECONDS
+    );
+  }
+
+  private loadArticleBySlug(slug: string) {
     return this.prisma.article.findFirst({
       where: {
-        slug: {
-          equals: slug,
-          mode: 'insensitive',
-        },
+        slug: slug.toLowerCase(),
       },
       orderBy: {
         publishedAt: 'asc', // there might be an unpublished article with the same slug
@@ -41,7 +74,20 @@ export class ArticleService {
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
-  async getArticles({
+  async getArticles(args: ArticleListArgs) {
+    if (args.filter?.body) {
+      return this.loadArticles(args);
+    }
+
+    return this.kv.getOrLoadNs(
+      contentCacheNamespace('articles'),
+      `list:${JSON.stringify(args)}`,
+      () => this.loadArticles(args),
+      CONTENT_CACHE_TTL_SECONDS
+    );
+  }
+
+  private async loadArticles({
     filter,
     cursorId,
     sort = ArticleSort.PublishedAt,
@@ -57,28 +103,12 @@ export class ArticleService {
       }
     }
 
-    if (filter?.tags?.length) {
-      const taggedArticles = await this.prisma.taggedArticles.findMany({
-        where: { tagId: { in: filter.tags } },
-        select: { articleId: true },
-        distinct: ['articleId'],
-      });
-
-      const tagArticleIds = taggedArticles.map(ta => ta.articleId);
-      filter.ids =
-        filter.ids?.length ?
-          filter.ids.filter(id => tagArticleIds.includes(id))
-        : tagArticleIds;
-      filter.tags = undefined;
-    }
-
     const orderBy = createArticleOrder(sort, order);
     const where = createArticleFilter(filter ?? {});
 
     const [totalCount, articles] = await Promise.all([
       this.prisma.article.count({
         where,
-        orderBy,
       }),
       this.prisma.article.findMany({
         where,
@@ -116,7 +146,7 @@ export class ArticleService {
       hidden,
       likes,
       disableComments,
-      authorIds,
+      authors,
       socialMediaAuthorIds,
       tagIds,
       properties,
@@ -132,7 +162,7 @@ export class ArticleService {
       data: {
         paywallId,
         likes,
-        slug,
+        slug: slug && slug.toLowerCase(),
         shared,
         hidden,
         disableComments,
@@ -152,7 +182,7 @@ export class ArticleService {
             properties: properties as any,
             authors: {
               createMany: {
-                data: authorIds.map(authorId => ({ authorId })),
+                data: mapArticleRevisionAuthors(authors),
               },
             },
             socialMediaAuthors: {
@@ -174,6 +204,8 @@ export class ArticleService {
       });
     }
 
+    await this.publicContentCache.invalidateDraft('articles');
+
     return article;
   }
 
@@ -187,7 +219,7 @@ export class ArticleService {
       paywallId,
       hidden,
       disableComments,
-      authorIds,
+      authors,
       socialMediaAuthorIds,
       tagIds,
       properties,
@@ -209,11 +241,11 @@ export class ArticleService {
 
     const mappedBlocks = blocks.map(mapBlockUnionMap);
 
-    return this.prisma.article.update({
+    const result = await this.prisma.article.update({
       where: { id },
       data: {
         likes,
-        slug,
+        slug: slug && slug.toLowerCase(),
         paywallId,
         shared,
         hidden,
@@ -235,7 +267,7 @@ export class ArticleService {
             properties: properties as any,
             authors: {
               createMany: {
-                data: authorIds.map(authorId => ({ authorId })),
+                data: mapArticleRevisionAuthors(authors),
               },
             },
             socialMediaAuthors: {
@@ -261,6 +293,14 @@ export class ArticleService {
         },
       },
     });
+    if (article.publishedAt) {
+      await this.publicContentCache.invalidate('articles');
+      await this.publicContentCache.invalidateArticlePages(article, result);
+    } else {
+      await this.publicContentCache.invalidateDraft('articles');
+    }
+
+    return result;
   }
 
   async deleteArticle(id: string) {
@@ -272,11 +312,17 @@ export class ArticleService {
       throw new NotFoundException(`Article with id ${id} not found`);
     }
 
-    return this.prisma.article.delete({
+    const deleted = await this.prisma.article.delete({
       where: {
         id,
       },
     });
+    await this.publicContentCache.invalidate('articles');
+    await this.publicContentCache.invalidateArticlePages(article);
+    await this.publicContentCache.invalidateArticleLayout();
+    await this.publicContentCache.invalidateNavigations();
+
+    return deleted;
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -321,7 +367,7 @@ export class ArticleService {
         (article.publishedAt ?? publishedAt)
       );
 
-    return this.prisma.article.update({
+    const published = await this.prisma.article.update({
       where: {
         id,
       },
@@ -340,6 +386,12 @@ export class ArticleService {
         },
       },
     });
+    await this.publicContentCache.invalidate('articles');
+    await this.publicContentCache.invalidateArticlePages(article);
+    this.publicationWatcher.schedule(publishedAt);
+    this.publicationWatcher.schedule(articlePublishedAt);
+
+    return published;
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -394,6 +446,10 @@ export class ArticleService {
       });
     }
 
+    await this.publicContentCache.invalidate('articles');
+    await this.publicContentCache.invalidateArticlePages(article);
+    await this.publicContentCache.invalidateArticleLayout();
+
     return updatedArticle;
   }
 
@@ -411,7 +467,7 @@ export class ArticleService {
             createdAt: 'desc',
           },
           include: {
-            authors: true,
+            authors: { orderBy: { position: 'asc' } },
             socialMediaAuthors: true,
           },
         },
@@ -436,7 +492,7 @@ export class ArticleService {
       },
     ] = article.revisions;
 
-    return this.prisma.article.create({
+    const result = await this.prisma.article.create({
       data: {
         paywallId: article.paywallId,
         shared: article.shared,
@@ -458,7 +514,7 @@ export class ArticleService {
             properties: properties as any,
             authors: {
               createMany: {
-                data: authors.map(({ authorId }) => ({ authorId })),
+                data: mapArticleRevisionAuthors(authors),
               },
             },
             socialMediaAuthors: {
@@ -470,11 +526,212 @@ export class ArticleService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('articles');
+
+    return result;
+  }
+
+  /**
+   * Returns a paginated, lightweight slice of an article's revisions for the
+   * version history. Loading happens directly against the revisions table (not
+   * through the article) so that articles with a long history (e.g. a start
+   * page) can be paged through without fetching everything at once.
+   */
+  async getArticleRevisions({
+    articleId,
+    filter,
+    order = SortOrder.Descending,
+    take = 10,
+    skip,
+    cursorId,
+  }: ArticleRevisionListArgs) {
+    const where: Prisma.ArticleRevisionWhereInput = {
+      articleId,
+      ...(filter?.userId ? { userId: filter.userId } : {}),
+    };
+
+    const orderBy = {
+      createdAt: graphQLSortOrderToPrisma(order),
+    } satisfies Prisma.ArticleRevisionOrderByWithRelationInput;
+
+    const [totalCount, revisions] = await Promise.all([
+      this.prisma.articleRevision.count({ where }),
+      this.prisma.articleRevision.findMany({
+        where,
+        skip,
+        take: getMaxTake(take) + 1,
+        orderBy,
+        cursor: cursorId ? { id: cursorId } : undefined,
+      }),
+    ]);
+
+    const nodes = revisions.slice(0, getMaxTake(take));
+    const firstRevision = nodes[0];
+    const lastRevision = nodes[nodes.length - 1];
+
+    return {
+      nodes,
+      totalCount,
+      pageInfo: {
+        hasPreviousPage: Boolean(skip),
+        hasNextPage: revisions.length > nodes.length,
+        startCursor: firstRevision?.id,
+        endCursor: lastRevision?.id,
+      },
+    };
+  }
+
+  /**
+   * Returns a single revision with all of its content. Used to lazily load the
+   * full data of a past version (e.g. for the read-only preview), so the
+   * version history list itself can stay lightweight.
+   */
+  async getRevisionById(id: string) {
+    return this.prisma.articleRevision.findUnique({
+      where: { id },
+    });
+  }
+
+  /**
+   * Restores an older revision by cloning its content into a brand new draft.
+   *
+   * This is non-destructive: no historic revision is mutated or deleted. Any
+   * currently open (unpublished, non-archived) draft is archived first, exactly
+   * like `updateArticle` does, so there is at most one draft at a time.
+   */
+  @PrimeDataLoader(ArticleDataloaderService)
+  async restoreArticleRevision(
+    articleId: string,
+    revisionId: string,
+    userId: string | null | undefined
+  ) {
+    const revision = await this.prisma.articleRevision.findUnique({
+      where: { id: revisionId },
+      include: {
+        authors: { orderBy: { position: 'asc' } },
+        socialMediaAuthors: true,
+      },
+    });
+
+    if (!revision || revision.articleId !== articleId) {
+      throw new NotFoundException(
+        `Revision with id ${revisionId} not found for article ${articleId}`
+      );
+    }
+
+    const {
+      id: _id,
+      createdAt: _createdAt,
+      publishedAt: _publishedAt,
+      archivedAt: _archivedAt,
+      userId: _userId,
+      articleId: _articleId,
+      properties,
+      authors,
+      socialMediaAuthors,
+      ...content
+    } = revision;
+
+    const result = await this.prisma.article.update({
+      where: { id: articleId },
+      data: {
+        modifiedAt: new Date(),
+        revisions: {
+          updateMany: {
+            where: {
+              archivedAt: null,
+              publishedAt: null,
+            },
+            data: {
+              archivedAt: new Date(),
+            },
+          },
+          create: {
+            ...content,
+            userId,
+            blocks: (content.blocks ?? []) as any[],
+            properties: properties as any,
+            authors: {
+              createMany: {
+                data: mapArticleRevisionAuthors(authors),
+              },
+            },
+            socialMediaAuthors: {
+              createMany: {
+                data: socialMediaAuthors.map(({ authorId }) => ({ authorId })),
+              },
+            },
+          },
+        },
+      },
+    });
+    await this.publicContentCache.invalidateDraft('articles');
+
+    return result;
+  }
+
+  /**
+   * Discards the current draft and reverts the article to its latest published
+   * (or pending) revision. The draft is archived rather than deleted, so it
+   * stays available in the version history. Requires a non-draft revision to
+   * fall back to, otherwise the article would be left without a `latest`.
+   */
+  @PrimeDataLoader(ArticleDataloaderService)
+  async discardArticleDraft(id: string) {
+    const article = await this.prisma.article.findUnique({
+      where: { id },
+    });
+
+    if (!article) {
+      throw new NotFoundException(`Article with id ${id} not found`);
+    }
+
+    const draft = await this.prisma.articleRevision.findFirst({
+      where: {
+        articleId: id,
+        publishedAt: null,
+        archivedAt: null,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!draft) {
+      throw new BadRequestException(
+        `Article with id ${id} has no draft to discard`
+      );
+    }
+
+    const fallback = await this.prisma.articleRevision.findFirst({
+      where: {
+        articleId: id,
+        archivedAt: null,
+        publishedAt: {
+          not: null,
+        },
+      },
+    });
+
+    if (!fallback) {
+      throw new BadRequestException(
+        `Cannot discard draft: article ${id} has no published version to revert to`
+      );
+    }
+
+    await this.prisma.articleRevision.update({
+      where: { id: draft.id },
+      data: { archivedAt: new Date() },
+    });
+
+    await this.publicContentCache.invalidateDraft('articles');
+
+    return article;
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
   async likeArticle(id: string) {
-    return this.prisma.article.update({
+    const article = await this.prisma.article.update({
       where: {
         id,
       },
@@ -484,6 +741,9 @@ export class ArticleService {
         },
       },
     });
+    await this.forgetArticle(id, article?.slug);
+
+    return article;
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -498,7 +758,7 @@ export class ArticleService {
       return article;
     }
 
-    return this.prisma.article.update({
+    const disliked = await this.prisma.article.update({
       where: {
         id,
       },
@@ -508,6 +768,21 @@ export class ArticleService {
         },
       },
     });
+    await this.forgetArticle(id, disliked?.slug);
+
+    return disliked;
+  }
+
+  private async forgetArticle(id: string, slug?: string | null) {
+    await Promise.all([
+      this.kv.delNs(contentCacheNamespace('articles'), `id:${id}`),
+      slug ?
+        this.kv.delNs(
+          contentCacheNamespace('articles'),
+          `slug:${slug.toLowerCase()}`
+        )
+      : undefined,
+    ]);
   }
 
   async performFullTextSearch(searchQuery: string): Promise<string[]> {
@@ -799,10 +1074,8 @@ const createTagsFilter = (
   if (filter?.tags?.length) {
     const hasTags = {
       some: {
-        tag: {
-          id: {
-            in: filter.tags,
-          },
+        tagId: {
+          in: filter.tags,
         },
       },
     } satisfies Prisma.TaggedArticlesListRelationFilter;
@@ -815,16 +1088,32 @@ const createTagsFilter = (
   return {};
 };
 
+const createAllTagsInFilter = (
+  filter: Partial<ArticleFilter>
+): Prisma.ArticleWhereInput => {
+  if (filter?.allTagsIn?.length) {
+    return {
+      AND: filter.allTagsIn.map(tagId => ({
+        tags: {
+          some: {
+            tagId,
+          },
+        },
+      })),
+    };
+  }
+
+  return {};
+};
+
 const createTagsNotInFilter = (
   filter: Partial<ArticleFilter>
 ): Prisma.ArticleWhereInput => {
   if (filter?.tagsNotIn?.length) {
     const hasNotTags = {
-      some: {
-        tag: {
-          id: {
-            notIn: filter.tagsNotIn,
-          },
+      none: {
+        tagId: {
+          in: filter.tagsNotIn,
         },
       },
     } satisfies Prisma.TaggedArticlesListRelationFilter;
@@ -894,6 +1183,45 @@ const createHiddenFilter = (
   };
 };
 
+const createExcludeHideAuthorFilter = (
+  filter: Partial<ArticleFilter>
+): Prisma.ArticleWhereInput => {
+  if (filter?.excludeHideAuthor) {
+    const hideAuthorFilter: Prisma.ArticleRevisionWhereInput = {
+      hideAuthor: false,
+    };
+
+    return {
+      ArticleRevisionPublished:
+        filter?.published ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      ArticleRevisionDraft:
+        filter?.draft ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      ArticleRevisionPending:
+        filter?.pending ?
+          {
+            articleRevision: hideAuthorFilter,
+          }
+        : undefined,
+      revisions:
+        !filter?.draft && !filter?.published && !filter?.pending ?
+          {
+            some: hideAuthorFilter,
+          }
+        : undefined,
+    };
+  }
+
+  return {};
+};
+
 const createPeerIdFilter = (
   filter: Partial<ArticleFilter>
 ): Prisma.ArticleWhereInput => {
@@ -920,10 +1248,13 @@ const createExcludeIdsFilter = (
   return {};
 };
 
+const isEmptyWhere = (where: Prisma.ArticleWhereInput) =>
+  Object.keys(where).length === 0;
+
 export const createArticleFilter = (
   filter: Partial<ArticleFilter>
-): Prisma.ArticleWhereInput => ({
-  AND: [
+): Prisma.ArticleWhereInput => {
+  const andClauses = [
     createIdsFilter(filter),
     createTitleFilter(filter),
     createPreTitleFilter(filter),
@@ -932,17 +1263,24 @@ export const createArticleFilter = (
     createLeadFilter(filter),
     createSharedFilter(filter),
     createTagsFilter(filter),
+    createAllTagsInFilter(filter),
     createTagsNotInFilter(filter),
     createAuthorFilter(filter),
     createHiddenFilter(filter),
+    createExcludeHideAuthorFilter(filter),
     createPeerIdFilter(filter),
     createExcludeIdsFilter(filter),
-    {
-      OR: [
-        createPublishedFilter(filter),
-        createDraftFilter(filter),
-        createPendingFilter(filter),
-      ],
-    },
-  ],
-});
+  ].filter(c => !isEmptyWhere(c));
+
+  const orClauses = [
+    createPublishedFilter(filter),
+    createDraftFilter(filter),
+    createPendingFilter(filter),
+  ].filter(c => !isEmptyWhere(c));
+
+  if (orClauses.length > 0) {
+    andClauses.push({ OR: orClauses });
+  }
+
+  return andClauses.length > 0 ? { AND: andClauses } : {};
+};

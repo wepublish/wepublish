@@ -1,13 +1,16 @@
 import styled from '@emotion/styled';
 import { truncateFirstParagraph } from '@wepublish/richtext';
-import { BlockContent, FullEventBlockFragment } from '@wepublish/website/api';
+import {
+  FullBlockFragment,
+  FullEventBlockFragment,
+} from '@wepublish/website/api';
 import {
   BuilderEventBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 
 export const isEventBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullEventBlockFragment => block.__typename === 'EventBlock';
 
 export const EventBlockWrapper = styled('aside')`
@@ -28,7 +31,11 @@ export const EventBlock = ({ events, className }: BuilderEventBlockProps) => {
         <EventListItem
           key={event.id}
           {...event}
-          description={truncate(event.description)}
+          description={{
+            type: 'doc',
+            attrs: undefined,
+            content: [truncate(event.description?.content ?? []) ?? []].flat(),
+          }}
         />
       ))}
     </EventBlockWrapper>

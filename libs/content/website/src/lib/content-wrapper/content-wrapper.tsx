@@ -11,6 +11,7 @@ import {
   EventBlockWrapper,
   ImageBlockWrapper,
   ImageGalleryBlockWrapper,
+  LightboxWrapper,
   SliderWrapper,
   TeaserGridBlockWrapper,
   TeaserGridFlexBlockWrapper,
@@ -66,6 +67,7 @@ export const ContentWrapperStyled = styled(
           > :is(
             ${ImageBlockWrapper},
               ${SliderWrapper},
+              ${LightboxWrapper},
               ${EventBlockWrapper},
               ${BreakBlockWrapper}
           ) {

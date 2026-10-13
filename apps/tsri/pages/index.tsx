@@ -5,7 +5,7 @@ import mailchimp, {
 import { captureException } from '@sentry/nextjs';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -15,7 +15,6 @@ import {
 } from '@wepublish/website/api';
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { ResponseError } from 'superagent';
 
 import { DailyBriefingContext } from '../src/components/teasers/teaser-sidebar-daily-briefing-context';
@@ -37,15 +36,13 @@ export default function Index({ campaigns }: IndexProps) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 
   mailchimp.setConfig({
-    apiKey: serverRuntimeConfig.env.MAILCHIMP_API_KEY,
-    server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX,
+    apiKey: process.env.MAILCHIMP_API_KEY,
+    server: process.env.MAILCHIMP_SERVER_PREFIX,
   });
 
   const client = getApiClient(getApiUrl(), []);
@@ -70,12 +67,14 @@ export const getStaticProps: GetStaticProps = async () => {
   } catch (e) {
     if (e && typeof e === 'object' && 'response' in e) {
       console.error((e as ResponseError).response?.body);
+    } else {
+      console.error(e);
     }
 
     captureException(e);
   }
 
-  await Promise.all([
+  const [page] = await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
@@ -97,6 +96,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(page.data?.page, page.error),
   };
 };

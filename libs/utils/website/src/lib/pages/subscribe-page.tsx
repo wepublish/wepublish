@@ -1,25 +1,26 @@
+import { useQuery } from '@apollo/client/react';
 import { NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ssrAuthLink } from '../auth-link';
 import { getSessionTokenProps } from '../get-session-token-props';
 import { handleJwtLogin } from '../handle-jwt-login';
-import { useSubscriptionsQuery } from '@wepublish/website/api';
-import { MemberPlanListQueryVariables } from '@wepublish/website/api';
+import {
+  InvoicesDocument,
+  MeDocument,
+  MemberPlanListDocument,
+  MemberPlanListQueryVariables,
+  NavigationListDocument,
+  PeerProfileDocument,
+  SubscriptionsDocument,
+  addClientCacheToProps,
+  getApiClient,
+} from '@wepublish/website/api';
 import { useUser } from '@wepublish/authentication/website';
 import {
+  getMonthlyEquivalentRange,
   SubscribeContainer,
   UpgradeContainer,
 } from '@wepublish/membership/website';
-import {
-  getApiClient,
-  MemberPlanListDocument,
-  NavigationListDocument,
-  PeerProfileDocument,
-  MeDocument,
-  InvoicesDocument,
-  addClientCacheToProps,
-} from '@wepublish/website/api';
 import { ComponentProps, useMemo } from 'react';
 
 import { getApiUrl } from '../api-url';
@@ -37,13 +38,13 @@ export function SubscribePage(props: SubscribePageProps) {
       deactivateSubscriptionId,
       upgradeSubscriptionId,
       userId,
-      voucher,
+      discountCode,
     },
   } = useRouter();
 
   const { hasUser } = useUser();
 
-  const userSubscriptions = useSubscriptionsQuery({
+  const userSubscriptions = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
     skip: !hasUser,
   });
@@ -64,7 +65,7 @@ export function SubscribePage(props: SubscribePageProps) {
             firstName: firstName as string | undefined,
             name: lastName as string | undefined,
             memberPlanSlug: memberPlanBySlug as string | undefined,
-            voucher: voucher as string | undefined,
+            discountCode: discountCode as string | undefined,
             ...props.defaults,
           }}
           filter={memberPlans => {
@@ -77,9 +78,9 @@ export function SubscribePage(props: SubscribePageProps) {
             if (additionalMemberPlans === 'upsell' && preselectedMemberPlan) {
               return parentFiltered.filter(
                 memberPlan =>
-                  memberPlan.amountPerMonthMin >=
-                    preselectedMemberPlan.amountPerMonthMin ||
-                  memberPlan === preselectedMemberPlan
+                  getMonthlyEquivalentRange(memberPlan).amountPerMonthMin >=
+                    getMonthlyEquivalentRange(preselectedMemberPlan)
+                      .amountPerMonthMin || memberPlan === preselectedMemberPlan
               );
             }
 
@@ -111,9 +112,9 @@ export function SubscribePage(props: SubscribePageProps) {
             if (additionalMemberPlans === 'upsell' && preselectedMemberPlan) {
               return parentFiltered.filter(
                 memberPlan =>
-                  memberPlan.amountPerMonthMin >=
-                    preselectedMemberPlan.amountPerMonthMin ||
-                  memberPlan === preselectedMemberPlan
+                  getMonthlyEquivalentRange(memberPlan).amountPerMonthMin >=
+                    getMonthlyEquivalentRange(preselectedMemberPlan)
+                      .amountPerMonthMin || memberPlan === preselectedMemberPlan
               );
             }
 
@@ -129,18 +130,21 @@ export function SubscribePage(props: SubscribePageProps) {
 }
 
 SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
-  const { publicRuntimeConfig } = getConfig();
+  if (typeof window !== 'undefined') {
+    return {};
+  }
+
   const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
   ]);
 
-  await handleJwtLogin(ctx, client, !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE);
+  await handleJwtLogin(ctx, client, !!process.env.HTTP_ONLY_COOKIE);
 
   const sessionProps = await getSessionTokenProps(ctx);
 
-  const dataPromises = [
+  const dataPromises: Promise<unknown>[] = [
     client.query<MemberPlanListQueryVariables>({
       query: MemberPlanListDocument,
       variables: {
@@ -166,9 +170,6 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
         }),
         client.query({
           query: InvoicesDocument,
-          variables: {
-            take: 50,
-          },
         }),
       ]
     );

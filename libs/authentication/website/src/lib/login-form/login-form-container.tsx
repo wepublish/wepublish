@@ -1,7 +1,8 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import {
-  useCheckLoginOtpLazyQuery,
-  useLoginWithCredentialsMutation,
-  useLoginWithEmailMutation,
+  CheckLoginOtpDocument,
+  LoginWithCredentialsDocument,
+  LoginWithEmailDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -10,6 +11,7 @@ import {
 } from '@wepublish/website/builder';
 import { useCallback, useEffect, useState } from 'react';
 import { useUser } from '../session.context';
+import { useLoginLinkCooldown } from './login-link-cooldown';
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -31,6 +33,7 @@ export function LoginFormContainer({
   const { setToken } = useUser();
   const [otpRequired, setOtpRequired] = useState(false);
   const [totpRedirectToPassword, setTotpRedirectToPassword] = useState(false);
+  const [loginLinkCooldownSeconds, markLoginLinkSent] = useLoginLinkCooldown();
 
   // Check if redirected from a failed JWT login (2FA user)
   useEffect(() => {
@@ -42,18 +45,25 @@ export function LoginFormContainer({
       }
     }
   }, []);
-  const [checkLoginOtp] = useCheckLoginOtpLazyQuery();
-  const [loginWithEmail, withEmail] = useLoginWithEmailMutation();
-  const [loginWithCredentials, withCredentials] =
-    useLoginWithCredentialsMutation({
+  const [checkLoginOtp] = useLazyQuery(CheckLoginOtpDocument);
+  const [loginWithEmail, withEmail] = useMutation(LoginWithEmailDocument, {
+    onCompleted() {
+      markLoginLinkSent();
+    },
+  });
+  const [loginWithCredentials, withCredentials] = useMutation(
+    LoginWithCredentialsDocument,
+    {
       onCompleted(data) {
         setToken({
+          __typename: 'SessionWithTokenWithoutUser',
           createdAt: data.createSession.createdAt,
           expiresAt: data.createSession.expiresAt,
           token: data.createSession.token,
         });
       },
-    });
+    }
+  );
 
   const handleEmailChange = useCallback(
     (email: string) => {
@@ -99,6 +109,7 @@ export function LoginFormContainer({
       loginWithCredentials={withCredentials}
       onSubmitLoginWithEmail={handleSubmitLoginWithEmail}
       loginWithEmail={withEmail}
+      loginLinkCooldownSeconds={loginLinkCooldownSeconds}
       defaults={defaults}
       disablePasswordLogin={disablePasswordLogin}
       otpRequired={otpRequired}

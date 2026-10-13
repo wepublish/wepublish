@@ -1,4 +1,4 @@
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { Context, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import {
   TeaserListBlock,
   TeaserListBlockFilter,
@@ -23,6 +23,7 @@ import { Article } from '@prisma/client';
 import { SortOrder } from '@wepublish/utils/api';
 import { EventService, EventSort } from '@wepublish/event/api';
 import { Tag, TagDataloader } from '@wepublish/tag/api';
+import { skipAnswerCache } from '@wepublish/kv-ttl-cache/api';
 
 @Resolver(() => TeaserListBlock)
 export class TeaserListBlockResolver {
@@ -32,12 +33,12 @@ export class TeaserListBlockResolver {
     private articleService: ArticleService,
     @Inject(forwardRef(() => PageService))
     private pageService: PageService,
-    @Inject(HOT_AND_TRENDING_DATA_SOURCE)
+    @Inject(forwardRef(() => HOT_AND_TRENDING_DATA_SOURCE))
     private hotAndTrending: HotAndTrendingDataSource
   ) {}
 
   @ResolveField(() => [Teaser], { nullable: true })
-  async teasers(@Parent() parent: TeaserListBlock) {
+  async teasers(@Parent() parent: TeaserListBlock, @Context() context: object) {
     const { teaserType, skip, sort, take, filter } = parent;
 
     if (teaserType === TeaserType.Article) {
@@ -51,6 +52,7 @@ export class TeaserListBlockResolver {
           });
         } catch (e) {
           console.error(e);
+          skipAnswerCache(context);
         }
       } else {
         articles = (

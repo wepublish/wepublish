@@ -44,8 +44,9 @@ export const CrowdfundingGoalList = ({
               t('crowdfunding.goalsForm.amountSubscriptions')
             : t('crowdfunding.goalsForm.amount')}
           </Col>
-          <Col xs={4}>{t('crowdfunding.goalsForm.remove')}</Col>
+          <Col xs={4}>{t('action')}</Col>
         </Row>
+
         {goals.map((goal, index) => (
           <Row>
             <Col xs={5}>
@@ -55,6 +56,7 @@ export const CrowdfundingGoalList = ({
                 onChange={value => handleChange(index, 'title', value)}
               />
             </Col>
+
             <Col xs={5}>
               <Form.Control
                 name="goalDescription"
@@ -62,6 +64,7 @@ export const CrowdfundingGoalList = ({
                 onChange={value => handleChange(index, 'description', value)}
               />
             </Col>
+
             <Col xs={5}>
               {goalType === CrowdfundingGoalType.Revenue && (
                 <CurrencyInput
@@ -83,6 +86,7 @@ export const CrowdfundingGoalList = ({
                 />
               )}
             </Col>
+
             <Col xs={4}>
               <Button onClick={() => onRemove(index)}>
                 {t('crowdfunding.goalsForm.remove')}

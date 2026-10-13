@@ -19,9 +19,19 @@ import {
   TeaserSlotsArchiveTopicWithTwoCol,
 } from './layout-archive-topic-with-two-col';
 import {
+  isTeaserSlotsCompactNews,
+  TeaserSlotsCompactNews,
+} from './layout-compact-news';
+import {
   alignmentForTeaserBlock as alignmentForTeaserBlockDefault,
   TeaserSlotsDefault,
 } from './layout-default';
+import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockDossier,
+  isTeaserSlotsDossier,
+  teaserBlockStyleByIndex as teaserBlockStyleByIndexDossier,
+  TeaserSlotsDossier,
+} from './layout-dossier';
 import {
   alignmentForTeaserBlock as alignmentForTeaserBlockTeaserSlotsHeroTeaser,
   isTeaserSlotsHeroTeaser,
@@ -60,6 +70,12 @@ import {
 } from './layout-xl-fullsize-image-teasers';
 
 export const TsriBaseTeaserSlots = cond([
+  [
+    isTeaserSlotsCompactNews,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsCompactNews {...props} />
+    ),
+  ],
   [
     isTeaserSlotsTsriLoveSidebar,
     (props: BuilderTeaserSlotsBlockProps) => (
@@ -147,6 +163,16 @@ export const TsriBaseTeaserSlots = cond([
         {...props}
         alignmentForTeaserBlock={alignmentForTeaserBlock}
         teaserBlockStyleByIndex={teaserBlockStyleByIndexWithTwoCol}
+      />
+    ),
+  ],
+  [
+    isTeaserSlotsDossier,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsDossier
+        {...props}
+        teaserBlockStyleByIndex={teaserBlockStyleByIndexDossier}
+        alignmentForTeaserBlock={alignmentForTeaserBlockDossier}
       />
     ),
   ],

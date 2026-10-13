@@ -7,6 +7,7 @@
   "targets": {
     "build": {
       "executor": "@nx/next:build",
+      "dependsOn": [],
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
@@ -45,10 +46,8 @@
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/tsri/jest.config.ts"
+        "config": "../../{projectRoot}/vitest.config.ts"
       }
     },
     "lint": {

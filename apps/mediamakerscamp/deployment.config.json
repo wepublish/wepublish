@@ -1,0 +1,24 @@
+{
+  "tdl": {
+    "production": "wepublish.cloud",
+    "staging": "wepublish.works"
+  },
+  "website": {
+    "production": {
+      "deployment": true,
+      "env": {},
+      "secret_env": [],
+      "custom_domain": "https://mediamakerscamp.ch"
+    },
+    "staging": {
+      "deployment": true,
+      "env": {},
+      "secret_env": []
+    },
+    "review": {
+      "deployment": true,
+      "env": {},
+      "secret_env": []
+    }
+  }
+}

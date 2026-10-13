@@ -1,3 +1,4 @@
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrimeDataLoader } from '@wepublish/utils/api';
@@ -6,7 +7,10 @@ import { CreatePaywallInput, UpdatePaywallInput } from './paywall.model';
 
 @Injectable()
 export class PaywallService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private publicContentCache: PublicContentCacheInvalidator
+  ) {}
 
   @PrimeDataLoader(PaywallDataloaderService)
   public getPaywalls() {
@@ -27,7 +31,7 @@ export class PaywallService {
   }
 
   @PrimeDataLoader(PaywallDataloaderService)
-  public createPaywall({
+  public async createPaywall({
     memberPlanIds,
     bypassTokens,
     ...input
@@ -36,14 +40,13 @@ export class PaywallService {
       throw new BadRequestException('hideContentAfter can not be lower than 0');
     }
 
-    return this.prisma.paywall.create({
+    const result = await this.prisma.paywall.create({
       data: {
         ...input,
-        description: input.description as any[],
-        circumventDescription: input.circumventDescription as any[],
-        upgradeDescription: input.upgradeDescription as any[],
-        upgradeCircumventDescription:
-          input.upgradeCircumventDescription as any[],
+        description: input.description as any,
+        circumventDescription: input.circumventDescription as any,
+        upgradeDescription: input.upgradeDescription as any,
+        upgradeCircumventDescription: input.upgradeCircumventDescription as any,
         memberPlans: {
           createMany: {
             data: memberPlanIds.map(memberPlanId => ({
@@ -60,10 +63,13 @@ export class PaywallService {
         },
       },
     });
+    await this.publicContentCache.invalidate('paywalls');
+
+    return result;
   }
 
   @PrimeDataLoader(PaywallDataloaderService)
-  public updatePaywall({
+  public async updatePaywall({
     id,
     memberPlanIds,
     bypassTokens,
@@ -73,17 +79,16 @@ export class PaywallService {
       throw new BadRequestException('hideContentAfter can not be lower than 0');
     }
 
-    return this.prisma.paywall.update({
+    const result = await this.prisma.paywall.update({
       where: {
         id,
       },
       data: {
         ...input,
-        description: input.description as any[],
-        circumventDescription: input.circumventDescription as any[],
-        upgradeDescription: input.upgradeDescription as any[],
-        upgradeCircumventDescription:
-          input.upgradeCircumventDescription as any[],
+        description: input.description as any,
+        circumventDescription: input.circumventDescription as any,
+        upgradeDescription: input.upgradeDescription as any,
+        upgradeCircumventDescription: input.upgradeCircumventDescription as any,
         memberPlans:
           memberPlanIds ?
             {
@@ -119,30 +124,20 @@ export class PaywallService {
           : undefined,
       },
     });
+    await this.publicContentCache.invalidate('paywalls');
+
+    return result;
   }
 
-  public deletePaywall(id: string) {
-    return this.prisma.paywall.delete({
+  public async deletePaywall(id: string) {
+    const result = await this.prisma.paywall.delete({
       where: {
         id,
       },
     });
-  }
+    await this.publicContentCache.invalidate('paywalls', 'articles');
 
-  // @PrimeDataLoader(MemberPlanDataloader)
-  public getPaywallMemberplans(id: string) {
-    return this.prisma.memberPlan.findMany({
-      where: {
-        paywalls: {
-          some: {
-            paywallId: id,
-          },
-        },
-      },
-      include: {
-        availablePaymentMethods: true,
-      },
-    });
+    return result;
   }
 
   public getPaywallBypasses(id: string) {

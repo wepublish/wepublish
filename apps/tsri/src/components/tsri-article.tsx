@@ -47,6 +47,7 @@ export const TsriArticle = styled(ArticleDefault)`
   ${ImageBlockImage} {
     border-radius: 1rem;
     object-fit: cover;
+    object-position: left center;
     max-width: calc(100vw - ${({ theme }) => theme.spacing(4)});
 
     ${({ theme }) => theme.breakpoints.up('sm')} {

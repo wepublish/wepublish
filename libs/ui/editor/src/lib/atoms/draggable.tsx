@@ -14,9 +14,8 @@ export interface Point {
   readonly y: number;
 }
 
-export const DraggableContext = createContext<RefObject<HTMLDivElement> | null>(
-  null
-);
+export const DraggableContext =
+  createContext<RefObject<HTMLDivElement | null> | null>(null);
 
 export interface DraggableContainerProps {
   readonly children?: ReactNode;

@@ -1,7 +1,8 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   FullUserFragment,
-  useSendWebsiteLoginMutation,
+  SendWebsiteLoginDocument,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,8 +20,11 @@ const SendIcon = styled(MdSend)`
   margin-right: 5px;
 `;
 
-const Button = styled(RButton)`
-  margin-left: 20px;
+const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
 `;
 
 interface CreateOrUpdateuserPasswordProps {
@@ -41,7 +45,7 @@ export function EditUserPassword({
     useState<boolean>(false);
   const [sendLoginModalOpen, setSendLoginModalOpen] = useState<boolean>(false);
 
-  const [sendWebsiteLogin] = useSendWebsiteLoginMutation();
+  const [sendWebsiteLogin] = useMutation(SendWebsiteLoginDocument);
 
   async function sendLoginLink() {
     if (!user) {
@@ -50,7 +54,7 @@ export function EditUserPassword({
           type="error"
           showIcon
           closable
-          duration={2000}
+          duration={8000}
         >
           {t('createOrUpdateUserPassword.unexpectedErrorNoUserFound')}
         </Message>
@@ -79,9 +83,9 @@ export function EditUserPassword({
           type="error"
           showIcon
           closable
-          duration={2000}
+          duration={8000}
         >
-          {t('userList.panel.sendWebsiteLoginFailureMessage', { error })}
+          {t('userCreateOrEditView.sendWebsiteLoginFailureMessage', { error })}
         </Message>
       );
     }
@@ -95,22 +99,23 @@ export function EditUserPassword({
     if (user) {
       return (
         <Form.Group>
-          <RButton
-            appearance="primary"
-            onClick={() => setIsResetUserPasswordOpen(true)}
-          >
-            <ReplayIcon />
-            {t('userCreateOrEditView.resetPassword')}
-          </RButton>
-          <Button
-            appearance="primary"
-            color="red"
-            disabled={isDisabled || !user.email || !user.active}
-            onClick={() => setSendLoginModalOpen(true)}
-          >
-            <SendIcon />
-            {t('userCreateOrEditView.sendWebsiteLogin')}
-          </Button>
+          <ButtonWrapper>
+            <RButton
+              appearance="primary"
+              onClick={() => setIsResetUserPasswordOpen(true)}
+            >
+              <ReplayIcon />
+              {t('userCreateOrEditView.resetPassword')}
+            </RButton>
+            <RButton
+              appearance="primary"
+              disabled={isDisabled || !user.email || !user.active}
+              onClick={() => setSendLoginModalOpen(true)}
+            >
+              <SendIcon />
+              {t('userCreateOrEditView.sendWebsiteLogin')}
+            </RButton>
+          </ButtonWrapper>
         </Form.Group>
       );
     }
@@ -118,9 +123,9 @@ export function EditUserPassword({
     // create new password form
     return (
       <Form.Group controlId="password">
-        <Form.ControlLabel>
+        <Form.Label>
           {toggleRequiredLabel(t('userCreateOrEditView.password'))}
-        </Form.ControlLabel>
+        </Form.Label>
 
         <Form.Control
           type="password"
@@ -135,14 +140,16 @@ export function EditUserPassword({
     );
   }
 
-  function resetPasswordModal(): JSX.Element {
+  function resetPasswordModal() {
     const userId = user?.id;
+
     if (!userId) {
-      // eslint-disable-next-line react/jsx-no-useless-fragment
-      return <></>;
+      return null;
     }
+
     const userName =
       user?.firstName ? `${user.firstName} ${user.name}` : user.name;
+
     return (
       <Modal
         open={isResetUserPasswordOpen}

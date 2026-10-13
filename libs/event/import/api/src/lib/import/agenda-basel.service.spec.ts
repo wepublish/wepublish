@@ -14,7 +14,11 @@ const mockedEvent: EventFromSource = {
   name: 'Foobar',
   startsAt: new Date('2023-01-01'),
   status: EventStatus.Scheduled,
-  description: [],
+  description: {
+    type: 'doc',
+    attrs: undefined,
+    content: [],
+  },
   externalSourceId: '123',
   externalSourceName: 'KulturBasel',
 };
@@ -40,15 +44,15 @@ describe('AgendaBaselService', () => {
         {
           provide: CACHE_MANAGER,
           useValue: {
-            get: jest.fn(),
-            set: jest.fn(),
+            get: vi.fn(),
+            set: vi.fn(),
           },
         },
         {
           provide: PrismaClient,
           useValue: {
             event: {
-              create: jest.fn().mockResolvedValue({
+              create: vi.fn().mockResolvedValue({
                 id: 'created-event-id',
               }),
             },
@@ -63,13 +67,13 @@ describe('AgendaBaselService', () => {
         {
           provide: ImageFetcherService,
           useValue: {
-            fetch: jest.fn(),
+            fetch: vi.fn(),
           },
         },
         {
           provide: MediaAdapter,
           useValue: {
-            uploadImageFromArrayBuffer: jest.fn().mockResolvedValue({
+            uploadImageFromArrayBuffer: vi.fn().mockResolvedValue({
               id: 'bar',
             }),
           },
@@ -82,7 +86,7 @@ describe('AgendaBaselService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('AgendaBaselService', () => {
@@ -97,9 +101,7 @@ describe('AgendaBaselService', () => {
         id: 'non-existing-event-id',
       };
 
-      await expect(
-        service.importedEvent(importedEventParams)
-      ).rejects.toThrowError(
+      await expect(service.importedEvent(importedEventParams)).rejects.toThrow(
         `Event with id ${importedEventParams.id} not found.`
       );
     });
@@ -124,7 +126,7 @@ describe('AgendaBaselService', () => {
         id: 'non-existent-event-id',
       };
 
-      await expect(service.createEvent(createEventParams)).rejects.toThrowError(
+      await expect(service.createEvent(createEventParams)).rejects.toThrow(
         `Event with id ${createEventParams.id} not found.`
       );
     });

@@ -1,6 +1,7 @@
+import { useMutation } from '@apollo/client/react';
 import {
-  useDislikeArticleMutation,
-  useLikeArticleMutation,
+  DislikeArticleDocument,
+  LikeArticleDocument,
 } from '@wepublish/website/api';
 import { useCallback, useEffect, useState } from 'react';
 import { useCounter } from 'usehooks-ts';
@@ -39,13 +40,13 @@ export function useLikeStatus(articleId: string, articleLikes: number) {
     [articleId]
   );
 
-  const [removeLikeMutation] = useDislikeArticleMutation({
+  const [removeLikeMutation] = useMutation(DislikeArticleDocument, {
     variables: {
       id: articleId,
     },
   });
 
-  const [addLikeMutation] = useLikeArticleMutation({
+  const [addLikeMutation] = useMutation(LikeArticleDocument, {
     variables: {
       id: articleId,
     },
@@ -62,15 +63,16 @@ export function useLikeStatus(articleId: string, articleLikes: number) {
       if (isLiked && !preventDislike) {
         decrementLikes();
         updateLikeStatus(false);
-        await removeLikeMutation();
+        await removeLikeMutation({ variables: { id: articleId } });
       } else if (!isLiked) {
         incrementLikes();
         updateLikeStatus(true);
-        await addLikeMutation();
+        await addLikeMutation({ variables: { id: articleId } });
       }
     },
     [
       addLikeMutation,
+      articleId,
       decrementLikes,
       incrementLikes,
       isLiked,

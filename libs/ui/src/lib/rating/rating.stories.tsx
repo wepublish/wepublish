@@ -1,5 +1,5 @@
 import { Link, Stack } from '@mui/material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { MdFavorite, MdHeartBroken } from 'react-icons/md';
 
 import { Rating as RatingCmp } from './rating';
@@ -9,8 +9,10 @@ export default {
   title: 'UI/Rating',
   render: () => (
     <Stack
-      gap={1}
-      alignItems={'start'}
+      sx={{
+        gap: 1,
+        alignItems: 'start',
+      }}
     >
       <RatingCmp />
       <RatingCmp defaultValue={4} />

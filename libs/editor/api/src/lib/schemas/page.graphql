@@ -1,65 +1,8 @@
-fragment FullPageRevisionWithoutBlocks on PageRevision {
-  id
-  createdAt
-  publishedAt
-  title
-  description
-  socialMediaTitle
-  socialMediaDescription
-
-  image {
-    ...FullImage
-  }
-
-  socialMediaImage {
-    ...FullImage
-  }
-
-  properties {
-    key
-    value
-    public
-  }
-}
-
 fragment FullPageRevision on PageRevision {
   ...FullPageRevisionWithoutBlocks
 
   blocks {
     ...FullBlock
-  }
-}
-
-fragment PageWithoutBlocks on Page {
-  id
-  publishedAt
-  createdAt
-  modifiedAt
-  slug
-  url
-  previewUrl
-  hidden
-
-  tags {
-    ...FullTag
-  }
-
-  latest {
-    ...FullPageRevisionWithoutBlocks
-  }
-
-  draft {
-    id
-  }
-
-  pending {
-    id
-    publishedAt
-  }
-
-  published {
-    id
-    publishedAt
   }
 }
 
@@ -99,6 +42,8 @@ mutation CreatePage(
   $blocks: [BlockContentInput!]!
   $imageID: String
   $description: String
+  $seoTitle: String
+  $seoDescription: String
   $properties: [PropertyInput!]!
   $slug: String
   $hidden: Boolean = false
@@ -112,6 +57,8 @@ mutation CreatePage(
     blocks: $blocks
     imageID: $imageID
     description: $description
+    seoTitle: $seoTitle
+    seoDescription: $seoDescription
     properties: $properties
     slug: $slug
     hidden: $hidden
@@ -130,6 +77,8 @@ mutation UpdatePage(
   $blocks: [BlockContentInput!]!
   $imageID: String
   $description: String
+  $seoTitle: String
+  $seoDescription: String
   $properties: [PropertyInput!]!
   $slug: String
   $hidden: Boolean = false
@@ -144,6 +93,8 @@ mutation UpdatePage(
     blocks: $blocks
     imageID: $imageID
     description: $description
+    seoTitle: $seoTitle
+    seoDescription: $seoDescription
     properties: $properties
     slug: $slug
     hidden: $hidden
@@ -171,6 +122,70 @@ mutation UnpublishPage($id: String!) {
 
 mutation DeletePage($id: String!) {
   deletePage(id: $id)
+}
+
+fragment PageRevisionMeta on PageRevision {
+  id
+  createdAt
+  publishedAt
+  archivedAt
+  title
+  description
+
+  user {
+    id
+    name
+    firstName
+  }
+}
+
+query PageRevisionList(
+  $id: String!
+  $take: Int
+  $skip: Int
+  $cursor: String
+  $filter: PageRevisionFilter
+  $order: SortOrder
+) {
+  pageRevisions(
+    pageId: $id
+    take: $take
+    skip: $skip
+    cursorId: $cursor
+    filter: $filter
+    order: $order
+  ) {
+    nodes {
+      ...PageRevisionMeta
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query PageRevisionPreview($id: String!) {
+  pageRevision(id: $id) {
+    ...FullPageRevision
+  }
+}
+
+mutation RestorePageRevision($id: String!, $revisionId: String!) {
+  restorePageRevision(id: $id, revisionId: $revisionId) {
+    ...FullPage
+  }
+}
+
+mutation DiscardPageDraft($id: String!) {
+  discardPageDraft(id: $id) {
+    ...FullPage
+  }
 }
 
 mutation DuplicatePage($id: String!) {

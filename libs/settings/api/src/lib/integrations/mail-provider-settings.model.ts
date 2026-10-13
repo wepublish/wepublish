@@ -2,6 +2,7 @@ import {
   Field,
   ObjectType,
   ArgsType,
+  Int,
   registerEnumType,
   PartialType,
   PickType,
@@ -47,6 +48,18 @@ export class SettingMailProvider extends SettingProvider {
 
   @Field({ nullable: true })
   slack_webhookURL?: string;
+
+  @Field({ nullable: true })
+  smtp_host?: string;
+
+  @Field(() => Int, { nullable: true })
+  smtp_port?: number;
+
+  @Field({ nullable: true })
+  smtp_secure?: boolean;
+
+  @Field({ nullable: true })
+  smtp_user?: string;
 }
 
 @InputType()
@@ -76,6 +89,6 @@ export class CreateSettingMailProviderInput extends OmitType(
 
 @ArgsType()
 export class UpdateSettingMailProviderInput extends PartialType(
-  OmitType(CreateSettingMailProviderInput, ['type'] as const, ArgsType),
+  CreateSettingMailProviderInput,
   ArgsType
 ) {}

@@ -1,15 +1,16 @@
 import {
   EventStatus,
   FullImageFragment,
+  FullTagFragment,
   MutationCreateEventArgs,
   MutationUpdateEventArgs,
-  Tag,
   TagType,
 } from '@wepublish/editor/api';
 import {
   ChooseEditImage,
   DateTimePicker,
   ImageEditPanel,
+  InfoTooltip,
   ImageSelectPanel,
   RichTextBlock,
   RichTextBlockValue,
@@ -22,7 +23,7 @@ import { Drawer, Form, Panel, SelectPicker } from 'rsuite';
 
 type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
   image?: FullImageFragment | null;
-  tags?: Pick<Tag, 'id' | 'tag'>[];
+  tags?: Pick<FullTagFragment, 'id' | 'tag'>[];
   externalSourceName?: string;
 };
 
@@ -41,14 +42,14 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
   return (
     <>
       <div
-        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}
+        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}
       >
         <Panel
           bordered
           style={{ overflow: 'initial' }}
         >
           <Form.Group controlId="name">
-            <Form.ControlLabel>{t('event.form.name')}</Form.ControlLabel>
+            <Form.Label>{t('event.form.name')}</Form.Label>
             <Form.Control
               name="name"
               value={event.name ?? ''}
@@ -58,9 +59,7 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
 
           {event.externalSourceName && (
             <Form.Group controlId="externalSourceName">
-              <Form.ControlLabel>
-                {t('event.form.externalSource')}
-              </Form.ControlLabel>
+              <Form.Label>{t('event.form.externalSource')}</Form.Label>
               <Form.Control
                 name="externalSourceName"
                 value={event.externalSourceName ?? ''}
@@ -70,7 +69,7 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
           )}
 
           <Form.Group controlId="location">
-            <Form.ControlLabel>{t('event.form.location')}</Form.ControlLabel>
+            <Form.Label>{t('event.form.location')}</Form.Label>
             <Form.Control
               name="location"
               value={event.location ?? ''}
@@ -112,7 +111,7 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
           </div>
 
           <Form.Group controlId="lead">
-            <Form.ControlLabel>{t('event.form.lead')}</Form.ControlLabel>
+            <Form.Label>{t('event.form.lead')}</Form.Label>
             <Form.Control
               name="lead"
               rows={3}
@@ -123,11 +122,11 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
           </Form.Group>
 
           <Form.Group controlId="description">
-            <Form.ControlLabel>{t('event.form.description')}</Form.ControlLabel>
+            <Form.Label>{t('event.form.description')}</Form.Label>
             <Panel bordered>
               <Form.Control
                 name="description"
-                value={event.description || []}
+                value={event.description}
                 onChange={(description: RichTextBlockValue['richText']) =>
                   onChange({ description })
                 }
@@ -140,7 +139,10 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
         <Panel bordered>
           {!create && (
             <Form.Group controlId="status">
-              <Form.ControlLabel>{t('event.form.status')}</Form.ControlLabel>
+              <Form.Label>
+                {t('event.form.status')}{' '}
+                <InfoTooltip text={t('event.form.statusInfo')} />
+              </Form.Label>
               <Form.Control
                 name="status"
                 block
@@ -175,7 +177,7 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
           )}
 
           <Form.Group controlId="tagIds">
-            <Form.ControlLabel>{t('event.form.tags')}</Form.ControlLabel>
+            <Form.Label>{t('event.form.tags')}</Form.Label>
             <Form.Control
               name="tagIds"
               defaultTags={event.tags ?? []}
@@ -186,8 +188,8 @@ export const EventForm = ({ event, onChange, create }: EventFormProps) => {
             />
           </Form.Group>
 
-          <Form.Group controlId="tagIds">
-            <Form.ControlLabel>{t('event.form.image')}</Form.ControlLabel>
+          <Form.Group controlId="image">
+            <Form.Label>{t('event.form.image')}</Form.Label>
             <Form.Control
               name="image"
               header={''}

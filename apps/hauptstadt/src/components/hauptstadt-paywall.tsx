@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { Paywall, useShowPaywall } from '@wepublish/paywall/website';
@@ -5,7 +6,7 @@ import { createWithTheme } from '@wepublish/ui';
 import {
   FullPaywallFragment,
   SlimPaywallFragment,
-  useSubscriptionsQuery,
+  SubscriptionsDocument,
 } from '@wepublish/website/api';
 import {
   BuilderPaywallProps,
@@ -21,7 +22,7 @@ const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
   const { hasUser } = useUser();
   const url = props.alternativeSubscribeUrl || '/mitmachen';
 
-  const { data } = useSubscriptionsQuery({
+  const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
     skip: !hasUser,
   });

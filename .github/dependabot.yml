@@ -4,8 +4,58 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 15
+    # Only update the core framework packages; all other dependencies
+    # are implicitly ignored.
+    allow:
+      - dependency-name: "nx"
+      - dependency-name: "@nx/*"
+      - dependency-name: "@nestjs/*"
+      - dependency-name: "nestjs-*"
+      - dependency-name: "next"
+      - dependency-name: "@next/*"
+      - dependency-name: "eslint-config-next"
+      - dependency-name: "prisma"
+      - dependency-name: "@prisma/*"
+      - dependency-name: "react"
+      - dependency-name: "react-dom"
+      - dependency-name: "@types/react"
+      - dependency-name: "@types/react-dom"
+      - dependency-name: "@apollo/*"
+      - dependency-name: "apollo-*"
     groups:
-      dev-deps:
-        dependency-type: "development"
-      prod-deps:
-        dependency-type: "production"
+      important:
+        patterns:
+          - "nx"
+          - "@nx/*"
+          - "@nestjs/*"
+          - "nestjs-*"
+          - "next"
+          - "@next/*"
+          - "eslint-config-next"
+          - "prisma"
+          - "@prisma/*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "@apollo/*"
+          - "apollo-*"
+      important-security:
+        applies-to: security-updates
+        patterns:
+          - "nx"
+          - "@nx/*"
+          - "@nestjs/*"
+          - "nestjs-*"
+          - "next"
+          - "@next/*"
+          - "eslint-config-next"
+          - "prisma"
+          - "@prisma/*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "@apollo/*"
+          - "apollo-*"

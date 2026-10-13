@@ -14,6 +14,6 @@ describe('mapPaymentPeriodToMonths', () => {
   });
 
   it('should error if if periodicity is not found', () => {
-    expect(() => mapPaymentPeriodToMonths('invalid' as any)).toThrowError();
+    expect(() => mapPaymentPeriodToMonths('invalid' as any)).toThrow();
   });
 });

@@ -1,7 +1,6 @@
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl } from '@wepublish/utils/website';
-import { LinkContext } from '@wepublish/website/builder';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -9,9 +8,11 @@ import {
   PageDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
+import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
+
+import { localizeSlug } from '../src/localize-slug';
 
 export default function Index() {
   const { locale } = useRouter();
@@ -19,25 +20,23 @@ export default function Index() {
   return (
     <LinkContext.Provider value={{ prefetch: true }}>
       <ContentWidthProvider fullWidth>
-        <PageContainer slug={`-${locale}`} />
+        <PageContainer slug={localizeSlug('', locale)} />
       </ContentWidthProvider>
     </LinkContext.Provider>
   );
 }
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 
   const client = getApiClient(getApiUrl(), []);
-  await Promise.all([
+  const [page] = await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
-        slug: `-${locale}`,
+        slug: localizeSlug('', locale),
       },
     }),
     client.query({
@@ -52,6 +51,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(page.data?.page, page.error),
   };
 };

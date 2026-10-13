@@ -44,6 +44,18 @@ export function mapMollieEventToPaymentStatus(event: string): PaymentState {
   }
 }
 
+export function mapMolliePaymentToPaymentStatus(
+  payment: Payment
+): PaymentState {
+  if (
+    payment.amountChargedBack &&
+    Number(payment.amountChargedBack.value) > 0
+  ) {
+    return PaymentState.chargeback;
+  }
+  return mapMollieEventToPaymentStatus(payment.status);
+}
+
 export function calculateAndFormatAmount(invoice: {
   items: { amount: number; quantity: number }[];
 }) {
@@ -106,7 +118,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     }
     const mollieClient = await this.getMollieGateway();
     const payment = await mollieClient.payments.get(molliePaymentId);
-    const state = mapMollieEventToPaymentStatus(payment.status);
+    const state = mapMolliePaymentToPaymentStatus(payment);
     const metadata = payment.metadata as MolliePaymentMetadata;
     if (state && metadata.paymentID) {
       let customerID: undefined | string;
@@ -247,7 +259,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
   }: CheckIntentProps): Promise<IntentState> {
     const mollieClient = await this.getMollieGateway();
     const payment = await mollieClient.payments.get(intentID);
-    const state = mapMollieEventToPaymentStatus(payment.status);
+    const state = mapMolliePaymentToPaymentStatus(payment);
 
     const metadata = payment.metadata as MolliePaymentMetadata;
 

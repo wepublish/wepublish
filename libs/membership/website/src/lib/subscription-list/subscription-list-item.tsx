@@ -16,10 +16,7 @@ import {
   MdTimelapse,
 } from 'react-icons/md';
 import { formatCurrency } from '../formatters/format-currency';
-import {
-  formatPaymentPeriod,
-  formatPaymentTimeline,
-} from '../formatters/format-payment-period';
+import { calculatePeriodAmount } from '../formatters/format-payment-period';
 import { Modal } from '@wepublish/website/builder';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -92,6 +89,9 @@ export function SubscriptionListItem({
   extendable,
   url,
   cancel,
+  reactivate,
+  revertUpgrade,
+  canRevertUpgrade,
   canExtend,
   externalReward,
   extend,
@@ -108,10 +108,16 @@ export function SubscriptionListItem({
   const [error, setError] = useState<Error>();
   const callAction = useAsyncAction(setLoading, setError);
 
-  const periodicityTimeline = formatPaymentTimeline(paymentPeriodicity);
-  const subscriptionDuration = formatPaymentPeriod(paymentPeriodicity);
+  const periodicityTimeline = t(
+    `subscription.paymentTimeline.${paymentPeriodicity || 'yearly'}`
+  );
+  const subscriptionDuration = t(
+    `subscription.paymentPeriod.${paymentPeriodicity || 'yearly'}`
+  );
 
   const [confirmCancel, setConfirmCancel] = useState(false);
+  const [confirmReactivate, setConfirmReactivate] = useState(false);
+  const [confirmRevertUpgrade, setConfirmRevertUpgrade] = useState(false);
   const [confirmExtend, setConfirmExtend] = useState<boolean>(false);
 
   return (
@@ -148,7 +154,7 @@ export function SubscriptionListItem({
             <SubscriptionListItemMetaItem>
               <MdOutlinePayments />
               <span>
-                Bezahlt bis{' '}
+                {t('subscription.paidUntil')}{' '}
                 <time
                   suppressHydrationWarning
                   dateTime={paidUntil}
@@ -164,7 +170,7 @@ export function SubscriptionListItem({
               <SubscriptionListItemMetaItem>
                 <MdCancel />
                 <span>
-                  Gekündigt am{' '}
+                  {t('subscription.cancelledOn')}{' '}
                   <time
                     suppressHydrationWarning
                     dateTime={deactivation.date}
@@ -177,13 +183,13 @@ export function SubscriptionListItem({
               {deactivation.reason ===
                 SubscriptionDeactivationReason.InvoiceNotPaid && (
                 <SubscriptionListItemMetaItem>
-                  <MdCancel /> Automatisch gekündigt
+                  <MdCancel /> {t('subscription.cancelledDueToInvoiceNotPaid')}
                 </SubscriptionListItemMetaItem>
               )}
 
               {deactivation.reason === SubscriptionDeactivationReason.None && (
                 <SubscriptionListItemMetaItem>
-                  <MdCancel /> Kündigungsgrund ist unbekannt.
+                  <MdCancel /> {t('subscription.cancelledDueToUnknownReason')}
                 </SubscriptionListItemMetaItem>
               )}
             </>
@@ -201,24 +207,38 @@ export function SubscriptionListItem({
 
           {autoRenew && (
             <SubscriptionListItemMetaItem>
-              <MdAutorenew /> Wird automatisch {periodicityTimeline} erneuert
+              <MdAutorenew />{' '}
+              {t('subscription.autoRenew', {
+                periodicityTimeline,
+              })}
             </SubscriptionListItemMetaItem>
           )}
 
           {!autoRenew && (
             <SubscriptionListItemPaymentPeriodicity>
-              <MdTimelapse /> Gültig für {subscriptionDuration}
+              <MdTimelapse />{' '}
+              {t('subscription.validFor', {
+                subscriptionDuration,
+              })}
             </SubscriptionListItemPaymentPeriodicity>
           )}
 
           <SubscriptionListItemMetaItem>
-            <MdAttachMoney /> Kostet{' '}
-            {formatCurrency(monthlyAmount / 100, currency, locale)}{' '}
-            {extendable ? 'pro Monat' : ''}
+            <MdAttachMoney />
+            {t('subscription.costs', {
+              amount: formatCurrency(
+                calculatePeriodAmount(monthlyAmount, paymentPeriodicity) / 100,
+                currency,
+                locale
+              ),
+              extendable,
+              periodicity: paymentPeriodicity,
+            })}
           </SubscriptionListItemMetaItem>
 
           <SubscriptionListItemMetaItem>
-            <MdHistory /> <Link href={url}>Details & Zahlungen</Link>
+            <MdHistory />{' '}
+            <Link href={url}>{t('subscription.detailsAndPayments')}</Link>
           </SubscriptionListItemMetaItem>
         </SubscriptionListItemMeta>
 
@@ -246,6 +266,30 @@ export function SubscriptionListItem({
 
         {error && <Alert severity="error">{error.message}</Alert>}
 
+        {canRevertUpgrade && revertUpgrade && (
+          <SubscriptionListItemActions>
+            <Button
+              onClick={() => setConfirmRevertUpgrade(true)}
+              disabled={loading}
+            >
+              {t('subscription.revertUpgrade')}
+            </Button>
+          </SubscriptionListItemActions>
+        )}
+
+        {deactivation && !canRevertUpgrade && reactivate && (
+          <SubscriptionListItemActions>
+            <Button
+              onClick={() => setConfirmReactivate(true)}
+              disabled={loading}
+            >
+              {t('subscription.reactivate', {
+                type: productType,
+              })}
+            </Button>
+          </SubscriptionListItemActions>
+        )}
+
         {!deactivation && (
           <SubscriptionListItemActions>
             {(extendable || !paidUntil) && (
@@ -266,7 +310,7 @@ export function SubscriptionListItem({
                 onClick={() => setConfirmExtend(true)}
                 disabled={loading}
               >
-                Jetzt verlängern
+                {t('subscription.extendNow')}
               </Button>
             )}
           </SubscriptionListItemActions>
@@ -283,11 +327,60 @@ export function SubscriptionListItem({
         submitText={t('subscription.cancel', {
           type: productType,
         })}
+        cancelText={t('user.cancel')}
       >
-        <H5 component="h1">{name} wirklich kündigen?</H5>
+        <H5 component="h1">
+          {t('subscription.cancelProduct', {
+            productName: productType,
+          })}
+        </H5>
 
         <Paragraph gutterBottom={false}>
           {t('subscription.cancelConfirmation', {
+            type: productType,
+          })}
+        </Paragraph>
+      </Modal>
+
+      <Modal
+        open={confirmRevertUpgrade}
+        onSubmit={async () => {
+          setConfirmRevertUpgrade(false);
+          await callAction(revertUpgrade)();
+        }}
+        onCancel={() => setConfirmRevertUpgrade(false)}
+        submitText={t('subscription.revertUpgrade')}
+        cancelText={t('user.cancel')}
+      >
+        <H5 component="h1">{t('subscription.revertUpgradeTitle')}</H5>
+
+        <Paragraph gutterBottom={false}>
+          {t('subscription.revertUpgradeConfirmation', {
+            type: productType,
+          })}
+        </Paragraph>
+      </Modal>
+
+      <Modal
+        open={confirmReactivate}
+        onSubmit={async () => {
+          setConfirmReactivate(false);
+          await callAction(reactivate)();
+        }}
+        onCancel={() => setConfirmReactivate(false)}
+        submitText={t('subscription.reactivate', {
+          type: productType,
+        })}
+        cancelText={t('user.cancel')}
+      >
+        <H5 component="h1">
+          {t('subscription.reactivateProduct', {
+            productName: productType,
+          })}
+        </H5>
+
+        <Paragraph gutterBottom={false}>
+          {t('subscription.reactivateConfirmation', {
             type: productType,
           })}
         </Paragraph>
@@ -300,7 +393,10 @@ export function SubscriptionListItem({
           setConfirmExtend(false);
           await callAction(extend)();
         }}
-        submitText={`Jetzt um ${subscriptionDuration} verlängern`}
+        submitText={t('subscription.extendBy', {
+          subscriptionDuration,
+        })}
+        cancelText={t('user.cancel')}
       >
         <H5 component="h1">
           {t('subscription.extendEarly', {

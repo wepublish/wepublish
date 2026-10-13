@@ -1,10 +1,14 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`EventService should create an event 1`] = `
+exports[`EventService > should create an event 1`] = `
 [
   {
     "data": {
-      "description": [],
+      "description": {
+        "attrs": undefined,
+        "content": [],
+        "type": "doc",
+      },
       "endsAt": 2023-01-01T00:00:00.000Z,
       "imageId": "123",
       "location": "Location",
@@ -27,7 +31,7 @@ exports[`EventService should create an event 1`] = `
 ]
 `;
 
-exports[`EventService should delete an event 1`] = `
+exports[`EventService > should delete an event 1`] = `
 [
   {
     "where": {
@@ -37,7 +41,7 @@ exports[`EventService should delete an event 1`] = `
 ]
 `;
 
-exports[`EventService should query an event by id 1`] = `
+exports[`EventService > should query an event by id 1`] = `
 [
   {
     "where": {
@@ -47,7 +51,7 @@ exports[`EventService should query an event by id 1`] = `
 ]
 `;
 
-exports[`EventService should query events based on filter 1`] = `
+exports[`EventService > should query events based on filter 1`] = `
 [
   {
     "cursor": undefined,
@@ -137,7 +141,7 @@ exports[`EventService should query events based on filter 1`] = `
 ]
 `;
 
-exports[`EventService should query events based on filter 2`] = `
+exports[`EventService > should query events based on filter 2`] = `
 [
   {
     "orderBy": {
@@ -224,7 +228,7 @@ exports[`EventService should query events based on filter 2`] = `
 ]
 `;
 
-exports[`EventService should query events using cursor based pagination 1`] = `
+exports[`EventService > should query events using cursor based pagination 1`] = `
 [
   {
     "cursor": {
@@ -249,7 +253,7 @@ exports[`EventService should query events using cursor based pagination 1`] = `
 ]
 `;
 
-exports[`EventService should query events using cursor based pagination 2`] = `
+exports[`EventService > should query events using cursor based pagination 2`] = `
 [
   {
     "orderBy": {
@@ -269,7 +273,7 @@ exports[`EventService should query events using cursor based pagination 2`] = `
 ]
 `;
 
-exports[`EventService should return paginated events 1`] = `
+exports[`EventService > should return paginated events 1`] = `
 {
   "nodes": [
     {
@@ -286,7 +290,7 @@ exports[`EventService should return paginated events 1`] = `
 }
 `;
 
-exports[`EventService should update an event 1`] = `
+exports[`EventService > should update an event 1`] = `
 [
   {
     "where": {
@@ -296,11 +300,15 @@ exports[`EventService should update an event 1`] = `
 ]
 `;
 
-exports[`EventService should update an event 2`] = `
+exports[`EventService > should update an event 2`] = `
 [
   {
     "data": {
-      "description": [],
+      "description": {
+        "attrs": undefined,
+        "content": [],
+        "type": "doc",
+      },
       "endsAt": 2023-01-01T00:00:00.000Z,
       "imageId": "123",
       "location": "Location",

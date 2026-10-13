@@ -3,12 +3,11 @@ import { ImageContext } from '@wepublish/image/website';
 import {
   BuilderBlockRendererProps,
   BuilderBlocksProps,
-  useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { cond } from 'ramda';
-import type { ComponentType } from 'react';
 import { memo, useMemo } from 'react';
 
+import { BlockSibling, collectSiblings } from './block-siblings';
 import { TsriTabbedContent } from './block-layouts/tsri-base-tabbed-content';
 import {
   isTsriSidebarContent,
@@ -19,18 +18,23 @@ import {
   TsriSidebarContentAltColor,
 } from './break-blocks/tsri-sidebar-content-alt-color';
 import { isTabbedContentBlockStyle } from './tabbed-content/tabbed-content';
-export type BlockSiblings = Array<{
-  typeName: string;
-  blockStyle?: string;
-}>;
 
 export const TsriBlockRenderer = (
-  props: BuilderBlockRendererProps & { siblings: BlockSiblings }
+  props: BuilderBlockRendererProps & { siblings?: BlockSibling[] }
 ) => {
   const extraBlockMap = useMemo(
     () =>
       cond([
-        [isTabbedContentBlockStyle, block => <TsriTabbedContent {...block} />],
+        [
+          isTabbedContentBlockStyle,
+          block => (
+            <TsriTabbedContent
+              {...block}
+              type={props.type}
+              level={props.level}
+            />
+          ),
+        ],
         [
           isTsriSidebarContentAltColor,
           block => (
@@ -54,34 +58,17 @@ export const TsriBlockRenderer = (
           ),
         ],
       ]),
-    [props.count, props.index, props.siblings]
+    [props.count, props.index, props.siblings, props.type, props.level]
   );
 
   const block = extraBlockMap(props.block) ?? <BlockRenderer {...props} />;
 
-  if (props.type === 'Page') {
-    return block;
-  }
-
-  return <>{block}</>;
+  return block;
 };
 
 // eslint-disable-next-line react/display-name
 export const TsriBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
-  const {
-    blocks: { Renderer },
-  } = useWebsiteBuilder() as {
-    blocks: {
-      Renderer: ComponentType<
-        BuilderBlockRendererProps & { siblings: BlockSiblings }
-      >;
-    };
-  };
-
-  const siblings = blocks.map(b => ({
-    typeName: b.__typename,
-    blockStyle: b.blockStyle,
-  })) as BlockSiblings;
+  const siblings = collectSiblings(blocks);
 
   return (
     <>
@@ -98,7 +85,7 @@ export const TsriBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
             : {}
           }
         >
-          <Renderer
+          <TsriBlockRenderer
             block={block}
             index={index}
             count={blocks.length}

@@ -1,10 +1,11 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Badge, css, Theme } from '@mui/material';
 import {
   ArticleTags as ArticleTagsDefault,
   ArticleTagsWrapper,
 } from '@wepublish/article/website';
-import { useCommentListQuery } from '@wepublish/website/api';
+import { CommentListDocument } from '@wepublish/website/api';
 import {
   BuilderArticleMetaProps,
   useWebsiteBuilder,
@@ -12,7 +13,9 @@ import {
 import { FaCommentSlash } from 'react-icons/fa6';
 import { FiMessageCircle as FiMessageCircleDefault } from 'react-icons/fi';
 
-export const ArticleMetaWrapper = styled('div')`
+export const ArticleMetaWrapper = styled('div', {
+  shouldForwardProp: prop => prop !== 'hideAuthor',
+})<{ hideAuthor?: boolean }>`
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-start;
@@ -23,10 +26,22 @@ export const ArticleMetaWrapper = styled('div')`
   grid-column: 1 / 4;
   grid-row: 4 / 5;
 
+  ${({ theme, hideAuthor }) =>
+    hideAuthor &&
+    css`
+      margin-top: ${theme.spacing(-5)};
+    `}
+
   ${({ theme }) => theme.breakpoints.up('md')} {
     gap: 8px;
     grid-column: 2 / 4;
     padding: 0 0 0.75rem 0;
+
+    ${({ theme, hideAuthor }) =>
+      hideAuthor &&
+      css`
+        margin-top: ${theme.spacing(-4)};
+      `}
   }
 
   ${ArticleTagsWrapper} {
@@ -162,7 +177,7 @@ export const TsriArticleMeta = ({
   const {
     elements: { Link },
   } = useWebsiteBuilder();
-  const { data } = useCommentListQuery({
+  const { data } = useQuery(CommentListDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       itemId: article.id,
@@ -172,7 +187,10 @@ export const TsriArticleMeta = ({
   const commentCount = data?.commentsForItem.length;
 
   return (
-    <ArticleMetaWrapper className={className}>
+    <ArticleMetaWrapper
+      className={className}
+      hideAuthor={article.latest.hideAuthor}
+    >
       <ArticleTags article={article} />
 
       <ArticleMetaComments>

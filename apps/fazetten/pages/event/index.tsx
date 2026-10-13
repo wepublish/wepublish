@@ -1,21 +1,21 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { EventListContainer } from '@wepublish/event/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { EventSort, SortOrder } from '@wepublish/website/api';
 import {
-  addClientCacheToProps,
   EventListDocument,
   EventListQueryVariables,
-  getApiClient,
+  EventSort,
   NavigationListDocument,
   PeerProfileDocument,
-  useEventListQuery,
+  SortOrder,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
@@ -67,7 +67,7 @@ export default function EventList() {
     [from, page, to, upcomingOnly]
   );
 
-  const { data } = useEventListQuery({
+  const { data } = useQuery(EventListDocument, {
     fetchPolicy: 'cache-only',
     variables,
   });
@@ -154,9 +154,7 @@ export default function EventList() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 

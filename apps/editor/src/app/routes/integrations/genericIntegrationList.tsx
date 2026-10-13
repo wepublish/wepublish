@@ -1,6 +1,7 @@
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { SettingProvider } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
 import { useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
@@ -12,16 +13,49 @@ import {
   GenericIntegrationFormProps,
   SingleGenericIntegrationForm,
 } from './genericIntegrationForm';
+import {
+  AddIntegrationButton,
+  CreateFixedIntegrationButton,
+  DeleteIntegrationButton,
+  ProviderTypeOption,
+} from './integrationRegistryActions';
 
 interface GenericIntegrationListProps<
   TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
-> extends Omit<GenericIntegrationFormProps<TSetting, TFormValues>, 'setting'> {
+> extends Omit<
+    GenericIntegrationFormProps<TSetting, TFormValues>,
+    'setting' | 'renderActions'
+  > {
   query: DocumentNode;
   dataKey: string;
+
+  registry?: {
+    createMutation: DocumentNode;
+    deleteMutation: DocumentNode;
+    types: ProviderTypeOption[];
+  };
+
+  fixedProvider?: {
+    id: string;
+    type: string;
+    name: string;
+    createMutation: DocumentNode;
+  };
+
+  setup?: {
+    createMutation: DocumentNode;
+    types: ProviderTypeOption[];
+  };
 }
 
 const StyledInputGroup = styled(InputGroup)`
+  margin-bottom: 20px;
+`;
+
+const Toolbar = styled.div`
+  display: flex;
+  justify-content: flex-end;
   margin-bottom: 20px;
 `;
 
@@ -37,12 +71,15 @@ export function GenericIntegrationList<
 >({
   query,
   dataKey,
+  registry,
+  fixedProvider,
+  setup,
   ...formProps
 }: GenericIntegrationListProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState('');
 
-  const { data, loading, error } = useQuery(query, {});
+  const { data, loading, error } = useQuery<Record<string, unknown>>(query, {});
 
   const settings = data?.[dataKey] as TSetting[] | undefined;
 
@@ -69,17 +106,60 @@ export function GenericIntegrationList<
   }
 
   if (error) {
-    return <Message type="error">{error.message}</Message>;
+    return <Message type="error">{humanizeError(error)}</Message>;
   }
+
+  const addButton = registry && (
+    <AddIntegrationButton
+      types={registry.types}
+      mutation={registry.createMutation}
+      refetchQuery={query}
+      existingIds={settings?.map(setting => setting.id) ?? []}
+    />
+  );
 
   if (!settings?.length) {
     return (
-      <Message type="warning">{t('integrations.noSettingsFound')}</Message>
+      <>
+        <Message type="warning">
+          {setup ?
+            t('integrations.setUpHint')
+          : t('integrations.noSettingsFound')}
+        </Message>
+
+        {(addButton || fixedProvider || setup) && (
+          <Toolbar>
+            {addButton}
+
+            {setup && (
+              <AddIntegrationButton
+                types={setup.types}
+                mutation={setup.createMutation}
+                refetchQuery={query}
+                existingIds={[]}
+                label={t('integrations.setUp')}
+              />
+            )}
+
+            {fixedProvider && (
+              <CreateFixedIntegrationButton
+                id={fixedProvider.id}
+                type={fixedProvider.type}
+                name={fixedProvider.name}
+                mutation={fixedProvider.createMutation}
+                refetchQuery={query}
+              />
+            )}
+          </Toolbar>
+        )}
+      </>
     );
   }
 
   return (
     <>
+      {addButton && <Toolbar>{addButton}</Toolbar>}
+
       {settings?.length > 3 && (
         <StyledInputGroup>
           <InputGroup.Addon>
@@ -100,6 +180,17 @@ export function GenericIntegrationList<
           <SingleGenericIntegrationForm
             key={setting.id}
             setting={setting}
+            renderActions={
+              registry ?
+                current => (
+                  <DeleteIntegrationButton
+                    id={current.id}
+                    mutation={registry.deleteMutation}
+                    refetchQuery={query}
+                  />
+                )
+              : undefined
+            }
             {...formProps}
           />
         ))}

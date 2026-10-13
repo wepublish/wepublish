@@ -2,6 +2,7 @@ import {
   PrismaClient,
   SubscriptionDeactivationReason,
   SubscriptionPeriod,
+  DiscountCode,
 } from '@prisma/client';
 import {
   BadRequestException,
@@ -11,7 +12,17 @@ import {
 } from '@nestjs/common';
 import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
 import { MemberContextService } from '../legacy/member-context.service';
-import { PaymentsService } from '@wepublish/payment/api';
+import { GoodieService } from '../goodie/goodie.service';
+import {
+  isPaymentMethodRetired,
+  PaymentsService,
+} from '@wepublish/payment/api';
+import { DiscountCodeService } from '../discountCode/discountCode.service';
+import {
+  calculateAmountForPeriodicity,
+  getNextDateForPeriodicity,
+} from '../legacy/member-context';
+import { SettingName, SettingsService } from '@wepublish/settings/api';
 
 const roundUpTo5Cents = (amount: number) =>
   (Math.ceil((amount / 100) * 20) / 20) * 100;
@@ -36,13 +47,35 @@ const leftoverSubscriptionPeriodAmount = (periods: SubscriptionPeriod[]) => {
   return discountAmount;
 };
 
+const fullSubscriptionPeriodAmount = (periods: SubscriptionPeriod[]) =>
+  periods.reduce((total, period) => total + period.amount, 0);
+
 @Injectable()
 export class UpgradeSubscriptionService {
   constructor(
     private prisma: PrismaClient,
     private memberContext: MemberContextService,
-    private payments: PaymentsService
+    private goodieService: GoodieService,
+    private payments: PaymentsService,
+    private discountCodeservice: DiscountCodeService,
+    private settingsService: SettingsService
   ) {}
+
+  private async resolvePeriodCreditCalculator() {
+    try {
+      const setting = await this.settingsService.settingByName(
+        SettingName.SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE
+      );
+
+      if (setting?.value === true) {
+        return fullSubscriptionPeriodAmount;
+      }
+    } catch {
+      return leftoverSubscriptionPeriodAmount;
+    }
+
+    return leftoverSubscriptionPeriodAmount;
+  }
 
   private async validateForUpgrade({
     memberPlanId,
@@ -112,6 +145,21 @@ export class UpgradeSubscriptionService {
       );
     }
 
+    if (paymentMethodId) {
+      const paymentMethod = await this.prisma.paymentMethod.findUnique({
+        where: { id: paymentMethodId },
+      });
+
+      if (
+        paymentMethod &&
+        (await isPaymentMethodRetired(this.prisma, paymentMethod))
+      ) {
+        throw new BadRequestException(
+          `PaymentMethod ${paymentMethodId} is no longer offered`
+        );
+      }
+    }
+
     const paymentMethods =
       paymentMethodId ?
         newMemberplan.availablePaymentMethods.filter(av =>
@@ -155,6 +203,8 @@ export class UpgradeSubscriptionService {
     successURL,
     failureURL,
     monthlyAmount,
+    discountCode,
+    goodieId,
   }: {
     userId: string;
     subscriptionId: string;
@@ -163,6 +213,8 @@ export class UpgradeSubscriptionService {
     successURL?: string;
     failureURL?: string;
     monthlyAmount: number;
+    discountCode?: string;
+    goodieId?: string;
   }) {
     const { oldSubscription, oldSubscriptionPeriods } =
       await this.validateForUpgrade({
@@ -171,6 +223,39 @@ export class UpgradeSubscriptionService {
         paymentMethodId,
         userId,
       });
+
+    const calculatePeriodCredit = await this.resolvePeriodCreditCalculator();
+    const leftoverDiscount =
+      oldSubscriptionPeriods.length ?
+        calculatePeriodCredit(oldSubscriptionPeriods)
+      : 0;
+
+    let discountCodeId: string | undefined = undefined;
+    let discountCodeDiscount = 0;
+
+    if (discountCode) {
+      const discountCodeObj =
+        await this.discountCodeservice.getValidDiscountCode(
+          discountCode,
+          memberPlanId
+        );
+
+      const amountAfterLeftoverDiscount = Math.max(
+        calculateAmountForPeriodicity(
+          monthlyAmount,
+          oldSubscription.paymentPeriodicity
+        ) - leftoverDiscount,
+        0
+      );
+
+      discountCodeId = discountCodeObj.id;
+      discountCodeDiscount =
+        amountAfterLeftoverDiscount * (discountCodeObj.discountPercent / 100);
+    }
+
+    if (goodieId) {
+      await this.goodieService.getValidGoodie(goodieId, memberPlanId);
+    }
 
     const { invoice } = await this.memberContext.createSubscription({
       userID: userId,
@@ -183,10 +268,9 @@ export class UpgradeSubscriptionService {
       extendable: oldSubscription.extendable,
       replacedSubscriptionId: oldSubscription.id,
       startsAt: new Date(),
-      discount:
-        oldSubscriptionPeriods.length ?
-          leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
-        : undefined,
+      discount: leftoverDiscount + discountCodeDiscount || undefined,
+      discountCodeId,
+      goodieId,
     });
 
     await Promise.all([
@@ -234,14 +318,144 @@ export class UpgradeSubscriptionService {
     });
   }
 
+  async revertUpgrade({
+    subscriptionId,
+    userId,
+  }: {
+    subscriptionId: string;
+    /**
+     * The user the revert is done for, or null to revert as an admin, which
+     * skips the ownership check. Required so that a caller can not drop the
+     * check by forgetting the argument.
+     */
+    userId: string | null;
+  }) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+      include: {
+        deactivation: true,
+        periods: true,
+      },
+    });
+
+    if (!subscription) {
+      throw new NotFoundException(
+        `Subscription with id ${subscriptionId} was not found.`
+      );
+    }
+
+    if (userId && subscription.userID !== userId) {
+      throw new ForbiddenException(
+        `Subscription with id ${subscriptionId} does not belong to current user.`
+      );
+    }
+
+    const replacements = await this.prisma.subscription.findMany({
+      where: { replacesSubscriptionID: subscriptionId },
+      include: { invoices: true },
+    });
+
+    if (!replacements.length) {
+      throw new BadRequestException(
+        `Subscription with id ${subscriptionId} was not upgraded.`
+      );
+    }
+
+    if (
+      replacements.some(replacement =>
+        replacement.invoices.some(invoice => invoice.paidAt)
+      )
+    ) {
+      throw new BadRequestException(
+        `The upgrade of subscription with id ${subscriptionId} has already been paid.`
+      );
+    }
+
+    for (const replacement of replacements) {
+      const invoices = await this.prisma.invoice.findMany({
+        where: { subscriptionID: replacement.id },
+        select: { id: true },
+      });
+      const invoiceIds = invoices.map(({ id }) => id);
+
+      // nothing of the upgrade has been paid, so the invoice and everything
+      // hanging off it goes away with the subscription instead of being
+      // detached into orphaned rows
+      await this.prisma.payment.deleteMany({
+        where: { invoiceID: { in: invoiceIds } },
+      });
+
+      await this.prisma.subscriptionPeriod.deleteMany({
+        where: { invoiceID: { in: invoiceIds } },
+      });
+
+      await this.prisma.invoiceItem.deleteMany({
+        where: { invoiceId: { in: invoiceIds } },
+      });
+
+      await this.prisma.invoice.deleteMany({
+        where: { id: { in: invoiceIds } },
+      });
+
+      await this.prisma.subscription.delete({
+        where: { id: replacement.id },
+      });
+    }
+
+    // the upgrade cut the running periods short, give them their original end back
+    const truncatedAt = subscription.deactivation?.date;
+    const restoredPeriods = subscription.periods.map(period => ({
+      period,
+      endsAt:
+        truncatedAt && period.endsAt.getTime() === truncatedAt.getTime() ?
+          getNextDateForPeriodicity(period.startsAt, period.paymentPeriodicity)
+        : period.endsAt,
+    }));
+
+    for (const { period, endsAt } of restoredPeriods) {
+      if (endsAt.getTime() === period.endsAt.getTime()) {
+        continue;
+      }
+
+      await this.prisma.subscriptionPeriod.update({
+        where: { id: period.id },
+        data: { endsAt },
+      });
+    }
+
+    if (subscription.deactivation) {
+      await this.prisma.subscriptionDeactivation.delete({
+        where: { subscriptionID: subscriptionId },
+      });
+    }
+
+    const paidUntil = restoredPeriods.reduce<Date | null>(
+      (latest, { endsAt }) => (!latest || endsAt > latest ? endsAt : latest),
+      null
+    );
+
+    return this.prisma.subscription.update({
+      where: { id: subscriptionId },
+      data: {
+        paidUntil: paidUntil ?? subscription.paidUntil,
+      },
+      include: {
+        deactivation: true,
+        periods: true,
+      },
+    });
+  }
+
   async getInfo({
     userId,
     subscriptionId,
     memberPlanId,
+    discountCode,
   }: {
     userId: string;
     subscriptionId: string;
     memberPlanId: string;
+    discountCode?: string;
   }) {
     const { oldSubscriptionPeriods } = await this.validateForUpgrade({
       memberPlanId,
@@ -250,8 +464,32 @@ export class UpgradeSubscriptionService {
       userId,
     });
 
-    return oldSubscriptionPeriods.length ?
-        leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
+    const calculatePeriodCredit = await this.resolvePeriodCreditCalculator();
+    const discountAmount =
+      oldSubscriptionPeriods.length ?
+        calculatePeriodCredit(oldSubscriptionPeriods)
       : 0;
+
+    if (!discountCode) {
+      return { discountAmount };
+    }
+
+    let validDiscountCode: DiscountCode | null = null;
+
+    try {
+      validDiscountCode = await this.discountCodeservice.getValidDiscountCode(
+        discountCode,
+        memberPlanId
+      );
+    } catch (e) {
+      validDiscountCode = null;
+    }
+
+    return {
+      discountAmount,
+      discountCodeValid: !!validDiscountCode,
+      discountPercent:
+        validDiscountCode ? validDiscountCode.discountPercent / 100 : 0,
+    };
   }
 }

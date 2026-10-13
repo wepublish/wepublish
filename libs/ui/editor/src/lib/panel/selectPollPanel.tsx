@@ -1,6 +1,6 @@
-import { ApolloError } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Poll, usePollsLazyQuery } from '@wepublish/editor/api';
+import { FullPollFragment, PollsDocument } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
@@ -10,7 +10,7 @@ import {
   IconButton,
   Message,
   Pagination,
-  Table,
+  Table as RTable,
   toaster,
 } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
@@ -19,8 +19,10 @@ import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { PollStateIndication } from '../atoms/poll/pollStateIndication';
 import { PollBlockValue } from '../blocks/types';
 import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
+import { humanizeError } from '../humanizeError';
+import { Table } from '../listView/list-view';
 
-export function PollOpensAtView({ poll }: { poll: Poll }) {
+export function PollOpensAtView({ poll }: { poll: FullPollFragment }) {
   const now = new Date();
   const opensAt = new Date(poll.opensAt);
   const { t } = useTranslation();
@@ -34,7 +36,7 @@ export function PollOpensAtView({ poll }: { poll: Poll }) {
   return <>{t('pollList.pollWillOpenAt', { opensAt })}</>;
 }
 
-export function PollClosedAtView({ poll }: { poll: Poll }) {
+export function PollClosedAtView({ poll }: { poll: FullPollFragment }) {
   const now = new Date();
   const closedAt = poll.closedAt ? new Date(poll.closedAt) : undefined;
   const { t } = useTranslation();
@@ -51,16 +53,16 @@ const DrawerBody = styled(Drawer.Body)`
   padding: 24px;
 `;
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   if (error?.message) {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error?.message}
+        {error && humanizeError(error)}
       </Message>
     );
   }
@@ -81,9 +83,14 @@ export function SelectPollPanel({
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
 
-  const [fetchPolls, { data, loading }] = usePollsLazyQuery({
-    onError: onErrorToast,
-  });
+  const [fetchPolls, { data, loading, error: pollsError }] =
+    useLazyQuery(PollsDocument);
+
+  useEffect(() => {
+    if (pollsError) {
+      onErrorToast(pollsError);
+    }
+  }, [pollsError]);
 
   useEffect(() => {
     fetchPolls({
@@ -119,66 +126,68 @@ export function SelectPollPanel({
             rowData?.id === selectedPoll?.id ? 'highlighted-row' : ''
           }
         >
-          <Table.Column resizable>
-            <Table.HeaderCell>{t('pollList.state')}</Table.HeaderCell>
-            <Table.Cell>
-              {(rowData: RowDataType<Poll>) => (
+          <RTable.Column resizable>
+            <RTable.HeaderCell>{t('pollList.state')}</RTable.HeaderCell>
+            <RTable.Cell>
+              {(rowData: RowDataType<FullPollFragment>) => (
                 <PollStateIndication
                   closedAt={rowData.closedAt}
                   opensAt={rowData.opensAt}
                 />
               )}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column
+          <RTable.Column
             resizable
             width={200}
           >
-            <Table.HeaderCell>{t('pollList.question')}</Table.HeaderCell>
-            <Table.Cell>
-              {(rowData: RowDataType<Poll>) =>
+            <RTable.HeaderCell>{t('pollList.question')}</RTable.HeaderCell>
+            <RTable.Cell>
+              {(rowData: RowDataType<FullPollFragment>) =>
                 rowData.question || t('pollList.noQuestion')
               }
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column
+          <RTable.Column
             width={250}
             resizable
           >
-            <Table.HeaderCell>{t('pollList.opensAt')}</Table.HeaderCell>
-            <Table.Cell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollOpensAtView poll={rowData as Poll} />
+            <RTable.HeaderCell>{t('pollList.opensAt')}</RTable.HeaderCell>
+            <RTable.Cell>
+              {(rowData: RowDataType<FullPollFragment>) => (
+                <PollOpensAtView poll={rowData as FullPollFragment} />
               )}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column
+          <RTable.Column
             width={250}
             resizable
           >
-            <Table.HeaderCell>{t('pollList.closedAt')}</Table.HeaderCell>
-            <Table.Cell>
-              {(rowData: RowDataType<Poll>) => (
-                <PollClosedAtView poll={rowData as Poll} />
+            <RTable.HeaderCell>{t('pollList.closedAt')}</RTable.HeaderCell>
+            <RTable.Cell>
+              {(rowData: RowDataType<FullPollFragment>) => (
+                <PollClosedAtView poll={rowData as FullPollFragment} />
               )}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
 
-          <Table.Column width={125}>
-            <Table.HeaderCell align="center">
-              {t('blocks.poll.select')}
-            </Table.HeaderCell>
-            <Table.Cell align="center">
-              {(rowData: RowDataType<Poll>) => (
+          <RTable.Column
+            width={100}
+            align="center"
+            fixed="right"
+          >
+            <RTable.HeaderCell align="center">{t('action')}</RTable.HeaderCell>
+            <RTable.Cell align="center">
+              {(rowData: RowDataType<FullPollFragment>) => (
                 <IconButtonTooltip caption={t('blocks.poll.select')}>
                   <IconButton
+                    aria-label={t('blocks.poll.select')}
                     icon={<MdAddCircle />}
-                    appearance="primary"
                     circle
-                    size="xs"
+                    size="sm"
                     onClick={() => {
                       onSelect({ id: rowData.id, question: rowData.question });
                       onClose();
@@ -186,8 +195,8 @@ export function SelectPollPanel({
                   />
                 </IconButtonTooltip>
               )}
-            </Table.Cell>
-          </Table.Column>
+            </RTable.Cell>
+          </RTable.Column>
         </Table>
 
         <Pagination

@@ -1,0 +1,440 @@
+-- DropView recreated below. SQL blocks changing the column types while used in a view
+DROP VIEW IF EXISTS "articles.revisions.published";
+DROP VIEW IF EXISTS "articles.revisions.pending";
+DROP VIEW IF EXISTS "articles.revisions.draft";
+DROP VIEW IF EXISTS "pages.revisions.published";
+DROP VIEW IF EXISTS "pages.revisions.pending";
+DROP VIEW IF EXISTS "pages.revisions.draft";
+
+-- AlterTable
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = '_GoodieToMemberPlan_AB_pkey' AND conrelid = '"_GoodieToMemberPlan"'::regclass
+  ) THEN
+    ALTER TABLE "_GoodieToMemberPlan" ADD CONSTRAINT "_GoodieToMemberPlan_AB_pkey" PRIMARY KEY ("A", "B");
+  END IF;
+END $$;
+
+-- DropIndex
+DROP INDEX IF EXISTS "_GoodieToMemberPlan_AB_unique";
+
+-- AlterTable
+ALTER TABLE "apps.external" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "articles" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "publishedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "publishedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "articles.revisions" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "publishedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "publishedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "archivedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "archivedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "articles.tagged-articles" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "articles.tracking-pixels" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "authors" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "authors.links" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "authors.tagged-authors" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "banner_actions" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "banners" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "block-content.styles" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "comments" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "comments.rating-override" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "comments.rating-system-answers" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "comments.rating-systems" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "comments.ratings" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "comments.revisions" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "comments.tagged-comments" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "consents" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "crowdfunding_goals" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "crowdfundings" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "countSubscriptionsFrom" SET DATA TYPE TIMESTAMPTZ(3) USING "countSubscriptionsFrom" AT TIME ZONE 'UTC',
+ALTER COLUMN "countSubscriptionsUntil" SET DATA TYPE TIMESTAMPTZ(3) USING "countSubscriptionsUntil" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "documents" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "events" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "startsAt" SET DATA TYPE TIMESTAMPTZ(3) USING "startsAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "endsAt" SET DATA TYPE TIMESTAMPTZ(3) USING "endsAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "events.tagged-events" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "goodies" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "images" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "invoices" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "dueAt" SET DATA TYPE TIMESTAMPTZ(3) USING "dueAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "paidAt" SET DATA TYPE TIMESTAMPTZ(3) USING "paidAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "canceledAt" SET DATA TYPE TIMESTAMPTZ(3) USING "canceledAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "scheduledDeactivationAt" SET DATA TYPE TIMESTAMPTZ(3) USING "scheduledDeactivationAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "invoices.items" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "mail.log" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "sentDate" SET DATA TYPE TIMESTAMPTZ(3) USING "sentDate" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "mail.send_job_recipients" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "sentAt" SET DATA TYPE TIMESTAMPTZ(3) USING "sentAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "mail.send_jobs" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "startedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "startedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "finishedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "finishedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "recipientsResolvedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "recipientsResolvedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "heartbeatAt" SET DATA TYPE TIMESTAMPTZ(3) USING "heartbeatAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "mail_templates" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "mailchimp_sync_errors" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "member.plans" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "member.plans.payment-methods" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "navigations" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "navigations.links" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "pages" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "publishedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "publishedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "pages.revisions" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "publishedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "publishedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "archivedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "archivedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "pages.tagged-pages" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "payment.methods" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "payments" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "paywall_bypasses" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "paywalls" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "paywalls.memberPlans" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "peers" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "periodic_jobs" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "executionTime" SET DATA TYPE TIMESTAMPTZ(3) USING "executionTime" AT TIME ZONE 'UTC',
+ALTER COLUMN "successfullyFinished" SET DATA TYPE TIMESTAMPTZ(3) USING "successfullyFinished" AT TIME ZONE 'UTC',
+ALTER COLUMN "finishedWithError" SET DATA TYPE TIMESTAMPTZ(3) USING "finishedWithError" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "polls" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "opensAt" SET DATA TYPE TIMESTAMPTZ(3) USING "opensAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "closedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "closedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "polls.answers" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "polls.external-vote-sources" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "polls.external-votes" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "polls.votes" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "sessions" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "expiresAt" SET DATA TYPE TIMESTAMPTZ(3) USING "expiresAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "settings" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "settings.aiprovider" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "lastLoadedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "lastLoadedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "settings.analyticsProvider" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "lastLoadedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "lastLoadedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "settings.challengeprovider" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "lastLoadedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "lastLoadedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "settings.mailprovider" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "lastLoadedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "lastLoadedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "settings.paymentprovider" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "lastLoadedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "lastLoadedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "settings.syncprovider" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "lastLoadedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "lastLoadedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "lastSyncAt" SET DATA TYPE TIMESTAMPTZ(3) USING "lastSyncAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "settings.trackingpixel" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "lastLoadedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "lastLoadedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "settings.website" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "subscription_communication_flows" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "subscriptions" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "startsAt" SET DATA TYPE TIMESTAMPTZ(3) USING "startsAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "paidUntil" SET DATA TYPE TIMESTAMPTZ(3) USING "paidUntil" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "subscriptions.deactivation-reasons" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "date" SET DATA TYPE TIMESTAMPTZ(3) USING "date" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "subscriptions.intervals" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "subscriptions.periods" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "startsAt" SET DATA TYPE TIMESTAMPTZ(3) USING "startsAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "endsAt" SET DATA TYPE TIMESTAMPTZ(3) USING "endsAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "tags" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "tokens" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "tracking.pixels.methods" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "user-consents" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "user_communication_flows" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "users" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "emailVerifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "emailVerifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "lastLogin" SET DATA TYPE TIMESTAMPTZ(3) USING "lastLogin" AT TIME ZONE 'UTC',
+ALTER COLUMN "pendingEmailAt" SET DATA TYPE TIMESTAMPTZ(3) USING "pendingEmailAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "users.addresses" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "users.payment-providers" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "users.roles" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC';
+
+-- AlterTable
+ALTER TABLE "vouchers" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3) USING "createdAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "modifiedAt" SET DATA TYPE TIMESTAMPTZ(3) USING "modifiedAt" AT TIME ZONE 'UTC',
+ALTER COLUMN "validFrom" SET DATA TYPE TIMESTAMPTZ(3) USING "validFrom" AT TIME ZONE 'UTC',
+ALTER COLUMN "validTo" SET DATA TYPE TIMESTAMPTZ(3) USING "validTo" AT TIME ZONE 'UTC';
+
+-- CreateView recreate the dropped views
+-- @see: libs/api/prisma/migrations/20250820145935_add_article_and_page_revisions_published_draft_pending_view/migration.sql
+CREATE VIEW "articles.revisions.published" AS
+    SELECT DISTINCT ON ("articleId")
+        id,
+        "articleId"
+        FROM
+        "articles.revisions"
+        WHERE
+        "publishedAt" IS NOT NULL AND "publishedAt" <= CURRENT_TIMESTAMP
+    ORDER BY
+     "articleId", "createdAt" DESC, id DESC
+;
+
+CREATE VIEW "articles.revisions.pending" AS
+    SELECT DISTINCT ON ("articleId")
+        id,
+        "articleId"
+    FROM
+        "articles.revisions"
+    WHERE
+        "publishedAt" IS NOT NULL AND "publishedAt" > CURRENT_TIMESTAMP
+    ORDER BY
+        "articleId", "createdAt" DESC, id DESC
+;
+
+CREATE VIEW "articles.revisions.draft" AS
+    SELECT DISTINCT ON ("articleId")
+        id,
+        "articleId"
+    FROM
+        "articles.revisions"
+    WHERE
+        "archivedAt" IS NULL AND "publishedAt" is NULL
+    ORDER BY
+        "articleId", "createdAt" DESC, id DESC
+;
+
+CREATE VIEW "pages.revisions.published" AS
+SELECT DISTINCT ON ("pageId")
+    id,
+    "pageId"
+FROM
+    "pages.revisions"
+WHERE
+    "publishedAt" IS NOT NULL AND "publishedAt" <= CURRENT_TIMESTAMP
+ORDER BY
+    "pageId", "createdAt" DESC, id DESC;
+
+CREATE VIEW "pages.revisions.pending" AS
+SELECT DISTINCT ON ("pageId")
+    id,
+    "pageId"
+FROM
+    "pages.revisions"
+WHERE
+    "publishedAt" IS NOT NULL AND "publishedAt" > CURRENT_TIMESTAMP
+ORDER BY
+    "pageId", "createdAt" DESC, id DESC;
+
+CREATE VIEW "pages.revisions.draft" AS
+SELECT DISTINCT ON ("pageId")
+    id,
+    "pageId"
+FROM
+    "pages.revisions"
+WHERE
+    "archivedAt" IS NULL AND "publishedAt" is NULL
+ORDER BY
+    "pageId", "createdAt" DESC, id DESC;

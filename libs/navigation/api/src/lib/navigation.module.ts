@@ -1,16 +1,19 @@
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { NavigationService } from './navigation.service';
 import { NavigationDataloaderService } from './navigation-dataloader.service';
+import { NavigationLinksDataloaderService } from './navigation-links.dataloader';
 import { PageModule } from '@wepublish/page/api';
 import { ArticleModule } from '@wepublish/article/api';
 import { NavigationResolver } from './navigation.resolver';
 
 @Module({
-  imports: [PrismaModule, PageModule, ArticleModule],
+  imports: [PrismaModule, PageModule, ArticleModule, KvTtlCacheModule],
   providers: [
     NavigationService,
     NavigationDataloaderService,
+    NavigationLinksDataloaderService,
     NavigationResolver,
   ],
 })

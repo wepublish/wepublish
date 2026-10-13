@@ -29,7 +29,12 @@ fragment FullSubscription on PublicSubscription {
     ...Deactivation
   }
   extendable
+  canRevertUpgrade
   currency
+  goodie {
+    id
+    name
+  }
 }
 
 fragment Deactivation on SubscriptionDeactivation {
@@ -41,6 +46,11 @@ fragment TinySubscription on PublicSubscription {
   id
   createdAt
   modifiedAt
+
+  monthlyAmount
+  paymentPeriodicity
+  currency
+  paidUntil
 
   user {
     id
@@ -90,10 +100,17 @@ query SubscriptionList(
 query Subscription($id: String!) {
   subscription(id: $id) {
     ...FullSubscription
+
+    periods {
+      id
+      invoiceID
+      startsAt
+    }
   }
 }
 
 query SubscriptionsAsCsv(
+  $activeAt: DateTime
   $autoRenew: Boolean
   $userHasAddress: Boolean
   $extendable: Boolean
@@ -114,6 +131,7 @@ query SubscriptionsAsCsv(
   $paymentPeriodicity: PaymentPeriodicity
 ) {
   subscriptionsAsCsv(
+    activeAt: $activeAt
     autoRenew: $autoRenew
     userHasAddress: $userHasAddress
     extendable: $extendable
@@ -144,7 +162,7 @@ query SubscriptionsAsCsv(
 mutation CreateSubscription(
   $autoRenew: Boolean!
   $extendable: Boolean!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
   $paidUntil: DateTime
   $startsAt: DateTime!
   $paymentPeriodicity: PaymentPeriodicity!
@@ -152,6 +170,7 @@ mutation CreateSubscription(
   $userID: String!
   $paymentMethodID: String!
   $memberPlanID: String!
+  $skipMail: Boolean
 ) {
   createSubscription(
     autoRenew: $autoRenew
@@ -164,6 +183,7 @@ mutation CreateSubscription(
     userID: $userID
     paymentMethodID: $paymentMethodID
     memberPlanID: $memberPlanID
+    skipMail: $skipMail
   ) {
     ...FullSubscription
   }
@@ -173,7 +193,7 @@ mutation UpdateSubscription(
   $id: String!
   $autoRenew: Boolean
   $extendable: Boolean
-  $monthlyAmount: Int
+  $monthlyAmount: Float
   $paidUntil: DateTime
   $startsAt: DateTime
   $paymentPeriodicity: PaymentPeriodicity
@@ -202,8 +222,25 @@ mutation UpdateSubscription(
 mutation CancelSubscription(
   $cancelSubscriptionId: String!
   $reason: SubscriptionDeactivationReason!
+  $skipMail: Boolean
 ) {
-  cancelSubscription(id: $cancelSubscriptionId, reason: $reason) {
+  cancelSubscription(
+    id: $cancelSubscriptionId
+    reason: $reason
+    skipMail: $skipMail
+  ) {
+    ...FullSubscription
+  }
+}
+
+mutation RevertSubscriptionUpgrade($id: String!) {
+  revertSubscriptionUpgrade(id: $id) {
+    ...FullSubscription
+  }
+}
+
+mutation ReactivateSubscription($id: String!) {
+  reactivateSubscription(id: $id) {
     ...FullSubscription
   }
 }

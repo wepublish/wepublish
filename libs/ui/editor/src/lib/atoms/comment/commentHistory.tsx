@@ -1,14 +1,15 @@
+import { useLazyQuery } from '@apollo/client/react';
 import {
   CommentItemType,
+  CommentListDocument,
   CommentSort,
   CommentState,
   FullCommentFragment,
-  useCommentListLazyQuery,
 } from '@wepublish/editor/api';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
-import { FlexboxGrid } from 'rsuite';
+import { Col, Row } from 'rsuite';
 
 import { CommentPreview, RevisionProps } from './commentPreview';
 import { CreateCommentBtn } from './createCommentBtn';
@@ -25,19 +26,20 @@ function ChildComments({
   originComment,
   revision,
   setRevision,
-}: ChildCommentsProps): JSX.Element {
+}: ChildCommentsProps) {
   if (!comments) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>;
+    return null;
   }
+
   const childComments = comments.filter(
     tmpComment => tmpComment.parentComment?.id === comment.id
   );
+
   return (
     <div
       style={{
         marginTop: '20px',
-        borderLeft: '1px lightgrey solid',
+        borderLeft: '1px var(--rs-border-primary) solid',
         paddingLeft: '20px',
       }}
     >
@@ -88,22 +90,28 @@ export function CommentHistory({
   const { t } = useTranslation();
   const [comments, setComments] = useState<FullCommentFragment[] | undefined>();
 
-  const [fetchCommentList, { data }] = useCommentListLazyQuery({
-    variables: {
-      filter: {
-        itemType: commentItemType,
-        itemID: commentItemID,
-        states: [
-          CommentState.Approved,
-          CommentState.PendingUserChanges,
-          CommentState.PendingApproval,
-          CommentState.Rejected,
-        ],
-      },
-      sort: CommentSort.CreatedAt,
-      take: 1000,
-    },
-  });
+  const [fetchCommentList, { data }] = useLazyQuery(CommentListDocument);
+
+  const fetchComments = useCallback(
+    () =>
+      fetchCommentList({
+        variables: {
+          filter: {
+            itemType: commentItemType,
+            itemID: commentItemID,
+            states: [
+              CommentState.Approved,
+              CommentState.PendingUserChanges,
+              CommentState.PendingApproval,
+              CommentState.Rejected,
+            ],
+          },
+          sort: CommentSort.CreatedAt,
+          take: 1000,
+        },
+      }),
+    [fetchCommentList, commentItemType, commentItemID]
+  );
 
   useEffect(() => {
     setComments(data?.comments?.nodes);
@@ -111,18 +119,18 @@ export function CommentHistory({
 
   // re-load comments whenever the comment id changes
   useEffect(() => {
-    fetchCommentList();
+    fetchComments();
   }, [originComment?.id]);
 
   return (
     <>
-      <FlexboxGrid
+      <Row
         align="bottom"
         justify="end"
       >
-        <FlexboxGrid.Item
+        <Col
           style={{ textAlign: 'end', paddingBottom: '20px' }}
-          colspan={24}
+          span={24}
         >
           <CreateCommentBtn
             itemID={commentItemID}
@@ -132,11 +140,11 @@ export function CommentHistory({
             appearance="ghost"
             icon={<MdAdd />}
             onCommentCreated={async () => {
-              await fetchCommentList();
+              await fetchComments();
             }}
           />
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
+        </Col>
+      </Row>
 
       {comments &&
         comments.map(tmpComment => (

@@ -7,6 +7,7 @@ import {
   useRadioGroup,
 } from '@mui/material';
 import styled from '@emotion/styled';
+import { FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderPaymentMethodPickerProps,
   useWebsiteBuilder,
@@ -45,10 +46,16 @@ const icon = css`
   width: auto;
 `;
 
+const FormControlLabelNoMargin = styled(FormControlLabel)`
+  margin-left: 0;
+`;
+
 const HiddenRadio = styled(Radio)`
   visibility: hidden;
   width: 0;
   height: 0;
+  padding: 0;
+  margin: 0;
 `;
 
 export function PaymentRadio({
@@ -103,7 +110,7 @@ export const PaymentMethodPicker = forwardRef<
         row
       >
         {filteredPaymentMethods.map(method => (
-          <FormControlLabel
+          <FormControlLabelNoMargin
             key={method.id}
             value={method.id}
             label=""
@@ -111,13 +118,13 @@ export const PaymentMethodPicker = forwardRef<
               <PaymentRadio aria-label={`${method.description} ${method.name}`}>
                 {method.image && (
                   <Image
-                    image={method.image}
+                    image={method.image as unknown as FullImageFragment}
                     css={icon}
                   />
                 )}
               </PaymentRadio>
             }
-          ></FormControlLabel>
+          ></FormControlLabelNoMargin>
         ))}
       </RadioGroup>
     </PaymentMethodPickerWrapper>

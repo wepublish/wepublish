@@ -1,13 +1,15 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  ApproveCommentDocument,
   CommentRejectionReason,
-  CommentRevision,
+  CommentRevisionFragment,
   CommentState,
   FullCommentFragment,
-  useApproveCommentMutation,
-  useRejectCommentMutation,
-  useRequestChangesOnCommentMutation,
+  RejectCommentDocument,
+  RequestChangesOnCommentDocument,
 } from '@wepublish/editor/api';
+import { toPlaintext } from '@wepublish/richtext';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdReplay } from 'react-icons/md';
@@ -21,7 +23,6 @@ import {
   toaster,
 } from 'rsuite';
 
-import { RichTextBlock } from '../../blocks/richTextBlock/rich-text-block';
 import { DescriptionList, DescriptionListItem } from '../descriptionList';
 
 const ParentCommentPanel = styled(Panel)`
@@ -64,6 +65,17 @@ export function mapCommentActionToBtnTitle(commentState: CommentState) {
   }
 }
 
+export function mapRejectionReasonToLabel(
+  rejectionReason: CommentRejectionReason
+) {
+  switch (rejectionReason) {
+    case CommentRejectionReason.Spam:
+      return 'comments.panels.rejectionReasons.spam';
+    case CommentRejectionReason.Misconduct:
+      return 'comments.panels.rejectionReasons.misconduct';
+  }
+}
+
 interface CommentStateChangeModalProps {
   comment: FullCommentFragment;
   newCommentState: CommentState;
@@ -86,13 +98,13 @@ export function CommentStateChangeModal({
     useState<CommentRejectionReason>();
 
   const [approveComment, { loading: isApproving, error: errorApprove }] =
-    useApproveCommentMutation();
+    useMutation(ApproveCommentDocument);
   const [
     requestChanges,
     { loading: isRequestingChanges, error: errorRequestingChanges },
-  ] = useRequestChangesOnCommentMutation();
+  ] = useMutation(RequestChangesOnCommentDocument);
   const [rejectComment, { loading: isRejecting, error: errorRejecting }] =
-    useRejectCommentMutation();
+    useMutation(RejectCommentDocument);
 
   useEffect(() => {
     const error =
@@ -169,7 +181,7 @@ export function CommentStateChangeModal({
   const sortedRevisions = useMemo(() => {
     const dcRevisions = [...comment.revisions];
     return dcRevisions.sort(
-      (a: CommentRevision, b: CommentRevision) =>
+      (a: CommentRevisionFragment, b: CommentRevisionFragment) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   }, [comment.revisions]);
@@ -238,18 +250,12 @@ export function CommentStateChangeModal({
                     })}
                   </div>
                   <p>{printUsername}:</p>
-                  <RichTextBlock
-                    displayOnly
-                    displayOneLine
-                    disabled
-                    // TODO: remove this
-                    onChange={console.log}
-                    value={
-                      comment.parentComment.revisions[
-                        comment.parentComment.revisions.length - 1
-                      ]?.text || []
-                    }
-                  />
+
+                  {toPlaintext(
+                    comment.parentComment.revisions[
+                      comment.parentComment.revisions.length - 1
+                    ]?.text?.content
+                  )}
                 </>
               </ParentCommentPanel>
               <IconWrapper>
@@ -271,10 +277,10 @@ export function CommentStateChangeModal({
             >
               <Dropdown
                 title={t(
-                  rejectionReason ||
-                    (newCommentState === CommentState.Rejected ?
-                      'comments.panels.rejectionReason'
-                    : 'comments.panels.requestChangesReason')
+                  rejectionReason ? mapRejectionReasonToLabel(rejectionReason)
+                  : newCommentState === CommentState.Rejected ?
+                    'comments.panels.rejectionReason'
+                  : 'comments.panels.requestChangesReason'
                 )}
                 placement="topEnd"
               >
@@ -285,7 +291,7 @@ export function CommentStateChangeModal({
                     setRejectionReason(CommentRejectionReason.Spam)
                   }
                 >
-                  {CommentRejectionReason.Spam}
+                  {t(mapRejectionReasonToLabel(CommentRejectionReason.Spam))}
                 </Dropdown.Item>
                 <Dropdown.Item
                   key={CommentRejectionReason.Misconduct}
@@ -294,7 +300,9 @@ export function CommentStateChangeModal({
                     setRejectionReason(CommentRejectionReason.Misconduct);
                   }}
                 >
-                  {CommentRejectionReason.Misconduct}
+                  {t(
+                    mapRejectionReasonToLabel(CommentRejectionReason.Misconduct)
+                  )}
                 </Dropdown.Item>
               </Dropdown>
             </DescriptionListItem>
@@ -314,14 +322,8 @@ export function CommentStateChangeModal({
                         revisionCreatedAtDate: new Date(createdAt),
                       })}
                     </div>
-                    <RichTextBlock
-                      disabled
-                      displayOnly
-                      onChange={() => {
-                        return undefined;
-                      }}
-                      value={text || []}
-                    />
+
+                    {toPlaintext(text?.content)}
                   </Timeline.Item>
                 ))
               : null}

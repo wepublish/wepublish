@@ -20,13 +20,13 @@ import { GraphQLRichText } from '@wepublish/richtext/api';
 import { Tag } from '@wepublish/tag/api';
 import { HasOptionalUser } from '@wepublish/user/api';
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
-import { Descendant } from 'slate';
 import {
   CalculatedRating,
   CommentRating,
   OverriddenRating,
   OverriddenRatingInput,
 } from './rating-system/rating-system.model';
+import type { RichtextJSONDocument } from '@wepublish/richtext';
 
 registerEnumType(CommentAuthorType, {
   name: 'CommentAuthorType',
@@ -59,7 +59,7 @@ export class CommentRevision {
   lead?: string;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  text?: Descendant[];
+  text?: RichtextJSONDocument[];
 
   @Field(() => Date)
   createdAt!: Date;
@@ -122,7 +122,7 @@ export class Comment extends HasOptionalUser {
   @Field(() => String, { nullable: true })
   lead?: string;
   @Field(() => GraphQLRichText, { nullable: true })
-  text?: Descendant[];
+  text?: RichtextJSONDocument[];
 
   @Field(() => [Comment])
   children!: Comment[];
@@ -212,6 +212,9 @@ export class CreateCommentInput extends PickType(
 ) {
   @Field(type => [String], { nullable: true })
   tagIds?: string[];
+
+  @Field({ nullable: true, defaultValue: false })
+  publish?: boolean;
 }
 
 @ArgsType()
@@ -263,7 +266,7 @@ export class AddUserCommentInput {
   title?: string;
 
   @Field(() => GraphQLRichText)
-  text!: Descendant[];
+  text!: RichtextJSONDocument;
 }
 
 @ArgsType()
@@ -272,7 +275,7 @@ export class UpdateUserCommentInput {
   id!: string;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  text?: Descendant[];
+  text?: RichtextJSONDocument;
 
   @Field(() => String, { nullable: true })
   title?: string;

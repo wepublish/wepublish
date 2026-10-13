@@ -1,4 +1,5 @@
 import { FormControl, FormLabel, List, Stack } from '@mui/material';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { memo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -36,10 +37,10 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
 
       <List>
         <Stack
-          gap={5}
           sx={{
-            borderRadius: '6px',
-            bgcolor: '#00000008',
+            gap: 5,
+            borderRadius: 'var(--rs-radius-md)',
+            bgcolor: 'action.hover',
             p: 3,
             mb: 2,
           }}
@@ -54,7 +55,12 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
               render={({ field }) => (
                 <FormControl fullWidth>
                   <FormLabel>
-                    {t('websiteSettings.theme.typography.fontFamily')}
+                    {t('websiteSettings.theme.typography.fontFamily')}{' '}
+                    <InfoTooltip
+                      text={t(
+                        'websiteSettings.theme.typography.fontFamilyInfo'
+                      )}
+                    />
                   </FormLabel>
 
                   <AvailableFontsPicker {...field} />
@@ -90,7 +96,12 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
               render={({ field }) => (
                 <FormControl fullWidth>
                   <FormLabel>
-                    {t('websiteSettings.theme.typography.lineHeight')}
+                    {t('websiteSettings.theme.typography.lineHeight')}{' '}
+                    <InfoTooltip
+                      text={t(
+                        'websiteSettings.theme.typography.lineHeightInfo'
+                      )}
+                    />
                   </FormLabel>
 
                   <LengthSlider
@@ -108,7 +119,12 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
               render={({ field }) => (
                 <FormControl fullWidth>
                   <FormLabel>
-                    {t('websiteSettings.theme.typography.letterSpacing')}
+                    {t('websiteSettings.theme.typography.letterSpacing')}{' '}
+                    <InfoTooltip
+                      text={t(
+                        'websiteSettings.theme.typography.letterSpacingInfo'
+                      )}
+                    />
                   </FormLabel>
 
                   <LengthSlider

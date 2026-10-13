@@ -1,9 +1,10 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  CreateSessionWithJwtDocument,
+  EnableTotpDocument,
+  GenerateTotpSetupDocument,
   LocalStorageKey,
-  useCreateSessionWithJwtMutation,
-  useEnableTotpMutation,
-  useGenerateTotpSetupMutation,
 } from '@wepublish/editor/api';
 import {
   AuthDispatchActionType,
@@ -25,7 +26,7 @@ import { Button, Form as RForm, Message, toaster } from 'rsuite';
 import { Background } from './ui/loginBackground';
 import { TotpQrCode } from './ui/totpQrCode';
 
-const { Group, ControlLabel, Control } = RForm;
+const { Group, Label, Control } = RForm;
 
 const Form = styled(RForm)`
   display: flex;
@@ -38,7 +39,7 @@ const SecretCode = styled.code`
   text-align: center;
   font-size: 14px;
   padding: 8px;
-  background: #f5f5f5;
+  background: var(--rs-bg-well);
   border-radius: 4px;
   margin-bottom: 16px;
   word-break: break-all;
@@ -48,17 +49,17 @@ const TotpDescription = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 14px;
-  color: #555;
+  color: var(--rs-text-secondary);
 `;
 
 const AppLinks = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 13px;
-  color: #555;
+  color: var(--rs-text-secondary);
 
   a {
-    color: #1675e0;
+    color: var(--rs-text-link);
     text-decoration: none;
     &:hover {
       text-decoration: underline;
@@ -77,10 +78,12 @@ export function LoginJwt() {
   const authDispatch = useContext(AuthDispatchContext);
   const { t } = useTranslation();
 
-  const [authenticateWithJWT] = useCreateSessionWithJwtMutation();
-  const [generateTotpSetup, { loading: loadingSetup }] =
-    useGenerateTotpSetupMutation();
-  const [enableTotp, { loading: loadingEnable }] = useEnableTotpMutation();
+  const [authenticateWithJWT] = useMutation(CreateSessionWithJwtDocument);
+  const [generateTotpSetup, { loading: loadingSetup }] = useMutation(
+    GenerateTotpSetupDocument
+  );
+  const [enableTotp, { loading: loadingEnable }] =
+    useMutation(EnableTotpDocument);
 
   const [step, setStep] = useState<'loading' | 'totp-setup'>('loading');
   const [email, setEmail] = useState('');
@@ -106,7 +109,7 @@ export function LoginJwt() {
             type="error"
             showIcon
             closable
-            duration={5000}
+            duration={8000}
           >
             {t('login.totp.setupError')}
           </Message>
@@ -192,7 +195,7 @@ export function LoginJwt() {
           type="error"
           showIcon
           closable
-          duration={5000}
+          duration={8000}
         >
           {message}
         </Message>
@@ -211,57 +214,59 @@ export function LoginJwt() {
 
   return (
     <LoginTemplate backgroundChildren={<Background />}>
-      <Form fluid>
-        <TotpDescription>{t('login.totp.setupDescription')}</TotpDescription>
+      <Form>
+        <RForm.Stack fluid>
+          <TotpDescription>{t('login.totp.setupDescription')}</TotpDescription>
 
-        <AppLinks>
-          {t('login.totp.downloadApp')}{' '}
-          <a
-            href="https://play.google.com/store/apps/details?id=proton.android.authenticator"
-            target="_blank"
-            rel="noopener noreferrer"
+          <AppLinks>
+            {t('login.totp.downloadApp')}{' '}
+            <a
+              href="https://play.google.com/store/apps/details?id=proton.android.authenticator"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('login.totp.android')}
+            </a>
+            {' | '}
+            <a
+              href="https://apps.apple.com/app/proton-authenticator/id6741758667"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('login.totp.ios')}
+            </a>
+          </AppLinks>
+
+          <TotpDescription>{t('login.totp.backupHint')}</TotpDescription>
+
+          {totpUri && <TotpQrCode uri={totpUri} />}
+
+          {totpSecret && (
+            <>
+              <TotpDescription>{t('login.totp.manualEntry')}</TotpDescription>
+              <SecretCode data-sentry-mask>{totpSecret}</SecretCode>
+            </>
+          )}
+
+          <Group controlId="totpCode">
+            <Label>{t('login.totp.code')}</Label>
+            <Control
+              inputRef={totpInputRef}
+              name="totpCode"
+              value={totpToken}
+              autoComplete="one-time-code"
+              onChange={(value: string) => setTotpToken(value)}
+            />
+          </Group>
+          <Button
+            appearance="primary"
+            type="submit"
+            disabled={loadingEnable || loadingSetup || !totpToken}
+            onClick={handleTotpSetup}
           >
-            {t('login.totp.android')}
-          </a>
-          {' | '}
-          <a
-            href="https://apps.apple.com/app/proton-authenticator/id6741758667"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('login.totp.ios')}
-          </a>
-        </AppLinks>
-
-        <TotpDescription>{t('login.totp.backupHint')}</TotpDescription>
-
-        {totpUri && <TotpQrCode uri={totpUri} />}
-
-        {totpSecret && (
-          <>
-            <TotpDescription>{t('login.totp.manualEntry')}</TotpDescription>
-            <SecretCode>{totpSecret}</SecretCode>
-          </>
-        )}
-
-        <Group controlId="totpCode">
-          <ControlLabel>{t('login.totp.code')}</ControlLabel>
-          <Control
-            inputRef={totpInputRef}
-            name="totpCode"
-            value={totpToken}
-            autoComplete="one-time-code"
-            onChange={(value: string) => setTotpToken(value)}
-          />
-        </Group>
-        <Button
-          appearance="primary"
-          type="submit"
-          disabled={loadingEnable || loadingSetup || !totpToken}
-          onClick={handleTotpSetup}
-        >
-          {t('login.totp.activate')}
-        </Button>
+            {t('login.totp.activate')}
+          </Button>
+        </RForm.Stack>
       </Form>
     </LoginTemplate>
   );

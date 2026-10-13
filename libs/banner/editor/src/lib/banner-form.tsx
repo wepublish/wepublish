@@ -1,12 +1,13 @@
+import { useQuery } from '@apollo/client/react';
 import React from 'react';
 import styled from '@emotion/styled';
 import {
   CreateBannerActionInput,
   CreateBannerInput,
   FullImageFragment,
-  UpdateBannerInput,
-  usePageListQuery,
   LoginStatus,
+  PageListDocument,
+  UpdateBannerInput,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,13 +20,14 @@ import {
   RadioGroup,
   Toggle,
   Radio,
-  InputNumber,
+  NumberInput,
 } from 'rsuite';
 import { BannerActionList } from './banner-action-list';
 import {
   ChooseEditImage,
   ImageEditPanel,
   ImageSelectPanel,
+  InfoTooltip,
 } from '@wepublish/ui/editor';
 
 type BannerFormData = (CreateBannerInput | UpdateBannerInput) & {
@@ -44,7 +46,7 @@ interface BannerFormProps {
 const BannerFormContainer = styled('div')`
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 12px;
+  gap: 16px;
   grid-template-areas:
     'displayoptions content'
     'actions        actions';
@@ -53,7 +55,7 @@ const BannerFormContainer = styled('div')`
 export const BannerForm = (props: BannerFormProps) => {
   const { t } = useTranslation();
 
-  const { data: pageData } = usePageListQuery({
+  const { data: pageData } = useQuery(PageListDocument, {
     variables: { take: 50 },
   });
 
@@ -70,50 +72,54 @@ export const BannerForm = (props: BannerFormProps) => {
         <h3>{t('banner.form.displayOptions')}</h3>
 
         <Form.Group controlId="active">
-          <Form.ControlLabel>{t('banner.form.active')}</Form.ControlLabel>
-
           <Form.Control
             name="active"
-            value={props.banner.active}
+            checked={props.banner.active}
             onChange={value =>
               props.onChange({ ...props.banner, active: value })
             }
             accepter={Toggle}
+            label={t('banner.form.active')}
           />
         </Form.Group>
 
         <Form.Group controlId="collapsible">
-          <Form.ControlLabel>{t('banner.form.collapsible')}</Form.ControlLabel>
-
           <Form.Control
             name="collapsible"
-            value={props.banner.collapsible}
+            checked={props.banner.collapsible}
             onChange={value =>
               props.onChange({ ...props.banner, collapsible: value })
             }
             accepter={Toggle}
+            label={
+              <>
+                {t('banner.form.collapsible')}{' '}
+                <InfoTooltip text={t('banner.form.collapsibleInfo')} />
+              </>
+            }
           />
         </Form.Group>
 
         <Form.Group controlId="delay">
-          <Form.ControlLabel>{t('banner.form.delay')}</Form.ControlLabel>
+          <Form.Label>
+            {t('banner.form.delay')}{' '}
+            <InfoTooltip text={t('banner.form.delayInfo')} />
+          </Form.Label>
 
           <Form.Control
             name="delay"
-            accepter={InputNumber}
+            accepter={NumberInput}
             value={props.banner.delay}
             onChange={v => props.onChange({ ...props.banner, delay: +v })}
           />
         </Form.Group>
 
         <Form.Group controlId="hideForMinutes">
-          <Form.ControlLabel>
-            {t('banner.form.hideForMinutes')}
-          </Form.ControlLabel>
+          <Form.Label>{t('banner.form.hideForMinutes')}</Form.Label>
 
           <Form.Control
             name="hideForMinutes"
-            accepter={InputNumber}
+            accepter={NumberInput}
             value={props.banner.hideForMinutes}
             onChange={v =>
               props.onChange({ ...props.banner, hideForMinutes: +v })
@@ -122,9 +128,10 @@ export const BannerForm = (props: BannerFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="showForLoginStatus">
-          <Form.ControlLabel>
-            {t('banner.form.showForLoginStatus')}
-          </Form.ControlLabel>
+          <Form.Label>
+            {t('banner.form.showForLoginStatus')}{' '}
+            <InfoTooltip text={t('banner.form.showForLoginStatusInfo')} />
+          </Form.Label>
 
           <RadioGroup
             name="showForLoginStatus"
@@ -148,22 +155,22 @@ export const BannerForm = (props: BannerFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="showOnArticles">
-          <Form.ControlLabel>
-            {t('banner.form.showOnArticles')}
-          </Form.ControlLabel>
-
           <Form.Control
             name="showOnArticles"
-            value={props.banner.showOnArticles}
+            checked={props.banner.showOnArticles}
             onChange={value =>
               props.onChange({ ...props.banner, showOnArticles: value })
             }
             accepter={Toggle}
+            label={t('banner.form.showOnArticles')}
           />
         </Form.Group>
 
         <Form.Group controlId="showOnPages">
-          <Form.ControlLabel>{t('banner.form.showOnPages')}</Form.ControlLabel>
+          <Form.Label>
+            {t('banner.form.showOnPages')}{' '}
+            <InfoTooltip text={t('banner.form.showOnPagesInfo')} />
+          </Form.Label>
 
           <CheckPicker
             block
@@ -191,10 +198,10 @@ export const BannerForm = (props: BannerFormProps) => {
         bordered
         style={{ overflow: 'initial', gridArea: 'content' }}
       >
-        <h3>Inhalt</h3>
+        <h3>{t('banner.form.content')}</h3>
 
         <Form.Group controlId="title">
-          <Form.ControlLabel>{t('banner.form.title')}</Form.ControlLabel>
+          <Form.Label>{t('banner.form.title')}</Form.Label>
 
           <Form.Control
             name="title"
@@ -206,7 +213,7 @@ export const BannerForm = (props: BannerFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="text">
-          <Form.ControlLabel>{t('banner.form.text')}</Form.ControlLabel>
+          <Form.Label>{t('banner.form.text')}</Form.Label>
 
           <Form.Control
             name="text"
@@ -218,7 +225,10 @@ export const BannerForm = (props: BannerFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="cta">
-          <Form.ControlLabel>{t('banner.form.cta')}</Form.ControlLabel>
+          <Form.Label>
+            {t('banner.form.cta')}{' '}
+            <InfoTooltip text={t('banner.form.ctaInfo')} />
+          </Form.Label>
 
           <Form.Control
             name="cta"
@@ -228,7 +238,7 @@ export const BannerForm = (props: BannerFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="images">
-          <Form.ControlLabel>{t('banner.form.image')}</Form.ControlLabel>
+          <Form.Label>{t('banner.form.image')}</Form.Label>
 
           <Form.Control
             name="image"
@@ -250,7 +260,10 @@ export const BannerForm = (props: BannerFormProps) => {
         </Form.Group>
 
         <Form.Group controlId="html">
-          <Form.ControlLabel>{t('banner.form.html')}</Form.ControlLabel>
+          <Form.Label>
+            {t('banner.form.html')}{' '}
+            <InfoTooltip text={t('banner.form.htmlInfo')} />
+          </Form.Label>
 
           <Input
             name="html"
@@ -259,6 +272,19 @@ export const BannerForm = (props: BannerFormProps) => {
             value={props.banner.html ?? undefined}
             onChange={value => props.onChange({ ...props.banner, html: value })}
           />
+        </Form.Group>
+
+        <Form.Group controlId="embedUrl">
+          <Form.ControlLabel>{t('banner.form.embedUrl')}</Form.ControlLabel>
+
+          <Input
+            name="embedUrl"
+            value={props.banner.embedUrl ?? undefined}
+            onChange={value =>
+              props.onChange({ ...props.banner, embedUrl: value })
+            }
+          />
+          <Form.HelpText>{t('banner.form.embedUrlHelp')}</Form.HelpText>
         </Form.Group>
       </Panel>
 

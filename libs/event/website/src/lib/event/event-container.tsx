@@ -1,4 +1,5 @@
-import { useEventQuery } from '@wepublish/website/api';
+import { useQuery } from '@apollo/client/react';
+import { EventDocument } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
   useWebsiteBuilder,
@@ -10,7 +11,7 @@ export type EventContainerProps = {
 
 export function EventContainer({ id, className }: EventContainerProps) {
   const { Event } = useWebsiteBuilder();
-  const { data, loading, error } = useEventQuery({
+  const { data, loading, error } = useQuery(EventDocument, {
     variables: {
       id,
     },

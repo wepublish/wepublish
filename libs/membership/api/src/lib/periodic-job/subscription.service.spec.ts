@@ -8,7 +8,7 @@ import {
 import nock from 'nock';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { PaymentsModule } from '@wepublish/payment/api';
+import { InvoicePaidNotifier, PaymentsModule } from '@wepublish/payment/api';
 import { add, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionFlowService } from '../subscription-flow/subscription-flow.service';
@@ -17,20 +17,44 @@ import {
   registerPaymentMethodModule,
 } from '../testing/module-registrars';
 import { SubscriptionService } from './subscription.service';
+import type { Mock } from 'vitest';
+
+const { loggerError } = vi.hoisted(() => ({ loggerError: vi.fn() }));
+
+vi.mock('@wepublish/utils/api', async importOriginal => {
+  const original =
+    await importOriginal<typeof import('@wepublish/utils/api')>();
+
+  return {
+    ...original,
+    logger: (name: string) => {
+      const log = original.logger(name);
+
+      return {
+        ...log,
+        error: (...args: unknown[]) => {
+          loggerError(...args);
+        },
+        warn: log.warn.bind(log),
+        info: log.info.bind(log),
+      };
+    },
+  };
+});
 
 describe('SubscriptionPaymentsService', () => {
   let subscriptionService: SubscriptionService;
   let prismaMock: {
     subscription: {
-      [method in keyof PrismaClient['subscription']]?: jest.Mock;
+      [method in keyof PrismaClient['subscription']]?: Mock;
     };
-    invoice: { [method in keyof PrismaClient['invoice']]?: jest.Mock };
+    invoice: { [method in keyof PrismaClient['invoice']]?: Mock };
     subscriptionPeriod: {
-      [method in keyof PrismaClient['subscriptionPeriod']]?: jest.Mock;
+      [method in keyof PrismaClient['subscriptionPeriod']]?: Mock;
     };
-    payment: { [method in keyof PrismaClient['payment']]?: jest.Mock };
+    payment: { [method in keyof PrismaClient['payment']]?: Mock };
     subscriptionDeactivation: {
-      [method in keyof PrismaClient['subscriptionDeactivation']]?: jest.Mock;
+      [method in keyof PrismaClient['subscriptionDeactivation']]?: Mock;
     };
   };
 
@@ -40,7 +64,6 @@ describe('SubscriptionPaymentsService', () => {
     slug: 'memberplan',
     description: 'Test Plan',
     active: true,
-    amountPerMonthMin: 100,
     currency: Currency.CHF,
     createdAt: new Date(),
     modifiedAt: new Date(),
@@ -69,30 +92,30 @@ describe('SubscriptionPaymentsService', () => {
 
     prismaMock = {
       subscription: {
-        findMany: jest.fn(),
-        findUnique: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
-        deleteMany: jest.fn(),
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+        deleteMany: vi.fn(),
       },
       invoice: {
-        findMany: jest.fn(),
-        findUnique: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
       subscriptionPeriod: {
-        create: jest.fn(),
+        create: vi.fn(),
       },
       payment: {
-        findMany: jest.fn(),
-        create: jest.fn(),
+        findMany: vi.fn().mockResolvedValue([]),
+        create: vi.fn(),
       },
       subscriptionDeactivation: {
-        create: jest.fn(),
+        create: vi.fn(),
       },
     } as any;
-    (prismaMock as any).$transaction = jest
+    (prismaMock as any).$transaction = vi
       .fn()
       .mockImplementation(async (operations: any) => {
         return await Promise.all(operations);
@@ -110,6 +133,10 @@ describe('SubscriptionPaymentsService', () => {
         {
           provide: PrismaClient,
           useValue: prismaMock,
+        },
+        {
+          provide: InvoicePaidNotifier,
+          useValue: { notify: vi.fn().mockResolvedValue(undefined) },
         },
       ],
     }).compile();
@@ -181,6 +208,35 @@ describe('SubscriptionPaymentsService', () => {
     );
     expect(invoicesToCharge.length).toEqual(2);
     expect(prismaMock.invoice.findMany).toHaveBeenCalled();
+  });
+
+  it('does not re-charge an invoice whose in-flight payment is still within the grace period, but does once it goes stale', async () => {
+    const runDate = new Date('2026-06-15');
+    prismaMock.invoice.findMany!.mockResolvedValue([
+      {
+        id: 'fresh-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+      },
+      {
+        id: 'stale-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+      },
+      {
+        id: 'no-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+      },
+    ]);
+    prismaMock.payment.findMany!.mockResolvedValue([
+      { invoiceID: 'fresh-in-flight', createdAt: new Date('2026-06-14') },
+      { invoiceID: 'stale-in-flight', createdAt: new Date('2026-05-01') },
+    ]);
+
+    const result = await subscriptionService.findUnpaidDueInvoices(runDate);
+
+    expect(result.map(invoice => invoice.id)).toEqual([
+      'stale-in-flight',
+      'no-in-flight',
+    ]);
   });
 
   it('skips unconfirmed invoices', async () => {
@@ -260,6 +316,31 @@ describe('SubscriptionPaymentsService', () => {
     expect(prismaMock.invoice.findMany).toHaveBeenCalled();
   });
 
+  it('does not deactivate an invoice whose in-flight payment is still within the grace period, but does once it goes stale', async () => {
+    const runDate = new Date('2026-06-15');
+    prismaMock.invoice.findMany!.mockResolvedValue([
+      {
+        id: 'fresh-in-flight',
+        subscription: { paymentMethod: { gracePeriod: 14 } },
+      },
+      {
+        id: 'stale-in-flight',
+        subscription: { paymentMethod: { gracePeriod: 14 } },
+      },
+    ]);
+    prismaMock.payment.findMany!.mockResolvedValue([
+      { invoiceID: 'fresh-in-flight', createdAt: new Date('2026-06-10') },
+      { invoiceID: 'stale-in-flight', createdAt: new Date('2026-05-01') },
+    ]);
+
+    const result =
+      await subscriptionService.findUnpaidScheduledForDeactivationInvoices(
+        runDate
+      );
+
+    expect(result.map(invoice => invoice.id)).toEqual(['stale-in-flight']);
+  });
+
   it('invoice creation yearly', async () => {
     const paidUntil = add(new Date(), { days: 14 });
     const deactivationDate = add(paidUntil, { days: 10 });
@@ -303,6 +384,50 @@ describe('SubscriptionPaymentsService', () => {
         data: expect.objectContaining({
           subscriptionPeriods: expect.objectContaining({
             create: expect.any(Object),
+          }),
+        }),
+      })
+    );
+  });
+
+  it('invoice creation yearly with fractional monthly amount charges the exact period total', async () => {
+    const paidUntil = add(new Date(), { days: 14 });
+    const deactivationDate = add(paidUntil, { days: 10 });
+
+    const mockSubscription = {
+      id: 'sub-1',
+      monthlyAmount: 50000 / 12,
+      paymentPeriodicity: PaymentPeriodicity.yearly,
+      paidUntil,
+      startsAt: sub(paidUntil, { years: 3, days: -1 }),
+      periods: [],
+      memberPlan: mockMemberPlan,
+      user: mockUser,
+    };
+
+    prismaMock.invoice.create!.mockResolvedValue({
+      id: 'invoice-1',
+      dueAt: paidUntil,
+      scheduledDeactivationAt: deactivationDate,
+    });
+
+    await subscriptionService.createInvoice(
+      mockSubscription as any,
+      deactivationDate
+    );
+
+    expect(prismaMock.invoice.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          items: expect.objectContaining({
+            create: expect.objectContaining({
+              amount: 50000,
+            }),
+          }),
+          subscriptionPeriods: expect.objectContaining({
+            create: expect.objectContaining({
+              amount: 50000,
+            }),
           }),
         }),
       })
@@ -466,7 +591,7 @@ describe('SubscriptionPaymentsService', () => {
       const event: Action = {
         type: SubscriptionEvent.RENEWAL_SUCCESS,
         daysAwayFromEnding: 1,
-        externalMailTemplate: null,
+        mailTemplateId: null,
       };
       await subscriptionService['offSessionPayment'](
         { canceledAt: null, paidAt: null } as any,
@@ -481,13 +606,11 @@ describe('SubscriptionPaymentsService', () => {
     }
   });
 
-  it('checkInvoiceState should throw NotFoundException if payment provider is not found', async () => {
+  it('checkInvoiceState skips a payment without throwing when its payment provider cannot be resolved', async () => {
     const mockInvoice = {
       id: 'invoice-1',
       subscription: {
-        paymentMethod: {
-          paymentProviderID: 'invalid',
-        },
+        paymentMethod: { paymentProviderID: 'payrexx' },
         memberPlan: {},
         user: { paymentProviderCustomers: [] },
       },
@@ -495,18 +618,37 @@ describe('SubscriptionPaymentsService', () => {
       subscriptionPeriods: [],
     };
 
+    const findPaymentProviderByPaymentMethodeId = vi
+      .fn()
+      .mockResolvedValue(undefined);
+    const paymentsService = {
+      findByInvoiceId: vi
+        .fn()
+        .mockResolvedValue([
+          { id: 'pay-1', intentID: 'intent-1', paymentMethodID: 'unknown' },
+        ]),
+      findPaymentProviderByPaymentMethodeId,
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as any,
+      paymentsService as any,
+      { notify: vi.fn().mockResolvedValue(undefined) } as any
+    );
+
     await expect(
-      subscriptionService['checkInvoiceState'](mockInvoice as any)
-    ).rejects.toThrow('Payment Provider invalid not found!');
+      subscriptionService.checkInvoiceState(mockInvoice as any)
+    ).resolves.toBeUndefined();
+
+    expect(findPaymentProviderByPaymentMethodeId).toHaveBeenCalledWith(
+      'unknown'
+    );
   });
 
-  it('checkInvoiceState should call checkIntentStatus and updatePaymentWithIntentState for each payment with intentID', async () => {
+  it("checkInvoiceState resolves the payment provider from each payment's own payment method", async () => {
     const mockInvoice = {
       id: 'invoice-1',
       subscription: {
-        paymentMethod: {
-          paymentProviderID: 'provider-1',
-        },
+        paymentMethod: { paymentProviderID: 'payrexx' },
         memberPlan: {},
         user: { paymentProviderCustomers: [] },
       },
@@ -515,48 +657,56 @@ describe('SubscriptionPaymentsService', () => {
     };
 
     const mockPayments = [
-      { id: 'pay-1', intentID: 'intent-1' },
-      { id: 'pay-2', intentID: null },
-      { id: 'pay-3', intentID: 'intent-3' },
+      { id: 'pay-1', intentID: 'pi_stripe', paymentMethodID: 'stripe-method' },
+      { id: 'pay-2', intentID: null, paymentMethodID: 'payrexx-method' },
+      { id: 'pay-3', intentID: '35123953', paymentMethodID: 'payrexx-method' },
     ];
 
-    const checkIntentStatus = jest
-      .fn()
-      .mockResolvedValueOnce('intent-state-1')
-      .mockResolvedValueOnce('intent-state-3');
-    const updatePaymentWithIntentState = jest.fn();
-    const paymentProvider = {
-      checkIntentStatus,
-      updatePaymentWithIntentState,
+    const stripeProvider = {
+      checkIntentStatus: vi.fn().mockResolvedValue('stripe-state'),
+      updatePaymentWithIntentState: vi.fn(),
+      getName: () => 'stripe',
     };
+    const payrexxProvider = {
+      checkIntentStatus: vi.fn().mockResolvedValue('payrexx-state'),
+      updatePaymentWithIntentState: vi.fn(),
+      getName: () => 'payrexx',
+    };
+    const findPaymentProviderByPaymentMethodeId = vi.fn(
+      async (paymentMethodID: string) =>
+        paymentMethodID === 'stripe-method' ? stripeProvider : payrexxProvider
+    );
     const paymentsService = {
-      findById: jest.fn().mockReturnValue(paymentProvider),
-      findByInvoiceId: jest.fn().mockResolvedValue(mockPayments),
+      findByInvoiceId: vi.fn().mockResolvedValue(mockPayments),
+      findPaymentProviderByPaymentMethodeId,
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
-      paymentsService as any
+      paymentsService as any,
+      { notify: vi.fn().mockResolvedValue(undefined) } as any
     );
 
     await subscriptionService.checkInvoiceState(mockInvoice as any);
 
-    expect(paymentsService.findById).toHaveBeenCalledWith('provider-1');
-    expect(paymentsService.findByInvoiceId).toHaveBeenCalledWith('invoice-1');
-    expect(checkIntentStatus).toHaveBeenCalledTimes(2);
-    expect(checkIntentStatus).toHaveBeenCalledWith({
-      intentID: 'intent-1',
+    expect(findPaymentProviderByPaymentMethodeId).toHaveBeenCalledWith(
+      'stripe-method'
+    );
+    expect(findPaymentProviderByPaymentMethodeId).toHaveBeenCalledWith(
+      'payrexx-method'
+    );
+    expect(stripeProvider.checkIntentStatus).toHaveBeenCalledWith({
+      intentID: 'pi_stripe',
       paymentID: 'pay-1',
     });
-    expect(checkIntentStatus).toHaveBeenCalledWith({
-      intentID: 'intent-3',
+    expect(payrexxProvider.checkIntentStatus).toHaveBeenCalledWith({
+      intentID: '35123953',
       paymentID: 'pay-3',
     });
-    expect(updatePaymentWithIntentState).toHaveBeenCalledTimes(2);
-    expect(updatePaymentWithIntentState).toHaveBeenCalledWith({
-      intentState: 'intent-state-1',
+    expect(stripeProvider.updatePaymentWithIntentState).toHaveBeenCalledWith({
+      intentState: 'stripe-state',
     });
-    expect(updatePaymentWithIntentState).toHaveBeenCalledWith({
-      intentState: 'intent-state-3',
+    expect(payrexxProvider.updatePaymentWithIntentState).toHaveBeenCalledWith({
+      intentState: 'payrexx-state',
     });
   });
 
@@ -564,9 +714,7 @@ describe('SubscriptionPaymentsService', () => {
     const mockInvoice = {
       id: 'invoice-1',
       subscription: {
-        paymentMethod: {
-          paymentProviderID: 'provider-1',
-        },
+        paymentMethod: { paymentProviderID: 'payrexx' },
         memberPlan: {},
         user: { paymentProviderCustomers: [] },
       },
@@ -575,28 +723,237 @@ describe('SubscriptionPaymentsService', () => {
     };
 
     const mockPayments = [
-      { id: 'pay-1', intentID: null },
-      { id: 'pay-2', intentID: undefined },
+      { id: 'pay-1', intentID: null, paymentMethodID: 'payrexx-method' },
+      { id: 'pay-2', intentID: undefined, paymentMethodID: 'payrexx-method' },
     ];
 
-    const checkIntentStatus = jest.fn();
-    const updatePaymentWithIntentState = jest.fn();
-    const paymentProvider = {
-      checkIntentStatus,
-      updatePaymentWithIntentState,
-    };
+    const findPaymentProviderByPaymentMethodeId = vi.fn();
     const paymentsService = {
-      findById: jest.fn().mockReturnValue(paymentProvider),
-      findByInvoiceId: jest.fn().mockResolvedValue(mockPayments),
+      findByInvoiceId: vi.fn().mockResolvedValue(mockPayments),
+      findPaymentProviderByPaymentMethodeId,
     };
     const subscriptionService = new SubscriptionService(
       prismaMock as any,
-      paymentsService as any
+      paymentsService as any,
+      { notify: vi.fn().mockResolvedValue(undefined) } as any
     );
 
     await subscriptionService.checkInvoiceState(mockInvoice as any);
 
-    expect(checkIntentStatus).not.toHaveBeenCalled();
+    expect(findPaymentProviderByPaymentMethodeId).not.toHaveBeenCalled();
+  });
+
+  it('checkInvoiceState skips updating the payment when checkIntentStatus returns null', async () => {
+    const mockInvoice = {
+      id: 'invoice-1',
+      subscription: {
+        paymentMethod: { paymentProviderID: 'payrexx' },
+        memberPlan: {},
+        user: { paymentProviderCustomers: [] },
+      },
+      items: [],
+      subscriptionPeriods: [],
+    };
+
+    const checkIntentStatus = vi.fn().mockResolvedValue(null);
+    const updatePaymentWithIntentState = vi.fn();
+    const paymentProvider = {
+      checkIntentStatus,
+      updatePaymentWithIntentState,
+      getName: () => 'payrexx',
+    };
+    const paymentsService = {
+      findByInvoiceId: vi.fn().mockResolvedValue([
+        {
+          id: 'pay-1',
+          intentID: 'intent-1',
+          paymentMethodID: 'payrexx-method',
+        },
+      ]),
+      findPaymentProviderByPaymentMethodeId: vi
+        .fn()
+        .mockResolvedValue(paymentProvider),
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as any,
+      paymentsService as any,
+      { notify: vi.fn().mockResolvedValue(undefined) } as any
+    );
+
+    await subscriptionService.checkInvoiceState(mockInvoice as any);
+
+    expect(checkIntentStatus).toHaveBeenCalledTimes(1);
     expect(updatePaymentWithIntentState).not.toHaveBeenCalled();
+  });
+
+  it('checkInvoiceState continues with the remaining payments when one payment check throws', async () => {
+    const mockInvoice = {
+      id: 'invoice-1',
+      subscription: {
+        paymentMethod: { paymentProviderID: 'payrexx' },
+        memberPlan: {},
+        user: { paymentProviderCustomers: [] },
+      },
+      items: [],
+      subscriptionPeriods: [],
+    };
+
+    const mockPayments = [
+      { id: 'pay-1', intentID: 'pi_bad', paymentMethodID: 'payrexx-method' },
+      { id: 'pay-2', intentID: '35123953', paymentMethodID: 'payrexx-method' },
+    ];
+
+    const checkIntentStatus = vi
+      .fn()
+      .mockRejectedValueOnce(
+        new Error(
+          'Payrexx request has error status with message: An error occurred: No Gateway found with id 0'
+        )
+      )
+      .mockResolvedValueOnce('payrexx-state');
+    const updatePaymentWithIntentState = vi.fn();
+    const paymentProvider = {
+      checkIntentStatus,
+      updatePaymentWithIntentState,
+      getName: () => 'payrexx',
+    };
+    const paymentsService = {
+      findByInvoiceId: vi.fn().mockResolvedValue(mockPayments),
+      findPaymentProviderByPaymentMethodeId: vi
+        .fn()
+        .mockResolvedValue(paymentProvider),
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as any,
+      paymentsService as any,
+      { notify: vi.fn().mockResolvedValue(undefined) } as any
+    );
+
+    await expect(
+      subscriptionService.checkInvoiceState(mockInvoice as any)
+    ).resolves.toBeUndefined();
+
+    expect(checkIntentStatus).toHaveBeenCalledTimes(2);
+    expect(updatePaymentWithIntentState).toHaveBeenCalledTimes(1);
+    expect(updatePaymentWithIntentState).toHaveBeenCalledWith({
+      intentState: 'payrexx-state',
+    });
+  });
+
+  it('checkInvoiceState logs readably why a payment check failed', async () => {
+    const paymentProvider = {
+      checkIntentStatus: vi
+        .fn()
+        .mockRejectedValue({ code: 401, message: { message: 'Unauthorized' } }),
+      updatePaymentWithIntentState: vi.fn(),
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as never,
+      {
+        findByInvoiceId: vi
+          .fn()
+          .mockResolvedValue([
+            { id: 'pay-1', intentID: 'pi_1', paymentMethodID: 'bexio-method' },
+          ]),
+        findPaymentProviderByPaymentMethodeId: vi
+          .fn()
+          .mockResolvedValue(paymentProvider),
+      } as never,
+      { notify: vi.fn().mockResolvedValue(undefined) } as never
+    );
+
+    await subscriptionService.checkInvoiceState({
+      id: 'invoice-1',
+      subscription: {},
+    } as never);
+
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.any(String),
+      'pay-1',
+      'pi_1',
+      'bexio-method',
+      '401 Unauthorized'
+    );
+  });
+
+  it('keeps and logs readably why charging an invoice failed, but sends the customer only a code', async () => {
+    prismaMock.payment.create = vi.fn().mockResolvedValue({
+      id: 'pay-1',
+      paymentMethodID: 'bexio-method',
+      invoiceID: 'invoice-1',
+    });
+    prismaMock.payment.update = vi.fn();
+    const paymentProvider = {
+      createIntent: vi
+        .fn()
+        .mockRejectedValue({ code: 401, message: { message: 'Unauthorized' } }),
+    };
+
+    const status = await subscriptionService['offSessionPayment'](
+      {
+        id: 'invoice-1',
+        paidAt: null,
+        canceledAt: null,
+        currency: Currency.CHF,
+        subscription: {
+          id: 'sub-1',
+          memberPlan: mockMemberPlan,
+          paymentMethod: { id: 'bexio-method', paymentProviderID: 'bexio' },
+          user: {
+            ...mockUser,
+            paymentProviderCustomers: [
+              { paymentProviderID: 'bexio', customerID: 'cus-1' },
+            ],
+          },
+        },
+      } as never,
+      paymentProvider as never,
+      []
+    );
+
+    expect(prismaMock.payment.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          paymentData: JSON.stringify({ error: '401 Unauthorized' }),
+        }),
+      })
+    );
+    expect(loggerError).toHaveBeenCalledWith(
+      expect.any(String),
+      'invoice-1',
+      'pay-1',
+      '401 Unauthorized'
+    );
+    expect(status.errorCode).toBe('payment-provider-error');
+  });
+
+  it('checkInvoiceState notifies that the invoice is paid after checking its payments', async () => {
+    const mockInvoice = {
+      id: 'invoice-1',
+      subscription: {
+        paymentMethod: { paymentProviderID: 'payrexx' },
+        memberPlan: {},
+        user: { paymentProviderCustomers: [] },
+      },
+      items: [],
+      subscriptionPeriods: [],
+    };
+
+    const paymentsService = {
+      findByInvoiceId: vi.fn().mockResolvedValue([]),
+      findPaymentProviderByPaymentMethodeId: vi.fn(),
+    };
+    const invoicePaidNotifier = {
+      notify: vi.fn().mockResolvedValue(undefined),
+    };
+    const subscriptionService = new SubscriptionService(
+      prismaMock as any,
+      paymentsService as any,
+      invoicePaidNotifier as any
+    );
+
+    await subscriptionService.checkInvoiceState(mockInvoice as any);
+
+    expect(invoicePaidNotifier.notify).toHaveBeenCalledWith('invoice-1');
   });
 });

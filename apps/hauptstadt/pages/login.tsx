@@ -1,4 +1,5 @@
 import {
+  IntendedRouteExpiryInSeconds,
   IntendedRouteStorageKey,
   LoginFormContainer,
   useUser,
@@ -6,19 +7,20 @@ import {
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
+  FullSessionWithTokenWithoutUserFragment,
   PageDocument,
-  SessionWithTokenWithoutUser,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
-import { getApiClient } from '@wepublish/website/api';
-import { deleteCookie, getCookie } from 'cookies-next';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { add } from 'date-fns';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 
 import { HauptstadtContentFullWidth } from '../src/components/hauptstadt-content-wrapper';
 
-type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
+type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 
 export default function Login({ sessionToken }: LoginProps) {
   const { hasUser, setToken } = useUser();
@@ -30,6 +32,17 @@ export default function Login({ sessionToken }: LoginProps) {
       setToken(sessionToken);
     }
   }, [sessionToken, setToken]);
+
+  if (
+    router.query.intended &&
+    (router.query.intended as string).startsWith('/')
+  ) {
+    setCookie(IntendedRouteStorageKey, router.query.intended, {
+      expires: add(new Date(), {
+        seconds: IntendedRouteExpiryInSeconds,
+      }),
+    });
+  }
 
   if (hasUser && typeof window !== 'undefined') {
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();

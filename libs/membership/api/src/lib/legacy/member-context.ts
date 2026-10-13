@@ -18,6 +18,7 @@ import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import { InvoiceWithItems, PaymentProvider } from '@wepublish/payment/api';
 import {
+  calculatePeriodAmount,
   logger,
   ONE_DAY_IN_MILLISECONDS,
   ONE_MONTH_IN_MILLISECONDS,
@@ -50,7 +51,8 @@ export interface HandleSubscriptionChangeProps {
 export interface RenewSubscriptionForUserProps {
   subscription: SubscriptionWithRelations;
   discount?: number;
-  voucherId?: string;
+  discountCodeId?: string;
+  goodieId?: string;
 }
 
 export interface ChargeInvoiceProps {
@@ -122,20 +124,7 @@ export function calculateAmountForPeriodicity(
   monthlyAmount: number,
   periodicity: PaymentPeriodicity
 ): number {
-  switch (periodicity) {
-    case PaymentPeriodicity.monthly:
-      return monthlyAmount;
-    case PaymentPeriodicity.quarterly:
-      return monthlyAmount * 3;
-    case PaymentPeriodicity.biannual:
-      return monthlyAmount * 6;
-    case PaymentPeriodicity.yearly:
-      return monthlyAmount * 12;
-    case PaymentPeriodicity.biennial:
-      return monthlyAmount * 24;
-    case PaymentPeriodicity.lifetime:
-      return monthlyAmount * 1200;
-  }
+  return calculatePeriodAmount(monthlyAmount, periodicity);
 }
 
 export class MemberContext implements MemberContextInterface {
@@ -221,7 +210,8 @@ export class MemberContext implements MemberContextInterface {
   async renewSubscriptionForUser({
     subscription,
     discount,
-    voucherId,
+    discountCodeId,
+    goodieId,
   }: RenewSubscriptionForUserProps): Promise<InvoiceWithItems | null> {
     try {
       const { periods = [], paidUntil, deactivation } = subscription;
@@ -328,6 +318,13 @@ export class MemberContext implements MemberContextInterface {
         throw new Error('Memberplan not found');
       }
 
+      const goodie =
+        goodieId ?
+          await this.prisma.goodie.findUnique({
+            where: { id: goodieId },
+          })
+        : null;
+
       const newInvoice = await this.prisma.invoice.create({
         data: {
           subscriptionID: subscription.id,
@@ -337,13 +334,25 @@ export class MemberContext implements MemberContextInterface {
           scheduledDeactivationAt: deactivationDate,
           currency: subscription.currency,
           items: {
-            create: {
-              name: 'Membership',
-              description: `From ${startDate.toISOString()} to ${nextDate.toISOString()}`,
-              amount,
-              quantity: 1,
-              voucherId,
-            },
+            create: [
+              {
+                name: 'Membership',
+                description: `From ${startDate.toISOString()} to ${nextDate.toISOString()}`,
+                amount,
+                quantity: 1,
+                discountCodeId,
+              },
+              ...(goodie ?
+                [
+                  {
+                    name: goodie.name,
+                    amount: 0,
+                    quantity: 1,
+                    goodieId: goodie.id,
+                  },
+                ]
+              : []),
+            ],
           },
         },
         include: {
@@ -493,7 +502,7 @@ export class MemberContext implements MemberContextInterface {
 
       if (remoteTemplate) {
         await this.mailContext.sendMail({
-          externalMailTemplateId: remoteTemplate,
+          mailTemplateId: remoteTemplate,
           recipient: user,
           optionalData: {
             invoice,
@@ -632,7 +641,7 @@ export class MemberContext implements MemberContextInterface {
       input?.autoRenew === false
     ) {
       throw new Error(
-        `It is not possible to update the subscription with payment provider "${paymentProvider.getName()}".`
+        `It is not possible to update the subscription with payment provider "${await paymentProvider.getName()}".`
       );
     }
 
@@ -640,7 +649,7 @@ export class MemberContext implements MemberContextInterface {
     if (input.monthlyAmount !== originalSubscription.monthlyAmount) {
       await paymentProvider.updateRemoteSubscriptionAmount({
         subscription: originalSubscription,
-        newAmount: parseInt(`${input.monthlyAmount}`, 10),
+        newAmount: Number(input.monthlyAmount),
       });
     }
   }
@@ -759,7 +768,9 @@ export class MemberContext implements MemberContextInterface {
     startsAt = new Date(),
     needsConfirmation,
     discount,
-    voucherId,
+    discountCodeId,
+    goodieId,
+    skipMail,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -773,7 +784,10 @@ export class MemberContext implements MemberContextInterface {
     startsAt?: Date | string;
     needsConfirmation?: boolean;
     discount?: number;
-    voucherId?: string;
+    discountCodeId?: string;
+    goodieId?: string;
+    /** Set when an editor creates the subscription and chose not to mail the reader. */
+    skipMail?: boolean;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -844,23 +858,25 @@ export class MemberContext implements MemberContextInterface {
     const invoice = await this.renewSubscriptionForUser({
       subscription,
       discount,
+      discountCodeId,
+      goodieId,
     });
 
     if (!invoice) {
       throw new InternalServerErrorException();
     }
 
-    // Send subscribe mail
-
-    const subscriptionEvent =
-      needsConfirmation ?
-        SubscriptionEvent.CONFIRM_SUBSCRIPTION
-      : SubscriptionEvent.SUBSCRIBE;
-    await this.sendMailForSubscriptionEvent(
-      subscriptionEvent,
-      subscription,
-      {}
-    );
+    if (!skipMail) {
+      const subscriptionEvent =
+        needsConfirmation ?
+          SubscriptionEvent.CONFIRM_SUBSCRIPTION
+        : SubscriptionEvent.SUBSCRIBE;
+      await this.sendMailForSubscriptionEvent(
+        subscriptionEvent,
+        subscription,
+        {}
+      );
+    }
 
     return {
       subscription,
@@ -1011,6 +1027,11 @@ export class MemberContext implements MemberContextInterface {
         throw new InternalServerErrorException();
       }
 
+      const periodAmount = calculateAmountForPeriodicity(
+        monthlyAmount,
+        paymentPeriodicity
+      );
+
       const invoice = await this.prisma.invoice.create({
         data: {
           currency: memberPlan.currency,
@@ -1023,7 +1044,7 @@ export class MemberContext implements MemberContextInterface {
             create: {
               name: 'Membership',
               description: `From ${startsAt.toISOString()} to ${endsAt.toISOString()}`,
-              amount: monthlyAmount,
+              amount: periodAmount,
               quantity: 1,
             },
           },
@@ -1040,7 +1061,7 @@ export class MemberContext implements MemberContextInterface {
           periods: {
             create: {
               startsAt,
-              amount: monthlyAmount,
+              amount: periodAmount,
               endsAt,
               paymentPeriodicity,
               invoiceID: invoice.id,
@@ -1107,7 +1128,7 @@ export class MemberContext implements MemberContextInterface {
     }
 
     await this.mailContext.sendMail({
-      externalMailTemplateId: remoteTemplate,
+      mailTemplateId: remoteTemplate,
       recipient: user,
       optionalData: {
         subscription,

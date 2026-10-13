@@ -1,19 +1,26 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+
+export type ReviveStatus = 'pending' | 'ready' | 'blocked';
 
 interface AdsContextType {
   adsDisabled: boolean;
   setAdsDisabled: (disabled: boolean) => void;
+  reviveStatus: ReviveStatus;
+  setReviveStatus: (status: ReviveStatus) => void;
 }
 
 const AdsContext = createContext<AdsContextType | undefined>(undefined);
 
 export const AdsProvider = ({ children }: { children: ReactNode }) => {
   const [adsDisabled, setAdsDisabled] = useState(false);
-  return (
-    <AdsContext.Provider value={{ adsDisabled, setAdsDisabled }}>
-      {children}
-    </AdsContext.Provider>
+  const [reviveStatus, setReviveStatus] = useState<ReviveStatus>('pending');
+
+  const value = useMemo(
+    () => ({ adsDisabled, setAdsDisabled, reviveStatus, setReviveStatus }),
+    [adsDisabled, reviveStatus]
   );
+
+  return <AdsContext.Provider value={value}>{children}</AdsContext.Provider>;
 };
 
 export const useAdsContext = () => {

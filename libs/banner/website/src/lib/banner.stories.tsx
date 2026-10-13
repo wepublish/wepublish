@@ -1,6 +1,5 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { Banner } from './banner';
-import { ApolloError } from '@apollo/client';
 import { mockImage } from '@wepublish/storybook/mocks';
 
 const banner = {
@@ -36,9 +35,7 @@ export const WithError = {
   args: {
     data: undefined,
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
   },
 };
 
@@ -46,6 +43,29 @@ export const WithoutImage = {
   args: {
     data: {
       primaryBanner: { ...banner, image: null },
+    },
+  },
+};
+
+export const WithEmbed = {
+  args: {
+    data: {
+      primaryBanner: {
+        ...banner,
+        embedUrl: 'https://briefing.bajour.ch/mini?iframe=true',
+      },
+    },
+  },
+};
+
+export const WithEmbedWithoutImage = {
+  args: {
+    data: {
+      primaryBanner: {
+        ...banner,
+        image: null,
+        embedUrl: 'https://briefing.bajour.ch/mini?iframe=true',
+      },
     },
   },
 };

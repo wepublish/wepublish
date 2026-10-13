@@ -16,7 +16,6 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 
 import { Container } from '../src/components/layout/container';
@@ -48,7 +47,9 @@ export default function SignUp() {
 
           <Typography
             variant="body1"
-            paragraph
+            sx={{
+              marginBottom: '16px',
+            }}
           >
             (Falls du schon einen Account hast,{' '}
             <Link href={'/login'}>klicke hier.</Link>)
@@ -62,9 +63,7 @@ export default function SignUp() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 

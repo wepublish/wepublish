@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullYouTubeVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderYouTubeVideoBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
 
 export const isYouTubeVideoBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullYouTubeVideoBlockFragment =>
   block.__typename === 'YouTubeVideoBlock';
 
@@ -27,7 +27,7 @@ export function YouTubeVideoBlock({
       <YouTubeVideoBlockPlayer
         width={'auto'}
         height={'auto'}
-        url={`https://www.youtube.com/watch?v=${videoID}`}
+        src={`https://www.youtube.com/watch?v=${videoID}`}
         controls={true}
       />
     </YouTubeVideoBlockWrapper>

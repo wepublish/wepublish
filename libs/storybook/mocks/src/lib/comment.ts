@@ -1,12 +1,12 @@
 import {
-  CalculatedRating,
-  Comment,
   CommentAuthorType,
   CommentItemType,
-  CommentRating,
-  CommentRatingSystemAnswer,
   CommentState,
-  OverriddenRating,
+  FullCalculatedRatingFragment,
+  FullCommentFragment,
+  FullCommentRatingFragment,
+  FullCommentRatingSystemAnswerFragment,
+  FullOverriddenRatingFragment,
   RatingSystemType,
 } from '@wepublish/website/api';
 import { mockTag } from './tag';
@@ -18,14 +18,14 @@ import { mockUser } from './user';
 export const mockCommentRatingAnswer = ({
   id = faker.string.nanoid(),
   answer = 'Foobar',
-}: Partial<CommentRatingSystemAnswer> = {}) =>
+}: Partial<FullCommentRatingSystemAnswerFragment> = {}) =>
   ({
     __typename: 'CommentRatingSystemAnswer',
     id,
     ratingSystemId: faker.string.nanoid(),
     type: RatingSystemType.Star,
     answer,
-  }) as CommentRatingSystemAnswer;
+  }) as FullCommentRatingSystemAnswerFragment;
 
 export const mockCommentRating = ({
   answer = 'Foobar',
@@ -39,17 +39,17 @@ export const mockCommentRating = ({
     count,
     mean,
     total,
-  }) as CalculatedRating;
+  }) as FullCalculatedRatingFragment;
 
 export const mockOverridenRating = ({
   answerId = faker.string.nanoid(),
   value = 100,
-}: Partial<OverriddenRating> = {}) =>
+}: Partial<FullOverriddenRatingFragment> = {}) =>
   ({
     __typename: 'OverriddenRating',
     answerId,
     value,
-  }) as OverriddenRating;
+  }) as FullOverriddenRatingFragment;
 
 export const mockUserCommentRating = ({
   answer = 'Foobar',
@@ -58,8 +58,8 @@ export const mockUserCommentRating = ({
   disabled = false,
   userId = faker.string.nanoid(),
 }: Partial<
-  Pick<CommentRating, 'value' | 'disabled' | 'userId'> &
-    Pick<CommentRatingSystemAnswer, 'answer' | 'id'>
+  Pick<FullCommentRatingFragment, 'value' | 'disabled' | 'userId'> &
+    Pick<FullCommentRatingSystemAnswerFragment, 'answer' | 'id'>
 > = {}) =>
   ({
     __typename: 'CommentRating',
@@ -70,7 +70,7 @@ export const mockUserCommentRating = ({
     id: faker.string.nanoid(),
     disabled,
     userId,
-  }) as CommentRating;
+  }) as FullCommentRatingFragment;
 
 export const mockComment = ({
   id = faker.string.nanoid(),
@@ -97,7 +97,7 @@ export const mockComment = ({
   lead = faker.lorem.sentence(),
   rejectionReason = faker.lorem.sentence(),
   user = mockUser(),
-}: Partial<Comment> = {}): Comment => ({
+}: Partial<FullCommentFragment> = {}): FullCommentFragment => ({
   id,
   __typename: 'Comment',
   authorType,

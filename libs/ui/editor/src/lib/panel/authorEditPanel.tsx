@@ -1,14 +1,15 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  AuthorDocument,
   AuthorLink,
   AuthorListDocument,
+  CreateAuthorDocument,
   FullAuthorFragment,
   FullImageFragment,
   Maybe,
   TagType,
-  useAuthorQuery,
-  useCreateAuthorMutation,
-  useUpdateAuthorMutation,
+  UpdateAuthorDocument,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
 import React, { useEffect, useState } from 'react';
@@ -28,7 +29,6 @@ import {
   Toggle,
 } from 'rsuite';
 import FormControl from 'rsuite/FormControl';
-import { Descendant } from 'slate';
 
 import {
   ChooseEditImage,
@@ -39,21 +39,17 @@ import {
   SelectTags,
   useAuthorisation,
 } from '../atoms';
-import {
-  createDefaultValue,
-  RichTextBlock,
-  RichTextBlockValue,
-} from '../blocks';
+import { RichTextBlock, RichTextBlockValue } from '../blocks';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { generateID, getOperationNameFromDocument } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 
-const { ControlLabel: RControlLabel, Group, Control } = RForm;
+const { Label: RLabel, Group, Control } = RForm;
 
 const InputGroup = styled(RInputGroup)`
   width: 230px;
-  margin-left: 5px;
+  margin-left: 4px;
 `;
 
 const Controls = styled('div')`
@@ -65,9 +61,22 @@ const Form = styled(RForm)`
   height: 100%;
 `;
 
-const ControlLabel = styled(RControlLabel)`
+const Label = styled(RLabel)`
   padding-top: 16px;
 `;
+
+const ToggleList = styled('div')`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+`;
+
+const emptyAuthorLink: AuthorLink = {
+  __typename: 'AuthorLink',
+  title: '',
+  url: '',
+};
 
 export interface AuthorEditPanelProps {
   id?: string;
@@ -82,9 +91,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
   const [slug, setSlug] = useState('');
   const [jobTitle, setJobTitle] = useState('');
   const [image, setImage] = useState<Maybe<FullImageFragment>>();
-  const [bio, setBio] = useState<RichTextBlockValue['richText'] | undefined>(
-    () => (!id ? createDefaultValue() : undefined)
-  );
+  const [bio, setBio] = useState<RichTextBlockValue['richText']>();
   const [hideOnArticle, setHideOnArticle] = useState<
     boolean | undefined | null
   >(undefined);
@@ -95,7 +102,10 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     undefined
   );
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
-    { id: generateID(), value: { title: '', url: '' } },
+    {
+      id: generateID(),
+      value: emptyAuthorLink,
+    },
   ]);
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
@@ -107,18 +117,18 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     data,
     loading: isLoading,
     error: loadError,
-  } = useAuthorQuery({
+  } = useQuery(AuthorDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
 
   const [createAuthor, { loading: isCreating, error: createError }] =
-    useCreateAuthorMutation({
+    useMutation(CreateAuthorDocument, {
       refetchQueries: [getOperationNameFromDocument(AuthorListDocument)],
     });
 
   const [updateAuthor, { loading: isUpdating, error: updateError }] =
-    useUpdateAuthorMutation({});
+    useMutation(UpdateAuthorDocument, {});
 
   const isDisabled =
     isLoading ||
@@ -136,7 +146,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
       setSlug(data.author.slug);
       setJobTitle(data.author.jobTitle ?? '');
       setImage(data.author.image);
-      setBio(data.author.bio ? data.author.bio : createDefaultValue());
+      setBio(data.author.bio);
       setHideOnArticle(data.author.hideOnArticle);
       setHideOnTeam(data.author.hideOnTeam);
       setHideOnTeaser(data.author.hideOnTeaser);
@@ -145,6 +155,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
           data.author.links.map(link => ({
             id: generateID(),
             value: {
+              __typename: 'AuthorLink',
               title: link.title,
               url: link.url,
             },
@@ -259,9 +270,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
           <PanelGroup>
             <Panel>
               <Group controlId="name">
-                <ControlLabel>
-                  {toggleRequiredLabel(t('authors.panels.name'))}
-                </ControlLabel>
+                <Label>{toggleRequiredLabel(t('authors.panels.name'))}</Label>
 
                 <Control
                   name="name"
@@ -274,7 +283,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
                 />
               </Group>
               <Group controlId="jobTitle">
-                <ControlLabel>{t('authors.panels.jobTitle')}</ControlLabel>
+                <Label>{t('authors.panels.jobTitle')}</Label>
                 <Control
                   name={t('authors.panels.jobTitle')}
                   value={jobTitle}
@@ -299,15 +308,11 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
             </Panel>
 
             <Panel header={t('authors.panels.bioInformation')}>
-              <div className="richTextFrame">
-                {bio && (
-                  <RichTextBlock
-                    disabled={isDisabled}
-                    value={bio}
-                    onChange={value => setBio(value as Descendant[])}
-                  />
-                )}
-              </div>
+              <RichTextBlock
+                disabled={isDisabled}
+                value={bio}
+                onChange={value => setBio(value)}
+              />
             </Panel>
 
             <Panel
@@ -320,7 +325,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
                 onChange={links => {
                   setLinks(links);
                 }}
-                defaultValue={{ title: '', url: '' }}
+                defaultValue={emptyAuthorLink}
               >
                 {({ value, onChange }) => (
                   <Controls>
@@ -368,25 +373,25 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
             {/* hide author in different places */}
             <Panel header={t('authorEditPanel.hideAuthor')}>
               <Group controlId="hideAuthorToggles">
-                <RControlLabel>
-                  {t('authorEditPanel.hideOnArticle')}
-                </RControlLabel>
-                <Toggle
-                  checked={!!hideOnArticle}
-                  onChange={value => setHideOnArticle(value)}
-                />
+                <ToggleList>
+                  <Toggle
+                    checked={!!hideOnArticle}
+                    onChange={value => setHideOnArticle(value)}
+                    label={t('authorEditPanel.hideOnArticle')}
+                  />
 
-                <ControlLabel>{t('authorEditPanel.hideOnTeaser')}</ControlLabel>
-                <Toggle
-                  checked={!!hideOnTeaser}
-                  onChange={value => setHideOnTeaser(value)}
-                />
+                  <Toggle
+                    checked={!!hideOnTeaser}
+                    onChange={value => setHideOnTeaser(value)}
+                    label={t('authorEditPanel.hideOnTeaser')}
+                  />
 
-                <ControlLabel>{t('authorEditPanel.hideOnTeam')}</ControlLabel>
-                <Toggle
-                  checked={!!hideOnTeam}
-                  onChange={value => setHideOnTeam(value)}
-                />
+                  <Toggle
+                    checked={!!hideOnTeam}
+                    onChange={value => setHideOnTeam(value)}
+                    label={t('authorEditPanel.hideOnTeam')}
+                  />
+                </ToggleList>
               </Group>
             </Panel>
           </PanelGroup>

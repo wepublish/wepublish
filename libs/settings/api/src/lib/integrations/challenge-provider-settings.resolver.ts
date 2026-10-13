@@ -1,10 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
+  CanCreateChallengeProviderSettings,
   CanGetChallengeProviderSettings,
   CanUpdateChallengeProviderSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
+  CreateSettingChallengeProviderInput,
   SettingChallengeProvider,
   UpdateSettingChallengeProviderInput,
   SettingChallengeProviderFilter,
@@ -40,16 +42,19 @@ export class ChallengeProviderSettingsResolver {
   challengeProviderSetting(@Args('id') id: string) {
     return this.challengeProviderSettingsDataloader.load(id);
   }
-  /** DISABLE FOR NOW
   @Permissions(CanCreateChallengeProviderSettings)
   @Mutation(returns => SettingChallengeProvider, {
     name: 'createChallengeProviderSetting',
-    description: 'Creates a new challenge provider setting.',
+    description:
+      'Sets up the challenge provider. Only possible while none is configured.',
   })
-  createChallengeProviderSetting(@Args() input: CreateSettingChallengeProviderInput) {
-    return this.challengeProviderSettingsService.createChallengeProviderSetting(input);
+  createChallengeProviderSetting(
+    @Args() input: CreateSettingChallengeProviderInput
+  ) {
+    return this.challengeProviderSettingsService.createChallengeProviderSetting(
+      input
+    );
   }
- **/
 
   @Permissions(CanUpdateChallengeProviderSettings)
   @Mutation(returns => SettingChallengeProvider, {

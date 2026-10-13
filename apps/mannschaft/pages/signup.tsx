@@ -13,7 +13,6 @@ import {
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -38,24 +37,22 @@ export default function SignUp() {
   return (
     <SignupWrapper>
       <H3 component="h1">Registriere dich noch heute</H3>
-
       <Typography
         variant="body1"
-        paragraph
+        sx={{
+          marginBottom: '16px',
+        }}
       >
         (Falls du schon einen Account hast,{' '}
         <Link href={'/login'}>klicke hier.</Link>)
       </Typography>
-
       <RegistrationFormContainer />
     </SignupWrapper>
   );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 

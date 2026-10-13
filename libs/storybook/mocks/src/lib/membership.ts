@@ -1,12 +1,13 @@
 import {
-  AvailablePaymentMethod,
   CaptchaType,
   Challenge,
   Currency,
-  Invoice,
-  InvoiceItem,
-  MemberPlan,
-  PaymentMethod,
+  FullAvailablePaymentMethodFragment,
+  FullGoodieFragment,
+  FullInvoiceFragment,
+  FullInvoiceItemFragment,
+  FullMemberPlanFragment,
+  FullPaymentMethodFragment,
   PaymentPeriodicity,
   ProductType,
   PublicSubscription,
@@ -26,7 +27,7 @@ export const mockPaymentMethod = ({
   gracePeriod = 0,
   image = mockImage(),
   imageId = image?.id,
-}: Partial<PaymentMethod> = {}): PaymentMethod & {
+}: Partial<FullPaymentMethodFragment> = {}): FullPaymentMethodFragment & {
   active: boolean;
   createdAt: string;
   modifiedAt: string;
@@ -56,10 +57,10 @@ export const mockAvailablePaymentMethod = ({
   paymentMethods = [mockPaymentMethod(), mockPaymentMethod()],
   paymentMethodIDs = [],
 }: Partial<
-  AvailablePaymentMethod & {
+  FullAvailablePaymentMethodFragment & {
     paymentMethodIDs: string[];
   }
-> = {}): AvailablePaymentMethod & {
+> = {}): FullAvailablePaymentMethodFragment & {
   paymentMethodIDs: string[];
 } => ({
   __typename: 'AvailablePaymentMethod',
@@ -69,11 +70,24 @@ export const mockAvailablePaymentMethod = ({
   paymentMethodIDs,
 });
 
+export const mockGoodie = ({
+  id = faker.string.nanoid(),
+  name = faker.commerce.productName(),
+  description = mockShortRichText(),
+  image = mockImage(),
+  stock = 10,
+}: Partial<FullGoodieFragment> = {}): FullGoodieFragment => ({
+  __typename: 'Goodie',
+  id,
+  name,
+  description,
+  image,
+  stock,
+});
+
 export const mockMemberPlan = ({
   id = faker.string.nanoid(),
   image = mockImage(),
-  amountPerMonthMin = 500,
-  amountPerMonthTarget = 700,
   name = faker.commerce.productName(),
   slug = name,
   currency = Currency.Chf,
@@ -91,19 +105,32 @@ export const mockMemberPlan = ({
   confirmationPageId = faker.string.nanoid(),
   successPage = {
     url: 'https://example.com/success',
-  } as MemberPlan['successPage'],
-  failPage = { url: 'https://example.com/fail' } as MemberPlan['failPage'],
+  } as FullMemberPlanFragment['successPage'],
+  failPage = {
+    url: 'https://example.com/fail',
+  } as FullMemberPlanFragment['failPage'],
   confirmationPage = {
     url: 'https://example.com/confirmation',
-  } as MemberPlan['confirmationPage'],
-  amountPerMonthMax = 1000,
+  } as FullMemberPlanFragment['confirmationPage'],
   externalReward = 'https://example.com/mock-external-reward-url',
-}: Partial<MemberPlan> = {}): MemberPlan & { active: boolean } => ({
+  goodies = [],
+  periodicityPricing = [
+    {
+      __typename: 'PeriodicityPrice',
+      periodicity: PaymentPeriodicity.Monthly,
+      label: null,
+      amountMin: 500,
+      amountTarget: 700,
+      amountMax: 1000,
+    },
+  ],
+  defaultPaymentPeriodicity = null,
+}: Partial<FullMemberPlanFragment> = {}): FullMemberPlanFragment & {
+  active: boolean;
+} => ({
   __typename: 'MemberPlan',
   id,
   image,
-  amountPerMonthMin,
-  amountPerMonthTarget,
   name,
   slug,
   description,
@@ -119,8 +146,10 @@ export const mockMemberPlan = ({
   successPage,
   failPage,
   confirmationPage,
-  amountPerMonthMax,
   externalReward,
+  goodies,
+  periodicityPricing,
+  defaultPaymentPeriodicity,
   active: true,
 });
 
@@ -142,7 +171,9 @@ export const mockSubscription = ({
   isActive = true,
   canExtend = false,
   memberPlan = mockMemberPlan(),
-  monthlyAmount = memberPlan.amountPerMonthMin,
+  monthlyAmount = memberPlan.periodicityPricing?.find(
+    price => price.periodicity === PaymentPeriodicity.Monthly
+  )?.amountMin ?? 500,
   paymentMethod = memberPlan.availablePaymentMethods[0].paymentMethods[0],
   paymentMethodID = paymentMethod.id,
   paymentPeriodicity = memberPlan.availablePaymentMethods[0]
@@ -150,6 +181,7 @@ export const mockSubscription = ({
   properties = [],
   url = faker.internet.url(),
   externalReward,
+  goodie = null,
   deactivation,
   user = mockUser(),
   userID = user.id,
@@ -178,6 +210,7 @@ export const mockSubscription = ({
   properties,
   url,
   externalReward,
+  goodie,
   deactivation,
   user,
   userID,
@@ -194,7 +227,7 @@ export const mockInvoiceItem = ({
     .toISOString(),
   amount = 500,
   description = faker.commerce.productDescription(),
-}: Partial<InvoiceItem> = {}): InvoiceItem => ({
+}: Partial<FullInvoiceItemFragment> = {}): FullInvoiceItemFragment => ({
   __typename: 'InvoiceItem',
   name,
   amount,
@@ -230,7 +263,7 @@ export const mockInvoice = ({
   ],
   mail = faker.internet.email(),
   description = faker.lorem.sentence(),
-}: Partial<Invoice> = {}): Invoice => ({
+}: Partial<FullInvoiceFragment> = {}): FullInvoiceFragment => ({
   __typename: 'Invoice',
   id,
   createdAt,

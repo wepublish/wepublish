@@ -97,6 +97,14 @@ import {
   StreamableVideoBlockInput,
 } from './embed/streamable-block.model';
 import { FlexBlock, FlexBlockInput } from './flex/flex-block.model';
+import {
+  BlockTemplateBlock,
+  BlockTemplateBlockInput,
+} from './block-template/block-template.model';
+import {
+  MailchimpFormBlock,
+  MailchimpFormBlockInput,
+} from './mailchimp-form/mailchimp-form-block.model';
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -128,11 +136,13 @@ export const BlockContent = createUnionType({
       StreamableVideoBlock,
       YouTubeVideoBlock,
       SubscribeBlock,
+      MailchimpFormBlock,
       TeaserGridBlock,
       TeaserGridFlexBlock,
       TeaserListBlock,
       TeaserSlotsBlock,
       FlexBlock,
+      BlockTemplateBlock,
     ] as const,
   resolveType: (value: BaseBlock<BlockType>) => {
     switch (value.type) {
@@ -186,6 +196,8 @@ export const BlockContent = createUnionType({
         return YouTubeVideoBlock.name;
       case BlockType.Subscribe:
         return SubscribeBlock.name;
+      case BlockType.MailchimpForm:
+        return MailchimpFormBlock.name;
       case BlockType.TeaserGrid:
         return TeaserGridBlock.name;
       case BlockType.TeaserGridFlex:
@@ -196,6 +208,8 @@ export const BlockContent = createUnionType({
         return TeaserSlotsBlock.name;
       case BlockType.FlexBlock:
         return FlexBlock.name;
+      case BlockType.BlockTemplate:
+        return BlockTemplateBlock.name;
     }
 
     console.warn(`Block ${value.type} not implemented!`);
@@ -234,6 +248,8 @@ export class BlockContentInput {
   [BlockType.Comment]?: CommentBlockInput;
   @Field(() => SubscribeBlockInput, { nullable: true })
   [BlockType.Subscribe]?: SubscribeBlockInput;
+  @Field(() => MailchimpFormBlockInput, { nullable: true })
+  [BlockType.MailchimpForm]?: MailchimpFormBlockInput;
 
   @Field(() => IFrameBlockInput, { nullable: true })
   [BlockType.Embed]?: IFrameBlockInput;
@@ -270,6 +286,8 @@ export class BlockContentInput {
   [BlockType.TeaserSlots]?: TeaserSlotsBlockInput;
   @Field(() => FlexBlockInput, { nullable: true })
   [BlockType.FlexBlock]?: FlexBlockInput;
+  @Field(() => BlockTemplateBlockInput, { nullable: true })
+  [BlockType.BlockTemplate]?: BlockTemplateBlockInput;
 }
 
 export function mapBlockUnionMap(

@@ -1,11 +1,13 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   CommentFilter,
+  CommentListDocument,
   CommentSort,
   CommentState,
   FullCommentFragment,
-  useCommentListQuery,
 } from '@wepublish/editor/api';
+import { toPlaintext } from '@wepublish/richtext';
 import {
   CommentStateDropdown,
   createCheckedPermissionComponent,
@@ -14,14 +16,15 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   IconButton,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewContainer,
   ListViewFilterArea,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
   PermissionControl,
-  RichTextBlock,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +36,7 @@ import { RowDataType } from 'rsuite-table';
 const { Column, HeaderCell, Cell } = RTable;
 
 const EditIcon = styled.span`
-  margin-right: 5px;
+  margin-right: 4px;
 `;
 
 function mapColumFieldToGraphQLField(columnField: string): CommentSort | null {
@@ -50,18 +53,17 @@ function mapColumFieldToGraphQLField(columnField: string): CommentSort | null {
 function CommentList() {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortField, setSortField] = useState('modifiedAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-
-  const [filter, setFilter] = useState<CommentFilter>({
-    states: [
-      CommentState.Approved,
-      CommentState.PendingApproval,
-      CommentState.PendingUserChanges,
-      CommentState.Rejected,
-    ],
-  });
+  const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
+    useListViewState<CommentFilter>('comments', {
+      defaultFilter: {
+        states: [
+          CommentState.Approved,
+          CommentState.PendingApproval,
+          CommentState.PendingUserChanges,
+          CommentState.Rejected,
+        ],
+      },
+    });
 
   const [comments, setComments] = useState<FullCommentFragment[]>([]);
 
@@ -77,7 +79,7 @@ function CommentList() {
     data,
     refetch,
     loading: isLoading,
-  } = useCommentListQuery({
+  } = useQuery(CommentListDocument, {
     variables: commentListVariables,
   });
 
@@ -94,7 +96,7 @@ function CommentList() {
   useEffect(() => {
     if (data?.comments?.nodes) {
       setComments(data.comments.nodes);
-      if (data.comments.totalCount + 9 < page * limit) {
+      if (Math.ceil(data.comments.totalCount / limit) < page) {
         setPage(1);
       }
     }
@@ -126,8 +128,7 @@ function CommentList() {
                 };
               })
             }
-            checkedChildren={t('comments.state.approved')}
-            unCheckedChildren={t('comments.state.approved')}
+            label={t('comments.state.approved')}
           />
 
           <Toggle
@@ -149,8 +150,7 @@ function CommentList() {
                 };
               })
             }
-            checkedChildren={t('comments.state.pendingApproval')}
-            unCheckedChildren={t('comments.state.pendingApproval')}
+            label={t('comments.state.pendingApproval')}
           />
 
           <Toggle
@@ -172,8 +172,14 @@ function CommentList() {
                 };
               })
             }
-            checkedChildren={t('comments.state.pendingUserChanges')}
-            unCheckedChildren={t('comments.state.pendingUserChanges')}
+            label={
+              <>
+                {t('comments.state.pendingUserChanges')}{' '}
+                <InfoTooltip
+                  text={t('comments.overview.pendingUserChangesInfo')}
+                />
+              </>
+            }
           />
 
           <Toggle
@@ -191,8 +197,7 @@ function CommentList() {
                 };
               })
             }
-            checkedChildren={t('comments.state.rejected')}
-            unCheckedChildren={t('comments.state.rejected')}
+            label={t('comments.state.rejected')}
           />
         </ListViewFilterArea>
       </ListViewContainer>
@@ -220,11 +225,11 @@ function CommentList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={350}
             align="left"
@@ -235,23 +240,15 @@ function CommentList() {
             <Cell dataKey="revisions">
               {(rowData: RowDataType<FullCommentFragment>) =>
                 rowData.revisions?.length ?
-                  <RichTextBlock
-                    displayOnly
-                    displayOneLine
-                    disabled
-                    onChange={() => {
-                      return undefined;
-                    }}
-                    value={
-                      rowData.revisions[rowData.revisions?.length - 1]?.text ||
-                      []
-                    }
-                  />
+                  toPlaintext(
+                    rowData.revisions[rowData.revisions.length - 1]?.text
+                      ?.content
+                  )
                 : null
               }
             </Cell>
           </Column>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={150}
             align="left"
@@ -265,7 +262,7 @@ function CommentList() {
               }
             </Cell>
           </Column>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={150}
             align="left"
@@ -283,7 +280,7 @@ function CommentList() {
             </Cell>
           </Column>
 
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
             width={200}
             align="right"
@@ -308,14 +305,14 @@ function CommentList() {
             </Cell>
           </Column>
 
-          {/* eslint-disable-next-line i18next/no-literal-string */}
+          {}
           <Column
-            width={150}
+            width={140}
             align="center"
             verticalAlign="middle"
             fixed="right"
           >
-            <HeaderCell>{t('comments.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<FullCommentFragment>) => (
                 <PermissionControl
@@ -326,6 +323,7 @@ function CommentList() {
                     <IconButtonTooltip caption={t('comments.overview.edit')}>
                       <Link to={`edit/${rowData.id}`}>
                         <IconButton
+                          aria-label={t('comments.overview.edit')}
                           icon={<MdEdit />}
                           circle
                           size="sm"
@@ -362,7 +360,10 @@ function CommentList() {
           total={data?.comments.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
     </>

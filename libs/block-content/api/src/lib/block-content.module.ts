@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { BlockStylesModule } from './block-styles/block-styles.module';
+import { BlockTemplateModule } from './block-template/block-template.module';
 import { EventBlockResolver } from './event/event-block.resolver';
 import { CommentBlockResolver } from './comment/comment-block.resolver';
 import { ImageModule } from '@wepublish/image/api';
@@ -18,11 +19,15 @@ import { SlotTeasersLoader } from './teaser/slot-teasers-loader';
 import { TagModule } from '@wepublish/tag/api';
 import { SubscribeBlockResolver } from './subscribe/subscribe-block.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
+import { SettingModule } from '@wepublish/settings/api';
+import { MailchimpSubscribeResolver } from './mailchimp-form/mailchimp-subscribe.resolver';
+import { MailchimpSubscribeService } from './mailchimp-form/mailchimp-subscribe.service';
 
 @Module({
   imports: [
     PrismaModule,
     BlockStylesModule,
+    forwardRef(() => BlockTemplateModule),
     ImageModule,
     forwardRef(() => ArticleModule),
     forwardRef(() => PageModule),
@@ -31,6 +36,7 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
     CommentModule,
     TagModule,
     forwardRef(() => MemberPlanModule),
+    SettingModule,
   ],
   providers: [
     BaseBlockResolver,
@@ -40,6 +46,8 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
     TeaserListBlockFilterResolver,
     SlotTeasersLoader,
     SubscribeBlockResolver,
+    MailchimpSubscribeResolver,
+    MailchimpSubscribeService,
   ],
   exports: [SlotTeasersLoader],
 })

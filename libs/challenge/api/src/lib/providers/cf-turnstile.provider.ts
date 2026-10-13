@@ -6,7 +6,7 @@ import {
 } from '../challenge.model';
 import { ChallengeProvider } from '../challenge-provider.interface';
 import FormData from 'form-data';
-import fetch from 'node-fetch';
+import fetch, { RequestInit } from 'node-fetch';
 import { PrismaClient, SettingChallengeProvider } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
@@ -120,7 +120,7 @@ export class CFTurnstileProvider extends ChallengeProvider {
     const result = await fetch(url, {
       body: formData as any,
       method: 'POST',
-      signal: AbortSignal.timeout(5_000),
+      signal: AbortSignal.timeout(5_000) as unknown as RequestInit['signal'],
     });
 
     const outcome = await result.json();

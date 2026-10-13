@@ -1,13 +1,18 @@
 import styled from '@emotion/styled';
+import { alpha } from '@mui/material';
 import {
   ArticleAuthor,
+  ArticleAuthorImage,
   ArticleAuthorImageWrapper,
   ArticleAuthorMetaWrapper,
   ArticleAuthorName,
   AuthorLinksWrapper,
 } from '@wepublish/author/website';
+import { BuilderAuthorChipProps } from '@wepublish/website/builder';
 
-export const TsriArticleAuthor = styled(ArticleAuthor)`
+import { getAdvertiserBio, useAdvertisers } from '../hooks/use-advertisers';
+
+const StyledArticleAuthor = styled(ArticleAuthor)`
   grid-column: -1 / 1;
   grid-template-rows: min-content auto;
   grid-template-columns: subgrid;
@@ -19,6 +24,10 @@ export const TsriArticleAuthor = styled(ArticleAuthor)`
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       width: 140px;
+    }
+
+    ${ArticleAuthorImage} {
+      border: 1px solid ${({ theme }) => alpha(theme.palette.common.black, 0.2)};
     }
   }
 
@@ -76,3 +85,22 @@ export const TsriArticleAuthor = styled(ArticleAuthor)`
     }
   }
 `;
+
+export function TsriArticleAuthor({
+  author,
+  ...props
+}: BuilderAuthorChipProps) {
+  const advertisers = useAdvertisers([author]);
+
+  const authorWithAdvertiserBio =
+    advertisers && advertisers.length > 0 ?
+      { ...author, bio: getAdvertiserBio(author) }
+    : author;
+
+  return (
+    <StyledArticleAuthor
+      author={authorWithAdvertiserBio}
+      {...props}
+    />
+  );
+}

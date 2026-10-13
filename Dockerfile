@@ -18,7 +18,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl python3 build-essential && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm ci
+    npm ci --no-audit --no-fund
 
 FROM ${PLAIN_BUILD_IMAGE} AS base-image
 LABEL org.opencontainers.image.authors="WePublish Foundation"
@@ -36,21 +36,25 @@ ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_ORG
 ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
+ARG SENTRY_DSN
 ARG APP_RELEASE_ID
 ARG SSR_FETCH_TIMEOUT_MS
 ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
 ENV SENTRY_ORG=${SENTRY_ORG}
 ENV SENTRY_PROJECT=${SENTRY_PROJECT}
 ENV SENTRY_RELEASE=${SENTRY_RELEASE}
+ENV SENTRY_DSN=${SENTRY_DSN}
 ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ENV SSR_FETCH_TIMEOUT_MS=${SSR_FETCH_TIMEOUT_MS}
 ### FRONT_ARG_REPLACER ###
 
 COPY . .
+# Sourcemaps are injected and uploaded by withSentryConfig during `nx build`
+# (it picks up SENTRY_AUTH_TOKEN/ORG/PROJECT/RELEASE from the env set above).
+# Do not add a manual `sentry-cli sourcemaps upload` here: the client maps are
+# already deleted by then, and it would walk .next/standalone/node_modules.
 RUN npx prisma generate && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
-    npx @sentry/cli sourcemaps inject ./dist/apps/${NEXT_PROJECT}/.next && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/${NEXT_PROJECT}/.next && \
     node /wepublish/deployment/map-secrets.js clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website-setup
@@ -71,6 +75,7 @@ COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.n
 COPY --chown=1001:0 version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
 COPY --chown=1001:0 --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
 COPY --chown=1001:0 --from=build-website /wepublish/deployment/map-secrets.js /wepublish/map-secrets.js
+COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
 RUN printf '{"serverPath":"/wepublish/apps/%s/server.js"}' "${NEXT_PROJECT}" > /wepublish/startup-config.json && \
     chmod -R g=u /wepublish
 
@@ -97,12 +102,11 @@ ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
 COPY . .
 RUN npx prisma generate && \
-    grep -q "require('#main-entry-point')" node_modules/.prisma/client/default.js || \
-    (echo "ERROR: Prisma client no longer uses #main-entry-point — update the pkg workaround" && exit 1) && \
-    sed -i "s|require('#main-entry-point')|require('./index.js')|" node_modules/.prisma/client/default.js && \
-    npx nx build api-example --ignore-nx-cache && \
+    node docker/inline-pkg-imports.js && \
+    npx nx build api-example --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/api-example && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example && \
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example || echo "sentry sourcemaps upload failed, continuing build"; } && \
+    node docker/generate-pkg-shims.js && \
     cp docker/api_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
 
@@ -161,11 +165,12 @@ ARG SENTRY_ORG
 ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 COPY . .
 RUN npx prisma generate && \
-    npx nx build editor --ignore-nx-cache && \
+    npx nx build editor --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/editor && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor && \
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor || echo "sentry sourcemaps upload failed, continuing build"; } && \
     cp docker/editor_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
 
@@ -202,15 +207,18 @@ WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
 COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
+COPY libs/changelog/api/src/lib/sync/run-sync-changelogs.ts changelog/run-sync-changelogs.ts
+COPY libs/changelog/api/src/lib/sync/sync-changelogs.ts changelog/sync-changelogs.ts
+COPY libs/changelog/api/src/lib/sync/parse-changelog-markdown.ts changelog/parse-changelog-markdown.ts
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
 COPY prisma.config.ts prisma.config.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
+RUN npm install --no-audit --no-fund prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
     npx prisma generate && \
     npx tsc -p tsconfig.yaml && \
     npx @sentry/cli sourcemaps inject ./dist && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist || echo "sentry sourcemaps upload failed, continuing build"; }
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration-setup
 ARG APP_RELEASE_ID
@@ -219,6 +227,7 @@ ENV NODE_ENV=production
 WORKDIR /wepublish
 COPY --from=build-migration /wepublish/dist ./dist
 COPY libs/api/prisma/migrations prisma/migrations
+COPY libs/api/changelogs changelogs
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY prisma.config.ts prisma.config.ts
@@ -227,7 +236,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @node-rs/argon2 && \
+    npm install --no-audit --no-fund prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @node-rs/argon2 && \
     npx prisma generate && \
     chmod -R g=u /wepublish
 
@@ -260,13 +269,18 @@ RUN apt-get update && apt-get install -y libjemalloc-dev poppler-utils fonts-lib
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
-RUN npm ci
-RUN npx nx build media --ignore-nx-cache && \
+RUN npm ci --no-audit --no-fund
+# This stage installs only `apps/media/package.json`, so the workspace-wide Nx
+# inference plugins declared in nx.json (eslint/vite/vitest) are not on disk and
+# nx aborts before it builds anything. `media:build` is an explicit
+# @nx/webpack:webpack target that needs none of them, so drop them here.
+RUN node -e "const fs=require('fs');const nx=JSON.parse(fs.readFileSync('nx.json','utf8'));delete nx.plugins;fs.writeFileSync('nx.json',JSON.stringify(nx,null,2));"
+RUN npx nx build media --skip-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/media && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media && \
+    { npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media || echo "sentry sourcemaps upload failed, continuing build"; } && \
     mkdir -p /poppler-dist/bin /poppler-dist/lib && \
     cp /usr/bin/pdftoppm /poppler-dist/bin/ && \
-    ldd /usr/bin/pdftoppm | awk '/=>/ {print $3}' | xargs -I{} cp -L {} /poppler-dist/lib/ 2>/dev/null || true
+    { ldd /usr/bin/pdftoppm | awk '/=>/ {print $3}' | xargs -I{} cp -L {} /poppler-dist/lib/ 2>/dev/null || true; }
 
 FROM ${PLAIN_BUILD_IMAGE} AS media-setup
 WORKDIR /wepublish

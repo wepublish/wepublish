@@ -1,7 +1,7 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
+  DeleteCommentDocument,
   FullCommentFragment,
-  useDeleteCommentMutation,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,16 +9,17 @@ import { MdDelete } from 'react-icons/md';
 import { Button, IconButton, Message, Modal, toaster } from 'rsuite';
 
 import { PermissionControl } from '../permissionControl';
+import { humanizeError } from '../../humanizeError';
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -31,11 +32,11 @@ interface CommentDeleteBtnProps {
 export function CommentDeleteBtn({
   comment,
   onCommentDeleted,
-}: CommentDeleteBtnProps): JSX.Element {
+}: CommentDeleteBtnProps) {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const [deleteComment, { loading }] = useDeleteCommentMutation({
+  const [deleteComment, { loading }] = useMutation(DeleteCommentDocument, {
     onCompleted: () => {
       setModalOpen(false);
       if (onCommentDeleted) {
@@ -49,8 +50,7 @@ export function CommentDeleteBtn({
   });
 
   if (!comment) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>;
+    return;
   }
 
   return (

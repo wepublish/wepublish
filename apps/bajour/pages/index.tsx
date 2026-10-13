@@ -2,12 +2,11 @@ import styled from '@emotion/styled';
 import { SliderWrapper } from '@wepublish/block-content/website';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl } from '@wepublish/utils/website';
-import { LinkContext } from '@wepublish/website/builder';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
-  addClientCacheToProps,
   CommentListDocument,
   CommentSort,
+  FullTeaserListBlockFragment,
   getApiClient,
   HotAndTrendingDocument,
   NavigationListDocument,
@@ -16,10 +15,10 @@ import {
   PeerProfileDocument,
   SettingListDocument,
   SortOrder,
-  TeaserListBlock,
+  addClientCacheToProps,
 } from '@wepublish/website/api';
+import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 
 import { BestOfWePublishWrapper } from '../src/components/best-of-wepublish/best-of-wepublish';
 import { isFrageDesTages } from '../src/components/frage-des-tages/is-frage-des-tages';
@@ -70,9 +69,7 @@ export default function Index() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 
@@ -104,7 +101,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const fdTTeaser = page.data?.page?.latest.blocks.find(block => {
     return isFrageDesTages(block);
-  }) as TeaserListBlock | undefined;
+  }) as FullTeaserListBlockFragment | undefined;
 
   if (fdTTeaser && fdTTeaser.teasers[0]) {
     let id: string | undefined;
@@ -136,6 +133,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(page.data?.page, page.error),
   };
 };

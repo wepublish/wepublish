@@ -3,6 +3,11 @@ export * from './lib/block-styles/block-styles.model';
 export * from './lib/block-styles/block-styles.service';
 export * from './lib/block-styles/block-styles-dataloader.service';
 
+export * from './lib/block-template/block-template.module';
+export * from './lib/block-template/block-template.model';
+export * from './lib/block-template/block-template.service';
+export * from './lib/block-template/block-template-dataloader.service';
+
 export * from './lib/title/title-block.model';
 export * from './lib/poll/poll-block.model';
 export * from './lib/comment/comment-block.model';
@@ -15,6 +20,10 @@ export * from './lib/html/html-block.model';
 export * from './lib/event/event-block.model';
 export * from './lib/richtext/richtext-block.model';
 export * from './lib/subscribe/subscribe-block.model';
+export * from './lib/mailchimp-form/mailchimp-form-block.model';
+export * from './lib/mailchimp-form/mailchimp-subscribe.model';
+export * from './lib/mailchimp-form/mailchimp-subscribe.service';
+export * from './lib/mailchimp-form/mailchimp-subscribe.resolver';
 export * from './lib/embed/iframe-block.model';
 export * from './lib/base-block.model';
 

@@ -2,27 +2,41 @@ import {
   CaptchaType,
   Challenge as ChallengeType,
 } from '@wepublish/website/api';
-import { forwardRef } from 'react';
+import { forwardRef, Ref, useImperativeHandle, useRef } from 'react';
 import { TextFieldProps } from '@wepublish/ui';
-import Turnstile from 'react-turnstile';
+import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
+export type BuilderChallengeRef = { reset: () => void };
 export type BuilderChallengeProps = {
   challenge: ChallengeType;
   onChange?: (token: string) => void;
+  challengeRef: Ref<BuilderChallengeRef | undefined>;
 } & TextFieldProps;
 
 export const CfTurnstileChallenge = forwardRef<
   HTMLInputElement,
   BuilderChallengeProps
->(({ challenge, ...inputProps }: BuilderChallengeProps, ref) => {
+>(({ challenge, challengeRef, ...inputProps }: BuilderChallengeProps, ref) => {
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
+
+  useImperativeHandle(challengeRef, () => {
+    return {
+      reset: () => turnstileRef.current?.reset(),
+    };
+  }, []);
+
   return (
     <Turnstile
-      refreshExpired="auto"
-      sitekey={challenge.challengeID ?? ''}
-      theme="light"
-      language={'de'}
+      ref={turnstileRef}
+      siteKey={challenge.challengeID ?? ''}
+      options={{
+        refreshExpired: 'auto',
+        theme: 'light',
+        language: 'de',
+      }}
       onSuccess={token => inputProps.onChange?.(token)}
+      onExpire={() => turnstileRef.current?.reset()}
     />
   );
 });

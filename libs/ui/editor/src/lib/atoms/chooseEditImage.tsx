@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { FullImageFragment } from '@wepublish/editor/api';
-import React from 'react';
+import React, { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose, MdEdit, MdPhoto } from 'react-icons/md';
 import { Dropdown, IconButton, Panel as RPanel, Placeholder } from 'rsuite';
@@ -69,6 +69,7 @@ export function ChooseEditImage({
       {!image && disabled === true && <Placeholder.Graph />}
       <PlaceholderInput
         onAddClick={() => openChooseModalOpen?.()}
+        addLabel={t('chooseEditImage.chooseImage')}
         maxHeight={maxHeight}
         minHeight={minHeight}
       >
@@ -93,6 +94,8 @@ export function ChooseEditImage({
                       circle
                       size="sm"
                       appearance="primary"
+                      title={t('chooseEditImage.imageOptions')}
+                      aria-label={t('chooseEditImage.imageOptions')}
                     />
                   )}
                 >

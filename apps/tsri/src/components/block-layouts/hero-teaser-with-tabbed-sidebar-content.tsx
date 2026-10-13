@@ -2,8 +2,7 @@ import styled from '@emotion/styled';
 import { Theme } from '@mui/material';
 import { hasBlockStyle, isFlexBlock } from '@wepublish/block-content/website';
 import {
-  BlockContent,
-  BlockType,
+  FullBlockFragment,
   FullFlexBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderFlexBlockProps } from '@wepublish/website/builder';
@@ -22,7 +21,7 @@ import { TeaserPreTitle } from '../teasers/tsri-teaser';
 import { TsriTabbedContentType } from './tsri-base-tabbed-content';
 
 export const isHeroTeaserWithTabbedSidebarContent = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullFlexBlockFragment =>
   allPass([
     hasBlockStyle(TsriTabbedContentType.HeroTeaserWithTabbedSidebarContent),
@@ -218,8 +217,10 @@ export const HeroTeaserWithTabbedContent = ({
   blocks,
   blockStyle,
   blockStyleByIndex,
+  randomizeTab,
 }: BuilderFlexBlockProps & {
   blockStyleByIndex: (index: number) => TsriLayoutType;
+  randomizeTab?: boolean;
 }) => {
   return (
     <FrontTopRow>
@@ -232,13 +233,13 @@ export const HeroTeaserWithTabbedContent = ({
         className={className}
         blocks={blocks.slice(1)}
         blockStyle={blockStyle}
+        randomizeTab={randomizeTab}
         blockStyleByIndex={(index: number) => blockStyleByIndex(index + 1)}
         cssByBlockStyle={(
           index: number,
           theme: Theme,
           blockStyleOverride?: string | undefined | null
         ) => cssByBlockStyle(index + 1, theme, blockStyleOverride)}
-        type={BlockType.FlexBlock}
       />
     </FrontTopRow>
   );

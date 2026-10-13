@@ -1,46 +1,60 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  FullPoll,
-  PollAnswer,
-  PollExternalVote,
-  useCreatePollAnswerMutation,
-  useDeletePollAnswerMutation,
+  CreatePollAnswerDocument,
+  DeletePollAnswerDocument,
+  FullPollFragment,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
+import { MdAdd, MdDelete } from 'react-icons/md';
 import {
   Badge as RBadge,
   Button,
-  Col as RCol,
   Form,
   IconButton as RIconButton,
   Message,
   Modal,
-  Row as RRow,
   toaster,
-  Tooltip,
-  Whisper,
 } from 'rsuite';
+import { humanizeError } from '../../humanizeError';
+import { IconButtonTooltip } from '../iconButtonTooltip';
+
+type PollAnswerFragment = FullPollFragment['answers'][number];
+type PollExternalVoteFragment =
+  FullPollFragment['externalVoteSources'][number]['voteAmounts'][number];
 
 const IconButton = styled(RIconButton)`
-  margin-right: 10px;
+  &&:not([data-with-text]) {
+    width: 36px;
+    height: 36px;
+  }
 `;
 
 const Badge = styled(RBadge)`
   width: 100%;
+  display: grid;
 `;
 
-const Col = styled(RCol)`
-  padding-right: 30px;
-`;
-
-const Row = styled(RRow)`
+const Grid = styled.div`
   align-items: center;
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: 12px;
+  margin-bottom: 8px;
 `;
 
-function getTotalUserVotesByAnswerId(poll: FullPoll, answerId: string): number {
+const Hint = styled(Form.HelpText)`
+  && {
+    display: block;
+    margin-top: 12px;
+  }
+`;
+
+function getTotalUserVotesByAnswerId(
+  poll: FullPollFragment,
+  answerId: string
+): number {
   const answers = poll?.answers;
   if (!answers) {
     return 0;
@@ -53,7 +67,7 @@ function getTotalUserVotesByAnswerId(poll: FullPoll, answerId: string): number {
 }
 
 function getTotalExternalVotesByAnswerId(
-  poll: FullPoll,
+  poll: FullPollFragment,
   answerId: string
 ): number {
   const externalVoteSources = poll?.externalVoteSources;
@@ -72,7 +86,7 @@ function getTotalExternalVotesByAnswerId(
 
 function getTotalExternalVoteSourcesByAnswerId(
   answerId: string,
-  pollExternalVotes?: PollExternalVote[] | null
+  pollExternalVotes?: PollExternalVoteFragment[] | null
 ): number {
   if (!pollExternalVotes) {
     return 0;
@@ -85,7 +99,10 @@ function getTotalExternalVoteSourcesByAnswerId(
   );
 }
 
-function getTotalVotesByAnswerId(poll: FullPoll, answerId: string): number {
+function getTotalVotesByAnswerId(
+  poll: FullPollFragment,
+  answerId: string
+): number {
   return (
     getTotalUserVotesByAnswerId(poll, answerId) +
     getTotalExternalVotesByAnswerId(poll, answerId)
@@ -93,38 +110,33 @@ function getTotalVotesByAnswerId(poll: FullPoll, answerId: string): number {
 }
 
 interface PollAnswersProps {
-  poll?: FullPoll;
-  onPollChange(poll: FullPoll): void;
-}
-
-function generateUrlParams(answer: PollAnswer): undefined | string {
-  if (!answer) {
-    return undefined;
-  }
-
-  return `?answerId=${answer.id}`;
+  poll?: FullPollFragment;
+  onPollChange(poll: FullPollFragment): void;
 }
 
 export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [answerToDelete, setAnswerToDelete] = useState<PollAnswer | undefined>(
-    undefined
-  );
+  const [answerToDelete, setAnswerToDelete] = useState<
+    PollAnswerFragment | undefined
+  >(undefined);
   const [newAnswer, setNewAnswer] = useState<string>('');
 
-  const [createAnswerMutation, { loading }] = useCreatePollAnswerMutation({});
-  const [deleteAnswerMutation] = useDeletePollAnswerMutation();
+  const [createAnswerMutation, { loading }] = useMutation(
+    CreatePollAnswerDocument,
+    {}
+  );
+  const [deleteAnswerMutation] = useMutation(DeletePollAnswerDocument);
 
-  const onErrorToast = (error: ApolloError) => {
+  const onErrorToast = (error: Error) => {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -136,39 +148,46 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     if (!poll) {
       return;
     }
+
     if (!newAnswer) {
       toaster.push(
         <Message
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('pollAnswer.answerMissing')}
         </Message>
       );
       return;
     }
+
     const answer = await createAnswerMutation({
       variables: {
         pollId: poll.id,
         answer: newAnswer,
       },
     });
+
     const savedAnswer = answer?.data?.createPollAnswer;
+
     if (savedAnswer) {
       const updatedPoll = { ...poll };
-      updatedPoll.answers?.push(savedAnswer as PollAnswer);
+      updatedPoll.answers?.push(savedAnswer);
       onPollChange(updatedPoll);
     }
+
     setNewAnswer('');
   }
 
   async function deleteAnswer(): Promise<void> {
     setModalOpen(false);
+
     if (!answerToDelete) {
       return;
     }
+
     const answer = await deleteAnswerMutation({
       variables: {
         deletePollAnswerId: answerToDelete.id,
@@ -179,12 +198,14 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     const updatedPoll = {
       ...poll,
       answers: poll?.answers ? [...poll.answers] : [],
-    } as FullPoll | undefined;
+    } as FullPollFragment | undefined;
+
     // delete answer
     const deletedAnswer = answer?.data?.deletePollAnswer;
     if (!deletedAnswer || !updatedPoll?.answers) {
       return;
     }
+
     const deleteIndex = updatedPoll?.answers?.findIndex(
       tmpAnswer => tmpAnswer.id === deletedAnswer.id
     );
@@ -198,24 +219,28 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     // delete external vote sources
     updatedPoll.externalVoteSources?.forEach(tmpSource => {
       tmpSource.voteAmounts = tmpSource.voteAmounts?.filter(
-        (tmpVoteAmount: PollExternalVote) =>
+        (tmpVoteAmount: PollExternalVoteFragment) =>
           tmpVoteAmount.answerId !== deletedAnswer.id
       );
     });
+
     onPollChange(updatedPoll);
   }
 
-  async function updateAnswer(updatedAnswer: PollAnswer) {
+  async function updateAnswer(updatedAnswer: PollAnswerFragment) {
     if (!poll) {
       return;
     }
+
     const updatedAnswers = poll.answers ? [...poll.answers] : [];
     const answerIndex = updatedAnswers.findIndex(
       tempAnswer => tempAnswer.id === updatedAnswer.id
     );
+
     if (answerIndex < 0) {
       return;
     }
+
     updatedAnswers[answerIndex] = updatedAnswer;
 
     onPollChange({
@@ -224,117 +249,64 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     });
   }
 
-  async function copyUrlParamsIntoClipboard(answer: PollAnswer): Promise<void> {
-    const urlParams = generateUrlParams(answer);
-
-    if (!urlParams) {
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(urlParams);
-
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('pollAnswer.urlCopied')}
-        </Message>
-      );
-    } catch (e) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('pollAnswer.urlCopyingFailed')}
-        </Message>
-      );
-    }
-  }
-
   return (
     <>
-      <Row>
-        {poll?.answers?.map(answer => (
-          <div key={`answer-${answer.id}`}>
-            <Col xs={16}>
-              <Badge
-                content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}
-              >
-                <Form.Control
-                  name={`answer-${answer.id}`}
-                  value={answer.answer}
-                  onChange={(value: string) => {
-                    updateAnswer({
-                      ...answer,
-                      answer: value,
-                    });
-                  }}
-                />
-              </Badge>
-            </Col>
-
-            {/* copy link btn */}
-            <RCol xs={8}>
-              <IconButton
-                icon={<MdDelete />}
-                circle
-                size="sm"
-                appearance="ghost"
-                color="red"
-                onClick={() => {
-                  setAnswerToDelete(answer);
-                  setModalOpen(true);
-                }}
-              />
-              <Whisper
-                speaker={<Tooltip>{t('pollAnswer.copyVoteUrl')}</Tooltip>}
-              >
-                <RIconButton
-                  icon={<MdContentCopy />}
-                  circle
-                  size="sm"
-                  appearance="ghost"
-                  onClick={() => copyUrlParamsIntoClipboard(answer)}
-                />
-              </Whisper>
-            </RCol>
-          </div>
-        ))}
-      </Row>
-
-      {/* adding new poll answer */}
-      <RRow>
-        <RCol xs={16}>
-          <Form.Control
-            name="createNewFormAnswer"
-            placeholder={t('pollAnswer.insertYourNewAnswer')}
-            value={newAnswer}
-            onChange={(value: string) => {
-              setNewAnswer(value);
-            }}
-          />
-        </RCol>
-
-        <RCol xs={8}>
-          <RIconButton
-            icon={<MdAdd />}
-            loading={loading}
-            appearance="primary"
-            onClick={createAnswer}
+      {poll?.answers?.map(answer => (
+        <Grid key={answer.id}>
+          <Badge
+            content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}
           >
-            {t('pollEditView.addAndSaveNewAnswer')}
-          </RIconButton>
-        </RCol>
-      </RRow>
+            <Form.Control
+              name={`answer-${answer.id}`}
+              value={answer.answer}
+              onChange={(value: string) => {
+                updateAnswer({
+                  ...answer,
+                  answer: value,
+                });
+              }}
+            />
+          </Badge>
 
-      {/* delete modal */}
+          <IconButtonTooltip caption={t('delete')}>
+            <IconButton
+              aria-label={t('delete')}
+              icon={<MdDelete />}
+              circle
+              size="sm"
+              appearance="ghost"
+              color="red"
+              onClick={() => {
+                setAnswerToDelete(answer);
+                setModalOpen(true);
+              }}
+            />
+          </IconButtonTooltip>
+        </Grid>
+      ))}
+
+      <Hint>{t('pollAnswer.copyVoteUrlHint')}</Hint>
+
+      <Grid css={{ marginTop: 24, marginBottom: 0 }}>
+        <Form.Control
+          name="createNewFormAnswer"
+          placeholder={t('pollAnswer.insertYourNewAnswer')}
+          value={newAnswer}
+          onChange={(value: string) => {
+            setNewAnswer(value);
+          }}
+        />
+
+        <RIconButton
+          icon={<MdAdd />}
+          loading={loading}
+          appearance="primary"
+          onClick={createAnswer}
+        >
+          {t('pollEditView.addAndSaveNewAnswer')}
+        </RIconButton>
+      </Grid>
+
       <Modal
         open={modalOpen}
         size="xs"
@@ -343,9 +315,11 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
         }}
       >
         <Modal.Title>{t('pollAnswer.deleteModalTitle')}</Modal.Title>
+
         <Modal.Body>
           {t('pollAnswer.deleteModalBody', { answer: answerToDelete?.answer })}
         </Modal.Body>
+
         <Modal.Footer>
           <Button
             appearance="primary"
@@ -353,6 +327,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           >
             {t('pollAnswer.deleteBtn')}
           </Button>
+
           <Button
             appearance="subtle"
             onClick={() => setModalOpen(false)}

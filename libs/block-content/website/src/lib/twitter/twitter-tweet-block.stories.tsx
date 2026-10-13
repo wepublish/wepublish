@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { TwitterTweetBlock } from './twitter-tweet-block';
 import { mockTwitterTweetBlock } from '@wepublish/storybook/mocks';
 

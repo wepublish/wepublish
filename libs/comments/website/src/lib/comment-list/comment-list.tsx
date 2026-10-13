@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Button } from '@wepublish/ui';
+import { useTranslation } from 'react-i18next';
 import {
   BuilderCommentListProps,
   useWebsiteBuilder,
@@ -46,13 +47,14 @@ export const CommentList = ({
     CommentListItem,
     elements: { Alert },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
   const canReply = true;
   const showReply = getStateForEditor(openEditorsState)('add', null);
 
   return (
     <CommentListWrapper className={className}>
       {!loading && !error && !data?.commentsForItem.length && (
-        <Alert severity="info">Keine Kommentare vorhanden.</Alert>
+        <Alert severity="info">{t('comments.list.noComments')}</Alert>
       )}
 
       {error && <Alert severity="error">{error.message}</Alert>}
@@ -112,7 +114,7 @@ export const CommentList = ({
               });
             }}
           >
-            Jetzt Mitreden
+            {t('comments.list.readMore')}
           </CommentListReadMore>
         </CommentListActions>
       )}

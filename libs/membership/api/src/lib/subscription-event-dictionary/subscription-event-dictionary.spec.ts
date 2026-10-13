@@ -7,14 +7,15 @@ import { add, format, sub } from 'date-fns';
 
 import nock from 'nock';
 import { SubscriptionEventDictionary } from './subscription-event-dictionary';
+import type { Mock } from 'vitest';
 
 describe('SubscriptionEventDictionary', () => {
   let prismaMock: {
     subscriptionFlow: {
-      [method in keyof PrismaClient['subscriptionFlow']]?: jest.Mock;
+      [method in keyof PrismaClient['subscriptionFlow']]?: Mock;
     };
     subscriptionInterval: {
-      [method in keyof PrismaClient['subscriptionInterval']]?: jest.Mock;
+      [method in keyof PrismaClient['subscriptionInterval']]?: Mock;
     };
   };
 
@@ -23,11 +24,11 @@ describe('SubscriptionEventDictionary', () => {
 
     prismaMock = {
       subscriptionFlow: {
-        findMany: jest.fn(),
-        findFirst: jest.fn(),
+        findMany: vi.fn(),
+        findFirst: vi.fn(),
       },
       subscriptionInterval: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
     } as any;
   });
@@ -52,7 +53,7 @@ describe('SubscriptionEventDictionary', () => {
             id: 'default-interval-1',
             event: SubscriptionEvent.SUBSCRIBE,
             daysAwayFromEnding: null,
-            mailTemplate: { externalMailTemplateId: 'default-SUBSCRIBE' },
+            mailTemplate: { id: 'default-SUBSCRIBE' },
           },
         ],
         paymentMethods: [],
@@ -70,20 +71,20 @@ describe('SubscriptionEventDictionary', () => {
             id: 'interval-1',
             event: SubscriptionEvent.SUBSCRIBE,
             daysAwayFromEnding: null,
-            mailTemplate: { externalMailTemplateId: 'custom1-SUBSCRIBE' },
+            mailTemplate: { id: 'custom1-SUBSCRIBE' },
           },
           {
             id: 'interval-2',
             event: SubscriptionEvent.RENEWAL_SUCCESS,
             daysAwayFromEnding: null,
-            mailTemplate: { externalMailTemplateId: 'custom1-RENEWAL_SUCCESS' },
+            mailTemplate: { id: 'custom1-RENEWAL_SUCCESS' },
           },
           {
             id: 'interval-3',
             event: SubscriptionEvent.INVOICE_CREATION,
             daysAwayFromEnding: -7,
             mailTemplate: {
-              externalMailTemplateId: 'custom1-INVOICE_CREATION',
+              id: 'custom1-INVOICE_CREATION',
             },
           },
         ],
@@ -112,7 +113,7 @@ describe('SubscriptionEventDictionary', () => {
     const subscribeAction = actions.find(
       a => a.type === SubscriptionEvent.SUBSCRIBE
     )!;
-    expect(subscribeAction.externalMailTemplate).toEqual('custom1-SUBSCRIBE');
+    expect(subscribeAction.mailTemplateId).toEqual('custom1-SUBSCRIBE');
   });
 
   it('gets actions for default subscription flow when custom not found', async () => {
@@ -136,14 +137,14 @@ describe('SubscriptionEventDictionary', () => {
             id: 'default-interval-1',
             event: SubscriptionEvent.SUBSCRIBE,
             daysAwayFromEnding: null,
-            mailTemplate: { externalMailTemplateId: 'default-SUBSCRIBE' },
+            mailTemplate: { id: 'default-SUBSCRIBE' },
           },
           {
             id: 'default-interval-2',
             event: SubscriptionEvent.INVOICE_CREATION,
             daysAwayFromEnding: -14,
             mailTemplate: {
-              externalMailTemplateId: 'default-INVOICE_CREATION',
+              id: 'default-INVOICE_CREATION',
             },
           },
         ],
@@ -169,7 +170,7 @@ describe('SubscriptionEventDictionary', () => {
     const subscribeAction = actions.find(
       a => a.type === SubscriptionEvent.SUBSCRIBE
     )!;
-    expect(subscribeAction.externalMailTemplate).toEqual('default-SUBSCRIBE');
+    expect(subscribeAction.mailTemplateId).toEqual('default-SUBSCRIBE');
   });
 
   it('filters actions by daysAwayFromEnding', async () => {
@@ -199,20 +200,20 @@ describe('SubscriptionEventDictionary', () => {
             event: SubscriptionEvent.INVOICE_CREATION,
             daysAwayFromEnding: -7,
             mailTemplate: {
-              externalMailTemplateId: 'custom1-INVOICE_CREATION',
+              id: 'custom1-INVOICE_CREATION',
             },
           },
           {
             id: 'interval-2',
             event: SubscriptionEvent.CUSTOM,
             daysAwayFromEnding: -7,
-            mailTemplate: { externalMailTemplateId: 'custom1-CUSTOM2' },
+            mailTemplate: { id: 'custom1-CUSTOM2' },
           },
           {
             id: 'interval-3',
             event: SubscriptionEvent.CUSTOM,
             daysAwayFromEnding: -10,
-            mailTemplate: { externalMailTemplateId: 'custom1-CUSTOM1' },
+            mailTemplate: { id: 'custom1-CUSTOM1' },
           },
         ],
         paymentMethods: [{ id: 'stripe', name: 'Stripe' }],
@@ -263,7 +264,7 @@ describe('SubscriptionEventDictionary', () => {
             event: SubscriptionEvent.INVOICE_CREATION,
             daysAwayFromEnding: -7,
             mailTemplate: {
-              externalMailTemplateId: 'custom1-INVOICE_CREATION',
+              id: 'custom1-INVOICE_CREATION',
             },
           },
           {
@@ -271,14 +272,14 @@ describe('SubscriptionEventDictionary', () => {
             event: SubscriptionEvent.DEACTIVATION_UNPAID,
             daysAwayFromEnding: 7,
             mailTemplate: {
-              externalMailTemplateId: 'custom1-DEACTIVATION_UNPAID',
+              id: 'custom1-DEACTIVATION_UNPAID',
             },
           },
           {
             id: 'interval-3',
             event: SubscriptionEvent.SUBSCRIBE,
             daysAwayFromEnding: null,
-            mailTemplate: { externalMailTemplateId: 'custom1-SUBSCRIBE' },
+            mailTemplate: { id: 'custom1-SUBSCRIBE' },
           },
         ],
         paymentMethods: [{ id: 'stripe', name: 'Stripe' }],

@@ -3,19 +3,23 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/media-transform-guard/api/src",
   "projectType": "library",
+  "tags": [],
   "targets": {
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/media-transform-guard/api",
+        "tsConfig": "libs/media-transform-guard/api/tsconfig.lib.json",
+        "packageJson": "libs/media-transform-guard/api/package.json",
+        "main": "libs/media-transform-guard/api/src/index.ts",
+        "rootDir": "."
+      }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/media-transform-guard/api/jest.config.ts",
-        "passWithNoTests": true
+        "config": "../../../{projectRoot}/vitest.config.ts"
       }
     }
-  },
-  "tags": []
+  }
 }

@@ -112,10 +112,88 @@ fragment FullSubscribeBlock on SubscribeBlock {
   disabled
   blockStyle: blockStyleName
   memberPlanIds
+  periodicityDisplay
+  memberPlanRenderSettings {
+    isDefault
+    memberPlanId
+    layout {
+      type
+
+      ... on SubscribeBlockLayoutNoneConfig {
+        showInput
+      }
+
+      ... on SubscribeBlockLayoutSliderConfig {
+        showInput
+      }
+
+      ... on SubscribeBlockLayoutPickerConfig {
+        showInput
+        values
+        valuesByPeriodicity {
+          periodicity
+          values
+        }
+      }
+    }
+  }
   memberPlans {
     ...FullMemberPlan
   }
   fields
+  showGoodies
+  showDiscountCodes
+  goodieMinValue
+  goodieMinValueAppliesToUpgrade
+  hideRepeatGoodieOnUpgrade
+}
+
+fragment FullMailchimpFormBlock on MailchimpFormBlock {
+  disabled
+  blockStyle: blockStyleName
+  syncProviderId
+  listId
+  interests
+  autoFocus
+  doubleOptIn
+  buttonColor
+  buttonFontColor
+  submitButtonLabel
+  successUrl
+  steps {
+    skipIfFieldsFilled
+    skipIfInterestsFilled
+    showIfInterestsFilled
+    inputs {
+      inputType
+      name
+      label
+      description
+      required
+      urlParam
+      defaultValue
+      value
+      optionsLayout
+      options {
+        id
+        name
+        description
+        image {
+          ...FullImage
+        }
+      }
+    }
+  }
+  successPage {
+    description
+    options {
+      label
+      background
+      url
+      mergeFieldName
+      mergeFieldValue
+    }
+  }
 }
 
 fragment FullEventBlock on EventBlock {
@@ -288,6 +366,10 @@ fragment BlockWithoutTeaser on BlockContent {
     ...FullSubscribeBlock
   }
 
+  ... on MailchimpFormBlock {
+    ...FullMailchimpFormBlock
+  }
+
   ... on EventBlock {
     ...FullEventBlock
   }
@@ -357,7 +439,7 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on IFrameBlock {
-    blockStyle: blockStyleName
+    ...FullIFrameBlock
   }
 
   ... on TeaserSlotsBlock {
@@ -377,6 +459,10 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on FlexBlock {
+    blockStyle: blockStyleName
+  }
+
+  ... on BlockTemplateBlock {
     blockStyle: blockStyleName
   }
 
@@ -502,6 +588,42 @@ fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
   }
 }
 
+fragment FullBlockTemplateBlock on BlockTemplateBlock {
+  disabled
+  blockStyle: blockStyleName
+  type
+  templateId
+
+  template {
+    id
+    name
+
+    blocks {
+      ...BlockWithoutTeaser
+
+      ... on TeaserGridFlexBlock {
+        ...FullTeaserGridFlexBlock
+      }
+
+      ... on TeaserGridBlock {
+        ...FullTeaserGridBlock
+      }
+
+      ... on TeaserListBlock {
+        ...FullTeaserListBlock
+      }
+
+      ... on TeaserSlotsBlock {
+        ...FullTeaserSlotsBlock
+      }
+
+      ... on FlexBlock {
+        ...FullFlexBlock
+      }
+    }
+  }
+}
+
 fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
@@ -523,5 +645,16 @@ fragment FullBlock on BlockContent {
 
   ... on FlexBlock {
     ...FullFlexBlock
+  }
+
+  ... on BlockTemplateBlock {
+    ...FullBlockTemplateBlock
+  }
+}
+
+mutation AddMailchimpContact($input: MailchimpContactInput!) {
+  addMailchimpContact(input: $input) {
+    success
+    error
   }
 }

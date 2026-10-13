@@ -7,7 +7,6 @@ import {
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
-import { PaymentAmountPicker } from '@wepublish/membership/website';
 import {
   FooterContainer,
   NavbarContainer,
@@ -15,7 +14,6 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
-  getApiUrl,
   initWePublishTranslator,
   RoutedAdminBar,
   withBuilderRouter,
@@ -25,9 +23,9 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithApiClient,
-  SessionWithTokenWithoutUser,
+  FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
+  createWithApiClient,
 } from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
@@ -36,7 +34,6 @@ import {
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
@@ -48,6 +45,7 @@ import deOverriden from '../locales/deOverriden.json';
 import { TsriFlexBlock } from '../src/components/block-layouts/tsri-base-flex-block';
 import { TsriBreakBlock } from '../src/components/break-blocks/tsri-base-break-block';
 import { TsriContextBox } from '../src/components/break-blocks/tsri-context-box';
+import { TsriRenderElement } from '../src/components/richtext/tsri-render-element';
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriBaseTeaser } from '../src/components/teasers/tsri-base-teaser';
 import { TsriArticle } from '../src/components/tsri-article';
@@ -68,10 +66,17 @@ import {
   TsriBlocks,
 } from '../src/components/tsri-block-renderer';
 import { TsriCommentList } from '../src/components/tsri-comment-list';
+import { TsriEvent } from '../src/components/tsri-event';
+import {
+  TsriEventListItem,
+  TsriEventListView,
+} from '../src/components/tsri-event-list-item';
 import { TsriFooter } from '../src/components/tsri-footer';
 import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
 import { TsriImageSlider } from '../src/components/tsri-image-slider';
 import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
+import { TsriPage } from '../src/components/tsri-page';
+import { TsriPaymentAmountPicker } from '../src/components/tsri-payment-amount-picker';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTag } from '../src/components/tsri-tag';
@@ -114,16 +119,22 @@ const dateFormatter = (date: Date, includeTime = true) =>
   : format(date, 'dd. MMMM yyyy');
 
 export type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
-
-const { publicRuntimeConfig } = getConfig();
+  sessionToken?: FullSessionWithTokenWithoutUserFragment;
+}> & {
+  emotionCache?: EmotionCache;
+  websiteSettings?: WebsiteSettingsFragment;
+  publicEnv?: {
+    apiUrl: string;
+    stripeKey: string;
+  };
+};
 
 function CustomApp({
   Component,
   pageProps,
   emotionCache,
   websiteSettings,
+  publicEnv,
 }: CustomAppProps) {
   const siteTitle = 'Tsri';
 
@@ -136,6 +147,12 @@ function CustomApp({
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
+  const env =
+    publicEnv ??
+    (typeof window !== 'undefined' ?
+      (window.PUBLIC_ENV as typeof publicEnv)
+    : undefined);
+
   return (
     <PlausibleProvider
       enabled={
@@ -145,58 +162,67 @@ function CustomApp({
       src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Footer={TsriFooter}
-            Script={Script}
-            Navbar={TsriV2Navbar}
-            Article={TsriArticle}
-            AuthorChip={TsriAuthorChip}
-            ArticleDate={TsriArticleDate}
-            ArticleMeta={TsriArticleMeta}
-            ArticleList={TsriArticleList}
-            PaymentAmount={PaymentAmountPicker}
-            ArticleAuthor={TsriArticleAuthor}
-            ArticleAuthors={TsriArticleAuthors}
-            Author={TsriAuthor}
-            AuthorLinks={TsriAuthorLinks}
-            AuthorList={TsriAuthorList}
-            AuthorListItem={TsriAuthorListItem}
-            TextToIcon={TsriTextToIcon}
-            Tag={TsriTag}
-            CommentList={TsriCommentList}
-            elements={{ Link: TsriNextWepublishLink }}
-            blocks={{
-              BaseTeaser: TsriBaseTeaser,
-              TeaserSlots: TsriBaseTeaserSlots,
-              Break: TsriBreakBlock,
-              Quote: TsriQuoteBlock,
-              RichText: TsriRichText,
-              Title: TsriTitleBlock,
-              Renderer:
-                TsriBlockRenderer as ComponentType<BuilderBlockRendererProps>,
-              Blocks: TsriBlocks,
-              FlexBlock: TsriFlexBlock,
-              BildwurfAd: TsriBildwurfAdBlock,
-            }}
-            blockStyles={{
-              ContextBox: TsriContextBox,
-              ImageSlider: TsriImageSlider,
-            }}
-            date={{ format: dateFormatter }}
-            meta={{ siteTitle }}
-            thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
-            }}
-            Banner={TsriBanner}
-          >
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              Head={Head}
+              Footer={TsriFooter}
+              Script={Script}
+              Navbar={TsriV2Navbar}
+              Article={TsriArticle}
+              Page={TsriPage}
+              Event={TsriEvent}
+              EventList={TsriEventListView}
+              EventListItem={TsriEventListItem}
+              AuthorChip={TsriAuthorChip}
+              ArticleDate={TsriArticleDate}
+              ArticleMeta={TsriArticleMeta}
+              ArticleList={TsriArticleList}
+              PaymentAmountPicker={TsriPaymentAmountPicker}
+              ArticleAuthor={TsriArticleAuthor}
+              ArticleAuthors={TsriArticleAuthors}
+              Author={TsriAuthor}
+              AuthorLinks={TsriAuthorLinks}
+              AuthorList={TsriAuthorList}
+              AuthorListItem={TsriAuthorListItem}
+              TextToIcon={TsriTextToIcon}
+              Tag={TsriTag}
+              CommentList={TsriCommentList}
+              elements={{ Link: TsriNextWepublishLink }}
+              richtext={{ RenderElement: TsriRenderElement }}
+              blocks={{
+                BaseTeaser: TsriBaseTeaser,
+                TeaserSlots: TsriBaseTeaserSlots,
+                Break: TsriBreakBlock,
+                Quote: TsriQuoteBlock,
+                RichText: TsriRichText,
+                Title: TsriTitleBlock,
+                Renderer:
+                  TsriBlockRenderer as ComponentType<BuilderBlockRendererProps>,
+                Blocks: TsriBlocks,
+                FlexBlock: TsriFlexBlock,
+                BildwurfAd: TsriBildwurfAdBlock,
+              }}
+              blockStyles={{
+                ContextBox: TsriContextBox,
+                ImageSlider: TsriImageSlider,
+              }}
+              date={{ format: dateFormatter }}
+              meta={{ siteTitle }}
+              thirdParty={{
+                stripe: env?.stripeKey,
+              }}
+              Banner={TsriBanner}
+            >
               <CssBaseline />
               <TsriGlobalStyles />
 
               <Head>
                 <title key="title">{siteTitle}</title>
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=1.0"
+                />
               </Head>
 
               <Spacer>
@@ -251,15 +277,15 @@ function CustomApp({
                     data-sparkloop
                   />
                 )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
       </AppCacheProvider>
     </PlausibleProvider>
   );
 }
 
-const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient([authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

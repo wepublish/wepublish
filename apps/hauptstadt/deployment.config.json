@@ -3,9 +3,7 @@
   "website": {
     "production": {
       "deployment": true,
-      "env": {
-        "GTM_ID": "GTM-KBR8Z6M8"
-      },
+      "env": {},
       "secret_env": [],
       "custom_domain": "https://www.hauptstadt.be"
     },

@@ -40,6 +40,7 @@ import {
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
+  BuilderMailchimpFormBlockProps,
   BuilderIFrameBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
@@ -54,6 +55,7 @@ import {
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderFlexBlockProps,
+  BuilderBlockTemplateBlockProps,
   BuilderTeaserListBlockProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
@@ -67,7 +69,6 @@ import {
 import {
   BuilderCommentEditorProps,
   BuilderCommentListItemProps,
-  BuilderCommentListItemShareProps,
   BuilderCommentListProps,
   BuilderCommentProps,
   BuilderCommentRatingsProps,
@@ -89,8 +90,10 @@ import {
   BuilderInvoiceListItemProps,
   BuilderInvoiceListProps,
   BuilderMemberPlanItemProps,
+  BuilderGoodiePickerProps,
+  BuilderMemberPlanOfferPickerProps,
   BuilderMemberPlanPickerProps,
-  BuilderPaymentAmountProps,
+  BuilderPaymentAmountSliderProps,
   BuilderPaymentMethodPickerProps,
   BuilderPeriodicityPickerProps,
   BuilderSubscribeProps,
@@ -98,6 +101,7 @@ import {
   BuilderSubscriptionListProps,
   BuilderTransactionFeeProps,
   BuilderUpgradeProps,
+  BuilderPaymentAmountPickerProps,
 } from './membership.interface';
 import { BuilderNavbarProps } from './navbar.interface';
 import { BuilderPageProps, BuilderPageSEOProps } from './page.interface';
@@ -124,11 +128,13 @@ import {
 import {
   BuilderImageUploadProps,
   BuilderPersonalDataFormProps,
+  BuilderUserFormProps,
 } from './user.interface';
 import { BuilderBlockStyleProps } from './block-styles.interface';
 import { BuilderContentWrapperProps } from './content-wrapper.interface';
 import { BuilderTeaserProps } from './teaser.interface';
 import { BuilderPaywallProps } from './paywall.interface';
+import { BuilderShareProps } from './share.interface';
 import { BuilderTagProps, BuilderTagSEOProps } from './tag.interface';
 import { BuilderTextToIconProps } from './text-to-icon.interface';
 
@@ -166,20 +172,23 @@ export type WebsiteBuilderProps = {
   Comment: ComponentType<BuilderCommentProps>;
   CommentList: ComponentType<BuilderCommentListProps>;
   CommentListItem: ComponentType<BuilderCommentListItemProps>;
-  CommentListItemShare: ComponentType<BuilderCommentListItemShareProps>;
   CommentListItemChild: ComponentType<BuilderCommentListItemProps>;
   CommentEditor: ComponentType<BuilderCommentEditorProps>;
   CommentRatings: ComponentType<BuilderCommentRatingsProps>;
   LoginForm: ComponentType<BuilderLoginFormProps>;
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>;
   PersonalDataForm: ComponentType<BuilderPersonalDataFormProps>;
+  UserForm: ComponentType<BuilderUserFormProps>;
   SubscriptionList: ComponentType<BuilderSubscriptionListProps>;
   SubscriptionListItem: ComponentType<BuilderSubscriptionListItemProps>;
   InvoiceList: ComponentType<BuilderInvoiceListProps>;
   InvoiceListItem: ComponentType<BuilderInvoiceListItemProps>;
+  GoodiePicker: ComponentType<BuilderGoodiePickerProps>;
   MemberPlanPicker: ComponentType<BuilderMemberPlanPickerProps>;
   MemberPlanItem: ComponentType<BuilderMemberPlanItemProps>;
-  PaymentAmount: ComponentType<BuilderPaymentAmountProps>;
+  MemberPlanOfferPicker: ComponentType<BuilderMemberPlanOfferPickerProps>;
+  PaymentAmountSlider: ComponentType<BuilderPaymentAmountSliderProps>;
+  PaymentAmountPicker: ComponentType<BuilderPaymentAmountPickerProps>;
   PaymentMethodPicker: ComponentType<BuilderPaymentMethodPickerProps>;
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>;
   TransactionFee: ComponentType<BuilderTransactionFeeProps>;
@@ -188,6 +197,7 @@ export type WebsiteBuilderProps = {
   ContentWrapper: ComponentType<BuilderContentWrapperProps>;
   Paywall: ComponentType<BuilderPaywallProps>;
   TextToIcon: ComponentType<BuilderTextToIconProps>;
+  Share: ComponentType<BuilderShareProps>;
 
   elements: {
     Rating: ComponentType<BuilderRatingProps>;
@@ -229,6 +239,7 @@ export type WebsiteBuilderProps = {
     RichText: ComponentType<BuilderRichTextBlockProps>;
     HTML: ComponentType<BuilderHTMLBlockProps>;
     Subscribe: ComponentType<BuilderSubscribeBlockProps>;
+    MailchimpForm: ComponentType<BuilderMailchimpFormBlockProps>;
     FacebookPost: ComponentType<BuilderFacebookPostBlockProps>;
     FacebookVideo: ComponentType<BuilderFacebookVideoBlockProps>;
     InstagramPost: ComponentType<BuilderInstagramPostBlockProps>;
@@ -246,6 +257,7 @@ export type WebsiteBuilderProps = {
     Crowdfunding: ComponentType<BuilderCrowdfundingBlockProps>;
     Listicle: ComponentType<BuilderListicleBlockProps>;
     FlexBlock: ComponentType<BuilderFlexBlockProps>;
+    BlockTemplate: ComponentType<BuilderBlockTemplateBlockProps>;
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>;
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>;
     TeaserList: ComponentType<BuilderTeaserListBlockProps>;
@@ -287,9 +299,12 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   Subscribe: NoComponent,
   Upgrade: NoComponent,
   TransactionFee: NoComponent,
+  GoodiePicker: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
-  PaymentAmount: NoComponent,
+  MemberPlanOfferPicker: NoComponent,
+  PaymentAmountSlider: NoComponent,
+  PaymentAmountPicker: NoComponent,
   PaymentMethodPicker: NoComponent,
   PeriodicityPicker: NoComponent,
   Page: NoComponent,
@@ -316,7 +331,6 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleList: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
-  CommentListItemShare: NoComponent,
   CommentListItemChild: NoComponent,
   Comment: NoComponent,
   CommentEditor: NoComponent,
@@ -324,9 +338,11 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
   PersonalDataForm: NoComponent,
+  UserForm: NoComponent,
   ContentWrapper: NoComponent,
   Paywall: NoComponent,
   TextToIcon: NoComponent,
+  Share: NoComponent,
 
   elements: {
     Rating: NoComponent,
@@ -368,6 +384,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     RichText: NoComponent,
     HTML: NoComponent,
     Subscribe: NoComponent,
+    MailchimpForm: NoComponent,
     FacebookPost: NoComponent,
     FacebookVideo: NoComponent,
     InstagramPost: NoComponent,
@@ -392,10 +409,12 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     Teaser: NoComponent,
     Break: NoComponent,
     FlexBlock: NoComponent,
+    BlockTemplate: NoComponent,
   },
 
   blockStyles: {
     ImageSlider: NoComponent,
+    Lightbox: NoComponent,
     TeaserSlider: NoComponent,
     AlternatingTeaser: NoComponent,
     AlternatingTeaserGrid: NoComponent,

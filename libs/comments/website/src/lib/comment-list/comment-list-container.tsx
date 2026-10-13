@@ -1,16 +1,17 @@
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { useUser } from '@wepublish/authentication/website';
 import {
-  Comment,
+  AddCommentDocument,
+  AddCommentMutation,
+  AddCommentMutationVariables,
+  ChallengeDocument,
   CommentItemType,
   CommentListDocument,
   CommentListQuery,
   CommentListQueryVariables,
+  EditCommentDocument,
+  SettingListDocument,
   SettingName,
-  useAddCommentMutation,
-  useChallengeLazyQuery,
-  useCommentListQuery,
-  useEditCommentMutation,
-  useSettingListQuery,
 } from '@wepublish/website/api';
 import {
   BuilderCommentListProps,
@@ -49,10 +50,10 @@ export function CommentListContainer({
   const { hasUser } = useUser();
   const [openCommentEditors, dispatch] = useReducer(commentListReducer, {});
 
-  const settings = useSettingListQuery({});
-  const [fetchChallenge, challenge] = useChallengeLazyQuery();
+  const settings = useQuery(SettingListDocument, {});
+  const [fetchChallenge, challenge] = useLazyQuery(ChallengeDocument);
 
-  const { data, loading, error } = useCommentListQuery({
+  const { data, loading, error } = useQuery(CommentListDocument, {
     variables: {
       ...variables,
       itemId: id,
@@ -84,7 +85,7 @@ export function CommentListContainer({
     }
   );
 
-  const [editComment, edit] = useEditCommentMutation({
+  const [editComment, edit] = useMutation(EditCommentDocument, {
     onCompleted: async data => {
       dispatch({
         type: 'edit',
@@ -137,24 +138,24 @@ export function CommentListContainer({
           });
         }}
         maxCommentLength={
-          settings.data?.settings.find(
+          (settings.data?.settings.find(
             setting => setting.name === SettingName.CommentCharLimit
-          )?.value ?? 1000
+          )?.value as number | undefined) ?? 1000
         }
         anonymousCanComment={
           settings.data?.settings.find(
             setting => setting.name === SettingName.AllowGuestCommenting
-          )?.value
+          )?.value as boolean | undefined
         }
         anonymousCanRate={
           settings.data?.settings.find(
             setting => setting.name === SettingName.AllowGuestCommentRating
-          )?.value
+          )?.value as boolean | undefined
         }
         userCanEdit={
           settings.data?.settings.find(
             setting => setting.name === SettingName.AllowCommentEditing
-          )?.value
+          )?.value as boolean | undefined
         }
         signUpUrl={signUpUrl}
         maxCommentDepth={maxCommentDepth}
@@ -181,9 +182,14 @@ const extractAllComments = <C extends { children: C[] }>(
 
 const useAddCommentMutationWithCacheUpdate = (
   variables: CommentListQueryVariables,
-  ...params: Parameters<typeof useAddCommentMutation>
+  ...params: [
+    options?: useMutation.Options<
+      AddCommentMutation,
+      AddCommentMutationVariables
+    >,
+  ]
 ) =>
-  useAddCommentMutation({
+  useMutation(AddCommentDocument, {
     ...params[0],
     update: (cache, { data }) => {
       const query = cache.readQuery<CommentListQuery>({
@@ -202,7 +208,9 @@ const useAddCommentMutationWithCacheUpdate = (
         );
 
         if (parentComment) {
-          parentComment.children.unshift(data.addUserComment as Comment);
+          parentComment.children.push(
+            data.addUserComment as unknown as (typeof parentComment.children)[number]
+          );
         } else {
           comments.unshift(data.addUserComment);
         }
@@ -211,6 +219,7 @@ const useAddCommentMutationWithCacheUpdate = (
       cache.writeQuery<CommentListQuery>({
         query: CommentListDocument,
         data: {
+          __typename: 'Query',
           commentsForItem: updatedComments,
           ratingSystem: query.ratingSystem,
         },

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ArticleRevisionDataloaderService load should load many 1`] = `
+exports[`ArticleRevisionDataloaderService > load > should load many 1`] = `
 [
   [
     {
@@ -21,6 +21,7 @@ exports[`ArticleRevisionDataloaderService load should load many 1`] = `
           },
         },
       },
+      "relationLoadStrategy": "join",
       "where": {
         "id": {
           "in": [
@@ -34,7 +35,7 @@ exports[`ArticleRevisionDataloaderService load should load many 1`] = `
 ]
 `;
 
-exports[`ArticleRevisionDataloaderService load should load one 1`] = `
+exports[`ArticleRevisionDataloaderService > load > should load one 1`] = `
 [
   [
     {
@@ -55,6 +56,7 @@ exports[`ArticleRevisionDataloaderService load should load one 1`] = `
           },
         },
       },
+      "relationLoadStrategy": "join",
       "where": {
         "id": {
           "in": [
@@ -67,7 +69,7 @@ exports[`ArticleRevisionDataloaderService load should load one 1`] = `
 ]
 `;
 
-exports[`ArticleRevisionDataloaderService should prime 1`] = `
+exports[`ArticleRevisionDataloaderService > should prime 1`] = `
 [
   "123",
   {},

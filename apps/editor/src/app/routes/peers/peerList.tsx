@@ -1,17 +1,18 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  DeletePeerDocument,
   PeerListDocument,
   PeerListQuery,
-  useDeletePeerMutation,
-  usePeerListQuery,
-  usePeerProfileQuery,
-  useUpdatePeerMutation,
+  PeerProfileDocument,
+  UpdatePeerDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   DescriptionList,
   DescriptionListItem,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -33,13 +34,14 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   Avatar as RAvatar,
   Button,
+  Col,
   Drawer,
-  FlexboxGrid,
   Form,
   IconButton,
   List,
   Message,
   Modal,
+  Row,
   toaster,
 } from 'rsuite';
 
@@ -48,7 +50,7 @@ const MarginTop = styled.div`
 `;
 
 const Avatar = styled(RAvatar)`
-  border: solid 2px #3498ff;
+  border: solid 2px var(--rs-primary-500);
 `;
 
 const AvatarWrapper = styled.div`
@@ -56,9 +58,9 @@ const AvatarWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
-  border: solid 2px #3498ff;
-  padding: 10px;
-  border-radius: 5px;
+  border: solid 2px var(--rs-primary-500);
+  padding: 12px;
+  border-radius: var(--rs-radius-lg);
   margin: 1rem 0 2rem 0;
 `;
 
@@ -66,7 +68,7 @@ const ListItem = styled(List.Item)<{ isDisabled?: boolean | null }>`
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `;
 
-const FlexItem = styled(FlexboxGrid.Item)`
+const FlexItem = styled(Col)`
   text-align: center;
 `;
 
@@ -99,18 +101,24 @@ function PeerList() {
     data: peerInfoData,
     loading: isPeerInfoLoading,
     error: peerInfoError,
-  } = usePeerProfileQuery({});
+  } = useQuery(PeerProfileDocument, {});
 
   const {
     data: peerListData,
     loading: isPeerListLoading,
     error: peerListError,
-  } = usePeerListQuery({
+  } = useQuery(PeerListDocument, {
     errorPolicy: 'ignore',
   });
 
-  const [deletePeer, { loading: isDeleting }] = useDeletePeerMutation({});
-  const [updatePeer, { loading: isUpdating }] = useUpdatePeerMutation({});
+  const [deletePeer, { loading: isDeleting }] = useMutation(
+    DeletePeerDocument,
+    {}
+  );
+  const [updatePeer, { loading: isUpdating }] = useMutation(
+    UpdatePeerDocument,
+    {}
+  );
 
   const { t } = useTranslation();
 
@@ -153,8 +161,8 @@ function PeerList() {
         key={name}
       >
         <ListItem isDisabled={isDisabled}>
-          <FlexboxGrid>
-            <FlexItem colspan={2}>
+          <Row>
+            <FlexItem span={2}>
               <Avatar
                 circle
                 src={
@@ -165,15 +173,15 @@ function PeerList() {
                 alt={profile?.name?.substr(0, 2)}
               />
             </FlexItem>
-            <FlexboxGrid.Item colspan={17}>
+            <Col span={17}>
               <h5>{name}</h5>
               <p>
                 {profile && `${profile.name} - `}
                 {hostURL}
               </p>
-            </FlexboxGrid.Item>
+            </Col>
 
-            <FlexboxGrid.Item colspan={3}>
+            <Col span={3}>
               <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
                 <IconButton
                   appearance="primary"
@@ -191,9 +199,9 @@ function PeerList() {
                   : t('peerList.overview.disable')}
                 </IconButton>
               </PermissionControl>
-            </FlexboxGrid.Item>
+            </Col>
 
-            <FlexItem colspan={2}>
+            <FlexItem span={2}>
               <PermissionControl qualifyingPermissions={['CAN_DELETE_PEER']}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
@@ -203,6 +211,7 @@ function PeerList() {
                     size="sm"
                     appearance="ghost"
                     color="red"
+                    aria-label={t('delete')}
                     onClick={e => {
                       e.preventDefault();
                       setConfirmationDialogOpen(true);
@@ -212,7 +221,7 @@ function PeerList() {
                 </IconButtonTooltip>
               </PermissionControl>
             </FlexItem>
-          </FlexboxGrid>
+          </Row>
         </ListItem>
       </Link>
     );
@@ -221,7 +230,10 @@ function PeerList() {
   return (
     <>
       <PermissionControl qualifyingPermissions={['CAN_GET_PEER_PROFILE']}>
-        <h3>{t('peerList.overview.myPeerProfile')}</h3>
+        <h3>
+          {t('peerList.overview.myPeerProfile')}{' '}
+          <InfoTooltip text={t('peerList.overview.myPeerProfileInfo')} />
+        </h3>
         <Wrapper>
           <NavigationBar
             centerChildren={
@@ -241,7 +253,7 @@ function PeerList() {
                     t('peerList.panels.unnamed')}
                 </h5>
                 <p>{peerInfoData?.peerProfile.hostURL}</p>
-                <Form.HelpText>
+                <Form.Text>
                   {t('peerList.panels.checkOwnPeerProfileHelpBlock')}{' '}
                   <a
                     href="https://wepublish.ch/peering-infos-preview/"
@@ -250,7 +262,7 @@ function PeerList() {
                   >
                     {t('peerList.panels.peeringPreviewGuide')}
                   </a>
-                </Form.HelpText>
+                </Form.Text>
               </AvatarWrapper>
             }
             rightChildren={
@@ -264,6 +276,7 @@ function PeerList() {
                       appearance="link"
                       icon={<MdSettings />}
                       circle
+                      aria-label={t('peerList.overview.editProfile')}
                     />
                   </Link>
                 </IconButtonTooltip>
@@ -275,7 +288,10 @@ function PeerList() {
 
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('peerList.overview.peers')}</h2>
+          <h2>
+            {t('peerList.overview.peers')}{' '}
+            <InfoTooltip text={t('peerList.overview.peersInfo')} />
+          </h2>
         </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
           <ListViewActions>
@@ -389,6 +405,7 @@ function PeerList() {
                   cache.writeQuery<PeerListQuery>({
                     query: PeerListDocument,
                     data: {
+                      __typename: 'Query',
                       peers: query.peers?.filter(
                         peer => peer.id !== currentPeer.id
                       ),

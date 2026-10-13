@@ -2,9 +2,6 @@
 User-agent: *
 Allow: /
 
-# Disallow GPT-4 from crawling the pages
-User-agent: GPTBot
-Disallow: /
 
 # Duplicate Content durch Weiterleitungen und Parameter verhindern
 User-agent: *
@@ -16,5 +13,11 @@ Disallow: /*?jahr=
 Disallow: /*?next=
 Disallow: /*?trk=
 Disallow: /*?from=
+
+# Archivierte Nachtleben-Artikel und deren Übersicht nicht crawlen
+User-agent: *
+Disallow: /archive/
+Disallow: /a/tag/nachtleben
+Disallow: /a/tag/Nachtleben
 
 Sitemap: https://hauptstadt.be/api/sitemap

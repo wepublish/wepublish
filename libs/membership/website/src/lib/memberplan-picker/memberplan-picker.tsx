@@ -5,7 +5,9 @@ import {
   BuilderMemberPlanPickerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { forwardRef, useEffect } from 'react';
+import { forwardRef, useCallback, useEffect } from 'react';
+import { getPlanPeriodicities } from '../formatters/format-payment-period';
+import { findMemberPlanRenderSetting } from '../subscribe/member-plan-render-settings';
 
 export const MemberPlanPickerWrapper = styled('fieldset')`
   display: grid;
@@ -37,7 +39,19 @@ export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanPickerProps & { alwaysShow?: boolean }
 >(function MemberPlanPicker(
-  { memberPlans, onChange, value, className, name, alwaysShow },
+  {
+    memberPlans,
+    onChange,
+    value,
+    className,
+    name,
+    alwaysShow,
+    paymentPeriodicity,
+    requiredPeriodicity,
+    memberPlanRenderSettings,
+    amount,
+    onAmountChange,
+  },
   ref
 ) {
   const {
@@ -50,57 +64,87 @@ export const MemberPlanPicker = forwardRef<
   const selectedMemberPlan = memberPlans.find(({ id }) => id === value);
   const showPicker =
     showRadioButtons ||
-    toPlaintext(selectedMemberPlan?.description) ||
+    toPlaintext(selectedMemberPlan?.description?.content) ||
     selectedMemberPlan?.image;
 
+  const isUnavailable = useCallback(
+    (memberPlan: (typeof memberPlans)[number]) =>
+      !!requiredPeriodicity &&
+      !getPlanPeriodicities(memberPlan).includes(requiredPeriodicity),
+    [requiredPeriodicity]
+  );
+
   useEffect(() => {
-    if (memberPlans.length && !selectedMemberPlan) {
-      onChange(memberPlans[0].id);
+    if (!memberPlans.length || selectedMemberPlan) {
+      return;
     }
-  }, [memberPlans, onChange, selectedMemberPlan]);
+
+    const available = memberPlans.find(
+      memberPlan => !isUnavailable(memberPlan)
+    );
+
+    onChange((available ?? memberPlans[0]).id);
+  }, [memberPlans, onChange, selectedMemberPlan, isUnavailable]);
+
+  if (!showPicker) {
+    return;
+  }
 
   return (
-    showPicker && (
-      <MemberPlanPickerWrapper className={className}>
-        {showRadioButtons && (
-          <MemberPlanPickerRadios
-            name={name}
-            onChange={event => onChange(event.target.value)}
-            value={value ? value : ''}
-            ref={ref}
-          >
-            {memberPlans.map(memberPlan => (
-              <FormControlLabel
-                key={memberPlan.id}
-                value={memberPlan.id}
-                control={
-                  <MemberPlanItem
-                    slug={memberPlan.slug}
-                    key={memberPlan.id}
-                    checked={memberPlan.id === value}
-                    name={memberPlan.name}
-                    currency={memberPlan.currency}
-                    amountPerMonthMin={memberPlan.amountPerMonthMin}
-                    amountPerMonthMax={memberPlan.amountPerMonthMax}
-                    extendable={memberPlan.extendable}
-                    shortDescription={memberPlan.shortDescription}
-                    tags={memberPlan.tags}
-                  />
-                }
-                label={memberPlan.name}
-              />
-            ))}
-          </MemberPlanPickerRadios>
-        )}
+    <MemberPlanPickerWrapper className={className}>
+      {showRadioButtons && (
+        <MemberPlanPickerRadios
+          name={name}
+          onChange={event => onChange(event.target.value)}
+          value={value ? value : ''}
+          ref={ref}
+        >
+          {memberPlans.map(memberPlan => (
+            <FormControlLabel
+              key={memberPlan.id}
+              value={memberPlan.id}
+              disabled={isUnavailable(memberPlan)}
+              control={
+                <MemberPlanItem
+                  slug={memberPlan.slug}
+                  key={memberPlan.id}
+                  checked={memberPlan.id === value}
+                  paymentPeriodicity={paymentPeriodicity}
+                  amountLayout={
+                    findMemberPlanRenderSetting(
+                      memberPlanRenderSettings,
+                      memberPlan.id
+                    )?.layout
+                  }
+                  amount={amount}
+                  onAmountChange={monthlyAmount => {
+                    onChange(memberPlan.id);
+                    onAmountChange?.(monthlyAmount);
+                  }}
+                  disabled={isUnavailable(memberPlan)}
+                  name={memberPlan.name}
+                  currency={memberPlan.currency}
+                  periodicityPricing={memberPlan.periodicityPricing}
+                  availablePaymentMethods={memberPlan.availablePaymentMethods}
+                  defaultPaymentPeriodicity={
+                    memberPlan.defaultPaymentPeriodicity
+                  }
+                  extendable={memberPlan.extendable}
+                  shortDescription={memberPlan.shortDescription}
+                  tags={memberPlan.tags}
+                  goodies={memberPlan.goodies}
+                />
+              }
+              label={memberPlan.name}
+            />
+          ))}
+        </MemberPlanPickerRadios>
+      )}
+      {selectedMemberPlan?.image && <Image image={selectedMemberPlan.image} />}
 
-        {selectedMemberPlan?.image && (
-          <Image image={selectedMemberPlan.image} />
-        )}
-
-        {!!selectedMemberPlan?.description?.length && (
-          <RichText richText={selectedMemberPlan.description} />
-        )}
-      </MemberPlanPickerWrapper>
-    )
+      {!!selectedMemberPlan?.description?.content?.length && (
+        <RichText richText={selectedMemberPlan.description} />
+      )}
+    </MemberPlanPickerWrapper>
   );
 });

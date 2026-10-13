@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { FullArticleFragment } from '@wepublish/website/api';
 import {
   BuilderArticleAuthorsProps,
   useWebsiteBuilder,
@@ -10,13 +11,17 @@ export const ArticleAuthorsWrapper = styled('div')`
   gap: ${({ theme }) => theme.spacing(3)};
 `;
 
+export const selectArticleAuthors = (
+  article: Pick<FullArticleFragment, 'latest'> | null | undefined
+) =>
+  article?.latest.authors.filter(({ author }) => !author.hideOnArticle) ?? [];
+
 export const ArticleAuthors = ({
   article,
   className,
 }: BuilderArticleAuthorsProps) => {
   const { AuthorChip, ArticleDate } = useWebsiteBuilder();
-  const authors =
-    article?.latest.authors.filter(author => !author.hideOnArticle) || [];
+  const authors = selectArticleAuthors(article);
 
   if (!authors.length) {
     return;
@@ -28,10 +33,11 @@ export const ArticleAuthors = ({
       component={ArticleAuthorsWrapper}
       className={className}
     >
-      {authors.map(author => (
+      {authors.map(({ author, role }) => (
         <AuthorChip
           key={author.id}
           author={author}
+          role={role}
         />
       ))}
 

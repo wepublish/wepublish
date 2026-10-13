@@ -1,5 +1,6 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { useSendPasswordResetEmailMutation } from '@wepublish/editor/api';
+import { SendPasswordResetEmailDocument } from '@wepublish/editor/api';
 import { LoginTemplate } from '@wepublish/ui/editor';
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +9,7 @@ import { Button, Form as RForm, Message, toaster } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
 
-const { Group, ControlLabel, Control } = RForm;
+const { Group, Label, Control } = RForm;
 
 const Form = styled(RForm)`
   display: flex;
@@ -20,7 +21,7 @@ const Description = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 14px;
-  color: #555;
+  color: var(--rs-text-secondary);
 `;
 
 const BackLink = styled.a`
@@ -28,7 +29,7 @@ const BackLink = styled.a`
   text-align: center;
   margin-top: 12px;
   font-size: 13px;
-  color: #1675e0;
+  color: var(--rs-text-link);
   cursor: pointer;
   text-decoration: none;
   &:hover {
@@ -43,7 +44,9 @@ export function ResetPassword() {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
 
-  const [sendPasswordReset, { loading }] = useSendPasswordResetEmailMutation();
+  const [sendPasswordReset, { loading }] = useMutation(
+    SendPasswordResetEmailDocument
+  );
 
   useEffect(() => {
     emailInputRef.current?.focus();
@@ -79,35 +82,38 @@ export function ResetPassword() {
 
   return (
     <LoginTemplate backgroundChildren={<Background />}>
-      <Form fluid>
-        <Description>
-          {sent ? t('resetPassword.sent') : t('resetPassword.description')}
-        </Description>
+      <Form>
+        <RForm.Stack fluid>
+          <Description>
+            {sent ? t('resetPassword.sent') : t('resetPassword.description')}
+          </Description>
 
-        {!sent && (
-          <>
-            <Group controlId="resetEmail">
-              <ControlLabel>{t('login.email')}</ControlLabel>
-              <Control
-                inputRef={emailInputRef}
-                name="email"
-                value={email}
-                autoComplete="email"
-                onChange={(value: string) => setEmail(value)}
-              />
-            </Group>
-            <Button
-              appearance="primary"
-              type="submit"
-              disabled={loading || !email}
-              onClick={handleSubmit}
-            >
-              {t('resetPassword.submit')}
-            </Button>
-          </>
-        )}
+          {!sent && (
+            <>
+              <Group controlId="resetEmail">
+                <Label>{t('login.email')}</Label>
+                <Control
+                  inputRef={emailInputRef}
+                  name="email"
+                  value={email}
+                  autoComplete="email"
+                  onChange={(value: string) => setEmail(value)}
+                />
+              </Group>
 
-        <BackLink href="/login">{t('resetPassword.backToLogin')}</BackLink>
+              <Button
+                appearance="primary"
+                type="submit"
+                disabled={loading || !email}
+                onClick={handleSubmit}
+              >
+                {t('resetPassword.submit')}
+              </Button>
+            </>
+          )}
+
+          <BackLink href="/login">{t('resetPassword.backToLogin')}</BackLink>
+        </RForm.Stack>
       </Form>
     </LoginTemplate>
   );

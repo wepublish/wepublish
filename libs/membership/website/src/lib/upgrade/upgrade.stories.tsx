@@ -1,7 +1,6 @@
-import { ApolloError } from '@apollo/client';
-import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/react';
-import { userEvent, within } from '@storybook/test';
+import { action } from 'storybook/actions';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import {
   mockAvailablePaymentMethod,
   mockMemberPlan,
@@ -11,9 +10,10 @@ import { WithUserDecorator } from '@wepublish/storybook';
 import { wait } from '@wepublish/testing';
 import {
   FullMemberPlanFragment,
-  PaymentMethod,
+  FullPaymentMethodFragment,
   PaymentPeriodicity,
   ProductType,
+  SubscribeBlockRenderLayout,
 } from '@wepublish/website/api';
 import { Upgrade } from './upgrade';
 
@@ -51,8 +51,16 @@ const memberPlan2 = mockMemberPlan({
   id: undefined,
   name: undefined,
   shortDescription: undefined,
-  amountPerMonthMin: 800,
-  amountPerMonthTarget: 800,
+  periodicityPricing: [
+    {
+      __typename: 'PeriodicityPrice',
+      periodicity: PaymentPeriodicity.Monthly,
+      label: null,
+      amountMin: 800,
+      amountTarget: 800,
+      amountMax: null,
+    },
+  ],
   availablePaymentMethods: [memberPlan.availablePaymentMethods[1]],
 });
 
@@ -61,8 +69,16 @@ const memberPlan3 = mockMemberPlan({
   id: undefined,
   name: undefined,
   shortDescription: undefined,
-  amountPerMonthMin: 1200,
-  amountPerMonthTarget: 1200,
+  periodicityPricing: [
+    {
+      __typename: 'PeriodicityPrice',
+      periodicity: PaymentPeriodicity.Monthly,
+      label: null,
+      amountMin: 1200,
+      amountTarget: 1200,
+      amountMax: null,
+    },
+  ],
   availablePaymentMethods: [memberPlan.availablePaymentMethods[2]],
 });
 
@@ -71,14 +87,26 @@ const memberPlan4 = mockMemberPlan({
   id: undefined,
   name: 'Donation',
   shortDescription: undefined,
-  amountPerMonthMin: 0,
+  periodicityPricing: [
+    {
+      __typename: 'PeriodicityPrice',
+      periodicity: PaymentPeriodicity.Monthly,
+      label: null,
+      amountMin: 1500,
+      amountTarget: 1500,
+      amountMax: null,
+    },
+  ],
   availablePaymentMethods: [memberPlan.availablePaymentMethods[2]],
   productType: ProductType.Donation,
 });
 
 const subscription = mockSubscription({
   memberPlan,
-  monthlyAmount: memberPlan.amountPerMonthMin,
+  monthlyAmount:
+    memberPlan.periodicityPricing?.find(
+      price => price.periodicity === PaymentPeriodicity.Monthly
+    )?.amountMin ?? 500,
   paymentPeriodicity: PaymentPeriodicity.Yearly,
   canExtend: true,
 });
@@ -99,7 +127,7 @@ const clickPayTransactionFees: StoryObj['play'] = async ({
 
 const clickUpgrade: StoryObj['play'] = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement);
-  const submitButton = canvas.getByText('Abonnieren', {
+  const submitButton = canvas.getByText('upgraden', {
     exact: false,
   });
 
@@ -125,7 +153,7 @@ const changeMemberPlan =
   };
 
 const changePaymentMethod =
-  (paymentMethod: PaymentMethod): NonNullable<StoryObj['play']> =>
+  (paymentMethod: FullPaymentMethodFragment): NonNullable<StoryObj['play']> =>
   async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -158,8 +186,10 @@ export const Default: StoryObj<typeof Upgrade> = {
     },
     upgradeInfo: {
       data: {
-        upgradeSubscriptionInfo: {
+        upgradeUserSubscriptionInfo: {
           discountAmount: 500,
+          discountPercent: null,
+          discountCodeValid: null,
         },
       },
       loading: false,
@@ -184,9 +214,7 @@ export const WithUpgradeError: StoryObj<typeof Upgrade> = {
     onUpgrade: (...args: unknown[]) => {
       action('onUpgrade')(args);
 
-      throw new ApolloError({
-        errorMessage: 'Something went wrong.',
-      });
+      throw new Error('Something went wrong.');
     },
   },
   play: async ctx => {
@@ -207,8 +235,10 @@ export const ResetPaymentOptionsOnPaymentMethodChange: StoryObj<
 > = {
   ...Default,
   play: async ctx => {
+    // memberPlan2 is the default upgrade target, so only its payment
+    // methods are selectable
     await changePaymentMethod(
-      memberPlan.availablePaymentMethods[2].paymentMethods[0]
+      memberPlan.availablePaymentMethods[1].paymentMethods[1]
     )(ctx);
     await clickUpgrade(ctx);
   },
@@ -218,5 +248,119 @@ export const WithDonate: StoryObj<typeof Upgrade> = {
   ...Default,
   play: async ctx => {
     await changeMemberPlan(memberPlan4)(ctx);
+  },
+};
+
+// getAllByText throws when a text is missing, which fails the story
+const expectTexts =
+  (texts: string[]): NonNullable<StoryObj['play']> =>
+  async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Check texts', async () => {
+      texts.forEach(text => canvas.getAllByText(text, { exact: false }));
+    });
+  };
+
+export const WithDiscountCode: StoryObj<typeof Upgrade> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    showDiscountCodes: true,
+    upgradeInfo: {
+      data: {
+        upgradeUserSubscriptionInfo: {
+          discountAmount: 500,
+          discountPercent: 0.2,
+          discountCodeValid: true,
+        },
+      },
+      loading: false,
+    },
+  },
+  // memberPlan2 for a year is CHF 96.-, minus the CHF 5.- leftover
+  // of the old subscription, minus 20% discountCode discount
+  play: expectTexts([
+    '20% Rabatt angewendet',
+    'CHF 72.80',
+    'Nach dem ersten Jahr',
+  ]),
+};
+
+export const WithInvalidDiscountCode: StoryObj<typeof Upgrade> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    showDiscountCodes: true,
+    upgradeInfo: {
+      data: {
+        upgradeUserSubscriptionInfo: {
+          discountAmount: 500,
+          discountPercent: null,
+          discountCodeValid: false,
+        },
+      },
+      loading: false,
+    },
+  },
+  play: expectTexts(['Rabattcode ungültig', 'CHF 91.-']),
+};
+
+export const WithDiscountCoveringTheFullAmount: StoryObj<typeof Upgrade> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    upgradeInfo: {
+      data: {
+        upgradeUserSubscriptionInfo: {
+          discountAmount: 100000,
+          discountPercent: 0.2,
+          discountCodeValid: true,
+        },
+      },
+      loading: false,
+    },
+  },
+  // the leftover discount is bigger than the upgrade, so it stays at zero
+  // instead of turning into a negative amount
+  play: expectTexts(['CHF 0.-']),
+};
+
+// The subscription is yearly, so the monthly picker values (10/15/20) are
+// offered as yearly tiles. Picking CHF 120 a year must upgrade to 10 a month.
+export const PickerTilesInSubscriptionInterval: StoryObj<typeof Upgrade> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    onUpgrade: fn(),
+    memberPlanRenderSettings: [
+      {
+        __typename: 'SubscribeBlockMemberPlanRenderSetting',
+        memberPlanId: memberPlan2.id,
+        isDefault: true,
+        layout: {
+          __typename: 'SubscribeBlockLayoutPickerConfig',
+          type: SubscribeBlockRenderLayout.Picker,
+          showInput: true,
+          values: [1000, 1500, 2000],
+          valuesByPeriodicity: [],
+        },
+      },
+    ],
+  },
+  play: async ctx => {
+    const canvas = within(ctx.canvasElement);
+
+    await ctx.step('Pick the yearly tile for 10 a month', async () => {
+      await userEvent.click(canvas.getByText('120', { exact: true }));
+    });
+
+    await clickUpgrade(ctx);
+
+    await ctx.step('Upgrade with the monthly amount', async () => {
+      expect(ctx.args.onUpgrade).toHaveBeenCalledWith(
+        expect.objectContaining({ monthlyAmount: 1000 })
+      );
+    });
   },
 };

@@ -1,6 +1,5 @@
-import { ApolloError } from '@apollo/client';
-import { action } from '@storybook/addon-actions';
-import { Meta } from '@storybook/react';
+import { action } from 'storybook/actions';
+import { Meta } from '@storybook/nextjs-vite';
 import { InvoiceList } from './invoice-list';
 import {
   Exact,
@@ -77,8 +76,6 @@ export const WithError = {
     ...Default.args,
     data: undefined,
     loading: false,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
   },
 };

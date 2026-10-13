@@ -1,16 +1,60 @@
 import { css, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import {
-  BuilderPaymentAmountProps,
+  BuilderPaymentAmountPickerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Currency } from '@wepublish/website/api';
-import { forwardRef, PropsWithChildren, useMemo } from 'react';
+import { Currency, PaymentPeriodicity } from '@wepublish/website/api';
+import {
+  forwardRef,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { formatCurrency } from '../../formatters/format-currency';
+import {
+  calculatePeriodAmount,
+  getPaymentPeriodicyMonths,
+  monthlyAmountFromPeriodAmount,
+} from '../../formatters/format-payment-period';
+import {
+  CurrencyNumberSpinner,
+  CurrencyNumberSpinnerSnap,
+  HelperText,
+} from './currency-number-spinner';
 import styled from '@emotion/styled';
+
+const GROUP_SEPARATORS = /[\u2019\u0027]/g;
+const NON_BREAKING_SPACES = /[\u00a0\u202f\u2009]/g;
+
+const formatNumber = (value: number, format: string, locale = 'de-CH') => {
+  const [intPart = '', fracPart = ''] = format.split('.');
+  const useGrouping = intPart.includes(',');
+
+  const minimumIntegerDigits = Math.max(1, (intPart.match(/0/g) || []).length);
+  const minimumFractionDigits = (fracPart.match(/0/g) || []).length;
+  const maximumFractionDigits = Math.max(
+    minimumFractionDigits,
+    (fracPart.match(/[0#]/g) || []).length
+  );
+
+  return new Intl.NumberFormat(locale, {
+    style: 'decimal',
+    minimumIntegerDigits,
+    minimumFractionDigits,
+    maximumFractionDigits,
+    useGrouping,
+  })
+    .format(value)
+    .replace(GROUP_SEPARATORS, "'")
+    .replace(NON_BREAKING_SPACES, ' ');
+};
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 125px);
+  grid-template-columns: repeat(auto-fit, 185px);
   align-items: top;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing(2)};
@@ -39,7 +83,8 @@ export const PaymentAmountPickerItemWrapper = styled('div')<
 >`
   position: relative;
   padding: ${({ theme }) => theme.spacing(2)};
-  aspect-ratio: 1;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   border: 1px solid ${({ theme }) => theme.palette.divider};
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
   display: flex;
@@ -51,6 +96,10 @@ export const PaymentAmountPickerItemWrapper = styled('div')<
     css`
       color: ${theme.palette.primary.contrastText};
       background: ${theme.palette.primary.light};
+
+      ${HelperText} {
+        color: ${theme.palette.primary.contrastText};
+      }
     `}
 `;
 
@@ -74,6 +123,8 @@ export const PaymentAmountPickerItemAmount = styled('div')`
   font-weight: 600;
 `;
 
+export const StyledCurrencyNumberSpinner = styled(CurrencyNumberSpinner)``;
+
 export const PaymentAmountPickerItem = forwardRef<
   HTMLButtonElement,
   PaymentAmountPickerItemProps
@@ -96,15 +147,27 @@ export const PaymentAmountPickerItem = forwardRef<
 
 export const PaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps
+  BuilderPaymentAmountPickerProps & {
+    format?: string;
+    step?: number;
+    snap?: CurrencyNumberSpinnerSnap;
+    arrows?: 'split' | 'stacked';
+    noInitialSelection?: boolean;
+  }
 >(
   (
     {
       className,
-      slug,
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
+      presetAmounts,
+      format,
+      snap,
+      arrows,
+      noInitialSelection,
+      showInput = true,
+      paymentPeriodicity = PaymentPeriodicity.Monthly,
       name,
       error,
       value,
@@ -113,20 +176,66 @@ export const PaymentAmountPicker = forwardRef<
     ref
   ) => {
     const {
-      elements: { TextField },
-      meta: { locale, siteTitle },
+      meta: { locale },
     } = useWebsiteBuilder();
+    const { t } = useTranslation();
 
-    const pickerItems = useMemo(() => {
-      switch (siteTitle) {
-        case 'WNTI':
-          return slug?.includes('donate') ?
-              [10000, 15000, 20000]
-            : [1000, 1500, 2000];
-        default:
-          return [1000, 1500, 2000];
+    const [hasInteracted, setHasInteracted] = useState(false);
+    const showSelection = !noInitialSelection || hasInteracted;
+    const items = useMemo(() => presetAmounts ?? [], [presetAmounts]);
+    const periodValue = calculatePeriodAmount(value, paymentPeriodicity);
+    const periodMin = calculatePeriodAmount(
+      amountPerMonthMin,
+      paymentPeriodicity
+    );
+    const handlePeriodAmountChange = (periodAmount: number) =>
+      onChange(
+        monthlyAmountFromPeriodAmount(
+          Math.round(periodAmount),
+          paymentPeriodicity
+        )
+      );
+    const isCustomValue = !items.some(p => p === periodValue);
+    const months = getPaymentPeriodicyMonths(paymentPeriodicity);
+    // snap values are configured per month and have to follow the shown period
+    const periodSnap =
+      snap && months !== 1 ?
+        {
+          values: snap.values.map(snapValue => snapValue * months),
+          threshold: snap.threshold * months,
+        }
+      : snap;
+
+    useEffect(() => {
+      if (showInput || !items.length) {
+        return;
       }
-    }, [siteTitle, slug]);
+
+      // a kept selection may fall below the minimum of a newly chosen interval
+      if (!isCustomValue && periodValue >= periodMin) {
+        return;
+      }
+
+      const selectable = items.filter(item => item >= periodMin);
+      const candidates = selectable.length ? selectable : items;
+      const nearest = candidates.reduce((best, item) =>
+        Math.abs(item - periodValue) < Math.abs(best - periodValue) ?
+          item
+        : best
+      );
+
+      if (nearest !== periodValue) {
+        onChange(monthlyAmountFromPeriodAmount(nearest, paymentPeriodicity));
+      }
+    }, [
+      showInput,
+      items,
+      isCustomValue,
+      periodValue,
+      periodMin,
+      paymentPeriodicity,
+      onChange,
+    ]);
 
     return (
       <PaymentAmountPickerWrapper
@@ -134,22 +243,25 @@ export const PaymentAmountPicker = forwardRef<
         name={name}
         onChange={event => {
           if (+event.target.value) {
-            onChange(+event.target.value);
+            setHasInteracted(true);
+            handlePeriodAmountChange(+event.target.value);
           }
         }}
-        value={value}
+        value={periodValue}
       >
-        {pickerItems.map(itemAmount => (
+        {items.map(itemAmount => (
           <FormControlLabel
             key={itemAmount}
             value={itemAmount}
             control={
               <PaymentAmountPickerItem
                 currency={currency}
-                checked={itemAmount === value}
+                checked={showSelection && itemAmount === periodValue}
               >
                 <PaymentAmountPickerItemAmount>
-                  {formatCurrency(itemAmount / 100, currency, locale, false)}
+                  {format ?
+                    formatNumber(itemAmount / 100, format, locale)
+                  : formatCurrency(itemAmount / 100, currency, locale, false)}
                 </PaymentAmountPickerItemAmount>
               </PaymentAmountPickerItem>
             }
@@ -157,31 +269,34 @@ export const PaymentAmountPicker = forwardRef<
           />
         ))}
 
-        <FormControlLabel
-          value={0}
-          control={
-            <PaymentAmountPickerItem
-              currency={currency}
-              checked={false}
-            >
-              <TextField
-                ref={ref}
-                name={name}
-                value={value / 100}
-                onChange={event => onChange(+event.target.value * 100)}
-                type={'number'}
-                fullWidth
-                error={!!error}
-                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
-                inputProps={{
-                  step: 'any',
-                  min: amountPerMonthMin / 100,
-                }}
-              />
-            </PaymentAmountPickerItem>
-          }
-          label={'Manuell'}
-        />
+        {showInput && (
+          <FormControlLabel
+            value={0}
+            control={
+              <PaymentAmountPickerItem
+                currency={currency}
+                checked={showSelection && isCustomValue}
+              >
+                <StyledCurrencyNumberSpinner
+                  value={showSelection ? periodValue / 100 : undefined}
+                  min={periodMin / 100}
+                  snap={periodSnap}
+                  arrows={arrows}
+                  helperText={`Min ${formatCurrency(periodMin / 100, currency, locale)}`}
+                  onValueChange={v => {
+                    setHasInteracted(true);
+                    if (typeof v === 'number' && v >= 0) {
+                      handlePeriodAmountChange(v ? v * 100 : 0);
+                    } else {
+                      handlePeriodAmountChange(0);
+                    }
+                  }}
+                />
+              </PaymentAmountPickerItem>
+            }
+            label={t('paymentAmountPicker.manual')}
+          />
+        )}
       </PaymentAmountPickerWrapper>
     );
   }

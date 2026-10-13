@@ -1,31 +1,43 @@
 import styled from '@emotion/styled';
-import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MdChevronLeft } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Button, Col, FlexboxGrid, Loader as RLoader, Row } from 'rsuite';
+import { Button, Loader as RLoader } from 'rsuite';
+
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 
 const ChevronLeft = styled(MdChevronLeft)`
   font-size: 48px;
+
+  @media (max-width: 640px) {
+    font-size: 32px;
+  }
 `;
 
-const FlexGrid = styled(FlexboxGrid)`
-  padding-right: 5px;
-  padding-bottom: 20px;
-`;
+const Grid = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  align-items: center;
+  justify-items: start;
+  gap: 40px;
+  margin-bottom: 20px;
 
-const FlexboxItem = styled(FlexboxGrid.Item)`
-  margin-left: 40px;
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
 `;
 
 const Loader = styled(RLoader)`
-  margin-right: 5px;
+  margin-right: 4px;
 `;
 
 const SaveButton = styled(Button)`
-  margin-right: 10px;
+  margin-right: 8px;
 `;
 
-const PaddedCol = styled(Col)`
+const PaddedCol = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -34,18 +46,14 @@ const PaddedCol = styled(Col)`
   margin-right: 1rem;
 `;
 
-const FlexRow = styled(Row)`
-  display: flex;
-  align-items: center;
-`;
-
 const FlexLink = styled(Link)`
   display: flex;
 `;
 
 const Heading = styled.h1`
-  font-size: 36px;
-  line-height: 50px;
+  font-size: var(--rs-heading-h1-font-size, 36px);
+  line-height: var(--rs-heading-h1-line-height, 50px);
+  overflow-wrap: anywhere;
 `;
 
 interface SingleViewTitleProps {
@@ -55,7 +63,6 @@ interface SingleViewTitleProps {
   saveBtnTitle: string;
   saveAndCloseBtnTitle: string;
   closePath: string;
-  additionalMenu?: ReactNode;
   setCloseFn(close: boolean): void;
 }
 
@@ -66,12 +73,10 @@ export function SingleViewTitle({
   saveBtnTitle,
   saveAndCloseBtnTitle,
   closePath,
-  additionalMenu,
   setCloseFn,
 }: SingleViewTitleProps) {
-  /**
-   * UI helpers
-   */
+  const { t } = useTranslation();
+
   function titleView() {
     if (loading) {
       return (
@@ -81,13 +86,26 @@ export function SingleViewTitle({
         </>
       );
     }
+
     return title;
   }
 
-  function actionsView() {
-    return (
-      <>
-        {/* save button */}
+  return (
+    <Grid>
+      <PaddedCol>
+        <IconButtonTooltip caption={t('back')}>
+          <FlexLink
+            to={closePath}
+            aria-label={t('back')}
+          >
+            <ChevronLeft />
+          </FlexLink>
+        </IconButtonTooltip>
+
+        <Heading>{titleView()}</Heading>
+      </PaddedCol>
+
+      <div>
         <SaveButton
           appearance="ghost"
           loading={loading}
@@ -96,7 +114,7 @@ export function SingleViewTitle({
         >
           {saveBtnTitle}
         </SaveButton>
-        {/* save and close button */}
+
         <Button
           appearance="primary"
           loading={loading}
@@ -106,39 +124,7 @@ export function SingleViewTitle({
         >
           {saveAndCloseBtnTitle}
         </Button>
-      </>
-    );
-  }
-
-  return (
-    <FlexGrid align="middle">
-      {/* title */}
-      <FlexboxGrid.Item colspan={12}>
-        <FlexboxGrid align="middle">
-          <FlexRow>
-            <PaddedCol xs={29}>
-              <FlexLink to={closePath}>
-                <ChevronLeft />
-              </FlexLink>
-              <Heading>{titleView()}</Heading>
-            </PaddedCol>
-          </FlexRow>
-        </FlexboxGrid>
-      </FlexboxGrid.Item>
-
-      {/* actions */}
-      <FlexboxGrid.Item colspan={12}>
-        <FlexboxGrid
-          justify="end"
-          align="middle"
-        >
-          {/* additional menu content */}
-          <FlexboxGrid.Item>{additionalMenu}</FlexboxGrid.Item>
-
-          {/* save btns */}
-          <FlexboxItem>{actionsView()}</FlexboxItem>
-        </FlexboxGrid>
-      </FlexboxGrid.Item>
-    </FlexGrid>
+      </div>
+    </Grid>
   );
 }

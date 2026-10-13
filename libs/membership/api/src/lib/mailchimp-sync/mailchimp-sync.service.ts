@@ -9,6 +9,8 @@ import {
   ClickTrackingExtension,
   ClickTrackingExtensionConfig,
 } from './extensions/click-tracking.extension';
+import { describeError } from '@wepublish/utils/api';
+import { describeMailchimpError } from '@wepublish/mail/api';
 
 interface SubscriptionLite {
   id: string;
@@ -121,8 +123,7 @@ export class MailchimpSyncService {
           `Mailchimp sync for "${config.name || config.id}" completed successfully.`
         );
       } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
+        const errorMessage = describeError(error);
         this.logger.error(
           `Mailchimp sync failed for "${config.name || config.id}": ${errorMessage}`
         );
@@ -186,8 +187,7 @@ export class MailchimpSyncService {
         if (progress) {
           progress.status = 'failed';
           progress.finishedAt = new Date();
-          progress.errorMessage =
-            error instanceof Error ? error.message : String(error);
+          progress.errorMessage = describeError(error);
         }
       });
   }
@@ -320,8 +320,9 @@ export class MailchimpSyncService {
         userWithSub.user.email.toLowerCase()
       );
 
-      // Skip users whose Mailchimp contact is not subscribed
-      if (existingContact?.status !== 'subscribed') {
+      // Skip existing contacts that aren't subscribed (unsubscribed, cleaned,
+      // pending, transactional). New users are created as 'subscribed'.
+      if (existingContact && existingContact.status !== 'subscribed') {
         skippedCount++;
         continue;
       }
@@ -497,8 +498,7 @@ export class MailchimpSyncService {
                 });
                 updatedCount++;
               } catch (error: any) {
-                const errorMessage =
-                  error instanceof Error ? error.message : String(error);
+                const errorMessage = describeError(error);
                 const statusCode =
                   error?.response?.body?.status ?? error?.status ?? null;
                 this.logger.warn(
@@ -517,8 +517,7 @@ export class MailchimpSyncService {
           }
         } catch (error: any) {
           // Batch API itself failed — fall back to recording errors for all contacts in batch
-          const errorMessage =
-            error instanceof Error ? error.message : String(error);
+          const errorMessage = describeMailchimpError(error);
           this.logger.error(`Batch API failed: ${errorMessage}`);
 
           for (const update of batch) {
@@ -576,8 +575,7 @@ export class MailchimpSyncService {
           (clickTracking.config ?? {}) as ClickTrackingExtensionConfig
         );
       } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
+        const errorMessage = describeError(error);
         this.logger.error(
           `Click tracking extension failed for "${config.name || config.id}": ${errorMessage}`
         );
@@ -766,11 +764,8 @@ export class MailchimpSyncService {
         interests: data.interests,
       });
     } catch (error: any) {
-      const detail =
-        error?.response?.body?.detail ?? error?.message ?? String(error);
-      const title = error?.response?.body?.title ?? 'Mailchimp API error';
       throw new Error(
-        `Error updating contact '${data.email}': ${title} - ${detail}`
+        `Error updating contact '${data.email}': ${describeMailchimpError(error)}`
       );
     }
   }
@@ -789,7 +784,9 @@ export class MailchimpSyncService {
    * - "active_abo" - "1" if active, "-1" if past subscriptions, "" if none
    * - "active_abo_with_payment:method_slug:days" - like active_abo but also returns "1"
    *     if last subscription has given payment method and paidUntil within N days
-   * - "retarget:days" - "1" if last subscription paidUntil within N days, "-1" if currently subscribed but was previously retargetable, else ""
+   * - "retarget:days" - "1" if last subscription paidUntil within N days,
+   *     "-1" if currently subscribed but was previously retargetable or if the
+   *     retarget window has elapsed, "" if no subscription ever
    * - "static:value" - always returns the given value
    */
   private evaluateMergeFieldExpression(
@@ -815,6 +812,25 @@ export class MailchimpSyncService {
     const parts = expression.split(':');
     const type = parts[0];
 
+    // Temporary: exclude donation slugs from active_abo and retarget
+    if (type === 'active_abo' || type === 'retarget') {
+      const excludedSlugs = ['spende-gastro-brief', 'spende-stadtratbrief'];
+      const subscriptions = data.subscriptions.filter(
+        s => !excludedSlugs.includes(s.memberPlan.slug)
+      );
+      const byPaidUntilDesc = [...subscriptions].sort(
+        (a, b) => (b.paidUntil?.getTime() ?? 0) - (a.paidUntil?.getTime() ?? 0)
+      );
+      data = {
+        ...data,
+        subscriptions,
+        currentSubscription: byPaidUntilDesc.find(
+          s => !s.deactivation || (s.paidUntil && s.paidUntil > new Date())
+        ),
+        lastSubscription: byPaidUntilDesc[0],
+      };
+    }
+
     switch (type) {
       case 'user.firstName':
         return (data.user.firstName || 'Unbekannt').trim();
@@ -839,8 +855,14 @@ export class MailchimpSyncService {
           return false;
         };
 
-        if (matches(data.currentSubscription?.memberPlan.slug)) return '1';
-        if (data.subscriptions.some(s => matches(s.memberPlan.slug))) {
+        const now = new Date();
+        const matchingSubs = data.subscriptions.filter(s =>
+          matches(s.memberPlan.slug)
+        );
+        if (matchingSubs.some(s => this.isSubscriptionActive(s, now))) {
+          return '1';
+        }
+        if (matchingSubs.length > 0) {
           return '-1';
         }
         return '';
@@ -885,6 +907,9 @@ export class MailchimpSyncService {
           this.isWithinLastXDays(data.lastSubscription.paidUntil, days)
         ) {
           return '1';
+        }
+        if (data.subscriptions.length > 0) {
+          return '-1';
         }
         return '';
       }

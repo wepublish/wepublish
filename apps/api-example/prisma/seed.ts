@@ -1,5 +1,4 @@
 import {
-  PaymentPeriodicity,
   PrismaClient,
   CommentAuthorType,
   CommentItemType,
@@ -14,13 +13,17 @@ import {
   ChallengeProviderType,
   TrackingPixelProviderType,
   AIProviderType,
+  Currency,
+  PaymentPeriodicity,
+  SubscriptionDeactivationReason,
+  MailTemplateContext,
 } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { createReadStream } from 'fs';
 import { seed as rootSeed } from '../../../libs/api/prisma/seed';
 import { NovaMediaAdapter } from '../../../libs/api/src/lib/media/novaMediaAdapter';
 import { capitalize } from '@mui/material';
-import { NavigationLinkType } from 'libs/navigation/api/src/lib/navigation.model';
+import { NavigationLinkType } from '../../../libs/navigation/api/src/lib/navigation.model';
 import {
   TeaserGridFlexBlock,
   TeaserType,
@@ -36,6 +39,10 @@ import {
 } from '@wepublish/block-content/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
 import { hash as argon2Hash } from '@node-rs/argon2';
+import {
+  seedChangelogEntries,
+  seedPeriodicJobLogs,
+} from './seed-notifications';
 
 async function hashPassword(password: string) {
   return await argon2Hash(password);
@@ -76,7 +83,7 @@ function getText(min = 1, max = 10) {
     ],
   }));
 
-  return text as unknown as Prisma.InputJsonValue;
+  return text as any[];
 }
 
 async function seedImages(prisma: PrismaClient) {
@@ -230,7 +237,7 @@ async function seedPoll(prisma: PrismaClient) {
     prisma.poll.create({
       data: {
         closedAt: faker.date.future(),
-        infoText: getText(1, 3),
+        slateInfoText: getText(1, 3),
         question: capitalize(faker.lorem.words({ min: 3, max: 10 })),
         answers: {
           createMany: {
@@ -251,7 +258,7 @@ async function seedPoll(prisma: PrismaClient) {
       data: {
         opensAt: faker.date.past({ refDate: pastDate }),
         closedAt: pastDate,
-        infoText: getText(1, 3) as Prisma.InputJsonValue,
+        slateInfoText: getText(1, 3) as Prisma.InputJsonValue,
         question: faker.lorem.words({ min: 3, max: 10 }),
         answers: {
           createMany: {
@@ -441,7 +448,7 @@ async function seedAuthors(prisma: PrismaClient, imageIds: string[] = []) {
       prisma.author.create({
         data: {
           ...nameAndSlug(),
-          bio: getText(4, 9),
+          slateBio: getText(4, 9),
           jobTitle: faker.person.jobTitle(),
           imageID: shuffle(imageIds).at(0),
         },
@@ -458,7 +465,7 @@ async function seedEvents(prisma: PrismaClient, imageIds: string[] = []) {
       prisma.event.create({
         data: {
           name: capitalize(faker.lorem.words({ min: 3, max: 8 })),
-          description: getText(4, 12) as any,
+          slateDescription: getText(4, 12) as any,
           startsAt: future,
           endsAt: faker.date.future({ refDate: future }),
           imageId: shuffle(imageIds).at(0),
@@ -575,7 +582,8 @@ async function seedPages(
                 linkTarget: '',
                 linkText: capitalize(faker.lorem.words({ min: 2, max: 4 })),
                 linkURL: faker.internet.url(),
-                richText: getText(1, 2) as any,
+                slateRichText: getText(1, 2) as any,
+                richText: null,
                 text: capitalize(faker.lorem.words({ min: 8, max: 12 })),
                 layoutOption: 'image-left',
               } as BreakBlock,
@@ -700,7 +708,8 @@ async function seedArticles(
                   ...pickRandom(
                     {
                       type: BlockType.RichText,
-                      richText: getText(3, 10) as any,
+                      slateRichText: getText(3, 10) as any,
+                      richText: null,
                     } as RichTextBlock,
                     0.7
                   ),
@@ -715,7 +724,8 @@ async function seedArticles(
                   ...pickRandom(
                     {
                       type: BlockType.RichText,
-                      richText: getText(3, 10) as any,
+                      slateRichText: getText(3, 10) as any,
+                      richText: null,
                     } as RichTextBlock,
                     0.5
                   ),
@@ -732,7 +742,8 @@ async function seedArticles(
                   ...pickRandom(
                     {
                       type: BlockType.RichText,
-                      richText: getText(3, 10) as any,
+                      slateRichText: getText(3, 10) as any,
+                      richText: null,
                     } as RichTextBlock,
                     0.3
                   ),
@@ -769,7 +780,8 @@ async function seedArticles(
                         faker.lorem.words({ min: 2, max: 4 })
                       ),
                       linkURL: faker.internet.url(),
-                      richText: getText(1, 1) as any,
+                      slateRichText: getText(1, 1) as any,
+                      richText: null,
                       text: capitalize(faker.lorem.words({ min: 8, max: 12 })),
                       layoutOption: 'image-left',
                     } as BreakBlock,
@@ -792,11 +804,15 @@ async function seedArticles(
 
   await Promise.all(
     articles.map(({ revisions }) =>
-      prisma.articleRevisionAuthor.create({
-        data: {
-          authorId: shuffle(authorIds).at(0),
-          revisionId: revisions[0].id,
-        },
+      prisma.articleRevisionAuthor.createMany({
+        data: shuffle(authorIds)
+          .slice(0, 2)
+          .map((authorId, position) => ({
+            authorId,
+            revisionId: revisions[0].id,
+            role: position === 0 ? 'Text' : 'Fotos',
+            position,
+          })),
       })
     )
   );
@@ -828,7 +844,7 @@ async function seedComments(
             revisions: {
               create: {
                 title: capitalize(faker.lorem.words({ min: 3, max: 8 })),
-                text: getText(),
+                slateText: getText(),
               },
             },
           },
@@ -841,7 +857,9 @@ async function seedComments(
 }
 
 async function seedPaymentMethods(prisma: PrismaClient) {
+  // skipDuplicates keeps the seed re-runnable against an existing database.
   await prisma.paymentMethod.createMany({
+    skipDuplicates: true,
     data: [
       {
         id: 'payrexx',
@@ -859,50 +877,837 @@ async function seedPaymentMethods(prisma: PrismaClient) {
         paymentProviderID: 'stripe',
         active: true,
       },
+      {
+        id: 'simulated',
+        name: 'Simulated payment',
+        slug: 'simulated',
+        description: 'Pick the outcome on a checkout page; no money moves.',
+        paymentProviderID: 'simulated',
+        active: true,
+      },
     ],
   });
 }
 
+/** Slugs of the seeded plans, so the test subscriptions can reference them. */
+const MEMBER_PLAN_SLUGS = {
+  chfYearly: 'test-abo-chf',
+  eurMonthly: 'test-abo-eur',
+  chfMonthly: 'test-abo-chf-monatlich',
+} as const;
+
 async function seedMemberPlans(prisma: PrismaClient) {
-  const testAbo1 = prisma.memberPlan.create({
-    data: {
+  // Upserted by slug (not id): existing databases already carry these plans
+  // under generated ids, and the slug is what stays stable.
+  const testAbo1 = prisma.memberPlan.upsert({
+    where: { slug: MEMBER_PLAN_SLUGS.chfYearly },
+    update: {},
+    create: {
       active: true,
       name: 'Test-Abo CHF',
-      description: [],
-      slug: 'test-abo-chf',
-      amountPerMonthMin: 1000,
+      slateDescription: getText(),
+      slateShortDescription: getText(),
+      slug: MEMBER_PLAN_SLUGS.chfYearly,
+      periodicityPricing: {
+        create: { periodicity: 'monthly', amountMin: 1000 },
+      },
       extendable: true,
       currency: 'CHF',
       availablePaymentMethods: {
         create: {
           forceAutoRenewal: true,
-          paymentMethodIDs: ['payrexx'],
+          paymentMethodIDs: ['payrexx', 'simulated'],
           paymentPeriodicities: ['yearly'],
         },
       },
     },
   });
 
-  const testAbo2 = prisma.memberPlan.create({
-    data: {
+  const testAbo2 = prisma.memberPlan.upsert({
+    where: { slug: MEMBER_PLAN_SLUGS.eurMonthly },
+    update: {},
+    create: {
       active: true,
       name: 'Test-Abo EUR',
-      description: [],
-      slug: 'test-abo-eur',
-      amountPerMonthMin: 2000,
+      slateDescription: getText(),
+      slateShortDescription: getText(),
+      slug: MEMBER_PLAN_SLUGS.eurMonthly,
+      periodicityPricing: {
+        create: { periodicity: 'monthly', amountMin: 2000 },
+      },
       extendable: true,
       currency: 'EUR',
       availablePaymentMethods: {
         create: {
           forceAutoRenewal: false,
-          paymentMethodIDs: ['stripe'],
+          paymentMethodIDs: ['stripe', 'simulated'],
           paymentPeriodicities: ['yearly', 'monthly'],
         },
       },
     },
   });
 
-  await Promise.all([testAbo1, testAbo2]);
+  // A second CHF plan so tests can tell "different plan" from "different
+  // currency" — the audience filters treat those as separate dimensions.
+  const testAbo3 = prisma.memberPlan.upsert({
+    where: { slug: MEMBER_PLAN_SLUGS.chfMonthly },
+    update: {},
+    create: {
+      active: true,
+      name: 'Test-Abo CHF Monatlich',
+      slateDescription: getText(),
+      slateShortDescription: getText(),
+      slug: MEMBER_PLAN_SLUGS.chfMonthly,
+      periodicityPricing: {
+        create: { periodicity: 'monthly', amountMin: 500 },
+      },
+      extendable: true,
+      currency: 'CHF',
+      availablePaymentMethods: {
+        create: {
+          forceAutoRenewal: false,
+          paymentMethodIDs: ['payrexx', 'stripe', 'simulated'],
+          paymentPeriodicities: ['monthly', 'quarterly'],
+        },
+      },
+    },
+  });
+
+  await Promise.all([testAbo1, testAbo2, testAbo3]);
+}
+
+// All test subscriptions are positioned relative to the moment of seeding, so
+// re-running the seed always produces a current data set instead of dates that
+// silently expired since the last run.
+const shiftDays = (days: number): Date => {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+
+  return date;
+};
+
+const shiftMonths = (months: number): Date => {
+  const date = new Date();
+  date.setMonth(date.getMonth() + months);
+
+  return date;
+};
+
+interface SeedSubscription {
+  planSlug: string;
+  paymentMethodID: 'payrexx' | 'stripe';
+  periodicity: PaymentPeriodicity;
+  currency: Currency;
+  /** Amount per month in the smallest currency unit (1000 = 10.00). */
+  monthlyAmount: number;
+  autoRenew: boolean;
+  /** Unconfirmed subscriptions are the "pending" audience state. */
+  confirmed?: boolean;
+  extendable?: boolean;
+  /** Offset in months from today; negative is in the past. */
+  startsAtMonths: number;
+  /** Offset in days from today. `null` = no paid-until (e.g. lifetime). */
+  paidUntilDays: number | null;
+  invoice: 'paid' | 'open' | 'none';
+  deactivation?: {
+    reason: SubscriptionDeactivationReason;
+    daysAgo: number;
+  };
+}
+
+interface SeedSubscriber {
+  email: string;
+  firstName: string;
+  name: string;
+  /** Why this row exists — printed after seeding as a quick test overview. */
+  purpose: string;
+  subscriptions: SeedSubscription[];
+}
+
+const MONTHS_PER_PERIOD: Record<PaymentPeriodicity, number> = {
+  monthly: 1,
+  quarterly: 3,
+  biannual: 6,
+  yearly: 12,
+  biennial: 24,
+  lifetime: 1200,
+};
+
+/**
+ * A deliberately broad matrix: active and deactivated subscriptions, several
+ * deactivation reasons, users with multiple subscriptions across plans and
+ * currencies, unconfirmed and lifetime subscriptions, paid and open invoices,
+ * plus a subscriber-less user for the "no active subscription" audience.
+ */
+const SEED_SUBSCRIBERS: SeedSubscriber[] = [
+  {
+    email: 'abo.aktiv.chf@wepublish.ch',
+    firstName: 'Anna',
+    name: 'Aktiv',
+    purpose: 'Active yearly CHF subscription, auto-renewing, invoice paid',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'yearly',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: true,
+        startsAtMonths: -4,
+        paidUntilDays: 240,
+        invoice: 'paid',
+      },
+    ],
+  },
+  {
+    email: 'abo.aktiv.eur@wepublish.ch',
+    firstName: 'Bruno',
+    name: 'Monatlich',
+    purpose: 'Active monthly EUR subscription, auto-renewing, invoice paid',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.eurMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'monthly',
+        currency: 'EUR',
+        monthlyAmount: 2000,
+        autoRenew: true,
+        startsAtMonths: -7,
+        paidUntilDays: 12,
+        invoice: 'paid',
+      },
+    ],
+  },
+  {
+    email: 'abo.mehrfach@wepublish.ch',
+    firstName: 'Clara',
+    name: 'Mehrfach',
+    purpose:
+      'Three subscriptions at once: two active across plans and currencies, one deactivated',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'yearly',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: true,
+        startsAtMonths: -14,
+        paidUntilDays: 180,
+        invoice: 'paid',
+      },
+      {
+        planSlug: MEMBER_PLAN_SLUGS.eurMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'monthly',
+        currency: 'EUR',
+        monthlyAmount: 2000,
+        autoRenew: false,
+        startsAtMonths: -3,
+        paidUntilDays: 20,
+        invoice: 'paid',
+      },
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'monthly',
+        currency: 'CHF',
+        monthlyAmount: 500,
+        autoRenew: false,
+        startsAtMonths: -20,
+        paidUntilDays: -60,
+        invoice: 'paid',
+        deactivation: {
+          reason: SubscriptionDeactivationReason.userSelfDeactivated,
+          daysAgo: 60,
+        },
+      },
+    ],
+  },
+  {
+    email: 'abo.gekuendigt@wepublish.ch',
+    firstName: 'Daniel',
+    name: 'Gekündigt',
+    purpose: 'Deactivated by the user — no active subscription left',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'yearly',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: false,
+        startsAtMonths: -18,
+        paidUntilDays: -30,
+        invoice: 'paid',
+        deactivation: {
+          reason: SubscriptionDeactivationReason.userSelfDeactivated,
+          daysAgo: 30,
+        },
+      },
+    ],
+  },
+  {
+    email: 'abo.chargeback@wepublish.ch',
+    firstName: 'Elena',
+    name: 'Rückbuchung',
+    purpose: 'Deactivated after a chargeback',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.eurMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'monthly',
+        currency: 'EUR',
+        monthlyAmount: 2000,
+        autoRenew: false,
+        startsAtMonths: -9,
+        paidUntilDays: -5,
+        invoice: 'paid',
+        deactivation: {
+          reason: SubscriptionDeactivationReason.chargeback,
+          daysAgo: 5,
+        },
+      },
+    ],
+  },
+  {
+    email: 'abo.offene.rechnung@wepublish.ch',
+    firstName: 'Fabio',
+    name: 'Unbezahlt',
+    purpose:
+      'Still active but the renewal invoice is open and overdue — deactivation is scheduled',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfMonthly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'monthly',
+        currency: 'CHF',
+        monthlyAmount: 500,
+        autoRenew: true,
+        startsAtMonths: -6,
+        paidUntilDays: -3,
+        invoice: 'open',
+      },
+    ],
+  },
+  {
+    email: 'abo.ausgelaufen@wepublish.ch',
+    firstName: 'Lena',
+    name: 'Ausgelaufen',
+    purpose:
+      'Ran out without auto-renewal; the periodic job deactivated it at paidUntil. A win-back target.',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'yearly',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: false,
+        startsAtMonths: -14,
+        paidUntilDays: -20,
+        invoice: 'paid',
+        // Mirrors `deactivateExpiredNotAutoRenewSubscriptions`: reason
+        // `userSelfDeactivated`, dated at the day the subscription ran out.
+        deactivation: {
+          reason: SubscriptionDeactivationReason.userSelfDeactivated,
+          daysAgo: 20,
+        },
+      },
+    ],
+  },
+  {
+    email: 'abo.laeuft.ab@wepublish.ch',
+    firstName: 'Gina',
+    name: 'Ablauf',
+    purpose:
+      'Active without auto-renewal, ends in 10 days — target for renewal reminders',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'yearly',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: false,
+        startsAtMonths: -12,
+        paidUntilDays: 10,
+        invoice: 'paid',
+      },
+    ],
+  },
+  {
+    email: 'abo.unbestaetigt@wepublish.ch',
+    firstName: 'Heidi',
+    name: 'Ausstehend',
+    purpose: 'Unconfirmed subscription — the "pending" audience state',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.eurMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'monthly',
+        currency: 'EUR',
+        monthlyAmount: 2000,
+        autoRenew: true,
+        confirmed: false,
+        startsAtMonths: 0,
+        paidUntilDays: null,
+        invoice: 'open',
+      },
+    ],
+  },
+  {
+    email: 'abo.lebenslang@wepublish.ch',
+    firstName: 'Igor',
+    name: 'Lebenslang',
+    purpose: 'Lifetime subscription without a paid-until date',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfYearly,
+        paymentMethodID: 'payrexx',
+        periodicity: 'lifetime',
+        currency: 'CHF',
+        monthlyAmount: 1000,
+        autoRenew: false,
+        extendable: false,
+        startsAtMonths: -26,
+        paidUntilDays: null,
+        invoice: 'paid',
+      },
+    ],
+  },
+  {
+    email: 'abo.quartal@wepublish.ch',
+    firstName: 'Jana',
+    name: 'Quartal',
+    purpose: 'Quarterly billing period, auto-renewing',
+    subscriptions: [
+      {
+        planSlug: MEMBER_PLAN_SLUGS.chfMonthly,
+        paymentMethodID: 'stripe',
+        periodicity: 'quarterly',
+        currency: 'CHF',
+        monthlyAmount: 500,
+        autoRenew: true,
+        startsAtMonths: -5,
+        paidUntilDays: 45,
+        invoice: 'paid',
+      },
+    ],
+  },
+  {
+    email: 'ohne.abo@wepublish.ch',
+    firstName: 'Karl',
+    name: 'Ohne Abo',
+    purpose: 'Registered user without any subscription',
+    subscriptions: [],
+  },
+];
+
+/**
+ * Creates the test subscribers and their subscriptions. Safe to re-run: the
+ * previously seeded subscriptions of these users are removed first, so every
+ * run leaves exactly this data set with dates relative to today.
+ */
+export async function seedSubscribers(prisma: PrismaClient) {
+  const plans = await prisma.memberPlan.findMany({
+    where: { slug: { in: Object.values(MEMBER_PLAN_SLUGS) } },
+    select: { id: true, slug: true },
+  });
+  const planIdBySlug = new Map(plans.map(plan => [plan.slug, plan.id]));
+
+  const emails = SEED_SUBSCRIBERS.map(({ email }) => email);
+  const existingUsers = await prisma.user.findMany({
+    where: { email: { in: emails } },
+    select: { id: true },
+  });
+
+  // Wipe what a previous run created, deepest relation first: periods point at
+  // invoices, invoices and deactivations at subscriptions.
+  if (existingUsers.length) {
+    const staleSubscriptions = await prisma.subscription.findMany({
+      where: { userID: { in: existingUsers.map(({ id }) => id) } },
+      select: { id: true },
+    });
+    const staleIds = staleSubscriptions.map(({ id }) => id);
+
+    if (staleIds.length) {
+      await prisma.subscriptionPeriod.deleteMany({
+        where: { subscriptionId: { in: staleIds } },
+      });
+      await prisma.invoice.deleteMany({
+        where: { subscriptionID: { in: staleIds } },
+      });
+      await prisma.subscriptionDeactivation.deleteMany({
+        where: { subscriptionID: { in: staleIds } },
+      });
+      await prisma.subscription.deleteMany({ where: { id: { in: staleIds } } });
+    }
+  }
+
+  const password = await hashPassword('123');
+
+  for (const subscriber of SEED_SUBSCRIBERS) {
+    const user = await prisma.user.upsert({
+      where: { email: subscriber.email },
+      update: { active: true },
+      create: {
+        email: subscriber.email,
+        emailVerifiedAt: new Date(),
+        firstName: subscriber.firstName,
+        name: subscriber.name,
+        active: true,
+        roleIDs: [],
+        password,
+        totpExempt: true,
+      },
+    });
+
+    for (const seed of subscriber.subscriptions) {
+      const memberPlanID = planIdBySlug.get(seed.planSlug);
+
+      if (!memberPlanID) {
+        throw new Error(`Member plan <${seed.planSlug}> is missing`);
+      }
+
+      const startsAt = shiftMonths(seed.startsAtMonths);
+      const paidUntil =
+        seed.paidUntilDays === null ? null : shiftDays(seed.paidUntilDays);
+
+      const subscription = await prisma.subscription.create({
+        data: {
+          userID: user.id,
+          memberPlanID,
+          paymentMethodID: seed.paymentMethodID,
+          paymentPeriodicity: seed.periodicity,
+          monthlyAmount: seed.monthlyAmount,
+          currency: seed.currency,
+          autoRenew: seed.autoRenew,
+          confirmed: seed.confirmed ?? true,
+          extendable: seed.extendable ?? true,
+          startsAt,
+          paidUntil,
+        },
+      });
+
+      if (seed.invoice !== 'none') {
+        const periodMonths = MONTHS_PER_PERIOD[seed.periodicity];
+        const amount = Math.round(seed.monthlyAmount * periodMonths);
+        // The current period ends at paidUntil; without one (lifetime, pending)
+        // fall back to one period after the start.
+        const periodEndsAt =
+          paidUntil ??
+          new Date(
+            new Date(startsAt).setMonth(startsAt.getMonth() + periodMonths)
+          );
+        const periodStartsAt = new Date(
+          new Date(periodEndsAt).setMonth(
+            periodEndsAt.getMonth() - periodMonths
+          )
+        );
+        const isPaid = seed.invoice === 'paid';
+
+        const invoice = await prisma.invoice.create({
+          data: {
+            mail: subscriber.email,
+            description: `${seed.planSlug} — ${seed.periodicity}`,
+            currency: seed.currency,
+            subscriptionID: subscription.id,
+            dueAt: periodStartsAt,
+            paidAt: isPaid ? periodStartsAt : null,
+            // Unpaid invoices are deactivated a fortnight after they were due.
+            scheduledDeactivationAt: shiftDays(isPaid ? 365 : 11),
+            items: {
+              create: {
+                name: `Abo ${seed.currency}`,
+                description: `${seed.periodicity} — ${seed.planSlug}`,
+                quantity: 1,
+                amount,
+              },
+            },
+          },
+        });
+
+        await prisma.subscriptionPeriod.create({
+          data: {
+            subscriptionId: subscription.id,
+            invoiceID: invoice.id,
+            startsAt: periodStartsAt,
+            endsAt: periodEndsAt,
+            paymentPeriodicity: seed.periodicity,
+            amount,
+          },
+        });
+      }
+
+      if (seed.deactivation) {
+        await prisma.subscriptionDeactivation.create({
+          data: {
+            subscriptionID: subscription.id,
+            date: shiftDays(-seed.deactivation.daysAgo),
+            reason: seed.deactivation.reason,
+          },
+        });
+      }
+    }
+
+    console.log(`  ${subscriber.email} — ${subscriber.purpose}`);
+  }
+}
+
+const SEED_LOGIN_URL = `${
+  process.env.WEBSITE_URL ?? 'http://localhost:4200'
+}/login?jwt={{jwt}}`;
+
+const mailDocument = (body: string) => `<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body style="margin: 0; padding: 24px; font-family: Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.6; color: #1a1a1a;">
+${body}
+  </body>
+</html>`;
+
+interface SeedMailTemplate {
+  id: string;
+  name: string;
+  description: string;
+  context: MailTemplateContext;
+  subject: string;
+  htmlContent: string;
+  textContent: string;
+}
+
+const SEED_MAIL_TEMPLATES: SeedMailTemplate[] = [
+  {
+    id: 'seed-account-creation',
+    name: 'Konto erstellt',
+    description: 'Begrüssung nach der Registrierung, mit Login-Link.',
+    context: MailTemplateContext.account,
+    subject: 'Willkommen bei We.Publish, {{user_firstName}}',
+    htmlContent:
+      mailDocument(`    <h1 style="font-size: 20px; margin: 0 0 16px;">Willkommen, {{user_fullName}}</h1>
+    <p>Dein Konto für {{user_email}} ist bereit.</p>
+    <p><a href="${SEED_LOGIN_URL}">Jetzt anmelden</a></p>
+    <p>Der Link ist nur eine begrenzte Zeit gültig.</p>`),
+    textContent: `Willkommen, {{user_fullName}}
+
+Dein Konto für {{user_email}} ist bereit.
+
+Jetzt anmelden: ${SEED_LOGIN_URL}
+
+Der Link ist nur eine begrenzte Zeit gültig.`,
+  },
+  {
+    id: 'seed-password-reset',
+    name: 'Passwort zurücksetzen',
+    description: 'Reset-Link für ein vergessenes Passwort.',
+    context: MailTemplateContext.account,
+    subject: 'Passwort zurücksetzen',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Für das Konto {{user_email}} wurde ein neues Passwort angefordert.</p>
+    <p><a href="${SEED_LOGIN_URL}">Passwort jetzt neu setzen</a></p>
+    <p>Wenn du das nicht warst, kannst du diese Nachricht ignorieren.</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Für das Konto {{user_email}} wurde ein neues Passwort angefordert.
+
+Passwort jetzt neu setzen: ${SEED_LOGIN_URL}
+
+Wenn du das nicht warst, kannst du diese Nachricht ignorieren.`,
+  },
+  {
+    id: 'seed-login-link',
+    name: 'Login-Link',
+    description: 'Anmeldung ohne Passwort über einen Einmal-Link.',
+    context: MailTemplateContext.account,
+    subject: 'Dein Login-Link',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Mit diesem Link meldest du dich ohne Passwort an:</p>
+    <p><a href="${SEED_LOGIN_URL}">Anmelden</a></p>
+    <p>Letzte Anmeldung: {{user_lastLogin_dateTime}}</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Mit diesem Link meldest du dich ohne Passwort an:
+${SEED_LOGIN_URL}
+
+Letzte Anmeldung: {{user_lastLogin_dateTime}}`,
+  },
+  {
+    id: 'seed-email-change',
+    name: 'E-Mail-Adresse ändern',
+    description: 'Bestätigung der neuen Adresse bei einem Adresswechsel.',
+    context: MailTemplateContext.emailChange,
+    subject: 'Bestätige deine neue E-Mail-Adresse',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Du möchtest künftig <strong>{{optional_newEmail}}</strong> verwenden.</p>
+    <p><a href="${SEED_LOGIN_URL}">Änderung bestätigen</a></p>
+    <p>Bis zur Bestätigung bleibt {{user_email}} aktiv.</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Du möchtest künftig {{optional_newEmail}} verwenden.
+
+Änderung bestätigen: ${SEED_LOGIN_URL}
+
+Bis zur Bestätigung bleibt {{user_email}} aktiv.`,
+  },
+  {
+    id: 'seed-subscription-confirmed',
+    name: 'Abo bestätigt',
+    description: 'Bestätigung eines neu abgeschlossenen Abos.',
+    context: MailTemplateContext.subscription,
+    subject: 'Dein Abo ist aktiv',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Dein Abo läuft seit {{optional_subscription_startsAt_date}}.</p>
+    <p>
+      Du bezahlst {{optional_subscription_periodAmount_display}}
+      {{optional_subscription_paymentPeriodicity_display}}, bezahlt bis
+      {{optional_subscription_paidUntil_date}}.
+    </p>
+    <p>Danke für deine Unterstützung.</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Dein Abo läuft seit {{optional_subscription_startsAt_date}}.
+
+Du bezahlst {{optional_subscription_periodAmount_display}} {{optional_subscription_paymentPeriodicity_display}}, bezahlt bis {{optional_subscription_paidUntil_date}}.
+
+Danke für deine Unterstützung.`,
+  },
+  {
+    id: 'seed-subscription-deactivated',
+    name: 'Abo beendet',
+    description: 'Information über ein deaktiviertes Abo, mit Grund.',
+    context: MailTemplateContext.subscription,
+    subject: 'Dein Abo wurde beendet',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>Dein Abo endet am {{optional_subscription_paidUntil_date}}.</p>
+    <p>Grund: {{optional_subscription_deactivation_reason}}</p>
+    <p>Du kannst jederzeit ein neues Abo abschliessen.</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Dein Abo endet am {{optional_subscription_paidUntil_date}}.
+
+Grund: {{optional_subscription_deactivation_reason}}
+
+Du kannst jederzeit ein neues Abo abschliessen.`,
+  },
+  {
+    id: 'seed-invoice-created',
+    name: 'Neue Rechnung',
+    description: 'Rechnungsstellung für die kommende Abo-Periode.',
+    context: MailTemplateContext.invoiceCreation,
+    subject: 'Deine Rechnung über {{optional_invoice_total_display}}',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>
+      Für dein Abo «{{optional_subscriptionToCreateInvoice_memberPlan_name}}»
+      haben wir eine neue Rechnung erstellt.
+    </p>
+    <p>
+      {{optional_invoice_description}}<br />
+      Betrag: {{optional_invoice_total_display}}<br />
+      Zahlbar bis: {{optional_invoice_dueAt_date}}
+    </p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Für dein Abo «{{optional_subscriptionToCreateInvoice_memberPlan_name}}» haben wir eine neue Rechnung erstellt.
+
+{{optional_invoice_description}}
+Betrag: {{optional_invoice_total_display}}
+Zahlbar bis: {{optional_invoice_dueAt_date}}`,
+  },
+  {
+    id: 'seed-renewal-success',
+    name: 'Verlängerung erfolgreich',
+    description: 'Quittung nach einer erfolgreichen automatischen Zahlung.',
+    context: MailTemplateContext.renewal,
+    subject: 'Dein Abo wurde verlängert',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>
+      Dein Abo «{{optional_subscription_memberPlan_name}}» wurde verlängert.
+    </p>
+    <p>
+      Betrag: {{optional_invoice_total_display}}<br />
+      Zahlungsmethode: {{optional_subscription_paymentMethod_name}}<br />
+      Bezahlt bis: {{optional_subscription_paidUntil_date}}
+    </p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Dein Abo «{{optional_subscription_memberPlan_name}}» wurde verlängert.
+
+Betrag: {{optional_invoice_total_display}}
+Zahlungsmethode: {{optional_subscription_paymentMethod_name}}
+Bezahlt bis: {{optional_subscription_paidUntil_date}}`,
+  },
+  {
+    id: 'seed-renewal-failed',
+    name: 'Verlängerung fehlgeschlagen',
+    description: 'Zahlungsfehler bei der automatischen Verlängerung.',
+    context: MailTemplateContext.renewal,
+    subject: 'Die Zahlung für dein Abo hat nicht geklappt',
+    htmlContent: mailDocument(`    <p>Hallo {{user_firstName}}</p>
+    <p>
+      Wir konnten {{optional_invoice_total_display}} nicht über
+      {{optional_subscription_paymentMethod_name}} einziehen.
+    </p>
+    <p>Fehler: {{optional_errorCode}}</p>
+    <p>Bitte begleiche die Rechnung bis {{optional_invoice_dueAt_date}}.</p>`),
+    textContent: `Hallo {{user_firstName}}
+
+Wir konnten {{optional_invoice_total_display}} nicht über {{optional_subscription_paymentMethod_name}} einziehen.
+
+Fehler: {{optional_errorCode}}
+
+Bitte begleiche die Rechnung bis {{optional_invoice_dueAt_date}}.`,
+  },
+  {
+    id: 'seed-custom-subscriber',
+    name: 'Mitteilung an Abonnent:innen',
+    description: 'Freier Versand an Personen mit Abo.',
+    context: MailTemplateContext.custom,
+    subject: 'Eine Mitteilung an dich, {{user_firstName}}',
+    htmlContent: mailDocument(`    <p>Hallo {{user_fullName}}</p>
+    <p>Hier steht der Text der Mitteilung.</p>
+    <p>
+      Dein Abo: {{optional_subscription_periodAmount_display}}
+      {{optional_subscription_paymentPeriodicity_display}}, bezahlt bis
+      {{optional_subscription_paidUntil_date}}.<br />
+      Letzte Rechnung: {{optional_invoices_0_description}}
+    </p>`),
+    textContent: `Hallo {{user_fullName}}
+
+Hier steht der Text der Mitteilung.
+
+Dein Abo: {{optional_subscription_periodAmount_display}} {{optional_subscription_paymentPeriodicity_display}}, bezahlt bis {{optional_subscription_paidUntil_date}}.
+Letzte Rechnung: {{optional_invoices_0_description}}`,
+  },
+  {
+    id: 'seed-custom-no-subscription',
+    name: 'Mitteilung ohne Abo',
+    description: 'Freier Versand an Personen ohne Abo.',
+    context: MailTemplateContext.customNoSubscription,
+    subject: 'Hallo {{user_firstName}}',
+    htmlContent: mailDocument(`    <p>Hallo {{user_fullName}}</p>
+    <p>Hier steht der Text der Mitteilung.</p>
+    <p>Du erhältst diese Nachricht an {{user_email}}.</p>`),
+    textContent: `Hallo {{user_fullName}}
+
+Hier steht der Text der Mitteilung.
+
+Du erhältst diese Nachricht an {{user_email}}.`,
+  },
+];
+
+async function seedMailTemplates(prisma: PrismaClient) {
+  for (const { id, ...content } of SEED_MAIL_TEMPLATES) {
+    await prisma.mailTemplate.upsert({
+      where: { id },
+      update: {},
+      create: { id, ...content },
+    });
+
+    console.log(`  ${content.name} — ${content.description}`);
+  }
 }
 
 async function seedSettings(prisma: PrismaClient) {
@@ -912,15 +1717,17 @@ async function seedSettings(prisma: PrismaClient) {
     update: {},
   });
 
-  const mailprovider = prisma.settingMailProvider.upsert(
-    upsert({
-      id: 'slackmail',
-      name: 'Slackmail',
-      type: MailProviderType.SLACK,
-      fromAddress: 'dev@wepublish.ch',
-      slack_webhookURL: 'https://slackmail.com',
-    })
-  );
+  const mailprovider =
+    (await prisma.settingMailProvider.count()) === 0 ?
+      prisma.settingMailProvider.create({
+        data: {
+          id: 'smtp',
+          name: 'SMTP',
+          type: MailProviderType.SMTP,
+          fromAddress: 'dev@wepublish.ch',
+        },
+      })
+    : Promise.resolve(null);
 
   const payrexx = prisma.settingPaymentProvider.upsert(
     upsert({
@@ -1033,6 +1840,17 @@ async function seedSettings(prisma: PrismaClient) {
     })
   );
 
+  // Stays inside We.Publish: the checkout page lets you pick the outcome, and
+  // renewals are charged straight away.
+  const simulated = prisma.settingPaymentProvider.upsert(
+    upsert({
+      id: 'simulated',
+      type: PaymentProviderType.SIMULATED,
+      name: 'Simulated',
+      offSessionPayments: true,
+    })
+  );
+
   const turnstile = prisma.settingChallengeProvider.upsert(
     upsert({
       id: 'turnstile',
@@ -1099,6 +1917,7 @@ async function seedSettings(prisma: PrismaClient) {
     mollie,
     bexio,
     noCharge,
+    simulated,
     turnstile,
     prolitteris,
     v0,
@@ -1117,7 +1936,21 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
   });
 
   if (hasSeeded) {
-    console.warn('Website Example seeding has already been done. Skipping');
+    console.warn(
+      'Website Example content seeding has already been done. Skipping content.'
+    );
+    // Subscriptions are still refreshed: their dates are relative to now, so a
+    // re-seed brings an existing database back to a current test data set.
+    await seedPaymentMethods(prisma);
+    await seedMemberPlans(prisma);
+    console.log('Refreshing test subscribers');
+    await seedSubscribers(prisma);
+    console.log('Refreshing demo notifications');
+    await seedPeriodicJobLogs(prisma);
+    await seedChangelogEntries(prisma);
+    console.log('Seeding mail templates');
+    await seedMailTemplates(prisma);
+
     return;
   }
 
@@ -1210,4 +2043,13 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
 
   console.log('Seeding Member Plans');
   await seedMemberPlans(prisma);
+
+  console.log('Seeding test subscribers');
+  await seedSubscribers(prisma);
+
+  console.log('Seeding demo notifications');
+  await seedPeriodicJobLogs(prisma);
+  await seedChangelogEntries(prisma);
+  console.log('Seeding mail templates');
+  await seedMailTemplates(prisma);
 }

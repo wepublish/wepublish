@@ -1,15 +1,17 @@
+import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  AccountCreationMailDocument,
+  CreateUserDocument,
   FullImageFragment,
   FullUserFragment,
   FullUserRoleFragment,
-  useCreateUserMutation,
+  ResetUserTotpDocument,
+  UpdateUserDocument,
   UserAddress,
-  useResetUserTotpMutation,
-  useUpdateUserMutation,
-  useUserQuery,
-  useUserRoleListQuery,
-  useUserSubscriptionListQuery,
+  UserDocument,
+  UserRoleListDocument,
+  UserSubscriptionListDocument,
 } from '@wepublish/editor/api';
 import {
   ChooseEditImage,
@@ -21,10 +23,16 @@ import {
   ListValue,
   SingleViewTitle,
   Textarea,
+  skipMailFor,
   toggleRequiredLabel,
+  useActionMailQuestion,
   useAuthorisation,
   UserSubscriptionsList,
 } from '@wepublish/ui/editor';
+import {
+  SendMailToUserPanel,
+  UserMailLogPanel,
+} from '@wepublish/membership/editor';
 import { userCountryNames } from '@wepublish/user';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -52,18 +60,38 @@ const Grid = styled(RGrid)`
   padding-right: 0px;
 `;
 
+/* constant width across both states, sized for the wider label
+   ("Öffentlich"); the visible pill is the inner .rs-toggle-track -
+   the root label is inline, where min-width has no effect */
 const Toggle = styled(RToggle)`
-  max-width: 70px;
-  min-width: 70px;
+  .rs-toggle-track {
+    min-width: 105px;
+  }
 `;
 
-const InputW60 = styled(Input)`
-  width: 60%;
+/* && beats rsuite's .rs-input { width: 100% } regardless of sheet order */
+const PropertyValueInput = styled(Input)`
+  && {
+    width: 220px;
+  }
 `;
 
-const InputW40 = styled(Input)`
-  width: 40%;
-  margin-right: 10px;
+const PropertyKeyInput = styled(Input)`
+  && {
+    width: 140px;
+    margin-right: 10px;
+  }
+`;
+
+/* the ListInput's inner panel stretches to the full row width, pushing the
+   delete icon to the far end - fit-content shrinks it to its content even
+   if a descendant asks for 100%; the outer container keeps its full width */
+const PropertiesListWrapper = styled.div`
+  .rs-panel {
+    width: fit-content;
+    max-width: 100%;
+    flex: 0 0 auto;
+  }
 `;
 
 const FlexRow = styled.div`
@@ -82,13 +110,19 @@ const ColTextAlign = styled(Col)`
 const UserFormGrid = styled(RGrid)`
   width: 100%;
   padding-left: 0px;
-  height: calc(100vh - 160px);
-  overflow-y: scroll;
 `;
 
+/* inside the fluid form the group stretches to the remaining row width,
+   pushing the delete icon away - keep it as wide as the toggle only */
 const FormGroup = styled(Form.Group)`
   padding-top: 6px;
   padding-left: 8px;
+
+  && {
+    width: fit-content;
+    flex: 0 0 auto;
+    margin-bottom: 0;
+  }
 `;
 
 export interface UserProperty {
@@ -121,6 +155,8 @@ function UserEditView() {
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null);
   const [password, setPassword] = useState('');
   const [active, setActive] = useState(true);
+  const client = useApolloClient();
+  const { askMail, actionMailDialog } = useActionMailQuestion();
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([]);
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
   const [address, setAddress] = useState<UserAddress | null>(null);
@@ -130,7 +166,7 @@ function UserEditView() {
     ListValue<UserProperty>[]
   >([]);
 
-  const { data: subscriptionData } = useUserSubscriptionListQuery({
+  const { data: subscriptionData } = useQuery(UserSubscriptionListDocument, {
     skip: !userId,
     variables: {
       userId: userId!,
@@ -139,12 +175,14 @@ function UserEditView() {
 
   // getting user id from url param
   const [id] = useState<string | undefined>(isEditRoute ? userId : undefined);
-  const { data: userRoleData, loading: isUserRoleLoading } =
-    useUserRoleListQuery({
+  const { data: userRoleData, loading: isUserRoleLoading } = useQuery(
+    UserRoleListDocument,
+    {
       variables: {
         take: 200,
       },
-    });
+    }
+  );
 
   /**
    * fetch user from api
@@ -153,7 +191,7 @@ function UserEditView() {
     data,
     loading: isLoading,
     error: loadError,
-  } = useUserQuery({
+  } = useQuery(UserDocument, {
     variables: { id: id! },
     skip: id === undefined,
   });
@@ -203,8 +241,14 @@ function UserEditView() {
     }
   }, [userRoleData?.userRoles]);
 
-  const [createUser, { loading: isCreating }] = useCreateUserMutation({});
-  const [updateUser, { loading: isUpdating }] = useUpdateUserMutation({});
+  const [createUser, { loading: isCreating }] = useMutation(
+    CreateUserDocument,
+    {}
+  );
+  const [updateUser, { loading: isUpdating }] = useMutation(
+    UpdateUserDocument,
+    {}
+  );
 
   const isDisabled =
     isLoading ||
@@ -215,8 +259,9 @@ function UserEditView() {
   const canResetPassword = useAuthorisation('CAN_RESET_USER_PASSWORD');
   const canResetTotp = useAuthorisation('CAN_RESET_USER_TOTP');
 
-  const [resetUserTotp, { loading: isResettingTotp }] =
-    useResetUserTotpMutation();
+  const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
+    ResetUserTotpDocument
+  );
 
   /**
    * Function to update address object
@@ -242,6 +287,7 @@ function UserEditView() {
     let addressCopy = Object.assign({}, address);
     if (!address) {
       addressCopy = {
+        __typename: 'UserAddress',
         company: '',
         streetAddress: '',
         streetAddressNumber: '',
@@ -353,6 +399,23 @@ function UserEditView() {
       }
     } else {
       try {
+        const { data: mailData } = await client.query({
+          query: AccountCreationMailDocument,
+          fetchPolicy: 'network-only',
+        });
+        const mail = mailData?.accountCreationMail;
+
+        if (!mail) {
+          throw new Error('Could not look up the mail of this action');
+        }
+
+        // asked every time: whether the mail goes out, or that none will
+        const decision = await askMail({ ...mail, recipient: email });
+
+        if (decision === 'cancel') {
+          return;
+        }
+
         const { data } = await createUser({
           variables: {
             name,
@@ -374,6 +437,7 @@ function UserEditView() {
             address,
             userImageID: userImage?.id || null,
             password,
+            skipMail: skipMailFor(decision),
           },
         });
         const newUser = data?.createUser;
@@ -443,7 +507,10 @@ function UserEditView() {
           setCloseFn={setCloseAfterSave}
         />
         <UserFormGrid>
-          <Row gutter={10}>
+          <Row
+            gutter={10}
+            data-testid="user-columns"
+          >
             <Col xs={12}>
               <RGrid fluid>
                 {/* general user data */}
@@ -466,9 +533,9 @@ function UserEditView() {
                     {/* active / inactive */}
                     <ColTextAlign xs={12}>
                       <Form.Group controlId="active">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.active')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <RToggle
                           checked={active}
                           disabled={isDisabled}
@@ -482,12 +549,12 @@ function UserEditView() {
                     {/* first name */}
                     <Col xs={12}>
                       <Form.Group controlId="firstName">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.firstName')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="firstName"
-                          value={firstName || undefined}
+                          value={firstName ?? ''}
                           disabled={isDisabled}
                           onChange={(value: string) => {
                             setFirstName(value);
@@ -498,9 +565,9 @@ function UserEditView() {
                     {/* name */}
                     <Col xs={12}>
                       <Form.Group controlId="name">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {toggleRequiredLabel(t('userCreateOrEditView.name'))}
-                        </Form.ControlLabel>
+                        </Form.Label>
 
                         <Form.Control
                           name="name"
@@ -515,9 +582,9 @@ function UserEditView() {
                     {/* email */}
                     <Col xs={12}>
                       <Form.Group controlId="email">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {toggleRequiredLabel(t('userCreateOrEditView.email'))}
-                        </Form.ControlLabel>
+                        </Form.Label>
 
                         <Form.Control
                           name="email"
@@ -532,9 +599,9 @@ function UserEditView() {
                     {/* birthday */}
                     <Col xs={12}>
                       <Form.Group controlId="birthday">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.birthday')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="birthday"
                           autoComplete="birthday"
@@ -543,7 +610,7 @@ function UserEditView() {
                           isoWeek
                           format="dd.MM.yyyy"
                           limitEndYear={0}
-                          value={birthday}
+                          value={birthday ?? null}
                           disabled={isDisabled}
                           onChange={value => {
                             setBirthday(value as Date);
@@ -555,12 +622,12 @@ function UserEditView() {
                     {/* flair */}
                     <Col xs={12}>
                       <Form.Group controlId="flair">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.flair')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="flair"
-                          value={flair}
+                          value={flair ?? ''}
                           disabled={isDisabled}
                           onChange={(value: string) => setFlair(value)}
                         />
@@ -570,9 +637,9 @@ function UserEditView() {
                     {/* company */}
                     <Col xs={12}>
                       <Form.Group controlId="company">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.company')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="company"
                           value={address?.company || ''}
@@ -591,9 +658,9 @@ function UserEditView() {
                     {/* street */}
                     <Col xs={18}>
                       <Form.Group controlId="streetAddress">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.streetAddress')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="streetAddress"
                           value={address?.streetAddress || ''}
@@ -611,9 +678,9 @@ function UserEditView() {
                     </Col>
                     <Col xs={6}>
                       <Form.Group controlId="streetAddressNumber">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.streetAddressNumber')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="streetAddressNumber"
                           value={address?.streetAddressNumber || ''}
@@ -632,9 +699,9 @@ function UserEditView() {
                     {/* street 2 */}
                     <Col xs={18}>
                       <Form.Group controlId="streetAddress2">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.streetAddress2')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="streetAddress2"
                           value={address?.streetAddress2 || ''}
@@ -653,9 +720,9 @@ function UserEditView() {
 
                     <Col xs={6}>
                       <Form.Group controlId="streetAddress2Number">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.streetAddress2Number')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="streetAddress2Number"
                           value={address?.streetAddress2Number || ''}
@@ -674,9 +741,9 @@ function UserEditView() {
                     {/* zip */}
                     <Col xs={8}>
                       <Form.Group controlId="zipCode">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.zipCode')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="zipCode"
                           value={address?.zipCode || ''}
@@ -695,9 +762,9 @@ function UserEditView() {
                     {/* city */}
                     <Col xs={16}>
                       <Form.Group controlId="city">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.city')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <Form.Control
                           name="city"
                           value={address?.city || ''}
@@ -716,9 +783,9 @@ function UserEditView() {
                     {/* country */}
                     <Col xs={24}>
                       <Form.Group controlId="country">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.country')}
-                        </Form.ControlLabel>
+                        </Form.Label>
 
                         <Form.Control
                           name="country"
@@ -747,9 +814,9 @@ function UserEditView() {
 
                     <Col xs={24}>
                       <Form.Group controlId="note">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.note')}
-                        </Form.ControlLabel>
+                        </Form.Label>
 
                         <Form.Control
                           name="note"
@@ -760,24 +827,29 @@ function UserEditView() {
                           onChange={setNote}
                         />
 
-                        <Form.HelpText>
+                        <Form.Text>
                           {t('userCreateOrEditView.noteHelpText')}
-                        </Form.HelpText>
+                        </Form.Text>
                       </Form.Group>
                     </Col>
                   </Row>
                 </RPanel>
+              </RGrid>
+            </Col>
+            {/* roles, security + communication */}
+            <Col xs={12}>
+              <Grid fluid>
                 {/* roles */}
-                <Panel
+                <RPanel
                   bordered
                   header={t('userCreateOrEditView.userRoles')}
                 >
                   <Row gutter={10}>
                     <Col xs={24}>
                       <Form.Group controlId="userRoles">
-                        <Form.ControlLabel>
+                        <Form.Label>
                           {t('userCreateOrEditView.userRoles')}
-                        </Form.ControlLabel>
+                        </Form.Label>
                         <CheckPicker
                           name="userRoles"
                           block
@@ -798,64 +870,7 @@ function UserEditView() {
                       </Form.Group>
                     </Col>
                   </Row>
-                </Panel>
-                {/* properties */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.properties')}
-                >
-                  <Row gutter={10}>
-                    <Col xs={24}>
-                      <Form.Group controlId="userProperties">
-                        <Form.ControlLabel>
-                          {t('articleEditor.panels.properties')}
-                        </Form.ControlLabel>
-                        <ListInput
-                          value={metaDataProperties}
-                          onChange={propertiesItemInput =>
-                            setMetadataProperties(propertiesItemInput)
-                          }
-                          defaultValue={{ key: '', value: '', public: true }}
-                        >
-                          {({ value, onChange }) => (
-                            <FlexRow>
-                              <InputW40
-                                placeholder={t('articleEditor.panels.key')}
-                                value={value.key}
-                                onChange={propertyKey =>
-                                  onChange({ ...value, key: propertyKey })
-                                }
-                                data-testid="propertyKey"
-                              />
-                              <InputW60
-                                placeholder={t('articleEditor.panels.value')}
-                                value={value.value}
-                                onChange={propertyValue =>
-                                  onChange({ ...value, value: propertyValue })
-                                }
-                                data-testid="propertyValue"
-                              />
-                              <FormGroup controlId="articleProperty">
-                                <Toggle
-                                  checkedChildren={t(
-                                    'articleEditor.panels.public'
-                                  )}
-                                  unCheckedChildren={t(
-                                    'articleEditor.panels.private'
-                                  )}
-                                  checked={value.public}
-                                  onChange={isPublic =>
-                                    onChange({ ...value, public: isPublic })
-                                  }
-                                />
-                              </FormGroup>
-                            </FlexRow>
-                          )}
-                        </ListInput>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </Panel>
+                </RPanel>
                 {/* password */}
                 <Panel
                   bordered
@@ -927,9 +942,9 @@ function UserEditView() {
                       </Col>
                       <Col xs={24}>
                         <Form.Group controlId="totpExempt">
-                          <Form.ControlLabel>
+                          <Form.Label>
                             {t('userCreateOrEditView.totpExemptLabel')}
-                          </Form.ControlLabel>
+                          </Form.Label>
                           <RToggle
                             checked={user.totpExempt}
                             onChange={async value => {
@@ -984,27 +999,108 @@ function UserEditView() {
                     </Row>
                   </Panel>
                 )}
-              </RGrid>
+                {/* properties */}
+                <Panel
+                  bordered
+                  header={t('userCreateOrEditView.properties')}
+                >
+                  <Row gutter={10}>
+                    <Col xs={24}>
+                      <Form.Group controlId="userProperties">
+                        <PropertiesListWrapper>
+                          <ListInput
+                            value={metaDataProperties}
+                            onChange={propertiesItemInput =>
+                              setMetadataProperties(propertiesItemInput)
+                            }
+                            defaultValue={{ key: '', value: '', public: true }}
+                          >
+                            {({ value, onChange }) => (
+                              <FlexRow>
+                                <PropertyKeyInput
+                                  placeholder={t('articleEditor.panels.key')}
+                                  value={value.key}
+                                  onChange={propertyKey =>
+                                    onChange({ ...value, key: propertyKey })
+                                  }
+                                  data-testid="propertyKey"
+                                />
+                                <PropertyValueInput
+                                  placeholder={t('articleEditor.panels.value')}
+                                  value={value.value}
+                                  onChange={propertyValue =>
+                                    onChange({ ...value, value: propertyValue })
+                                  }
+                                  data-testid="propertyValue"
+                                />
+                                <FormGroup controlId="articleProperty">
+                                  <Toggle
+                                    checkedChildren={t(
+                                      'articleEditor.panels.public'
+                                    )}
+                                    unCheckedChildren={t(
+                                      'articleEditor.panels.private'
+                                    )}
+                                    checked={value.public}
+                                    onChange={isPublic =>
+                                      onChange({ ...value, public: isPublic })
+                                    }
+                                  />
+                                </FormGroup>
+                              </FlexRow>
+                            )}
+                          </ListInput>
+                        </PropertiesListWrapper>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </Panel>
+              </Grid>
             </Col>
-            {/* subscriptions */}
-            {subscriptionData?.subscriptions.nodes && (
-              <Col xs={12}>
-                <Grid fluid>
-                  <RPanel
-                    bordered
-                    header={t('userCreateOrEditView.subscriptionsHeader')}
-                  >
-                    <UserSubscriptionsList
-                      subscriptions={subscriptionData.subscriptions.nodes}
-                      userId={user?.id}
-                    />
-                  </RPanel>
-                </Grid>
-              </Col>
-            )}
           </Row>
+
+          {/* subscriptions */}
+          {subscriptionData?.subscriptions.nodes && (
+            <Row gutter={10}>
+              <Col xs={24}>
+                <Panel
+                  bordered
+                  header={t('userCreateOrEditView.subscriptionsHeader')}
+                >
+                  <UserSubscriptionsList
+                    subscriptions={subscriptionData.subscriptions.nodes}
+                    userId={user?.id}
+                  />
+                </Panel>
+              </Col>
+            </Row>
+          )}
+
+          {/* manual mail sending + sent-mail history */}
+          {isEditRoute && userId && (
+            <Row gutter={10}>
+              <Col xs={12}>
+                <Panel
+                  bordered
+                  header={t('userMail.sendTitle')}
+                >
+                  <SendMailToUserPanel userId={userId} />
+                </Panel>
+              </Col>
+              <Col xs={12}>
+                <Panel
+                  bordered
+                  header={t('userMail.logTitle')}
+                >
+                  <UserMailLogPanel userId={userId} />
+                </Panel>
+              </Col>
+            </Row>
+          )}
         </UserFormGrid>
       </Form>
+
+      {actionMailDialog}
 
       {/* image selection panel */}
       <Drawer

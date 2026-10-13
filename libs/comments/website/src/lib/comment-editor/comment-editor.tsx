@@ -2,13 +2,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { css, IconButton, Modal, Theme, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import {
+  BuilderChallengeRef,
   Challenge,
   IntendedRouteExpiryInSeconds,
   IntendedRouteStorageKey,
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
-import { BlockFormat, toPlaintext } from '@wepublish/richtext';
+import { toPlaintext } from '@wepublish/richtext';
 import {
   BuilderCommentEditorProps,
   Link,
@@ -16,10 +17,11 @@ import {
 } from '@wepublish/website/builder';
 import { setCookie } from 'cookies-next';
 import { add } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { MdClose, MdLogin, MdSend } from 'react-icons/md';
 import { z } from 'zod';
+import { useTranslation } from 'react-i18next';
 
 export const CommentEditorWrapper = styled('form')<{ modalOpen: boolean }>`
   display: grid;
@@ -228,11 +230,13 @@ export const CommentEditor = ({
 }: BuilderCommentEditorProps) => {
   const theme = useTheme();
   const {
-    elements: { TextField, Button, Alert, H3, Link },
+    elements: { TextField, Button, Alert, H3 },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
   const { hasUser } = useUser();
   const [modalOpen, setModalOpen] = useState(!hasUser);
   const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment);
+  const challengeRef = useRef<BuilderChallengeRef>(null);
 
   const handleClose = () => {
     setModalOpen(false);
@@ -287,7 +291,7 @@ export const CommentEditor = ({
   const { handleSubmit, control, reset } = useForm<FormInput>({
     resolver: zodResolver(schema),
     defaultValues: {
-      comment: toPlaintext(text) ?? '',
+      comment: toPlaintext(text?.content) ?? '',
       title: title ?? '',
       guestUsername: '',
       challenge: {
@@ -299,18 +303,26 @@ export const CommentEditor = ({
   });
 
   const submit = handleSubmit(({ comment, ...data }) => {
+    challengeRef.current?.reset();
     onSubmit({
       ...data,
-      text: [
-        {
-          type: BlockFormat.Paragraph,
-          children: [
-            {
-              text: comment,
-            },
-          ],
-        },
-      ],
+      text: {
+        attrs: undefined,
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            attrs: {},
+            content: [
+              {
+                type: 'text',
+                text: comment,
+                attrs: undefined,
+              },
+            ],
+          },
+        ],
+      },
     });
   });
 
@@ -396,9 +408,10 @@ export const CommentEditor = ({
             render={({ field, fieldState: { error } }) => (
               <Challenge
                 {...field}
+                challengeRef={challengeRef}
                 onChange={field.onChange}
                 challenge={challenge.data!.challenge}
-                label={'Captcha'}
+                label={t('commentEditor.captcha')}
                 error={!!error}
                 helperText={error?.message}
               />
@@ -419,7 +432,7 @@ export const CommentEditor = ({
             endIcon={<MdSend />}
             disabled={loading}
           >
-            Kommentieren
+            {t('commentEditor.comment')}
           </Button>
 
           <Button
@@ -432,7 +445,7 @@ export const CommentEditor = ({
             variant="text"
             color="secondary"
           >
-            Abbrechen
+            {t('commentEditor.cancel')}
           </Button>
         </CommentEditorActions>
       </CommentEditorWrapper>
@@ -448,7 +461,7 @@ export const CommentEditor = ({
 
           {showInitialModal && (
             <InitialModalWrapper>
-              <H3 css={headingStyles}>Du bist nicht eingeloggt</H3>
+              <H3 css={headingStyles}>{t('commentEditor.notLoggedIn')}</H3>
 
               <InitialModalContent>
                 {anonymousCanComment && (
@@ -457,7 +470,7 @@ export const CommentEditor = ({
                     variant="outlined"
                     css={initialButtonsStyles}
                   >
-                    als gast kommentieren
+                    {t('commentEditor.guestComment')}
                   </Button>
                 )}
 
@@ -465,7 +478,7 @@ export const CommentEditor = ({
                   onClick={handleLoginRegister}
                   css={initialButtonsStyles}
                 >
-                  anmelden/registieren
+                  {t('commentEditor.loginRegister')}
                 </Button>
               </InitialModalContent>
             </InitialModalWrapper>
@@ -478,7 +491,7 @@ export const CommentEditor = ({
                   css={existingAccountsHeadingStyles}
                   gutterBottom={true}
                 >
-                  Login für Leserinnen und Leser
+                  {t('commentEditor.loginForReaders')}
                 </H3>
                 <LoginFormContainer
                   afterLoginCallback={handleAfterLoginCallback}
@@ -491,7 +504,7 @@ export const CommentEditor = ({
                   css={newAccountsHeadingStyles}
                   gutterBottom={true}
                 >
-                  Noch keinen Account?
+                  {t('commentEditor.noAccountYet')}
                 </H3>
                 <Register>
                   <Button
@@ -503,7 +516,9 @@ export const CommentEditor = ({
                       css={iconStyles}
                     />
 
-                    <SignupLink href={signUpUrl}>Jetzt registrieren</SignupLink>
+                    <SignupLink href={signUpUrl}>
+                      {t('commentEditor.registerNow')}
+                    </SignupLink>
                   </Button>
                 </Register>
               </NewAccountsLoginWrapper>

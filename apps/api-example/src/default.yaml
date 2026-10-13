@@ -1,38 +1,6 @@
 general:
   apolloPlayground: true
   apolloIntrospection: true
-  bcryptHashCostFactor: 12
   urlAdapter: default
-mailProvider:
-  id: slackmail # allowed is mailchimp/mailgun/slackmail
-  type: slackmail # allowed mailchimp/slackmail
-paymentProviders:
-  - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
-    id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio
-  - type: stripe
-    id: stripe
-  - type: stripe-checkout
-    id: stripe-checkout
-  - type: mollie
-    id: mollie
-  - type: payrexx-subscription
-    id: payrexx-subscription
-  - type: bexio
-    id: bexio
-  - type: no-charge
-    id: no-charge
-challenge:
-  type: turnstile
-  id: 'turnstile'
-trackingPixelProviders:
-  - type: prolitteris
-    id: prolitteris
 mediaServer:
-  type: 'nova'
   quality: 1
-syncProviders:
-  - type: mailchimp
-    id: mailchimp-sync
-v0:
-  type: VO
-  id: v0

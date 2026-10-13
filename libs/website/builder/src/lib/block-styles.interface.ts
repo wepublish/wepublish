@@ -20,10 +20,18 @@ export type BuilderSliderConfig = {
   dragDisabled?: boolean;
   detailsChanged?: (slider: any) => void;
   slideGap?: number;
+  origin?: 'auto' | 'center' | number;
+};
+
+export type BuilderLightboxConfig = {
+  dragDisabled?: boolean;
+  animationDisabled?: boolean;
+  dragAnimationDisabled?: boolean;
 };
 
 export type BuilderBlockStyleProps = {
   ImageSlider: BuilderImageGalleryBlockProps & BuilderSliderConfig;
+  Lightbox: BuilderImageGalleryBlockProps & BuilderLightboxConfig;
   TeaserSlider: (
     | BuilderTeaserListBlockProps
     | BuilderTeaserGridBlockProps

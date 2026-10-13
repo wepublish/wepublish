@@ -1,4 +1,4 @@
-import { StoryObj } from '@storybook/react';
+import { StoryObj } from '@storybook/nextjs-vite';
 import {
   MemberPlanListDocument,
   PaymentPeriodicity,
@@ -48,8 +48,16 @@ const memberPlan2 = mockMemberPlan({
   id: undefined,
   name: undefined,
   shortDescription: undefined,
-  amountPerMonthMin: 800,
-  amountPerMonthTarget: 800,
+  periodicityPricing: [
+    {
+      __typename: 'PeriodicityPrice',
+      periodicity: PaymentPeriodicity.Monthly,
+      label: null,
+      amountMin: 800,
+      amountTarget: 800,
+      amountMax: null,
+    },
+  ],
   availablePaymentMethods: [memberPlan.availablePaymentMethods[1]],
 });
 
@@ -58,14 +66,25 @@ const memberPlan3 = mockMemberPlan({
   id: undefined,
   name: undefined,
   shortDescription: undefined,
-  amountPerMonthMin: 1200,
-  amountPerMonthTarget: 1200,
+  periodicityPricing: [
+    {
+      __typename: 'PeriodicityPrice',
+      periodicity: PaymentPeriodicity.Monthly,
+      label: null,
+      amountMin: 1200,
+      amountTarget: 1200,
+      amountMax: null,
+    },
+  ],
   availablePaymentMethods: [memberPlan.availablePaymentMethods[2]],
 });
 
 const subscription = mockSubscription({
   memberPlan,
-  monthlyAmount: memberPlan.amountPerMonthMin,
+  monthlyAmount:
+    memberPlan.periodicityPricing?.find(
+      price => price.periodicity === PaymentPeriodicity.Monthly
+    )?.amountMin ?? 500,
   paymentPeriodicity: PaymentPeriodicity.Yearly,
   canExtend: true,
 });
@@ -119,8 +138,10 @@ export const Default: StoryObj<typeof UpgradeContainer> = {
           },
           result: {
             data: {
-              upgradeSubscriptionInfo: {
+              upgradeUserSubscriptionInfo: {
                 discountAmount: 500,
+                discountPercent: null,
+                discountCodeValid: null,
               },
             },
           },
@@ -135,8 +156,10 @@ export const Default: StoryObj<typeof UpgradeContainer> = {
           },
           result: {
             data: {
-              upgradeSubscriptionInfo: {
+              upgradeUserSubscriptionInfo: {
                 discountAmount: 800,
+                discountPercent: null,
+                discountCodeValid: null,
               },
             },
           },

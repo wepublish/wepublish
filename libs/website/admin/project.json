@@ -5,15 +5,20 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/website/admin",
+        "tsConfig": "libs/website/admin/tsconfig.lib.json",
+        "packageJson": "libs/website/admin/package.json",
+        "main": "libs/website/admin/src/index.ts",
+        "rootDir": "."
+      }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/website/admin/jest.config.ts"
+        "config": "../../../{projectRoot}/vitest.config.ts"
       }
     }
   }

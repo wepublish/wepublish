@@ -1,8 +1,8 @@
-import styled from '@emotion/styled';
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  Paywall,
-  useDeletePaywallMutation,
-  usePaywallListQuery,
+  DeletePaywallDocument,
+  FullPaywallFragment,
+  PaywallListDocument,
 } from '@wepublish/editor/api';
 import {
   CanCreatePaywall,
@@ -11,6 +11,8 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  IconButton,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -30,20 +32,16 @@ import {
 } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
 
-const IconButton = styled(RIconButton)`
-  margin-left: 12px;
-`;
-
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function PaywallList() {
   const { t } = useTranslation();
-  const [paywallToDelete, setPaywallToDelete] = useState<Paywall | undefined>(
-    undefined
-  );
+  const [paywallToDelete, setPaywallToDelete] = useState<
+    FullPaywallFragment | undefined
+  >(undefined);
 
-  const { data, loading, refetch } = usePaywallListQuery({});
-  const [deletePaywall] = useDeletePaywallMutation({
+  const { data, loading, refetch } = useQuery(PaywallListDocument, {});
+  const [deletePaywall] = useMutation(DeletePaywallDocument, {
     onCompleted() {
       refetch();
     },
@@ -58,13 +56,13 @@ function PaywallList() {
 
         <ListViewActions>
           <Link to="create">
-            <IconButton
+            <RIconButton
               appearance="primary"
               loading={false}
             >
               <MdAdd />
               {t('paywall.overview.createPaywall')}
-            </IconButton>
+            </RIconButton>
           </Link>
         </ListViewActions>
       </ListViewContainer>
@@ -82,7 +80,7 @@ function PaywallList() {
             <HeaderCell>{t('paywall.overview.active')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Paywall>) =>
+              {(rowData: RowDataType<FullPaywallFragment>) =>
                 rowData.active ? `✅` : `❌`
               }
             </RCell>
@@ -95,7 +93,7 @@ function PaywallList() {
             <HeaderCell>{t('paywall.overview.name')}</HeaderCell>
 
             <RCell>
-              {(rowData: RowDataType<Paywall>) => (
+              {(rowData: RowDataType<FullPaywallFragment>) => (
                 <Link to={`edit/${rowData.id}`}>{rowData.name}</Link>
               )}
             </RCell>
@@ -108,7 +106,7 @@ function PaywallList() {
             <HeaderCell>{t('paywall.overview.memberPlans')}</HeaderCell>
 
             <RCell>
-              {(rowData: Paywall) =>
+              {(rowData: FullPaywallFragment) =>
                 rowData.anyMemberPlan ?
                   t('paywall.overview.anyMemberPlan')
                 : rowData.memberPlans.map((mb, index) => (
@@ -123,20 +121,26 @@ function PaywallList() {
           </Column>
 
           <Column
-            resizable
+            width={100}
+            align="center"
             fixed="right"
           >
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
-              {(paywall: RowDataType<Paywall>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() => setPaywallToDelete(paywall as Paywall)}
-                />
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell>
+              {(paywall: RowDataType<FullPaywallFragment>) => (
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    aria-label={t('delete')}
+                    onClick={() =>
+                      setPaywallToDelete(paywall as FullPaywallFragment)
+                    }
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

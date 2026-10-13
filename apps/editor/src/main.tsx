@@ -1,32 +1,64 @@
-import { ApolloProvider } from '@apollo/client';
+import './polyfills';
+
+import { ApolloProvider } from '@apollo/client/react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import * as Sentry from '@sentry/react';
-import { getApiClientV2 } from '@wepublish/editor/api';
+import { getApiClientV2, getSettings } from '@wepublish/editor/api';
 import {
   AuthProvider,
   FacebookProvider,
   InstagramProvider,
   TwitterProvider,
 } from '@wepublish/ui/editor';
+import { useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import { IconContext } from 'react-icons';
 
 import { App } from './app/app';
+import { ColorModeProvider, useColorMode } from './app/colorMode';
 import { initI18N } from './app/i18n';
-import { theme } from './app/theme';
+import { createEditorTheme } from './app/theme';
 import { ElementID } from './shared/elementID';
 
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-  release: process.env.APP_RELEASE_ID,
-  integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration(),
-  ],
-  tracesSampleRate: 1.0,
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
-});
+const { sentryDSN, apiURL, appName, appEnvironment } = getSettings();
+
+if (sentryDSN) {
+  const apiEndpoint = `${apiURL}/v1`;
+
+  Sentry.init({
+    dsn: sentryDSN,
+    environment: appEnvironment,
+    release: process.env.APP_RELEASE_ID,
+    tracePropagationTargets: [/^\//, apiEndpoint],
+    integrations: [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration({
+        maskAllText: false,
+        blockAllMedia: false,
+        maskAllInputs: true,
+      }),
+      Sentry.graphqlClientIntegration({ endpoints: [apiEndpoint] }),
+    ],
+    tracesSampleRate: 1.0,
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+  });
+
+  Sentry.setTag('app_name', appName);
+  Sentry.setTag('component', 'editor');
+}
+
+function ThemedApp() {
+  const { mode } = useColorMode();
+  const theme = useMemo(() => createEditorTheme(mode), [mode]);
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline enableColorScheme />
+      <App />
+    </ThemeProvider>
+  );
+}
 
 const onDOMContentLoaded = async () => {
   const client = getApiClientV2();
@@ -44,10 +76,9 @@ const onDOMContentLoaded = async () => {
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>
-                <ThemeProvider theme={theme}>
-                  <CssBaseline />
-                  <App />
-                </ThemeProvider>
+                <ColorModeProvider>
+                  <ThemedApp />
+                </ColorModeProvider>
               </TwitterProvider>
             </InstagramProvider>
           </FacebookProvider>

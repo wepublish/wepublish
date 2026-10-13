@@ -13,17 +13,21 @@ import {
   UserSession,
 } from '@wepublish/authentication/api';
 import { UserSubscriptionService } from './user-subscription.service';
-import { PublicSubscription } from '@wepublish/membership/api';
+import {
+  PublicSubscription,
+  DiscountCodeService,
+} from '@wepublish/membership/api';
 import { Payment } from '@wepublish/payment/api';
 import { UserDataloaderService } from '@wepublish/user/api';
 import { BadRequestException } from '@nestjs/common';
-import { Voucher } from '@prisma/client';
+import { DiscountCode } from '@prisma/client';
 
 @Resolver()
 export class UserSubscriptionResolver {
   constructor(
     private userSubscriptionService: UserSubscriptionService,
-    private userDataloader: UserDataloaderService
+    private userDataloader: UserDataloaderService,
+    private discountCodeservice: DiscountCodeService
   ) {}
 
   @Authenticated()
@@ -40,13 +44,13 @@ export class UserSubscriptionResolver {
   })
   async createSubscriptionInfo(
     @Args('memberPlanId') memberPlanId: string,
-    @Args('voucher', { nullable: true }) voucher: string
+    @Args('discountCode', { nullable: true }) discountCode: string
   ): Promise<CreateSubscriptionInfo> {
-    let validVoucher: Voucher | null = null;
+    let validDiscountCode: DiscountCode | null = null;
 
     try {
-      validVoucher = await this.userSubscriptionService.getValidVoucher(
-        voucher,
+      validDiscountCode = await this.discountCodeservice.getValidDiscountCode(
+        discountCode,
         memberPlanId
       );
     } catch (e) {
@@ -54,11 +58,11 @@ export class UserSubscriptionResolver {
     }
 
     return {
-      ...(voucher ?
+      ...(discountCode ?
         {
-          voucherValid: !!validVoucher,
+          discountCodeValid: !!validDiscountCode,
           discountPercent:
-            validVoucher ? validVoucher.discountPercent / 100 : 0,
+            validDiscountCode ? validDiscountCode.discountPercent / 100 : 0,
         }
       : {}),
     };
@@ -122,6 +126,17 @@ export class UserSubscriptionResolver {
       ...input,
       userID: user.id,
     });
+  }
+
+  @Authenticated()
+  @Mutation(() => PublicSubscription, {
+    description: `Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created.`,
+  })
+  async reactivateUserSubscription(
+    @Args('id') id: string,
+    @CurrentUser() { user }: UserSession
+  ) {
+    return this.userSubscriptionService.reactivateUserSubscription(user.id, id);
   }
 
   @Authenticated()

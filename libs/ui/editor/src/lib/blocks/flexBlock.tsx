@@ -3,7 +3,8 @@ import 'react-resizable/css/styles.css';
 
 import styled from '@emotion/styled';
 import { BlockType } from '@wepublish/editor/api';
-import i18next from 'i18next';
+import { toPlaintext } from '@wepublish/richtext';
+import i18next, { TFunction } from 'i18next';
 import nanoid from 'nanoid';
 import React, {
   ComponentType,
@@ -49,6 +50,8 @@ import { BlockMap } from './blockMap';
 import { IconWrapper } from './teaserGridBlock';
 import {
   BlockValue,
+  EmbedBlockValue,
+  EmbedType,
   FlexAlignment,
   FlexBlockValue,
   FlexBlockWithAlignment,
@@ -62,7 +65,7 @@ const Block = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.025);
+  background-color: rgb(from var(--rs-text-primary) r g b / 0.025);
   display: grid;
   grid-template-rows: auto min-content;
 `;
@@ -79,7 +82,7 @@ const GridLayoutStyled = styled(GridLayout)`
 
   & .react-grid-item[data-is-editing='true'] {
     ${Block} {
-      background-color: rgba(52, 152, 255, 0.25);
+      background-color: rgb(from var(--rs-primary-500) r g b / 0.25);
     }
   }
 `;
@@ -115,7 +118,7 @@ const ToolbarButton = styled(RIconButton)`
   justify-content: center;
   align-items: center;
   pointer-events: all;
-  background-color: #eeeeee;
+  background-color: var(--rs-bg-well);
 
   & svg {
     display: block;
@@ -147,9 +150,9 @@ const Panel = styled(RPanel, {
 
 const NestedBlockEditPanel = styled('div')`
   margin: 0 -25px;
-  box-shadow: 1px 0 11px 4px rgba(52, 152, 255, 0.25);
-  border-radius: 0.3rem;
-  padding: 5px;
+  box-shadow: 1px 0 11px 4px rgb(from var(--rs-primary-500) r g b / 0.25);
+  border-radius: var(--rs-radius-lg);
+  padding: 4px;
 
   ${ListItem} {
     display: grid;
@@ -189,7 +192,10 @@ export function FlexItem({
       bodyFill
       showGrabCursor={showGrabCursor}
     >
-      <PlaceholderInput onAddClick={onChoose}>
+      <PlaceholderInput
+        onAddClick={onChoose}
+        addLabel={i18next.t('blocks.flexBlock.chooseNestedBlock')}
+      >
         {block && (
           <Block>
             <ContentForFlexBlock block={block} />
@@ -199,6 +205,7 @@ export function FlexItem({
                 caption={i18next.t('blocks.flexBlock.chooseNestedBlock')}
               >
                 <IconButton
+                  aria-label={i18next.t('blocks.flexBlock.chooseNestedBlock')}
                   icon={<MdArticle />}
                   onClick={onChoose}
                 />
@@ -208,6 +215,7 @@ export function FlexItem({
                 caption={i18next.t('blocks.flexBlock.editNestedBlock')}
               >
                 <IconButton
+                  aria-label={i18next.t('blocks.flexBlock.editNestedBlock')}
                   icon={<MdEdit />}
                   onClick={onEdit}
                 />
@@ -217,6 +225,7 @@ export function FlexItem({
                 caption={i18next.t('blocks.flexBlock.deleteNestedBlock')}
               >
                 <IconButton
+                  aria-label={i18next.t('blocks.flexBlock.deleteNestedBlock')}
                   icon={<MdDelete />}
                   onClick={onRemove}
                 />
@@ -231,22 +240,152 @@ export function FlexItem({
 
 const ContentForFlexBlockWrapper = styled('div')`
   width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
   align-self: end;
   padding: 0.25rem;
   background-color: rgba(0, 0, 0, 0.4);
   min-height: 2.5rem;
   color: white;
+
+  white-space: pre-line;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  word-wrap: break-word;
 `;
 
-export const ContentForFlexBlock = ({ block }: { block: BlockValue }) => {
-  const { value } = block;
-  return (
-    <ContentForFlexBlockWrapper>
-      {(value && (value as { title: string }).title) ?? ''}
-    </ContentForFlexBlockWrapper>
-  );
+const getContentHintForFlexBlockNestedBlock = (
+  block: BlockListValue,
+  t: TFunction
+) => {
+  if (!block) return '';
+
+  if (block.type === 'TeaserSlots') {
+    return block.value?.title || t('blocks.teaserSlots.label');
+  }
+  if (block.type === 'Image') {
+    return block.value?.image?.filename || t('blocks.image.label');
+  }
+  if (block.type === 'Embed') {
+    const embed = block.value as EmbedBlockValue | undefined;
+    if (!embed) return t('blocks.embeds.label');
+
+    switch (embed.type) {
+      case EmbedType.YouTubeVideo:
+        return `YouTube: ${embed.videoID || t('blocks.flexBlock.noId')}`;
+      case EmbedType.VimeoVideo:
+        return `Vimeo: ${embed.videoID || t('blocks.flexBlock.noId')}`;
+      case EmbedType.TikTokVideo:
+        return `TikTok: ${embed.videoID || t('blocks.flexBlock.noId')}`;
+      case EmbedType.SoundCloudTrack:
+        return `SoundCloud: ${embed.trackID || t('blocks.flexBlock.noId')}`;
+      case EmbedType.InstagramPost:
+        return `Instagram: ${embed.postID || t('blocks.flexBlock.noId')}`;
+      case EmbedType.TwitterTweet:
+        return `Twitter: ${embed.tweetID || t('blocks.flexBlock.noId')}`;
+      case EmbedType.FacebookPost:
+        return `Facebook Post: ${embed.postID || t('blocks.flexBlock.noId')}`;
+      case EmbedType.FacebookVideo:
+        return `Facebook Video: ${embed.videoID || t('blocks.flexBlock.noId')}`;
+      case EmbedType.Other:
+        return embed.title || embed.url || t('blocks.embeds.label');
+      default:
+        return t('blocks.embeds.label');
+    }
+  }
+  if (block.type === 'RichText') {
+    const text = toPlaintext(block.value?.richText);
+    if (!text) {
+      return t('blocks.richText.label');
+    }
+    if (text.length > 25) {
+      return text.slice(0, 25) + '...';
+    }
+    return text;
+  }
+  if (block.type === 'Crowdfunding') {
+    const name = block.value?.crowdfunding?.name;
+    if (!name) {
+      return t('blocks.crowdfunding.label');
+    }
+    if (name.length > 25) {
+      return name.slice(0, 25) + '...';
+    }
+    return name;
+  }
+
+  if (block.type === 'Crowdfunding') {
+    return block.value?.crowdfunding?.name || t('blocks.crowdfunding.label');
+  }
+
+  if (block.type === 'LinkPageBreak') {
+    return block.value?.text || t('blocks.linkPageBreak.label');
+  }
+
+  return t('blocks.flexBlock.unknownBlock');
+};
+
+const oEmbedUrlForEmbed = (embed: EmbedBlockValue): string | null => {
+  switch (embed.type) {
+    case EmbedType.YouTubeVideo:
+      return embed.videoID ?
+          `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${embed.videoID}&format=json`
+        : null;
+    case EmbedType.VimeoVideo:
+      return embed.videoID ?
+          `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${embed.videoID}`
+        : null;
+    default:
+      return null;
+  }
+};
+
+const embedTitleCache = new Map<string, string>();
+
+const useEmbedTitle = (embed: EmbedBlockValue | undefined): string | null => {
+  const [title, setTitle] = useState<string | null>(null);
+  const oEmbedUrl = embed ? oEmbedUrlForEmbed(embed) : null;
+
+  useEffect(() => {
+    if (!oEmbedUrl) return;
+
+    const cached = embedTitleCache.get(oEmbedUrl);
+    if (cached) {
+      setTitle(cached);
+      return;
+    }
+
+    fetch(oEmbedUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (data.title) {
+          embedTitleCache.set(oEmbedUrl, data.title);
+          setTitle(data.title);
+        }
+      })
+      .catch(() => undefined);
+  }, [oEmbedUrl]);
+
+  return title;
+};
+
+export const ContentForFlexBlock = ({ block }: { block: BlockListValue }) => {
+  const embed =
+    block?.type === 'Embed' ?
+      (block.value as EmbedBlockValue | undefined)
+    : undefined;
+  const embedTitle = useEmbedTitle(embed);
+  const { t } = useTranslation();
+
+  const hint =
+    embedTitle ?
+      `${getContentHintForFlexBlockNestedBlock(block, t).split(':')[0]}: ${embedTitle}`
+    : getContentHintForFlexBlockNestedBlock(block, t);
+
+  return <ContentForFlexBlockWrapper>{hint}</ContentForFlexBlockWrapper>;
 };
 
 export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
@@ -273,12 +412,12 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   const handleAddNestedBlock = () => {
     const newBlock: FlexBlockWithAlignment = {
       alignment: {
+        __typename: 'FlexAlignment',
         i: nanoid(),
         x: 0,
         y: 0,
         w: 4,
         h: 4,
-        static: false,
       },
       block: null,
     };
@@ -294,9 +433,10 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   };
 
   const handleLayoutChange = (layout: FlexAlignment[]) => {
-    const newBlocks = layout.map(v => ({
+    const newBlocks: FlexBlockWithAlignment[] = layout.map(v => ({
       block: blocks.find(block => v.i === block.alignment.i)?.block,
       alignment: {
+        __typename: 'FlexAlignment',
         i: v.i,
         x: v.x,
         y: v.y,
@@ -310,21 +450,24 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   };
 
   const handlePinNestedBlock = (index: string) => {
-    const newBlocks = blocks.map(({ block, alignment }) => {
-      return alignment.i === index ?
-          {
-            block,
-            alignment: {
-              i: alignment.i,
-              x: alignment.x,
-              y: alignment.y,
-              w: alignment.w,
-              h: alignment.h,
-              static: !alignment.static,
-            },
-          }
-        : { block, alignment };
-    });
+    const newBlocks: FlexBlockWithAlignment[] = blocks.map(
+      ({ block, alignment }) => {
+        return alignment.i === index ?
+            {
+              block,
+              alignment: {
+                __typename: 'FlexAlignment',
+                i: alignment.i,
+                x: alignment.x,
+                y: alignment.y,
+                w: alignment.w,
+                h: alignment.h,
+                static: !alignment.static,
+              },
+            }
+          : { block, alignment };
+      }
+    );
 
     onChange({ ...value, blocks: newBlocks });
   };
@@ -398,6 +541,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
     <>
       <IconButtonTooltip caption={t('blocks.flexBlock.addNestedBlock')}>
         <RIconButton
+          aria-label={t('blocks.flexBlock.addNestedBlock')}
           icon={<MdAddBox />}
           appearance="primary"
           circle
@@ -448,6 +592,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
                   caption={t('blocks.flexBlock.removeNestedBlock')}
                 >
                   <ToolbarButton
+                    aria-label={t('blocks.flexBlock.removeNestedBlock')}
                     disabled={block.alignment.static as unknown as boolean}
                     block
                     appearance="subtle"
@@ -467,6 +612,11 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
                 <ToolbarButton
                   block
                   appearance="subtle"
+                  aria-label={
+                    !block.alignment.static ?
+                      t('blocks.flexBlock.lockNestedBlock')
+                    : t('blocks.flexBlock.unlockNestedBlock')
+                  }
                   icon={block.alignment.static ? <MdLockOpen /> : <MdLock />}
                   onClick={() => handlePinNestedBlock(block.alignment.i)}
                 />

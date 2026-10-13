@@ -10,10 +10,7 @@ import { TypographicTextArea } from '../atoms/typographicTextArea';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import { isFunctionalUpdate } from '../utility';
-import {
-  createDefaultValue,
-  RichTextBlock,
-} from './richTextBlock/rich-text-block';
+import { RichTextBlock } from './richTextBlock/rich-text-block';
 import { ListicleBlockValue, ListicleItem, RichTextBlockValue } from './types';
 
 const ListicleWrapper = styled.div`
@@ -47,7 +44,7 @@ export function ListicleBlock({
           items: isFunctionalUpdate(items) ? items(value.items) : items,
         }))
       }
-      defaultValue={{ image: null, richText: createDefaultValue(), title: '' }}
+      defaultValue={{ image: null, richText: undefined, title: '' }}
       disabled={disabled}
     >
       {props => <ListicleItemElement {...props} />}
@@ -89,6 +86,7 @@ export function ListicleItemElement({
             removeImage={() => onChange?.({ ...value, image: null })}
           />
         </ImageWrapper>
+
         <TextAreaWrapper>
           <TypographicTextArea
             variant="h1"

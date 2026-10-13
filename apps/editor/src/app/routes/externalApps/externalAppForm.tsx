@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -18,13 +19,14 @@ import {
   TextField,
 } from '@mui/material';
 import {
+  CreateExternalAppDocument,
+  DeleteExternalAppDocument,
   ExternalAppFragment,
   ExternalAppsDocument,
   ExternalAppsTarget,
-  useCreateExternalAppMutation,
-  useDeleteExternalAppMutation,
-  useUpdateExternalAppMutation,
+  UpdateExternalAppDocument,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -32,13 +34,15 @@ import { MdAdd, MdDelete, MdSave } from 'react-icons/md';
 import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
+import { lazyMessage } from '../../utility';
 import { IconPickerSelect } from './iconPicker';
 
 const Form = styled('form')`
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 24px;
+  padding: 28px;
 `;
 
 const FormRow = styled('div')`
@@ -46,15 +50,19 @@ const FormRow = styled('div')`
   grid-template-columns: 1fr;
   gap: 24px;
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: 1fr 1fr;
+  @container (min-width: 480px) {
+    grid-template-columns: minmax(160px, 1fr) 2fr;
   }
 `;
 
 const validationSchema = z.object({
-  name: z.string().min(1),
+  name: z
+    .string({ errorMap: lazyMessage('errorMessages.noNameErrorMessage') })
+    .min(1),
   description: z.string().optional(),
-  url: z.string().url(),
+  url: z
+    .string({ errorMap: lazyMessage('errorMessages.invalidUrlErrorMessage') })
+    .url(),
   target: z.nativeEnum(ExternalAppsTarget),
   icon: z.string().optional(),
 });
@@ -68,15 +76,15 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const [createExternalApp, { loading: isCreating, error: createError }] =
-    useCreateExternalAppMutation({
+    useMutation(CreateExternalAppDocument, {
       refetchQueries: [ExternalAppsDocument],
     });
 
   const [updateExternalApp, { loading: isUpdating, error: updateError }] =
-    useUpdateExternalAppMutation();
+    useMutation(UpdateExternalAppDocument);
 
   const [deleteExternalApp, { loading: isDeleting, error: deleteError }] =
-    useDeleteExternalAppMutation({
+    useMutation(DeleteExternalAppDocument, {
       refetchQueries: [ExternalAppsDocument],
     });
 
@@ -99,7 +107,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
   });
 
   const handleDelete = () => {
-    if (!app) return;
+    if (!app) {
+      return;
+    }
 
     deleteExternalApp({
       variables: {
@@ -115,9 +125,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             closable
             duration={3000}
           >
-            {t('externalAppForm.successDelete', {
-              defaultValue: 'External app deleted successfully',
-            })}
+            {t('externalAppForm.successDelete')}
           </Message>,
           { placement: 'topCenter' }
         );
@@ -130,12 +138,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             type="error"
             showIcon
             closable
-            duration={3000}
+            duration={8000}
           >
-            {err.message ||
-              t('externalAppForm.errorDelete', {
-                defaultValue: 'Failed to delete external app',
-              })}
+            {humanizeError(err)}
           </Message>,
           { placement: 'topCenter' }
         );
@@ -162,9 +167,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
               closable
               duration={3000}
             >
-              {t('externalAppForm.successUpdate', {
-                defaultValue: 'External app updated successfully',
-              })}
+              {t('externalAppForm.successUpdate')}
             </Message>,
             { placement: 'topCenter' }
           );
@@ -176,12 +179,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
               type="error"
               showIcon
               closable
-              duration={3000}
+              duration={8000}
             >
-              {err.message ||
-                t('externalAppForm.errorUpdate', {
-                  defaultValue: 'Failed to update external app',
-                })}
+              {humanizeError(err)}
             </Message>,
             { placement: 'topCenter' }
           );
@@ -207,9 +207,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
               closable
               duration={3000}
             >
-              {t('externalAppForm.successCreate', {
-                defaultValue: 'External app created successfully',
-              })}
+              {t('externalAppForm.successCreate')}
             </Message>,
             { placement: 'topCenter' }
           );
@@ -221,12 +219,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
               type="error"
               showIcon
               closable
-              duration={3000}
+              duration={8000}
             >
-              {err.message ||
-                t('externalAppForm.errorCreate', {
-                  defaultValue: 'Failed to create external app',
-                })}
+              {humanizeError(err)}
             </Message>,
             { placement: 'topCenter' }
           );
@@ -235,7 +230,10 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
   };
 
   return (
-    <Card variant="outlined">
+    <Card
+      variant="outlined"
+      sx={{ borderRadius: 'var(--rs-radius-lg)' }}
+    >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="name"
@@ -259,9 +257,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
           render={({ field, fieldState }) => (
             <TextField
               {...field}
-              label={t('externalAppForm.description', {
-                defaultValue: 'Description',
-              })}
+              label={t('externalAppForm.description')}
               variant="outlined"
               fullWidth
               multiline
@@ -296,7 +292,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
                       key={target}
                       value={target}
                     >
-                      {target}
+                      {target === ExternalAppsTarget.Iframe ?
+                        t('externalAppForm.targetIframe')
+                      : t('externalAppForm.targetBlank')}
                     </MenuItem>
                   ))}
                 </Select>
@@ -340,11 +338,13 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
           )}
         />
 
-        {error && <FormHelperText error>{error.message}</FormHelperText>}
+        {error && <FormHelperText error>{humanizeError(error)}</FormHelperText>}
 
         <Box
-          display="flex"
-          gap={2}
+          sx={{
+            display: 'flex',
+            gap: 2,
+          }}
         >
           <Button
             disabled={loading}
@@ -369,12 +369,11 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             >
               {loading && isDeleting ?
                 <CircularProgress size={24} />
-              : t('externalAppForm.delete', { defaultValue: 'Delete' })}
+              : t('externalAppForm.delete')}
             </Button>
           )}
         </Box>
       </Form>
-
       <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
@@ -382,16 +381,11 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
         aria-describedby="delete-dialog-description"
       >
         <DialogTitle id="delete-dialog-title">
-          {t('externalAppForm.deleteConfirmationTitle', {
-            defaultValue: 'Delete External App',
-          })}
+          {t('externalAppForm.deleteConfirmationTitle')}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-dialog-description">
-            {t('externalAppForm.deleteConfirmationText', {
-              defaultValue:
-                'Are you sure you want to delete this external app? This action cannot be undone.',
-            })}
+            {t('externalAppForm.deleteConfirmationText')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -399,7 +393,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             onClick={() => setDeleteDialogOpen(false)}
             disabled={loading}
           >
-            {t('cancel', { defaultValue: 'Cancel' })}
+            {t('cancel')}
           </Button>
           <Button
             onClick={handleDelete}
@@ -407,7 +401,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             autoFocus
             disabled={loading}
           >
-            {t('externalAppForm.delete', { defaultValue: 'Delete' })}
+            {t('externalAppForm.delete')}
           </Button>
         </DialogActions>
       </Dialog>

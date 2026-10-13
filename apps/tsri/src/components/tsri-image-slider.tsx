@@ -318,6 +318,7 @@ export const TsriImageSlider = styled(ImageSliderBase)`
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: left center;
           grid-row: 1 / 2;
           grid-column: -1 / 1;
           min-width: 100cqw;

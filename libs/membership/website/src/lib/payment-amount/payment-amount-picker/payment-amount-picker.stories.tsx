@@ -1,5 +1,5 @@
-import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/react';
+import { action } from 'storybook/actions';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Currency } from '@wepublish/website/api';
 import { useState } from 'react';
 import { PaymentAmountPicker as PaymentAmountPickerCmp } from './payment-amount-picker';
@@ -30,5 +30,6 @@ export const PaymentAmountPicker: StoryObj<typeof PaymentAmountPickerCmp> = {
     currency: Currency.Eur,
     value: 1500,
     onChange: action('onChange'),
+    pickerItems: [1000, 1250, 1500, 1750, 2000],
   },
 };

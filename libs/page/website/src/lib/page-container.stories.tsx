@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import { PageDocument } from '@wepublish/website/api';
 import { PageContainer } from './page-container';
 import { mockPage } from '@wepublish/storybook/mocks';

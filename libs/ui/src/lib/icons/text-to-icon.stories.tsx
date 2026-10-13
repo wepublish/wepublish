@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 import { TextToIcon } from './text-to-icon';
 
@@ -8,8 +8,10 @@ export default {
   title: 'UI/Icons/TextToIcon',
   render: () => (
     <Stack
-      gap={1}
-      alignItems={'start'}
+      sx={{
+        gap: 1,
+        alignItems: 'start',
+      }}
     >
       <span>
         <TextToIcon
@@ -153,8 +155,10 @@ export const Default: StoryObj<typeof TextToIcon> = {};
 export const ExtraSpellings: StoryObj<typeof TextToIcon> = {
   render: () => (
     <Stack
-      gap={1}
-      alignItems={'start'}
+      sx={{
+        gap: 1,
+        alignItems: 'start',
+      }}
     >
       <span>
         <TextToIcon

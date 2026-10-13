@@ -1,21 +1,22 @@
-import { ApolloError } from '@apollo/client';
 import { TFunction } from 'i18next';
+import { useEffect } from 'react';
 import { Message, toaster } from 'rsuite';
+import { humanizeError } from '@wepublish/ui/editor';
 
-const showErrors = (error: ApolloError): void => {
+export const showErrors = (error: Error): void => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
 
-const showSavedToast = (t: TFunction): void => {
+const showSuccessToast = (message: string): void => {
   toaster.push(
     <Message
       type="success"
@@ -23,7 +24,7 @@ const showSavedToast = (t: TFunction): void => {
       closable
       duration={3000}
     >
-      {t('subscriptionFlow.savedChange').toString()}
+      {message}
     </Message>
   );
 };
@@ -35,19 +36,30 @@ const showSavedToast = (t: TFunction): void => {
  * @returns QueryHookOptions for the GraphQL client
  */
 export const DEFAULT_MUTATION_OPTIONS = (t: TFunction) => {
+  return MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE(
+    t('subscriptionFlow.savedChange').toString()
+  );
+};
+
+/**
+ * Like DEFAULT_MUTATION_OPTIONS, but confirms with a message that fits the
+ * mutation instead of the generic «change saved».
+ */
+export const MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE = (message: string) => {
   return {
-    ...DEFAULT_QUERY_OPTIONS(),
-    onCompleted: () => showSavedToast(t),
+    onError: showErrors,
+    onCompleted: () => showSuccessToast(message),
   };
 };
 
 /**
- * Default options for the GraphQL client. Displays errors.
- * @param client the graphql client to make the request with
- * @returns QueryHookOptions for the GraphQL client
+ * Toasts query errors. Apollo Client 4 removed `onError` from the query
+ * hooks, so pass the hook result's `error` here instead.
  */
-export const DEFAULT_QUERY_OPTIONS = () => {
-  return {
-    onError: showErrors,
-  };
+export const useShowErrors = (error: Error | undefined): void => {
+  useEffect(() => {
+    if (error) {
+      showErrors(error);
+    }
+  }, [error]);
 };

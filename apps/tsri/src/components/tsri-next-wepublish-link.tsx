@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { css, IconButton, Modal as MUIModal } from '@mui/material';
+import { captureException } from '@sentry/react';
 import { Link as BuilderLink } from '@wepublish/ui';
 import { BuilderLinkProps } from '@wepublish/website/builder';
 import NextLink from 'next/link';
@@ -16,7 +17,7 @@ import MailchimpForm from './newsletter/mailchimp-form';
 export const Modal = styled(MUIModal)``;
 
 export const ModalTitle = styled('div')`
-  padding: 0
+  padding: 0;
   position: relative;
   background-color: ${({ theme }) => theme.palette.primary.main};
   padding: ${({ theme }) => theme.spacing(0.75, 2)};
@@ -105,10 +106,18 @@ const parseQueryParams: (url: string) => QueryParams = (
     mc_f_id: '',
     tf_id: '',
   };
-  const urlObj = new URL(url, process.env.WEBSITE_URL || 'http://localhost');
-  urlObj.searchParams.forEach((value: string, key: string) => {
-    queryParams[key as keyof QueryParams] = value;
-  });
+
+  try {
+    const urlObj = new URL(url, process.env.WEBSITE_URL || 'http://localhost');
+
+    urlObj.searchParams.forEach((value: string, key: string) => {
+      queryParams[key as keyof QueryParams] = value;
+    });
+  } catch (e) {
+    console.error(e);
+    captureException(e);
+  }
+
   return queryParams;
 };
 
@@ -126,6 +135,7 @@ export const TsriNextWepublishLink = forwardRef<
     if (props.onClick) {
       props.onClick(event);
     }
+
     if (
       href?.startsWith('/newsletter') &&
       queryParams.mc_u &&
@@ -159,6 +169,7 @@ export const TsriNextWepublishLink = forwardRef<
       >
         {children}
       </BuilderLink>
+
       <Modal
         open={modalOpen}
         onClose={handleClose}
@@ -169,10 +180,12 @@ export const TsriNextWepublishLink = forwardRef<
             <ModalTitleText>
               {queryParams.popTitle ?? 'Newsletter abonnieren'}
             </ModalTitleText>
+
             <ModalClose onClick={handleClose}>
               <MdClose />
             </ModalClose>
           </ModalTitle>
+
           <ModalContent>
             <MailchimpForm
               onMCSubmit={handleMCSubmit}

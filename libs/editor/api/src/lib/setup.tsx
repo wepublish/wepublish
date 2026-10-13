@@ -1,17 +1,19 @@
+// The apps resolve this lib through path mapping, so the ambient module
+// declaration is only reachable through an explicit reference.
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../apollo-upload-client.d.ts" />
 import {
   ApolloClient,
   ApolloLink,
-  ApolloProvider,
   HttpLink,
   InMemoryCache,
-  NormalizedCacheObject,
-  split,
 } from '@apollo/client';
-import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
-import { createUploadLink } from 'apollo-upload-client';
+import { ApolloProvider } from '@apollo/client/react';
+import { RemoveTypenameFromVariablesLink } from '@apollo/client/link/remove-typename';
+import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';
 
-import { ComponentType, memo } from 'react';
-import possibleTypes from './graphql';
+import { ComponentType, createElement, memo } from 'react';
+import possibleTypes from './possible-types';
 
 export enum ElementID {
   Settings = 'settings',
@@ -21,13 +23,18 @@ export enum ElementID {
 export interface ClientSettings {
   readonly apiURL: string;
   readonly wepOneURL: string;
+  readonly medium?: string;
   readonly peerByDefault: boolean;
   readonly imgMinSizeToCompress: number;
+  readonly sentryDSN?: string;
+  readonly appName?: string;
+  readonly appEnvironment?: string;
 }
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken',
   ImageListLayout = 'imageListLayout',
+  AudienceDashboardFilter = 'audienceDashboardFilter',
 }
 
 const authLink = new ApolloLink((operation, forward) => {
@@ -54,7 +61,11 @@ export function getSettings(): ClientSettings {
     const defaultSettings = {
       apiURL: 'http://localhost:4000',
       wepOneURL: 'https://one-admin.wepublish.cloud',
+      medium: '',
       imgMinSizeToCompress: 10,
+      sentryDSN: '',
+      appName: '',
+      appEnvironment: '',
     };
 
     const settingsJson = document.getElementById(ElementID.Settings);
@@ -68,7 +79,7 @@ export function getSettings(): ClientSettings {
   return settings;
 }
 
-let client: ApolloClient<NormalizedCacheObject>;
+let client: ApolloClient;
 
 const isFile = (value: unknown): boolean =>
   Boolean(
@@ -82,25 +93,33 @@ export function getApiClientV2() {
 
   if (!client) {
     // If operation is uploading a file, use the upload link, else use the normal http link
-    const httpLink = split(
+    const httpLink = ApolloLink.split(
       ({ variables }) => isFile(variables),
-      createUploadLink({
+      new UploadHttpLink({
         uri: `${apiURL}/v1`,
       }),
       new HttpLink({ uri: `${apiURL}/v1` })
     );
 
     client = new ApolloClient({
-      link: authLink.concat(removeTypenameFromVariables({})).concat(httpLink),
+      link: authLink
+        .concat(new RemoveTypenameFromVariablesLink({}))
+        .concat(httpLink),
+
       cache: new InMemoryCache({
         possibleTypes: possibleTypes.possibleTypes,
       }),
+
       defaultOptions: {
         query: {
           fetchPolicy: 'network-only',
         },
         watchQuery: {
           fetchPolicy: 'network-only',
+          refetchOn: {
+            online: false,
+            windowFocus: false,
+          },
         },
       },
     });
@@ -109,16 +128,13 @@ export function getApiClientV2() {
   return client;
 }
 
-export const createWithV2ApiClient = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const createWithV2ApiClient = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   memo<P>(props => {
     return (
       <ApolloProvider client={client}>
-        <ControlledComponent {...(props as P)} />
+        {createElement(ControlledComponent, props as P)}
       </ApolloProvider>
     );
   });

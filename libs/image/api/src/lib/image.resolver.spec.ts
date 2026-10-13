@@ -7,6 +7,8 @@ import request from 'supertest';
 import { ImageResolver } from './image.resolver';
 import { ImageDataloaderService } from './image-dataloader.service';
 import { MediaAdapter } from './media-adapter';
+import { ImageService } from './image.service';
+import type { Mock } from 'vitest';
 
 const imageQuery = `
   query Image($id: String!) {
@@ -20,17 +22,17 @@ const imageQuery = `
 describe('ImageService', () => {
   let app: INestApplication;
   let imageDataloaderServiceMock: {
-    [method in keyof ImageDataloaderService]?: jest.Mock;
+    [method in keyof ImageDataloaderService]?: Mock;
   };
-  let mediaAdapterMock: { getImageURL: jest.Mock };
+  let mediaAdapterMock: { getImageURL: Mock };
 
   beforeEach(async () => {
     imageDataloaderServiceMock = {
-      load: jest.fn(),
+      load: vi.fn(),
     };
 
     mediaAdapterMock = {
-      getImageURL: jest.fn().mockReturnValue('https://example.com/image.jpg'),
+      getImageURL: vi.fn().mockReturnValue('https://example.com/image.jpg'),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -54,7 +56,11 @@ describe('ImageService', () => {
         },
         {
           provide: PrismaClient,
-          useValue: jest.fn(), // not used due to mocks but needs to be provided
+          useValue: vi.fn(), // not used due to mocks but needs to be provided
+        },
+        {
+          provide: ImageService,
+          useValue: {},
         },
       ],
     }).compile();
@@ -86,7 +92,7 @@ describe('ImageService', () => {
         expect(
           imageDataloaderServiceMock.load?.mock.calls[0]
         ).toMatchSnapshot();
-        expect(res.body.data.getImage).toMatchSnapshot();
+        expect(res.body.data.image).toMatchSnapshot();
       });
   });
 });

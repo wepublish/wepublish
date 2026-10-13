@@ -15,12 +15,14 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
+
+import { EenewsPageShell } from '../src/components/eenews-page-shell';
 
 const SignupWrapper = styled('div')`
   display: grid;
   justify-content: center;
+  gap: 28px;
 `;
 
 export default function SignUp() {
@@ -39,26 +41,28 @@ export default function SignUp() {
   }
 
   return (
-    <SignupWrapper>
-      <H3 component="h1">Registriere dich noch heute</H3>
+    <EenewsPageShell>
+      <SignupWrapper>
+        <H3 component="h1">Registriere dich noch heute</H3>
 
-      <Typography
-        variant="body1"
-        paragraph
-      >
-        (Falls du schon einen Account hast,{' '}
-        <Link href={'/login'}>klicke hier.</Link>)
-      </Typography>
+        <Typography
+          variant="body1"
+          sx={{
+            marginBottom: '16px',
+          }}
+        >
+          (Falls du schon einen Account hast,{' '}
+          <Link href={'/login'}>klicke hier.</Link>)
+        </Typography>
 
-      <RegistrationFormContainer />
-    </SignupWrapper>
+        <RegistrationFormContainer />
+      </SignupWrapper>
+    </EenewsPageShell>
   );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 

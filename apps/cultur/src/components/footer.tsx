@@ -6,9 +6,9 @@ import {
 
 export const Footer = styled(WepFooter)`
   background-color: transparent;
-  color: ${({ theme }) => theme.palette.text.primary};
 
   ${FooterPaperWrapper} {
     background: ${({ theme }) => theme.palette.primary.main};
+    color: ${({ theme }) => theme.palette.text.primary};
   }
 `;

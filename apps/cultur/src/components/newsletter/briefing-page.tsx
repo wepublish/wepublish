@@ -33,6 +33,7 @@ export default function BriefingPage(props: BriefingPageProps) {
           name="viewport"
           content="width=device-width, initial-scale=1.0"
         />
+        {/* eslint-disable-next-line @next/next/no-css-tags -- page-specific static stylesheet for this standalone newsletter landing page */}
         <link
           rel="stylesheet"
           href="/newsletter/styles.css"
@@ -51,16 +52,17 @@ export default function BriefingPage(props: BriefingPageProps) {
           content={props.headerBackgroundImage}
         />
       </Head>
-
       <header
         className="header"
         style={{ backgroundImage: `url(${props.headerBackgroundImage})` }}
       >
         <Box
-          display={'flex'}
-          flexDirection={'column'}
-          gap={2}
           className="header__content"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+          }}
         >
           <h1 className="header__title">{props.title}</h1>
           <h2 className="header__subtitle">{props.subtitle}</h2>

@@ -3,7 +3,6 @@ import {
   Field,
   Float,
   InputType,
-  Int,
   ObjectType,
   OmitType,
   registerEnumType,
@@ -28,7 +27,7 @@ export class UpdateUserSubscriptionInput {
   @Field(() => PaymentPeriodicity)
   paymentPeriodicity: PaymentPeriodicityType;
 
-  @Field(() => Int)
+  @Field(() => Float)
   monthlyAmount: number;
 
   @Field()
@@ -44,13 +43,13 @@ export class CreateSubscriptionInfo {
   discountPercent?: number;
 
   @Field({ nullable: true })
-  voucherValid?: boolean;
+  discountCodeValid?: boolean;
 }
 
 @ArgsType()
 export class CreateSubscriptionArgs {
   @Field({ nullable: true })
-  voucher?: string;
+  discountCode?: string;
 
   @Field({ nullable: true })
   memberPlanID?: string;
@@ -64,7 +63,7 @@ export class CreateSubscriptionArgs {
   @Field(() => PaymentPeriodicity)
   paymentPeriodicity!: PaymentPeriodicity;
 
-  @Field(() => Int)
+  @Field(() => Float)
   monthlyAmount!: number;
 
   @Field({ nullable: true })
@@ -75,6 +74,9 @@ export class CreateSubscriptionArgs {
 
   @Field(() => [PropertyInput], { nullable: true })
   subscriptionProperties?: PropertyInput[];
+
+  @Field({ nullable: true })
+  goodieId?: string;
 
   @Field({ nullable: true })
   successURL?: string;

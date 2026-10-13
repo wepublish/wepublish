@@ -1,9 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  CONTENT_CACHE_TTL_SECONDS,
+  KvTtlCacheService,
+  PublicContentCacheInvalidator,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
   CreatePageInput,
   PageFilter,
   PageListArgs,
+  PageRevisionListArgs,
   PageSort,
   UpdatePageInput,
 } from './page.model';
@@ -19,10 +30,23 @@ import { mapBlockUnionMap } from '@wepublish/block-content/api';
 
 @Injectable()
 export class PageService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private publicContentCache: PublicContentCacheInvalidator,
+    private kv: KvTtlCacheService
+  ) {}
 
   @PrimeDataLoader(PageDataloaderService)
   async getPageBySlug(slug: string) {
+    return this.kv.getOrLoadNs(
+      contentCacheNamespace('pages'),
+      `slug:${slug.toLowerCase()}`,
+      () => this.loadPageBySlug(slug),
+      CONTENT_CACHE_TTL_SECONDS
+    );
+  }
+
+  private loadPageBySlug(slug: string) {
     return this.prisma.page.findFirst({
       where: {
         slug: {
@@ -37,7 +61,16 @@ export class PageService {
   }
 
   @PrimeDataLoader(PageDataloaderService)
-  async getPages({
+  async getPages(args: PageListArgs) {
+    return this.kv.getOrLoadNs(
+      contentCacheNamespace('pages'),
+      `list:${JSON.stringify(args)}`,
+      () => this.loadPages(args),
+      CONTENT_CACHE_TTL_SECONDS
+    );
+  }
+
+  private async loadPages({
     filter,
     cursorId,
     sort = PageSort.PublishedAt,
@@ -86,7 +119,7 @@ export class PageService {
     { slug, hidden, tagIds, properties, blocks, ...revision }: CreatePageInput,
     userId: string | null | undefined
   ) {
-    return this.prisma.page.create({
+    const result = await this.prisma.page.create({
       data: {
         slug,
         hidden,
@@ -108,6 +141,9 @@ export class PageService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('pages');
+
+    return result;
   }
 
   @PrimeDataLoader(PageDataloaderService)
@@ -134,7 +170,7 @@ export class PageService {
       throw new NotFoundException(`Page with id ${id} not found`);
     }
 
-    return this.prisma.page.update({
+    const result = await this.prisma.page.update({
       where: { id },
       data: {
         slug,
@@ -172,6 +208,13 @@ export class PageService {
         },
       },
     });
+    if (page.publishedAt) {
+      await this.publicContentCache.invalidate('pages');
+    } else {
+      await this.publicContentCache.invalidateDraft('pages');
+    }
+
+    return result;
   }
 
   async deletePage(id: string) {
@@ -183,11 +226,16 @@ export class PageService {
       throw new NotFoundException(`Page with id ${id} not found`);
     }
 
-    return this.prisma.page.delete({
+    const deleted = await this.prisma.page.delete({
       where: {
         id,
       },
     });
+    await this.publicContentCache.invalidate('pages');
+    await this.publicContentCache.invalidateArticleLayout();
+    await this.publicContentCache.invalidateNavigations();
+
+    return deleted;
   }
 
   @PrimeDataLoader(PageDataloaderService)
@@ -232,7 +280,7 @@ export class PageService {
         (page.publishedAt ?? publishedAt)
       );
 
-    return this.prisma.page.update({
+    const published = await this.prisma.page.update({
       where: {
         id,
       },
@@ -251,6 +299,11 @@ export class PageService {
         },
       },
     });
+    await this.publicContentCache.invalidate('pages');
+    this.publicContentCache.invalidateAt(publishedAt, 'pages');
+    this.publicContentCache.invalidateAt(pagePublishedAt, 'pages');
+
+    return published;
   }
 
   @PrimeDataLoader(PageDataloaderService)
@@ -305,6 +358,9 @@ export class PageService {
       });
     }
 
+    await this.publicContentCache.invalidate('pages');
+    await this.publicContentCache.invalidateArticleLayout();
+
     return updatedPage;
   }
 
@@ -340,7 +396,7 @@ export class PageService {
       },
     ] = page.revisions;
 
-    return this.prisma.page.create({
+    const result = await this.prisma.page.create({
       data: {
         hidden: page.hidden,
         tags: {
@@ -361,6 +417,191 @@ export class PageService {
         },
       },
     });
+    await this.publicContentCache.invalidateDraft('pages');
+
+    return result;
+  }
+
+  /**
+   * Discards the current draft and reverts the page to its latest published
+   * (or pending) revision. The draft is archived rather than deleted, so it
+   * stays available in the version history. Requires a non-draft revision to
+   * fall back to, otherwise the page would be left without a `latest`.
+   */
+  @PrimeDataLoader(PageDataloaderService)
+  async discardPageDraft(id: string) {
+    const page = await this.prisma.page.findUnique({
+      where: { id },
+    });
+
+    if (!page) {
+      throw new NotFoundException(`Page with id ${id} not found`);
+    }
+
+    const draft = await this.prisma.pageRevision.findFirst({
+      where: {
+        pageId: id,
+        publishedAt: null,
+        archivedAt: null,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!draft) {
+      throw new BadRequestException(
+        `Page with id ${id} has no draft to discard`
+      );
+    }
+
+    const fallback = await this.prisma.pageRevision.findFirst({
+      where: {
+        pageId: id,
+        archivedAt: null,
+        publishedAt: {
+          not: null,
+        },
+      },
+    });
+
+    if (!fallback) {
+      throw new BadRequestException(
+        `Cannot discard draft: page ${id} has no published version to revert to`
+      );
+    }
+
+    await this.prisma.pageRevision.update({
+      where: { id: draft.id },
+      data: { archivedAt: new Date() },
+    });
+
+    await this.publicContentCache.invalidateDraft('pages');
+
+    return page;
+  }
+
+  /**
+   * Returns a paginated, lightweight slice of a page's revisions for the
+   * version history. Loading happens directly against the revisions table (not
+   * through the page) so that pages with a long history (e.g. a start page) can
+   * be paged through without fetching everything at once.
+   */
+  async getPageRevisions({
+    pageId,
+    filter,
+    order = SortOrder.Descending,
+    take = 10,
+    skip,
+    cursorId,
+  }: PageRevisionListArgs) {
+    const where: Prisma.PageRevisionWhereInput = {
+      pageId,
+      ...(filter?.userId ? { userId: filter.userId } : {}),
+    };
+
+    const orderBy = {
+      createdAt: graphQLSortOrderToPrisma(order),
+    } satisfies Prisma.PageRevisionOrderByWithRelationInput;
+
+    const [totalCount, revisions] = await Promise.all([
+      this.prisma.pageRevision.count({ where }),
+      this.prisma.pageRevision.findMany({
+        where,
+        skip,
+        take: getMaxTake(take) + 1,
+        orderBy,
+        cursor: cursorId ? { id: cursorId } : undefined,
+      }),
+    ]);
+
+    const nodes = revisions.slice(0, getMaxTake(take));
+    const firstRevision = nodes[0];
+    const lastRevision = nodes[nodes.length - 1];
+
+    return {
+      nodes,
+      totalCount,
+      pageInfo: {
+        hasPreviousPage: Boolean(skip),
+        hasNextPage: revisions.length > nodes.length,
+        startCursor: firstRevision?.id,
+        endCursor: lastRevision?.id,
+      },
+    };
+  }
+
+  /**
+   * Returns a single revision with all of its content. Used to lazily load the
+   * full data of a past version (e.g. for the read-only preview), so the
+   * version history list itself can stay lightweight.
+   */
+  async getRevisionById(id: string) {
+    return this.prisma.pageRevision.findUnique({
+      where: { id },
+    });
+  }
+
+  /**
+   * Restores an older revision by cloning its content into a brand new draft.
+   *
+   * This is non-destructive: no historic revision is mutated or deleted. Any
+   * currently open (unpublished, non-archived) draft is archived first, exactly
+   * like `updatePage` does, so there is at most one draft at a time.
+   */
+  @PrimeDataLoader(PageDataloaderService)
+  async restorePageRevision(
+    pageId: string,
+    revisionId: string,
+    userId: string | null | undefined
+  ) {
+    const revision = await this.prisma.pageRevision.findUnique({
+      where: { id: revisionId },
+    });
+
+    if (!revision || revision.pageId !== pageId) {
+      throw new NotFoundException(
+        `Revision with id ${revisionId} not found for page ${pageId}`
+      );
+    }
+
+    const {
+      id: _id,
+      createdAt: _createdAt,
+      publishedAt: _publishedAt,
+      archivedAt: _archivedAt,
+      userId: _userId,
+      pageId: _pageId,
+      properties,
+      ...content
+    } = revision;
+
+    const result = await this.prisma.page.update({
+      where: { id: pageId },
+      data: {
+        modifiedAt: new Date(),
+        revisions: {
+          updateMany: {
+            where: {
+              archivedAt: null,
+              publishedAt: null,
+            },
+            data: {
+              archivedAt: new Date(),
+            },
+          },
+          create: {
+            ...content,
+            userId,
+            blocks: (content.blocks ?? []) as any[],
+            properties: properties as any,
+          },
+        },
+      },
+    });
+    await this.publicContentCache.invalidateDraft('pages');
+
+    return result;
   }
 
   async performPageFullTextSearch(searchQuery: string): Promise<string[]> {
@@ -597,6 +838,21 @@ const createTagsFilter = (
   return {};
 };
 
+const createSlugFilter = (
+  filter: Partial<PageFilter>
+): Prisma.PageWhereInput => {
+  if (filter?.slug) {
+    return {
+      slug: {
+        contains: filter.slug,
+        mode: 'insensitive',
+      },
+    };
+  }
+
+  return {};
+};
+
 const createHiddenFilter = (
   filter: Partial<PageFilter>
 ): Prisma.PageWhereInput => {
@@ -617,6 +873,7 @@ export const createPageFilter = (
     createPublicationDateFromFilter(filter),
     createPublicationDateToFilter(filter),
     createDescriptionFilter(filter),
+    createSlugFilter(filter),
     createTagsFilter(filter),
     createHiddenFilter(filter),
     {

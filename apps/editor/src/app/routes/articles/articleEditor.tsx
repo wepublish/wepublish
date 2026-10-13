@@ -1,18 +1,33 @@
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button as MuiButton,
+  Dialog as MuiDialog,
+  DialogActions as MuiDialogActions,
+  DialogContent as MuiDialogContent,
+  DialogContentText as MuiDialogContentText,
+  DialogTitle as MuiDialogTitle,
+} from '@mui/material';
+import {
+  ArticleDocument,
+  ArticleRevisionListDocument,
+  ArticleRevisionPreviewDocument,
+  CreateArticleDocument,
   CreateArticleMutationVariables,
+  CreateJwtForWebsiteLoginDocument,
+  DiscardArticleDraftDocument,
   EditorBlockType,
   FullAuthorFragment,
   FullImageFragment,
+  PublishArticleDocument,
+  RestoreArticleRevisionDocument,
   SettingName,
-  useArticleQuery,
-  useCreateArticleMutation,
-  useCreateJwtForWebsiteLoginMutation,
-  usePublishArticleMutation,
-  useSettingsListQuery,
-  useUpdateArticleMutation,
+  SettingsListDocument,
+  UpdateArticleDocument,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
+import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
+import type { AggregatedValidation } from '@wepublish/ui/editor';
 import {
   ArticleMetadata,
   ArticleMetadataPanel,
@@ -21,25 +36,34 @@ import {
   BlockMap,
   BlockValue,
   createCheckedPermissionComponent,
+  DocumentUrlProvider,
+  EditorHeader,
+  EditorHeaderButton,
   EditorTemplate,
+  EditorValidationProvider,
   InfoData,
   ListicleBlockListValue,
   mapBlockValueToBlockInput,
-  NavigationBar,
   PermissionControl,
   PublishArticlePanel,
   QuoteBlockListValue,
+  RevisionContentPreview,
   RichTextBlockListValue,
   StateColor,
   TitleBlockListValue,
   TitleBlockValue,
   useAuthorisation,
   useUnsavedChangesDialog,
+  VersionHistory,
+  VersionHistoryRevision,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
+  MdDeleteOutline,
+  MdEdit,
+  MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
   MdRemoveRedEye,
@@ -53,39 +77,23 @@ import {
   Message,
   Modal,
   Notification,
-  Tag as RTag,
   toaster,
 } from 'rsuite';
-import { type Node, Descendant, Element, Text } from 'slate';
 
-const IconButtonMarginTop = styled(RIconButton)`
-  margin-top: 4px;
-`;
+import { LastSavedAt } from '../../lastSavedAt';
+import {
+  PreviewControls,
+  PreviewDevice,
+  PreviewFrame,
+} from '../../previewFrame';
+import { useAutosave } from '../../useAutosave';
 
-const IconButton = styled(RIconButton)`
-  margin-left: 10px;
-`;
+const EditorContent = styled.div`
+  width: 100%;
 
-const CenterChildren = styled.div`
-  margin-top: 4px;
-  margin-bottom: 20px;
-`;
-
-const Legend = styled.legend`
-  width: auto;
-  margin: 0px auto;
-`;
-
-const FieldSet = styled('fieldset', {
-  shouldForwardProp: prop => prop !== 'stateColor',
-})<{ stateColor: string }>`
-  border-color: ${({ stateColor }) => stateColor};
-`;
-
-const Tag = styled(RTag, {
-  shouldForwardProp: prop => prop !== 'stateColor',
-})<{ stateColor: string }>`
-  background-color: ${({ stateColor }) => stateColor};
+  &[hidden] {
+    display: none;
+  }
 `;
 
 const InitialArticleBlocks: BlockValue[] = [
@@ -101,18 +109,21 @@ const InitialArticleBlocks: BlockValue[] = [
   },
 ];
 
-function countRichtextChars(blocksCharLength: number, nodes: Node[]): number {
-  return nodes.reduce((charLength: number, node) => {
-    if (!Element.isElement(node) && !Text.isText(node)) {
-      return charLength;
-    }
+const REVISIONS_PAGE_SIZE = 20;
 
-    if (Text.isText(node)) {
-      return charLength + (node.text as string).length;
-    }
+function countRichtextChars(
+  blocksCharLength: number,
+  richtext?: RichtextJSONDocument | RichtextElements | null
+): number {
+  return (
+    richtext?.content?.reduce((charLength: number, node: RichtextElements) => {
+      if (node.type === 'text') {
+        return charLength + node.text.length;
+      }
 
-    return countRichtextChars(charLength, node.children as Descendant[]);
-  }, blocksCharLength);
+      return countRichtextChars(charLength, node);
+    }, blocksCharLength) ?? blocksCharLength
+  );
 }
 
 function ArticleEditor() {
@@ -125,14 +136,35 @@ function ArticleEditor() {
   const [
     createArticle,
     { data: createData, loading: isCreating, error: createError },
-  ] = useCreateArticleMutation();
+  ] = useMutation(CreateArticleDocument);
   const [updateArticle, { loading: isUpdating, error: updateError }] =
-    useUpdateArticleMutation({});
+    useMutation(UpdateArticleDocument, {});
+  const [autosaveArticle, { loading: isAutosaving, error: autosaveError }] =
+    useMutation(UpdateArticleDocument, {});
   const [publishArticle, { loading: isPublishing, error: publishError }] =
-    usePublishArticleMutation({});
+    useMutation(PublishArticleDocument, {});
+  const [
+    restoreArticleRevision,
+    { loading: isRestoring, error: restoreError },
+  ] = useMutation(RestoreArticleRevisionDocument, {});
+  const [discardArticleDraft, { loading: isDiscarding, error: discardError }] =
+    useMutation(DiscardArticleDraftDocument, {});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
+  const [isVersionHistoryOpen, setVersionHistoryOpen] = useState(false);
+  const [isVersionHistoryRequested, setVersionHistoryRequested] =
+    useState(false);
+  const [isDiscardDialogOpen, setDiscardDialogOpen] = useState(false);
+  const [isLoadingMoreRevisions, setLoadingMoreRevisions] = useState(false);
+  const [previewRevisionId, setPreviewRevisionId] = useState<string | null>(
+    null
+  );
+  const [restoringRevisionId, setRestoringRevisionId] = useState<string | null>(
+    null
+  );
+  const [isPreviewOpen, setPreviewOpen] = useState(false);
+  const [previewDevice, setPreviewDevice] = useState<PreviewDevice>('desktop');
 
   const [publishedAt, setPublishedAt] = useState<Date>();
 
@@ -142,6 +174,7 @@ function ArticleEditor() {
     title: '',
     lead: '',
     seoTitle: '',
+    seoDescription: '',
     authors: [],
     tags: [],
     defaultTags: [],
@@ -163,23 +196,25 @@ function ArticleEditor() {
     trackingPixels: undefined,
   });
 
-  useSettingsListQuery({
-    onCompleted(data) {
+  const { data: settingsData } = useQuery(SettingsListDocument);
+
+  useEffect(() => {
+    if (settingsData) {
       setMetadata(meta => ({
         ...meta,
         shared:
           meta.shared ??
-          !!data.settings.find(
+          !!settingsData.settings.find(
             setting => setting.name === SettingName.NewArticlePeering
           )?.value,
         paywall:
           meta.paywall ??
-          data.settings.find(
+          (settingsData.settings.find(
             setting => setting.name === SettingName.NewArticlePaywall
-          )?.value,
+          )?.value as string | null | undefined),
       }));
-    },
-  });
+    }
+  }, [settingsData]);
 
   const isNew = id === undefined;
   const [blocks, setBlocks] = useState<BlockValue[]>(
@@ -192,37 +227,127 @@ function ArticleEditor() {
     data: articleData,
     refetch,
     loading: isLoading,
-  } = useArticleQuery({
+  } = useQuery(ArticleDocument, {
     errorPolicy: 'all',
     variables: { id: articleID! },
     skip: !articleID,
   });
-  const [createJWT] = useCreateJwtForWebsiteLoginMutation({
+  const [createJWT] = useMutation(CreateJwtForWebsiteLoginDocument, {
     errorPolicy: 'none',
     fetchPolicy: 'no-cache',
   });
 
+  const {
+    data: revisionsData,
+    refetch: refetchRevisions,
+    fetchMore: fetchMoreRevisions,
+    loading: isRevisionsLoading,
+  } = useQuery(ArticleRevisionListDocument, {
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
+    variables: { id: articleID!, take: REVISIONS_PAGE_SIZE, skip: 0 },
+    skip: !articleID || !isVersionHistoryRequested,
+  });
+
+  const revisionNodes = revisionsData?.articleRevisions?.nodes ?? [];
+
+  const revisions: VersionHistoryRevision[] = revisionNodes.map(revision => ({
+    id: revision.id,
+    createdAt: revision.createdAt,
+    publishedAt: revision.publishedAt,
+    archivedAt: revision.archivedAt,
+    title: revision.title,
+    subtitle: revision.preTitle || revision.lead,
+    author: revision.user,
+  }));
+
+  const reloadRevisions = () =>
+    isVersionHistoryRequested ? refetchRevisions() : Promise.resolve();
+
+  async function loadMoreRevisions() {
+    setLoadingMoreRevisions(true);
+
+    try {
+      await fetchMoreRevisions({
+        variables: { skip: revisionNodes.length },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult?.articleRevisions) {
+            return prev;
+          }
+
+          return {
+            ...prev,
+            articleRevisions: {
+              ...fetchMoreResult.articleRevisions,
+              nodes: [
+                ...(prev.articleRevisions?.nodes ?? []),
+                ...fetchMoreResult.articleRevisions.nodes,
+              ],
+            },
+          };
+        },
+      });
+    } finally {
+      setLoadingMoreRevisions(false);
+    }
+  }
+
+  const [
+    loadRevisionPreview,
+    { data: previewData, loading: isPreviewLoading },
+  ] = useLazyQuery(ArticleRevisionPreviewDocument, { errorPolicy: 'all' });
+
+  function handlePreviewRevision(revisionId: string) {
+    setPreviewRevisionId(revisionId);
+    loadRevisionPreview({ variables: { id: revisionId } });
+  }
+
+  const previewRevision =
+    previewData?.articleRevision?.id === previewRevisionId ?
+      previewData?.articleRevision
+    : undefined;
+
   const isNotFound = articleData && !articleData.article;
-  const isDisabled =
-    isLoading || isCreating || isUpdating || isPublishing || isNotFound;
-  const canPreview = Boolean(articleData?.article?.draft);
+  const isBusy =
+    isLoading ||
+    isCreating ||
+    isUpdating ||
+    isPublishing ||
+    isRestoring ||
+    isDiscarding ||
+    isNotFound;
+  // Autosaving must not disable the blocks, as that would blur whatever the user is typing in.
+  const isDisabled = isBusy || isAutosaving;
+  const canPreview = Boolean(
+    articleData?.article?.draft ||
+      articleData?.article?.published ||
+      articleData?.article?.pending
+  );
 
   const [hasChanged, setChanged] = useState(false);
+  const changeVersion = useRef(0);
+  const skipRepopulate = useRef(false);
 
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
+
+  const previewUrl = articleData?.article?.previewUrl;
+  const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
+  const showPreview = isPreviewOpen && !isPreviewDisabled;
 
   const isAuthorized = useAuthorisation('CAN_CREATE_ARTICLE');
 
   const handleChange = useCallback(
     (blocks: React.SetStateAction<BlockValue[]>) => {
       setBlocks(blocks);
+      changeVersion.current++;
       setChanged(true);
     },
     []
   );
 
   useEffect(() => {
-    if (articleData?.article && !hasChanged) {
+    if (articleData?.article && !hasChanged && !skipRepopulate.current) {
       const {
         latest,
         shared,
@@ -239,6 +364,7 @@ function ArticleEditor() {
         preTitle,
         title,
         seoTitle,
+        seoDescription,
         lead,
         breaking,
         authors,
@@ -263,6 +389,7 @@ function ArticleEditor() {
         title: title ?? '',
         lead: lead ?? '',
         seoTitle: seoTitle ?? '',
+        seoDescription: seoDescription ?? '',
         tags: tags.map(({ id }) => id),
         defaultTags: tags,
         url,
@@ -273,9 +400,7 @@ function ArticleEditor() {
         hidden,
         disableComments,
         breaking,
-        authors: authors.filter(
-          author => author != null
-        ) as FullAuthorFragment[],
+        authors,
         image: (image as FullImageFragment) || undefined,
         hideAuthor,
         socialMediaTitle: socialMediaTitle || '',
@@ -318,7 +443,12 @@ function ArticleEditor() {
 
   useEffect(() => {
     const error =
-      createError?.message ?? updateError?.message ?? publishError?.message;
+      createError?.message ??
+      updateError?.message ??
+      autosaveError?.message ??
+      publishError?.message ??
+      restoreError?.message ??
+      discardError?.message;
     if (error)
       toaster.push(
         <Message
@@ -330,7 +460,75 @@ function ArticleEditor() {
           {error}
         </Message>
       );
-  }, [createError, updateError, publishError]);
+  }, [
+    createError,
+    updateError,
+    autosaveError,
+    publishError,
+    restoreError,
+    discardError,
+  ]);
+
+  async function handleDiscardDraft() {
+    if (!articleID) {
+      return;
+    }
+
+    const { data } = await discardArticleDraft({
+      variables: { id: articleID },
+    });
+
+    if (data) {
+      skipRepopulate.current = false;
+      markSaved();
+      setChanged(false);
+      await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
+
+      toaster.push(
+        <Notification
+          type="success"
+          header={t('discardDraft.success')}
+          duration={2000}
+        />,
+        { placement: 'topEnd' }
+      );
+    }
+  }
+
+  async function handleRestoreRevision(revisionId: string) {
+    if (!articleID) {
+      return;
+    }
+
+    setRestoringRevisionId(revisionId);
+
+    try {
+      const { data } = await restoreArticleRevision({
+        variables: { id: articleID, revisionId },
+      });
+
+      if (data) {
+        // Let the article query repopulate the editor with the restored draft.
+        skipRepopulate.current = false;
+        markSaved();
+        setChanged(false);
+        await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
+
+        toaster.push(
+          <Notification
+            type="success"
+            header={t('versionHistory.restored')}
+            duration={2000}
+          />,
+          { placement: 'topEnd' }
+        );
+
+        setVersionHistoryOpen(false);
+      }
+    } finally {
+      setRestoringRevisionId(null);
+    }
+  }
 
   function countRichTextBlocksChars(block: RichTextBlockListValue) {
     return countRichtextChars(0, block.value.richText);
@@ -387,7 +585,10 @@ function ArticleEditor() {
       title: metadata.title,
       lead: metadata.lead,
       seoTitle: metadata.seoTitle,
-      authorIds: metadata.authors.map(({ id }) => id),
+      seoDescription: metadata.seoDescription,
+      authors: metadata.authors.flatMap(({ author, role }) =>
+        author ? [{ authorId: author.id, role: role || undefined }] : []
+      ),
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: !!metadata.shared,
@@ -433,12 +634,50 @@ function ArticleEditor() {
     }
   }
 
+  const validateAll = useRef<() => AggregatedValidation>(() => ({
+    ok: true,
+    failures: [],
+  }));
+
+  function runEditorValidation(reason: 'save' | 'publish' = 'save'): boolean {
+    const result = validateAll.current();
+    if (result.ok) {
+      return true;
+    }
+    const summaries = result.failures
+      .map(f => f.summary)
+      .filter(Boolean)
+      .join(' · ');
+    const header =
+      reason === 'publish' ?
+        t('articleEditor.publishValidationFailed')
+      : t('articleEditor.saveValidationFailed');
+    toaster.push(
+      <Message
+        type="error"
+        showIcon={false}
+        closable
+        duration={8000}
+      >
+        <strong>{header}</strong>
+        <div>{summaries || t('articleEditor.validationFailedGeneric')}</div>
+      </Message>,
+      { placement: 'topEnd' }
+    );
+    return false;
+  }
+
   async function handleSave() {
+    if (!runEditorValidation('save')) {
+      return;
+    }
     const input = createInput();
 
     if (articleID) {
       await updateArticle({ variables: { id: articleID, ...input } });
 
+      skipRepopulate.current = false;
+      markSaved();
       setChanged(false);
       toaster.push(
         <Notification
@@ -446,9 +685,9 @@ function ArticleEditor() {
           header={t('articleEditor.overview.draftSaved')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
-      await refetch({ id: articleID });
+      await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
     } else {
       const { data } = await createArticle({ variables: input });
       if (data) {
@@ -461,12 +700,52 @@ function ArticleEditor() {
           header={t('articleEditor.overview.draftCreated')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
     }
   }
 
+  async function handleAutosave() {
+    if (!articleID) {
+      return;
+    }
+
+    const version = changeVersion.current;
+    const { data } = await autosaveArticle({
+      variables: { id: articleID, ...createInput() },
+    });
+
+    if (!data) {
+      return;
+    }
+
+    skipRepopulate.current = true;
+
+    if (version === changeVersion.current) {
+      setChanged(false);
+    }
+
+    toaster.push(
+      <Notification
+        type="success"
+        header={t('articleEditor.overview.draftAutosaved')}
+        duration={2000}
+      />,
+      { placement: 'bottomEnd' }
+    );
+    await reloadRevisions();
+  }
+
+  const { markSaved } = useAutosave({
+    enabled: !isDisabled && !!articleID,
+    hasChanged,
+    onAutosave: handleAutosave,
+  });
+
   async function handlePublish(publishedAt: Date) {
+    if (!runEditorValidation('publish')) {
+      return;
+    }
     if (!metadata.slug) {
       toaster.push(
         <Message
@@ -487,6 +766,8 @@ function ArticleEditor() {
       });
 
       if (data) {
+        skipRepopulate.current = false;
+        markSaved();
         const { data: publishData } = await publishArticle({
           variables: {
             id: articleID,
@@ -513,10 +794,10 @@ function ArticleEditor() {
           )}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
     }
-    await refetch({ id: articleID });
+    await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
   }
 
   useEffect(() => {
@@ -546,152 +827,199 @@ function ArticleEditor() {
 
   return (
     <>
-      <FieldSet stateColor={stateColor}>
-        <Legend>
-          <Tag stateColor={stateColor}>{tagTitle}</Tag>
-        </Legend>
-        <EditorTemplate
-          navigationChildren={
-            <NavigationBar
-              leftChildren={
-                <Link to="/articles">
-                  <RIconButton
-                    size="lg"
-                    className="actionButton"
-                    icon={<MdKeyboardBackspace />}
-                    onClick={e => {
-                      if (!unsavedChangesDialog()) e.preventDefault();
-                    }}
-                  >
-                    {t('articleEditor.overview.back')}
-                  </RIconButton>
-                </Link>
-              }
-              centerChildren={
-                <CenterChildren>
-                  <RIconButton
-                    icon={<MdIntegrationInstructions />}
-                    size="lg"
-                    disabled={isDisabled}
-                    className="actionButton"
-                    onClick={() => {
-                      syncFirstTitleBlockWithMetadata();
-                      setMetaDrawerOpen(true);
-                    }}
-                  >
-                    {t('articleEditor.overview.metadata')}
-                  </RIconButton>
+      <EditorTemplate
+        maxWidth={showPreview ? '80vw' : undefined}
+        navigationChildren={
+          <EditorHeader
+            state={stateColor}
+            stateLabel={tagTitle}
+            meta={<LastSavedAt date={articleData?.article?.latest.createdAt} />}
+            back={
+              <Link to="/articles">
+                <RIconButton
+                  circle
+                  appearance="subtle"
+                  icon={<MdKeyboardBackspace />}
+                  title={t('articleEditor.overview.back')}
+                  aria-label={t('articleEditor.overview.back')}
+                  onClick={e => {
+                    if (!unsavedChangesDialog()) e.preventDefault();
+                  }}
+                />
+              </Link>
+            }
+            secondaryActions={
+              <>
+                <EditorHeaderButton
+                  appearance="subtle"
+                  icon={<MdIntegrationInstructions />}
+                  label={t('articleEditor.overview.metadata')}
+                  disabled={isDisabled}
+                  onClick={() => {
+                    syncFirstTitleBlockWithMetadata();
+                    setMetaDrawerOpen(true);
+                  }}
+                />
 
-                  {isNew && createData == null ?
+                {!isNew && (
+                  <>
                     <PermissionControl
-                      qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                      qualifyingPermissions={['CAN_GET_ARTICLE']}
                     >
-                      <IconButton
-                        className="actionButton"
-                        size="lg"
-                        icon={<MdSave />}
+                      <EditorHeaderButton
+                        appearance="subtle"
+                        icon={<MdHistory />}
+                        label={t('versionHistory.title')}
                         disabled={isDisabled}
-                        onClick={() => handleSave()}
-                      >
-                        {t('create')}
-                      </IconButton>
-                    </PermissionControl>
-                  : <PermissionControl
-                      qualifyingPermissions={['CAN_CREATE_ARTICLE']}
-                    >
-                      <Badge className={hasChanged ? 'unsaved' : 'saved'}>
-                        <IconButton
-                          className="actionButton"
-                          size="lg"
-                          icon={<MdSave />}
-                          disabled={isDisabled}
-                          onClick={() => handleSave()}
-                        >
-                          {t('save')}
-                        </IconButton>
-                      </Badge>
-                      <PermissionControl
-                        qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}
-                      >
-                        <Badge
-                          className={
-                            (
-                              articleData?.article?.draft ||
-                              !articleData?.article?.published
-                            ) ?
-                              'unsaved'
-                            : 'saved'
+                        onClick={() => {
+                          if (isVersionHistoryRequested) {
+                            refetchRevisions();
                           }
-                        >
-                          <IconButton
-                            className="actionButton"
-                            size="lg"
-                            icon={<MdCloudUpload />}
-                            disabled={isDisabled}
-                            onClick={() => {
-                              setPublishDialogOpen(true);
-                            }}
-                          >
-                            {t('articleEditor.overview.publish')}
-                          </IconButton>
-                        </Badge>
-                      </PermissionControl>
+                          setVersionHistoryRequested(true);
+                          setVersionHistoryOpen(true);
+                        }}
+                      />
                     </PermissionControl>
-                  }
-                </CenterChildren>
-              }
-              rightChildren={
+
+                    {articleData?.article?.draft &&
+                      articleData?.article?.published && (
+                        <PermissionControl
+                          qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                        >
+                          <EditorHeaderButton
+                            appearance="subtle"
+                            icon={<MdDeleteOutline />}
+                            label={t('discardDraft.button')}
+                            disabled={isDisabled}
+                            onClick={() => setDiscardDialogOpen(true)}
+                          />
+                        </PermissionControl>
+                      )}
+                  </>
+                )}
+
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <IconButtonMarginTop
-                    disabled={hasChanged || !id || !canPreview}
-                    size="lg"
-                    icon={<MdRemoveRedEye />}
-                    onClick={async () => {
-                      const previewWindow = window.open(
-                        articleData!.article.previewUrl,
-                        '_blank'
-                      );
-                      if (!previewWindow) return;
+                  {showPreview && previewUrl && (
+                    <PreviewControls
+                      device={previewDevice}
+                      onDeviceChange={setPreviewDevice}
+                      previewUrl={previewUrl}
+                    />
+                  )}
 
-                      const { data: jwtData } = await createJWT();
-                      const token = jwtData?.createJWTForWebsiteLogin?.token;
-                      if (!token) return;
-
-                      const targetOrigin = new URL(
-                        articleData!.article.previewUrl
-                      ).origin;
-
-                      const handleMessage = (event: MessageEvent) => {
-                        if (
-                          event.source === previewWindow &&
-                          event.data === 'preview-jwt-ready'
-                        ) {
-                          previewWindow.postMessage(
-                            { previewJwt: token },
-                            targetOrigin
-                          );
-                          window.removeEventListener('message', handleMessage);
-                        }
-                      };
-                      window.addEventListener('message', handleMessage);
-                    }}
-                  >
-                    {t('articleEditor.overview.preview')}
-                  </IconButtonMarginTop>
+                  <EditorHeaderButton
+                    appearance={showPreview ? 'ghost' : 'subtle'}
+                    icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
+                    label={
+                      showPreview ?
+                        t('preview.backToEditor')
+                      : t('articleEditor.overview.preview')
+                    }
+                    disabled={isPreviewDisabled}
+                    onClick={() => setPreviewOpen(!showPreview)}
+                  />
                 </PermissionControl>
-              }
-            />
-          }
-        >
-          <BlockList
-            itemId={articleID}
-            value={blocks}
-            onChange={handleChange}
-            disabled={isLoading || isDisabled || !isAuthorized}
-            blockMap={BlockMap}
+              </>
+            }
+            primaryActions={
+              isNew && createData == null ?
+                <PermissionControl
+                  qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                >
+                  <EditorHeaderButton
+                    appearance="primary"
+                    icon={<MdSave />}
+                    label={t('create')}
+                    collapse={false}
+                    disabled={isDisabled}
+                    onClick={() => handleSave()}
+                  />
+                </PermissionControl>
+              : <PermissionControl
+                  qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                >
+                  <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+                    <EditorHeaderButton
+                      icon={<MdSave />}
+                      label={t('save')}
+                      collapse="sm"
+                      disabled={isDisabled}
+                      onClick={() => handleSave()}
+                    />
+                  </Badge>
+
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}
+                  >
+                    <Badge
+                      className={
+                        (
+                          articleData?.article?.draft ||
+                          !articleData?.article?.published
+                        ) ?
+                          'unsaved'
+                        : 'saved'
+                      }
+                    >
+                      <EditorHeaderButton
+                        appearance="primary"
+                        icon={<MdCloudUpload />}
+                        label={t('articleEditor.overview.publish')}
+                        collapse={false}
+                        disabled={isDisabled}
+                        onClick={() => {
+                          if (!runEditorValidation('publish')) {
+                            return;
+                          }
+                          setPublishDialogOpen(true);
+                        }}
+                      />
+                    </Badge>
+                  </PermissionControl>
+                </PermissionControl>
+            }
           />
-        </EditorTemplate>
-      </FieldSet>
+        }
+      >
+        {showPreview && previewUrl && (
+          <PreviewFrame
+            key={articleData?.article?.latest.id}
+            previewUrl={previewUrl}
+            device={previewDevice}
+            title={t('articleEditor.overview.preview')}
+            createToken={async () => {
+              const { data: jwtData } = await createJWT();
+
+              return jwtData?.createJWTForWebsiteLogin?.token;
+            }}
+            onSilence={() =>
+              toaster.push(
+                <Message
+                  type="warning"
+                  showIcon
+                  closable
+                >
+                  {t('previewHandshake.notResponding')}
+                </Message>
+              )
+            }
+          />
+        )}
+
+        <EditorContent hidden={showPreview}>
+          <EditorValidationProvider runAllRef={validateAll}>
+            <DocumentUrlProvider documentUrl={articleData?.article?.url}>
+              <BlockList
+                itemId={articleID}
+                value={blocks}
+                onChange={handleChange}
+                disabled={isBusy || !isAuthorized}
+                blockMap={BlockMap}
+              />
+            </DocumentUrlProvider>
+          </EditorValidationProvider>
+        </EditorContent>
+      </EditorTemplate>
 
       <Drawer
         open={isMetaDrawerOpen}
@@ -709,6 +1037,7 @@ function ArticleEditor() {
           }}
           onChange={value => {
             setMetadata(value);
+            changeVersion.current++;
             setChanged(true);
           }}
         />
@@ -734,6 +1063,61 @@ function ArticleEditor() {
           }}
         />
       </Modal>
+
+      <VersionHistory
+        open={isVersionHistoryOpen}
+        onClose={() => setVersionHistoryOpen(false)}
+        loading={isRevisionsLoading && revisions.length === 0}
+        revisions={revisions}
+        totalCount={revisionsData?.articleRevisions?.totalCount}
+        hasMore={!!revisionsData?.articleRevisions?.pageInfo?.hasNextPage}
+        loadingMore={isLoadingMoreRevisions}
+        onLoadMore={loadMoreRevisions}
+        draftId={articleData?.article?.draft?.id}
+        pendingId={articleData?.article?.pending?.id}
+        publishedId={articleData?.article?.published?.id}
+        restoringId={restoringRevisionId}
+        canRestore={isAuthorized}
+        onRestore={handleRestoreRevision}
+        onPreview={handlePreviewRevision}
+      />
+
+      <RevisionContentPreview
+        open={!!previewRevisionId}
+        loading={isPreviewLoading || !previewRevision}
+        onClose={() => setPreviewRevisionId(null)}
+        title={previewRevision?.title}
+        subtitle={previewRevision?.preTitle || previewRevision?.lead}
+        blocks={(previewRevision?.blocks ?? []).map(blockForQueryBlock)}
+      />
+
+      <MuiDialog
+        open={isDiscardDialogOpen}
+        onClose={() => setDiscardDialogOpen(false)}
+      >
+        <MuiDialogTitle>{t('discardDraft.confirm.title')}</MuiDialogTitle>
+        <MuiDialogContent>
+          <MuiDialogContentText>
+            {t('discardDraft.confirm.message')}
+          </MuiDialogContentText>
+        </MuiDialogContent>
+        <MuiDialogActions>
+          <MuiButton onClick={() => setDiscardDialogOpen(false)}>
+            {t('discardDraft.confirm.cancel')}
+          </MuiButton>
+          <MuiButton
+            color="error"
+            variant="contained"
+            startIcon={<MdDeleteOutline />}
+            onClick={() => {
+              setDiscardDialogOpen(false);
+              handleDiscardDraft();
+            }}
+          >
+            {t('discardDraft.confirm.confirm')}
+          </MuiButton>
+        </MuiDialogActions>
+      </MuiDialog>
     </>
   );
 }

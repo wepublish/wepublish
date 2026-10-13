@@ -24,5 +24,6 @@
   },
   "bin": "main.js",
   "main": "main.js",
+  "type": "commonjs",
   "license": "MIT"
 }

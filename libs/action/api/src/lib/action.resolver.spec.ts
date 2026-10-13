@@ -9,10 +9,15 @@ import { UserSession } from '@wepublish/authentication/api';
 import { ActionType } from './action.model';
 import { Event } from '@wepublish/event/api';
 import { EventStatus } from '@prisma/client';
+import type { Mock } from 'vitest';
 
-jest.mock('@wepublish/authentication/api', () => ({
-  ...jest.requireActual('@wepublish/authentication/api'),
-  CurrentUser: jest.fn(() => {
+vi.mock('@wepublish/authentication/api', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/authentication/api')>()),
+  // interface only exists at type level, but swc decorator metadata
+  // references it at runtime and the vitest mock proxy is strict
+  ScopedJwtVerifier: vi.fn(),
+  UserSession: vi.fn(),
+  CurrentUser: vi.fn(() => {
     return (
       data: unknown,
       ctx: ExecutionContext
@@ -54,11 +59,11 @@ const actionsQuery = `
 
 describe('ActionResolver', () => {
   let app: INestApplication;
-  let actionServiceMock: { [method in keyof ActionService]?: jest.Mock };
+  let actionServiceMock: { [method in keyof ActionService]?: Mock };
 
   beforeEach(async () => {
     actionServiceMock = {
-      getActions: jest.fn(),
+      getActions: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({

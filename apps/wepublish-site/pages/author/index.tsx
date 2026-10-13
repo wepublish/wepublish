@@ -1,17 +1,17 @@
+import { useQuery } from '@apollo/client/react';
 import { AuthorListContainer } from '@wepublish/author/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { AuthorSort, SortOrder } from '@wepublish/website/api';
 import {
-  addClientCacheToProps,
   AuthorListDocument,
-  getApiClient,
+  AuthorSort,
   NavigationListDocument,
   PeerProfileDocument,
-  useAuthorListQuery,
+  SortOrder,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
@@ -44,7 +44,7 @@ export default function AuthorList() {
     [page]
   );
 
-  const { data } = useAuthorListQuery({
+  const { data } = useQuery(AuthorListDocument, {
     fetchPolicy: 'cache-only',
     variables,
   });
@@ -93,9 +93,7 @@ export default function AuthorList() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  if (!publicRuntimeConfig.env.API_URL) {
+  if (!getApiUrl()) {
     return { props: {}, revalidate: 1 };
   }
 

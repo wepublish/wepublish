@@ -1,28 +1,28 @@
-import { ApolloError, ApolloQueryResult } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
-  Banner,
-  BannersQuery,
-  useDeleteBannerMutation,
+  DeleteBannerDocument,
+  FullBannerFragment,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
 
 type DeleteBannerProps = {
-  banner: Banner | undefined;
+  banner: FullBannerFragment | undefined;
   onClose(): void;
-  onDelete(): Promise<ApolloQueryResult<BannersQuery>>;
+  onDelete(): Promise<unknown>;
 };
 
-const onErrorToast = (error: ApolloError) => {
+const onErrorToast = (error: Error) => {
   toaster.push(
     <Message
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -47,7 +47,7 @@ export function BannerDeleteModal({
 }: DeleteBannerProps) {
   const { t } = useTranslation();
 
-  const [deleteBannerMutation] = useDeleteBannerMutation({
+  const [deleteBannerMutation] = useMutation(DeleteBannerDocument, {
     onError: onErrorToast,
     onCompleted: onCompletedToast(t),
   });

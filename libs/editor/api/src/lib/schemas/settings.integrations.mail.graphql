@@ -11,11 +11,16 @@ query MailProviderSettings {
     name
     replyToAddress
     slack_webhookURL
+    smtp_host
+    smtp_port
+    smtp_secure
+    smtp_user
     type
   }
 }
 
 mutation UpdateMailProviderSetting(
+  $type: MailProviderType
   $apiKey: String
   $fromAddress: String
   $id: String!
@@ -25,9 +30,14 @@ mutation UpdateMailProviderSetting(
   $name: String
   $replyToAddress: String
   $slack_webhookURL: String
+  $smtp_host: String
+  $smtp_port: Int
+  $smtp_secure: Boolean
+  $smtp_user: String
   $webhookEndpointSecret: String
 ) {
   updateMailProviderSetting(
+    type: $type
     apiKey: $apiKey
     fromAddress: $fromAddress
     id: $id
@@ -37,6 +47,10 @@ mutation UpdateMailProviderSetting(
     name: $name
     replyToAddress: $replyToAddress
     slack_webhookURL: $slack_webhookURL
+    smtp_host: $smtp_host
+    smtp_port: $smtp_port
+    smtp_secure: $smtp_secure
+    smtp_user: $smtp_user
     webhookEndpointSecret: $webhookEndpointSecret
   ) {
     createdAt
@@ -50,6 +64,22 @@ mutation UpdateMailProviderSetting(
     name
     replyToAddress
     slack_webhookURL
+    smtp_host
+    smtp_port
+    smtp_secure
+    smtp_user
     type
+  }
+}
+
+mutation CreateMailProviderSetting(
+  $id: String!
+  $type: MailProviderType!
+  $name: String
+) {
+  createMailProviderSetting(id: $id, type: $type, name: $name) {
+    id
+    type
+    name
   }
 }

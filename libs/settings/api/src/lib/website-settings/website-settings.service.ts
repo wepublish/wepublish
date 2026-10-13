@@ -1,19 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { UpdateWebsiteSettingsInput } from './website-settings.model';
+
+const CACHE_NAMESPACE = 'website-settings';
+const CACHE_TTL_SECONDS = 300;
 
 @Injectable()
 export class WebsiteSettingsService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
   async getSettings() {
-    return this.prisma.websiteSettings.findFirst({});
+    return this.kv.getOrLoadNs(
+      CACHE_NAMESPACE,
+      'current',
+      () => this.prisma.websiteSettings.findFirst({}),
+      CACHE_TTL_SECONDS
+    );
   }
 
   async updateSettings(input: UpdateWebsiteSettingsInput) {
     const settings = await this.prisma.websiteSettings.findFirstOrThrow({});
 
-    return this.prisma.websiteSettings.update({
+    const updated = await this.prisma.websiteSettings.update({
       where: {
         id: settings.id,
       },
@@ -34,7 +46,7 @@ export class WebsiteSettingsService {
         analyticsPAId: input.analytics?.plausible.key,
 
         analyticsPiwikEnabled:
-          input.analytics?.plausible.enabled ?? settings.analyticsPiwikEnabled,
+          input.analytics?.piwik.enabled ?? settings.analyticsPiwikEnabled,
         analyticsPiwikId: input.analytics?.piwik.key,
 
         // Mail
@@ -52,5 +64,8 @@ export class WebsiteSettingsService {
         fonts: input.fonts as any,
       },
     });
+    await this.kv.resetNamespace(CACHE_NAMESPACE);
+
+    return updated;
   }
 }

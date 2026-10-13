@@ -1,72 +1,31 @@
-import {
-  ArticleContainer,
-  ArticleListContainer,
-  ArticleWrapper,
-} from '@wepublish/article/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { CombinedGraphQLErrors } from '@apollo/client';
+import { ArticleContainer } from '@wepublish/article/website';
+import { getApiUrl, revalidateFor } from '@wepublish/utils/website';
 import {
   addClientCacheToProps,
   ArticleDocument,
-  ArticleListDocument,
-  CommentListDocument,
   getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  Tag,
-  useArticleQuery,
 } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
+import { localizeSlug } from '../../src/localize-slug';
+
 export default function ArticleBySlugOrId() {
   const {
-    locale,
     query: { slug, id },
+    locale,
   } = useRouter();
-  const {
-    elements: { H3 },
-  } = useWebsiteBuilder();
-
-  const { data } = useArticleQuery({
-    fetchPolicy: 'cache-only',
-    variables: {
-      slug: `${slug}-${locale}`,
-      id: id as string,
-    },
-  });
 
   const containerProps = {
-    slug: `${slug}-${locale}`,
+    slug: slug ? localizeSlug(slug, locale) : undefined,
     id,
   } as ComponentProps<typeof ArticleContainer>;
 
-  return (
-    <>
-      <ArticleContainer {...containerProps} />
-
-      {data?.article && (
-        <>
-          <ArticleWrapper>
-            <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
-
-            <ArticleListContainer
-              variables={{
-                filter: { tags: data.article.tags.map(tag => tag.id) },
-                take: 4,
-              }}
-              filter={articles =>
-                articles
-                  .filter(article => article.id !== data.article?.id)
-                  .splice(0, 3)
-              }
-            />
-          </ArticleWrapper>
-        </>
-      )}
-    </>
-  );
+  return <ArticleContainer {...containerProps} />;
 }
 
 export const getStaticPaths = () => ({
@@ -75,7 +34,9 @@ export const getStaticPaths = () => ({
 });
 
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const { id, slug } = params || {};
+  const id = params?.id?.toString();
+  const slug = params?.slug?.toString();
+  const localizedSlug = slug ? localizeSlug(slug, locale) : undefined;
   const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
@@ -83,7 +44,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
       query: ArticleDocument,
       variables: {
         id,
-        slug: `${slug}-${locale}`,
+        slug: localizedSlug,
       },
     }),
     client.query({
@@ -94,9 +55,9 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     }),
   ]);
 
-  const is404 = article.errors?.find(
-    ({ extensions }) => extensions?.status === 404
-  );
+  const is404 =
+    CombinedGraphQLErrors.is(article.error) &&
+    article.error.errors.find(({ extensions }) => extensions?.status === 404);
 
   if (is404) {
     return {
@@ -105,30 +66,10 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     };
   }
 
-  if (article.data?.article) {
-    await Promise.all([
-      client.query({
-        query: ArticleListDocument,
-        variables: {
-          filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id),
-          },
-          take: 4,
-        },
-      }),
-      client.query({
-        query: CommentListDocument,
-        variables: {
-          itemId: article.data.article.id,
-        },
-      }),
-    ]);
-  }
-
   const props = addClientCacheToProps(client, {});
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: revalidateFor(article.data?.article, article.error),
   };
 };

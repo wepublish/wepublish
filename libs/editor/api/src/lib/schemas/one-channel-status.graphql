@@ -1,0 +1,10 @@
+query OneChannelStatus {
+    oneChannelStatus {
+        state
+        oneUrl
+        lastSuccessAt
+        lastAttemptAt
+        lastError
+        unreachable
+    }
+}

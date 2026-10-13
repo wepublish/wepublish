@@ -1,6 +1,7 @@
+import { useQuery } from '@apollo/client/react';
 import {
   BannerDocumentType,
-  usePrimaryBannerQuery,
+  PrimaryBannerDocument,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -13,18 +14,20 @@ import { hasPaywallBypass } from '@wepublish/paywall/website';
 export type BannerContainerProps = {
   documentType: BannerDocumentType;
   documentId?: string;
+  tags?: string[];
 } & BuilderContainerProps;
 
 export function BannerContainer({
   documentType,
   documentId,
+  tags,
   className,
 }: BannerContainerProps) {
   const { Banner } = useWebsiteBuilder();
   const { hasUser } = useUser();
   const hasSubscription = useHasActiveSubscription();
 
-  const { data, loading, error } = usePrimaryBannerQuery({
+  const { data, loading, error } = useQuery(PrimaryBannerDocument, {
     skip: hasSubscription == null,
     variables: {
       documentId: documentId ?? '',
@@ -40,6 +43,7 @@ export function BannerContainer({
       data={data}
       loading={loading}
       error={error}
+      tags={tags}
       className={className}
     />
   );

@@ -1,4 +1,5 @@
 import { FiSearch } from 'react-icons/fi';
+import { GoLinkExternal } from 'react-icons/go';
 import {
   PiAmazonLogoThin,
   //PiChalkboardTeacherThin,
@@ -209,5 +210,10 @@ export const TsriTextToIcon = ({
     );
   }
 
-  return title;
+  return (
+    <GoLinkExternal
+      size={size}
+      aria-label={title}
+    />
+  );
 };

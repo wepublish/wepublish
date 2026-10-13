@@ -1,12 +1,9 @@
 import { useRouter } from 'next/router';
-import { ComponentType, memo, useEffect } from 'react';
+import { ComponentType, createElement, memo, useEffect } from 'react';
 
 const storageKey = 'is-first-route';
 
-export const withTrackFirstRoute = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object,
->(
+export const withTrackFirstRoute = <P extends object>(
   ControlledComponent: ComponentType<P>
 ) =>
   // eslint-disable-next-line react/display-name
@@ -29,7 +26,7 @@ export const withTrackFirstRoute = <
       };
     }, [router]);
 
-    return <ControlledComponent {...(props as P)} />;
+    return createElement(ControlledComponent, props as P);
   });
 
 export const useIsFirstRoute = () => {

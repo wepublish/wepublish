@@ -1,9 +1,10 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  AuthorListDocument,
   AuthorSort,
+  DeleteAuthorDocument,
   FullAuthorFragment,
-  useAuthorListQuery,
-  useDeleteAuthorMutation,
 } from '@wepublish/editor/api';
 import {
   AuthorEditPanel,
@@ -24,6 +25,7 @@ import {
   PermissionControl,
   Table,
   TableWrapper,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -40,6 +42,7 @@ import {
   Pagination,
   Table as RTable,
 } from 'rsuite';
+import type { RowDataType } from 'rsuite-table';
 
 const { Column, HeaderCell, Cell } = RTable;
 
@@ -81,10 +84,11 @@ function AuthorList() {
   );
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortField, setSortField] = useState('createdAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [filter, setFilter] = useState('');
+  const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
+    useListViewState<string>('authors', {
+      defaultFilter: '',
+      defaultSortField: 'createdAt',
+    });
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [authors, setAuthors] = useState<FullAuthorFragment[]>([]);
@@ -105,7 +109,7 @@ function AuthorList() {
     data,
     loading: isLoading,
     refetch: authorListRefetch,
-  } = useAuthorListQuery({
+  } = useQuery(AuthorListDocument, {
     variables: authorListQueryVariables,
   });
 
@@ -121,7 +125,10 @@ function AuthorList() {
     authorListQueryVariables,
   ]);
 
-  const [deleteAuthor, { loading: isDeleting }] = useDeleteAuthorMutation({});
+  const [deleteAuthor, { loading: isDeleting }] = useMutation(
+    DeleteAuthorDocument,
+    {}
+  );
 
   useEffect(() => {
     if (isCreateRoute) {
@@ -166,7 +173,10 @@ function AuthorList() {
           <InputGroup>
             <Input
               value={filter}
-              onChange={value => setFilter(value)}
+              onChange={value => {
+                setFilter(value);
+                setPage(1);
+              }}
             />
             <InputGroup.Addon>
               <MdSearch />
@@ -183,8 +193,8 @@ function AuthorList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
           <Column
@@ -192,9 +202,9 @@ function AuthorList() {
             align="left"
             resizable
           >
-            <HeaderCell>{}</HeaderCell>
+            <HeaderCell>{null}</HeaderCell>
             <CellSmallPadding>
-              {(rowData: FullAuthorFragment) => (
+              {(rowData: RowDataType<FullAuthorFragment>) => (
                 <Avatar
                   circle
                   src={rowData.image?.squareURL || undefined}
@@ -214,7 +224,7 @@ function AuthorList() {
               {(rowData: FullAuthorFragment) => (
                 <PeerAvatar peer={rowData.peer}>
                   <Link to={`/authors/edit/${rowData.id}`}>
-                    {rowData.name || t('authors.overview.untitled')}
+                    {rowData.name || t('untitled')}
                   </Link>
                 </PeerAvatar>
               )}
@@ -242,14 +252,15 @@ function AuthorList() {
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('authors.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
-              {(rowData: FullAuthorFragment) => (
+              {(rowData: RowDataType<FullAuthorFragment>) => (
                 <PermissionControl
                   qualifyingPermissions={['CAN_DELETE_AUTHOR']}
                 >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
+                      aria-label={t('delete')}
                       icon={<MdDelete />}
                       circle
                       size="sm"
@@ -281,7 +292,10 @@ function AuthorList() {
           total={data?.authors.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
 

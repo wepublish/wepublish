@@ -1,0 +1,20 @@
+{
+    "i18n-ally.localesPaths": [
+        "apps/fazetten/locales",
+        "apps/flimmer/locales",
+        "apps/ganzgraz/locales",
+        "apps/gruppetto/locales",
+        "apps/hauptstadt/locales",
+        "apps/munotgloeggli/locales",
+        "apps/onlinereports/locales",
+        "apps/reflekt/locales",
+        "apps/tsri/locales",
+        "apps/wepublish-site/locales",
+        "apps/wnti/locales",
+        "apps/zwoelf/locales",
+        "apps/editor/src/app/locales",
+        "libs/website/translations/src/lib",
+        "apps/factuel/locales"
+    ],
+    "i18n-ally.keystyle": "nested"
+}

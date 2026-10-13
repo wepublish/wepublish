@@ -1,5 +1,6 @@
 import {
   EditorBlockType,
+  MailchimpFormOptionsLayout,
   SubscribeBlockField,
   TeaserListBlockSort,
   TeaserSlotType,
@@ -12,6 +13,7 @@ import {
   MdCoffee,
   MdComment,
   MdEvent,
+  MdFileCopy,
   MdFilter,
   MdFilter1,
   MdFilter6,
@@ -20,6 +22,7 @@ import {
   MdFormatQuote,
   MdIntegrationInstructions,
   MdInterests,
+  MdMarkEmailRead,
   MdMoney,
   MdPhoto,
   MdPhotoLibrary,
@@ -31,6 +34,7 @@ import {
 
 import { BlockMapForValue } from '../atoms/blockList';
 import { isFunctionalUpdate } from '../utility';
+import { BlockTemplateBlock } from './blockTemplateBlock';
 import { CommentBlock } from './commentBlock';
 import { CrowdfundingBlock } from './CrowdfundingBlock';
 import { EmbedBlock } from './embedBlock';
@@ -41,12 +45,10 @@ import { ImageBlock } from './imageBlock';
 import { ImageGalleryBlock } from './imageGalleryBlock';
 import { LinkPageBreakBlock } from './linkPageBreakBlock';
 import { ListicleBlock } from './listicleBlock';
+import { MailchimpFormBlock } from './mailchimpFormBlock';
 import { PollBlock } from './pollBlock';
 import { QuoteBlock } from './quoteBlock';
-import {
-  createDefaultValue,
-  RichTextBlock,
-} from './richTextBlock/rich-text-block';
+import { RichTextBlock } from './richTextBlock/rich-text-block';
 import { SubscribeBlock } from './subscribeBlock';
 import { TeaserGridBlock } from './teaserGridBlock';
 import { TeaserGridFlexBlock } from './teaserGridFlexBlock';
@@ -80,7 +82,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       />
     ),
     defaultValue: {
-      richText: createDefaultValue(),
+      richText: undefined,
     },
     label: 'blocks.richText.label',
     icon: <MdFormatColorText />,
@@ -112,7 +114,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
           value: {
             image: null,
             title: '',
-            richText: createDefaultValue(),
+            richText: undefined,
           },
         },
       ],
@@ -136,7 +138,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       linkText: '',
       linkTarget: '',
       linkURL: '',
-      richText: createDefaultValue(),
+      richText: undefined,
       image: undefined,
       hideButton: false,
       blockStyle: undefined,
@@ -266,15 +268,62 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       blockStyle: undefined,
       memberPlanIds: [],
+      periodicityDisplay: null,
+      memberPlanRenderSettings: [],
       fields: [
         SubscribeBlockField.FirstName,
         SubscribeBlockField.Password,
         SubscribeBlockField.PasswordRepeated,
         SubscribeBlockField.Address,
       ],
+      showGoodies: false,
+      showDiscountCodes: false,
+      goodieMinValue: null,
+      goodieMinValueAppliesToUpgrade: false,
+      hideRepeatGoodieOnUpgrade: false,
     },
     label: 'blocks.subscribe.label',
     icon: <MdAccountBox />,
+  },
+
+  [EditorBlockType.MailchimpForm]: {
+    field: props => <MailchimpFormBlock {...props} />,
+    defaultValue: {
+      blockStyle: undefined,
+      syncProviderId: null,
+      listId: null,
+      interests: [],
+      autoFocus: true,
+      doubleOptIn: true,
+      buttonColor: '#ffd60a',
+      buttonFontColor: '#000000',
+      submitButtonLabel: '',
+      steps: [
+        {
+          skipIfFieldsFilled: [],
+          skipIfInterestsFilled: [],
+          showIfInterestsFilled: [],
+          inputs: [
+            {
+              inputType: 'email',
+              name: 'EMAIL',
+              label: 'E-Mail',
+              description: null,
+              required: true,
+              urlParam: 'email',
+              defaultValue: null,
+              value: null,
+              optionsLayout: MailchimpFormOptionsLayout.List,
+              options: [],
+            },
+          ],
+        },
+      ],
+      successUrl: '',
+      successPage: null,
+    },
+    label: 'blocks.mailchimpForm.label',
+    icon: <MdMarkEmailRead />,
   },
 
   [EditorBlockType.Poll]: {
@@ -310,7 +359,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       blocks: [
         {
-          alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
+          alignment: {
+            __typename: 'FlexAlignment',
+            i: nanoid(),
+            x: 0,
+            y: 0,
+            w: 3,
+            h: 6,
+          },
           block: null,
         },
       ],
@@ -320,5 +376,12 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       return 'blocks.flexBlock.label';
     })(),
     icon: <MdInterests />,
+  },
+
+  [EditorBlockType.BlockTemplate]: {
+    field: props => <BlockTemplateBlock {...props} />,
+    defaultValue: { template: null, blockStyle: undefined },
+    label: 'blocks.blockTemplate.label',
+    icon: <MdFileCopy />,
   },
 };

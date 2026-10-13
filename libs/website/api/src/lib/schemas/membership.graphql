@@ -18,6 +18,16 @@ fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
   forceAutoRenewal
 }
 
+fragment FullGoodie on Goodie {
+  id
+  name
+  description
+  stock
+  image {
+    ...FullImage
+  }
+}
+
 fragment FullMemberPlan on MemberPlan {
   id
   slug
@@ -30,9 +40,14 @@ fragment FullMemberPlan on MemberPlan {
     ...FullImage
   }
 
-  amountPerMonthMin
-  amountPerMonthMax
-  amountPerMonthTarget
+  periodicityPricing {
+    periodicity
+    label
+    amountMin
+    amountTarget
+    amountMax
+  }
+  defaultPaymentPeriodicity
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
@@ -52,6 +67,10 @@ fragment FullMemberPlan on MemberPlan {
   confirmationPageId
   confirmationPage {
     url
+  }
+
+  goodies {
+    ...FullGoodie
   }
 }
 
@@ -99,7 +118,12 @@ fragment FullSubscription on PublicSubscription {
     ...FullProperty
   }
 
+  goodie {
+    ...FullGoodie
+  }
+
   canExtend
+  canRevertUpgrade
   isActive
 }
 
@@ -137,9 +161,12 @@ fragment FullInvoice on Invoice {
   total
 }
 
-query CreateSubscriptionInfo($memberPlanId: String!, $voucher: String) {
-  createSubscriptionInfo(memberPlanId: $memberPlanId, voucher: $voucher) {
-    voucherValid
+query CreateSubscriptionInfo($memberPlanId: String!, $discountCode: String) {
+  createSubscriptionInfo(
+    memberPlanId: $memberPlanId
+    discountCode: $discountCode
+  ) {
+    discountCodeValid
     discountPercent
   }
 }
@@ -149,14 +176,15 @@ mutation Subscribe(
   $memberPlanSlug: Slug
   $autoRenew: Boolean!
   $paymentPeriodicity: PaymentPeriodicity!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
   $paymentMethodId: String
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
   $successURL: String
   $failureURL: String
   $deactivateSubscriptionId: String
-  $voucher: String
+  $discountCode: String
+  $goodieId: String
 ) {
   createUserSubscription(
     memberPlanID: $memberPlanId
@@ -170,7 +198,8 @@ mutation Subscribe(
     successURL: $successURL
     failureURL: $failureURL
     deactivateSubscriptionId: $deactivateSubscriptionId
-    voucher: $voucher
+    discountCode: $discountCode
+    goodieId: $goodieId
   ) {
     ...FullPayment
   }
@@ -182,11 +211,12 @@ mutation Resubscribe(
   $memberPlanSlug: Slug
   $autoRenew: Boolean!
   $paymentPeriodicity: PaymentPeriodicity!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
   $paymentMethodId: String
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
-  $voucher: String
+  $discountCode: String
+  $goodieId: String
 ) {
   createUserSubscriptionWithConfirmation(
     userId: $userId
@@ -198,7 +228,8 @@ mutation Resubscribe(
     paymentMethodID: $paymentMethodId
     paymentMethodSlug: $paymentMethodSlug
     subscriptionProperties: $subscriptionProperties
-    voucher: $voucher
+    discountCode: $discountCode
+    goodieId: $goodieId
   )
 }
 
@@ -206,17 +237,21 @@ mutation Upgrade(
   $subscriptionId: String!
   $memberPlanId: String!
   $paymentMethodId: String!
-  $monthlyAmount: Int!
+  $monthlyAmount: Float!
+  $goodieId: String
   $successURL: String
   $failureURL: String
+  $discountCode: String
 ) {
   upgradeUserSubscription(
     subscriptionId: $subscriptionId
     memberPlanId: $memberPlanId
     paymentMethodId: $paymentMethodId
     monthlyAmount: $monthlyAmount
+    goodieId: $goodieId
     successURL: $successURL
     failureURL: $failureURL
+    discountCode: $discountCode
   ) {
     ...FullPayment
   }
@@ -258,6 +293,18 @@ mutation PaySubscription(
 
 mutation CancelSubscription($subscriptionId: String!) {
   cancelUserSubscription(id: $subscriptionId) {
+    ...FullSubscription
+  }
+}
+
+mutation ReactivateSubscription($subscriptionId: String!) {
+  reactivateUserSubscription(id: $subscriptionId) {
+    ...FullSubscription
+  }
+}
+
+mutation RevertSubscriptionUpgrade($subscriptionId: String!) {
+  revertUserSubscriptionUpgrade(subscriptionId: $subscriptionId) {
     ...FullSubscription
   }
 }
@@ -343,16 +390,20 @@ query NewSubscribers($start: DateTime!, $end: DateTime) {
 query UpgradeSubscriptionInfo(
   $memberPlanId: String!
   $subscriptionId: String!
+  $discountCode: String
 ) {
   upgradeUserSubscriptionInfo(
     memberPlanId: $memberPlanId
     subscriptionId: $subscriptionId
+    discountCode: $discountCode
   ) {
     discountAmount
+    discountPercent
+    discountCodeValid
   }
 }
 
-fragment FullVoucher on Voucher {
+fragment FullDiscountCode on DiscountCode {
   id
   code
   discountPercent
@@ -366,15 +417,15 @@ fragment FullVoucher on Voucher {
   }
 }
 
-query VoucherList(
-  $filter: VoucherFilter
+query DiscountCodeList(
+  $filter: DiscountCodeFilter
   $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
-  $sort: VoucherSort
+  $sort: DiscountCodesort
 ) {
-  vouchers(
+  discountCodes(
     filter: $filter
     cursorId: $cursorId
     take: $take
@@ -383,7 +434,7 @@ query VoucherList(
     sort: $sort
   ) {
     nodes {
-      ...FullVoucher
+      ...FullDiscountCode
     }
 
     pageInfo {

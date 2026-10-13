@@ -1,4 +1,5 @@
-import { useAuthorListQuery } from '@wepublish/website/api';
+import { useQuery } from '@apollo/client/react';
+import { AuthorListDocument } from '@wepublish/website/api';
 import {
   BuilderAuthorListProps,
   BuilderContainerProps,
@@ -14,7 +15,7 @@ export function AuthorListContainer({
   onVariablesChange,
 }: AuthorListContainerProps) {
   const { AuthorList } = useWebsiteBuilder();
-  const { data, loading, error } = useAuthorListQuery({
+  const { data, loading, error } = useQuery(AuthorListDocument, {
     variables,
   });
 

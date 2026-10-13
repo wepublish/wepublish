@@ -1,7 +1,7 @@
 //@ts-check
 
 const { composePlugins, withNx } = require('@nx/next');
-const { withSentryConfig } = require('@sentry/nextjs');
+const { withSentryConfig } = require('@sentry/nextjs/config');
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.NODE_ENV === 'production',
@@ -13,18 +13,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
-  publicRuntimeConfig: {
-    env: {
-      API_URL: process.env.API_URL || '',
-      MAILCHIMP_SIGNUP_URL: process.env.MAILCHIMP_SIGNUP_URL || '',
-    },
-  },
-  serverRuntimeConfig: {
-    env: {
-      API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
-      MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY || '',
-      MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX || '',
-    },
+  env: {
+    ...wepNextConfig.env,
+    MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY,
+    MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX,
   },
 };
 
@@ -35,5 +27,11 @@ const plugins = [
 ];
 
 module.exports = withSentryConfig(composePlugins(...plugins)(nextConfig), {
-  silent: true,
+  // `silent: true` suppresses info, warn AND error, so a failed sourcemap
+  // upload leaves no trace in the build log. Keep the plugin loud.
+  silent: false,
+  // Upload all client chunks, not just static/chunks/pages + static/chunks/app.
+  // Shared chunks hold most of our app code; framework/polyfills/webpack chunks
+  // stay excluded by the plugin's own ignore list.
+  widenClientFileUpload: true,
 });

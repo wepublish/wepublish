@@ -1,4 +1,8 @@
-import { SensitiveDataUser, User, UserAddress } from '@wepublish/website/api';
+import {
+  FullSensitiveDataUserFragment,
+  FullUserFragment,
+  UserAddress,
+} from '@wepublish/website/api';
 import { mockImage } from './image';
 import { faker } from '@faker-js/faker';
 
@@ -28,7 +32,7 @@ export const mockUser = ({
   paymentProviderCustomers = [],
   active = true,
   roleIDs = [],
-}: Partial<User> & UserExtensionProperties = {}): User &
+}: Partial<FullUserFragment> & UserExtensionProperties = {}): FullUserFragment &
   UserExtensionProperties => ({
   __typename: 'User',
   id,
@@ -65,8 +69,8 @@ export const mockSensitiveDataUser = ({
   active = true,
   roleIDs = [],
   totpEnabled = false,
-}: Partial<SensitiveDataUser> &
-  UserExtensionProperties = {}): SensitiveDataUser &
+}: Partial<FullSensitiveDataUserFragment> &
+  UserExtensionProperties = {}): FullSensitiveDataUserFragment &
   UserExtensionProperties => ({
   __typename: 'SensitiveDataUser',
   id,

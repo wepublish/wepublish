@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 
 import { ListItem, OrderedList, UnorderedList } from './lists';
 
@@ -8,8 +8,10 @@ export default {
   title: 'UI/Lists',
   render: () => (
     <Stack
-      gap={1}
-      alignItems={'start'}
+      sx={{
+        gap: 1,
+        alignItems: 'start',
+      }}
     >
       <UnorderedList>
         <ListItem>One</ListItem>

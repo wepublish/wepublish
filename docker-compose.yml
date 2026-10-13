@@ -30,12 +30,40 @@ services:
       WEBSITE_URL: http://localhost:4200
       JWT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJWbdZ23hpurtFiEpnulSfJ1U4TwbkiDWmbGZSDVx3nR\n-----END PRIVATE KEY-----"
       JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA93mjXbSful1W9nAVHuYHdRfgKEF+pvkwm4/5P27J4RA=\n-----END PUBLIC KEY-----"
+      MAIL_SMTP_HOST: mailpit
+      MAIL_SMTP_PORT: '1025'
+      MAIL_SMTP_FROM: no-reply@wepublish.local
+      REDIS_URL: ''
     env_file: .env
     volumes:
       - ./apps/api-example/src/default.yaml:/config.yaml
     depends_on:
       - database
       - migration
+      - mailpit
+    networks:
+      - app-tier
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:v2.0.0
+    # Same version and ACL rules as dragonfly01.wepublish.cloud: each medium's
+    # user may only touch keys starting with its own name. See docker/dragonfly/users.acl.
+    command:
+      - --aclfile=/etc/dragonfly/users.acl
+      - --proactor_threads=2
+      - --maxmemory=1gb
+      - --cache_mode=true
+    ports:
+      - '127.0.0.1:6379:6379'
+    volumes:
+      - ./docker/dragonfly/users.acl:/etc/dragonfly/users.acl:ro
+    networks:
+      - app-tier
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      # SMTP endpoint (providers connect here) + web UI to read caught mails.
+      - '127.0.0.1:1025:1025'
+      - '127.0.0.1:8025:8025'
     networks:
       - app-tier
   editor:
@@ -51,7 +79,6 @@ services:
       - api
   database:
     image: postgres:17
-    platform: linux/amd64
     ports:
       - '5432:5432'
     volumes:
@@ -80,7 +107,6 @@ services:
       - app-tier
   pgadmin:
     image: dpage/pgadmin4
-    platform: linux/amd64
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: 'admin@admin.com'

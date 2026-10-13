@@ -1,5 +1,5 @@
 import { Link, Stack } from '@mui/material';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 import { TextField as TextFieldCmp } from './text-field';
 
@@ -8,8 +8,10 @@ export default {
   title: 'UI/TextField',
   render: () => (
     <Stack
-      gap={1}
-      alignItems={'start'}
+      sx={{
+        gap: 1,
+        alignItems: 'start',
+      }}
     >
       <TextFieldCmp label={'Default'} />
       <TextFieldCmp

@@ -1,4 +1,4 @@
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { composeStories } from '@storybook/react';
 import { act, render } from '@testing-library/react';
 import { actWait, addDateMock } from '@wepublish/testing';
@@ -9,14 +9,6 @@ const storiesCmp = composeStories(stories);
 
 describe('SubscriptionList Container', () => {
   addDateMock();
-
-  beforeAll(() => {
-    Object.defineProperty(global.window, 'location', {
-      value: {
-        href: 'http://localhost',
-      },
-    });
-  });
 
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, async () => {

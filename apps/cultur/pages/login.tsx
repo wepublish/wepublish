@@ -1,12 +1,15 @@
 import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
 import {
   IntendedRouteStorageKey,
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { getApiClient } from '@wepublish/website/api';
+import {
+  FullSessionWithTokenWithoutUserFragment,
+  getApiClient,
+} from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
@@ -18,12 +21,12 @@ const LoginWrapper = styled('div')`
   justify-content: center;
 `;
 
-type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
+type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 
 export default function Login({ sessionToken }: LoginProps) {
   const { hasUser, setToken } = useUser();
   const {
-    elements: { H3 },
+    elements: { H3, Link },
   } = useWebsiteBuilder();
   const router = useRouter();
 
@@ -36,7 +39,7 @@ export default function Login({ sessionToken }: LoginProps) {
   if (hasUser && typeof window !== 'undefined') {
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();
     deleteCookie(IntendedRouteStorageKey);
-    const route = intendedRoute ?? '/';
+    const route = intendedRoute ?? '/profile';
 
     router.replace(route);
   }
@@ -44,7 +47,15 @@ export default function Login({ sessionToken }: LoginProps) {
   return (
     <LoginWrapper>
       <H3 component="h1">Login für Member</H3>
-
+      <Typography
+        variant="body1"
+        sx={{
+          marginBottom: '16px',
+        }}
+      >
+        (Falls du noch keinen Account hast,{' '}
+        <Link href={'/mitmachen'}>klicke hier.</Link>)
+      </Typography>
       <LoginFormContainer
         defaults={{
           email: router.query?.mail as string | undefined,

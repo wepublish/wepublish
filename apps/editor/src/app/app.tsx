@@ -1,6 +1,7 @@
-import 'rsuite/styles/index.less';
+import 'rsuite/dist/rsuite.css';
 
-import { gql, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { css, Global } from '@emotion/react';
 import {
   BannerList,
@@ -27,11 +28,12 @@ import {
 } from '@wepublish/editor/api';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
+  MailLogList,
+  MailSendPage,
+  MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
-  PlaceholderList,
   SubscriptionFlowList,
-  SystemMailList,
 } from '@wepublish/membership/editor';
 import { SettingList } from '@wepublish/settings/editor';
 import {
@@ -43,29 +45,43 @@ import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { CustomProvider } from 'rsuite';
+import de from 'rsuite/locales/de_DE';
 import enGB from 'rsuite/locales/en_GB';
+import fr from 'rsuite/locales/fr_FR';
 
 import { Base } from './base';
-import de from './locales/rsuiteDe';
-import fr from './locales/rsuiteFr';
+import { useColorMode } from './colorMode';
+import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
+import { LoginImpersonate } from './loginImpersonate';
 import { ResetPassword } from './resetPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
 import { AudienceDashboard } from './routes/audience/audience-dashboard';
 import { AuthorList } from './routes/authors/authorList';
 import { BlockStyleList } from './routes/blockStyles/blockStyleList';
+import { BlockTemplateEditView } from './routes/blockTemplate/blockTemplateEditView';
+import { BlockTemplateList } from './routes/blockTemplate/blockTemplateList';
 import { CommentRatingEditView } from './routes/commentRatings/commentRatingEditView';
 import { CommentEditView } from './routes/comments/commentEditView';
 import { CommentList } from './routes/comments/commentList';
 import { Dashboard } from './routes/dashboard/dashboard';
+import { DiscountCodeCreateView } from './routes/discountCode/discountCodeCreateView';
+import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView';
+import { DiscountCodeList } from './routes/discountCode/discountCodeList';
+import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
+import { NotificationsPage } from './routes/notifications/notificationsPage';
+import { AuditLogList } from './routes/auditLog/auditLogList';
 import { DocumentList } from './routes/documents/documentList';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
 import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
 import { ExternalApps } from './routes/externalApps/externalAppsEdit';
+import { GoodieCreateView } from './routes/goodie/goodieCreateView';
+import { GoodieEditView } from './routes/goodie/goodieEditView';
+import { GoodieList } from './routes/goodie/goodieList';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
@@ -92,9 +108,6 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
-import { VoucherCreateView } from './routes/voucher/voucherCreateView';
-import { VoucherEditView } from './routes/voucher/voucherEditView';
-import { VoucherList } from './routes/voucher/voucherList';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
@@ -142,6 +155,7 @@ export function App() {
   });
 
   const { session } = useContext(AuthContext);
+  const { mode: colorMode } = useColorMode();
 
   useEffect(() => {
     if (session === null && !window.location.pathname.startsWith('/login')) {
@@ -156,25 +170,34 @@ export function App() {
           .rs-table {
             .highlighted-row,
             .highlighted-row &-cell-group &-cell {
-              background-color: #f2faff;
+              background-color: var(--wep-row-highlight);
             }
 
             &-row.approved:not(&-row-header),
             &-row.approved &-cell-group,
             &-row.approved &-cell {
-              background: #e1f8de;
+              background: var(--wep-row-approved);
+            }
+
+            &-row.approved &-cell-first {
+              box-shadow: inset 3px 0 0 var(--wep-accent-approved);
             }
 
             &-row.pending-user:not(&-row-header),
             &-row.pending-user &-cell-group,
             &-row.pending-user &-cell {
-              background: #f8def2;
+              background: var(--wep-row-pending);
+            }
+
+            &-row.pending-user &-cell-first,
+            &-row.pending-approval &-cell-first {
+              box-shadow: inset 3px 0 0 var(--wep-accent-pending);
             }
 
             &-row.pending-approval:not(&-row-header),
             &-row.pending-approval &-cell-group,
             &-row.pending-approval &-cell {
-              background: #f8def2;
+              background: var(--wep-row-pending);
             }
 
             &-row.rejected:not(&-row-header),
@@ -188,16 +211,16 @@ export function App() {
             &-hover &-row.rejected:not(&-row-header):hover,
             &-hover &-row.rejected:hover &-cell-group,
             &-hover &-row.rejected:hover &-cell {
-              color: rgb(83, 85, 83);
+              color: var(--rs-text-secondary);
               text-decoration: line-through;
             }
           }
 
           .icon-selector {
-            fill: #7a7a7a;
+            fill: var(--rs-text-secondary);
 
             &:hover {
-              fill: #1675e0;
+              fill: var(--rs-text-link);
             }
 
             svg {
@@ -226,15 +249,6 @@ export function App() {
             word-wrap: break-word;
           }
 
-          .richTextFrame {
-            padding: 0px 20px 20px;
-            border: 1px solid #e5e5ea;
-            border-radius: 7px;
-            &:hover {
-              border-color: #1675e0;
-            }
-          }
-
           .authorLinks div {
             overflow: visible;
           }
@@ -245,23 +259,32 @@ export function App() {
             margin-top: 5px;
           }
 
-          .rs-sidenav-item-active,
-          .rs-dropdown-item-active {
-            position: relative;
+          // Styles missing from v6 of rsuite
+          :root {
+            --rs-form-control-width: 100%;
+            --rs-form-group-direction: column;
+            --rs-form-group-spacing: var(--rs-spacing);
+          }
 
-            &:before {
-              content: '';
-              position: absolute;
-              width: 4px;
-              height: 100%;
-              left: 0;
-              top: 0;
-              background-color: #1675e0;
-            }
+          .rs-picker-toggle.rs-btn {
+            max-width: 100%;
+          }
+
+          .rs-grid-container-fluid,
+          .rs-form-group {
+            width: 100%;
+          }
+
+          .rs-drawer-header {
+            width: 100%;
           }
         `}
       />
-      <CustomProvider locale={lng}>
+      <EditorGlobalStyles />
+      <CustomProvider
+        locale={lng}
+        theme={colorMode}
+      >
         <BrowserRouter>
           <Routes>
             <Route
@@ -271,6 +294,10 @@ export function App() {
             <Route
               path="login/jwt/:jwt"
               element={<LoginJwt />}
+            />
+            <Route
+              path="login/impersonate/:jwt"
+              element={<LoginImpersonate />}
             />
             <Route
               path="login/reset-password"
@@ -294,6 +321,22 @@ export function App() {
               element={
                 <Base>
                   <Dashboard />
+                </Base>
+              }
+            />
+            <Route
+              path="notifications"
+              element={
+                <Base>
+                  <NotificationsPage />
+                </Base>
+              }
+            />
+            <Route
+              path="audit-log"
+              element={
+                <Base>
+                  <AuditLogList />
                 </Base>
               }
             />
@@ -436,6 +479,23 @@ export function App() {
                   <BlockStyleList />
                 </Base>
               }
+            />
+            {/* BlockTemplate Routes */}
+            <Route
+              path="block-content/templates"
+              element={
+                <Base>
+                  <BlockTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="block-content/templates/create"
+              element={<BlockTemplateEditView />}
+            />
+            <Route
+              path="block-content/templates/edit/:id"
+              element={<BlockTemplateEditView />}
             />
 
             {/* Crowdfunding Routes */}
@@ -811,7 +871,7 @@ export function App() {
               path="audience/dashboard"
               element={
                 <Base>
-                  <AudienceDashboard />
+                  <AudienceDashboard persist />
                 </Base>
               }
             />
@@ -891,28 +951,60 @@ export function App() {
                 </Base>
               }
             />
-            {/* Voucher routes */}
+            {/* DiscountCode routes */}
             <Route
-              path="vouchers"
+              path="discountCodes"
               element={
                 <Base>
-                  <VoucherList />
+                  <DiscountCodeList />
                 </Base>
               }
             />
             <Route
-              path="vouchers/edit/:id"
+              path="discountCodes/edit/:id"
               element={
                 <Base>
-                  <VoucherEditView />
+                  <DiscountCodeEditView />
                 </Base>
               }
             />
             <Route
-              path="vouchers/create"
+              path="discountCodes/create"
               element={
                 <Base>
-                  <VoucherCreateView />
+                  <DiscountCodeCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="discountCodes/usage/:id"
+              element={
+                <Base>
+                  <DiscountCodeUsageView />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies"
+              element={
+                <Base>
+                  <GoodieList />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies/edit/:id"
+              element={
+                <Base>
+                  <GoodieEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="goodies/create"
+              element={
+                <Base>
+                  <GoodieCreateView />
                 </Base>
               }
             />
@@ -983,18 +1075,44 @@ export function App() {
               }
             />
             <Route
-              path="mailtemplates/placeholders"
+              path="mailtemplates/create"
               element={
                 <Base>
-                  <PlaceholderList />
+                  <MailTemplateEdit />
                 </Base>
               }
             />
             <Route
-              path="systemmails"
+              path="mailtemplates/edit/:id"
               element={
                 <Base>
-                  <SystemMailList />
+                  <MailTemplateEdit />
+                </Base>
+              }
+            />
+            {/* System mails are now part of the automatic mails view */}
+            <Route
+              path="systemmails"
+              element={
+                <Navigate
+                  to="/communicationflows/edit/default"
+                  replace
+                />
+              }
+            />
+            <Route
+              path="mailsend"
+              element={
+                <Base>
+                  <MailSendPage />
+                </Base>
+              }
+            />
+            <Route
+              path="maillog"
+              element={
+                <Base>
+                  <MailLogList />
                 </Base>
               }
             />

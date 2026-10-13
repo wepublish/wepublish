@@ -1,7 +1,7 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 
 import { NextPage, NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { withAuthGuard } from '../../../auth-guard';
 import { ssrAuthLink } from '../../../auth-link';
@@ -9,21 +9,18 @@ import { getSessionTokenProps } from '../../../get-session-token-props';
 import { handleJwtLogin } from '../../../handle-jwt-login';
 import { ComponentProps } from 'react';
 import {
+  InvoicesDocument,
+  MeDocument,
+  SubscriptionsDocument,
   SubscriptionsQuery,
-  useSubscriptionsQuery,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
   SubscriptionListContainer,
   InvoiceListContainer,
 } from '@wepublish/membership/website';
-import {
-  getApiClient,
-  MeDocument,
-  SubscriptionsDocument,
-  InvoicesDocument,
-  addClientCacheToProps,
-} from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { fetch404 } from '../../../fetch-404';
 import { useTranslation } from 'react-i18next';
@@ -59,7 +56,7 @@ function SubscriptionPage() {
   } = useWebsiteBuilder();
   const { t } = useTranslation();
 
-  const { data } = useSubscriptionsQuery({
+  const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
   });
   const subscription = data?.userSubscriptions.find(sub => sub.id === id);
@@ -81,7 +78,7 @@ function SubscriptionPage() {
       </SubscriptionListWrapper>
 
       <SubscriptionListWrapper>
-        <H4 component={'h1'}>Rechnungen</H4>
+        <H4 component={'h1'}>{t('invoice.invoices')}</H4>
 
         <InvoiceListContainer
           filter={invoices =>
@@ -90,7 +87,7 @@ function SubscriptionPage() {
         />
       </SubscriptionListWrapper>
 
-      <Link href="/profile">Zurück zum Profil</Link>
+      <Link href="/profile">{t('navbar.backToProfile')}</Link>
     </SubscriptionsWrapper>
   );
 }
@@ -103,14 +100,13 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
     return {};
   }
 
-  const { publicRuntimeConfig } = getConfig();
   const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
   ]);
 
-  await handleJwtLogin(ctx, client, !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE);
+  await handleJwtLogin(ctx, client, !!process.env.HTTP_ONLY_COOKIE);
 
   const sessionProps = await getSessionTokenProps(ctx);
 
@@ -129,7 +125,7 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
 
     if (
       !subscriptions.error &&
-      !subscriptions.data.userSubscriptions.find(
+      !subscriptions.data?.userSubscriptions.find(
         subscription => subscription.id === ctx.query.id
       )
     ) {

@@ -24,7 +24,7 @@ type StoreAutoRenewal = {
 export type Action = {
   type: SubscriptionEvent;
   daysAwayFromEnding: number | null;
-  externalMailTemplate: string | null;
+  mailTemplateId: string | null;
 };
 
 export type LookupActionInput = {

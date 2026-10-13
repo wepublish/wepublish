@@ -1,18 +1,21 @@
-export function getContainedImageSize(img: HTMLImageElement): [number, number] {
+export function getContainedImageSize(
+  img: HTMLImageElement,
+  availableWidth = Number.POSITIVE_INFINITY
+): [number, number] {
+  const boxWidth = Math.min(img.width, availableWidth);
+  const boxHeight = img.height;
   const ratio = img.naturalWidth / img.naturalHeight;
 
-  let width = img.height * ratio;
-  let height = img.height;
-
-  if (width > img.width) {
-    width = img.width;
-    height = img.width / ratio;
+  if (!Number.isFinite(ratio) || ratio <= 0) {
+    return [boxWidth, boxHeight];
   }
 
-  const parentWidth = img.parentElement?.clientWidth ?? 0;
+  let width = boxHeight * ratio;
+  let height = boxHeight;
 
-  if (width > parentWidth) {
-    width = parentWidth;
+  if (width > boxWidth) {
+    width = boxWidth;
+    height = boxWidth / ratio;
   }
 
   return [width, height] as const;

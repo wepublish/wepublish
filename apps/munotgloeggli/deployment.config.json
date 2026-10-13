@@ -6,9 +6,7 @@
   "website": {
     "production": {
       "deployment": true,
-      "env": {
-        "PA_ID": "pa-4AWpxQJhhfUdDPHxdWWMP"
-      },
+      "env": {},
       "secret_env": [],
       "custom_domain": "https://munotgloeggli.ch"
     },

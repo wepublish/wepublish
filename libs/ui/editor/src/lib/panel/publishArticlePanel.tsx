@@ -10,6 +10,7 @@ import {
   DescriptionListItemWithMessage,
   InfoColor,
 } from '../atoms';
+import { formatArticleAuthors } from './articleAuthorList';
 import { ArticleMetadata } from './articleMetadataPanel';
 
 export interface PublishArticlePanelProps {
@@ -63,7 +64,7 @@ function PublishArticlePanel({
             marginTop: '0.25rem',
             marginBottom: '2rem',
             fontSize: '0.75rem',
-            color: '#555',
+            color: 'var(--rs-text-secondary)',
           }}
         >
           {firstPublishedAtDate ?
@@ -110,12 +111,16 @@ function PublishArticlePanel({
             {metadata.seoTitle}
           </DescriptionListItemWithMessage>
 
+          <DescriptionListItem label={t('articleEditor.panels.seoDescription')}>
+            {metadata.seoDescription || '-'}
+          </DescriptionListItem>
+
           <DescriptionListItemWithMessage
             label={t('articleEditor.panels.authors')}
             message={t('articleEditor.panels.enterAuthors')}
             messageType={InfoColor.warning}
           >
-            {metadata.authors.map(e => e.name).join(', ')}
+            {formatArticleAuthors(metadata.authors)}
           </DescriptionListItemWithMessage>
 
           <DescriptionListItemWithMessage
@@ -186,7 +191,7 @@ function PublishArticlePanel({
 
           <DescriptionListItemWithMessage
             label={t('articleEditor.panels.socialMediaImage')}
-            message={t('articleEditor.panels.enterSocialMediaDescription')}
+            message={t('articleEditor.panels.enterSocialMediaImage')}
             messageType={InfoColor.warning}
           >
             {metadata.socialMediaImage?.filename}

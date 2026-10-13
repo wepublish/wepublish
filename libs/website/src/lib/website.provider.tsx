@@ -7,7 +7,11 @@ import {
   ArticleSEO,
   ArticleTags,
 } from '@wepublish/article/website';
-import { LoginForm, RegistrationForm } from '@wepublish/authentication/website';
+import {
+  LoginForm,
+  RegistrationForm,
+  UserForm,
+} from '@wepublish/authentication/website';
 import {
   ArticleAuthor,
   Author,
@@ -29,11 +33,13 @@ import {
   FacebookVideoBlock,
   FocusTeaser,
   HtmlBlock,
+  MailchimpFormBlock,
   IFrameBlock,
   ImageBlock,
   ImageGalleryBlock,
   ImageSlider,
   InstagramPostBlock,
+  Lightbox,
   ListicleBlock,
   PolisConversationBlock,
   PollBlock,
@@ -60,6 +66,7 @@ import {
   AlternatingTeaser,
   AlternatingTeaserSlotsBlock,
   FlexBlock,
+  BlockTemplateBlock,
 } from '@wepublish/block-content/website';
 import {
   Comment,
@@ -67,7 +74,6 @@ import {
   CommentList,
   CommentListItem,
   CommentListItemChild,
-  CommentListItemShare,
   CommentRatings,
 } from '@wepublish/comments/website';
 import {
@@ -82,6 +88,8 @@ import {
   InvoiceList,
   InvoiceListItem,
   MemberPlanItem,
+  GoodiePicker,
+  MemberPlanOfferPicker,
   MemberPlanPicker,
   PaymentAmountSlider,
   PaymentMethodPicker,
@@ -91,6 +99,7 @@ import {
   SubscriptionListItem,
   TransactionFee,
   Upgrade,
+  PaymentAmountPicker,
 } from '@wepublish/membership/website';
 import { Footer, Navbar } from '@wepublish/navigation/website';
 import { Page, PageSEO } from '@wepublish/page/website';
@@ -117,12 +126,13 @@ import {
   Pagination,
   Paragraph,
   Rating,
+  Share,
   TextToIcon,
   UnorderedList,
 } from '@wepublish/ui';
 import { ImageUpload, PersonalDataForm } from '@wepublish/user/website';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import { format, getDefaultOptions } from 'date-fns';
+import { format, getDefaultOptions, Locale } from 'date-fns';
 import { memo, PropsWithChildren } from 'react';
 import { IconContext } from 'react-icons';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -130,12 +140,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 import { Paywall } from '@wepublish/paywall/website';
 import { Tag, TagSEO } from '@wepublish/tag/website';
-import { FontStyleOptions } from '@mui/material/styles/createTypography';
+import { TypographyVariantsOptions } from '@mui/material/styles';
 
 export type WebsiteProps = PropsWithChildren;
 
 const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime ? format(date, 'dd.MM.yyyy HH:mm') : format(date, 'dd.MM.yyyy');
+  format(date, includeTime ? 'dd.MM.yyyy HH:mm' : 'dd.MM.yyyy', {
+    locale: (getDefaultOptions() as { locale: Locale }).locale,
+  });
 
 const globalStyles = (
   <GlobalStyles
@@ -143,10 +155,10 @@ const globalStyles = (
       html,
       body {
         scroll-padding-top: ${theme.spacing(7)};
-        font-family: ${(theme.typography as FontStyleOptions).allVariants
-          ?.fontFamily};
-        font-weight: ${(theme.typography as FontStyleOptions).allVariants
-          ?.fontWeight};
+        font-family: ${(theme.typography as TypographyVariantsOptions)
+          .allVariants?.fontFamily};
+        font-weight: ${(theme.typography as TypographyVariantsOptions)
+          .allVariants?.fontWeight};
         hyphens: auto;
         word-break: break-word;
 
@@ -172,6 +184,17 @@ const globalStyles = (
       iframe {
         // fixes taking up more space than needed in 'display: block' wrappers
         vertical-align: bottom;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table,
+      td,
+      th {
+        border: 1px solid black;
       }
     `}
   />
@@ -206,7 +229,6 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         EventListItem={EventListItem}
         CommentList={CommentList}
         CommentListItem={CommentListItem}
-        CommentListItemShare={CommentListItemShare}
         CommentListItemChild={CommentListItemChild}
         Comment={Comment}
         CommentEditor={CommentEditor}
@@ -216,14 +238,18 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}
         PersonalDataForm={PersonalDataForm}
+        UserForm={UserForm}
         SubscriptionList={SubscriptionList}
         SubscriptionListItem={SubscriptionListItem}
         InvoiceList={InvoiceList}
         InvoiceListItem={InvoiceListItem}
+        GoodiePicker={GoodiePicker}
         MemberPlanPicker={MemberPlanPicker}
         MemberPlanItem={MemberPlanItem}
+        MemberPlanOfferPicker={MemberPlanOfferPicker}
         PeriodicityPicker={PeriodicityPicker}
-        PaymentAmount={PaymentAmountSlider}
+        PaymentAmountSlider={PaymentAmountSlider}
+        PaymentAmountPicker={PaymentAmountPicker}
         PaymentMethodPicker={PaymentMethodPicker}
         TransactionFee={TransactionFee}
         Subscribe={Subscribe}
@@ -233,6 +259,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         Tag={Tag}
         TagSEO={TagSEO}
         TextToIcon={TextToIcon}
+        Share={Share}
         elements={{
           TextField,
           Rating,
@@ -265,6 +292,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           Comment: CommentBlock,
           Quote: QuoteBlock,
           HTML: HtmlBlock,
+          MailchimpForm: MailchimpFormBlock,
           Poll: PollBlock,
           Crowdfunding: CrowdfundingBlock,
           RichText: RichTextBlock,
@@ -290,12 +318,14 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           StreamableVideo: StreamableVideoBlock,
           YouTubeVideo: YouTubeVideoBlock,
           FlexBlock,
+          BlockTemplate: BlockTemplateBlock,
         }}
         blockStyles={{
           Banner,
           ContextBox,
           FocusTeaser,
           ImageSlider,
+          Lightbox,
           TeaserSlider,
           AlternatingTeaser,
           AlternatingTeaserGrid: AlternatingTeaserGridBlock,

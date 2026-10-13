@@ -1,19 +1,20 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import {
   CommentItemType,
+  CreateCommentDocument,
+  DeletePageDocument,
+  DuplicatePageDocument,
   FullPageFragment,
   PageFilter,
   PageListDocument,
   PageListQuery,
   PageSort,
   TagType,
-  useCreateCommentMutation,
-  useDeletePageMutation,
-  useDuplicatePageMutation,
-  usePageListQuery,
-  useUnpublishPageMutation,
+  UnpublishPageDocument,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
+  ColumnConfigurator,
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
@@ -31,6 +32,10 @@ import {
   StatusBadge,
   Table,
   TableWrapper,
+  ListColumn,
+  renderListColumns,
+  useColumnConfig,
+  useListViewState,
 } from '@wepublish/ui/editor';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,14 +47,22 @@ import {
   MdUnpublished,
 } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Message, Modal, Pagination, Table as RTable } from 'rsuite';
+import {
+  Button,
+  IconButton as RIconButton,
+  Message,
+  Modal,
+  Pagination,
+  Table as RTable,
+} from 'rsuite';
+import type { RowDataType } from 'rsuite-table';
 
 interface State {
   state: string;
   text: string;
 }
 
-const { Column, HeaderCell, Cell } = RTable;
+const { Column, HeaderCell } = RTable;
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -74,22 +87,25 @@ function PageList() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [filter, setFilter] = useState({} as PageFilter);
+  const { filter, setFilter, sortField, sortOrder, setSort, limit, setLimit } =
+    useListViewState<PageFilter>('pages');
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<FullPageFragment>();
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>();
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortField, setSortField] = useState('modifiedAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const [deletePage, { loading: isDeleting }] = useDeletePageMutation({});
-  const [unpublishPage, { loading: isUnpublishing }] = useUnpublishPageMutation(
+  const [deletePage, { loading: isDeleting }] = useMutation(
+    DeletePageDocument,
     {}
   );
-  const [duplicatePage, { loading: isDuplicating }] = useDuplicatePageMutation(
+  const [unpublishPage, { loading: isUnpublishing }] = useMutation(
+    UnpublishPageDocument,
+    {}
+  );
+  const [duplicatePage, { loading: isDuplicating }] = useMutation(
+    DuplicatePageDocument,
     {}
   );
 
@@ -105,7 +121,7 @@ function PageList() {
     data,
     refetch,
     loading: isLoading,
-  } = usePageListQuery({
+  } = useQuery(PageListDocument, {
     variables: pageListVariables,
   });
 
@@ -126,24 +142,121 @@ function PageList() {
     refetch(pageListVariables);
   }, [filter, page, limit, sortOrder, sortField]);
 
-  const [createComment] = useCreateCommentMutation({});
+  const [createComment] = useMutation(CreateCommentDocument, {});
+
+  const dataColumns = useMemo<ListColumn<FullPageFragment>[]>(
+    () => [
+      {
+        id: 'states',
+        label: t('pages.overview.states'),
+        width: 190,
+        resizable: false,
+        alwaysVisible: true,
+        render: page => {
+          const states: State[] = [];
+
+          if (page.draft) {
+            states.push({ state: 'draft', text: t('pages.overview.draft') });
+          }
+          if (page.pending) {
+            states.push({
+              state: 'pending',
+              text: t('pages.overview.pending'),
+            });
+          }
+          if (page.published) {
+            states.push({
+              state: 'published',
+              text: t('pages.overview.published'),
+            });
+          }
+
+          return (
+            <StatusBadge states={states.map(st => st.state)}>
+              {states.map(st => st.text).join(' / ')}
+            </StatusBadge>
+          );
+        },
+      },
+      {
+        id: 'title',
+        label: t('pages.overview.title'),
+        width: 400,
+        alwaysVisible: true,
+        render: page => (
+          <Link to={`/pages/edit/${page.id}`}>
+            {page.latest.title || t('pages.overview.untitled')}
+          </Link>
+        ),
+      },
+      {
+        id: 'slug',
+        label: t('pages.overview.slug'),
+        width: 210,
+        dataKey: 'slug',
+        render: page => page.slug,
+      },
+      {
+        id: 'publishedAt',
+        label: t('pages.overview.publicationDate'),
+        width: 210,
+        sortable: true,
+        dataKey: 'publishedAt',
+        alwaysVisible: true,
+        render: page =>
+          page.published?.publishedAt ?
+            t('pageEditor.overview.publishedAt', {
+              publicationDate: new Date(page.published.publishedAt),
+            })
+          : page.pending?.publishedAt ?
+            t('pageEditor.overview.publishedAtIfPending', {
+              publishedAtIfPending: new Date(page.pending.publishedAt),
+            })
+          : t('pages.overview.notPublished'),
+      },
+      {
+        id: 'modifiedAt',
+        label: t('pages.overview.updated'),
+        width: 210,
+        sortable: true,
+        dataKey: 'modifiedAt',
+        alwaysVisible: true,
+        render: page =>
+          t('pageEditor.overview.modifiedAt', {
+            modificationDate: new Date(page.modifiedAt),
+          }),
+      },
+    ],
+    [t]
+  );
+
+  const { isVisible, toggle, configurableColumns } = useColumnConfig(
+    'pages',
+    dataColumns
+  );
 
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
           <h2>{t('pages.overview.pages')}</h2>
+
+          <ColumnConfigurator
+            columns={configurableColumns}
+            isVisible={isVisible}
+            onToggle={toggle}
+          />
         </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
           <ListViewActions>
             <Link to="/pages/create">
-              <IconButton
+              <RIconButton
                 appearance="primary"
                 disabled={isLoading}
                 icon={<MdAdd />}
               >
                 {t('pages.overview.newPage')}
-              </IconButton>
+              </RIconButton>
             </Link>
           </ListViewActions>
         </PermissionControl>
@@ -152,6 +265,7 @@ function PageList() {
           fields={[
             'title',
             'description',
+            'slug',
             'draft',
             'pending',
             'published',
@@ -179,108 +293,20 @@ function PageList() {
             rowData?.id === highlightedRowId ? 'highlighted-row' : ''
           }
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc');
-            setSortField(sortColumn);
+            setSort(sortColumn, sortType ?? 'asc');
+            setPage(1);
           }}
         >
-          <Column
-            width={125}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('pages.overview.states')}</HeaderCell>
-            <Cell>
-              {(rowData: FullPageFragment) => {
-                const states: State[] = [];
-
-                if (rowData.draft)
-                  states.push({
-                    state: 'draft',
-                    text: t('pages.overview.draft'),
-                  });
-                if (rowData.pending)
-                  states.push({
-                    state: 'pending',
-                    text: t('pages.overview.pending'),
-                  });
-                if (rowData.published)
-                  states.push({
-                    state: 'published',
-                    text: t('pages.overview.published'),
-                  });
-
-                return (
-                  <StatusBadge states={states.map(st => st.state)}>
-                    {states.map(st => st.text).join(' / ')}
-                  </StatusBadge>
-                );
-              }}
-            </Cell>
-          </Column>
-
-          <Column
-            width={400}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('pages.overview.title')}</HeaderCell>
-            <Cell>
-              {(rowData: FullPageFragment) => (
-                <Link to={`/pages/edit/${rowData.id}`}>
-                  {rowData.latest.title || t('pages.overview.untitled')}
-                </Link>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={210}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
-            <Cell dataKey="publishedAt">
-              {(pageRef: FullPageFragment) =>
-                pageRef.published?.publishedAt ?
-                  t('pageEditor.overview.publishedAt', {
-                    publicationDate: new Date(pageRef.published.publishedAt),
-                  })
-                : pageRef.pending?.publishedAt ?
-                  t('pageEditor.overview.publishedAtIfPending', {
-                    publishedAtIfPending: new Date(
-                      pageRef.pending?.publishedAt
-                    ),
-                  })
-                : t('pages.overview.notPublished')
-              }
-            </Cell>
-          </Column>
-
-          <Column
-            width={210}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
-            <Cell dataKey="modifiedAt">
-              {({ modifiedAt }: FullPageFragment) =>
-                t('pageEditor.overview.modifiedAt', {
-                  modificationDate: new Date(modifiedAt),
-                })
-              }
-            </Cell>
-          </Column>
+          {renderListColumns(dataColumns, isVisible)}
 
           <Column
             width={220}
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('pages.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <IconButtonCell>
-              {(rowData: FullPageFragment) => (
+              {(rowData: RowDataType<FullPageFragment>) => (
                 <>
                   <PermissionControl
                     qualifyingPermissions={['CAN_PUBLISH_PAGE']}
@@ -289,12 +315,13 @@ function PageList() {
                       caption={t('pageEditor.overview.unpublish')}
                     >
                       <IconButton
+                        aria-label={t('pageEditor.overview.unpublish')}
                         icon={<MdUnpublished />}
                         circle
                         disabled={!(rowData.published || rowData.pending)}
                         size="sm"
                         onClick={e => {
-                          setCurrentPage(rowData);
+                          setCurrentPage(rowData as FullPageFragment);
                           setConfirmAction(ConfirmAction.Unpublish);
                           setConfirmationDialogOpen(true);
                         }}
@@ -309,11 +336,12 @@ function PageList() {
                       caption={t('pageEditor.overview.duplicate')}
                     >
                       <IconButton
+                        aria-label={t('pageEditor.overview.duplicate')}
                         icon={<MdContentCopy />}
                         circle
                         size="sm"
                         onClick={() => {
-                          setCurrentPage(rowData);
+                          setCurrentPage(rowData as FullPageFragment);
                           setConfirmAction(ConfirmAction.Duplicate);
                           setConfirmationDialogOpen(true);
                         }}
@@ -328,6 +356,7 @@ function PageList() {
                       caption={t('pageEditor.overview.createComment')}
                     >
                       <IconButton
+                        aria-label={t('pageEditor.overview.createComment')}
                         icon={<MdComment />}
                         circle
                         size="sm"
@@ -335,7 +364,7 @@ function PageList() {
                           createComment({
                             variables: {
                               itemID: rowData.id,
-                              itemType: CommentItemType.Article,
+                              itemType: CommentItemType.Page,
                             },
                             onCompleted(data) {
                               navigate(
@@ -353,13 +382,14 @@ function PageList() {
                   >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
+                        aria-label={t('delete')}
                         icon={<MdDelete />}
                         circle
                         size="sm"
                         appearance="ghost"
                         color="red"
                         onClick={() => {
-                          setCurrentPage(rowData);
+                          setCurrentPage(rowData as FullPageFragment);
                           setConfirmAction(ConfirmAction.Delete);
                           setConfirmationDialogOpen(true);
                         }}
@@ -386,7 +416,10 @@ function PageList() {
           total={data?.pages.totalCount ?? 0}
           activePage={page}
           onChangePage={page => setPage(page)}
-          onChangeLimit={limit => setLimit(limit)}
+          onChangeLimit={limit => {
+            setLimit(limit);
+            setPage(1);
+          }}
         />
       </TableWrapper>
 
@@ -471,6 +504,7 @@ function PageList() {
                       cache.writeQuery<PageListQuery>({
                         query: PageListDocument,
                         data: {
+                          __typename: 'Query',
                           pages: {
                             ...query.pages,
                             nodes: query.pages.nodes.filter(
@@ -506,6 +540,7 @@ function PageList() {
                       cache.writeQuery<PageListQuery>({
                         query: PageListDocument,
                         data: {
+                          __typename: 'Query',
                           pages: {
                             ...query.pages,
                           },

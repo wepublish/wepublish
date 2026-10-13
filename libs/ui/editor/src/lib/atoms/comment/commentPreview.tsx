@@ -1,8 +1,9 @@
 import {
-  CommentRevision,
+  CommentRevisionFragment,
   CommentRevisionInput,
   FullCommentFragment,
 } from '@wepublish/editor/api';
+import { toPlaintext } from '@wepublish/richtext';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -13,7 +14,7 @@ import {
   MdTag,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Col, FlexboxGrid, Form, Grid, IconButton, Panel, Row } from 'rsuite';
+import { Col, Form, Grid, IconButton, Panel, Row, Stack } from 'rsuite';
 
 import { RichTextBlock } from '../../blocks/richTextBlock/rich-text-block';
 import { RichTextBlockValue } from '../../blocks/types';
@@ -23,7 +24,7 @@ import { CreateCommentBtn } from './createCommentBtn';
 export function CommentRevisionView({
   revision,
 }: {
-  revision: CommentRevision | undefined;
+  revision: CommentRevisionFragment | undefined;
 }) {
   const { t } = useTranslation();
   if (!revision) {
@@ -44,11 +45,7 @@ export function CommentRevisionView({
 
       {revision.text && (
         <div style={{ marginTop: '5px' }}>
-          <RichTextBlock
-            value={revision.text}
-            onChange={console.log}
-            displayOnly
-          />
+          {toPlaintext(revision.text.content)}
         </div>
       )}
     </>
@@ -176,19 +173,22 @@ export function CommentPreview({
       bordered
       collapsible
       header={
-        <FlexboxGrid justify="space-between">
-          <FlexboxGrid.Item>{getPanelHeader()}</FlexboxGrid.Item>
-          <FlexboxGrid.Item>
+        <Stack justifyContent="space-between">
+          <Stack.Item>{getPanelHeader()}</Stack.Item>
+          <Stack.Item>
             {panelExpanded && <MdExpandMore />}
             {!panelExpanded && <MdExpandLess />}
-          </FlexboxGrid.Item>
-        </FlexboxGrid>
+          </Stack.Item>
+        </Stack>
       }
       defaultExpanded={!!expanded}
       onSelect={() => setPanelExpanded(!panelExpanded)}
       style={
         expanded ?
-          { border: `1px solid black`, backgroundColor: '#f7f9fa' }
+          {
+            border: `1px solid var(--rs-text-primary)`,
+            backgroundColor: 'var(--rs-bg-well)',
+          }
         : {}
       }
     >
@@ -216,9 +216,7 @@ export function CommentPreview({
           <Row>
             {/* comment title */}
             <Col xs={24}>
-              <Form.ControlLabel>
-                {t('commentEditView.title')}
-              </Form.ControlLabel>
+              <Form.Label>{t('commentEditView.title')}</Form.Label>
               <Form.Control
                 name="commentTitle"
                 value={revision?.title || ''}
@@ -232,7 +230,7 @@ export function CommentPreview({
             </Col>
             {/* comment lead */}
             <Col xs={24}>
-              <Form.ControlLabel>{t('commentEditView.lead')}</Form.ControlLabel>
+              <Form.Label>{t('commentEditView.lead')}</Form.Label>
               <Form.Control
                 name="commentLead"
                 value={revision?.lead || ''}
@@ -249,26 +247,19 @@ export function CommentPreview({
               xs={24}
               style={{ marginTop: '20px' }}
             >
-              <Form.ControlLabel>
-                {t('commentEditView.comment')}
-              </Form.ControlLabel>
+              <Form.Label>{t('commentEditView.comment')}</Form.Label>
 
-              <Panel
-                bordered
-                style={{ backgroundColor: 'white' }}
-              >
-                <RichTextBlock
-                  value={revision?.text || []}
-                  onChange={text => {
-                    if (setRevision) {
-                      setRevision(oldRevision => ({
-                        ...oldRevision,
-                        text: text as RichTextBlockValue['richText'],
-                      }));
-                    }
-                  }}
-                />
-              </Panel>
+              <RichTextBlock
+                value={revision?.text}
+                onChange={text => {
+                  if (setRevision) {
+                    setRevision(oldRevision => ({
+                      ...oldRevision,
+                      text: text as RichTextBlockValue['richText'],
+                    }));
+                  }
+                }}
+              />
             </Col>
           </Row>
         </Grid>

@@ -1,10 +1,11 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 import {
   mockChallenge,
   mockMemberPlan,
   mockSubscribeBlock,
   mockSubscription,
 } from '@wepublish/storybook/mocks';
+import { PaymentPeriodicity } from '@wepublish/website/api';
 import { SubscribeBlock } from './subscribe-block';
 import {
   WithRouterDecorator,
@@ -40,6 +41,8 @@ export const Upgrade = {
         data: {
           upgradeUserSubscriptionInfo: {
             discountAmount: 50,
+            discountPercent: null,
+            discountCodeValid: null,
           },
         },
       },
@@ -50,7 +53,16 @@ export const Upgrade = {
               id: 'subcriptionToUpgrade',
               monthlyAmount: 100,
               memberPlan: mockMemberPlan({
-                amountPerMonthMin: 100,
+                periodicityPricing: [
+                  {
+                    __typename: 'PeriodicityPrice',
+                    periodicity: PaymentPeriodicity.Monthly,
+                    label: null,
+                    amountMin: 100,
+                    amountTarget: null,
+                    amountMax: null,
+                  },
+                ],
               }),
             }),
           ],

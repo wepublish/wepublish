@@ -1,13 +1,16 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Button, css, IconButton } from '@mui/material';
-import { ArticleDateWrapper } from '@wepublish/article/website';
-import { CommentListItemShareWrapper } from '@wepublish/comments/website';
-import { useCommentListQuery } from '@wepublish/website/api';
+import {
+  ArticleDateWrapper,
+  selectArticleAuthors,
+} from '@wepublish/article/website';
+import { ShareWrapper } from '@wepublish/ui';
+import { CommentListDocument } from '@wepublish/website/api';
 import {
   BuilderArticleAuthorsProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useEffect, useState } from 'react';
 import { MdOutlineModeComment } from 'react-icons/md';
 
 import {
@@ -94,28 +97,19 @@ export function OnlineReportsArticleAuthors({
   article,
 }: BuilderArticleAuthorsProps) {
   const {
-    CommentListItemShare,
+    Share,
     ArticleDate,
     elements: { Image, Link },
   } = useWebsiteBuilder();
 
-  const [url, setUrl] = useState(article.url);
-
-  const { data } = useCommentListQuery({
+  const { data } = useQuery(CommentListDocument, {
     fetchPolicy: 'cache-only',
     variables: {
       itemId: article.id,
     },
   });
 
-  useEffect(() => {
-    if (url.startsWith('/')) {
-      setUrl(window.location.origin + article.url);
-    }
-  }, [article.url, url]);
-
-  const authors =
-    article?.latest.authors.filter(author => !author.hideOnArticle) || [];
+  const authors = selectArticleAuthors(article).map(({ author }) => author);
 
   const scrollToComments = () => {
     const el = document.getElementById('comments');
@@ -164,7 +158,7 @@ export function OnlineReportsArticleAuthors({
 
       <CommentsShareBox>
         {!article?.disableComments && (
-          <CommentListItemShareWrapper>
+          <ShareWrapper>
             {data?.commentsForItem?.length ?
               <ShareButton
                 onClick={scrollToComments}
@@ -183,13 +177,13 @@ export function OnlineReportsArticleAuthors({
                 <MdOutlineModeComment />
               </IconButton>
             }
-          </CommentListItemShareWrapper>
+          </ShareWrapper>
         )}
 
-        <CommentListItemShare
-          title={article.latest.title ?? ''}
-          url={url}
-          forceNonSystemShare={true}
+        <Share
+          title={article.latest.title ?? undefined}
+          url={article.url}
+          overrideNavigatorShare={true}
         />
       </CommentsShareBox>
     </MetaWrapper>

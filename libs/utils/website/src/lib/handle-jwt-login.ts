@@ -1,9 +1,9 @@
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import {
+  FullSessionWithTokenWithoutUserFragment,
   LoginWithJwtDocument,
-  SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { ApolloClient } from '@apollo/client';
+import { ApolloClient, CombinedGraphQLErrors } from '@apollo/client';
 import { setCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import { EXPIRED_JWT_MESSAGE } from './with-jwt-handler';
@@ -17,8 +17,7 @@ import { EXPIRED_JWT_MESSAGE } from './with-jwt-handler';
  */
 export async function handleJwtLogin(
   ctx: NextPageContext,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  client: ApolloClient<any>,
+  client: ApolloClient,
   httpOnlyCookie?: boolean
 ): Promise<boolean> {
   if (!ctx.query.jwt) {
@@ -26,43 +25,51 @@ export async function handleJwtLogin(
   }
 
   try {
-    const { data, errors } = await client.mutate({
+    const { data, error } = await client.mutate({
       mutation: LoginWithJwtDocument,
       variables: {
-        jwt: ctx.query.jwt,
+        jwt: ctx.query.jwt.toString(),
       },
       errorPolicy: 'all',
     });
 
-    if (errors?.length || !data?.createSessionWithJWT) {
-      const totpRequired = errors?.some(e =>
-        e.message?.includes('TOTP_REQUIRED')
-      );
+    if (error || !data?.createSessionWithJWT) {
+      const totpRequired =
+        CombinedGraphQLErrors.is(error) &&
+        error.errors.some(e => e.message?.includes('TOTP_REQUIRED'));
+
       if (totpRequired) {
         // Let the client-side withJwtHandler show the TOTP prompt.
         return false;
       }
+
       redirectToLoginWithError(ctx);
       return false;
     }
 
     setCookie(
       AuthTokenStorageKey,
-      JSON.stringify(data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      JSON.stringify({
+        __typename: 'SessionWithTokenWithoutUser',
+        token: data.createSessionWithJWT.token,
+        expiresAt: data.createSessionWithJWT.expiresAt,
+        createdAt: data.createSessionWithJWT.createdAt,
+      } satisfies FullSessionWithTokenWithoutUserFragment),
       {
         req: ctx.req,
         res: ctx.res,
         expires: new Date(data.createSessionWithJWT.expiresAt),
         sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: !!httpOnlyCookie,
       }
     );
-
-    return true;
   } catch {
     redirectToLoginWithError(ctx);
     return false;
   }
+
+  return true;
 }
 
 function redirectToLoginWithError(ctx: NextPageContext) {
@@ -70,6 +77,7 @@ function redirectToLoginWithError(ctx: NextPageContext) {
     ctx.res.writeHead(302, {
       Location: `/login?error=${encodeURIComponent(EXPIRED_JWT_MESSAGE)}`,
     });
+
     ctx.res.end();
   }
 }

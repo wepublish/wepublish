@@ -6,10 +6,9 @@ import {
   Currency,
 } from '@wepublish/website/api';
 import { InvoiceListItem } from './invoice-list-item';
-import { Meta, StoryObj } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
-import { userEvent, within } from '@storybook/test';
-import { ApolloError } from '@apollo/client';
+import { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { action } from 'storybook/actions';
+import { userEvent, within } from 'storybook/test';
 import { mockMemberPlan } from '@wepublish/storybook/mocks';
 
 export default {
@@ -107,9 +106,7 @@ export const WithPayError: StoryObj<typeof InvoiceListItem> = {
     pay: (...args: unknown[]) => {
       action('pay')(args);
 
-      throw new ApolloError({
-        errorMessage: 'Foobar',
-      });
+      throw new Error('Foobar');
     },
   },
   play: clickPay,

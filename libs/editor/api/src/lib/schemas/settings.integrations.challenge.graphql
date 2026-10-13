@@ -11,12 +11,14 @@ query SettingsIntegrationsChallenge {
 
 mutation UpdateSettingsIntegrationsChallenge(
   $id: String!
+  $type: ChallengeProviderType
   $name: String
   $secret: String
   $siteKey: String
 ) {
   updateChallengeProviderSetting(
     id: $id
+    type: $type
     name: $name
     secret: $secret
     siteKey: $siteKey
@@ -27,5 +29,17 @@ mutation UpdateSettingsIntegrationsChallenge(
     modifiedAt
     name
     type
+  }
+}
+
+mutation CreateSettingsIntegrationsChallenge(
+  $id: String!
+  $type: ChallengeProviderType!
+  $name: String
+) {
+  createChallengeProviderSetting(id: $id, type: $type, name: $name) {
+    id
+    type
+    name
   }
 }

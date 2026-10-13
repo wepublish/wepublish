@@ -160,6 +160,10 @@ export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
     display: none;
   }
 
+  && ${TeaserLead} {
+    line-height: ${({ theme }) => theme.typography.teaserLead.lineHeight};
+  }
+
   ${TeaserTags} {
     display: ${({ teaser }) => (hasTags(teaser) ? 'block' : 'none')};
 

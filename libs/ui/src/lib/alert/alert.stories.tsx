@@ -1,5 +1,5 @@
 import { Link, Stack } from '@mui/material';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/nextjs-vite';
 
 import { Alert as AlertCmp } from './alert';
 
@@ -7,7 +7,11 @@ export default {
   component: AlertCmp,
   title: 'UI/Alert',
   render: () => (
-    <Stack gap={1}>
+    <Stack
+      sx={{
+        gap: 1,
+      }}
+    >
       <AlertCmp severity="error">Error</AlertCmp>
       <AlertCmp severity="warning">Warning</AlertCmp>
       <AlertCmp severity="info">Info</AlertCmp>

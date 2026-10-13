@@ -1,6 +1,6 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { render, screen } from '@testing-library/react';
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { Form } from 'rsuite';
 import { CrowdfundingGoalType } from '@wepublish/editor/api';
 import { CrowdfundingForm } from './crowdfunding-form';
@@ -19,9 +19,9 @@ const renderForm = (goalType: CrowdfundingGoalType) =>
             additionalRevenue: 0,
             goals: [{ title: 'Goal', description: '', amount: 0 }],
           }}
-          onChange={jest.fn()}
-          onAddGoal={jest.fn()}
-          onRemoveGoal={jest.fn()}
+          onChange={vi.fn()}
+          onAddGoal={vi.fn()}
+          onRemoveGoal={vi.fn()}
         />
       </Form>
     </MockedProvider>

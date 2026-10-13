@@ -1,10 +1,10 @@
 import { generateFeed } from '@wepublish/feed/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { SortOrder } from '@wepublish/website/api';
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
+  SortOrder,
   getApiClient,
 } from '@wepublish/website/api';
 import { NextApiRequest } from 'next';
@@ -16,9 +16,9 @@ export const getFeed = async (req: NextApiRequest) => {
   const generate = await generateFeed({
     id: `${siteUrl + req.url}`,
     link: siteUrl,
-    title: 'We.Publish',
-    ttl: 10, // in minutes
-    copyright: 'We.Publish',
+    title: 'Reflekt',
+    ttl: 10,
+    copyright: 'Reflekt',
     categories: ['OSS', 'CMS', 'Journalism'],
     updated: new Date(),
     feedLinks: {
@@ -40,5 +40,5 @@ export const getFeed = async (req: NextApiRequest) => {
     } as ArticleListQueryVariables,
   });
 
-  return generate(data.articles.nodes ?? []);
+  return generate(data?.articles.nodes ?? []);
 };

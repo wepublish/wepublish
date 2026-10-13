@@ -30,7 +30,9 @@ export enum BlockType {
   Comment = 'comment',
   Event = 'event',
   Subscribe = 'subscribe',
+  MailchimpForm = 'mailchimpForm',
   FlexBlock = 'flexBlock',
+  BlockTemplate = 'blockTemplate',
 }
 
 registerEnumType(BlockType, {

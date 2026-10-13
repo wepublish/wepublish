@@ -66,6 +66,8 @@ export const Event = ({
         <Image
           css={eventImage}
           image={data.event.image}
+          caption={null}
+          linkUrl={null}
         />
       )}
 
@@ -74,12 +76,23 @@ export const Event = ({
           <MetaWrapper>
             <EventStart>
               <MdDateRange />
-              {date.format(new Date(data.event.startsAt))}
+              <time
+                suppressHydrationWarning
+                dateTime={data.event.startsAt}
+              >
+                {date.format(new Date(data.event.startsAt))}
+              </time>
             </EventStart>
 
             {data.event.endsAt && (
               <>
-                <span>&ndash;</span> {date.format(new Date(data.event.endsAt))}
+                <span>&ndash;</span>{' '}
+                <time
+                  suppressHydrationWarning
+                  dateTime={data.event.endsAt}
+                >
+                  {date.format(new Date(data.event.endsAt))}
+                </time>
               </>
             )}
           </MetaWrapper>
@@ -91,9 +104,9 @@ export const Event = ({
         </EventMeta>
       )}
 
-      <Title title={data?.event.name} />
+      <Title title={data?.event.name ?? null} />
 
-      <RichText richText={data?.event.description ?? []} />
+      <RichText richText={data?.event.description ?? null} />
     </EventWrapper>
   );
 };

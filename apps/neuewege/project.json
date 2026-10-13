@@ -1,0 +1,57 @@
+{
+  "name": "neuewege",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/neuewege",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "dependsOn": [],
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/neuewege"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/neuewege"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "neuewege:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "neuewege:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "neuewege:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "neuewege:build:production"
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../{projectRoot}/vitest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

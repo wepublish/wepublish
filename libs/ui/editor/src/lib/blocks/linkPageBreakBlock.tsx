@@ -6,14 +6,12 @@ import { Drawer, IconButton, Input as RInput } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { ChooseEditImage } from '../atoms/chooseEditImage';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import { LinkPageBreakEditPanel } from '../panel/linkPageBreakEditPanel';
 import { isFunctionalUpdate } from '../utility';
-import {
-  createDefaultValue,
-  RichTextBlock,
-} from './richTextBlock/rich-text-block';
+import { RichTextBlock } from './richTextBlock/rich-text-block';
 import { LinkPageBreakBlockValue, RichTextBlockValue } from './types';
 
 const Input = styled(RInput)`
@@ -86,11 +84,14 @@ export function LinkPageBreakBlock({
     <>
       <LinkPage>
         <IconWrapper>
-          <IconButton
-            size="lg"
-            icon={<MdEdit />}
-            onClick={() => setEditPanelOpen(true)}
-          />
+          <IconButtonTooltip caption={t('blocks.linkPageBreak.editSettings')}>
+            <IconButton
+              size="lg"
+              aria-label={t('blocks.linkPageBreak.editSettings')}
+              icon={<MdEdit />}
+              onClick={() => setEditPanelOpen(true)}
+            />
+          </IconButtonTooltip>
         </IconWrapper>
       </LinkPage>
       <ContentWrapper>
@@ -107,6 +108,7 @@ export function LinkPageBreakBlock({
             minHeight={150}
           />
         </ChooseImageWrapper>
+
         <InputWrapper>
           <Input
             ref={focusInputRef}
@@ -117,11 +119,12 @@ export function LinkPageBreakBlock({
           />
 
           <RichTextBlock
-            value={richText || createDefaultValue()}
+            value={richText}
             onChange={handleRichTextChange}
           />
         </InputWrapper>
       </ContentWrapper>
+
       <Drawer
         open={isChooseModalOpen}
         size="sm"
