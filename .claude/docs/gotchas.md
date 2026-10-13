@@ -456,6 +456,31 @@ packaged binary.
 
 ---
 
+### ⚠️ The API binary's `Intl` has no locale data: never take names from it
+
+The API's Node comes from `@yao-pkg/pkg`, built with reduced ICU. Its
+`Intl.DisplayNames` knows no region names and hands the code back:
+`new Intl.DisplayNames(['de'], { type: 'region' }).of('CH')` is `'CH'` in the
+binary (and `'ZZ'` for the unknown region), `'Schweiz'` in plain Node —
+locally, in tests and in CI. Verified 2026-10-13 with a pkg-built
+`node22` binary: ICU 78.2, resolved locale `en-US`.
+
+It shipped «CH» into the address window of Neue Wege's letters, which Pingen
+reads, although every test and the local preview showed «Schweiz».
+
+Take country names from `i18n-iso-countries` (its `langs/` are a pkg asset in
+`docker/api_build_package.json`), as `countryName` in
+[`letter-recipient.ts`](../../libs/letter/api/src/lib/letter-recipient.ts)
+does. The same applies to locale-dependent `Intl` output in general (month
+names, `toLocaleDateString('de-CH')` and friends): assume English or raw values
+in the binary.
+
+Pinned by `libs/letter/api/src/lib/letter-recipient.spec.ts` («does not depend
+on the region names of the running Node»), which loads the module with an
+`Intl` that echoes codes.
+
+---
+
 ### ⚠️ Express 5 has no bare `*` route
 
 [apps/editor/src/server-app.ts](../../apps/editor/src/server-app.ts) serves
