@@ -3136,8 +3136,6 @@
       },
       "theme": {
         "title": "Thème",
-        "expandAll": "Tout déplier",
-        "collapseAll": "Tout replier",
         "exportTheme": "Exporter le thème",
         "importTheme": "Importer le thème",
         "importSuccess": "Thème importé. Cliquez sur «Enregistrer» pour l'appliquer.",

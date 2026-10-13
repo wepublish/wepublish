@@ -3144,8 +3144,6 @@
       },
       "theme": {
         "title": "Theme",
-        "expandAll": "Alle ausklappen",
-        "collapseAll": "Alle einklappen",
         "exportTheme": "Theme exportieren",
         "importTheme": "Theme importieren",
         "importSuccess": "Theme importiert. Zum Speichern auf «Speichern» klicken.",

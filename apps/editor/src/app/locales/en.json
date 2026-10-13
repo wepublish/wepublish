@@ -3203,8 +3203,6 @@
       },
       "theme": {
         "title": "Theme",
-        "expandAll": "Expand all",
-        "collapseAll": "Collapse all",
         "exportTheme": "Export theme",
         "importTheme": "Import theme",
         "importSuccess": "Theme imported. Click «Save» to persist.",
