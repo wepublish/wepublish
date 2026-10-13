@@ -1,6 +1,7 @@
 fragment FullToken on BaseToken {
   id
   name
+  roleIDs
 }
 
 query TokenList {
@@ -9,10 +10,16 @@ query TokenList {
   }
 }
 
-mutation CreateToken($name: String!) {
-  createToken(name: $name) {
+mutation CreateToken($name: String!, $roleIDs: [String!]) {
+  createToken(name: $name, roleIDs: $roleIDs) {
     ...FullToken
     token
+  }
+}
+
+mutation UpdateToken($id: String!, $roleIDs: [String!]) {
+  updateToken(id: $id, roleIDs: $roleIDs) {
+    ...FullToken
   }
 }
 

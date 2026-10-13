@@ -106,10 +106,13 @@ export class InvoiceResolver {
 
   @Permissions(CanDeleteInvoice)
   @Mutation(returns => Invoice, {
-    description: `Deletes an existing invoice.`,
+    description: `Deletes an existing invoice. A PAID invoice is billing history and is only deleted with cascade: true (removes its billing period and items along).`,
   })
-  public deleteInvoice(@Args('id') id: string) {
-    return this.service.deleteInvoice(id);
+  public deleteInvoice(
+    @Args('id') id: string,
+    @Args('cascade', { nullable: true }) cascade?: boolean
+  ) {
+    return this.service.deleteInvoice(id, cascade ?? false);
   }
 
   @Permissions(CanCreateInvoice)

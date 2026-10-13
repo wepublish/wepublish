@@ -5,6 +5,7 @@ import { InvoicePaidNotifier } from './invoice-paid.listener';
 import { PaymentMethodConfig } from './payment-method/payment-method.config';
 import { PaymentProvider } from './payment-provider/payment-provider';
 import { PaymentWebhookController } from './payment.webhook';
+import type { Mock } from 'vitest';
 
 function fakeProvider(
   id: string,
