@@ -232,6 +232,8 @@
         "breakingNewsInfo": "Marque l’article comme breaking news. Selon le design de votre site, son teaser reçoit un marquage spécial.",
         "peeringInfo": "Permet aux médias partenaires du réseau We.Publish (peers) de reprendre cet article et de le publier sur leur site.",
         "paywallInfo": "Choisissez un paywall si seul·e·s les lecteur·trice·s disposant d’un abonnement adapté doivent pouvoir lire cet article. Laissez vide pour un accès libre.",
+        "contentGateDisabled": "Pas de content gate",
+        "contentGateDisabledInfo": "La content gate active n'apparaît jamais sur cet article. Les articles avec un paywall n'ont jamais de content gate.",
         "hiddenInfo": "Les articles masqués n’apparaissent pas dans les listes automatiques d’articles du site (p.ex. derniers articles ou pages de tags), mais restent accessibles via leur lien direct.",
         "contentUrlInfo": "L’adresse web vers laquelle les lecteur·trice·s sont dirigé·e·s en cliquant sur le teaser.",
         "teaserPropertiesInfo": "Paires clé-valeur supplémentaires que votre site peut utiliser pour des affichages particuliers. Nécessaire uniquement si les personnes qui développent votre site vous l’ont demandé. Les propriétés publiques sont visibles via l’API publique.",
@@ -2772,6 +2774,72 @@
         "active": "Actif",
         "memberPlans": "Plans d’abonnement",
         "anyMemberPlan": "Tous les plans d’abonnement"
+      }
+    },
+    "contentGate": {
+      "navbar": "Content gates",
+      "list": {
+        "title": "Content gates",
+        "description": "Les content gates invitent les lecteur·rices à s'inscrire ou à s'abonner après avoir lu un certain nombre d'articles. Une seule content gate peut être active.",
+        "createNew": "Créer une content gate",
+        "active": "Active",
+        "name": "Nom",
+        "audience": "Public",
+        "metering": "Comptage",
+        "meteringSummary": "{{free}} gratuits, soft gate sur {{soft}}, hard gate dès l'article {{hard}}"
+      },
+      "create": {
+        "title": "Créer une content gate"
+      },
+      "edit": {
+        "title": "Modifier la content gate"
+      },
+      "delete": {
+        "title": "Supprimer la content gate ?",
+        "body": "Veux-tu vraiment supprimer la content gate « {{name}} » ?",
+        "delete": "Supprimer"
+      },
+      "audience": {
+        "ANONYMOUS": "Lecteur·rices non connecté·es",
+        "ANONYMOUSInfo": "Se connecter ou s'inscrire lève la gate.",
+        "NON_SUBSCRIBERS": "Lecteur·rices sans abonnement",
+        "NON_SUBSCRIBERSInfo": "Seul un abonnement actif lève la gate. Les lecteur·rices connecté·es sans abonnement la voient aussi."
+      },
+      "form": {
+        "metering": "Quand la gate apparaît-elle ?",
+        "name": "Nom (invisible pour les lecteur·rices)",
+        "active": "Active",
+        "activeInfo": "S'applique à tous les articles sans paywall. Si tu actives cette gate, toutes les autres content gates sont désactivées.",
+        "freeArticles": "Articles gratuits avant la première gate",
+        "softGateArticles": "Articles avec la soft gate",
+        "softGateArticlesInfo": "La soft gate peut être fermée, l'article peut ensuite être lu.",
+        "hardGateFrom": "Hard gate dès l'article",
+        "hardGateFromHelp": "La hard gate ne peut pas être fermée. Les lecteur·rices ne voient que le début de l'article.",
+        "meterWindowDays": "Compter les articles lus des … derniers jours",
+        "meterWindowDaysInfo": "Les lectures plus anciennes ne comptent plus. Laisse vide pour ne jamais remettre le compteur à zéro.",
+        "previewBlocks": "Blocs affichés avant la gate",
+        "previewBlocksInfo": "Seuls ces premiers blocs d'un article avec gate sont envoyés au navigateur. Le reste est chargé dès que la lectrice ou le lecteur peut lire l'article.",
+        "audience": "Qui voit la gate ?",
+        "exclusions": "Exceptions",
+        "newsletterParams": "Les liens de la newsletter contiennent",
+        "newsletterParamsInfo": "Les visites via un lien contenant l'un de ces paramètres d'URL sont considérées comme venant de la newsletter, pour le reste de la visite.",
+        "newsletterParamKey": "Paramètre, p. ex. utm_medium",
+        "newsletterParamValue": "Valeur, p. ex. email",
+        "addNewsletterParam": "Ajouter un paramètre",
+        "newsletterNeverGate": "Ne jamais afficher de gate lors des visites depuis la newsletter",
+        "newsletterFreeArticles": "Articles gratuits depuis la newsletter",
+        "newsletterFreeArticlesInfo": "Ce nombre d'articles ouverts depuis la newsletter n'affichent pas de gate et ne sont pas comptés.",
+        "content": "Que dit la gate ?",
+        "softDescription": "Texte de la soft gate",
+        "softDescriptionInfo": "Affiché dans une fenêtre que la lectrice ou le lecteur peut fermer.",
+        "hardDescription": "Texte de la hard gate",
+        "hardDescriptionInfo": "Affiché sous le début de l'article.",
+        "ctaLabel": "Texte du bouton",
+        "ctaLabelInfo": "Laisse vide pour « S'inscrire gratuitement » ou « S'abonner », selon qui voit la gate.",
+        "ctaUrl": "Lien du bouton",
+        "ctaUrlInfo": "Un chemin comme /signup ou une URL complète. Laisse vide pour la page d'inscription ou d'abonnement, selon qui voit la gate.",
+        "ctaUrlInvalid": "Saisis un chemin commençant par / ou une URL complète",
+        "mustNotBeNegative": "La valeur ne doit pas être négative"
       }
     },
     "discountCode": {

@@ -10,6 +10,56 @@ gets refactored away by the next agent.
 
 ---
 
+### ⚠️ `ArticleRevision.blocks` is truncated for readers a content gate applies to
+
+While a content gate is active, [article-revision.resolver.ts](../../libs/article/api/src/lib/article-revision.resolver.ts)
+only returns the first `previewBlocks` blocks to anonymous requests (and to
+logged-in non-subscribers for an `UNSUBSCRIBED` gate). That includes ISR
+article pages, RSS/feeds and any other anonymous API consumer. Editors
+(`CanGetArticle`), token sessions (peering) and paywalled or opted-out
+articles always get every block.
+
+Do not "fix" missing blocks by hiding the gate with CSS or dropping the cut:
+the point is that gated content never reaches the HTML or `__NEXT_DATA__`.
+Ask for `blocks(unlockContentGate: true)` instead, as `ArticleUnlocked` does.
+
+Pinned by `libs/article/api/src/lib/article-revision.resolver.spec.ts` and
+`libs/content-gate/api/src/lib/content-gate-access.spec.ts`.
+
+---
+
+### ⚠️ Paywalls, content gates and banners are one `gates` table, with three APIs' permissions
+
+[gate.service.ts](../../libs/gate/api/src/lib/gate.service.ts) owns them all.
+The `paywall`, `banner` and `content-gate` api libs only map a `Gate` onto
+the types the website already selects — do not add writes or Prisma calls
+there. `Article.paywallId` keeps its name but points at `gates`, so
+`ArticleService` rejects a banner or content gate as a paywall
+(`GateService.assertPaywall`).
+
+The gate CRUD resolver checks permissions per mode in
+[gate-permission.ts](../../libs/gate/api/src/lib/gate-permission.ts)
+(`CanCreatePaywall`, `CanUpdateBanner`, …), not with `@Permissions`, because
+the mode is only known from the input or the stored gate. Reading paywall
+and content gate gates stays public (the article editor's paywall picker
+needs it), banners need `CanGetBanner`. A new mode needs a row there.
+
+The unreleased WIP migration `20261013120000_add_content_gate` was deleted and
+folded into `20261014120000_unify_gates`, which copes with databases that
+applied it (`ADD COLUMN IF NOT EXISTS`, copies `content_gates` into `gates`).
+It runs in one `BEGIN`/`COMMIT`: Prisma does not wrap a migration in a
+transaction, and the first version failed halfway on such a database
+(*column "contentGateDisabled" of relation "articles" already exists*,
+2026-10-14), leaving `GateMode` created and `BannerActionRole` renamed. The
+partial index `gates_single_active_content_gate` is SQL-only, so
+`prisma migrate diff` never shows it.
+
+Pinned by `gate.resolver.spec.ts`, `gate.service.spec.ts` and the banner
+facade's snapshot (`banner.resolver.spec.ts.snap`, carried over from before
+the merge).
+
+---
+
 ### ⚠️ Prisma helpers are deliberately absent from the `@wepublish/testing` barrel
 
 [libs/testing/src/index.ts](../../libs/testing/src/index.ts) exports `act-wait`,

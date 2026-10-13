@@ -40,6 +40,11 @@ import {
   TrackingPixelService,
 } from '@wepublish/tracking-pixel/api';
 import { SettingDataloaderService, SettingName } from '@wepublish/settings/api';
+import {
+  ContentGate,
+  ContentGateAccessService,
+  toContentGate,
+} from '@wepublish/content-gate/api';
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -51,7 +56,8 @@ export class ArticleResolver {
     private urlAdapter: URLAdapter,
     private settings: SettingDataloaderService,
     private trackingPixelDataloader: TrackingPixelDataloader,
-    private tagDataLoader: ArticleTagDataloader
+    private tagDataLoader: ArticleTagDataloader,
+    private contentGateAccess: ContentGateAccessService
   ) {}
 
   @Public()
@@ -228,6 +234,17 @@ export class ArticleResolver {
   })
   public dislikeArticle(@Args('id') id: string) {
     return this.articleService.dislikeArticle(id);
+  }
+
+  @ResolveField(() => ContentGate, {
+    nullable: true,
+    description: `The content gate that applies to the reader of this article, if any.`,
+  })
+  async contentGate(
+    @Parent() parent: PArticle,
+    @CurrentUser() session: UserSession | undefined
+  ) {
+    return toContentGate(await this.contentGateAccess.gateFor(parent, session));
   }
 
   @ResolveField(() => ArticleRevision)

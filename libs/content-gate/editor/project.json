@@ -1,0 +1,24 @@
+{
+  "name": "content-gate-editor",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/content-gate/editor/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/content-gate/editor",
+        "tsConfig": "libs/content-gate/editor/tsconfig.lib.json",
+        "main": "libs/content-gate/editor/src/index.ts",
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}

@@ -25,7 +25,7 @@ const setup = ({
     poll: model(),
     tag: model(),
     memberPlan: model(),
-    paywall: model(),
+    gate: model(),
     articleRevision: model(),
     pageRevision: model(),
     $queryRaw: vi.fn().mockResolvedValue(rows),
@@ -84,11 +84,11 @@ const MIGRATIONS: Array<[keyof SlateToPmMigrator, Reset[]]> = [
   [
     'migrateMemberPlans',
     [
-      ['invalidate', 'paywalls'],
+      ['invalidate', 'gates'],
       ['resetNamespace', 'member-plans'],
     ],
   ],
-  ['migratePaywalls', [['invalidate', 'paywalls']]],
+  ['migratePaywalls', [['invalidate', 'gates']]],
   ['migrateArticles', ARTICLES],
   ['migratePages', PAGES],
 ];
@@ -180,7 +180,7 @@ describe('SlateToPmMigrator caches', () => {
 
     it('retires only the caches of the tables it rewrote, once each', async () => {
       const { migrator, prisma, resets } = setup({
-        raw: buggyEntityIn('authors', 'member.plans', 'paywalls'),
+        raw: buggyEntityIn('authors', 'member.plans', 'gates'),
       });
 
       await migrator.remigrateBuggyEntities();
@@ -188,8 +188,8 @@ describe('SlateToPmMigrator caches', () => {
       expect(prisma.$executeRawUnsafe).toHaveBeenCalledTimes(7);
       expect(resets()).toEqual([
         ['invalidate', 'authors'],
-        ['invalidate', 'paywalls'],
-        ['invalidate', 'paywalls'],
+        ['invalidate', 'gates'],
+        ['invalidate', 'gates'],
         ['resetNamespace', 'member-plans'],
       ]);
     });

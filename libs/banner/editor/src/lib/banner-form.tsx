@@ -1,11 +1,16 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  CreateBannerActionInput,
   FullImageFragment,
+  GateActionInput,
   LoginStatus,
   PageListDocument,
 } from '@wepublish/editor/api';
+import {
+  AudienceField,
+  BannerFormValues,
+  GateActionList,
+} from '@wepublish/gate/editor';
 import { useState } from 'react';
 import {
   Controller,
@@ -16,7 +21,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { z } from 'zod';
-import { BannerActionList } from './banner-action-list';
 import {
   ChooseEditImage,
   DRAWER_WIDTHS,
@@ -35,16 +39,13 @@ import {
   FormControlLabel,
   FormHelperText,
   FormLabel,
-  Radio,
-  RadioGroup,
   Switch,
   TextField,
   Typography,
 } from '@mui/material';
 
-export const createBannerSchema = (t: TFunction) =>
+export const createBannerSchema = (t: TFunction): z.ZodType<BannerFormValues> =>
   z.object({
-    id: z.string().optional(),
     title: z.string().min(1, t('errorMessages.required')),
     text: z.string().min(1, t('errorMessages.required')),
     cta: z.string().nullish(),
@@ -59,10 +60,8 @@ export const createBannerSchema = (t: TFunction) =>
     showOnPages: z.array(z.object({ id: z.string() })),
     imageId: z.string().nullish(),
     image: z.custom<FullImageFragment>().nullish(),
-    actions: z.array(z.custom<CreateBannerActionInput>()),
+    actions: z.array(z.custom<GateActionInput>()),
   });
-
-export type BannerFormValues = z.infer<ReturnType<typeof createBannerSchema>>;
 
 interface BannerFormProps {
   create?: boolean;
@@ -192,16 +191,15 @@ export const BannerForm = (props: BannerFormProps) => {
                 control={control}
                 name="showForLoginStatus"
                 render={({ field }) => (
-                  <RadioGroup {...field}>
-                    {Object.values(LoginStatus).map((status: LoginStatus) => (
-                      <FormControlLabel
-                        key={status}
-                        value={status}
-                        control={<Radio />}
-                        label={t(`banner.form.loginStatus.${status}`)}
-                      />
-                    ))}
-                  </RadioGroup>
+                  <AudienceField
+                    name={field.name}
+                    value={field.value}
+                    options={Object.values(LoginStatus).map(status => ({
+                      value: status,
+                      label: t(`banner.form.loginStatus.${status}`),
+                    }))}
+                    onChange={field.onChange}
+                  />
                 )}
               />
             </FormControl>
@@ -393,8 +391,8 @@ export const BannerForm = (props: BannerFormProps) => {
         <CardContent>
           <Box>
             <Typography variant="h3">{t('banner.form.actions')}</Typography>
-            <BannerActionList
-              actions={actions as unknown as CreateBannerActionInput[]}
+            <GateActionList
+              actions={actions as unknown as GateActionInput[]}
               onAdd={append}
               onRemove={remove}
               onUpdate={update}

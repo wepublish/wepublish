@@ -949,6 +949,24 @@ export const CanDeletePaywall: Permission = {
   deprecated: false,
 };
 
+export const CanCreateContentGate: Permission = {
+  id: 'CAN_CREATE_CONTENT_GATE',
+  description: 'Allows to create a content gate',
+  deprecated: false,
+};
+
+export const CanUpdateContentGate: Permission = {
+  id: 'CAN_UPDATE_CONTENT_GATE',
+  description: 'Allows to update a content gate',
+  deprecated: false,
+};
+
+export const CanDeleteContentGate: Permission = {
+  id: 'CAN_DELETE_CONTENT_GATE',
+  description: 'Allows to delete a content gate',
+  deprecated: false,
+};
+
 /**
  * AI Settings
  */
@@ -1334,6 +1352,9 @@ export const AllPermissions = [
   CanCreatePaywall,
   CanUpdatePaywall,
   CanDeletePaywall,
+  CanCreateContentGate,
+  CanUpdateContentGate,
+  CanDeleteContentGate,
   CanGetAudienceStats,
   CanGetAISettings,
   CanCreateAISettings,

@@ -275,7 +275,7 @@ export class MemberPlanService {
 
   private async forgetMemberPlans() {
     await this.kv.resetNamespace(CACHE_NAMESPACE);
-    await this.publicContentCache.invalidate('paywalls');
+    await this.publicContentCache.invalidate('gates');
   }
 }
 

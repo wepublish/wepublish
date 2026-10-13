@@ -22,7 +22,6 @@ export const SHARED_NAMESPACES = assertSharedNamespaces([
   'settings',
   'website-settings',
   'navigations',
-  'banners',
   'member-plans',
   'peer-profile',
   'peering:remote-profiles',
@@ -34,7 +33,7 @@ export const SHARED_NAMESPACES = assertSharedNamespaces([
   'content:pages',
   'content:authors',
   'content:images',
-  'content:paywalls',
+  'content:gates',
   'content:polls',
   'tracking-pixels',
 ] as const);
@@ -46,7 +45,6 @@ export const WEBSITE_PAGES_NAMESPACE = 'website:pages';
 export const PAGE_CONTENT_NAMESPACES: readonly string[] = [
   PUBLIC_CONTENT_NAMESPACE,
   'navigations',
-  'banners',
   'settings',
   'website-settings',
   'peer-profile',
@@ -65,7 +63,7 @@ export const WEBSITE_LAYOUT_NAMESPACES: readonly string[] = [
   ...PAGE_CONTENT_NAMESPACES.filter(
     namespace => namespace !== PUBLIC_CONTENT_NAMESPACE
   ),
-  'content:paywalls',
+  'content:gates',
 ];
 
 const websiteLayout = new Set<string>(WEBSITE_LAYOUT_NAMESPACES);

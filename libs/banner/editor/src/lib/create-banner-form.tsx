@@ -1,31 +1,17 @@
 import { useMutation } from '@apollo/client/react';
 import {
-  CreateBannerActionInput,
-  CreateBannerDocument,
+  CreateGateDocument,
+  GateMode,
   LoginStatus,
 } from '@wepublish/editor/api';
+import { BannerFormValues, toBannerGateInput } from '@wepublish/gate/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import {
-  BannerForm,
-  createBannerSchema,
-  BannerFormValues,
-} from './banner-form';
+import { BannerForm, createBannerSchema } from './banner-form';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-
-const removeIdAndTypename = (action: CreateBannerActionInput) => {
-  const { id, __typename, ...actionCleaned } =
-    action as CreateBannerActionInput & {
-      id?: string;
-      __typename?: string;
-    };
-  return actionCleaned;
-};
-
-const removeTypename = ({ id }: { id: string }) => ({ id });
 
 const EMPTY_BANNER = {
   title: '',
@@ -53,12 +39,12 @@ export const CreateBannerForm = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [createBanner, { loading }] = useMutation(CreateBannerDocument, {
+  const [createBanner, { loading }] = useMutation(CreateGateDocument, {
     onCompleted: data => {
       if (shouldClose) {
         navigate(closePath);
       } else {
-        navigate(`/banners/edit/${data.createBanner.id}`);
+        navigate(`/banners/edit/${data.createGate.id}`);
       }
     },
   });
@@ -66,14 +52,10 @@ export const CreateBannerForm = () => {
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit(({ image, id, ...banner }) =>
+        onSubmit={form.handleSubmit(banner =>
           createBanner({
             variables: {
-              input: {
-                ...banner,
-                actions: banner.actions?.map(removeIdAndTypename),
-                showOnPages: banner.showOnPages?.map(removeTypename),
-              },
+              input: { mode: GateMode.Banner, ...toBannerGateInput(banner) },
             },
           })
         )}

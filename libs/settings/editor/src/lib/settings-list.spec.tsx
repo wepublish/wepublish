@@ -2,7 +2,8 @@ import { MockedProvider as MockedProviderBase } from '@apollo/client/testing/rea
 import '@testing-library/jest-dom/vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import {
-  PaywallListDocument,
+  GateMode,
+  GatesDocument,
   SettingName,
   SettingsListDocument,
   SettingsListQuery,
@@ -76,10 +77,11 @@ const updateSettingMock = {
 
 const paywallListMock = {
   request: {
-    query: PaywallListDocument,
+    query: GatesDocument,
+    variables: { mode: GateMode.Paywall },
   },
   result: () => ({
-    data: { paywalls: [] },
+    data: { gates: [] },
   }),
 };
 

@@ -7,6 +7,11 @@ import {
   EditBannerForm,
 } from '@wepublish/banner/editor';
 import {
+  ContentGateList,
+  CreateContentGateForm,
+  EditContentGateForm,
+} from '@wepublish/content-gate/editor';
+import {
   ConsentCreateView,
   ConsentEditView,
   ConsentList,
@@ -362,6 +367,30 @@ export function App() {
               element={
                 <Base>
                   <PaywallCreateView />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/content-gates"
+              element={
+                <Base>
+                  <ContentGateList />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/content-gates/edit/:id"
+              element={
+                <Base>
+                  <EditContentGateForm />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/content-gates/create"
+              element={
+                <Base>
+                  <CreateContentGateForm />
                 </Base>
               }
             />

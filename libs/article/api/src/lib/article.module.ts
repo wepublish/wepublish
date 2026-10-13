@@ -18,6 +18,8 @@ import {
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { TagModule } from '@wepublish/tag/api';
+import { ContentGateModule } from '@wepublish/content-gate/api';
+import { GateModule } from '@wepublish/gate/api';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { TagModule } from '@wepublish/tag/api';
     AuthorModule,
     SettingModule,
     TagModule,
+    ContentGateModule,
+    GateModule,
     forwardRef(() => BlockContentModule),
   ],
   providers: [

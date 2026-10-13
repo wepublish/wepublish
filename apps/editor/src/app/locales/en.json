@@ -232,6 +232,8 @@
         "breakingNewsInfo": "Marks the article as breaking news. Depending on your website's design, its teaser gets a special label.",
         "peeringInfo": "Allows partner media in the We.Publish network (peers) to take over this article and publish it on their website.",
         "paywallInfo": "Choose a paywall if only readers with a suitable subscription should be able to read this article. Leave empty for free access.",
+        "contentGateDisabled": "No content gate",
+        "contentGateDisabledInfo": "The active content gate never appears on this article. Articles with a paywall never get a content gate.",
         "hiddenInfo": "Hidden articles do not appear in automatic article lists on the website (e.g. latest articles or tag pages), but remain reachable via their direct link.",
         "contentUrlInfo": "The web address readers are taken to when they click on the teaser.",
         "teaserPropertiesInfo": "Additional key-value pairs your website can use for special display options. Only needed if the people who develop your website asked you to set them. Public properties are visible via the public API.",
@@ -2840,6 +2842,72 @@
         "active": "Active",
         "memberPlans": "Subscription plans",
         "anyMemberPlan": "All subscription plans"
+      }
+    },
+    "contentGate": {
+      "navbar": "Content gates",
+      "list": {
+        "title": "Content gates",
+        "description": "Content gates ask readers to register or subscribe after they read a number of articles. Only one content gate can be active.",
+        "createNew": "Create content gate",
+        "active": "Active",
+        "name": "Name",
+        "audience": "Audience",
+        "metering": "Metering",
+        "meteringSummary": "{{free}} free, soft gate on {{soft}}, hard gate from article {{hard}}"
+      },
+      "create": {
+        "title": "Create content gate"
+      },
+      "edit": {
+        "title": "Edit content gate"
+      },
+      "delete": {
+        "title": "Delete content gate?",
+        "body": "Do you really want to delete the content gate \"{{name}}\"?",
+        "delete": "Delete"
+      },
+      "audience": {
+        "ANONYMOUS": "Readers who are not logged in",
+        "ANONYMOUSInfo": "Logging in or registering lifts the gate.",
+        "NON_SUBSCRIBERS": "Readers without a subscription",
+        "NON_SUBSCRIBERSInfo": "Only an active subscription lifts the gate. Logged-in readers without a subscription see it too."
+      },
+      "form": {
+        "metering": "When does the gate appear?",
+        "name": "Name (not visible to readers)",
+        "active": "Active",
+        "activeInfo": "Applies to every article without a paywall. Activating this gate deactivates all other content gates.",
+        "freeArticles": "Free articles before the first gate",
+        "softGateArticles": "Articles with the soft gate",
+        "softGateArticlesInfo": "The soft gate can be dismissed and the article can be read afterwards.",
+        "hardGateFrom": "Hard gate from article",
+        "hardGateFromHelp": "The hard gate cannot be dismissed. Readers only see the beginning of the article.",
+        "meterWindowDays": "Count reads of the last … days",
+        "meterWindowDaysInfo": "Older reads stop counting. Leave empty to never reset the count.",
+        "previewBlocks": "Blocks shown before the gate",
+        "previewBlocksInfo": "Only these first blocks of a gated article are sent to the browser. The rest is loaded once the reader may read the article.",
+        "audience": "Who sees the gate?",
+        "exclusions": "Exclusions",
+        "newsletterParams": "Newsletter links contain",
+        "newsletterParamsInfo": "Visits whose link contains one of these URL parameters count as coming from a newsletter, for the rest of the visit.",
+        "newsletterParamKey": "Parameter, e.g. utm_medium",
+        "newsletterParamValue": "Value, e.g. email",
+        "addNewsletterParam": "Add parameter",
+        "newsletterNeverGate": "Never show a gate on visits from a newsletter",
+        "newsletterFreeArticles": "Free articles from a newsletter",
+        "newsletterFreeArticlesInfo": "This many articles opened from a newsletter neither show a gate nor count towards it.",
+        "content": "What does the gate say?",
+        "softDescription": "Text of the soft gate",
+        "softDescriptionInfo": "Shown in a dialog the reader can close.",
+        "hardDescription": "Text of the hard gate",
+        "hardDescriptionInfo": "Shown below the beginning of the article.",
+        "ctaLabel": "Button text",
+        "ctaLabelInfo": "Leave empty for \"Register for free\" or \"Subscribe\", depending on who sees the gate.",
+        "ctaUrl": "Button link",
+        "ctaUrlInfo": "A path like /signup or a full URL. Leave empty for the registration or subscription page, depending on who sees the gate.",
+        "ctaUrlInvalid": "Enter a path starting with / or a full URL",
+        "mustNotBeNegative": "Value must not be negative"
       }
     },
     "discountCode": {

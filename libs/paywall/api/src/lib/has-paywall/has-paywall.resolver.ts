@@ -1,21 +1,22 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { GateDataloaderService } from '@wepublish/gate/api';
 import { HasPaywall, HasOptionalPaywall } from './has-paywall.model';
 import { Paywall } from '../paywall.model';
-import { PaywallDataloaderService } from '../paywall-dataloader.service';
+import { toPaywall } from '../to-paywall';
 
 @Resolver(() => HasPaywall)
 export class HasPaywallResolver {
-  constructor(private dataloader: PaywallDataloaderService) {}
+  constructor(private dataloader: GateDataloaderService) {}
 
   @ResolveField(() => Paywall, { nullable: true })
-  public paywall(@Parent() block: HasOptionalPaywall | HasPaywall) {
+  public async paywall(@Parent() block: HasOptionalPaywall | HasPaywall) {
     const id = block.paywallId;
 
     if (!id) {
       return null;
     }
 
-    return this.dataloader.load(id);
+    return toPaywall(await this.dataloader.load(id));
   }
 }
 

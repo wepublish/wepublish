@@ -1,11 +1,4 @@
-import {
-  ArgsType,
-  Field,
-  ObjectType,
-  OmitType,
-  PartialType,
-  Int,
-} from '@nestjs/graphql';
+import { Field, ObjectType, Int } from '@nestjs/graphql';
 import { MemberPlan } from '@wepublish/member-plan/api';
 import type { RichtextJSONDocument } from '@wepublish/richtext';
 import { GraphQLRichText } from '@wepublish/richtext/api';
@@ -70,26 +63,4 @@ export class Paywall {
 
   @Field(() => [PaywallBypass])
   bypasses!: PaywallBypass[];
-}
-
-@ArgsType()
-export class CreatePaywallInput extends OmitType(
-  Paywall,
-  ['id', 'memberPlans', 'bypasses', 'createdAt', 'modifiedAt'] as const,
-  ArgsType
-) {
-  @Field(() => [String])
-  memberPlanIds!: string[];
-
-  @Field(() => [String])
-  bypassTokens!: string[];
-}
-
-@ArgsType()
-export class UpdatePaywallInput extends PartialType(
-  CreatePaywallInput,
-  ArgsType
-) {
-  @Field()
-  id!: string;
 }

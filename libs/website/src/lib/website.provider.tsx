@@ -139,6 +139,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 import { Paywall } from '@wepublish/paywall/website';
+import { ContentGate } from '@wepublish/content-gate/website';
 import { Tag, TagSEO } from '@wepublish/tag/website';
 import { TypographyVariantsOptions } from '@mui/material/styles';
 
@@ -256,6 +257,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
         Upgrade={Upgrade}
         ContentWrapper={ContentWrapperStyled}
         Paywall={Paywall}
+        ContentGate={ContentGate}
         Tag={Tag}
         TagSEO={TagSEO}
         TextToIcon={TextToIcon}

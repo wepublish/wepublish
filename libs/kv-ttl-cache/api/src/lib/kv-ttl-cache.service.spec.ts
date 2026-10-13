@@ -203,7 +203,6 @@ describe('KvTtlCacheService', () => {
     it.each([
       'graphql:content',
       'navigations',
-      'banners',
       'settings',
       'website-settings',
       'peer-profile',
@@ -283,7 +282,7 @@ describe('KvTtlCacheService', () => {
 
       await replica.resetNamespace('navigations');
       await vi.advanceTimersByTimeAsync(1000);
-      await replica.resetNamespace('banners');
+      await replica.resetNamespace('member-plans');
       await vi.advanceTimersByTimeAsync(1500);
       await replica.resetNamespace('settings');
       await vi.advanceTimersByTimeAsync(70_000);
@@ -298,7 +297,7 @@ describe('KvTtlCacheService', () => {
 
       await first.resetNamespace('navigations');
       await vi.advanceTimersByTimeAsync(10_000);
-      await second.resetNamespace('banners');
+      await second.resetNamespace('member-plans');
       await vi.advanceTimersByTimeAsync(53_000);
 
       expect(changes()).toBe(1);
@@ -348,7 +347,7 @@ describe('KvTtlCacheService', () => {
       const replica = createReplica(dragonfly);
 
       for (let second = 0; second < 64; second += 2) {
-        await replica.resetNamespace('banners');
+        await replica.resetNamespace('member-plans');
         await vi.advanceTimersByTimeAsync(2000);
       }
 
@@ -384,13 +383,12 @@ describe('KvTtlCacheService', () => {
 
     it.each([
       'navigations',
-      'banners',
       'settings',
       'website-settings',
       'peer-profile',
       'member-plans',
       'peering:remote-profiles',
-      'content:paywalls',
+      'content:gates',
     ])(
       'changes at once and again six seconds after %s is reset',
       async namespace => {

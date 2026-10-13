@@ -122,6 +122,7 @@ export interface ArticleMetadata {
   image?: FullImageFragment;
   shared?: boolean;
   paywall?: string | null;
+  contentGateDisabled?: boolean | null;
   hidden?: boolean | null;
   disableComments?: boolean | null;
   breaking: boolean;
@@ -169,6 +170,7 @@ function ArticleMetadataPanel({
     authors,
     shared,
     paywall,
+    contentGateDisabled,
     hidden,
     disableComments,
     breaking,
@@ -597,6 +599,26 @@ function ArticleMetadataPanel({
                     {t('articleEditor.panels.breakingNews')}{' '}
                     <InfoTooltip
                       text={t('articleEditor.panels.breakingNewsInfo')}
+                    />
+                  </>
+                }
+              />
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={contentGateDisabled ?? false}
+                    disabled={!isAuthorized || !!paywall}
+                    onChange={(_event, contentGateDisabled) =>
+                      onChange?.({ ...value, contentGateDisabled })
+                    }
+                  />
+                }
+                label={
+                  <>
+                    {t('articleEditor.panels.contentGateDisabled')}{' '}
+                    <InfoTooltip
+                      text={t('articleEditor.panels.contentGateDisabledInfo')}
                     />
                   </>
                 }

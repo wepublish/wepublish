@@ -78,6 +78,9 @@ export enum AnalyticsProviderType {
 
 export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   __typename: 'Article';
+  /** The content gate that applies to the reader of this article, if any. */
+  contentGate?: Maybe<ContentGate>;
+  contentGateDisabled: Scalars['Boolean']['output'];
   createdAt: Scalars['DateTime']['output'];
   disableComments: Scalars['Boolean']['output'];
   draft?: Maybe<ArticleRevision>;
@@ -151,6 +154,8 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   blocks: Array<BlockContent>;
   breaking: Scalars['Boolean']['output'];
   canonicalUrl?: Maybe<Scalars['String']['output']>;
+  /** Whether blocks were left out because of a content gate. */
+  contentGated: Scalars['Boolean']['output'];
   createdAt: Scalars['DateTime']['output'];
   hideAuthor: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
@@ -170,6 +175,11 @@ export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   title?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type ArticleRevisionBlocksArgs = {
+  unlockContentGate?: Scalars['Boolean']['input'];
 };
 
 export type ArticleRevisionAuthor = {
@@ -824,28 +834,53 @@ export type ConsentFilter = {
   slug?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type CreateBannerActionInput = {
-  label: Scalars['String']['input'];
-  role: BannerActionRole;
-  style: Scalars['String']['input'];
-  url: Scalars['String']['input'];
+export type ContentGate = {
+  __typename: 'ContentGate';
+  active: Scalars['Boolean']['output'];
+  audience: ContentGateAudience;
+  createdAt: Scalars['DateTime']['output'];
+  ctaLabel?: Maybe<Scalars['String']['output']>;
+  ctaUrl?: Maybe<Scalars['String']['output']>;
+  /** Articles a reader can read before the first gate appears. */
+  freeArticles: Scalars['Int']['output'];
+  hardDescription?: Maybe<Scalars['RichText']['output']>;
+  id: Scalars['String']['output'];
+  /** Reads older than this many days stop counting. */
+  meterWindowDays?: Maybe<Scalars['Int']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  /** Articles opened from a newsletter that are neither gated nor counted. */
+  newsletterFreeArticles: Scalars['Int']['output'];
+  /** Never gate articles opened from a newsletter. */
+  newsletterNeverGate: Scalars['Boolean']['output'];
+  /** Query params that mark a visit as coming from a newsletter, e.g. utm_medium=email. */
+  newsletterParams: Array<ContentGateNewsletterParam>;
+  /** Blocks of a gated article that are sent before the gate. */
+  previewBlocks: Scalars['Int']['output'];
+  softDescription?: Maybe<Scalars['RichText']['output']>;
+  /** Articles on which the dismissible soft gate appears before the hard gate. */
+  softGateArticles: Scalars['Int']['output'];
 };
 
-export type CreateBannerInput = {
-  actions?: InputMaybe<Array<CreateBannerActionInput>>;
-  active: Scalars['Boolean']['input'];
-  collapsible: Scalars['Boolean']['input'];
-  cta?: InputMaybe<Scalars['String']['input']>;
-  delay: Scalars['Int']['input'];
-  embedUrl?: InputMaybe<Scalars['String']['input']>;
-  hideForMinutes: Scalars['Int']['input'];
-  html?: InputMaybe<Scalars['String']['input']>;
-  imageId?: InputMaybe<Scalars['String']['input']>;
-  showForLoginStatus: LoginStatus;
-  showOnArticles: Scalars['Boolean']['input'];
-  showOnPages?: InputMaybe<Array<PageModelInput>>;
-  text: Scalars['String']['input'];
-  title: Scalars['String']['input'];
+/**
+ * Who a content gate is meant for.
+ * ANONYMOUS: logging in lifts the gate.
+ * NON_SUBSCRIBERS: only an active subscription lifts the gate.
+ */
+export enum ContentGateAudience {
+  Anonymous = 'ANONYMOUS',
+  NonSubscribers = 'NON_SUBSCRIBERS'
+}
+
+export type ContentGateNewsletterParam = {
+  __typename: 'ContentGateNewsletterParam';
+  key: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
+export type ContentGateNewsletterParamInput = {
+  key: Scalars['String']['input'];
+  value: Scalars['String']['input'];
 };
 
 export type CreateCrowdfundingGoalInput = {
@@ -874,6 +909,41 @@ export type CreateExternalAppInput = {
   name: Scalars['String']['input'];
   target: ExternalAppsTarget;
   url: Scalars['String']['input'];
+};
+
+export type CreateGateInput = {
+  actions?: InputMaybe<Array<GateActionInput>>;
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  anyMemberPlan?: InputMaybe<Scalars['Boolean']['input']>;
+  audience?: InputMaybe<LoginStatus>;
+  bypassTokens?: InputMaybe<Array<Scalars['String']['input']>>;
+  circumventDescription?: InputMaybe<Scalars['RichText']['input']>;
+  collapsible?: InputMaybe<Scalars['Boolean']['input']>;
+  cta?: InputMaybe<Scalars['String']['input']>;
+  delay?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  embedUrl?: InputMaybe<Scalars['String']['input']>;
+  fadeout?: InputMaybe<Scalars['Boolean']['input']>;
+  freeArticles?: InputMaybe<Scalars['Int']['input']>;
+  hideForMinutes?: InputMaybe<Scalars['Int']['input']>;
+  html?: InputMaybe<Scalars['String']['input']>;
+  imageId?: InputMaybe<Scalars['String']['input']>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  meterWindowDays?: InputMaybe<Scalars['Int']['input']>;
+  mode: GateMode;
+  name?: InputMaybe<Scalars['String']['input']>;
+  newsletterFreeArticles?: InputMaybe<Scalars['Int']['input']>;
+  newsletterNeverGate?: InputMaybe<Scalars['Boolean']['input']>;
+  newsletterParams?: InputMaybe<Array<ContentGateNewsletterParamInput>>;
+  previewBlocks?: InputMaybe<Scalars['Int']['input']>;
+  showOnArticles?: InputMaybe<Scalars['Boolean']['input']>;
+  showOnPageIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  softDescription?: InputMaybe<Scalars['RichText']['input']>;
+  softGateArticles?: InputMaybe<Scalars['Int']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']['input']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']['input']>;
 };
 
 export type CreateSubscriptionInfo = {
@@ -1398,6 +1468,85 @@ export type FullPoll = {
   opensAt: Scalars['DateTime']['output'];
   question?: Maybe<Scalars['String']['output']>;
 };
+
+export type Gate = {
+  __typename: 'Gate';
+  actions: Array<GateAction>;
+  active: Scalars['Boolean']['output'];
+  anyMemberPlan: Scalars['Boolean']['output'];
+  audience: LoginStatus;
+  bypasses: Array<GateBypass>;
+  circumventDescription?: Maybe<Scalars['RichText']['output']>;
+  collapsible: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  cta?: Maybe<Scalars['String']['output']>;
+  delay: Scalars['Int']['output'];
+  description?: Maybe<Scalars['RichText']['output']>;
+  embedUrl?: Maybe<Scalars['String']['output']>;
+  fadeout: Scalars['Boolean']['output'];
+  freeArticles?: Maybe<Scalars['Int']['output']>;
+  hideForMinutes: Scalars['Int']['output'];
+  html?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']['output']>;
+  memberPlans: Array<MemberPlan>;
+  meterWindowDays?: Maybe<Scalars['Int']['output']>;
+  mode: GateMode;
+  modifiedAt: Scalars['DateTime']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  newsletterFreeArticles: Scalars['Int']['output'];
+  newsletterNeverGate: Scalars['Boolean']['output'];
+  newsletterParams: Array<ContentGateNewsletterParam>;
+  /** Blocks of a gated article that are shown before the gate. */
+  previewBlocks?: Maybe<Scalars['Int']['output']>;
+  showOnArticles: Scalars['Boolean']['output'];
+  showOnPages: Array<PageModel>;
+  softDescription?: Maybe<Scalars['RichText']['output']>;
+  softGateArticles?: Maybe<Scalars['Int']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  upgradeCircumventDescription?: Maybe<Scalars['RichText']['output']>;
+  upgradeDescription?: Maybe<Scalars['RichText']['output']>;
+};
+
+export type GateAction = {
+  __typename: 'GateAction';
+  id: Scalars['String']['output'];
+  label: Scalars['String']['output'];
+  role: GateActionRole;
+  style: Scalars['String']['output'];
+  url: Scalars['String']['output'];
+};
+
+export type GateActionInput = {
+  label: Scalars['String']['input'];
+  role?: InputMaybe<GateActionRole>;
+  style?: InputMaybe<Scalars['String']['input']>;
+  url: Scalars['String']['input'];
+};
+
+export enum GateActionRole {
+  Cancel = 'CANCEL',
+  Other = 'OTHER',
+  Primary = 'PRIMARY'
+}
+
+export type GateBypass = {
+  __typename: 'GateBypass';
+  createdAt: Scalars['DateTime']['output'];
+  gateId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  token: Scalars['String']['output'];
+};
+
+/** What a gate is used as. Each mode uses its own subset of the fields of a Gate. */
+export enum GateMode {
+  Banner = 'BANNER',
+  ContentGate = 'CONTENT_GATE',
+  Paywall = 'PAYWALL'
+}
 
 export type Goodie = HasImage & {
   __typename: 'Goodie';
@@ -2717,7 +2866,6 @@ export type Mutation = {
   createArticle: Article;
   /** Creates a new author. */
   createAuthor: Author;
-  createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
   /** Creates a new block template. */
@@ -2742,6 +2890,8 @@ export type Mutation = {
   createExternalApp: ExternalApp;
   /** Generates a short-lived JWT token for authenticating with an external app. */
   createExternalAppToken: ExternalAppToken;
+  /** Creates a gate. Activating a content gate deactivates every other content gate. */
+  createGate: Gate;
   /** Creates a new goodie. */
   createGoodie: Goodie;
   createImpersonationGrant: ImpersonationGrantResult;
@@ -2769,8 +2919,6 @@ export type Mutation = {
   createPaymentMethod: PaymentMethod;
   /** Creates a new payment provider setting. */
   createPaymentProviderSetting: SettingPaymentProvider;
-  /** Creates a paywall. */
-  createPaywall: Paywall;
   /** Creates a new peer. */
   createPeer: Peer;
   /** Creates a new poll. */
@@ -2818,7 +2966,6 @@ export type Mutation = {
   deleteArticle: Scalars['String']['output'];
   /** Deletes an existing author. */
   deleteAuthor: Author;
-  deleteBanner?: Maybe<Scalars['Boolean']['output']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
   /** Deletes an existing block template. */
@@ -2840,6 +2987,8 @@ export type Mutation = {
   deleteEvent: Event;
   /** Deletes an external app. */
   deleteExternalApp: ExternalApp;
+  /** Deletes a gate. */
+  deleteGate: Gate;
   /** Deletes an existing goodie. */
   deleteGoodie: Goodie;
   /** Deletes an existing image. */
@@ -2860,8 +3009,6 @@ export type Mutation = {
   deletePaymentMethod: PaymentMethod;
   /** Deletes a payment provider setting. */
   deletePaymentProviderSetting: SettingPaymentProvider;
-  /** Deletes a paywall. */
-  deletePaywall: Paywall;
   /** Deletes an existing peer. */
   deletePeer: Scalars['String']['output'];
   /** Deletes an existing poll. */
@@ -3005,7 +3152,6 @@ export type Mutation = {
   updateArticle: Article;
   /** Updates an existing author. */
   updateAuthor: Author;
-  updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
   /** Updates an existing block template. */
@@ -3032,6 +3178,8 @@ export type Mutation = {
   updateEvent: Event;
   /** Updates an existing external app. */
   updateExternalApp: ExternalApp;
+  /** Updates a gate. Activating a content gate deactivates every other content gate. */
+  updateGate: Gate;
   /** Updates an existing goodie. */
   updateGoodie: Goodie;
   /** Updates an existing image. */
@@ -3054,8 +3202,6 @@ export type Mutation = {
   updatePaymentMethod: PaymentMethod;
   /** Updates an existing payment provider setting. */
   updatePaymentProviderSetting: SettingPaymentProvider;
-  /** Updates a paywall. */
-  updatePaywall: Paywall;
   /** Updates an existing peer. */
   updatePeer: Peer;
   /** Updates the peer profile of the current media. */
@@ -3194,6 +3340,7 @@ export type MutationCreateArticleArgs = {
   blocks: Array<BlockContentInput>;
   breaking: Scalars['Boolean']['input'];
   canonicalUrl?: InputMaybe<Scalars['String']['input']>;
+  contentGateDisabled?: InputMaybe<Scalars['Boolean']['input']>;
   disableComments: Scalars['Boolean']['input'];
   hidden: Scalars['Boolean']['input'];
   hideAuthor: Scalars['Boolean']['input'];
@@ -3227,11 +3374,6 @@ export type MutationCreateAuthorArgs = {
   name: Scalars['String']['input'];
   slug: Scalars['Slug']['input'];
   tagIds: Array<Scalars['String']['input']>;
-};
-
-
-export type MutationCreateBannerArgs = {
-  input: CreateBannerInput;
 };
 
 
@@ -3308,6 +3450,11 @@ export type MutationCreateExternalAppArgs = {
 
 export type MutationCreateExternalAppTokenArgs = {
   externalAppId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateGateArgs = {
+  input: CreateGateInput;
 };
 
 
@@ -3469,22 +3616,6 @@ export type MutationCreatePaymentProviderSettingArgs = {
   stripe_methods?: InputMaybe<Array<StripePaymentMethod>>;
   type: PaymentProviderType;
   webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationCreatePaywallArgs = {
-  active: Scalars['Boolean']['input'];
-  alternativeSubscribeUrl?: InputMaybe<Scalars['String']['input']>;
-  anyMemberPlan: Scalars['Boolean']['input'];
-  bypassTokens: Array<Scalars['String']['input']>;
-  circumventDescription?: InputMaybe<Scalars['RichText']['input']>;
-  description?: InputMaybe<Scalars['RichText']['input']>;
-  fadeout: Scalars['Boolean']['input'];
-  hideContentAfter: Scalars['Int']['input'];
-  memberPlanIds: Array<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']['input']>;
-  upgradeDescription?: InputMaybe<Scalars['RichText']['input']>;
 };
 
 
@@ -3690,11 +3821,6 @@ export type MutationDeleteAuthorArgs = {
 };
 
 
-export type MutationDeleteBannerArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type MutationDeleteBlockStyleArgs = {
   id: Scalars['String']['input'];
 };
@@ -3736,6 +3862,11 @@ export type MutationDeleteEventArgs = {
 
 
 export type MutationDeleteExternalAppArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteGateArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -3786,11 +3917,6 @@ export type MutationDeletePaymentMethodArgs = {
 
 
 export type MutationDeletePaymentProviderSettingArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type MutationDeletePaywallArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -4150,6 +4276,7 @@ export type MutationUpdateArticleArgs = {
   blocks: Array<BlockContentInput>;
   breaking: Scalars['Boolean']['input'];
   canonicalUrl?: InputMaybe<Scalars['String']['input']>;
+  contentGateDisabled?: InputMaybe<Scalars['Boolean']['input']>;
   disableComments: Scalars['Boolean']['input'];
   hidden: Scalars['Boolean']['input'];
   hideAuthor: Scalars['Boolean']['input'];
@@ -4185,11 +4312,6 @@ export type MutationUpdateAuthorArgs = {
   name?: InputMaybe<Scalars['String']['input']>;
   slug?: InputMaybe<Scalars['Slug']['input']>;
   tagIds?: InputMaybe<Array<Scalars['String']['input']>>;
-};
-
-
-export type MutationUpdateBannerArgs = {
-  input: UpdateBannerInput;
 };
 
 
@@ -4291,6 +4413,11 @@ export type MutationUpdateExternalAppArgs = {
   name?: InputMaybe<Scalars['String']['input']>;
   target?: InputMaybe<ExternalAppsTarget>;
   url?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateGateArgs = {
+  input: UpdateGateInput;
 };
 
 
@@ -4453,23 +4580,6 @@ export type MutationUpdatePaymentProviderSettingArgs = {
   simulated_declineRenewals?: InputMaybe<Scalars['Boolean']['input']>;
   stripe_methods?: InputMaybe<Array<StripePaymentMethod>>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationUpdatePaywallArgs = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  alternativeSubscribeUrl?: InputMaybe<Scalars['String']['input']>;
-  anyMemberPlan?: InputMaybe<Scalars['Boolean']['input']>;
-  bypassTokens?: InputMaybe<Array<Scalars['String']['input']>>;
-  circumventDescription?: InputMaybe<Scalars['RichText']['input']>;
-  description?: InputMaybe<Scalars['RichText']['input']>;
-  fadeout?: InputMaybe<Scalars['Boolean']['input']>;
-  hideContentAfter?: InputMaybe<Scalars['Int']['input']>;
-  id: Scalars['String']['input'];
-  memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']['input']>;
-  upgradeDescription?: InputMaybe<Scalars['RichText']['input']>;
 };
 
 
@@ -4823,10 +4933,6 @@ export type PageInfo = {
 export type PageModel = {
   __typename: 'PageModel';
   id: Scalars['String']['output'];
-};
-
-export type PageModelInput = {
-  id: Scalars['String']['input'];
 };
 
 export type PageNavigationLink = BaseNavigationLink & HasPage & {
@@ -5750,6 +5856,10 @@ export type Query = {
   externalApps: Array<ExternalApp>;
   /** The features switched on for this medium in We.Publish One (or through WEP_FEATURES). */
   features: Array<Scalars['String']['output']>;
+  /** Returns a gate by id. */
+  gate: Gate;
+  /** Returns the gates of one mode, oldest first. */
+  gates: Array<Gate>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
   /** Returns a goodie by id. */
@@ -6248,6 +6358,18 @@ export type QueryExternalAppArgs = {
 
 export type QueryExternalAppsArgs = {
   filter?: InputMaybe<ExternalAppFilter>;
+};
+
+
+export type QueryGateArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGatesArgs = {
+  mode: GateMode;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -7728,24 +7850,6 @@ export type UnknownBlock = {
   type: BlockType;
 };
 
-export type UpdateBannerInput = {
-  actions?: InputMaybe<Array<CreateBannerActionInput>>;
-  active: Scalars['Boolean']['input'];
-  collapsible: Scalars['Boolean']['input'];
-  cta?: InputMaybe<Scalars['String']['input']>;
-  delay: Scalars['Int']['input'];
-  embedUrl?: InputMaybe<Scalars['String']['input']>;
-  hideForMinutes: Scalars['Int']['input'];
-  html?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['String']['input'];
-  imageId?: InputMaybe<Scalars['String']['input']>;
-  showForLoginStatus: LoginStatus;
-  showOnArticles: Scalars['Boolean']['input'];
-  showOnPages?: InputMaybe<Array<PageModelInput>>;
-  text: Scalars['String']['input'];
-  title: Scalars['String']['input'];
-};
-
 export type UpdateCommentRatingSystemAnswerInput = {
   answer?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
@@ -7761,6 +7865,41 @@ export type UpdateCrowdfundingInput = {
   id: Scalars['String']['input'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateGateInput = {
+  actions?: InputMaybe<Array<GateActionInput>>;
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  anyMemberPlan?: InputMaybe<Scalars['Boolean']['input']>;
+  audience?: InputMaybe<LoginStatus>;
+  bypassTokens?: InputMaybe<Array<Scalars['String']['input']>>;
+  circumventDescription?: InputMaybe<Scalars['RichText']['input']>;
+  collapsible?: InputMaybe<Scalars['Boolean']['input']>;
+  cta?: InputMaybe<Scalars['String']['input']>;
+  delay?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['RichText']['input']>;
+  embedUrl?: InputMaybe<Scalars['String']['input']>;
+  fadeout?: InputMaybe<Scalars['Boolean']['input']>;
+  freeArticles?: InputMaybe<Scalars['Int']['input']>;
+  hideForMinutes?: InputMaybe<Scalars['Int']['input']>;
+  html?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  imageId?: InputMaybe<Scalars['String']['input']>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  meterWindowDays?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  newsletterFreeArticles?: InputMaybe<Scalars['Int']['input']>;
+  newsletterNeverGate?: InputMaybe<Scalars['Boolean']['input']>;
+  newsletterParams?: InputMaybe<Array<ContentGateNewsletterParamInput>>;
+  previewBlocks?: InputMaybe<Scalars['Int']['input']>;
+  showOnArticles?: InputMaybe<Scalars['Boolean']['input']>;
+  showOnPageIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  softDescription?: InputMaybe<Scalars['RichText']['input']>;
+  softGateArticles?: InputMaybe<Scalars['Int']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']['input']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']['input']>;
 };
 
 export type UpdateUserSubscriptionInput = {

@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { Autocomplete, TextField } from '@mui/material';
-import { PaywallListDocument } from '@wepublish/editor/api';
+import { GateMode, GatesDocument } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -37,17 +37,19 @@ export function SelectPaywall({
 }: SelectPaywallsProps) {
   const { t } = useTranslation();
 
-  const { data: paywallsData } = useQuery(PaywallListDocument);
+  const { data: paywallsData } = useQuery(GatesDocument, {
+    variables: { mode: GateMode.Paywall },
+  });
 
   /**
    * Prepare available paywalls
    */
   const availablePaywalls = useMemo(() => {
-    if (!paywallsData?.paywalls) {
+    if (!paywallsData?.gates) {
       return [];
     }
 
-    return paywallsData.paywalls.map(paywall => ({
+    return paywallsData.gates.map(paywall => ({
       label: paywall.name || t('comments.edit.unnamedPaywall'),
       value: paywall.id,
     }));

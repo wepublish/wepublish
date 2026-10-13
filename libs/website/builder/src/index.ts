@@ -26,6 +26,8 @@ export * from './lib/teaser.components';
 
 export * from './lib/paywall.interface';
 export * from './lib/paywall.components';
+export * from './lib/content-gate.interface';
+export * from './lib/content-gate.components';
 
 export * from './lib/ui.interface';
 export * from './lib/ui.components';

@@ -59,6 +59,7 @@ export class ArticleRevisionAuthorInput {
 })
 export class ArticleRevision implements HasBlockContent, HasOptionalUserLc {
   blocks!: Array<typeof BlockContent>;
+  articleId!: string;
 
   // The user who created this revision. `userId` is populated from the DB row;
   // `user` is resolved by the global HasOptionalUserLc resolver.
@@ -155,6 +156,9 @@ export class Article implements HasOptionalPeerLc, HasOptionalPaywall {
   @Field()
   disableComments!: boolean;
 
+  @Field()
+  contentGateDisabled!: boolean;
+
   @Field(() => ArticleRevision, { nullable: true })
   draft?: ArticleRevision;
 
@@ -235,6 +239,7 @@ export class CreateArticleInput extends OmitType(
     'socialMediaAuthors',
     'blocks',
     'properties',
+    'articleId',
   ] as const,
   ArgsType
 ) {
@@ -246,6 +251,8 @@ export class CreateArticleInput extends OmitType(
   hidden!: boolean;
   @Field()
   disableComments!: boolean;
+  @Field({ nullable: true })
+  contentGateDisabled?: boolean;
   @Field({ nullable: true })
   slug?: string;
   @Field(() => Int, { nullable: true })

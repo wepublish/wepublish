@@ -1,0 +1,109 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`BannerResolver > primaryBanner > should return the first active banner for { documentType: +0, loggedIn: false, hasSubscription: false, hasPaywallBypass: false } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "showForLoginStatus": "LOGGED_OUT",
+  "showOnArticles": true,
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerResolver > primaryBanner > should return the first active banner for { documentType: +0, loggedIn: true, hasSubscription: false, hasPaywallBypass: false } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "showForLoginStatus": "UNSUBSCRIBED",
+  "showOnArticles": true,
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerResolver > primaryBanner > should return the first active banner for { documentType: +0, loggedIn: true, hasSubscription: true, hasPaywallBypass: true } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "showForLoginStatus": "PAYWALL_BYPASSED",
+  "showOnArticles": true,
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerResolver > primaryBanner > should return the first active banner for { documentType: 1, loggedIn: false, hasSubscription: false, hasPaywallBypass: false } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "showForLoginStatus": "LOGGED_OUT",
+  "showOnArticles": true,
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerResolver > primaryBanner > should return the first active banner for { documentType: 1, loggedIn: true, hasSubscription: false, hasPaywallBypass: false } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "showForLoginStatus": "UNSUBSCRIBED",
+  "showOnArticles": true,
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerResolver > primaryBanner > should return the first active banner for { documentType: 1, loggedIn: true, hasSubscription: true, hasPaywallBypass: true } 1`] = `
+{
+  "active": true,
+  "collapsible": true,
+  "cta": null,
+  "delay": 0,
+  "embedUrl": null,
+  "hideForMinutes": 1440,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "showForLoginStatus": "PAYWALL_BYPASSED",
+  "showOnArticles": true,
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;

@@ -7,6 +7,8 @@ import { DateFilterComparison, SortOrder } from '@wepublish/utils/api';
 import { ArticleSort } from './article.model';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
+import { GateService } from '@wepublish/gate/api';
+import { BadRequestException } from '@nestjs/common';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { ArticlePublicationWatcher } from './article-publication.watcher';
@@ -30,6 +32,7 @@ describe('ArticleService', () => {
     };
   };
   let trackingPixelMock: { [method in keyof TrackingPixelService]?: Mock };
+  let gateService: { assertPaywall: Mock };
   let publicContentCache: {
     invalidate: Mock;
     invalidateDraft: Mock;
@@ -89,6 +92,8 @@ describe('ArticleService', () => {
 
     publicationWatcher = { schedule: vi.fn() };
 
+    gateService = { assertPaywall: vi.fn().mockResolvedValue(undefined) };
+
     trackingPixelMock = {
       addMissingArticleTrackingPixels: vi.fn(),
       getArticlePixels: vi.fn(),
@@ -100,6 +105,7 @@ describe('ArticleService', () => {
         ArticleService,
         { provide: PrismaClient, useValue: prismaMock },
         { provide: TrackingPixelService, useValue: trackingPixelMock },
+        { provide: GateService, useValue: gateService },
         {
           provide: PublicContentCacheInvalidator,
           useValue: publicContentCache,
@@ -383,6 +389,43 @@ describe('ArticleService', () => {
     expect(prismaMock.articleTrackingPixels.createMany).not.toHaveBeenCalled();
   });
 
+  it.each([true, false])(
+    'stores whether the article opted out of the content gate (%s)',
+    async contentGateDisabled => {
+      prismaMock.article.create?.mockResolvedValue({
+        id: '1234',
+      } as Partial<Article>);
+      prismaMock.article.findUnique?.mockResolvedValue({
+        id: '1234',
+        tags: [],
+      });
+
+      const input = {
+        contentGateDisabled,
+        breaking: false,
+        disableComments: false,
+        hidden: false,
+        hideAuthor: false,
+        shared: false,
+        properties: [],
+        socialMediaAuthorIds: [],
+        tagIds: [],
+        authors: [],
+        blocks: [],
+      };
+
+      await service.createArticle(input, '1234');
+      await service.updateArticle({ ...input, id: '1234' }, '1234');
+
+      expect(
+        prismaMock.article.create?.mock.calls[0][0].data.contentGateDisabled
+      ).toBe(contentGateDisabled);
+      expect(
+        prismaMock.article.update?.mock.calls[0][0].data.contentGateDisabled
+      ).toBe(contentGateDisabled);
+    }
+  );
+
   it('should lowercase the slug when creating an article', async () => {
     prismaMock.article.create?.mockResolvedValue({
       id: '1234',
@@ -486,6 +529,61 @@ describe('ArticleService', () => {
     expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot();
     // make sure mapBlockUnionMap is called
     expect((mapBlockUnionMap as Mock).mock.calls[0]).toMatchSnapshot();
+  });
+
+  describe('paywall', () => {
+    const input = {
+      breaking: false,
+      disableComments: false,
+      hidden: false,
+      hideAuthor: false,
+      shared: false,
+      properties: [],
+      socialMediaAuthorIds: [],
+      tagIds: [],
+      authors: [],
+      blocks: [],
+    };
+
+    beforeEach(() => {
+      prismaMock.article.create?.mockResolvedValue({ id: '1234' });
+      prismaMock.article.findUnique?.mockResolvedValue({ id: '123', tags: [] });
+      prismaMock.article.update?.mockResolvedValue({ id: '123' });
+    });
+
+    it.each<[string, () => Promise<unknown>]>([
+      [
+        'a new',
+        () => service.createArticle({ ...input, paywallId: 'banner-1' }, '1'),
+      ],
+      [
+        'an updated',
+        () =>
+          service.updateArticle(
+            { ...input, id: '123', paywallId: 'banner-1' },
+            '1'
+          ),
+      ],
+    ])(
+      'rejects a gate that is no paywall as the paywall of %s article',
+      async (_, save) => {
+        gateService.assertPaywall.mockRejectedValue(
+          new BadRequestException('banner-1 is not a paywall')
+        );
+
+        await expect(save()).rejects.toThrow(BadRequestException);
+        expect(gateService.assertPaywall).toHaveBeenCalledWith('banner-1');
+        expect(prismaMock.article.create).not.toHaveBeenCalled();
+        expect(prismaMock.article.update).not.toHaveBeenCalled();
+      }
+    );
+
+    it('does not check articles without a paywall', async () => {
+      await service.createArticle({ ...input, paywallId: null }, '1');
+      await service.updateArticle({ ...input, id: '123' }, '1');
+
+      expect(gateService.assertPaywall).not.toHaveBeenCalled();
+    });
   });
 
   it('should delete an article', async () => {

@@ -6,6 +6,7 @@ export * from './lib/event';
 export * from './lib/poll';
 export * from './lib/comment';
 export * from './lib/article';
+export * from './lib/content-gate';
 export * from './lib/page';
 export * from './lib/peer';
 export * from './lib/block-content';

@@ -364,18 +364,20 @@ describe('GraphqlResponseCachePlugin', () => {
     expect(api.calls.article).toBe(2);
   });
 
-  it.each([PUBLIC_CONTENT_NAMESPACE, 'navigations', 'banners', 'settings'])(
-    'answers from the resolvers again once %s changed',
-    async namespace => {
-      const api = await start();
+  it.each([
+    PUBLIC_CONTENT_NAMESPACE,
+    'navigations',
+    'member-plans',
+    'settings',
+  ])('answers from the resolvers again once %s changed', async namespace => {
+    const api = await start();
 
-      await api.query(ARTICLE);
-      await api.kv.resetNamespace(namespace);
-      await api.query(ARTICLE);
+    await api.query(ARTICLE);
+    await api.kv.resetNamespace(namespace);
+    await api.query(ARTICLE);
 
-      expect(api.calls.article).toBe(2);
-    }
-  );
+    expect(api.calls.article).toBe(2);
+  });
 
   it('caches comments for anonymous visitors', async () => {
     const api = await start();
