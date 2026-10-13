@@ -222,7 +222,8 @@ describe('PingenLetterProvider', () => {
             number: '7',
             zip: '8000',
             city: 'Zürich',
-            country: 'CH',
+            // Pingen wants the country spelled out, never the iso code
+            country: 'Schweiz',
           },
           sender: {
             name: 'Beispiel Verlag',
@@ -231,7 +232,7 @@ describe('PingenLetterProvider', () => {
             number: '1',
             zip: '3000',
             city: 'Bern',
-            country: 'CH',
+            country: 'Schweiz',
           },
         },
       });
