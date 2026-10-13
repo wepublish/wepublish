@@ -26,23 +26,37 @@ export class ImpersonationSearchService {
       return [];
     }
 
-    const users = await this.prisma.user.findMany({
-      where: {
-        OR: [
-          { email: { contains: term, mode: 'insensitive' } },
-          { name: { contains: term, mode: 'insensitive' } },
-        ],
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        active: true,
-        roleIDs: true,
-      },
-      orderBy: { email: 'asc' },
-      take: clampSearchLimit(limit),
-    });
+    const select = {
+      id: true,
+      email: true,
+      name: true,
+      active: true,
+      roleIDs: true,
+    } as const;
+    const take = clampSearchLimit(limit);
+
+    const [exact, matches] = await Promise.all([
+      this.prisma.user.findFirst({
+        where: { email: { equals: term, mode: 'insensitive' } },
+        select,
+      }),
+      this.prisma.user.findMany({
+        where: {
+          OR: [
+            { email: { contains: term, mode: 'insensitive' } },
+            { name: { contains: term, mode: 'insensitive' } },
+          ],
+        },
+        select,
+        orderBy: { email: 'asc' },
+        take,
+      }),
+    ]);
+
+    const users = (
+      exact ?
+        [exact, ...matches.filter(user => user.id !== exact.id)]
+      : matches).slice(0, take);
 
     const roleIds = [...new Set(users.flatMap(user => user.roleIDs))];
 

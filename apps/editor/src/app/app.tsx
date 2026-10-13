@@ -55,6 +55,7 @@ import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
 import { LoginImpersonate } from './loginImpersonate';
+import { LoginSupport } from './loginSupport';
 import { ResetPassword } from './resetPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
@@ -298,6 +299,10 @@ export function App() {
             <Route
               path="login/impersonate/:jwt"
               element={<LoginImpersonate />}
+            />
+            <Route
+              path="login/support"
+              element={<LoginSupport />}
             />
             <Route
               path="login/reset-password"

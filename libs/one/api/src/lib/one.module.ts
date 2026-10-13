@@ -12,6 +12,7 @@ import { MediumStatsResolver } from './medium-stats.resolver';
 import { MediumAuditLogResolver } from './medium-audit-log.resolver';
 import { MediumAuditLogService } from './medium-audit-log.service';
 import { ImpersonationResolver } from './impersonation.resolver';
+import { SupportLoginResolver } from './support-login.resolver';
 import { ImpersonationSearchService } from './impersonation.service';
 import { OneChannelStateService } from './one-channel-state.service';
 import { OneChannelStatusResolver } from './one-channel-status.resolver';
@@ -64,6 +65,7 @@ export class OneModule {
         MediumAuditLogResolver,
         MediumAuditLogService,
         ImpersonationResolver,
+        SupportLoginResolver,
         ImpersonationSearchService,
         OneClientService,
         OneHeartbeatService,

@@ -5,6 +5,7 @@ exports[`SessionResolver > can be create via JWT 1`] = `
   [
     "this-is-special-token",
     undefined,
+    undefined,
   ],
 ]
 `;

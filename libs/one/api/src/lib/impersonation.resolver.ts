@@ -69,8 +69,19 @@ export class ImpersonationResolver {
   async createImpersonationGrant(
     @Args('userId') userId: string,
     @Args('durationMinutes', { type: () => Int }) durationMinutes: number,
-    @Args('reason') reason: string,
-    @Args('impersonatedBy') impersonatedBy: string
+    @Args('impersonatedBy') impersonatedBy: string,
+    @Args('reason', {
+      nullable: true,
+      description:
+        'Required, except for signing in as the We.Publish support account.',
+    })
+    reason?: string,
+    @Args('codeChallenge', {
+      nullable: true,
+      description:
+        'S256 PKCE challenge of a support login; the grant then redeems only with its verifier.',
+    })
+    codeChallenge?: string
   ): Promise<ImpersonationGrantResult> {
     this.assertEnabled();
 
@@ -78,8 +89,9 @@ export class ImpersonationResolver {
       return await this.sessionService.createImpersonationGrant({
         userId,
         durationMinutes,
-        reason,
         impersonatedBy,
+        reason,
+        codeChallenge,
       });
     } catch (error) {
       if (error instanceof ImpersonationError) {

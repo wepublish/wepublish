@@ -24,17 +24,48 @@ describe('clampSearchLimit', () => {
 
 describe('ImpersonationSearchService', () => {
   let prisma: {
-    user: { findMany: Mock };
+    user: { findMany: Mock; findFirst: Mock };
     userRole: { findMany: Mock };
   };
   let service: ImpersonationSearchService;
 
   beforeEach(() => {
     prisma = {
-      user: { findMany: vi.fn().mockResolvedValue([]) },
+      user: {
+        findMany: vi.fn().mockResolvedValue([]),
+        findFirst: vi.fn().mockResolvedValue(null),
+      },
       userRole: { findMany: vi.fn().mockResolvedValue([]) },
     };
     service = new ImpersonationSearchService(prisma as unknown as PrismaClient);
+  });
+
+  it('puts the account with exactly that address first, so look-alikes cannot push it out', async () => {
+    const lookAlikes = Array.from({ length: 10 }, (_, index) => ({
+      id: `fake-${index}`,
+      email: `a${index}@x.ch`,
+      name: 'admin@wepublish.ch',
+      active: true,
+      roleIDs: [],
+    }));
+    prisma.user.findMany.mockResolvedValue(lookAlikes);
+    prisma.user.findFirst.mockResolvedValue({
+      id: 'support',
+      email: 'admin@wepublish.ch',
+      name: 'Support',
+      active: true,
+      roleIDs: [],
+    });
+
+    const users = await service.searchUsers('admin@wepublish.ch');
+
+    expect(users[0]).toMatchObject({ id: 'support' });
+    expect(users).toHaveLength(10);
+    expect(prisma.user.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { email: { equals: 'admin@wepublish.ch', mode: 'insensitive' } },
+      })
+    );
   });
 
   it('refuses to search on a one-character term', async () => {

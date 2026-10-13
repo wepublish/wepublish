@@ -60,7 +60,8 @@ describe('session cache after authentication changes', () => {
       {} as never,
       {} as never,
       {} as never,
-      sessionCache as unknown as SessionCacheInvalidator
+      sessionCache as unknown as SessionCacheInvalidator,
+      { record: vi.fn() } as never
     );
 
   it('clears cached sessions after setting up two-factor authentication', async () => {

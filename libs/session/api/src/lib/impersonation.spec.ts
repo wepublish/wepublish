@@ -2,9 +2,12 @@ import {
   DEFAULT_IMPERSONATION_MINUTES,
   ImpersonationError,
   MAX_IMPERSONATION_MINUTES,
+  assertCodeChallenge,
   assertDuration,
   assertReason,
+  codeChallengeOf,
   isImpersonationEnabled,
+  isSupportAccount,
 } from './impersonation';
 
 describe('assertDuration', () => {
@@ -76,5 +79,46 @@ describe('isImpersonationEnabled', () => {
         true
       );
     }
+  });
+});
+
+describe('isSupportAccount', () => {
+  it('recognises the We.Publish support account regardless of casing and padding', () => {
+    expect(isSupportAccount('admin@wepublish.ch')).toBe(true);
+    expect(isSupportAccount('  Admin@WePublish.ch ')).toBe(true);
+  });
+
+  it('treats every other account as someone else', () => {
+    expect(isSupportAccount('editor@wepublish.ch')).toBe(false);
+    expect(isSupportAccount('admin@wepublish.ch.example.com')).toBe(false);
+  });
+});
+
+describe('codeChallengeOf', () => {
+  it('hashes a verifier the way RFC 7636 does for S256', () => {
+    expect(codeChallengeOf('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk')).toBe(
+      'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM'
+    );
+  });
+});
+
+describe('assertCodeChallenge', () => {
+  it('has no challenge to check for a grant without one', () => {
+    expect(assertCodeChallenge(undefined)).toBeNull();
+    expect(assertCodeChallenge(null)).toBeNull();
+  });
+
+  it('accepts an S256 challenge', () => {
+    expect(
+      assertCodeChallenge('E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM')
+    ).toBe('E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM');
+  });
+
+  it('refuses anything that is not an S256 challenge', () => {
+    expect(() => assertCodeChallenge('')).toThrow(ImpersonationError);
+    expect(() => assertCodeChallenge('too-short')).toThrow(ImpersonationError);
+    expect(() =>
+      assertCodeChallenge('E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw+cM')
+    ).toThrow(ImpersonationError);
   });
 });

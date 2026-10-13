@@ -40,9 +40,19 @@ export class SessionResolver {
   @Mutation(() => SessionWithToken)
   async createSessionWithJWT(
     @Args('jwt') jwt: string,
-    @Args('totpToken', { nullable: true }) totpToken?: string
+    @Args('totpToken', { nullable: true }) totpToken?: string,
+    @Args('codeVerifier', {
+      nullable: true,
+      description:
+        'The PKCE verifier of a support login, required when its grant carries a code challenge.',
+    })
+    codeVerifier?: string
   ) {
-    return this.sessionService.createSessionWithJWT(jwt, totpToken);
+    return this.sessionService.createSessionWithJWT(
+      jwt,
+      totpToken,
+      codeVerifier
+    );
   }
 
   @Public()

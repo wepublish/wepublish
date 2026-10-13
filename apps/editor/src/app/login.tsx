@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Form as RForm, Message, toaster } from 'rsuite';
 
+import { SupportLoginButton } from './supportLoginButton';
 import { Background } from './ui/loginBackground';
 import { TotpQrCode } from './ui/totpQrCode';
 
@@ -422,6 +423,7 @@ export function Login() {
           </ForgotPasswordLink>
         </RForm.Stack>
       </Form>
+      <SupportLoginButton />
     </LoginTemplate>
   );
 }

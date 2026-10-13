@@ -65,3 +65,34 @@ describe('ImpersonationResolver requires the secure channel', () => {
     }
   });
 });
+
+describe('ImpersonationResolver.createImpersonationGrant', () => {
+  it('passes the code challenge and a missing reason on to the session service', async () => {
+    const previous = process.env['WEP_ONE_IMPERSONATION'];
+    delete process.env['WEP_ONE_IMPERSONATION'];
+    const sessionService = {
+      createImpersonationGrant: vi.fn().mockResolvedValue({ token: 'grant' }),
+    };
+    const resolver = new ImpersonationResolver(
+      sessionService as never,
+      {} as never
+    );
+
+    await resolver.createImpersonationGrant(
+      'support',
+      60,
+      'ops@wepublish.ch',
+      undefined,
+      'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM'
+    );
+
+    expect(sessionService.createImpersonationGrant).toHaveBeenCalledWith({
+      userId: 'support',
+      durationMinutes: 60,
+      impersonatedBy: 'ops@wepublish.ch',
+      reason: undefined,
+      codeChallenge: 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',
+    });
+    process.env['WEP_ONE_IMPERSONATION'] = previous;
+  });
+});
