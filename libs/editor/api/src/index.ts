@@ -368,6 +368,7 @@ export type {
   MutationUpdateSyncProviderSettingArgs,
   MutationUpdateSystemMailArgs,
   MutationUpdateTagArgs,
+  MutationUpdateTokenArgs,
   MutationUpdateTrackingPixelSettingArgs,
   MutationUpdateUserArgs,
   MutationUpdateUserCommentArgs,

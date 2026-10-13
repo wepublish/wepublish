@@ -389,6 +389,9 @@ interface BaseToken {
   id: String!
   modifiedAt: DateTime!
   name: String!
+
+  """The user roles whose permissions a request with this token gets."""
+  roleIDs: [String!]!
 }
 
 interface BaseUser {
@@ -2845,7 +2848,12 @@ type Mutation {
   createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
 
   """Creates a token and returns it's secret once."""
-  createToken(name: String!): TokenWithSecret!
+  createToken(
+    name: String!
+
+    """User roles for the token. Without roles a token has no permissions."""
+    roleIDs: [String!]
+  ): TokenWithSecret!
 
   """Creates a new tracking pixel setting."""
   createTrackingPixelSetting(id: String!, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String, type: TrackingPixelProviderType!): SettingTrackingPixelProvider!
@@ -3326,6 +3334,17 @@ type Mutation {
 
   """Updates an existing tag."""
   updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
+
+  """
+  Renames a token or replaces its roles. Cached sessions of the token are cleared, so new roles apply at once.
+  """
+  updateToken(
+    id: String!
+    name: String
+
+    """User roles for the token. Without roles a token has no permissions."""
+    roleIDs: [String!]
+  ): Token!
 
   """Updates an existing tracking pixel setting."""
   updateTrackingPixelSetting(id: String, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixelProvider!
@@ -5658,6 +5677,9 @@ type Token implements BaseToken {
   id: String!
   modifiedAt: DateTime!
   name: String!
+
+  """The user roles whose permissions a request with this token gets."""
+  roleIDs: [String!]!
 }
 
 type TokenWithSecret implements BaseToken {
@@ -5665,6 +5687,9 @@ type TokenWithSecret implements BaseToken {
   id: String!
   modifiedAt: DateTime!
   name: String!
+
+  """The user roles whose permissions a request with this token gets."""
+  roleIDs: [String!]!
   token: String!
 }
 

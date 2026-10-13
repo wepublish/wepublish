@@ -15,9 +15,16 @@ import {
 import { createCheckedPermissionComponent } from '../atoms';
 import { getOperationNameFromDocument } from '../utility';
 import { humanizeError } from '../humanizeError';
+import { TokenRolePicker } from './tokenRolePicker';
 
 const Message = styled(RMessage)`
   margin-top: 4px;
+`;
+
+const Field = styled.div`
+  display: grid;
+  gap: 6px;
+  margin-top: 16px;
 `;
 
 export interface TokenGeneratePanelProps {
@@ -26,6 +33,7 @@ export interface TokenGeneratePanelProps {
 
 function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
   const [name, setName] = useState('');
+  const [roleIDs, setRoleIDs] = useState<string[]>([]);
 
   const [createToken, { data, loading: isCreating, error: createError }] =
     useMutation(CreateTokenDocument, {
@@ -53,7 +61,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
   }, [createError]);
 
   async function handleSave() {
-    await createToken({ variables: { name } });
+    await createToken({ variables: { name, roleIDs } });
   }
 
   return (
@@ -96,14 +104,32 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
               {t('tokenList.panels.tokenWarning')}
             </Message>
           </>
-        : <Input
-            placeholder={t('tokenList.panels.name')}
-            value={name}
-            disabled={isDisabled}
-            onChange={value => {
-              setName(value);
-            }}
-          />
+        : <>
+            <Input
+              placeholder={t('tokenList.panels.name')}
+              value={name}
+              disabled={isDisabled}
+              onChange={value => {
+                setName(value);
+              }}
+            />
+            <Field>
+              <label>{t('tokenList.panels.roles')}</label>
+              <TokenRolePicker
+                value={roleIDs}
+                disabled={isDisabled}
+                onChange={setRoleIDs}
+              />
+              {roleIDs.length === 0 && (
+                <Message
+                  showIcon
+                  type="info"
+                >
+                  {t('tokenList.panels.noRolesWarning')}
+                </Message>
+              )}
+            </Field>
+          </>
         }
       </Drawer.Body>
     </>

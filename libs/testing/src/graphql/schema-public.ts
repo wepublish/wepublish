@@ -415,6 +415,8 @@ export type BaseToken = {
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  /** The user roles whose permissions a request with this token gets. */
+  roleIDs: Array<Scalars['String']['output']>;
 };
 
 export type BaseUser = {
@@ -3076,6 +3078,8 @@ export type Mutation = {
   updateSystemMail: Array<SystemMailModel>;
   /** Updates an existing tag. */
   updateTag: Tag;
+  /** Renames a token or replaces its roles. Cached sessions of the token are cleared, so new roles apply at once. */
+  updateToken: Token;
   /** Updates an existing tracking pixel setting. */
   updateTrackingPixelSetting: SettingTrackingPixelProvider;
   /** Updates an existing user. */
@@ -3587,6 +3591,7 @@ export type MutationCreateTagArgs = {
 
 export type MutationCreateTokenArgs = {
   name: Scalars['String']['input'];
+  roleIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -4570,6 +4575,13 @@ export type MutationUpdateTagArgs = {
   main?: InputMaybe<Scalars['Boolean']['input']>;
   tag?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<TagType>;
+};
+
+
+export type MutationUpdateTokenArgs = {
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  roleIDs?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -7654,6 +7666,8 @@ export type Token = BaseToken & {
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  /** The user roles whose permissions a request with this token gets. */
+  roleIDs: Array<Scalars['String']['output']>;
 };
 
 export type TokenWithSecret = BaseToken & {
@@ -7662,6 +7676,8 @@ export type TokenWithSecret = BaseToken & {
   id: Scalars['String']['output'];
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
+  /** The user roles whose permissions a request with this token gets. */
+  roleIDs: Array<Scalars['String']['output']>;
   token: Scalars['String']['output'];
 };
 
