@@ -1,0 +1,118 @@
+fragment PageTemplateMetadata on PageTemplateMetadata {
+  title
+  description
+  seoTitle
+  seoDescription
+  hidden
+  socialMediaTitle
+  socialMediaDescription
+
+  tags {
+    id
+    tag
+  }
+
+  image {
+    ...FullImage
+  }
+
+  socialMediaImage {
+    ...FullImage
+  }
+
+  properties {
+    key
+    value
+    public
+  }
+}
+
+fragment FullPageTemplate on PageTemplate {
+  id
+  createdAt
+  modifiedAt
+
+  blockTemplate {
+    ...FullBlockTemplate
+  }
+
+  metadata {
+    ...PageTemplateMetadata
+  }
+}
+
+query PageTemplateList(
+  $filter: PageTemplateFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: PageTemplateSort
+) {
+  pageTemplates(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      id
+      createdAt
+      modifiedAt
+
+      blockTemplate {
+        id
+        name
+      }
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query PageTemplate($id: String!) {
+  pageTemplate(id: $id) {
+    ...FullPageTemplate
+  }
+}
+
+mutation CreatePageTemplate(
+  $name: String!
+  $blocks: [BlockContentInput!]!
+  $metadata: PageTemplateMetadataInput!
+) {
+  createPageTemplate(name: $name, blocks: $blocks, metadata: $metadata) {
+    ...FullPageTemplate
+  }
+}
+
+mutation UpdatePageTemplate(
+  $id: String!
+  $name: String!
+  $blocks: [BlockContentInput!]!
+  $metadata: PageTemplateMetadataInput!
+) {
+  updatePageTemplate(
+    id: $id
+    name: $name
+    blocks: $blocks
+    metadata: $metadata
+  ) {
+    ...FullPageTemplate
+  }
+}
+
+mutation DeletePageTemplate($id: String!) {
+  deletePageTemplate(id: $id) {
+    id
+  }
+}

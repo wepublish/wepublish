@@ -238,7 +238,7 @@
     "articles": {
       "createModal": {
         "title": "Nouvel article",
-        "blankArticle": "Article vide",
+        "blank": "Article vide",
         "search": "Rechercher des modèles",
         "noResults": "Aucun modèle trouvé"
       },
@@ -1593,6 +1593,7 @@
       "memberPlans": "Plans d’abonnement",
       "navigations": "Menus",
       "pages": "Pages",
+      "pageTemplates": "Modèles de pages",
       "paymentMethods": "Méthodes de paiement",
       "peerArticles": "Articles peerables",
       "networkContent": "Réseau We.Publish",
@@ -1688,7 +1689,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Dépublier",
-        "unpublished": "Non publié"
+        "unpublished": "Non publié",
+        "loadingTemplate": "Chargement du modèle…"
       },
       "panels": {
         "chooseBlock": "Choisir le bloc",
@@ -1732,7 +1734,8 @@
         "value": "Valeur",
         "slugInfo": "La dernière partie de l’adresse web de la page, p.ex. « a-propos ». Utilisez uniquement des minuscules, des chiffres et des tirets. Une modification ultérieure rend les liens existants invalides.",
         "hiddenInfo": "Les pages masquées n’apparaissent pas dans les listes automatiques du site, mais restent accessibles via leur lien direct.",
-        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux"
+        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
+        "createTemplate": "Créer un modèle à partir de la page"
       }
     },
     "pages": {
@@ -1765,6 +1768,12 @@
         "untitled": "Sans titre",
         "updatedAt": "Mis à jour le",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "Nouvelle page",
+        "blank": "Page vide",
+        "search": "Rechercher des modèles",
+        "noResults": "Aucun modèle trouvé"
       }
     },
     "paymentMethodList": {
@@ -2442,7 +2451,7 @@
         "action": "Action",
         "copy": "Copier",
         "title": "Modèles d'articles",
-        "newArticleTemplate": "Nouveau modèle d'article",
+        "newTemplate": "Nouveau modèle d'article",
         "name": "Nom",
         "noName": "Sans nom",
         "info": "Les modèles d'articles définissent le contenu et les métadonnées avec lesquels un nouvel article commence. Modifier un modèle n'affecte pas les articles déjà créés à partir de celui-ci."
@@ -2462,6 +2471,33 @@
       "delete": {
         "title": "Supprimer le modèle d'article ?",
         "body": "Voulez-vous vraiment supprimer le modèle d'article « {{name}} » ? Les articles créés à partir de celui-ci ne sont pas affectés."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copier",
+        "title": "Modèles de pages",
+        "newTemplate": "Nouveau modèle de page",
+        "name": "Nom",
+        "noName": "Sans nom",
+        "info": "Les modèles de pages définissent le contenu et les métadonnées avec lesquels une nouvelle page commence. Modifier un modèle n'affecte pas les pages déjà créées à partir de celui-ci."
+      },
+      "edit": {
+        "loadingTemplate": "Chargement du modèle…",
+        "loadingPage": "Chargement de la page…",
+        "copyName": "{{name}} (copie)",
+        "name": "Nom",
+        "backToList": "Retour à la liste",
+        "metadata": "Métadonnées",
+        "saved": "Enregistré",
+        "created": "Créé",
+        "new": "Nouveau",
+        "editing": "En cours d'édition"
+      },
+      "delete": {
+        "title": "Supprimer le modèle de page ?",
+        "body": "Veux-tu vraiment supprimer le modèle de page « {{name}} » ? Les pages créées à partir de celui-ci ne sont pas affectées."
       }
     },
     "blockTemplates": {

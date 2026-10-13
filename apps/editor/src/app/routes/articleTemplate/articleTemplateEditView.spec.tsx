@@ -142,11 +142,13 @@ const articleTemplate = ({
 });
 
 const mockQuery = (template = articleTemplate()) => {
-  articleTemplateQueryMock.mockReturnValue({
-    data: { articleTemplate: template },
-    refetch,
-    loading: false,
-  });
+  articleTemplateQueryMock.mockImplementation(
+    ({ skip }: { skip?: boolean }) => ({
+      data: skip ? undefined : { articleTemplate: template },
+      refetch,
+      loading: false,
+    })
+  );
 };
 
 const view = (path = '/articles/templates/edit/article-template-1') => (

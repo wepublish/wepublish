@@ -17,6 +17,7 @@ import {
   CanCreateMemberPlan,
   CanCreateNavigation,
   CanCreatePage,
+  CanCreatePageTemplate,
   CanCreatePaymentMethod,
   CanCreatePaywall,
   CanCreatePeer,
@@ -41,6 +42,7 @@ import {
   CanDeleteMemberPlan,
   CanDeleteNavigation,
   CanDeletePage,
+  CanDeletePageTemplate,
   CanDeletePaymentMethod,
   CanDeletePeer,
   CanDeletePoll,
@@ -115,6 +117,7 @@ import {
   CanUpdateExternalApp,
   CanUpdateGoodie,
   CanUpdateMailTemplates,
+  CanUpdatePageTemplate,
   CanUpdatePaywall,
   CanUpdateSettings,
   CanUpdateSystemMails,
@@ -674,6 +677,23 @@ export function Base({ children }: BaseProps) {
                         active={path === 'pages'}
                       >
                         {t('navbar.pages')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanCreatePageTemplate.id,
+                        CanUpdatePageTemplate.id,
+                        CanDeletePageTemplate.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/pages/templates"
+                        icon={<MdNoteAdd />}
+                        active={path === 'pages/templates'}
+                      >
+                        {t('navbar.pageTemplates')}
                       </Nav.Item>
                     </PermissionControl>
 

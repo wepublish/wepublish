@@ -1,14 +1,13 @@
-import {
-  BadRequestException,
-  forwardRef,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { BlockTemplateService } from '@wepublish/block-content/api';
+import {
+  BlockTemplateService,
+  createTemplateFilter,
+  createTemplateOrder,
+  throwOnDuplicateName,
+} from '@wepublish/block-content/api';
 import { getMaxTake, SortOrder } from '@wepublish/utils/api';
 import {
-  ArticleTemplateFilter,
   ArticleTemplateListArgs,
   ArticleTemplateSort,
   CreateArticleTemplateInput,
@@ -31,8 +30,8 @@ export class ArticleTemplateService {
     skip = 0,
     take = 10,
   }: ArticleTemplateListArgs) {
-    const where = createArticleTemplateFilter(filter);
-    const orderBy = createArticleTemplateOrder(sort, order);
+    const where = createTemplateFilter(filter);
+    const orderBy = createTemplateOrder(sort, order);
 
     const [totalCount, articleTemplates] = await Promise.all([
       this.prisma.articleTemplate.count({
@@ -150,55 +149,4 @@ export class ArticleTemplateService {
 
     return { ...articleTemplate, blockTemplate };
   }
-}
-
-function throwOnDuplicateName(error: unknown, name: string): never {
-  if (
-    error instanceof Prisma.PrismaClientKnownRequestError &&
-    error.code === 'P2002'
-  ) {
-    throw new BadRequestException(
-      `A template with the name "${name}" already exists.`
-    );
-  }
-
-  throw error;
-}
-
-function createArticleTemplateOrder(
-  field: ArticleTemplateSort,
-  sortOrder: SortOrder
-): Prisma.ArticleTemplateOrderByWithRelationInput {
-  const direction = sortOrder === SortOrder.Ascending ? 'asc' : 'desc';
-
-  switch (field) {
-    case ArticleTemplateSort.CreatedAt:
-      return { createdAt: direction };
-
-    case ArticleTemplateSort.ModifiedAt:
-      return { modifiedAt: direction };
-
-    case ArticleTemplateSort.Name:
-    default:
-      return { blockTemplate: { name: direction } };
-  }
-}
-
-function createArticleTemplateFilter(
-  filter?: ArticleTemplateFilter
-): Prisma.ArticleTemplateWhereInput {
-  const conditions: Prisma.ArticleTemplateWhereInput[] = [];
-
-  if (filter?.name) {
-    conditions.push({
-      blockTemplate: {
-        name: {
-          mode: 'insensitive',
-          contains: filter.name,
-        },
-      },
-    });
-  }
-
-  return conditions.length ? { AND: conditions } : {};
 }

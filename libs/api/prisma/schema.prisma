@@ -1622,6 +1622,7 @@ model BlockTemplate {
   blocks Json
 
   articleTemplate ArticleTemplate?
+  pageTemplate    PageTemplate?
 
   @@map("block_templates")
 }
@@ -1636,6 +1637,18 @@ model ArticleTemplate {
   metadata        Json
 
   @@map("article_templates")
+}
+
+model PageTemplate {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  blockTemplateId String        @unique
+  blockTemplate   BlockTemplate @relation(fields: [blockTemplateId], references: [id], onDelete: Cascade)
+  metadata        Json
+
+  @@map("page_templates")
 }
 
 model Banner {

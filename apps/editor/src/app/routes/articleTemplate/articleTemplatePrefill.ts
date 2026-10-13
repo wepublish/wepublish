@@ -6,24 +6,17 @@ import {
   FullArticleTemplateFragment,
   FullBlockFragment,
 } from '@wepublish/editor/api';
-import {
-  ArticleMetadata,
-  blockForQueryBlock,
-  BlockValue,
-} from '@wepublish/ui/editor';
-import { useEffect, useState } from 'react';
+import { ArticleMetadata, blockForQueryBlock } from '@wepublish/ui/editor';
 
+import { TemplatePrefill, usePrefillOnce } from '../templates/usePrefillOnce';
 import {
   ArticleTemplateArticleMetadata,
   articleTemplateMetadataToArticleMetadata,
   articleToArticleMetadata,
 } from '../articles/articleMapping';
 
-export type ArticleTemplatePrefill = {
-  name: string;
-  blocks: BlockValue[];
-  metadata: ArticleTemplateArticleMetadata;
-};
+export type ArticleTemplatePrefill =
+  TemplatePrefill<ArticleTemplateArticleMetadata>;
 
 type OnPrefill = (prefill: ArticleTemplatePrefill) => void;
 
@@ -53,25 +46,6 @@ const articleToPrefill = (
   blocks: article.latest.blocks.map(blockForQueryBlock),
   metadata: withoutArticleSpecificMetadata(articleToArticleMetadata(article)),
 });
-
-function usePrefillOnce<Source extends { id: string }>(
-  source: Source | null | undefined,
-  toPrefill: (source: Source) => ArticleTemplatePrefill,
-  onPrefill: OnPrefill
-) {
-  const [prefilledId, setPrefilledId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!source || prefilledId === source.id) {
-      return;
-    }
-
-    setPrefilledId(source.id);
-    onPrefill(toPrefill(source));
-  }, [source, prefilledId, toPrefill, onPrefill]);
-
-  return !!source && prefilledId !== source.id;
-}
 
 export function useArticleTemplatePrefill(
   templateId: string | null | undefined,

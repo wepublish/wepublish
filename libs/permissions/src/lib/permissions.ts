@@ -951,6 +951,28 @@ export const CanDeleteArticleTemplate: Permission = {
 };
 
 /**
+ * Page Templates
+ */
+
+export const CanCreatePageTemplate: Permission = {
+  id: 'CAN_CREATE_PAGE_TEMPLATE',
+  description: 'Allows to create a page template',
+  deprecated: false,
+};
+
+export const CanUpdatePageTemplate: Permission = {
+  id: 'CAN_UPDATE_PAGE_TEMPLATE',
+  description: 'Allows to update a page template',
+  deprecated: false,
+};
+
+export const CanDeletePageTemplate: Permission = {
+  id: 'CAN_DELETE_PAGE_TEMPLATE',
+  description: 'Allows to delete a page template',
+  deprecated: false,
+};
+
+/**
  * Paywall
  */
 export const CanCreatePaywall: Permission = {
@@ -1356,6 +1378,9 @@ export const AllPermissions: Permission[] = [
   CanCreateArticleTemplate,
   CanUpdateArticleTemplate,
   CanDeleteArticleTemplate,
+  CanCreatePageTemplate,
+  CanUpdatePageTemplate,
+  CanDeletePageTemplate,
   CanCreatePaywall,
   CanUpdatePaywall,
   CanDeletePaywall,
@@ -1467,6 +1492,9 @@ export const EditorPermissions: Permission[] = [
   CanCreateArticleTemplate,
   CanUpdateArticleTemplate,
   CanDeleteArticleTemplate,
+  CanCreatePageTemplate,
+  CanUpdatePageTemplate,
+  CanDeletePageTemplate,
   CanPreview,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,

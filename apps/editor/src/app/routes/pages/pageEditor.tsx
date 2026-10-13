@@ -58,11 +58,17 @@ import {
   MdRemoveRedEye,
   MdSave,
 } from 'react-icons/md';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import {
   Badge,
   Drawer,
   IconButton as RIconButton,
+  Loader,
   Message,
   Modal,
   Notification,
@@ -76,6 +82,9 @@ import {
   PreviewFrame,
 } from '../../previewFrame';
 import { useAutosave } from '../../useAutosave';
+import { usePageTemplatePrefill } from '../pageTemplate/pageTemplatePrefill';
+import { emptyPageMetadata } from './pageDefaults';
+import { pageMetadataToMetadataInput, pageToPageMetadata } from './pageMapping';
 
 const EditorContent = styled.div`
   display: flex;
@@ -102,6 +111,7 @@ function PageEditor() {
   const navigate = useNavigate();
   const params = useParams();
   const { id } = params;
+  const [searchParams] = useSearchParams();
 
   const [
     createPage,
@@ -135,25 +145,20 @@ function PageEditor() {
   const [previewDevice, setPreviewDevice] = useState<PreviewDevice>('desktop');
 
   const [publishedAt, setPublishedAt] = useState<Date>();
-  const [metadata, setMetadata] = useState<PageMetadata>({
-    slug: '',
-    title: '',
-    description: '',
-    seoTitle: '',
-    seoDescription: '',
-    tags: [],
-    defaultTags: [],
-    url: '',
-    properties: [],
-    hidden: false,
-    image: undefined,
-    socialMediaTitle: undefined,
-    socialMediaDescription: undefined,
-    socialMediaImage: undefined,
-  });
+  const [metadata, setMetadata] = useState<PageMetadata>(emptyPageMetadata);
 
   const isNew = id === undefined;
+  const [hasChanged, setChanged] = useState(false);
   const [blocks, setBlocks] = useState<BlockValue[]>([]);
+
+  const { loading: isLoadingTemplate } = usePageTemplatePrefill(
+    isNew ? searchParams.get('templateId') : null,
+    useCallback(({ blocks, metadata: templateMetadata }) => {
+      setBlocks(blocks);
+      setMetadata(meta => ({ ...meta, ...templateMetadata }));
+      setChanged(true);
+    }, [])
+  );
 
   const pageID = id || createData?.createPage.id;
 
@@ -252,6 +257,7 @@ function PageEditor() {
     isPublishing ||
     isRestoring ||
     isDiscarding ||
+    isLoadingTemplate ||
     isNotFound;
   // Autosaving must not disable the blocks, as that would blur whatever the user is typing in.
   const isDisabled = isBusy || isAutosaving;
@@ -261,7 +267,6 @@ function PageEditor() {
       pageData?.page?.pending
   );
 
-  const [hasChanged, setChanged] = useState(false);
   const changeVersion = useRef(0);
   const skipRepopulate = useRef(false);
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
@@ -283,43 +288,14 @@ function PageEditor() {
 
   useEffect(() => {
     if (pageData?.page && !hasChanged && !skipRepopulate.current) {
-      const { latest, tags, hidden, slug, url } = pageData.page;
-      const {
-        title,
-        description,
-        seoTitle,
-        seoDescription,
-        image,
-        blocks,
-        properties,
-        socialMediaTitle,
-        socialMediaDescription,
-        socialMediaImage,
-        publishedAt,
-      } = latest;
+      const { latest } = pageData.page;
 
-      if (publishedAt) {
-        setPublishedAt(new Date(publishedAt));
+      if (latest.publishedAt) {
+        setPublishedAt(new Date(latest.publishedAt));
       }
 
-      setMetadata({
-        slug: slug ?? '',
-        title: title ?? '',
-        description: description ?? '',
-        seoTitle: seoTitle ?? '',
-        seoDescription: seoDescription ?? '',
-        tags: tags.map(({ id }) => id),
-        defaultTags: tags,
-        url,
-        properties,
-        hidden,
-        image: image || undefined,
-        socialMediaTitle: socialMediaTitle || '',
-        socialMediaDescription: socialMediaDescription || '',
-        socialMediaImage: socialMediaImage || undefined,
-      });
-
-      setBlocks(blocks.map(blockForQueryBlock));
+      setMetadata(pageToPageMetadata(pageData.page));
+      setBlocks(latest.blocks.map(blockForQueryBlock));
     }
   }, [pageData]);
 
@@ -438,18 +414,8 @@ function PageEditor() {
 
   function createInput(): CreatePageMutationVariables {
     return {
+      ...pageMetadataToMetadataInput(metadata),
       slug: metadata.slug ?? '',
-      title: metadata.title ?? '',
-      description: metadata.description,
-      seoTitle: metadata.seoTitle || undefined,
-      seoDescription: metadata.seoDescription || undefined,
-      hidden: metadata.hidden ?? false,
-      imageID: metadata.image?.id,
-      tagIds: metadata.tags,
-      properties: metadata.properties,
-      socialMediaTitle: metadata.socialMediaTitle || undefined,
-      socialMediaDescription: metadata.socialMediaDescription || undefined,
-      socialMediaImageID: metadata.socialMediaImage?.id || undefined,
       blocks: blocks.map(mapBlockValueToBlockInput),
     };
   }
@@ -811,6 +777,14 @@ function PageEditor() {
         </EditorContent>
       </EditorTemplate>
 
+      {isLoadingTemplate && (
+        <Loader
+          backdrop
+          vertical
+          content={t('pageEditor.overview.loadingTemplate')}
+        />
+      )}
+
       <Drawer
         open={isMetaDrawerOpen}
         size="sm"
@@ -827,6 +801,17 @@ function PageEditor() {
             changeVersion.current++;
             setChanged(true);
           }}
+          onCreateTemplate={
+            pageID ?
+              () => {
+                if (unsavedChangesDialog()) {
+                  navigate(
+                    `/pages/templates/create?fromPage=${encodeURIComponent(pageID)}`
+                  );
+                }
+              }
+            : undefined
+          }
         />
       </Drawer>
 

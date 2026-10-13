@@ -90,6 +90,8 @@ import { IntegrationList } from './routes/integrations/integrationList';
 import { MemberPlanList } from './routes/memberPlans/memberPlanList';
 import { NavigationList } from './routes/navigations/navigationList';
 import { NetworkContentPage } from './routes/networkContent/networkContentPage';
+import { PageTemplateEditView } from './routes/pageTemplate/pageTemplateEditView';
+import { PageTemplateList } from './routes/pageTemplate/pageTemplateList';
 import { PageEditor } from './routes/pages/pageEditor';
 import { PageList } from './routes/pages/pageList';
 import { PaymentMethodList } from './routes/paymentMethods/paymentMethodList';
@@ -460,6 +462,22 @@ export function App() {
             <Route
               path="pages/create"
               element={<PageEditor />}
+            />
+            <Route
+              path="pages/templates"
+              element={
+                <Base>
+                  <PageTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="pages/templates/create"
+              element={<PageTemplateEditView />}
+            />
+            <Route
+              path="pages/templates/edit/:id"
+              element={<PageTemplateEditView />}
             />
             <Route
               path="pages/edit/:id"

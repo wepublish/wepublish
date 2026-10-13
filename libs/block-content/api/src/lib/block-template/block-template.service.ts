@@ -81,7 +81,7 @@ export class BlockTemplateService {
     name,
     blocks,
   }: UpdateBlockTemplateInput) {
-    await this.assertNoArticleTemplate(id);
+    await this.assertNotOwnedByTemplate(id);
 
     const blockTemplate = await this.prisma.blockTemplate.update({
       where: {
@@ -99,7 +99,7 @@ export class BlockTemplateService {
   }
 
   public async deleteBlockTemplate(id: string) {
-    await this.assertNoArticleTemplate(id);
+    await this.assertNotOwnedByTemplate(id);
 
     const blockTemplate = await this.prisma.blockTemplate.delete({
       where: {
@@ -130,7 +130,7 @@ export class BlockTemplateService {
     }
 
     if (referencedIDs.length) {
-      await this.assertNoArticleTemplateReference(referencedIDs);
+      await this.assertNoTemplateReference(referencedIDs);
     }
 
     if (id) {
@@ -140,35 +140,43 @@ export class BlockTemplateService {
     return blocks.map(mapBlockUnionMap) as unknown as Prisma.InputJsonValue;
   }
 
-  private async assertNoArticleTemplate(id: string) {
-    const articleTemplates = await this.prisma.articleTemplate.count({
-      where: {
-        blockTemplateId: id,
-      },
-    });
+  private async assertNotOwnedByTemplate(id: string) {
+    const [articleTemplates, pageTemplates] = await Promise.all([
+      this.prisma.articleTemplate.count({
+        where: {
+          blockTemplateId: id,
+        },
+      }),
+      this.prisma.pageTemplate.count({
+        where: {
+          blockTemplateId: id,
+        },
+      }),
+    ]);
 
-    if (articleTemplates) {
+    if (articleTemplates || pageTemplates) {
       throw new BadRequestException(
-        `Article templates can only be changed as article templates.`
+        `Article and page templates can only be changed as article or page templates.`
       );
     }
   }
 
-  private async assertNoArticleTemplateReference(templateIds: string[]) {
-    const articleTemplates = await this.prisma.blockTemplate.count({
+  private async assertNoTemplateReference(templateIds: string[]) {
+    const templates = await this.prisma.blockTemplate.count({
       where: {
         id: {
           in: templateIds,
         },
-        articleTemplate: {
-          isNot: null,
-        },
+        OR: [
+          { articleTemplate: { isNot: null } },
+          { pageTemplate: { isNot: null } },
+        ],
       },
     });
 
-    if (articleTemplates) {
+    if (templates) {
       throw new BadRequestException(
-        `Article templates can not be used as block templates.`
+        `Article and page templates can not be used as block templates.`
       );
     }
   }
@@ -239,7 +247,7 @@ function createBlockTemplateFilter(
   filter?: BlockTemplateFilter
 ): Prisma.BlockTemplateWhereInput {
   const conditions: Prisma.BlockTemplateWhereInput[] = [
-    { articleTemplate: null },
+    { articleTemplate: null, pageTemplate: null },
   ];
 
   if (filter?.name) {
