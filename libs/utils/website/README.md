@@ -30,8 +30,9 @@ api error that is neither 4xx nor such a hidden article it throws (not during
 it has none.
 
 Without `REDIS_URL`, during `next build`, in production without `rediss://` and
-a readable `NODE_EXTRA_CA_CERTS`, or while Dragonfly fails (1 s timeout, then
-5 s pause) the cache works per pod only, and since no publication reaches it
+a readable `NODE_EXTRA_CA_CERTS`, or while Dragonfly fails (2 s timeout, then
+5 s pause; a connection is only dropped after 5 s without an answer, since
+Dragonfly stalls about a second per snapshot) the cache works per pod only, and since no publication reaches it
 then, no page stays fresh longer than 60 s. The same 60 s apply while
 `website:heartbeat` is missing (no api writing versions under this prefix, e.g.
 a website deployed before its api).

@@ -13,6 +13,7 @@ class FakeDragonfly {
   connectDelayMs = 0;
   hangOnConnect = false;
   hangOnCommand = false;
+  commandDelayMs = 0;
 }
 
 class FakeClient {
@@ -67,6 +68,12 @@ class FakeClient {
 
     if (this.dragonfly.hangOnCommand) {
       return new Promise(() => undefined);
+    }
+
+    if (this.dragonfly.commandDelayMs) {
+      await new Promise(resolve =>
+        setTimeout(resolve, this.dragonfly.commandDelayMs)
+      );
     }
 
     const [command, key, value, ...rest] = args;
@@ -493,19 +500,73 @@ describe('shared page store', () => {
       expect(errors).toHaveLength(1);
     });
 
-    it('gives up on a command that gets no answer within a second', async () => {
+    it('waits up to 2 s for an answer, so Dragonfly pausing for a second while it writes a snapshot is no outage', async () => {
+      vi.useFakeTimers();
+      const { dragonfly, errors, store } = setup();
+      const shared = store();
+      await shared?.setEntry('/a/one', entry('one'));
+      dragonfly.commandDelayMs = 1500;
+
+      const stored = shared?.getEntry('/a/one');
+      await vi.advanceTimersByTimeAsync(1500);
+
+      await expect(stored).resolves.toEqual(entry('one'));
+      expect(errors).toEqual([]);
+    });
+
+    it('gives up on a command that gets no answer within 2 s', async () => {
       vi.useFakeTimers();
       const { dragonfly, errors, store } = setup();
       const shared = store();
       await shared?.getVersion();
       dragonfly.hangOnCommand = true;
 
-      const entry = shared?.getEntry('/a/one');
-      await vi.advanceTimersByTimeAsync(1001);
+      const stored = shared?.getEntry('/a/one');
+      await vi.advanceTimersByTimeAsync(2001);
 
-      await expect(entry).resolves.toBeUndefined();
+      await expect(stored).resolves.toBeUndefined();
       expect(errors).toHaveLength(1);
       await expect(shared?.getVersion()).resolves.toBeUndefined();
+    });
+
+    it('keeps a connection whose answer only comes late, so a slow moment costs no reconnect', async () => {
+      vi.useFakeTimers();
+      const { dragonfly, store } = setup();
+      const shared = store();
+      await shared?.getVersion();
+      dragonfly.commandDelayMs = 3000;
+
+      const stored = shared?.getEntry('/a/one');
+      await vi.advanceTimersByTimeAsync(2000);
+      dragonfly.commandDelayMs = 0;
+      await expect(stored).resolves.toBeUndefined();
+      await vi.advanceTimersByTimeAsync(10_000);
+
+      expect(dragonfly.clients[0].destroyed).toBe(false);
+      await expect(shared?.getEntry('/a/one')).resolves.toBeNull();
+      expect(dragonfly.clients).toHaveLength(1);
+    });
+
+    it('drops a connection that has not answered for 5 s, so the next command connects anew instead of waiting on a dead socket', async () => {
+      vi.useFakeTimers();
+      const { dragonfly, store } = setup();
+      const shared = store();
+      await shared?.getVersion();
+      dragonfly.hangOnCommand = true;
+
+      const stored = shared?.getEntry('/a/one');
+      await vi.advanceTimersByTimeAsync(2000);
+      await expect(stored).resolves.toBeUndefined();
+      expect(dragonfly.clients[0].destroyed).toBe(false);
+
+      await vi.advanceTimersByTimeAsync(3000);
+      expect(dragonfly.clients[0].destroyed).toBe(true);
+
+      dragonfly.hangOnCommand = false;
+      await vi.advanceTimersByTimeAsync(2000);
+
+      await expect(shared?.getEntry('/a/one')).resolves.toBeNull();
+      expect(dragonfly.clients).toHaveLength(2);
     });
 
     it('does not put the password into its log', async () => {
