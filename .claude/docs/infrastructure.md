@@ -30,15 +30,16 @@ serves all media. Terraform in `application-configuration` creates a user
 prefix ([gotchas.md](gotchas.md)), mirrored locally by `docker/dragonfly/users.acl`.
 In production the api refuses `redis://` and verifies Dragonfly against the CA.
 It holds page data, articles/pages/authors/images and anonymous GraphQL
-answers — never sessions or integration settings. Run it with
-`--cache_mode=true`: when full it otherwise rejects writes, cache resets
-included. Give it headroom all the same: full, it evicts keys, the locks and
-counters below among them (`evicted_keys` in `INFO stats` should stay 0).
+answers — never sessions or integration settings. Production runs it without
+`--cache_mode` and backs it up, so nothing is evicted and the locks and
+counters below survive; full, it rejects writes, cache resets included, so give
+it headroom (`used_memory` well below `maxmemory`). The local
+`docker-compose.yml` still starts it with `--cache_mode=true`.
 With Dragonfly configured but unreachable the nightly job does not run (without
 `REDIS_URL` the database keeps it to one replica), and the UptimeRobot check
 (`/health`, `monitoring.tf`) turns red; pod probes ignore it.
-Cross-replica locks (`lock:*`: jobs, migrator ticks, tracking pixels, used TOTP
-codes) and counters (`count:*`: TOTP failures) live there as well.
+Cross-replica locks (`lock:*`: jobs, the running periodic job, migrator ticks,
+tracking pixels, used TOTP codes) and counters (`count:*`: TOTP failures) live there as well.
 Websites share their rendered ISR pages there too (Next `cacheHandler`, nothing
 written to disk; [utils-website README](../../libs/utils/website/README.md)):
 publishing rebuilds front page and pages through `website:pages`, but an

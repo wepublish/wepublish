@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
 import {
   FullPollVoteFragment,
   FullPollVoteWithAnswerFragment,
@@ -8,6 +9,7 @@ import {
   PollVoteListQueryVariables,
 } from '@wepublish/editor/api';
 import {
+  InfoTooltip,
   ListFilters,
   ListViewContainer,
   ListViewHeader,
@@ -24,6 +26,11 @@ import { useTranslation } from 'react-i18next';
 import { Button, Checkbox, Table as RTable } from 'rsuite';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
+
+const HeaderInfo = styled.span`
+  display: inline-flex;
+  margin-left: 4px;
+`;
 
 type PollVotesListProps = {
   listQueryState: QueryState<PollVoteListQueryVariables>;
@@ -153,7 +160,12 @@ export function PollVoteList({
             align="left"
             resizable
           >
-            <HeaderCell>{t('pollVoteList.userId')}</HeaderCell>
+            <HeaderCell>
+              {t('pollVoteList.userId')}
+              <HeaderInfo>
+                <InfoTooltip text={t('pollVoteList.userIdInfo')} />
+              </HeaderInfo>
+            </HeaderCell>
             <RCell dataKey="userId">
               {({ userId }: FullPollVoteFragment) => userId}
             </RCell>
@@ -163,7 +175,12 @@ export function PollVoteList({
             align="left"
             resizable
           >
-            <HeaderCell>{t('pollVoteList.fingerprint')}</HeaderCell>
+            <HeaderCell>
+              {t('pollVoteList.fingerprint')}
+              <HeaderInfo>
+                <InfoTooltip text={t('pollVoteList.fingerprintInfo')} />
+              </HeaderInfo>
+            </HeaderCell>
             <RCell dataKey="userId">
               {({ fingerprint }: FullPollVoteFragment) => fingerprint}
             </RCell>

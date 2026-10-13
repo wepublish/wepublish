@@ -1,4 +1,5 @@
 import { loadPaymentProviders } from '@wepublish/payment/api';
+import { loadMailProvider } from '@wepublish/mail/api';
 import { ProviderRegistryService } from './provider-registry.service';
 
 const { loads } = vi.hoisted(() => ({ loads: { count: 0 } }));
@@ -197,5 +198,45 @@ describe('ProviderRegistryService reloads', () => {
     expect(await failing).toEqual(new Error('database down'));
     await newer;
     expect(registry.paymentProviders).toEqual([{ id: 'saved after' }]);
+  });
+});
+
+describe('ProviderRegistryService errors', () => {
+  const unauthorized = { code: 401, message: { message: 'Unauthorized' } };
+
+  it('says which payment provider failed', async () => {
+    vi.mocked(loadPaymentProviders).mockResolvedValueOnce([
+      {
+        id: 'bexio',
+        getName: async () => 'Bexio',
+        createRemoteInvoice: async () => {
+          throw unauthorized;
+        },
+      },
+    ] as never);
+    const { registry } = createReplica();
+    await registry.ensureLoaded();
+
+    await expect(
+      registry.paymentProviders[0].createRemoteInvoice({} as never)
+    ).rejects.toThrow(
+      'Payment provider "Bexio" (Object, id bexio) failed in createRemoteInvoice: 401 Unauthorized'
+    );
+  });
+
+  it('says which mail provider failed', async () => {
+    vi.mocked(loadMailProvider).mockResolvedValueOnce({
+      id: 'mailgun',
+      getName: async () => 'Mailgun',
+      sendMail: async () => {
+        throw unauthorized;
+      },
+    } as never);
+    const { registry } = createReplica();
+    await registry.ensureLoaded();
+
+    await expect(registry.mailProvider.sendMail({} as never)).rejects.toThrow(
+      'Mail provider "Mailgun" (Object, id mailgun) failed in sendMail: 401 Unauthorized'
+    );
   });
 });

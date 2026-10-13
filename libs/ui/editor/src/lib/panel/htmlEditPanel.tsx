@@ -12,11 +12,11 @@ import {
   InputGroup,
   Loader,
   Message,
-  Tooltip,
-  Whisper,
 } from 'rsuite';
 
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { HTMLBlockValue } from '../blocks/types';
+import { humanizeError } from '../humanizeError';
 
 const Warning = styled.div``;
 
@@ -118,20 +118,17 @@ export function HtmlEditPanel({
                 onChange={setPrompt}
               />
 
-              <Whisper
-                placement="top"
-                trigger="hover"
-                speaker={<Tooltip>{t('blocks.html.prompt')}</Tooltip>}
-              >
+              <IconButtonTooltip caption={t('blocks.html.prompt')}>
                 <InputGroup.Button
                   type="submit"
+                  aria-label={t('blocks.html.prompt')}
                   disabled={thinking || !prompt}
                 >
                   {thinking ?
                     <Loader size={'xs'} />
                   : <MdAutoFixHigh />}
                 </InputGroup.Button>
-              </Whisper>
+              </IconButtonTooltip>
             </InputGroup>
           </div>
 
@@ -140,7 +137,7 @@ export function HtmlEditPanel({
               showIcon
               type="error"
             >
-              {error.message}
+              {humanizeError(error)}
             </Message>
           )}
 

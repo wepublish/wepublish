@@ -12,8 +12,8 @@ import {
 
 import { ArticleTemplateEditView } from './articleTemplateEditView';
 
-const useArticleTemplateQuery = vi.fn();
-const useArticleQuery = vi.fn();
+const articleTemplateQueryMock = vi.fn();
+const articleQueryMock = vi.fn();
 const createArticleTemplate = vi.fn();
 const updateArticleTemplate = vi.fn();
 const refetch = vi.fn();
@@ -31,9 +31,9 @@ vi.mock('@apollo/client/react', async importOriginal => {
     useQuery: (document: unknown, options?: unknown) => {
       switch (operationName(document)) {
         case 'ArticleTemplate':
-          return useArticleTemplateQuery(options);
+          return articleTemplateQueryMock(options);
         case 'Article':
-          return useArticleQuery(options);
+          return articleQueryMock(options);
         case 'SettingsList':
           return { data: undefined };
         case 'BlockTemplateList':
@@ -142,7 +142,7 @@ const articleTemplate = ({
 });
 
 const mockQuery = (template = articleTemplate()) => {
-  useArticleTemplateQuery.mockReturnValue({
+  articleTemplateQueryMock.mockReturnValue({
     data: { articleTemplate: template },
     refetch,
     loading: false,
@@ -174,7 +174,7 @@ const nameInput = () =>
 beforeEach(() => {
   vi.clearAllMocks();
   isAuthorised.mockImplementation(() => true);
-  useArticleQuery.mockReturnValue({ data: undefined, loading: false });
+  articleQueryMock.mockReturnValue({ data: undefined, loading: false });
   mockQuery();
   updateArticleTemplate.mockResolvedValue({});
 });
@@ -183,7 +183,7 @@ describe('ArticleTemplateEditView', () => {
   it('should take over the loaded article template', () => {
     render(view());
 
-    expect(useArticleTemplateQuery).toHaveBeenCalledWith(
+    expect(articleTemplateQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({
         variables: { id: 'article-template-1' },
         skip: false,
@@ -248,7 +248,7 @@ describe('ArticleTemplateEditView', () => {
   });
 
   it('should create a new article template and open it', async () => {
-    useArticleTemplateQuery.mockReturnValue({
+    articleTemplateQueryMock.mockReturnValue({
       data: undefined,
       refetch,
       loading: false,
@@ -259,7 +259,7 @@ describe('ArticleTemplateEditView', () => {
 
     render(view('/articles/templates/create'));
 
-    expect(useArticleTemplateQuery).toHaveBeenCalledWith(
+    expect(articleTemplateQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({ skip: true })
     );
 
@@ -281,7 +281,7 @@ describe('ArticleTemplateEditView', () => {
   });
 
   it('should create a copy of an existing article template', async () => {
-    useArticleTemplateQuery.mockImplementation(
+    articleTemplateQueryMock.mockImplementation(
       ({ variables, skip }: { variables: { id: string }; skip: boolean }) =>
         !skip && variables.id === 'article-template-1' ?
           {
@@ -328,12 +328,12 @@ describe('ArticleTemplateEditView', () => {
   });
 
   it('should create an article template from an article', async () => {
-    useArticleTemplateQuery.mockReturnValue({
+    articleTemplateQueryMock.mockReturnValue({
       data: undefined,
       refetch,
       loading: false,
     });
-    useArticleQuery.mockImplementation(
+    articleQueryMock.mockImplementation(
       ({ variables, skip }: { variables: { id: string }; skip: boolean }) =>
         !skip && variables.id === 'article-1' ?
           {
@@ -407,10 +407,11 @@ describe('ArticleTemplateEditView', () => {
   });
 
   it('should show that the template to copy is loading', () => {
-    useArticleTemplateQuery.mockImplementation(({ skip }: { skip: boolean }) =>
-      skip ?
-        { data: undefined, loading: false, refetch }
-      : { data: undefined, loading: true, refetch }
+    articleTemplateQueryMock.mockImplementation(
+      ({ skip }: { skip: boolean }) =>
+        skip ?
+          { data: undefined, loading: false, refetch }
+        : { data: undefined, loading: true, refetch }
     );
 
     render(view('/articles/templates/create?copyFrom=article-template-1'));
@@ -421,12 +422,12 @@ describe('ArticleTemplateEditView', () => {
   });
 
   it('should show that the article is loading', () => {
-    useArticleTemplateQuery.mockReturnValue({
+    articleTemplateQueryMock.mockReturnValue({
       data: undefined,
       refetch,
       loading: false,
     });
-    useArticleQuery.mockReturnValue({ data: undefined, loading: true });
+    articleQueryMock.mockReturnValue({ data: undefined, loading: true });
 
     render(view('/articles/templates/create?fromArticle=article-1'));
 
@@ -436,7 +437,7 @@ describe('ArticleTemplateEditView', () => {
   });
 
   it('should not show a loader for a new empty template', () => {
-    useArticleTemplateQuery.mockReturnValue({
+    articleTemplateQueryMock.mockReturnValue({
       data: undefined,
       refetch,
       loading: false,
@@ -472,7 +473,7 @@ describe('ArticleTemplateEditView', () => {
     });
 
     it('should allow creating a template with the create permission', () => {
-      useArticleTemplateQuery.mockReturnValue({
+      articleTemplateQueryMock.mockReturnValue({
         data: undefined,
         refetch,
         loading: false,
@@ -484,7 +485,7 @@ describe('ArticleTemplateEditView', () => {
     });
 
     it('should not allow creating a template with the update permission only', () => {
-      useArticleTemplateQuery.mockReturnValue({
+      articleTemplateQueryMock.mockReturnValue({
         data: undefined,
         refetch,
         loading: false,

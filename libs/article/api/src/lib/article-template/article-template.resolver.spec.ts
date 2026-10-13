@@ -1,3 +1,5 @@
+import type { Mock } from 'vitest';
+
 import { NotFoundException } from '@nestjs/common';
 import {
   CanCreateArticle,
@@ -47,20 +49,20 @@ const articleTemplate = {
 };
 
 describe('ArticleTemplateResolver', () => {
-  let service: Record<string, jest.Mock>;
-  let blockTemplateDataloader: { load: jest.Mock };
+  let service: Record<string, Mock>;
+  let blockTemplateDataloader: { load: Mock };
   let resolver: ArticleTemplateResolver;
 
   beforeEach(() => {
     service = {
-      getArticleTemplates: jest.fn(),
-      getArticleTemplateById: jest.fn().mockResolvedValue(articleTemplate),
-      createArticleTemplate: jest.fn(),
-      updateArticleTemplate: jest.fn(),
-      deleteArticleTemplate: jest.fn(),
+      getArticleTemplates: vi.fn(),
+      getArticleTemplateById: vi.fn().mockResolvedValue(articleTemplate),
+      createArticleTemplate: vi.fn(),
+      updateArticleTemplate: vi.fn(),
+      deleteArticleTemplate: vi.fn(),
     };
     blockTemplateDataloader = {
-      load: jest.fn().mockResolvedValue({ id: 'block-template' }),
+      load: vi.fn().mockResolvedValue({ id: 'block-template' }),
     };
 
     resolver = new ArticleTemplateResolver(
@@ -143,13 +145,13 @@ describe('ArticleTemplateMetadataResolver', () => {
   beforeEach(() => {
     resolver = new ArticleTemplateMetadataResolver(
       {
-        load: jest.fn(async (id: string) => (id === author.id ? author : null)),
+        load: vi.fn(async (id: string) => (id === author.id ? author : null)),
       } as unknown as AuthorDataloaderService,
       {
-        load: jest.fn(async (id: string) => (id === tag.id ? tag : null)),
+        load: vi.fn(async (id: string) => (id === tag.id ? tag : null)),
       } as unknown as TagDataloader,
       {
-        load: jest.fn(async (id: string) => (id === image.id ? image : null)),
+        load: vi.fn(async (id: string) => (id === image.id ? image : null)),
       } as unknown as ImageDataloaderService
     );
   });

@@ -6,6 +6,7 @@ import {
   MailSendJobState,
   ResumeMailSendJobDocument,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdPlayArrow, MdStop } from 'react-icons/md';
@@ -70,7 +71,7 @@ export function JobProgressBar({ job }: { job: FullMailSendJobFragment }) {
   return (
     <Progress.Line
       percent={percent}
-      strokeColor={job.failedCount ? '#f5a623' : undefined}
+      strokeColor={job.failedCount ? 'var(--rs-state-warning)' : undefined}
       status={
         job.status === MailSendJobState.Running ? 'active'
         : job.status === MailSendJobState.Done ?
@@ -109,7 +110,7 @@ export function ResumeJobButton({
           showIcon
           closable
         >
-          {error.message}
+          {humanizeError(error)}
         </Message>
       ),
     onCompleted: () => {
@@ -165,7 +166,11 @@ export function ResumeJobButton({
               </Checkbox>
               <Typography
                 variant="caption"
-                style={{ color: '#8e8e93', lineHeight: 1.35, marginLeft: 34 }}
+                style={{
+                  color: 'var(--rs-text-secondary)',
+                  lineHeight: 1.35,
+                  marginLeft: 34,
+                }}
                 sx={{
                   display: 'block',
                 }}
@@ -227,7 +232,7 @@ export function CancelJobButton({
           showIcon
           closable
         >
-          {error.message}
+          {humanizeError(error)}
         </Message>
       ),
     onCompleted: () => onDone?.(),

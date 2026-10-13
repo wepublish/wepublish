@@ -26,6 +26,7 @@ import {
   ExternalAppsTarget,
   UpdateExternalAppDocument,
 } from '@wepublish/editor/api';
+import { humanizeError } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -36,10 +37,11 @@ import { z } from 'zod';
 import { IconPickerSelect } from './iconPicker';
 
 const Form = styled('form')`
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 24px;
+  padding: 28px;
 `;
 
 const FormRow = styled('div')`
@@ -47,8 +49,8 @@ const FormRow = styled('div')`
   grid-template-columns: 1fr;
   gap: 24px;
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: 1fr 1fr;
+  @container (min-width: 480px) {
+    grid-template-columns: minmax(160px, 1fr) 2fr;
   }
 `;
 
@@ -133,12 +135,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
             type="error"
             showIcon
             closable
-            duration={3000}
+            duration={8000}
           >
-            {err.message ||
-              t('externalAppForm.errorDelete', {
-                defaultValue: 'Failed to delete external app',
-              })}
+            {humanizeError(err)}
           </Message>,
           { placement: 'topCenter' }
         );
@@ -179,12 +178,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
               type="error"
               showIcon
               closable
-              duration={3000}
+              duration={8000}
             >
-              {err.message ||
-                t('externalAppForm.errorUpdate', {
-                  defaultValue: 'Failed to update external app',
-                })}
+              {humanizeError(err)}
             </Message>,
             { placement: 'topCenter' }
           );
@@ -224,12 +220,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
               type="error"
               showIcon
               closable
-              duration={3000}
+              duration={8000}
             >
-              {err.message ||
-                t('externalAppForm.errorCreate', {
-                  defaultValue: 'Failed to create external app',
-                })}
+              {humanizeError(err)}
             </Message>,
             { placement: 'topCenter' }
           );
@@ -238,7 +231,10 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
   };
 
   return (
-    <Card variant="outlined">
+    <Card
+      variant="outlined"
+      sx={{ borderRadius: 'var(--rs-radius-lg)' }}
+    >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="name"
@@ -299,7 +295,9 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
                       key={target}
                       value={target}
                     >
-                      {target}
+                      {target === ExternalAppsTarget.Iframe ?
+                        t('externalAppForm.targetIframe')
+                      : t('externalAppForm.targetBlank')}
                     </MenuItem>
                   ))}
                 </Select>
@@ -343,7 +341,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
           )}
         />
 
-        {error && <FormHelperText error>{error.message}</FormHelperText>}
+        {error && <FormHelperText error>{humanizeError(error)}</FormHelperText>}
 
         <Box
           sx={{

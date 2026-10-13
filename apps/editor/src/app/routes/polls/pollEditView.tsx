@@ -10,6 +10,8 @@ import {
 import { RichtextJSONDocument } from '@wepublish/richtext';
 import {
   createCheckedPermissionComponent,
+  humanizeError,
+  InfoTooltip,
   PollAnswers,
   PollExternalVotes,
   RichTextBlock,
@@ -29,7 +31,7 @@ const PollEditor = styled.div`
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
   align-items: start;
-  gap: 12px;
+  gap: 16px;
 `;
 
 const DatesWrapper = styled.div`
@@ -58,9 +60,9 @@ function PollEditView() {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -246,7 +248,10 @@ function PollEditView() {
               </DateItem>
 
               <DateItem>
-                <DateLabel>{t('pollEditView.closesAtLabel')}</DateLabel>
+                <DateLabel>
+                  {t('pollEditView.closesAtLabel')}{' '}
+                  <InfoTooltip text={t('pollEditView.closesAtInfo')} />
+                </DateLabel>
 
                 <DatePicker
                   value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
@@ -272,7 +277,12 @@ function PollEditView() {
         </Panel>
 
         <Panel
-          header={t('pollEditView.infoText')}
+          header={
+            <>
+              {t('pollEditView.infoText')}{' '}
+              <InfoTooltip text={t('pollEditView.infoTextInfo')} />
+            </>
+          }
           bordered
         >
           <RichTextBlock
@@ -289,7 +299,12 @@ function PollEditView() {
         </Panel>
 
         <Panel
-          header={t('pollEditView.pollExternalVotesPanelHeader')}
+          header={
+            <>
+              {t('pollEditView.pollExternalVotesPanelHeader')}{' '}
+              <InfoTooltip text={t('pollEditView.pollExternalVotesInfo')} />
+            </>
+          }
           bordered
           css={{ gridColumn: '-1/1' }}
         >

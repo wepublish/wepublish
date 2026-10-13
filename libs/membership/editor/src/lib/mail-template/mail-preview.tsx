@@ -1,3 +1,4 @@
+import { IconButtonTooltip } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdLaptopMac, MdPhoneIphone, MdTabletMac } from 'react-icons/md';
@@ -44,7 +45,7 @@ export function MailPreview({
 
   const deviceProps = (value: Device, label: string) => ({
     size: 'sm' as const,
-    title: label,
+    'aria-label': label,
     appearance: (device === value ? 'primary' : 'default') as
       | 'primary'
       | 'default',
@@ -58,21 +59,35 @@ export function MailPreview({
         justifyContent="center"
         style={{ marginBottom: 8 }}
       >
-        <IconButton
-          icon={<MdLaptopMac />}
-          {...deviceProps(
-            'desktop',
-            t('mailTemplates.editor.desktop', 'Desktop')
-          )}
-        />
-        <IconButton
-          icon={<MdTabletMac />}
-          {...deviceProps('tablet', t('mailTemplates.editor.tablet', 'Tablet'))}
-        />
-        <IconButton
-          icon={<MdPhoneIphone />}
-          {...deviceProps('mobile', t('mailTemplates.editor.mobile', 'Mobile'))}
-        />
+        <IconButtonTooltip
+          caption={t('mailTemplates.editor.desktop', 'Desktop')}
+        >
+          <IconButton
+            icon={<MdLaptopMac />}
+            {...deviceProps(
+              'desktop',
+              t('mailTemplates.editor.desktop', 'Desktop')
+            )}
+          />
+        </IconButtonTooltip>
+        <IconButtonTooltip caption={t('mailTemplates.editor.tablet', 'Tablet')}>
+          <IconButton
+            icon={<MdTabletMac />}
+            {...deviceProps(
+              'tablet',
+              t('mailTemplates.editor.tablet', 'Tablet')
+            )}
+          />
+        </IconButtonTooltip>
+        <IconButtonTooltip caption={t('mailTemplates.editor.mobile', 'Mobile')}>
+          <IconButton
+            icon={<MdPhoneIphone />}
+            {...deviceProps(
+              'mobile',
+              t('mailTemplates.editor.mobile', 'Mobile')
+            )}
+          />
+        </IconButtonTooltip>
       </Stack>
 
       {subject !== undefined && (
@@ -89,6 +104,7 @@ export function MailPreview({
           justifyContent: 'center',
           overflow: 'auto',
           background: '#f4f4f4',
+          borderRadius: 'var(--rs-radius-md)',
         }}
       >
         <iframe
@@ -99,7 +115,7 @@ export function MailPreview({
             maxWidth: '100%',
             height: '100%',
             border: '1px solid #e5e5ea',
-            borderRadius: 6,
+            borderRadius: 'var(--rs-radius-md)',
             background: '#fff',
           }}
         />

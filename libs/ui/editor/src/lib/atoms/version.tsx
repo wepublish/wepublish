@@ -47,9 +47,9 @@ const ConnectorLabel = styled.div`
 const UNKNOWN_VERSION = '<!- VERSION UNKNOWN -!>';
 
 const DOT_COLORS: Record<OneChannelConnectionState, string> = {
-  [OneChannelConnectionState.Connected]: '#2e7d32',
-  [OneChannelConnectionState.Failing]: '#ed6c02',
-  [OneChannelConnectionState.NotConfigured]: '#d32f2f',
+  [OneChannelConnectionState.Connected]: 'var(--rs-state-success)',
+  [OneChannelConnectionState.Failing]: 'var(--rs-state-warning)',
+  [OneChannelConnectionState.NotConfigured]: 'var(--rs-state-error)',
 };
 
 export function Version() {

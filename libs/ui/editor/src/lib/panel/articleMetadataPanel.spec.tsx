@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { ArticleMetadata, ArticleMetadataPanel } from './articleMetadataPanel';
@@ -51,9 +51,7 @@ describe('ArticleMetadataPanel', () => {
   it('should show article specific metadata for articles', () => {
     renderPanel();
 
-    expect(
-      screen.getByLabelText('articleEditor.panels.slug')
-    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue('slug')).toBeInTheDocument();
     expect(
       screen.getByText('articleEditor.panels.likeCount')
     ).toBeInTheDocument();
@@ -65,9 +63,7 @@ describe('ArticleMetadataPanel', () => {
   it('should hide article specific metadata for article templates', () => {
     renderPanel(true);
 
-    expect(
-      screen.queryByLabelText('articleEditor.panels.slug')
-    ).not.toBeInTheDocument();
+    expect(screen.queryByDisplayValue('slug')).not.toBeInTheDocument();
     expect(
       screen.queryByText('articleEditor.panels.likeCount')
     ).not.toBeInTheDocument();

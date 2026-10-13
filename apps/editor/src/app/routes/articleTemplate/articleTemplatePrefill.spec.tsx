@@ -6,8 +6,8 @@ import {
   useArticleTemplatePrefill,
 } from './articleTemplatePrefill';
 
-const useArticleTemplateQuery = vi.fn();
-const useArticleQuery = vi.fn();
+const articleTemplateQueryMock = vi.fn();
+const articleQueryMock = vi.fn();
 
 const operationName = (document: unknown) =>
   (document as { definitions?: { name?: { value?: string } }[] })
@@ -18,9 +18,9 @@ vi.mock('@apollo/client/react', async importOriginal => ({
   useQuery: (document: unknown, options?: unknown) => {
     switch (operationName(document)) {
       case 'ArticleTemplate':
-        return useArticleTemplateQuery(options);
+        return articleTemplateQueryMock(options);
       case 'Article':
-        return useArticleQuery(options);
+        return articleQueryMock(options);
     }
   },
 }));
@@ -82,8 +82,8 @@ const articleTemplate = (modifiedAt = '2026-01-01T00:00:00.000Z') => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
-  useArticleTemplateQuery.mockReturnValue({ data: undefined, loading: false });
-  useArticleQuery.mockReturnValue({ data: undefined, loading: false });
+  articleTemplateQueryMock.mockReturnValue({ data: undefined, loading: false });
+  articleQueryMock.mockReturnValue({ data: undefined, loading: false });
 });
 
 describe('useArticleTemplatePrefill', () => {
@@ -92,14 +92,14 @@ describe('useArticleTemplatePrefill', () => {
 
     renderHook(() => useArticleTemplatePrefill(null, onPrefill));
 
-    expect(useArticleTemplateQuery).toHaveBeenCalledWith(
+    expect(articleTemplateQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({ skip: true })
     );
     expect(onPrefill).not.toHaveBeenCalled();
   });
 
   it('should prefill the top level blocks and the metadata of the template', () => {
-    useArticleTemplateQuery.mockReturnValue({
+    articleTemplateQueryMock.mockReturnValue({
       data: { articleTemplate: articleTemplate() },
       loading: false,
     });
@@ -109,7 +109,7 @@ describe('useArticleTemplatePrefill', () => {
       useArticleTemplatePrefill('article-template-1', onPrefill)
     );
 
-    expect(useArticleTemplateQuery).toHaveBeenCalledWith(
+    expect(articleTemplateQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({
         variables: { id: 'article-template-1' },
         skip: false,
@@ -143,7 +143,10 @@ describe('useArticleTemplatePrefill', () => {
   });
 
   it('should be loading until the template has been prefilled', () => {
-    useArticleTemplateQuery.mockReturnValue({ data: undefined, loading: true });
+    articleTemplateQueryMock.mockReturnValue({
+      data: undefined,
+      loading: true,
+    });
     const onPrefill = vi.fn();
     const renders: { loading: boolean; prefilled: boolean }[] = [];
 
@@ -160,7 +163,7 @@ describe('useArticleTemplatePrefill', () => {
       return prefill;
     });
 
-    useArticleTemplateQuery.mockReturnValue({
+    articleTemplateQueryMock.mockReturnValue({
       data: { articleTemplate: articleTemplate() },
       loading: false,
     });
@@ -174,7 +177,7 @@ describe('useArticleTemplatePrefill', () => {
   });
 
   it('should stop loading if the template does not exist', () => {
-    useArticleTemplateQuery.mockReturnValue({
+    articleTemplateQueryMock.mockReturnValue({
       data: { articleTemplate: null },
       loading: false,
     });
@@ -187,7 +190,7 @@ describe('useArticleTemplatePrefill', () => {
   });
 
   it('should only prefill once', () => {
-    useArticleTemplateQuery.mockReturnValue({
+    articleTemplateQueryMock.mockReturnValue({
       data: { articleTemplate: articleTemplate() },
       loading: false,
     });
@@ -197,7 +200,7 @@ describe('useArticleTemplatePrefill', () => {
       useArticleTemplatePrefill('article-template-1', onPrefill)
     );
 
-    useArticleTemplateQuery.mockReturnValue({
+    articleTemplateQueryMock.mockReturnValue({
       data: { articleTemplate: articleTemplate('2026-02-02T00:00:00.000Z') },
       loading: false,
     });
@@ -256,14 +259,14 @@ describe('useArticlePrefill', () => {
 
     renderHook(() => useArticlePrefill(null, onPrefill));
 
-    expect(useArticleQuery).toHaveBeenCalledWith(
+    expect(articleQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({ skip: true })
     );
     expect(onPrefill).not.toHaveBeenCalled();
   });
 
   it('should prefill the name, blocks and metadata of the article once', () => {
-    useArticleQuery.mockReturnValue({
+    articleQueryMock.mockReturnValue({
       data: { article },
       loading: false,
     });
@@ -274,7 +277,7 @@ describe('useArticlePrefill', () => {
     );
     rerender();
 
-    expect(useArticleQuery).toHaveBeenCalledWith(
+    expect(articleQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({ variables: { id: 'article-1' }, skip: false })
     );
     expect(onPrefill).toHaveBeenCalledTimes(1);

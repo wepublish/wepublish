@@ -1,3 +1,5 @@
+import type { Mock } from 'vitest';
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
@@ -33,31 +35,31 @@ describe('ArticleTemplateService', () => {
       | 'findUniqueOrThrow'
       | 'create'
       | 'update',
-      jest.Mock
+      Mock
     >;
-    blockTemplate: Record<'delete', jest.Mock>;
+    blockTemplate: Record<'delete', Mock>;
   };
-  let blockTemplateService: { mapBlocks: jest.Mock };
+  let blockTemplateService: { mapBlocks: Mock };
 
   beforeEach(async () => {
     prismaMock = {
       articleTemplate: {
-        count: jest.fn().mockResolvedValue(0),
-        findMany: jest.fn().mockResolvedValue([]),
-        findUnique: jest.fn(),
-        findUniqueOrThrow: jest.fn().mockResolvedValue({
+        count: vi.fn().mockResolvedValue(0),
+        findMany: vi.fn().mockResolvedValue([]),
+        findUnique: vi.fn(),
+        findUniqueOrThrow: vi.fn().mockResolvedValue({
           id: '1',
           blockTemplateId: 'block-template',
         }),
-        create: jest.fn(),
-        update: jest.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
       },
       blockTemplate: {
-        delete: jest.fn(),
+        delete: vi.fn(),
       },
     };
     blockTemplateService = {
-      mapBlocks: jest.fn().mockResolvedValue(mappedBlocks),
+      mapBlocks: vi.fn().mockResolvedValue(mappedBlocks),
     };
 
     const module: TestingModule = await Test.createTestingModule({

@@ -164,6 +164,7 @@ mutation CreateSubscription(
   $userID: String!
   $paymentMethodID: String!
   $memberPlanID: String!
+  $skipMail: Boolean
 ) {
   createSubscription(
     autoRenew: $autoRenew
@@ -176,6 +177,7 @@ mutation CreateSubscription(
     userID: $userID
     paymentMethodID: $paymentMethodID
     memberPlanID: $memberPlanID
+    skipMail: $skipMail
   ) {
     ...FullSubscription
   }
@@ -214,8 +216,13 @@ mutation UpdateSubscription(
 mutation CancelSubscription(
   $cancelSubscriptionId: String!
   $reason: SubscriptionDeactivationReason!
+  $skipMail: Boolean
 ) {
-  cancelSubscription(id: $cancelSubscriptionId, reason: $reason) {
+  cancelSubscription(
+    id: $cancelSubscriptionId
+    reason: $reason
+    skipMail: $skipMail
+  ) {
     ...FullSubscription
   }
 }

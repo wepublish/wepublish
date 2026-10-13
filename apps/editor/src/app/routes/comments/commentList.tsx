@@ -16,6 +16,7 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   IconButton,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewContainer,
   ListViewFilterArea,
   ListViewHeader,
@@ -35,7 +36,7 @@ import { RowDataType } from 'rsuite-table';
 const { Column, HeaderCell, Cell } = RTable;
 
 const EditIcon = styled.span`
-  margin-right: 5px;
+  margin-right: 4px;
 `;
 
 function mapColumFieldToGraphQLField(columnField: string): CommentSort | null {
@@ -127,8 +128,7 @@ function CommentList() {
                 };
               })
             }
-            checkedChildren={t('comments.state.approved')}
-            unCheckedChildren={t('comments.state.approved')}
+            label={t('comments.state.approved')}
           />
 
           <Toggle
@@ -150,8 +150,7 @@ function CommentList() {
                 };
               })
             }
-            checkedChildren={t('comments.state.pendingApproval')}
-            unCheckedChildren={t('comments.state.pendingApproval')}
+            label={t('comments.state.pendingApproval')}
           />
 
           <Toggle
@@ -173,8 +172,14 @@ function CommentList() {
                 };
               })
             }
-            checkedChildren={t('comments.state.pendingUserChanges')}
-            unCheckedChildren={t('comments.state.pendingUserChanges')}
+            label={
+              <>
+                {t('comments.state.pendingUserChanges')}{' '}
+                <InfoTooltip
+                  text={t('comments.overview.pendingUserChangesInfo')}
+                />
+              </>
+            }
           />
 
           <Toggle
@@ -192,8 +197,7 @@ function CommentList() {
                 };
               })
             }
-            checkedChildren={t('comments.state.rejected')}
-            unCheckedChildren={t('comments.state.rejected')}
+            label={t('comments.state.rejected')}
           />
         </ListViewFilterArea>
       </ListViewContainer>
@@ -303,12 +307,12 @@ function CommentList() {
 
           {}
           <Column
-            width={150}
+            width={140}
             align="center"
             verticalAlign="middle"
             fixed="right"
           >
-            <HeaderCell>{t('comments.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<FullCommentFragment>) => (
                 <PermissionControl
@@ -319,6 +323,7 @@ function CommentList() {
                     <IconButtonTooltip caption={t('comments.overview.edit')}>
                       <Link to={`edit/${rowData.id}`}>
                         <IconButton
+                          aria-label={t('comments.overview.edit')}
                           icon={<MdEdit />}
                           circle
                           size="sm"

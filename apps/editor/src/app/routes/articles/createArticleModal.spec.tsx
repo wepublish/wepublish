@@ -5,7 +5,7 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import { CreateArticleModal } from './createArticleModal';
 
-const useArticleTemplateListQuery = vi.fn();
+const articleTemplateListQueryMock = vi.fn();
 
 const operationName = (document: unknown) =>
   (document as { definitions?: { name?: { value?: string } }[] })
@@ -15,7 +15,7 @@ vi.mock('@apollo/client/react', async importOriginal => ({
   ...((await importOriginal()) as object),
   useQuery: (document: unknown, options?: unknown) =>
     operationName(document) === 'ArticleTemplateList' ?
-      useArticleTemplateListQuery(options)
+      articleTemplateListQueryMock(options)
     : undefined,
 }));
 
@@ -37,7 +37,7 @@ const articleTemplate = (id: string, name: string) => ({
 });
 
 const mockTemplates = (count: number) =>
-  useArticleTemplateListQuery.mockReturnValue({
+  articleTemplateListQueryMock.mockReturnValue({
     data: {
       articleTemplates: {
         nodes: Array.from({ length: count }, (_, index) =>
@@ -73,7 +73,7 @@ const renderModal = (onClose = vi.fn()) =>
 
 beforeEach(() => {
   vi.clearAllMocks();
-  useArticleTemplateListQuery.mockReturnValue({
+  articleTemplateListQueryMock.mockReturnValue({
     data: {
       articleTemplates: {
         nodes: [
@@ -91,7 +91,7 @@ describe('CreateArticleModal', () => {
   it('should offer a blank article and all article templates', async () => {
     renderModal();
 
-    expect(useArticleTemplateListQuery).toHaveBeenCalledWith(
+    expect(articleTemplateListQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({
         variables: { take: 100 },
         skip: false,
@@ -204,7 +204,7 @@ describe('CreateArticleModal', () => {
     await screen.findByRole('button', { name: /News/ });
     rerender(modal(false));
 
-    expect(useArticleTemplateListQuery).toHaveBeenLastCalledWith(
+    expect(articleTemplateListQueryMock).toHaveBeenLastCalledWith(
       expect.objectContaining({ skip: false })
     );
   });
@@ -219,7 +219,7 @@ describe('CreateArticleModal', () => {
       </MemoryRouter>
     );
 
-    expect(useArticleTemplateListQuery).toHaveBeenCalledWith(
+    expect(articleTemplateListQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({ skip: true })
     );
   });

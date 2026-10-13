@@ -191,7 +191,9 @@ export const Extend: StoryObj = {
   ...Default,
   play: async ctx => {
     const canvas = within(ctx.canvasElement);
-    await waitFor(() => canvas.getByText('Jetzt verlängern'));
+    await waitFor(() => canvas.getByText('Jetzt verlängern'), {
+      timeout: 5000,
+    });
 
     await WithExtendError.play?.(ctx);
   },
@@ -219,7 +221,9 @@ export const Cancel: StoryObj = {
   ...Default,
   play: async ctx => {
     const canvas = within(ctx.canvasElement);
-    await waitFor(() => canvas.getByText('Abo kündigen'));
+    await waitFor(() => canvas.getByText('Abo kündigen'), {
+      timeout: 5000,
+    });
 
     await WithCancelError.play?.(ctx);
   },

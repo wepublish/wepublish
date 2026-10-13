@@ -5,7 +5,7 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import { ArticleTemplateList } from './articleTemplateList';
 
-const useArticleTemplateListQuery = vi.fn();
+const articleTemplateListQueryMock = vi.fn();
 const deleteArticleTemplate = vi.fn();
 const refetch = vi.fn();
 
@@ -17,7 +17,7 @@ vi.mock('@apollo/client/react', async importOriginal => ({
   ...((await importOriginal()) as object),
   useQuery: (document: unknown, options?: unknown) =>
     operationName(document) === 'ArticleTemplateList' ?
-      useArticleTemplateListQuery(options)
+      articleTemplateListQueryMock(options)
     : undefined,
   useMutation: (document: unknown) =>
     operationName(document) === 'DeleteArticleTemplate' ?
@@ -54,7 +54,7 @@ const articleTemplate = (id: string, name: string) => ({
 beforeEach(() => {
   vi.clearAllMocks();
   deleteArticleTemplate.mockResolvedValue({});
-  useArticleTemplateListQuery.mockReturnValue({
+  articleTemplateListQueryMock.mockReturnValue({
     data: {
       articleTemplates: {
         nodes: [
@@ -95,7 +95,7 @@ describe('ArticleTemplateList', () => {
   it('should list the article templates and link to them', async () => {
     renderList();
 
-    expect(useArticleTemplateListQuery).toHaveBeenCalledWith(
+    expect(articleTemplateListQueryMock).toHaveBeenCalledWith(
       expect.objectContaining({ variables: { take: 10, skip: 0 } })
     );
     expect(await screen.findByRole('link', { name: 'News' })).toHaveAttribute(

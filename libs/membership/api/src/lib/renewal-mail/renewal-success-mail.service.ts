@@ -6,7 +6,12 @@ import {
 } from '@prisma/client';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { InvoicePaidListener } from '@wepublish/payment/api';
+import { ActionMailNoMailReason } from '../action-mail/action-mail-reason';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
+
+export type PaymentMail =
+  | { mailTemplateId: string }
+  | { noMailReason: ActionMailNoMailReason };
 
 type TemplateLookupSubscription = {
   id: string;
@@ -28,68 +33,37 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
     private mailContext: MailContext
   ) {}
 
-  public async onInvoicePaid(invoiceId: string): Promise<void> {
-    const invoice = await this.prisma.invoice.findUnique({
-      where: { id: invoiceId },
-      include: {
-        items: true,
-        subscriptionPeriods: {
-          orderBy: { startsAt: 'asc' },
-        },
-        subscription: {
-          include: {
-            user: true,
-            memberPlan: true,
-            paymentMethod: true,
-          },
-        },
-      },
-    });
+  /**
+   * The RENEWAL_SUCCESS template that paying this invoice would send, or why
+   * paying it sends nothing. Lets an admin decide before marking the invoice
+   * as paid.
+   */
+  public async templateForPayment(invoiceId: string): Promise<PaymentMail> {
+    const invoice = await this.loadInvoice(invoiceId);
 
-    if (
-      !invoice ||
-      !invoice.paidAt ||
-      !invoice.subscription ||
-      !invoice.subscription.user ||
-      invoice.suppressRenewalSuccessMail ||
-      invoice.renewalSuccessMailSentAt
-    ) {
+    return invoice ?
+        this.renewalSuccessTemplate(invoice)
+      : { noMailReason: ActionMailNoMailReason.notApplicable };
+  }
+
+  public async onInvoicePaid(invoiceId: string): Promise<void> {
+    const invoice = await this.loadInvoice(invoiceId);
+
+    if (!invoice?.paidAt) {
       return;
     }
 
-    const user = invoice.subscription.user;
+    const mail = await this.renewalSuccessTemplate(invoice);
+    const user = invoice.subscription?.user;
+
+    if (!('mailTemplateId' in mail) || !user) {
+      return;
+    }
+
+    const { mailTemplateId } = mail;
+
     const { subscription, items, subscriptionPeriods, ...invoiceData } =
       invoice;
-    const [invoicePeriod] = subscriptionPeriods;
-
-    if (!invoicePeriod) {
-      return;
-    }
-
-    const earlierPeriods = await this.prisma.subscriptionPeriod.count({
-      where: {
-        subscriptionId: subscription.id,
-        startsAt: { lt: invoicePeriod.startsAt },
-      },
-    });
-
-    if (earlierPeriods === 0) {
-      this.logger.log(
-        `Invoice ${invoiceId} is the first period of subscription ${subscription.id}, no renewal success mail`
-      );
-
-      return;
-    }
-
-    const mailTemplateId = await this.findRenewalSuccessTemplate(subscription);
-
-    if (!mailTemplateId) {
-      this.logger.log(
-        `No RENEWAL_SUCCESS template configured for subscription ${subscription.id}, skipping invoice ${invoiceId}`
-      );
-
-      return;
-    }
 
     const claimedAt = new Date();
     const claim = await this.prisma.invoice.updateMany({
@@ -127,6 +101,72 @@ export class RenewalSuccessMailService implements InvoicePaidListener {
     this.logger.log(
       `Sent RENEWAL_SUCCESS mail for invoice ${invoiceId} using template ${mailTemplateId}`
     );
+  }
+
+  private loadInvoice(invoiceId: string) {
+    return this.prisma.invoice.findUnique({
+      where: { id: invoiceId },
+      include: {
+        items: true,
+        subscriptionPeriods: {
+          orderBy: { startsAt: 'asc' },
+        },
+        subscription: {
+          include: {
+            user: true,
+            memberPlan: true,
+            paymentMethod: true,
+          },
+        },
+      },
+    });
+  }
+
+  private async renewalSuccessTemplate(
+    invoice: NonNullable<
+      Awaited<ReturnType<RenewalSuccessMailService['loadInvoice']>>
+    >
+  ): Promise<PaymentMail> {
+    const { subscription, subscriptionPeriods } = invoice;
+    const [invoicePeriod] = subscriptionPeriods;
+
+    if (!subscription?.user || !invoicePeriod) {
+      return { noMailReason: ActionMailNoMailReason.notApplicable };
+    }
+
+    if (
+      invoice.suppressRenewalSuccessMail ||
+      invoice.renewalSuccessMailSentAt
+    ) {
+      return { noMailReason: ActionMailNoMailReason.alreadyHandled };
+    }
+
+    const earlierPeriods = await this.prisma.subscriptionPeriod.count({
+      where: {
+        subscriptionId: subscription.id,
+        startsAt: { lt: invoicePeriod.startsAt },
+      },
+    });
+
+    if (earlierPeriods === 0) {
+      this.logger.log(
+        `Invoice ${invoice.id} is the first period of subscription ${subscription.id}, no renewal success mail`
+      );
+
+      return { noMailReason: ActionMailNoMailReason.firstPeriod };
+    }
+
+    const mailTemplateId = await this.findRenewalSuccessTemplate(subscription);
+
+    if (!mailTemplateId) {
+      this.logger.log(
+        `No RENEWAL_SUCCESS template configured for subscription ${subscription.id}, skipping invoice ${invoice.id}`
+      );
+
+      return { noMailReason: ActionMailNoMailReason.noTemplate };
+    }
+
+    return { mailTemplateId };
   }
 
   private async releaseClaim(invoiceId: string, claimedAt: Date) {

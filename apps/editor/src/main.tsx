@@ -10,12 +10,14 @@ import {
   InstagramProvider,
   TwitterProvider,
 } from '@wepublish/ui/editor';
+import { useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import { IconContext } from 'react-icons';
 
 import { App } from './app/app';
+import { ColorModeProvider, useColorMode } from './app/colorMode';
 import { initI18N } from './app/i18n';
-import { theme } from './app/theme';
+import { createEditorTheme } from './app/theme';
 import { ElementID } from './shared/elementID';
 
 const { sentryDSN, apiURL, appName, appEnvironment } = getSettings();
@@ -46,6 +48,18 @@ if (sentryDSN) {
   Sentry.setTag('component', 'editor');
 }
 
+function ThemedApp() {
+  const { mode } = useColorMode();
+  const theme = useMemo(() => createEditorTheme(mode), [mode]);
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline enableColorScheme />
+      <App />
+    </ThemeProvider>
+  );
+}
+
 const onDOMContentLoaded = async () => {
   const client = getApiClientV2();
 
@@ -62,10 +76,9 @@ const onDOMContentLoaded = async () => {
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>
-                <ThemeProvider theme={theme}>
-                  <CssBaseline />
-                  <App />
-                </ThemeProvider>
+                <ColorModeProvider>
+                  <ThemedApp />
+                </ColorModeProvider>
               </TwitterProvider>
             </InstagramProvider>
           </FacebookProvider>

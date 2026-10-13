@@ -14,7 +14,7 @@ import { PeerAvatar } from '../atoms/peer/peerAvatar';
 import { getOperationNameFromDocument } from '../utility';
 
 const ButtonWrapper = styled.div`
-  margin: 10px;
+  margin: 8px;
 `;
 
 export interface AuthorCheckPickerProps {

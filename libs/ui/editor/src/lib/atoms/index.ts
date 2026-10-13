@@ -1,6 +1,5 @@
 // directories
 export * from './comment';
-export * from './dashboard';
 export * from './memberPlan/selectMemberPlan';
 export * from './notification/confirmActionModal';
 export * from './notification/notificationItem';
@@ -23,11 +22,13 @@ export * from './deferredTextField';
 export * from './descriptionList';
 export * from './descriptionListwithMessage';
 export * from './draggable';
+export * from './editorHeader';
 export * from './editorTemplate';
 export * from './fileDropInput';
 export * from './focalPointInput';
 export * from './helpers';
 export * from './iconButtonTooltip';
+export * from './infoTooltip';
 export * from './imageMetaData';
 export * from './infoMessage';
 export * from './listInput';

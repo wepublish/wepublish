@@ -1,11 +1,10 @@
 import { useMutation } from '@apollo/client/react';
-import { CircularProgress, IconButton, Typography } from '@mui/material';
 import { ImportPeerArticleDocument } from '@wepublish/editor/api';
 import { ListViewContainer, ListViewHeader } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
+import { Loader, Pagination } from 'rsuite';
 
 import {
   ARTICLES_PER_PAGE,
@@ -15,12 +14,14 @@ import {
   usePeerMatching,
 } from './networkContent.hooks';
 import {
+  Card,
+  CardCount,
+  CardFooter,
+  CardHeader,
   CenteredContainer,
+  ErrorText,
   FeedList,
   PageGrid,
-  PaginationBar,
-  PanelColumn,
-  SectionTitle,
 } from './networkContent.styles';
 import type {
   ArticleFilterParams,
@@ -141,8 +142,13 @@ export function NetworkContentPage() {
       </ListViewContainer>
 
       <PageGrid>
-        <PanelColumn>
-          <SectionTitle>{t('networkContentPage.articlesTitle')}</SectionTitle>
+        <Card aria-labelledby="network-articles-title">
+          <CardHeader>
+            <h3 id="network-articles-title">
+              {t('networkContentPage.articlesTitle')}
+            </h3>
+            {!loading && !error && <CardCount>{articleTotalCount}</CardCount>}
+          </CardHeader>
 
           <NetworkContentArticleFilters
             filters={filters}
@@ -152,87 +158,66 @@ export function NetworkContentPage() {
 
           {loading && (
             <CenteredContainer>
-              <CircularProgress size={24} />
+              <Loader />
             </CenteredContainer>
           )}
 
           {!loading && error && (
             <CenteredContainer>
-              <Typography
-                color="error"
-                variant="body2"
-              >
-                {t('networkContentDashboard.errorLoading')}
-              </Typography>
+              <ErrorText>{t('networkContentDashboard.errorLoading')}</ErrorText>
             </CenteredContainer>
           )}
 
           {!loading && !error && articles.length === 0 && (
             <CenteredContainer>
-              <Typography
-                color="textSecondary"
-                variant="body2"
-              >
-                {t('networkContentDashboard.noArticles')}
-              </Typography>
+              {t('networkContentDashboard.noArticles')}
             </CenteredContainer>
           )}
 
           {!loading && !error && articles.length > 0 && (
-            <>
-              <FeedList>
-                {articles.map(article => (
-                  <NetworkContentArticleItem
-                    key={article.id}
-                    article={article}
-                    peerMatch={findPeerMatch(article.client?.apiUrl)}
-                    onImport={(peerId, articleId) =>
-                      setArticleToImport({ peerId, articleId })
-                    }
-                    onShowPeerInfo={() =>
-                      handleShowPeerInfo(article.client?.apiUrl ?? null)
-                    }
-                  />
-                ))}
-              </FeedList>
-
-              {articleTotalPages > 1 && (
-                <PaginationBar>
-                  <IconButton
-                    size="small"
-                    disabled={articlePage === 0}
-                    onClick={() => setArticlePage(articlePage - 1)}
-                  >
-                    <MdChevronLeft />
-                  </IconButton>
-                  <Typography variant="body2">
-                    {articlePage + 1} / {articleTotalPages}
-                  </Typography>
-                  <IconButton
-                    size="small"
-                    disabled={articlePage >= articleTotalPages - 1}
-                    onClick={() => setArticlePage(articlePage + 1)}
-                  >
-                    <MdChevronRight />
-                  </IconButton>
-                </PaginationBar>
-              )}
-            </>
+            <FeedList>
+              {articles.map(article => (
+                <NetworkContentArticleItem
+                  key={article.id}
+                  article={article}
+                  peerMatch={findPeerMatch(article.client?.apiUrl)}
+                  onImport={(peerId, articleId) =>
+                    setArticleToImport({ peerId, articleId })
+                  }
+                  onShowPeerInfo={() =>
+                    handleShowPeerInfo(article.client?.apiUrl ?? null)
+                  }
+                />
+              ))}
+            </FeedList>
           )}
-        </PanelColumn>
 
-        <PanelColumn>
-          <NetworkMediaList
-            clients={clients}
-            totalCount={clientTotalCount}
-            loading={clientsLoading}
-            error={clientsError}
-            page={clientPage}
-            onPageChange={setClientPage}
-            findPeerMatch={findPeerMatch}
-            onConnectClient={setPeerInfoClient}
-          />
-        </PanelColumn>
+          {!loading && !error && articleTotalPages > 1 && (
+            <CardFooter>
+              <Pagination
+                prev
+                next
+                size="sm"
+                maxButtons={5}
+                total={articleTotalCount}
+                limit={ARTICLES_PER_PAGE}
+                activePage={articlePage + 1}
+                onChangePage={nextPage => setArticlePage(nextPage - 1)}
+              />
+            </CardFooter>
+          )}
+        </Card>
+
+        <NetworkMediaList
+          clients={clients}
+          totalCount={clientTotalCount}
+          loading={clientsLoading}
+          error={clientsError}
+          page={clientPage}
+          onPageChange={setClientPage}
+          findPeerMatch={findPeerMatch}
+          onConnectClient={setPeerInfoClient}
+        />
       </PageGrid>
 
       <NetworkContentImportDialog

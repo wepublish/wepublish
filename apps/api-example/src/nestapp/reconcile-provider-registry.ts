@@ -80,7 +80,7 @@ export const reconcileProviderRegistry = async (
 
     await Promise.all(
       (configFile.paymentProviders ?? []).map(provider =>
-        upsertProvider(
+        ensureProvider(
           prisma,
           'settingPaymentProvider',
           provider.id,
@@ -104,7 +104,7 @@ export const reconcileProviderRegistry = async (
 
     await Promise.all(
       (configFile.trackingPixelProviders ?? []).map(provider =>
-        upsertProvider(
+        ensureProvider(
           prisma,
           'settingTrackingPixel',
           provider.id,
@@ -131,21 +131,26 @@ export const reconcileProviderRegistry = async (
   const sessionTTLDays = configFile.general?.sessionTTLDays;
 
   if (typeof sessionTTLDays === 'number' && sessionTTLDays > 0) {
-    await prisma.setting.upsert({
+    await prisma.setting.createMany({
+      data: [
+        {
+          name: SettingName.SESSION_TTL_DAYS,
+          value: sessionTTLDays,
+          settingRestriction: { minValue: 1, maxValue: 365 },
+        },
+      ],
+      skipDuplicates: true,
+    });
+    await prisma.setting.update({
       where: { name: SettingName.SESSION_TTL_DAYS },
-      create: {
-        name: SettingName.SESSION_TTL_DAYS,
-        value: sessionTTLDays,
-        settingRestriction: { minValue: 1, maxValue: 365 },
-      },
-      update: { value: sessionTTLDays },
+      data: { value: sessionTTLDays },
     });
 
     logger.log(`Took the session lifetime of ${sessionTTLDays} day(s) over`);
   }
 
   for (const provider of configFile.syncProviders ?? []) {
-    await upsertProvider(
+    await ensureProvider(
       prisma,
       'settingSyncProvider',
       provider.id,
@@ -158,14 +163,13 @@ export const reconcileProviderRegistry = async (
 };
 
 type ProviderDelegate = {
-  upsert: (args: {
-    where: { id: string };
-    create: { id: string; name: string; type: string };
-    update: Record<string, never>;
+  createMany: (args: {
+    data: { id: string; name: string; type: string }[];
+    skipDuplicates: boolean;
   }) => Promise<unknown>;
 };
 
-const upsertProvider = async (
+const ensureProvider = async (
   prisma: PrismaClient,
   delegate:
     | 'settingPaymentProvider'
@@ -178,10 +182,9 @@ const upsertProvider = async (
     return;
   }
 
-  await (prisma[delegate] as unknown as ProviderDelegate).upsert({
-    where: { id },
-    create: { id, name: id, type },
-    update: {},
+  await (prisma[delegate] as unknown as ProviderDelegate).createMany({
+    data: [{ id, name: id, type }],
+    skipDuplicates: true,
   });
 };
 
@@ -216,8 +219,7 @@ const retireAllBut = async (
 };
 
 const markReconciled = (prisma: PrismaClient) =>
-  prisma.setting.upsert({
-    where: { name: PROVIDER_REGISTRY_RECONCILED },
-    create: { name: PROVIDER_REGISTRY_RECONCILED, value: true },
-    update: {},
+  prisma.setting.createMany({
+    data: [{ name: PROVIDER_REGISTRY_RECONCILED, value: true }],
+    skipDuplicates: true,
   });

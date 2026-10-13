@@ -33,6 +33,8 @@ import {
   ValueConstructor,
 } from '../utility';
 import { AddBlockInput, MenuItem } from './addBlockInput';
+import { IconButtonTooltip } from './iconButtonTooltip';
+import { InfoTooltip } from './infoTooltip';
 
 export const BlockStyleIconWrapper = styled.div`
   display: flex;
@@ -41,6 +43,13 @@ export const BlockStyleIconWrapper = styled.div`
   gap: 8px;
   position: absolute;
   left: 100%;
+
+  @media (max-width: 899px) {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    margin: 8px 0 0;
+  }
 `;
 
 const Icon = styled.div`
@@ -66,6 +75,10 @@ export const PanelWrapper = styled.div<{ disabled?: boolean }>`
   display: flex;
   width: 100%;
 
+  @media (max-width: 899px) {
+    flex-direction: column;
+  }
+
   ${({ disabled }) => disabled && `& > * > * {opacity: 0.3;}`}
 `;
 
@@ -88,12 +101,29 @@ export const LeftButtonsWrapper = styled.div`
   margin-right: 10px;
   position: absolute;
   right: 100%;
+
+  @media (max-width: 899px) {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 8px;
+
+    > * {
+      margin: 0 !important;
+      flex-grow: 0 !important;
+    }
+  }
 `;
 
 export const ListItem = styled.div`
   display: flex;
   width: 100%;
   position: relative;
+
+  @media (max-width: 899px) {
+    flex-direction: column;
+  }
 `;
 
 const AddButton = styled.div`
@@ -443,43 +473,57 @@ function ListItemWrapper({
   );
 
   const blockStyleId = value.value.blockStyle;
+  const visibilityLabel = t(
+    value.value.disabled ? 'blockList.showBlock' : 'blockList.hideBlock'
+  );
 
   return (
     <ListItem>
       <LeftButtonsWrapper>
-        <IconButton
-          appearance={'subtle'}
-          icon={value.value.disabled ? <MdVisibilityOff /> : <MdVisibility />}
-          onClick={() => onDisable?.(!value.value.disabled)}
-        />
+        <IconButtonTooltip caption={visibilityLabel}>
+          <IconButton
+            appearance={'subtle'}
+            aria-label={visibilityLabel}
+            icon={value.value.disabled ? <MdVisibilityOff /> : <MdVisibility />}
+            onClick={() => onDisable?.(!value.value.disabled)}
+          />
+        </IconButtonTooltip>
 
         <FlexGrow />
 
-        <IconButton
-          appearance={'ghost'}
-          color={'red'}
-          icon={<MdDelete />}
-          onClick={onDelete}
-          disabled={onDelete == null || disabled}
-        />
+        <IconButtonTooltip caption={t('blockList.deleteBlock')}>
+          <IconButton
+            appearance={'ghost'}
+            color={'red'}
+            aria-label={t('blockList.deleteBlock')}
+            icon={<MdDelete />}
+            onClick={onDelete}
+            disabled={onDelete == null || disabled}
+          />
+        </IconButtonTooltip>
 
         <FlexGrow />
 
         <UpwardButtonWrapper>
-          <IconButton
-            icon={<MdArrowUpward />}
-            onClick={onMoveUp}
-            disabled={onMoveUp == null || disabled}
-          />
+          <IconButtonTooltip caption={t('blockList.moveBlockUp')}>
+            <IconButton
+              aria-label={t('blockList.moveBlockUp')}
+              icon={<MdArrowUpward />}
+              onClick={onMoveUp}
+              disabled={onMoveUp == null || disabled}
+            />
+          </IconButtonTooltip>
         </UpwardButtonWrapper>
 
         <DownwardButtonWrapper>
-          <IconButton
-            title=""
-            icon={<MdArrowDownward />}
-            onClick={onMoveDown}
-            disabled={onMoveDown == null || disabled}
-          />
+          <IconButtonTooltip caption={t('blockList.moveBlockDown')}>
+            <IconButton
+              aria-label={t('blockList.moveBlockDown')}
+              icon={<MdArrowDownward />}
+              onClick={onMoveDown}
+              disabled={onMoveDown == null || disabled}
+            />
+          </IconButtonTooltip>
         </DownwardButtonWrapper>
 
         <FlexGrow />
@@ -494,6 +538,7 @@ function ListItemWrapper({
       <BlockStyleIconWrapper>
         <Icon>
           {icon} {t('blockStyles.style')}
+          <InfoTooltip text={t('blockList.styleHelp')} />
         </Icon>
 
         <BlockStyleSelect

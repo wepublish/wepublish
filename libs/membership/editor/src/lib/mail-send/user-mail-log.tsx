@@ -33,7 +33,7 @@ export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
   }
 
   return (
-    <TableContainer>
+    <TableContainer sx={{ overflowX: 'auto' }}>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -57,7 +57,7 @@ export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
               <TableCell>{formatDateTime(log.sentDate)}</TableCell>
               <TableCell>{log.mailTemplate.name}</TableCell>
               <TableCell>{log.subject ?? '—'}</TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <MailLogStateTag state={log.state} />
               </TableCell>
             </TableRow>

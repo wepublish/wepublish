@@ -9,7 +9,7 @@ import { useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { CrowdfundingForm } from './crowdfunding-form';
-import { SingleViewTitle } from '@wepublish/ui/editor';
+import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
 const showError = (error: Error): void => {
@@ -18,9 +18,9 @@ const showError = (error: Error): void => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

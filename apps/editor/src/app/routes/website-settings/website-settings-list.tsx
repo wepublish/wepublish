@@ -14,7 +14,7 @@ import {
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { CanGetAISettings } from '@wepublish/permissions';
-import { PermissionControl } from '@wepublish/ui/editor';
+import { IconButtonTooltip, PermissionControl } from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -67,10 +67,14 @@ const CardIntegration = styled.div`
   align-items: center;
 `;
 
+const StatusIcon = styled.span`
+  display: inline-flex;
+`;
+
 const CardColors = styled.div`
   display: flex;
   flex-flow: row wrap;
-  gap: 2px;
+  gap: 4px;
 `;
 
 export const WebsiteSettingsList = () => {
@@ -212,7 +216,11 @@ export const WebsiteSettingsList = () => {
         >
           <Card
             variant="outlined"
-            sx={{ display: 'flex', flexFlow: 'column' }}
+            sx={{
+              display: 'flex',
+              flexFlow: 'column',
+              borderRadius: 'var(--rs-radius-lg)',
+            }}
           >
             <CardContent sx={{ flex: 1 }}>
               <Typography
@@ -232,7 +240,16 @@ export const WebsiteSettingsList = () => {
                   component={CardIntegration}
                   key={index}
                 >
-                  <MdWarning color={theme.palette.error.main} />
+                  <IconButtonTooltip
+                    caption={t('websiteSettings.list.statusMissingKey')}
+                  >
+                    <StatusIcon
+                      role="img"
+                      aria-label={t('websiteSettings.list.statusMissingKey')}
+                    >
+                      <MdWarning color={theme.palette.error.main} />
+                    </StatusIcon>
+                  </IconButtonTooltip>
                   {integration.text}
                 </Typography>
               ))}
@@ -252,7 +269,16 @@ export const WebsiteSettingsList = () => {
                   component={CardIntegration}
                   key={index}
                 >
-                  <MdCheck color={theme.palette.success.main} />
+                  <IconButtonTooltip
+                    caption={t('websiteSettings.list.statusActive')}
+                  >
+                    <StatusIcon
+                      role="img"
+                      aria-label={t('websiteSettings.list.statusActive')}
+                    >
+                      <MdCheck color={theme.palette.success.main} />
+                    </StatusIcon>
+                  </IconButtonTooltip>
                   {integration.text}
                 </Typography>
               ))}
@@ -272,7 +298,16 @@ export const WebsiteSettingsList = () => {
                   component={CardIntegration}
                   key={index}
                 >
-                  <MdClose color={theme.palette.info.main} />
+                  <IconButtonTooltip
+                    caption={t('websiteSettings.list.statusInactive')}
+                  >
+                    <StatusIcon
+                      role="img"
+                      aria-label={t('websiteSettings.list.statusInactive')}
+                    >
+                      <MdClose color={theme.palette.info.main} />
+                    </StatusIcon>
+                  </IconButtonTooltip>
                   {integration.text}
                 </Typography>
               ))}

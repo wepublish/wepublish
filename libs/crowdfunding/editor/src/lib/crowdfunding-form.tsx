@@ -14,6 +14,7 @@ import {
   CurrencyInput,
   DateTimePicker,
   CrowdfundingProgressBar,
+  InfoTooltip,
 } from '@wepublish/ui/editor';
 import styled from '@emotion/styled';
 
@@ -30,7 +31,7 @@ interface CrowdfundingFormProps {
 const CrowdfundingFormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 12px;
+  gap: 16px;
 `;
 
 export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
@@ -72,7 +73,14 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
             <Form.Label>
               {isSubscriptionGoal ?
                 t('crowdfunding.form.additionalSubscriptions')
-              : t('crowdfunding.form.additionalRevenue')}
+              : t('crowdfunding.form.additionalRevenue')}{' '}
+              <InfoTooltip
+                text={
+                  isSubscriptionGoal ?
+                    t('crowdfunding.form.additionalSubscriptionsInfo')
+                  : t('crowdfunding.form.additionalRevenueInfo')
+                }
+              />
             </Form.Label>
 
             {isSubscriptionGoal ?
@@ -117,7 +125,10 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
 
         <Form.Stack fluid>
           <Form.Group controlId="memberPlans">
-            <Form.Label>{t('crowdfunding.form.memberPlans')}</Form.Label>
+            <Form.Label>
+              {t('crowdfunding.form.memberPlans')}{' '}
+              <InfoTooltip text={t('crowdfunding.form.memberPlansInfo')} />
+            </Form.Label>
 
             <CheckPicker
               block
@@ -186,10 +197,16 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
       >
         <Form.Stack fluid>
           <Form.Group controlId="goals">
-            <h3>{t('crowdfunding.form.goals')}</h3>
+            <h3>
+              {t('crowdfunding.form.goals')}{' '}
+              <InfoTooltip text={t('crowdfunding.form.goalsInfo')} />
+            </h3>
 
             <Form.Group controlId="goalType">
-              <Form.Label>{t('crowdfunding.form.goalType')}</Form.Label>
+              <Form.Label>
+                {t('crowdfunding.form.goalType')}{' '}
+                <InfoTooltip text={t('crowdfunding.form.goalTypeInfo')} />
+              </Form.Label>
 
               <SelectPicker
                 cleanable={false}

@@ -30,9 +30,7 @@ import {
   Nav as RNav,
   NumberInput,
   Schema,
-  Toggle as RToggle,
-  Tooltip,
-  Whisper,
+  Toggle,
 } from 'rsuite';
 
 import {
@@ -47,6 +45,8 @@ import {
   useAuthorisation,
   useListInputState,
 } from '../atoms';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import TrackingPixels from '../atoms/tracking/tracking-pixels';
 import { MetaDataType } from '../blocks';
 import { ArticleAuthor, ArticleAuthorList } from './articleAuthorList';
@@ -56,7 +56,7 @@ import { ImageSelectPanel } from './imageSelectPanel';
 
 const { Item } = RNav;
 
-const { Group, Control, Label, Text } = RForm;
+const { Group, Control, Label } = RForm;
 
 const Nav = styled(RNav)`
   margin-bottom: 20px;
@@ -66,18 +66,13 @@ const Form = styled(RForm)`
   height: 100%;
 `;
 
-const Toggle = styled(RToggle)`
-  max-width: 70px;
-  min-width: 70px;
-`;
-
 const ValueInput = styled(Input)`
   width: 60%;
 `;
 
 const KeyInput = styled(Input)`
   width: 40%;
-  margin-right: 10px;
+  margin-right: 8px;
 `;
 
 const FlexRow = styled.div`
@@ -90,8 +85,10 @@ const PaddingBottom = styled.div`
 `;
 
 const FormGroup = styled(Group)`
+  flex-shrink: 0;
   padding-top: 6px;
   padding-left: 8px;
+  white-space: nowrap;
 `;
 
 export interface ArticleMetadataProperty {
@@ -320,7 +317,8 @@ function ArticleMetadataPanel({
             {!isTemplate && (
               <Group>
                 <Label>
-                  {t('articleEditor.panels.likeCount', { likeCount: likes })}
+                  {t('articleEditor.panels.likeCount', { likeCount: likes })}{' '}
+                  <InfoTooltip text={t('articleEditor.panels.likeCountInfo')} />
                 </Label>
                 <Control
                   accepter={NumberInput}
@@ -405,23 +403,23 @@ function ArticleMetadataPanel({
                 controlId="articleSlug"
                 name="slug"
                 className="slug"
-                label={t('articleEditor.panels.slug')}
+                label={
+                  <>
+                    {t('articleEditor.panels.slug')}{' '}
+                    <InfoTooltip text={t('articleEditor.panels.slugInfo')} />
+                  </>
+                }
                 value={slug}
                 onChange={slug => onChange?.({ ...value, slug })}
                 onCommit={slug =>
                   onChange?.({ ...value, slug: slug ? slugify(slug) : null })
                 }
                 action={
-                  <Whisper
-                    placement="top"
-                    trigger="hover"
-                    speaker={
-                      <Tooltip>
-                        {t('articleEditor.panels.slugifySeoTitle')}
-                      </Tooltip>
-                    }
+                  <IconButtonTooltip
+                    caption={t('articleEditor.panels.slugifySeoTitle')}
                   >
                     <IconButton
+                      aria-label={t('articleEditor.panels.slugifySeoTitle')}
                       icon={<MdAutoFixHigh />}
                       onClick={() => {
                         onChange?.({
@@ -431,7 +429,7 @@ function ArticleMetadataPanel({
                         });
                       }}
                     />
-                  </Whisper>
+                  </IconButtonTooltip>
                 }
                 helpText={
                   <>
@@ -458,12 +456,19 @@ function ArticleMetadataPanel({
             </Group>
 
             <Group>
-              <Label>{t('articleEditor.panels.hideAuthors')}</Label>
               <Toggle
                 className="hideAuthor"
                 checked={hideAuthor}
                 disabled={!isAuthorized}
                 onChange={hideAuthor => onChange?.({ ...value, hideAuthor })}
+                label={
+                  <>
+                    {t('articleEditor.panels.hideAuthors')}{' '}
+                    <InfoTooltip
+                      text={t('articleEditor.panels.hideAuthorsInfo')}
+                    />
+                  </>
+                }
               />
             </Group>
 
@@ -481,12 +486,19 @@ function ArticleMetadataPanel({
             </Group>
 
             <Group controlId="articleBreakingNews">
-              <Label>{t('articleEditor.panels.breakingNews')}</Label>
               <Toggle
                 className="breaking"
                 disabled={!isAuthorized}
                 checked={breaking}
                 onChange={breaking => onChange?.({ ...value, breaking })}
+                label={
+                  <>
+                    {t('articleEditor.panels.breakingNews')}{' '}
+                    <InfoTooltip
+                      text={t('articleEditor.panels.breakingNewsInfo')}
+                    />
+                  </>
+                }
               />
             </Group>
 
@@ -515,19 +527,27 @@ function ArticleMetadataPanel({
 
             {!peerId && (
               <Group controlId="articlePeering">
-                <Label>{t('articleEditor.panels.peering')}</Label>
-
                 <Toggle
                   checked={shared}
                   disabled={!isAuthorized}
                   onChange={shared => onChange?.({ ...value, shared })}
+                  label={
+                    <>
+                      {t('articleEditor.panels.peering')}{' '}
+                      <InfoTooltip
+                        text={t('articleEditor.panels.peeringInfo')}
+                      />
+                    </>
+                  }
                 />
-                <Text>{t('articleEditor.panels.allowPeerPublishing')}</Text>
               </Group>
             )}
 
             <Group controlId="paywall">
-              <Label>{t('articleEditor.panels.paywall')}</Label>
+              <Label>
+                {t('articleEditor.panels.paywall')}{' '}
+                <InfoTooltip text={t('articleEditor.panels.paywallInfo')} />
+              </Label>
 
               <SelectPaywall
                 disabled={!isAuthorized}
@@ -539,23 +559,27 @@ function ArticleMetadataPanel({
             </Group>
 
             <Group controlId="hidden">
-              <Label>{t('articleEditor.panels.hidden')}</Label>
               <Toggle
                 checked={hidden ?? false}
                 disabled={!isAuthorized}
                 onChange={hidden => onChange?.({ ...value, hidden })}
+                label={
+                  <>
+                    {t('articleEditor.panels.hidden')}{' '}
+                    <InfoTooltip text={t('articleEditor.panels.hiddenInfo')} />
+                  </>
+                }
               />
-              <Text>{t('articleEditor.panels.setAsHidden')}</Text>
             </Group>
 
             <Group controlId="disableComments">
-              <Label>{t('articleEditor.panels.disableComments')}</Label>
               <Toggle
                 checked={disableComments ?? false}
                 disabled={!isAuthorized}
                 onChange={disableComments =>
                   onChange?.({ ...value, disableComments })
                 }
+                label={t('articleEditor.panels.disableComments')}
               />
             </Group>
 
@@ -629,12 +653,11 @@ function ArticleMetadataPanel({
                     />
                     <FormGroup controlId="articleProperty">
                       <Toggle
-                        checkedChildren={t('articleEditor.panels.public')}
-                        unCheckedChildren={t('articleEditor.panels.private')}
                         checked={value.public}
                         onChange={isPublic =>
                           onChange({ ...value, public: isPublic })
                         }
+                        label={t('articleEditor.panels.public')}
                       />
                     </FormGroup>
                   </FlexRow>

@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import styled from '@emotion/styled';
 import {
   DeleteTokenDocument,
   FullTokenFragment,
@@ -8,11 +7,15 @@ import {
 import {
   createCheckedPermissionComponent,
   getOperationNameFromDocument,
+  IconButton,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PaddedCell,
   PermissionControl,
+  Table,
   TableWrapper,
   TokenGeneratePanel,
 } from '@wepublish/ui/editor';
@@ -22,28 +25,16 @@ import { MdDelete, MdGeneratingTokens } from 'react-icons/md';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Button,
-  Col,
   Drawer,
-  IconButton,
-  List as RList,
-  Loader,
+  IconButton as RIconButton,
   Message,
   Modal,
-  Row,
+  Table as RTable,
   toaster,
 } from 'rsuite';
+import { RowDataType } from 'rsuite-table';
 
-const List = styled(RList)`
-  margin-top: 40px;
-`;
-
-const FlexItemPLeft = styled(Col)`
-  padding-left: 10px;
-`;
-
-const FlexItemPRight = styled(Col)`
-  padding-right: 10px;
-`;
+const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function TokenList() {
   const location = useLocation();
@@ -94,63 +85,70 @@ function TokenList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('tokenList.overview.tokens')}</h2>
+          <h2>
+            {t('tokenList.overview.tokens')}{' '}
+            <InfoTooltip text={t('tokenList.overview.tokensInfo')} />
+          </h2>
         </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_TOKEN']}>
           <ListViewActions>
             <Link to="/tokens/generate">
-              <IconButton
+              <RIconButton
                 appearance="primary"
                 disabled={isTokenListLoading}
                 icon={<MdGeneratingTokens />}
               >
                 {t('tokenList.overview.generateToken')}
-              </IconButton>
+              </RIconButton>
             </Link>
           </ListViewActions>
         </PermissionControl>
       </ListViewContainer>
 
-      {isTokenListLoading ?
-        <Loader
-          backdrop
-          content={t('tokenList.overview.loading')}
-          vertical
-        />
-      : <TableWrapper>
-          <List bordered>
-            {tokenListData?.tokens.map((token, index) => (
-              <RList.Item
-                key={token.name}
-                index={index}
-              >
-                <Row>
-                  <FlexItemPLeft span={23}>{token.name}</FlexItemPLeft>
-                  <FlexItemPRight span={1}>
-                    <PermissionControl
-                      qualifyingPermissions={['CAN_DELETE_TOKEN']}
-                    >
-                      <IconButtonTooltip caption={t('delete')}>
-                        <IconButton
-                          icon={<MdDelete />}
-                          circle
-                          size="sm"
-                          appearance="ghost"
-                          color="red"
-                          onClick={() => {
-                            setConfirmationDialogOpen(true);
-                            setCurrentToken(token);
-                          }}
-                        />
-                      </IconButtonTooltip>
-                    </PermissionControl>
-                  </FlexItemPRight>
-                </Row>
-              </RList.Item>
-            ))}
-          </List>
-        </TableWrapper>
-      }
+      <TableWrapper>
+        <Table
+          fillHeight
+          loading={isTokenListLoading}
+          data={tokenListData?.tokens ?? []}
+        >
+          <Column
+            width={400}
+            align="left"
+            resizable
+          >
+            <HeaderCell>{t('tokenList.panels.name')}</HeaderCell>
+            <RCell dataKey="name" />
+          </Column>
+
+          <Column
+            width={100}
+            align="center"
+            fixed="right"
+          >
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell>
+              {(rowData: RowDataType<FullTokenFragment>) => (
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_TOKEN']}>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      icon={<MdDelete />}
+                      circle
+                      size="sm"
+                      appearance="ghost"
+                      color="red"
+                      aria-label={t('delete')}
+                      onClick={() => {
+                        setConfirmationDialogOpen(true);
+                        setCurrentToken(rowData as FullTokenFragment);
+                      }}
+                    />
+                  </IconButtonTooltip>
+                </PermissionControl>
+              )}
+            </PaddedCell>
+          </Column>
+        </Table>
+      </TableWrapper>
 
       <Drawer
         open={isTokenGeneratePanelOpen}

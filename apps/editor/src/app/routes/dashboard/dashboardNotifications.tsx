@@ -28,7 +28,7 @@ import {
 import { useOneChannelNotifications } from './oneChannelAlert';
 
 const NotificationsPanel = styled(Panel)`
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 `;
 
 // Every source renders its own stack of notification items. Dissolving those

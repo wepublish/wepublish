@@ -1,3 +1,4 @@
+export * from './lib/app-environment';
 export * from './lib/generate-jwt';
 export * from './lib/logger';
 export * from './lib/module-options';
@@ -5,6 +6,7 @@ export * from './lib/payment-period-to-months';
 export * from './lib/periodicity-pricing';
 export * from './lib/max-payload-size';
 export * from './lib/constants';
+export * from './lib/error-context';
 
 export * from './lib/dataloader/create-optionals-array';
 export * from './lib/dataloader/prime-dataloaders.decorator';

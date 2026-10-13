@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { SingleViewTitle } from '@wepublish/ui/editor';
+import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
 import { UserConsentForm } from './user-consent-form';
 
 const mapApiDataToInput = (
@@ -27,7 +27,7 @@ const onErrorToast = (error: Error, slug?: string) => {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
         {`A user consent with slug '${slug}' already exists. Please choose a different slug.`}
       </Message>
@@ -39,9 +39,9 @@ const onErrorToast = (error: Error, slug?: string) => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
