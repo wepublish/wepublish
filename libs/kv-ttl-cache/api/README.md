@@ -12,7 +12,7 @@ Whether a namespace's values go to Dragonfly is decided by one list,
 
 | Namespace | Values |
 | --- | --- |
-| listed (`settings`, `website-settings`, `navigations`, `banners`, `member-plans`, `peer-profile`, `peering:remote-profiles`, `crowdfunding`, `ga4`, `graphql:responses`, `graphql:comments`, `content:articles`, `content:pages`, `content:authors`, `content:images`, `content:paywalls`, `content:polls`, `tracking-pixels`) | Dragonfly key `<REDIS_KEY_PREFIX>::val:<APP_RELEASE_ID or dev>:ns:<namespace>:v<version>:<key>` (pods of different releases never read each other's values, but share versions), plus a 2 s copy in memory |
+| listed (`settings`, `website-settings`, `navigations`, `member-plans`, `peer-profile`, `peering:remote-profiles`, `crowdfunding`, `ga4`, `graphql:responses`, `graphql:comments`, `content:articles`, `content:pages`, `content:authors`, `content:images`, `content:gates`, `content:polls`, `tracking-pixels`) | Dragonfly key `<REDIS_KEY_PREFIX>::val:<APP_RELEASE_ID or dev>:ns:<namespace>:v<version>:<key>` (pods of different releases never read each other's values, but share versions), plus a 2 s copy in memory |
 | everything else, including all integration settings (`settings:paymentprovider`, `settings:mailprovider`, …) | process memory only |
 
 Integration secrets never reach Dragonfly, enforced three ways:
@@ -84,14 +84,14 @@ The article, page, author, image, paywall and poll dataloaders (including
 article tags, tracking-pixel rows, paywall member plans and poll vote counts),
 `getArticleBySlug`, `getPageBySlug`, `getArticles` and `getPages` (except
 full-text search) read through
-`content:<articles|pages|authors|images|paywalls|polls>` for 5 min
+`content:<articles|pages|authors|images|gates|polls>` for 5 min
 (`CONTENT_CACHE_TTL_SECONDS`), for every request including logged-in ones —
 they cache what the database query returns for those arguments, nothing
 per-user. Writers call `PublicContentCacheInvalidator`:
 
 | Call | Clears | Used by |
 | --- | --- | --- |
-| `invalidate(...contents)` | those content caches + anonymous answers, and the answers again 3 s later (another replica may have built one from content that was stale for up to 2 s) | publish, unpublish, delete, updates of published articles/pages; authors, tags, events, paywalls, image updates/deletes, event import; block template/style updates and deletes; `SlateToPmMigrator` after a batch that changed rows |
+| `invalidate(...contents)` | those content caches + anonymous answers, and the answers again 3 s later (another replica may have built one from content that was stale for up to 2 s) | publish, unpublish, delete, updates of published articles/pages; authors, tags, events, gates (paywalls, content gates, banners), image updates/deletes, event import; block template/style updates and deletes; `SlateToPmMigrator` after a batch that changed rows |
 | `invalidateDraft(...contents)` | only those content caches (plus anonymous answers that show `draft` or `pending`, which are versioned by `content:articles`/`content:pages`) | create, update of unpublished, duplicate, restore, discard; peer import; image upload and a reader's own profile image |
 | `invalidateArticlePages(...articles)` | the website pages of those articles (`/a/<slug>`, `/a/id/<id>`), see [Website pages](#website-pages) | publish, unpublish, delete and updates of published articles (old and new slug); `ArticlePublicationWatcher` |
 | `invalidateComments(removed, ...articles)` | answers containing `commentsForItem` / `ratingSystem` and the pages of those articles; with `removed` also all anonymous answers (comment blocks inside articles/pages) | create (`false`, with the article once an editor publishes it), approve (`false`, with the commented article), edit/reject/delete (`true`, with the commented article); rating system changes; not ratings; a commenter's name, flair or profile image (`false`), a deleted user's comments (`true`, with the commented articles), an editor comment with tags (`true`, comment blocks select by tag) |
@@ -141,7 +141,7 @@ settings unreadable, database) is logged, does not fail the article query and
 is retried after 15 min, so no reader waits for a replica that failed. Once a
 working pixel exists, `invalidateArticleAnswers` retires anonymous answers and
 that article's pages, so they carry it. Member plan writes call
-`invalidate('paywalls')` (paywall member plans embed them) and payment method
+`invalidate('gates')` (paywall member plans embed them) and payment method
 writes `invalidate()`; paywall bypasses are never cached.
 
 ## GraphQL answers
@@ -165,7 +165,7 @@ what an anonymous visitor gets, and answers computed for them are never stored.
 
 The key includes the query, the variables the operation declares (sorted, so
 order and undeclared extras do not matter) and the versions of
-`graphql:content`, `navigations`, `banners`, `settings`, `website-settings`,
+`graphql:content`, `navigations`, `settings`, `website-settings`,
 `peer-profile`, `member-plans`, `peering:remote-profiles` — plus
 `graphql:comments` for comment fields, `content:images` for `getImagesByTag`
 and `content:articles`/`content:pages` when a `draft` or `pending` field is
@@ -201,7 +201,7 @@ publication does not rebuild every article. They follow two versions instead:
 | Version | Changes | Rebuilds |
 | --- | --- | --- |
 | `nsv:website:path:<path>` | `resetWebsitePaths` via `invalidateArticlePages` / `invalidateComments(…, article)`, at once and again 6 s later; kept 4 h, and like every version written again once Dragonfly answers if it failed | that article only |
-| `nsv:website:layout` | a reset of a namespace in `WEBSITE_LAYOUT_NAMESPACES` (navigations, banners, settings, peer profile, member plans, paywalls …), at once and again 6 s later | every article page |
+| `nsv:website:layout` | a reset of a namespace in `WEBSITE_LAYOUT_NAMESPACES` (navigations, settings, peer profile, member plans, gates …), at once and again 6 s later | every article page |
 
 A resolver that answers a fallback because something failed (hot & trending
 and teaser lists while Google Analytics is down) calls `skipAnswerCache(context)`,

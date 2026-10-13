@@ -4,10 +4,15 @@ import {
   SubscribeBlockProvider,
 } from '@wepublish/block-content/website';
 import { ArticleDocument, BannerDocumentType } from '@wepublish/website/api';
-import { Article, BuilderContainerProps } from '@wepublish/website/builder';
+import {
+  Article,
+  BuilderContainerProps,
+  ContentGate,
+} from '@wepublish/website/builder';
 import { BannerContainer } from '@wepublish/banner/website';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 import { useShowPaywall } from '@wepublish/paywall/website';
+import { useContentGate } from '@wepublish/content-gate/website';
 
 type IdOrSlug = { id: string; slug?: never } | { id?: never; slug: string };
 
@@ -28,6 +33,27 @@ export function ArticleContainer({
     },
   });
   const { showPaywall, hideContent } = useShowPaywall(data?.article?.paywall);
+  const {
+    state: contentGateState,
+    gate,
+    unlockedBlocks,
+  } = useContentGate(data?.article);
+
+  // The api only sends the preview blocks of gated articles,
+  // the rest arrives once the reader's meter allows it.
+  const articleData = useMemo(
+    () =>
+      data?.article && unlockedBlocks ?
+        {
+          ...data,
+          article: {
+            ...data.article,
+            latest: { ...data.article.latest, blocks: unlockedBlocks },
+          },
+        }
+      : data,
+    [data, unlockedBlocks]
+  );
 
   return (
     <PollBlockProvider>
@@ -41,13 +67,22 @@ export function ArticleContainer({
         />
 
         <Article
-          data={data}
+          data={articleData}
           loading={loading}
           error={error}
           showPaywall={showPaywall}
           hideContent={hideContent}
           className={className}
         >
+          {gate &&
+            (contentGateState === 'soft' || contentGateState === 'hard') && (
+              <ContentGate
+                key={data?.article?.id}
+                {...gate}
+                state={contentGateState}
+              />
+            )}
+
           {children}
         </Article>
       </SubscribeBlockProvider>

@@ -1,4 +1,4 @@
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { ArticleRevision, ArticleRevisionAuthor } from './article.model';
 import {
   ArticleAuthorDataloader,
@@ -12,6 +12,8 @@ import { hasPermission } from '@wepublish/permissions/api';
 import { SlotTeasersLoader, BlockContent } from '@wepublish/block-content/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { Property } from '@wepublish/property/api';
+import { ContentGateAccessService } from '@wepublish/content-gate/api';
+import { ArticleDataloaderService } from './article-dataloader.service';
 
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {
@@ -20,13 +22,54 @@ export class ArticleRevisionResolver {
     private slotTeasersLoader: SlotTeasersLoader,
     private authorDataLoader: ArticleAuthorDataloader,
     private socialMediaAuthorDataLoader: ArticleSocialMediaAuthorDataloader,
-    private imageDataloaderService: ImageDataloaderService
+    private imageDataloaderService: ImageDataloaderService,
+    private articleDataloader: ArticleDataloaderService,
+    private contentGateAccess: ContentGateAccessService
   ) {}
 
   @ResolveField(() => [BlockContent])
-  async blocks(@Parent() parent: ArticleRevision) {
-    return await this.slotTeasersLoader.loadSlotTeasersIntoBlocks(
-      parent.blocks
+  async blocks(
+    @Parent() parent: ArticleRevision,
+    @Args('unlockContentGate', {
+      defaultValue: false,
+      description: `Content gates only send the preview blocks of an article.
+The website asks for the rest once the reader's meter allows it.`,
+    })
+    unlockContentGate: boolean,
+    @CurrentUser() session: UserSession | undefined
+  ) {
+    const blocks =
+      unlockContentGate ?
+        parent.blocks
+      : (await this.contentGatePreview(parent, session)).blocks;
+
+    return await this.slotTeasersLoader.loadSlotTeasersIntoBlocks(blocks);
+  }
+
+  @ResolveField(() => Boolean, {
+    description: `Whether blocks were left out because of a content gate.`,
+  })
+  async contentGated(
+    @Parent() parent: ArticleRevision,
+    @CurrentUser() session: UserSession | undefined
+  ) {
+    return (await this.contentGatePreview(parent, session)).gated;
+  }
+
+  private async contentGatePreview(
+    parent: ArticleRevision,
+    session: UserSession | undefined
+  ) {
+    const article = await this.articleDataloader.load(parent.articleId);
+
+    if (!article) {
+      return { blocks: parent.blocks, gated: false };
+    }
+
+    return this.contentGateAccess.previewBlocks(
+      parent.blocks,
+      article,
+      session
     );
   }
 

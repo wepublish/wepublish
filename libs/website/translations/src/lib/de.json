@@ -9,6 +9,12 @@
     "backToProfile": "Zurück zum Profil",
     "profile": "Profil"
   },
+  "contentGate": {
+    "register": "Kostenlos registrieren",
+    "subscribe": "Abonnent*in werden",
+    "login": "Login",
+    "continueReading": "Weiterlesen"
+  },
   "paywall": {
     "subscribe": "Abonnent*in werden",
     "login": "Login"

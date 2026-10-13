@@ -47,6 +47,9 @@
       "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
       "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
       "@wepublish/content/website": ["libs/content/website/src/index.ts"],
+      "@wepublish/content-gate/api": ["libs/content-gate/api/src/index.ts"],
+      "@wepublish/content-gate/editor": ["libs/content-gate/editor/src/index.ts"],
+      "@wepublish/content-gate/website": ["libs/content-gate/website/src/index.ts"],
       "@wepublish/crowdfunding/api": ["libs/crowdfunding/api/src/index.ts"],
       "@wepublish/crowdfunding/editor": [
         "libs/crowdfunding/editor/src/index.ts"
@@ -63,6 +66,8 @@
       "@wepublish/event/website": ["libs/event/website/src/index.ts"],
       "@wepublish/external-apps/api": ["libs/external-apps/api/src/index.ts"],
       "@wepublish/feed/website": ["libs/feed/website/src/index.ts"],
+      "@wepublish/gate/api": ["libs/gate/api/src/index.ts"],
+      "@wepublish/gate/editor": ["libs/gate/editor/src/index.ts"],
       "@wepublish/google-analytics/api": [
         "libs/google-analytics/api/src/index.ts"
       ],

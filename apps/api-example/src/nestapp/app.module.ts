@@ -65,6 +65,8 @@ import {
 import { PageModule } from '@wepublish/page/api';
 import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 import { PaywallModule } from '@wepublish/paywall/api';
+import { ContentGateModule } from '@wepublish/content-gate/api';
+import { GateModule } from '@wepublish/gate/api';
 import { PeerModule } from '@wepublish/peering/api';
 import { ImportPeerArticleModule } from '@wepublish/peering/api/import';
 import { PermissionModule } from '@wepublish/permissions/api';
@@ -369,7 +371,9 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       },
       inject: [ConfigService],
     }),
+    GateModule,
     PaywallModule,
+    ContentGateModule,
     WebsiteSettingsModule,
   ],
   exports: ['SYSTEM_INFO_KEY'],

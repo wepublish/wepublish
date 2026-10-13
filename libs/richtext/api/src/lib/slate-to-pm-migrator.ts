@@ -236,7 +236,7 @@ type MigratedTable =
   | 'polls'
   | 'tags'
   | 'member.plans'
-  | 'paywalls'
+  | 'gates'
   | 'articles.revisions'
   | 'pages.revisions';
 
@@ -277,9 +277,9 @@ export class SlateToPmMigrator {
         return this.publicContentCache.invalidate('articles');
       case 'member.plans':
         await this.kv.resetNamespace(MEMBER_PLANS_NAMESPACE);
-        return this.publicContentCache.invalidate('paywalls');
-      case 'paywalls':
-        return this.publicContentCache.invalidate('paywalls');
+        return this.publicContentCache.invalidate('gates');
+      case 'gates':
+        return this.publicContentCache.invalidate('gates');
       case 'articles.revisions':
         await this.publicContentCache.invalidate('articles');
         return this.publicContentCache.invalidateArticleLayout();
@@ -689,7 +689,7 @@ export class SlateToPmMigrator {
       return;
     }
 
-    const paywallsByDescription = await this.prisma.paywall.findMany({
+    const paywallsByDescription = await this.prisma.gate.findMany({
       where: {
         slateDescription: {
           not: Prisma.AnyNull,
@@ -701,7 +701,7 @@ export class SlateToPmMigrator {
       take: 30,
     });
 
-    const paywallsByUpgradeDescription = await this.prisma.paywall.findMany({
+    const paywallsByUpgradeDescription = await this.prisma.gate.findMany({
       where: {
         slateUpgradeDescription: {
           not: Prisma.AnyNull,
@@ -713,7 +713,7 @@ export class SlateToPmMigrator {
       take: 30,
     });
 
-    const paywallsByCircumventDescription = await this.prisma.paywall.findMany({
+    const paywallsByCircumventDescription = await this.prisma.gate.findMany({
       where: {
         slateCircumventDescription: {
           not: Prisma.AnyNull,
@@ -726,7 +726,7 @@ export class SlateToPmMigrator {
     });
 
     const paywallsByUpgradeCircumventDescription =
-      await this.prisma.paywall.findMany({
+      await this.prisma.gate.findMany({
         where: {
           slateUpgradeCircumventDescription: {
             not: Prisma.AnyNull,
@@ -741,7 +741,7 @@ export class SlateToPmMigrator {
     await Promise.all([
       ...paywallsByDescription.map(async paywall => {
         this.logger.log(`Migrating paywall with id: ${paywall.id}`);
-        await this.prisma.paywall.update({
+        await this.prisma.gate.update({
           where: { id: paywall.id },
           data: {
             // @ts-expect-error Prisma JSON typings
@@ -751,7 +751,7 @@ export class SlateToPmMigrator {
       }),
       ...paywallsByUpgradeDescription.map(async paywall => {
         this.logger.log(`Migrating paywall with id: ${paywall.id}`);
-        await this.prisma.paywall.update({
+        await this.prisma.gate.update({
           where: { id: paywall.id },
           data: {
             upgradeDescription: this.migrate(
@@ -763,7 +763,7 @@ export class SlateToPmMigrator {
       }),
       ...paywallsByCircumventDescription.map(async paywall => {
         this.logger.log(`Migrating paywall with id: ${paywall.id}`);
-        await this.prisma.paywall.update({
+        await this.prisma.gate.update({
           where: { id: paywall.id },
           data: {
             circumventDescription: this.migrate(
@@ -775,7 +775,7 @@ export class SlateToPmMigrator {
       }),
       ...paywallsByUpgradeCircumventDescription.map(async paywall => {
         this.logger.log(`Migrating paywall with id: ${paywall.id}`);
-        await this.prisma.paywall.update({
+        await this.prisma.gate.update({
           where: { id: paywall.id },
           data: {
             upgradeCircumventDescription: this.migrate(
@@ -788,7 +788,7 @@ export class SlateToPmMigrator {
     ]);
 
     await this.forgetMigrated(
-      'paywalls',
+      'gates',
       paywallsByDescription.length +
         paywallsByUpgradeDescription.length +
         paywallsByCircumventDescription.length +
@@ -1201,19 +1201,19 @@ export class SlateToPmMigrator {
       source: 'slateShortDescription',
       target: 'shortDescription',
     },
-    { table: 'paywalls', source: 'slateDescription', target: 'description' },
+    { table: 'gates', source: 'slateDescription', target: 'description' },
     {
-      table: 'paywalls',
+      table: 'gates',
       source: 'slateUpgradeDescription',
       target: 'upgradeDescription',
     },
     {
-      table: 'paywalls',
+      table: 'gates',
       source: 'slateCircumventDescription',
       target: 'circumventDescription',
     },
     {
-      table: 'paywalls',
+      table: 'gates',
       source: 'slateUpgradeCircumventDescription',
       target: 'upgradeCircumventDescription',
     },

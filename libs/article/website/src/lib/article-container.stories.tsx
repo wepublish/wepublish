@@ -1,7 +1,12 @@
 import { Meta } from '@storybook/nextjs-vite';
 import { ArticleDocument } from '@wepublish/website/api';
 import { ArticleContainer } from './article-container';
-import { mockArticle, mockPeer } from '@wepublish/storybook/mocks';
+import {
+  mockArticle,
+  mockArticleRevision,
+  mockContentGate,
+  mockPeer,
+} from '@wepublish/storybook/mocks';
 import {
   WithPollBlockDecorators,
   WithSubscribeBlockDecorators,
@@ -9,6 +14,14 @@ import {
 
 const article = mockArticle();
 const articleWithPeer = mockArticle({ peer: mockPeer() });
+const articleBehindHardContentGate = mockArticle({
+  contentGate: mockContentGate({
+    freeArticles: 0,
+    softGateArticles: 0,
+    ctaLabel: 'Gratis registrieren',
+  }),
+  latest: mockArticleRevision({ contentGated: true }),
+});
 
 export default {
   component: ArticleContainer,
@@ -139,6 +152,32 @@ export const WithChildren = {
           result: {
             data: {
               article,
+            },
+          },
+        },
+      ],
+    },
+  },
+};
+
+export const WithHardContentGate = {
+  args: {
+    id: articleBehindHardContentGate.id,
+  },
+
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleDocument,
+            variables: {
+              id: articleBehindHardContentGate.id,
+            },
+          },
+          result: {
+            data: {
+              article: articleBehindHardContentGate,
             },
           },
         },

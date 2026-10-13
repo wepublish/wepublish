@@ -71,6 +71,7 @@ mutation CreateArticle(
   $hideAuthor: Boolean!
   $imageID: String
   $paywallId: String
+  $contentGateDisabled: Boolean
   $lead: String
   $preTitle: String
   $properties: [PropertyInput!]!
@@ -96,6 +97,7 @@ mutation CreateArticle(
     hideAuthor: $hideAuthor
     imageID: $imageID
     paywallId: $paywallId
+    contentGateDisabled: $contentGateDisabled
     lead: $lead
     preTitle: $preTitle
     properties: $properties
@@ -126,6 +128,7 @@ mutation UpdateArticle(
   $hideAuthor: Boolean!
   $imageID: String
   $paywallId: String
+  $contentGateDisabled: Boolean
   $lead: String
   $preTitle: String
   $properties: [PropertyInput!]!
@@ -151,6 +154,7 @@ mutation UpdateArticle(
     hideAuthor: $hideAuthor
     imageID: $imageID
     paywallId: $paywallId
+    contentGateDisabled: $contentGateDisabled
     lead: $lead
     preTitle: $preTitle
     properties: $properties

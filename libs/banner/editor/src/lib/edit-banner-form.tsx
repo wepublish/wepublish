@@ -1,32 +1,17 @@
 import { useApolloClient, useMutation } from '@apollo/client/react';
+import { GateDocument, UpdateGateDocument } from '@wepublish/editor/api';
 import {
-  BannerDocument,
-  CreateBannerActionInput,
-  LoginStatus,
-  UpdateBannerDocument,
-} from '@wepublish/editor/api';
+  bannerFromGate,
+  BannerFormValues,
+  toBannerGateInput,
+} from '@wepublish/gate/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  BannerForm,
-  createBannerSchema,
-  BannerFormValues,
-} from './banner-form';
+import { BannerForm, createBannerSchema } from './banner-form';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-
-const removeIdAndTypename = (action: CreateBannerActionInput) => {
-  const { id, __typename, ...actionCleaned } =
-    action as CreateBannerActionInput & {
-      id?: string;
-      __typename?: string;
-    };
-  return actionCleaned;
-};
-
-const removeTypename = ({ id }: { id: string }) => ({ id });
 
 export const EditBannerForm = () => {
   const { id } = useParams();
@@ -41,35 +26,17 @@ export const EditBannerForm = () => {
     resolver: zodResolver(createBannerSchema(t)),
     defaultValues: async () => {
       const { data } = await client.query({
-        query: BannerDocument,
+        query: GateDocument,
         variables: { id: bannerId },
       });
-      const banner = data!.banner!;
 
-      return {
-        id: bannerId,
-        title: banner.title,
-        text: banner.text,
-        cta: banner.cta,
-        html: banner.html,
-        embedUrl: banner.embedUrl,
-        active: banner.active,
-        collapsible: banner.collapsible,
-        delay: banner.delay,
-        hideForMinutes: banner.hideForMinutes,
-        showForLoginStatus: banner.showForLoginStatus ?? LoginStatus.All,
-        showOnArticles: banner.showOnArticles,
-        showOnPages: banner.showOnPages?.map(removeTypename) ?? [],
-        imageId: banner.image?.id,
-        image: banner.image,
-        actions: banner.actions ?? [],
-      } satisfies BannerFormValues;
+      return bannerFromGate(data!.gate);
     },
   });
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [updateBanner, { loading }] = useMutation(UpdateBannerDocument, {
+  const [updateBanner, { loading }] = useMutation(UpdateGateDocument, {
     onCompleted: () => {
       if (shouldClose) {
         navigate(closePath);
@@ -84,15 +51,10 @@ export const EditBannerForm = () => {
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit(({ image, ...banner }) =>
+        onSubmit={form.handleSubmit(banner =>
           updateBanner({
             variables: {
-              input: {
-                ...banner,
-                id: bannerId,
-                actions: banner.actions?.map(removeIdAndTypename),
-                showOnPages: banner.showOnPages?.map(removeTypename),
-              },
+              input: { id: bannerId, ...toBannerGateInput(banner) },
             },
           })
         )}

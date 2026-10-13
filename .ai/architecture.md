@@ -69,7 +69,7 @@ libs/<domain>/
 
 ### Content Domain Libraries
 
-`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `banner`, `richtext`, `feed`
+`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `gate` (with the `paywall`, `banner` and `content-gate` facades), `richtext`, `feed`
 
 **Sitemaps:** every website serves `/api/sitemap` (plus `/api/sitemap/[chunk]`:
 `news`, `pages`, `articles-YYYY` per past year, `articles-YYYY-MM` per month
@@ -79,6 +79,31 @@ of the current year in `index` mode) through
 hooks) live in `apps/<app>/src/sitemap.ts`. Fetch with the lean `Sitemap*`
 documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 `ArticleList`, and leave peered articles out. `generateSitemap` is deprecated.
+
+**Gates** (`libs/gate/{api,editor}`): paywalls, content gates and banners
+are one `Gate` model (table `gates`) with a `mode` (`PAYWALL`,
+`CONTENT_GATE`, `BANNER`). `GateService` is the only code that touches
+`prisma.gate`: per-mode defaults and validation, one active content gate,
+the primary banner (`audienceRanking` / `matchesAudience` in `audience.ts`)
+and the `content:gates` cache. The editor manages all three through one CRUD
+API (`gates(mode)`, `gate`, `createGate`, `updateGate`, `deleteGate`), each
+mode with its own form. The website still reads `Article.paywall`,
+`paywall(s)`, `primaryBanner`, `banner(s)` and `Article.contentGate`: the
+`paywall`, `banner` and `content-gate` api libs are read-only facades that map
+a `Gate` onto those unchanged types (`toPaywall`, `toBanner`,
+`toContentGate`). A paywall's subscribe url and a content gate's CTA are the
+gate's `PRIMARY` action; `hideContentAfter` is `previewBlocks`.
+
+**Content gates** (`libs/content-gate/{api,editor,website}`): one active
+content gate meters every article without a paywall (opt out per article with
+`Article.contentGateDisabled`). The **api** decides *who* is gated (audience
+`LOGGED_OUT` or `UNSUBSCRIBED`, login, subscription) and, for them, cuts
+`ArticleRevision.blocks` down to `previewBlocks` and sets `contentGated`. The
+**website** decides *when*: `useContentGate` keeps the read count in
+localStorage (`content-gate-meter`), picks free / soft / hard, and only for
+free and soft fetches the rest with `blocks(unlockContentGate: true)`.
+`ArticleContainer` renders the gate as the first child of `Article`, so tenant
+`Article` overrides need no changes.
 
 ### Business Domain Libraries
 

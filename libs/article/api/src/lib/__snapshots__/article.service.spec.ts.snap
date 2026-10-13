@@ -4,6 +4,7 @@ exports[`ArticleService > should create an article 1`] = `
 [
   {
     "data": {
+      "contentGateDisabled": undefined,
       "disableComments": false,
       "hidden": false,
       "likes": undefined,
@@ -1589,6 +1590,7 @@ exports[`ArticleService > should update an article 2`] = `
 [
   {
     "data": {
+      "contentGateDisabled": undefined,
       "disableComments": false,
       "hidden": false,
       "likes": undefined,

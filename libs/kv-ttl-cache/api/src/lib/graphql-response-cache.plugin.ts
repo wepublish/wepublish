@@ -31,7 +31,7 @@ export type PublicContent =
   | 'pages'
   | 'authors'
   | 'images'
-  | 'paywalls'
+  | 'gates'
   | 'polls';
 
 export const contentCacheNamespace = (content: PublicContent) =>

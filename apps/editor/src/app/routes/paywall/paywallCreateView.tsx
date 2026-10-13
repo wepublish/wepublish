@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreatePaywallDocument } from '@wepublish/editor/api';
+import { CreateGateDocument, GateMode } from '@wepublish/editor/api';
+import { PaywallFormValues, toPaywallGateInput } from '@wepublish/gate/editor';
 import { CanCreatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -13,7 +14,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { PaywallForm, PaywallFormValues, paywallSchema } from './paywallForm';
+import { PaywallForm, paywallSchema } from './paywallForm';
 
 const onErrorToast = (error: Error) => {
   enqueueSnackbar(humanizeError(error), {
@@ -42,15 +43,15 @@ const PaywallCreateView = () => {
   });
 
   const [createPaywall, { loading: updateLoading }] = useMutation(
-    CreatePaywallDocument,
+    CreateGateDocument,
     {
       onError: onErrorToast,
       onCompleted: data => {
-        if (data.createPaywall) {
+        if (data.createGate) {
           if (shouldClose) {
             navigate(`./..`);
           } else {
-            navigate(`./../edit/${data.createPaywall.id}`);
+            navigate(`./../edit/${data.createGate.id}`);
           }
         }
       },
@@ -60,14 +61,12 @@ const PaywallCreateView = () => {
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit(
-          ({ memberPlans, bypasses, id, ...paywall }) =>
-            createPaywall({
-              variables: {
-                ...paywall,
-                bypassTokens: bypasses.map(bypass => bypass.token),
-              },
-            })
+        onSubmit={form.handleSubmit(paywall =>
+          createPaywall({
+            variables: {
+              input: { mode: GateMode.Paywall, ...toPaywallGateInput(paywall) },
+            },
+          })
         )}
       >
         <SingleViewTitle

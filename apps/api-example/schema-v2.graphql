@@ -60,6 +60,9 @@ enum AnalyticsProviderType {
 }
 
 type Article implements HasOptionalPaywall & HasOptionalPeerLc {
+  """The content gate that applies to the reader of this article, if any."""
+  contentGate: ContentGate
+  contentGateDisabled: Boolean!
   createdAt: DateTime!
   disableComments: Boolean!
   draft: ArticleRevision
@@ -127,9 +130,18 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
 type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
   authors: [ArticleRevisionAuthor!]!
-  blocks: [BlockContent!]!
+  blocks(
+    """
+    Content gates only send the preview blocks of an article.
+    The website asks for the rest once the reader's meter allows it.
+    """
+    unlockContentGate: Boolean! = false
+  ): [BlockContent!]!
   breaking: Boolean!
   canonicalUrl: String
+
+  """Whether blocks were left out because of a content gate."""
+  contentGated: Boolean!
   createdAt: DateTime!
   hideAuthor: Boolean!
   id: String!
@@ -782,28 +794,62 @@ input ConsentFilter {
   slug: String
 }
 
-input CreateBannerActionInput {
-  label: String!
-  role: BannerActionRole!
-  style: String!
-  url: String!
+type ContentGate {
+  active: Boolean!
+  audience: ContentGateAudience!
+  createdAt: DateTime!
+  ctaLabel: String
+  ctaUrl: String
+
+  """Articles a reader can read before the first gate appears."""
+  freeArticles: Int!
+  hardDescription: RichText
+  id: String!
+
+  """Reads older than this many days stop counting."""
+  meterWindowDays: Int
+  modifiedAt: DateTime!
+  name: String!
+
+  """Articles opened from a newsletter that are neither gated nor counted."""
+  newsletterFreeArticles: Int!
+
+  """Never gate articles opened from a newsletter."""
+  newsletterNeverGate: Boolean!
+
+  """
+  Query params that mark a visit as coming from a newsletter, e.g. utm_medium=email.
+  """
+  newsletterParams: [ContentGateNewsletterParam!]!
+
+  """Blocks of a gated article that are sent before the gate."""
+  previewBlocks: Int!
+  softDescription: RichText
+
+  """
+  Articles on which the dismissible soft gate appears before the hard gate.
+  """
+  softGateArticles: Int!
 }
 
-input CreateBannerInput {
-  actions: [CreateBannerActionInput!]
-  active: Boolean!
-  collapsible: Boolean!
-  cta: String
-  delay: Int!
-  embedUrl: String
-  hideForMinutes: Int!
-  html: String
-  imageId: String
-  showForLoginStatus: LoginStatus!
-  showOnArticles: Boolean!
-  showOnPages: [PageModelInput!]
-  text: String!
-  title: String!
+"""
+Who a content gate is meant for.
+ANONYMOUS: logging in lifts the gate.
+NON_SUBSCRIBERS: only an active subscription lifts the gate.
+"""
+enum ContentGateAudience {
+  ANONYMOUS
+  NON_SUBSCRIBERS
+}
+
+type ContentGateNewsletterParam {
+  key: String!
+  value: String!
+}
+
+input ContentGateNewsletterParamInput {
+  key: String!
+  value: String!
 }
 
 input CreateCrowdfundingGoalInput {
@@ -832,6 +878,41 @@ input CreateExternalAppInput {
   name: String!
   target: ExternalAppsTarget!
   url: String!
+}
+
+input CreateGateInput {
+  actions: [GateActionInput!]
+  active: Boolean
+  anyMemberPlan: Boolean
+  audience: LoginStatus
+  bypassTokens: [String!]
+  circumventDescription: RichText
+  collapsible: Boolean
+  cta: String
+  delay: Int
+  description: RichText
+  embedUrl: String
+  fadeout: Boolean
+  freeArticles: Int
+  hideForMinutes: Int
+  html: String
+  imageId: String
+  memberPlanIds: [String!]
+  meterWindowDays: Int
+  mode: GateMode!
+  name: String
+  newsletterFreeArticles: Int
+  newsletterNeverGate: Boolean
+  newsletterParams: [ContentGateNewsletterParamInput!]
+  previewBlocks: Int
+  showOnArticles: Boolean
+  showOnPageIds: [String!]
+  softDescription: RichText
+  softGateArticles: Int
+  text: String
+  title: String
+  upgradeCircumventDescription: RichText
+  upgradeDescription: RichText
 }
 
 type CreateSubscriptionInfo {
@@ -1337,6 +1418,85 @@ type FullPoll {
   infoText: RichText
   opensAt: DateTime!
   question: String
+}
+
+type Gate {
+  actions: [GateAction!]!
+  active: Boolean!
+  anyMemberPlan: Boolean!
+  audience: LoginStatus!
+  bypasses: [GateBypass!]!
+  circumventDescription: RichText
+  collapsible: Boolean!
+  createdAt: DateTime!
+  cta: String
+  delay: Int!
+  description: RichText
+  embedUrl: String
+  fadeout: Boolean!
+  freeArticles: Int
+  hideForMinutes: Int!
+  html: String
+  id: String!
+  image: Image
+  imageId: String
+  memberPlans: [MemberPlan!]!
+  meterWindowDays: Int
+  mode: GateMode!
+  modifiedAt: DateTime!
+  name: String
+  newsletterFreeArticles: Int!
+  newsletterNeverGate: Boolean!
+  newsletterParams: [ContentGateNewsletterParam!]!
+
+  """Blocks of a gated article that are shown before the gate."""
+  previewBlocks: Int
+  showOnArticles: Boolean!
+  showOnPages: [PageModel!]!
+  softDescription: RichText
+  softGateArticles: Int
+  text: String
+  title: String
+  upgradeCircumventDescription: RichText
+  upgradeDescription: RichText
+}
+
+type GateAction {
+  id: String!
+  label: String!
+  role: GateActionRole!
+  style: String!
+  url: String!
+}
+
+input GateActionInput {
+  label: String!
+  role: GateActionRole
+  style: String
+  url: String!
+}
+
+enum GateActionRole {
+  CANCEL
+  OTHER
+  PRIMARY
+}
+
+type GateBypass {
+  createdAt: DateTime!
+  gateId: String!
+  id: String!
+  modifiedAt: DateTime!
+  token: String!
+}
+
+"""
+What a gate is used as. Each mode uses its own subset of the fields of a Gate.
+"""
+enum GateMode {
+  BANNER
+  CONTENT_GATE
+  PAYWALL
 }
 
 type Goodie implements HasImage {
@@ -2716,11 +2876,10 @@ type Mutation {
   createAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String!, name: String, property: String, type: AnalyticsProviderType!): SettingAnalyticsProvider!
 
   """Creates an article."""
-  createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, contentGateDisabled: Boolean, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Creates a new author."""
   createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
-  createBanner(input: CreateBannerInput!): Banner!
 
   """Creates a new block style."""
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
@@ -2755,6 +2914,11 @@ type Mutation {
   Generates a short-lived JWT token for authenticating with an external app.
   """
   createExternalAppToken(externalAppId: String!): ExternalAppToken!
+
+  """
+  Creates a gate. Activating a content gate deactivates every other content gate.
+  """
+  createGate(input: CreateGateInput!): Gate!
 
   """Creates a new goodie."""
   createGoodie(active: Boolean!, description: RichText, imageID: String, memberPlanIDs: [String!]!, name: String!, stock: Int): Goodie!
@@ -2797,9 +2961,6 @@ type Mutation {
 
   """Creates a new payment provider setting."""
   createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
-
-  """Creates a paywall."""
-  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
@@ -2900,7 +3061,6 @@ type Mutation {
 
   """Deletes an existing author."""
   deleteAuthor(id: String!): Author!
-  deleteBanner(id: String!): Boolean
 
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
@@ -2926,6 +3086,9 @@ type Mutation {
 
   """Deletes an external app."""
   deleteExternalApp(id: String!): ExternalApp!
+
+  """Deletes a gate."""
+  deleteGate(id: String!): Gate!
 
   """Deletes an existing goodie."""
   deleteGoodie(id: String!): Goodie!
@@ -2956,9 +3119,6 @@ type Mutation {
 
   """Deletes a payment provider setting."""
   deletePaymentProviderSetting(id: String!): SettingPaymentProvider!
-
-  """Deletes a paywall."""
-  deletePaywall(id: String!): Paywall!
 
   """Deletes an existing peer."""
   deletePeer(id: String!): String!
@@ -3217,11 +3377,10 @@ type Mutation {
   updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
 
   """Updates an article."""
-  updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, contentGateDisabled: Boolean, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
   """Updates an existing author."""
   updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
-  updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
@@ -3255,6 +3414,11 @@ type Mutation {
 
   """Updates an existing external app."""
   updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
+
+  """
+  Updates a gate. Activating a content gate deactivates every other content gate.
+  """
+  updateGate(input: UpdateGateInput!): Gate!
 
   """Updates an existing goodie."""
   updateGoodie(active: Boolean, description: RichText, id: String!, imageID: String, memberPlanIDs: [String!], name: String, stock: Int): Goodie!
@@ -3290,9 +3454,6 @@ type Mutation {
 
   """Updates an existing payment provider setting."""
   updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
-
-  """Updates a paywall."""
-  updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
@@ -3490,10 +3651,6 @@ type PageInfo {
 }
 
 type PageModel {
-  id: String!
-}
-
-input PageModelInput {
   id: String!
 }
 
@@ -4471,6 +4628,12 @@ type Query {
   The features switched on for this medium in We.Publish One (or through WEP_FEATURES).
   """
   features: [String!]!
+
+  """Returns a gate by id."""
+  gate(id: String!): Gate!
+
+  """Returns the gates of one mode, oldest first."""
+  gates(mode: GateMode!, skip: Int, take: Int): [Gate!]!
 
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!
@@ -5728,24 +5891,6 @@ type UnknownBlock {
   type: BlockType!
 }
 
-input UpdateBannerInput {
-  actions: [CreateBannerActionInput!]
-  active: Boolean!
-  collapsible: Boolean!
-  cta: String
-  delay: Int!
-  embedUrl: String
-  hideForMinutes: Int!
-  html: String
-  id: String!
-  imageId: String
-  showForLoginStatus: LoginStatus!
-  showOnArticles: Boolean!
-  showOnPages: [PageModelInput!]
-  text: String!
-  title: String!
-}
-
 input UpdateCommentRatingSystemAnswerInput {
   answer: String
   id: String!
@@ -5761,6 +5906,41 @@ input UpdateCrowdfundingInput {
   id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String
+}
+
+input UpdateGateInput {
+  actions: [GateActionInput!]
+  active: Boolean
+  anyMemberPlan: Boolean
+  audience: LoginStatus
+  bypassTokens: [String!]
+  circumventDescription: RichText
+  collapsible: Boolean
+  cta: String
+  delay: Int
+  description: RichText
+  embedUrl: String
+  fadeout: Boolean
+  freeArticles: Int
+  hideForMinutes: Int
+  html: String
+  id: String!
+  imageId: String
+  memberPlanIds: [String!]
+  meterWindowDays: Int
+  name: String
+  newsletterFreeArticles: Int
+  newsletterNeverGate: Boolean
+  newsletterParams: [ContentGateNewsletterParamInput!]
+  previewBlocks: Int
+  showOnArticles: Boolean
+  showOnPageIds: [String!]
+  softDescription: RichText
+  softGateArticles: Int
+  text: String
+  title: String
+  upgradeCircumventDescription: RichText
+  upgradeDescription: RichText
 }
 
 input UpdateUserSubscriptionInput {

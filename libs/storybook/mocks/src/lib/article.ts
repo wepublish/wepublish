@@ -32,6 +32,7 @@ export const mockArticleRevision = ({
   blocks = mockBlockContent(),
   canonicalUrl = 'https://example.com',
   breaking = false,
+  contentGated = false,
 }: Partial<FullArticleRevisionFragment> = {}): FullArticleRevisionFragment => ({
   __typename: 'ArticleRevision',
   id: faker.string.nanoid(),
@@ -52,6 +53,7 @@ export const mockArticleRevision = ({
   hideAuthor: false,
   seoTitle: title,
   seoDescription: lead,
+  contentGated,
 });
 
 export const mockArticle = ({
@@ -64,6 +66,7 @@ export const mockArticle = ({
   peerId = null,
   peerArticleId = null,
   peer = null,
+  contentGate = null,
 }: Partial<FullArticleFragment> = {}): FullArticleFragment => ({
   __typename: 'Article',
   id,
@@ -80,4 +83,5 @@ export const mockArticle = ({
   peerArticleId,
   peer,
   paywall: null,
+  contentGate,
 });

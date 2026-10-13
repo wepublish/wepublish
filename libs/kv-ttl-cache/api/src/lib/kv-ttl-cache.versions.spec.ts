@@ -2,7 +2,12 @@ import { createCache } from 'cache-manager';
 import { KvTtlCacheService } from './kv-ttl-cache.service';
 import { FakeDragonfly } from './kv-ttl-cache.testing';
 
-const NAMESPACES = ['graphql:content', 'navigations', 'banners', 'settings'];
+const NAMESPACES = [
+  'graphql:content',
+  'navigations',
+  'member-plans',
+  'settings',
+];
 
 class HeldDragonfly extends FakeDragonfly {
   private held = new Map<string, Promise<void>>();
@@ -117,18 +122,20 @@ describe('KvTtlCacheService namespace versions', () => {
     const replica = new KvTtlCacheService(createCache(), dragonfly);
     dragonfly.down = true;
     await replica.resetNamespace('navigations');
-    await replica.resetNamespace('banners');
+    await replica.resetNamespace('member-plans');
     dragonfly.down = false;
     vi.setSystemTime(new Date('2026-10-02T10:00:02.100Z'));
 
     const release = dragonfly.hold('set nsv:navigations');
     const catchingUp = replica.getNamespaceVersion('navigations');
     await new Promise(resolve => setTimeout(resolve, 0));
-    await replica.resetNamespace('banners');
-    const banners = await replica.getNamespaceVersion('banners');
+    await replica.resetNamespace('member-plans');
+    const memberPlans = await replica.getNamespaceVersion('member-plans');
     release();
     await catchingUp;
 
-    await expect(dragonfly.getRaw('nsv:banners')).resolves.toBe(banners);
+    await expect(dragonfly.getRaw('nsv:member-plans')).resolves.toBe(
+      memberPlans
+    );
   });
 });

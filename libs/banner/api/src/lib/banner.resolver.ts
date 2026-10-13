@@ -1,74 +1,65 @@
-import {
-  Args,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
-import { BannerService } from './banner.service';
-import {
-  Banner,
-  CreateBannerInput,
-  PageModel,
-  PrimaryBannerArgs,
-  UpdateBannerInput,
-} from './banner.model';
-import { BannerActionService } from './banner-action.service';
-import { BannerAction } from './banner-action.model';
-import { PaginationArgs } from './pagination.model';
-import { Image, ImageDataloaderService } from '@wepublish/image/api';
-import {
-  CanCreateBanner,
-  CanDeleteBanner,
-  CanGetBanner,
-  CanUpdateBanner,
-} from '@wepublish/permissions';
-import { Public } from '@wepublish/authentication/api';
 import { NotFoundException } from '@nestjs/common';
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { GateMode } from '@prisma/client';
+import { Public } from '@wepublish/authentication/api';
+import { GateService, PageModel } from '@wepublish/gate/api';
+import { Image, ImageDataloaderService } from '@wepublish/image/api';
+import { CanGetBanner } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
+import { BannerAction } from './banner-action.model';
+import { Banner, PrimaryBannerArgs } from './banner.model';
+import { PaginationArgs } from './pagination.model';
+import { toBanner } from './to-banner';
 
+/**
+ * Banners are gates with mode BANNER. Only the website reads them here,
+ * the editor manages them through the gate API.
+ */
 @Resolver(() => Banner)
 export class BannerResolver {
   constructor(
-    private bannerService: BannerService,
-    private bannerActionService: BannerActionService,
+    private gateService: GateService,
     private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @Permissions(CanGetBanner)
   @Query(() => [Banner])
-  async banners(@Args() args: PaginationArgs) {
-    return this.bannerService.findAll(args);
+  async banners(@Args() { skip, take }: PaginationArgs) {
+    const gates = await this.gateService.getGates({
+      mode: GateMode.BANNER,
+      skip,
+      take,
+    });
+
+    return gates.map(toBanner);
   }
 
   @Permissions(CanGetBanner)
   @Query(() => Banner)
-  async banner(@Args('id') args: string) {
-    const banner = await this.bannerService.findOne(args);
+  async banner(@Args('id') id: string) {
+    const banner = toBanner(await this.gateService.getGate(id));
+
     if (!banner) {
-      throw new NotFoundException(`Banner with id ${args} not found`);
+      throw new NotFoundException(`Banner with id ${id} not found`);
     }
+
     return banner;
   }
 
   @Public()
   @Query(() => Banner, { nullable: true })
   async primaryBanner(@Args() args: PrimaryBannerArgs) {
-    return await this.bannerService.findFirst(args);
+    return toBanner(await this.gateService.findPrimaryBanner(args));
   }
 
   @ResolveField(() => [BannerAction])
   async actions(@Parent() banner: Banner) {
-    const { id } = banner;
-    return this.bannerActionService.findAll({ bannerId: id });
+    return banner.actions ?? [];
   }
 
   @ResolveField(() => [PageModel])
   async showOnPages(@Parent() banner: Banner) {
-    const { id } = banner;
-
-    return this.bannerService.findPages(id);
+    return this.gateService.getPages(banner.id);
   }
 
   @ResolveField(() => Image, { nullable: true })
@@ -80,23 +71,5 @@ export class BannerResolver {
     }
 
     return this.imageDataloaderService.load(imageId);
-  }
-
-  @Permissions(CanCreateBanner)
-  @Mutation(() => Banner)
-  async createBanner(@Args('input') args: CreateBannerInput) {
-    return await this.bannerService.create(args);
-  }
-
-  @Permissions(CanUpdateBanner)
-  @Mutation(() => Banner)
-  async updateBanner(@Args('input') args: UpdateBannerInput) {
-    return this.bannerService.update(args);
-  }
-
-  @Permissions(CanDeleteBanner)
-  @Mutation(() => Boolean, { nullable: true })
-  async deleteBanner(@Args('id') args: string) {
-    await this.bannerService.delete(args);
   }
 }

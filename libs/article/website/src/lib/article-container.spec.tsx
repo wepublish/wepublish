@@ -1,6 +1,6 @@
 import { MockedProvider } from '@apollo/client/testing/react';
 import { composeStories } from '@storybook/react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import * as stories from './article-container.stories';
 
 const storiesCmp = composeStories(stories);
@@ -14,5 +14,17 @@ describe('Article Container', () => {
         </MockedProvider>
       );
     });
+  });
+
+  it('shows the content gate of the article', async () => {
+    const { WithHardContentGate } = storiesCmp;
+
+    render(
+      <MockedProvider {...WithHardContentGate.parameters?.apolloClient}>
+        <WithHardContentGate />
+      </MockedProvider>
+    );
+
+    expect(await screen.findByText('Gratis registrieren')).toBeTruthy();
   });
 });

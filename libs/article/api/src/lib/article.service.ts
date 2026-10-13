@@ -30,6 +30,7 @@ import {
 } from '@wepublish/kv-ttl-cache/api';
 import { uniqBy } from 'ramda';
 import { ArticlePublicationWatcher } from './article-publication.watcher';
+import { GateService } from '@wepublish/gate/api';
 
 export const mapArticleRevisionAuthors = (
   authors: { authorId: string; role?: string | null }[]
@@ -49,7 +50,8 @@ export class ArticleService {
     private trackingPixelService: TrackingPixelService,
     private publicContentCache: PublicContentCacheInvalidator,
     private kv: KvTtlCacheService,
-    private publicationWatcher: ArticlePublicationWatcher
+    private publicationWatcher: ArticlePublicationWatcher,
+    private gateService: GateService
   ) {}
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -152,15 +154,21 @@ export class ArticleService {
       properties,
       blocks,
       paywallId,
+      contentGateDisabled,
       ...revision
     }: CreateArticleInput,
     userId: string | null | undefined
   ) {
+    if (paywallId) {
+      await this.gateService.assertPaywall(paywallId);
+    }
+
     const mappedBlocks = blocks.map(mapBlockUnionMap);
 
     const article = await this.prisma.article.create({
       data: {
         paywallId,
+        contentGateDisabled,
         likes,
         slug: slug && slug.toLowerCase(),
         shared,
@@ -217,6 +225,7 @@ export class ArticleService {
       slug,
       shared,
       paywallId,
+      contentGateDisabled,
       hidden,
       disableComments,
       authors,
@@ -239,6 +248,10 @@ export class ArticleService {
       throw new NotFoundException(`Article with id ${id} not found`);
     }
 
+    if (paywallId) {
+      await this.gateService.assertPaywall(paywallId);
+    }
+
     const mappedBlocks = blocks.map(mapBlockUnionMap);
 
     const result = await this.prisma.article.update({
@@ -247,6 +260,7 @@ export class ArticleService {
         likes,
         slug: slug && slug.toLowerCase(),
         paywallId,
+        contentGateDisabled,
         shared,
         hidden,
         disableComments,
@@ -495,6 +509,7 @@ export class ArticleService {
     const result = await this.prisma.article.create({
       data: {
         paywallId: article.paywallId,
+        contentGateDisabled: article.contentGateDisabled,
         shared: article.shared,
         hidden: article.hidden,
         disableComments: article.disableComments,

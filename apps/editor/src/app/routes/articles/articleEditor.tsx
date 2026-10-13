@@ -196,6 +196,7 @@ function ArticleEditor() {
     canonicalUrl: '',
     shared: undefined,
     paywall: undefined,
+    contentGateDisabled: false,
     hidden: false,
     disableComments: false,
     breaking: false,
@@ -365,6 +366,7 @@ function ArticleEditor() {
         trackingPixels,
         likes,
         paywallId,
+        contentGateDisabled,
       } = articleData.article;
       const {
         preTitle,
@@ -403,6 +405,7 @@ function ArticleEditor() {
         canonicalUrl: canonicalUrl ?? '',
         shared,
         paywall: paywallId,
+        contentGateDisabled,
         hidden,
         disableComments,
         breaking,
@@ -591,6 +594,7 @@ function ArticleEditor() {
       breaking: metadata.breaking,
       shared: !!metadata.shared,
       paywallId: metadata.paywall,
+      contentGateDisabled: metadata.contentGateDisabled ?? false,
       hidden: metadata.hidden ?? false,
       disableComments: metadata.disableComments ?? false,
       tagIds: metadata.tags,

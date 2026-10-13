@@ -1,83 +1,52 @@
-import {
-  Args,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
-import { PaywallDataloaderService } from './paywall-dataloader.service';
-import { PaywallMemberPlansDataloader } from './paywall-member-plans.dataloader';
-import {
-  Paywall,
-  PaywallBypass,
-  CreatePaywallInput,
-  UpdatePaywallInput,
-} from './paywall.model';
-import { PaywallService } from './paywall.service';
-import { Paywall as PPaywall } from '@prisma/client';
-import {
-  CanCreatePaywall,
-  CanDeletePaywall,
-  CanUpdatePaywall,
-} from '@wepublish/permissions';
-import { Permissions } from '@wepublish/permissions/api';
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { GateMode } from '@prisma/client';
 import { Public } from '@wepublish/authentication/api';
+import {
+  GateDataloaderService,
+  GateMemberPlansDataloader,
+  GateService,
+} from '@wepublish/gate/api';
 import { MemberPlan } from '@wepublish/member-plan/api';
+import { Paywall, PaywallBypass } from './paywall.model';
+import { toPaywall } from './to-paywall';
 
+/**
+ * Paywalls are gates with mode PAYWALL. Only the website reads them here,
+ * the editor manages them through the gate API.
+ */
 @Resolver(() => Paywall)
 export class PaywallResolver {
   constructor(
-    private paywallDataloader: PaywallDataloaderService,
-    private paywallMemberPlansDataloader: PaywallMemberPlansDataloader,
-    private paywallService: PaywallService
+    private gateDataloader: GateDataloaderService,
+    private gateMemberPlansDataloader: GateMemberPlansDataloader,
+    private gateService: GateService
   ) {}
 
   @Public()
   @Query(() => Paywall, { description: `Returns an paywall by id.` })
   public async paywall(@Args('id') id: string) {
-    return await this.paywallDataloader.load(id);
+    return toPaywall(await this.gateDataloader.load(id));
   }
 
   @Public()
   @Query(() => [Paywall], {
     description: `Returns a list of paywalls based on the filters given.`,
   })
-  public paywalls() {
-    return this.paywallService.getPaywalls();
-  }
+  public async paywalls() {
+    const gates = await this.gateService.getGates({ mode: GateMode.PAYWALL });
 
-  @Permissions(CanCreatePaywall)
-  @Mutation(() => Paywall, {
-    description: `Creates a paywall.`,
-  })
-  public createPaywall(@Args() input: CreatePaywallInput) {
-    return this.paywallService.createPaywall(input);
-  }
-
-  @Permissions(CanUpdatePaywall)
-  @Mutation(() => Paywall, {
-    description: `Updates a paywall.`,
-  })
-  public updatePaywall(@Args() input: UpdatePaywallInput) {
-    return this.paywallService.updatePaywall(input);
-  }
-
-  @Permissions(CanDeletePaywall)
-  @Mutation(() => Paywall, {
-    description: `Deletes a paywall.`,
-  })
-  public async deletePaywall(@Args('id') id: string) {
-    return this.paywallService.deletePaywall(id);
+    return gates.map(toPaywall);
   }
 
   @ResolveField(() => [MemberPlan])
-  async memberPlans(@Parent() parent: PPaywall) {
-    return this.paywallMemberPlansDataloader.load(parent.id);
+  async memberPlans(@Parent() parent: Paywall) {
+    return this.gateMemberPlansDataloader.load(parent.id);
   }
 
   @ResolveField(() => [PaywallBypass])
-  async bypasses(@Parent() parent: PPaywall) {
-    return this.paywallService.getPaywallBypasses(parent.id);
+  async bypasses(@Parent() parent: Paywall) {
+    const bypasses = await this.gateService.getBypasses(parent.id);
+
+    return bypasses.map(bypass => ({ ...bypass, paywallId: bypass.gateId }));
   }
 }

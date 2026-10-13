@@ -27,7 +27,7 @@ describe('shared namespaces', () => {
         'settings',
         'navigations',
         'graphql:responses',
-        'content:paywalls',
+        'content:gates',
       ])
     );
   });
@@ -80,7 +80,15 @@ describe('findSecretField', () => {
 });
 
 describe('website layout', () => {
-  it.each(['navigations', 'settings', 'banners', 'content:paywalls'])(
+  it.each(['banners', 'content:paywalls', 'content:content-gates'])(
+    'no longer knows %s, which became content:gates',
+    namespace => {
+      expect(isSharedNamespace(namespace)).toBe(false);
+      expect(isWebsiteLayoutNamespace(namespace)).toBe(false);
+    }
+  );
+
+  it.each(['navigations', 'settings', 'content:gates'])(
     'counts %s as layout every page shows',
     namespace => {
       expect(isWebsiteLayoutNamespace(namespace)).toBe(true);

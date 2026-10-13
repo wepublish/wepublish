@@ -166,7 +166,7 @@ describe('SlateToPmMigrator nested list repair', () => {
 
     it('repairs every richtext column, without needing a slate source', async () => {
       const { migrator, prisma, written } = setup(
-        nestedIn('FROM "authors"', '"description" AS value FROM "paywalls"')
+        nestedIn('FROM "authors"', '"description" AS value FROM "gates"')
       );
 
       await migrator.normalizeNestedListsInEntities();
@@ -183,7 +183,7 @@ describe('SlateToPmMigrator nested list repair', () => {
           value: fixedDoc,
         },
         {
-          sql: 'UPDATE "paywalls" SET "description" = $1::jsonb WHERE id = $2',
+          sql: 'UPDATE "gates" SET "description" = $1::jsonb WHERE id = $2',
           id: 'row-1',
           value: fixedDoc,
         },

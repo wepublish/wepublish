@@ -1,17 +1,10 @@
-import {
-  ArgsType,
-  Field,
-  InputType,
-  ObjectType,
-  PickType,
-  registerEnumType,
-} from '@nestjs/graphql';
-import { BannerActionRole } from '@prisma/client';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 
-@ArgsType()
-export class BannerActionArgs {
-  @Field()
-  bannerId!: string;
+// Same values as GateActionRole, under the name the website already selects.
+export enum BannerActionRole {
+  PRIMARY = 'PRIMARY',
+  CANCEL = 'CANCEL',
+  OTHER = 'OTHER',
 }
 
 registerEnumType(BannerActionRole, {
@@ -35,17 +28,3 @@ export class BannerAction {
   @Field(() => BannerActionRole)
   role!: BannerActionRole;
 }
-
-@InputType()
-export class CreateBannerActionInput extends PickType(
-  BannerAction,
-  ['label', 'url', 'style', 'role'],
-  InputType
-) {}
-
-@InputType()
-export class UpdateBannerActionInput extends PickType(
-  BannerAction,
-  ['id', 'label', 'url', 'style', 'role'],
-  InputType
-) {}

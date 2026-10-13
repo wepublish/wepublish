@@ -9,6 +9,12 @@
     "backToProfile": "Retour au profil",
     "profile": "Profil"
   },
+  "contentGate": {
+    "register": "S'inscrire gratuitement",
+    "subscribe": "S'abonner",
+    "login": "Login",
+    "continueReading": "Continuer à lire"
+  },
   "paywall": {
     "subscribe": "S'abonner",
     "login": "Login"

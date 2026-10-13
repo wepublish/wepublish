@@ -213,6 +213,7 @@ export class ImportPeerArticleService {
         slug: article.slug?.toLowerCase(),
 
         paywallId: null,
+        contentGateDisabled: false,
         shared: false,
         hidden: false,
         disableComments: false,

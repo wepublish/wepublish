@@ -23,6 +23,7 @@ import {
   CanCreateNavigation,
   CanCreatePage,
   CanCreatePaymentMethod,
+  CanCreateContentGate,
   CanCreatePaywall,
   CanCreatePeer,
   CanCreatePoll,
@@ -118,6 +119,7 @@ import {
   CanUpdateExternalApp,
   CanUpdateGoodie,
   CanUpdateMailTemplates,
+  CanUpdateContentGate,
   CanUpdatePaywall,
   CanUpdateSettings,
   CanUpdateSystemMails,
@@ -162,6 +164,7 @@ import {
   MdHub,
   MdLightMode,
   MdLocationPin,
+  MdLock,
   MdLogout,
   MdMail,
   MdMenu,
@@ -529,6 +532,8 @@ export function Base({ children }: BaseProps) {
                   CanGetTags.id,
                   CanCreatePaywall.id,
                   CanUpdatePaywall.id,
+                  CanCreateContentGate.id,
+                  CanUpdateContentGate.id,
                 ]}
               >
                 <SidebarNavMenu
@@ -604,6 +609,20 @@ export function Base({ children }: BaseProps) {
                       icon={<MdPayment />}
                     >
                       {t('paywall.navbar')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanCreateContentGate.id,
+                      CanUpdateContentGate.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/articles/content-gates"
+                      icon={<MdLock />}
+                    >
+                      {t('contentGate.navbar')}
                     </SidebarNavItem>
                   </PermissionControl>
                 </SidebarNavMenu>

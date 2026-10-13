@@ -40,6 +40,7 @@ const article = {
   disableComments: false,
   likes: 0,
   paywallId: null,
+  contentGateDisabled: false,
   trackingPixels: [],
   tags: [],
   draft: { id: 'rev-1' },
