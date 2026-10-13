@@ -3,7 +3,7 @@ title: Les tokens d'API reçoivent leurs rôles dans l'éditeur
 lead: En créant un token d'API, vous choisissez désormais les rôles dont il reçoit les autorisations, et vous pouvez modifier les rôles des tokens existants. Jusqu'ici, un token n'avait aucune autorisation, sauf si quelqu'un les inscrivait directement dans la base de données.
 ---
 
-**Tokens d'API** (Paramètres → Tokens)
+**Tokens d'API** (Peering → Tokens)
 
 - **Rôles à la création.** Le panneau «Générer un token» propose un choix de rôles. Les programmes utilisant ce token reçoivent exactement les autorisations de ces rôles, les mêmes rôles que ceux des utilisateur·trice·s. Sans rôle, le token ne peut rien faire; le panneau le signale.
 - **Colonne «Rôles».** La liste des tokens affiche les rôles de chaque token, ou «Aucun rôle – aucune autorisation».
