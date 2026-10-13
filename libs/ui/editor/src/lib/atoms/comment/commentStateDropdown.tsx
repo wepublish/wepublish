@@ -20,6 +20,7 @@ import type { BasicSize } from 'rsuite/esm/internals/types';
 import {
   CommentStateChangeModal,
   mapCommentActionToBtnTitle,
+  mapRejectionReasonToLabel,
 } from './commentStateChangeModal';
 
 const BadgeWrapper = styled.div`
@@ -127,7 +128,10 @@ export function CommentStateDropdown({
       {showBadge && (
         <BadgeWrapper>
           <Badge
-            content={comment.rejectionReason}
+            content={
+              comment.rejectionReason &&
+              t(mapRejectionReasonToLabel(comment.rejectionReason))
+            }
             color={mapCommentStateToColor(comment.state)}
           />
         </BadgeWrapper>

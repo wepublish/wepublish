@@ -6,6 +6,8 @@ import { InMemoryCacheConfig } from '@apollo/client';
  */
 type MergedBlock = { disabled?: boolean | null };
 
+type MergedFlexBlock = { block?: MergedBlock | null };
+
 export const omitDisabledBlocks: Exclude<
   InMemoryCacheConfig['typePolicies'],
   undefined
@@ -33,6 +35,15 @@ export const omitDisabledBlocks: Exclude<
       blocks: {
         merge: (_, blocks: MergedBlock[]) => {
           return blocks.filter(block => !block.disabled);
+        },
+      },
+    },
+  },
+  FlexBlock: {
+    fields: {
+      blocks: {
+        merge: (_, blocks: MergedFlexBlock[]) => {
+          return blocks.filter(({ block }) => !block?.disabled);
         },
       },
     },

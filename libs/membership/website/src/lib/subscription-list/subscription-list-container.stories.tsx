@@ -2,6 +2,7 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { SubscriptionListContainer } from './subscription-list-container';
 import {
   CancelSubscriptionDocument,
+  ReactivateSubscriptionDocument,
   Exact,
   ExtendSubscriptionDocument,
   FullInvoiceFragment,
@@ -113,6 +114,22 @@ export const Default: StoryObj = {
                 ...subscription,
                 canceledAt: new Date('2023-01-01'),
                 deactivation,
+              },
+            },
+          },
+        },
+        {
+          request: {
+            query: ReactivateSubscriptionDocument,
+            variables: {
+              subscriptionId: subscription.id,
+            },
+          },
+          result: {
+            data: {
+              reactivateUserSubscription: {
+                ...subscription,
+                deactivation: null,
               },
             },
           },

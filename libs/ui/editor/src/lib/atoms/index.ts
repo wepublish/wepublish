@@ -1,5 +1,6 @@
 // directories
 export * from './comment';
+export * from './dashboard';
 export * from './memberPlan/selectMemberPlan';
 export * from './notification/confirmActionModal';
 export * from './notification/notificationItem';
@@ -29,6 +30,7 @@ export * from './focalPointInput';
 export * from './helpers';
 export * from './iconButtonTooltip';
 export * from './infoTooltip';
+export * from './singleLineTooltip';
 export * from './imageMetaData';
 export * from './infoMessage';
 export * from './listInput';

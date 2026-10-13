@@ -7,6 +7,26 @@
       }
       const result: PossibleTypesResultData = {
   "possibleTypes": {
+    "Action": [
+      "ArticleCreatedAction",
+      "AuthorCreatedAction",
+      "CommentCreatedAction",
+      "EventCreatedAction",
+      "PageCreatedAction",
+      "PollStartedAction",
+      "SubscriptionCreatedAction",
+      "UserCreatedAction"
+    ],
+    "BaseAction": [
+      "ArticleCreatedAction",
+      "AuthorCreatedAction",
+      "CommentCreatedAction",
+      "EventCreatedAction",
+      "PageCreatedAction",
+      "PollStartedAction",
+      "SubscriptionCreatedAction",
+      "UserCreatedAction"
+    ],
     "BaseBlock": [
       "BildwurfAdBlock",
       "BlockTemplateBlock",
@@ -103,10 +123,22 @@
     "HasArticle": [
       "ArticleNavigationLink"
     ],
+    "HasArticleLc": [
+      "ArticleCreatedAction"
+    ],
+    "HasAuthor": [
+      "AuthorCreatedAction"
+    ],
     "HasBlockContent": [
       "ArticleRevision",
       "BlockTemplate",
       "PageRevision"
+    ],
+    "HasComment": [
+      "CommentCreatedAction"
+    ],
+    "HasEventLc": [
+      "EventCreatedAction"
     ],
     "HasImage": [
       "ArticleTeaser",
@@ -172,12 +204,24 @@
     "HasPage": [
       "PageNavigationLink"
     ],
+    "HasPageLc": [
+      "PageCreatedAction"
+    ],
     "HasPaymentMethod": [
       "Payment",
       "PublicSubscription"
     ],
+    "HasPoll": [
+      "PollStartedAction"
+    ],
+    "HasSubscriptionLc": [
+      "SubscriptionCreatedAction"
+    ],
     "HasUser": [
       "PublicSubscription"
+    ],
+    "HasUserLc": [
+      "UserCreatedAction"
     ],
     "SettingProvider": [
       "SettingAIProvider",
