@@ -2195,7 +2195,13 @@
         "generate": "Générer",
         "generateToken": "Générer un token",
         "name": "Nom",
-        "tokenWarning": "Les tokens ne peuvent pas être récupérés ultérieurement. Il est recommandé de copier et d’enregistrer votre token dans un endroit sûr."
+        "tokenWarning": "Les tokens ne peuvent pas être récupérés ultérieurement. Il est recommandé de copier et d’enregistrer votre token dans un endroit sûr.",
+        "roles": "Rôles",
+        "noRoles": "Aucun rôle – aucune autorisation",
+        "noRolesWarning": "Sans rôle, le token ne peut rien faire. Choisissez les rôles dont les programmes utilisant ce token doivent recevoir les autorisations.",
+        "rolesInfo": "Une requête avec ce token reçoit les autorisations de ces rôles. Les modifications s’appliquent immédiatement.",
+        "editRoles": "Modifier les rôles",
+        "editRolesOf": "Rôles de {{name}}"
       }
     },
     "untitled": "Sans titre",
