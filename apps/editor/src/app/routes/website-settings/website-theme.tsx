@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import {
   UpdateWebsiteSettingsDocument,
+  WebsiteRemoteFontInput,
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { minimalTheme } from '@wepublish/ui';
@@ -26,6 +27,11 @@ import { z } from 'zod';
 import { downloadJson } from './theme/download-json';
 import { PaletteList } from './theme/palette-list';
 import { normalizeTheme, themeSchema } from './theme/schema';
+import {
+  createThemeExport,
+  mergeFonts,
+  parseThemeImport,
+} from './theme/theme-transfer';
 import { TypographyList } from './theme/typography-list';
 
 const WebsiteThemeWrapper = styled.form`
@@ -66,11 +72,21 @@ function a11yProps(index: number) {
 export const WebsiteTheme = memo(() => {
   const { t } = useTranslation();
 
-  const [loadSettings, { loading }] = useLazyQuery(WebsiteSettingsDocument);
+  const [loadSettings, { loading, data: settings }] = useLazyQuery(
+    WebsiteSettingsDocument
+  );
+  const websiteFonts: WebsiteRemoteFontInput[] = (
+    settings?.websiteSettings.fonts ?? []
+  ).map(({ name, weight, style }) => ({ name, weight, style }));
+  const [importedFonts, setImportedFonts] = useState<WebsiteRemoteFontInput[]>(
+    []
+  );
+
   const [updateWebsiteSettings, { loading: saving }] = useMutation(
     UpdateWebsiteSettingsDocument,
     {
       onCompleted: () => {
+        setImportedFonts([]);
         toaster.push(
           <Message
             type="success"
@@ -120,15 +136,18 @@ export const WebsiteTheme = memo(() => {
     updateWebsiteSettings({
       variables: {
         theme: data,
+        // only sent when an import brought fonts the website does not have yet
+        fonts: mergeFonts(websiteFonts, importedFonts),
       },
     });
   }, console.warn);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const exportTheme = () => {
-    downloadJson(form.getValues(), 'website-theme.json');
-  };
+  // validated like Save, so the file holds exactly what Save would store
+  const exportTheme = handleSubmit(data => {
+    downloadJson(createThemeExport(data, websiteFonts), 'website-theme.json');
+  }, console.warn);
 
   const importTheme = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -139,16 +158,10 @@ export const WebsiteTheme = memo(() => {
     }
 
     try {
-      const parsed = JSON.parse(await file.text());
-      const result = themeSchema.safeParse(
-        normalizeTheme(createTheme(minimalTheme, parsed))
-      );
+      const { theme, fonts } = parseThemeImport(JSON.parse(await file.text()));
 
-      if (!result.success) {
-        throw result.error;
-      }
-
-      form.reset(result.data);
+      form.reset(theme);
+      setImportedFonts(fonts);
 
       toaster.push(
         <Message
