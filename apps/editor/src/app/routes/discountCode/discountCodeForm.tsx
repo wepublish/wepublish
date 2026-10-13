@@ -1,10 +1,14 @@
 import styled from '@emotion/styled';
 import {
-  MemberPlan,
+  FullMemberPlanFragment,
   MutationCreateDiscountCodeArgs,
   MutationUpdateDiscountCodeArgs,
 } from '@wepublish/editor/api';
-import { DateTimePicker, SelectMemberPlan } from '@wepublish/ui/editor';
+import {
+  DateTimePicker,
+  InfoTooltip,
+  SelectMemberPlan,
+} from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { Form, NumberInput, Panel } from 'rsuite';
 
@@ -12,7 +16,7 @@ type DiscountCodeFormData = (
   | MutationCreateDiscountCodeArgs
   | MutationUpdateDiscountCodeArgs
 ) & {
-  memberPlan?: Pick<MemberPlan, 'id' | 'name'>;
+  memberPlan?: Pick<FullMemberPlanFragment, 'id' | 'name'>;
 };
 
 type DiscountCodeFormProps = {
@@ -25,7 +29,7 @@ const DiscountCodeFormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   align-items: start;
-  gap: 12px;
+  gap: 16px;
 
   ${({ theme }) => theme.breakpoints.up('lg')} {
     grid-template-columns: 1fr 1fr;
@@ -35,19 +39,34 @@ const DiscountCodeFormWrapper = styled.div`
 const DiscountCodeFormSection = styled.div`
   display: grid;
   align-items: start;
-  gap: 12px;
+  gap: 16px;
 `;
 
 const CodeDiscountGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 100px;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) minmax(140px, 180px);
+  align-self: stretch;
+  gap: 16px;
+
+  .rs-form-group {
+    min-width: 0;
+  }
+
+  .rs-form-control,
+  .rs-input-group {
+    width: 100%;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 `;
 
 const DateRangeGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-self: stretch;
+  gap: 16px;
 `;
 
 export const DiscountCodeForm = ({
@@ -66,7 +85,10 @@ export const DiscountCodeForm = ({
         >
           <CodeDiscountGrid>
             <Form.Group controlId="code">
-              <Form.Label>{t('discountCode.form.code')}</Form.Label>
+              <Form.Label>
+                {t('discountCode.form.code')}{' '}
+                <InfoTooltip text={t('discountCode.form.codeInfo')} />
+              </Form.Label>
 
               <Form.Control
                 name="code"
@@ -76,7 +98,12 @@ export const DiscountCodeForm = ({
             </Form.Group>
 
             <Form.Group controlId="discountPercent">
-              <Form.Label>{t('discountCode.form.discountPercent')}</Form.Label>
+              <Form.Label>
+                {t('discountCode.form.discountPercent')}{' '}
+                <InfoTooltip
+                  text={t('discountCode.form.discountPercentInfo')}
+                />
+              </Form.Label>
 
               <Form.Control
                 name="discountPercent"
@@ -97,7 +124,10 @@ export const DiscountCodeForm = ({
           css={{ overflow: 'initial' }}
         >
           <Form.Group>
-            <Form.Label>{t('discountCode.form.memberPlan')}</Form.Label>
+            <Form.Label>
+              {t('discountCode.form.memberPlan')}{' '}
+              <InfoTooltip text={t('discountCode.form.memberPlanInfo')} />
+            </Form.Label>
 
             <Form.Control
               name="memberPlan"

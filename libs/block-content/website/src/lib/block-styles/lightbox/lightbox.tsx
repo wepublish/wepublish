@@ -339,6 +339,7 @@ export const Lightbox = ({
               <LightboxImage
                 caption={image.caption}
                 image={image.image}
+                linkUrl={null}
               />
             </LightboxSlide>
           ))}

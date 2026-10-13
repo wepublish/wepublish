@@ -1,0 +1,4 @@
+export const LOCAL_PEER_PROFILE_CACHE_NAMESPACE = 'peer-profile';
+export const LOCAL_PEER_PROFILE_CACHE_TTL_SECONDS = 300;
+export const REMOTE_PEER_PROFILE_CACHE_NAMESPACE = 'peering:remote-profiles';
+export const REMOTE_PEER_PROFILE_CACHE_TTL_SECONDS = 24 * 3600;

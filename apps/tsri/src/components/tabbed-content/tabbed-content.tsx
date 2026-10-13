@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import { isFlexBlock } from '@wepublish/block-content/website';
 import {
-  BlockContent,
   FullBlockFragment,
   FullFlexBlockFragment,
 } from '@wepublish/website/api';
@@ -307,7 +306,7 @@ export const TabbedContent = ({
 };
 
 export const isTabbedContentBlockStyle = (
-  block: Pick<BlockContent, '__typename' | 'blockStyle'>
+  block: Partial<Pick<FullBlockFragment, '__typename' | 'blockStyle'>>
 ): block is FullFlexBlockFragment =>
   allPass([
     isFlexBlock,

@@ -1,17 +1,18 @@
 import { toPlaintext } from '@wepublish/richtext';
-import { Tag } from '@wepublish/website/api';
+import { stripQueryAndHash } from '@wepublish/utils';
+import { FullTagFragment } from '@wepublish/website/api';
 import {
   BuilderTagSEOProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useMemo } from 'react';
 
-export const getTagSEO = (tag: Tag) => {
+export const getTagSEO = (tag: FullTagFragment) => {
   const tagBody = toPlaintext(tag.description?.content ?? []);
   const description = tagBody;
 
   const title = tag.tag;
-  const url = tag.url;
+  const url = stripQueryAndHash(tag.url);
 
   return {
     title,

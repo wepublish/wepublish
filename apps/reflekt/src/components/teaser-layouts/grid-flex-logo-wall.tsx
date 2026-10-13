@@ -5,7 +5,7 @@ import {
   isTeaserGridFlexBlock,
   TeaserGridFlexBlockWrapper as TeaserGridFlexBlockWrapperDefault,
 } from '@wepublish/block-content/website';
-import { BlockContent } from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserGridFlexBlockProps,
   useWebsiteBuilder,
@@ -16,7 +16,7 @@ import { useMemo } from 'react';
 import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const isGridFlexLogoWall = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderTeaserGridFlexBlockProps =>
   allPass([
     isTeaserGridFlexBlock,

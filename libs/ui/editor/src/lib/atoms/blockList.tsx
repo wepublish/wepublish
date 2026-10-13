@@ -1,8 +1,9 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  BlockStyle,
+  BlockStylesDocument,
   EditorBlockType,
-  useBlockStylesQuery,
+  FullBlockStyleFragment,
 } from '@wepublish/editor/api';
 import nanoid from 'nanoid';
 import React, {
@@ -31,7 +32,9 @@ import {
   UnionToIntersection,
   ValueConstructor,
 } from '../utility';
-import { AddBlockInput } from './addBlockInput';
+import { AddBlockInput, MenuItem } from './addBlockInput';
+import { IconButtonTooltip } from './iconButtonTooltip';
+import { InfoTooltip } from './infoTooltip';
 
 export const BlockStyleIconWrapper = styled.div`
   display: flex;
@@ -40,6 +43,13 @@ export const BlockStyleIconWrapper = styled.div`
   gap: 8px;
   position: absolute;
   left: 100%;
+
+  @media (max-width: 899px) {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    margin: 8px 0 0;
+  }
 `;
 
 const Icon = styled.div`
@@ -65,6 +75,10 @@ export const PanelWrapper = styled.div<{ disabled?: boolean }>`
   display: flex;
   width: 100%;
 
+  @media (max-width: 899px) {
+    flex-direction: column;
+  }
+
   ${({ disabled }) => disabled && `& > * > * {opacity: 0.3;}`}
 `;
 
@@ -87,12 +101,29 @@ export const LeftButtonsWrapper = styled.div`
   margin-right: 10px;
   position: absolute;
   right: 100%;
+
+  @media (max-width: 899px) {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 8px;
+
+    > * {
+      margin: 0 !important;
+      flex-grow: 0 !important;
+    }
+  }
 `;
 
 export const ListItem = styled.div`
   display: flex;
   width: 100%;
   position: relative;
+
+  @media (max-width: 899px) {
+    flex-direction: column;
+  }
 `;
 
 const AddButton = styled.div`
@@ -218,6 +249,38 @@ export const BlockListItem = memo(function BlockListItem({
   );
 });
 
+interface AddBlockButtonProps {
+  index: number;
+  menuItems: MenuItem[];
+  onAdd: (index: number, type: string) => void;
+  subtle?: boolean;
+  disabled?: boolean;
+}
+
+const AddBlockButton = memo(function AddBlockButton({
+  index,
+  menuItems,
+  onAdd,
+  subtle,
+  disabled,
+}: AddBlockButtonProps) {
+  const handleMenuItemClick = useCallback(
+    ({ id }: MenuItem) => onAdd(index, id),
+    [onAdd, index]
+  );
+
+  return (
+    <AddBlockInputWrapper>
+      <AddBlockInput
+        menuItems={menuItems}
+        onMenuItemClick={handleMenuItemClick}
+        subtle={subtle}
+        disabled={disabled}
+      />
+    </AddBlockInputWrapper>
+  );
+});
+
 export interface BlockListProps<V extends BlockListValue>
   extends BlockProps<V[]> {
   blockMap: BlockMapForValue<V>;
@@ -314,22 +377,25 @@ export function BlockList<V extends BlockListValue>({
     [handleMoveIndex]
   );
 
+  const menuItems = useMemo(
+    () =>
+      Object.entries(blockMap).map(([type, { icon, label }]) => ({
+        id: type,
+        icon,
+        label,
+      })),
+    [blockMap]
+  );
+
   function addButtonForIndex(index: number) {
     return (
-      <AddBlockInputWrapper>
-        <AddBlockInput
-          menuItems={Object.entries(blockMap).map(
-            ([type, { icon, label }]) => ({
-              id: type,
-              icon,
-              label,
-            })
-          )}
-          onMenuItemClick={({ id }: { id: string }) => handleAdd(index, id)}
-          subtle={index !== values.length || disabled}
-          disabled={disabled}
-        />
-      </AddBlockInputWrapper>
+      <AddBlockButton
+        index={index}
+        menuItems={menuItems}
+        onAdd={handleAdd}
+        subtle={index !== values.length || disabled}
+        disabled={disabled}
+      />
     );
   }
 
@@ -379,8 +445,8 @@ interface ListItemWrapperProps {
   onMoveUp?: () => void;
   onMoveDown?: () => void;
   onStyleChange?: (
-    blockStyleName?: BlockStyle['name'],
-    blockStyle?: BlockStyle['id']
+    blockStyleName?: FullBlockStyleFragment['name'],
+    blockStyle?: FullBlockStyleFragment['id']
   ) => void;
 }
 
@@ -396,7 +462,7 @@ function ListItemWrapper({
   onStyleChange,
 }: ListItemWrapperProps) {
   const { t } = useTranslation();
-  const { data } = useBlockStylesQuery();
+  const { data } = useQuery(BlockStylesDocument);
 
   const stylesForBlock = useMemo(
     () =>
@@ -407,43 +473,57 @@ function ListItemWrapper({
   );
 
   const blockStyleId = value.value.blockStyle;
+  const visibilityLabel = t(
+    value.value.disabled ? 'blockList.showBlock' : 'blockList.hideBlock'
+  );
 
   return (
     <ListItem>
       <LeftButtonsWrapper>
-        <IconButton
-          appearance={'subtle'}
-          icon={value.value.disabled ? <MdVisibilityOff /> : <MdVisibility />}
-          onClick={() => onDisable?.(!value.value.disabled)}
-        />
+        <IconButtonTooltip caption={visibilityLabel}>
+          <IconButton
+            appearance={'subtle'}
+            aria-label={visibilityLabel}
+            icon={value.value.disabled ? <MdVisibilityOff /> : <MdVisibility />}
+            onClick={() => onDisable?.(!value.value.disabled)}
+          />
+        </IconButtonTooltip>
 
         <FlexGrow />
 
-        <IconButton
-          appearance={'ghost'}
-          color={'red'}
-          icon={<MdDelete />}
-          onClick={onDelete}
-          disabled={onDelete == null || disabled}
-        />
+        <IconButtonTooltip caption={t('blockList.deleteBlock')}>
+          <IconButton
+            appearance={'ghost'}
+            color={'red'}
+            aria-label={t('blockList.deleteBlock')}
+            icon={<MdDelete />}
+            onClick={onDelete}
+            disabled={onDelete == null || disabled}
+          />
+        </IconButtonTooltip>
 
         <FlexGrow />
 
         <UpwardButtonWrapper>
-          <IconButton
-            icon={<MdArrowUpward />}
-            onClick={onMoveUp}
-            disabled={onMoveUp == null || disabled}
-          />
+          <IconButtonTooltip caption={t('blockList.moveBlockUp')}>
+            <IconButton
+              aria-label={t('blockList.moveBlockUp')}
+              icon={<MdArrowUpward />}
+              onClick={onMoveUp}
+              disabled={onMoveUp == null || disabled}
+            />
+          </IconButtonTooltip>
         </UpwardButtonWrapper>
 
         <DownwardButtonWrapper>
-          <IconButton
-            title=""
-            icon={<MdArrowDownward />}
-            onClick={onMoveDown}
-            disabled={onMoveDown == null || disabled}
-          />
+          <IconButtonTooltip caption={t('blockList.moveBlockDown')}>
+            <IconButton
+              aria-label={t('blockList.moveBlockDown')}
+              icon={<MdArrowDownward />}
+              onClick={onMoveDown}
+              disabled={onMoveDown == null || disabled}
+            />
+          </IconButtonTooltip>
         </DownwardButtonWrapper>
 
         <FlexGrow />
@@ -458,6 +538,7 @@ function ListItemWrapper({
       <BlockStyleIconWrapper>
         <Icon>
           {icon} {t('blockStyles.style')}
+          <InfoTooltip text={t('blockList.styleHelp')} />
         </Icon>
 
         <BlockStyleSelect

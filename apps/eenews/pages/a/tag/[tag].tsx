@@ -23,7 +23,7 @@ export {
 const TAKE = 25;
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { tag } = params || {};
+  const tag = params!.tag!.toString();
   const client = getApiClient(getApiUrl(), []);
 
   const tagResult = await client.query<TagQuery>({

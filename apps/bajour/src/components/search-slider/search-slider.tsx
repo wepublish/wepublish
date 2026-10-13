@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import 'keen-slider/keen-slider.min.css';
 
 import styled from '@emotion/styled';
@@ -9,11 +10,11 @@ import {
 } from '@wepublish/block-content/website';
 import { H1, H4, Share } from '@wepublish/ui';
 import {
-  Article,
   ArticleSort,
   FullArticleFragment,
+  FullArticleListDocument,
+  SlimArticleFragment,
   SortOrder,
-  useFullArticleListQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { format } from 'date-fns';
@@ -262,10 +263,17 @@ const VideoNavigationButton = styled('button')<{ position: 'left' | 'right' }>`
 `;
 
 type SearchSliderProps = {
-  article: Article;
-  includeSEO?: boolean;
   className?: string;
-};
+} & (
+  | {
+      article: FullArticleFragment;
+      includeSEO: true;
+    }
+  | {
+      article: SlimArticleFragment;
+      includeSEO?: false;
+    }
+);
 
 const sortArticlesByPublishedAt = sortWith<FullArticleFragment>([
   descend(article =>
@@ -275,11 +283,8 @@ const sortArticlesByPublishedAt = sortWith<FullArticleFragment>([
 
 const uniqueById = uniqWith(eqBy<FullArticleFragment>(a => a.id));
 
-export function SearchSlider({
-  article,
-  includeSEO,
-  className,
-}: SearchSliderProps) {
+export function SearchSlider(props: SearchSliderProps) {
+  const { article, className } = props;
   const {
     elements: { Image, H5, Button },
   } = useWebsiteBuilder();
@@ -298,7 +303,7 @@ export function SearchSlider({
     [article]
   );
 
-  const { data, fetchMore, refetch } = useFullArticleListQuery({
+  const { data, fetchMore, refetch } = useQuery(FullArticleListDocument, {
     variables: {
       take: TAKE,
       cursorId: article.id,
@@ -339,7 +344,7 @@ export function SearchSlider({
 
         return fetchMore({
           variables: {
-            cursor: sliderArticles[slideIndex].id,
+            cursorId: sliderArticles[slideIndex].id,
             order: goesBack ? SortOrder.Ascending : SortOrder.Descending,
             filter: {
               body: searchQuery,
@@ -545,7 +550,7 @@ export function SearchSlider({
 
   return (
     <Container className={className}>
-      {includeSEO && <ArticleSEO article={article as Article} />}
+      {props.includeSEO && <ArticleSEO article={props.article} />}
 
       <HeaderContainer>
         <TitleContainer>

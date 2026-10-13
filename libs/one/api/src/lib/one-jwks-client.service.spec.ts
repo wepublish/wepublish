@@ -1,5 +1,6 @@
 import { createPublicKey, generateKeyPairSync } from 'crypto';
 import { OneJwksClientService } from './one-jwks-client.service';
+import type { Mock } from 'vitest';
 
 function makeJwk(kid: string) {
   const { publicKey } = generateKeyPairSync('ed25519', {
@@ -17,10 +18,10 @@ function makeJwk(kid: string) {
 describe('OneJwksClientService', () => {
   const first = makeJwk('kid-one');
   const second = makeJwk('kid-two');
-  let fetchMock: jest.Mock;
+  let fetchMock: Mock;
 
   beforeEach(() => {
-    fetchMock = jest.fn().mockResolvedValue({
+    fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
       statusText: 'OK',

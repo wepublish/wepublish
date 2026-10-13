@@ -298,7 +298,10 @@ export function TeaserBlock({
       bodyFill
       showGrabCursor={showGrabCursor}
     >
-      <PlaceholderInput onAddClick={onChoose}>
+      <PlaceholderInput
+        onAddClick={onChoose}
+        addLabel={t('blocks.flexTeaser.chooseTeaser')}
+      >
         {teaser && (
           <Teaser>
             <ContentForTeaser
@@ -308,6 +311,7 @@ export function TeaserBlock({
             <IconWrapper>
               <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
                 <IconButton
+                  aria-label={t('blocks.flexTeaser.chooseTeaser')}
                   icon={<MdArticle />}
                   onClick={onChoose}
                 />
@@ -315,6 +319,7 @@ export function TeaserBlock({
 
               <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
                 <IconButton
+                  aria-label={t('blocks.flexTeaser.editTeaser')}
                   icon={<MdEdit />}
                   onClick={onEdit}
                 />
@@ -322,6 +327,7 @@ export function TeaserBlock({
 
               <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
                 <IconButton
+                  aria-label={t('blocks.flexTeaser.deleteTeaser')}
                   icon={<MdDelete />}
                   onClick={onRemove}
                 />

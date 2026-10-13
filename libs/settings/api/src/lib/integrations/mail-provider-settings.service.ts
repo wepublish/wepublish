@@ -77,6 +77,16 @@ export class MailProviderSettingsService {
   async createMailProviderSetting(
     input: CreateSettingMailProviderInput
   ): Promise<SettingMailProvider> {
+    if (
+      await this.prisma.settingMailProvider.count({
+        where: { deletedAt: null },
+      })
+    ) {
+      throw new BadRequestException(
+        `A mail provider is already set up. Change its type or settings instead of adding another one.`
+      );
+    }
+
     const output = this.encryptSecretsIfPresent(input);
     const returnValue = await this.prisma.settingMailProvider.create({
       data: output,

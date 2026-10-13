@@ -4,24 +4,51 @@ import mailchimp from '@mailchimp/mailchimp_marketing';
 import { SyncProviderSettingsService } from '@wepublish/settings/api';
 import { MailchimpSyncService } from './mailchimp-sync.service';
 import { ClickTrackingExtension } from './extensions/click-tracking.extension';
+import type { Mock } from 'vitest';
 
-jest.mock('@mailchimp/mailchimp_marketing', () => ({
+vi.mock('@mailchimp/mailchimp_marketing', () => ({
   __esModule: true,
   default: {
-    setConfig: jest.fn(),
+    setConfig: vi.fn(),
     lists: {
-      getListMembersInfo: jest.fn(),
-      getListMergeFields: jest.fn(),
+      getListMembersInfo: vi.fn(),
+      getListMergeFields: vi.fn(),
+      setListMember: vi.fn(),
+    },
+    batches: {
+      start: vi.fn(),
+      status: vi.fn(),
     },
   },
 }));
 
 const mailchimpStub = mailchimp as unknown as {
   lists: {
-    getListMembersInfo: jest.Mock;
-    getListMergeFields: jest.Mock;
+    getListMembersInfo: Mock;
+    getListMergeFields: Mock;
+    setListMember: Mock;
+  };
+  batches: {
+    start: Mock;
+    status: Mock;
   };
 };
+
+const invalidResourceError = (field: string, message: string) => ({
+  status: 400,
+  response: {
+    body: {
+      status: 400,
+      title: 'Invalid Resource',
+      detail:
+        "The resource submitted could not be validated. For field-specific details, see the 'errors' array.",
+      errors: [{ field, message }],
+    },
+  },
+});
+
+const INVALID_RESOURCE_MESSAGE =
+  "Invalid Resource: The resource submitted could not be validated. For field-specific details, see the 'errors' array.";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -89,16 +116,17 @@ const givenMailchimpContact = (overrides: Record<string, any> = {}) => {
 };
 
 const prismaMock = {
-  user: { findMany: jest.fn() },
-  subscription: { findMany: jest.fn() },
+  user: { findMany: vi.fn() },
+  subscription: { findMany: vi.fn() },
   mailchimpSyncError: {
-    findMany: jest.fn(),
+    findMany: vi.fn(),
+    upsert: vi.fn(),
   },
 };
 
 const syncProviderSettingsServiceMock = {
-  getEnabledSyncConfigs: jest.fn(),
-  updateSyncResult: jest.fn(),
+  getEnabledSyncConfigs: vi.fn(),
+  updateSyncResult: vi.fn(),
 };
 
 describe('MailchimpSyncService', () => {
@@ -107,7 +135,7 @@ describe('MailchimpSyncService', () => {
   const dryRun = () => service.executeSyncById(CONFIG_ID, true);
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     prismaMock.user.findMany.mockResolvedValue([mockUser]);
     prismaMock.subscription.findMany.mockResolvedValue([]);
@@ -135,12 +163,33 @@ describe('MailchimpSyncService', () => {
         },
         {
           provide: ClickTrackingExtension,
-          useValue: { execute: jest.fn() },
+          useValue: { execute: vi.fn() },
         },
       ],
     }).compile();
 
     service = module.get<MailchimpSyncService>(MailchimpSyncService);
+  });
+
+  it('keeps readably why a nightly sync failed', async () => {
+    vi.spyOn(
+      service as unknown as { executeSyncForConfig: () => Promise<void> },
+      'executeSyncForConfig'
+    ).mockRejectedValue({
+      status: 401,
+      title: 'API Key Invalid',
+      detail:
+        'Your API key may be invalid, or you have attempted to access the wrong datacenter.',
+    });
+
+    await service.executeAllSync();
+
+    expect(
+      syncProviderSettingsServiceMock.updateSyncResult
+    ).toHaveBeenCalledWith(
+      syncConfig.id,
+      '401 Your API key may be invalid, or you have attempted to access the wrong datacenter.'
+    );
   });
 
   describe('newly created CMS user', () => {
@@ -176,6 +225,49 @@ describe('MailchimpSyncService', () => {
         [ABO_A_GROUP_ID]: false,
         [ABO_B_GROUP_ID]: false,
       });
+    });
+  });
+
+  describe('sync errors', () => {
+    it('records the field details of a contact Mailchimp rejects', async () => {
+      mailchimpStub.batches.start.mockResolvedValue({
+        id: 'batch-1',
+        status: 'finished',
+      });
+      mailchimpStub.batches.status.mockResolvedValue({
+        status: 'finished',
+        errored_operations: 1,
+      });
+      mailchimpStub.lists.setListMember.mockRejectedValue(
+        invalidResourceError('FNAME', 'Please enter a value')
+      );
+
+      await service.executeSyncById(CONFIG_ID);
+
+      expect(prismaMock.mailchimpSyncError.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          create: expect.objectContaining({
+            email: mockUser.email,
+            errorMessage: `Error updating contact '${mockUser.email}': ${INVALID_RESOURCE_MESSAGE} (FNAME: Please enter a value)`,
+          }),
+        })
+      );
+    });
+
+    it('records the field details when Mailchimp rejects the whole batch', async () => {
+      mailchimpStub.batches.start.mockRejectedValue(
+        invalidResourceError('operations', 'Too many operations')
+      );
+
+      await service.executeSyncById(CONFIG_ID);
+
+      expect(prismaMock.mailchimpSyncError.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          create: expect.objectContaining({
+            errorMessage: `Batch failed: ${INVALID_RESOURCE_MESSAGE} (operations: Too many operations)`,
+          }),
+        })
+      );
     });
   });
 

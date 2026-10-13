@@ -40,8 +40,12 @@ const renderBlock = (block: MailchimpFormBlockType) => {
         apolloClient: {
           mocks: [
             {
-              request: { query: AddMailchimpContactDocument },
-              variableMatcher: () => true,
+              // Apollo Client 4 matches variables through `request.variables`,
+              // which accepts a predicate; `variableMatcher` is gone.
+              request: {
+                query: AddMailchimpContactDocument,
+                variables: () => true,
+              },
               maxUsageCount: Number.POSITIVE_INFINITY,
               result,
             },

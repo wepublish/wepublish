@@ -13,9 +13,8 @@ import {
   YouTubeVideoBlockWrapper,
 } from '@wepublish/block-content/website';
 import {
-  BlockContent,
-  FlexAlignment,
   FullBlockFragment,
+  FullFlexAlignmentFragment,
 } from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
@@ -37,7 +36,7 @@ import { ReflektLogo } from '../reflekt-navbar';
 const FLEX_GRID_COLUMN_COUNT = 12;
 
 export const isFlexBlockHeroCrowdfunding = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is BuilderFlexBlockProps => {
   return allPass([
     hasBlockStyle(ReflektBlockStyles.FlexBlockHeroCrowdfunding),
@@ -45,12 +44,14 @@ export const isFlexBlockHeroCrowdfunding = (
   ])(block);
 };
 
-const isVideoBlock = (block: Pick<BlockContent, '__typename'>): boolean =>
+const isVideoBlock = (
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
+): boolean =>
   isVimeoVideoBlock(block) ||
   isYouTubeVideoBlock(block) ||
   isIFrameBlock(block);
 
-const isRightColumnBlock = (alignment: FlexAlignment): boolean =>
+const isRightColumnBlock = (alignment: FullFlexAlignmentFragment): boolean =>
   alignment.x + alignment.w / 2 > FLEX_GRID_COLUMN_COUNT / 2;
 
 export const FlexBlockHeroCrowdfundingWrapper = styled('div')`
@@ -199,7 +200,7 @@ export const FlexBlockHeroCrowdfunding = ({
   }));
 
   let rightItems = items.filter(({ nestedBlock }) =>
-    isRightColumnBlock(nestedBlock.alignment as FlexAlignment)
+    isRightColumnBlock(nestedBlock.alignment as FullFlexAlignmentFragment)
   );
 
   if (!rightItems.length) {

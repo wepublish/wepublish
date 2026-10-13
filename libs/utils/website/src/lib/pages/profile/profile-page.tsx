@@ -1,6 +1,7 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
   InvoiceListContainer,
@@ -8,6 +9,8 @@ import {
   SubscriptionListContainer,
   SubscriptionListItemContent,
   SubscriptionListItemWrapper,
+  isSubscriptionActive,
+  isSubscriptionDeactivated,
   useHasUnpaidInvoices,
 } from '@wepublish/membership/website';
 import {
@@ -15,15 +18,14 @@ import {
   TotpSetupContainer,
 } from '@wepublish/user/website';
 import {
-  addClientCacheToProps,
-  getApiClient,
+  ConfirmEmailChangeDocument,
+  InvoicesDocument,
   MeDocument,
   NavigationListDocument,
-  InvoicesDocument,
-  SubscriptionsDocument,
   ProductType,
-  useConfirmEmailChangeMutation,
-  useSubscriptionsQuery,
+  SubscriptionsDocument,
+  addClientCacheToProps,
+  getApiClient,
 } from '@wepublish/website/api';
 import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { NextPage, NextPageContext } from 'next';
@@ -92,7 +94,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
   const router = useRouter();
   const client = useApolloClient();
   const [confirmEmailChange, { data: confirmData, error: confirmError }] =
-    useConfirmEmailChangeMutation();
+    useMutation(ConfirmEmailChangeDocument);
 
   useEffect(() => {
     const newEmail = router.query.confirmEmailChange as string | undefined;
@@ -114,21 +116,21 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
     }
   }, [router.query.confirmEmailChange, confirmEmailChange, router, client]);
 
-  const { data: subscriptonData } = useSubscriptionsQuery({
+  const { data: subscriptonData } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
   });
 
   const hasDeactivatedSubscriptions = subscriptonData?.userSubscriptions.some(
-    subscription => subscription.deactivation
+    isSubscriptionDeactivated
   );
   const hasActiveSubscriptions = subscriptonData?.userSubscriptions.some(
     subscription =>
-      !subscription.deactivation &&
+      isSubscriptionActive(subscription) &&
       subscription.memberPlan.productType === ProductType.Subscription
   );
   const hasActiveDonations = subscriptonData?.userSubscriptions.some(
     subscription =>
-      !subscription.deactivation &&
+      isSubscriptionActive(subscription) &&
       subscription.memberPlan.productType === ProductType.Donation
   );
 
@@ -171,7 +173,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
             filter={subscriptions =>
               subscriptions.filter(
                 subscription =>
-                  !subscription.deactivation &&
+                  isSubscriptionActive(subscription) &&
                   subscription.memberPlan.productType ===
                     ProductType.Subscription
               )
@@ -190,7 +192,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
                 filter={subscriptions =>
                   subscriptions.filter(
                     subscription =>
-                      !subscription.deactivation &&
+                      isSubscriptionActive(subscription) &&
                       subscription.memberPlan.productType ===
                         ProductType.Donation
                   )

@@ -31,3 +31,5 @@ tsconfig.tsbuildinfo
 
 .claude/worktrees
 /plan.json
+
+.claude/settings.local.json

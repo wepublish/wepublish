@@ -1,8 +1,9 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import {
+  ArticleListDocument,
   FullTeaserFragment,
-  useArticleListQuery,
 } from '@wepublish/website/api';
 import {
   BuilderAuthorProps,
@@ -98,7 +99,7 @@ export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
     [author?.id, currentPage]
   );
 
-  const { data: articlesData } = useArticleListQuery({
+  const { data: articlesData } = useQuery(ArticleListDocument, {
     skip: !author?.id,
     variables,
   });
@@ -164,6 +165,7 @@ export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
                   blockStyle="DossierGrid"
                   numColumns={3}
                   alignment={{
+                    __typename: 'FlexAlignment',
                     i: String(idx),
                     x: 0,
                     y: 0,

@@ -4,6 +4,7 @@ import {
   enGB as enLocale,
   fr as frLocale,
 } from 'date-fns/locale';
+import { humanizeError } from '@wepublish/ui/editor';
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
@@ -22,10 +23,14 @@ export const initI18N = () => {
   i18n.init({
     interpolation: {
       escapeValue: false,
+      alwaysFormat: true,
       format: (value, format, lng = 'en') => {
         if (isDate(value) && format !== undefined) {
           const myLocale = dateFormatMap.get(lng);
           return formatDate(value, format, { locale: myLocale });
+        }
+        if (value instanceof Error) {
+          return humanizeError(value);
         }
         return value;
       },

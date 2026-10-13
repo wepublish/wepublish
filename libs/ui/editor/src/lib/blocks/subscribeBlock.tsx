@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import {
   DndContext,
   DragEndEvent,
@@ -15,19 +16,19 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
+  MemberPlanListDocument,
   PaymentPeriodicity,
   ProductType,
   SubscribeBlockField,
-  SubscribeBlockLayoutPickerConfig,
   SubscribeBlockLayoutNoneConfig,
+  SubscribeBlockLayoutPickerConfig,
   SubscribeBlockLayoutSliderConfig,
   SubscribeBlockRenderLayout,
   SubscribePeriodicityDisplay,
-  useMemberPlanListQuery,
 } from '@wepublish/editor/api';
 import { Fragment, ReactNode, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdDragIndicator, MdInfo, MdPriceCheck } from 'react-icons/md';
+import { MdDragIndicator, MdPriceCheck } from 'react-icons/md';
 import type { CheckPickerProps } from 'rsuite';
 import {
   Checkbox,
@@ -46,6 +47,8 @@ import {
 } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import { InfoTooltip, InfoTrigger } from '../atoms/infoTooltip';
 import { getMonthlyEquivalentRange } from '../utility';
 import { SubscribeBlockValue } from './types';
 
@@ -53,7 +56,7 @@ const Panel = styled(RPanel)`
   display: grid;
   padding: 0;
   overflow: hidden;
-  background-color: #f7f9fa;
+  background-color: var(--rs-bg-well);
 
   .rs-panel-body {
     display: grid;
@@ -74,7 +77,7 @@ const Heading = styled('p')`
 const Hint = styled('p')`
   margin: 0;
   font-size: 12px;
-  color: #6c757d;
+  color: var(--rs-text-secondary);
 `;
 
 const DisplayOptionRadio = styled(Radio)`
@@ -107,7 +110,7 @@ const RadioOptionHint = styled('span')`
   font-size: 12px;
   font-weight: 400;
   line-height: 1.4;
-  color: #6c757d;
+  color: var(--rs-text-secondary);
 `;
 
 const RadioOptionNote = styled(RadioOptionHint)`
@@ -181,7 +184,7 @@ const PlanStyleName = styled('span')`
 const PlanAmounts = styled('span')`
   min-width: 150px;
   font-size: 12px;
-  color: #6c757d;
+  color: var(--rs-text-secondary);
   white-space: nowrap;
 `;
 
@@ -227,8 +230,8 @@ const PlanRowWrapper = styled('div')`
 const SettingRowContent = styled('div')`
   display: grid;
   gap: 12px;
-  background: #fff;
-  border-radius: 3px;
+  background: var(--rs-bg-card);
+  border-radius: var(--rs-radius-md);
   padding: 12px;
 `;
 
@@ -244,6 +247,7 @@ type SortablePlanRowProps = {
 };
 
 const SortablePlanRow = ({ id, disabled, children }: SortablePlanRowProps) => {
+  const { t } = useTranslation();
   const {
     attributes,
     listeners,
@@ -269,11 +273,14 @@ const SortablePlanRow = ({ id, disabled, children }: SortablePlanRowProps) => {
         {...attributes}
         {...listeners}
       >
-        <IconButton
-          icon={<MdDragIndicator />}
-          appearance="subtle"
-          disabled={disabled}
-        />
+        <IconButtonTooltip caption={t('blocks.subscribe.dragToReorder')}>
+          <IconButton
+            aria-label={t('blocks.subscribe.dragToReorder')}
+            icon={<MdDragIndicator />}
+            appearance="subtle"
+            disabled={disabled}
+          />
+        </IconButtonTooltip>
       </div>
 
       {children}
@@ -450,7 +457,7 @@ export const SubscribeBlock = ({
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
   );
 
-  const { data, loading } = useMemberPlanListQuery({
+  const { data, loading } = useQuery(MemberPlanListDocument, {
     variables: {
       take: 200,
       filter: {
@@ -461,8 +468,8 @@ export const SubscribeBlock = ({
 
   const productTypeLabels = useMemo(
     () => ({
-      [ProductType.Subscription]: t('memberPlanEdit.productTypeSubscription'),
-      [ProductType.Donation]: t('memberPlanEdit.productTypeDonation'),
+      [ProductType.Subscription]: t('memberplanForm.productTypeSubscription'),
+      [ProductType.Donation]: t('memberplanForm.productTypeDonation'),
     }),
     [t]
   );
@@ -536,6 +543,7 @@ export const SubscribeBlock = ({
 
               return (
                 existingSetting ?? {
+                  __typename: 'SubscribeBlockMemberPlanRenderSetting',
                   memberPlanId,
                   isDefault: !hasDefault,
                   layout: {
@@ -847,7 +855,10 @@ export const SubscribeBlock = ({
 
         {!!value.memberPlanRenderSettings.length && (
           <>
-            <Heading>{t('blocks.subscribe.renderStylesHeading')}</Heading>
+            <Heading>
+              {t('blocks.subscribe.renderStylesHeading')}{' '}
+              <InfoTooltip text={t('blocks.subscribe.renderStylesHelp')} />
+            </Heading>
 
             <DndContext
               sensors={sensors}
@@ -921,11 +932,7 @@ export const SubscribeBlock = ({
                                 </PlanAmountsPopover>
                               }
                             >
-                              <IconButton
-                                icon={<MdInfo size={16} />}
-                                circle
-                                size="xs"
-                                appearance="subtle"
+                              <InfoTrigger
                                 aria-label={t(
                                   'blocks.subscribe.planAmountsTitle'
                                 )}
@@ -950,14 +957,14 @@ export const SubscribeBlock = ({
                           <PlanDefaultToggle
                             checked={!!plan.isDefault}
                             disabled={disabled}
-                            size="sm"
-                            title={t('blocks.subscribe.defaultPlanTitle')}
-                            checkedChildren={t(
-                              'blocks.subscribe.defaultPlanLabel'
-                            )}
-                            unCheckedChildren={t(
-                              'blocks.subscribe.defaultPlanLabel'
-                            )}
+                            label={
+                              <>
+                                {t('blocks.subscribe.defaultPlanLabel')}{' '}
+                                <InfoTooltip
+                                  text={t('blocks.subscribe.defaultPlanTitle')}
+                                />
+                              </>
+                            }
                             onChange={checked =>
                               handlePlanDefaultChange(
                                 plan.memberPlanId,
@@ -980,9 +987,6 @@ export const SubscribeBlock = ({
                                   ).showInput
                                 }
                                 disabled={disabled}
-                                title={t(
-                                  'blocks.subscribe.showInCardAmountInput.title'
-                                )}
                                 onChange={(_value, checked) =>
                                   handleShowAmountInputChange(
                                     plan.memberPlanId,
@@ -993,7 +997,12 @@ export const SubscribeBlock = ({
                                 <Hint>
                                   {t(
                                     'blocks.subscribe.showInCardAmountInput.label'
-                                  )}
+                                  )}{' '}
+                                  <InfoTooltip
+                                    text={t(
+                                      'blocks.subscribe.showInCardAmountInput.title'
+                                    )}
+                                  />
                                 </Hint>
                               </Checkbox>
                             </div>
@@ -1011,9 +1020,6 @@ export const SubscribeBlock = ({
                                   ).showInput
                                 }
                                 disabled={disabled}
-                                title={t(
-                                  'blocks.subscribe.showAmountInput.title'
-                                )}
                                 onChange={(_value, checked) =>
                                   handleShowAmountInputChange(
                                     plan.memberPlanId,
@@ -1022,7 +1028,12 @@ export const SubscribeBlock = ({
                                 }
                               >
                                 <Hint>
-                                  {t('blocks.subscribe.showAmountInput.label')}
+                                  {t('blocks.subscribe.showAmountInput.label')}{' '}
+                                  <InfoTooltip
+                                    text={t(
+                                      'blocks.subscribe.showAmountInput.title'
+                                    )}
+                                  />
                                 </Hint>
                               </Checkbox>
                             </div>
@@ -1040,9 +1051,6 @@ export const SubscribeBlock = ({
                                   ).showInput
                                 }
                                 disabled={disabled}
-                                title={t(
-                                  'blocks.subscribe.showAmountInput.title'
-                                )}
                                 onChange={(_value, checked) =>
                                   handleShowAmountInputChange(
                                     plan.memberPlanId,
@@ -1051,7 +1059,12 @@ export const SubscribeBlock = ({
                                 }
                               >
                                 <Hint>
-                                  {t('blocks.subscribe.showAmountInput.label')}
+                                  {t('blocks.subscribe.showAmountInput.label')}{' '}
+                                  <InfoTooltip
+                                    text={t(
+                                      'blocks.subscribe.showAmountInput.title'
+                                    )}
+                                  />
                                 </Hint>
                               </Checkbox>
                             </div>

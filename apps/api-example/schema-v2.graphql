@@ -8,6 +8,37 @@ enum AIProviderType {
 
 union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
 
+"""
+The mail an admin action in the editor would send to the user, or why it sends none, so the editor can ask the admin before running the action.
+"""
+type ActionMail {
+  """
+  The SubscriptionEvent or UserEvent of the mail, e.g. SUBSCRIBE or ACCOUNT_CREATION.
+  """
+  event: String!
+
+  """Set when a mail would be sent."""
+  mailTemplateId: String
+
+  """Set when a mail would be sent."""
+  mailTemplateName: String
+
+  """Set when no mail would be sent."""
+  noMailReason: ActionMailNoMailReason
+
+  """
+  The address the mail would go to; null while the user does not exist yet (createUser).
+  """
+  recipientEmail: String
+}
+
+enum ActionMailNoMailReason {
+  alreadyHandled
+  firstPeriod
+  noTemplate
+  notApplicable
+}
+
 enum ActionType {
   ArticleCreated
   AuthorCreated
@@ -2650,7 +2681,7 @@ type Mutation {
     reason: SubscriptionDeactivationReason!
 
     """
-    When true, suppress the subscription-deactivation mail. Useful for bulk migrations of already-cancelled subscriptions.
+    When true, suppress the subscription-deactivation mail, e.g. when an editor chose not to mail the reader, or for bulk migrations of already-cancelled subscriptions.
     """
     skipMail: Boolean
   ): PublicSubscription!
@@ -2692,6 +2723,11 @@ type Mutation {
   """Creates a new block template."""
   createBlockTemplate(blocks: [BlockContentInput!]!, name: String!): BlockTemplate!
 
+  """
+  Sets up the challenge provider. Only possible while none is configured.
+  """
+  createChallengeProviderSetting(id: String!, name: String, secret: String, siteKey: String, type: ChallengeProviderType!): SettingChallengeProvider!
+
   """Creates a comment for any user"""
   createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, publish: Boolean = false, tagIds: [String!], text: RichText): Comment!
 
@@ -2725,6 +2761,9 @@ type Mutation {
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
 
+  """Sets up the mail provider. Only possible while none is configured."""
+  createMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, smtp_host: String, smtp_port: Int, smtp_secure: Boolean, smtp_user: String, type: MailProviderType!, webhookEndpointSecret: String): SettingMailProvider!
+
   """Start a background job sending a template to a filtered audience"""
   createMailSendJob(input: MailSendJobInput!): MailSendJobModel!
 
@@ -2752,7 +2791,7 @@ type Mutation {
   createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
 
   """Creates a new payment provider setting."""
-  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
+  createPaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], type: PaymentProviderType!, webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -2775,13 +2814,32 @@ type Mutation {
   createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
   """Creates a new subscription."""
-  createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Float!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
+  createSubscription(
+    autoRenew: Boolean!
+    extendable: Boolean!
+    memberPlanID: String!
+    monthlyAmount: Float!
+    paidUntil: DateTime
+    paymentMethodID: String!
+    paymentPeriodicity: PaymentPeriodicity!
+    properties: [PropertyInput!]!
+
+    """
+    When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.
+    """
+    skipMail: Boolean
+    startsAt: DateTime!
+    userID: String!
+  ): PublicSubscription!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
   """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+
+  """Sets up the sync provider. Only possible while none is configured."""
+  createSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String, type: SyncProviderType!): SettingSyncProvider!
 
   """Creates a new tag."""
   createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
@@ -3005,7 +3063,7 @@ type Mutation {
     properties: [PropertyInput!]!
 
     """
-    When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.
+    When true, suppress the subscribe mail to the user, e.g. when an editor chose not to mail the reader or for bulk imports.
     """
     skipMail: Boolean
     startsAt: DateTime!
@@ -3033,6 +3091,14 @@ type Mutation {
   This mutation allows to rate a comment. Supports logged in and anonymous
   """
   rateComment(answerId: String!, commentId: String!, value: Int!): Comment!
+
+  """Reactivates a deactivated subscription."""
+  reactivateSubscription(id: String!): PublicSubscription!
+
+  """
+  Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created.
+  """
+  reactivateUserSubscription(id: String!): PublicSubscription!
 
   """
   This mutation registers a new member by providing name, email, and other required information.
@@ -3081,6 +3147,21 @@ type Mutation {
   Continue a send job that stopped early. Recipients already sent are skipped.
   """
   resumeMailSendJob(id: String!, retryUnfinished: Boolean): MailSendJobModel!
+
+  """
+  Retries the failed periodic job and then catches up every run up to today. Answers once the failed run is taken over; the runs go on in the background. Refused while a run is going on.
+  """
+  retryPeriodicJob: PeriodicJob!
+
+  """
+  Undoes an upgrade of a subscription as long as the new subscription has not been paid for.
+  """
+  revertSubscriptionUpgrade(id: String!): PublicSubscription!
+
+  """
+  Undoes an upgrade of one of the authenticated user's own subscriptions as long as the new subscription has not been paid for. The replacement subscription is removed and the original one continues.
+  """
+  revertUserSubscriptionUpgrade(subscriptionId: String!): PublicSubscription!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -3203,7 +3284,7 @@ type Mutation {
   updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
 
   """Updates an existing payment provider setting."""
-  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
+  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, simulated_declineRenewals: Boolean, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -3725,6 +3806,7 @@ enum PaymentProviderType {
   NO_CHARGE
   PAYREXX
   PAYREXX_SUBSCRIPTION
+  SIMULATED
   STRIPE
   STRIPE_CHECKOUT
 }
@@ -3959,6 +4041,7 @@ type PeriodicJob {
   finishedWithError: DateTime
   id: String!
   modifiedAt: DateTime!
+  running: Boolean!
   successfullyFinished: DateTime
   tries: Float!
 }
@@ -4131,6 +4214,11 @@ input PropertyInput {
 type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
+
+  """
+  Whether an upgrade of this subscription can still be undone, meaning it has been replaced by a subscription that has not been paid for yet.
+  """
+  canRevertUpgrade: Boolean!
   confirmed: Boolean!
   createdAt: DateTime!
   currency: Currency!
@@ -4163,8 +4251,14 @@ type PublicSubscriptionConnection {
 }
 
 type Query {
+  """The mail createUser would send, or why it sends none."""
+  accountCreationMail: ActionMail!
+
   """Returns latest actions"""
-  actions: [Action!]!
+  actions(
+    """Only these kinds of actions. Empty or omitted means all."""
+    types: [ActionType!]
+  ): [Action!]!
 
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
@@ -4424,6 +4518,11 @@ type Query {
   """Returns a invoice by id."""
   invoice(id: String!): Invoice!
 
+  """
+  The mail markInvoiceAsPaid would send for this invoice, or why it sends none.
+  """
+  invoicePaymentMail(invoiceId: String!): ActionMail!
+
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
@@ -4617,6 +4716,16 @@ type Query {
 
   """Returns a subscription by id."""
   subscription(id: String!): PublicSubscription!
+
+  """
+  The mail cancelSubscription would send for this subscription and reason, or why it sends none.
+  """
+  subscriptionCancellationMail(id: String!, reason: SubscriptionDeactivationReason!): ActionMail!
+
+  """
+  The mail createSubscription would send for a subscription with these settings, or why it sends none.
+  """
+  subscriptionCreationMail(autoRenew: Boolean!, memberPlanID: String!, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, userID: String!): ActionMail!
 
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
@@ -5032,6 +5141,7 @@ type SettingPaymentProvider implements SettingProvider {
   payrexx_pm: [PayrexxPM!]
   payrexx_psp: [PayrexxPSP!]
   payrexx_vatrate: String
+  simulated_declineRenewals: Boolean
   stripe_methods: [StripePaymentMethod!]
   type: PaymentProviderType!
 }
@@ -5337,7 +5447,7 @@ type SubscriptionFlowModel {
   id: String!
   intervals: [SubscriptionInterval!]!
   memberPlan: MemberPlan
-  numberOfSubscriptions: Int!
+  numberOfSubscriptions(memberPlanId: String): Int!
   paymentMethods: [PaymentMethod!]!
   periodicities: [PaymentPeriodicity!]!
 }

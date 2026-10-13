@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import { isPollBlock } from '@wepublish/block-content/website';
@@ -5,11 +6,11 @@ import { Comment } from '@wepublish/comments/website';
 import { Image } from '@wepublish/image/website';
 import { Button } from '@wepublish/ui';
 import {
-  ArticleTeaser,
+  CommentListDocument,
   CommentSort,
+  FullArticleTeaserFragment,
   FullCommentFragment,
   SortOrder,
-  useCommentListQuery,
 } from '@wepublish/website/api';
 import {
   BuilderCommentProps,
@@ -161,9 +162,10 @@ export const FrageDesTages = ({
   teasers,
   className,
 }: BuilderTeaserListBlockProps | BuilderTeaserGridBlockProps) => {
-  const article = (teasers[0] as ArticleTeaser | undefined)?.article;
+  const article = (teasers[0] as FullArticleTeaserFragment | undefined)
+    ?.article;
 
-  const { data: commentsData } = useCommentListQuery({
+  const { data: commentsData } = useQuery(CommentListDocument, {
     variables: {
       itemId: article?.id || '',
       sort: CommentSort.Rating,

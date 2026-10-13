@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { Chip, css, SxProps, Typography } from '@mui/material';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
-import { FlexAlignment, FullTeaserFragment } from '@wepublish/website/api';
+import {
+  FullFlexAlignmentFragment,
+  FullTeaserFragment,
+} from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
   Image,
@@ -240,7 +243,7 @@ export const selectTeaserTags = (teaser: FullTeaserFragment) => {
   return [];
 };
 
-export const TeaserWrapper = styled('article')<FlexAlignment>`
+export const TeaserWrapper = styled('article')<FullFlexAlignmentFragment>`
   display: grid;
 
   ${({ theme, w }) =>
@@ -417,12 +420,12 @@ const TeaserContent = ({
   className,
   children,
   target,
-  title,
+  label,
 }: PropsWithChildren<{
   href?: string;
   className?: string;
   target?: string;
-  title: string | null | undefined;
+  label: string;
 }>) => {
   const {
     elements: { Link },
@@ -436,7 +439,7 @@ const TeaserContent = ({
         href={href}
         target={target}
         css={stretchToParentHeight}
-        aria-label={title ?? ''}
+        aria-label={label}
       >
         <TeaserContentWrapper className={className}>
           {children}
@@ -503,10 +506,24 @@ export const BaseTeaser = ({
   const { t } = useTranslation();
   const { date } = useWebsiteBuilder();
 
+  const authorNames =
+    authors?.length ?
+      t('teaser.author.text', { authors: authors.join(', ') })
+    : null;
+
+  const ariaLabel = t('teaser.ariaLabel', {
+    hasTitle: !!title,
+    title: title ?? '',
+    hasLead: !!lead,
+    lead: lead ?? '',
+    hasAuthors: !!authors?.length,
+    authors: authors?.join(', ') ?? '',
+  }).trim();
+
   return (
     <TeaserWrapper {...alignment}>
       <TeaserContent
-        title={title}
+        label={ariaLabel}
         href={href}
         target={target}
         className={className}
@@ -545,16 +562,8 @@ export const BaseTeaser = ({
           variant="teaserMeta"
           component={TeaserMetadata}
         >
-          {authors && authors?.length ?
-            <TeaserAuthors>
-              {t('teaser.author.text', {
-                authors: joinAuthorNames(
-                  authors,
-                  t('teaser.author.seperator'),
-                  t('teaser.author.lastSeperator')
-                ),
-              })}
-            </TeaserAuthors>
+          {authorNames ?
+            <TeaserAuthors>{authorNames}</TeaserAuthors>
           : null}
 
           {publishDate && authors && authors?.length ?

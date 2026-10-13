@@ -14,4 +14,5 @@ export * from './lib/mail-context';
 export * from './lib/mail-renderer';
 export * from './lib/mails.module';
 export * from './lib/mailchimp-contact/mailchimp-contact.service';
+export * from './lib/mailchimp-contact/mailchimp-error';
 export * from './lib/mailchimp-contact/mailchimp-contact.module';

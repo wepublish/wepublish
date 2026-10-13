@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`DashboardInvoiceResolver expectedRevenue 1`] = `
+exports[`DashboardInvoiceResolver > expectedRevenue 1`] = `
 [
   {
     "amount": 1050,
@@ -17,7 +17,7 @@ exports[`DashboardInvoiceResolver expectedRevenue 1`] = `
 ]
 `;
 
-exports[`DashboardInvoiceResolver revenue 1`] = `
+exports[`DashboardInvoiceResolver > revenue 1`] = `
 [
   {
     "amount": 1050,

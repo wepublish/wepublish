@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
-
-export const UnsavedChangesDialogMessage = 'Changes you made may not be saved.';
+import { useTranslation } from 'react-i18next';
 
 export function useUnsavedChangesDialog(hasChanges: boolean) {
+  const { t } = useTranslation();
+  const message = t('unsavedChangesDialog.message');
+
   useEffect(() => {
     if (!hasChanges)
       return () => {
@@ -11,8 +13,8 @@ export function useUnsavedChangesDialog(hasChanges: boolean) {
 
     function handleBeforeUnload(e: BeforeUnloadEvent) {
       e.preventDefault();
-      e.returnValue = UnsavedChangesDialogMessage;
-      return UnsavedChangesDialogMessage;
+      e.returnValue = message;
+      return message;
     }
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -20,9 +22,9 @@ export function useUnsavedChangesDialog(hasChanges: boolean) {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [hasChanges]);
+  }, [hasChanges, message]);
 
   return () => {
-    return !hasChanges || window.confirm(UnsavedChangesDialogMessage);
+    return !hasChanges || window.confirm(message);
   };
 }

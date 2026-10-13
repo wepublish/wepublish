@@ -1,26 +1,27 @@
-import { ApolloError } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import {
+  CreateUserConsentDocument,
   MutationCreateUserConsentArgs,
-  useCreateUserConsentMutation,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { TFunction } from 'i18next';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { SingleViewTitle } from '@wepublish/ui/editor';
+import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
 import { UserConsentForm } from './user-consent-form';
 
-const onErrorToast = (error: ApolloError, slug?: string) => {
+const onErrorToast = (t: TFunction, error: Error, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {`A consent with slug '${slug}' already exists. Please choose a different slug.`}
+        {t('consents.uniqueConstraint', { slug })}
       </Message>
     );
     return;
@@ -30,9 +31,9 @@ const onErrorToast = (error: ApolloError, slug?: string) => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -50,26 +51,29 @@ export const UserConsentCreateView = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const [createUserConsent, { loading }] = useCreateUserConsentMutation({
-    onError: error => onErrorToast(error, userConsent.userId),
-    onCompleted: consent => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.createdSuccess')}
-        </Message>
-      );
-      if (shouldClose) {
-        navigate(closePath);
-      } else {
-        navigate(`/userConsents/edit/${consent.createUserConsent?.id}`);
-      }
-    },
-  });
+  const [createUserConsent, { loading }] = useMutation(
+    CreateUserConsentDocument,
+    {
+      onError: error => onErrorToast(t, error, userConsent.userId),
+      onCompleted: consent => {
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('toast.createdSuccess')}
+          </Message>
+        );
+        if (shouldClose) {
+          navigate(closePath);
+        } else {
+          navigate(`/userConsents/edit/${consent.createUserConsent?.id}`);
+        }
+      },
+    }
+  );
 
   const onSubmit = () => {
     createUserConsent({
@@ -79,9 +83,9 @@ export const UserConsentCreateView = () => {
 
   const { StringType, BooleanType } = Schema.Types;
   const validationModel = Schema.Model({
-    userId: StringType().isRequired(),
-    consentId: StringType().isRequired(),
-    value: BooleanType().isRequired(),
+    userId: StringType().isRequired(t('errorMessages.required')),
+    consentId: StringType().isRequired(t('errorMessages.required')),
+    value: BooleanType().isRequired(t('errorMessages.required')),
   });
 
   return (

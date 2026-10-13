@@ -9,8 +9,10 @@ export default {
   title: 'UI/IconButton',
   render: () => (
     <Stack
-      gap={1}
-      alignItems={'start'}
+      sx={{
+        gap: 1,
+        alignItems: 'start',
+      }}
     >
       <IconButtonCmp>
         <MdAdd />

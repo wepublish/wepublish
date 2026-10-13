@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';
+import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { BlockContentInput, mapBlockUnionMap } from '../block-content.model';
 import { BlockType } from '../block-type.model';
 import { BlockTemplateDataloaderService } from './block-template-dataloader.service';
@@ -14,7 +15,10 @@ import {
 
 @Injectable()
 export class BlockTemplateService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private publicContentCache: PublicContentCacheInvalidator
+  ) {}
 
   @PrimeDataLoader(BlockTemplateDataloaderService)
   public async getBlockTemplates({
@@ -77,7 +81,7 @@ export class BlockTemplateService {
     name,
     blocks,
   }: UpdateBlockTemplateInput) {
-    return this.prisma.blockTemplate.update({
+    const blockTemplate = await this.prisma.blockTemplate.update({
       where: {
         id,
       },
@@ -86,14 +90,27 @@ export class BlockTemplateService {
         blocks: await this.mapBlocks(blocks, id),
       },
     });
+
+    await this.invalidateRenderedContent();
+
+    return blockTemplate;
   }
 
-  public deleteBlockTemplate(id: string) {
-    return this.prisma.blockTemplate.delete({
+  public async deleteBlockTemplate(id: string) {
+    const blockTemplate = await this.prisma.blockTemplate.delete({
       where: {
         id,
       },
     });
+
+    await this.invalidateRenderedContent();
+
+    return blockTemplate;
+  }
+
+  private async invalidateRenderedContent() {
+    await this.publicContentCache.invalidate();
+    await this.publicContentCache.invalidateArticleLayout();
   }
 
   private async mapBlocks(

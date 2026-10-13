@@ -6,12 +6,12 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import {
-  BlockContent,
+  FullBlockFragment,
   FullListicleBlockFragment,
 } from '@wepublish/website/api';
 
 export const isListicleBlock = (
-  block: Pick<BlockContent, '__typename'>
+  block: Partial<Pick<FullBlockFragment, '__typename'>>
 ): block is FullListicleBlockFragment => block.__typename === 'ListicleBlock';
 
 export const ListicleBlockWrapper = styled('div')`

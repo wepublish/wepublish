@@ -1,4 +1,7 @@
-import { FullPeerFragment, RemotePeerProfile } from '@wepublish/website/api';
+import {
+  FullPeerFragment,
+  FullRemotePeerProfileFragment,
+} from '@wepublish/website/api';
 import nanoid from 'nanoid';
 import { mockRichText } from './richtext';
 import { mockPeerImage } from './image';
@@ -15,7 +18,7 @@ export const mockRemotePeerProfile = ({
   name = 'Peer',
   themeColor = '#faa',
   themeFontColor = '#000',
-}: Partial<RemotePeerProfile> = {}): RemotePeerProfile => ({
+}: Partial<FullRemotePeerProfileFragment> = {}): FullRemotePeerProfileFragment => ({
   __typename: 'RemotePeerProfile',
   callToActionText,
   callToActionURL,

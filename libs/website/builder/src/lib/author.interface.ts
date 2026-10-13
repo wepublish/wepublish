@@ -1,4 +1,5 @@
-import { QueryResult } from '@apollo/client';
+import type { OperationVariables } from '@apollo/client';
+import type { useQuery } from '@apollo/client/react';
 import {
   AuthorQuery,
   AuthorListQuery,
@@ -7,7 +8,7 @@ import {
 } from '@wepublish/website/api';
 
 export type BuilderAuthorProps = Pick<
-  QueryResult<AuthorQuery>,
+  useQuery.Result<AuthorQuery, OperationVariables, 'complete' | 'empty'>,
   'data' | 'loading' | 'error'
 > & {
   className?: string;
@@ -24,7 +25,7 @@ export type BuilderAuthorListItemProps = FullAuthorFragment & {
 };
 
 export type BuilderAuthorListProps = Pick<
-  QueryResult<AuthorListQuery>,
+  useQuery.Result<AuthorListQuery, OperationVariables, 'complete' | 'empty'>,
   'data' | 'loading' | 'error'
 > & {
   className?: string;

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`DashboardSubscriptionResolver activeSubscribers 1`] = `
+exports[`DashboardSubscriptionResolver > activeSubscribers 1`] = `
 [
   {
     "endsAt": null,
@@ -23,7 +23,7 @@ exports[`DashboardSubscriptionResolver activeSubscribers 1`] = `
 ]
 `;
 
-exports[`DashboardSubscriptionResolver newDeactivations 1`] = `
+exports[`DashboardSubscriptionResolver > newDeactivations 1`] = `
 [
   {
     "endsAt": "2023-02-03T00:00:00.000Z",
@@ -36,7 +36,7 @@ exports[`DashboardSubscriptionResolver newDeactivations 1`] = `
 ]
 `;
 
-exports[`DashboardSubscriptionResolver newSubscribers 1`] = `
+exports[`DashboardSubscriptionResolver > newSubscribers 1`] = `
 [
   {
     "endsAt": null,
@@ -59,7 +59,7 @@ exports[`DashboardSubscriptionResolver newSubscribers 1`] = `
 ]
 `;
 
-exports[`DashboardSubscriptionResolver renewingSubscribers 1`] = `
+exports[`DashboardSubscriptionResolver > renewingSubscribers 1`] = `
 [
   {
     "memberPlan": "Foo",

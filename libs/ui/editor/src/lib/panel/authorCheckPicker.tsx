@@ -1,9 +1,9 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   AuthorListDocument,
+  CreateAuthorDocument,
   FullAuthorFragment,
-  useAuthorListQuery,
-  useCreateAuthorMutation,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ import { PeerAvatar } from '../atoms/peer/peerAvatar';
 import { getOperationNameFromDocument } from '../utility';
 
 const ButtonWrapper = styled.div`
-  margin: 10px;
+  margin: 8px;
 `;
 
 export interface AuthorCheckPickerProps {
@@ -35,7 +35,7 @@ export function AuthorCheckPicker({
 
   const authorsVariables = { filter: authorsFilter || undefined, take: 10 };
 
-  const { data } = useAuthorListQuery({
+  const { data } = useQuery(AuthorListDocument, {
     variables: authorsVariables,
   });
 
@@ -49,7 +49,7 @@ export function AuthorCheckPicker({
     }
   }, [data?.authors, list]);
 
-  const [createAuthor] = useCreateAuthorMutation({
+  const [createAuthor] = useMutation(CreateAuthorDocument, {
     refetchQueries: [getOperationNameFromDocument(AuthorListDocument)],
   });
 

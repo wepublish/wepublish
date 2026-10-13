@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import mailchimp from '@mailchimp/mailchimp_marketing';
 import {
@@ -11,12 +12,12 @@ import {
 } from './mailchimp-subscribe.model';
 import { MailchimpSubscribeService } from './mailchimp-subscribe.service';
 
-jest.mock('@mailchimp/mailchimp_marketing', () => ({
+vi.mock('@mailchimp/mailchimp_marketing', () => ({
   __esModule: true,
   default: {
-    setConfig: jest.fn(),
+    setConfig: vi.fn(),
     lists: {
-      setListMember: jest.fn(),
+      setListMember: vi.fn(),
     },
   },
 }));
@@ -26,11 +27,11 @@ process.env['APP_SECRET_KEY'] ??= 'test-secret-key-for-mailchimp-spec';
 describe('MailchimpSubscribeService', () => {
   let service: MailchimpSubscribeService;
 
-  const setListMember = mailchimp.lists.setListMember as jest.Mock;
-  const setConfig = mailchimp.setConfig as jest.Mock;
+  const setListMember = mailchimp.lists.setListMember as Mock;
+  const setConfig = mailchimp.setConfig as Mock;
 
   const mockSyncProviderSettingsService = {
-    syncProviderSetting: jest.fn(),
+    syncProviderSetting: vi.fn(),
   };
 
   const email = 'Reader@Example.com';
@@ -47,7 +48,7 @@ describe('MailchimpSubscribeService', () => {
   };
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     mockSyncProviderSettingsService.syncProviderSetting.mockResolvedValue({
       mailchimp_apiKey: new SecretCrypto().encrypt('secret-us21'),

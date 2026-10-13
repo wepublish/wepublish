@@ -25,18 +25,24 @@ it in the background, and tell the user what you are looking for.
 So the dependency chain is:
 
 ```
-docker (database + storage)  →  prisma migrate + seed  →  services
+docker (database + storage + dragonfly)  →  prisma migrate + seed  →  services
 ```
 
 Skipping a step fails in a way that looks like an application bug:
 
 - **No Docker** → Prisma cannot reach Postgres; `migrate` fails on connect.
+  Without Dragonfly the API still works and caches in memory, but logs
+  "Dragonfly unavailable", namespace resets stay local to the replica and the
+  nightly job does not run while `REDIS_URL` points at it; with `REDIS_URL=`
+  (empty) the database keeps the nightly job to one replica as before
+  Dragonfly. The compose `api` (production image, would need `rediss://`) runs
+  without it.
 - **No migrate** → the API boots against a schema that does not match the client,
   and resolvers fail at query time rather than at boot.
 
 ```bash
 npm run dev            # everything: docker → migrate → api, editor, media, website-example
-npm run start:docker   # just Postgres + MinIO
+npm run start:docker   # just Postgres + MinIO + Dragonfly
 npm run migrate        # prisma migrate deploy + seed
 ```
 
@@ -74,7 +80,7 @@ table, one place.
 - **"Why is my GraphQL type missing?"** → almost always a stale
   `schema-v2.graphql`. Start the API to regenerate it, then `npm run generate-api`.
   See [gotchas.md](gotchas.md).
-- **"Is my setup healthy?"** → `docker ps` (database + storage up?), then check the
+- **"Is my setup healthy?"** → `docker ps` (database + storage + dragonfly up?), then check the
   service ports. Do not start services to answer this.
 
 ## Guardrails

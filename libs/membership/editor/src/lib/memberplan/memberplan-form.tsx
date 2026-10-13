@@ -4,7 +4,6 @@ import {
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullImageFragment,
-  PaymentMethod,
   PaymentPeriodicity,
   ProductType,
   FullAvailablePaymentMethodFragment,
@@ -33,6 +32,7 @@ import {
   ChooseEditImage,
   ImageEditPanel,
   ImageSelectPanel,
+  InfoTooltip,
   ListInput,
   ListValue,
   RichTextBlock,
@@ -48,13 +48,6 @@ const { Label, Text, Control } = RForm;
 
 const ColTextAlignEnd = styled(Col)`
   text-align: end;
-`;
-
-const FormLabelMarginRight = styled(Label)`
-  margin-right: 10px;
-`;
-const FormLabelMarginLeft = styled(Label)`
-  margin-left: 10px;
 `;
 
 const PanelWidth100 = styled(Panel)`
@@ -262,19 +255,17 @@ export function MemberPlanForm({
                   if (!memberPlan) {
                     return;
                   }
-                  setMemberPlan({ ...memberPlan, image: undefined });
+                  setMemberPlan({ ...memberPlan, image: null });
                 }}
               />
             </Col>
 
             {/* active / inactive */}
             <ColTextAlignEnd xs={12}>
-              <FormLabelMarginRight>
-                {t('memberPlanEdit.active')}
-              </FormLabelMarginRight>
               <Toggle
                 checked={!!memberPlan?.active}
                 disabled={loading}
+                label={t('memberPlanEdit.active')}
                 onChange={active => {
                   if (!memberPlan) {
                     return;
@@ -301,7 +292,10 @@ export function MemberPlanForm({
 
                 {/* slug */}
                 <Col xs={12}>
-                  <Form.Label>{t('memberPlanEdit.slug')}</Form.Label>
+                  <Form.Label>
+                    {t('memberPlanEdit.slug')}{' '}
+                    <InfoTooltip text={t('memberPlanEdit.slugHelp')} />
+                  </Form.Label>
                   <Form.Control
                     name="slug"
                     value={memberPlan?.slug || ''}
@@ -321,7 +315,10 @@ export function MemberPlanForm({
 
             {/* description */}
             <Col xs={24}>
-              <Form.Label>{t('memberPlanEdit.description')}</Form.Label>
+              <Form.Label>
+                {t('memberPlanEdit.description')}{' '}
+                <InfoTooltip text={t('memberPlanEdit.descriptionHelp')} />
+              </Form.Label>
 
               <RichTextBlock
                 value={memberPlan?.description}
@@ -331,7 +328,8 @@ export function MemberPlanForm({
                     setMemberPlan({
                       ...memberPlan,
                       description:
-                        newDescription as RichTextBlockValue['richText'],
+                        (newDescription as RichTextBlockValue['richText']) ??
+                        null,
                     });
                   }
                 }}
@@ -340,7 +338,10 @@ export function MemberPlanForm({
 
             {/* short description */}
             <Col xs={24}>
-              <Form.Label>{t('memberPlanEdit.shortDescription')}</Form.Label>
+              <Form.Label>
+                {t('memberPlanEdit.shortDescription')}{' '}
+                <InfoTooltip text={t('memberPlanEdit.shortDescriptionHelp')} />
+              </Form.Label>
 
               <RichTextBlock
                 value={memberPlan?.shortDescription}
@@ -350,7 +351,8 @@ export function MemberPlanForm({
                     setMemberPlan({
                       ...memberPlan,
                       shortDescription:
-                        newShortDescription as RichTextBlockValue['richText'],
+                        (newShortDescription as RichTextBlockValue['richText']) ??
+                        null,
                     });
                   }
                 }}
@@ -370,7 +372,7 @@ export function MemberPlanForm({
 
                   setMemberPlan({
                     ...memberPlan,
-                    externalReward: newexternalReward,
+                    externalReward: newexternalReward ?? null,
                   });
                 }}
               />
@@ -419,19 +421,22 @@ export function MemberPlanForm({
                 >
                   {t('memberplanForm.trialMemberplanAlert')}
                 </Alert>
-              : <Button
-                  startIcon={<MdAutoFixHigh />}
-                  onClick={() =>
-                    setExtendable(
-                      false,
-                      memberPlan ? { ...memberPlan, maxCount: 1 } : undefined
-                    )
-                  }
-                  disabled={isTrialSubscription}
-                  color={'green'}
-                >
-                  {t('memberplanForm.configureTrialBtn')}
-                </Button>
+              : <>
+                  <Button
+                    startIcon={<MdAutoFixHigh />}
+                    onClick={() =>
+                      setExtendable(
+                        false,
+                        memberPlan ? { ...memberPlan, maxCount: 1 } : undefined
+                      )
+                    }
+                    disabled={isTrialSubscription}
+                    color={'green'}
+                  >
+                    {t('memberplanForm.configureTrialBtn')}
+                  </Button>{' '}
+                  <InfoTooltip text={t('memberplanForm.configureTrialHelp')} />
+                </>
               }
             </Col>
           </RowPaddingTop>
@@ -441,15 +446,21 @@ export function MemberPlanForm({
               <Toggle
                 checked={memberPlan?.extendable}
                 onChange={extendable => setExtendable(extendable)}
+                label={
+                  <>
+                    {t('memberplanForm.extendableToggle')}{' '}
+                    <InfoTooltip
+                      text={t('memberplanForm.extendableHelpText')}
+                    />
+                  </>
+                }
               />
-              <FormLabelMarginLeft>
-                {t('memberplanForm.extendableToggle')}
-              </FormLabelMarginLeft>
-              <Text>{t('memberplanForm.extendableHelpText')}</Text>
             </Col>
             {/* max count */}
             <Col xs={12}>
-              <Label>{maxCountLabel}</Label>
+              <Label>
+                {maxCountLabel} <InfoTooltip text={maxCountHelpText} />
+              </Label>
               <Input
                 placeholder={maxCountLabel}
                 type={'number'}
@@ -465,12 +476,14 @@ export function MemberPlanForm({
                   });
                 }}
               />
-              <Text>{maxCountHelpText}</Text>
             </Col>
           </RowPaddingTop>
           <RowPaddingTop>
             <Col xs={12}>
-              <Label>{t('memberplanForm.migratePMTitle')}</Label>
+              <Label>
+                {t('memberplanForm.migratePMTitle')}{' '}
+                <InfoTooltip text={t('memberplanForm.migratePMHelptext')} />
+              </Label>
               <Control
                 name="migrateToTargetPaymentMethodID"
                 block
@@ -491,7 +504,6 @@ export function MemberPlanForm({
                   })
                 }
               />
-              <Text>{t('memberplanForm.migratePMHelptext')}</Text>
             </Col>
           </RowPaddingTop>
 
@@ -530,7 +542,12 @@ export function MemberPlanForm({
           </RowPaddingTop>
 
           <RowPaddingTop>
-            <Form.Label>{t('memberplanForm.confirmationPage')}</Form.Label>
+            <Form.Label>
+              {t('memberplanForm.confirmationPage')}{' '}
+              <InfoTooltip
+                text={t('memberplanForm.confirmationPageHelptext')}
+              />
+            </Form.Label>
             <SelectPage
               setSelectedPage={confirmationPageId => {
                 if (!memberPlan) {
@@ -543,7 +560,6 @@ export function MemberPlanForm({
               name="failPageId"
             />
           </RowPaddingTop>
-          <Text>{t('memberplanForm.confirmationPageHelptext')}</Text>
         </Panel>
       </Col>
 
@@ -621,6 +637,7 @@ export function MemberPlanForm({
                 disabled={loading}
                 onChange={app => setAvailablePaymentMethods(app)}
                 defaultValue={{
+                  __typename: 'AvailablePaymentMethod',
                   forceAutoRenewal: false,
                   paymentPeriodicities: [],
                   paymentMethods: [],
@@ -636,12 +653,17 @@ export function MemberPlanForm({
                     <Row>
                       {/* force auto-renew */}
                       <Col xs={24}>
-                        <FormLabelMarginRight>
-                          {t('memberPlanEdit.forceAutoRenewal')}
-                        </FormLabelMarginRight>
                         <Toggle
                           checked={value.forceAutoRenewal}
                           disabled={loading}
+                          label={
+                            <>
+                              {t('memberPlanEdit.forceAutoRenewal')}{' '}
+                              <InfoTooltip
+                                text={t('memberPlanEdit.forceAutoRenewalHelp')}
+                              />
+                            </>
+                          }
                           onChange={forceAutoRenewal =>
                             setForceAutoRenewal(
                               forceAutoRenewal,
@@ -650,9 +672,6 @@ export function MemberPlanForm({
                             )
                           }
                         />
-                        <Text>
-                          {t('memberPlanEdit.autoRenewalDescription')}
-                        </Text>
                       </Col>
 
                       {/* payment periodicity */}
@@ -695,8 +714,7 @@ export function MemberPlanForm({
                                 .map(pmID =>
                                   paymentMethods.find(pm => pm.id === pmID)
                                 )
-                                .filter(pm => pm !== undefined)
-                                .map(pm => pm as PaymentMethod),
+                                .filter(pm => pm !== undefined),
                             });
                           }}
                           block

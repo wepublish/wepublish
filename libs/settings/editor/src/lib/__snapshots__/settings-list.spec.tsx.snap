@@ -133,34 +133,6 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="ALLOW_GUEST_COMMENTING"
-                        id="ALLOW_GUEST_COMMENTING-label"
-                      >
-                        settingList.guestCommenting
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
                         class="rs-toggle"
                         data-checked="false"
                         data-disabled="false"
@@ -171,7 +143,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-checked="false"
                           aria-disabled="false"
-                          aria-label="OFF"
+                          aria-labelledby="rs-label_r_e_"
                           class="rs-toggle-input"
                           role="switch"
                           type="checkbox"
@@ -179,6 +151,35 @@ exports[`SettingList > renders successfully 1`] = `
                         <span
                           class="rs-toggle-track"
                         />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_e_"
+                        >
+                          settingList.guestCommenting 
+                          <button
+                            aria-label="settingList.warnings.guestCommenting"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                     <div
@@ -186,34 +187,6 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="ALLOW_GUEST_COMMENT_RATING"
-                        id="ALLOW_GUEST_COMMENT_RATING-label"
-                      >
-                        settingList.allowGuestCommentRating
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
                         class="rs-toggle"
                         data-checked="false"
                         data-disabled="false"
@@ -224,7 +197,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-checked="false"
                           aria-disabled="false"
-                          aria-label="OFF"
+                          aria-labelledby="rs-label_r_i_"
                           class="rs-toggle-input"
                           role="switch"
                           type="checkbox"
@@ -232,6 +205,35 @@ exports[`SettingList > renders successfully 1`] = `
                         <span
                           class="rs-toggle-track"
                         />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_i_"
+                        >
+                          settingList.allowGuestCommentRating 
+                          <button
+                            aria-label="settingList.warnings.guestCommentRating"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                     <div
@@ -239,34 +241,6 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="ALLOW_COMMENT_EDITING"
-                        id="ALLOW_COMMENT_EDITING-label"
-                      >
-                        settingList.allowCommentEditing
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
                         class="rs-toggle"
                         data-checked="false"
                         data-disabled="false"
@@ -277,7 +251,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-checked="false"
                           aria-disabled="false"
-                          aria-label="OFF"
+                          aria-labelledby="rs-label_r_m_"
                           class="rs-toggle-input"
                           role="switch"
                           type="checkbox"
@@ -285,6 +259,35 @@ exports[`SettingList > renders successfully 1`] = `
                         <span
                           class="rs-toggle-track"
                         />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_m_"
+                        >
+                          settingList.allowCommentEditing 
+                          <button
+                            aria-label="settingList.info.allowCommentEditing"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                     <div
@@ -296,28 +299,30 @@ exports[`SettingList > renders successfully 1`] = `
                         for="COMMENT_CHAR_LIMIT"
                         id="COMMENT_CHAR_LIMIT-label"
                       >
-                        settingList.commentCharLimit
-                        <div
+                        settingList.commentCharLimit 
+                        <button
+                          aria-label="settingList.info.commentCharLimit"
                           class="emotion-8 emotion-9"
+                          type="button"
                         >
                           <svg
                             fill="currentColor"
-                            height="1em"
+                            height="16"
                             stroke="currentColor"
                             stroke-width="0"
                             viewBox="0 0 24 24"
-                            width="1em"
+                            width="16"
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0z"
+                              d="M0 0h24v24H0V0z"
                               fill="none"
                             />
                             <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
                             />
                           </svg>
-                        </div>
+                        </button>
                       </label>
                       <div
                         class="rs-input-group"
@@ -439,27 +444,6 @@ exports[`SettingList > renders successfully 1`] = `
                     class="rs-panel-title"
                   >
                     settingList.polls
-                    <div
-                      class="emotion-8 emotion-9"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                        />
-                      </svg>
-                    </div>
                   </div>
                 </div>
                 <div
@@ -474,13 +458,6 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="guestPollVote"
-                        id="guestPollVote-label"
-                      >
-                        settingList.guestPollVote
-                      </label>
-                      <label
                         class="rs-toggle"
                         data-checked="false"
                         data-disabled="false"
@@ -491,7 +468,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-checked="false"
                           aria-disabled="false"
-                          aria-label="OFF"
+                          aria-labelledby="rs-label_r_1b_"
                           class="rs-toggle-input"
                           role="switch"
                           type="checkbox"
@@ -499,6 +476,35 @@ exports[`SettingList > renders successfully 1`] = `
                         <span
                           class="rs-toggle-track"
                         />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_1b_"
+                        >
+                          settingList.guestPollVote 
+                          <button
+                            aria-label="settingList.warnings.guestPollVote"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                   </div>
@@ -532,34 +538,6 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="MAKE_NEW_SUBSCRIBERS_API_PUBLIC"
-                        id="MAKE_NEW_SUBSCRIBERS_API_PUBLIC-label"
-                      >
-                        settingList.newSubscriptionsApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
                         class="rs-toggle"
                         data-checked="false"
                         data-disabled="false"
@@ -570,7 +548,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-checked="false"
                           aria-disabled="false"
-                          aria-label="OFF"
+                          aria-labelledby="rs-label_r_1k_"
                           class="rs-toggle-input"
                           role="switch"
                           type="checkbox"
@@ -578,6 +556,35 @@ exports[`SettingList > renders successfully 1`] = `
                         <span
                           class="rs-toggle-track"
                         />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_1k_"
+                        >
+                          settingList.newSubscriptionsApiPublic 
+                          <button
+                            aria-label="settingList.info.newSubscriptionsApiPublic"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                     <div
@@ -585,34 +592,6 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC"
-                        id="MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC-label"
-                      >
-                        settingList.activeSubscriptionsApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
                         class="rs-toggle"
                         data-checked="false"
                         data-disabled="false"
@@ -623,7 +602,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-checked="false"
                           aria-disabled="false"
-                          aria-label="OFF"
+                          aria-labelledby="rs-label_r_1o_"
                           class="rs-toggle-input"
                           role="switch"
                           type="checkbox"
@@ -631,6 +610,35 @@ exports[`SettingList > renders successfully 1`] = `
                         <span
                           class="rs-toggle-track"
                         />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_1o_"
+                        >
+                          settingList.activeSubscriptionsApiPublic 
+                          <button
+                            aria-label="settingList.info.activeSubscriptionsApiPublic"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                     <div
@@ -638,34 +646,6 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC"
-                        id="MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC-label"
-                      >
-                        settingList.renewingSubscriptionsApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
                         class="rs-toggle"
                         data-checked="false"
                         data-disabled="false"
@@ -676,7 +656,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-checked="false"
                           aria-disabled="false"
-                          aria-label="OFF"
+                          aria-labelledby="rs-label_r_1s_"
                           class="rs-toggle-input"
                           role="switch"
                           type="checkbox"
@@ -684,6 +664,35 @@ exports[`SettingList > renders successfully 1`] = `
                         <span
                           class="rs-toggle-track"
                         />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_1s_"
+                        >
+                          settingList.renewingSubscriptionsApiPublic 
+                          <button
+                            aria-label="settingList.info.renewingSubscriptionsApiPublic"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                     <div
@@ -691,34 +700,6 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="MAKE_NEW_DEACTIVATIONS_API_PUBLIC"
-                        id="MAKE_NEW_DEACTIVATIONS_API_PUBLIC-label"
-                      >
-                        settingList.newDeactivationsApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
                         class="rs-toggle"
                         data-checked="false"
                         data-disabled="false"
@@ -729,7 +710,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-checked="false"
                           aria-disabled="false"
-                          aria-label="OFF"
+                          aria-labelledby="rs-label_r_20_"
                           class="rs-toggle-input"
                           role="switch"
                           type="checkbox"
@@ -737,6 +718,35 @@ exports[`SettingList > renders successfully 1`] = `
                         <span
                           class="rs-toggle-track"
                         />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_20_"
+                        >
+                          settingList.newDeactivationsApiPublic 
+                          <button
+                            aria-label="settingList.info.newDeactivationsApiPublic"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                     <div
@@ -744,34 +754,6 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="MAKE_EXPECTED_REVENUE_API_PUBLIC"
-                        id="MAKE_EXPECTED_REVENUE_API_PUBLIC-label"
-                      >
-                        settingList.expectedRevenueApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
                         class="rs-toggle"
                         data-checked="false"
                         data-disabled="false"
@@ -782,7 +764,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-checked="false"
                           aria-disabled="false"
-                          aria-label="OFF"
+                          aria-labelledby="rs-label_r_24_"
                           class="rs-toggle-input"
                           role="switch"
                           type="checkbox"
@@ -790,6 +772,35 @@ exports[`SettingList > renders successfully 1`] = `
                         <span
                           class="rs-toggle-track"
                         />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_24_"
+                        >
+                          settingList.expectedRevenueApiPublic 
+                          <button
+                            aria-label="settingList.info.expectedRevenueApiPublic"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                     <div
@@ -797,34 +808,6 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="MAKE_REVENUE_API_PUBLIC"
-                        id="MAKE_REVENUE_API_PUBLIC-label"
-                      >
-                        settingList.revenueApiPublic
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
                         class="rs-toggle"
                         data-checked="false"
                         data-disabled="false"
@@ -835,7 +818,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-checked="false"
                           aria-disabled="false"
-                          aria-label="OFF"
+                          aria-labelledby="rs-label_r_28_"
                           class="rs-toggle-input"
                           role="switch"
                           type="checkbox"
@@ -843,6 +826,35 @@ exports[`SettingList > renders successfully 1`] = `
                         <span
                           class="rs-toggle-track"
                         />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_28_"
+                        >
+                          settingList.revenueApiPublic 
+                          <button
+                            aria-label="settingList.info.revenueApiPublic"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                   </div>
@@ -876,34 +888,6 @@ exports[`SettingList > renders successfully 1`] = `
                       role="group"
                     >
                       <label
-                        class="rs-form-control-label"
-                        for="SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE"
-                        id="SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE-label"
-                      >
-                        settingList.subscriptionUpgradeModel
-                        <div
-                          class="emotion-8 emotion-9"
-                        >
-                          <svg
-                            fill="currentColor"
-                            height="1em"
-                            stroke="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0 0h24v24H0z"
-                              fill="none"
-                            />
-                            <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                            />
-                          </svg>
-                        </div>
-                      </label>
-                      <label
                         class="rs-toggle"
                         data-checked="false"
                         data-disabled="false"
@@ -914,7 +898,7 @@ exports[`SettingList > renders successfully 1`] = `
                         <input
                           aria-checked="false"
                           aria-disabled="false"
-                          aria-label="OFF"
+                          aria-labelledby="rs-label_r_2h_"
                           class="rs-toggle-input"
                           role="switch"
                           type="checkbox"
@@ -922,6 +906,35 @@ exports[`SettingList > renders successfully 1`] = `
                         <span
                           class="rs-toggle-track"
                         />
+                        <span
+                          class="rs-toggle-label"
+                          id="rs-label_r_2h_"
+                        >
+                          settingList.subscriptionUpgradeModel 
+                          <button
+                            aria-label="settingList.warnings.subscriptionUpgradeModel"
+                            class="emotion-8 emotion-9"
+                            type="button"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="16"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0V0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
                       </label>
                     </div>
                   </div>
@@ -967,28 +980,30 @@ exports[`SettingList > renders successfully 1`] = `
                         for="SESSION_TTL_DAYS"
                         id="SESSION_TTL_DAYS-label"
                       >
-                        settingList.sessionTtlDays
-                        <div
+                        settingList.sessionTtlDays 
+                        <button
+                          aria-label="settingList.warnings.sessionTtlDays"
                           class="emotion-8 emotion-9"
+                          type="button"
                         >
                           <svg
                             fill="currentColor"
-                            height="1em"
+                            height="16"
                             stroke="currentColor"
                             stroke-width="0"
                             viewBox="0 0 24 24"
-                            width="1em"
+                            width="16"
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0z"
+                              d="M0 0h24v24H0V0z"
                               fill="none"
                             />
                             <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
                             />
                           </svg>
-                        </div>
+                        </button>
                       </label>
                       <div
                         class="rs-input-group"
@@ -1107,28 +1122,30 @@ exports[`SettingList > renders successfully 1`] = `
                         for="SEND_LOGIN_JWT_EXPIRES_MIN"
                         id="SEND_LOGIN_JWT_EXPIRES_MIN-label"
                       >
-                        settingList.loginMinutes
-                        <div
+                        settingList.loginMinutes 
+                        <button
+                          aria-label="settingList.info.loginMinutes"
                           class="emotion-8 emotion-9"
+                          type="button"
                         >
                           <svg
                             fill="currentColor"
-                            height="1em"
+                            height="16"
                             stroke="currentColor"
                             stroke-width="0"
                             viewBox="0 0 24 24"
-                            width="1em"
+                            width="16"
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0z"
+                              d="M0 0h24v24H0V0z"
                               fill="none"
                             />
                             <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
                             />
                           </svg>
-                        </div>
+                        </button>
                       </label>
                       <div
                         class="rs-input-group"
@@ -1247,28 +1264,30 @@ exports[`SettingList > renders successfully 1`] = `
                         for="RESET_PASSWORD_JWT_EXPIRES_MIN"
                         id="RESET_PASSWORD_JWT_EXPIRES_MIN-label"
                       >
-                        settingList.passwordToken
-                        <div
+                        settingList.passwordToken 
+                        <button
+                          aria-label="settingList.info.passwordToken"
                           class="emotion-8 emotion-9"
+                          type="button"
                         >
                           <svg
                             fill="currentColor"
-                            height="1em"
+                            height="16"
                             stroke="currentColor"
                             stroke-width="0"
                             viewBox="0 0 24 24"
-                            width="1em"
+                            width="16"
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M0 0h24v24H0z"
+                              d="M0 0h24v24H0V0z"
                               fill="none"
                             />
                             <path
-                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
                             />
                           </svg>
-                        </div>
+                        </button>
                       </label>
                       <div
                         class="rs-input-group"
@@ -1395,27 +1414,6 @@ exports[`SettingList > renders successfully 1`] = `
                     class="rs-panel-title"
                   >
                     settingList.peering
-                    <div
-                      class="emotion-8 emotion-9"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                        />
-                      </svg>
-                    </div>
                   </div>
                 </div>
                 <div
@@ -1434,7 +1432,30 @@ exports[`SettingList > renders successfully 1`] = `
                         for="PEERING_TIMEOUT_MS"
                         id="PEERING_TIMEOUT_MS-label"
                       >
-                        settingList.peerToken
+                        settingList.peerToken 
+                        <button
+                          aria-label="settingList.info.peerToken"
+                          class="emotion-8 emotion-9"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0V0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                            />
+                          </svg>
+                        </button>
                       </label>
                       <div
                         class="rs-input-group"
@@ -1576,34 +1597,6 @@ exports[`SettingList > renders successfully 1`] = `
                     role="group"
                   >
                     <label
-                      class="rs-form-control-label"
-                      for="NEW_ARTICLE_PEERING"
-                      id="NEW_ARTICLE_PEERING-label"
-                    >
-                      settingList.newArticlePeering
-                      <div
-                        class="emotion-8 emotion-9"
-                      >
-                        <svg
-                          fill="currentColor"
-                          height="1em"
-                          stroke="currentColor"
-                          stroke-width="0"
-                          viewBox="0 0 24 24"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0 0h24v24H0z"
-                            fill="none"
-                          />
-                          <path
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                          />
-                        </svg>
-                      </div>
-                    </label>
-                    <label
                       class="rs-toggle"
                       data-checked="false"
                       data-disabled="false"
@@ -1614,7 +1607,7 @@ exports[`SettingList > renders successfully 1`] = `
                       <input
                         aria-checked="false"
                         aria-disabled="false"
-                        aria-label="OFF"
+                        aria-labelledby="rs-label_r_4q_"
                         class="rs-toggle-input"
                         role="switch"
                         type="checkbox"
@@ -1622,6 +1615,35 @@ exports[`SettingList > renders successfully 1`] = `
                       <span
                         class="rs-toggle-track"
                       />
+                      <span
+                        class="rs-toggle-label"
+                        id="rs-label_r_4q_"
+                      >
+                        settingList.newArticlePeering 
+                        <button
+                          aria-label="settingList.warnings.newArticlePeering"
+                          class="emotion-8 emotion-9"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0V0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                            />
+                          </svg>
+                        </button>
+                      </span>
                     </label>
                   </div>
                   <div
@@ -1633,28 +1655,30 @@ exports[`SettingList > renders successfully 1`] = `
                       for="NEW_ARTICLE_PAYWALL"
                       id="NEW_ARTICLE_PAYWALL-label"
                     >
-                      settingList.newArticlePaywall
-                      <div
+                      settingList.newArticlePaywall 
+                      <button
+                        aria-label="settingList.warnings.newArticlePaywall"
                         class="emotion-8 emotion-9"
+                        type="button"
                       >
                         <svg
                           fill="currentColor"
-                          height="1em"
+                          height="16"
                           stroke="currentColor"
                           stroke-width="0"
                           viewBox="0 0 24 24"
-                          width="1em"
+                          width="16"
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            d="M0 0h24v24H0z"
+                            d="M0 0h24v24H0V0z"
                             fill="none"
                           />
                           <path
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                            d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
                           />
                         </svg>
-                      </div>
+                      </button>
                     </label>
                     <div
                       class="rs-picker"
@@ -1664,8 +1688,8 @@ exports[`SettingList > renders successfully 1`] = `
                       data-testid="picker"
                     >
                       <div
-                        aria-controls="rs-_r_5o_-listbox"
-                        aria-describedby="rs-_r_5o_-describe"
+                        aria-controls="rs-_r_50_-listbox"
+                        aria-describedby="rs-_r_50_-describe"
                         aria-disabled="false"
                         aria-expanded="false"
                         aria-haspopup="listbox"
@@ -1675,7 +1699,7 @@ exports[`SettingList > renders successfully 1`] = `
                         data-cleanable="true"
                         data-disabled="false"
                         data-has-value="false"
-                        id="rs-_r_5o_"
+                        id="rs-_r_50_"
                         role="combobox"
                         tabindex="0"
                       >
@@ -1683,7 +1707,7 @@ exports[`SettingList > renders successfully 1`] = `
                           class="rs-picker-toggle-stack rs-stack"
                         >
                           <div
-                            class="rs-stack-item rs-box-_r_5s_"
+                            class="rs-stack-item rs-box-_r_54_"
                             data-rs="box"
                             overflow="hidden"
                           >
@@ -1699,13 +1723,13 @@ exports[`SettingList > renders successfully 1`] = `
                             <span
                               class="rs-picker-toggle-placeholder"
                               data-testid="picker-describe"
-                              id="rs-_r_5o_-describe"
+                              id="rs-_r_50_-describe"
                             >
                               Select
                             </span>
                           </div>
                           <div
-                            class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_5t_"
+                            class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_55_"
                             data-rs="box"
                           >
                             <svg
@@ -1735,34 +1759,6 @@ exports[`SettingList > renders successfully 1`] = `
                     role="group"
                   >
                     <label
-                      class="rs-form-control-label"
-                      for="SHOW_PENDING_WHEN_NOT_PUBLISHED"
-                      id="SHOW_PENDING_WHEN_NOT_PUBLISHED-label"
-                    >
-                      settingList.showPendingWhenNotPublished
-                      <div
-                        class="emotion-8 emotion-9"
-                      >
-                        <svg
-                          fill="currentColor"
-                          height="1em"
-                          stroke="currentColor"
-                          stroke-width="0"
-                          viewBox="0 0 24 24"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0 0h24v24H0z"
-                            fill="none"
-                          />
-                          <path
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                          />
-                        </svg>
-                      </div>
-                    </label>
-                    <label
                       class="rs-toggle"
                       data-checked="false"
                       data-disabled="false"
@@ -1773,7 +1769,7 @@ exports[`SettingList > renders successfully 1`] = `
                       <input
                         aria-checked="false"
                         aria-disabled="false"
-                        aria-label="OFF"
+                        aria-labelledby="rs-label_r_58_"
                         class="rs-toggle-input"
                         role="switch"
                         type="checkbox"
@@ -1781,6 +1777,35 @@ exports[`SettingList > renders successfully 1`] = `
                       <span
                         class="rs-toggle-track"
                       />
+                      <span
+                        class="rs-toggle-label"
+                        id="rs-label_r_58_"
+                      >
+                        settingList.showPendingWhenNotPublished 
+                        <button
+                          aria-label="settingList.warnings.showPendingWhenNotPublished"
+                          class="emotion-8 emotion-9"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0V0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                            />
+                          </svg>
+                        </button>
+                      </span>
                     </label>
                   </div>
                 </div>

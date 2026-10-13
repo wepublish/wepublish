@@ -9,8 +9,8 @@ describe('NotificationReadService', () => {
 
   const mockPrisma = {
     notificationRead: {
-      findMany: jest.fn(),
-      upsert: jest.fn(),
+      findMany: vi.fn(),
+      upsert: vi.fn(),
     },
   };
 
@@ -29,7 +29,7 @@ describe('NotificationReadService', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('lists the reads of the given user only', async () => {

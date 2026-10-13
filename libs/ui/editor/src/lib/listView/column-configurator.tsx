@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { TbColumns, TbColumnsOff } from 'react-icons/tb';
 import { Checkbox, IconButton } from 'rsuite';
 
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+
 export type ColumnConfiguratorColumn = {
   id: string;
   label: string;
@@ -23,7 +25,7 @@ const Options = styled.div`
   white-space: nowrap;
   background-color: var(--rs-bg-overlay, #fff);
   border: 1px solid var(--rs-border-primary, #e5e5ea);
-  border-radius: 6px;
+  border-radius: var(--rs-radius-md);
   box-shadow: var(--rs-shadow-overlay, 0 4px 12px rgba(0, 0, 0, 0.15));
 `;
 
@@ -76,15 +78,16 @@ export const ColumnConfigurator = ({
 
   return (
     <Wrapper ref={wrapperRef}>
-      <IconButton
-        size="sm"
-        appearance="subtle"
-        title={label}
-        aria-label={label}
-        aria-expanded={expanded}
-        icon={expanded ? <TbColumnsOff /> : <TbColumns />}
-        onClick={() => setExpanded(expanded => !expanded)}
-      />
+      <IconButtonTooltip caption={label}>
+        <IconButton
+          size="sm"
+          appearance="subtle"
+          aria-label={label}
+          aria-expanded={expanded}
+          icon={expanded ? <TbColumnsOff /> : <TbColumns />}
+          onClick={() => setExpanded(expanded => !expanded)}
+        />
+      </IconButtonTooltip>
 
       {expanded && (
         <Options>

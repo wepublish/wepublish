@@ -3,7 +3,6 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Currency, FullMemberPlanFragment } from '@wepublish/website/api';
 import { useState } from 'react';
 import { MemberPlanPicker } from './memberplan-picker';
-import { ApolloError } from '@apollo/client';
 import { mockMemberPlan } from '@wepublish/storybook/mocks';
 
 export default {
@@ -68,8 +67,6 @@ export const WithError = {
   args: {
     ...Default.args,
     data: null,
-    error: new ApolloError({
-      errorMessage: 'Foobar',
-    }),
+    error: new Error('Foobar'),
   },
 };

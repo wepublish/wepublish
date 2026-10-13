@@ -1,4 +1,4 @@
-import { Article } from '@wepublish/website/api';
+import { FullArticleFragment } from '@wepublish/website/api';
 import { generateFeed } from './feed-generator';
 import {
   mockArticle,
@@ -28,7 +28,7 @@ it('should setup the feed', async () => {
   const articles = [
     mockArticle({ id: '1' }),
     mockArticle({ id: '2' }),
-  ] as Article[];
+  ] as FullArticleFragment[];
 
   expect(await generate(articles)).toMatchSnapshot();
 });
@@ -37,7 +37,7 @@ it('should generate the RSS feed', async () => {
   const articles = [
     mockArticle({ id: '1' }),
     mockArticle({ id: '2' }),
-  ] as Article[];
+  ] as FullArticleFragment[];
 
   expect((await generate(articles)).rss2()).toMatchSnapshot();
 });
@@ -46,7 +46,7 @@ it('should generate the atom feed', async () => {
   const articles = [
     mockArticle({ id: '1' }),
     mockArticle({ id: '2' }),
-  ] as Article[];
+  ] as FullArticleFragment[];
 
   expect((await generate(articles)).atom1()).toMatchSnapshot();
 });
@@ -55,7 +55,7 @@ it('should generate the json feed', async () => {
   const articles = [
     mockArticle({ id: '1' }),
     mockArticle({ id: '2' }),
-  ] as Article[];
+  ] as FullArticleFragment[];
 
   expect((await generate(articles)).json1()).toMatchSnapshot();
 });
@@ -82,7 +82,7 @@ it('should generate the json feed for articles with no authors', async () => {
         canonicalUrl: null,
       },
     }),
-  ] as Article[];
+  ] as FullArticleFragment[];
 
   expect(() => generate(articles).then(f => f.json1())).not.toThrow();
 });
@@ -113,7 +113,7 @@ it('should escape ampersands in image URLs for RSS feed', async () => {
         canonicalUrl: 'https://example.com',
       },
     }),
-  ] as Article[];
+  ] as FullArticleFragment[];
 
   const rss = (await generate(articles)).rss2();
 

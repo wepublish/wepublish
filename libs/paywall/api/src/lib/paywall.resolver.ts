@@ -68,7 +68,7 @@ export class PaywallResolver {
     description: `Deletes a paywall.`,
   })
   public async deletePaywall(@Args('id') id: string) {
-    return (await this.paywallService.deletePaywall(id)).id;
+    return this.paywallService.deletePaywall(id);
   }
 
   @ResolveField(() => [MemberPlan])

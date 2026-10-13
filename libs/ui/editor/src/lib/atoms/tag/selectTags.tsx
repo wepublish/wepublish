@@ -1,14 +1,15 @@
-import { ApolloError, useApolloClient } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
+import { useApolloClient } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  FullTagFragment,
   SortOrder,
-  Tag,
   TagDocument,
+  TagListDocument,
   TagQuery,
   TagQueryVariables,
   TagSort,
   TagType,
-  useTagListQuery,
 } from '@wepublish/editor/api';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +23,7 @@ import {
 import type { Option } from 'rsuite/esm/internals/types';
 
 import { DEFAULT_MAX_TABLE_PAGES } from '../../utility';
+import { humanizeError } from '../../humanizeError';
 
 const Divider = styled(RDivider)`
   margin: '12px 0';
@@ -36,7 +38,7 @@ interface SelectTagsProps {
   disabled?: boolean;
   name?: string;
   tagType: TagType;
-  defaultTags: Pick<Tag, 'id' | 'tag'>[];
+  defaultTags: Pick<FullTagFragment, 'id' | 'tag'>[];
   selectedTags?: string[] | null;
   setSelectedTags(tags: string[]): void;
   placeholder?: string;
@@ -126,15 +128,15 @@ export function SelectTags({
    * Error handling
    * @param error
    */
-  const showErrors = (error: ApolloError): void => {
+  const showErrors = (error: Error): void => {
     toaster.push(
       <Message
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -144,7 +146,11 @@ export function SelectTags({
    */
   const take = 50;
 
-  const { data: tagsData, refetch } = useTagListQuery({
+  const {
+    data: tagsData,
+    error: tagListError,
+    refetch,
+  } = useQuery(TagListDocument, {
     variables: {
       filter: {
         type: tagType,
@@ -154,8 +160,13 @@ export function SelectTags({
       take,
       skip: (page - 1) * take,
     },
-    onError: showErrors,
   });
+
+  useEffect(() => {
+    if (tagListError) {
+      showErrors(tagListError);
+    }
+  }, [tagListError]);
 
   /**
    * Prepare available tags

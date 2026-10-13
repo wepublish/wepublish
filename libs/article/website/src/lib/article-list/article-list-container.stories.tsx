@@ -1,5 +1,8 @@
 import { Meta } from '@storybook/nextjs-vite';
-import { Article, ArticleListDocument } from '@wepublish/website/api';
+import {
+  ArticleListDocument,
+  FullArticleFragment,
+} from '@wepublish/website/api';
 import { ArticleListContainer } from './article-list-container';
 import { mockArticle } from '@wepublish/storybook/mocks';
 
@@ -44,6 +47,7 @@ export const Default = {
 export const WithFilter = {
   ...Default,
   args: {
-    filter: (articles: Article[]) => articles.filter(a => a.id !== article.id),
+    filter: (articles: FullArticleFragment[]) =>
+      articles.filter(a => a.id !== article.id),
   },
 };

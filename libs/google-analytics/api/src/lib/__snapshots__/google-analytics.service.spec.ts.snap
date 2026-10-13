@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`GoogleAnalyticsService should filter pages out 1`] = `
+exports[`GoogleAnalyticsService > should filter pages out 1`] = `
 [
   {
     "where": {
@@ -19,7 +19,7 @@ exports[`GoogleAnalyticsService should filter pages out 1`] = `
 ]
 `;
 
-exports[`GoogleAnalyticsService should get articles by popularity 1`] = `
+exports[`GoogleAnalyticsService > should get articles by popularity 1`] = `
 [
   {
     "published": {
@@ -44,7 +44,7 @@ exports[`GoogleAnalyticsService should get articles by popularity 1`] = `
 ]
 `;
 
-exports[`GoogleAnalyticsService should get articles by popularity 2`] = `
+exports[`GoogleAnalyticsService > should get articles by popularity 2`] = `
 [
   {
     "where": {
@@ -65,7 +65,7 @@ exports[`GoogleAnalyticsService should get articles by popularity 2`] = `
 ]
 `;
 
-exports[`GoogleAnalyticsService should have a working pagination 1`] = `
+exports[`GoogleAnalyticsService > should have a working pagination 1`] = `
 [
   {
     "where": {

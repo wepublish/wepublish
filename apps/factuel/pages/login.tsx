@@ -6,8 +6,10 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { getApiClient } from '@wepublish/website/api';
+import {
+  FullSessionWithTokenWithoutUserFragment,
+  getApiClient,
+} from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
@@ -20,7 +22,7 @@ const LoginWrapper = styled('div')`
   justify-content: center;
 `;
 
-type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
+type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 
 export default function Login({ sessionToken }: LoginProps) {
   const { hasUser, setToken } = useUser();
@@ -51,17 +53,17 @@ export default function Login({ sessionToken }: LoginProps) {
   return (
     <LoginWrapper>
       <H3 component="h1">{t('login.title')}</H3>
-
       <Typography
         variant="body1"
-        paragraph
+        sx={{
+          marginBottom: '16px',
+        }}
       >
         <Trans
           i18nKey="login.noAccount"
           components={{ Link: <Link href={'/signup'} /> }}
         />
       </Typography>
-
       <LoginFormContainer
         defaults={{
           email: router.query?.mail as string | undefined,

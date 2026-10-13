@@ -1,19 +1,16 @@
 import type { Mock } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import {
-  MemberPlanSort,
-  SortOrder,
-  useMemberPlanListQuery,
-} from '@wepublish/editor/api';
+import { useQuery } from '@apollo/client/react';
+import { MemberPlanSort, SortOrder } from '@wepublish/editor/api';
 
 import { MemberPlanList } from './memberPlanList';
 
-// Partial mock: the UI library imports enums from the same module.
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
-  useMemberPlanListQuery: vi.fn(),
-  useDeleteMemberPlanMutation: () => [vi.fn(), { loading: false }],
+// Partial mock: the list also renders components that use other Apollo hooks.
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: vi.fn(),
+  useMutation: () => [vi.fn(), { loading: false }],
 }));
 
 vi.mock('react-i18next', () => ({
@@ -30,7 +27,7 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const mockedUseMemberPlanListQuery = useMemberPlanListQuery as Mock;
+const mockedUseQuery = useQuery as unknown as Mock;
 
 const plan = {
   id: 'plan-1',
@@ -43,8 +40,7 @@ const plan = {
   availablePaymentMethods: [],
 };
 
-const lastVariables = () =>
-  mockedUseMemberPlanListQuery.mock.calls.at(-1)?.[0]?.variables;
+const lastVariables = () => mockedUseQuery.mock.calls.at(-1)?.[1]?.variables;
 
 const renderList = () =>
   render(
@@ -55,8 +51,8 @@ const renderList = () =>
 
 beforeEach(() => {
   localStorage.clear();
-  mockedUseMemberPlanListQuery.mockReset();
-  mockedUseMemberPlanListQuery.mockReturnValue({
+  mockedUseQuery.mockReset();
+  mockedUseQuery.mockReturnValue({
     data: {
       memberPlans: {
         nodes: [plan],

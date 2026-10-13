@@ -1,3 +1,4 @@
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
@@ -10,10 +11,11 @@ import {
 import {
   FontStyle,
   FontWeight,
-  useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsLazyQuery,
+  UpdateWebsiteSettingsDocument,
   WebsiteRemoteFontInput,
+  WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
+import { humanizeError, IconButtonTooltip } from '@wepublish/ui/editor';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdAdd, MdArrowBack, MdDelete } from 'react-icons/md';
@@ -52,9 +54,10 @@ type FormValues = z.infer<typeof formSchema>;
 
 export const WebsiteFonts = () => {
   const { t } = useTranslation();
-  const [loadSettings] = useWebsiteSettingsLazyQuery();
-  const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation({
+  const [loadSettings] = useLazyQuery(WebsiteSettingsDocument);
+  const [updateWebsiteSettings, { loading: saving }] = useMutation(
+    UpdateWebsiteSettingsDocument,
+    {
       onCompleted: () => {
         toaster.push(
           <Message
@@ -74,12 +77,13 @@ export const WebsiteFonts = () => {
             showIcon
             closable
           >
-            {error.message}
+            {humanizeError(error)}
           </Message>,
           { duration: 3000 }
         );
       },
-    });
+    }
+  );
 
   const {
     control,
@@ -128,9 +132,7 @@ export const WebsiteFonts = () => {
           {t('websiteSettings.backToOverview')}
         </Button>
       </Link>
-
       <h3>{t('websiteSettings.fonts.title')}</h3>
-
       <Typography
         variant="body2"
         color={'gray'}
@@ -148,18 +150,21 @@ export const WebsiteFonts = () => {
           }}
         />
       </Typography>
-
       <Stack spacing={2}>
         {fields.map((field, index) => (
           <Stack
             key={field.id}
             direction="row"
             spacing={1}
-            alignItems="center"
+            sx={{
+              alignItems: 'center',
+            }}
           >
             <Box
-              flex={1}
-              sx={{ maxWidth: 300 }}
+              sx={{
+                flex: 1,
+                maxWidth: 300,
+              }}
             >
               <Controller
                 name={`fonts.${index}`}
@@ -174,17 +179,19 @@ export const WebsiteFonts = () => {
               />
             </Box>
 
-            <IconButton
-              onClick={() => remove(index)}
-              size="small"
-              color="error"
-            >
-              <MdDelete />
-            </IconButton>
+            <IconButtonTooltip caption={t('delete')}>
+              <IconButton
+                onClick={() => remove(index)}
+                size="small"
+                color="error"
+                aria-label={t('delete')}
+              >
+                <MdDelete />
+              </IconButton>
+            </IconButtonTooltip>
           </Stack>
         ))}
       </Stack>
-
       <Box>
         <Button
           variant="text"
@@ -195,7 +202,6 @@ export const WebsiteFonts = () => {
           {t('websiteSettings.fonts.addFont')}
         </Button>
       </Box>
-
       <Box>
         <Button
           type="submit"

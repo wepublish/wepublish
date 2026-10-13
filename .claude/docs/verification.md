@@ -53,7 +53,7 @@ Nx project names are `<domain>-<layer>`. List them with `npx nx show projects`.
 ```bash
 npm run lint            # all projects
 npm run test            # all projects, serial — many minutes
-npm run test-backend    # Jest/NestJS projects
+npm run test-backend    # NestJS/backend projects
 npm run test-website    # *website* projects
 ```
 
@@ -68,7 +68,7 @@ still a broken change.
 | Workflow | Command | Covers |
 | --- | --- | --- |
 | `lint.yml` | `npm run lint` | ESLint, all projects |
-| `test.yml` | `npm run test-backend -- --configuration=ci` | Jest/NestJS + coverage, with Postgres 17 |
+| `test.yml` | `npm run test-backend -- --configuration=ci` | Vitest backend/NestJS + coverage, with Postgres 17 |
 | `website-tests.yml` | `npm run test-website -- --configuration=ci` | Vitest website projects + coverage |
 | `website-typecheck.yml` | `bash ./tools/typecheck-websites.sh` | `tsc --noEmit` per app |
 
@@ -94,4 +94,6 @@ patch: a test you weakened to make it green is a regression you shipped.
 
 Do **not** run Prettier manually. A Husky `pre-commit` hook runs
 `pretty-quick --staged` over `{apps,libs}/**/*.{js,ts,tsx,json}`. Formatting-only
-diffs from a manual run create noise in the review.
+diffs from a manual run create noise in the review. It skips what
+`.prettierignore` lists, which must include all generated code (see
+[graphql-prisma.md](graphql-prisma.md)).

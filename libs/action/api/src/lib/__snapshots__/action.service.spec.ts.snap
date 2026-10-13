@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ActionService should get actions 1`] = `
+exports[`ActionService > should get actions 1`] = `
 [
   {
     "actionType": "eventCreated",

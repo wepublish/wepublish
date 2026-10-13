@@ -1,23 +1,26 @@
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 import { PaywallMemberPlansDataloader } from './paywall-member-plans.dataloader';
+import type { Mock } from 'vitest';
 
 describe('PaywallMemberPlansDataloader', () => {
   let dataloader: PaywallMemberPlansDataloader;
   let prismaMock: {
     paywallMemberplan: {
-      findMany: jest.Mock;
+      findMany: Mock;
     };
   };
 
   beforeEach(async () => {
     prismaMock = {
       paywallMemberplan: {
-        findMany: jest.fn(),
+        findMany: vi.fn(),
       },
     };
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [KvTtlCacheModule],
       providers: [
         PaywallMemberPlansDataloader,
         {

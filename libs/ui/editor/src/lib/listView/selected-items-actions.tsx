@@ -14,7 +14,8 @@ const SelectedItemsActionsStyled = styled.div`
   align-content: center;
   gap: 20px;
   padding: 8px 16px;
-  background: #fff4c2;
+  border-radius: var(--rs-radius-md);
+  background: rgb(from var(--rs-state-warning) r g b / 20%);
   visibility: hidden;
   margin-bottom: -20px;
 

@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client/react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
@@ -18,7 +19,7 @@ import {
   FullMemberPlanFragment,
   FullSubscriptionFragment,
   ProductType,
-  useSubscriptionsQuery,
+  SubscriptionsDocument,
 } from '@wepublish/website/api';
 import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
@@ -160,7 +161,7 @@ export const ReflektSubscribeBlock = (props: BuilderSubscribeBlockProps) => {
   const router = useRouter();
   const forceUpgrade = useContext(ForceUpgradeContext);
 
-  const { data } = useSubscriptionsQuery({
+  const { data } = useQuery(SubscriptionsDocument, {
     fetchPolicy: 'cache-only',
     skip: !hasUser,
   });

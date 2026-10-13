@@ -1,3 +1,8 @@
+import {
+  CONTENT_CACHE_TTL_SECONDS,
+  KvTtlCacheService,
+  contentCacheNamespace,
+} from '@wepublish/kv-ttl-cache/api';
 import { Injectable, Scope } from '@nestjs/common';
 import { PageRevision, PrismaClient } from '@prisma/client';
 import { Primeable } from '@wepublish/utils/api';
@@ -14,45 +19,57 @@ type RevisionMap = Partial<{
 })
 export class PageRevisionDataloaderService implements Primeable<RevisionMap> {
   private dataloader = new DataLoader<string, RevisionMap>(
-    async (pageIds: readonly string[]) => {
-      const pages = await this.prisma.page.findMany({
-        where: {
-          id: {
-            in: pageIds as string[],
-          },
-        },
-        include: {
-          PagesRevisionPublished: {
-            include: {
-              pageRevision: true,
-            },
-          },
-          PagesRevisionDraft: {
-            include: {
-              pageRevision: true,
-            },
-          },
-          PagesRevisionPending: {
-            include: {
-              pageRevision: true,
-            },
-          },
-        },
-      });
-
-      return pageIds.map((pageIds): RevisionMap => {
-        const rev = pages.find(rev => rev.id === pageIds);
-        const published = rev?.PagesRevisionPublished?.pageRevision;
-        const draft = rev?.PagesRevisionDraft?.pageRevision;
-        const pending = rev?.PagesRevisionPending?.pageRevision;
-
-        return { draft, pending, published };
-      });
-    },
+    async (pageIds: readonly string[]) =>
+      (await this.kv.getOrLoadManyNs(
+        contentCacheNamespace('pages'),
+        pageIds as string[],
+        missing => this.loadRevisions(missing),
+        CONTENT_CACHE_TTL_SECONDS,
+        'revisions:'
+      )) as RevisionMap[],
     { name: 'PageRevisionDataloader' }
   );
 
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
+
+  private async loadRevisions(pageIds: string[]): Promise<RevisionMap[]> {
+    const pages = await this.prisma.page.findMany({
+      where: {
+        id: {
+          in: pageIds,
+        },
+      },
+      include: {
+        PagesRevisionPublished: {
+          include: {
+            pageRevision: true,
+          },
+        },
+        PagesRevisionDraft: {
+          include: {
+            pageRevision: true,
+          },
+        },
+        PagesRevisionPending: {
+          include: {
+            pageRevision: true,
+          },
+        },
+      },
+    });
+
+    return pageIds.map((pageIds): RevisionMap => {
+      const rev = pages.find(rev => rev.id === pageIds);
+      const published = rev?.PagesRevisionPublished?.pageRevision;
+      const draft = rev?.PagesRevisionDraft?.pageRevision;
+      const pending = rev?.PagesRevisionPending?.pageRevision;
+
+      return { draft, pending, published };
+    });
+  }
 
   public prime(
     ...parameters: Parameters<DataLoader<string, RevisionMap>['prime']>

@@ -69,7 +69,6 @@ export function AuthorListItem({
           <Image image={image} />
         )}
       </AuthorListItemImageWrapper>
-
       <ReflektAuthorListItemContent>
         <Typography variant="authorListItemName">{name}</Typography>
 
