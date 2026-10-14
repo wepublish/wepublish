@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
 import { useMutation, useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
 import {
   BlockTemplateDocument,
   CreateBlockTemplateDocument,
@@ -19,10 +19,10 @@ import {
   BlockValue,
   ConfirmActionModal,
   createCheckedPermissionComponent,
-  EditorTemplate,
-  mapBlockValueToBlockInput,
   EditorHeader,
   EditorHeaderButton,
+  EditorTemplate,
+  mapBlockValueToBlockInput,
   PermissionControl,
   StateColor,
   TypographicTextArea,

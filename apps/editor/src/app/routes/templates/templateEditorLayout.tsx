@@ -3,8 +3,9 @@ import {
   BlockList,
   BlockMap,
   BlockValue,
+  EditorHeader,
+  EditorHeaderButton,
   EditorTemplate,
-  NavigationBar,
   PermissionControl,
   StateColor,
   TypographicTextArea,
@@ -18,29 +19,15 @@ import {
   MdSave,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Badge, Drawer, IconButton, Loader, Tag as RTag } from 'rsuite';
-
-const FieldSet = styled('fieldset')``;
-
-const Legend = styled.legend`
-  width: auto;
-  margin: 0px auto;
-`;
-
-const Tag = styled(RTag, {
-  shouldForwardProp: prop => prop !== 'stateColor',
-})<{ stateColor: string }>`
-  background-color: ${({ stateColor }) => stateColor};
-`;
-
-const RightChildren = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 12px;
-`;
+import { Badge, Drawer, IconButton, Loader } from 'rsuite';
 
 const NameInput = styled(TypographicTextArea)``;
+
+const TemplateContent = styled.div`
+  display: grid;
+  gap: 24px;
+  width: 100%;
+`;
 
 type TemplateEditorLayoutProps = {
   /** Translation namespace with the `edit.*` keys. */
@@ -64,7 +51,7 @@ type TemplateEditorLayoutProps = {
 };
 
 /**
- * Navigation bar, block list and metadata drawer shared by the article and
+ * Editor header, block list and metadata drawer shared by the article and
  * page template editors.
  */
 export function TemplateEditorLayout({
@@ -95,79 +82,72 @@ export function TemplateEditorLayout({
 
   return (
     <>
-      <FieldSet>
-        <Legend>
-          <Tag stateColor={stateColor}>{tagTitle}</Tag>
-        </Legend>
-        <EditorTemplate
-          navigationChildren={
-            <NavigationBar
-              leftChildren={
-                <Link to={backPath}>
-                  <IconButton
-                    size="lg"
-                    icon={<MdKeyboardBackspace />}
-                    onClick={e => {
-                      if (!unsavedChangesDialog()) e.preventDefault();
-                    }}
-                  >
-                    {t(`${i18nPrefix}.edit.backToList`)}
-                  </IconButton>
-                </Link>
-              }
-              centerChildren={
-                <NameInput
-                  value={name}
-                  disabled={disabled}
-                  variant="title"
-                  align="center"
-                  placeholder={t(`${i18nPrefix}.edit.name`)}
-                  onChange={e => onNameChange(e?.target?.value)}
+      <EditorTemplate
+        navigationChildren={
+          <EditorHeader
+            state={stateColor}
+            stateLabel={tagTitle}
+            back={
+              <Link to={backPath}>
+                <IconButton
+                  circle
+                  appearance="subtle"
+                  icon={<MdKeyboardBackspace />}
+                  title={t(`${i18nPrefix}.edit.backToList`)}
+                  aria-label={t(`${i18nPrefix}.edit.backToList`)}
+                  onClick={e => {
+                    if (!unsavedChangesDialog()) e.preventDefault();
+                  }}
                 />
-              }
-              rightChildren={
-                <RightChildren>
-                  <IconButton
-                    size="lg"
-                    icon={<MdIntegrationInstructions />}
+              </Link>
+            }
+            secondaryActions={
+              <EditorHeaderButton
+                appearance="subtle"
+                icon={<MdIntegrationInstructions />}
+                label={t(`${i18nPrefix}.edit.metadata`)}
+                disabled={disabled}
+                onClick={() => setMetaDrawerOpen(true)}
+              />
+            }
+            primaryActions={
+              isNew ?
+                <PermissionControl qualifyingPermissions={[permissions.create]}>
+                  <EditorHeaderButton
+                    appearance="primary"
+                    icon={<MdSave />}
+                    label={t('create')}
+                    collapse={false}
                     disabled={disabled}
-                    onClick={() => setMetaDrawerOpen(true)}
-                  >
-                    {t(`${i18nPrefix}.edit.metadata`)}
-                  </IconButton>
-                  {isNew ?
-                    <PermissionControl
-                      qualifyingPermissions={[permissions.create]}
-                    >
-                      <IconButton
-                        size="lg"
-                        icon={<MdSave />}
-                        disabled={disabled}
-                        onClick={() => onSave()}
-                      >
-                        {t('create')}
-                      </IconButton>
-                    </PermissionControl>
-                  : <PermissionControl
-                      qualifyingPermissions={[permissions.update]}
-                    >
-                      <Badge className={hasChanged ? 'unsaved' : 'saved'}>
-                        <IconButton
-                          size="lg"
-                          icon={<MdSave />}
-                          disabled={disabled}
-                          onClick={() => onSave()}
-                        >
-                          {t('save')}
-                        </IconButton>
-                      </Badge>
-                    </PermissionControl>
-                  }
-                </RightChildren>
-              }
-            />
-          }
-        >
+                    onClick={() => onSave()}
+                  />
+                </PermissionControl>
+              : <PermissionControl qualifyingPermissions={[permissions.update]}>
+                  <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+                    <EditorHeaderButton
+                      appearance="primary"
+                      icon={<MdSave />}
+                      label={t('save')}
+                      collapse={false}
+                      disabled={disabled}
+                      onClick={() => onSave()}
+                    />
+                  </Badge>
+                </PermissionControl>
+            }
+          />
+        }
+      >
+        <TemplateContent>
+          <NameInput
+            value={name}
+            disabled={disabled}
+            variant="title"
+            align="center"
+            placeholder={t(`${i18nPrefix}.edit.name`)}
+            onChange={e => onNameChange(e?.target?.value)}
+          />
+
           <BlockList
             itemId={itemId}
             blockMap={BlockMap}
@@ -175,8 +155,8 @@ export function TemplateEditorLayout({
             disabled={disabled}
             onChange={onBlocksChange}
           />
-        </EditorTemplate>
-      </FieldSet>
+        </TemplateContent>
+      </EditorTemplate>
 
       {loadingMessage && (
         <Loader

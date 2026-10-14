@@ -7,6 +7,7 @@ import {
   IconButton,
   IconButtonCell,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -16,7 +17,7 @@ import {
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdContentCopy, MdDelete, MdInfo } from 'react-icons/md';
+import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   IconButton as RIconButton,
@@ -122,9 +123,7 @@ export function TemplateList<Data>({
       <ListViewContainer>
         <ListViewHeader>
           <h2>{t(`${i18nPrefix}.list.title`)}</h2>
-          <IconButtonTooltip caption={t(`${i18nPrefix}.list.info`)}>
-            <MdInfo />
-          </IconButtonTooltip>
+          <InfoTooltip text={t(`${i18nPrefix}.list.info`)} />
         </ListViewHeader>
 
         <PermissionControl qualifyingPermissions={[permissions.create]}>

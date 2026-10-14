@@ -115,7 +115,11 @@ describe('TemplateEditorLayout', () => {
       'data-permissions',
       'UPDATE'
     );
-    expect(screen.getByText('thingTemplates.edit.saved')).toBeInTheDocument();
+    expect(
+      screen
+        .getByRole('group', { name: 'thingTemplates.edit.saved' })
+        .closest('header')
+    ).toBeInTheDocument();
 
     fireEvent.click(save);
 
@@ -130,13 +134,21 @@ describe('TemplateEditorLayout', () => {
         .getByRole('button', { name: /^create$/i })
         .closest('[data-permissions]')
     ).toHaveAttribute('data-permissions', 'CREATE');
-    expect(screen.getByText('thingTemplates.edit.new')).toBeInTheDocument();
+    expect(
+      screen
+        .getByRole('group', { name: 'thingTemplates.edit.new' })
+        .closest('header')
+    ).toBeInTheDocument();
   });
 
   it('should show unsaved changes', () => {
     renderLayout({ hasChanged: true });
 
-    expect(screen.getByText('thingTemplates.edit.editing')).toBeInTheDocument();
+    expect(
+      screen
+        .getByRole('group', { name: 'thingTemplates.edit.editing' })
+        .closest('header')
+    ).toBeInTheDocument();
   });
 
   it('should disable editing', () => {
@@ -168,12 +180,12 @@ describe('TemplateEditorLayout', () => {
     unsavedChangesDialog.mockReturnValue(false);
     renderLayout({ hasChanged: true });
 
-    const back = screen.getByRole('link', {
-      name: /thingTemplates.edit.backToList/,
+    const back = screen.getByRole('button', {
+      name: 'thingTemplates.edit.backToList',
     });
-    expect(back).toHaveAttribute('href', '/things/templates');
+    expect(back.closest('a')).toHaveAttribute('href', '/things/templates');
 
-    fireEvent.click(screen.getByRole('button', { name: /backToList/ }));
+    fireEvent.click(back);
 
     expect(unsavedChangesDialog).toHaveBeenCalled();
   });
