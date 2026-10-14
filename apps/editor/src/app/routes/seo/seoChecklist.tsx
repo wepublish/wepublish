@@ -395,7 +395,7 @@ const ChecklistItem = ({
             checked={!!completed}
             disabled={!data || !canUpdate || updating}
             onChange={event => onToggle(event.target.checked)}
-            inputProps={{ 'aria-label': t(`${key}.title`) }}
+            slotProps={{ input: { 'aria-label': t(`${key}.title`) } }}
           />
         }
       </ItemMarker>
@@ -572,6 +572,7 @@ function SeoChecklist() {
           { query: SeoChecklistDocument },
           previous =>
             previous && {
+              ...previous,
               seoChecklist: {
                 ...previous.seoChecklist,
                 completedItems: result.updateSeoChecklistItem,
@@ -621,7 +622,7 @@ function SeoChecklist() {
           {checklist && (
             <Typography
               variant="body2"
-              marginTop={1}
+              sx={{ mt: 1 }}
             >
               {t('seoChecklist.websiteUrl')}:{' '}
               <code>{checklist.websiteUrl}</code>
