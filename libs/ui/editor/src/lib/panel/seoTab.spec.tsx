@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { SeoContentType } from './seoPreviewData';
 import { SeoTab } from './seoTab';
 
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
-  usePeerProfileQuery: () => ({ data: undefined }),
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: vi.fn(() => ({ data: undefined })),
 }));
 
 vi.mock('./seoPreviews', () => ({

@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client/react';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
@@ -25,8 +26,7 @@ import {
   SeoChecklistItemFragment,
   SeoChecklistQuery,
   SeoCheckStatus,
-  useSeoChecklistQuery,
-  useUpdateSeoChecklistItemMutation,
+  UpdateSeoChecklistItemDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -554,14 +554,15 @@ function SeoChecklist() {
   const { t } = useTranslation();
   const canUpdate = !!useAuthorisation('CAN_UPDATE_SETTINGS');
 
-  const { data, loading, error, refetch } = useSeoChecklistQuery({
+  const { data, loading, error, refetch } = useQuery(SeoChecklistDocument, {
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
 
   const [updatingId, setUpdatingId] = useState<string>();
-  const [updateItem, { loading: updating, error: updateError }] =
-    useUpdateSeoChecklistItemMutation({
+  const [updateItem, { loading: updating, error: updateError }] = useMutation(
+    UpdateSeoChecklistItemDocument,
+    {
       update: (cache, { data: result }) => {
         if (!result) {
           return;
@@ -578,7 +579,8 @@ function SeoChecklist() {
             }
         );
       },
-    });
+    }
+  );
 
   const checklist = data?.seoChecklist;
   const initialLoading = !checklist && loading;

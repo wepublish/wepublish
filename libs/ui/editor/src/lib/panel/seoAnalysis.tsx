@@ -56,9 +56,7 @@ export function SeoAnalysis({ stats }: SeoAnalysisProps) {
           <StatTitle>
             {t('seoAnalysis.stats.imagesWithoutDescription')}
           </StatTitle>
-          <StatVal>
-            {stats.imagesWithoutDescription}/{stats.imageCount}
-          </StatVal>
+          <StatVal>{stats.imagesWithoutDescription}</StatVal>
         </div>
       </Stats>
     </Panel>

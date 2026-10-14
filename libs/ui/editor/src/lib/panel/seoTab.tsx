@@ -1,5 +1,6 @@
+import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { usePeerProfileQuery } from '@wepublish/editor/api';
+import { PeerProfileDocument } from '@wepublish/editor/api';
 
 import { SeoBlockContext } from '../blocks/blocksToPlaintext';
 import { SeoAnalysis } from './seoAnalysis';
@@ -23,7 +24,7 @@ export interface SeoTabProps {
 }
 
 export function SeoTab({ type, metadata, seoContext }: SeoTabProps) {
-  const { data: peerProfile } = usePeerProfileQuery();
+  const { data: peerProfile } = useQuery(PeerProfileDocument);
   const profile = peerProfile?.peerProfile;
 
   const previewData = getSeoPreviewData(

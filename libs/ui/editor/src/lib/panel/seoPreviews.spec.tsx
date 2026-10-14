@@ -1,5 +1,7 @@
+import { createTheme, PaletteMode, ThemeProvider } from '@mui/material';
 import { render, screen, within } from '@testing-library/react';
 import { FullImageFragment } from '@wepublish/editor/api';
+import { ReactElement } from 'react';
 
 import { SeoPreviewData } from './seoPreviewData';
 import { GooglePreview, SocialPreviews } from './seoPreviews';
@@ -28,6 +30,13 @@ const data: SeoPreviewData = {
   domain: 'example.com',
   ignoredFields: [],
 };
+
+const renderInMode = (ui: ReactElement, mode: PaletteMode) =>
+  render(
+    <ThemeProvider theme={createTheme({ palette: { mode } })}>
+      {ui}
+    </ThemeProvider>
+  );
 
 describe('GooglePreview', () => {
   test('renders google with the document title and description', () => {
@@ -58,6 +67,22 @@ describe('GooglePreview', () => {
 
     expect(screen.getByText('seoPreviews.googleTitleTooLong')).toBeTruthy();
     expect(screen.getByText('seoPreviews.pageIgnoresSeoFields')).toBeTruthy();
+  });
+
+  test('uses the google light colors in light mode', () => {
+    renderInMode(<GooglePreview data={data} />, 'light');
+
+    expect(
+      getComputedStyle(screen.getByTestId('seo-preview-google')).backgroundColor
+    ).toBe('#fff');
+  });
+
+  test('uses the google dark colors in dark mode', () => {
+    renderInMode(<GooglePreview data={data} />, 'dark');
+
+    expect(
+      getComputedStyle(screen.getByTestId('seo-preview-google')).backgroundColor
+    ).toBe('#1f1f1f');
   });
 });
 
@@ -103,5 +128,21 @@ describe('SocialPreviews', () => {
     render(<SocialPreviews data={{ ...data, image: undefined }} />);
 
     expect(screen.getAllByText('No image').length).toBe(5);
+  });
+
+  test('renders the light social cards in light mode', () => {
+    renderInMode(<SocialPreviews data={data} />, 'light');
+
+    expect(screen.getByTestId('seo-preview-facebook').closest('.dark')).toBe(
+      null
+    );
+  });
+
+  test('renders the dark social cards in dark mode', () => {
+    renderInMode(<SocialPreviews data={data} />, 'dark');
+
+    expect(
+      screen.getByTestId('seo-preview-facebook').closest('.dark')
+    ).not.toBe(null);
   });
 });

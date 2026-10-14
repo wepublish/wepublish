@@ -1,6 +1,7 @@
 import 'react-og-preview/styles.css';
 
 import styled from '@emotion/styled';
+import { useTheme } from '@mui/material';
 import { FullImageFragment } from '@wepublish/editor/api';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -55,13 +56,45 @@ const Clamp = styled.div<{ lines: number }>`
   overflow-wrap: anywhere;
 `;
 
-const Google = styled.div`
+const googleColors = {
+  light: {
+    background: '#fff',
+    border: '#dadce0',
+    site: '#202124',
+    url: '#4d5156',
+    title: '#1a0dab',
+    description: '#4d5156',
+    favicon: '#f1f3f4',
+  },
+  dark: {
+    background: '#1f1f1f',
+    border: '#3c4043',
+    site: '#dadce0',
+    url: '#bdc1c6',
+    title: '#8ab4f8',
+    description: '#bdc1c6',
+    favicon: '#303134',
+  },
+};
+
+const Google = styled.div<{ dark: boolean }>`
+  ${({ dark }) => {
+    const colors = googleColors[dark ? 'dark' : 'light'];
+
+    return `
+      --google-site: ${colors.site};
+      --google-url: ${colors.url};
+      --google-title: ${colors.title};
+      --google-description: ${colors.description};
+      --google-favicon: ${colors.favicon};
+      border: 1px solid ${colors.border};
+      background: ${colors.background};
+    `;
+  }}
   font-family: Arial, sans-serif;
   max-width: 600px;
   padding: 12px 16px;
-  border: 1px solid #dadce0;
   border-radius: 8px;
-  background: #fff;
 `;
 
 const GoogleSite = styled.div`
@@ -70,7 +103,7 @@ const GoogleSite = styled.div`
   gap: 12px;
   align-items: center;
   font-size: 14px;
-  color: #202124;
+  color: var(--google-site);
 `;
 
 const GoogleFavicon = styled.div`
@@ -78,7 +111,7 @@ const GoogleFavicon = styled.div`
   height: 28px;
   border-radius: 50%;
   overflow: hidden;
-  background: #f1f3f4;
+  background: var(--google-favicon);
 `;
 
 const GoogleFaviconImage = styled.img`
@@ -90,14 +123,14 @@ const GoogleFaviconImage = styled.img`
 
 const GoogleUrl = styled.div`
   font-size: 12px;
-  color: #4d5156;
+  color: var(--google-url);
 `;
 
 const GoogleTitle = styled.div`
   margin-top: 8px;
   font-size: 20px;
   line-height: 1.3;
-  color: #1a0dab;
+  color: var(--google-title);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -106,7 +139,7 @@ const GoogleTitle = styled.div`
 const GoogleDescription = styled(Clamp)`
   font-size: 14px;
   line-height: 1.58;
-  color: #4d5156;
+  color: var(--google-description);
 `;
 
 const PreviewSection = ({
@@ -135,6 +168,7 @@ export interface GooglePreviewProps {
 
 export function GooglePreview({ data, siteName, favicon }: GooglePreviewProps) {
   const { t } = useTranslation();
+  const dark = useTheme().palette.mode === 'dark';
 
   const domain = data.domain ?? '';
   const path = data.url?.replace(/^https?:\/\/[^/]+/, '').replace(/\//g, ' › ');
@@ -159,7 +193,10 @@ export function GooglePreview({ data, siteName, favicon }: GooglePreviewProps) {
           : undefined
         }
       >
-        <Google data-testid="seo-preview-google">
+        <Google
+          dark={dark}
+          data-testid="seo-preview-google"
+        >
           <GoogleSite>
             <GoogleFavicon>
               {faviconSrc && (
@@ -193,6 +230,8 @@ export interface SocialPreviewsProps {
 
 export function SocialPreviews({ data }: SocialPreviewsProps) {
   const { t } = useTranslation();
+  // react-og-preview switches to its dark card styles under a `.dark` parent
+  const dark = useTheme().palette.mode === 'dark';
 
   const social = {
     url: data.url ?? '',
@@ -203,7 +242,7 @@ export function SocialPreviews({ data }: SocialPreviewsProps) {
   };
 
   return (
-    <Previews>
+    <Previews className={dark ? 'dark' : undefined}>
       <Message
         showIcon
         type="info"
@@ -259,10 +298,7 @@ export function SocialPreviews({ data }: SocialPreviewsProps) {
         </SocialCard>
       </PreviewSection>
 
-      <PreviewSection
-        title={t('seoPreviews.xLarge')}
-        note={t('seoPreviews.xLargeUsed')}
-      >
+      <PreviewSection title={t('seoPreviews.xLarge')}>
         <SocialCard
           maxWidth={506}
           data-testid="seo-preview-x-large"
@@ -275,10 +311,7 @@ export function SocialPreviews({ data }: SocialPreviewsProps) {
         </SocialCard>
       </PreviewSection>
 
-      <PreviewSection
-        title={t('seoPreviews.xSummary')}
-        note={t('seoPreviews.xSummaryUnused')}
-      >
+      <PreviewSection title={t('seoPreviews.xSummary')}>
         <SocialCard
           maxWidth={506}
           data-testid="seo-preview-x-summary"

@@ -25,10 +25,10 @@ const { queryResult, updateItem, mutationResult, auth } = vi.hoisted(() => ({
   auth: { canUpdate: true },
 }));
 
-vi.mock('@wepublish/editor/api', async importOriginal => ({
-  ...(await importOriginal<typeof import('@wepublish/editor/api')>()),
-  useSeoChecklistQuery: () => queryResult,
-  useUpdateSeoChecklistItemMutation: () => [updateItem, mutationResult],
+vi.mock('@apollo/client/react', async importOriginal => ({
+  ...(await importOriginal<typeof import('@apollo/client/react')>()),
+  useQuery: vi.fn(() => queryResult),
+  useMutation: vi.fn(() => [updateItem, mutationResult]),
 }));
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
