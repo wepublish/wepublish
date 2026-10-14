@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { PeerProfileDocument } from '@wepublish/editor/api';
 
-import { SeoBlockContext } from '../blocks/blocksToPlaintext';
+import { SeoBlockContext } from './seoBlockContext';
 import { SeoAnalysis } from './seoAnalysis';
 import { SeoDocumentChecklist } from './seoDocumentChecklist';
 import {

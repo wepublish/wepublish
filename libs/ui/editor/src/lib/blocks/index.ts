@@ -23,4 +23,3 @@ export * from './teaserGridBlock';
 export * from './teaserGridFlexBlock';
 export * from './titleBlock';
 export * from './types';
-export * from './blocksToPlaintext';

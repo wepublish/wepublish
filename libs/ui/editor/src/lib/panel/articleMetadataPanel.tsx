@@ -48,11 +48,12 @@ import {
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { InfoTooltip } from '../atoms/infoTooltip';
 import TrackingPixels from '../atoms/tracking/tracking-pixels';
-import { MetaDataType, SeoBlockContext } from '../blocks';
+import { MetaDataType } from '../blocks';
 import { ArticleAuthor, ArticleAuthorList } from './articleAuthorList';
 import { AuthorCheckPicker } from './authorCheckPicker';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
+import { SeoBlockContext } from './seoBlockContext';
 import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
 import { SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';

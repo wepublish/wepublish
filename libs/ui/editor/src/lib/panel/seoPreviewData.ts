@@ -1,6 +1,6 @@
 import { FullImageFragment } from '@wepublish/editor/api';
 
-import { SeoBlockContext } from '../blocks/blocksToPlaintext';
+import { SeoBlockContext } from './seoBlockContext';
 
 export enum SeoContentType {
   Article = 'article',

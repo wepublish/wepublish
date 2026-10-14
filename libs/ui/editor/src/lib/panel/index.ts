@@ -28,6 +28,7 @@ export * from './selectCommentsPanel';
 export * from './selectEventsPanel';
 export * from './selectPollPanel';
 export * from './seoAnalysis';
+export * from './seoBlockContext';
 export * from './seoDocumentChecklist';
 export * from './seoPreviewData';
 export * from './seoPreviews';

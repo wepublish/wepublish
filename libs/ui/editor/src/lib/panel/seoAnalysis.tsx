@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useTranslation } from 'react-i18next';
 import { Form, Panel } from 'rsuite';
 
-import { SeoContentStats } from '../blocks/blocksToPlaintext';
+import { SeoContentStats } from './seoBlockContext';
 
 const Stats = styled.dl`
   display: grid;

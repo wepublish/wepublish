@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { MdCheck, MdInfoOutline, MdWarning } from 'react-icons/md';
 import { Form, Panel } from 'rsuite';
 
-import { SeoContentStats } from '../blocks/blocksToPlaintext';
+import { SeoContentStats } from './seoBlockContext';
 import { GOOGLE_DESCRIPTION_LIMIT, GOOGLE_TITLE_LIMIT } from './seoPreviews';
 
 const MIN_WORDS_FOR_HEADINGS = 300;

@@ -35,10 +35,11 @@ import {
   useAuthorisation,
 } from '../atoms';
 import { InfoTooltip } from '../atoms/infoTooltip';
-import { MetaDataType, SeoBlockContext } from '../blocks';
+import { MetaDataType } from '../blocks';
 import { generateID, isFunctionalUpdate } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
+import { SeoBlockContext } from './seoBlockContext';
 import { getSeoPreviewData, SeoContentType } from './seoPreviewData';
 import { SocialPreviews } from './seoPreviews';
 import { SeoTab } from './seoTab';

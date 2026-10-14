@@ -6,7 +6,7 @@ import {
   toPlaintext,
 } from '@wepublish/richtext';
 
-import { BlockValue } from './types';
+import { BlockValue } from '../blocks/types';
 
 export interface SeoContentStats {
   wordCount: number;

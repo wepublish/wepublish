@@ -1,7 +1,7 @@
 import { EditorBlockType, FullImageFragment } from '@wepublish/editor/api';
 
-import { getSeoBlockContext } from './blocksToPlaintext';
-import { BlockValue } from './types';
+import { BlockValue } from '../blocks/types';
+import { getSeoBlockContext } from './seoBlockContext';
 
 const paragraph = (text: string) => ({
   type: 'paragraph',
