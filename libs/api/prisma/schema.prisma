@@ -1624,6 +1624,11 @@ model BlockTemplate {
   @@map("block_templates")
 }
 
+enum NewsletterCampaignStatus {
+  active
+  archived
+}
+
 model NewsletterCampaign {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
@@ -1631,6 +1636,7 @@ model NewsletterCampaign {
 
   title    String
   document Json
+  status   NewsletterCampaignStatus @default(active)
 
   mailchimpCampaignId    String?
   mailchimpCampaignWebId Int?

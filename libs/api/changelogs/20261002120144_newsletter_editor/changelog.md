@@ -7,6 +7,7 @@ actionRequired: false
 What you can do:
 
 - Start a new issue from scratch, or duplicate an earlier one to keep its layout, and edit it block by block — the canvas shows the newsletter exactly as it will look in the inbox.
+- Archive issues you no longer need to keep the overview short. Nothing is deleted: **Show archived** brings them back into view, and they can be restored at any time.
 - Pick articles for teasers; headline, lead, link and image are always taken from the published article, so corrections reach the newsletter automatically.
 - Pick images straight from the media library. They are sent in a format every mail client can show, including Outlook.
 - Show blocks only to part of your audience (Mailchimp merge fields and groups).

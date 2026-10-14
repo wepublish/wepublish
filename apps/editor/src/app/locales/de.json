@@ -3909,11 +3909,6 @@
         "stored": "Im Dokument gespeichert",
         "value": "Wert"
       },
-      "delete": {
-        "body": "«{{title}}» wird gelöscht. Ein bereits erstellter Mailchimp-Entwurf bleibt erhalten.",
-        "delete": "Löschen",
-        "title": "Ausgabe löschen?"
-      },
       "editor": {
         "back": "Zurück zur Übersicht",
         "createdAt": "Kampagne erstellt um {{time}}.",
@@ -3934,6 +3929,10 @@
       },
       "list": {
         "actions": "Aktionen",
+        "archive": "Archivieren",
+        "unarchive": "Wiederherstellen",
+        "showArchived": "Archivierte anzeigen",
+        "archived": "Archiviert",
         "blocks": "Blöcke",
         "createNew": "Neue Ausgabe",
         "duplicate": "Duplizieren",

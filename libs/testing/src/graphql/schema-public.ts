@@ -2705,6 +2705,8 @@ export type Mutation = {
   applyMediumFeatures: Array<Scalars['String']['output']>;
   /** Approves a comment */
   approveComment: Comment;
+  /** Hides the campaign from the default list. Campaigns are never deleted. */
+  archiveNewsletterCampaign: NewsletterCampaign;
   /** Stop a running send job. Unsent recipients stay open and can be continued. */
   cancelMailSendJob: MailSendJobModel;
   /** Cancels a subscription. */
@@ -2863,7 +2865,6 @@ export type Mutation = {
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
   deleteNavigation: Navigation;
-  deleteNewsletterCampaign: Scalars['Boolean']['output'];
   /** Deletes an page. */
   deletePage: Scalars['String']['output'];
   /** Deletes an existing payment method. */
@@ -3006,6 +3007,7 @@ export type Mutation = {
   testSystemMail: Scalars['Boolean']['output'];
   /** Triggers a mailchimp sync in the background. */
   triggerMailchimpSync: Scalars['Boolean']['output'];
+  unarchiveNewsletterCampaign: NewsletterCampaign;
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article;
   /** Unpublishes all revisions of an page. */
@@ -3145,6 +3147,11 @@ export type MutationApplyMediumFeaturesArgs = {
 
 
 export type MutationApproveCommentArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationArchiveNewsletterCampaignArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -3795,11 +3802,6 @@ export type MutationDeleteNavigationArgs = {
 };
 
 
-export type MutationDeleteNewsletterCampaignArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type MutationDeletePageArgs = {
   id: Scalars['String']['input'];
 };
@@ -4148,6 +4150,11 @@ export type MutationTestSystemMailArgs = {
 
 
 export type MutationTriggerMailchimpSyncArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationUnarchiveNewsletterCampaignArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -4776,8 +4783,14 @@ export type NewsletterCampaign = {
   mailchimpCampaignWebId?: Maybe<Scalars['Int']['output']>;
   mailchimpEditUrl?: Maybe<Scalars['String']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
+  status: NewsletterCampaignStatus;
   title: Scalars['String']['output'];
 };
+
+export enum NewsletterCampaignStatus {
+  Active = 'active',
+  Archived = 'archived'
+}
 
 export type NewsletterInterestCategory = {
   __typename?: 'NewsletterInterestCategory';
@@ -6600,6 +6613,11 @@ export type QueryNewsletterCampaignPreviewArgs = {
 
 export type QueryNewsletterCampaignReportArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryNewsletterCampaignsArgs = {
+  includeArchived?: Scalars['Boolean']['input'];
 };
 
 

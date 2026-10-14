@@ -1,10 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  ArchiveNewsletterCampaignDocument,
   CreateNewsletterCampaignDocument,
-  DeleteNewsletterCampaignDocument,
   DuplicateNewsletterCampaignDocument,
   NewsletterCampaignsDocument,
+  NewsletterCampaignStatus,
   NewsletterCampaignSummaryFragment,
+  UnarchiveNewsletterCampaignDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -19,15 +21,21 @@ import {
 } from '@wepublish/ui/editor';
 import { FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdContentCopy, MdDelete, MdVisibility } from 'react-icons/md';
+import {
+  MdAdd,
+  MdArchive,
+  MdContentCopy,
+  MdUnarchive,
+  MdVisibility,
+} from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  Button,
+  Checkbox,
   IconButton as RIconButton,
   Input,
   Message,
-  Modal,
   Table as RTable,
+  Tag,
   toaster,
 } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
@@ -52,10 +60,11 @@ function NewsletterCampaignList() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
-  const [toDelete, setToDelete] = useState<NewsletterCampaignSummaryFragment>();
+  const [includeArchived, setIncludeArchived] = useState(false);
 
   const { data, loading, error, refetch } = useQuery(
-    NewsletterCampaignsDocument
+    NewsletterCampaignsDocument,
+    { variables: { includeArchived } }
   );
 
   useEffect(() => {
@@ -82,15 +91,14 @@ function NewsletterCampaignList() {
     }
   );
 
-  const [remove, { loading: deleting }] = useMutation(
-    DeleteNewsletterCampaignDocument,
-    {
-      onError: toastError,
-      onCompleted: () => {
-        setToDelete(undefined);
-        refetch();
-      },
-    }
+  const [archive, { loading: archiving }] = useMutation(
+    ArchiveNewsletterCampaignDocument,
+    { onError: toastError, onCompleted: () => refetch() }
+  );
+
+  const [unarchive, { loading: unarchiving }] = useMutation(
+    UnarchiveNewsletterCampaignDocument,
+    { onError: toastError, onCompleted: () => refetch() }
   );
 
   const submit = (event: FormEvent) => {
@@ -134,6 +142,13 @@ function NewsletterCampaignList() {
             </form>
           </ListViewActions>
         </PermissionControl>
+
+        <Checkbox
+          checked={includeArchived}
+          onChange={(_, checked) => setIncludeArchived(checked)}
+        >
+          {t('newsletter.list.showArchived')}
+        </Checkbox>
       </ListViewContainer>
 
       <TableWrapper>
@@ -149,7 +164,15 @@ function NewsletterCampaignList() {
             <HeaderCell>{t('newsletter.list.name')}</HeaderCell>
             <RCell>
               {(row: Row) => (
-                <Link to={`/newsletter/edit/${row.id}`}>{row.title}</Link>
+                <>
+                  <Link to={`/newsletter/edit/${row.id}`}>{row.title}</Link>
+                  {row.status === NewsletterCampaignStatus.Archived && (
+                    <>
+                      {' '}
+                      <Tag size="sm">{t('newsletter.list.archived')}</Tag>
+                    </>
+                  )}
+                </>
               )}
             </RCell>
           </Column>
@@ -223,17 +246,26 @@ function NewsletterCampaignList() {
                   <PermissionControl
                     qualifyingPermissions={['CAN_DELETE_NEWSLETTER_CAMPAIGN']}
                   >
-                    <IconButton
-                      icon={<MdDelete />}
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      color="red"
-                      title={t('newsletter.delete.delete')}
-                      onClick={() =>
-                        setToDelete(row as NewsletterCampaignSummaryFragment)
-                      }
-                    />
+                    {row.status === NewsletterCampaignStatus.Archived ?
+                      <IconButton
+                        icon={<MdUnarchive />}
+                        circle
+                        size="sm"
+                        appearance="ghost"
+                        title={t('newsletter.list.unarchive')}
+                        disabled={unarchiving}
+                        onClick={() => unarchive({ variables: { id: row.id } })}
+                      />
+                    : <IconButton
+                        icon={<MdArchive />}
+                        circle
+                        size="sm"
+                        appearance="ghost"
+                        title={t('newsletter.list.archive')}
+                        disabled={archiving}
+                        onClick={() => archive({ variables: { id: row.id } })}
+                      />
+                    }
                   </PermissionControl>
                 </>
               )}
@@ -241,36 +273,6 @@ function NewsletterCampaignList() {
           </Column>
         </Table>
       </TableWrapper>
-
-      <Modal
-        open={!!toDelete}
-        backdrop="static"
-        size="xs"
-        onClose={() => setToDelete(undefined)}
-      >
-        <Modal.Title>{t('newsletter.delete.title')}</Modal.Title>
-        <Modal.Body>
-          {t('newsletter.delete.body', { title: toDelete?.title })}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            color="red"
-            appearance="primary"
-            loading={deleting}
-            onClick={() =>
-              toDelete && remove({ variables: { id: toDelete.id } })
-            }
-          >
-            {t('newsletter.delete.delete')}
-          </Button>
-          <Button
-            appearance="subtle"
-            onClick={() => setToDelete(undefined)}
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 }

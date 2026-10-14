@@ -7,6 +7,7 @@ actionRequired: false
 Was Sie tun können:
 
 - Eine neue Ausgabe leer beginnen oder eine frühere duplizieren, um ihren Aufbau zu übernehmen, und Block für Block bearbeiten — die Arbeitsfläche zeigt den Newsletter genau so, wie er im Posteingang aussieht.
+- Nicht mehr benötigte Ausgaben archivieren, damit die Übersicht kurz bleibt. Gelöscht wird nichts: **Archivierte anzeigen** blendet sie wieder ein, und sie lassen sich jederzeit wiederherstellen.
 - Artikel für Teaser auswählen; Titel, Lead, Link und Bild kommen immer aus dem publizierten Artikel, Korrekturen gelangen also automatisch in den Newsletter.
 - Bilder direkt aus der Medienbibliothek wählen. Sie werden in einem Format verschickt, das jedes Mailprogramm anzeigen kann, auch Outlook.
 - Blöcke nur einem Teil des Publikums zeigen (Mailchimp-Merge-Felder und -Gruppen).

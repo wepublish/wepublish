@@ -3,7 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { NewsletterCampaign, Prisma, PrismaClient } from '@prisma/client';
+import {
+  NewsletterCampaign,
+  NewsletterCampaignStatus,
+  Prisma,
+  PrismaClient,
+} from '@prisma/client';
 import {
   describeRequiredTag,
   missingRequiredFooterTags,
@@ -55,9 +60,11 @@ export class NewsletterCampaignService {
     private mailchimp: NewsletterMailchimpService
   ) {}
 
-  async list() {
+  async list(includeArchived = false) {
     const [rows, editUrl] = await Promise.all([
       this.prisma.newsletterCampaign.findMany({
+        where:
+          includeArchived ? {} : { status: NewsletterCampaignStatus.active },
         orderBy: { modifiedAt: 'desc' },
         take: LIST_LIMIT,
       }),
@@ -137,9 +144,28 @@ export class NewsletterCampaignService {
     return toCampaign(row);
   }
 
-  async delete(id: string) {
-    await this.row(id);
-    await this.prisma.newsletterCampaign.delete({ where: { id } });
+  archive(id: string) {
+    return this.setStatus(id, NewsletterCampaignStatus.archived);
+  }
+
+  unarchive(id: string) {
+    return this.setStatus(id, NewsletterCampaignStatus.active);
+  }
+
+  /**
+   * Archiving is not an edit of the issue: `modifiedAt` is written back as it
+   * was, or `@updatedAt` would move every archived or restored issue to the
+   * top of the list.
+   */
+  private async setStatus(id: string, status: NewsletterCampaignStatus) {
+    const existing = await this.row(id);
+
+    const row = await this.prisma.newsletterCampaign.update({
+      where: { id },
+      data: { status, modifiedAt: existing.modifiedAt },
+    });
+
+    return toCampaign(row);
   }
 
   /**
