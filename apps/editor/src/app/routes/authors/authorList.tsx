@@ -224,7 +224,7 @@ function AuthorList() {
               {(rowData: FullAuthorFragment) => (
                 <PeerAvatar peer={rowData.peer}>
                   <Link to={`/authors/edit/${rowData.id}`}>
-                    {rowData.name || t('authors.overview.untitled')}
+                    {rowData.name || t('untitled')}
                   </Link>
                 </PeerAvatar>
               )}
@@ -252,7 +252,7 @@ function AuthorList() {
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('authors.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullAuthorFragment>) => (
                 <PermissionControl
@@ -260,6 +260,7 @@ function AuthorList() {
                 >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
+                      aria-label={t('delete')}
                       icon={<MdDelete />}
                       circle
                       size="sm"

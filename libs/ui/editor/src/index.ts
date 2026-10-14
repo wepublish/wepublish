@@ -6,6 +6,7 @@ export * from './lib/atoms/peer/peerAvatar';
 export * from './lib/authContext';
 export * from './lib/blocks';
 export * from './lib/hooks';
+export * from './lib/humanizeError';
 export * from './lib/listView/column-configurator';
 export * from './lib/listView/list-columns';
 export * from './lib/listView/list-view';

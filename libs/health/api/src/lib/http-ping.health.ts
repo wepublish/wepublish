@@ -17,7 +17,9 @@ const DEFAULT_TIMEOUT_MS = 5000;
  */
 @Injectable()
 export class HttpPingHealthIndicator {
-  constructor(private readonly healthIndicatorService: HealthIndicatorService) {}
+  constructor(
+    private readonly healthIndicatorService: HealthIndicatorService
+  ) {}
 
   public pingCheck<Key extends string>(
     key: Key,

@@ -7,7 +7,7 @@ import {
   User,
   UserAddress,
 } from '@prisma/client';
-import { logger } from '@wepublish/utils/api';
+import { addErrorContext, describeError, logger } from '@wepublish/utils/api';
 import Bexio, { ContactsStatic, InvoicesStatic } from 'bexio';
 import { MappedReplacer } from 'mapped-replacer';
 import {
@@ -151,7 +151,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         } catch (error) {
           logger('bexioPaymentProvider').error(
             'Error to cancel invoice for payment (id: %s): %s',
-            error instanceof Error ? error.message : `${error}`
+            payment.id,
+            describeError(error)
           );
         }
       })
@@ -252,6 +253,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     isRenewal: boolean,
     successURL = ''
   ): Promise<Intent> {
+    let step = 'loading the invoice';
+
     try {
       const invoice = await this.prisma.invoice.findUnique({
         where: {
@@ -276,12 +279,16 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         throw new InvoiceNotFoundError(invoice);
       }
 
+      step = 'loading its settings';
       const bexio = await this.getBexioGateway();
+      step = 'searching the contact';
       const contact = await searchForContact(bexio, invoice.subscription.user);
+      step = 'saving the contact';
       const updatedContact = await this.createOrUpdateContact(
         contact,
         invoice.subscription.user
       );
+      step = 'creating the invoice';
       const newInvoice = await this.createInvoice(
         updatedContact,
         invoice,
@@ -295,13 +302,17 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         state: PaymentState.submitted,
       };
     } catch (e) {
+      const error = addErrorContext(
+        e,
+        `Bexio failed while ${step} for invoice ${invoiceId}`
+      );
       logger('bexioPaymentProvider').error(
         'Failed to create Bexio invoice for invoiceId %s (renewal: %s): %s',
         invoiceId,
         isRenewal,
-        e instanceof Error ? e.message : String(e)
+        error.message
       );
-      throw e;
+      throw error;
     }
   }
 

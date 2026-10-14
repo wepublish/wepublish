@@ -7,11 +7,14 @@ import { SyncProviderSettingsService } from './sync-provider-settings.service';
 
 const existing = {
   id: 'mailchimp-sync',
-  type: 'MAILCHIMP',
-  name: 'Mailchimp',
-  enabled: true,
   mailchimp_listId: 'list-1',
-} as SettingSyncProvider;
+  name: 'Mailchimp',
+  type: 'MAILCHIMP',
+  enabled: false,
+  createdAt: new Date('2026-01-01'),
+  modifiedAt: new Date('2026-01-01'),
+  lastLoadedAt: new Date('2026-01-01'),
+} as unknown as SettingSyncProvider;
 
 describe('SyncProviderSettingsService', () => {
   let service: SyncProviderSettingsService;
@@ -34,7 +37,6 @@ describe('SyncProviderSettingsService', () => {
     service = module.get<SyncProviderSettingsService>(
       SyncProviderSettingsService
     );
-
     vi.spyOn(prisma.settingSyncProvider, 'findUnique').mockResolvedValue(
       existing
     );
@@ -136,5 +138,32 @@ describe('SyncProviderSettingsService', () => {
       where: { syncProviderId: 'mailchimp-sync' },
       orderBy: { sort: 'asc' },
     });
+  });
+
+  test('sets up the sync provider when none is configured yet', async () => {
+    vi.spyOn(prisma.settingSyncProvider, 'count').mockResolvedValue(0);
+    const create = vi
+      .spyOn(prisma.settingSyncProvider, 'create')
+      .mockResolvedValue(existing);
+
+    await service.createSyncProviderSetting({
+      id: 'mailchimp-sync',
+      type: 'MAILCHIMP',
+    } as never);
+
+    expect(create).toHaveBeenCalled();
+  });
+
+  test('refuses a second sync provider', async () => {
+    vi.spyOn(prisma.settingSyncProvider, 'count').mockResolvedValue(1);
+    const create = vi.spyOn(prisma.settingSyncProvider, 'create');
+
+    await expect(
+      service.createSyncProviderSetting({
+        id: 'another-sync',
+        type: 'MAILCHIMP',
+      } as never)
+    ).rejects.toThrow('already set up');
+    expect(create).not.toHaveBeenCalled();
   });
 });

@@ -56,10 +56,7 @@ export function ExternalAppIframeView() {
         }}
       >
         <Typography color="error">
-          {error?.message ||
-            t('externalApps.notFound', {
-              defaultValue: 'External app not found',
-            })}
+          {error?.message || t('externalApps.notFound')}
         </Typography>
       </Box>
     );

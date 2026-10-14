@@ -126,4 +126,31 @@ describe('MailProviderSettingsService', () => {
     );
     expect(count).toHaveBeenCalledWith({ where: { deletedAt: null } });
   });
+
+  test('sets up the mail provider when none is configured yet', async () => {
+    vi.spyOn(prisma.settingMailProvider, 'count').mockResolvedValue(0);
+    const create = vi
+      .spyOn(prisma.settingMailProvider, 'create')
+      .mockResolvedValue(existing);
+
+    await service.createMailProviderSetting({
+      id: 'mail',
+      type: 'MAILGUN',
+    } as never);
+
+    expect(create).toHaveBeenCalled();
+  });
+
+  test('refuses a second mail provider', async () => {
+    const count = vi
+      .spyOn(prisma.settingMailProvider, 'count')
+      .mockResolvedValue(1);
+    const create = vi.spyOn(prisma.settingMailProvider, 'create');
+
+    await expect(
+      service.createMailProviderSetting({ id: 'other', type: 'SMTP' } as never)
+    ).rejects.toThrow('already set up');
+    expect(count).toHaveBeenCalledWith({ where: { deletedAt: null } });
+    expect(create).not.toHaveBeenCalled();
+  });
 });

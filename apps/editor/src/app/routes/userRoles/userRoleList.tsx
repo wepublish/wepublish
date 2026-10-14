@@ -143,7 +143,7 @@ function UserRoleList() {
             <RCell>
               {(rowData: RowDataType<FullUserRoleFragment>) => (
                 <Link to={`/userroles/edit/${rowData.id}`}>
-                  {rowData.name || t('userRoles.overview.untitled')}
+                  {rowData.name || t('untitled')}
                 </Link>
               )}
             </RCell>
@@ -161,7 +161,7 @@ function UserRoleList() {
             align="center"
             fixed="right"
           >
-            <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullUserRoleFragment>) => (
                 <PermissionControl
@@ -175,6 +175,7 @@ function UserRoleList() {
                       color="red"
                       size="sm"
                       icon={<MdDelete />}
+                      aria-label={t('delete')}
                       onClick={() => {
                         setConfirmationDialogOpen(true);
                         setCurrentUserRole(rowData as FullUserRoleFragment);

@@ -8,6 +8,7 @@ import { PeriodicJobModule } from './periodic-job/periodic-job.module';
 import { MemberContextModule } from './legacy/member-context.module';
 import { MailchimpSyncModule } from './mailchimp-sync/mailchimp-sync.module';
 import { MailchimpNewsletterModule } from './mailchimp-newsletter/mailchimp-newsletter.module';
+import { ActionMailModule } from './action-mail/action-mail.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MailchimpNewsletterModule } from './mailchimp-newsletter/mailchimp-news
     MemberContextModule,
     MailchimpSyncModule,
     MailchimpNewsletterModule,
+    ActionMailModule,
   ],
 })
 export class MembershipModule {}

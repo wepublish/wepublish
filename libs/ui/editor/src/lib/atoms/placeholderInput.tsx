@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
 import { IconButton } from 'rsuite';
+
+import { IconButtonTooltip } from './iconButtonTooltip';
 
 const PlaceholderInputWrapper = styled.div<{
   maxHeight: number;
@@ -11,7 +14,8 @@ const PlaceholderInputWrapper = styled.div<{
   width: 100%;
   height: 100%;
   place-items: center;
-  background-color: #f7f9fa;
+  border-radius: var(--rs-radius-md);
+  background-color: var(--rs-bg-well);
   max-height: ${({ maxHeight }) => `${maxHeight}px`};
   min-height: ${({ minHeight }) => `${minHeight}px`};
 `;
@@ -26,6 +30,7 @@ export interface PlaceholderInputProps {
    * Called when the add button is clicked.
    */
   onAddClick?: () => void;
+  addLabel?: string;
   disabled?: boolean;
   maxHeight?: number;
   minHeight?: number;
@@ -37,10 +42,13 @@ export interface PlaceholderInputProps {
 export function PlaceholderInput({
   children,
   onAddClick,
+  addLabel,
   disabled,
   maxHeight = 450,
   minHeight = 100,
 }: PlaceholderInputProps) {
+  const { t } = useTranslation();
+
   if (children) {
     return <>{children}</>;
   }
@@ -50,12 +58,15 @@ export function PlaceholderInput({
       maxHeight={maxHeight}
       minHeight={minHeight}
     >
-      <IconButton
-        disabled={disabled}
-        size="sm"
-        icon={<MdAddCircle />}
-        onClick={() => onAddClick && onAddClick()}
-      />
+      <IconButtonTooltip caption={addLabel ?? t('placeholderInput.add')}>
+        <IconButton
+          disabled={disabled}
+          size="sm"
+          aria-label={addLabel ?? t('placeholderInput.add')}
+          icon={<MdAddCircle />}
+          onClick={() => onAddClick && onAddClick()}
+        />
+      </IconButtonTooltip>
     </PlaceholderInputWrapper>
   );
 }

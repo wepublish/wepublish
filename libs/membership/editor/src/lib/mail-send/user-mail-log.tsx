@@ -33,8 +33,14 @@ export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
   }
 
   return (
-    <TableContainer>
-      <Table size="small">
+    // a long history scrolls inside the card; the column titles stay visible
+    <TableContainer
+      sx={{ overflowX: 'auto', overflowY: 'auto', maxHeight: 300 }}
+    >
+      <Table
+        size="small"
+        stickyHeader
+      >
         <TableHead>
           <TableRow>
             <TableCell>
@@ -57,7 +63,7 @@ export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
               <TableCell>{formatDateTime(log.sentDate)}</TableCell>
               <TableCell>{log.mailTemplate.name}</TableCell>
               <TableCell>{log.subject ?? '—'}</TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <MailLogStateTag state={log.state} />
               </TableCell>
             </TableRow>

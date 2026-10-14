@@ -31,6 +31,7 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '../atoms';
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { ImageSelectPanel } from './imageSelectPanel';
 
@@ -255,7 +256,10 @@ function PaymentMethodEditPanel({
               </RForm.Group>
 
               <RForm.Group controlId="paymentMethodSlug">
-                <RForm.Label>{t('paymentMethodList.slug')}</RForm.Label>
+                <RForm.Label>
+                  {t('paymentMethodList.slug')}{' '}
+                  <InfoTooltip text={t('paymentMethodList.slugInfo')} />
+                </RForm.Label>
 
                 <RForm.Control
                   name={t('paymentMethodList.slug')}
@@ -265,22 +269,25 @@ function PaymentMethodEditPanel({
               </RForm.Group>
 
               <RForm.Group controlId="paymentMethodIsActive">
-                <RForm.Label>{t('paymentMethodList.active')}</RForm.Label>
-
                 <Toggle
                   checked={active}
                   disabled={isDisabled}
                   onChange={value => setActive(value)}
+                  label={
+                    <>
+                      {t('paymentMethodList.active')}{' '}
+                      <InfoTooltip
+                        text={t('paymentMethodList.activeDescription')}
+                      />
+                    </>
+                  }
                 />
-
-                <RForm.Text>
-                  {t('paymentMethodList.activeDescription')}
-                </RForm.Text>
               </RForm.Group>
 
               <RForm.Group controlId="paymentMethodAdapter">
                 <RForm.Label>
-                  {toggleRequiredLabel(t('paymentMethodList.adapter'))}
+                  {toggleRequiredLabel(t('paymentMethodList.adapter'))}{' '}
+                  <InfoTooltip text={t('paymentMethodList.adapterInfo')} />
                 </RForm.Label>
 
                 <RForm.Control

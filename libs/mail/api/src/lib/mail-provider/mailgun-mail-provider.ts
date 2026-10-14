@@ -4,6 +4,7 @@ import FormData from 'form-data';
 import Mailgun from 'mailgun.js';
 import {
   MailLogStatus,
+  MailProviderError,
   MailProviderTemplate,
   MailProviderTemplateContent,
   SendMailProps,
@@ -66,7 +67,7 @@ export class MailgunMailProvider extends BaseMailProvider {
       !timestamp ||
       !token ||
       !signature ||
-      !this.verifyWebhookSignature({ timestamp, token, signature })
+      !(await this.verifyWebhookSignature({ timestamp, token, signature }))
     ) {
       throw new Error('Webhook signature failed');
     }
@@ -125,9 +126,21 @@ export class MailgunMailProvider extends BaseMailProvider {
           },
         },
         (err, res) => {
-          return err || res.statusCode !== 200 ?
-              reject(err || res)
-            : resolve({});
+          if (err) {
+            return reject(err);
+          }
+
+          if (res.statusCode !== 200) {
+            res.resume();
+
+            return reject(
+              new MailProviderError(
+                `Mailgun refused the mail to ${props.recipient}: ${res.statusCode} ${res.statusMessage}`
+              )
+            );
+          }
+
+          return resolve({});
         }
       );
     });

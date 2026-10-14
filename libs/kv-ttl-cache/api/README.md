@@ -54,7 +54,8 @@ immediately. `getNamespaceVersions(namespaces)` re-reads all stale ones with one
 `MGET` (the answer cache and the provider registry use it), so a cache hit needs
 no Dragonfly round trip.
 
-If a Dragonfly command fails or does not answer within 500 ms, the replica
+If a Dragonfly command fails or does not answer within 2 s (Dragonfly stalls
+commands for about a second while it writes a snapshot), the replica
 caches in memory only and does not ask Dragonfly again for 5 s (`Dragonfly
 unavailable, caching on this replica only …` is logged at most once per 5 s, not
 per command). Requests do not fail or queue. A reset that could not be written is
@@ -64,13 +65,17 @@ replica falls back to the older version. Commands sent while the connection is
 being set up wait for that one connect (at most 1 s, then the half-open client
 is destroyed; node-redis' own timeout does not cover the handshake). A command
 timeout never destroys a connection that is still being set up, and a client
-that ended up ready but closed reconnects.
+that ended up ready but closed reconnects. A connection is only dropped once a
+command has gone unanswered for 5 s, so a stall costs no reconnect but a dead
+socket is still replaced.
 Batches (`getOrLoadManyNs`) read Dragonfly with one `MGET`. At boot the module
 pings Dragonfly and logs an error if it is unreachable (wrong password, ACL user
 or CA), and warns in production when `REDIS_URL` is missing. `/health` (watched
 by UptimeRobot) reports `dragonfly` down while `REDIS_URL` is unset or Dragonfly
 refuses a probe write to `<REDIS_KEY_PREFIX>::health` (`dragonflyStatus()`:
-unreachable, wrong prefix, out of memory); the Kubernetes probes
+unreachable, wrong prefix, out of memory, no answer within 2 s). The probe is
+sent even during the 5 s pause after a failure, so `/health` shows whether
+Dragonfly answers now, not whether it failed once; the Kubernetes probes
 (`/health/readinessProbe` etc.) ignore it, so pods stay in service.
 
 ## Published content
@@ -216,7 +221,15 @@ for the one replica that got it, `false` for the others and `undefined` when
 it cannot tell (no `REDIS_URL`, Dragonfly unreachable or failing);
 `{ retryForMs }` asks again every 5 s while it cannot tell. The lock holds a
 token of that one `claim` call, so a retry whose earlier attempt landed although
-its answer got lost still wins. Claims are never released, they expire. `increment(name, ttlMs)` / `count(name)` /
+its answer got lost still wins. Claims are never released, they expire.
+`lock(name, ttlMs)` takes the same key but only while a job runs: it answers a
+`KvLock` (or `false` / `undefined` like `claim`) that renews the expiry every
+quarter of `ttlMs` (`GET`, then `PEXPIRE` while the token is still its own, or
+`SET NX` again when the key ran out and nobody took it), and `release()`
+deletes the key if it still holds its token. `lost` turns `true` once another
+replica holds it. Without Lua neither step is atomic, so a holder that misses
+renewals for a whole `ttlMs` can lose the lock. `isLocked(name)` tells every
+replica whether it is held (`undefined` without Dragonfly). `increment(name, ttlMs)` / `count(name)` /
 `forgetCount(name)` keep a counter in `<REDIS_KEY_PREFIX>::count:<name>`
 (`SET 0 NX PX`, `INCR`, then `PEXPIRE`: the key is born with its expiry, so a
 failed `PEXPIRE` cannot keep it forever, and the window restarts with every
@@ -234,6 +247,17 @@ periodic jobs and then the Mailchimp sync, the others skip both. Without
 configured but unreachable no replica runs (a double run could charge twice)
 and the executor logs an error; the next run catches up the missed days and a
 run left unfinished for over 12 h (`getOutstandingRuns`).
+Every run of the periodic jobs, the nightly one and a retry from the editor
+(`retryPeriodicJob`, `CanRetryPeriodicJob`, admin role only), holds
+`lock('periodic-job-run')` for 2 min, renewed every 30 s. A second run is
+skipped (nightly) or refused with a `ConflictException` (editor); the editor
+reads `PeriodicJob.running` from the lock and polls while it is held. An
+unfinished run whose lock is gone counts as cut off and is retried at once, and
+a run that lost its lock stops before its next night. A retry answers once it
+took over the failed row (`updateManyAndReturn` on its last `executionTime`),
+then runs that night and every night up to today in the background. Without
+`REDIS_URL` it falls back to the 12 h rule above; with Dragonfly configured
+but unreachable the retry is refused.
 `AuditLogRetentionService` claims `audit-log-retention` the same way, but runs
 on every replica when the claim cannot tell, since deleting old entries twice
 is harmless. `SlateToPmMigrator` claims each cron job for

@@ -4,8 +4,20 @@ import {
   SortOrder,
 } from '@wepublish/editor/api';
 import { DocumentNode, OperationDefinitionNode } from 'graphql';
+import i18n, { TOptions } from 'i18next';
 import nanoid from 'nanoid';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+/**
+ * Error message for a zod schema, translated when validation runs rather than
+ * when the (module-level) schema is created, so it follows the UI language:
+ * `z.string({ errorMap: lazyMessage('some.key') })` or
+ * `.refine(check, lazyMessage('some.key'))`.
+ */
+export const lazyMessage =
+  (key: string, options?: TOptions) => (): { message: string } => ({
+    message: i18n.t(key, options) as string,
+  });
 
 export const addOrUpdateOneInArray = (
   array: Record<string | 'id', any>[] | null | undefined,
@@ -147,10 +159,10 @@ export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
 ];
 
 export enum StateColor {
-  pending = '#f8def2',
-  published = '#e1f8de',
-  draft = '#f8efde',
-  none = 'white',
+  pending = 'var(--wep-state-pending)',
+  published = 'var(--wep-state-published)',
+  draft = 'var(--wep-state-draft)',
+  none = 'var(--wep-state-none)',
 }
 
 export function flattenDOMTokenList(list: DOMTokenList) {

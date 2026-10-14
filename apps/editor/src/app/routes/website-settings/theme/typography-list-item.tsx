@@ -1,20 +1,19 @@
 import {
   Collapse,
   FormControl,
-  FormControlLabel,
   FormLabel,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
   Stack,
-  Switch,
-  Typography,
 } from '@mui/material';
+import { InfoTooltip } from '@wepublish/ui/editor';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
+import { Toggle } from 'rsuite';
 
 import { AvailableFontsPicker } from './available-fonts-picker';
 import { FontWeightSelect } from './font-weight-select';
@@ -178,7 +177,12 @@ export const TypographyListItem = memo<TypographyListItemProps>(
               >
                 <FormControl fullWidth>
                   <FormLabel>
-                    {t('websiteSettings.theme.typography.fontFamily')}
+                    {t('websiteSettings.theme.typography.fontFamily')}{' '}
+                    <InfoTooltip
+                      text={t(
+                        'websiteSettings.theme.typography.fontFamilyInfo'
+                      )}
+                    />
                   </FormLabel>
 
                   <Controller
@@ -215,7 +219,12 @@ export const TypographyListItem = memo<TypographyListItemProps>(
               >
                 <FormControl fullWidth>
                   <FormLabel>
-                    {t('websiteSettings.theme.typography.textTransform')}
+                    {t('websiteSettings.theme.typography.textTransform')}{' '}
+                    <InfoTooltip
+                      text={t(
+                        'websiteSettings.theme.typography.textTransformInfo'
+                      )}
+                    />
                   </FormLabel>
 
                   <Controller
@@ -230,32 +239,34 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                   />
                 </FormControl>
 
-                <FormControl fullWidth>
-                  <FormLabel>
-                    {t('websiteSettings.theme.typography.italic')}
-                  </FormLabel>
-
+                <Stack
+                  sx={{ width: '100%', justifyContent: 'flex-end', pb: 1 }}
+                >
                   <Controller
                     name={`${name}.fontStyle`}
                     control={control}
                     render={({ field }) => (
-                      <Switch
+                      <Toggle
                         checked={field.value === 'italic'}
-                        onChange={e =>
-                          field.onChange(e.target.checked ? 'italic' : null)
+                        onChange={checked =>
+                          field.onChange(checked ? 'italic' : null)
                         }
                         onBlur={field.onBlur}
+                        label={t('websiteSettings.theme.typography.italic')}
                       />
                     )}
                   />
-                </FormControl>
+                </Stack>
               </Stack>
             </ListItem>
 
             <ListItem>
               <FormControl fullWidth>
                 <FormLabel>
-                  {t('websiteSettings.theme.typography.fontSize')}
+                  {t('websiteSettings.theme.typography.fontSize')}{' '}
+                  <InfoTooltip
+                    text={t('websiteSettings.theme.typography.fontSizeInfo')}
+                  />
                 </FormLabel>
 
                 <Controller
@@ -281,27 +292,26 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                     direction="column"
                     sx={{ width: '100%' }}
                   >
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={field.value != null}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              field.onChange(
-                                getValues(
-                                  `${parentName}.allVariants.lineHeight`
-                                )
-                              );
-                            } else {
-                              field.onChange(null);
-                            }
-                          }}
-                        />
-                      }
+                    <Toggle
+                      checked={field.value != null}
+                      onChange={checked => {
+                        if (checked) {
+                          field.onChange(
+                            getValues(`${parentName}.allVariants.lineHeight`)
+                          );
+                        } else {
+                          field.onChange(null);
+                        }
+                      }}
                       label={
-                        <Typography variant="body2">
-                          {t('websiteSettings.theme.typography.lineHeight')}
-                        </Typography>
+                        <>
+                          {t('websiteSettings.theme.typography.lineHeight')}{' '}
+                          <InfoTooltip
+                            text={t(
+                              'websiteSettings.theme.typography.overrideInfo'
+                            )}
+                          />
+                        </>
                       }
                     />
 
@@ -327,27 +337,28 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                     direction="column"
                     sx={{ width: '100%' }}
                   >
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={field.value != null}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              field.onChange(
-                                getValues(
-                                  `${parentName}.allVariants.letterSpacing`
-                                ) ?? '0em'
-                              );
-                            } else {
-                              field.onChange(null);
-                            }
-                          }}
-                        />
-                      }
+                    <Toggle
+                      checked={field.value != null}
+                      onChange={checked => {
+                        if (checked) {
+                          field.onChange(
+                            getValues(
+                              `${parentName}.allVariants.letterSpacing`
+                            ) ?? '0em'
+                          );
+                        } else {
+                          field.onChange(null);
+                        }
+                      }}
                       label={
-                        <Typography variant="body2">
-                          {t('websiteSettings.theme.typography.letterSpacing')}
-                        </Typography>
+                        <>
+                          {t('websiteSettings.theme.typography.letterSpacing')}{' '}
+                          <InfoTooltip
+                            text={t(
+                              'websiteSettings.theme.typography.overrideInfo'
+                            )}
+                          />
+                        </>
                       }
                     />
 

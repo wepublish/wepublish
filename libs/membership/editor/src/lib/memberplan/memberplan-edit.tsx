@@ -15,6 +15,7 @@ import {
 import {
   createCheckedPermissionComponent,
   generateID,
+  humanizeError,
   ListValue,
   SingleView,
   SingleViewContent,
@@ -32,9 +33,9 @@ const showErrors = (error: Error): void => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

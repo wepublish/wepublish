@@ -12,6 +12,8 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  humanizeError,
+  InfoTooltip,
   ListFilters,
   ListViewContainer,
   ListViewHeader,
@@ -39,14 +41,21 @@ import {
 
 const { Column, HeaderCell, Cell } = RTable;
 
+const HeaderInfo = styled.span`
+  display: inline-flex;
+  margin-left: 4px;
+`;
+
 const Img = styled.img`
   height: 25px;
   width: auto;
+  border-radius: var(--rs-radius-md);
 `;
 
 const PopoverImg = styled.img`
   height: 175px;
   width: auto;
+  border-radius: var(--rs-radius-md);
 `;
 
 const CheckboxGroup = styled.div`
@@ -135,7 +144,7 @@ function PeerArticleList() {
           showIcon
           closable
         >
-          {peerArticleListError.message}
+          {humanizeError(peerArticleListError)}
         </Message>,
         { duration: 0 }
       );
@@ -149,6 +158,7 @@ function PeerArticleList() {
       <ListViewContainer>
         <ListViewHeader>
           <h2>{t('peerArticles.peerArticles')}</h2>
+          <InfoTooltip text={t('peerArticles.info')} />
         </ListViewHeader>
 
         <ListFilters
@@ -227,7 +237,12 @@ function PeerArticleList() {
             align="left"
             resizable
           >
-            <HeaderCell>{t('peerArticles.peer')}</HeaderCell>
+            <HeaderCell>
+              {t('peerArticles.peer')}
+              <HeaderInfo>
+                <InfoTooltip text={t('peerArticles.peerInfo')} />
+              </HeaderInfo>
+            </HeaderCell>
             <Cell dataKey="peer">
               {(rowData: SlimPeerArticleFragment) => (
                 <PeerAvatar peer={rowData.peer}>
@@ -272,9 +287,10 @@ function PeerArticleList() {
 
           <Column
             width={120}
-            align="right"
+            align="center"
+            fixed="right"
           >
-            <HeaderCell>{null}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <Cell>
               {(rowData: SlimPeerArticleFragment) => (
                 <Button
@@ -333,7 +349,7 @@ function PeerArticleList() {
               showIcon
               closable
             >
-              {error.message}
+              {humanizeError(error)}
             </Message>
           )}
 

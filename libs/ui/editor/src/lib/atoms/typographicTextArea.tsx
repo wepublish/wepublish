@@ -81,7 +81,8 @@ export const TypographicTextArea = forwardRef<
         fontFamily: 'inherit',
         lineHeight: 1.375,
 
-        color: 'black',
+        color: 'var(--rs-text-primary)',
+        backgroundColor: 'var(--rs-bg-card)',
         textAlign: align,
         ...stylesForTypographyVariant(variant),
 

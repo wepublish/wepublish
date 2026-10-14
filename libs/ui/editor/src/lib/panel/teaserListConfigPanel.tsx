@@ -9,6 +9,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Drawer, Form, Schema, SelectPicker } from 'rsuite';
 
+import { InfoTooltip } from '../atoms/infoTooltip';
 import { SelectTags } from '../atoms/tag/selectTags';
 import { TeaserListBlockValue } from '../blocks/types';
 
@@ -143,7 +144,10 @@ export function TeaserListConfigPanel({
         </Form.Group>
 
         <Form.Group controlId="sort">
-          <Form.Label>{t('blocks.teaserList.sortLabel')}</Form.Label>
+          <Form.Label>
+            {t('blocks.teaserList.sortLabel')}{' '}
+            <InfoTooltip text={t('blocks.teaserList.sortInfo')} />
+          </Form.Label>
 
           <SelectPicker
             name="sort"
@@ -180,7 +184,10 @@ export function TeaserListConfigPanel({
         </Form.Group>
 
         <Form.Group controlId="skip">
-          <Form.Label>{t('blocks.teaserList.skipLabel')}</Form.Label>
+          <Form.Label>
+            {t('blocks.teaserList.skipLabel')}{' '}
+            <InfoTooltip text={t('blocks.teaserList.skipInfo')} />
+          </Form.Label>
 
           <Form.Control
             name="skip"

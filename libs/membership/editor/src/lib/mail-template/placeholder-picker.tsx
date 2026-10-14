@@ -1,5 +1,7 @@
 import { Typography } from '@mui/material';
 import { MailTemplateContext } from '@wepublish/editor/api';
+import { InfoTooltip } from '@wepublish/ui/editor';
+import { TFunction } from 'i18next';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, Tooltip, Whisper } from 'rsuite';
@@ -70,6 +72,18 @@ const AMOUNT_FORMATS = [
   },
 ];
 
+/**
+ * The description is shown in the tooltip and searched, so both use the
+ * translated text. The code default stays as the fallback.
+ */
+const describePlaceholder = (t: TFunction, placeholder: MailPlaceholder) =>
+  t(`mailTemplates.placeholderDescriptions.${placeholder.key}`, {
+    defaultValue: placeholder.description,
+    // The description of the login token contains a literal `{{jwt}}`; passing
+    // it as a value keeps i18next from treating it as an interpolation.
+    jwt: '{{jwt}}',
+  });
+
 export function PlaceholderPicker({
   onInsert,
   context,
@@ -105,7 +119,7 @@ export function PlaceholderPicker({
       return (
         p.key.toLowerCase().includes(term) ||
         name.includes(term) ||
-        p.description.toLowerCase().includes(term)
+        describePlaceholder(t, p).toLowerCase().includes(term)
       );
     });
   }, [search, scopedPlaceholders, t]);
@@ -160,7 +174,7 @@ export function PlaceholderPicker({
                 trigger="hover"
                 placement="left"
                 speaker={tooltip(
-                  placeholder.description,
+                  describePlaceholder(t, placeholder),
                   `{{${placeholder.key}${format.suffix}}}`,
                   format.example
                 )}
@@ -191,7 +205,7 @@ export function PlaceholderPicker({
         trigger="hover"
         placement="left"
         speaker={tooltip(
-          placeholder.description,
+          describePlaceholder(t, placeholder),
           `{{${placeholder.key}}}`,
           placeholder.example
         )}
@@ -214,7 +228,8 @@ export function PlaceholderPicker({
 
   return (
     <div style={{ paddingRight: 4 }}>
-      <strong>{t('mailTemplates.placeholders')}</strong>
+      <strong>{t('mailTemplates.placeholders')}</strong>{' '}
+      <InfoTooltip text={t('mailTemplates.placeholdersInfo')} />
       <Typography
         variant="caption"
         style={{ marginBottom: 8 }}
@@ -236,7 +251,7 @@ export function PlaceholderPicker({
           searchResults.map(renderPlaceholder)
         : <Typography
             variant="caption"
-            style={{ color: '#8e8e93' }}
+            style={{ color: 'var(--rs-text-secondary)' }}
           >
             {t('mailTemplates.noPlaceholders', 'No matching placeholders.')}
           </Typography>
@@ -253,7 +268,7 @@ export function PlaceholderPicker({
           </Typography>
           <Typography
             variant="caption"
-            style={{ marginBottom: 8, color: '#8e8e93' }}
+            style={{ marginBottom: 8, color: 'var(--rs-text-secondary)' }}
             sx={{
               display: 'block',
             }}
@@ -269,13 +284,13 @@ export function PlaceholderPicker({
             style={{
               marginTop: 20,
               paddingTop: 12,
-              borderTop: '1px solid #e5e5ea',
+              borderTop: '1px solid var(--rs-border-primary)',
             }}
           >
             {!selectedContext ?
               <Typography
                 variant="caption"
-                style={{ color: '#8e8e93' }}
+                style={{ color: 'var(--rs-text-secondary)' }}
                 sx={{
                   display: 'block',
                 }}
@@ -295,7 +310,10 @@ export function PlaceholderPicker({
                 {selectedContext.note && (
                   <Typography
                     variant="caption"
-                    style={{ marginBottom: 8, color: '#8e8e93' }}
+                    style={{
+                      marginBottom: 8,
+                      color: 'var(--rs-text-secondary)',
+                    }}
                     sx={{
                       display: 'block',
                     }}
@@ -310,7 +328,7 @@ export function PlaceholderPicker({
                   selectedContext.placeholders.map(renderPlaceholder)
                 : <Typography
                     variant="caption"
-                    style={{ color: '#8e8e93' }}
+                    style={{ color: 'var(--rs-text-secondary)' }}
                     sx={{
                       display: 'block',
                     }}

@@ -26,7 +26,7 @@ export function ImageUploadPanel({ onClose, onUpload }: ImageUploadPanelProps) {
       toaster.push(
         <Notification
           type="error"
-          header={t('articleEditor.panels.învalidImage')}
+          header={t('articleEditor.panels.invalidImage')}
           duration={5000}
         />,
         { placement: 'topEnd' }

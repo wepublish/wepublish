@@ -12,6 +12,7 @@ import {
   DescriptionListItem,
   IconButton,
   IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewFilterArea,
@@ -143,7 +144,11 @@ function MemberPlanList() {
             width={40}
             align="left"
           >
-            <HeaderCell>{''}</HeaderCell>
+            <HeaderCell>
+              <InfoTooltip
+                text={t('memberPlanList.paymentProviderStatusInfo')}
+              />
+            </HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullMemberPlanFragment>) =>
                 hasBrokenPaymentProvider(rowData as FullMemberPlanFragment) ?
@@ -201,10 +206,30 @@ function MemberPlanList() {
           </Column>
 
           <Column
+            width={250}
+            align="left"
+            resizable
+          >
+            <HeaderCell>{t('memberPlanList.editFlowShort')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<FullMemberPlanFragment>) => (
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_SUBSCRIPTION_FLOWS']}
+                >
+                  <Link to={`/communicationflows/edit/${rowData.id}`}>
+                    {t('memberPlanList.editFlow')}
+                  </Link>
+                </PermissionControl>
+              )}
+            </RCell>
+          </Column>
+
+          <Column
             width={100}
             align="center"
+            fixed="right"
           >
-            <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullMemberPlanFragment>) => (
                 <PermissionControl
@@ -217,6 +242,7 @@ function MemberPlanList() {
                       size="sm"
                       appearance="ghost"
                       color="red"
+                      aria-label={t('delete')}
                       onClick={() => {
                         setConfirmationDialogOpen(true);
                         setCurrentMemberPlan(rowData as FullMemberPlanFragment);
@@ -226,26 +252,6 @@ function MemberPlanList() {
                 </PermissionControl>
               )}
             </PaddedCell>
-          </Column>
-          <Column
-            width={400}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell>{t('memberPlanList.editFlowShort')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullMemberPlanFragment>) => (
-                <PermissionControl
-                  qualifyingPermissions={['CAN_GET_SUBSCRIPTION_FLOWS']}
-                >
-                  <IconButtonTooltip caption={t('memberPlanList.editFlow')}>
-                    <Link to={`/communicationflows/edit/${rowData.id}`}>
-                      {t('memberPlanList.editFlow')}
-                    </Link>
-                  </IconButtonTooltip>
-                </PermissionControl>
-              )}
-            </RCell>
           </Column>
         </Table>
       </TableWrapper>

@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { SingleViewTitle } from '@wepublish/ui/editor';
+import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
 import { ConsentForm } from './consent-form';
 
 const mapApiDataToInput = (
@@ -37,7 +37,7 @@ export const ConsentEditView = () => {
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('consents.uniqueConstraint', { slug })}
         </Message>
@@ -49,9 +49,9 @@ export const ConsentEditView = () => {
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -131,9 +131,9 @@ export const ConsentEditView = () => {
 
   const { StringType, BooleanType } = Schema.Types;
   const validationModel = Schema.Model({
-    name: StringType().isRequired(),
-    slug: StringType().isRequired(),
-    defaultValue: BooleanType().isRequired(),
+    name: StringType().isRequired(t('errorMessages.required')),
+    slug: StringType().isRequired(t('errorMessages.required')),
+    defaultValue: BooleanType().isRequired(t('errorMessages.required')),
   });
 
   return (

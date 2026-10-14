@@ -76,7 +76,7 @@ const LoaderOverlay = styled.div`
   gap: 16px;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgb(from var(--rs-bg-card) r g b / 80%);
 `;
 
 const LoaderTitle = styled.h3`
@@ -147,7 +147,7 @@ const devices: { device: PreviewDevice; Icon: IconType }[] = [
 
 const PreviewControlsWrapper = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 4px;
 `;
 
 export type PreviewControlsProps = {
@@ -185,7 +185,7 @@ export function PreviewControls({
           type="error"
           showIcon
           closable
-          duration={3000}
+          duration={8000}
         >
           {t('preview.urlCopyFailed')}
         </Message>
@@ -199,7 +199,6 @@ export function PreviewControls({
         {devices.map(({ device: option, Icon }) => (
           <IconButton
             key={option}
-            size="lg"
             icon={<Icon />}
             appearance={option === device ? 'primary' : 'default'}
             active={option === device}
@@ -212,7 +211,6 @@ export function PreviewControls({
       </ButtonGroup>
 
       <IconButton
-        size="lg"
         icon={<MdContentCopy />}
         title={t('preview.copyUrl')}
         aria-label={t('preview.copyUrl')}

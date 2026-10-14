@@ -18,7 +18,10 @@ import {
   PaymentsService,
 } from '@wepublish/payment/api';
 import { DiscountCodeService } from '../discountCode/discountCode.service';
-import { calculateAmountForPeriodicity } from '../legacy/member-context';
+import {
+  calculateAmountForPeriodicity,
+  getNextDateForPeriodicity,
+} from '../legacy/member-context';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 
 const roundUpTo5Cents = (amount: number) =>
@@ -312,6 +315,134 @@ export class UpgradeSubscriptionService {
       successURL,
       failureURL,
       userId,
+    });
+  }
+
+  async revertUpgrade({
+    subscriptionId,
+    userId,
+  }: {
+    subscriptionId: string;
+    /**
+     * The user the revert is done for, or null to revert as an admin, which
+     * skips the ownership check. Required so that a caller can not drop the
+     * check by forgetting the argument.
+     */
+    userId: string | null;
+  }) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+      include: {
+        deactivation: true,
+        periods: true,
+      },
+    });
+
+    if (!subscription) {
+      throw new NotFoundException(
+        `Subscription with id ${subscriptionId} was not found.`
+      );
+    }
+
+    if (userId && subscription.userID !== userId) {
+      throw new ForbiddenException(
+        `Subscription with id ${subscriptionId} does not belong to current user.`
+      );
+    }
+
+    const replacements = await this.prisma.subscription.findMany({
+      where: { replacesSubscriptionID: subscriptionId },
+      include: { invoices: true },
+    });
+
+    if (!replacements.length) {
+      throw new BadRequestException(
+        `Subscription with id ${subscriptionId} was not upgraded.`
+      );
+    }
+
+    if (
+      replacements.some(replacement =>
+        replacement.invoices.some(invoice => invoice.paidAt)
+      )
+    ) {
+      throw new BadRequestException(
+        `The upgrade of subscription with id ${subscriptionId} has already been paid.`
+      );
+    }
+
+    for (const replacement of replacements) {
+      const invoices = await this.prisma.invoice.findMany({
+        where: { subscriptionID: replacement.id },
+        select: { id: true },
+      });
+      const invoiceIds = invoices.map(({ id }) => id);
+
+      // nothing of the upgrade has been paid, so the invoice and everything
+      // hanging off it goes away with the subscription instead of being
+      // detached into orphaned rows
+      await this.prisma.payment.deleteMany({
+        where: { invoiceID: { in: invoiceIds } },
+      });
+
+      await this.prisma.subscriptionPeriod.deleteMany({
+        where: { invoiceID: { in: invoiceIds } },
+      });
+
+      await this.prisma.invoiceItem.deleteMany({
+        where: { invoiceId: { in: invoiceIds } },
+      });
+
+      await this.prisma.invoice.deleteMany({
+        where: { id: { in: invoiceIds } },
+      });
+
+      await this.prisma.subscription.delete({
+        where: { id: replacement.id },
+      });
+    }
+
+    // the upgrade cut the running periods short, give them their original end back
+    const truncatedAt = subscription.deactivation?.date;
+    const restoredPeriods = subscription.periods.map(period => ({
+      period,
+      endsAt:
+        truncatedAt && period.endsAt.getTime() === truncatedAt.getTime() ?
+          getNextDateForPeriodicity(period.startsAt, period.paymentPeriodicity)
+        : period.endsAt,
+    }));
+
+    for (const { period, endsAt } of restoredPeriods) {
+      if (endsAt.getTime() === period.endsAt.getTime()) {
+        continue;
+      }
+
+      await this.prisma.subscriptionPeriod.update({
+        where: { id: period.id },
+        data: { endsAt },
+      });
+    }
+
+    if (subscription.deactivation) {
+      await this.prisma.subscriptionDeactivation.delete({
+        where: { subscriptionID: subscriptionId },
+      });
+    }
+
+    const paidUntil = restoredPeriods.reduce<Date | null>(
+      (latest, { endsAt }) => (!latest || endsAt > latest ? endsAt : latest),
+      null
+    );
+
+    return this.prisma.subscription.update({
+      where: { id: subscriptionId },
+      data: {
+        paidUntil: paidUntil ?? subscription.paidUntil,
+      },
+      include: {
+        deactivation: true,
+        periods: true,
+      },
     });
   }
 

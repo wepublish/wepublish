@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import styled from '@emotion/styled';
 import {
   DeleteDiscountCodeDocument,
   DiscountCodeListDocument,
@@ -16,6 +15,9 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  IconButton,
+  IconButtonTooltip,
+  InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -38,10 +40,6 @@ import {
   Table as RTable,
 } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
-
-const IconButton = styled(RIconButton)`
-  margin-left: 12px;
-`;
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
@@ -88,13 +86,13 @@ function DiscountCodeList() {
 
         <ListViewActions>
           <Link to="create">
-            <IconButton
+            <RIconButton
               appearance="primary"
               loading={false}
             >
               <MdAdd />
               {t('discountCode.overview.createDiscountCode')}
-            </IconButton>
+            </RIconButton>
           </Link>
         </ListViewActions>
       </ListViewContainer>
@@ -112,10 +110,13 @@ function DiscountCodeList() {
           }}
         >
           <Column
-            width={75}
+            width={100}
             resizable
           >
-            <HeaderCell>{t('discountCode.overview.valid')}</HeaderCell>
+            <HeaderCell>
+              {t('discountCode.overview.valid')}{' '}
+              <InfoTooltip text={t('discountCode.overview.validInfo')} />
+            </HeaderCell>
 
             <RCell>
               {(rowData: RowDataType<FullDiscountCodeFragment>) =>
@@ -222,25 +223,28 @@ function DiscountCodeList() {
           </Column>
 
           <Column
-            width={50}
-            resizable
+            width={100}
+            align="center"
             fixed="right"
           >
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
-            <PaddedCell align={'center'}>
+            <HeaderCell align="center">{t('action')}</HeaderCell>
+            <PaddedCell>
               {(discountCode: RowDataType<FullDiscountCodeFragment>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  circle
-                  appearance="ghost"
-                  color="red"
-                  size="sm"
-                  onClick={() =>
-                    setDiscountCodeToDelete(
-                      discountCode as FullDiscountCodeFragment
-                    )
-                  }
-                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    icon={<MdDelete />}
+                    circle
+                    appearance="ghost"
+                    color="red"
+                    size="sm"
+                    aria-label={t('delete')}
+                    onClick={() =>
+                      setDiscountCodeToDelete(
+                        discountCode as FullDiscountCodeFragment
+                      )
+                    }
+                  />
+                </IconButtonTooltip>
               )}
             </PaddedCell>
           </Column>

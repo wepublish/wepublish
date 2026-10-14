@@ -61,7 +61,10 @@ export function ImageBlock({
         bodyFill
         bordered
       >
-        <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
+        <PlaceholderInput
+          onAddClick={() => setChooseModalOpen(true)}
+          addLabel={t('blocks.image.overview.chooseImage')}
+        >
           {image && (
             <ImagePanel image={image}>
               <Dropdown
@@ -75,6 +78,9 @@ export function ImageBlock({
                     icon={<MdBuild />}
                     circle
                     appearance="subtle"
+                    data-on-media
+                    title={t('chooseEditImage.imageOptions')}
+                    aria-label={t('chooseEditImage.imageOptions')}
                   />
                 )}
               >

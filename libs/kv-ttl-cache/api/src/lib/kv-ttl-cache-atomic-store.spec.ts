@@ -46,6 +46,19 @@ describe('MemoryAtomicStore', () => {
     await store.delRaw('key');
     await expect(store.getRaw('key')).resolves.toBeUndefined();
   });
+
+  it('keeps a key that is still there for longer, but brings none back', async () => {
+    const store = new MemoryAtomicStore();
+    await store.setIfAbsent('lock', '1', 1000);
+
+    vi.advanceTimersByTime(900);
+    await expect(store.expireRaw('lock', 1000)).resolves.toBe(true);
+    await expect(store.expireRaw('gone', 1000)).resolves.toBe(false);
+    vi.advanceTimersByTime(900);
+
+    await expect(store.getRaw('lock')).resolves.toBe('1');
+    await expect(store.getRaw('gone')).resolves.toBeUndefined();
+  });
 });
 
 describe('DragonflyAtomicStore', () => {
@@ -180,12 +193,14 @@ describe('DragonflyAtomicStore', () => {
 
   it('sends only commands the production ACL allows, every key under the prefix of its medium', async () => {
     const sendCommand = vi.fn(async (command: string[]) =>
-      command[0] === 'INCR' ? 1 : 'OK'
+      command[0] === 'INCR' || command[0] === 'PEXPIRE' ? 1 : 'OK'
     );
     const store = createStore(sendCommand);
 
     await store.ping();
+    await store.probe('health', '1', 60_000);
     await store.setIfAbsent('lock:nightly-job', 'token', 60_000);
+    await store.expireRaw('lock:periodic-job-run', 120_000);
     await store.getRaw('nsv:settings');
     await store.getManyRaw(['nsv:navigations', 'nsv:banners']);
     await store.setRaw('val:dev:ns:navigations:v1:main', '{}', 60_000);
@@ -208,6 +223,22 @@ describe('DragonflyAtomicStore', () => {
     expect(keys.every(key => key.startsWith('wepublish-demo::'))).toBe(true);
   });
 
+  it('extends a key with PEXPIRE and tells whether it was still there', async () => {
+    const sendCommand = vi
+      .fn()
+      .mockResolvedValueOnce(1)
+      .mockResolvedValueOnce(0);
+    const store = createStore(sendCommand);
+
+    await expect(store.expireRaw('lock:job', 120_000)).resolves.toBe(true);
+    await expect(store.expireRaw('lock:job', 120_000)).resolves.toBe(false);
+    expect(sendCommand).toHaveBeenCalledWith([
+      'PEXPIRE',
+      'wepublish-demo::lock:job',
+      '120000',
+    ]);
+  });
+
   it('is shared between replicas, unlike memory', () => {
     expect(createStore(vi.fn()).shared).toBe(true);
     expect(new MemoryAtomicStore().shared).toBe(false);
@@ -226,15 +257,48 @@ describe('DragonflyAtomicStore', () => {
     expect(store.isAvailable()).toBe(false);
   });
 
-  it('gives up on a command Dragonfly does not answer within 500 ms', async () => {
+  it('waits up to 2 s for an answer, so Dragonfly pausing for a second while it writes a snapshot is no outage', async () => {
+    const sendCommand = vi.fn(
+      () => new Promise(resolve => setTimeout(() => resolve('v1'), 1500))
+    );
+    const store = createStore(sendCommand);
+
+    const reply = store.getRaw('nsv:settings');
+    await vi.advanceTimersByTimeAsync(1500);
+
+    await expect(reply).resolves.toBe('v1');
+    expect(store.isAvailable()).toBe(true);
+  });
+
+  it('gives up on a command Dragonfly does not answer within 2 s', async () => {
     const sendCommand = vi.fn(() => new Promise(() => undefined));
     const store = createStore(sendCommand);
 
     const reply = store.getRaw('nsv:settings');
-    await vi.advanceTimersByTimeAsync(500);
+    await vi.advanceTimersByTimeAsync(2000);
 
     await expect(reply).resolves.toBeUndefined();
     expect(store.isAvailable()).toBe(false);
+  });
+
+  it('still probes Dragonfly for /health while other commands pause after a failure, so /health shows whether it answers now', async () => {
+    const sendCommand = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('ECONNREFUSED'))
+      .mockResolvedValue('OK');
+    const store = createStore(sendCommand);
+
+    await store.getRaw('nsv:settings');
+    expect(store.isAvailable()).toBe(false);
+
+    await expect(store.probe('health', '1', 60_000)).resolves.toBe(true);
+    expect(sendCommand).toHaveBeenLastCalledWith([
+      'SET',
+      'wepublish-demo::health',
+      '1',
+      'PX',
+      '60000',
+    ]);
   });
 
   it('logs an outage once, not once per command that was in flight', async () => {
@@ -291,7 +355,7 @@ describe('DragonflyAtomicStore', () => {
       return { adapter, client, store };
     };
 
-    it('drops a connection that stopped answering, so the next command connects anew instead of waiting on a dead socket', async () => {
+    it('drops a connection that has not answered for 5 s, so the next command connects anew instead of waiting on a dead socket', async () => {
       const { client, store } = fakeAdapter(
         vi
           .fn()
@@ -300,14 +364,59 @@ describe('DragonflyAtomicStore', () => {
       );
 
       const reply = store.getRaw('nsv:settings');
-      await vi.advanceTimersByTimeAsync(500);
+      await vi.advanceTimersByTimeAsync(2000);
       await expect(reply).resolves.toBeUndefined();
+      expect(client.destroy).not.toHaveBeenCalled();
+
+      await vi.advanceTimersByTimeAsync(3000);
       expect(client.destroy).toHaveBeenCalledTimes(1);
 
-      vi.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(2000);
 
       await expect(store.getRaw('nsv:settings')).resolves.toBe('v1');
       expect(client.connect).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps a connection whose answer only comes late, so a slow moment costs no reconnect', async () => {
+      const { client, store } = fakeAdapter(
+        vi
+          .fn()
+          .mockImplementationOnce(
+            () => new Promise(resolve => setTimeout(() => resolve('v1'), 3000))
+          )
+          .mockResolvedValue('v1')
+      );
+
+      const reply = store.getRaw('nsv:settings');
+      await vi.advanceTimersByTimeAsync(2000);
+      await expect(reply).resolves.toBeUndefined();
+      await vi.advanceTimersByTimeAsync(10_000);
+
+      expect(client.destroy).not.toHaveBeenCalled();
+      await expect(store.getRaw('nsv:settings')).resolves.toBe('v1');
+      expect(client.connect).not.toHaveBeenCalled();
+    });
+
+    it('gives a reconnect its full second for the handshake', async () => {
+      const { client, store } = fakeAdapter(vi.fn().mockResolvedValue('v1'));
+      await store.getRaw('nsv:settings');
+      client.isOpen = false;
+      client.isReady = false;
+      client.connect.mockImplementationOnce(
+        () =>
+          new Promise<void>(resolve =>
+            setTimeout(() => {
+              client.isOpen = true;
+              client.isReady = true;
+              resolve();
+            }, 800)
+          )
+      );
+
+      const reply = store.getRaw('nsv:settings');
+      await vi.advanceTimersByTimeAsync(800);
+
+      await expect(reply).resolves.toBe('v1');
     });
 
     it('reconnects without adding the client listeners again each time', async () => {
@@ -414,7 +523,7 @@ describe('DragonflyAtomicStore', () => {
       } as unknown as ConstructorParameters<typeof DragonflyAtomicStore>[0]);
 
       const whilePaused = store.getRaw('nsv:settings');
-      await vi.advanceTimersByTimeAsync(500);
+      await vi.advanceTimersByTimeAsync(1000);
       await expect(whilePaused).resolves.toBeUndefined();
 
       handshake();
@@ -471,7 +580,7 @@ describe('DragonflyAtomicStore', () => {
       answering = false;
 
       const silent = store.getRaw('nsv:settings');
-      await vi.advanceTimersByTimeAsync(500);
+      await vi.advanceTimersByTimeAsync(1000);
       await expect(silent).resolves.toBeUndefined();
 
       answering = true;

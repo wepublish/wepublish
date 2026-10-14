@@ -5,6 +5,8 @@ import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
+  humanizeError,
+  IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
@@ -26,9 +28,9 @@ const onErrorToast = (error: Error) => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };
@@ -36,19 +38,19 @@ const onErrorToast = (error: Error) => {
 /* eslint-disable-next-line */
 export interface UserConsentListProps {}
 
-const consentValues = [
-  {
-    value: true,
-    label: 'Accepted',
-  },
-  {
-    value: false,
-    label: 'Rejected',
-  },
-];
-
 export function UserConsentList(props: UserConsentListProps) {
   const { t } = useTranslation();
+
+  const consentValues = [
+    {
+      value: true,
+      label: t('consents.accepted'),
+    },
+    {
+      value: false,
+      label: t('consents.rejected'),
+    },
+  ];
 
   const { loading, data, refetch, error } = useQuery(UserConsentsDocument);
 
@@ -154,27 +156,36 @@ export function UserConsentList(props: UserConsentListProps) {
             <Cell>
               {(rowData: RowDataType<FullUserConsentFragment>) => (
                 <span>
-                  {consentValues.find(v => v.value === rowData.value)?.label}
+                  {rowData.value ?
+                    t('consents.accepted')
+                  : t('consents.rejected')}
                 </span>
               )}
             </Cell>
           </Column>
 
-          <Column width={75}>
-            <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
+          <Column
+            width={100}
+            align="center"
+            fixed="right"
+          >
+            <HeaderCell align="center">{t('action')}</HeaderCell>
             <Cell
-              align={'center'}
-              style={{ padding: '5px 0' }}
+              align="center"
+              style={{ padding: '6px 0' }}
             >
               {(rowData: RowDataType<FullUserConsentFragment>) => (
-                <IconButton
-                  icon={<MdDelete />}
-                  color="red"
-                  appearance="ghost"
-                  circle
-                  size="sm"
-                  onClick={() => onDeleteUserConsent(rowData.id)}
-                />
+                <IconButtonTooltip caption={t('delete')}>
+                  <IconButton
+                    aria-label={t('delete')}
+                    icon={<MdDelete />}
+                    color="red"
+                    appearance="ghost"
+                    circle
+                    size="sm"
+                    onClick={() => onDeleteUserConsent(rowData.id)}
+                  />
+                </IconButtonTooltip>
               )}
             </Cell>
           </Column>

@@ -13,6 +13,7 @@ import type {
 } from 'rsuite/esm/internals/types';
 
 import { IconButtonTooltip } from '../iconButtonTooltip';
+import { humanizeError } from '../../humanizeError';
 
 interface ReplyCommentBtnProps {
   circle?: boolean;
@@ -48,9 +49,9 @@ export function CreateCommentBtn({
         type="error"
         showIcon
         closable
-        duration={3000}
+        duration={8000}
       >
-        {error.message}
+        {humanizeError(error)}
       </Message>
     );
   };
@@ -80,6 +81,7 @@ export function CreateCommentBtn({
       return (
         <IconButton
           style={{ marginLeft: '10px' }}
+          aria-label={t('replyCommentBtn.tooltip')}
           icon={icon || <MdReply />}
           size={size}
           circle={circle}

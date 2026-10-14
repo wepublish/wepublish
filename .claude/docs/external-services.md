@@ -7,6 +7,17 @@
 - Payrexx
 - Bexio
 
+- Simulated (`simulated` type) — no external service: `createIntent` sends the
+  customer to a checkout page served by the API at
+  `/payment-webhooks/<providerId>`, where Pay / Decline / Cancel post back
+  through the normal webhook path. With `offSessionPayments`, renewals are
+  charged straight away — or declined when "Decline renewals"
+  (`simulated_declineRenewals`) is ticked, to test failed recurring payments.
+  Guarded by `isSimulatedPaymentAllowed()` (`@wepublish/utils/api`): only when
+  `APP_ENVIRONMENT` is set and not `production` (unset counts as production —
+  `NODE_ENV` is `production` on review too). Otherwise the API refuses to
+  create it and skips existing rows when loading providers; the editor hides it.
+
 ## Email Provider
 
 - Mailgun
@@ -24,6 +35,12 @@ can be changed; new members are added as `pending` (double opt-in). An interest
 that is also in the sync's interest-group mappings gets flipped by the sync
 whenever a matching subscription starts or ends, regardless of the reader's
 choice.
+
+Mail, challenge (captcha) and Mailchimp sync run with exactly one provider
+each: the runtime uses the first non-deleted row. Their `create*Setting`
+mutations only succeed while none exists (the editor then shows «Einrichten»),
+and there is no delete mutation, so a medium never ends up without one. Change
+type or credentials on the existing row instead.
 
 ## Analytics Provider
 

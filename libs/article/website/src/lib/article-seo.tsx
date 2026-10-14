@@ -4,6 +4,7 @@ import {
   isTitleBlock,
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext, toPlaintext } from '@wepublish/richtext';
+import { stripQueryAndHash } from '@wepublish/utils';
 import { FullArticleFragment, FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderArticleSEOProps,
@@ -57,7 +58,7 @@ export const getArticleSEO = (article: FullArticleFragment) => {
     article.latest.title ||
     firstTitle?.title;
   const headline = firstTitle?.title || article.latest.title;
-  const url = article.latest.canonicalUrl || article.url;
+  const url = article.latest.canonicalUrl || stripQueryAndHash(article.url);
 
   const firstAuthor = article.latest.authors.at(0)?.author;
 

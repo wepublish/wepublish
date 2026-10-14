@@ -332,6 +332,7 @@ const PROVIDER_IDS: Record<PaymentProviderType, string> = {
   [PaymentProviderType.MOLLIE]: 'mollie',
   [PaymentProviderType.BEXIO]: 'bexio',
   [PaymentProviderType.NO_CHARGE]: 'no-charge',
+  [PaymentProviderType.SIMULATED]: 'simulated',
 };
 
 export async function seedProviders(prisma: PrismaClient) {

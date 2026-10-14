@@ -33,8 +33,9 @@ export type BuilderMemberPlanLayout = BuilderMemberPlanRenderSetting['layout'];
 
 export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   className?: string;
-  canExtend: boolean;
   cancel?: () => Promise<void>;
+  reactivate?: () => Promise<void>;
+  revertUpgrade?: () => Promise<void>;
   extend?: () => Promise<void>;
 };
 
@@ -49,6 +50,8 @@ export type BuilderSubscriptionListProps = Pick<
   >;
   subscribeUrl: string;
   onCancel?: (subscriptionId: string) => Promise<void>;
+  onReactivate?: (subscriptionId: string) => Promise<void>;
+  onRevertUpgrade?: (subscriptionId: string) => Promise<void>;
   onExtend?: (subscriptionId: string) => Promise<void>;
 };
 

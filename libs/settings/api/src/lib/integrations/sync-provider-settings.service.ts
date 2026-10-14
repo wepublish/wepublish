@@ -109,6 +109,12 @@ export class SyncProviderSettingsService {
   async createSyncProviderSetting(
     input: CreateSettingSyncProviderInput
   ): Promise<SettingSyncProvider> {
+    if (await this.prisma.settingSyncProvider.count()) {
+      throw new BadRequestException(
+        `A sync provider is already set up. Change its settings instead of adding another one.`
+      );
+    }
+
     const { newsletters, ...output } = this.encryptSecretsIfPresent(input);
     const returnValue = await this.prisma.settingSyncProvider.create({
       data: {

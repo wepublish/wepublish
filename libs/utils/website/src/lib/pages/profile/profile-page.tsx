@@ -9,6 +9,8 @@ import {
   SubscriptionListContainer,
   SubscriptionListItemContent,
   SubscriptionListItemWrapper,
+  isSubscriptionActive,
+  isSubscriptionDeactivated,
   useHasUnpaidInvoices,
 } from '@wepublish/membership/website';
 import {
@@ -121,16 +123,16 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
   });
 
   const hasDeactivatedSubscriptions = subscriptonData?.userSubscriptions.some(
-    subscription => subscription.deactivation
+    isSubscriptionDeactivated
   );
   const hasActiveSubscriptions = subscriptonData?.userSubscriptions.some(
     subscription =>
-      !subscription.deactivation &&
+      isSubscriptionActive(subscription) &&
       subscription.memberPlan.productType === ProductType.Subscription
   );
   const hasActiveDonations = subscriptonData?.userSubscriptions.some(
     subscription =>
-      !subscription.deactivation &&
+      isSubscriptionActive(subscription) &&
       subscription.memberPlan.productType === ProductType.Donation
   );
 
@@ -173,7 +175,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
             filter={subscriptions =>
               subscriptions.filter(
                 subscription =>
-                  !subscription.deactivation &&
+                  isSubscriptionActive(subscription) &&
                   subscription.memberPlan.productType ===
                     ProductType.Subscription
               )
@@ -192,7 +194,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
                 filter={subscriptions =>
                   subscriptions.filter(
                     subscription =>
-                      !subscription.deactivation &&
+                      isSubscriptionActive(subscription) &&
                       subscription.memberPlan.productType ===
                         ProductType.Donation
                   )

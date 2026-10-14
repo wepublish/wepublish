@@ -5,6 +5,7 @@ import {
   SubscriptionEvent,
 } from '@prisma/client';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
+import { ActionMailNoMailReason } from '../action-mail/action-mail-reason';
 import { RenewalSuccessMailService } from './renewal-success-mail.service';
 
 const INVOICE_ID = 'inv-2';
@@ -308,5 +309,59 @@ describe('RenewalSuccessMailService', () => {
     await expect(service.onInvoicePaid(INVOICE_ID)).rejects.toThrow(
       'provider rejected'
     );
+  });
+});
+
+// Asked by the editor before an admin marks an invoice as paid: which mail
+// the payment would send, or why it sends none, so the admin can decide.
+describe('RenewalSuccessMailService.templateForPayment', () => {
+  const unpaid = (overrides: Record<string, unknown> = {}) =>
+    createInvoice({ paidAt: null, ...overrides });
+
+  it('names the renewal success template for an unpaid renewal invoice', async () => {
+    const { service } = await setup({ invoice: unpaid() });
+
+    await expect(service.templateForPayment(INVOICE_ID)).resolves.toEqual({
+      mailTemplateId: 'mt-renewal-success',
+    });
+  });
+
+  it('sends none for the first period of a subscription', async () => {
+    const { service } = await setup({ invoice: unpaid(), earlierPeriods: 0 });
+
+    await expect(service.templateForPayment(INVOICE_ID)).resolves.toEqual({
+      noMailReason: ActionMailNoMailReason.firstPeriod,
+    });
+  });
+
+  it('sends none when the flow assigns no template', async () => {
+    const { service } = await setup({ invoice: unpaid(), mailTemplate: null });
+
+    await expect(service.templateForPayment(INVOICE_ID)).resolves.toEqual({
+      noMailReason: ActionMailNoMailReason.noTemplate,
+    });
+  });
+
+  it('sends none when the mail already went out or was suppressed', async () => {
+    const sent = await setup({
+      invoice: unpaid({ renewalSuccessMailSentAt: new Date() }),
+    });
+    const suppressed = await setup({
+      invoice: unpaid({ suppressRenewalSuccessMail: true }),
+    });
+
+    for (const { service } of [sent, suppressed]) {
+      await expect(service.templateForPayment(INVOICE_ID)).resolves.toEqual({
+        noMailReason: ActionMailNoMailReason.alreadyHandled,
+      });
+    }
+  });
+
+  it('sends none for an unknown invoice', async () => {
+    const { service } = await setup({ invoice: null });
+
+    await expect(service.templateForPayment(INVOICE_ID)).resolves.toEqual({
+      noMailReason: ActionMailNoMailReason.notApplicable,
+    });
   });
 });

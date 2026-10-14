@@ -1,6 +1,7 @@
 import { TFunction } from 'i18next';
 import { useEffect } from 'react';
 import { Message, toaster } from 'rsuite';
+import { humanizeError } from '@wepublish/ui/editor';
 
 export const showErrors = (error: Error): void => {
   toaster.push(
@@ -8,9 +9,9 @@ export const showErrors = (error: Error): void => {
       type="error"
       showIcon
       closable
-      duration={3000}
+      duration={8000}
     >
-      {error.message}
+      {humanizeError(error)}
     </Message>
   );
 };

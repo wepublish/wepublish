@@ -11,6 +11,7 @@ import { Col, Form, Input, Nav, Panel, Row, Toggle } from 'rsuite';
 import {
   CurrencyInput,
   getMonthlyEquivalentRange,
+  InfoTooltip,
   ListValue,
   PAYMENT_PERIODICITY_MONTHS,
 } from '@wepublish/ui/editor';
@@ -332,10 +333,14 @@ export function MemberPlanPricing({
               <Toggle
                 checked={hasOverride}
                 disabled={loading}
-                checkedChildren={t('memberplanForm.periodicityPricingCustom')}
-                unCheckedChildren={t(
-                  'memberplanForm.periodicityPricingDerived'
-                )}
+                label={
+                  <>
+                    {t('memberplanForm.periodicityPricingCustom')}{' '}
+                    <InfoTooltip
+                      text={t('memberplanForm.periodicityPricingCustomHelp')}
+                    />
+                  </>
+                }
                 onChange={enabled =>
                   setPeriodicityPrice(
                     enabled ?
@@ -367,7 +372,10 @@ export function MemberPlanPricing({
                 isMonthlyTab ?
                   'memberPlanEdit.amountPerMonthMin'
                 : 'memberplanForm.periodicityPricingMin'
-              )}
+              )}{' '}
+              <InfoTooltip
+                text={t('memberplanForm.periodicityPricingMinHelpText')}
+              />
             </Form.ControlLabel>
             <CurrencyInput
               name={`periodicityPricing.${periodicity}.amountMin`}
@@ -381,9 +389,6 @@ export function MemberPlanPricing({
                 });
               }}
             />
-            <HelpText>
-              {t('memberplanForm.periodicityPricingMinHelpText')}
-            </HelpText>
           </Col>
 
           <Col xs={8}>
@@ -392,7 +397,10 @@ export function MemberPlanPricing({
                 isMonthlyTab ?
                   'memberplanForm.amountPerMonthTarget'
                 : 'memberplanForm.periodicityPricingTarget'
-              )}
+              )}{' '}
+              <InfoTooltip
+                text={t('memberplanForm.periodicityPricingTargetHelpText')}
+              />
             </Form.ControlLabel>
             <CurrencyInput
               name={`periodicityPricing.${periodicity}.amountTarget`}
@@ -412,9 +420,6 @@ export function MemberPlanPricing({
                 {t('memberPlanEdit.targetPriceMustBeGreaterThanMin')}
               </ErrorHelpText>
             )}
-            <HelpText>
-              {t('memberplanForm.periodicityPricingTargetHelpText')}
-            </HelpText>
           </Col>
 
           <Col xs={8}>
@@ -423,7 +428,10 @@ export function MemberPlanPricing({
                 isMonthlyTab ?
                   'memberPlanEdit.amountPerMonthMax'
                 : 'memberplanForm.periodicityPricingMax'
-              )}
+              )}{' '}
+              <InfoTooltip
+                text={t('memberplanForm.periodicityPricingMaxHelpText')}
+              />
             </Form.ControlLabel>
             <CurrencyInput
               name={`periodicityPricing.${periodicity}.amountMax`}
@@ -442,9 +450,6 @@ export function MemberPlanPricing({
                 {t('memberPlanEdit.maxPriceMustBeGreaterThanMin')}
               </ErrorHelpText>
             )}
-            <HelpText>
-              {t('memberplanForm.periodicityPricingMaxHelpText')}
-            </HelpText>
           </Col>
         </Row>
 
