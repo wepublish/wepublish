@@ -47,13 +47,9 @@ type TemplateEditorLayoutProps = {
   /** Shown above the editor while something it depends on loads. */
   loadingMessage?: string;
   metadataDrawerSize?: 'sm' | 'md';
-  renderMetadata(close: () => void): ReactNode;
+  renderMetadata?(close: () => void): ReactNode;
 };
 
-/**
- * Editor header, block list and metadata drawer shared by the article and
- * page template editors.
- */
 export function TemplateEditorLayout({
   i18nPrefix,
   backPath,
@@ -102,13 +98,15 @@ export function TemplateEditorLayout({
               </Link>
             }
             secondaryActions={
-              <EditorHeaderButton
-                appearance="subtle"
-                icon={<MdIntegrationInstructions />}
-                label={t(`${i18nPrefix}.edit.metadata`)}
-                disabled={disabled}
-                onClick={() => setMetaDrawerOpen(true)}
-              />
+              renderMetadata && (
+                <EditorHeaderButton
+                  appearance="subtle"
+                  icon={<MdIntegrationInstructions />}
+                  label={t(`${i18nPrefix}.edit.metadata`)}
+                  disabled={disabled}
+                  onClick={() => setMetaDrawerOpen(true)}
+                />
+              )
             }
             primaryActions={
               isNew ?
@@ -166,13 +164,15 @@ export function TemplateEditorLayout({
         />
       )}
 
-      <Drawer
-        open={isMetaDrawerOpen}
-        size={metadataDrawerSize}
-        onClose={() => setMetaDrawerOpen(false)}
-      >
-        {renderMetadata(() => setMetaDrawerOpen(false))}
-      </Drawer>
+      {renderMetadata && (
+        <Drawer
+          open={isMetaDrawerOpen}
+          size={metadataDrawerSize}
+          onClose={() => setMetaDrawerOpen(false)}
+        >
+          {renderMetadata(() => setMetaDrawerOpen(false))}
+        </Drawer>
+      )}
     </>
   );
 }

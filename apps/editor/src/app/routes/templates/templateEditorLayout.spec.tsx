@@ -176,6 +176,14 @@ describe('TemplateEditorLayout', () => {
     expect(unsavedChangesDialog).not.toHaveBeenCalled();
   });
 
+  it('should not offer metadata without a metadata panel', () => {
+    renderLayout({ renderMetadata: undefined });
+
+    expect(
+      screen.queryByRole('button', { name: /thingTemplates.edit.metadata/ })
+    ).not.toBeInTheDocument();
+  });
+
   it('should go back to the list unless unsaved changes are kept', () => {
     unsavedChangesDialog.mockReturnValue(false);
     renderLayout({ hasChanged: true });
