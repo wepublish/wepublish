@@ -73,6 +73,7 @@ import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
 import { SessionModule } from '@wepublish/session/api';
 import { OneModule } from '@wepublish/one/api';
+import { FeaturesModule } from '@wepublish/features/api';
 import {
   SettingModule,
   SettingName,
@@ -241,6 +242,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       },
     }),
 
+    FeaturesModule,
     OneModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

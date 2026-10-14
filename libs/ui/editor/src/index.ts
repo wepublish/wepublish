@@ -4,6 +4,7 @@ export * from './lib/atoms/inlineAvatar';
 export * from './lib/atoms/page/selectPage';
 export * from './lib/atoms/peer/peerAvatar';
 export * from './lib/authContext';
+export * from './lib/featureContext';
 export * from './lib/blocks';
 export * from './lib/hooks';
 export * from './lib/humanizeError';
