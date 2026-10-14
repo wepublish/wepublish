@@ -12,12 +12,15 @@ import { ButtonGroup, IconButton, Loader, Message, toaster } from 'rsuite';
 
 import { OpenPreviewOptions, startPreviewHandshake } from './openPreview';
 
-const PreviewWrapper = styled.div`
+const PreviewWrapper = styled('div', {
+  shouldForwardProp: propName => propName !== 'device',
+})<{ device: PreviewDevice }>`
   position: relative;
   display: flex;
   justify-content: center;
   width: 100%;
-  height: calc(100vh - 180px);
+  height: ${({ device }) =>
+    device === 'desktop' ? 'calc(100vh - 180px)' : 'auto'};
   min-height: 500px;
 `;
 
@@ -35,14 +38,14 @@ const deviceStyles: Record<PreviewDevice, DeviceStyle> = {
   mobile: {
     width: '390px',
     maxWidth: 'calc(100% - 24px)',
-    height: 'min(844px, calc(100% - 24px))',
+    height: '844px',
     bezel: 12,
     radius: 36,
   },
   tablet: {
     width: '820px',
     maxWidth: 'calc(100% - 28px)',
-    height: 'min(1180px, calc(100% - 28px))',
+    height: '1180px',
     bezel: 14,
     radius: 24,
   },
@@ -120,7 +123,7 @@ export function PreviewFrame({
   }, [previewUrl]);
 
   return (
-    <PreviewWrapper>
+    <PreviewWrapper device={device}>
       <Frame
         ref={frameRef}
         src={previewUrl}
