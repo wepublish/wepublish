@@ -4099,11 +4099,6 @@
         "stored": "Enregistré dans le document",
         "value": "Valeur"
       },
-      "delete": {
-        "body": "«{{title}}» sera supprimé. Un brouillon Mailchimp déjà créé est conservé.",
-        "delete": "Supprimer",
-        "title": "Supprimer le numéro ?"
-      },
       "editor": {
         "back": "Retour à l’aperçu général",
         "createdAt": "Campagne créée à {{time}}.",
@@ -4124,6 +4119,10 @@
       },
       "list": {
         "actions": "Actions",
+        "archive": "Archiver",
+        "unarchive": "Restaurer",
+        "showArchived": "Afficher les archives",
+        "archived": "Archivé",
         "blocks": "Blocs",
         "createNew": "Nouveau numéro",
         "duplicate": "Dupliquer",

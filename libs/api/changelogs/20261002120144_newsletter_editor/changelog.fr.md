@@ -7,6 +7,7 @@ actionRequired: false
 Ce que vous pouvez faire :
 
 - Commencer un nouveau numéro vide, ou dupliquer un numéro précédent pour en garder la mise en page, et le modifier bloc par bloc — la zone de travail montre la newsletter telle qu’elle apparaîtra dans la boîte de réception.
+- Archiver les numéros dont vous n’avez plus besoin pour garder la vue d’ensemble courte. Rien n’est supprimé : **Afficher les archives** les fait réapparaître, et ils peuvent être restaurés à tout moment.
 - Choisir des articles pour les teasers ; titre, chapeau, lien et image proviennent toujours de l’article publié, les corrections arrivent donc automatiquement dans la newsletter.
 - Choisir les images directement dans la médiathèque. Elles sont envoyées dans un format que tous les programmes de messagerie affichent, Outlook compris.
 - N’afficher certains blocs qu’à une partie de l’audience (champs de fusion et groupes Mailchimp).

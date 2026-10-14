@@ -1,7 +1,18 @@
-import { ArgsType, Field, Int, ObjectType } from '@nestjs/graphql';
+import {
+  ArgsType,
+  Field,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import { NewsletterCampaignStatus } from '@prisma/client';
 import { Image } from '@wepublish/image/api';
 import type { NewsletterDocument } from '@wepublish/newsletter/email';
 import { GraphQLJSONObject } from 'graphql-type-json';
+
+registerEnumType(NewsletterCampaignStatus, {
+  name: 'NewsletterCampaignStatus',
+});
 
 @ObjectType()
 export class NewsletterCampaign {
@@ -22,6 +33,9 @@ export class NewsletterCampaign {
 
   @Field(() => Int)
   blockCount!: number;
+
+  @Field(() => NewsletterCampaignStatus)
+  status!: NewsletterCampaignStatus;
 
   @Field({ nullable: true })
   mailchimpCampaignId?: string;

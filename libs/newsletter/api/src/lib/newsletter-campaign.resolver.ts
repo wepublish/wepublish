@@ -39,8 +39,10 @@ export class NewsletterCampaignResolver {
 
   @Permissions(CanGetNewsletterCampaigns)
   @Query(() => [NewsletterCampaign])
-  newsletterCampaigns() {
-    return this.campaigns.list();
+  newsletterCampaigns(
+    @Args('includeArchived', { defaultValue: false }) includeArchived: boolean
+  ) {
+    return this.campaigns.list(includeArchived);
   }
 
   @Permissions(CanGetNewsletterCampaigns)
@@ -95,11 +97,18 @@ export class NewsletterCampaignResolver {
   }
 
   @Permissions(CanDeleteNewsletterCampaign)
-  @Mutation(() => Boolean)
-  async deleteNewsletterCampaign(@Args('id') id: string) {
-    await this.campaigns.delete(id);
+  @Mutation(() => NewsletterCampaign, {
+    description:
+      'Hides the campaign from the default list. Campaigns are never deleted.',
+  })
+  archiveNewsletterCampaign(@Args('id') id: string) {
+    return this.campaigns.archive(id);
+  }
 
-    return true;
+  @Permissions(CanDeleteNewsletterCampaign)
+  @Mutation(() => NewsletterCampaign)
+  unarchiveNewsletterCampaign(@Args('id') id: string) {
+    return this.campaigns.unarchive(id);
   }
 
   @Permissions(CanPublishNewsletterCampaign)

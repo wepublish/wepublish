@@ -15,6 +15,7 @@ const row = {
   id: 'campaign-1',
   title: 'Ausgabe 1',
   document,
+  status: 'active',
   createdAt: new Date('2026-10-01'),
   modifiedAt: new Date('2026-10-02'),
   mailchimpCampaignId: 'mc-1',
@@ -27,7 +28,7 @@ describe('NewsletterCampaignService', () => {
   let service: NewsletterCampaignService;
   let prisma: {
     newsletterCampaign: Record<
-      'findMany' | 'findUnique' | 'create' | 'update' | 'delete',
+      'findMany' | 'findUnique' | 'create' | 'update',
       Mock
     >;
   };
@@ -41,7 +42,6 @@ describe('NewsletterCampaignService', () => {
         findUnique: vi.fn().mockResolvedValue(row),
         create: vi.fn(async ({ data }) => ({ ...row, ...data })),
         update: vi.fn(async ({ data }) => ({ ...row, ...data })),
-        delete: vi.fn().mockResolvedValue(row),
       },
     };
     renderer = {
@@ -84,6 +84,53 @@ describe('NewsletterCampaignService', () => {
     expect(prisma.newsletterCampaign.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ orderBy: { modifiedAt: 'desc' } })
     );
+  });
+
+  it('leaves archived issues out of the list', async () => {
+    await service.list();
+
+    expect(prisma.newsletterCampaign.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { status: 'active' } })
+    );
+  });
+
+  it('lists archived issues alongside the active ones on request', async () => {
+    await service.list(true);
+
+    expect(prisma.newsletterCampaign.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: {} })
+    );
+  });
+
+  it('archives an issue instead of deleting it, without touching its modification date', async () => {
+    await service.archive('campaign-1');
+
+    expect(prisma.newsletterCampaign.update).toHaveBeenCalledWith({
+      where: { id: 'campaign-1' },
+      data: { status: 'archived', modifiedAt: row.modifiedAt },
+    });
+  });
+
+  it('restores an archived issue', async () => {
+    prisma.newsletterCampaign.findUnique.mockResolvedValue({
+      ...row,
+      status: 'archived',
+    });
+
+    expect(await service.unarchive('campaign-1')).toEqual(
+      expect.objectContaining({ status: 'active' })
+    );
+    expect(prisma.newsletterCampaign.update).toHaveBeenCalledWith({
+      where: { id: 'campaign-1' },
+      data: { status: 'active', modifiedAt: row.modifiedAt },
+    });
+  });
+
+  it('reports archiving an unknown id as not found', async () => {
+    prisma.newsletterCampaign.findUnique.mockResolvedValue(null);
+
+    await expect(service.archive('nope')).rejects.toThrow(NotFoundException);
+    expect(prisma.newsletterCampaign.update).not.toHaveBeenCalled();
   });
 
   it('reports an unknown id as not found', async () => {

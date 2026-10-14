@@ -4099,11 +4099,6 @@
         "stored": "Stored in the document",
         "value": "Value"
       },
-      "delete": {
-        "body": "«{{title}}» will be deleted. A Mailchimp draft created from it is kept.",
-        "delete": "Delete",
-        "title": "Delete issue?"
-      },
       "editor": {
         "back": "Back to overview",
         "createdAt": "Campaign created at {{time}}.",
@@ -4124,6 +4119,10 @@
       },
       "list": {
         "actions": "Actions",
+        "archive": "Archive",
+        "unarchive": "Restore",
+        "showArchived": "Show archived",
+        "archived": "Archived",
         "blocks": "Blocks",
         "createNew": "New issue",
         "duplicate": "Duplicate",

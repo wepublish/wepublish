@@ -4,6 +4,7 @@ fragment NewsletterCampaignSummary on NewsletterCampaign {
   createdAt
   modifiedAt
   blockCount
+  status
   mailchimpCampaignWebId
   mailchimpEditUrl
 }
@@ -32,8 +33,8 @@ fragment NewsletterArticle on Article {
   }
 }
 
-query NewsletterCampaigns {
-  newsletterCampaigns {
+query NewsletterCampaigns($includeArchived: Boolean) {
+  newsletterCampaigns(includeArchived: $includeArchived) {
     ...NewsletterCampaignSummary
   }
 }
@@ -113,8 +114,16 @@ mutation UpdateNewsletterCampaign(
   }
 }
 
-mutation DeleteNewsletterCampaign($id: String!) {
-  deleteNewsletterCampaign(id: $id)
+mutation ArchiveNewsletterCampaign($id: String!) {
+  archiveNewsletterCampaign(id: $id) {
+    ...NewsletterCampaignSummary
+  }
+}
+
+mutation UnarchiveNewsletterCampaign($id: String!) {
+  unarchiveNewsletterCampaign(id: $id) {
+    ...NewsletterCampaignSummary
+  }
 }
 
 mutation PublishNewsletterCampaign($id: String!) {

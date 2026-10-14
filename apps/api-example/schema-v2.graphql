@@ -2727,6 +2727,9 @@ type Mutation {
   """Approves a comment"""
   approveComment(id: String!): Comment!
 
+  """Hides the campaign from the default list. Campaigns are never deleted."""
+  archiveNewsletterCampaign(id: String!): NewsletterCampaign!
+
   """
   Stop a running send job. Unsent recipients stay open and can be continued.
   """
@@ -3012,7 +3015,6 @@ type Mutation {
 
   """Deletes an existing navigation."""
   deleteNavigation(id: String!): Navigation!
-  deleteNewsletterCampaign(id: String!): Boolean!
 
   """Deletes an page."""
   deletePage(id: String!): String!
@@ -3280,6 +3282,7 @@ type Mutation {
 
   """Triggers a mailchimp sync in the background."""
   triggerMailchimpSync(id: String!): Boolean!
+  unarchiveNewsletterCampaign(id: String!): NewsletterCampaign!
 
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
@@ -3484,7 +3487,13 @@ type NewsletterCampaign {
   mailchimpCampaignWebId: Int
   mailchimpEditUrl: String
   modifiedAt: DateTime!
+  status: NewsletterCampaignStatus!
   title: String!
+}
+
+enum NewsletterCampaignStatus {
+  active
+  archived
 }
 
 type NewsletterInterestCategory {
@@ -4764,7 +4773,7 @@ type Query {
   """The stored issue rendered as the HTML Mailchimp receives."""
   newsletterCampaignPreview(id: String!): String!
   newsletterCampaignReport(id: String!): NewsletterReport!
-  newsletterCampaigns: [NewsletterCampaign!]!
+  newsletterCampaigns(includeArchived: Boolean! = false): [NewsletterCampaign!]!
   newsletterMergeFields: NewsletterMergeFields!
 
   """
