@@ -6,6 +6,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { Feature } from '@wepublish/features/api';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { imagesIn } from '@wepublish/newsletter/email';
 import {
@@ -27,6 +28,7 @@ import {
 import { NewsletterCampaignService } from './newsletter-campaign.service';
 import { NewsletterMailchimpService } from './newsletter-mailchimp.service';
 
+@Feature('newsletter-editor')
 @Resolver(() => NewsletterCampaign)
 export class NewsletterCampaignResolver {
   constructor(

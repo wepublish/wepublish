@@ -119,7 +119,11 @@ import {
   CanUpdateTag,
   CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
-import { PermissionControl, Version } from '@wepublish/ui/editor';
+import {
+  FeatureControl,
+  PermissionControl,
+  Version,
+} from '@wepublish/ui/editor';
 import { de, enUS, fr } from 'date-fns/locale';
 import { forwardRef, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -1189,18 +1193,20 @@ export function Base({ children }: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
-                    <PermissionControl
-                      qualifyingPermissions={[CanGetNewsletterCampaigns.id]}
-                    >
-                      <Nav.Item
-                        as={NavLink}
-                        href="/newsletter"
-                        active={path === 'newsletter'}
-                        icon={<MdNewspaper />}
+                    <FeatureControl feature="newsletter-editor">
+                      <PermissionControl
+                        qualifyingPermissions={[CanGetNewsletterCampaigns.id]}
                       >
-                        {t('newsletter.navbar')}
-                      </Nav.Item>
-                    </PermissionControl>
+                        <Nav.Item
+                          as={NavLink}
+                          href="/newsletter"
+                          active={path === 'newsletter'}
+                          icon={<MdNewspaper />}
+                        >
+                          {t('newsletter.navbar')}
+                        </Nav.Item>
+                      </PermissionControl>
+                    </FeatureControl>
 
                     {/* SENT MAILS */}
                     <PermissionControl
