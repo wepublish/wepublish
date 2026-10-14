@@ -38,6 +38,7 @@ import {
   AuthContext,
   AuthDispatchActionType,
   AuthDispatchContext,
+  createCheckedFeatureComponent,
   SnackbarHost,
   useReportQueryErrors,
 } from '@wepublish/ui/editor';
@@ -111,15 +112,18 @@ import { WebsiteSettingsList } from './routes/website-settings/website-settings-
 import { SetNewPassword } from './setNewPassword';
 
 // For the time being, lazy load the newsletter editor.
+// Checked outside the lazy so the chunk is not even fetched while it is off.
 const newsletter = () => import('@wepublish/newsletter/editor');
-const NewsletterCampaignList = lazy(() =>
-  newsletter().then(m => ({ default: m.NewsletterCampaignList }))
+const withNewsletterFeature =
+  createCheckedFeatureComponent('newsletter-editor');
+const NewsletterCampaignList = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignList })))
 );
-const NewsletterCampaignEditor = lazy(() =>
-  newsletter().then(m => ({ default: m.NewsletterCampaignEditor }))
+const NewsletterCampaignEditor = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignEditor })))
 );
-const NewsletterCampaignPreview = lazy(() =>
-  newsletter().then(m => ({ default: m.NewsletterCampaignPreview }))
+const NewsletterCampaignPreview = withNewsletterFeature(
+  lazy(() => newsletter().then(m => ({ default: m.NewsletterCampaignPreview })))
 );
 
 const LogoutMutation = gql`

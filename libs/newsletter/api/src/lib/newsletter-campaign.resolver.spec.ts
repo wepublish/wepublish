@@ -3,6 +3,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { INestApplication } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test } from '@nestjs/testing';
+import { FeaturesService } from '@wepublish/features/api';
 import { ImageDataloaderService } from '@wepublish/image/api';
 import type { NewsletterDocument } from '@wepublish/newsletter/email';
 import { createMock, PartialMocked } from '@wepublish/testing';
@@ -50,6 +51,7 @@ describe('NewsletterCampaignResolver', () => {
   let app: INestApplication;
   let campaigns: PartialMocked<NewsletterCampaignService>;
   let images: { loadMany: Mock };
+  const features = { isEnabled: vi.fn() };
 
   const gql = (query: string, variables?: Record<string, unknown>) =>
     request(app.getHttpServer()).post('/').send({ query, variables });
@@ -75,6 +77,7 @@ describe('NewsletterCampaignResolver', () => {
           useValue: createMock(NewsletterMailchimpService),
         },
         { provide: ImageDataloaderService, useValue: images },
+        { provide: FeaturesService, useValue: features },
       ],
     }).compile();
 
@@ -82,7 +85,23 @@ describe('NewsletterCampaignResolver', () => {
     await app.init();
   });
 
+  beforeEach(() => {
+    features.isEnabled.mockResolvedValue(true);
+  });
+
   afterAll(() => app.close());
+
+  it('refuses everything while the newsletter-editor feature is off', async () => {
+    features.isEnabled.mockResolvedValue(false);
+
+    const { body } = await gql(`query { newsletterCampaigns { id } }`);
+
+    expect(body.errors?.[0].message).toBe(
+      'Feature "newsletter-editor" is not enabled for this medium'
+    );
+    expect(features.isEnabled).toHaveBeenCalledWith('newsletter-editor');
+    expect(campaigns.list).not.toHaveBeenCalled();
+  });
 
   it('returns the document as JSON and the images it uses', async () => {
     campaigns.get?.mockResolvedValue(campaign);

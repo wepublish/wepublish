@@ -131,6 +131,7 @@ import {
 import {
   ClickMenu,
   CommandPaletteTrigger,
+  FeatureControl,
   Link,
   PermissionControl,
   SidebarNav,
@@ -1143,16 +1144,18 @@ export function Base({ children }: BaseProps) {
                     </SidebarNavItem>
                   </PermissionControl>
 
-                  <PermissionControl
-                    qualifyingPermissions={[CanGetNewsletterCampaigns.id]}
-                  >
-                    <SidebarNavItem
-                      href="/newsletter"
-                      icon={<MdNewspaper />}
+                  <FeatureControl feature="newsletter-editor">
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetNewsletterCampaigns.id]}
                     >
-                      {t('newsletter.navbar')}
-                    </SidebarNavItem>
-                  </PermissionControl>
+                      <SidebarNavItem
+                        href="/newsletter"
+                        icon={<MdNewspaper />}
+                      >
+                        {t('newsletter.navbar')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
 
                   <PermissionControl
                     qualifyingPermissions={[CanGetMailLogs.id]}
