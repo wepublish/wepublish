@@ -55,6 +55,7 @@ import {
   MdHistory,
   MdIntegrationInstructions,
   MdKeyboardBackspace,
+  MdLink,
   MdRemoveRedEye,
   MdSave,
 } from 'react-icons/md';
@@ -69,6 +70,7 @@ import {
   toaster,
 } from 'rsuite';
 
+import { copyLinkToClipboard } from '../../copyLink';
 import { LastSavedAt } from '../../lastSavedAt';
 import {
   PreviewControls,
@@ -268,6 +270,8 @@ function PageEditor() {
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
 
   const previewUrl = pageData?.page?.previewUrl;
+  const publishedUrl =
+    pageData?.page?.published ? pageData.page.url : undefined;
   const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
   const showPreview = isPreviewOpen && !isPreviewDisabled;
 
@@ -675,6 +679,15 @@ function PageEditor() {
                         }}
                       />
                     </PermissionControl>
+
+                    {publishedUrl && (
+                      <EditorHeaderButton
+                        appearance="subtle"
+                        icon={<MdLink />}
+                        label={t('copyLink.button')}
+                        onClick={() => copyLinkToClipboard(publishedUrl, t)}
+                      />
+                    )}
 
                     {pageData?.page?.draft && pageData?.page?.published && (
                       <PermissionControl

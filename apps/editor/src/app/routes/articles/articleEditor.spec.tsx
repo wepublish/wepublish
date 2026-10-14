@@ -1,4 +1,10 @@
-import { act, render } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { useState } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
@@ -195,5 +201,52 @@ describe('ArticleEditor autosave', () => {
     });
 
     expect(blockListProps.disabled).not.toContain(true);
+  });
+});
+
+describe('ArticleEditor copy link', () => {
+  const writeText = vi.fn().mockResolvedValue(undefined);
+
+  beforeEach(() => {
+    writeText.mockClear();
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+  });
+
+  afterEach(() => {
+    article.published = null;
+  });
+
+  const renderEditor = () =>
+    render(
+      <MemoryRouter initialEntries={['/articles/edit/article-1']}>
+        <Routes>
+          <Route
+            path="/articles/edit/:id"
+            element={<ArticleEditor />}
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+
+  it('is hidden for unpublished articles', () => {
+    renderEditor();
+
+    expect(
+      screen.queryByRole('button', { name: 'copyLink.button' })
+    ).toBeNull();
+  });
+
+  it('copies the url of published articles', async () => {
+    (article as { published: unknown }).published = { id: 'rev-0' };
+    renderEditor();
+
+    fireEvent.click(screen.getByRole('button', { name: 'copyLink.button' }));
+
+    await waitFor(() =>
+      expect(writeText).toHaveBeenCalledWith('https://example.com/a/slug')
+    );
   });
 });

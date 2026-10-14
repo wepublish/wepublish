@@ -77,6 +77,11 @@
         "confirm": "Restaurer comme brouillon"
       }
     },
+    "copyLink": {
+      "button": "Copier le lien",
+      "copied": "Lien copié dans le presse-papiers",
+      "failed": "Le lien n'a pas pu être copié"
+    },
     "discardDraft": {
       "button": "Abandonner le brouillon",
       "success": "Brouillon abandonné — retour à la version publiée",

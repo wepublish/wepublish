@@ -77,6 +77,11 @@
         "confirm": "Restore as draft"
       }
     },
+    "copyLink": {
+      "button": "Copy link",
+      "copied": "Link copied to clipboard",
+      "failed": "Link could not be copied"
+    },
     "discardDraft": {
       "button": "Discard draft",
       "success": "Draft discarded — reverted to the published version",

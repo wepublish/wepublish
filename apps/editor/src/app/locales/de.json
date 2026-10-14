@@ -77,6 +77,11 @@
         "confirm": "Als Entwurf wiederherstellen"
       }
     },
+    "copyLink": {
+      "button": "Link kopieren",
+      "copied": "Link in die Zwischenablage kopiert",
+      "failed": "Link konnte nicht kopiert werden"
+    },
     "discardDraft": {
       "button": "Entwurf verwerfen",
       "success": "Entwurf verworfen – zur veröffentlichten Version zurückgekehrt",

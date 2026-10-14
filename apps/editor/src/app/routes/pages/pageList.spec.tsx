@@ -1,8 +1,8 @@
-import type { Mock } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { CommentItemType, CreateCommentDocument } from '@wepublish/editor/api';
+import { MemoryRouter } from 'react-router-dom';
+import type { Mock } from 'vitest';
 
 import { PageList } from './pageList';
 
@@ -96,5 +96,57 @@ describe('PageList', () => {
         variables: { itemID: 'page-1', itemType: CommentItemType.Page },
       })
     );
+  });
+
+  describe('copy link', () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+
+    beforeEach(() => {
+      writeText.mockClear();
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: { writeText },
+      });
+    });
+
+    const renderWith = (node: typeof page) => {
+      mockedUseQuery.mockReturnValue({
+        data: {
+          pages: {
+            nodes: [node],
+            totalCount: 1,
+            pageInfo: { hasNextPage: false, hasPreviousPage: false },
+          },
+        },
+        loading: false,
+        refetch: vi.fn(),
+      });
+
+      render(
+        <MemoryRouter>
+          <PageList />
+        </MemoryRouter>
+      );
+    };
+
+    it('is disabled for unpublished pages', () => {
+      renderWith(page);
+
+      expect(
+        screen
+          .getByRole('button', { name: 'copyLink.button' })
+          .hasAttribute('disabled')
+      ).toBe(true);
+    });
+
+    it('copies the url of published pages', async () => {
+      renderWith({ ...page, published: { id: 'revision-1' } } as never);
+
+      fireEvent.click(screen.getByRole('button', { name: 'copyLink.button' }));
+
+      await waitFor(() =>
+        expect(writeText).toHaveBeenCalledWith('https://example.com/about')
+      );
+    });
   });
 });
