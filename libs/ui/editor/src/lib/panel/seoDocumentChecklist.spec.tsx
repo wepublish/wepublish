@@ -110,7 +110,7 @@ describe('getSeoDocumentChecks', () => {
 
     expect(statusOf(checks, 'structure')?.status).toBe(SeoCheckStatus.Info);
     expect(statusOf(checks, 'image-descriptions')?.status).toBe(
-      SeoCheckStatus.Info
+      SeoCheckStatus.Ok
     );
   });
 

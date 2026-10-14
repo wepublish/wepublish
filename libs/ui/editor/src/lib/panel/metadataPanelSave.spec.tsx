@@ -1,9 +1,10 @@
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { ArticleMetadataPanel } from './articleMetadataPanel';
 import { PageMetadataPanel } from './pageMetadataPanel';
+import { JSX } from 'react';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({

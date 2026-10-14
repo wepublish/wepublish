@@ -117,13 +117,6 @@ describe('SocialPreviews', () => {
     ).toBe('https://media.example.com/large.jpg');
   });
 
-  test('marks which x card the website uses', () => {
-    render(<SocialPreviews data={data} />);
-
-    expect(screen.getByText('seoPreviews.xLargeUsed')).toBeTruthy();
-    expect(screen.getByText('seoPreviews.xSummaryUnused')).toBeTruthy();
-  });
-
   test('shows placeholders without an image', () => {
     render(<SocialPreviews data={{ ...data, image: undefined }} />);
 

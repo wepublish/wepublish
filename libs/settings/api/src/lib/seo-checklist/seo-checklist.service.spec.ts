@@ -4,14 +4,15 @@ import { PrismaClient } from '@prisma/client';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { SeoChecklistService } from './seo-checklist.service';
 import { SeoCheckId, SeoCheckStatus } from './seo-checklist.model';
+import { Mock } from 'vitest';
 
 const mockPrisma = {
-  article: { findFirst: jest.fn() },
-  peerProfile: { findFirst: jest.fn() },
+  article: { findFirst: vi.fn() },
+  peerProfile: { findFirst: vi.fn() },
   seoChecklistItem: {
-    findMany: jest.fn(),
-    upsert: jest.fn(),
-    deleteMany: jest.fn(),
+    findMany: vi.fn(),
+    upsert: vi.fn(),
+    deleteMany: vi.fn(),
   },
 };
 
@@ -32,14 +33,14 @@ const responses: Record<string, { status: number; body: string }> = {
 
 describe('SeoChecklistService', () => {
   let service: SeoChecklistService;
-  let fetchSpy: jest.SpyInstance;
+  let fetchSpy: Mock;
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     mockPrisma.seoChecklistItem.findMany.mockResolvedValue([]);
 
-    fetchSpy = jest
+    fetchSpy = vi
       .spyOn(global, 'fetch')
       .mockImplementation(async (input: string | URL | Request) => {
         const response = responses[input.toString()];

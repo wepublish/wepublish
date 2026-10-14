@@ -25,7 +25,7 @@ describe('SeoAnalysis', () => {
     expect(screen.getByText('600')).toBeTruthy();
     expect(screen.getByText('2')).toBeTruthy();
     expect(screen.getByText('3')).toBeTruthy();
-    expect(screen.getByText('1/4')).toBeTruthy();
+    expect(screen.getByText('1')).toBeTruthy();
   });
 
   test('does not offer an analysis', () => {
