@@ -92,10 +92,11 @@ export class ExternalAppsResolver {
     }
 
     const expiresInMinutes = 240;
+    // the userinfo endpoint matches the audience against the app's origin
     const token = await this.jwtService.generateJWT({
       id: session.user.id,
       expiresInMinutes,
-      audience: app.url,
+      audience: new URL(app.url).origin,
     });
 
     return {
