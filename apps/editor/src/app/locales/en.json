@@ -1724,6 +1724,8 @@
         "value": "Value",
         "slugInfo": "The last part of the page's web address, e.g. «about-us». Use lowercase letters, numbers and hyphens only. Changing it later breaks existing links.",
         "hiddenInfo": "Hidden pages do not appear in automatic lists on the website, but remain reachable via their direct link.",
+        "hideHeaderFooter": "Hide header and footer",
+        "hideHeaderFooterInfo": "Hides the website's header and footer on this page, e.g. for landing pages.",
         "enterSocialMediaImage": "Please add an image for social media"
       }
     },

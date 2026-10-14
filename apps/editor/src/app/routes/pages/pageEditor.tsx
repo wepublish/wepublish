@@ -146,6 +146,7 @@ function PageEditor() {
     url: '',
     properties: [],
     hidden: false,
+    hideHeaderFooter: false,
     image: undefined,
     socialMediaTitle: undefined,
     socialMediaDescription: undefined,
@@ -283,7 +284,8 @@ function PageEditor() {
 
   useEffect(() => {
     if (pageData?.page && !hasChanged && !skipRepopulate.current) {
-      const { latest, tags, hidden, slug, url } = pageData.page;
+      const { latest, tags, hidden, hideHeaderFooter, slug, url } =
+        pageData.page;
       const {
         title,
         description,
@@ -313,6 +315,7 @@ function PageEditor() {
         url,
         properties,
         hidden,
+        hideHeaderFooter,
         image: image || undefined,
         socialMediaTitle: socialMediaTitle || '',
         socialMediaDescription: socialMediaDescription || '',
@@ -444,6 +447,7 @@ function PageEditor() {
       seoTitle: metadata.seoTitle || undefined,
       seoDescription: metadata.seoDescription || undefined,
       hidden: metadata.hidden ?? false,
+      hideHeaderFooter: metadata.hideHeaderFooter ?? false,
       imageID: metadata.image?.id,
       tagIds: metadata.tags,
       properties: metadata.properties,

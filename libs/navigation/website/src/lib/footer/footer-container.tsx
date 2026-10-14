@@ -3,6 +3,7 @@ import { NavigationListDocument } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
   BuilderFooterProps,
+  footerContainerClassName,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { PropsWithChildren } from 'react';
@@ -35,7 +36,9 @@ export function FooterContainer({
       loading={loading}
       error={error}
       slug={slug}
-      className={className}
+      className={[className, footerContainerClassName]
+        .filter(Boolean)
+        .join(' ')}
       iconSlug={iconSlug}
       categorySlugs={categorySlugs}
       hideBannerOnIntersecting={hideBannerOnIntersecting}

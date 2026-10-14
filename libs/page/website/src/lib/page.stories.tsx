@@ -40,6 +40,12 @@ export const WithError = {
   },
 };
 
+export const WithHiddenHeaderFooter = {
+  args: {
+    data: { page: mockPage({ hideHeaderFooter: true }) },
+  },
+};
+
 export const WithChildren = {
   args: {
     data: { page },

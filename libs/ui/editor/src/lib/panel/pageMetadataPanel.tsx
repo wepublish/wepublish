@@ -85,6 +85,7 @@ export interface PageMetadata {
   readonly socialMediaDescription?: string;
   readonly socialMediaImage?: FullImageFragment;
   readonly hidden?: boolean | null;
+  readonly hideHeaderFooter?: boolean | null;
 }
 
 export interface PageMetadataPanelProps {
@@ -109,6 +110,7 @@ function PageMetadataPanel({
     defaultTags,
     tags,
     hidden,
+    hideHeaderFooter,
     image,
     socialMediaTitle,
     socialMediaDescription,
@@ -312,6 +314,24 @@ function PageMetadataPanel({
                   <>
                     {t('pageEditor.panels.hidden')}{' '}
                     <InfoTooltip text={t('pageEditor.panels.hiddenInfo')} />
+                  </>
+                }
+              />
+            </Form.Group>
+
+            <Form.Group controlId="hideHeaderFooter">
+              <Toggle
+                checked={!!hideHeaderFooter}
+                disabled={!isAuthorized}
+                onChange={hideHeaderFooter =>
+                  onChange?.({ ...value, hideHeaderFooter })
+                }
+                label={
+                  <>
+                    {t('pageEditor.panels.hideHeaderFooter')}{' '}
+                    <InfoTooltip
+                      text={t('pageEditor.panels.hideHeaderFooterInfo')}
+                    />
                   </>
                 }
               />
