@@ -2667,6 +2667,11 @@ type Mutation {
   """Adds a new comment made by you."""
   addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
 
+  """
+  Called by We.Publish One. Replaces the feature state of this medium and returns the features now switched on.
+  """
+  applyMediumFeatures(features: JSONObject!): [String!]!
+
   """Approves a comment"""
   approveComment(id: String!): Comment!
 
@@ -4461,6 +4466,11 @@ type Query {
 
   """Returns all external apps. Requires authentication."""
   externalApps(filter: ExternalAppFilter): [ExternalApp!]!
+
+  """
+  The features switched on for this medium in We.Publish One (or through WEP_FEATURES).
+  """
+  features: [String!]!
 
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!

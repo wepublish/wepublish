@@ -573,6 +573,29 @@ that error list.
 
 ---
 
+### ⚠️ `@Feature` is a plain guard, not `OneOf` — and `useFeature` starts at false
+
+[feature.decorator.ts](../../libs/features/api/src/lib/feature.decorator.ts)
+uses `UseGuards(FeatureGuard)`, unlike `@Permissions`, `@Authenticated` and
+`@Settings`, which all add to `OneOf`.
+
+`OneOf` passes when **any** listed guard passes, so a feature check added to it
+would be skipped whenever the user has the permission. That is every admin:
+`addPredefinedPermissions` gives the admin role all of them. A method-level
+`UseGuards` runs after the global guards and adds an AND.
+
+In the editor, `useHasPermission` answers `true` while the roles are loading.
+`useFeature` deliberately answers `false` until the `features` query is back,
+so an unreleased menu item never flashes in.
+
+**Load-bearing:** the `UseGuards` in `Feature()`, and the `?? false` in
+`useFeature`. Wrapping either in the permission pattern opens unreleased
+features to every admin, or briefly to everyone.
+
+Pinned by `feature.guard.spec.ts` and `featureContext.spec.tsx`.
+
+---
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell *why* the obvious
