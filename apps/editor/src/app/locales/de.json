@@ -2193,7 +2193,13 @@
         "generate": "Generieren",
         "generateToken": "Token generieren",
         "name": "Name",
-        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort."
+        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort.",
+        "roles": "Rollen",
+        "noRoles": "Keine Rollen – keine Berechtigungen",
+        "noRolesWarning": "Ohne Rolle darf das Token nichts. Wähle die Rollen, deren Berechtigungen Programme mit diesem Token erhalten sollen.",
+        "rolesInfo": "Eine Anfrage mit diesem Token erhält die Berechtigungen dieser Rollen. Änderungen gelten sofort.",
+        "editRoles": "Rollen bearbeiten",
+        "editRolesOf": "Rollen von {{name}}"
       }
     },
     "untitled": "Ohne Titel",

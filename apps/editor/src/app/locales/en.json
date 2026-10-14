@@ -2241,7 +2241,13 @@
         "generate": "Generate",
         "generateToken": "Generate Token",
         "name": "Name",
-        "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe."
+        "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe.",
+        "roles": "Roles",
+        "noRoles": "No roles – no permissions",
+        "noRolesWarning": "Without a role the token may do nothing. Pick the roles whose permissions programs using this token should have.",
+        "rolesInfo": "A request with this token gets the permissions of these roles. Changes apply immediately.",
+        "editRoles": "Edit roles",
+        "editRolesOf": "Roles of {{name}}"
       }
     },
     "untitled": "Untitled",
