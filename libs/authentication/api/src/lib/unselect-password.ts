@@ -22,6 +22,8 @@ export const unselectPassword: Record<
     | 'changelogConfirmations'
     | 'notificationReads'
     | 'notificationConfirmations'
+    | 'emailQuality'
+    | 'emailQualityEvents'
   >,
   boolean
 > = {

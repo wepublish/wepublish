@@ -127,6 +127,16 @@ function SettingList() {
       name: SettingName.SessionTtlDays,
       label: 'settingList.sessionTtlDays',
     },
+    [SettingName.EmailQualityUnresponsiveAfterDays]: {
+      value: 180,
+      name: SettingName.EmailQualityUnresponsiveAfterDays,
+      label: 'settingList.emailQualityUnresponsiveAfterDays',
+    },
+    [SettingName.EmailQualityMinMailsForUnresponsive]: {
+      value: 1,
+      name: SettingName.EmailQualityMinMailsForUnresponsive,
+      label: 'settingList.emailQualityMinMailsForUnresponsive',
+    },
     [SettingName.SendLoginJwtExpiresMin]: {
       value: 0,
       name: SettingName.SendLoginJwtExpiresMin,
@@ -281,7 +291,27 @@ function SettingList() {
 
   const { NumberType } = Schema.Types;
 
+  const numberInRange = (name: SettingName, fallbackMax: number) =>
+    NumberType()
+      .isRequired(t('errorMessages.required'))
+      .range(
+        settings[name].settingRestriction?.minValue ?? 1,
+        settings[name].settingRestriction?.maxValue ?? fallbackMax,
+        t('errorMessages.invalidRange', {
+          min: settings[name].settingRestriction?.minValue ?? 1,
+          max: settings[name].settingRestriction?.maxValue ?? fallbackMax,
+        })
+      );
+
   const validationModel = Schema.Model({
+    [SettingName.EmailQualityUnresponsiveAfterDays]: numberInRange(
+      SettingName.EmailQualityUnresponsiveAfterDays,
+      3650
+    ),
+    [SettingName.EmailQualityMinMailsForUnresponsive]: numberInRange(
+      SettingName.EmailQualityMinMailsForUnresponsive,
+      100
+    ),
     [SettingName.SessionTtlDays]: NumberType()
       .isRequired(t('errorMessages.required'))
       .range(
@@ -618,6 +648,31 @@ function SettingList() {
                           SettingName.ResetPasswordJwtExpiresMin,
                           t('settingList.info.passwordToken'),
                           t('settingList.minutes')
+                        )}
+                      </Form.Stack>
+                    </Panel>
+                  </Col>
+
+                  {/* email quality: when a mailed address counts as unresponsive */}
+                  <Col xs={24}>
+                    <Panel
+                      bordered
+                      header={t('settingList.emailQuality')}
+                    >
+                      <Form.Stack fluid>
+                        {renderNumberInput(
+                          SettingName.EmailQualityUnresponsiveAfterDays,
+                          t(
+                            'settingList.warnings.emailQualityUnresponsiveAfterDays'
+                          ),
+                          t('settingList.days')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.EmailQualityMinMailsForUnresponsive,
+                          t(
+                            'settingList.warnings.emailQualityMinMailsForUnresponsive'
+                          )
                         )}
                       </Form.Stack>
                     </Panel>

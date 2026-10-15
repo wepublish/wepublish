@@ -1,7 +1,18 @@
 import { Logger } from '@nestjs/common';
-import { MailLogState, MailLogType, PrismaClient, User } from '@prisma/client';
+import {
+  EmailQualityEventSource,
+  MailLogState,
+  MailLogType,
+  PrismaClient,
+  User,
+} from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { MailContext } from './mail-context';
+import { MailProviderRecipientError } from './mail-provider/mail-provider.interface';
+import {
+  qualityTypeForRejectReason,
+  recordEmailQualitySafely,
+} from './email-quality-recorder';
 
 export enum mailLogType {
   SubscriptionFlow,
@@ -136,6 +147,27 @@ export class MailController {
         (error as Error).message
       );
 
+      // Only a lasting refusal of this very address says something about it.
+      const type =
+        error instanceof MailProviderRecipientError ?
+          qualityTypeForRejectReason(error.reason)
+        : null;
+
+      if (type) {
+        const detail = (error as MailProviderRecipientError).reason;
+
+        await recordEmailQualitySafely(
+          this.mailContext.emailQualityRecorder,
+          recorder =>
+            recorder.recordMailSignals({
+              mailLogId,
+              userId: this.config.recipient.id,
+              signals: [{ type, email: this.config.recipient.email, detail }],
+              source: EmailQualityEventSource.send,
+            })
+        );
+      }
+
       throw error;
     }
 
@@ -166,6 +198,7 @@ export class MailController {
           },
           state,
           sentDate: new Date(),
+          recipientEmail: this.config.recipient.email,
           mailProviderID: this.mailContext.mailProvider?.id || '',
           mailIdentifier: this.generateMailIdentifier(),
           type: MAIL_LOG_TYPE_MAP[this.config.mailType],

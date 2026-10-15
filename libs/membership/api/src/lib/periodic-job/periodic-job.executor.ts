@@ -1,14 +1,20 @@
 import { Cron } from '@nestjs/schedule';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Type } from '@nestjs/common';
 import { ContextIdFactory, ModuleRef } from '@nestjs/core';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { NIGHT_CLAIM_MS, PeriodicJobService } from './periodic-job.service';
 import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
+import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
+import { EmailQualityService } from '../email-quality/email-quality.service';
 
 const SCHEDULE =
   process.env['PERIODIC_JOB_EXECUTION_SCHEDULE'] || '0 0 3 * * *';
 
 const CLAIM_RETRY_FOR_MS = 60_000;
+
+// The sync service caps a call at 500; one call a night is plenty for the
+// handful of mails whose webhook never arrived.
+const NIGHTLY_MAIL_LOG_SYNC_LIMIT = 500;
 
 @Injectable()
 export class PeriodicJobExecutor {
@@ -66,16 +72,34 @@ export class PeriodicJobExecutor {
       this.logger.error('Periodic jobs failed:', error);
     }
 
+    await this.runStep('Mailchimp sync', MailchimpSyncService, service =>
+      service.executeAllSync()
+    );
+    // Delivery states a provider never reported by webhook, then the levels
+    // that change with time alone (unresponsive). Order matters: a polled
+    // bounce should count tonight, not tomorrow.
+    await this.runStep('Mail log sync', MailLogSyncService, service =>
+      service.syncOpenStates(NIGHTLY_MAIL_LOG_SYNC_LIMIT)
+    );
+    await this.runStep('Email quality', EmailQualityService, service =>
+      service.recomputeAll()
+    );
+  }
+
+  /** Each step of the night fails on its own; the next one still runs. */
+  private async runStep<T>(
+    name: string,
+    service: Type<T>,
+    run: (service: T) => Promise<unknown>
+  ) {
     try {
       const contextId = ContextIdFactory.create();
-      const mailchimpSyncService = await this.moduleRef.resolve(
-        MailchimpSyncService,
-        contextId,
-        { strict: false }
+
+      await run(
+        await this.moduleRef.resolve(service, contextId, { strict: false })
       );
-      await mailchimpSyncService.executeAllSync();
     } catch (error) {
-      this.logger.error('Mailchimp sync failed during periodic job:', error);
+      this.logger.error(`${name} failed during periodic job:`, error);
     }
   }
 }

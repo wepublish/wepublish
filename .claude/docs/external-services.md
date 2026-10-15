@@ -29,6 +29,14 @@ mutations only succeed while none exists (the editor then shows «Einrichten»),
 and there is no delete mutation, so a medium never ends up without one. Change
 type or credentials on the existing row instead.
 
+## PDF Renderer
+
+Renders letters to pdf. One `settings.pdfrenderer` row; editors switch by its
+`type` (which clears the other type's credentials).
+
+- Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
+- Cloudflare Browser Rendering
+
 ## Analytics Provider
 
 - Google Analytics

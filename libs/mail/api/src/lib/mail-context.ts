@@ -6,6 +6,7 @@ import { MailController, MailControllerConfig } from './mail.controller';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 import { composeMail, MailTemplateContent } from './mail-renderer';
+import { EmailQualityRecorder } from './email-quality-recorder';
 
 export interface SendComposedMailProps {
   readonly mailTemplateId: string;
@@ -107,6 +108,7 @@ export interface MailContextProps {
   readonly prisma: PrismaClient;
   readonly kv: KvTtlCacheService;
   readonly jwtGenerator: (userId: string) => Promise<string>;
+  readonly emailQualityRecorder?: EmailQualityRecorder;
 }
 
 @Injectable()
@@ -115,12 +117,14 @@ export class MailContext implements MailContextInterface {
   prisma: PrismaClient;
   kv: KvTtlCacheService;
   jwtGenerator: (userId: string) => Promise<string>;
+  emailQualityRecorder?: EmailQualityRecorder;
 
   constructor(props: MailContextProps) {
     this.mailProvider = props.mailProvider;
     this.prisma = props.prisma;
     this.kv = props.kv;
     this.jwtGenerator = props.jwtGenerator;
+    this.emailQualityRecorder = props.emailQualityRecorder;
   }
 
   async sendMail(

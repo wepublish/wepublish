@@ -83,6 +83,12 @@ export class MailTemplatePreviewModel {
 }
 
 @ObjectType()
+export class MailTemplateLetterPreviewModel {
+  @Field({ description: 'The rendered letter as a base64 encoded pdf.' })
+  pdf!: string;
+}
+
+@ObjectType()
 export class MailTemplateSubscriptionOption {
   @Field()
   id!: string;
