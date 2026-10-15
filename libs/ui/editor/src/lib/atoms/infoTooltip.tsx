@@ -59,7 +59,7 @@ export interface InfoTooltipProps {
 export function InfoTooltip({
   text,
   label,
-  placement = 'top',
+  placement = 'bottom',
 }: InfoTooltipProps) {
   return (
     <Whisper

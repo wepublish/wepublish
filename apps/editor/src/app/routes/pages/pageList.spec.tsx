@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom/vitest';
 import type { Mock } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
@@ -35,6 +36,11 @@ vi.mock('react-i18next', () => ({
     t: (key: string) => key,
     i18n: { language: 'en' },
   }),
+}));
+
+vi.mock('./createPageModal', () => ({
+  CreatePageModal: ({ open }: { open: boolean }) =>
+    open ? <div data-testid="create-page-modal" /> : null,
 }));
 
 const mockedUseQuery = useQuery as unknown as Mock;
@@ -96,5 +102,21 @@ describe('PageList', () => {
         variables: { itemID: 'page-1', itemType: CommentItemType.Page },
       })
     );
+  });
+
+  it('offers to create a page from a template', () => {
+    render(
+      <MemoryRouter>
+        <PageList />
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByTestId('create-page-modal')).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /pages.overview.newPage/ })
+    );
+
+    expect(screen.getByTestId('create-page-modal')).toBeInTheDocument();
   });
 });

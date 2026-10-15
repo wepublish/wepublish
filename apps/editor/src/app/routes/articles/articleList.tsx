@@ -59,6 +59,8 @@ import {
 } from 'rsuite';
 import type { RowDataType } from 'rsuite-table';
 
+import { CreateArticleModal } from './createArticleModal';
+
 const { Column, HeaderCell } = RTable;
 
 interface State {
@@ -99,6 +101,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     });
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [currentArticle, setCurrentArticle] = useState<FullArticleFragment>();
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>();
 
@@ -257,15 +260,14 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
 
         <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
           <ListViewActions>
-            <Link to="/articles/create">
-              <RIconButton
-                appearance="primary"
-                disabled={isLoading}
-                icon={<MdAdd />}
-              >
-                {t('articles.overview.newArticle')}
-              </RIconButton>
-            </Link>
+            <RIconButton
+              appearance="primary"
+              disabled={isLoading}
+              icon={<MdAdd />}
+              onClick={() => setCreateModalOpen(true)}
+            >
+              {t('articles.overview.newArticle')}
+            </RIconButton>
           </ListViewActions>
         </PermissionControl>
 
@@ -584,6 +586,11 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <CreateArticleModal
+        open={isCreateModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+      />
     </>
   );
 }

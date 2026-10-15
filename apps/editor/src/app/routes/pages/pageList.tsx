@@ -57,6 +57,8 @@ import {
 } from 'rsuite';
 import type { RowDataType } from 'rsuite-table';
 
+import { CreatePageModal } from './createPageModal';
+
 interface State {
   state: string;
   text: string;
@@ -91,6 +93,7 @@ function PageList() {
     useListViewState<PageFilter>('pages');
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<FullPageFragment>();
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>();
 
@@ -249,15 +252,14 @@ function PageList() {
         </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
           <ListViewActions>
-            <Link to="/pages/create">
-              <RIconButton
-                appearance="primary"
-                disabled={isLoading}
-                icon={<MdAdd />}
-              >
-                {t('pages.overview.newPage')}
-              </RIconButton>
-            </Link>
+            <RIconButton
+              appearance="primary"
+              disabled={isLoading}
+              icon={<MdAdd />}
+              onClick={() => setCreateModalOpen(true)}
+            >
+              {t('pages.overview.newPage')}
+            </RIconButton>
           </ListViewActions>
         </PermissionControl>
 
@@ -572,6 +574,11 @@ function PageList() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <CreatePageModal
+        open={isCreateModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+      />
     </>
   );
 }

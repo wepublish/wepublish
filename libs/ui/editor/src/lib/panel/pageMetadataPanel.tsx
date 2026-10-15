@@ -6,11 +6,12 @@ import {
 } from '@wepublish/editor/api';
 import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdListAlt, MdSettings, MdShare } from 'react-icons/md';
+import { MdListAlt, MdNoteAdd, MdSettings, MdShare } from 'react-icons/md';
 import {
   Button,
   Drawer,
   Form,
+  IconButton,
   Input,
   Message,
   Nav as RNav,
@@ -89,15 +90,19 @@ export interface PageMetadata {
 
 export interface PageMetadataPanelProps {
   readonly value: PageMetadata;
+  readonly isTemplate?: boolean;
 
   onClose?(): void;
+  onCreateTemplate?(): void;
 
   onChange?(value: PageMetadata): void;
 }
 
 function PageMetadataPanel({
   value,
+  isTemplate,
   onClose,
+  onCreateTemplate,
   onChange,
 }: PageMetadataPanelProps) {
   const {
@@ -234,19 +239,21 @@ function PageMetadataPanel({
       case MetaDataType.General:
         return (
           <Form.Stack fluid>
-            <DeferredTextField
-              controlId="pageSlug"
-              name="slug"
-              label={
-                <>
-                  {t('pageEditor.panels.slug')}{' '}
-                  <InfoTooltip text={t('pageEditor.panels.slugInfo')} />
-                </>
-              }
-              disabled={!isAuthorized}
-              value={slug}
-              onChange={slug => onChange?.({ ...value, slug })}
-            />
+            {!isTemplate && (
+              <DeferredTextField
+                controlId="pageSlug"
+                name="slug"
+                label={
+                  <>
+                    {t('pageEditor.panels.slug')}{' '}
+                    <InfoTooltip text={t('pageEditor.panels.slugInfo')} />
+                  </>
+                }
+                disabled={!isAuthorized}
+                value={slug}
+                onChange={slug => onChange?.({ ...value, slug })}
+              />
+            )}
 
             <DeferredTextField
               controlId="pageTitle"
@@ -333,6 +340,20 @@ function PageMetadataPanel({
                 removeImage={() => onChange?.({ ...value, image: undefined })}
               />
             </Form.Group>
+
+            {onCreateTemplate && !isTemplate && (
+              <PermissionControl
+                qualifyingPermissions={['CAN_CREATE_PAGE_TEMPLATE']}
+              >
+                <IconButton
+                  appearance="ghost"
+                  icon={<MdNoteAdd />}
+                  onClick={onCreateTemplate}
+                >
+                  {t('pageEditor.panels.createTemplate')}
+                </IconButton>
+              </PermissionControl>
+            )}
           </Form.Stack>
         );
       case MetaDataType.Properties:

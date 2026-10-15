@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
   BlockTemplateDocument,
@@ -14,34 +13,18 @@ import {
 } from '@wepublish/permissions';
 import {
   blockForQueryBlock,
-  BlockList,
-  BlockMap,
   BlockValue,
   ConfirmActionModal,
   createCheckedPermissionComponent,
-  EditorTemplate,
   mapBlockValueToBlockInput,
-  EditorHeader,
-  EditorHeaderButton,
-  PermissionControl,
-  StateColor,
-  TypographicTextArea,
   useAuthorisation,
-  useUnsavedChangesDialog,
 } from '@wepublish/ui/editor';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdKeyboardBackspace, MdSave } from 'react-icons/md';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Badge, IconButton, Message, Notification, toaster } from 'rsuite';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Message, Notification, toaster } from 'rsuite';
 
-const NameInput = styled(TypographicTextArea)``;
-
-const TemplateContent = styled.div`
-  display: grid;
-  gap: 24px;
-  width: 100%;
-`;
+import { TemplateEditorLayout } from '../templates/templateEditorLayout';
 
 const initialBlocks: BlockValue[] = [];
 
@@ -65,8 +48,6 @@ function BlockTemplateEditView() {
   ] = useMutation(CreateBlockTemplateDocument);
   const [updateBlockTemplate, { loading: isUpdating, error: updateError }] =
     useMutation(UpdateBlockTemplateDocument);
-
-  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
 
   const blockTemplateId = (id || createData?.createBlockTemplate.id) ?? '';
   const {
@@ -124,11 +105,6 @@ function BlockTemplateEditView() {
     setBlocks((blocks as FullBlockFragment[]).map(blockForQueryBlock));
   }, [blockTemplateData]);
 
-  const [tagTitle, stateColor] =
-    isNew ? [t('blockTemplates.edit.new'), StateColor.none]
-    : hasChanged ? [t('blockTemplates.edit.editing'), StateColor.draft]
-    : [t('blockTemplates.edit.saved'), StateColor.published];
-
   function createInput(): CreateBlockTemplateMutationVariables {
     return {
       name,
@@ -181,79 +157,28 @@ function BlockTemplateEditView() {
 
   return (
     <>
-      <EditorTemplate
-        navigationChildren={
-          <EditorHeader
-            state={stateColor}
-            stateLabel={tagTitle}
-            back={
-              <Link to="/block-content/templates">
-                <IconButton
-                  circle
-                  appearance="subtle"
-                  icon={<MdKeyboardBackspace />}
-                  title={t('blockTemplates.edit.backToList')}
-                  aria-label={t('blockTemplates.edit.backToList')}
-                  onClick={e => {
-                    if (!unsavedChangesDialog()) e.preventDefault();
-                  }}
-                />
-              </Link>
-            }
-            primaryActions={
-              isNew && createData == null ?
-                <PermissionControl
-                  qualifyingPermissions={[CanCreateBlockTemplate.id]}
-                >
-                  <EditorHeaderButton
-                    appearance="primary"
-                    icon={<MdSave />}
-                    label={t('create')}
-                    collapse={false}
-                    disabled={isDisabled}
-                    onClick={() => handleSave()}
-                  />
-                </PermissionControl>
-              : <PermissionControl
-                  qualifyingPermissions={[CanUpdateBlockTemplate.id]}
-                >
-                  <Badge className={hasChanged ? 'unsaved' : 'saved'}>
-                    <EditorHeaderButton
-                      appearance="primary"
-                      icon={<MdSave />}
-                      label={t('save')}
-                      collapse={false}
-                      disabled={isDisabled}
-                      onClick={() => setSaveConfirmOpen(true)}
-                    />
-                  </Badge>
-                </PermissionControl>
-            }
-          />
+      <TemplateEditorLayout
+        i18nPrefix="blockTemplates"
+        backPath="/block-content/templates"
+        permissions={{
+          create: CanCreateBlockTemplate.id,
+          update: CanUpdateBlockTemplate.id,
+        }}
+        isNew={isNew && createData == null}
+        hasChanged={hasChanged}
+        disabled={isDisabled}
+        itemId={blockTemplateId}
+        name={name}
+        onNameChange={name => {
+          setName(name);
+          setChanged(true);
+        }}
+        blocks={blocks}
+        onBlocksChange={handleChange}
+        onSave={() =>
+          blockTemplateId ? setSaveConfirmOpen(true) : handleSave()
         }
-      >
-        <TemplateContent>
-          <NameInput
-            value={name}
-            disabled={isDisabled}
-            variant="title"
-            align="center"
-            placeholder={t('blockTemplates.edit.name')}
-            onChange={e => {
-              setName(e?.target?.value);
-              setChanged(true);
-            }}
-          />
-
-          <BlockList
-            itemId={blockTemplateId}
-            blockMap={BlockMap}
-            value={blocks}
-            disabled={isLoading || isDisabled || !isAuthorized}
-            onChange={handleChange}
-          />
-        </TemplateContent>
-      </EditorTemplate>
+      />
 
       {isSaveConfirmOpen && (
         <ConfirmActionModal

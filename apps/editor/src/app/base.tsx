@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import {
   CanCreateArticle,
+  CanCreateArticleTemplate,
   CanCreateAuthor,
   CanCreateBanner,
   CanCreateBlockStyle,
@@ -16,6 +17,7 @@ import {
   CanCreateMemberPlan,
   CanCreateNavigation,
   CanCreatePage,
+  CanCreatePageTemplate,
   CanCreatePaymentMethod,
   CanCreatePaywall,
   CanCreatePeer,
@@ -26,6 +28,7 @@ import {
   CanCreateUser,
   CanCreateUserRole,
   CanDeleteArticle,
+  CanDeleteArticleTemplate,
   CanDeleteAuthor,
   CanDeleteBanner,
   CanDeleteBlockStyle,
@@ -39,6 +42,7 @@ import {
   CanDeleteMemberPlan,
   CanDeleteNavigation,
   CanDeletePage,
+  CanDeletePageTemplate,
   CanDeletePaymentMethod,
   CanDeletePeer,
   CanDeletePoll,
@@ -101,6 +105,7 @@ import {
   CanPublishPage,
   CanSendMailTemplates,
   CanTakeActionOnComment,
+  CanUpdateArticleTemplate,
   CanUpdateBlockStyle,
   CanUpdateBlockTemplate,
   CanUpdateCommentRatingSystem,
@@ -112,6 +117,7 @@ import {
   CanUpdateExternalApp,
   CanUpdateGoodie,
   CanUpdateMailTemplates,
+  CanUpdatePageTemplate,
   CanUpdatePaywall,
   CanUpdateSettings,
   CanUpdateSystemMails,
@@ -152,6 +158,7 @@ import {
   MdMenu,
   MdMoney,
   MdMultilineChart,
+  MdNoteAdd,
   MdNotificationsNone,
   MdOutgoingMail,
   MdOutlineGridView,
@@ -561,6 +568,23 @@ export function Base({ children }: BaseProps) {
 
                     <PermissionControl
                       qualifyingPermissions={[
+                        CanCreateArticleTemplate.id,
+                        CanUpdateArticleTemplate.id,
+                        CanDeleteArticleTemplate.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/articles/templates"
+                        icon={<MdNoteAdd />}
+                        active={path === 'articles/templates'}
+                      >
+                        {t('navbar.articleTemplates')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
                         CanGetPeerArticles.id,
                         CanGetPeerArticle.id,
                       ]}
@@ -653,6 +677,23 @@ export function Base({ children }: BaseProps) {
                         active={path === 'pages'}
                       >
                         {t('navbar.pages')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanCreatePageTemplate.id,
+                        CanUpdatePageTemplate.id,
+                        CanDeletePageTemplate.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/pages/templates"
+                        icon={<MdNoteAdd />}
+                        active={path === 'pages/templates'}
+                      >
+                        {t('navbar.pageTemplates')}
                       </Nav.Item>
                     </PermissionControl>
 

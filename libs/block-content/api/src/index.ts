@@ -7,6 +7,7 @@ export * from './lib/block-template/block-template.module';
 export * from './lib/block-template/block-template.model';
 export * from './lib/block-template/block-template.service';
 export * from './lib/block-template/block-template-dataloader.service';
+export * from './lib/block-template/block-template-owner';
 
 export * from './lib/title/title-block.model';
 export * from './lib/poll/poll-block.model';

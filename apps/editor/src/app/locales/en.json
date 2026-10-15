@@ -92,6 +92,7 @@
       "saveValidationFailed": "Saving failed",
       "publishValidationFailed": "Publishing failed",
       "overview": {
+        "loadingTemplate": "Loading template…",
         "articlePending": "Article Pending",
         "articlePublished": "Article Published",
         "back": "Back",
@@ -117,6 +118,7 @@
         "warningLabel": "Warning"
       },
       "panels": {
+        "createTemplate": "Create template from article",
         "firstPublishedAtDate": "First published on {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Article not yet published",
         "addSlug": "Please add a slug",
@@ -234,6 +236,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "New Article",
+        "blank": "Blank article",
+        "search": "Search templates",
+        "noResults": "No templates found"
+      },
       "overview": {
         "articles": "Articles",
         "authors": "Authors",
@@ -1568,6 +1576,7 @@
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Block Templates"
       },
+      "articleTemplates": "Article Templates",
       "commentRating": "Rating System",
       "comments": "Comments",
       "commentTags": "Tags",
@@ -1594,6 +1603,7 @@
       "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
       "pages": "Pages",
+      "pageTemplates": "Page Templates",
       "paymentMethods": "Payment Methods",
       "peerArticles": "Peerable Articles",
       "networkContent": "We.Publish Network",
@@ -1680,7 +1690,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Unpublish",
-        "unpublished": "Unpublished"
+        "unpublished": "Unpublished",
+        "loadingTemplate": "Loading template…"
       },
       "panels": {
         "chooseBlock": "Choose Block",
@@ -1724,7 +1735,8 @@
         "value": "Value",
         "slugInfo": "The last part of the page's web address, e.g. «about-us». Use lowercase letters, numbers and hyphens only. Changing it later breaks existing links.",
         "hiddenInfo": "Hidden pages do not appear in automatic lists on the website, but remain reachable via their direct link.",
-        "enterSocialMediaImage": "Please add an image for social media"
+        "enterSocialMediaImage": "Please add an image for social media",
+        "createTemplate": "Create template from page"
       }
     },
     "pages": {
@@ -1757,6 +1769,12 @@
         "untitled": "Untitled",
         "updatedAt": "Updated At",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "New Page",
+        "blank": "Blank page",
+        "search": "Search templates",
+        "noResults": "No templates found"
       }
     },
     "paymentMethodList": {
@@ -2486,6 +2504,60 @@
       "areYouSureConfirmation": "Delete style",
       "info": "A style lets you show a block differently on your website, e.g. a teaser grid as a slider. Select the block types each style is available for; how it looks is defined by your website's design.",
       "blockTypesPlaceholder": "Available for block types"
+    },
+    "articleTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Article Templates",
+        "newTemplate": "New Article Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Article templates define the content and metadata a new article starts with. Changing a template does not affect articles that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingArticle": "Loading article…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing"
+      },
+      "delete": {
+        "title": "Delete article template?",
+        "body": "Do you really want to delete the article template \"{{name}}\"? Articles created from it are not affected."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Action",
+        "copy": "Copy",
+        "title": "Page Templates",
+        "newTemplate": "New Page Template",
+        "name": "Name",
+        "noName": "No name",
+        "info": "Page templates define the content and metadata a new page starts with. Changing a template does not affect pages that have already been created from it."
+      },
+      "edit": {
+        "loadingTemplate": "Loading template…",
+        "loadingPage": "Loading page…",
+        "copyName": "{{name}} (Copy)",
+        "name": "Name",
+        "backToList": "Back to list",
+        "metadata": "Metadata",
+        "saved": "Saved",
+        "created": "Created",
+        "new": "New",
+        "editing": "Editing"
+      },
+      "delete": {
+        "title": "Delete page template?",
+        "body": "Do you really want to delete the page template \"{{name}}\"? Pages created from it are not affected."
+      }
     },
     "blockTemplates": {
       "list": {

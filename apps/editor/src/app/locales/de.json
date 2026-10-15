@@ -92,6 +92,7 @@
       "saveValidationFailed": "Speichern fehlgeschlagen",
       "publishValidationFailed": "Publizieren fehlgeschlagen",
       "overview": {
+        "loadingTemplate": "Vorlage wird geladen…",
         "articlePending": "Artikel geplant",
         "articlePublished": "Artikel publiziert",
         "back": "Zurück",
@@ -117,6 +118,7 @@
         "warningLabel": "Warnung"
       },
       "panels": {
+        "createTemplate": "Vorlage aus Artikel erstellen",
         "firstPublishedAtDate": "Erstpublikation am {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
         "notPublishedYet": "Artikel wurde noch nicht publiziert",
         "addSlug": "Bitte Slug erfassen",
@@ -234,6 +236,12 @@
       }
     },
     "articles": {
+      "createModal": {
+        "title": "Neuer Artikel",
+        "blank": "Leerer Artikel",
+        "search": "Vorlagen durchsuchen",
+        "noResults": "Keine Vorlagen gefunden"
+      },
       "overview": {
         "articles": "Artikel",
         "authors": "Autor*innen",
@@ -1567,6 +1575,7 @@
         "crowdfundings": "Crowdfundings",
         "blockTemplates": "Blockvorlagen"
       },
+      "articleTemplates": "Artikelvorlagen",
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
       "commentTags": "Tags",
@@ -1593,6 +1602,7 @@
       "memberPlans": "Abo-Pläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
+      "pageTemplates": "Seitenvorlagen",
       "paymentMethods": "Zahlungsmethoden",
       "peerArticles": "Peerbare Artikel",
       "networkContent": "We.Publish-Netzwerk",
@@ -1679,7 +1689,8 @@
         "publishedAt": "{{publicationDate, ccc PP p}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Publikation widerrufen",
-        "unpublished": "Nicht publiziert"
+        "unpublished": "Nicht publiziert",
+        "loadingTemplate": "Vorlage wird geladen…"
       },
       "panels": {
         "close": "Schliessen",
@@ -1723,7 +1734,8 @@
         "value": "Wert",
         "slugInfo": "Der letzte Teil der Webadresse der Seite, z.B. «ueber-uns». Verwende nur Kleinbuchstaben, Zahlen und Bindestriche. Eine spätere Änderung macht bestehende Links ungültig.",
         "hiddenInfo": "Ausgeblendete Seiten erscheinen nicht in automatischen Listen auf der Website, bleiben aber über ihren direkten Link erreichbar.",
-        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
+        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
+        "createTemplate": "Vorlage aus Seite erstellen"
       }
     },
     "pages": {
@@ -1756,6 +1768,12 @@
         "untitled": "Ohne Titel",
         "updatedAt": "Aktualisiert am",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+      },
+      "createModal": {
+        "title": "Neue Seite",
+        "blank": "Leere Seite",
+        "search": "Vorlagen durchsuchen",
+        "noResults": "Keine Vorlagen gefunden"
       }
     },
     "paymentMethodList": {
@@ -2427,6 +2445,60 @@
       "subscriptionIsAutoRenewed": "Abo wird automatisch erneuert",
       "subscriptionStartsAt": "Abo startet am {{date}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
+    },
+    "articleTemplates": {
+      "list": {
+        "action": "Aktion",
+        "copy": "Kopieren",
+        "title": "Artikelvorlagen",
+        "newTemplate": "Neue Artikelvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "info": "Artikelvorlagen legen den Inhalt und die Metadaten fest, mit denen ein neuer Artikel beginnt. Änderungen an einer Vorlage wirken sich nicht auf bereits daraus erstellte Artikel aus."
+      },
+      "edit": {
+        "loadingTemplate": "Vorlage wird geladen…",
+        "loadingArticle": "Artikel wird geladen…",
+        "copyName": "{{name}} (Kopie)",
+        "name": "Name",
+        "backToList": "Zurück zur Liste",
+        "metadata": "Metadaten",
+        "saved": "Gespeichert",
+        "created": "Erstellt",
+        "new": "Neu",
+        "editing": "In Bearbeitung"
+      },
+      "delete": {
+        "title": "Artikelvorlage löschen?",
+        "body": "Möchtest du die Artikelvorlage \"{{name}}\" wirklich löschen? Daraus erstellte Artikel sind nicht betroffen."
+      }
+    },
+    "pageTemplates": {
+      "list": {
+        "action": "Aktion",
+        "copy": "Kopieren",
+        "title": "Seitenvorlagen",
+        "newTemplate": "Neue Seitenvorlage",
+        "name": "Name",
+        "noName": "Kein Name",
+        "info": "Seitenvorlagen legen den Inhalt und die Metadaten fest, mit denen eine neue Seite beginnt. Änderungen an einer Vorlage wirken sich nicht auf bereits daraus erstellte Seiten aus."
+      },
+      "edit": {
+        "loadingTemplate": "Vorlage wird geladen…",
+        "loadingPage": "Seite wird geladen…",
+        "copyName": "{{name}} (Kopie)",
+        "name": "Name",
+        "backToList": "Zurück zur Liste",
+        "metadata": "Metadaten",
+        "saved": "Gespeichert",
+        "created": "Erstellt",
+        "new": "Neu",
+        "editing": "In Bearbeitung"
+      },
+      "delete": {
+        "title": "Seitenvorlage löschen?",
+        "body": "Möchtest du die Seitenvorlage \"{{name}}\" wirklich löschen? Daraus erstellte Seiten sind nicht betroffen."
+      }
     },
     "blockTemplates": {
       "list": {

@@ -213,6 +213,76 @@ export type ArticleTeaserInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ArticleTemplate = {
+  __typename: 'ArticleTemplate';
+  /** The content (name and blocks) of the article template. */
+  blockTemplate: BlockTemplate;
+  blockTemplateId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  metadata: ArticleTemplateMetadata;
+  modifiedAt: Scalars['DateTime']['output'];
+};
+
+export type ArticleTemplateFilter = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ArticleTemplateMetadata = {
+  __typename: 'ArticleTemplateMetadata';
+  authors: Array<ArticleRevisionAuthor>;
+  breaking: Scalars['Boolean']['output'];
+  canonicalUrl?: Maybe<Scalars['String']['output']>;
+  disableComments: Scalars['Boolean']['output'];
+  hidden: Scalars['Boolean']['output'];
+  hideAuthor: Scalars['Boolean']['output'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  lead?: Maybe<Scalars['String']['output']>;
+  paywallId?: Maybe<Scalars['String']['output']>;
+  preTitle?: Maybe<Scalars['String']['output']>;
+  properties: Array<Property>;
+  seoDescription?: Maybe<Scalars['String']['output']>;
+  seoTitle?: Maybe<Scalars['String']['output']>;
+  shared: Scalars['Boolean']['output'];
+  socialMediaAuthors: Array<Author>;
+  socialMediaDescription?: Maybe<Scalars['String']['output']>;
+  socialMediaImage?: Maybe<Image>;
+  socialMediaImageID?: Maybe<Scalars['String']['output']>;
+  socialMediaTitle?: Maybe<Scalars['String']['output']>;
+  tags: Array<Tag>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type ArticleTemplateMetadataInput = {
+  authors: Array<ArticleRevisionAuthorInput>;
+  breaking: Scalars['Boolean']['input'];
+  canonicalUrl?: InputMaybe<Scalars['String']['input']>;
+  disableComments: Scalars['Boolean']['input'];
+  hidden: Scalars['Boolean']['input'];
+  hideAuthor: Scalars['Boolean']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  lead?: InputMaybe<Scalars['String']['input']>;
+  paywallId?: InputMaybe<Scalars['String']['input']>;
+  preTitle?: InputMaybe<Scalars['String']['input']>;
+  properties: Array<PropertyInput>;
+  seoDescription?: InputMaybe<Scalars['String']['input']>;
+  seoTitle?: InputMaybe<Scalars['String']['input']>;
+  shared: Scalars['Boolean']['input'];
+  socialMediaAuthorIds: Array<Scalars['String']['input']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
+  socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  tagIds: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum ArticleTemplateSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
+}
+
 export type AuditLog = {
   __typename: 'AuditLog';
   action: AuditLogAction;
@@ -2715,6 +2785,8 @@ export type Mutation = {
   createAnalyticsProviderSetting: SettingAnalyticsProvider;
   /** Creates an article. */
   createArticle: Article;
+  /** Creates a new article template. */
+  createArticleTemplate: ArticleTemplate;
   /** Creates a new author. */
   createAuthor: Author;
   createBanner: Banner;
@@ -2761,6 +2833,8 @@ export type Mutation = {
   createNavigation: Navigation;
   /** Creates an page. */
   createPage: Page;
+  /** Creates a new page template. */
+  createPageTemplate: PageTemplate;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>;
   /** This mutation allows to create payment by referencing a subscription. */
@@ -2816,6 +2890,8 @@ export type Mutation = {
   deleteAllMailchimpSyncErrors: Scalars['Boolean']['output'];
   /** Deletes an article. */
   deleteArticle: Scalars['String']['output'];
+  /** Deletes an existing article template. */
+  deleteArticleTemplate: ArticleTemplate;
   /** Deletes an existing author. */
   deleteAuthor: Author;
   deleteBanner?: Maybe<Scalars['Boolean']['output']>;
@@ -2856,6 +2932,8 @@ export type Mutation = {
   deleteNavigation: Navigation;
   /** Deletes an page. */
   deletePage: Scalars['String']['output'];
+  /** Deletes an existing page template. */
+  deletePageTemplate: PageTemplate;
   /** Deletes an existing payment method. */
   deletePaymentMethod: PaymentMethod;
   /** Deletes a payment provider setting. */
@@ -3003,6 +3081,8 @@ export type Mutation = {
   updateAnalyticsProviderSetting: SettingAnalyticsProvider;
   /** Updates an article. */
   updateArticle: Article;
+  /** Updates an existing article template. */
+  updateArticleTemplate: ArticleTemplate;
   /** Updates an existing author. */
   updateAuthor: Author;
   updateBanner: Banner;
@@ -3048,6 +3128,8 @@ export type Mutation = {
   updateNavigation: Navigation;
   /** Updates an page. */
   updatePage: Page;
+  /** Updates an existing page template. */
+  updatePageTemplate: PageTemplate;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
   updatePassword: SensitiveDataUser;
   /** Updates an existing payment method. */
@@ -3213,6 +3295,13 @@ export type MutationCreateArticleArgs = {
   socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
   tagIds: Array<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateArticleTemplateArgs = {
+  blocks: Array<BlockContentInput>;
+  metadata: ArticleTemplateMetadataInput;
+  name: Scalars['String']['input'];
 };
 
 
@@ -3414,6 +3503,13 @@ export type MutationCreatePageArgs = {
   socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
   tagIds: Array<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreatePageTemplateArgs = {
+  blocks: Array<BlockContentInput>;
+  metadata: PageTemplateMetadataInput;
+  name: Scalars['String']['input'];
 };
 
 
@@ -3685,6 +3781,11 @@ export type MutationDeleteArticleArgs = {
 };
 
 
+export type MutationDeleteArticleTemplateArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteAuthorArgs = {
   id: Scalars['String']['input'];
 };
@@ -3776,6 +3877,11 @@ export type MutationDeleteNavigationArgs = {
 
 
 export type MutationDeletePageArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeletePageTemplateArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -4173,6 +4279,14 @@ export type MutationUpdateArticleArgs = {
 };
 
 
+export type MutationUpdateArticleTemplateArgs = {
+  blocks: Array<BlockContentInput>;
+  id: Scalars['String']['input'];
+  metadata: ArticleTemplateMetadataInput;
+  name: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateAuthorArgs = {
   bio?: InputMaybe<Scalars['RichText']['input']>;
   hideOnArticle?: InputMaybe<Scalars['Boolean']['input']>;
@@ -4404,6 +4518,14 @@ export type MutationUpdatePageArgs = {
   socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
   tagIds: Array<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdatePageTemplateArgs = {
+  blocks: Array<BlockContentInput>;
+  id: Scalars['String']['input'];
+  metadata: PageTemplateMetadataInput;
+  name: Scalars['String']['input'];
 };
 
 
@@ -4892,9 +5014,68 @@ export type PageTeaserInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type PageTemplate = {
+  __typename: 'PageTemplate';
+  /** The content (name and blocks) of the page template. */
+  blockTemplate: BlockTemplate;
+  blockTemplateId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  metadata: PageTemplateMetadata;
+  modifiedAt: Scalars['DateTime']['output'];
+};
+
+export type PageTemplateFilter = {
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageTemplateMetadata = {
+  __typename: 'PageTemplateMetadata';
+  description?: Maybe<Scalars['String']['output']>;
+  hidden: Scalars['Boolean']['output'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']['output']>;
+  properties: Array<Property>;
+  seoDescription?: Maybe<Scalars['String']['output']>;
+  seoTitle?: Maybe<Scalars['String']['output']>;
+  socialMediaDescription?: Maybe<Scalars['String']['output']>;
+  socialMediaImage?: Maybe<Image>;
+  socialMediaImageID?: Maybe<Scalars['String']['output']>;
+  socialMediaTitle?: Maybe<Scalars['String']['output']>;
+  tags: Array<Tag>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageTemplateMetadataInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  hidden: Scalars['Boolean']['input'];
+  imageID?: InputMaybe<Scalars['String']['input']>;
+  properties: Array<PropertyInput>;
+  seoDescription?: InputMaybe<Scalars['String']['input']>;
+  seoTitle?: InputMaybe<Scalars['String']['input']>;
+  socialMediaDescription?: InputMaybe<Scalars['String']['input']>;
+  socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
+  socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
+  tagIds: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum PageTemplateSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
+}
+
 export type PaginatedArticleRevisions = {
   __typename: 'PaginatedArticleRevisions';
   nodes: Array<ArticleRevision>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedArticleTemplate = {
+  __typename: 'PaginatedArticleTemplate';
+  nodes: Array<ArticleTemplate>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
@@ -5023,6 +5204,13 @@ export type PaginatedMemberPlans = {
 export type PaginatedPageRevisions = {
   __typename: 'PaginatedPageRevisions';
   nodes: Array<PageRevision>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedPageTemplate = {
+  __typename: 'PaginatedPageTemplate';
+  nodes: Array<PageTemplate>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
@@ -5659,6 +5847,10 @@ export type Query = {
   articleRevision?: Maybe<ArticleRevision>;
   /** Returns a paginated list of revisions (version history) for an article. */
   articleRevisions: PaginatedArticleRevisions;
+  /** Returns a single article template by ID. */
+  articleTemplate: ArticleTemplate;
+  /** Returns a paginated list of article templates. */
+  articleTemplates: PaginatedArticleTemplate;
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles;
   /** Returns a paginated list of audit log entries based on the filters given. */
@@ -5870,6 +6062,10 @@ export type Query = {
   pageRevision?: Maybe<PageRevision>;
   /** Returns a paginated list of revisions (version history) for a page. */
   pageRevisions: PaginatedPageRevisions;
+  /** Returns a single page template by ID. */
+  pageTemplate: PageTemplate;
+  /** Returns a paginated list of page templates. */
+  pageTemplates: PaginatedPageTemplate;
   /** Returns a paginated list of pages based on the filters given. */
   pages: PaginatedPages;
   /** Returns a payment method by id */
@@ -6046,6 +6242,21 @@ export type QueryArticleRevisionsArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryArticleTemplateArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryArticleTemplatesArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ArticleTemplateFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int']['input'];
+  sort?: ArticleTemplateSort;
+  take?: Scalars['Int']['input'];
 };
 
 
@@ -6509,6 +6720,21 @@ export type QueryPageRevisionsArgs = {
   pageId: Scalars['String']['input'];
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryPageTemplateArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryPageTemplatesArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<PageTemplateFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int']['input'];
+  sort?: PageTemplateSort;
+  take?: Scalars['Int']['input'];
 };
 
 
