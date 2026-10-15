@@ -9,6 +9,7 @@ import {
   BuilderHTMLBlockProps,
   BuilderMailchimpFormBlockProps,
   BuilderListicleBlockProps,
+  BuilderAuthorBlockProps,
   BuilderPollBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
@@ -40,6 +41,7 @@ import { isYouTubeVideoBlock } from './youtube/youtube-video-block';
 import { isStreamableVideoBlock } from './streamable/streamable-video-block';
 import { isTeaserGridBlock } from './teaser/teaser-grid-block';
 import { isImageGalleryBlock } from './image-gallery/image-gallery-block';
+import { isAuthorBlock } from './author/author-block';
 import { isPollBlock } from './poll/poll-block';
 import { isListicleBlock } from './listicle/listicle-block';
 import { isEventBlock } from './event/event-block';
@@ -61,30 +63,13 @@ import {
   isAlternatingTeaserSlotsBlockStyle,
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
-import { css } from '@emotion/react';
 
 export const BlockRenderer = memo(
   ({ block, className }: BuilderBlockRendererProps) => {
     const { blocks, blockStyles } = useWebsiteBuilder();
 
-    const emptyBlockCss = css`
-      height: 100%;
-      width: 100%;
-      background-color: red;
-      color: white;
-      font-size: 2rem;
-      text-align: center;
-      display: flex;
-      align-content: center;
-      justify-content: center;
-      justify-items: center;
-      align-items: center;
-      font-weight: 700;
-      border-radius: 1rem;
-    `;
-
     if (!block) {
-      return <div css={emptyBlockCss}>empty block</div>;
+      return;
     }
 
     const blockStylesCond = cond([
@@ -438,6 +423,15 @@ export const BlockRenderer = memo(
           block => (
             <blocks.Poll
               {...(block as BuilderPollBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isAuthorBlock,
+          block => (
+            <blocks.Author
+              {...(block as BuilderAuthorBlockProps)}
               className={className}
             />
           ),

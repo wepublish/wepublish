@@ -716,6 +716,10 @@
         "doubleOptInHelp": "New subscribers first receive a confirmation email from Mailchimp and are only added to the list once they click the link in it.",
         "advancedStepHelp": "Shows conditions for when this step is skipped or shown, e.g. if certain information is already available.",
         "advancedInputHelp": "Shows more settings for this field, e.g. a description below the field or a default value."
+      },
+      "author": {
+        "label": "Author",
+        "placeholder": "Select an author"
       }
     },
     "cancel": "Cancel",

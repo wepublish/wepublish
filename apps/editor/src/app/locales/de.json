@@ -716,6 +716,10 @@
         "doubleOptInHelp": "Neue Abonnentinnen und Abonnenten erhalten zuerst eine Bestätigungs-E-Mail von Mailchimp und werden erst in die Liste aufgenommen, wenn sie auf den Link darin klicken.",
         "advancedStepHelp": "Zeigt Bedingungen, wann dieser Schritt übersprungen oder angezeigt wird, z. B. wenn bestimmte Angaben bereits vorhanden sind.",
         "advancedInputHelp": "Zeigt weitere Einstellungen für dieses Feld, z. B. eine Beschreibung unter dem Feld oder einen Standardwert."
+      },
+      "author": {
+        "label": "Autor*in",
+        "placeholder": "Autor*in auswählen"
       }
     },
     "cancel": "Abbrechen",
