@@ -2237,6 +2237,9 @@ input MailTemplateInput {
   context: MailTemplateContext
   description: String
   htmlContent: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
   letterLayoutId: String
   name: String!
   subject: String!
@@ -2254,6 +2257,9 @@ type MailTemplateModel {
   htmlContent: String!
   id: String!
 
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+
   """
   Stationery a letter printed from this template is set on; null means the default.
   """
@@ -2268,6 +2274,9 @@ input MailTemplatePreviewInput {
   """Mail type / context id, e.g. "renewal"."""
   contextId: String!
   htmlContent: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
 
   """Stationery to show a letter preview on; null for the default."""
   letterLayoutId: String

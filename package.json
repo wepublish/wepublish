@@ -344,6 +344,7 @@
     "nodemailer": "^9.0.3",
     "otpauth": "^9.5.0",
     "passport-http-bearer": "^1.0.1",
+    "pdf-lib": "^1.17.1",
     "pg": "^8.20.0",
     "pingen2-sdk-js": "^0.3.0",
     "pino": "^6.11.0",

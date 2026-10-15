@@ -52,6 +52,7 @@ import {
   readShellSettings,
 } from './mail-html';
 import { MailColorPicker } from './color-picker';
+import { LetterAppendixPicker } from './letter-appendix-picker';
 import { LetterPreview } from './letter-preview';
 import { MailPreview } from './mail-preview';
 import { MAIL_PLACEHOLDER_CONTEXTS } from './mail-placeholders';
@@ -118,6 +119,7 @@ function MailTemplateEdit() {
   const [contextId, setContextId] = useState<MailTemplateContext | null>(null);
   // Stationery for the letter version; null prints on the default layout.
   const [letterLayoutId, setLetterLayoutId] = useState<string | null>(null);
+  const [letterAppendixId, setLetterAppendixId] = useState<string | null>(null);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [previewSubject, setPreviewSubject] = useState('');
@@ -170,6 +172,7 @@ function MailTemplateEdit() {
       setTextContent(template.textContent ?? '');
       setContextId(template.context ?? null);
       setLetterLayoutId(template.letterLayoutId ?? null);
+      setLetterAppendixId(template.letterAppendixId ?? null);
       htmlRef.current = template.htmlContent || createEmptyEmailHtml();
       const shell = readShellSettings(htmlRef.current);
       setBackgroundColor(shell.backgroundColor);
@@ -255,6 +258,7 @@ function MailTemplateEdit() {
     textContent: deriveTextFromHtml(htmlRef.current),
     context: contextId,
     letterLayoutId,
+    letterAppendixId,
   });
 
   const save = async (close: boolean) => {
@@ -301,6 +305,7 @@ function MailTemplateEdit() {
     htmlContent: htmlRef.current,
     textContent,
     letterLayoutId,
+    letterAppendixId,
   });
 
   // Preview/test never block on a missing mail type: fall back to `custom`
@@ -540,6 +545,20 @@ function MailTemplateEdit() {
                         })
                       : t('mailTemplates.edit.letterLayoutNone')
                     }
+                  />
+                </Form.Group>
+              )}
+              {letterAvailable && (
+                <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
+                  <Form.ControlLabel>
+                    {t('mailTemplates.edit.letterAppendix')}{' '}
+                    <InfoTooltip
+                      text={t('mailTemplates.edit.letterAppendixHelp')}
+                    />
+                  </Form.ControlLabel>
+                  <LetterAppendixPicker
+                    value={letterAppendixId}
+                    onChange={setLetterAppendixId}
                   />
                 </Form.Group>
               )}

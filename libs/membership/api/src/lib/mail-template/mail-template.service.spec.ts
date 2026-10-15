@@ -211,6 +211,31 @@ describe('MailTemplateService', () => {
       vi.fn(async () => Buffer.from('%PDF-1.4 letter'));
     const resolveLayout = vi.fn(async () => null);
 
+    it('previews the chosen appendix with the letter', async () => {
+      const render = renderLetter();
+      const service = makeService(
+        {},
+        {},
+        { renderLetter: render, resolveLayout }
+      );
+
+      await service.previewLetter({
+        contextId: 'renewal',
+        subscriptionId: null,
+        html: '<p>Hallo</p>',
+        letterAppendixId: 'qr-bill',
+      });
+
+      expect(render).toHaveBeenCalledWith(
+        expect.objectContaining({
+          template: {
+            htmlContent: '<p>Hallo</p>',
+            letterAppendixId: 'qr-bill',
+          },
+        })
+      );
+    });
+
     it('renders the draft with sample data and a sample address', async () => {
       const render = renderLetter();
       const service = makeService(

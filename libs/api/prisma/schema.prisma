@@ -307,6 +307,8 @@ model Document {
   fileSize    Int
   extension   String
 
+  mailTemplates MailTemplate[]
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([title])
@@ -1586,6 +1588,10 @@ model MailTemplate {
   // Kept (nullable) so content can be imported from the remote provider for
   // installs migrating from the remote-template model. Not used for sending.
   externalMailTemplateId String? @unique
+
+  // Uploaded pdf printed after the letter pages (e.g. a static QR-bill).
+  letterAppendixId String?
+  letterAppendix   Document? @relation(fields: [letterAppendixId], references: [id], onDelete: SetNull)
 
   subscriptionIntervals SubscriptionInterval[]
 

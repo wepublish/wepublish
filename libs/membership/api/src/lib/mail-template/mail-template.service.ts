@@ -227,6 +227,8 @@ export class MailTemplateService {
     html: string;
     /** Stationery chosen in the editor, possibly not saved yet. */
     letterLayoutId?: string | null;
+    /** Uploaded pdf chosen in the editor, possibly not saved yet. */
+    letterAppendixId?: string | null;
   }): Promise<{ pdf: string }> {
     const data = await this.buildData(
       input.contextId,
@@ -235,7 +237,10 @@ export class MailTemplateService {
     );
 
     const pdf = await this.letterContext.renderLetter({
-      template: { htmlContent: input.html },
+      template: {
+        htmlContent: input.html,
+        letterAppendixId: input.letterAppendixId,
+      },
       layout: await this.letterContext.resolveLayout(input.letterLayoutId),
       // The window position is chosen per send; a preview shows the default.
       addressPosition: LetterAddressPosition.left,

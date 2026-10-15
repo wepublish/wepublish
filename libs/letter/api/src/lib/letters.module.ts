@@ -57,9 +57,15 @@ export class LettersModule {
       {
         provide: LetterContext,
         useFactory: (
-          { letterProvider, pdfRenderer }: LettersModuleOptions,
+          { letterProvider, pdfRenderer, documentUrl }: LettersModuleOptions,
           prisma: PrismaClient
-        ) => new LetterContext({ letterProvider, pdfRenderer, prisma }),
+        ) =>
+          new LetterContext({
+            letterProvider,
+            pdfRenderer,
+            prisma,
+            documentUrl,
+          }),
         inject: [LETTERS_MODULE_OPTIONS, PrismaClient],
       },
     ];

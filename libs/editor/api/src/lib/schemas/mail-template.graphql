@@ -80,6 +80,7 @@ fragment FullMailTemplate on MailTemplateModel {
   htmlContent
   textContent
   letterLayoutId
+  letterAppendixId
 }
 
 fragment FullMailProvider on MailProviderModel {

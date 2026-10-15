@@ -46,6 +46,12 @@ export class MailTemplateModel {
   })
   letterLayoutId?: string | null;
 
+  @Field(() => String, {
+    nullable: true,
+    description: 'Uploaded pdf printed after the letter pages, e.g. a QR-bill.',
+  })
+  letterAppendixId?: string | null;
+
   @Field()
   status!: string;
 }
@@ -78,6 +84,12 @@ export class MailTemplateInput {
 
   @Field(() => String, { nullable: true })
   letterLayoutId?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'Uploaded pdf printed after the letter pages, e.g. a QR-bill.',
+  })
+  letterAppendixId?: string | null;
 }
 
 @ObjectType()
@@ -133,6 +145,12 @@ export class MailTemplatePreviewInput {
       'Stationery to show a letter preview on; null for the default.',
   })
   letterLayoutId?: string | null;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'Uploaded pdf printed after the letter pages, e.g. a QR-bill.',
+  })
+  letterAppendixId?: string | null;
 }
 
 @InputType()

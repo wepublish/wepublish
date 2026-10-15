@@ -37,6 +37,10 @@ Renders letters to pdf. One `settings.pdfrenderer` row; editors switch by its
 - Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
 - Cloudflare Browser Rendering
 
+A template's `letterAppendixId` (an uploaded pdf `Document`, e.g. a static
+QR-bill) is appended after rendering by `appendPdf` (pdf-lib, renderer-agnostic)
+— CH recipients only, padded to an odd page for duplex (Pingen's QR paper rules).
+
 ### Letter layouts (Briefpapier)
 
 `LetterLayout` rows (`letter_layouts`, CRUD in `libs/letter/api/src/lib/letter-layout/`,

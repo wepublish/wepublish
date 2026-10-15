@@ -7,6 +7,8 @@ import {
 
 export interface LetterTemplateContent {
   htmlContent: string;
+  /** Uploaded pdf (e.g. a static QR-bill) printed after the letter pages. */
+  letterAppendixId?: string | null;
 }
 
 /**

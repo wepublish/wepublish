@@ -2248,6 +2248,8 @@ export type MailTemplateInput = {
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']['input']>;
   htmlContent: Scalars['String']['input'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
   letterLayoutId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   subject: Scalars['String']['input'];
@@ -2266,6 +2268,8 @@ export type MailTemplateModel = {
   description?: Maybe<Scalars['String']['output']>;
   htmlContent: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: Maybe<Scalars['String']['output']>;
   /** Stationery a letter printed from this template is set on; null means the default. */
   letterLayoutId?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -2278,6 +2282,8 @@ export type MailTemplatePreviewInput = {
   /** Mail type / context id, e.g. "renewal". */
   contextId: Scalars['String']['input'];
   htmlContent: Scalars['String']['input'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
   /** Stationery to show a letter preview on; null for the default. */
   letterLayoutId?: InputMaybe<Scalars['String']['input']>;
   subject: Scalars['String']['input'];
