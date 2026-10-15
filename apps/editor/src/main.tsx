@@ -7,6 +7,7 @@ import { getApiClientV2, getSettings } from '@wepublish/editor/api';
 import {
   AuthProvider,
   FacebookProvider,
+  FeaturesProvider,
   InstagramProvider,
   TwitterProvider,
 } from '@wepublish/ui/editor';
@@ -72,17 +73,19 @@ const onDOMContentLoaded = async () => {
   root.render(
     <ApolloProvider client={client}>
       <AuthProvider>
-        <IconContext.Provider value={{ className: 'rs-icon' }}>
-          <FacebookProvider sdkLanguage={'en_US'}>
-            <InstagramProvider>
-              <TwitterProvider>
-                <ColorModeProvider>
-                  <ThemedApp />
-                </ColorModeProvider>
-              </TwitterProvider>
-            </InstagramProvider>
-          </FacebookProvider>
-        </IconContext.Provider>
+        <FeaturesProvider>
+          <IconContext.Provider value={{ className: 'rs-icon' }}>
+            <FacebookProvider sdkLanguage={'en_US'}>
+              <InstagramProvider>
+                <TwitterProvider>
+                  <ColorModeProvider>
+                    <ThemedApp />
+                  </ColorModeProvider>
+                </TwitterProvider>
+              </InstagramProvider>
+            </FacebookProvider>
+          </IconContext.Provider>
+        </FeaturesProvider>
       </AuthProvider>
     </ApolloProvider>
   );

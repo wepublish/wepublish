@@ -607,6 +607,58 @@ applies only the pending folders and does not care about extra ones
 
 Nothing guards this — a reset here is silent until the data is gone.
 
+---
+
+### ⚠️ A `MailchimpSyncError` row takes its user out of every Mailchimp sync
+
+The nightly sync skips every user with a row for the config, whatever the
+error and however old ([mailchimp-sync.service.ts](../../libs/membership/api/src/lib/mailchimp-sync/mailchimp-sync.service.ts),
+`getRecentSyncErrorUserIds` — nothing makes it "recent"). Rows only go away when
+someone deletes them in the editor's sync error list.
+
+The email-change hook used to record one whenever Mailchimp refused the rename,
+including when the user had signed up with the new email. That user then
+dropped out of the sync for good, with two stale contacts (found on hauptstadt,
+2026-10-09). Record an error only for a state a person has to resolve, and
+handle the expected Mailchimp answers instead.
+
+Mailchimp renames only `subscribed` contacts, and not onto an email that an
+active, archived or even permanently deleted contact still has: all give
+`400 Invalid Resource`, with the reason only in `errors[].message`, e.g.
+`"…" is already in this list with a status of "Deleted".` Removing the
+existing contact cannot make room; renaming it away first does, which is why
+the hook moves it to `moved-<contact_id>@wepublish.ch` before archiving it
+(`example.com` is rejected as invalid). All verified against the hauptstadt
+audience on 2026-10-09.
+
+Nothing guards the skip itself — a user missing from the sync shows up only in
+that error list.
+
+---
+
+### ⚠️ `@Feature` is a plain guard, not `OneOf` — and `useFeature` starts at false
+
+[feature.decorator.ts](../../libs/features/api/src/lib/feature.decorator.ts)
+uses `UseGuards(FeatureGuard)`, unlike `@Permissions`, `@Authenticated` and
+`@Settings`, which all add to `OneOf`.
+
+`OneOf` passes when **any** listed guard passes, so a feature check added to it
+would be skipped whenever the user has the permission. That is every admin:
+`addPredefinedPermissions` gives the admin role all of them. A method-level
+`UseGuards` runs after the global guards and adds an AND.
+
+In the editor, `useHasPermission` answers `true` while the roles are loading.
+`useFeature` deliberately answers `false` until the `features` query is back,
+so an unreleased menu item never flashes in.
+
+**Load-bearing:** the `UseGuards` in `Feature()`, and the `?? false` in
+`useFeature`. Wrapping either in the permission pattern opens unreleased
+features to every admin, or briefly to everyone.
+
+Pinned by `feature.guard.spec.ts` and `featureContext.spec.tsx`.
+
+---
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell *why* the obvious

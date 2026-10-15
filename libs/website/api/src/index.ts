@@ -253,6 +253,7 @@ export type {
   Mutation,
   MutationAddMailchimpContactArgs,
   MutationAddUserCommentArgs,
+  MutationApplyMediumFeaturesArgs,
   MutationApproveCommentArgs,
   MutationCancelMailSendJobArgs,
   MutationCancelSubscriptionArgs,

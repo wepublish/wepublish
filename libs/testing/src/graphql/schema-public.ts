@@ -2827,6 +2827,8 @@ export type Mutation = {
   addMailchimpContact: MailchimpSubscribeResult;
   /** Adds a new comment made by you. */
   addUserComment: Comment;
+  /** Called by We.Publish One. Replaces the feature state of this medium and returns the features now switched on. */
+  applyMediumFeatures: Array<Scalars['String']['output']>;
   /** Approves a comment */
   approveComment: Comment;
   /** Stop a running send job. Unsent recipients stay open and can be continued. */
@@ -3272,6 +3274,11 @@ export type MutationAddUserCommentArgs = {
   parentID?: InputMaybe<Scalars['String']['input']>;
   text: Scalars['RichText']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationApplyMediumFeaturesArgs = {
+  features: Scalars['JSONObject']['input'];
 };
 
 
@@ -5978,6 +5985,8 @@ export type Query = {
   externalApp: ExternalApp;
   /** Returns all external apps. Requires authentication. */
   externalApps: Array<ExternalApp>;
+  /** The features switched on for this medium in We.Publish One (or through WEP_FEATURES). */
+  features: Array<Scalars['String']['output']>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
   /** Returns a goodie by id. */

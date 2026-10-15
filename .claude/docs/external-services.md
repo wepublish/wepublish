@@ -77,3 +77,15 @@ Impersonation (One signs in as a user of this medium) is off unless
 editor redeems at `/login/impersonate/:jwt` — a route that accepts nothing but
 an impersonation grant, since it skips TOTP and any other JWT pointed at it
 would be a way around two-factor.
+
+**Feature toggles** come from One too: per medium, staff-only (One's
+`ClientFeatures`).
+- Every heartbeat sends the registry (`FEATURES` in `libs/features`). One
+  answers `200 {features: {key: bool}}`, the complete state, which
+  `FeaturesService.apply` stores in `medium_features`; a key One leaves out is
+  switched off.
+- One also pushes a change at once via `applyMediumFeatures` (scope
+  `write:features`).
+- A `204`, an older One or One being down changes nothing: the last known
+  state stays. `WEP_FEATURES=a,b` switches flags on locally or in review
+  builds without One.
