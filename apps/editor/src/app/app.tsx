@@ -53,12 +53,13 @@ import { Base } from './base';
 import { useColorMode } from './colorMode';
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
-import { LoginJwt } from './loginJwt';
 import { LoginImpersonate } from './loginImpersonate';
+import { LoginJwt } from './loginJwt';
 import { ResetPassword } from './resetPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
 import { AudienceDashboard } from './routes/audience/audience-dashboard';
+import { AuditLogList } from './routes/auditLog/auditLogList';
 import { AuthorList } from './routes/authors/authorList';
 import { BlockStyleList } from './routes/blockStyles/blockStyleList';
 import { BlockTemplateEditView } from './routes/blockTemplate/blockTemplateEditView';
@@ -71,8 +72,6 @@ import { DiscountCodeCreateView } from './routes/discountCode/discountCodeCreate
 import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView';
 import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
-import { NotificationsPage } from './routes/notifications/notificationsPage';
-import { AuditLogList } from './routes/auditLog/auditLogList';
 import { DocumentList } from './routes/documents/documentList';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
@@ -88,6 +87,7 @@ import { IntegrationList } from './routes/integrations/integrationList';
 import { MemberPlanList } from './routes/memberPlans/memberPlanList';
 import { NavigationList } from './routes/navigations/navigationList';
 import { NetworkContentPage } from './routes/networkContent/networkContentPage';
+import { NotificationsPage } from './routes/notifications/notificationsPage';
 import { PageEditor } from './routes/pages/pageEditor';
 import { PageList } from './routes/pages/pageList';
 import { PaymentMethodList } from './routes/paymentMethods/paymentMethodList';
@@ -99,6 +99,7 @@ import { PeerList } from './routes/peers/peerList';
 import { PollEditView } from './routes/polls/pollEditView';
 import { PollList } from './routes/polls/pollList';
 import { PollVoteListContainer } from './routes/polls/PollVotesListContainer';
+import { SeoChecklist } from './routes/seo/seoChecklist';
 import { SubscriptionEditView } from './routes/subscriptions/subscriptionEditView';
 import { SubscriptionList } from './routes/subscriptions/subscriptionList';
 import { TagCreateView } from './routes/tags/tagCreateView';
@@ -1213,6 +1214,14 @@ export function App() {
               element={
                 <Base>
                   <WebsiteSettingsItem />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/seo"
+              element={
+                <Base>
+                  <SeoChecklist />
                 </Base>
               }
             />

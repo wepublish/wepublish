@@ -364,6 +364,7 @@
     "react-i18next": "^13.0.0",
     "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
+    "react-og-preview": "^0.2.0",
     "react-onesignal": "^3.0.1",
     "react-page-visibility": "^7.0.0",
     "react-player": "3.4.0",
