@@ -1823,6 +1823,40 @@ async function seedMailTemplates(prisma: PrismaClient) {
   }
 }
 
+/**
+ * Stationery every letter prints on until a template picks its own. Plain
+ * text in both bands, so it reads fine on any renderer without a logo asset.
+ */
+async function seedLetterLayouts(prisma: PrismaClient) {
+  const id = 'seed-letter-layout-default';
+
+  await prisma.letterLayout.upsert({
+    where: { id },
+    update: {},
+    create: {
+      id,
+      name: 'Standard-Briefpapier',
+      isDefault: true,
+      headerHeightMm: 30,
+      footerHeightMm: 20,
+      headerHtml: `<table style="width: 100%; border-collapse: collapse; margin-top: 10mm; font-size: 9pt; color: #444">
+  <tr>
+    <td style="vertical-align: top"><span style="font-size: 16pt; font-weight: bold; color: #000">We.Publish</span></td>
+    <td style="vertical-align: top; text-align: right">We.Publish Medien AG<br>Musterstrasse 1<br>8000 Zürich</td>
+  </tr>
+</table>`,
+      footerHtml: `<table style="width: 100%; border-collapse: collapse; border-top: 0.3mm solid #999; font-size: 8pt; color: #444">
+  <tr>
+    <td style="vertical-align: top; padding-top: 2mm">We.Publish Medien AG · Musterstrasse 1 · 8000 Zürich<br>kontakt@example.com · +41 44 000 00 00</td>
+    <td style="vertical-align: top; padding-top: 2mm; text-align: right">IBAN CH00 0000 0000 0000 0000 0<br>UID CHE-000.000.000</td>
+  </tr>
+</table>`,
+    },
+  });
+
+  console.log('  Standard-Briefpapier (default)');
+}
+
 async function seedSettings(prisma: PrismaClient) {
   const upsert = <T extends { id: string }>(data: T) => ({
     where: { id: data.id },
@@ -2086,6 +2120,8 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
     await seedChangelogEntries(prisma);
     console.log('Seeding mail templates');
     await seedMailTemplates(prisma);
+    console.log('Seeding letter layouts');
+    await seedLetterLayouts(prisma);
 
     return;
   }
@@ -2188,4 +2224,6 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
   await seedChangelogEntries(prisma);
   console.log('Seeding mail templates');
   await seedMailTemplates(prisma);
+  console.log('Seeding letter layouts');
+  await seedLetterLayouts(prisma);
 }

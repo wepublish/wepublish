@@ -456,6 +456,31 @@ packaged binary.
 
 ---
 
+### ⚠️ The API binary's `Intl` has no locale data: never take names from it
+
+The API's Node comes from `@yao-pkg/pkg`, built with reduced ICU. Its
+`Intl.DisplayNames` knows no region names and hands the code back:
+`new Intl.DisplayNames(['de'], { type: 'region' }).of('CH')` is `'CH'` in the
+binary (and `'ZZ'` for the unknown region), `'Schweiz'` in plain Node —
+locally, in tests and in CI. Verified 2026-10-13 with a pkg-built
+`node22` binary: ICU 78.2, resolved locale `en-US`.
+
+It shipped «CH» into the address window of Neue Wege's letters, which Pingen
+reads, although every test and the local preview showed «Schweiz».
+
+Take country names from `i18n-iso-countries` (its `langs/` are a pkg asset in
+`docker/api_build_package.json`), as `countryName` in
+[`letter-recipient.ts`](../../libs/letter/api/src/lib/letter-recipient.ts)
+does. The same applies to locale-dependent `Intl` output in general (month
+names, `toLocaleDateString('de-CH')` and friends): assume English or raw values
+in the binary.
+
+Pinned by `libs/letter/api/src/lib/letter-recipient.spec.ts` («does not depend
+on the region names of the running Node»), which loads the module with an
+`Intl` that echoes codes.
+
+---
+
 ### ⚠️ Express 5 has no bare `*` route
 
 [apps/editor/src/server-app.ts](../../apps/editor/src/server-app.ts) serves
@@ -562,6 +587,94 @@ failed signature.
 
 Pinned by `libs/mail/api/src/lib/mail.webhook.spec.ts` ("refuses a call that
 does not come from the provider", "answers 200 to a payload it cannot handle").
+
+---
+
+### ⚠️ The letter sheet keeps `@page { margin: 0 }`; stationery space comes from the table spacers
+
+`composeLetter` (`libs/letter/api/src/lib/letter-renderer.ts`) positions the
+Pingen address window absolutely at 60mm from the sheet top and puts the
+header/footer bands in `position: fixed` boxes. Space for the bands on every
+page is reserved by the `thead`/`tfoot` spacer rows of the `.flow` table, which
+Chromium repeats per page, and page 1's body offset is reduced by the header
+spacer so the text still starts at 90mm.
+
+Reserving the bands with `@page` margins instead moves the address window by
+the top margin and Pingen rejects the letter; a fixed box offset into the
+margin area is clipped by Chromium. The band cap of 40mm (`LAYOUT_BAND_MAX_MM`)
+keeps a header out of the franking zone, whose bottom edge is at 87.5mm.
+
+**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows,
+and `CONTENT_TOP_MM - headerSpace` for the body padding.
+
+Pinned by `libs/letter/api/src/lib/letter-renderer.spec.ts`.
+
+### ⚠️ `prisma migrate dev` refuses to run against a database other branches migrated
+
+The local Postgres is shared by every worktree. Once a migration from another
+branch has been applied to it, `prisma migrate dev` in a worktree that lacks
+that folder reports it as missing and wants to reset the database, which drops
+every table (`migrate status` still says "up to date", it does not flag extra
+migrations).
+
+Write the migration by hand instead: `npx prisma migrate diff
+--from-config-datasource --to-schema libs/api/prisma/schema.prisma --script`
+prints the SQL (strip the parts that belong to the other branches), put it in a
+`YYYYMMDDHHMMSS_name/migration.sql` folder, then `npx prisma migrate deploy`
+applies only the pending folders and does not care about extra ones
+(verified 2026-10-15 with `20261015100000_letter_layout`).
+
+Nothing guards this — a reset here is silent until the data is gone.
+
+---
+
+### ⚠️ A `MailchimpSyncError` row takes its user out of every Mailchimp sync
+
+The nightly sync skips every user with a row for the config, whatever the
+error and however old ([mailchimp-sync.service.ts](../../libs/membership/api/src/lib/mailchimp-sync/mailchimp-sync.service.ts),
+`getRecentSyncErrorUserIds` — nothing makes it "recent"). Rows only go away when
+someone deletes them in the editor's sync error list.
+
+The email-change hook used to record one whenever Mailchimp refused the rename,
+including when the user had signed up with the new email. That user then
+dropped out of the sync for good, with two stale contacts (found on hauptstadt,
+2026-10-09). Record an error only for a state a person has to resolve, and
+handle the expected Mailchimp answers instead.
+
+Mailchimp renames only `subscribed` contacts, and not onto an email that an
+active, archived or even permanently deleted contact still has: all give
+`400 Invalid Resource`, with the reason only in `errors[].message`, e.g.
+`"…" is already in this list with a status of "Deleted".` Removing the
+existing contact cannot make room; renaming it away first does, which is why
+the hook moves it to `moved-<contact_id>@wepublish.ch` before archiving it
+(`example.com` is rejected as invalid). All verified against the hauptstadt
+audience on 2026-10-09.
+
+Nothing guards the skip itself — a user missing from the sync shows up only in
+that error list.
+
+---
+
+### ⚠️ `@Feature` is a plain guard, not `OneOf` — and `useFeature` starts at false
+
+[feature.decorator.ts](../../libs/features/api/src/lib/feature.decorator.ts)
+uses `UseGuards(FeatureGuard)`, unlike `@Permissions`, `@Authenticated` and
+`@Settings`, which all add to `OneOf`.
+
+`OneOf` passes when **any** listed guard passes, so a feature check added to it
+would be skipped whenever the user has the permission. That is every admin:
+`addPredefinedPermissions` gives the admin role all of them. A method-level
+`UseGuards` runs after the global guards and adds an AND.
+
+In the editor, `useHasPermission` answers `true` while the roles are loading.
+`useFeature` deliberately answers `false` until the `features` query is back,
+so an unreleased menu item never flashes in.
+
+**Load-bearing:** the `UseGuards` in `Feature()`, and the `?? false` in
+`useFeature`. Wrapping either in the permission pattern opens unreleased
+features to every admin, or briefly to everyone.
+
+Pinned by `feature.guard.spec.ts` and `featureContext.spec.tsx`.
 
 ---
 

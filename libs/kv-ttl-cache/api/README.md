@@ -54,7 +54,8 @@ immediately. `getNamespaceVersions(namespaces)` re-reads all stale ones with one
 `MGET` (the answer cache and the provider registry use it), so a cache hit needs
 no Dragonfly round trip.
 
-If a Dragonfly command fails or does not answer within 500 ms, the replica
+If a Dragonfly command fails or does not answer within 2 s (Dragonfly stalls
+commands for about a second while it writes a snapshot), the replica
 caches in memory only and does not ask Dragonfly again for 5 s (`Dragonfly
 unavailable, caching on this replica only …` is logged at most once per 5 s, not
 per command). Requests do not fail or queue. A reset that could not be written is
@@ -64,13 +65,17 @@ replica falls back to the older version. Commands sent while the connection is
 being set up wait for that one connect (at most 1 s, then the half-open client
 is destroyed; node-redis' own timeout does not cover the handshake). A command
 timeout never destroys a connection that is still being set up, and a client
-that ended up ready but closed reconnects.
+that ended up ready but closed reconnects. A connection is only dropped once a
+command has gone unanswered for 5 s, so a stall costs no reconnect but a dead
+socket is still replaced.
 Batches (`getOrLoadManyNs`) read Dragonfly with one `MGET`. At boot the module
 pings Dragonfly and logs an error if it is unreachable (wrong password, ACL user
 or CA), and warns in production when `REDIS_URL` is missing. `/health` (watched
 by UptimeRobot) reports `dragonfly` down while `REDIS_URL` is unset or Dragonfly
 refuses a probe write to `<REDIS_KEY_PREFIX>::health` (`dragonflyStatus()`:
-unreachable, wrong prefix, out of memory); the Kubernetes probes
+unreachable, wrong prefix, out of memory, no answer within 2 s). The probe is
+sent even during the 5 s pause after a failure, so `/health` shows whether
+Dragonfly answers now, not whether it failed once; the Kubernetes probes
 (`/health/readinessProbe` etc.) ignore it, so pods stay in service.
 
 ## Published content

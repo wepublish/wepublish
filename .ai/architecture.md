@@ -121,6 +121,7 @@ Frontend (Apollo Client)
 - Decorators: `@Public()` (no auth), `@CurrentUser()` (inject session), `@Permissions(...)` (RBAC check)
 - Permission constants: `CanCreateArticle`, `CanDeleteArticle`, `CanPublishArticle`, `CanGetArticle`, etc.
 - `@PreviewMode()` for draft content access
+- Per-medium feature toggles (`libs/features`, state from We.Publish One): `@Feature('key')` in the API, `useFeature` / `FeatureControl` in the editor — see [conventions.md](conventions.md#feature-toggles-per-medium)
 
 ## Import Aliases
 

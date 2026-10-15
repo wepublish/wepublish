@@ -1,7 +1,9 @@
 const { readFileSync } = require('fs');
 
 const CONNECTION_TIMEOUT_MS = 1000;
-const COMMAND_TIMEOUT_MS = 1000;
+// Dragonfly stalls commands for about a second while it writes a snapshot.
+const COMMAND_TIMEOUT_MS = 2000;
+const SILENT_CONNECTION_MS = 5000;
 const UNAVAILABLE_RETRY_MS = 5000;
 const PAGE_TTL_MS = 3 * 60 * 60 * 1000;
 const LOCK_TTL_MS = 10_000;
@@ -12,10 +14,12 @@ const API_HEARTBEAT_KEY = 'website:heartbeat';
 const describe = error =>
   error instanceof Error ? error.message : String(error);
 
+class Timeout extends Error {}
+
 const timeout = (promise, ms, what) =>
   new Promise((resolve, reject) => {
     const timer = setTimeout(
-      () => reject(new Error(`no ${what} within ${ms} ms`)),
+      () => reject(new Timeout(`no ${what} within ${ms} ms`)),
       ms
     );
 
@@ -144,19 +148,35 @@ function createSharedStore({
     }
   };
 
-  const drop = () => {
-    const current = client;
-    client = undefined;
-    destroy(current);
+  const drop = (candidate = client) => {
+    if (client === candidate) {
+      client = undefined;
+    }
+
+    destroy(candidate);
   };
 
-  const fail = error => {
-    drop();
+  const pause = error => {
     unavailableUntil = Date.now() + UNAVAILABLE_RETRY_MS;
     logger.error(
       `[page-cache] Dragonfly unavailable, caching pages on this pod only for the next ${
         UNAVAILABLE_RETRY_MS / 1000
       } s: ${describe(error)}`
+    );
+  };
+
+  const fail = (error, candidate) => {
+    drop(candidate);
+    pause(error);
+  };
+
+  const dropIfSilent = (reply, candidate) => {
+    timeout(reply, SILENT_CONNECTION_MS - COMMAND_TIMEOUT_MS, 'answer').catch(
+      error => {
+        if (error instanceof Timeout) {
+          drop(candidate);
+        }
+      }
     );
   };
 
@@ -200,16 +220,19 @@ function createSharedStore({
       return undefined;
     }
 
+    let reply;
+
     try {
-      return (
-        (await timeout(
-          ready.sendCommand(command),
-          COMMAND_TIMEOUT_MS,
-          'answer'
-        )) ?? null
-      );
+      reply = ready.sendCommand(command);
+
+      return (await timeout(reply, COMMAND_TIMEOUT_MS, 'answer')) ?? null;
     } catch (error) {
-      fail(error);
+      if (error instanceof Timeout) {
+        pause(error);
+        dropIfSilent(reply, ready);
+      } else {
+        fail(error, ready);
+      }
 
       return undefined;
     }

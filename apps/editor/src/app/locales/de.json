@@ -1254,6 +1254,9 @@
         "preview": "Vorschau",
         "sendTest": "Test senden",
         "previewLetter": "Als Brief anzeigen",
+        "letterAppendix": "QR-Einzahlungsschein (PDF)",
+        "letterAppendixNone": "Keiner",
+        "letterAppendixHelp": "PDF aus «Dokumente», das nach den Briefseiten gedruckt wird, z. B. ein QR-Einzahlungsschein (A4, Schein am unteren Rand). Nur für Adressen in der Schweiz; bei Duplexdruck wird bei Bedarf eine leere Seite eingefügt, damit der Schein auf einer Vorderseite liegt.",
         "letterPreviewTitle": "Briefvorschau",
         "selectMailType": "Bitte zuerst einen Verwendungszweck wählen.",
         "selectMailTypePlaceholder": "Verwendungszweck wählen …",
@@ -1267,7 +1270,11 @@
         "sampleSubscriptionHelp": "Wähle ein bestehendes Abo, damit Vorschau und Test-E-Mail mit dessen echten Daten gefüllt werden. Ohne Auswahl werden erfundene Beispieldaten verwendet. Die Test-E-Mail geht trotzdem nur an dich.",
         "bodyModeHelp": "Visuell: Inhalt wie in einem Textprogramm bearbeiten. HTML: den Quellcode direkt bearbeiten – nur für Fortgeschrittene. Text-Inhalt: die reine Textversion für E-Mail-Programme ohne HTML; sie wird automatisch erzeugt.",
         "backgroundHelp": "Farbe der Fläche rund um den Inhalt der E-Mail.",
-        "contentWidthHelp": "Maximale Breite des Inhalts in Pixeln. 600 px ist ein bewährter Wert, der in den meisten E-Mail-Programmen gut aussieht. Auf schmalen Bildschirmen wird der Inhalt automatisch schmaler."
+        "contentWidthHelp": "Maximale Breite des Inhalts in Pixeln. 600 px ist ein bewährter Wert, der in den meisten E-Mail-Programmen gut aussieht. Auf schmalen Bildschirmen wird der Inhalt automatisch schmaler.",
+        "letterLayout": "Briefpapier",
+        "letterLayoutDefault": "Standard ({{name}})",
+        "letterLayoutNone": "Standard (keines vorhanden)",
+        "letterLayoutHelp": "Kopf- und Fusszeile, wenn diese Vorlage als Brief gedruckt wird. Für E-Mails ohne Bedeutung."
       },
       "editor": {
         "undo": "Rückgängig",
@@ -1619,7 +1626,8 @@
       "mailSend": "Manuelle Sendungen",
       "mailLog": "Abgeschlossene Sendungen",
       "communication": "Kommunikation",
-      "auditLog": "Audit-Log"
+      "auditLog": "Audit-Log",
+      "letterLayouts": "Briefpapier"
     },
     "navigation": {
       "overview": {
@@ -3970,6 +3978,32 @@
     "listInput": {
       "dragToReorder": "Ziehen, um die Reihenfolge zu ändern",
       "add": "Eintrag hinzufügen"
+    },
+    "letterLayouts": {
+      "title": "Briefpapier",
+      "intro": "Kopf- und Fusszeile für gedruckte Briefe. Sendungsvorlagen drucken auf dem Standard-Briefpapier, sofern sie kein eigenes wählen.",
+      "create": "Briefpapier erstellen",
+      "createHeader": "Briefpapier erstellen",
+      "editHeader": "Briefpapier bearbeiten",
+      "name": "Name",
+      "nameRequired": "Bitte gib einen Namen an.",
+      "isDefault": "Standard-Briefpapier",
+      "isDefaultHelp": "Vorlagen ohne eigenes Briefpapier werden auf dem Standard gedruckt. Es kann nur eines geben.",
+      "default": "Standard",
+      "header": "Kopfzeile",
+      "footer": "Fusszeile",
+      "headerHeight": "Höhe Kopfzeile (mm)",
+      "footerHeight": "Höhe Fusszeile (mm)",
+      "heightHint": "Höchstens 40 mm, damit die Kopfzeile nicht in die Frankierzone von Pingen reicht. Beide erscheinen auf jeder Seite.",
+      "htmlHint": "HTML mit Platzhaltern wie {{user_firstName}}. Grössen in mm angeben, Bilder mit fester Breite und Höhe.",
+      "insertImage": "Bild einfügen",
+      "preview": "Vorschau",
+      "previewTitle": "Musterbrief auf diesem Briefpapier",
+      "saved": "Briefpapier gespeichert",
+      "deleteTitle": "Briefpapier löschen",
+      "deleteQuestion": "«{{name}}» löschen? Vorlagen, die darauf drucken, müssen zuerst ein anderes wählen.",
+      "deleteConfirm": "Löschen",
+      "noLayouts": "Noch kein Briefpapier. Erstelle eines, damit Briefe eine Kopf- und Fusszeile bekommen."
     }
   }
 }

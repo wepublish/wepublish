@@ -1886,6 +1886,45 @@ export enum LetterDeliveryProduct {
   Registered = 'registered'
 }
 
+export type LetterLayoutInput = {
+  footerHeightMm: Scalars['Int']['input'];
+  footerHtml: Scalars['String']['input'];
+  headerHeightMm: Scalars['Int']['input'];
+  headerHtml: Scalars['String']['input'];
+  isDefault: Scalars['Boolean']['input'];
+  name: Scalars['String']['input'];
+};
+
+/** Stationery for printed letters: a header and a footer repeated on every page of the pdf. */
+export type LetterLayoutModel = {
+  __typename: 'LetterLayoutModel';
+  createdAt: Scalars['DateTime']['output'];
+  /** Height of the footer band in millimetres from the bottom edge. */
+  footerHeightMm: Scalars['Int']['output'];
+  footerHtml: Scalars['String']['output'];
+  /** Height of the header band in millimetres from the top edge. */
+  headerHeightMm: Scalars['Int']['output'];
+  headerHtml: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  /** Templates without stationery of their own print on this one. */
+  isDefault: Scalars['Boolean']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type LetterLayoutPreviewInput = {
+  footerHeightMm: Scalars['Int']['input'];
+  footerHtml: Scalars['String']['input'];
+  headerHeightMm: Scalars['Int']['input'];
+  headerHtml: Scalars['String']['input'];
+};
+
+export type LetterLayoutPreviewModel = {
+  __typename: 'LetterLayoutPreviewModel';
+  /** A sample letter on this stationery, as base64 pdf. */
+  pdf: Scalars['String']['output'];
+};
+
 export type LetterPrintInput = {
   addressPosition?: InputMaybe<LetterAddressPosition>;
   deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
@@ -2271,6 +2310,9 @@ export type MailTemplateInput = {
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']['input']>;
   htmlContent: Scalars['String']['input'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
+  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   subject: Scalars['String']['input'];
   textContent?: InputMaybe<Scalars['String']['input']>;
@@ -2288,6 +2330,10 @@ export type MailTemplateModel = {
   description?: Maybe<Scalars['String']['output']>;
   htmlContent: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: Maybe<Scalars['String']['output']>;
+  /** Stationery a letter printed from this template is set on; null means the default. */
+  letterLayoutId?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   status: Scalars['String']['output'];
   subject: Scalars['String']['output'];
@@ -2298,6 +2344,10 @@ export type MailTemplatePreviewInput = {
   /** Mail type / context id, e.g. "renewal". */
   contextId: Scalars['String']['input'];
   htmlContent: Scalars['String']['input'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
+  /** Stationery to show a letter preview on; null for the default. */
+  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
   subject: Scalars['String']['input'];
   /** Subscription to take sample data from. */
   subscriptionId?: InputMaybe<Scalars['String']['input']>;
@@ -2839,6 +2889,8 @@ export type Mutation = {
   addMailchimpContact: MailchimpSubscribeResult;
   /** Adds a new comment made by you. */
   addUserComment: Comment;
+  /** Called by We.Publish One. Replaces the feature state of this medium and returns the features now switched on. */
+  applyMediumFeatures: Array<Scalars['String']['output']>;
   /** Approves a comment */
   approveComment: Comment;
   /** Stop a running send job. Unsent recipients stay open and can be continued. */
@@ -2893,6 +2945,8 @@ export type Mutation = {
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Create a letter layout. */
+  createLetterLayout: LetterLayoutModel;
   /** Creates a new letter provider setting. */
   createLetterProviderSetting: SettingLetterProvider;
   /** Sets up the mail provider. Only possible while none is configured. */
@@ -2996,6 +3050,8 @@ export type Mutation = {
   deleteImage: Scalars['String']['output'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Delete a letter layout. Refused while a mail template still prints on it. */
+  deleteLetterLayout: LetterLayoutModel;
   /** Deletes an existing letter provider setting. */
   deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
@@ -3200,6 +3256,8 @@ export type Mutation = {
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
+  /** Update a letter layout. */
+  updateLetterLayout: LetterLayoutModel;
   /** Updates an existing letter provider setting. */
   updateLetterProviderSetting: SettingLetterProvider;
   /** Updates an existing mail provider setting. */
@@ -3288,6 +3346,11 @@ export type MutationAddUserCommentArgs = {
   parentID?: InputMaybe<Scalars['String']['input']>;
   text: Scalars['RichText']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationApplyMediumFeaturesArgs = {
+  features: Scalars['JSONObject']['input'];
 };
 
 
@@ -3499,6 +3562,11 @@ export type MutationCreateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']['input']>;
   scheduledDeactivationAt: Scalars['DateTime']['input'];
   subscriptionID?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateLetterLayoutArgs = {
+  input: LetterLayoutInput;
 };
 
 
@@ -3946,6 +4014,11 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteLetterLayoutArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -4543,6 +4616,12 @@ export type MutationUpdateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']['input']>;
   scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']['input']>;
   subscriptionID?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateLetterLayoutArgs = {
+  id: Scalars['String']['input'];
+  input: LetterLayoutInput;
 };
 
 
@@ -5996,6 +6075,8 @@ export type Query = {
   externalApp: ExternalApp;
   /** Returns all external apps. Requires authentication. */
   externalApps: Array<ExternalApp>;
+  /** The features switched on for this medium in We.Publish One (or through WEP_FEATURES). */
+  features: Array<Scalars['String']['output']>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
   /** Returns a goodie by id. */
@@ -6041,6 +6122,12 @@ export type Query = {
   invoices: InvoiceConnection;
   /** Whether a letter integration is configured, so letters can be previewed and sent */
   letterChannelAvailable: Scalars['Boolean']['output'];
+  /** A single letter layout. */
+  letterLayout: LetterLayoutModel;
+  /** A sample letter printed on the given, possibly unsaved, stationery. */
+  letterLayoutPreview: LetterLayoutPreviewModel;
+  /** All letter layouts, the default first. */
+  letterLayouts: Array<LetterLayoutModel>;
   /** Returns a single letter provider setting by id. */
   letterProviderSetting: SettingLetterProvider;
   /** Returns all letter provider settings. */
@@ -6589,6 +6676,16 @@ export type QueryInvoicesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryLetterLayoutArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryLetterLayoutPreviewArgs = {
+  input: LetterLayoutPreviewInput;
 };
 
 

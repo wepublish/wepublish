@@ -1186,6 +1186,23 @@ export function Base({ children }: BaseProps) {
                       </Nav.Item>
                     </PermissionControl>
 
+                    {/* LETTER LAYOUTS */}
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetMailTemplates.id,
+                        CanUpdateMailTemplates.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/letterlayouts"
+                        active={path === 'letterlayouts'}
+                        icon={<MdDescription />}
+                      >
+                        {t('navbar.letterLayouts')}
+                      </Nav.Item>
+                    </PermissionControl>
+
                     {/* SENT MAILS */}
                     <PermissionControl
                       qualifyingPermissions={[CanGetMailLogs.id]}
