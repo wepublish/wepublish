@@ -1268,7 +1268,11 @@
         "sampleSubscriptionHelp": "Pick an existing subscription to fill the preview and the test mail with its real data. Without a choice, made-up sample data is used. The test mail still only goes to you.",
         "bodyModeHelp": "Visual: edit the content like in a word processor. HTML: edit the source code directly — for advanced users. Plain text: the text-only version for email programs without HTML; it is generated automatically.",
         "backgroundHelp": "Color of the area around the email's content.",
-        "contentWidthHelp": "Maximum width of the content in pixels. 600 px is a proven value that looks good in most email programs. On narrow screens the content shrinks automatically."
+        "contentWidthHelp": "Maximum width of the content in pixels. 600 px is a proven value that looks good in most email programs. On narrow screens the content shrinks automatically.",
+        "letterLayout": "Stationery",
+        "letterLayoutDefault": "Default ({{name}})",
+        "letterLayoutNone": "Default (none yet)",
+        "letterLayoutHelp": "Header and footer when this template is printed as a letter. Ignored for emails."
       },
       "editor": {
         "undo": "Undo",
@@ -1617,7 +1621,8 @@
       "mailSend": "Manual mailings",
       "mailLog": "Completed mailings",
       "communication": "Communication",
-      "auditLog": "Audit log"
+      "auditLog": "Audit log",
+      "letterLayouts": "Stationery"
     },
     "navigation": {
       "overview": {
@@ -3910,6 +3915,32 @@
     "listInput": {
       "dragToReorder": "Drag to change the order",
       "add": "Add entry"
+    },
+    "letterLayouts": {
+      "title": "Stationery",
+      "intro": "Header and footer for printed letters. Mailing templates print on the default stationery unless they choose their own.",
+      "create": "Create stationery",
+      "createHeader": "Create stationery",
+      "editHeader": "Edit stationery",
+      "name": "Name",
+      "nameRequired": "Please enter a name.",
+      "isDefault": "Default stationery",
+      "isDefaultHelp": "Templates without stationery of their own print on the default. There can only be one.",
+      "default": "Default",
+      "header": "Header",
+      "footer": "Footer",
+      "headerHeight": "Header height (mm)",
+      "footerHeight": "Footer height (mm)",
+      "heightHint": "At most 40 mm, so the header stays clear of the Pingen franking zone. Both repeat on every page.",
+      "htmlHint": "HTML with placeholders such as {{user_firstName}}. Use mm for sizes and give images a fixed width and height.",
+      "insertImage": "Insert image",
+      "preview": "Preview",
+      "previewTitle": "Sample letter on this stationery",
+      "saved": "Stationery saved",
+      "deleteTitle": "Delete stationery",
+      "deleteQuestion": "Delete “{{name}}”? Templates printing on it have to choose another first.",
+      "deleteConfirm": "Delete",
+      "noLayouts": "No stationery yet. Create one so letters get a header and footer."
     }
   }
 }

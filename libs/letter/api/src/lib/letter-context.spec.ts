@@ -15,6 +15,7 @@ import {
 } from './letter-provider/letter-provider.interface';
 import { UserWithAddress } from './letter-recipient';
 import { PdfRenderer } from './pdf/pdf-renderer';
+import type { Mock } from 'vitest';
 
 const recipient: LetterAddress = {
   name: 'Jane Doe',
@@ -68,14 +69,21 @@ function createContext(
 
   const create = vi.fn();
 
+  const layouts = {
+    findUnique: vi.fn().mockResolvedValue(null),
+    findFirst: vi.fn().mockResolvedValue(null),
+  };
+
   const prisma = {
     mailTemplate: {
       findUnique: vi.fn().mockResolvedValue({
         id: 'template-1',
         subject: 'Ihre Rechnung',
         htmlContent: '<p>Hallo {{user_firstName}}</p>',
+        letterLayoutId: null,
       }),
     },
+    letterLayout: layouts,
     mailLog: { create },
   } as unknown as PrismaClient;
 
@@ -89,8 +97,18 @@ function createContext(
     pdfRenderer,
   });
 
-  return { context, rendered, create };
+  return { context, rendered, create, prisma, layouts };
 }
+
+const layout = (name: string) => ({
+  id: `layout-${name}`,
+  name,
+  headerHtml: `<b>${name} header</b>`,
+  footerHtml: `<i>${name} footer</i>`,
+  headerHeightMm: 30,
+  footerHeightMm: 20,
+  isDefault: false,
+});
 
 describe('LetterContext.renderLetter', () => {
   it('renders the template and the address window into one sheet', async () => {
@@ -122,7 +140,87 @@ describe('LetterContext.renderLetter', () => {
   });
 });
 
+describe('LetterContext.resolveLayout', () => {
+  it('takes the layout a template points at', async () => {
+    const { context, layouts } = createContext();
+    layouts.findUnique.mockResolvedValue(layout('invoice'));
+
+    const resolved = await context.resolveLayout('layout-invoice');
+
+    expect(layouts.findUnique).toHaveBeenCalledWith({
+      where: { id: 'layout-invoice' },
+    });
+    expect(resolved?.headerHtml).toBe('<b>invoice header</b>');
+  });
+
+  it('falls back to the default layout', async () => {
+    const { context, layouts } = createContext();
+    layouts.findFirst.mockResolvedValue(layout('default'));
+
+    const resolved = await context.resolveLayout(null);
+
+    expect(layouts.findFirst).toHaveBeenCalledWith({
+      where: { isDefault: true },
+    });
+    expect(resolved?.footerHtml).toBe('<i>default footer</i>');
+  });
+
+  it('is nothing while no layout exists', async () => {
+    const { context } = createContext();
+
+    expect(await context.resolveLayout(null)).toBeNull();
+  });
+});
+
 describe('LetterContext.sendLetter', () => {
+  it('prints the letter on the stationery the template points at', async () => {
+    const { context, rendered, prisma, layouts } = createContext();
+    (prisma.mailTemplate.findUnique as Mock).mockResolvedValue({
+      id: 'template-1',
+      subject: 'Ihre Rechnung',
+      htmlContent: '<p>Hallo</p>',
+      letterLayoutId: 'layout-invoice',
+    });
+    layouts.findUnique.mockResolvedValue(layout('invoice'));
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    expect(rendered[0]).toContain('<b>invoice header</b>');
+    expect(rendered[0]).toContain('<i>invoice footer</i>');
+  });
+
+  it('prints on the default stationery when the template has none', async () => {
+    const { context, rendered, layouts } = createContext();
+    layouts.findFirst.mockResolvedValue(layout('default'));
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    expect(rendered[0]).toContain('<b>default header</b>');
+  });
+
+  it('prints without stationery while none exists', async () => {
+    const { context, rendered } = createContext();
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    expect(rendered[0]).not.toContain('letter-header');
+  });
+
   it('posts the rendered letter and logs it on the letter channel', async () => {
     const sendLetter = vi.fn().mockResolvedValue({
       providerLetterID: 'pingen-1',

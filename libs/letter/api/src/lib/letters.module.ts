@@ -8,6 +8,8 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { createAsyncOptionsProvider } from '@wepublish/utils/api';
 import { LetterContext } from './letter-context';
+import { LetterLayoutResolver } from './letter-layout/letter-layout.resolver';
+import { LetterLayoutService } from './letter-layout/letter-layout.service';
 import {
   LetterWebhookController,
   LetterWebhookMiddleware,
@@ -44,6 +46,10 @@ export class LettersModule {
   ): Provider[] {
     return [
       LetterWebhookMiddleware,
+      // Stationery lives here because its preview needs the LetterContext the
+      // factory below builds.
+      LetterLayoutService,
+      LetterLayoutResolver,
       createAsyncOptionsProvider<LettersModuleOptions>(
         LETTERS_MODULE_OPTIONS,
         options

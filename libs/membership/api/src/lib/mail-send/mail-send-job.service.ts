@@ -750,6 +750,7 @@ export class MailSendJobService {
 
       const pdf = await this.letterContext.renderLetter({
         template: { htmlContent: template.htmlContent },
+        layout: await this.letterContext.resolveLayout(template.letterLayoutId),
         addressPosition: printSettings(input.print).addressPosition,
         data: { user: recipient.user, optional: optionalData },
         recipient: toLetterAddress(recipient.user),

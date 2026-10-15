@@ -209,10 +209,15 @@ describe('MailTemplateService', () => {
   describe('previewLetter', () => {
     const renderLetter = () =>
       vi.fn(async () => Buffer.from('%PDF-1.4 letter'));
+    const resolveLayout = vi.fn(async () => null);
 
     it('renders the draft with sample data and a sample address', async () => {
       const render = renderLetter();
-      const service = makeService({}, {}, { renderLetter: render });
+      const service = makeService(
+        {},
+        {},
+        { renderLetter: render, resolveLayout }
+      );
 
       const result = await service.previewLetter({
         contextId: 'renewal',
@@ -268,7 +273,11 @@ describe('MailTemplateService', () => {
         },
         invoice: { findFirst: vi.fn(async () => null) },
       };
-      const service = makeService(prisma, {}, { renderLetter: render });
+      const service = makeService(
+        prisma,
+        {},
+        { renderLetter: render, resolveLayout }
+      );
 
       await service.previewLetter({
         contextId: 'subscription',
@@ -295,6 +304,48 @@ describe('MailTemplateService', () => {
       );
     });
 
+    it('prints the draft on the stationery the editor chose', async () => {
+      const render = renderLetter();
+      const layout = { headerHtml: '<b>Zwölf</b>' };
+      const resolveLayout = vi.fn(async () => layout);
+      const service = makeService(
+        {},
+        {},
+        { renderLetter: render, resolveLayout }
+      );
+
+      await service.previewLetter({
+        contextId: 'renewal',
+        subscriptionId: null,
+        html: '<p>Hallo</p>',
+        letterLayoutId: 'layout-1',
+      });
+
+      expect(resolveLayout).toHaveBeenCalledWith('layout-1');
+      expect(render).toHaveBeenCalledWith(expect.objectContaining({ layout }));
+    });
+
+    it('prints the draft on the default stationery when none is chosen', async () => {
+      const render = renderLetter();
+      const resolveLayout = vi.fn(async () => null);
+      const service = makeService(
+        {},
+        {},
+        { renderLetter: render, resolveLayout }
+      );
+
+      await service.previewLetter({
+        contextId: 'renewal',
+        subscriptionId: null,
+        html: '<p>Hallo</p>',
+      });
+
+      expect(resolveLayout).toHaveBeenCalledWith(undefined);
+      expect(render).toHaveBeenCalledWith(
+        expect.objectContaining({ layout: null })
+      );
+    });
+
     it('refuses a subscription whose user has no usable address', async () => {
       const render = renderLetter();
       const prisma = {
@@ -306,7 +357,11 @@ describe('MailTemplateService', () => {
         },
         invoice: { findFirst: vi.fn(async () => null) },
       };
-      const service = makeService(prisma, {}, { renderLetter: render });
+      const service = makeService(
+        prisma,
+        {},
+        { renderLetter: render, resolveLayout }
+      );
 
       await expect(
         service.previewLetter({

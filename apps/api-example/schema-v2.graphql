@@ -1796,6 +1796,48 @@ enum LetterDeliveryProduct {
   registered
 }
 
+input LetterLayoutInput {
+  footerHeightMm: Int!
+  footerHtml: String!
+  headerHeightMm: Int!
+  headerHtml: String!
+  isDefault: Boolean!
+  name: String!
+}
+
+"""
+Stationery for printed letters: a header and a footer repeated on every page of the pdf.
+"""
+type LetterLayoutModel {
+  createdAt: DateTime!
+
+  """Height of the footer band in millimetres from the bottom edge."""
+  footerHeightMm: Int!
+  footerHtml: String!
+
+  """Height of the header band in millimetres from the top edge."""
+  headerHeightMm: Int!
+  headerHtml: String!
+  id: String!
+
+  """Templates without stationery of their own print on this one."""
+  isDefault: Boolean!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+input LetterLayoutPreviewInput {
+  footerHeightMm: Int!
+  footerHtml: String!
+  headerHeightMm: Int!
+  headerHtml: String!
+}
+
+type LetterLayoutPreviewModel {
+  """A sample letter on this stationery, as base64 pdf."""
+  pdf: String!
+}
+
 input LetterPrintInput {
   addressPosition: LetterAddressPosition
   deliveryProduct: LetterDeliveryProduct
@@ -2195,6 +2237,7 @@ input MailTemplateInput {
   context: MailTemplateContext
   description: String
   htmlContent: String!
+  letterLayoutId: String
   name: String!
   subject: String!
   textContent: String
@@ -2210,6 +2253,11 @@ type MailTemplateModel {
   description: String
   htmlContent: String!
   id: String!
+
+  """
+  Stationery a letter printed from this template is set on; null means the default.
+  """
+  letterLayoutId: String
   name: String!
   status: String!
   subject: String!
@@ -2220,6 +2268,9 @@ input MailTemplatePreviewInput {
   """Mail type / context id, e.g. "renewal"."""
   contextId: String!
   htmlContent: String!
+
+  """Stationery to show a letter preview on; null for the default."""
+  letterLayoutId: String
   subject: String!
 
   """Subscription to take sample data from."""
@@ -2860,6 +2911,9 @@ type Mutation {
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
 
+  """Create a letter layout."""
+  createLetterLayout(input: LetterLayoutInput!): LetterLayoutModel!
+
   """Creates a new letter provider setting."""
   createLetterProviderSetting(
     autoSend: Boolean
@@ -3050,6 +3104,11 @@ type Mutation {
 
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
+
+  """
+  Delete a letter layout. Refused while a mail template still prints on it.
+  """
+  deleteLetterLayout(id: String!): LetterLayoutModel!
 
   """Deletes an existing letter provider setting."""
   deleteLetterProviderSetting(id: String!): SettingLetterProvider!
@@ -3385,6 +3444,9 @@ type Mutation {
 
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
+
+  """Update a letter layout."""
+  updateLetterLayout(id: String!, input: LetterLayoutInput!): LetterLayoutModel!
 
   """Updates an existing letter provider setting."""
   updateLetterProviderSetting(
@@ -4677,6 +4739,15 @@ type Query {
   Whether a letter integration is configured, so letters can be previewed and sent
   """
   letterChannelAvailable: Boolean!
+
+  """A single letter layout."""
+  letterLayout(id: String!): LetterLayoutModel!
+
+  """A sample letter printed on the given, possibly unsaved, stationery."""
+  letterLayoutPreview(input: LetterLayoutPreviewInput!): LetterLayoutPreviewModel!
+
+  """All letter layouts, the default first."""
+  letterLayouts: [LetterLayoutModel!]!
 
   """Returns a single letter provider setting by id."""
   letterProviderSetting(id: String!): SettingLetterProvider!

@@ -571,6 +571,42 @@ in `reconcile-provider-registry.spec.ts`, whose fakes race like Prisma does.
 
 ---
 
+### ⚠️ The letter sheet keeps `@page { margin: 0 }`; stationery space comes from the table spacers
+
+`composeLetter` (`libs/letter/api/src/lib/letter-renderer.ts`) positions the
+Pingen address window absolutely at 60mm from the sheet top and puts the
+header/footer bands in `position: fixed` boxes. Space for the bands on every
+page is reserved by the `thead`/`tfoot` spacer rows of the `.flow` table, which
+Chromium repeats per page, and page 1's body offset is reduced by the header
+spacer so the text still starts at 90mm.
+
+Reserving the bands with `@page` margins instead moves the address window by
+the top margin and Pingen rejects the letter; a fixed box offset into the
+margin area is clipped by Chromium. The band cap of 40mm (`LAYOUT_BAND_MAX_MM`)
+keeps a header out of the franking zone, whose bottom edge is at 87.5mm.
+
+**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows,
+and `CONTENT_TOP_MM - headerSpace` for the body padding.
+
+Pinned by `libs/letter/api/src/lib/letter-renderer.spec.ts`.
+
+### ⚠️ `prisma migrate dev` refuses to run against a database other branches migrated
+
+The local Postgres is shared by every worktree. Once a migration from another
+branch has been applied to it, `prisma migrate dev` in a worktree that lacks
+that folder reports it as missing and wants to reset the database, which drops
+every table (`migrate status` still says "up to date", it does not flag extra
+migrations).
+
+Write the migration by hand instead: `npx prisma migrate diff
+--from-config-datasource --to-schema libs/api/prisma/schema.prisma --script`
+prints the SQL (strip the parts that belong to the other branches), put it in a
+`YYYYMMDDHHMMSS_name/migration.sql` folder, then `npx prisma migrate deploy`
+applies only the pending folders and does not care about extra ones
+(verified 2026-10-15 with `20261015100000_letter_layout`).
+
+Nothing guards this — a reset here is silent until the data is gone.
+
 ## Adding an entry
 
 Keep the house style: a future agent must be able to tell *why* the obvious

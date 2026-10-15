@@ -79,6 +79,7 @@ fragment FullMailTemplate on MailTemplateModel {
   ...TinyMailTemplate
   htmlContent
   textContent
+  letterLayoutId
 }
 
 fragment FullMailProvider on MailProviderModel {

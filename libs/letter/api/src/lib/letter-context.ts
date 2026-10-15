@@ -17,7 +17,11 @@ import {
   LetterState,
 } from './letter-provider/letter-provider.interface';
 import { toLetterAddress, UserWithAddress } from './letter-recipient';
-import { composeLetter, LetterTemplateContent } from './letter-renderer';
+import {
+  composeLetter,
+  LetterLayoutContent,
+  LetterTemplateContent,
+} from './letter-renderer';
 import { PdfRenderer } from './pdf/pdf-renderer';
 
 export interface LetterContextProps {
@@ -39,6 +43,8 @@ export interface RenderLetterProps {
   addressPosition: LetterAddressPosition;
   data: Record<string, any>;
   recipient: LetterAddress;
+  /** Stationery to print on; none prints the bare sheet. */
+  layout?: LetterLayoutContent | null;
 }
 
 export interface SendTemplateLetterProps {
@@ -111,6 +117,7 @@ export class LetterContext {
     addressPosition,
     data,
     recipient,
+    layout,
   }: RenderLetterProps): Promise<Buffer> {
     return this.pdfRenderer.render(
       composeLetter({
@@ -118,7 +125,30 @@ export class LetterContext {
         data,
         recipient,
         addressPosition,
+        layout,
       })
+    );
+  }
+
+  /**
+   * The stationery a template is printed on: its own if it names one, else
+   * the default, else none. Both lookups go to the database on every letter;
+   * a send job prints a few hundred at most, so that is cheaper than a cache
+   * that has to be told about every edit.
+   */
+  async resolveLayout(
+    letterLayoutId?: string | null
+  ): Promise<LetterLayoutContent | null> {
+    const own =
+      letterLayoutId ?
+        await this.prisma.letterLayout.findUnique({
+          where: { id: letterLayoutId },
+        })
+      : null;
+
+    return (
+      own ??
+      (await this.prisma.letterLayout.findFirst({ where: { isDefault: true } }))
     );
   }
 
@@ -145,6 +175,7 @@ export class LetterContext {
         addressPosition: props.print.addressPosition,
         data: props.data,
         recipient: address,
+        layout: await this.resolveLayout(template.letterLayoutId),
       });
 
       const result = await this.letterProvider.sendLetter({

@@ -39,6 +39,13 @@ export class MailTemplateModel {
   @Field(() => MailTemplateContext, { nullable: true })
   context?: MailTemplateContext;
 
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Stationery a letter printed from this template is set on; null means the default.',
+  })
+  letterLayoutId?: string | null;
+
   @Field()
   status!: string;
 }
@@ -68,6 +75,9 @@ export class MailTemplateInput {
 
   @Field(() => MailTemplateContext, { nullable: true })
   context?: MailTemplateContext;
+
+  @Field(() => String, { nullable: true })
+  letterLayoutId?: string | null;
 }
 
 @ObjectType()
@@ -116,6 +126,13 @@ export class MailTemplatePreviewInput {
 
   @Field({ nullable: true })
   textContent?: string;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Stationery to show a letter preview on; null for the default.',
+  })
+  letterLayoutId?: string | null;
 }
 
 @InputType()

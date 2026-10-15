@@ -13,6 +13,7 @@ import {
   MailTemplatePreviewQuery,
   MailTemplatePreviewQueryVariables,
   LetterChannelAvailableDocument,
+  LetterLayoutsDocument,
   MailTemplateSubscriptionsDocument,
   SendTestMailTemplateDocument,
   UpdateMailTemplateDocument,
@@ -115,6 +116,8 @@ function MailTemplateEdit() {
   // The mail type must be chosen explicitly so preview/test use the data a real
   // mail of that type would carry (more realistic than a generic dump).
   const [contextId, setContextId] = useState<MailTemplateContext | null>(null);
+  // Stationery for the letter version; null prints on the default layout.
+  const [letterLayoutId, setLetterLayoutId] = useState<string | null>(null);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [previewSubject, setPreviewSubject] = useState('');
@@ -139,6 +142,11 @@ function MailTemplateEdit() {
   // Without a letter integration there is nothing to render a letter with.
   const { data: letterChannelData } = useQuery(LetterChannelAvailableDocument);
   const letterAvailable = !!letterChannelData?.letterChannelAvailable;
+  const { data: letterLayoutData } = useQuery(LetterLayoutsDocument, {
+    skip: !letterAvailable,
+  });
+  const letterLayouts = letterLayoutData?.letterLayouts ?? [];
+  const defaultLetterLayout = letterLayouts.find(layout => layout.isDefault);
   const [sendTest, { loading: testLoading }] = useMutation(
     SendTestMailTemplateDocument,
     DEFAULT_MUTATION_OPTIONS(t)
@@ -161,6 +169,7 @@ function MailTemplateEdit() {
       setSubject(template.subject);
       setTextContent(template.textContent ?? '');
       setContextId(template.context ?? null);
+      setLetterLayoutId(template.letterLayoutId ?? null);
       htmlRef.current = template.htmlContent || createEmptyEmailHtml();
       const shell = readShellSettings(htmlRef.current);
       setBackgroundColor(shell.backgroundColor);
@@ -245,6 +254,7 @@ function MailTemplateEdit() {
     // The text fallback is always regenerated from the HTML on save.
     textContent: deriveTextFromHtml(htmlRef.current),
     context: contextId,
+    letterLayoutId,
   });
 
   const save = async (close: boolean) => {
@@ -290,6 +300,7 @@ function MailTemplateEdit() {
     subject,
     htmlContent: htmlRef.current,
     textContent,
+    letterLayoutId,
   });
 
   // Preview/test never block on a missing mail type: fall back to `custom`
@@ -504,6 +515,34 @@ function MailTemplateEdit() {
                   onFocus={() => setActiveField('subject')}
                 />
               </Form.Group>
+              {letterAvailable && (
+                <Form.Group style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
+                  <Form.ControlLabel>
+                    {t('mailTemplates.edit.letterLayout')}{' '}
+                    <InfoTooltip
+                      text={t('mailTemplates.edit.letterLayoutHelp')}
+                    />
+                  </Form.ControlLabel>
+                  <SelectPicker
+                    block
+                    searchable={false}
+                    data={letterLayouts.map(layout => ({
+                      label: layout.name,
+                      value: layout.id,
+                    }))}
+                    value={letterLayoutId}
+                    onChange={value => setLetterLayoutId(value ?? null)}
+                    popupStyle={{ zIndex: 100 }}
+                    placeholder={
+                      defaultLetterLayout ?
+                        t('mailTemplates.edit.letterLayoutDefault', {
+                          name: defaultLetterLayout.name,
+                        })
+                      : t('mailTemplates.edit.letterLayoutNone')
+                    }
+                  />
+                </Form.Group>
+              )}
             </div>
           </Form>
         </Panel>
