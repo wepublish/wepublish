@@ -68,6 +68,7 @@ import {
   CanGetMailLogs,
   CanGetMailProviderSettings,
   CanGetMailTemplates,
+  CanGetNewsletterCampaigns,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetNavigation,
@@ -118,7 +119,11 @@ import {
   CanUpdateTag,
   CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
-import { PermissionControl, Version } from '@wepublish/ui/editor';
+import {
+  FeatureControl,
+  PermissionControl,
+  Version,
+} from '@wepublish/ui/editor';
 import { de, enUS, fr } from 'date-fns/locale';
 import { forwardRef, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -150,6 +155,7 @@ import {
   MdLogout,
   MdMail,
   MdMenu,
+  MdNewspaper,
   MdMoney,
   MdMultilineChart,
   MdNotificationsNone,
@@ -1130,6 +1136,7 @@ export function Base({ children }: BaseProps) {
                     CanSendMailTemplates.id,
                     CanGetMailLogs.id,
                     CanGetSubscriptionFlows.id,
+                    CanGetNewsletterCampaigns.id,
                   ]}
                 >
                   <Nav.Menu
@@ -1185,6 +1192,21 @@ export function Base({ children }: BaseProps) {
                         {t('navbar.mailTemplates')}
                       </Nav.Item>
                     </PermissionControl>
+
+                    <FeatureControl feature="newsletter-editor">
+                      <PermissionControl
+                        qualifyingPermissions={[CanGetNewsletterCampaigns.id]}
+                      >
+                        <Nav.Item
+                          as={NavLink}
+                          href="/newsletter"
+                          active={path === 'newsletter'}
+                          icon={<MdNewspaper />}
+                        >
+                          {t('newsletter.navbar')}
+                        </Nav.Item>
+                      </PermissionControl>
+                    </FeatureControl>
 
                     {/* SENT MAILS */}
                     <PermissionControl
