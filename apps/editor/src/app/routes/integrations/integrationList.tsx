@@ -25,7 +25,7 @@ import {
   MdSmartToy,
   MdSync,
 } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
 import bexioLogo from './assets/bexio.webp';
 import cloudflareLogo from './assets/cloudflare.svg';
@@ -146,7 +146,7 @@ export function IntegrationList() {
         >
           <Card
             variant="outlined"
-            sx={{ borderRadius: 'var(--rs-radius-lg)' }}
+            sx={{ borderRadius: 1 }}
           >
             <CardContent>
               <Typography
@@ -171,9 +171,13 @@ export function IntegrationList() {
             </CardContent>
 
             <CardActions>
-              <Link to={integration.path}>
-                <Button size="small">{t('edit')}</Button>
-              </Link>
+              <Button
+                component={RouterLink}
+                to={integration.path}
+                size="small"
+              >
+                {t('edit')}
+              </Button>
             </CardActions>
           </Card>
         </PermissionControl>

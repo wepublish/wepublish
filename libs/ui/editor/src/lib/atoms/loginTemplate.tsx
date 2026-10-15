@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 export interface LoginTemplateProps {
-  readonly children?: ReactNode;
-  readonly backgroundChildren?: ReactNode;
+  children?: ReactNode;
+  backgroundChildren?: ReactNode;
 }
 
 const Wrapper = styled.div`
@@ -31,7 +31,7 @@ const Wrapper = styled.div`
       rgb(4 196 217 / 14%),
       transparent 70%
     ),
-    var(--rs-body);
+    ${({ theme }) => theme.vars.palette.background.default};
 
   .rs-theme-dark & {
     background:
@@ -50,7 +50,7 @@ const Wrapper = styled.div`
         rgb(4 196 217 / 10%),
         transparent 70%
       ),
-      var(--rs-body);
+      ${({ theme }) => theme.vars.palette.background.default};
   }
 `;
 
@@ -63,9 +63,10 @@ const Content = styled.div`
   width: 100%;
   max-width: 560px;
   padding: 40px;
-  background-color: var(--rs-bg-card);
-  border: 1px solid var(--wep-shell-border, var(--rs-border-primary));
-  border-radius: var(--rs-radius-lg);
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
+  border: 1px solid
+    var(--wep-shell-border, ${({ theme }) => theme.vars.palette.divider});
+  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
   box-shadow: var(--wep-elevated-shadow, 0 2px 4px 0 rgba(0, 0, 0, 0.2));
 
   .rs-btn[type='submit'] {

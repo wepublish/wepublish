@@ -1,14 +1,15 @@
 import styled from '@emotion/styled';
+import { Button, ButtonProps, useTheme } from '@mui/material';
 import { ReactNode, useId } from 'react';
-import { IconButton, IconButtonProps } from 'rsuite';
 
+import { paletteColor } from '../paletteColor';
 import { StateColor } from '../utility';
 
 const stateTextColors: Record<StateColor, string> = {
   [StateColor.pending]: 'var(--wep-state-pending-text)',
   [StateColor.published]: 'var(--wep-state-published-text)',
   [StateColor.draft]: 'var(--wep-state-draft-text)',
-  [StateColor.none]: 'var(--rs-text-secondary)',
+  [StateColor.none]: 'text.secondary',
 };
 
 const Bar = styled('header', {
@@ -16,26 +17,36 @@ const Bar = styled('header', {
 })<{ accent: string }>`
   container-type: inline-size;
   width: 100%;
-  background-color: var(--wep-content-bg, var(--rs-bg-card));
-  border-bottom: 1px solid var(--rs-border-primary);
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
+  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
   box-shadow: inset 0 3px 0 ${({ accent }) => accent};
 
   @container (max-width: 1240px) {
-    .rs-btn[data-collapse='md'] {
+    button[data-collapse='md'] {
+      min-width: 0;
       padding-inline: 9px;
 
-      > [data-label] {
+      [data-label] {
         display: none;
+      }
+
+      .MuiButton-startIcon {
+        margin: 0;
       }
     }
   }
 
   @container (max-width: 520px) {
-    .rs-btn[data-collapse='sm'] {
+    button[data-collapse='sm'] {
+      min-width: 0;
       padding-inline: 9px;
 
-      > [data-label] {
+      [data-label] {
         display: none;
+      }
+
+      .MuiButton-startIcon {
+        margin: 0;
       }
     }
   }
@@ -64,6 +75,7 @@ const Start = styled('div')`
 
 const Status = styled('div')`
   display: grid;
+  grid-template-columns: minmax(0, auto);
   justify-items: start;
   gap: 2px;
   min-width: 0;
@@ -75,6 +87,7 @@ const Chip = styled('span', {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
   max-width: 100%;
   padding: 2px 10px;
   border-radius: 999px;
@@ -106,9 +119,16 @@ const Meta = styled('span')`
   padding-left: 2px;
   font-size: 12px;
   line-height: 16px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   white-space: nowrap;
   text-overflow: ellipsis;
+`;
+
+const StatusAction = styled('div')`
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  margin-left: auto;
 `;
 
 const Title = styled('div')`
@@ -147,7 +167,7 @@ const Divider = styled('span')`
   width: 1px;
   height: 24px;
   margin: 0 4px;
-  background-color: var(--rs-border-primary);
+  background-color: ${({ theme }) => theme.vars.palette.divider};
 `;
 
 export interface EditorHeaderProps {
@@ -155,6 +175,7 @@ export interface EditorHeaderProps {
   stateLabel: string;
   meta?: ReactNode;
   back?: ReactNode;
+  statusAction?: ReactNode;
   title?: ReactNode;
   secondaryActions?: ReactNode;
   primaryActions?: ReactNode;
@@ -165,12 +186,14 @@ export function EditorHeader({
   stateLabel,
   meta,
   back,
+  statusAction,
   title,
   secondaryActions,
   primaryActions,
 }: EditorHeaderProps) {
   const statusId = useId();
-  const textColor = stateTextColors[state];
+  const theme = useTheme();
+  const textColor = paletteColor(theme, stateTextColors[state]);
 
   return (
     <Bar accent={textColor}>
@@ -193,6 +216,8 @@ export function EditorHeader({
           </Status>
 
           {title && <Title>{title}</Title>}
+
+          {statusAction && <StatusAction>{statusAction}</StatusAction>}
         </Start>
 
         <Actions>
@@ -205,24 +230,30 @@ export function EditorHeader({
   );
 }
 
-export interface EditorHeaderButtonProps extends IconButtonProps {
+export interface EditorHeaderButtonProps extends Omit<ButtonProps, 'variant'> {
   label: string;
+  icon?: ReactNode;
   collapse?: 'md' | 'sm' | false;
+  variant?: ButtonProps['variant'];
 }
 
 export function EditorHeaderButton({
   label,
+  icon,
   collapse = 'md',
+  variant = 'text',
   ...props
 }: EditorHeaderButtonProps) {
   return (
-    <IconButton
+    <Button
       title={collapse ? label : undefined}
       aria-label={label}
       data-collapse={collapse || undefined}
+      variant={variant}
+      startIcon={icon}
       {...props}
     >
       <span data-label>{label}</span>
-    </IconButton>
+    </Button>
   );
 }

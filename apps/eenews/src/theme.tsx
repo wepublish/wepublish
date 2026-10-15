@@ -3,6 +3,7 @@ import { theme as WePTheme } from '@wepublish/ui';
 import { Cactus_Classical_Serif } from 'next/font/google';
 import localFont from 'next/font/local';
 import { PartialDeep } from 'type-fest';
+import { CSSProperties } from 'react';
 
 export const gilroy = localFont({
   src: [
@@ -68,15 +69,14 @@ const eenewsColors = {
 const eenewsHeroGradient =
   'linear-gradient(90deg, #b6e9a8 0%, #abe1b5 35%, #98d6c0 65%, #84cdc4 100%)';
 
-const toVariant = (style: CSSObject): React.CSSProperties =>
-  style as React.CSSProperties;
+const toVariant = (style: CSSObject): CSSProperties => style as CSSProperties;
 
 const heading = (
   fontSize: string,
   lineHeight: number,
   weight: number,
   letterSpacing: string | undefined
-): React.CSSProperties =>
+): CSSProperties =>
   toVariant({
     '&': {
       fontFamily: sans,
@@ -91,7 +91,7 @@ const body = (
   fontSize: string,
   lineHeight: number,
   weight = 400
-): React.CSSProperties =>
+): CSSProperties =>
   toVariant({
     '&': {
       fontFamily: serif,
@@ -107,7 +107,7 @@ const ui = (
   lineHeight = 1,
   letterSpacing?: string,
   uppercase = false
-): React.CSSProperties =>
+): CSSProperties =>
   toVariant({
     '&': {
       fontFamily: sans,

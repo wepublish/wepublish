@@ -2,13 +2,22 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
 import styled from '@emotion/styled';
+import {
+  Button,
+  Card,
+  CardContent,
+  Drawer,
+  IconButton as MuiIconButton,
+  Stack,
+} from '@mui/material';
 import { BlockType } from '@wepublish/editor/api';
 import { toPlaintext } from '@wepublish/richtext';
 import i18next, { TFunction } from 'i18next';
 import nanoid from 'nanoid';
-import React, {
+import {
   ComponentType,
   PropsWithChildren,
+  SetStateAction,
   useCallback,
   useEffect,
   useState,
@@ -25,13 +34,6 @@ import {
   MdLock,
   MdLockOpen,
 } from 'react-icons/md';
-import {
-  Button,
-  ButtonToolbar as RButtonToolbar,
-  Drawer,
-  IconButton as RIconButton,
-  Panel as RPanel,
-} from 'rsuite';
 
 import {
   type BlockListValue,
@@ -44,6 +46,8 @@ import {
 import { BlockMapType, BlockProps } from '../atoms/blockList';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { PlaceholderInput } from '../atoms/placeholderInput';
+import { DRAWER_WIDTHS } from '../drawer';
+import { useSeededState } from '../hooks/use-seeded-state';
 import { BlockSelectAndEditPanel } from '../panel/blockSelectAndEditPanel';
 import { isFunctionalUpdate, isValueConstructor } from '../utility';
 import { BlockMap } from './blockMap';
@@ -57,7 +61,7 @@ import {
   FlexBlockWithAlignment,
 } from './types';
 
-const IconButton = styled(RIconButton)`
+const IconButton = styled(MuiIconButton)`
   margin: 10px;
 `;
 
@@ -65,7 +69,9 @@ const Block = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: rgb(from var(--rs-text-primary) r g b / 0.025);
+  background-color: rgb(
+    from ${({ theme }) => theme.vars.palette.text.primary} r g b / 0.025
+  );
   display: grid;
   grid-template-rows: auto min-content;
 `;
@@ -82,12 +88,14 @@ const GridLayoutStyled = styled(GridLayout)`
 
   & .react-grid-item[data-is-editing='true'] {
     ${Block} {
-      background-color: rgb(from var(--rs-primary-500) r g b / 0.25);
+      background-color: rgb(
+        from ${({ theme }) => theme.vars.palette.primary.main} r g b / 0.25
+      );
     }
   }
 `;
 
-const ButtonToolbar = styled(RButtonToolbar)`
+const ButtonToolbar = styled(Stack)`
   top: 0;
   left: 0;
   position: absolute;
@@ -104,7 +112,7 @@ const ButtonToolbar = styled(RButtonToolbar)`
   gap: 0.1rem;
 `;
 
-const ToolbarButton = styled(RIconButton)`
+const ToolbarButton = styled(MuiIconButton)`
   aspect-ratio: 1;
   padding: 0.15rem !important;
   width: 1.5rem;
@@ -118,7 +126,7 @@ const ToolbarButton = styled(RIconButton)`
   justify-content: center;
   align-items: center;
   pointer-events: all;
-  background-color: var(--rs-bg-well);
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 
   & svg {
     display: block;
@@ -133,7 +141,7 @@ const ToolbarButton = styled(RIconButton)`
   }
 `;
 
-const Panel = styled(RPanel, {
+const Panel = styled(Card, {
   shouldForwardProp: prop => prop !== 'showGrabCursor',
 })<{ showGrabCursor: boolean }>`
   display: grid;
@@ -150,8 +158,9 @@ const Panel = styled(RPanel, {
 
 const NestedBlockEditPanel = styled('div')`
   margin: 0 -25px;
-  box-shadow: 1px 0 11px 4px rgb(from var(--rs-primary-500) r g b / 0.25);
-  border-radius: var(--rs-radius-lg);
+  box-shadow: 1px 0 11px 4px
+    rgb(from ${({ theme }) => theme.vars.palette.primary.main} r g b / 0.25);
+  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
   padding: 4px;
 
   ${ListItem} {
@@ -189,51 +198,56 @@ export function FlexItem({
 }: FlexItemProps) {
   return (
     <Panel
-      bodyFill
+      variant="outlined"
       showGrabCursor={showGrabCursor}
     >
-      <PlaceholderInput
-        onAddClick={onChoose}
-        addLabel={i18next.t('blocks.flexBlock.chooseNestedBlock')}
-      >
-        {block && (
-          <Block>
-            <ContentForFlexBlock block={block} />
+      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+        <PlaceholderInput
+          onAddClick={onChoose}
+          addLabel={i18next.t('blocks.flexBlock.chooseNestedBlock')}
+        >
+          {block && (
+            <Block>
+              <ContentForFlexBlock block={block} />
 
-            <IconWrapper>
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexBlock.chooseNestedBlock')}
-              >
-                <IconButton
-                  aria-label={i18next.t('blocks.flexBlock.chooseNestedBlock')}
-                  icon={<MdArticle />}
-                  onClick={onChoose}
-                />
-              </IconButtonTooltip>
+              <IconWrapper>
+                <IconButtonTooltip
+                  caption={i18next.t('blocks.flexBlock.chooseNestedBlock')}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<MdArticle />}
+                    aria-label={i18next.t('blocks.flexBlock.chooseNestedBlock')}
+                    onClick={onChoose}
+                  ></Button>
+                </IconButtonTooltip>
 
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexBlock.editNestedBlock')}
-              >
-                <IconButton
-                  aria-label={i18next.t('blocks.flexBlock.editNestedBlock')}
-                  icon={<MdEdit />}
-                  onClick={onEdit}
-                />
-              </IconButtonTooltip>
+                <IconButtonTooltip
+                  caption={i18next.t('blocks.flexBlock.editNestedBlock')}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<MdEdit />}
+                    aria-label={i18next.t('blocks.flexBlock.editNestedBlock')}
+                    onClick={onEdit}
+                  ></Button>
+                </IconButtonTooltip>
 
-              <IconButtonTooltip
-                caption={i18next.t('blocks.flexBlock.deleteNestedBlock')}
-              >
-                <IconButton
-                  aria-label={i18next.t('blocks.flexBlock.deleteNestedBlock')}
-                  icon={<MdDelete />}
-                  onClick={onRemove}
-                />
-              </IconButtonTooltip>
-            </IconWrapper>
-          </Block>
-        )}
-      </PlaceholderInput>
+                <IconButtonTooltip
+                  caption={i18next.t('blocks.flexBlock.deleteNestedBlock')}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<MdDelete />}
+                    aria-label={i18next.t('blocks.flexBlock.deleteNestedBlock')}
+                    onClick={onRemove}
+                  ></Button>
+                </IconButtonTooltip>
+              </IconWrapper>
+            </Block>
+          )}
+        </PlaceholderInput>
+      </CardContent>
     </Panel>
   );
 }
@@ -261,7 +275,9 @@ const getContentHintForFlexBlockNestedBlock = (
   block: BlockListValue,
   t: TFunction
 ) => {
-  if (!block) return '';
+  if (!block) {
+    return '';
+  }
 
   if (block.type === 'TeaserSlots') {
     return block.value?.title || t('blocks.teaserSlots.label');
@@ -271,7 +287,9 @@ const getContentHintForFlexBlockNestedBlock = (
   }
   if (block.type === 'Embed') {
     const embed = block.value as EmbedBlockValue | undefined;
-    if (!embed) return t('blocks.embeds.label');
+    if (!embed) {
+      return t('blocks.embeds.label');
+    }
 
     switch (embed.type) {
       case EmbedType.YouTubeVideo:
@@ -346,15 +364,22 @@ const oEmbedUrlForEmbed = (embed: EmbedBlockValue): string | null => {
 const embedTitleCache = new Map<string, string>();
 
 const useEmbedTitle = (embed: EmbedBlockValue | undefined): string | null => {
-  const [title, setTitle] = useState<string | null>(null);
   const oEmbedUrl = embed ? oEmbedUrlForEmbed(embed) : null;
+  const [title, setTitle] = useState<string | null>(
+    () => (oEmbedUrl && embedTitleCache.get(oEmbedUrl)) || null
+  );
+  useSeededState(
+    oEmbedUrl ? (embedTitleCache.get(oEmbedUrl) ?? null) : null,
+    setTitle,
+    oEmbedUrl
+  );
 
   useEffect(() => {
-    if (!oEmbedUrl) return;
+    if (!oEmbedUrl) {
+      return;
+    }
 
-    const cached = embedTitleCache.get(oEmbedUrl);
-    if (cached) {
-      setTitle(cached);
+    if (embedTitleCache.has(oEmbedUrl)) {
       return;
     }
 
@@ -495,9 +520,11 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   };
 
   const handleItemChange = useCallback(
-    (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
+    (index: number, itemValue: SetStateAction<BlockListValue>) => {
       const current = value.blocks[index]?.block as BlockValue | null;
-      if (!current) return;
+      if (!current) {
+        return;
+      }
 
       const resolved =
         isFunctionalUpdate(itemValue) ?
@@ -540,19 +567,18 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   return (
     <>
       <IconButtonTooltip caption={t('blocks.flexBlock.addNestedBlock')}>
-        <RIconButton
+        <IconButton
           aria-label={t('blocks.flexBlock.addNestedBlock')}
-          icon={<MdAddBox />}
-          appearance="primary"
-          circle
-          size="md"
+          size="medium"
           onClick={handleAddNestedBlock}
-        />
+        >
+          <MdAddBox />
+        </IconButton>
       </IconButtonTooltip>
+
       <GridLayoutStyled
         onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
         onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
-        className="layout"
         resizeHandles={['se']}
         onDragStop={layout => {
           setIsDragging(false);
@@ -586,7 +612,11 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
               onRemove={() => handleRemoveBlock(block.alignment.i)}
             />
 
-            <ButtonToolbar>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ flexWrap: 'wrap' }}
+            >
               {!block.block && (
                 <IconButtonTooltip
                   caption={t('blocks.flexBlock.removeNestedBlock')}
@@ -594,11 +624,10 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
                   <ToolbarButton
                     aria-label={t('blocks.flexBlock.removeNestedBlock')}
                     disabled={block.alignment.static as unknown as boolean}
-                    block
-                    appearance="subtle"
-                    icon={<MdDelete />}
                     onClick={() => handleRemoveNestedBlock(block.alignment.i)}
-                  />
+                  >
+                    <MdDelete />
+                  </ToolbarButton>
                 </IconButtonTooltip>
               )}
 
@@ -610,24 +639,33 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
                 }
               >
                 <ToolbarButton
-                  block
-                  appearance="subtle"
                   aria-label={
                     !block.alignment.static ?
                       t('blocks.flexBlock.lockNestedBlock')
                     : t('blocks.flexBlock.unlockNestedBlock')
                   }
-                  icon={block.alignment.static ? <MdLockOpen /> : <MdLock />}
                   onClick={() => handlePinNestedBlock(block.alignment.i)}
-                />
+                >
+                  {block.alignment.static ?
+                    <MdLockOpen />
+                  : <MdLock />}
+                </ToolbarButton>
               </IconButtonTooltip>
-            </ButtonToolbar>
+            </Stack>
           </div>
         ))}
       </GridLayoutStyled>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.xs,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="xs"
         onClose={handleClose}
       >
         <BlockSelectAndEditPanel
@@ -643,12 +681,14 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
           const blockWithAlignment = value.blocks[editIndex];
           const currentBlock = blockWithAlignment?.block;
 
-          if (!currentBlock) return null;
+          if (!currentBlock) {
+            return null;
+          }
 
           return (
             <NestedBlockEditPanel>
               <Button
-                appearance={'subtle'}
+                variant="text"
                 onClick={handleClose}
               >
                 {t('blocks.flexBlock.close')}

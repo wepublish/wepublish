@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Autocomplete, Button, FormLabel, TextField } from '@mui/material';
 import {
   ArticleListDocument,
-  ArticleWithoutBlocksFragment,
   CreateNavigationDocument,
   FullNavigationFragment,
   NavigationDocument,
@@ -10,21 +10,16 @@ import {
   NavigationLinkType,
   NavigationListDocument,
   PageListDocument,
-  PageWithoutBlocksFragment,
   UpdateNavigationDocument,
 } from '@wepublish/editor/api';
+import {
+  CanCreateNavigation,
+  CanDeleteNavigation,
+  CanGetNavigation,
+  CanGetNavigations,
+} from '@wepublish/permissions';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Drawer,
-  Form,
-  Input as RInput,
-  Message,
-  Panel,
-  SelectPicker as RSelectPicker,
-  toaster,
-} from 'rsuite';
 
 import {
   createCheckedPermissionComponent,
@@ -34,13 +29,18 @@ import {
   useAuthorisation,
 } from '../atoms';
 import { InfoTooltip } from '../atoms/infoTooltip';
+import {
+  DrawerActions,
+  DrawerBody,
+  FormFields,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { useSeededState } from '../hooks/use-seeded-state';
+import { enqueueSnackbar } from '../snackbar';
 import { generateID, getOperationNameFromDocument } from '../utility';
 
-const SelectPicker = styled(RSelectPicker)`
-  margin-bottom: 4px;
-`;
-
-const Input = styled(RInput)`
+const Input = styled(TextField)`
   margin-bottom: 8px;
 `;
 
@@ -64,14 +64,12 @@ function NavigationEditPanel({
   onClose,
   onSave,
 }: NavigationEditPanelProps) {
-  const isAuthorized = useAuthorisation('CAN_CREATE_NAVIGATION');
+  const isAuthorized = useAuthorisation(CanCreateNavigation.id);
   const [name, setName] = useState('');
   const [key, setKey] = useState('');
   const [navigationLinks, setNavigationLinks] = useState<
     ListValue<NavigationLink>[]
   >([]);
-  const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([]);
-  const [articles, setArticles] = useState<ArticleWithoutBlocksFragment[]>([]);
 
   const { t } = useTranslation();
 
@@ -104,6 +102,8 @@ function NavigationEditPanel({
     variables: { take: 50 },
   });
 
+  const pages = pageData?.pages?.nodes ?? [];
+
   const {
     data: articleData,
     loading: isLoadingArticleData,
@@ -111,6 +111,8 @@ function NavigationEditPanel({
   } = useQuery(ArticleListDocument, {
     variables: { take: 50 },
   });
+
+  const articles = articleData?.articles?.nodes ?? [];
 
   const [createNavigation, { loading: isCreating, error: createError }] =
     useMutation(CreateNavigationDocument, {
@@ -131,49 +133,27 @@ function NavigationEditPanel({
     articleLoadError !== undefined ||
     !isAuthorized;
 
-  useEffect(() => {
-    if (data?.navigation) {
-      setName(data.navigation.name);
-      setKey(data.navigation.key);
-      setNavigationLinks(
-        data.navigation.links ?
-          data.navigation.links.map(link => {
-            return {
-              id: generateID(),
-              value: {
-                label: link.label,
-                type: link.__typename,
-                articleID:
-                  link.__typename === 'ArticleNavigationLink' ?
-                    link.articleID
-                  : undefined,
-                pageID:
-                  link.__typename === 'PageNavigationLink' ?
-                    link.pageID
-                  : undefined,
-                url:
-                  link.__typename === 'ExternalNavigationLink' ?
-                    link.url
-                  : undefined,
-              },
-            };
-          })
-        : []
-      );
-    }
-  }, [data?.navigation]);
-
-  useEffect(() => {
-    if (pageData?.pages?.nodes) {
-      setPages(pageData.pages.nodes);
-    }
-  }, [pageData?.pages]);
-
-  useEffect(() => {
-    if (articleData?.articles.nodes) {
-      setArticles(articleData.articles.nodes);
-    }
-  }, [articleData?.articles]);
+  useSeededState(data?.navigation, navigation => {
+    setName(navigation.name);
+    setKey(navigation.key);
+    setNavigationLinks(
+      navigation.links?.map(link => ({
+        id: generateID(),
+        value: {
+          label: link.label,
+          type: link.__typename,
+          articleID:
+            link.__typename === 'ArticleNavigationLink' ?
+              link.articleID
+            : undefined,
+          pageID:
+            link.__typename === 'PageNavigationLink' ? link.pageID : undefined,
+          url:
+            link.__typename === 'ExternalNavigationLink' ? link.url : undefined,
+        },
+      })) ?? []
+    );
+  });
 
   useEffect(() => {
     const error =
@@ -182,17 +162,9 @@ function NavigationEditPanel({
       updateError?.message ??
       pageLoadError?.message ??
       articleLoadError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [loadError, createError, updateError, articleLoadError, pageLoadError]);
 
   function unionForNavigationLink(
@@ -234,7 +206,9 @@ function NavigationEditPanel({
         },
       });
 
-      if (data?.updateNavigation) onSave?.(data.updateNavigation);
+      if (data?.updateNavigation) {
+        onSave?.(data.updateNavigation);
+      }
     } else {
       const { data } = await createNavigation({
         variables: {
@@ -244,23 +218,25 @@ function NavigationEditPanel({
         },
       });
 
-      if (data?.createNavigation) onSave?.(data.createNavigation);
+      if (data?.createNavigation) {
+        onSave?.(data.createNavigation);
+      }
     }
   }
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>
           {id ?
             t('navigation.panels.editNavigation')
           : t('navigation.panels.createNavigation')}
-        </Drawer.Title>
+        </DrawerTitle>
 
-        <Drawer.Actions>
-          <PermissionControl qualifyingPermissions={['CAN_CREATE_NAVIGATION']}>
+        <DrawerActions>
+          <PermissionControl qualifyingPermissions={[CanCreateNavigation.id]}>
             <Button
-              appearance="primary"
+              variant="contained"
               disabled={isDisabled}
               onClick={() => handleSave()}
             >
@@ -268,52 +244,46 @@ function NavigationEditPanel({
             </Button>
           </PermissionControl>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('navigation.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
-      <Drawer.Body>
-        <Panel>
-          <Form>
-            <Form.Stack fluid>
-              <Form.Group controlId="navigationName">
-                <Form.Label>{t('navigation.panels.name')}</Form.Label>
+        </DrawerActions>
+      </DrawerHeader>
+      <DrawerBody>
+        <FormFields>
+          <TextField
+            label={t('navigation.panels.name')}
+            name="name"
+            placeholder={t('navigation.panels.name')}
+            value={name}
+            disabled={isDisabled}
+            onChange={event => {
+              setName(event.target.value);
+            }}
+            fullWidth
+          />
 
-                <Form.Control
-                  name="name"
-                  placeholder={t('navigation.panels.name')}
-                  value={name}
-                  disabled={isDisabled}
-                  onChange={(value: string) => {
-                    setName(value);
-                  }}
-                />
-              </Form.Group>
+          <TextField
+            label={
+              <>
+                {t('navigation.panels.key')}{' '}
+                <InfoTooltip text={t('navigation.panels.keyInfo')} />
+              </>
+            }
+            name="key"
+            placeholder={t('navigation.panels.key')}
+            value={key}
+            disabled={isDisabled}
+            onChange={event => {
+              setKey(event.target.value);
+            }}
+            fullWidth
+          />
 
-              <Form.Group controlId="navigationKey">
-                <Form.Label>
-                  {t('navigation.panels.key')}{' '}
-                  <InfoTooltip text={t('navigation.panels.keyInfo')} />
-                </Form.Label>
+          <FormLabel>{t('authors.panels.links')}</FormLabel>
 
-                <Form.Control
-                  name="key"
-                  placeholder={t('navigation.panels.key')}
-                  value={key}
-                  disabled={isDisabled}
-                  onChange={(value: string) => {
-                    setKey(value);
-                  }}
-                />
-              </Form.Group>
-            </Form.Stack>
-          </Form>
-        </Panel>
-
-        <Panel header={t('authors.panels.links')}>
           <ListInput
             disabled={isDisabled}
             value={navigationLinks}
@@ -328,70 +298,82 @@ function NavigationEditPanel({
           >
             {({ value, onChange }) => (
               <>
-                <Input
+                <TextField
                   placeholder={t('navigation.panels.label')}
                   value={value.label}
-                  onChange={label => {
-                    onChange({ ...value, label });
+                  onChange={event => {
+                    onChange({ ...value, label: event.target.value });
                   }}
                 />
 
-                <SelectPicker
-                  block
-                  virtualized
-                  value={value.type}
-                  data={linkTypes}
-                  onChange={type => {
+                <Autocomplete
+                  options={linkTypes}
+                  getOptionLabel={option => option.label}
+                  isOptionEqualToValue={(option, selected) =>
+                    option.value === selected.value
+                  }
+                  value={
+                    linkTypes.find(option => option.value === value.type) ??
+                    null
+                  }
+                  onChange={(_event, option) => {
+                    const type = option?.value ?? null;
                     if (type) {
                       onChange({ ...value, type: type as string });
                     }
                   }}
+                  renderInput={params => <TextField {...params} />}
                 />
 
                 {(
                   value.type === 'PageNavigationLink' ||
                   value.type === 'ArticleNavigationLink'
                 ) ?
-                  <RSelectPicker
-                    block
-                    virtualized
-                    placeholder={
+                  <Autocomplete
+                    options={
                       value.type === 'PageNavigationLink' ?
-                        t('navigation.panels.selectPage')
-                      : t('navigation.panels.selectArticle')
+                        pages.map(page => page.id!)
+                      : articles.map(article => article.id!)
+                    }
+                    getOptionLabel={id =>
+                      value.type === 'PageNavigationLink' ?
+                        (pages.find(page => page.id === id)?.latest.title ?? id)
+                      : (articles.find(article => article.id === id)?.latest
+                          .title ?? id)
                     }
                     value={
-                      value.type === 'PageNavigationLink' ?
+                      (value.type === 'PageNavigationLink' ?
                         value.pageID
-                      : value.articleID
+                      : value.articleID) ?? null
                     }
-                    data={
-                      value.type === 'PageNavigationLink' ?
-                        pages.map(page => ({
-                          value: page.id!,
-                          label: page.latest.title,
-                        }))
-                      : articles.map(article => ({
-                          value: article.id!,
-                          label: article.latest.title,
-                        }))
-                    }
-                    onChange={chosenReferenceID => {
-                      if (!chosenReferenceID) return;
+                    onChange={(_event, chosenReferenceID) => {
+                      if (!chosenReferenceID) {
+                        return;
+                      }
                       if (value.type === 'PageNavigationLink') {
                         onChange({ ...value, pageID: chosenReferenceID });
                       } else {
                         onChange({ ...value, articleID: chosenReferenceID });
                       }
                     }}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        placeholder={
+                          value.type === 'PageNavigationLink' ?
+                            t('navigation.panels.selectPage')
+                          : t('navigation.panels.selectArticle')
+                        }
+                      />
+                    )}
                   />
-                : <Input
+                : <TextField
                     placeholder={t('navigation.panels.url')}
                     value={value.url!}
-                    onChange={url =>
+                    onChange={event =>
                       onChange({
                         ...value,
-                        url,
+                        url: event.target.value,
                       })
                     }
                   />
@@ -399,15 +381,15 @@ function NavigationEditPanel({
               </>
             )}
           </ListInput>
-        </Panel>
-      </Drawer.Body>
+        </FormFields>
+      </DrawerBody>
     </>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_NAVIGATIONS',
-  'CAN_GET_NAVIGATION',
-  'CAN_CREATE_NAVIGATION',
-  'CAN_DELETE_NAVIGATION',
+  CanGetNavigations.id,
+  CanGetNavigation.id,
+  CanCreateNavigation.id,
+  CanDeleteNavigation.id,
 ])(NavigationEditPanel);
 export { CheckedPermissionComponent as NavigationEditPanel };

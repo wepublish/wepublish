@@ -12,18 +12,22 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '@wepublish/ui/editor';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdManageAccounts, MdUnsubscribe } from 'react-icons/md';
 import { RiTestTubeLine } from 'react-icons/ri';
-import { Button, SelectPicker } from 'rsuite';
 import {
   DEFAULT_MUTATION_OPTIONS,
   MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE,
-  showErrors,
 } from '../common';
 import { EventList, EventRow, MailBlock } from '../mail-settings-layout';
 import { formatTemplateLabel } from '../mail-template/mail-placeholders';
+import { Button, MenuItem, TextField } from '@mui/material';
+import {
+  CanGetSystemMails,
+  CanTestSystemMails,
+  CanUpdateSystemMails,
+} from '@wepublish/permissions';
 
 /**
  * Display order of the account events. Events not listed here are appended, so
@@ -51,22 +55,9 @@ const Controls = styled('div')`
 function SystemMailSection() {
   const { t } = useTranslation();
 
-  const { data: systemMails, error: systemMailsError } =
-    useQuery(SystemMailsDocument);
-  const { data: mailTemplates, error: mailTemplatesError } =
-    useQuery(MailTemplateDocument);
+  const { data: systemMails } = useQuery(SystemMailsDocument);
+  const { data: mailTemplates } = useQuery(MailTemplateDocument);
 
-  useEffect(() => {
-    if (systemMailsError) {
-      showErrors(systemMailsError);
-    }
-  }, [systemMailsError]);
-
-  useEffect(() => {
-    if (mailTemplatesError) {
-      showErrors(mailTemplatesError);
-    }
-  }, [mailTemplatesError]);
   const [updateSystemMail] = useMutation(
     UpdateSystemMailDocument,
     DEFAULT_MUTATION_OPTIONS(t)
@@ -76,7 +67,7 @@ function SystemMailSection() {
     MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE(t('systemMails.testSent'))
   );
 
-  const canUpdateSystemMails = useAuthorisation('CAN_UPDATE_SYSTEM_MAILS');
+  const canUpdateSystemMails = useAuthorisation(CanUpdateSystemMails.id);
 
   // The update mutation returns objects without an id, so the Apollo cache cannot
   // patch the query result. Keep the local selection to reflect saved changes.
@@ -163,33 +154,40 @@ function SystemMailSection() {
               example={t(`systemMails.eventInfo.${eventKey}.example`)}
             >
               <Controls>
-                <SelectPicker
-                  block
-                  data={templateOptions}
-                  cleanable
+                <TextField
+                  select
                   disabled={!canUpdateSystemMails}
-                  placeholder={
-                    <>
-                      <MdUnsubscribe
-                        size={16}
-                        style={{ marginRight: '5px' }}
-                      />
-                      {t('mailTemplateSelect.noMailSentSelectNow')}
-                    </>
+                  value={systemMail.mailTemplate?.id ?? ''}
+                  onChange={event =>
+                    assignTemplate(systemMail.event, event.target.value || null)
                   }
-                  defaultValue={systemMail.mailTemplate?.id}
-                  onSelect={(value: string) =>
-                    assignTemplate(systemMail.event, value)
-                  }
-                  onClean={() => assignTemplate(systemMail.event, null)}
-                />
+                  slotProps={{ select: { displayEmpty: true } }}
+                  fullWidth
+                >
+                  <MenuItem value="">
+                    <MdUnsubscribe
+                      size={16}
+                      style={{ marginRight: '5px' }}
+                    />
+                    {t('mailTemplateSelect.noMailSentSelectNow')}
+                  </MenuItem>
+
+                  {templateOptions.map(option => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
 
                 <PermissionControl
                   showRejectionMessage={false}
-                  qualifyingPermissions={['CAN_TEST_SYSTEM_MAILS']}
+                  qualifyingPermissions={[CanTestSystemMails.id]}
                 >
                   <Button
-                    appearance="ghost"
+                    variant="outlined"
                     startIcon={<RiTestTubeLine />}
                     disabled={!mailTemplateId}
                     onClick={() =>
@@ -211,7 +209,7 @@ function SystemMailSection() {
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent(
-  ['CAN_GET_SYSTEM_MAILS', 'CAN_UPDATE_SYSTEM_MAILS'],
+  [CanGetSystemMails.id, CanUpdateSystemMails.id],
   false
 )(SystemMailSection);
 export { CheckedPermissionComponent as SystemMailSection };

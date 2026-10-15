@@ -8,895 +8,727 @@ exports[`ImportableEventListView > renders the event list view with events 1`] =
     <div
       class="emotion-2 emotion-3"
     >
-      <h2>
+      <h1
+        class="MuiTypography-root MuiTypography-h2 emotion-4"
+      >
         importableEvent.title
-      </h2>
+      </h1>
     </div>
-    <form
-      class="emotion-4 emotion-5 emotion-6"
-      data-rs="form"
-    >
-      <div
-        class="rs-form-group"
-        role="group"
-        style="margin-right: 16px; margin-top: 0px; margin-bottom: 12px;"
-      >
-        <input
-          class="rs-input"
-          data-size="md"
-          id="rs-_r_1_"
-          placeholder="filterableList.filter.name"
-          type="text"
-          value=""
-        />
-      </div>
-      <div
-        class="rs-form-group"
-        role="group"
-        style="margin-right: 16px; margin-top: 0px; margin-bottom: 12px;"
-      >
-        <input
-          class="rs-input"
-          data-size="md"
-          id="rs-_r_5_"
-          placeholder="filterableList.filter.location"
-          type="text"
-          value=""
-        />
-      </div>
-      <div
-        class="rs-form-group"
-        role="group"
-        style="margin-right: 16px; margin-top: 0px; margin-bottom: 12px;"
-      >
-        <div
-          class="emotion-7 emotion-8 rs-picker"
-          data-appearance="default"
-          data-block="true"
-          data-picker="check"
-          data-testid="picker"
-        >
-          <div
-            aria-controls="rs-_r_b_-listbox"
-            aria-describedby="rs-_r_b_-describe"
-            aria-disabled="false"
-            aria-expanded="false"
-            aria-haspopup="listbox"
-            class="rs-picker-toggle rs-btn"
-            data-active="false"
-            data-appearance="default"
-            data-cleanable="true"
-            data-countable="true"
-            data-disabled="false"
-            data-has-value="false"
-            id="rs-_r_b_"
-            role="combobox"
-            tabindex="0"
-          >
-            <div
-              class="rs-picker-toggle-stack rs-stack"
-            >
-              <div
-                class="rs-stack-item rs-box-_r_f_"
-                data-rs="box"
-                overflow="hidden"
-              >
-                <input
-                  aria-hidden="true"
-                  class="rs-picker-toggle-textbox"
-                  data-testid="picker-toggle-input"
-                  readonly=""
-                  style="pointer-events: none;"
-                  tabindex="-1"
-                  value=""
-                />
-                <span
-                  class="rs-picker-toggle-placeholder"
-                  data-testid="picker-describe"
-                  id="rs-_r_b_-describe"
-                >
-                  filterableList.filter.providers
-                </span>
-              </div>
-              <div
-                class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_g_"
-                data-rs="box"
-              >
-                <svg
-                  aria-hidden="true"
-                  aria-label="arrow down line"
-                  class="rs-picker-caret-icon rs-icon rs-icon"
-                  data-category="direction"
-                  data-testid="caret"
-                  fill="currentColor"
-                  focusable="false"
-                  height="1em"
-                  viewBox="0 0 16 16"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M3.166 5.128a.5.5 0 0 1 .706.037L8 9.752l4.128-4.587a.5.5 0 1 1 .743.669l-4.5 5a.5.5 0 0 1-.744 0l-4.5-5a.5.5 0 0 1 .037-.706z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="rs-form-group"
-        role="group"
-        style="margin-right: 16px; margin-top: 0px; margin-bottom: 12px;"
-      >
-        <div
-          class="rs-picker"
-          data-appearance="default"
-          data-block="true"
-          data-cleanable="true"
-          data-picker="date-range"
-          data-testid="picker"
-        >
-          <div
-            class="rs-picker-input-group rs-input-group"
-            data-focus="false"
-            data-inside="true"
-            data-size="md"
-          >
-            <input
-              aria-haspopup="dialog"
-              autocomplete="off"
-              autocorrect="off"
-              class="rs-date-range-input rs-input rs-box-_r_o_"
-              data-rs="box"
-              data-size="md"
-              id="rs-_r_j_"
-              inputmode="text"
-              placeholder="filterableList.filter.dates"
-              size="27"
-              spellcheck="false"
-              type="text"
-              value=""
-            />
-            <span
-              class="rs-picker-toggle-indicator rs-input-group-addon"
-            >
-              <svg
-                aria-hidden="true"
-                aria-label="calendar"
-                class="rs-picker-caret-icon rs-icon rs-icon"
-                data-category="time"
-                data-testid="caret"
-                fill="currentColor"
-                focusable="false"
-                height="1em"
-                viewBox="0 0 16 16"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M4.5 7a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v-5a.5.5 0 0 1 .5-.5M7.5 7a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v-5a.5.5 0 0 1 .5-.5M10.5 7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 .5-.5"
-                />
-                <path
-                  d="M1 8h10.5a.5.5 0 0 1 0 1H1zm0 3h7.5a.5.5 0 0 1 0 1H1zM1 5h14v1H1z"
-                />
-                <path
-                  d="M4.5 1a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5M11.5 1a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5M14.5 11a.5.5 0 0 1 .492.41l.008.09v1a2.5 2.5 0 0 1-2.336 2.495L12.5 15h-3a.5.5 0 0 1-.09-.992L9.5 14h3a1.5 1.5 0 0 0 1.493-1.356L14 12.5v-1a.5.5 0 0 1 .5-.5"
-                />
-                <path
-                  d="M13 3a2 2 0 0 1 2 2v3c0 2-2 3-4 3q1 2-1 4H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm.117 1.007L13 4H3a1 1 0 0 0-.993.883L2 5v8a1 1 0 0 0 .883.993L3 14h6.566l.031-.033c.738-.856.9-1.608.575-2.375l-.067-.144a1 1 0 0 1 .894-1.447c1.692 0 2.9-.76 2.994-1.861l.006-.139v-3a1 1 0 0 0-.883-.993z"
-                />
-              </svg>
-            </span>
-          </div>
-        </div>
-      </div>
-    </form>
   </div>
   <div
     class="emotion-0 emotion-1"
   >
     <div
-      aria-busy="false"
-      aria-colcount="5"
-      aria-rowcount="3"
-      class="emotion-2 emotion-3 rs-table rs-table-hover"
-      role="grid"
-      style="width: auto; height: 100px;"
-      tabindex="-1"
+      class="emotion-2 emotion-3"
     >
-      <div
-        class="rs-table-header-row-wrapper"
-        role="rowgroup"
-        style="transform: translate(0px,0px);"
-      >
-        <div
-          aria-rowindex="1"
-          class="rs-table-row rs-table-row-header"
-          role="row"
-          style="min-width: 940px; height: 40px; transform: translate3d(0px,0px,0); backface-visibility: hidden;"
-        >
-          <div
-            class="rs-table-cell-group rs-table-cell-group-scroll"
-            style="transform: translate3d(0px,0px,0); backface-visibility: hidden;"
-          >
-            <div
-              class="rs-table-cell-header"
-            >
-              <div
-                aria-colindex="1"
-                aria-sort="descending"
-                class="rs-table-cell rs-table-cell-first"
-                role="columnheader"
-                style="width: 200px; height: 40px; z-index: 0; left: 0px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 200px; height: 40px;"
-                >
-                  event.list.name
-                </div>
-              </div>
-              <div
-                class="rs-table-column-resize-spanner"
-                role="button"
-                style="left: 198px; height: 39px;"
-                tabindex="-1"
-              />
-            </div>
-            <div
-              class="rs-table-cell-header"
-            >
-              <div
-                aria-colindex="2"
-                aria-sort="descending"
-                class="rs-table-cell"
-                role="columnheader"
-                style="width: 220px; height: 40px; z-index: 0; left: 200px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 220px; height: 40px;"
-                >
-                  event.list.startsAtHeader
-                </div>
-              </div>
-              <div
-                class="rs-table-column-resize-spanner"
-                role="button"
-                style="left: 418px; height: 39px;"
-                tabindex="-1"
-              />
-            </div>
-            <div
-              class="rs-table-cell-header"
-            >
-              <div
-                aria-colindex="3"
-                aria-sort="descending"
-                class="rs-table-cell"
-                role="columnheader"
-                style="width: 220px; height: 40px; z-index: 0; left: 420px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 220px; height: 40px;"
-                >
-                  event.list.endsAtHeader
-                </div>
-              </div>
-              <div
-                class="rs-table-column-resize-spanner"
-                role="button"
-                style="left: 638px; height: 39px;"
-                tabindex="-1"
-              />
-            </div>
-            <div
-              class="rs-table-cell-header"
-            >
-              <div
-                aria-colindex="4"
-                aria-sort="descending"
-                class="rs-table-cell"
-                role="columnheader"
-                style="width: 150px; height: 40px; z-index: 0; left: 640px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 150px; height: 40px;"
-                >
-                  event.list.source
-                </div>
-              </div>
-              <div
-                class="rs-table-column-resize-spanner"
-                role="button"
-                style="left: 788px; height: 39px;"
-                tabindex="-1"
-              />
-            </div>
-            <div
-              class="rs-table-cell-header"
-            >
-              <div
-                aria-colindex="5"
-                aria-sort="descending"
-                class="rs-table-cell rs-table-cell-last"
-                role="columnheader"
-                style="width: 150px; height: 40px; z-index: 0; left: 790px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 150px; height: 40px;"
-                >
-                  event.list.source
-                </div>
-              </div>
-              <div
-                class="rs-table-column-resize-spanner"
-                role="button"
-                style="left: 938px; height: 39px;"
-                tabindex="-1"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="rs-table-body-row-wrapper"
-        role="rowgroup"
-        style="top: 40px; height: 60px;"
-      >
-        <div
-          class="rs-table-body-wheel-area"
-          style="position: absolute; height: 120px; min-height: 100px; transform: translate(0px,0px);"
-        >
-          <div
-            aria-rowindex="2"
-            class="rs-table-row"
-            role="row"
-            style="min-width: 940px; height: 60px; transform: translate3d(0px,0px,0); backface-visibility: hidden;"
-          >
-            <div
-              class="rs-table-cell-group rs-table-cell-group-scroll"
-              style="transform: translate3d(0px,0px,0); backface-visibility: hidden;"
-            >
-              <div
-                aria-colindex="1"
-                class="emotion-4 emotion-5 rs-table-cell rs-table-cell-first"
-                role="gridcell"
-                style="width: 200px; height: 60px; z-index: 0; left: 0px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 200px; height: 60px;"
-                >
-                  Event 1
-                </div>
-              </div>
-              <div
-                aria-colindex="2"
-                class="emotion-4 emotion-5 rs-table-cell"
-                role="gridcell"
-                style="width: 220px; height: 60px; z-index: 0; left: 200px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 220px; height: 60px;"
-                >
-                  <time
-                    datetime="2023-05-01T09:00:00.000Z"
-                  >
-                    May 1st, 2023 9:00 AM
-                  </time>
-                </div>
-              </div>
-              <div
-                aria-colindex="3"
-                class="emotion-4 emotion-5 rs-table-cell"
-                role="gridcell"
-                style="width: 220px; height: 60px; z-index: 0; left: 420px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 220px; height: 60px;"
-                >
-                  <time
-                    datetime="2023-05-01T17:00:00.000Z"
-                  >
-                    May 1st, 2023 5:00 PM
-                  </time>
-                </div>
-              </div>
-              <div
-                aria-colindex="4"
-                class="emotion-4 emotion-5 rs-table-cell"
-                role="gridcell"
-                style="width: 150px; height: 60px; z-index: 0; left: 640px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 150px; height: 60px;"
-                >
-                  AgendaBasel
-                </div>
-              </div>
-              <div
-                aria-colindex="5"
-                class="emotion-4 emotion-5 rs-table-cell rs-table-cell-last"
-                role="gridcell"
-                style="width: 150px; height: 60px; z-index: 0; left: 790px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 150px; height: 60px;"
-                >
-                  <button
-                    class="rs-btn"
-                    data-appearance="ghost"
-                    data-disabled="true"
-                    data-size="md"
-                    disabled=""
-                    type="button"
-                  >
-                    importableEvent.imported
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            aria-rowindex="3"
-            class="rs-table-row"
-            role="row"
-            style="min-width: 940px; height: 60px; transform: translate3d(0px,60px,0); backface-visibility: hidden;"
-          >
-            <div
-              class="rs-table-cell-group rs-table-cell-group-scroll"
-              style="transform: translate3d(0px,0px,0); backface-visibility: hidden;"
-            >
-              <div
-                aria-colindex="1"
-                class="emotion-4 emotion-5 rs-table-cell rs-table-cell-first"
-                role="gridcell"
-                style="width: 200px; height: 60px; z-index: 0; left: 0px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 200px; height: 60px;"
-                >
-                  Event 2
-                </div>
-              </div>
-              <div
-                aria-colindex="2"
-                class="emotion-4 emotion-5 rs-table-cell"
-                role="gridcell"
-                style="width: 220px; height: 60px; z-index: 0; left: 200px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 220px; height: 60px;"
-                >
-                  <time
-                    datetime="2023-05-02T10:00:00.000Z"
-                  >
-                    May 2nd, 2023 10:00 AM
-                  </time>
-                </div>
-              </div>
-              <div
-                aria-colindex="3"
-                class="emotion-4 emotion-5 rs-table-cell"
-                role="gridcell"
-                style="width: 220px; height: 60px; z-index: 0; left: 420px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 220px; height: 60px;"
-                >
-                  <time
-                    datetime="2023-05-02T18:00:00.000Z"
-                  >
-                    May 2nd, 2023 6:00 PM
-                  </time>
-                </div>
-              </div>
-              <div
-                aria-colindex="4"
-                class="emotion-4 emotion-5 rs-table-cell"
-                role="gridcell"
-                style="width: 150px; height: 60px; z-index: 0; left: 640px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 150px; height: 60px;"
-                >
-                  AgendaBasel
-                </div>
-              </div>
-              <div
-                aria-colindex="5"
-                class="emotion-4 emotion-5 rs-table-cell rs-table-cell-last"
-                role="gridcell"
-                style="width: 150px; height: 60px; z-index: 0; left: 790px;"
-              >
-                <div
-                  class="rs-table-cell-content"
-                  style="width: 150px; height: 60px;"
-                >
-                  <button
-                    class="rs-btn"
-                    data-appearance="primary"
-                    data-size="md"
-                    type="button"
-                  >
-                    importableEvent.import
-                    <span
-                      class="rs-ripple-pond"
-                    >
-                      <span
-                        class="rs-ripple"
-                      />
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          aria-orientation="vertical"
-          aria-valuemax="100"
-          aria-valuemin="0"
-          aria-valuenow="42.857142857142854"
-          class="rs-table-scrollbar rs-table-scrollbar-vertical"
-          role="scrollbar"
-        >
-          <div
-            class="rs-table-scrollbar-handle"
-            role="button"
-            style="height: 42.857142857142854%; min-height: 14px; transform: translate3d(0px,0px,0); backface-visibility: hidden;"
-            tabindex="-1"
-          />
-        </div>
-        <div
-          class="rs-table-loader-wrapper"
-        >
-          <div
-            class="rs-table-loader"
-          >
-            <i
-              class="rs-table-loader-icon"
-            />
-            <span
-              class="rs-table-loader-text"
-            >
-              Loading...
-            </span>
-          </div>
-        </div>
-      </div>
-      <div
-        class="rs-table-mouse-area"
-        style="height: 100px;"
+      <button
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-sizeSmall MuiButton-colorInherit emotion-4"
+        tabindex="0"
+        type="button"
       >
         <span
-          style="height: 39px;"
-        />
+          class="MuiButton-icon MuiButton-startIcon emotion-5"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+            />
+          </svg>
+        </span>
+        filterableList.filter.label
+      </button>
+      <button
+        aria-expanded="false"
+        aria-haspopup="menu"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-sizeSmall MuiButton-colorInherit emotion-4"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-icon MuiButton-startIcon emotion-5"
+        >
+          <svg
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4 6l5.5 0"
+            />
+            <path
+              d="M4 10l5.5 0"
+            />
+            <path
+              d="M4 14l5.5 0"
+            />
+            <path
+              d="M4 18l5.5 0"
+            />
+            <path
+              d="M14.5 6l5.5 0"
+            />
+            <path
+              d="M14.5 10l5.5 0"
+            />
+            <path
+              d="M14.5 14l5.5 0"
+            />
+            <path
+              d="M14.5 18l5.5 0"
+            />
+          </svg>
+        </span>
+        columnConfigurator.title
+      </button>
+    </div>
+    <div
+      class="MuiCollapse-root MuiCollapse-vertical emotion-8 MuiCollapse-hidden emotion-9"
+      style="min-height: 0px;"
+    >
+      <div
+        class="MuiCollapse-wrapper MuiCollapse-vertical emotion-10"
+      >
+        <div
+          class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-11"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            <div
+              class="emotion-14 emotion-15 emotion-16"
+            >
+              <div>
+                <div
+                  class="MuiFormControl-root MuiTextField-root emotion-17"
+                >
+                  <div
+                    class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-18"
+                  >
+                    <input
+                      aria-invalid="false"
+                      class="MuiInputBase-input MuiOutlinedInput-input emotion-19"
+                      id="_r_4_"
+                      placeholder="filterableList.filter.name"
+                      type="text"
+                      value=""
+                    />
+                    <fieldset
+                      aria-hidden="true"
+                      class="MuiOutlinedInput-notchedOutline emotion-20"
+                    >
+                      <legend
+                        class="emotion-21"
+                      >
+                        <span
+                          aria-hidden="true"
+                          class="notranslate"
+                        >
+                          ​
+                        </span>
+                      </legend>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  class="MuiFormControl-root MuiTextField-root emotion-17"
+                >
+                  <div
+                    class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-18"
+                  >
+                    <input
+                      aria-invalid="false"
+                      class="MuiInputBase-input MuiOutlinedInput-input emotion-19"
+                      id="_r_5_"
+                      placeholder="filterableList.filter.location"
+                      type="text"
+                      value=""
+                    />
+                    <fieldset
+                      aria-hidden="true"
+                      class="MuiOutlinedInput-notchedOutline emotion-20"
+                    >
+                      <legend
+                        class="emotion-21"
+                      >
+                        <span
+                          aria-hidden="true"
+                          class="notranslate"
+                        >
+                          ​
+                        </span>
+                      </legend>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon emotion-27 emotion-28"
+                >
+                  <div
+                    class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-29"
+                  >
+                    <label
+                      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-30"
+                      data-shrink="false"
+                      for="_r_6_"
+                      id="_r_6_-label"
+                    >
+                      filterableList.filter.providers
+                    </label>
+                    <div
+                      class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot emotion-31"
+                    >
+                      <input
+                        aria-autocomplete="list"
+                        aria-expanded="false"
+                        aria-invalid="false"
+                        autocapitalize="none"
+                        autocomplete="off"
+                        class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-32"
+                        id="_r_6_"
+                        role="combobox"
+                        spellcheck="false"
+                        type="text"
+                        value=""
+                      />
+                      <div
+                        class="MuiAutocomplete-endAdornment emotion-33"
+                      >
+                        <button
+                          aria-label="Open"
+                          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-34"
+                          tabindex="-1"
+                          title="Open"
+                          type="button"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-35"
+                            data-testid="ArrowDropDownIcon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M7 10l5 5 5-5z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <fieldset
+                        aria-hidden="true"
+                        class="MuiOutlinedInput-notchedOutline emotion-20"
+                      >
+                        <legend
+                          class="emotion-37"
+                        >
+                          <span>
+                            filterableList.filter.providers
+                          </span>
+                        </legend>
+                      </fieldset>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  class="emotion-38 emotion-39"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <div
+                        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-29"
+                      >
+                        <label
+                          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeSmall MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeSmall MuiInputLabel-outlined emotion-41"
+                          data-shrink="false"
+                          for="_r_a_"
+                          id="_r_a_-label"
+                        >
+                          filterableList.filter.dates
+                        </label>
+                        <div
+                          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-adornedEnd emotion-31"
+                        >
+                          <input
+                            aria-invalid="false"
+                            autocomplete="off"
+                            class="MuiInputBase-input MuiOutlinedInput-input emotion-43"
+                            id="_r_a_"
+                            type="text"
+                            value=""
+                          />
+                          <div
+                            class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeSmall emotion-44"
+                          >
+                            <svg
+                              fill="currentColor"
+                              height="1em"
+                              stroke="currentColor"
+                              stroke-width="0"
+                              viewBox="0 0 24 24"
+                              width="1em"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                              />
+                              <path
+                                d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"
+                              />
+                            </svg>
+                          </div>
+                          <fieldset
+                            aria-hidden="true"
+                            class="MuiOutlinedInput-notchedOutline emotion-20"
+                          >
+                            <legend
+                              class="emotion-37"
+                            >
+                              <span>
+                                filterableList.filter.dates
+                              </span>
+                            </legend>
+                          </fieldset>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div
-      class="rs-pagination-group"
+      class="MuiTableContainer-root emotion-47"
+      data-pin-shadow="false"
     >
-      <div
-        class="rs-pagination-group-total"
+      <table
+        class="MuiTable-root MuiTable-stickyHeader emotion-48"
+        style="--col-name-size: 200px; --col-startsatheader-size: 220px; --col-endsatheader-size: 220px; --col-source-size: 150px; --col-action-size: 150px; min-width: 940px;"
       >
-        <span>
-          Total Rows: 
-        </span>
-        <span>
-          2
-        </span>
-        <span />
-      </div>
-      <div
-        class="rs-pagination-group-grow"
-      />
-      <div
-        class="rs-pagination-group-limit"
-      >
-        <div
-          class="rs-picker"
-          data-appearance="default"
-          data-picker="select"
-          data-testid="picker"
+        <thead
+          class="MuiTableHead-root emotion-49"
         >
-          <div
-            aria-controls="rs-_r_r_-listbox"
-            aria-describedby="rs-_r_r_-describe"
-            aria-disabled="false"
-            aria-expanded="false"
-            aria-haspopup="listbox"
-            class="rs-picker-toggle rs-btn"
-            data-active="false"
-            data-appearance="default"
-            data-cleanable="false"
-            data-disabled="false"
-            data-has-value="true"
-            id="rs-_r_r_"
-            role="combobox"
-            tabindex="0"
+          <tr
+            class="MuiTableRow-root MuiTableRow-head emotion-50"
           >
-            <div
-              class="rs-picker-toggle-stack rs-stack"
+            <th
+              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-51 emotion-52"
+              data-col="name"
+              data-resizable="true"
+              scope="col"
+              style="width: var(--col-name-size);"
             >
-              <div
-                class="rs-stack-item rs-box-_r_v_"
-                data-rs="box"
-                overflow="hidden"
+              event.list.name
+              <span
+                aria-hidden="true"
+                class="emotion-53 emotion-54"
+                data-resize-handle="name"
               >
-                <input
-                  aria-hidden="true"
-                  class="rs-picker-toggle-textbox"
-                  data-testid="picker-toggle-input"
-                  readonly=""
-                  style="pointer-events: none;"
-                  tabindex="-1"
-                  value="10"
-                />
                 <span
-                  class="rs-picker-toggle-value"
-                  data-testid="picker-describe"
-                  id="rs-_r_r_-describe"
-                >
-                  <span />
-                  <span>
-                    10
-                  </span>
-                  <span>
-                     / page
-                  </span>
-                </span>
-              </div>
-              <div
-                class="rs-picker-toggle-indicator rs-stack-item rs-box-_r_10_"
-                data-rs="box"
+                  class="emotion-55 emotion-56"
+                  data-resize-grip="true"
+                />
+              </span>
+            </th>
+            <th
+              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-51 emotion-52"
+              data-col="startsatheader"
+              data-resizable="true"
+              scope="col"
+              style="width: var(--col-startsatheader-size);"
+            >
+              event.list.startsAtHeader
+              <span
+                aria-hidden="true"
+                class="emotion-53 emotion-54"
+                data-resize-handle="startsatheader"
+              >
+                <span
+                  class="emotion-55 emotion-56"
+                  data-resize-grip="true"
+                />
+              </span>
+            </th>
+            <th
+              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-51 emotion-52"
+              data-col="endsatheader"
+              data-resizable="true"
+              scope="col"
+              style="width: var(--col-endsatheader-size);"
+            >
+              event.list.endsAtHeader
+              <span
+                aria-hidden="true"
+                class="emotion-53 emotion-54"
+                data-resize-handle="endsatheader"
+              >
+                <span
+                  class="emotion-55 emotion-56"
+                  data-resize-grip="true"
+                />
+              </span>
+            </th>
+            <th
+              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-51 emotion-52"
+              data-col="source"
+              data-resizable="true"
+              scope="col"
+              style="width: var(--col-source-size);"
+            >
+              event.list.source
+              <span
+                aria-hidden="true"
+                class="emotion-53 emotion-54"
+                data-resize-handle="source"
+              >
+                <span
+                  class="emotion-55 emotion-56"
+                  data-resize-grip="true"
+                />
+              </span>
+            </th>
+            <th
+              class="MuiTableCell-root MuiTableCell-head MuiTableCell-stickyHeader MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-51 emotion-52"
+              data-col="action"
+              data-resizable="true"
+              scope="col"
+              style="width: var(--col-action-size);"
+            >
+              action
+              <span
+                aria-hidden="true"
+                class="emotion-53 emotion-54"
+                data-resize-handle="action"
+              >
+                <span
+                  class="emotion-55 emotion-56"
+                  data-resize-grip="true"
+                />
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          class="MuiTableBody-root emotion-81"
+        >
+          <tr
+            class="MuiTableRow-root emotion-50"
+          >
+            <td
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              data-col="name"
+              style="width: var(--col-name-size);"
+            >
+              Event 1
+            </td>
+            <td
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              data-col="startsatheader"
+              style="width: var(--col-startsatheader-size);"
+            >
+              <time
+                datetime="2023-05-01T09:00:00.000Z"
+              >
+                May 1st, 2023 9:00 AM
+              </time>
+            </td>
+            <td
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              data-col="endsatheader"
+              style="width: var(--col-endsatheader-size);"
+            >
+              <time
+                datetime="2023-05-01T17:00:00.000Z"
+              >
+                May 1st, 2023 5:00 PM
+              </time>
+            </td>
+            <td
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              data-col="source"
+              style="width: var(--col-source-size);"
+            >
+              AgendaBasel
+            </td>
+            <td
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              data-col="action"
+              style="width: var(--col-action-size);"
+            >
+              <button
+                class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-outlined MuiButton-sizeMedium MuiButton-colorPrimary emotion-93"
+                disabled=""
+                tabindex="-1"
+                type="button"
+              >
+                importableEvent.imported
+              </button>
+            </td>
+          </tr>
+          <tr
+            class="MuiTableRow-root emotion-50"
+          >
+            <td
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              data-col="name"
+              style="width: var(--col-name-size);"
+            >
+              Event 2
+            </td>
+            <td
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              data-col="startsatheader"
+              style="width: var(--col-startsatheader-size);"
+            >
+              <time
+                datetime="2023-05-02T10:00:00.000Z"
+              >
+                May 2nd, 2023 10:00 AM
+              </time>
+            </td>
+            <td
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              data-col="endsatheader"
+              style="width: var(--col-endsatheader-size);"
+            >
+              <time
+                datetime="2023-05-02T18:00:00.000Z"
+              >
+                May 2nd, 2023 6:00 PM
+              </time>
+            </td>
+            <td
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              data-col="source"
+              style="width: var(--col-source-size);"
+            >
+              AgendaBasel
+            </td>
+            <td
+              class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignLeft MuiTableCell-sizeSmall emotion-83 emotion-84"
+              data-col="action"
+              style="width: var(--col-action-size);"
+            >
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary emotion-105"
+                tabindex="0"
+                type="button"
+              >
+                importableEvent.import
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div
+      class="MuiBox-root emotion-106"
+    >
+      <p
+        class="MuiTypography-root MuiTypography-body2 emotion-107"
+      >
+        listView.pagination.total
+      </p>
+      <div
+        class="MuiBox-root emotion-108"
+      >
+        <label
+          class="MuiBox-root emotion-109"
+          for="_r_b_"
+        >
+          listView.pagination.pageSize
+        </label>
+        <div
+          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-sizeSmall MuiSelect-root emotion-110"
+        >
+          <select
+            aria-label="listView.pagination.pageSize"
+            class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-111"
+            id="_r_b_"
+          >
+            <option
+              value="10"
+            >
+              listView.pagination.perPage
+            </option>
+            <option
+              value="20"
+            >
+              listView.pagination.perPage
+            </option>
+            <option
+              value="50"
+            >
+              listView.pagination.perPage
+            </option>
+            <option
+              value="100"
+            >
+              listView.pagination.perPage
+            </option>
+          </select>
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiNativeSelect-icon MuiNativeSelect-iconOutlined emotion-112"
+            data-testid="ArrowDropDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
+          <fieldset
+            aria-hidden="true"
+            class="MuiOutlinedInput-notchedOutline emotion-20"
+          >
+            <legend
+              class="emotion-21"
+            >
+              <span
+                aria-hidden="true"
+                class="notranslate"
+              >
+                ​
+              </span>
+            </legend>
+          </fieldset>
+        </div>
+        <nav
+          aria-label="pagination navigation"
+          class="MuiPagination-root MuiPagination-text emotion-115"
+        >
+          <ul
+            class="MuiPagination-ul emotion-116"
+          >
+            <li>
+              <button
+                aria-label="Go to first page"
+                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-firstLast emotion-117"
+                disabled=""
+                tabindex="-1"
+                type="button"
               >
                 <svg
                   aria-hidden="true"
-                  aria-label="arrow up line"
-                  class="rs-picker-caret-icon rs-icon rs-icon"
-                  data-category="direction"
-                  data-testid="caret"
-                  fill="currentColor"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-118"
+                  data-testid="FirstPageIcon"
                   focusable="false"
-                  height="1em"
-                  viewBox="0 0 16 16"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    d="M3.166 10.872a.5.5 0 0 0 .706-.037L8 6.248l4.128 4.587a.5.5 0 1 0 .743-.669l-4.5-5a.5.5 0 0 0-.744 0l-4.5 5a.5.5 0 0 0 .037.706z"
+                    d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"
                   />
                 </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="rs-divider"
-        data-orientation="vertical"
-        role="separator"
-      />
-      <div
-        class="rs-pagination"
-        data-size="sm"
-      >
-        <button
-          aria-disabled="true"
-          aria-label="First"
-          class="rs-pagination-btn rs-btn"
-          data-appearance="subtle"
-          data-disabled="true"
-          data-event-key="1"
-          data-size="sm"
-          disabled=""
-          title="First"
-          type="button"
-        >
-          <span
-            class="rs-pagination-symbol"
-          >
-            <svg
-              aria-hidden="true"
-              aria-label="page top"
-              class="rs-icon"
-              data-category="direction"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="0 0 16 16"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8.872 3.166a.5.5 0 0 0-.634-.091l-.072.054-5 4.5a.5.5 0 0 0-.065.672l.065.071 5 4.5a.5.5 0 0 0 .73-.677l-.061-.066L4.249 8l4.586-4.127a.5.5 0 0 0 .091-.634z"
-              />
-              <path
-                d="M12.872 3.166a.5.5 0 0 0-.634-.091l-.072.054-5 4.5a.5.5 0 0 0-.065.672l.065.071 5 4.5a.5.5 0 0 0 .73-.677l-.061-.066L8.249 8l4.586-4.127a.5.5 0 0 0 .091-.634z"
-              />
-            </svg>
-          </span>
-          <span
-            class="rs-ripple-pond"
-          >
-            <span
-              class="rs-ripple"
-            />
-          </span>
-        </button>
-        <button
-          aria-disabled="true"
-          aria-label="Previous"
-          class="rs-pagination-btn rs-btn"
-          data-appearance="subtle"
-          data-disabled="true"
-          data-event-key="0"
-          data-size="sm"
-          disabled=""
-          title="Previous"
-          type="button"
-        >
-          <span
-            class="rs-pagination-symbol"
-          >
-            <svg
-              aria-hidden="true"
-              aria-label="page previous"
-              class="rs-icon"
-              data-category="direction"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="0 0 16 16"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.872 3.166a.5.5 0 0 0-.634-.091l-.072.054-5 4.5a.5.5 0 0 0-.065.672l.065.071 5 4.5a.5.5 0 0 0 .73-.677l-.061-.066L6.249 8l4.586-4.127a.5.5 0 0 0 .091-.634z"
-              />
-            </svg>
-          </span>
-          <span
-            class="rs-ripple-pond"
-          >
-            <span
-              class="rs-ripple"
-            />
-          </span>
-        </button>
-        <button
-          aria-current="page"
-          aria-label="1"
-          class="rs-pagination-btn rs-btn"
-          data-active="true"
-          data-appearance="subtle"
-          data-event-key="1"
-          data-size="sm"
-          title="1"
-          type="button"
-        >
-          1
-          <span
-            class="rs-ripple-pond"
-          >
-            <span
-              class="rs-ripple"
-            />
-          </span>
-        </button>
-        <button
-          aria-disabled="true"
-          aria-label="Next"
-          class="rs-pagination-btn rs-btn"
-          data-appearance="subtle"
-          data-disabled="true"
-          data-event-key="2"
-          data-size="sm"
-          disabled=""
-          title="Next"
-          type="button"
-        >
-          <span
-            class="rs-pagination-symbol"
-          >
-            <svg
-              aria-hidden="true"
-              aria-label="page next"
-              class="rs-icon"
-              data-category="direction"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="0 0 16 16"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5.128 3.166a.5.5 0 0 1 .634-.091l.072.054 5 4.5a.5.5 0 0 1 .065.672l-.065.071-5 4.5a.5.5 0 0 1-.73-.677l.061-.066L9.751 8 5.165 3.873a.5.5 0 0 1-.091-.634z"
-              />
-            </svg>
-          </span>
-          <span
-            class="rs-ripple-pond"
-          >
-            <span
-              class="rs-ripple"
-            />
-          </span>
-        </button>
-        <button
-          aria-disabled="true"
-          aria-label="Last"
-          class="rs-pagination-btn rs-btn"
-          data-appearance="subtle"
-          data-disabled="true"
-          data-event-key="1"
-          data-size="sm"
-          disabled=""
-          title="Last"
-          type="button"
-        >
-          <span
-            class="rs-pagination-symbol"
-          >
-            <svg
-              aria-hidden="true"
-              aria-label="page end"
-              class="rs-icon"
-              data-category="direction"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="0 0 16 16"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.128 3.166a.5.5 0 0 1 .634-.091l.072.054 5 4.5a.5.5 0 0 1 .065.672l-.065.071-5 4.5a.5.5 0 0 1-.73-.677l.061-.066L11.751 8 7.165 3.873a.5.5 0 0 1-.091-.634z"
-              />
-              <path
-                d="M3.128 3.166a.5.5 0 0 1 .634-.091l.072.054 5 4.5a.5.5 0 0 1 .065.672l-.065.071-5 4.5a.5.5 0 0 1-.73-.677l.061-.066L7.751 8 3.165 3.873a.5.5 0 0 1-.091-.634z"
-              />
-            </svg>
-          </span>
-          <span
-            class="rs-ripple-pond"
-          >
-            <span
-              class="rs-ripple"
-            />
-          </span>
-        </button>
-      </div>
-      <div
-        class="rs-pagination-group-skip"
-      >
-        <span>
-          Go to
-        </span>
-        <span>
-          <input
-            class="rs-input"
-            data-size="md"
-            id="rs-_r_17_"
-            type="text"
-          />
-        </span>
-        <span />
+              </button>
+            </li>
+            <li>
+              <button
+                aria-label="Go to previous page"
+                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-previousNext emotion-117"
+                disabled=""
+                tabindex="-1"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-118"
+                  data-testid="NavigateBeforeIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+                  />
+                </svg>
+              </button>
+            </li>
+            <li>
+              <button
+                aria-current="page"
+                aria-label="page 1"
+                class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-selected MuiPaginationItem-page emotion-117"
+                tabindex="0"
+                type="button"
+              >
+                1
+              </button>
+            </li>
+            <li>
+              <button
+                aria-label="Go to next page"
+                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-previousNext emotion-117"
+                disabled=""
+                tabindex="-1"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-118"
+                  data-testid="NavigateNextIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                  />
+                </svg>
+              </button>
+            </li>
+            <li>
+              <button
+                aria-label="Go to last page"
+                class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-rounded Mui-disabled MuiPaginationItem-firstLast emotion-117"
+                disabled=""
+                tabindex="-1"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiPaginationItem-icon emotion-118"
+                  data-testid="LastPageIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"
+                  />
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>

@@ -6,10 +6,11 @@ export function useUnsavedChangesDialog(hasChanges: boolean) {
   const message = t('unsavedChangesDialog.message');
 
   useEffect(() => {
-    if (!hasChanges)
+    if (!hasChanges) {
       return () => {
         /* do nothing */
       };
+    }
 
     function handleBeforeUnload(e: BeforeUnloadEvent) {
       e.preventDefault();

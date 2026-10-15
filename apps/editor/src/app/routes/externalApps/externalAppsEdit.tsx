@@ -1,7 +1,12 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { ExternalAppsDocument } from '@wepublish/editor/api';
-import { InfoTooltip } from '@wepublish/ui/editor';
+import {
+  InfoTooltip,
+  ListViewContainer,
+  ListViewHeader,
+  PageTitle,
+} from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 
 import { ExternalAppForm } from './externalAppForm';
@@ -13,29 +18,31 @@ const Wrapper = styled.div`
   align-items: start;
 `;
 
-const Title = styled.h3`
-  grid-column: -1/1;
-`;
-
 export function ExternalApps() {
   const { t } = useTranslation();
   const { data } = useQuery(ExternalAppsDocument);
 
   return (
-    <Wrapper>
-      <Title>
-        {t('externalApps.apps')}{' '}
-        <InfoTooltip text={t('externalApps.appsInfo')} />
-      </Title>
+    <>
+      <ListViewContainer>
+        <ListViewHeader>
+          <PageTitle>
+            {t('externalApps.apps')}{' '}
+            <InfoTooltip text={t('externalApps.appsInfo')} />
+          </PageTitle>
+        </ListViewHeader>
+      </ListViewContainer>
 
-      {data?.externalApps?.map(app => (
-        <ExternalAppForm
-          key={app.id}
-          app={app}
-        />
-      ))}
+      <Wrapper>
+        {data?.externalApps?.map(app => (
+          <ExternalAppForm
+            key={app.id}
+            app={app}
+          />
+        ))}
 
-      <ExternalAppForm />
-    </Wrapper>
+        <ExternalAppForm />
+      </Wrapper>
+    </>
   );
 }

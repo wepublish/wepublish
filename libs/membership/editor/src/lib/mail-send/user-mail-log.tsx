@@ -6,11 +6,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Alert,
 } from '@mui/material';
 import { MailLogsDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
-import { Message } from 'rsuite';
-import { useShowErrors } from '../common';
 import { formatDateTime, MailLogStateTag } from './mail-log-common';
 
 interface UserMailLogPanelProps {
@@ -21,19 +20,17 @@ interface UserMailLogPanelProps {
 export function UserMailLogPanel({ userId }: UserMailLogPanelProps) {
   const { t } = useTranslation();
 
-  const { data, error } = useQuery(MailLogsDocument, {
+  const { data } = useQuery(MailLogsDocument, {
     variables: { filter: { recipientId: userId }, take: 20 },
   });
-  useShowErrors(error);
 
   const logs = data?.mailLogs.nodes ?? [];
 
   if (logs.length === 0) {
-    return <Message type="info">{t('mailLog.empty')}</Message>;
+    return <Alert severity="info">{t('mailLog.empty')}</Alert>;
   }
 
   return (
-    // a long history scrolls inside the card; the column titles stay visible
     <TableContainer
       sx={{ overflowX: 'auto', overflowY: 'auto', maxHeight: 300 }}
     >

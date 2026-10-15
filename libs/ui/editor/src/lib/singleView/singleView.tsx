@@ -1,15 +1,21 @@
-import React, { ReactNode } from 'react';
-import { Col, Grid, Row } from 'rsuite';
+import { Grid } from '@mui/material';
+import { ReactNode } from 'react';
 
 interface SingleViewProps {
   children: ReactNode;
 }
 export function SingleView({ children }: SingleViewProps) {
   return (
-    <Grid fluid>
-      <Row>
-        <Col xs={24}>{children}</Col>
-      </Row>
+    <Grid
+      container
+      spacing={2}
+    >
+      <Grid
+        container
+        spacing={2}
+      >
+        <Grid size={{ xs: 12 }}>{children}</Grid>
+      </Grid>
     </Grid>
   );
 }

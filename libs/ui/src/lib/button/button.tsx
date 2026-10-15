@@ -1,11 +1,10 @@
 import { Button as MuiButton } from '@mui/material';
-import { ComponentProps, PropsWithChildren } from 'react';
+import { ComponentProps, ElementType, PropsWithChildren } from 'react';
 
 type MuiButtonProps = ComponentProps<typeof MuiButton>;
 
 export type ButtonProps = PropsWithChildren<MuiButtonProps> &
-  (MuiButtonProps extends { LinkComponent?: React.ElementType } ?
-    { target?: string }
+  (MuiButtonProps extends { LinkComponent?: ElementType } ? { target?: string }
   : object);
 
 export function Button({

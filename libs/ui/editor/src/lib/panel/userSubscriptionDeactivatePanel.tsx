@@ -1,21 +1,29 @@
 import styled from '@emotion/styled';
-import { SubscriptionDeactivationReason } from '@wepublish/editor/api';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
+  Alert,
   Button,
-  DatePicker,
-  Form as RForm,
-  Message,
-  Modal,
-  SelectPicker,
-} from 'rsuite';
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormLabel,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { SubscriptionDeactivationReason } from '@wepublish/editor/api';
+import {
+  CanCancelSubscription,
+  CanCreateSubscription,
+} from '@wepublish/permissions';
+import { useState } from 'react';
+import { DatePicker } from '../atoms/datePicker';
+import { useTranslation } from 'react-i18next';
 
 import { createCheckedPermissionComponent } from '../atoms';
 
-const { Group, Label } = RForm;
-
-const Form = styled(RForm)`
+const Form = styled('form')`
   margin-top: 20px;
 `;
 
@@ -50,88 +58,110 @@ function UserSubscriptionDeactivatePanel({
 
   return (
     <>
-      <Modal.Header>
-        <Modal.Title>
-          {t('userSubscriptionEdit.deactivation.modalTitle.activated')}
-        </Modal.Title>
-      </Modal.Header>
+      <DialogTitle>
+        {t('userSubscriptionEdit.deactivation.modalTitle.activated')}
+      </DialogTitle>
 
-      <Modal.Body>
-        <p>
+      <DialogContent>
+        <Typography>
           {t('userSubscriptionEdit.deactivation.modalMessage.activated', {
             userName: displayName,
             userEmail,
           })}
-        </p>
-        <Form>
-          <RForm.Stack fluid>
-            <Group controlId="deactivationDate">
-              <Label>{t('userSubscriptionEdit.deactivation.date')}</Label>
+        </Typography>
+        <Stack
+          spacing={3}
+          sx={{ width: '100%' }}
+        >
+          <Stack
+            spacing={3}
+            sx={{ width: '100%' }}
+          >
+            <FormControl fullWidth>
+              <FormLabel>
+                {t('userSubscriptionEdit.deactivation.date')}
+              </FormLabel>
               <DatePicker
-                block
-                oneTap
-                placement="auto"
-                value={deactivationDate}
+                value={deactivationDate ?? null}
                 onChange={value => setDeactivationDate(value)}
+                fullWidth
               />
-            </Group>
+            </FormControl>
 
-            <Group controlId="deactivationReason">
-              <Label>{t('userSubscriptionEdit.deactivation.reason')}</Label>
-              <SelectPicker
-                virtualized
-                searchable={false}
-                data={[
-                  {
-                    value: SubscriptionDeactivationReason.None,
-                    label: t('userSubscriptionEdit.deactivation.reasonNone'),
-                  },
-                  {
-                    value: SubscriptionDeactivationReason.UserSelfDeactivated,
-                    label: t(
-                      'userSubscriptionEdit.deactivation.reasonUserSelfDeactivated'
-                    ),
-                  },
-                  {
-                    value: SubscriptionDeactivationReason.InvoiceNotPaid,
-                    label: t(
-                      'userSubscriptionEdit.deactivation.reasonInvoiceNotPaid'
-                    ),
-                  },
-                  {
-                    value:
-                      SubscriptionDeactivationReason.UserReplacedSubscription,
-                    label: t(
-                      'userSubscriptionEdit.deactivation.reasonUserReplacedSubscription'
-                    ),
-                  },
-                  {
-                    value: SubscriptionDeactivationReason.Chargeback,
-                    label: t(
-                      'userSubscriptionEdit.deactivation.reasonChargeback'
-                    ),
-                  },
-                ]}
-                value={deactivationReason}
-                block
-                placement="auto"
-                onChange={value => setDeactivationReason(value)}
-              />
-            </Group>
-            <Message
-              showIcon
-              type="info"
-            >
+            <FormControl fullWidth>
+              <FormLabel>
+                {t('userSubscriptionEdit.deactivation.reason')}
+              </FormLabel>
+              <TextField
+                select
+                value={deactivationReason ?? ''}
+                onChange={event => {
+                  const value = event.target
+                    .value as SubscriptionDeactivationReason;
+                  setDeactivationReason(value);
+                }}
+                fullWidth
+              >
+                <MenuItem
+                  key={SubscriptionDeactivationReason.None}
+                  value={SubscriptionDeactivationReason.None}
+                >
+                  {t('userSubscriptionEdit.deactivation.reasonNone')}
+                </MenuItem>
+
+                <MenuItem
+                  key={SubscriptionDeactivationReason.UserSelfDeactivated}
+                  value={SubscriptionDeactivationReason.UserSelfDeactivated}
+                >
+                  {t(
+                    'userSubscriptionEdit.deactivation.reasonUserSelfDeactivated'
+                  )}
+                </MenuItem>
+
+                <MenuItem
+                  key={SubscriptionDeactivationReason.InvoiceNotPaid}
+                  value={SubscriptionDeactivationReason.InvoiceNotPaid}
+                >
+                  {t('userSubscriptionEdit.deactivation.reasonInvoiceNotPaid')}
+                </MenuItem>
+
+                <MenuItem
+                  key={SubscriptionDeactivationReason.UserReplacedSubscription}
+                  value={
+                    SubscriptionDeactivationReason.UserReplacedSubscription
+                  }
+                >
+                  {t(
+                    'userSubscriptionEdit.deactivation.reasonUserReplacedSubscription'
+                  )}
+                </MenuItem>
+
+                <MenuItem
+                  key={SubscriptionDeactivationReason.Chargeback}
+                  value={SubscriptionDeactivationReason.Chargeback}
+                >
+                  {t('userSubscriptionEdit.deactivation.reasonChargeback')}
+                </MenuItem>
+              </TextField>
+            </FormControl>
+            <Alert severity="info">
               {t('userSubscriptionEdit.deactivation.help')}
-            </Message>
-          </RForm.Stack>
-        </Form>
-      </Modal.Body>
+            </Alert>
+          </Stack>
+        </Stack>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
+          variant="text"
+          onClick={() => onClose()}
+        >
+          {t('articleEditor.panels.close')}
+        </Button>
+
+        <Button
+          variant="contained"
           disabled={!deactivationDate || !deactivationReason}
-          appearance="primary"
           onClick={() =>
             onDeactivate({
               date: deactivationDate!,
@@ -141,19 +171,13 @@ function UserSubscriptionDeactivatePanel({
         >
           {t('userSubscriptionEdit.deactivation.action.activated')}
         </Button>
-        <Button
-          appearance="subtle"
-          onClick={() => onClose()}
-        >
-          {t('articleEditor.panels.close')}
-        </Button>
-      </Modal.Footer>
+      </DialogActions>
     </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_CREATE_SUBSCRIPTION',
-  'CAN_DELETE_SUBSCRIPTION',
+  CanCreateSubscription.id,
+  CanCancelSubscription.id,
 ])(UserSubscriptionDeactivatePanel);
 export { CheckedPermissionComponent as UserSubscriptionDeactivatePanel };

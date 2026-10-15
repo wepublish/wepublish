@@ -3,18 +3,14 @@ import {
   SubscriptionEvent,
   SubscriptionFlowFragment,
 } from '@wepublish/editor/api';
-import { PermissionControl, useAuthorisation } from '@wepublish/ui/editor';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  PermissionControl,
+  useAuthorisation,
+  ClickPopover,
+} from '@wepublish/ui/editor';
+import { useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdAlarmOn, MdCheck, MdEdit, MdRefresh } from 'react-icons/md';
-import {
-  Button,
-  IconButton,
-  NumberInput,
-  Popover,
-  Whisper,
-  type WhisperInstance,
-} from 'rsuite';
 import { MailSubsection } from '../../mail-settings-layout';
 import { DraggableSubscriptionInterval } from '../draggable-subscription-interval';
 import { DroppableSubscriptionInterval } from '../droppable-subscription-interval';
@@ -24,6 +20,14 @@ import {
   MailTemplatesContext,
   NonUserActionInterval,
 } from '../subscription-flow-list';
+import {
+  Button,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { CanUpdateSubscriptionFlow } from '@wepublish/permissions';
 
 const DayList = styled('ol')`
   margin: 0;
@@ -36,9 +40,11 @@ const DayRow = styled('li')<{ renewal: boolean }>`
   display: grid;
   gap: 8px 16px;
   padding: 10px 12px 10px 36px;
-  border-radius: var(--rs-radius-md);
-  background-color: ${({ renewal }) =>
-    renewal ? 'rgb(from var(--rs-primary-500) r g b / 7%)' : 'transparent'};
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  background-color: ${({ renewal, theme }) =>
+    renewal ?
+      `rgb(from ${theme.vars.palette.primary.main} r g b / 7%)`
+    : 'transparent'};
 
   &::before {
     content: '';
@@ -47,7 +53,7 @@ const DayRow = styled('li')<{ renewal: boolean }>`
     bottom: 0;
     left: 15px;
     width: 2px;
-    background-color: var(--rs-border-primary);
+    background-color: ${({ theme }) => theme.vars.palette.divider};
   }
 
   &:first-of-type::before {
@@ -71,11 +77,15 @@ const DayRow = styled('li')<{ renewal: boolean }>`
     width: 12px;
     height: 12px;
     border: 2px solid
-      ${({ renewal }) =>
-        renewal ? 'var(--rs-primary-500)' : 'var(--rs-border-secondary)'};
+      ${({ renewal, theme }) =>
+        renewal ?
+          `${theme.vars.palette.primary.main}`
+        : `${theme.vars.palette.divider}`};
     border-radius: 50%;
-    background-color: ${({ renewal }) =>
-      renewal ? 'var(--rs-primary-500)' : 'var(--rs-bg-card)'};
+    background-color: ${({ renewal, theme }) =>
+      renewal ?
+        `${theme.vars.palette.primary.main}`
+      : `${theme.vars.palette.background.paper}`};
   }
 
   @container (min-width: 620px) {
@@ -95,7 +105,7 @@ const DayLabel = styled('div')`
 const DayName = styled('span')`
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--rs-text-heading);
+  color: ${({ theme }) => theme.vars.palette.text.primary};
 `;
 
 const RenewalHint = styled('span')`
@@ -105,7 +115,7 @@ const RenewalHint = styled('span')`
   gap: 4px;
   font-size: 12px;
   line-height: 1.35;
-  color: var(--rs-primary-500);
+  color: ${({ theme }) => theme.vars.palette.primary.main};
 
   > svg {
     flex-shrink: 0;
@@ -145,7 +155,7 @@ const AddMail = styled('div')`
 const NewDayHint = styled('span')`
   font-size: 12px;
   line-height: 1.4;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 interface AddDayProps {
@@ -154,52 +164,53 @@ interface AddDayProps {
 
 function AddDay({ onAdd }: AddDayProps) {
   const { t } = useTranslation();
-  const whisper = useRef<WhisperInstance>(null);
   const [day, setDay] = useState(-3);
 
   return (
-    <PermissionControl qualifyingPermissions={['CAN_UPDATE_SUBSCRIPTION_FLOW']}>
-      <Whisper
-        ref={whisper}
-        placement="bottomEnd"
-        trigger="click"
-        speaker={
-          <Popover>
-            <NewDayBody>
-              <h6>{t('subscriptionFlow.newDayTitle')}</h6>
-
-              <NewDayHint>{t('subscriptionFlow.newDayHint')}</NewDayHint>
-
-              <NewDayForm>
-                <NumberInput
-                  defaultValue={day}
-                  onChange={value => setDay(+(value ?? 0))}
-                  step={1}
-                />
-
-                <Button
-                  appearance="primary"
-                  startIcon={<MdAdd />}
-                  onClick={() => {
-                    onAdd(day);
-                    whisper.current?.close();
-                  }}
-                >
-                  {t('subscriptionFlow.add')}
-                </Button>
-              </NewDayForm>
-            </NewDayBody>
-          </Popover>
+    <PermissionControl qualifyingPermissions={[CanUpdateSubscriptionFlow.id]}>
+      <ClickPopover
+        trigger={
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<MdAdd />}
+          >
+            {t('subscriptionFlow.addDay')}
+          </Button>
         }
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <Button
-          size="sm"
-          appearance="ghost"
-          startIcon={<MdAdd />}
-        >
-          {t('subscriptionFlow.addDay')}
-        </Button>
-      </Whisper>
+        {close => (
+          <NewDayBody>
+            <Typography variant="h6">
+              {t('subscriptionFlow.newDayTitle')}
+            </Typography>
+
+            <NewDayHint>{t('subscriptionFlow.newDayHint')}</NewDayHint>
+
+            <NewDayForm>
+              <TextField
+                type="number"
+                defaultValue={day}
+                onChange={event => setDay(+(event.target.value || 0))}
+                slotProps={{ htmlInput: { step: 1 } }}
+              />
+
+              <Button
+                variant="contained"
+                startIcon={<MdAdd />}
+                onClick={() => {
+                  onAdd(day);
+                  close();
+                }}
+              >
+                {t('subscriptionFlow.add')}
+              </Button>
+            </NewDayForm>
+          </NewDayBody>
+        )}
+      </ClickPopover>
     </PermissionControl>
   );
 }
@@ -212,7 +223,7 @@ interface EditDayProps {
 function EditDay({ day, subscriptionFlow }: EditDayProps) {
   const { t } = useTranslation();
   const canUpdateSubscriptionFlow = useAuthorisation(
-    'CAN_UPDATE_SUBSCRIPTION_FLOW'
+    CanUpdateSubscriptionFlow.id
   );
   const client = useContext(SubscriptionClientContext);
   const editDay = useRef<number | undefined>(undefined);
@@ -244,40 +255,44 @@ function EditDay({ day, subscriptionFlow }: EditDayProps) {
   }
 
   return (
-    <Whisper
-      placement="bottomStart"
-      trigger="click"
-      onClose={() => (editDay.current = undefined)}
-      speaker={
-        <Popover>
-          <PopoverBody>
-            <NumberInput
-              onChange={value => (editDay.current = +(value ?? 0))}
-              size="sm"
-              defaultValue={day}
-              step={1}
-              postfix={t('subscriptionFlow.days')}
-            />
-
-            <IconButton
-              icon={<MdCheck />}
-              color="green"
-              appearance="primary"
-              size="sm"
-              onClick={updateTimelineDay}
-            />
-          </PopoverBody>
-        </Popover>
+    <ClickPopover
+      trigger={
+        <IconButton
+          size="small"
+          aria-label={t('subscriptionFlow.editDay')}
+        >
+          <MdEdit />
+        </IconButton>
       }
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'left' }}
     >
-      <IconButton
-        icon={<MdEdit />}
-        size="sm"
-        circle
-        appearance="subtle"
-        aria-label={t('subscriptionFlow.editDay')}
-      />
-    </Whisper>
+      <PopoverBody>
+        <TextField
+          type="number"
+          defaultValue={day}
+          onChange={event => (editDay.current = +(event.target.value || 0))}
+          slotProps={{
+            htmlInput: { step: 1 },
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  {t('subscriptionFlow.days')}
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+
+        <IconButton
+          color="success"
+          size="small"
+          onClick={updateTimelineDay}
+        >
+          <MdCheck />
+        </IconButton>
+      </PopoverBody>
+    </ClickPopover>
   );
 }
 
@@ -303,11 +318,9 @@ export function Timeline({ subscriptionFlow }: TimelineProps) {
   const pendingMailSaved =
     !!pendingMail && mailsOnDay(pendingMail.day) > pendingMail.mailsOnDay;
 
-  useEffect(() => {
-    if (pendingMailSaved) {
-      setPendingMail(undefined);
-    }
-  }, [pendingMailSaved]);
+  if (pendingMailSaved) {
+    setPendingMail(undefined);
+  }
 
   const addMail = (day: number) =>
     setPendingMail({ day, mailsOnDay: mailsOnDay(day) });
@@ -385,12 +398,12 @@ export function Timeline({ subscriptionFlow }: TimelineProps) {
 
                 {!pending && !!intervals.length && (
                   <PermissionControl
-                    qualifyingPermissions={['CAN_UPDATE_SUBSCRIPTION_FLOW']}
+                    qualifyingPermissions={[CanUpdateSubscriptionFlow.id]}
                   >
                     <AddMail>
                       <Button
-                        size="xs"
-                        appearance="subtle"
+                        variant="text"
+                        size="small"
                         startIcon={<MdAdd />}
                         onClick={() => addMail(day)}
                       >
