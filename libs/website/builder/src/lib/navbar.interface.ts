@@ -28,3 +28,5 @@ export type BuilderNavbarProps = PropsWithChildren<
     paperActions?: ReactNode;
   }
 >;
+
+export const navbarContainerClassName = 'wep-navbar-container';

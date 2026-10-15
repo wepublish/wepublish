@@ -20,3 +20,5 @@ export type BuilderFooterProps = PropsWithChildren<
     wepublishLogo: 'light' | 'dark' | 'hidden';
   }
 >;
+
+export const footerContainerClassName = 'wep-footer-container';

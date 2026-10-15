@@ -23,17 +23,17 @@ import {
   IconButton,
   IconButtonCell,
   IconButtonTooltip,
+  ListColumn,
   ListFilters,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
   PermissionControl,
+  renderListColumns,
   StatusBadge,
   Table,
   TableWrapper,
-  ListColumn,
-  renderListColumns,
   useColumnConfig,
   useListViewState,
 } from '@wepublish/ui/editor';
@@ -44,6 +44,7 @@ import {
   MdComment,
   MdContentCopy,
   MdDelete,
+  MdLink,
   MdUnpublished,
 } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
@@ -56,6 +57,8 @@ import {
   Table as RTable,
 } from 'rsuite';
 import type { RowDataType } from 'rsuite-table';
+
+import { copyLinkToClipboard } from '../../copyLink';
 
 interface State {
   state: string;
@@ -300,7 +303,7 @@ function PageList() {
           {renderListColumns(dataColumns, isVisible)}
 
           <Column
-            width={220}
+            width={260}
             align="center"
             fixed="right"
           >
@@ -308,6 +311,17 @@ function PageList() {
             <IconButtonCell>
               {(rowData: RowDataType<FullPageFragment>) => (
                 <>
+                  <IconButtonTooltip caption={t('copyLink.button')}>
+                    <IconButton
+                      aria-label={t('copyLink.button')}
+                      icon={<MdLink />}
+                      circle
+                      disabled={!rowData.published}
+                      size="sm"
+                      onClick={() => copyLinkToClipboard(rowData.url, t)}
+                    />
+                  </IconButtonTooltip>
+
                   <PermissionControl
                     qualifyingPermissions={['CAN_PUBLISH_PAGE']}
                   >

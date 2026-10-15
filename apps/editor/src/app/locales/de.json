@@ -77,6 +77,11 @@
         "confirm": "Als Entwurf wiederherstellen"
       }
     },
+    "copyLink": {
+      "button": "Link kopieren",
+      "copied": "Link in die Zwischenablage kopiert",
+      "failed": "Link konnte nicht kopiert werden"
+    },
     "discardDraft": {
       "button": "Entwurf verwerfen",
       "success": "Entwurf verworfen – zur veröffentlichten Version zurückgekehrt",
@@ -1723,6 +1728,8 @@
         "value": "Wert",
         "slugInfo": "Der letzte Teil der Webadresse der Seite, z.B. «ueber-uns». Verwende nur Kleinbuchstaben, Zahlen und Bindestriche. Eine spätere Änderung macht bestehende Links ungültig.",
         "hiddenInfo": "Ausgeblendete Seiten erscheinen nicht in automatischen Listen auf der Website, bleiben aber über ihren direkten Link erreichbar.",
+        "hideHeaderFooter": "Header und Footer ausblenden",
+        "hideHeaderFooterInfo": "Blendet den Header und den Footer der Website auf dieser Seite aus, z.B. für Landingpages.",
         "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
       }
     },
