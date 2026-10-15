@@ -63,7 +63,7 @@ let settings: ClientSettings;
 export function getSettings(): ClientSettings {
   if (!settings) {
     const defaultSettings = {
-      apiURL: 'http://localhost:4000',
+      apiURL: 'https://api-demo.wepublish.works',
       wepOneURL: 'https://one-admin.wepublish.cloud',
       medium: '',
       imgMinSizeToCompress: 10,
