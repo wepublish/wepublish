@@ -31,6 +31,6 @@ describe('munotgloeggli login', () => {
 
     expect(
       screen.getByRole('heading', { name: 'Login für Mitglieder' })
-    ).toBeInTheDocument();
+    ).toBeTruthy();
   });
 });
