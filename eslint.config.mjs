@@ -4,6 +4,30 @@ import eslintPluginStorybook from 'eslint-plugin-storybook';
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 
+/**
+ * The React Compiler's own lint rules, as one switch.
+ *
+ * Shared so the editor projects can turn on exactly what the root turns off,
+ * rather than each listing the rules again and drifting apart.
+ */
+export const reactCompilerRules = level => ({
+  ...Object.fromEntries(
+    [
+      'react-hooks/set-state-in-effect',
+      'react-hooks/refs',
+      'react-hooks/purity',
+      'react-hooks/globals',
+      'react-hooks/immutability',
+      'react-hooks/preserve-manual-memoization',
+    ].map(rule => [rule, level])
+  ),
+  // Reports that the compiler skipped a component because a library it uses
+  // cannot be memoised safely — react-hook-form's `watch()`, for one. That is
+  // a missed optimisation rather than a defect, so it stays advisory even
+  // where the rest are errors.
+  'react-hooks/incompatible-library': level === 'off' ? 'off' : 'warn',
+});
+
 export default [
   ...eslintPluginStorybook.configs['flat/recommended'],
   ...nx.configs['flat/base'],
@@ -98,6 +122,15 @@ export default [
     rules: {
       '@nx/enforce-module-boundaries': 'off',
     },
+  },
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    // `eslint-plugin-react-hooks` v7 ships the React Compiler's diagnostics.
+    // The compiler runs on `apps/editor` only (see its vite config), so they
+    // are off here and switched back on by `reactCompilerRules` in the editor
+    // projects' own configs — anywhere else they would be findings nobody can
+    // act on. A project that starts compiling adds that import.
+    rules: reactCompilerRules('off'),
   },
   {
     ignores: [

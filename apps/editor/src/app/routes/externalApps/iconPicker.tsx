@@ -1,5 +1,5 @@
 import { Autocomplete, Box, TextField } from '@mui/material';
-import React, { useMemo } from 'react';
+import { ComponentType, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ICON_REGISTRY } from './iconRegistry';
@@ -13,7 +13,7 @@ interface IconPickerProps {
 type IconPickerItem = {
   label: string;
   value: string;
-  icon: React.ComponentType<{ size?: number }>;
+  icon: ComponentType<{ size?: number }>;
 };
 
 export const IconPickerSelect = ({

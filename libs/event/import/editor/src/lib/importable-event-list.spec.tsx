@@ -9,11 +9,15 @@ import {
   ImportedEventListDocument,
   ImportedEventListQuery,
   ImportedEventsIdsDocument,
+  EventProvidersDocument,
 } from '@wepublish/editor/api';
 import * as v2Client from '@wepublish/editor/api';
 import { AuthContext, sessionWithPermissions } from '@wepublish/ui/editor';
 import { BrowserRouter } from 'react-router-dom';
 import ImportableEventListView from './importable-event-list';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme({ cssVariables: true });
 
 vi.mock('node-fetch', () => ({ default: vi.fn() }));
 
@@ -62,8 +66,11 @@ const createEventMockData = {
   createEvent: 'new-event-id',
 };
 
+const reusable = { maxUsageCount: Number.POSITIVE_INFINITY };
+
 const mocks = [
   {
+    ...reusable,
     request: {
       query: ImportedEventListDocument,
       variables: {
@@ -79,6 +86,7 @@ const mocks = [
     },
   },
   {
+    ...reusable,
     request: {
       query: ImportedEventListDocument,
       variables: {
@@ -94,6 +102,7 @@ const mocks = [
     },
   },
   {
+    ...reusable,
     request: {
       query: ImportedEventListDocument,
       variables: {
@@ -109,6 +118,17 @@ const mocks = [
     },
   },
   {
+    ...reusable,
+    request: {
+      query: EventProvidersDocument,
+      variables: {},
+    },
+    result: () => ({
+      data: { eventProviders: ['AgendaBasel'] },
+    }),
+  },
+  {
+    ...reusable,
     request: {
       query: ImportEventDocument,
       variables: {
@@ -123,8 +143,10 @@ const mocks = [
     },
   },
   {
+    ...reusable,
     request: {
       query: ImportedEventsIdsDocument,
+      variables: {},
     },
     result: () => {
       return {
@@ -157,32 +179,26 @@ describe('ImportableEventListView', () => {
 
   test('renders the event list view with events', async () => {
     const { asFragment } = render(
-      <AuthContext.Provider value={sessionWithPermissions}>
-        <MockedProviderBase
-          mocks={mocks}
-          addTypename={false}
-        >
-          <BrowserRouter>
-            <ImportableEventListView />
-          </BrowserRouter>
-        </MockedProviderBase>
-      </AuthContext.Provider>
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProviderBase
+            mocks={mocks}
+            addTypename={false}
+          >
+            <BrowserRouter>
+              <ImportableEventListView />
+            </BrowserRouter>
+          </MockedProviderBase>
+        </AuthContext.Provider>
+      </ThemeProvider>
     );
 
-    // Apollo Client 4 delivers results a tick later than v3, and the view
-    // issues a second query, so wait for the rows AND for the table to leave
-    // its loading state — snapshotting on the rows alone is racy.
     expect(await screen.findByText('Event 1')).toBeInTheDocument();
-    await waitFor(() =>
-      expect(screen.getByRole('grid')).toHaveAttribute('aria-busy', 'false')
-    );
-    // rsuite positions the table's scrollbar handle in a later layout pass;
-    // snapshotting before that lands makes the inline style flap.
-    await waitFor(() =>
-      expect(document.querySelector('.rs-table-scrollbar-handle')).toHaveStyle({
-        backfaceVisibility: 'hidden',
-      })
-    );
+    await waitFor(() => expect(screen.getByRole('table')).toBeInTheDocument());
+
+    await screen.findByRole('button', {
+      name: 'importableEvent.imported',
+    });
 
     expect(asFragment()).toMatchSnapshot();
 
@@ -201,16 +217,18 @@ describe('ImportableEventListView', () => {
 
   test('imports an event when import button is clicked', async () => {
     render(
-      <AuthContext.Provider value={sessionWithPermissions}>
-        <MockedProviderBase
-          mocks={mocks}
-          addTypename={false}
-        >
-          <BrowserRouter>
-            <ImportableEventListView />
-          </BrowserRouter>
-        </MockedProviderBase>
-      </AuthContext.Provider>
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider value={sessionWithPermissions}>
+          <MockedProviderBase
+            mocks={mocks}
+            addTypename={false}
+          >
+            <BrowserRouter>
+              <ImportableEventListView />
+            </BrowserRouter>
+          </MockedProviderBase>
+        </AuthContext.Provider>
+      </ThemeProvider>
     );
 
     await waitFor(() => {

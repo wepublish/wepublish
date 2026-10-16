@@ -13,6 +13,11 @@ vi.mock('@mailchimp/mailchimp_marketing', () => ({
     lists: {
       getListMembersInfo: vi.fn(),
       getListMergeFields: vi.fn(),
+      setListMember: vi.fn(),
+    },
+    batches: {
+      start: vi.fn(),
+      status: vi.fn(),
     },
   },
 }));
@@ -21,8 +26,29 @@ const mailchimpStub = mailchimp as unknown as {
   lists: {
     getListMembersInfo: Mock;
     getListMergeFields: Mock;
+    setListMember: Mock;
+  };
+  batches: {
+    start: Mock;
+    status: Mock;
   };
 };
+
+const invalidResourceError = (field: string, message: string) => ({
+  status: 400,
+  response: {
+    body: {
+      status: 400,
+      title: 'Invalid Resource',
+      detail:
+        "The resource submitted could not be validated. For field-specific details, see the 'errors' array.",
+      errors: [{ field, message }],
+    },
+  },
+});
+
+const INVALID_RESOURCE_MESSAGE =
+  "Invalid Resource: The resource submitted could not be validated. For field-specific details, see the 'errors' array.";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -94,6 +120,7 @@ const prismaMock = {
   subscription: { findMany: vi.fn() },
   mailchimpSyncError: {
     findMany: vi.fn(),
+    upsert: vi.fn(),
   },
 };
 
@@ -198,6 +225,49 @@ describe('MailchimpSyncService', () => {
         [ABO_A_GROUP_ID]: false,
         [ABO_B_GROUP_ID]: false,
       });
+    });
+  });
+
+  describe('sync errors', () => {
+    it('records the field details of a contact Mailchimp rejects', async () => {
+      mailchimpStub.batches.start.mockResolvedValue({
+        id: 'batch-1',
+        status: 'finished',
+      });
+      mailchimpStub.batches.status.mockResolvedValue({
+        status: 'finished',
+        errored_operations: 1,
+      });
+      mailchimpStub.lists.setListMember.mockRejectedValue(
+        invalidResourceError('FNAME', 'Please enter a value')
+      );
+
+      await service.executeSyncById(CONFIG_ID);
+
+      expect(prismaMock.mailchimpSyncError.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          create: expect.objectContaining({
+            email: mockUser.email,
+            errorMessage: `Error updating contact '${mockUser.email}': ${INVALID_RESOURCE_MESSAGE} (FNAME: Please enter a value)`,
+          }),
+        })
+      );
+    });
+
+    it('records the field details when Mailchimp rejects the whole batch', async () => {
+      mailchimpStub.batches.start.mockRejectedValue(
+        invalidResourceError('operations', 'Too many operations')
+      );
+
+      await service.executeSyncById(CONFIG_ID);
+
+      expect(prismaMock.mailchimpSyncError.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          create: expect.objectContaining({
+            errorMessage: `Batch failed: ${INVALID_RESOURCE_MESSAGE} (operations: Too many operations)`,
+          }),
+        })
+      );
     });
   });
 

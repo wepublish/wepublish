@@ -1,5 +1,15 @@
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Button,
+  Drawer,
+  FormControlLabel,
+  FormLabel,
+  InputAdornment,
+  Switch,
+  TextField,
+} from '@mui/material';
 import {
   AuthorDocument,
   AuthorLink,
@@ -11,24 +21,18 @@ import {
   TagType,
   UpdateAuthorDocument,
 } from '@wepublish/editor/api';
+import {
+  CanCreateAuthor,
+  CanDeleteAuthor,
+  CanGetAuthor,
+  CanGetAuthors,
+} from '@wepublish/permissions';
 import { slugify } from '@wepublish/utils';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdLink } from 'react-icons/md';
-import {
-  Button,
-  Drawer,
-  Form as RForm,
-  Input,
-  InputGroup as RInputGroup,
-  Message,
-  Panel,
-  PanelGroup,
-  Schema,
-  toaster,
-  Toggle,
-} from 'rsuite';
-import FormControl from 'rsuite/FormControl';
+import { z } from 'zod';
 
 import {
   ChooseEditImage,
@@ -40,29 +44,26 @@ import {
   useAuthorisation,
 } from '../atoms';
 import { RichTextBlock, RichTextBlockValue } from '../blocks';
+import {
+  DRAWER_WIDTHS,
+  DrawerActions,
+  DrawerBody,
+  DrawerForm,
+  DrawerHeader,
+  DrawerTitle,
+  FormFields,
+  FormSectionTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { generateID, getOperationNameFromDocument } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 
-const { Label: RLabel, Group, Control } = RForm;
-
-const InputGroup = styled(RInputGroup)`
-  width: 230px;
-  margin-left: 4px;
-`;
-
 const Controls = styled('div')`
   display: flex;
   flex-direction: row;
-`;
-
-const Form = styled(RForm)`
-  height: 100%;
-`;
-
-const Label = styled(RLabel)`
-  padding-top: 16px;
+  gap: 8px;
 `;
 
 const ToggleList = styled('div')`
@@ -85,42 +86,98 @@ export interface AuthorEditPanelProps {
   onSave?(author: FullAuthorFragment): void;
 }
 
+const EMPTY_AUTHOR = {
+  name: '',
+  slug: '',
+  jobTitle: '',
+  image: undefined as Maybe<FullImageFragment> | undefined,
+  bio: undefined as RichTextBlockValue['richText'] | undefined,
+  tagIds: [] as string[],
+  tags: [] as FullAuthorFragment['tags'],
+  hideOnArticle: false,
+  hideOnTeaser: false,
+  hideOnTeam: false,
+  links: [
+    { id: generateID(), value: emptyAuthorLink },
+  ] as ListValue<AuthorLink>[],
+};
+
 function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
-  const [name, setName] = useState('');
-  const [tagIds, setTagIds] = useState<string[]>([]);
-  const [slug, setSlug] = useState('');
-  const [jobTitle, setJobTitle] = useState('');
-  const [image, setImage] = useState<Maybe<FullImageFragment>>();
-  const [bio, setBio] = useState<RichTextBlockValue['richText']>();
-  const [hideOnArticle, setHideOnArticle] = useState<
-    boolean | undefined | null
-  >(undefined);
-  const [hideOnTeaser, setHideOnTeaser] = useState<boolean | undefined | null>(
-    undefined
-  );
-  const [hideOnTeam, setHideOnTeam] = useState<boolean | undefined | null>(
-    undefined
-  );
-  const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
-    {
-      id: generateID(),
-      value: emptyAuthorLink,
-    },
-  ]);
+  const { t } = useTranslation();
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [loadError, setLoadError] = useState<Error>();
 
-  const isAuthorized = useAuthorisation('CAN_CREATE_AUTHOR');
+  const isAuthorized = useAuthorisation(CanCreateAuthor.id);
+  const client = useApolloClient();
+
+  const schema = z.object({
+    name: z.string().min(1, t('errorMessages.noNameErrorMessage')),
+    slug: z.string(),
+    jobTitle: z.string(),
+    image: z.custom<FullImageFragment>().nullish(),
+    bio: z.any(),
+    tagIds: z.array(z.string()),
+    tags: z.any(),
+    hideOnArticle: z.boolean(),
+    hideOnTeaser: z.boolean(),
+    hideOnTeam: z.boolean(),
+    links: z.array(z.custom<ListValue<AuthorLink>>()),
+  });
 
   const {
-    data,
-    loading: isLoading,
-    error: loadError,
-  } = useQuery(AuthorDocument, {
-    variables: { id: id! },
-    skip: id === undefined,
+    control,
+    handleSubmit,
+    setValue,
+    formState: { isLoading },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: async () => {
+      if (!id) {
+        return EMPTY_AUTHOR;
+      }
+
+      try {
+        const { data } = await client.query({
+          query: AuthorDocument,
+          variables: { id },
+        });
+        const author = data?.author;
+
+        return author ?
+            {
+              name: author.name,
+              slug: author.slug,
+              jobTitle: author.jobTitle ?? '',
+              image: author.image,
+              bio: author.bio,
+              tagIds: author.tags?.map(tag => tag.id) ?? [],
+              tags: author.tags ?? [],
+              hideOnArticle: !!author.hideOnArticle,
+              hideOnTeaser: !!author.hideOnTeaser,
+              hideOnTeam: !!author.hideOnTeam,
+              links:
+                author.links?.map(link => ({
+                  id: generateID(),
+                  value: {
+                    __typename: 'AuthorLink' as const,
+                    title: link.title,
+                    url: link.url,
+                  },
+                })) ?? [],
+            }
+          : EMPTY_AUTHOR;
+      } catch (error) {
+        setLoadError(error as Error);
+
+        return EMPTY_AUTHOR;
+      }
+    },
   });
+
+  const image = useWatch({ control, name: 'image' });
+  const tags = useWatch({ control, name: 'tags' });
 
   const [createAuthor, { loading: isCreating, error: createError }] =
     useMutation(CreateAuthorDocument, {
@@ -137,55 +194,27 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     loadError !== undefined ||
     !isAuthorized;
 
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    if (data?.author) {
-      setName(data.author.name);
-      setTagIds(data.author.tags?.map(tag => tag.id) || []);
-      setSlug(data.author.slug);
-      setJobTitle(data.author.jobTitle ?? '');
-      setImage(data.author.image);
-      setBio(data.author.bio);
-      setHideOnArticle(data.author.hideOnArticle);
-      setHideOnTeam(data.author.hideOnTeam);
-      setHideOnTeaser(data.author.hideOnTeaser);
-      setLinks(
-        data.author.links ?
-          data.author.links.map(link => ({
-            id: generateID(),
-            value: {
-              __typename: 'AuthorLink',
-              title: link.title,
-              url: link.url,
-            },
-          }))
-        : []
-      );
-    }
-  }, [data?.author]);
-
   useEffect(() => {
     const error =
       loadError?.message ?? createError?.message ?? updateError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [loadError, createError, updateError]);
 
-  function handleImageChange(image: FullImageFragment) {
-    setImage(image);
-  }
-
-  async function handleSave() {
+  async function handleSave({
+    name,
+    slug,
+    jobTitle,
+    image,
+    bio,
+    tagIds,
+    hideOnArticle,
+    hideOnTeaser,
+    hideOnTeam,
+    links,
+  }: z.infer<typeof schema>) {
     if (id) {
       const { data } = await updateAuthor({
         variables: {
@@ -203,7 +232,9 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
         },
       });
 
-      if (data?.updateAuthor) onSave?.(data.updateAuthor);
+      if (data?.updateAuthor) {
+        onSave?.(data.updateAuthor);
+      }
     } else {
       const { data } = await createAuthor({
         variables: {
@@ -214,42 +245,32 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
           links: links.map(({ value }) => value),
           bio,
           tagIds,
-          hideOnArticle: !!hideOnArticle,
-          hideOnTeaser: !!hideOnTeaser,
-          hideOnTeam: !!hideOnTeam,
+          hideOnArticle,
+          hideOnTeaser,
+          hideOnTeam,
         },
       });
 
-      if (data?.createAuthor) onSave?.(data.createAuthor);
+      if (data?.createAuthor) {
+        onSave?.(data.createAuthor);
+      }
     }
   }
 
-  // Defines field requirements
-  const { StringType } = Schema.Types;
-  const validationModel = Schema.Model({
-    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
-    link: StringType().isURL(t('errorMessages.invalidUrlErrorMessage')),
-  });
-
   return (
     <>
-      <Form
-        onSubmit={validationPassed => validationPassed && handleSave()}
-        fluid
-        model={validationModel}
-        formValue={{ name }}
-      >
-        <Drawer.Header>
-          <Drawer.Title>
+      <DrawerForm onSubmit={handleSubmit(handleSave)}>
+        <DrawerHeader>
+          <DrawerTitle>
             {id ?
               t('authors.panels.editAuthor')
             : t('authors.panels.createAuthor')}
-          </Drawer.Title>
+          </DrawerTitle>
 
-          <Drawer.Actions>
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
+          <DrawerActions>
+            <PermissionControl qualifyingPermissions={[CanCreateAuthor.id]}>
               <Button
-                appearance="primary"
+                variant="contained"
                 disabled={isDisabled}
                 type="submit"
                 data-testid="saveButton"
@@ -258,163 +279,236 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
               </Button>
             </PermissionControl>
             <Button
-              appearance={'subtle'}
+              variant="text"
               onClick={() => onClose?.()}
             >
               {t('authors.panels.close')}
             </Button>
-          </Drawer.Actions>
-        </Drawer.Header>
+          </DrawerActions>
+        </DrawerHeader>
 
-        <Drawer.Body>
-          <PanelGroup>
-            <Panel>
-              <Group controlId="name">
-                <Label>{toggleRequiredLabel(t('authors.panels.name'))}</Label>
+        <DrawerBody>
+          {!isLoading && (
+            <FormFields>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    label={toggleRequiredLabel(t('authors.panels.name'))}
+                    disabled={isDisabled}
+                    onChange={event => {
+                      field.onChange(event);
+                      setValue('slug', slugify(event.target.value));
+                    }}
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                    fullWidth
+                  />
+                )}
+              />
 
-                <Control
-                  name="name"
-                  value={name}
-                  disabled={isDisabled}
-                  onChange={(value: string) => {
-                    setName(value);
-                    setSlug(slugify(value));
-                  }}
-                />
-              </Group>
-              <Group controlId="jobTitle">
-                <Label>{t('authors.panels.jobTitle')}</Label>
-                <Control
-                  name={t('authors.panels.jobTitle')}
-                  value={jobTitle}
-                  disabled={isDisabled}
-                  onChange={(value: string) => {
-                    setJobTitle(value);
-                  }}
-                />
-              </Group>
-            </Panel>
-            <Panel header={t('authors.panels.image')}>
+              <Controller
+                control={control}
+                name="jobTitle"
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    label={t('authors.panels.jobTitle')}
+                    disabled={isDisabled}
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                    fullWidth
+                  />
+                )}
+              />
+
+              <FormLabel>{t('authors.panels.image')}</FormLabel>
+
               <ChooseEditImage
+                onSelect={(value: FullImageFragment) => {
+                  setChooseModalOpen(false);
+                  setValue('image', value);
+                }}
                 image={image}
-                header={''}
-                top={0}
-                left={0}
                 disabled={isLoading}
                 openChooseModalOpen={() => setChooseModalOpen(true)}
                 openEditModalOpen={() => setEditModalOpen(true)}
-                removeImage={() => setImage(undefined)}
+                removeImage={() => setValue('image', undefined)}
               />
-            </Panel>
 
-            <Panel header={t('authors.panels.bioInformation')}>
-              <RichTextBlock
-                disabled={isDisabled}
-                value={bio}
-                onChange={value => setBio(value)}
+              <FormLabel>{t('authors.panels.bioInformation')}</FormLabel>
+
+              <Controller
+                control={control}
+                name="bio"
+                render={({ field }) => (
+                  <RichTextBlock
+                    disabled={isDisabled}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
               />
-            </Panel>
 
-            <Panel
-              header={t('authors.panels.links')}
-              className="authorLinks"
-            >
-              <ListInput
-                disabled={isDisabled}
-                value={links}
-                onChange={links => {
-                  setLinks(links);
-                }}
-                defaultValue={emptyAuthorLink}
-              >
-                {({ value, onChange }) => (
-                  <Controls>
-                    <Control
-                      name="title"
-                      placeholder={t('authors.panels.title')}
-                      value={value.title}
-                      onChange={(title: string) =>
-                        onChange({ ...value, title })
-                      }
-                    />
-                    <Group>
-                      <InputGroup inside>
-                        <RInputGroup.Addon>
-                          <MdLink />
-                        </RInputGroup.Addon>
+              <FormLabel>{t('authors.panels.links')}</FormLabel>
 
-                        <Control
+              <Controller
+                control={control}
+                name="links"
+                render={({ field }) => (
+                  <ListInput
+                    disabled={isDisabled}
+                    value={field.value}
+                    onChange={field.onChange}
+                    defaultValue={emptyAuthorLink}
+                  >
+                    {({ value, onChange }) => (
+                      <Controls>
+                        <TextField
+                          name="title"
+                          placeholder={t('authors.panels.title')}
+                          value={value.title}
+                          onChange={event =>
+                            onChange({ ...value, title: event.target.value })
+                          }
+                          fullWidth
+                        />
+
+                        <TextField
                           name="link"
                           placeholder={
                             t('authors.panels.link') + ':https//link.com'
                           }
                           value={value.url}
-                          onChange={(url: any) => onChange({ ...value, url })}
-                          accepter={Input}
+                          onChange={event =>
+                            onChange({ ...value, url: event.target.value })
+                          }
+                          slotProps={{
+                            input: {
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <MdLink />
+                                </InputAdornment>
+                              ),
+                            },
+                          }}
+                          fullWidth
                         />
-                      </InputGroup>
-                    </Group>
-                  </Controls>
+                      </Controls>
+                    )}
+                  </ListInput>
                 )}
-              </ListInput>
-            </Panel>
-
-            <Panel header={t('authors.panels.tags')}>
-              <FormControl
-                name="tagIds"
-                defaultTags={data?.author?.tags ?? []}
-                selectedTags={tagIds}
-                setSelectedTags={(newTagIds: string[]) => setTagIds(newTagIds)}
-                tagType={TagType.Author}
-                accepter={SelectTags}
               />
-            </Panel>
 
-            {/* hide author in different places */}
-            <Panel header={t('authorEditPanel.hideAuthor')}>
-              <Group controlId="hideAuthorToggles">
-                <ToggleList>
-                  <Toggle
-                    checked={!!hideOnArticle}
-                    onChange={value => setHideOnArticle(value)}
-                    label={t('authorEditPanel.hideOnArticle')}
-                  />
+              <FormLabel>{t('authors.panels.tags')}</FormLabel>
 
-                  <Toggle
-                    checked={!!hideOnTeaser}
-                    onChange={value => setHideOnTeaser(value)}
-                    label={t('authorEditPanel.hideOnTeaser')}
+              <Controller
+                control={control}
+                name="tagIds"
+                render={({ field }) => (
+                  <SelectTags
+                    name={field.name}
+                    defaultTags={tags ?? []}
+                    selectedTags={field.value}
+                    setSelectedTags={field.onChange}
+                    tagType={TagType.Author}
                   />
+                )}
+              />
 
-                  <Toggle
-                    checked={!!hideOnTeam}
-                    onChange={value => setHideOnTeam(value)}
-                    label={t('authorEditPanel.hideOnTeam')}
-                  />
-                </ToggleList>
-              </Group>
-            </Panel>
-          </PanelGroup>
-        </Drawer.Body>
-      </Form>
+              <ToggleList>
+                <FormSectionTitle>
+                  {t('authorEditPanel.hideAuthor')}
+                </FormSectionTitle>
+
+                <Controller
+                  control={control}
+                  name="hideOnArticle"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          {...field}
+                          checked={field.value}
+                        />
+                      }
+                      label={t('authorEditPanel.hideOnArticle')}
+                    />
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="hideOnTeaser"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          {...field}
+                          checked={field.value}
+                        />
+                      }
+                      label={t('authorEditPanel.hideOnTeaser')}
+                    />
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="hideOnTeam"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          {...field}
+                          checked={field.value}
+                        />
+                      }
+                      label={t('authorEditPanel.hideOnTeam')}
+                    />
+                  )}
+                />
+              </ToggleList>
+            </FormFields>
+          )}
+        </DrawerBody>
+      </DrawerForm>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={(value: FullImageFragment) => {
             setChooseModalOpen(false);
-            handleImageChange(value);
+            setValue('image', value);
           }}
         />
       </Drawer>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
       >
         <ImageEditPanel
           id={image?.id}
@@ -426,9 +520,9 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_AUTHOR',
-  'CAN_GET_AUTHORS',
-  'CAN_CREATE_AUTHOR',
-  'CAN_DELETE_AUTHOR',
+  CanGetAuthor.id,
+  CanGetAuthors.id,
+  CanCreateAuthor.id,
+  CanDeleteAuthor.id,
 ])(AuthorEditPanel);
 export { CheckedPermissionComponent as AuthorEditPanel };

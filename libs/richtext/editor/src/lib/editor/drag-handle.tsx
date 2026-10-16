@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { useRef } from 'react';
 
 const DragHandleIndicator = styled('button')`
-  color: ${({ theme }) => theme.palette.text.disabled};
+  color: ${({ theme }) => theme.vars.palette.text.disabled};
   background-color: transparent;
   border-radius: 0.75rem;
   padding: 0.5rem 4px;
@@ -17,7 +17,7 @@ const DragHandleIndicator = styled('button')`
   margin-right: 8px;
 
   &:hover {
-    background-color: ${({ theme }) => theme.palette.divider};
+    background-color: ${({ theme }) => theme.vars.palette.divider};
   }
 `;
 

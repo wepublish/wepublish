@@ -1,32 +1,15 @@
 import { TFunction } from 'i18next';
-import { useEffect } from 'react';
-import { Message, toaster } from 'rsuite';
-import { humanizeError } from '@wepublish/ui/editor';
+import { humanizeError, enqueueSnackbar } from '@wepublish/ui/editor';
 
 export const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const showSuccessToast = (message: string): void => {
-  toaster.push(
-    <Message
-      type="success"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {message}
-    </Message>
-  );
+  enqueueSnackbar(message, { variant: 'success', autoHideDuration: 3000 });
 };
 
 /**
@@ -50,16 +33,4 @@ export const MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE = (message: string) => {
     onError: showErrors,
     onCompleted: () => showSuccessToast(message),
   };
-};
-
-/**
- * Toasts query errors. Apollo Client 4 removed `onError` from the query
- * hooks, so pass the hook result's `error` here instead.
- */
-export const useShowErrors = (error: Error | undefined): void => {
-  useEffect(() => {
-    if (error) {
-      showErrors(error);
-    }
-  }, [error]);
 };

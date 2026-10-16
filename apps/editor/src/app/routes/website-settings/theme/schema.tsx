@@ -218,8 +218,9 @@ export const normalizeValues = (
       value.startsWith('rgba')
     ) {
       const val = parseToRgb(value) as RgbaColor;
+      const alpha = val.alpha ?? 1;
 
-      return `#${decimalToHex(val.red)}${decimalToHex(val.green)}${decimalToHex(val.blue)}${decimalToHex((val.alpha ?? 1) * 100)}`;
+      return `#${decimalToHex(val.red)}${decimalToHex(val.green)}${decimalToHex(val.blue)}${alpha < 1 ? decimalToHex(Math.round(alpha * 255)) : ''}`;
     }
 
     if (value.startsWith('#')) {

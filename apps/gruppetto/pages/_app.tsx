@@ -24,9 +24,11 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import { theme } from '@wepublish/ui';
 import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  WebsiteShellProps,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
@@ -112,9 +114,11 @@ const NavBar = styled(NavbarContainer)`
   }
 `;
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -136,6 +140,8 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const shell = getWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
@@ -167,12 +173,14 @@ function CustomApp({
               </Head>
 
               <Spacer>
-                <NavBar
-                  categorySlugs={[['account', 'issues', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                />
+                {shell.showNavigation && (
+                  <NavBar
+                    categorySlugs={[['account', 'issues', 'about-us']]}
+                    slug="main"
+                    headerSlug="header"
+                    iconSlug="icons"
+                  />
+                )}
 
                 <main>
                   <MainSpacer maxWidth="lg">
@@ -180,11 +188,13 @@ function CustomApp({
                   </MainSpacer>
                 </main>
 
-                <FooterContainer
-                  slug="footer"
-                  categorySlugs={[[]]}
-                  iconSlug="icons"
-                />
+                {shell.showFooter && (
+                  <FooterContainer
+                    slug="footer"
+                    categorySlugs={[[]]}
+                    iconSlug="icons"
+                  />
+                )}
               </Spacer>
 
               <RoutedAdminBar />

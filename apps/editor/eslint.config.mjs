@@ -1,4 +1,4 @@
-import baseConfig from '../../eslint.config.mjs';
+import baseConfig, { reactCompilerRules } from '../../eslint.config.mjs';
 import nx from '@nx/eslint-plugin';
 import eslintPluginI18next from 'eslint-plugin-i18next';
 import eslintPluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
@@ -82,7 +82,9 @@ export default [
   {
     files: ['**/*.ts', '**/*.tsx'],
     // Override or add rules here
-    rules: {},
+    rules: {
+      curly: ['error', 'all'],
+    },
   },
   {
     files: ['**/*.js', '**/*.jsx'],
@@ -97,5 +99,11 @@ export default [
       // @typescript-eslint/no-var-requires was replaced by no-require-imports in typescript-eslint v8.
       '@typescript-eslint/no-require-imports': 'off',
     },
+  },
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    // This project is compiled by the React Compiler, so its diagnostics are
+    // errors here. The root config leaves them off for everything that is not.
+    rules: reactCompilerRules('error'),
   },
 ];

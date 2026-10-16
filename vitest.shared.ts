@@ -216,6 +216,9 @@ export const createVitestConfig = ({
       ],
       setupFiles: [
         join(workspaceRoot, 'vitest.setup-tests.ts'),
+        ...(environment === 'happy-dom' ?
+          [join(workspaceRoot, 'vitest.setup-dom.ts')]
+        : []),
         ...(nest ? [join(workspaceRoot, 'vitest.setup-nest.ts')] : []),
         ...setupFiles.map((file) => join(dir, file)),
       ],

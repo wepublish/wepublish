@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { PeerListDocument, getSettings } from '@wepublish/editor/api';
+import { getSettings, PeerListDocument } from '@wepublish/editor/api';
 import { useEffect, useMemo, useState } from 'react';
 
 import type {
@@ -71,14 +71,16 @@ function buildArticleParams(
 export function usePeerArticles(filters?: ArticleFilterParams, page = 0) {
   const [articles, setArticles] = useState<PeerArticle[]>([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   const serializedFilters = JSON.stringify(filters);
 
+  const request = `${serializedFilters}:${page}`;
+  const [answered, setAnswered] = useState<string>();
+  const loading = answered !== request;
+
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
 
     const fetchData = async () => {
       try {
@@ -103,7 +105,7 @@ export function usePeerArticles(filters?: ArticleFilterParams, page = 0) {
         }
       } finally {
         if (!cancelled) {
-          setLoading(false);
+          setAnswered(request);
         }
       }
     };
@@ -183,9 +185,13 @@ export function useAllNetworkClients() {
           limit: '200',
         });
         const response = await fetch(`${WEP_ONE_URL}/items/Clients?${params}`);
-        if (!response.ok) return;
+        if (!response.ok) {
+          return;
+        }
         const json: WepOneResponse<WepOneClient> = await response.json();
-        if (!cancelled) setClients(json.data);
+        if (!cancelled) {
+          setClients(json.data);
+        }
       } catch {
         // silently ignore – dropdown falls back to empty
       }
@@ -223,7 +229,9 @@ export function usePeerMatching() {
   }, [peers]);
 
   const findPeerMatch = (clientApiUrl: string | null): PeerMatch | null => {
-    if (!clientApiUrl) return null;
+    if (!clientApiUrl) {
+      return null;
+    }
     return peerByApiUrl.get(normalizeUrl(clientApiUrl)) ?? null;
   };
 

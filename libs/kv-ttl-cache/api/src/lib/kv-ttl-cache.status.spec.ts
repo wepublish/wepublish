@@ -13,6 +13,20 @@ class RefusingDragonfly extends FakeDragonfly {
   }
 }
 
+class PausedDragonfly extends FakeDragonfly {
+  override isAvailable() {
+    return false;
+  }
+
+  override async setRaw() {
+    return false;
+  }
+
+  override async probe() {
+    return true;
+  }
+}
+
 const createReplica = (atomic: KvAtomicStore) =>
   new KvTtlCacheService(createCache(), atomic);
 
@@ -30,6 +44,12 @@ describe('KvTtlCacheService dragonflyStatus', () => {
     await expect(createReplica(dragonfly).dragonflyStatus()).resolves.toBe(
       'unreachable'
     );
+  });
+
+  it('reports Dragonfly reachable when it answers the probe, even while this replica still pauses its other commands after a slow answer', async () => {
+    await expect(
+      createReplica(new PausedDragonfly()).dragonflyStatus()
+    ).resolves.toBe('reachable');
   });
 
   it('reports Dragonfly unreachable when it answers PING but refuses writes, like a wrong prefix or a full Dragonfly', async () => {

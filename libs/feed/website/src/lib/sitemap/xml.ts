@@ -1,5 +1,3 @@
-import { escape } from 'lodash';
-
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
 const SITEMAP_NS = 'http://www.sitemaps.org/schemas/sitemap/0.9';
 const NEWS_NS = 'http://www.google.com/schemas/sitemap-news/0.9';
@@ -18,13 +16,23 @@ export type SitemapUrl = {
   lastmod?: string | null;
   changefreq?: SitemapChangefreq;
   priority?: number;
-  /** Only rendered when `buildUrlset` is given a news publication. */
   news?: { title: string; publicationDate: string };
 };
 
 export type NewsPublication = { name: string; language: string };
 
 export type SitemapReference = { loc: string; lastmod?: string | null };
+
+const XML_ENTITIES: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+
+const escape = (value: string) =>
+  value.replace(/[&<>"']/g, char => XML_ENTITIES[char]);
 
 const tag = (name: string, value: string | null | undefined) =>
   value ? `<${name}>${escape(value)}</${name}>` : '';
@@ -52,10 +60,6 @@ const urlTag = (url: SitemapUrl, publication: NewsPublication | undefined) =>
   newsTag(url.news, publication) +
   '</url>';
 
-/**
- * A `<urlset>` sitemap. Pass `publication` to emit Google News entries for
- * the urls that carry `news`.
- */
 export const buildUrlset = (
   urls: SitemapUrl[],
   publication?: NewsPublication
@@ -67,7 +71,6 @@ export const buildUrlset = (
     '</urlset>',
   ].join('\n');
 
-/** A `<sitemapindex>` pointing to other sitemaps. */
 export const buildSitemapIndex = (sitemaps: SitemapReference[]) =>
   [
     XML_DECLARATION,

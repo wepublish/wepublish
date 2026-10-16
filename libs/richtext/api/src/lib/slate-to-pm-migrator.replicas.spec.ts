@@ -24,6 +24,21 @@ const JOBS: Array<[keyof SlateToPmMigrator, string, number]> = [
   ],
   ['remigrateUnmigratedPages', 'slate.remigrateUnmigratedPages', FIVE_SECONDS],
   ['remigrateBuggyEntities', 'slate.remigrateBuggyEntities', FIVE_SECONDS],
+  [
+    'normalizeNestedListsInArticles',
+    'slate.normalizeNestedListsInArticles',
+    FIVE_SECONDS,
+  ],
+  [
+    'normalizeNestedListsInPages',
+    'slate.normalizeNestedListsInPages',
+    FIVE_SECONDS,
+  ],
+  [
+    'normalizeNestedListsInEntities',
+    'slate.normalizeNestedListsInEntities',
+    FIVE_SECONDS,
+  ],
 ];
 
 const untouchable = new Proxy(

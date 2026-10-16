@@ -14,9 +14,11 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  WebsiteShellProps,
   withBuilderRouter,
   withJwtHandler,
   withRestrictedSessionRedirect,
@@ -80,9 +82,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -104,6 +108,8 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const shell = getWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
@@ -138,16 +144,18 @@ function CustomApp({
               </Head>
 
               <Spacer>
-                <NavBar
-                  categorySlugs={[['about']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                  subscribeBtn={{
-                    href: 'https://shop.zwoelf.ch/produkt-kategorie/abos/',
-                    target: '_blank',
-                  }}
-                />
+                {shell.showNavigation && (
+                  <NavBar
+                    categorySlugs={[['about']]}
+                    slug="main"
+                    headerSlug="header"
+                    iconSlug="icons"
+                    subscribeBtn={{
+                      href: 'https://shop.zwoelf.ch/produkt-kategorie/abos/',
+                      target: '_blank',
+                    }}
+                  />
+                )}
 
                 <main>
                   <MainSpacer maxWidth="lg">
@@ -155,11 +163,13 @@ function CustomApp({
                   </MainSpacer>
                 </main>
 
-                <FooterContainer
-                  slug="main"
-                  categorySlugs={[['about']]}
-                  iconSlug="icons"
-                />
+                {shell.showFooter && (
+                  <FooterContainer
+                    slug="main"
+                    categorySlugs={[['about']]}
+                    iconSlug="icons"
+                  />
+                )}
               </Spacer>
 
               <RoutedAdminBar />

@@ -1,7 +1,7 @@
-import type { Mock } from 'vitest';
 import { useQuery } from '@apollo/client/react';
 import { render, screen } from '@testing-library/react';
 import { OneChannelConnectionState } from '@wepublish/editor/api';
+import type { Mock } from 'vitest';
 
 import { OneChannelAlert } from './oneChannelAlert';
 

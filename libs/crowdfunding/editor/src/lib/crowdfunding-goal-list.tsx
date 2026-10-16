@@ -1,11 +1,22 @@
-import React from 'react';
 import {
   CreateCrowdfundingGoalInput,
   CrowdfundingGoalType,
 } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
-import { Button, Col, Form, Grid, Row } from 'rsuite';
-import { CurrencyInput } from '@wepublish/ui/editor';
+import { CurrencyInput, IconButtonTooltip } from '@wepublish/ui/editor';
+import {
+  Button,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+} from '@mui/material';
+import { useId } from 'react';
+import { MdAdd, MdDelete } from 'react-icons/md';
 
 interface CrowdfundingGoalListProps {
   goalType: CrowdfundingGoalType;
@@ -33,78 +44,119 @@ export const CrowdfundingGoalList = ({
     onUpdate(index, updatedGoal);
   };
 
+  const amountLabel =
+    goalType === CrowdfundingGoalType.Subscription ?
+      t('crowdfunding.goalsForm.amountSubscriptions')
+    : t('crowdfunding.goalsForm.amount');
+
+  const columnId = useId();
+  const titleId = `${columnId}-title`;
+  const descriptionId = `${columnId}-description`;
+  const amountId = `${columnId}-amount`;
+
   return (
     <>
-      <Grid fluid>
-        <Row>
-          <Col xs={5}>{t('crowdfunding.goalsForm.title')}</Col>
-          <Col xs={5}>{t('crowdfunding.goalsForm.description')}</Col>
-          <Col xs={5}>
-            {goalType === CrowdfundingGoalType.Subscription ?
-              t('crowdfunding.goalsForm.amountSubscriptions')
-            : t('crowdfunding.goalsForm.amount')}
-          </Col>
-          <Col xs={4}>{t('action')}</Col>
-        </Row>
+      <TableContainer>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell id={titleId}>
+                {t('crowdfunding.goalsForm.title')}
+              </TableCell>
+              <TableCell id={descriptionId}>
+                {t('crowdfunding.goalsForm.description')}
+              </TableCell>
+              <TableCell id={amountId}>{amountLabel}</TableCell>
+              <TableCell align="right">{t('action')}</TableCell>
+            </TableRow>
+          </TableHead>
 
-        {goals.map((goal, index) => (
-          <Row>
-            <Col xs={5}>
-              <Form.Control
-                name="goalTitle"
-                value={goal.title}
-                onChange={value => handleChange(index, 'title', value)}
-              />
-            </Col>
+          <TableBody>
+            {goals.map((goal, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <TextField
+                    name="goalTitle"
+                    value={goal.title}
+                    onChange={event =>
+                      handleChange(index, 'title', event.target.value)
+                    }
+                    slotProps={{ htmlInput: { 'aria-labelledby': titleId } }}
+                    fullWidth
+                  />
+                </TableCell>
 
-            <Col xs={5}>
-              <Form.Control
-                name="goalDescription"
-                value={goal.description}
-                onChange={value => handleChange(index, 'description', value)}
-              />
-            </Col>
+                <TableCell>
+                  <TextField
+                    name="goalDescription"
+                    value={goal.description}
+                    onChange={event =>
+                      handleChange(index, 'description', event.target.value)
+                    }
+                    slotProps={{
+                      htmlInput: { 'aria-labelledby': descriptionId },
+                    }}
+                    fullWidth
+                  />
+                </TableCell>
 
-            <Col xs={5}>
-              {goalType === CrowdfundingGoalType.Revenue && (
-                <CurrencyInput
-                  name="goalAmount"
-                  currency=""
-                  centAmount={goal.amount}
-                  onChange={value => handleChange(index, 'amount', value || 0)}
-                />
-              )}
+                <TableCell>
+                  {goalType === CrowdfundingGoalType.Revenue && (
+                    <CurrencyInput
+                      name="goalAmount"
+                      aria-labelledby={amountId}
+                      currency=""
+                      centAmount={goal.amount}
+                      onChange={value =>
+                        handleChange(index, 'amount', value || 0)
+                      }
+                    />
+                  )}
 
-              {goalType === CrowdfundingGoalType.Subscription && (
-                <Form.Control
-                  name="goalAmount"
-                  type="number"
-                  value={goal.amount}
-                  onChange={value =>
-                    handleChange(index, 'amount', +(value || 0))
-                  }
-                />
-              )}
-            </Col>
+                  {goalType === CrowdfundingGoalType.Subscription && (
+                    <TextField
+                      name="goalAmount"
+                      type="number"
+                      value={goal.amount}
+                      onChange={event =>
+                        handleChange(
+                          index,
+                          'amount',
+                          +(event.target.value || 0)
+                        )
+                      }
+                      slotProps={{ htmlInput: { 'aria-labelledby': amountId } }}
+                      fullWidth
+                    />
+                  )}
+                </TableCell>
 
-            <Col xs={4}>
-              <Button onClick={() => onRemove(index)}>
-                {t('crowdfunding.goalsForm.remove')}
-              </Button>
-            </Col>
-          </Row>
-        ))}
+                <TableCell align="right">
+                  <IconButtonTooltip
+                    caption={t('crowdfunding.goalsForm.remove')}
+                  >
+                    <IconButton
+                      color="error"
+                      aria-label={t('crowdfunding.goalsForm.remove')}
+                      onClick={() => onRemove(index)}
+                    >
+                      <MdDelete />
+                    </IconButton>
+                  </IconButtonTooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-        <Row>
-          <Col xs={24}>
-            <Button
-              onClick={() => onAdd({ title: '', description: '', amount: 0 })}
-            >
-              {t('crowdfunding.goalsForm.add')}
-            </Button>
-          </Col>
-        </Row>
-      </Grid>
+      <Button
+        variant="text"
+        startIcon={<MdAdd />}
+        onClick={() => onAdd({ title: '', description: '', amount: 0 })}
+      >
+        {t('crowdfunding.goalsForm.add')}
+      </Button>
     </>
   );
 };

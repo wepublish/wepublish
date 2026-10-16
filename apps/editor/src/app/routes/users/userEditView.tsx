@@ -1,141 +1,159 @@
 import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Alert,
+  Autocomplete,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  Divider,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Stack,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
 import {
   AccountCreationMailDocument,
   CreateUserDocument,
   FullImageFragment,
   FullUserFragment,
   FullUserRoleFragment,
-  ResetUserTotpDocument,
-  UpdateUserDocument,
-  UserAddress,
   LoginCodeSecondFactor,
   ReissueUserLoginCodeDocument,
+  ResetUserTotpDocument,
   RevokeUserLoginCodeDocument,
   SettingsListDocument,
+  UpdateUserDocument,
+  UserAddress,
   UserDocument,
   UserLoginCodeDocument,
   UserRoleListDocument,
   UserSubscriptionListDocument,
 } from '@wepublish/editor/api';
 import {
+  SendMailToUserPanel,
+  UserMailLogPanel,
+} from '@wepublish/membership/editor';
+import { isLoginCodeEnabled } from './login-code-enabled';
+import {
+  CanCreateUser,
+  CanDeleteUser,
+  CanGetUser,
+  CanGetUsers,
+  CanResetUserPassword,
+  CanResetUserTotp,
+} from '@wepublish/permissions';
+import {
   ChooseEditImage,
   createCheckedPermissionComponent,
+  DatePicker,
+  DRAWER_WIDTHS,
   EditUserPassword,
+  enqueueSnackbar,
   generateID,
   ImageSelectPanel,
+  InfoTooltip,
   ListInput,
   ListValue,
   SingleViewTitle,
-  Textarea,
   skipMailFor,
   toggleRequiredLabel,
   useActionMailQuestion,
   useAuthorisation,
   UserSubscriptionsList,
 } from '@wepublish/ui/editor';
-import {
-  SendMailToUserPanel,
-  UserMailLogPanel,
-} from '@wepublish/membership/editor';
 import { userCountryNames } from '@wepublish/user';
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdLockReset } from 'react-icons/md';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import {
-  Button as RButton,
-  CheckPicker,
-  Col,
-  DatePicker,
-  Drawer,
-  Form,
-  Grid as RGrid,
-  Input,
-  Message,
-  Panel as RPanel,
-  Row,
-  Schema,
-  SelectPicker,
-  toaster,
-  Toggle as RToggle,
-} from 'rsuite';
-import { isLoginCodeEnabled } from './login-code-enabled';
+import { z } from 'zod';
 
-const Grid = styled(RGrid)`
-  padding-right: 0px;
-`;
+const PropertyRow = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) auto;
+  align-items: center;
+  gap: 8px;
 
-/* constant width across both states, sized for the wider label
-   ("Öffentlich"); the visible pill is the inner .rs-toggle-track -
-   the root label is inline, where min-width has no effect */
-const Toggle = styled(RToggle)`
-  .rs-toggle-track {
-    min-width: 105px;
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
   }
 `;
 
-/* && beats rsuite's .rs-input { width: 100% } regardless of sheet order */
-const PropertyValueInput = styled(Input)`
-  && {
-    width: 220px;
-  }
-`;
-
-const PropertyKeyInput = styled(Input)`
-  && {
-    width: 140px;
-    margin-right: 10px;
-  }
-`;
-
-/* the ListInput's inner panel stretches to the full row width, pushing the
-   delete icon to the far end - fit-content shrinks it to its content even
-   if a descendant asks for 100%; the outer container keeps its full width */
-const PropertiesListWrapper = styled.div`
-  .rs-panel {
-    width: fit-content;
-    max-width: 100%;
-    flex: 0 0 auto;
-  }
-`;
-
-const FlexRow = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-const Panel = styled(RPanel)`
-  margin-top: 20px;
-`;
-
-const ColTextAlign = styled(Col)`
-  text-align: end;
-`;
-
-const UserFormGrid = styled(RGrid)`
+const UserFormGrid = styled.div`
   width: 100%;
-  padding-left: 0px;
+  height: calc(100vh - 160px);
+  overflow-y: auto;
+
+  @media (max-width: 899px) {
+    height: auto;
+    overflow: visible;
+  }
 `;
 
-/* inside the fluid form the group stretches to the remaining row width,
-   pushing the delete icon away - keep it as wide as the toggle only */
-const FormGroup = styled(Form.Group)`
-  padding-top: 6px;
-  padding-left: 8px;
+const PageColumns = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 20px;
+  padding-bottom: 20px;
 
-  && {
-    width: fit-content;
-    flex: 0 0 auto;
-    margin-bottom: 0;
+  @media (max-width: 1099px) {
+    grid-template-columns: minmax(0, 1fr);
   }
+`;
+
+const PanelStack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
 `;
 
 export interface UserProperty {
-  readonly key: string;
-  readonly value: string;
-  readonly public: boolean;
+  key: string;
+  value: string;
+  public: boolean;
 }
+
+const EMPTY_ADDRESS: UserAddress = {
+  __typename: 'UserAddress',
+  company: '',
+  streetAddress: '',
+  streetAddressNumber: '',
+  streetAddress2: '',
+  streetAddress2Number: '',
+  zipCode: '',
+  city: '',
+  country: '',
+};
+
+const EMPTY_USER = {
+  user: null as FullUserFragment | null,
+  name: '',
+  firstName: '',
+  note: '',
+  flair: '',
+  birthday: null as Date | null,
+  email: '',
+  emailVerifiedAt: null as Date | null,
+  password: '',
+  active: true,
+  roles: [] as FullUserRoleFragment[],
+  address: EMPTY_ADDRESS,
+  image: undefined as FullImageFragment | undefined,
+  properties: [] as ListValue<UserProperty>[],
+};
 
 function UserEditView() {
   const { t } = useTranslation();
@@ -150,27 +168,10 @@ function UserEditView() {
 
   // image selection drawer
   const [imageSelectionOpen, setImageSelectionOpen] = useState<boolean>(false);
+  const [loadError, setLoadError] = useState<Error>();
 
-  // user props
-  const [name, setName] = useState('');
-  const [firstName, setFirstName] = useState<string | undefined>();
-  const [note, setNote] = useState<string>();
-  const [birthday, setBirthday] = useState<Date>();
-  const [flair, setFlair] = useState<string>();
-  const [email, setEmail] = useState('');
-  const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null);
-  const [password, setPassword] = useState('');
-  const [active, setActive] = useState(true);
   const client = useApolloClient();
   const { askMail, actionMailDialog } = useActionMailQuestion();
-  const [roles, setRoles] = useState<FullUserRoleFragment[]>([]);
-  const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
-  const [address, setAddress] = useState<UserAddress | null>(null);
-  const [userImage, setUserImage] = useState<FullImageFragment>();
-  const [user, setUser] = useState<FullUserFragment | null>(null);
-  const [metaDataProperties, setMetadataProperties] = useState<
-    ListValue<UserProperty>[]
-  >([]);
 
   const { data: subscriptionData } = useQuery(UserSubscriptionListDocument, {
     skip: !userId,
@@ -190,62 +191,90 @@ function UserEditView() {
     }
   );
 
-  /**
-   * fetch user from api
-   */
-  const {
-    data,
-    loading: isLoading,
-    error: loadError,
-  } = useQuery(UserDocument, {
-    variables: { id: id! },
-    skip: id === undefined,
+  const userRoles = userRoleData?.userRoles?.nodes ?? [];
+
+  const schema = z.object({
+    user: z.custom<FullUserFragment>().nullable(),
+    name: z.string().min(1, t('errorMessages.noNameErrorMessage')),
+    firstName: z.string().nullish(),
+    note: z.string().nullish(),
+    flair: z.string().nullish(),
+    birthday: z.date().nullish(),
+    email: z.string().email(t('errorMessages.noEmailErrorMessage')),
+    emailVerifiedAt: z.date().nullish(),
+    password:
+      id ?
+        z.union([z.literal(''), z.string().min(12)]).nullish()
+      : z.string().min(12),
+    active: z.boolean(),
+    roles: z.array(z.custom<FullUserRoleFragment>()),
+    address: z.object({
+      __typename: z.literal('UserAddress').optional(),
+      company: z.string().nullish(),
+      streetAddress: z.string().nullish(),
+      streetAddressNumber: z.string().nullish(),
+      streetAddress2: z.string().nullish(),
+      streetAddress2Number: z.string().nullish(),
+      zipCode: z.string().nullish(),
+      city: z.string().nullish(),
+      country: z.enum(userCountryNames as [string, ...string[]]).nullish(),
+    }),
+    image: z.custom<FullImageFragment>().optional(),
+    properties: z.array(z.custom<ListValue<UserProperty>>()),
   });
-  /**
-   * setup user whenever user data object changes
-   */
-  useEffect(() => {
-    const tmpUser = data?.user;
 
-    if (!tmpUser) {
-      return;
-    }
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { isLoading },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: async () => {
+      if (!id) {
+        return EMPTY_USER;
+      }
 
-    setUser(tmpUser);
-    setFirstName(tmpUser.firstName ?? undefined);
-    setName(tmpUser.name);
-    setNote(tmpUser.note ?? undefined);
-    setFlair(tmpUser.flair ?? undefined);
-    setBirthday(tmpUser.birthday ? new Date(tmpUser.birthday) : undefined);
-    setEmail(tmpUser.email);
-    setMetadataProperties(
-      tmpUser?.properties ?
-        tmpUser?.properties.map(userProperty => ({
-          id: generateID(),
-          value: userProperty,
-        }))
-      : []
-    );
-    setEmailVerifiedAt(
-      tmpUser.emailVerifiedAt ? new Date(tmpUser.emailVerifiedAt) : null
-    );
-    setActive(tmpUser.active);
-    setAddress(tmpUser.address ? tmpUser.address : null);
-    setUserImage(tmpUser.image ? tmpUser.image : undefined);
+      try {
+        const { data } = await client.query({
+          query: UserDocument,
+          variables: { id },
+        });
+        const user = data?.user;
 
-    if (tmpUser.roles) {
-      setRoles(tmpUser.roles as FullUserRoleFragment[]);
-    }
-  }, [data?.user]);
+        return user ?
+            {
+              user,
+              name: user.name,
+              firstName: user.firstName ?? '',
+              note: user.note ?? '',
+              flair: user.flair ?? '',
+              birthday: user.birthday ? new Date(user.birthday) : null,
+              email: user.email,
+              emailVerifiedAt:
+                user.emailVerifiedAt ? new Date(user.emailVerifiedAt) : null,
+              password: '',
+              active: user.active,
+              roles: (user.roles ?? []) as FullUserRoleFragment[],
+              address: { ...EMPTY_ADDRESS, ...(user.address ?? {}) },
+              image: user.image ?? undefined,
+              properties:
+                user.properties?.map(userProperty => ({
+                  id: generateID(),
+                  value: userProperty,
+                })) ?? [],
+            }
+          : EMPTY_USER;
+      } catch (error) {
+        setLoadError(error as Error);
 
-  /**
-   * Setup user roles, whenever user role data object changes
-   */
-  useEffect(() => {
-    if (userRoleData?.userRoles?.nodes) {
-      setUserRoles(userRoleData.userRoles.nodes);
-    }
-  }, [userRoleData?.userRoles]);
+        return EMPTY_USER;
+      }
+    },
+  });
+
+  const user = useWatch({ control, name: 'user' });
+  const userImage = useWatch({ control, name: 'image' });
 
   const [createUser, { loading: isCreating }] = useMutation(
     CreateUserDocument,
@@ -262,8 +291,8 @@ function UserEditView() {
     isCreating ||
     isUpdating ||
     loadError !== undefined;
-  const canResetPassword = useAuthorisation('CAN_RESET_USER_PASSWORD');
-  const canResetTotp = useAuthorisation('CAN_RESET_USER_TOTP');
+  const canResetPassword = useAuthorisation(CanResetUserPassword.id);
+  const canResetTotp = useAuthorisation(CanResetUserTotp.id);
 
   const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
     ResetUserTotpDocument
@@ -292,73 +321,26 @@ function UserEditView() {
   } | null>(null);
 
   /**
-   * Function to update address object
-   * @param address
-   * @param setAddress
-   * @param key
-   * @param value
-   */
-  function updateAddressObject(
-    address: UserAddress | null,
-    setAddress: React.Dispatch<React.SetStateAction<UserAddress | null>>,
-    key:
-      | 'company'
-      | 'streetAddress'
-      | 'streetAddressNumber'
-      | 'streetAddress2'
-      | 'streetAddress2Number'
-      | 'zipCode'
-      | 'city'
-      | 'country',
-    value: string | null
-  ) {
-    let addressCopy = Object.assign({}, address);
-    if (!address) {
-      addressCopy = {
-        __typename: 'UserAddress',
-        company: '',
-        streetAddress: '',
-        streetAddressNumber: '',
-        streetAddress2: '',
-        streetAddress2Number: '',
-        zipCode: '',
-        city: '',
-        country: '',
-      };
-    }
-    addressCopy[key] = value || '';
-    setAddress(addressCopy);
-  }
-
-  /**
-   * Validation schema
-   */
-  const { StringType } = Schema.Types;
-  const validatePassword: any =
-    id ?
-      StringType().minLength(
-        12,
-        t('errorMessages.passwordTooShortErrorMessage')
-      )
-    : StringType()
-        .minLength(12, t('errorMessages.passwordTooShortErrorMessage'))
-        .isRequired(t('errorMessages.noPasswordErrorMessage'));
-  const validationModel = Schema.Model({
-    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
-    email: StringType()
-      .isRequired(t('errorMessages.noEmailErrorMessage'))
-      .isEmail(t('errorMessages.invalidEmailErrorMessage')),
-    password: validatePassword,
-    country: StringType().isOneOf(
-      userCountryNames,
-      t('errorMessages.invalidCountry')
-    ),
-  });
-
-  /**
    * Save or create new user
    */
-  async function createOrUpdateUser() {
+  async function createOrUpdateUser(values: z.infer<typeof schema>) {
+    const {
+      user,
+      name,
+      firstName,
+      note,
+      flair,
+      birthday,
+      email,
+      emailVerifiedAt,
+      password,
+      active,
+      roles,
+      address,
+      image: userImage,
+      properties: metaDataProperties,
+    } = values;
+
     if (user) {
       try {
         await updateUser({
@@ -382,48 +364,32 @@ function UserEditView() {
               })
             ),
             address: {
-              company: address?.company ? address.company : '',
-              streetAddress:
-                address?.streetAddress ? address.streetAddress : '',
-              streetAddressNumber:
-                address?.streetAddressNumber ? address.streetAddressNumber : '',
-              streetAddress2:
-                address?.streetAddress2 ? address.streetAddress2 : '',
-              streetAddress2Number:
-                address?.streetAddress2Number ?
-                  address.streetAddress2Number
-                : '',
-              zipCode: address?.zipCode ? address.zipCode : '',
-              city: address?.city ? address.city : '',
-              country: address?.country ? address.country : '',
+              company: address.company ?? '',
+              streetAddress: address.streetAddress ?? '',
+              streetAddressNumber: address.streetAddressNumber ?? '',
+              streetAddress2: address.streetAddress2 ?? '',
+              streetAddress2Number: address.streetAddress2Number ?? '',
+              zipCode: address.zipCode ?? '',
+              city: address.city ?? '',
+              country: address.country ?? '',
             },
           },
         });
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={2000}
-          >
-            {t('userCreateOrEditView.successfullyUpdatedUser')}
-          </Message>
-        );
+
+        enqueueSnackbar(t('userCreateOrEditView.successfullyUpdatedUser'), {
+          variant: 'success',
+          autoHideDuration: 2000,
+        });
+
         // go back to user list
         if (closeAfterSave) {
           navigate('/users');
         }
       } catch (e) {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={2000}
-          >
-            {t('userCreateOrEditView.errorOnUpdate', { error: e })}
-          </Message>
-        );
+        enqueueSnackbar(t('userCreateOrEditView.errorOnUpdate', { error: e }), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        });
       }
     } else {
       try {
@@ -462,7 +428,16 @@ function UserEditView() {
               })
             ),
             roleIDs: roles.map(role => role.id),
-            address,
+            address: {
+              company: address.company ?? '',
+              streetAddress: address.streetAddress ?? '',
+              streetAddressNumber: address.streetAddressNumber ?? '',
+              streetAddress2: address.streetAddress2 ?? '',
+              streetAddress2Number: address.streetAddress2Number ?? '',
+              zipCode: address.zipCode ?? '',
+              city: address.city ?? '',
+              country: address.country ?? '',
+            },
             userImageID: userImage?.id || null,
             password,
             skipMail: skipMailFor(decision),
@@ -473,58 +448,44 @@ function UserEditView() {
           throw new Error('User id not created');
         }
         // notify user
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={2000}
-          >
-            {t('userCreateOrEditView.successfullyCreatedUser')}
-          </Message>
-        );
+        enqueueSnackbar(t('userCreateOrEditView.successfullyCreatedUser'), {
+          variant: 'success',
+          autoHideDuration: 2000,
+        });
         // go back to user list
         if (closeAfterSave) {
           navigate('/users');
         } else {
           navigate(`/users/edit/${newUser.id}`);
-          setUser(newUser);
+          setValue('user', newUser);
         }
       } catch (e) {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={2000}
-          >
-            {t('userCreateOrEditView.errorCreatingUser', { error: e })}
-          </Message>
+        enqueueSnackbar(
+          t('userCreateOrEditView.errorCreatingUser', { error: e }),
+          { variant: 'error', autoHideDuration: 8000 }
         );
       }
     }
   }
 
-  /**
-   * UI helpers
-   */
   function titleView() {
     if (!user) {
       return t('userCreateOrEditView.createNewUser');
     }
+
     const firstName = user?.firstName;
     const lastName = user?.name;
+
     return firstName ? `${firstName} ${lastName}` : lastName;
+  }
+
+  if (isLoading) {
+    return null;
   }
 
   return (
     <>
-      <Form
-        onSubmit={validationPassed => validationPassed && createOrUpdateUser()}
-        fluid
-        model={validationModel}
-        formValue={{ name, email, password, country: address?.country }}
-      >
+      <form onSubmit={handleSubmit(createOrUpdateUser)}>
         <SingleViewTitle
           loading={false}
           title={titleView()}
@@ -534,508 +495,638 @@ function UserEditView() {
           closePath={closePath}
           setCloseFn={setCloseAfterSave}
         />
+
         <UserFormGrid>
-          <Row
-            gutter={10}
-            data-testid="user-columns"
-          >
-            <Col xs={12}>
-              <RGrid fluid>
-                {/* general user data */}
-                <RPanel
-                  bordered
-                  header={t('userCreateOrEditView.userDataTitle')}
-                >
-                  <Row>
-                    {/* profile image */}
-                    <Col xs={12}>
+          <PageColumns data-testid="user-columns">
+            <PanelStack>
+              <Card>
+                <CardHeader title={t('userCreateOrEditView.userDataTitle')} />
+
+                <CardContent>
+                  <Grid
+                    container
+                    spacing={2}
+                  >
+                    <Grid size={{ xs: 12 }}>
                       <ChooseEditImage
+                        onSelect={(image: FullImageFragment) => {
+                          setValue('image', image);
+                          setImageSelectionOpen(false);
+                        }}
                         image={userImage}
                         disabled={false}
                         openChooseModalOpen={() => setImageSelectionOpen(true)}
-                        removeImage={() => setUserImage(undefined)}
-                        header={t('userCreateOrEditView.selectUserImage')}
+                        removeImage={() => setValue('image', undefined)}
                         maxHeight={200}
                       />
-                    </Col>
-                    {/* active / inactive */}
-                    <ColTextAlign xs={12}>
-                      <Form.Group controlId="active">
-                        <Form.Label>
-                          {t('userCreateOrEditView.active')}
-                        </Form.Label>
-                        <RToggle
-                          checked={active}
-                          disabled={isDisabled}
-                          onChange={value => setActive(value)}
-                        />
-                      </Form.Group>
-                    </ColTextAlign>
-                  </Row>
+                    </Grid>
 
-                  <Row gutter={10}>
-                    {/* first name */}
-                    <Col xs={12}>
-                      <Form.Group controlId="firstName">
-                        <Form.Label>
-                          {t('userCreateOrEditView.firstName')}
-                        </Form.Label>
-                        <Form.Control
-                          name="firstName"
-                          value={firstName ?? ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) => {
-                            setFirstName(value);
-                          }}
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* name */}
-                    <Col xs={12}>
-                      <Form.Group controlId="name">
-                        <Form.Label>
-                          {toggleRequiredLabel(t('userCreateOrEditView.name'))}
-                        </Form.Label>
-
-                        <Form.Control
-                          name="name"
-                          value={name || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) => {
-                            setName(value);
-                          }}
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* email */}
-                    <Col xs={12}>
-                      <Form.Group controlId="email">
-                        <Form.Label>
-                          {toggleRequiredLabel(t('userCreateOrEditView.email'))}
-                        </Form.Label>
-
-                        <Form.Control
-                          name="email"
-                          value={email}
-                          disabled={isDisabled}
-                          onChange={(value: string) => {
-                            setEmail(value);
-                          }}
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* birthday */}
-                    <Col xs={12}>
-                      <Form.Group controlId="birthday">
-                        <Form.Label>
-                          {t('userCreateOrEditView.birthday')}
-                        </Form.Label>
-                        <Form.Control
-                          name="birthday"
-                          autoComplete="birthday"
-                          block
-                          oneTap
-                          isoWeek
-                          format="dd.MM.yyyy"
-                          limitEndYear={0}
-                          value={birthday ?? null}
-                          disabled={isDisabled}
-                          onChange={value => {
-                            setBirthday(value as Date);
-                          }}
-                          accepter={DatePicker}
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* flair */}
-                    <Col xs={12}>
-                      <Form.Group controlId="flair">
-                        <Form.Label>
-                          {t('userCreateOrEditView.flair')}
-                        </Form.Label>
-                        <Form.Control
-                          name="flair"
-                          value={flair ?? ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) => setFlair(value)}
-                        />
-                      </Form.Group>
-                    </Col>
-
-                    {/* company */}
-                    <Col xs={12}>
-                      <Form.Group controlId="company">
-                        <Form.Label>
-                          {t('userCreateOrEditView.company')}
-                        </Form.Label>
-                        <Form.Control
-                          name="company"
-                          value={address?.company || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'company',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* street */}
-                    <Col xs={18}>
-                      <Form.Group controlId="streetAddress">
-                        <Form.Label>
-                          {t('userCreateOrEditView.streetAddress')}
-                        </Form.Label>
-                        <Form.Control
-                          name="streetAddress"
-                          value={address?.streetAddress || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'streetAddress',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col xs={6}>
-                      <Form.Group controlId="streetAddressNumber">
-                        <Form.Label>
-                          {t('userCreateOrEditView.streetAddressNumber')}
-                        </Form.Label>
-                        <Form.Control
-                          name="streetAddressNumber"
-                          value={address?.streetAddressNumber || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'streetAddressNumber',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* street 2 */}
-                    <Col xs={18}>
-                      <Form.Group controlId="streetAddress2">
-                        <Form.Label>
-                          {t('userCreateOrEditView.streetAddress2')}
-                        </Form.Label>
-                        <Form.Control
-                          name="streetAddress2"
-                          value={address?.streetAddress2 || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'streetAddress2',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-
-                    <Col xs={6}>
-                      <Form.Group controlId="streetAddress2Number">
-                        <Form.Label>
-                          {t('userCreateOrEditView.streetAddress2Number')}
-                        </Form.Label>
-                        <Form.Control
-                          name="streetAddress2Number"
-                          value={address?.streetAddress2Number || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'streetAddress2Number',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* zip */}
-                    <Col xs={8}>
-                      <Form.Group controlId="zipCode">
-                        <Form.Label>
-                          {t('userCreateOrEditView.zipCode')}
-                        </Form.Label>
-                        <Form.Control
-                          name="zipCode"
-                          value={address?.zipCode || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'zipCode',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* city */}
-                    <Col xs={16}>
-                      <Form.Group controlId="city">
-                        <Form.Label>
-                          {t('userCreateOrEditView.city')}
-                        </Form.Label>
-                        <Form.Control
-                          name="city"
-                          value={address?.city || ''}
-                          disabled={isDisabled}
-                          onChange={(value: string) =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'city',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-                    {/* country */}
-                    <Col xs={24}>
-                      <Form.Group controlId="country">
-                        <Form.Label>
-                          {t('userCreateOrEditView.country')}
-                        </Form.Label>
-
-                        <Form.Control
-                          name="country"
-                          accepter={SelectPicker}
-                          block
-                          cleanable
-                          searchable
-                          data={userCountryNames.map(item => ({
-                            label: item,
-                            value: item,
-                          }))}
-                          placeholder={address?.country ?? undefined}
-                          value={address?.country ?? ''}
-                          disabled={isDisabled}
-                          onChange={value =>
-                            updateAddressObject(
-                              address,
-                              setAddress,
-                              'country',
-                              value
-                            )
-                          }
-                        />
-                      </Form.Group>
-                    </Col>
-
-                    <Col xs={24}>
-                      <Form.Group controlId="note">
-                        <Form.Label>
-                          {t('userCreateOrEditView.note')}
-                        </Form.Label>
-
-                        <Form.Control
-                          name="note"
-                          rows={5}
-                          accepter={Textarea}
-                          value={note || ''}
-                          disabled={isDisabled}
-                          onChange={setNote}
-                        />
-
-                        <Form.Text>
-                          {t('userCreateOrEditView.noteHelpText')}
-                        </Form.Text>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </RPanel>
-              </RGrid>
-            </Col>
-            {/* roles, security + communication */}
-            <Col xs={12}>
-              <Grid fluid>
-                {/* roles */}
-                <RPanel
-                  bordered
-                  header={t('userCreateOrEditView.userRoles')}
-                >
-                  <Row gutter={10}>
-                    <Col xs={24}>
-                      <Form.Group controlId="userRoles">
-                        <Form.Label>
-                          {t('userCreateOrEditView.userRoles')}
-                        </Form.Label>
-                        <CheckPicker
-                          name="userRoles"
-                          block
-                          value={roles.map(role => role.id)}
-                          data={userRoles.map(userRole => ({
-                            value: userRole.id,
-                            label: userRole.name,
-                          }))}
-                          placement={'auto'}
-                          onChange={value => {
-                            setRoles(
-                              userRoles.filter(userRole =>
-                                value.includes(userRole.id)
-                              )
-                            );
-                          }}
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </RPanel>
-                {/* password */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.passwordHeader')}
-                >
-                  <Row gutter={10}>
-                    <Col xs={24}>
-                      <EditUserPassword
-                        user={user}
-                        password={password}
-                        setPassword={setPassword}
-                        isDisabled={isDisabled || !canResetPassword}
-                      />
-                    </Col>
-                  </Row>
-                </Panel>
-                {/* login code */}
-                {user && canManageLoginCodes && (
-                  <Panel
-                    bordered
-                    header={t('userCreateOrEditView.loginCode.header')}
-                  >
-                    <Row gutter={10}>
-                      <Col xs={24}>
-                        <p style={{ marginBottom: 12 }}>
-                          {loginCodeData?.userLoginCode ?
-                            t('userCreateOrEditView.loginCode.status', {
-                              usesRemaining:
-                                loginCodeData.userLoginCode.usesRemaining,
-                              maxUses: loginCodeData.userLoginCode.maxUses,
-                              expiresAt: new Date(
-                                loginCodeData.userLoginCode.expiresAt
-                              ).toLocaleDateString(),
-                              lastUsedAt:
-                                loginCodeData.userLoginCode.lastUsedAt ?
-                                  new Date(
-                                    loginCodeData.userLoginCode.lastUsedAt
-                                  ).toLocaleString()
-                                : t('userCreateOrEditView.loginCode.never'),
-                            })
-                          : t('userCreateOrEditView.loginCode.none')}
-                        </p>
-
-                        {loginCodeData?.userLoginCode &&
-                          loginCodeData.userLoginCode.secondFactor !==
-                            LoginCodeSecondFactor.None && (
-                            <p style={{ marginBottom: 12 }}>
-                              {t(
-                                (
-                                  loginCodeData.userLoginCode
-                                    .secondFactorAvailable
-                                ) ?
-                                  'userCreateOrEditView.loginCode.secondFactorAvailable'
-                                : 'userCreateOrEditView.loginCode.secondFactorMissing',
-                                {
-                                  factor: t(
-                                    `settingList.loginCodeSecondFactorOptions.${loginCodeData.userLoginCode.secondFactor}`
-                                  ),
-                                }
-                              )}
-                            </p>
-                          )}
-
-                        <RButton
-                          appearance="ghost"
-                          disabled={
-                            !loginCodeData?.userLoginCode || isRevokingLoginCode
-                          }
-                          style={{ marginBottom: 16, marginRight: 8 }}
-                          onClick={async () => {
-                            await revokeUserLoginCode({
-                              variables: { userId: user.id },
-                            });
-                            setIssuedLoginCode(null);
-                            await refetchLoginCode();
-                          }}
-                        >
-                          {t('userCreateOrEditView.loginCode.revoke')}
-                        </RButton>
-
-                        <RButton
-                          appearance="primary"
-                          disabled={isReissuingLoginCode}
-                          style={{ marginBottom: 16 }}
-                          onClick={async () => {
-                            const result = await reissueUserLoginCode({
-                              variables: { userId: user.id },
-                            });
-
-                            if (result.data?.reissueUserLoginCode) {
-                              setIssuedLoginCode({
-                                code: result.data.reissueUserLoginCode.code,
-                                purl: result.data.reissueUserLoginCode.purl,
-                              });
-                            }
-
-                            await refetchLoginCode();
-                          }}
-                        >
-                          {t('userCreateOrEditView.loginCode.reissue')}
-                        </RButton>
-
-                        {issuedLoginCode && (
-                          <Message
-                            type="info"
-                            showIcon
-                          >
-                            {t('userCreateOrEditView.loginCode.issued')}{' '}
-                            <strong>{issuedLoginCode.code}</strong>
-                            <br />
-                            <a href={issuedLoginCode.purl}>
-                              {issuedLoginCode.purl}
-                            </a>
-                          </Message>
+                    <Grid size={{ xs: 6 }}>
+                      <Controller
+                        control={control}
+                        name="firstName"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            value={field.value ?? ''}
+                            label={t('userCreateOrEditView.firstName')}
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          />
                         )}
-                      </Col>
-                    </Row>
-                  </Panel>
-                )}
-                {/* two-factor authentication */}
-                {user && canResetTotp && (
-                  <Panel
-                    bordered
-                    header={t('userCreateOrEditView.totpHeader')}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 6 }}>
+                      <Controller
+                        control={control}
+                        name="name"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            label={toggleRequiredLabel(
+                              t('userCreateOrEditView.name')
+                            )}
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 6 }}>
+                      <Controller
+                        control={control}
+                        name="email"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            label={toggleRequiredLabel(
+                              t('userCreateOrEditView.email')
+                            )}
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 6 }}>
+                      <Controller
+                        control={control}
+                        name="birthday"
+                        render={({ field, fieldState: { error } }) => (
+                          <DatePicker
+                            label={t('userCreateOrEditView.birthday')}
+                            disableFuture
+                            value={field.value ?? null}
+                            disabled={isDisabled}
+                            onChange={field.onChange}
+                            fullWidth
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 12 }}>
+                      <Controller
+                        control={control}
+                        name="flair"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            value={field.value ?? ''}
+                            label={
+                              <>
+                                {t('userCreateOrEditView.flair')}{' '}
+                                <InfoTooltip
+                                  text={t('userCreateOrEditView.flairInfo')}
+                                />
+                              </>
+                            }
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 12 }}>
+                      <Controller
+                        control={control}
+                        name="note"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            value={field.value ?? ''}
+                            label={t('userCreateOrEditView.note')}
+                            multiline
+                            rows={5}
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={
+                              error?.message ??
+                              t('userCreateOrEditView.noteHelpText')
+                            }
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader title={t('userCreateOrEditView.addressTitle')} />
+
+                <CardContent>
+                  <Grid
+                    container
+                    spacing={2}
                   >
-                    <Row gutter={10}>
-                      <Col xs={24}>
-                        <p style={{ marginBottom: 12 }}>
+                    <Grid size={{ xs: 12 }}>
+                      <Controller
+                        control={control}
+                        name="address.company"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            value={field.value ?? ''}
+                            label={t('userCreateOrEditView.company')}
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 9 }}>
+                      <Controller
+                        control={control}
+                        name="address.streetAddress"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            value={field.value ?? ''}
+                            label={t('userCreateOrEditView.streetAddress')}
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 3 }}>
+                      <Controller
+                        control={control}
+                        name="address.streetAddressNumber"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            value={field.value ?? ''}
+                            label={t(
+                              'userCreateOrEditView.streetAddressNumber'
+                            )}
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 9 }}>
+                      <Controller
+                        control={control}
+                        name="address.streetAddress2"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            value={field.value ?? ''}
+                            label={t('userCreateOrEditView.streetAddress2')}
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 3 }}>
+                      <Controller
+                        control={control}
+                        name="address.streetAddress2Number"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            value={field.value ?? ''}
+                            label={t(
+                              'userCreateOrEditView.streetAddress2Number'
+                            )}
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 4 }}>
+                      <Controller
+                        control={control}
+                        name="address.zipCode"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            value={field.value ?? ''}
+                            label={t('userCreateOrEditView.zipCode')}
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 8 }}>
+                      <Controller
+                        control={control}
+                        name="address.city"
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            value={field.value ?? ''}
+                            label={t('userCreateOrEditView.city')}
+                            disabled={isDisabled}
+                            error={Boolean(error)}
+                            helperText={error?.message}
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={{ xs: 12 }}>
+                      <FormControl fullWidth>
+                        <FormLabel>
+                          {t('userCreateOrEditView.country')}
+                        </FormLabel>
+
+                        <Controller
+                          control={control}
+                          name="address.country"
+                          render={({ field, fieldState: { error } }) => (
+                            <Autocomplete
+                              options={userCountryNames}
+                              value={field.value ?? null}
+                              disabled={isDisabled}
+                              onChange={(_event, country) =>
+                                field.onChange(country ?? '')
+                              }
+                              renderInput={params => (
+                                <TextField
+                                  {...params}
+                                  error={Boolean(error)}
+                                  helperText={error?.message}
+                                />
+                              )}
+                            />
+                          )}
+                        />
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </PanelStack>
+
+            <PanelStack>
+              <Card>
+                <CardHeader title={t('userCreateOrEditView.passwordHeader')} />
+
+                <CardContent>
+                  <Grid
+                    container
+                    spacing={2}
+                  >
+                    <Grid size={{ xs: 12 }}>
+                      <Box sx={{ marginBottom: 3 }}>
+                        <Controller
+                          control={control}
+                          name="active"
+                          render={({ field }) => (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  {...field}
+                                  checked={field.value}
+                                  disabled={isDisabled}
+                                />
+                              }
+                              label={
+                                <>
+                                  {t('userCreateOrEditView.active')}{' '}
+                                  <InfoTooltip
+                                    text={t('userCreateOrEditView.activeInfo')}
+                                  />
+                                </>
+                              }
+                            />
+                          )}
+                        />
+                      </Box>
+                    </Grid>
+
+                    <Grid size={{ xs: 12 }}>
+                      <Controller
+                        control={control}
+                        name="password"
+                        render={({ field }) => (
+                          <EditUserPassword
+                            user={user}
+                            password={field.value ?? ''}
+                            setPassword={field.onChange}
+                            isDisabled={isDisabled || !canResetPassword}
+                          />
+                        )}
+                      />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader
+                  title={
+                    <>
+                      {t('userCreateOrEditView.properties')}{' '}
+                      <InfoTooltip
+                        text={t('userCreateOrEditView.propertiesInfo')}
+                      />
+                    </>
+                  }
+                />
+
+                <CardContent>
+                  <Grid
+                    container
+                    spacing={2}
+                  >
+                    <Grid size={{ xs: 12 }}>
+                      <Box sx={{ marginBottom: 3 }}>
+                        <Controller
+                          control={control}
+                          name="properties"
+                          render={({ field }) => (
+                            <ListInput
+                              value={field.value}
+                              onChange={field.onChange}
+                              defaultValue={{
+                                key: '',
+                                value: '',
+                                public: true,
+                              }}
+                            >
+                              {({ value, onChange }) => (
+                                <PropertyRow>
+                                  <TextField
+                                    placeholder={t('articleEditor.panels.key')}
+                                    value={value.key}
+                                    onChange={event =>
+                                      onChange({
+                                        ...value,
+                                        key: event.target.value,
+                                      })
+                                    }
+                                    data-testid="propertyKey"
+                                  />
+                                  <TextField
+                                    placeholder={t(
+                                      'articleEditor.panels.value'
+                                    )}
+                                    value={value.value}
+                                    onChange={event =>
+                                      onChange({
+                                        ...value,
+                                        value: event.target.value,
+                                      })
+                                    }
+                                    data-testid="propertyValue"
+                                  />
+                                  <FormControlLabel
+                                    control={
+                                      <Switch
+                                        checked={value.public}
+                                        onChange={(_event, isPublic) =>
+                                          onChange({
+                                            ...value,
+                                            public: isPublic,
+                                          })
+                                        }
+                                      />
+                                    }
+                                    label={t('articleEditor.panels.public')}
+                                  />
+                                </PropertyRow>
+                              )}
+                            </ListInput>
+                          )}
+                        />
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+              {/* roles */}
+              <Card>
+                <CardHeader
+                  title={
+                    <>
+                      {t('userCreateOrEditView.userRoles')}{' '}
+                      <InfoTooltip
+                        text={t('userCreateOrEditView.userRolesInfo')}
+                      />
+                    </>
+                  }
+                />
+
+                <CardContent>
+                  <Grid
+                    container
+                    spacing={2}
+                  >
+                    <Grid size={{ xs: 12 }}>
+                      <Box sx={{ marginBottom: 3 }}>
+                        <Controller
+                          control={control}
+                          name="roles"
+                          render={({ field }) => (
+                            <Autocomplete
+                              multiple
+                              disableCloseOnSelect
+                              options={userRoles.map(userRole => userRole.id)}
+                              getOptionLabel={id =>
+                                userRoles.find(userRole => userRole.id === id)
+                                  ?.name ?? id
+                              }
+                              value={(field.value ?? []).map(role => role.id)}
+                              onChange={(_event, value) =>
+                                field.onChange(
+                                  userRoles.filter(userRole =>
+                                    value.includes(userRole.id)
+                                  )
+                                )
+                              }
+                              renderInput={params => <TextField {...params} />}
+                            />
+                          )}
+                        />
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+              {/* login code */}
+              {user && canManageLoginCodes && (
+                <Card>
+                  <CardHeader
+                    title={t('userCreateOrEditView.loginCode.header')}
+                  />
+
+                  <CardContent>
+                    <Typography style={{ marginBottom: 12 }}>
+                      {loginCodeData?.userLoginCode ?
+                        t('userCreateOrEditView.loginCode.status', {
+                          usesRemaining:
+                            loginCodeData.userLoginCode.usesRemaining,
+                          maxUses: loginCodeData.userLoginCode.maxUses,
+                          expiresAt: new Date(
+                            loginCodeData.userLoginCode.expiresAt
+                          ).toLocaleDateString(),
+                          lastUsedAt:
+                            loginCodeData.userLoginCode.lastUsedAt ?
+                              new Date(
+                                loginCodeData.userLoginCode.lastUsedAt
+                              ).toLocaleString()
+                            : t('userCreateOrEditView.loginCode.never'),
+                        })
+                      : t('userCreateOrEditView.loginCode.none')}
+                    </Typography>
+
+                    {loginCodeData?.userLoginCode &&
+                      loginCodeData.userLoginCode.secondFactor !==
+                        LoginCodeSecondFactor.None && (
+                        <Typography style={{ marginBottom: 12 }}>
+                          {t(
+                            loginCodeData.userLoginCode.secondFactorAvailable ?
+                              'userCreateOrEditView.loginCode.secondFactorAvailable'
+                            : 'userCreateOrEditView.loginCode.secondFactorMissing',
+                            {
+                              factor: t(
+                                `settingList.loginCodeSecondFactorOptions.${loginCodeData.userLoginCode.secondFactor}`
+                              ),
+                            }
+                          )}
+                        </Typography>
+                      )}
+
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      style={{ marginBottom: 16 }}
+                    >
+                      <Button
+                        variant="outlined"
+                        disabled={
+                          !loginCodeData?.userLoginCode || isRevokingLoginCode
+                        }
+                        onClick={async () => {
+                          await revokeUserLoginCode({
+                            variables: { userId: user.id },
+                          });
+                          setIssuedLoginCode(null);
+                          await refetchLoginCode();
+                        }}
+                      >
+                        {t('userCreateOrEditView.loginCode.revoke')}
+                      </Button>
+
+                      <Button
+                        variant="contained"
+                        disabled={isReissuingLoginCode}
+                        onClick={async () => {
+                          const result = await reissueUserLoginCode({
+                            variables: { userId: user.id },
+                          });
+
+                          if (result.data?.reissueUserLoginCode) {
+                            setIssuedLoginCode({
+                              code: result.data.reissueUserLoginCode.code,
+                              purl: result.data.reissueUserLoginCode.purl,
+                            });
+                          }
+
+                          await refetchLoginCode();
+                        }}
+                      >
+                        {t('userCreateOrEditView.loginCode.reissue')}
+                      </Button>
+                    </Stack>
+
+                    {issuedLoginCode && (
+                      <Alert severity="info">
+                        {t('userCreateOrEditView.loginCode.issued')}{' '}
+                        <strong>{issuedLoginCode.code}</strong>
+                        <br />
+                        <a href={issuedLoginCode.purl}>
+                          {issuedLoginCode.purl}
+                        </a>
+                      </Alert>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+              {/* two-factor authentication */}
+              {user && canResetTotp && (
+                <Card>
+                  <CardHeader title={t('userCreateOrEditView.totpHeader')} />
+
+                  <CardContent>
+                    <Grid
+                      container
+                      spacing={2}
+                    >
+                      <Grid size={{ xs: 12 }}>
+                        <Typography style={{ marginBottom: 12 }}>
                           {user.totpEnabled ?
                             t('userCreateOrEditView.totpEnabled')
                           : user.totpExempt ?
                             t('userCreateOrEditView.totpExemptInfo')
                           : t('userCreateOrEditView.totpDisabled')}
-                        </p>
-                        <RButton
-                          appearance="primary"
-                          color="orange"
+                        </Typography>
+
+                        <Button
+                          variant="contained"
+                          color="warning"
                           startIcon={<MdLockReset />}
                           disabled={!user.totpEnabled || isResettingTotp}
                           style={{ marginBottom: 16 }}
@@ -1044,197 +1135,136 @@ function UserEditView() {
                               await resetUserTotp({
                                 variables: { userId: user.id },
                               });
-                              toaster.push(
-                                <Message
-                                  type="success"
-                                  showIcon
-                                  closable
-                                  duration={2000}
-                                >
-                                  {t('userList.overview.totpResetSuccess')}
-                                </Message>
+
+                              enqueueSnackbar(
+                                t('userList.overview.totpResetSuccess'),
+                                { variant: 'success', autoHideDuration: 2000 }
                               );
                             } catch (e) {
-                              toaster.push(
-                                <Message
-                                  type="error"
-                                  showIcon
-                                  closable
-                                  duration={2000}
-                                >
-                                  {t('userList.overview.totpResetError')}
-                                </Message>
+                              enqueueSnackbar(
+                                t('userList.overview.totpResetError'),
+                                { variant: 'error', autoHideDuration: 8000 }
                               );
                             }
                           }}
                         >
                           {t('userList.overview.resetTotp')}
-                        </RButton>
-                      </Col>
-                      <Col xs={24}>
-                        <Form.Group controlId="totpExempt">
-                          <Form.Label>
-                            {t('userCreateOrEditView.totpExemptLabel')}
-                          </Form.Label>
-                          <RToggle
-                            checked={user.totpExempt}
-                            onChange={async value => {
-                              if (
-                                value &&
-                                !window.confirm(
-                                  t('userCreateOrEditView.totpExemptWarning')
-                                )
-                              ) {
-                                return;
-                              }
-                              try {
-                                await updateUser({
-                                  variables: {
-                                    id: user.id,
-                                    name: user.name,
-                                    email: user.email,
-                                    totpExempt: value,
-                                  },
-                                });
-                                setUser({ ...user, totpExempt: value });
-                                toaster.push(
-                                  <Message
-                                    type="success"
-                                    showIcon
-                                    closable
-                                    duration={2000}
-                                  >
-                                    {t(
-                                      'userCreateOrEditView.successfullyUpdatedUser'
-                                    )}
-                                  </Message>
-                                );
-                              } catch (e) {
-                                toaster.push(
-                                  <Message
-                                    type="error"
-                                    showIcon
-                                    closable
-                                    duration={2000}
-                                  >
-                                    {t('userCreateOrEditView.errorOnUpdate', {
-                                      error: e,
-                                    })}
-                                  </Message>
-                                );
-                              }
-                            }}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                  </Panel>
-                )}
-                {/* properties */}
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.properties')}
-                >
-                  <Row gutter={10}>
-                    <Col xs={24}>
-                      <Form.Group controlId="userProperties">
-                        <PropertiesListWrapper>
-                          <ListInput
-                            value={metaDataProperties}
-                            onChange={propertiesItemInput =>
-                              setMetadataProperties(propertiesItemInput)
+                        </Button>
+                      </Grid>
+                      <Grid size={{ xs: 12 }}>
+                        <Box sx={{ marginBottom: 3 }}>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={user.totpExempt}
+                                onChange={async (_event, value) => {
+                                  if (
+                                    value &&
+                                    !window.confirm(
+                                      t(
+                                        'userCreateOrEditView.totpExemptWarning'
+                                      )
+                                    )
+                                  ) {
+                                    return;
+                                  }
+                                  try {
+                                    await updateUser({
+                                      variables: {
+                                        id: user.id,
+                                        name: user.name,
+                                        email: user.email,
+                                        totpExempt: value,
+                                      },
+                                    });
+                                    setValue('user', {
+                                      ...user,
+                                      totpExempt: value,
+                                    });
+                                    enqueueSnackbar(
+                                      t(
+                                        'userCreateOrEditView.successfullyUpdatedUser'
+                                      ),
+                                      {
+                                        variant: 'success',
+                                        autoHideDuration: 2000,
+                                      }
+                                    );
+                                  } catch (e) {
+                                    enqueueSnackbar(
+                                      t('userCreateOrEditView.errorOnUpdate', {
+                                        error: e,
+                                      }),
+                                      {
+                                        variant: 'error',
+                                        autoHideDuration: 8000,
+                                      }
+                                    );
+                                  }
+                                }}
+                              />
                             }
-                            defaultValue={{ key: '', value: '', public: true }}
-                          >
-                            {({ value, onChange }) => (
-                              <FlexRow>
-                                <PropertyKeyInput
-                                  placeholder={t('articleEditor.panels.key')}
-                                  value={value.key}
-                                  onChange={propertyKey =>
-                                    onChange({ ...value, key: propertyKey })
-                                  }
-                                  data-testid="propertyKey"
-                                />
-                                <PropertyValueInput
-                                  placeholder={t('articleEditor.panels.value')}
-                                  value={value.value}
-                                  onChange={propertyValue =>
-                                    onChange({ ...value, value: propertyValue })
-                                  }
-                                  data-testid="propertyValue"
-                                />
-                                <FormGroup controlId="articleProperty">
-                                  <Toggle
-                                    checkedChildren={t(
-                                      'articleEditor.panels.public'
-                                    )}
-                                    unCheckedChildren={t(
-                                      'articleEditor.panels.private'
-                                    )}
-                                    checked={value.public}
-                                    onChange={isPublic =>
-                                      onChange({ ...value, public: isPublic })
-                                    }
-                                  />
-                                </FormGroup>
-                              </FlexRow>
-                            )}
-                          </ListInput>
-                        </PropertiesListWrapper>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </Panel>
-              </Grid>
-            </Col>
-          </Row>
+                            label={t('userCreateOrEditView.totpExemptLabel')}
+                          />
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              )}
+            </PanelStack>
+          </PageColumns>
 
-          {/* subscriptions */}
-          {subscriptionData?.subscriptions.nodes && (
-            <Row gutter={10}>
-              <Col xs={24}>
-                <Panel
-                  bordered
-                  header={t('userCreateOrEditView.subscriptionsHeader')}
-                >
-                  <UserSubscriptionsList
-                    subscriptions={subscriptionData.subscriptions.nodes}
-                    userId={user?.id}
+          {(subscriptionData?.subscriptions.nodes ||
+            (isEditRoute && userId)) && (
+            <PanelStack>
+              {subscriptionData?.subscriptions.nodes && (
+                <Card>
+                  <CardHeader
+                    title={t('userCreateOrEditView.subscriptionsHeader')}
                   />
-                </Panel>
-              </Col>
-            </Row>
-          )}
 
-          {/* manual mail sending + sent-mail history */}
-          {isEditRoute && userId && (
-            <Row gutter={10}>
-              <Col xs={12}>
-                <Panel
-                  bordered
-                  header={t('userMail.sendTitle')}
-                >
-                  <SendMailToUserPanel userId={userId} />
-                </Panel>
-              </Col>
-              <Col xs={12}>
-                <Panel
-                  bordered
-                  header={t('userMail.logTitle')}
-                >
-                  <UserMailLogPanel userId={userId} />
-                </Panel>
-              </Col>
-            </Row>
+                  <CardContent>
+                    <UserSubscriptionsList
+                      subscriptions={subscriptionData.subscriptions.nodes}
+                      userId={user?.id}
+                    />
+                  </CardContent>
+                </Card>
+              )}
+
+              {isEditRoute && userId && (
+                <Card>
+                  <CardHeader title={t('userMail.title')} />
+
+                  <CardContent>
+                    <SendMailToUserPanel userId={userId} />
+                  </CardContent>
+
+                  <Divider />
+
+                  <CardContent>
+                    <UserMailLogPanel userId={userId} />
+                  </CardContent>
+                </Card>
+              )}
+            </PanelStack>
           )}
         </UserFormGrid>
-      </Form>
+      </form>
 
       {actionMailDialog}
 
-      {/* image selection panel */}
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={imageSelectionOpen}
         onClose={() => {
           setImageSelectionOpen(false);
@@ -1243,7 +1273,7 @@ function UserEditView() {
         <ImageSelectPanel
           onClose={() => setImageSelectionOpen(false)}
           onSelect={(image: FullImageFragment) => {
-            setUserImage(image);
+            setValue('image', image);
             setImageSelectionOpen(false);
           }}
         />
@@ -1252,10 +1282,10 @@ function UserEditView() {
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_USER',
-  'CAN_CREATE_USER',
-  'CAN_DELETE_USER',
-  'CAN_GET_USERS',
-  'CAN_RESET_USER_PASSWORD',
+  CanGetUser.id,
+  CanCreateUser.id,
+  CanDeleteUser.id,
+  CanGetUsers.id,
+  CanResetUserPassword.id,
 ])(UserEditView);
 export { CheckedPermissionComponent as UserEditView };

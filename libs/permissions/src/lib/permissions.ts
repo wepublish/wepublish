@@ -1197,7 +1197,7 @@ export const CanUpdateWebsiteSettings: Permission = {
   deprecated: false,
 };
 
-export const AllPermissions: Permission[] = [
+export const AllPermissions = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
   CanCreateCrowdfunding,
@@ -1379,9 +1379,9 @@ export const AllPermissions: Permission[] = [
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
   CanGetAuditLogs,
-];
+] as const;
 
-export const EditorPermissions: Permission[] = [
+export const EditorPermissions = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
   CanCreateCrowdfunding,
@@ -1450,10 +1450,10 @@ export const EditorPermissions: Permission[] = [
   CanPreview,
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
-];
+] as const;
 
-export const PeerPermissions: Permission[] = [
+export const PeerPermissions = [
   CanGetPeerProfile,
   CanGetSharedArticle,
   CanGetSharedArticles,
-];
+] as const;

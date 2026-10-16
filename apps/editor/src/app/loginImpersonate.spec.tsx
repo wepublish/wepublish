@@ -1,4 +1,5 @@
 import { render, waitFor } from '@testing-library/react';
+import { ReactNode } from 'react';
 import type { Mock } from 'vitest';
 
 import { LoginImpersonate } from './loginImpersonate';
@@ -31,7 +32,7 @@ vi.mock('@apollo/client/react', async importOriginal => ({
 vi.mock('@wepublish/ui/editor', () => ({
   AuthDispatchActionType: { Login: 'login' },
   AuthDispatchContext: { Provider: ({ children }: never) => children },
-  LoginTemplate: ({ children }: { children: React.ReactNode }) => (
+  LoginTemplate: ({ children }: { children: ReactNode }) => (
     <div>{children}</div>
   ),
 }));
