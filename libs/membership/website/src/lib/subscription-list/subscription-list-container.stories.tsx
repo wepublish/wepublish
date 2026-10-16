@@ -44,8 +44,12 @@ const subscription = {
   deactivation: null,
   extendable: true,
   canExtend: true,
+  canRevertUpgrade: false,
+  goodie: null,
   externalReward: 'https://example.com/external-reward-mock-url',
-} as Exact<FullSubscriptionFragment>;
+  // `satisfies`, not `as`: a field missing here leaves the subscription
+  // incomplete in the cache, and Apollo refetches it from a mock that is used up.
+} satisfies Exact<FullSubscriptionFragment>;
 
 const deactivation = {
   __typename: 'SubscriptionDeactivation',

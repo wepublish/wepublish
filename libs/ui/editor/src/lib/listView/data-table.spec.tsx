@@ -408,7 +408,10 @@ describe('DataTable resize performance', () => {
 });
 
 describe('DataTable virtualisation', () => {
-  const manyRows: Row[] = Array.from({ length: 500 }, (_, index) => ({
+  // A few times the ~34 rows a virtual window of 800px renders, no more: in
+  // happy-dom every rendered row costs, and on the shared CI runner 500 of them
+  // ran into the 15s timeout.
+  const manyRows: Row[] = Array.from({ length: 100 }, (_, index) => ({
     id: String(index),
     title: `Row ${index}`,
     author: 'Ada',
