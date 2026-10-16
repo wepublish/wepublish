@@ -1,14 +1,21 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { Typography } from '@mui/material';
+import {
+  Button,
+  Typography,
+  Stack,
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
+} from '@mui/material';
 import {
   MailChannel,
   SetUserDeliveryModeDocument,
   UserDeliveryPreferenceDocument,
 } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
+import { humanizeError, enqueueSnackbar } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdMailOutline, MdMarkunreadMailbox } from 'react-icons/md';
-import { Button, Message, Panel, Stack, Tag, toaster } from 'rsuite';
 
 import { usePaperLetterFlow } from './use-paper-letter-flow';
 
@@ -33,15 +40,7 @@ export function UserDeliveryModePanel({ userId }: UserDeliveryModePanelProps) {
   const [setMode, { loading }] = useMutation(SetUserDeliveryModeDocument, {
     onCompleted: () => refetch(),
     onError: error =>
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {humanizeError(error)}
-        </Message>
-      ),
+      enqueueSnackbar(humanizeError(error), { variant: 'error' }),
   });
 
   const preference = data?.userDeliveryPreference;
@@ -55,78 +54,77 @@ export function UserDeliveryModePanel({ userId }: UserDeliveryModePanelProps) {
     setMode({ variables: { userId, channel } });
 
   return (
-    <Panel
-      bordered
-      header={t('deliveryMode.panelTitle')}
-      style={{ background: 'var(--rs-bg-card)' }}
+    <Card
+      variant="outlined"
+      sx={{ bgcolor: 'background.paper' }}
     >
-      <Stack
-        spacing={12}
-        direction="column"
-        alignItems="flex-start"
-      >
-        <Tag
-          color={isLetter ? 'orange' : 'blue'}
-          size="lg"
+      <CardHeader title={t('deliveryMode.panelTitle')} />
+
+      <CardContent>
+        <Stack
+          sx={{ alignItems: 'flex-start' }}
+          spacing={1.5}
+          direction="column"
         >
+          <Chip
+            color={isLetter ? 'warning' : 'primary'}
+            icon={isLetter ? <MdMarkunreadMailbox /> : <MdMailOutline />}
+            label={t(`deliveryMode.channel.${preference.channel}`)}
+          />
+
+          {preference.origin && (
+            <Typography
+              variant="caption"
+              sx={{ display: 'block', color: 'text.secondary' }}
+            >
+              <span>{t(`deliveryMode.origin.${preference.origin}`)}</span>
+              {preference.reason && (
+                <>
+                  {' · '}
+                  <span>
+                    {t(`deliveryMode.reason.${reasonKey(preference.reason)}`)}
+                  </span>
+                </>
+              )}
+              {preference.changedAt && (
+                <>
+                  {' · '}
+                  {new Date(preference.changedAt).toLocaleDateString()}
+                  {preference.changedBy &&
+                    ` · ${preference.changedBy.firstName ? `${preference.changedBy.firstName} ` : ''}${preference.changedBy.name}`}
+                </>
+              )}
+            </Typography>
+          )}
+
+          {!preference.canReceiveLetters && (
+            <Typography
+              variant="caption"
+              sx={{ display: 'block', color: 'text.secondary' }}
+            >
+              {t('deliveryMode.noAddress')}
+            </Typography>
+          )}
+
           {isLetter ?
-            <MdMarkunreadMailbox style={{ marginRight: 6 }} />
-          : <MdMailOutline style={{ marginRight: 6 }} />}
-          {t(`deliveryMode.channel.${preference.channel}`)}
-        </Tag>
-
-        {preference.origin && (
-          <Typography
-            variant="caption"
-            sx={{ display: 'block', color: 'var(--rs-text-secondary)' }}
-          >
-            <span>{t(`deliveryMode.origin.${preference.origin}`)}</span>
-            {preference.reason && (
-              <>
-                {' · '}
-                <span>
-                  {t(`deliveryMode.reason.${reasonKey(preference.reason)}`)}
-                </span>
-              </>
-            )}
-            {preference.changedAt && (
-              <>
-                {' · '}
-                {new Date(preference.changedAt).toLocaleDateString()}
-                {preference.changedBy &&
-                  ` · ${preference.changedBy.firstName ? `${preference.changedBy.firstName} ` : ''}${preference.changedBy.name}`}
-              </>
-            )}
-          </Typography>
-        )}
-
-        {!preference.canReceiveLetters && (
-          <Typography
-            variant="caption"
-            sx={{ display: 'block', color: 'var(--rs-text-secondary)' }}
-          >
-            {t('deliveryMode.noAddress')}
-          </Typography>
-        )}
-
-        {isLetter ?
-          <Button
-            appearance="default"
-            loading={loading}
-            onClick={() => switchTo(MailChannel.Mail)}
-          >
-            {t('deliveryMode.switchToMail')}
-          </Button>
-        : <Button
-            appearance="primary"
-            loading={loading}
-            disabled={!preference.canReceiveLetters}
-            onClick={() => switchTo(MailChannel.Letter)}
-          >
-            {t('deliveryMode.switchToLetter')}
-          </Button>
-        }
-      </Stack>
-    </Panel>
+            <Button
+              variant="outlined"
+              loading={loading}
+              onClick={() => switchTo(MailChannel.Mail)}
+            >
+              {t('deliveryMode.switchToMail')}
+            </Button>
+          : <Button
+              variant="contained"
+              loading={loading}
+              disabled={!preference.canReceiveLetters}
+              onClick={() => switchTo(MailChannel.Letter)}
+            >
+              {t('deliveryMode.switchToLetter')}
+            </Button>
+          }
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }

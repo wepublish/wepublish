@@ -23,14 +23,38 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  DateRangeFilter,
+  enqueueSnackbar,
   humanizeError,
   InfoTooltip,
   ListViewContainer,
   ListViewHeader,
+  PageTitle,
+  Pagination,
 } from '@wepublish/ui/editor';
 import {
+  Alert,
+  Autocomplete,
   Box,
+  Button,
   Button as MuiButton,
+  Card,
+  CardContent,
+  CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  InputAdornment,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  Stack,
   Stack as MuiStack,
   Step,
   StepButton,
@@ -40,6 +64,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from '@mui/material';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
@@ -54,27 +79,6 @@ import {
   MdSend,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  CheckPicker,
-  DatePicker,
-  DateRangePicker,
-  Divider,
-  Form,
-  IconButton,
-  Message,
-  InputNumber,
-  Modal,
-  Pagination,
-  Panel,
-  Radio,
-  RadioGroup,
-  SelectPicker,
-  Stack,
-  toaster,
-} from 'rsuite';
-import { showErrors, useShowErrors } from '../common';
-import { DeliveryModeAudienceAction } from '../delivery-mode/delivery-mode-audience-action';
 import { useLetterChannel } from '../mail-template/use-letter-channel';
 import { mailErrorHelpKey } from './mail-log-common';
 import {
@@ -87,6 +91,7 @@ import {
 } from './mail-job-common';
 import { MailPreview } from '../mail-template/mail-preview';
 import { LetterPreview } from '../mail-template/letter-preview';
+import { DeliveryModeAudienceAction } from '../delivery-mode/delivery-mode-audience-action';
 import { EmailQualityRefreshButton } from './email-quality-refresh-button';
 
 /** Row tint for recipients a mail would not reach. */
@@ -215,36 +220,15 @@ function MailSendPage() {
   const [jobId, setJobId] = useState<string | null>(null);
   const [step, setStep] = useState(STEP_CONTENT);
 
-  const {
-    data: templateData,
-    refetch: refetchTemplates,
-    error: templateError,
-  } = useQuery(MailTemplateDocument);
+  const { data: templateData, refetch: refetchTemplates } =
+    useQuery(MailTemplateDocument);
   // Without a letter integration every send is a mail, so there is no channel
   // to choose and nothing to say about it.
   const { letterAvailable } = useLetterChannel();
-  const { data: memberPlanData, error: memberPlanError } = useQuery(
-    MemberPlanListDocument,
-    {
-      variables: { take: 100 },
-    }
-  );
-  useShowErrors(memberPlanError);
-  const { data: paymentMethodData, error: paymentMethodError } = useQuery(
-    PaymentMethodListDocument
-  );
-
-  useEffect(() => {
-    if (templateError) {
-      showErrors(templateError);
-    }
-  }, [templateError]);
-
-  useEffect(() => {
-    if (paymentMethodError) {
-      showErrors(paymentMethodError);
-    }
-  }, [paymentMethodError]);
+  const { data: memberPlanData } = useQuery(MemberPlanListDocument, {
+    variables: { take: 100 },
+  });
+  const { data: paymentMethodData } = useQuery(PaymentMethodListDocument);
 
   const isSubscriptionBase = base === MailRecipientBase.HasSubscription;
   const isWinBackBase = base === MailRecipientBase.EndedSubscription;
@@ -315,38 +299,22 @@ function MailSendPage() {
   const {
     data: previewData,
     loading: previewLoading,
-    error: previewError,
     refetch: refetchPreview,
   } = useQuery(MailSendRecipientPreviewDocument, {
     variables: { audience, channel },
   });
-  useShowErrors(previewError);
 
   const [createJob, { loading: creating }] = useMutation(
     CreateMailSendJobDocument,
     {
       onError: error =>
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-          >
-            {humanizeError(error)}
-          </Message>
-        ),
+        enqueueSnackbar(humanizeError(error), { variant: 'error' }),
       onCompleted: result => {
         setJobId(result.createMailSendJob.id);
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('mailSend.started')}
-          </Message>
-        );
+        enqueueSnackbar(t('mailSend.started'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
     }
   );
@@ -368,18 +336,16 @@ function MailSendPage() {
   // Warn (never block) when the template uses placeholders that this audience
   // won't fill. `withSubscriptionData` mirrors whether the audience carries a
   // subscription per recipient.
-  const {
-    data: missingData,
-    refetch: refetchMissing,
-    error: missingError,
-  } = useQuery(MailTemplateMissingPlaceholdersDocument, {
-    skip: !templateId,
-    variables: {
-      templateId: templateId as string,
-      withSubscriptionData: allowsSubscriptionTemplates,
-    },
-  });
-  useShowErrors(missingError);
+  const { data: missingData, refetch: refetchMissing } = useQuery(
+    MailTemplateMissingPlaceholdersDocument,
+    {
+      skip: !templateId,
+      variables: {
+        templateId: templateId as string,
+        withSubscriptionData: allowsSubscriptionTemplates,
+      },
+    }
+  );
   // The query is skipped without a template, but Apollo can still hand back the
   // previously selected template's result — so gate on the template as well.
   const missing =
@@ -465,7 +431,7 @@ function MailSendPage() {
     <div style={{ flexShrink: 0 }}>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('mailSend.title')}</h2>
+          <PageTitle>{t('mailSend.title')}</PageTitle>
         </ListViewHeader>
       </ListViewContainer>
 
@@ -511,34 +477,48 @@ function MailSendPage() {
 
           {step === STEP_CONTENT && (
             <>
-              <Panel
-                bordered
-                header={t('mailSend.template')}
+              <Card
+                variant="outlined"
                 style={{ marginTop: 16 }}
               >
-                <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                  <SelectPicker
-                    block
-                    data={(templateData?.mailTemplates ?? []).map(template => ({
-                      label: template.name,
-                      value: template.id,
-                    }))}
-                    value={templateId}
-                    onChange={setTemplateId}
-                    placeholder={t('mailSend.selectTemplate')}
-                    style={{ flex: 1, minWidth: 0 }}
-                  />
-                  <IconButton
-                    as={Link}
-                    to="/mailtemplates/create"
-                    target="_blank"
-                    appearance="ghost"
-                    icon={<MdAdd />}
+                <CardHeader title={t('mailSend.template')} />
+
+                <CardContent>
+                  <div
+                    style={{ display: 'flex', gap: 12, alignItems: 'center' }}
                   >
-                    {t('mailSend.createTemplate')}
-                  </IconButton>
-                </div>
-              </Panel>
+                    <TextField
+                      select
+                      value={templateId ?? ''}
+                      onChange={event => setTemplateId(event.target.value)}
+                      fullWidth
+                      slotProps={{ select: { displayEmpty: true } }}
+                    >
+                      <MenuItem value="">
+                        {t('mailSend.selectTemplate')}
+                      </MenuItem>
+
+                      {(templateData?.mailTemplates ?? []).map(template => (
+                        <MenuItem
+                          key={template.id}
+                          value={template.id}
+                        >
+                          {template.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <Button
+                      variant="outlined"
+                      startIcon={<MdAdd />}
+                      component={Link}
+                      to="/mailtemplates/create"
+                      target="_blank"
+                    >
+                      {t('mailSend.createTemplate')}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
 
               {letterAvailable && (
                 <ChannelPanel
@@ -558,374 +538,488 @@ function MailSendPage() {
 
           {step === STEP_AUDIENCE && (
             <>
-              <Panel
-                bordered
-                header={t('mailSend.audience.title')}
+              <Card
+                variant="outlined"
                 style={{ marginTop: 16 }}
               >
-                <Form fluid>
-                  <Form.Group>
-                    <Form.ControlLabel>
-                      {t('mailSend.base.label')}
-                    </Form.ControlLabel>
-                    <RadioGroup
-                      value={base}
-                      onChange={value => setBase(value as MailRecipientBase)}
-                    >
-                      {[
-                        MailRecipientBase.AllUsers,
-                        MailRecipientBase.HasSubscription,
-                        MailRecipientBase.NoActiveSubscription,
-                        MailRecipientBase.EndedSubscription,
-                      ].map(option => (
-                        <Radio
-                          key={option}
-                          value={option}
-                        >
-                          <div>{t(`mailSend.base.${option}`)}</div>
-                          <Typography
-                            variant="caption"
-                            style={{
-                              color: 'var(--rs-text-secondary)',
-                              whiteSpace: 'normal',
-                              lineHeight: 1.35,
-                            }}
-                            sx={{
-                              display: 'block',
-                            }}
+                <CardHeader title={t('mailSend.audience.title')} />
+
+                <CardContent>
+                  <Stack
+                    spacing={3}
+                    sx={{ width: '100%' }}
+                  >
+                    <FormControl fullWidth>
+                      <FormLabel>{t('mailSend.base.label')}</FormLabel>
+                      <RadioGroup
+                        value={base}
+                        onChange={(_event, value) =>
+                          setBase(value as MailRecipientBase)
+                        }
+                      >
+                        {[
+                          MailRecipientBase.AllUsers,
+                          MailRecipientBase.HasSubscription,
+                          MailRecipientBase.NoActiveSubscription,
+                          MailRecipientBase.EndedSubscription,
+                        ].map(option => (
+                          <FormControlLabel
+                            key={option}
+                            value={option}
+                            control={<Radio />}
+                            label={
+                              <>
+                                <div>{t(`mailSend.base.${option}`)}</div>
+                                <Typography
+                                  variant="caption"
+                                  style={{
+                                    color: 'text.secondary',
+                                    whiteSpace: 'normal',
+                                    lineHeight: 1.35,
+                                  }}
+                                  sx={{
+                                    display: 'block',
+                                  }}
+                                >
+                                  {t(`mailSend.base.${option}Hint`)}
+                                </Typography>
+                              </>
+                            }
+                          />
+                        ))}
+                      </RadioGroup>
+
+                      <MissingPlaceholdersWarning missing={missing} />
+                    </FormControl>
+
+                    <Divider />
+                    {/* Placeholder vs real is the `placeholder` segment and its
+                        complement, so one control covers it. */}
+                    <FormControl fullWidth>
+                      <FormLabel>{t('mailSend.emailSegments.label')}</FormLabel>
+                      <Autocomplete
+                        multiple
+                        disableCloseOnSelect
+                        options={Object.values(MailEmailSegment)}
+                        getOptionLabel={segment =>
+                          t(`mailSend.emailSegments.${segment}`)
+                        }
+                        value={emailSegments}
+                        onChange={(_event, value) =>
+                          setEmailSegments(value as MailEmailSegment[])
+                        }
+                        renderInput={params => (
+                          <TextField
+                            {...params}
+                            placeholder={t('mailSend.emailSegments.pick')}
+                          />
+                        )}
+                      />
+                      <FormHelperText>
+                        {t('mailSend.emailSegments.hint')}
+                      </FormHelperText>
+                    </FormControl>
+
+                    {isWinBackBase && (
+                      <>
+                        <Divider />
+                        <FormControl fullWidth>
+                          <FormLabel>
+                            {t('mailSend.endedWindow.label')}
+                          </FormLabel>
+                          <RadioGroup
+                            row
+                            value={endedMode}
+                            onChange={(_event, value) =>
+                              setEndedMode(value as EndedMode)
+                            }
                           >
-                            {t(`mailSend.base.${option}Hint`)}
-                          </Typography>
-                        </Radio>
-                      ))}
-                    </RadioGroup>
+                            <FormControlLabel
+                              value="days"
+                              control={<Radio />}
+                              label={t('mailSend.endedWindow.relative')}
+                            />
+                            <FormControlLabel
+                              value="period"
+                              control={<Radio />}
+                              label={t('mailSend.endedWindow.period')}
+                            />
+                          </RadioGroup>
 
-                    <MissingPlaceholdersWarning missing={missing} />
-                  </Form.Group>
-
-                  <Divider />
-                  {/* Placeholder vs real is the `placeholder` segment and its
-                      complement, so one control covers it. */}
-                  <Form.Group>
-                    <Form.ControlLabel>
-                      {t('mailSend.emailSegments.label')}
-                    </Form.ControlLabel>
-                    <CheckPicker
-                      block
-                      searchable={false}
-                      data={Object.values(MailEmailSegment).map(segment => ({
-                        label: t(`mailSend.emailSegments.${segment}`),
-                        value: segment,
-                      }))}
-                      value={emailSegments}
-                      onChange={value =>
-                        setEmailSegments((value ?? []) as MailEmailSegment[])
-                      }
-                      placeholder={t('mailSend.emailSegments.pick')}
-                    />
-                    <Form.HelpText>
-                      {t('mailSend.emailSegments.hint')}
-                    </Form.HelpText>
-                  </Form.Group>
-
-                  {isWinBackBase && (
-                    <>
-                      <Divider />
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.endedWindow.label')}
-                        </Form.ControlLabel>
-                        <RadioGroup
-                          inline
-                          value={endedMode}
-                          onChange={value => setEndedMode(value as EndedMode)}
-                        >
-                          <Radio value="days">
-                            {t('mailSend.endedWindow.relative')}
-                          </Radio>
-                          <Radio value="period">
-                            {t('mailSend.endedWindow.period')}
-                          </Radio>
-                        </RadioGroup>
-
-                        {endedMode === 'days' ?
-                          <>
-                            <InputNumber
-                              min={1}
-                              max={3650}
-                              value={endedWithinDays}
-                              onChange={value => {
-                                const parsed =
-                                  typeof value === 'number' ? value : (
-                                    parseInt(`${value}`, 10)
+                          {endedMode === 'days' ?
+                            <>
+                              <TextField
+                                type="number"
+                                value={endedWithinDays}
+                                onChange={event => {
+                                  const parsed = parseInt(
+                                    event.target.value,
+                                    10
                                   );
 
-                                if (Number.isFinite(parsed) && parsed > 0) {
-                                  setEndedWithinDays(parsed);
+                                  if (Number.isFinite(parsed) && parsed > 0) {
+                                    setEndedWithinDays(parsed);
+                                  }
+                                }}
+                                slotProps={{
+                                  htmlInput: { min: 1, max: 3650 },
+                                  input: {
+                                    endAdornment: (
+                                      <InputAdornment position="end">
+                                        {t('mailSend.endedWindow.days')}
+                                      </InputAdornment>
+                                    ),
+                                  },
+                                }}
+                                style={{ width: 180 }}
+                              />
+                              <FormHelperText>
+                                {t('mailSend.endedWithinDaysHint')}
+                              </FormHelperText>
+                            </>
+                          : <>
+                              <DateRangeFilter
+                                label={t('mailSend.endedWindow.periodFrom')}
+                                disableFuture
+                                value={{
+                                  from: endedPeriod?.[0] ?? null,
+                                  to: endedPeriod?.[1] ?? null,
+                                }}
+                                onChange={({ from, to }) =>
+                                  setEndedPeriod(from && to ? [from, to] : null)
                                 }
-                              }}
-                              postfix={t('mailSend.endedWindow.days')}
-                              style={{ width: 180 }}
-                            />
-                            <Form.HelpText>
-                              {t('mailSend.endedWithinDaysHint')}
-                            </Form.HelpText>
-                          </>
-                        : <>
-                            <DateRangePicker
-                              value={endedPeriod}
-                              onChange={value => setEndedPeriod(value)}
-                              format="dd.MM.yyyy"
-                              cleanable
-                              // Ended subscriptions can only lie in the past.
-                              shouldDisableDate={date => date > new Date()}
-                              placeholder={t(
-                                'mailSend.endedWindow.periodPlaceholder'
-                              )}
-                              style={{ width: 280 }}
-                            />
-                            <Form.HelpText>
-                              {t('mailSend.endedWindow.periodHint')}
-                            </Form.HelpText>
-                          </>
-                        }
-                      </Form.Group>
-
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.memberPlans')}
-                        </Form.ControlLabel>
-                        <CheckPicker
-                          block
-                          data={(memberPlanData?.memberPlans.nodes ?? []).map(
-                            plan => ({
-                              label: plan.name,
-                              value: plan.id,
-                            })
-                          )}
-                          value={memberPlanIDs}
-                          onChange={value =>
-                            setMemberPlanIDs(value as string[])
+                              />
+                              <FormHelperText>
+                                {t('mailSend.endedWindow.periodHint')}
+                              </FormHelperText>
+                            </>
                           }
-                          placeholder={t('mailSend.memberPlansAll')}
-                        />
-                      </Form.Group>
-                    </>
-                  )}
+                        </FormControl>
 
-                  {isSubscriptionBase && (
-                    <>
-                      <Divider />
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.memberPlans')}
-                        </Form.ControlLabel>
-                        <CheckPicker
-                          block
-                          data={(memberPlanData?.memberPlans.nodes ?? []).map(
-                            plan => ({
-                              label: plan.name,
-                              value: plan.id,
-                            })
-                          )}
-                          value={memberPlanIDs}
-                          onChange={value =>
-                            setMemberPlanIDs(value as string[])
-                          }
-                          placeholder={t('mailSend.memberPlansAll')}
-                        />
-                      </Form.Group>
-
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.state.label')}{' '}
-                          <InfoTooltip text={t('mailSend.stateHelp')} />
-                        </Form.ControlLabel>
-                        <SelectPicker
-                          block
-                          data={Object.values(MailSubscriptionState).map(
-                            value => ({
-                              label: t(`mailSend.state.${value}`),
-                              value,
-                            })
-                          )}
-                          value={subscriptionState}
-                          onChange={setSubscriptionState}
-                          placeholder={t('mailSend.state.any')}
-                        />
-                      </Form.Group>
-
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.autoRenew')}{' '}
-                          <InfoTooltip text={t('mailSend.autoRenewHelp')} />
-                        </Form.ControlLabel>
-                        <SelectPicker
-                          block
-                          cleanable={false}
-                          searchable={false}
-                          data={[
-                            { label: t('mailSend.any'), value: 'any' },
-                            { label: t('mailSend.yes'), value: 'true' },
-                            { label: t('mailSend.no'), value: 'false' },
-                          ]}
-                          value={autoRenew}
-                          onChange={value => setAutoRenew(value ?? 'any')}
-                        />
-                      </Form.Group>
-
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.paymentMethod')}
-                        </Form.ControlLabel>
-                        <SelectPicker
-                          block
-                          data={(paymentMethodData?.paymentMethods ?? []).map(
-                            method => ({ label: method.name, value: method.id })
-                          )}
-                          value={paymentMethodID}
-                          onChange={setPaymentMethodID}
-                          placeholder={t('mailSend.any')}
-                        />
-                      </Form.Group>
-
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.periodicity')}
-                        </Form.ControlLabel>
-                        <SelectPicker
-                          block
-                          data={Object.values(PaymentPeriodicity).map(
-                            value => ({
-                              label: t(
-                                `memberPlanList.paymentPeriodicity.${value}`
-                              ),
-                              value,
-                            })
-                          )}
-                          value={periodicity}
-                          onChange={setPeriodicity}
-                          placeholder={t('mailSend.any')}
-                        />
-                      </Form.Group>
-
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.startsAt')}
-                        </Form.ControlLabel>
-                        <div style={{ display: 'flex', gap: 12 }}>
-                          <DatePicker
-                            oneTap
-                            format="dd.MM.yyyy"
-                            placeholder={t('mailSend.from')}
-                            value={startsAtFrom}
-                            onChange={setStartsAtFrom}
-                            style={{ flex: 1 }}
+                        <FormControl fullWidth>
+                          <FormLabel>{t('mailSend.memberPlans')}</FormLabel>
+                          <Autocomplete
+                            multiple
+                            disableCloseOnSelect
+                            options={(
+                              memberPlanData?.memberPlans.nodes ?? []
+                            ).map(plan => plan.id)}
+                            getOptionLabel={option =>
+                              (memberPlanData?.memberPlans.nodes ?? [])
+                                .filter(plan => plan.id === option)
+                                .map(plan => plan.name)[0] ?? option
+                            }
+                            value={memberPlanIDs}
+                            onChange={(_event, value) =>
+                              setMemberPlanIDs(value as string[])
+                            }
+                            renderInput={params => (
+                              <TextField
+                                {...params}
+                                placeholder={t('mailSend.memberPlansAll')}
+                              />
+                            )}
                           />
-                          <DatePicker
-                            oneTap
-                            format="dd.MM.yyyy"
-                            placeholder={t('mailSend.to')}
-                            value={startsAtTo}
-                            onChange={setStartsAtTo}
-                            style={{ flex: 1 }}
+                        </FormControl>
+                      </>
+                    )}
+
+                    {isSubscriptionBase && (
+                      <>
+                        <Divider />
+                        <FormControl fullWidth>
+                          <FormLabel>{t('mailSend.memberPlans')}</FormLabel>
+                          <Autocomplete
+                            multiple
+                            disableCloseOnSelect
+                            options={(
+                              memberPlanData?.memberPlans.nodes ?? []
+                            ).map(plan => plan.id)}
+                            getOptionLabel={option =>
+                              (memberPlanData?.memberPlans.nodes ?? [])
+                                .filter(plan => plan.id === option)
+                                .map(plan => plan.name)[0] ?? option
+                            }
+                            value={memberPlanIDs}
+                            onChange={(_event, value) =>
+                              setMemberPlanIDs(value as string[])
+                            }
+                            renderInput={params => (
+                              <TextField
+                                {...params}
+                                placeholder={t('mailSend.memberPlansAll')}
+                              />
+                            )}
                           />
-                        </div>
-                      </Form.Group>
+                        </FormControl>
 
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.endsAt')}
-                        </Form.ControlLabel>
-                        <div style={{ display: 'flex', gap: 12 }}>
-                          <DatePicker
-                            oneTap
-                            format="dd.MM.yyyy"
-                            placeholder={t('mailSend.from')}
-                            value={endsAtFrom}
-                            onChange={setEndsAtFrom}
-                            style={{ flex: 1 }}
+                        <FormControl fullWidth>
+                          <FormLabel>
+                            {t('mailSend.state.label')}{' '}
+                            <InfoTooltip text={t('mailSend.stateHelp')} />
+                          </FormLabel>
+                          <TextField
+                            select
+                            value={subscriptionState ?? ''}
+                            onChange={event =>
+                              setSubscriptionState(
+                                event.target.value as MailSubscriptionState
+                              )
+                            }
+                            fullWidth
+                            slotProps={{ select: { displayEmpty: true } }}
+                          >
+                            <MenuItem value="">
+                              {t('mailSend.state.any')}
+                            </MenuItem>
+
+                            {Object.values(MailSubscriptionState).map(value => (
+                              <MenuItem
+                                key={value}
+                                value={value}
+                              >
+                                {t(`mailSend.state.${value}`)}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                          <FormLabel>
+                            {t('mailSend.autoRenew')}{' '}
+                            <InfoTooltip text={t('mailSend.autoRenewHelp')} />
+                          </FormLabel>
+                          <TextField
+                            select
+                            value={autoRenew ?? ''}
+                            onChange={event => {
+                              const value = event.target.value;
+                              setAutoRenew(value ?? 'any');
+                            }}
+                            fullWidth
+                          >
+                            <MenuItem
+                              key={'any'}
+                              value={'any'}
+                            >
+                              {t('mailSend.any')}
+                            </MenuItem>
+
+                            <MenuItem
+                              key={'true'}
+                              value={'true'}
+                            >
+                              {t('mailSend.yes')}
+                            </MenuItem>
+
+                            <MenuItem
+                              key={'false'}
+                              value={'false'}
+                            >
+                              {t('mailSend.no')}
+                            </MenuItem>
+                          </TextField>
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                          <FormLabel>{t('mailSend.paymentMethod')}</FormLabel>
+                          <TextField
+                            select
+                            value={paymentMethodID ?? ''}
+                            onChange={event =>
+                              setPaymentMethodID(event.target.value)
+                            }
+                            fullWidth
+                            slotProps={{ select: { displayEmpty: true } }}
+                          >
+                            <MenuItem value="">{t('mailSend.any')}</MenuItem>
+
+                            {(paymentMethodData?.paymentMethods ?? []).map(
+                              method => (
+                                <MenuItem
+                                  key={method.id}
+                                  value={method.id}
+                                >
+                                  {method.name}
+                                </MenuItem>
+                              )
+                            )}
+                          </TextField>
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                          <FormLabel>{t('mailSend.periodicity')}</FormLabel>
+                          <TextField
+                            select
+                            value={periodicity ?? ''}
+                            onChange={event =>
+                              setPeriodicity(
+                                event.target.value as PaymentPeriodicity
+                              )
+                            }
+                            fullWidth
+                            slotProps={{ select: { displayEmpty: true } }}
+                          >
+                            <MenuItem value="">{t('mailSend.any')}</MenuItem>
+
+                            {Object.values(PaymentPeriodicity).map(value => (
+                              <MenuItem
+                                key={value}
+                                value={value}
+                              >
+                                {t(
+                                  `memberPlanList.paymentPeriodicity.${value}`
+                                )}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                          <DateRangeFilter
+                            label={t('mailSend.startsAt')}
+                            value={{
+                              from: startsAtFrom ?? null,
+                              to: startsAtTo,
+                            }}
+                            onChange={({ from, to }) => {
+                              setStartsAtFrom(from);
+                              setStartsAtTo(to);
+                            }}
                           />
-                          <DatePicker
-                            oneTap
-                            format="dd.MM.yyyy"
-                            placeholder={t('mailSend.to')}
-                            value={endsAtTo}
-                            onChange={setEndsAtTo}
-                            style={{ flex: 1 }}
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                          <DateRangeFilter
+                            label={t('mailSend.endsAt')}
+                            value={{ from: endsAtFrom, to: endsAtTo }}
+                            onChange={({ from, to }) => {
+                              setEndsAtFrom(from);
+                              setEndsAtTo(to);
+                            }}
                           />
-                        </div>
-                        <Form.HelpText>
-                          {t('mailSend.endsAtHint')}
-                        </Form.HelpText>
-                      </Form.Group>
+                          <FormHelperText>
+                            {t('mailSend.endsAtHint')}
+                          </FormHelperText>
+                        </FormControl>
 
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.isPaid')}
-                        </Form.ControlLabel>
-                        <SelectPicker
-                          block
-                          cleanable={false}
-                          searchable={false}
-                          data={[
-                            { label: t('mailSend.any'), value: 'any' },
-                            { label: t('mailSend.yes'), value: 'true' },
-                            { label: t('mailSend.no'), value: 'false' },
-                          ]}
-                          value={isPaid}
-                          onChange={value => setIsPaid(value ?? 'any')}
-                        />
-                        <Form.HelpText>
-                          {t('mailSend.isPaidHint')}
-                        </Form.HelpText>
-                      </Form.Group>
+                        <FormControl fullWidth>
+                          <FormLabel>{t('mailSend.isPaid')}</FormLabel>
+                          <TextField
+                            select
+                            value={isPaid ?? ''}
+                            onChange={event => {
+                              const value = event.target.value;
+                              setIsPaid(value ?? 'any');
+                            }}
+                            fullWidth
+                          >
+                            <MenuItem
+                              key={'any'}
+                              value={'any'}
+                            >
+                              {t('mailSend.any')}
+                            </MenuItem>
 
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.isCanceled')}
-                        </Form.ControlLabel>
-                        <SelectPicker
-                          block
-                          cleanable={false}
-                          searchable={false}
-                          data={[
-                            { label: t('mailSend.any'), value: 'any' },
-                            { label: t('mailSend.yes'), value: 'true' },
-                            { label: t('mailSend.no'), value: 'false' },
-                          ]}
-                          value={isCanceled}
-                          onChange={value => setIsCanceled(value ?? 'any')}
-                        />
-                        <Form.HelpText>
-                          {t('mailSend.isCanceledHint')}
-                        </Form.HelpText>
-                      </Form.Group>
+                            <MenuItem
+                              key={'true'}
+                              value={'true'}
+                            >
+                              {t('mailSend.yes')}
+                            </MenuItem>
 
-                      <Form.Group>
-                        <Form.ControlLabel>
-                          {t('mailSend.hasReplacedSubscription')}
-                        </Form.ControlLabel>
-                        <SelectPicker
-                          block
-                          cleanable={false}
-                          searchable={false}
-                          data={[
-                            { label: t('mailSend.any'), value: 'any' },
-                            { label: t('mailSend.yes'), value: 'true' },
-                            { label: t('mailSend.no'), value: 'false' },
-                          ]}
-                          value={hasReplaced}
-                          onChange={value => setHasReplaced(value ?? 'any')}
-                        />
-                        <Form.HelpText>
-                          {t('mailSend.hasReplacedSubscriptionHint')}
-                        </Form.HelpText>
-                      </Form.Group>
-                    </>
-                  )}
-                </Form>
-              </Panel>
+                            <MenuItem
+                              key={'false'}
+                              value={'false'}
+                            >
+                              {t('mailSend.no')}
+                            </MenuItem>
+                          </TextField>
+                          <FormHelperText>
+                            {t('mailSend.isPaidHint')}
+                          </FormHelperText>
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                          <FormLabel>{t('mailSend.isCanceled')}</FormLabel>
+                          <TextField
+                            select
+                            value={isCanceled ?? ''}
+                            onChange={event => {
+                              const value = event.target.value;
+                              setIsCanceled(value ?? 'any');
+                            }}
+                            fullWidth
+                          >
+                            <MenuItem
+                              key={'any'}
+                              value={'any'}
+                            >
+                              {t('mailSend.any')}
+                            </MenuItem>
+
+                            <MenuItem
+                              key={'true'}
+                              value={'true'}
+                            >
+                              {t('mailSend.yes')}
+                            </MenuItem>
+
+                            <MenuItem
+                              key={'false'}
+                              value={'false'}
+                            >
+                              {t('mailSend.no')}
+                            </MenuItem>
+                          </TextField>
+                          <FormHelperText>
+                            {t('mailSend.isCanceledHint')}
+                          </FormHelperText>
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                          <FormLabel>
+                            {t('mailSend.hasReplacedSubscription')}
+                          </FormLabel>
+                          <TextField
+                            select
+                            value={hasReplaced ?? ''}
+                            onChange={event => {
+                              const value = event.target.value;
+                              setHasReplaced(value ?? 'any');
+                            }}
+                            fullWidth
+                          >
+                            <MenuItem
+                              key={'any'}
+                              value={'any'}
+                            >
+                              {t('mailSend.any')}
+                            </MenuItem>
+
+                            <MenuItem
+                              key={'true'}
+                              value={'true'}
+                            >
+                              {t('mailSend.yes')}
+                            </MenuItem>
+
+                            <MenuItem
+                              key={'false'}
+                              value={'false'}
+                            >
+                              {t('mailSend.no')}
+                            </MenuItem>
+                          </TextField>
+                          <FormHelperText>
+                            {t('mailSend.hasReplacedSubscriptionHint')}
+                          </FormHelperText>
+                        </FormControl>
+                      </>
+                    )}
+                  </Stack>
+                </CardContent>
+              </Card>
 
               {recipientSummary({ showMissing: false })}
 
@@ -939,38 +1033,46 @@ function MailSendPage() {
 
           {step === STEP_SEND && (
             <>
-              <Panel
-                bordered
-                header={t('mailSend.summary.title')}
+              <Card
+                variant="outlined"
                 style={{ marginTop: 16 }}
               >
-                <Stack
-                  spacing={8}
-                  alignItems="center"
-                >
-                  <strong>{t('mailSend.template')}:</strong>
-                  <span>{templateName ?? '—'}</span>
-                </Stack>
-                {letterAvailable && (
+                <CardHeader title={t('mailSend.summary.title')} />
+
+                <CardContent>
                   <Stack
-                    spacing={8}
-                    alignItems="center"
-                    style={{ marginTop: 8 }}
+                    direction="row"
+                    sx={{ alignItems: 'center' }}
+                    spacing={1}
                   >
-                    <strong>{t('mailSend.channel.label')}:</strong>
-                    <span>
-                      {t(`mailSend.channel.${isLetter ? 'letter' : 'mail'}`)}
-                    </span>
+                    <strong>{t('mailSend.template')}:</strong>
+                    <span>{templateName ?? '—'}</span>
                   </Stack>
-                )}
-              </Panel>
+                  {letterAvailable && (
+                    <Stack
+                      direction="row"
+                      sx={{ alignItems: 'center' }}
+                      spacing={1}
+                      style={{ marginTop: 8 }}
+                    >
+                      <strong>{t('mailSend.channel.label')}:</strong>
+                      <span>
+                        {t(`mailSend.channel.${isLetter ? 'letter' : 'mail'}`)}
+                      </span>
+                    </Stack>
+                  )}
+                </CardContent>
+              </Card>
 
               {recipientSummary({
                 action: (
-                  <Stack spacing={8}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                  >
                     <DeliveryModeAudienceAction audience={audience} />
                     <Button
-                      appearance="primary"
+                      variant="contained"
                       disabled={!canSend}
                       onClick={() => setConfirmOpen(true)}
                     >
@@ -999,14 +1101,15 @@ function MailSendPage() {
                 channel={channel}
                 print={print}
               />
-            : <Panel
-                bordered
-                header={t('mailSend.preview.title')}
-              >
-                <Message type="info">
-                  {t('mailSend.selectTemplateHint')}
-                </Message>
-              </Panel>
+            : <Card variant="outlined">
+                <CardHeader title={t('mailSend.preview.title')} />
+
+                <CardContent>
+                  <Alert severity="info">
+                    {t('mailSend.selectTemplateHint')}
+                  </Alert>
+                </CardContent>
+              </Card>
             }
           </Box>
         )}
@@ -1018,35 +1121,34 @@ function MailSendPage() {
         channel={channel}
         totalCount={count}
       />
-      <Modal
+      <Dialog
+        fullWidth
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        size="xs"
+        maxWidth="xs"
       >
-        <Modal.Header>
-          <Modal.Title>{t('mailSend.confirmTitle')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+        <DialogTitle>{t('mailSend.confirmTitle')}</DialogTitle>
+        <DialogContent>
           {t(isLetter ? 'mailSend.confirmTextLetter' : 'mailSend.confirmText', {
             count,
           })}
-        </Modal.Body>
-        <Modal.Footer>
+        </DialogContent>
+        <DialogActions>
           <Button
-            appearance="primary"
+            variant="contained"
             loading={creating}
             onClick={onConfirm}
           >
             {t('mailSend.confirm')}
           </Button>
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setConfirmOpen(false)}
           >
             {t('mailSend.cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
@@ -1087,89 +1189,90 @@ function RecipientSummary({
   const { t } = useTranslation();
 
   return (
-    <Panel
-      bordered
+    <Card
+      variant="outlined"
       style={{ marginTop: 16 }}
     >
-      <Stack
-        justifyContent="space-between"
-        alignItems="center"
-      >
+      <CardContent>
         <Stack
-          spacing={12}
-          alignItems="center"
+          direction="row"
+          sx={{ alignItems: 'center', justifyContent: 'space-between' }}
         >
-          <span>
-            {loading ?
-              t('mailSend.counting')
-            : t(
-                isLetter ?
-                  'mailSend.lettersCount'
-                : 'mailSend.recipientsCountPerPerson',
-                { count, people: userCount }
-              )
-            }
-          </span>
-          <Button
-            size="sm"
-            appearance="link"
-            disabled={count === 0}
-            onClick={onShowRecipients}
+          <Stack
+            direction="row"
+            sx={{ alignItems: 'center' }}
+            spacing={1.5}
           >
-            {t('mailSend.showRecipients')}
-          </Button>
-        </Stack>
-
-        {action}
-      </Stack>
-
-      {/* The split of the audience by email status: the analog people are
-          placeholder + dead, and a tile toggles its segment in the filter. */}
-      {segmentCounts.length > 0 && (
-        <Stack
-          spacing={8}
-          alignItems="center"
-          wrap
-          style={{ marginTop: 12 }}
-        >
-          <Typography
-            variant="caption"
-            style={{ color: 'var(--rs-text-secondary)' }}
-          >
-            {t('mailSend.emailSegments.overview')}
-          </Typography>
-          {segmentCounts.map(({ segment, userCount: people }) => (
-            <Button
-              key={segment}
-              size="xs"
-              appearance={
-                selectedSegments.includes(segment) ? 'primary' : 'ghost'
+            <span>
+              {loading ?
+                t('mailSend.counting')
+              : t(
+                  isLetter ?
+                    'mailSend.lettersCount'
+                  : 'mailSend.recipientsCountPerPerson',
+                  { count, people: userCount }
+                )
               }
-              onClick={() => onPickSegment(segment)}
+            </span>
+            <Button
+              variant="text"
+              size="small"
+              disabled={count === 0}
+              onClick={onShowRecipients}
             >
-              {t(`mailSend.emailSegments.${segment}`)}: {people}
+              {t('mailSend.showRecipients')}
             </Button>
-          ))}
-          <EmailQualityRefreshButton
-            size="xs"
-            onDone={onRefreshed}
-          />
+          </Stack>
+
+          {action}
         </Stack>
-      )}
 
-      {isLetter && withoutAddressCount > 0 && (
-        <Message
-          type="warning"
-          style={{ marginTop: 12 }}
-        >
-          {t('mailSend.channel.withoutAddress', {
-            count: withoutAddressCount,
-          })}
-        </Message>
-      )}
+        {/* The split of the audience by email status: the analog people are
+            placeholder + dead, and a tile toggles its segment in the filter. */}
+        {segmentCounts.length > 0 && (
+          <Stack
+            direction="row"
+            spacing={1}
+            useFlexGap
+            sx={{ alignItems: 'center', flexWrap: 'wrap' }}
+            style={{ marginTop: 12 }}
+          >
+            <Typography
+              variant="caption"
+              sx={{ color: 'text.secondary' }}
+            >
+              {t('mailSend.emailSegments.overview')}
+            </Typography>
+            {segmentCounts.map(({ segment, userCount: people }) => (
+              <Button
+                key={segment}
+                size="small"
+                variant={
+                  selectedSegments.includes(segment) ? 'contained' : 'outlined'
+                }
+                onClick={() => onPickSegment(segment)}
+              >
+                {t(`mailSend.emailSegments.${segment}`)}: {people}
+              </Button>
+            ))}
+            <EmailQualityRefreshButton onDone={onRefreshed} />
+          </Stack>
+        )}
 
-      <MissingPlaceholdersWarning missing={missing} />
-    </Panel>
+        {isLetter && withoutAddressCount > 0 && (
+          <Alert
+            severity="warning"
+            style={{ marginTop: 12 }}
+          >
+            {t('mailSend.channel.withoutAddress', {
+              count: withoutAddressCount,
+            })}
+          </Alert>
+        )}
+
+        <MissingPlaceholdersWarning missing={missing} />
+      </CardContent>
+    </Card>
   );
 }
 
@@ -1182,14 +1285,14 @@ function MissingPlaceholdersWarning({ missing }: { missing: string[] }) {
   }
 
   return (
-    <Message
-      type="warning"
+    <Alert
+      severity="warning"
       style={{ marginTop: 12 }}
     >
       {t('mailSend.missingPlaceholders', {
         placeholders: missing.join(', '),
       })}
-    </Message>
+    </Alert>
   );
 }
 
@@ -1268,71 +1371,82 @@ function ChannelPanel({
     }));
 
   return (
-    <Panel
-      bordered
-      header={t('mailSend.channel.label')}
+    <Card
+      variant="outlined"
       style={{ marginTop: 16 }}
     >
-      <RadioGroup
-        inline
-        value={channel}
-        onChange={value => onChannelChange(value as MailChannel)}
-      >
-        <Radio value={MailChannel.Mail}>{t('mailSend.channel.mail')}</Radio>
-        <Radio value={MailChannel.Letter}>{t('mailSend.channel.letter')}</Radio>
-      </RadioGroup>
+      <CardHeader title={t('mailSend.channel.label')} />
 
-      {isLetter && (
-        <>
-          <MuiStack
-            direction="row"
-            spacing={2}
-            useFlexGap
-            sx={{ marginTop: 2, flexWrap: 'wrap' }}
-          >
-            <PrintOption
-              label={t('mailSend.print.addressPosition.label')}
-              value={print.addressPosition}
-              options={option(
-                Object.values(LetterAddressPosition),
-                'addressPosition'
-              )}
-              onChange={addressPosition =>
-                onPrintChange({ ...print, addressPosition })
-              }
-            />
-            <PrintOption
-              label={t('mailSend.print.deliveryProduct.label')}
-              value={print.deliveryProduct}
-              options={option(
-                Object.values(LetterDeliveryProduct),
-                'deliveryProduct'
-              )}
-              onChange={deliveryProduct =>
-                onPrintChange({ ...print, deliveryProduct })
-              }
-            />
-            <PrintOption
-              label={t('mailSend.print.printMode.label')}
-              value={print.printMode}
-              options={option(Object.values(LetterPrintMode), 'printMode')}
-              onChange={printMode => onPrintChange({ ...print, printMode })}
-            />
-            <PrintOption
-              label={t('mailSend.print.printSpectrum.label')}
-              value={print.printSpectrum}
-              options={option(
-                Object.values(LetterPrintSpectrum),
-                'printSpectrum'
-              )}
-              onChange={printSpectrum =>
-                onPrintChange({ ...print, printSpectrum })
-              }
-            />
-          </MuiStack>
-        </>
-      )}
-    </Panel>
+      <CardContent>
+        <RadioGroup
+          row
+          value={channel}
+          onChange={(_event, value) => onChannelChange(value as MailChannel)}
+        >
+          <FormControlLabel
+            value={MailChannel.Mail}
+            control={<Radio />}
+            label={t('mailSend.channel.mail')}
+          />
+          <FormControlLabel
+            value={MailChannel.Letter}
+            control={<Radio />}
+            label={t('mailSend.channel.letter')}
+          />
+        </RadioGroup>
+
+        {isLetter && (
+          <>
+            <MuiStack
+              direction="row"
+              spacing={2}
+              useFlexGap
+              sx={{ marginTop: 2, flexWrap: 'wrap' }}
+            >
+              <PrintOption
+                label={t('mailSend.print.addressPosition.label')}
+                value={print.addressPosition}
+                options={option(
+                  Object.values(LetterAddressPosition),
+                  'addressPosition'
+                )}
+                onChange={addressPosition =>
+                  onPrintChange({ ...print, addressPosition })
+                }
+              />
+              <PrintOption
+                label={t('mailSend.print.deliveryProduct.label')}
+                value={print.deliveryProduct}
+                options={option(
+                  Object.values(LetterDeliveryProduct),
+                  'deliveryProduct'
+                )}
+                onChange={deliveryProduct =>
+                  onPrintChange({ ...print, deliveryProduct })
+                }
+              />
+              <PrintOption
+                label={t('mailSend.print.printMode.label')}
+                value={print.printMode}
+                options={option(Object.values(LetterPrintMode), 'printMode')}
+                onChange={printMode => onPrintChange({ ...print, printMode })}
+              />
+              <PrintOption
+                label={t('mailSend.print.printSpectrum.label')}
+                value={print.printSpectrum}
+                options={option(
+                  Object.values(LetterPrintSpectrum),
+                  'printSpectrum'
+                )}
+                onChange={printSpectrum =>
+                  onPrintChange({ ...print, printSpectrum })
+                }
+              />
+            </MuiStack>
+          </>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -1349,14 +1463,20 @@ function PrintOption<T extends string>({
 }) {
   return (
     <div style={{ minWidth: 180, flex: 1 }}>
-      <Form.ControlLabel>{label}</Form.ControlLabel>
-      <SelectPicker
-        block
-        cleanable={false}
-        searchable={false}
-        data={options}
-        value={value}
-        onChange={next => next && onChange(next as T)}
+      <FormLabel>{label}</FormLabel>
+      <Autocomplete
+        options={options}
+        getOptionLabel={option => option.label}
+        isOptionEqualToValue={(option, selected) =>
+          option.value === selected.value
+        }
+        value={options.find(option => option.value === value) ?? undefined}
+        onChange={(_event, option) => {
+          const next = option.value;
+          next && onChange(next as T);
+        }}
+        disableClearable
+        renderInput={params => <TextField {...params} />}
       />
     </div>
   );
@@ -1380,17 +1500,19 @@ function TemplatePreview({
 
   // A different audience resolves to different people, so the pinned recipient
   // must not survive it.
-  useEffect(() => {
-    setRecipientId(null);
-  }, [audience, channel]);
+  const [shownAudience, setShownAudience] = useState({ audience, channel });
 
-  const { data: recipientData, error: recipientsError } = useQuery(
-    MailSendRecipientsDocument,
-    {
-      variables: { audience, channel, take: RECIPIENTS_PAGE_SIZE },
-    }
-  );
-  useShowErrors(recipientsError);
+  if (
+    audience !== shownAudience.audience ||
+    channel !== shownAudience.channel
+  ) {
+    setShownAudience({ audience, channel });
+    setRecipientId(null);
+  }
+
+  const { data: recipientData } = useQuery(MailSendRecipientsDocument, {
+    variables: { audience, channel, take: RECIPIENTS_PAGE_SIZE },
+  });
 
   const isLetter = channel === MailChannel.Letter;
 
@@ -1406,7 +1528,6 @@ function TemplatePreview({
       },
     },
   });
-  useShowErrors(error);
 
   // The mail is composed by the API from the stored template, so an edit made in
   // the other tab only shows up once this query runs again.
@@ -1423,78 +1544,99 @@ function TemplatePreview({
   );
 
   return (
-    <Panel
-      bordered
-      header={
-        <Stack
-          justifyContent="space-between"
-          alignItems="center"
-          style={{ width: '100%' }}
-        >
-          <span>{t('mailSend.preview.title')}</span>
-          {/* Sits with the mail it changes, not with the template picker. */}
-          <IconButton
-            as={Link}
-            to={`/mailtemplates/edit/${templateId}`}
-            target="_blank"
-            appearance="ghost"
-            size="sm"
-            icon={<MdEdit />}
+    <Card variant="outlined">
+      <CardHeader
+        title={
+          <Stack
+            direction="row"
+            sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+            style={{ width: '100%' }}
           >
-            {t('mailSend.editTemplate')}
-          </IconButton>
-        </Stack>
-      }
-    >
-      {recipientCount === 0 ?
-        <Message type="info">{t('mailSend.preview.noRecipients')}</Message>
-      : <>
-          <div style={{ marginBottom: 12 }}>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-              <Form.ControlLabel style={{ margin: 0 }}>
-                {t('mailSend.preview.recipient')}
-              </Form.ControlLabel>
-              <SelectPicker
-                data={options}
-                value={preview?.recipient?.id ?? recipientId}
-                onChange={value => setRecipientId(value)}
-                cleanable={false}
-                placeholder={t('mailSend.preview.firstRecipient')}
-                style={{ flex: 1, minWidth: 0 }}
-              />
-            </div>
-            <Typography
-              variant="caption"
-              style={{ color: 'var(--rs-text-secondary)', marginTop: 4 }}
-              sx={{
-                display: 'block',
-              }}
+            <span>{t('mailSend.preview.title')}</span>
+            {/* Sits with the mail it changes, not with the template picker. */}
+            <Button
+              variant="outlined"
+              startIcon={<MdEdit />}
+              component={Link}
+              to={`/mailtemplates/edit/${templateId}`}
+              target="_blank"
+              size="small"
             >
-              {t('mailSend.preview.hint')}
-            </Typography>
-          </div>
+              {t('mailSend.editTemplate')}
+            </Button>
+          </Stack>
+        }
+      />
 
-          {error && <Message type="error">{humanizeError(error)}</Message>}
+      <CardContent>
+        {recipientCount === 0 ?
+          <Alert severity="info">{t('mailSend.preview.noRecipients')}</Alert>
+        : <>
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                <FormLabel style={{ margin: 0 }}>
+                  {t('mailSend.preview.recipient')}
+                </FormLabel>
+                <Autocomplete
+                  options={options}
+                  getOptionLabel={option => option.label}
+                  isOptionEqualToValue={(option, selected) =>
+                    option.value === selected.value
+                  }
+                  value={
+                    options.find(
+                      option =>
+                        option.value === (preview?.recipient?.id ?? recipientId)
+                    ) ?? undefined
+                  }
+                  onChange={(_event, option) => {
+                    const value = option.value;
+                    setRecipientId(value);
+                  }}
+                  disableClearable
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      placeholder={t('mailSend.preview.firstRecipient')}
+                    />
+                  )}
+                />
+              </div>
+              <Typography
+                variant="caption"
+                style={{ color: 'text.secondary', marginTop: 4 }}
+                sx={{
+                  display: 'block',
+                }}
+              >
+                {t('mailSend.preview.hint')}
+              </Typography>
+            </div>
 
-          {/* Both end with the viewport instead of stretching the page — but
+            {error && <Alert severity="error">{humanizeError(error)}</Alert>}
+
+            {/* Both end with the viewport instead of stretching the page — but
               never get so short that the message is unreadable. */}
-          {preview?.pdf ?
-            <LetterPreview
-              pdf={preview.pdf}
-              height="max(420px, calc(100vh - 250px))"
-            />
-          : preview && !isLetter ?
-            <MailPreview
-              html={preview.html}
-              subject={preview.subject}
-              height="max(420px, calc(100vh - 250px))"
-            />
-          : null}
+            {preview?.pdf ?
+              <LetterPreview
+                pdf={preview.pdf}
+                height="max(420px, calc(100vh - 250px))"
+              />
+            : preview && !isLetter ?
+              <MailPreview
+                html={preview.html}
+                subject={preview.subject}
+                height="max(420px, calc(100vh - 250px))"
+              />
+            : null}
 
-          {loading && !preview && <span>{t('mailSend.preview.loading')}</span>}
-        </>
-      }
-    </Panel>
+            {loading && !preview && (
+              <span>{t('mailSend.preview.loading')}</span>
+            )}
+          </>
+        }
+      </CardContent>
+    </Card>
   );
 }
 
@@ -1522,9 +1664,15 @@ function RecipientListModal({
 
   // Changing the audience while the modal is closed must not leave the user on
   // a page that no longer exists.
-  useEffect(() => {
+  const [pagedAudience, setPagedAudience] = useState({ audience, channel });
+
+  if (
+    audience !== pagedAudience.audience ||
+    channel !== pagedAudience.channel
+  ) {
+    setPagedAudience({ audience, channel });
     setPage(1);
-  }, [audience, channel]);
+  }
 
   const { data, loading, error } = useQuery(MailSendRecipientsDocument, {
     skip: !open,
@@ -1535,24 +1683,22 @@ function RecipientListModal({
       take: RECIPIENTS_PAGE_SIZE,
     },
   });
-  useShowErrors(error);
 
   const recipients = data?.mailSendRecipients.nodes ?? [];
   // Only a letter needs an address; for a mail the column would be noise.
   const isLetter = channel === MailChannel.Letter;
 
   return (
-    <Modal
+    <Dialog
+      fullWidth
       open={open}
       onClose={onClose}
-      size="md"
+      maxWidth="md"
     >
-      <Modal.Header>
-        <Modal.Title>
-          {t('mailSend.recipientList.title', { count: totalCount })}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body style={{ maxHeight: '65vh' }}>
+      <DialogTitle>
+        {t('mailSend.recipientList.title', { count: totalCount })}
+      </DialogTitle>
+      <DialogContent style={{ maxHeight: '65vh' }}>
         {loading && !recipients.length ?
           <span>{t('mailSend.recipientList.loading')}</span>
         : <Table size="small">
@@ -1622,31 +1768,30 @@ function RecipientListModal({
             </TableBody>
           </Table>
         }
-      </Modal.Body>
-      <Modal.Footer>
+      </DialogContent>
+      <DialogActions>
         <Stack
-          justifyContent="space-between"
-          alignItems="center"
+          direction="row"
+          sx={{ alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Pagination
-            prev
-            next
-            maxButtons={5}
-            size="sm"
-            total={data?.mailSendRecipients.totalCount ?? totalCount}
-            limit={RECIPIENTS_PAGE_SIZE}
-            activePage={page}
-            onChangePage={setPage}
+            state={{
+              page,
+              limit: RECIPIENTS_PAGE_SIZE,
+              setPage,
+              setLimit: () => undefined /* page size was fixed here */,
+            }}
+            totalCount={data?.mailSendRecipients.totalCount ?? totalCount}
           />
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={onClose}
           >
             {t('mailSend.cancel')}
           </Button>
         </Stack>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 }
 
@@ -1681,109 +1826,115 @@ function JobProgress({ jobId }: { jobId: string }) {
   const remaining = openCount(job);
 
   return (
-    <Panel
-      bordered
-      header={t('mailSend.progress.title')}
+    <Card
+      variant="outlined"
       style={{ marginTop: 16 }}
     >
-      <JobProgressBar job={job} />
+      <CardHeader title={t('mailSend.progress.title')} />
 
-      <Stack
-        spacing={24}
-        wrap
-        style={{ marginTop: 8 }}
-      >
-        <span>
-          {t('mailSend.progress.status')}: {t(`mailSend.status.${job.status}`)}
-        </span>
-        <span>
-          {t('mailSend.progress.sent')}: {job.sentCount} / {job.totalCount}
-        </span>
-        <span>
-          {t('mailSend.progress.failed')}: {job.failedCount}
-        </span>
-      </Stack>
+      <CardContent>
+        <JobProgressBar job={job} />
 
-      {/* An unfinished send is the case that needs an action, so say what is
+        <Stack
+          direction="row"
+          sx={{ flexWrap: 'wrap' }}
+          spacing={3}
+          style={{ marginTop: 8 }}
+        >
+          <span>
+            {t('mailSend.progress.status')}:{' '}
+            {t(`mailSend.status.${job.status}`)}
+          </span>
+          <span>
+            {t('mailSend.progress.sent')}: {job.sentCount} / {job.totalCount}
+          </span>
+          <span>
+            {t('mailSend.progress.failed')}: {job.failedCount}
+          </span>
+        </Stack>
+
+        {/* An unfinished send is the case that needs an action, so say what is
           left and offer to continue right here. */}
-      {remaining > 0 && !active && (
-        <Message
-          type="warning"
-          showIcon
-          style={{ marginTop: 12 }}
-        >
-          {t('mailJobs.unfinishedHint', { count: remaining })}
-        </Message>
-      )}
-
-      {(job.failedCount > 0 || job.error) && (
-        <Message
-          type="error"
-          showIcon
-          style={{ marginTop: 12 }}
-        >
-          <Stack
-            spacing={8}
-            direction="column"
-            alignItems="flex-start"
+        {remaining > 0 && !active && (
+          <Alert
+            severity="warning"
+            style={{ marginTop: 12 }}
           >
-            {job.error && (
-              <>
-                <span>
-                  {t('mailSend.progress.reason')}: {job.error}
-                </span>
-                <span>
-                  <strong>{t('mailLog.errorHelp.fixTitle')}:</strong>{' '}
-                  <span style={{ whiteSpace: 'pre-line' }}>
-                    {t(`mailLog.errorHelp.${mailErrorHelpKey(job.error)}.fix`)}
-                  </span>
-                </span>
-              </>
-            )}
-            {job.failedCount > 0 && (
-              <Button
-                size="sm"
-                appearance="ghost"
-                color="red"
-                as={Link}
-                to={`/maillog?job=${job.id}&state=${MailLogState.Rejected}`}
-              >
-                {t('mailSend.progress.showFailures', {
-                  count: job.failedCount,
-                })}
-              </Button>
-            )}
-          </Stack>
-        </Message>
-      )}
+            {t('mailJobs.unfinishedHint', { count: remaining })}
+          </Alert>
+        )}
 
-      <Stack
-        spacing={8}
-        wrap
-        style={{ marginTop: 12 }}
-      >
-        {canResume(job) && (
-          <ResumeJobButton
-            job={job}
-            onDone={() => refetch()}
-          />
+        {(job.failedCount > 0 || job.error) && (
+          <Alert
+            severity="error"
+            style={{ marginTop: 12 }}
+          >
+            <Stack
+              sx={{ alignItems: 'flex-start' }}
+              spacing={1}
+              direction="column"
+            >
+              {job.error && (
+                <>
+                  <span>
+                    {t('mailSend.progress.reason')}: {job.error}
+                  </span>
+                  <span>
+                    <strong>{t('mailLog.errorHelp.fixTitle')}:</strong>{' '}
+                    <span style={{ whiteSpace: 'pre-line' }}>
+                      {t(
+                        `mailLog.errorHelp.${mailErrorHelpKey(job.error)}.fix`
+                      )}
+                    </span>
+                  </span>
+                </>
+              )}
+              {job.failedCount > 0 && (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  color="error"
+                  component={Link}
+                  to={`/maillog?job=${job.id}&state=${MailLogState.Rejected}`}
+                >
+                  {t('mailSend.progress.showFailures', {
+                    count: job.failedCount,
+                  })}
+                </Button>
+              )}
+            </Stack>
+          </Alert>
         )}
-        {isActive(job) && (
-          <CancelJobButton
-            job={job}
-            onDone={() => refetch()}
-          />
-        )}
-        <Button
-          size="sm"
-          appearance="ghost"
-          as={Link}
-          to={`/maillog?tab=jobs&job=${job.id}`}
+
+        <Stack
+          direction="row"
+          sx={{ flexWrap: 'wrap' }}
+          spacing={1}
+          style={{ marginTop: 12 }}
         >
-          {t('mailSend.progress.showJob')}
-        </Button>
-      </Stack>
-    </Panel>
+          {canResume(job) && (
+            <ResumeJobButton
+              job={job}
+              onDone={() => refetch()}
+            />
+          )}
+          {isActive(job) && (
+            <CancelJobButton
+              job={job}
+              onDone={() => refetch()}
+            />
+          )}
+          <Button
+            variant="outlined"
+            size="small"
+            component={Link}
+            to={`/maillog?tab=jobs&job=${job.id}`}
+          >
+            {t('mailSend.progress.showJob')}
+          </Button>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }
 

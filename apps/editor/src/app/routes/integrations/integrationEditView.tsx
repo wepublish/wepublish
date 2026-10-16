@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import {
   CanGetAISettings,
   CanGetAnalyticsProviderSettings,
@@ -14,7 +14,7 @@ import {
 import { InfoTooltip, PermissionControl } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
-import { Link, useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 
 import { AIIntegrationForm } from './aiIntegrationForm';
 import { AnalyticsIntegrationForm } from './analyticsIntegrationForm';
@@ -130,7 +130,11 @@ export function IntegrationEditView() {
       case 'mailchimp-sync':
         return <MailchimpSyncIntegrationForm />;
       default:
-        return <p>{t('integrations.configure', { integration: title })}</p>;
+        return (
+          <Typography>
+            {t('integrations.configure', { integration: title })}
+          </Typography>
+        );
     }
   })();
 
@@ -139,17 +143,17 @@ export function IntegrationEditView() {
       qualifyingPermissions={permission ? [permission.id] : []}
     >
       <div>
-        <Link to={'/integrations'}>
-          <Button
-            size="small"
-            variant="text"
-            startIcon={<MdArrowBack />}
-          >
-            {t('integrations.back')}
-          </Button>
-        </Link>
+        <Button
+          component={RouterLink}
+          to={'/integrations'}
+          size="small"
+          variant="text"
+          startIcon={<MdArrowBack />}
+        >
+          {t('integrations.back')}
+        </Button>
 
-        <h1>
+        <Typography variant="h1">
           {title}
           {info && (
             <>
@@ -157,7 +161,7 @@ export function IntegrationEditView() {
               <InfoTooltip text={info} />
             </>
           )}
-        </h1>
+        </Typography>
 
         <div style={{ marginTop: 20 }}>{renderConfiguration}</div>
       </div>

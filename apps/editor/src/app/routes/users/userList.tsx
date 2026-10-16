@@ -1,5 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import {
   DeleteUserDocument,
   FullUserRoleFragment,
   ResetUserTotpDocument,
@@ -9,44 +18,43 @@ import {
   UserSort,
 } from '@wepublish/editor/api';
 import {
+  CanCreateUser,
+  CanDeleteUser,
+  CanGetUser,
+  CanGetUsers,
+  CanResetUserPassword,
+  CanResetUserTotp,
+} from '@wepublish/permissions';
+import {
+  clearFilters,
+  countActiveFilters,
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
   DescriptionList,
   DescriptionListItem,
+  enqueueSnackbar,
   humanizeError,
   IconButton,
   IconButtonTooltip,
+  Link,
   ListFilters,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
-  PaddedCell,
+  Pagination,
   PermissionControl,
   ResetUserPasswordForm,
-  Table,
   TableWrapper,
   useListViewState,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdLockReset, MdPassword } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import {
-  Button,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Pagination,
-  Table as RTable,
-  toaster,
-  Tooltip,
-  Whisper,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
+import { Link as RouterLink } from 'react-router-dom';
 
-const { Column, HeaderCell, Cell: RCell } = RTable;
+const USER_FILTER_FIELDS = ['userRole', 'text'] as const;
 
 function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
   switch (columnField) {
@@ -75,7 +83,6 @@ function UserList() {
   const [currentUser, setCurrentUser] = useState<TinyUserFragment>();
 
   const [page, setPage] = useState(1);
-  const [users, setUsers] = useState<TinyUserFragment[]>([]);
 
   const {
     data,
@@ -91,6 +98,8 @@ function UserList() {
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
   });
+
+  const users = data?.users?.nodes ?? [];
 
   const updateFilter = (filter: UserFilter) => {
     setFilter(filter);
@@ -118,14 +127,11 @@ function UserList() {
 
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (data?.users?.nodes) {
-      setUsers(data.users.nodes);
-      if (Math.ceil(data.users.totalCount / limit) < page) {
-        setPage(1);
-      }
-    }
-  }, [data?.users]);
+  const totalPages = Math.ceil((data?.users?.totalCount ?? 0) / limit);
+
+  if (totalPages > 0 && page > totalPages) {
+    setPage(1);
+  }
 
   if (userListQueryError) {
     return <div>{humanizeError(userListQueryError)}</div>;
@@ -156,7 +162,7 @@ function UserList() {
 
   function getSubscriptionTooltip(user: TinyUserFragment) {
     return (
-      <Tooltip>
+      <>
         {user.subscriptionOverview.map(({ id, memberPlanName, status }) => (
           <div key={id}>
             {t('userList.overview.subscriptionWithStatus', {
@@ -165,53 +171,37 @@ function UserList() {
             })}
           </div>
         ))}
-      </Tooltip>
+      </>
     );
   }
 
   const handleDeleteUser = async () => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      return;
+    }
 
     try {
       await deleteUser({
         variables: { id: currentUser.id },
       });
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={2000}
-        >
-          {t('toast.deletedSuccess')}
-        </Message>
-      );
+      enqueueSnackbar(t('toast.deletedSuccess'), {
+        variant: 'success',
+        autoHideDuration: 2000,
+      });
       setConfirmationDialogOpen(false);
       refetch();
     } catch (e) {
       if (e instanceof Error) {
         if (e.message.includes('Foreign key constraint')) {
-          toaster.push(
-            <Message
-              type="error"
-              showIcon
-              closable
-              duration={8000}
-            >
-              {t('userCreateOrEditView.foreignKeySubscription')}
-            </Message>
-          );
+          enqueueSnackbar(t('userCreateOrEditView.foreignKeySubscription'), {
+            variant: 'error',
+            autoHideDuration: 8000,
+          });
           setConfirmationDialogOpen(false);
         } else {
-          toaster.push(
-            <Message
-              type="error"
-              showIcon
-              closable
-              duration={8000}
-            >
-              {t('userCreateOrEditView.errorOnUpdate', { error: e })}
-            </Message>
+          enqueueSnackbar(
+            t('userCreateOrEditView.errorOnUpdate', { error: e }),
+            { variant: 'error', autoHideDuration: 8000 }
           );
         }
       }
@@ -219,35 +209,25 @@ function UserList() {
   };
 
   const handleResetTotp = async () => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      return;
+    }
 
     try {
       await resetUserTotp({
         variables: { userId: currentUser.id },
       });
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={2000}
-        >
-          {t('userList.overview.totpResetSuccess')}
-        </Message>
-      );
+      enqueueSnackbar(t('userList.overview.totpResetSuccess'), {
+        variant: 'success',
+        autoHideDuration: 2000,
+      });
       setIsResetTotpDialogOpen(false);
       refetch();
     } catch (e) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('userList.overview.totpResetError')}
-        </Message>
-      );
+      enqueueSnackbar(t('userList.overview.totpResetError'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     }
   };
 
@@ -255,133 +235,126 @@ function UserList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('userList.overview.users')}</h2>
+          <PageTitle>{t('userList.overview.users')}</PageTitle>
         </ListViewHeader>
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_USER']}>
+
+        <PermissionControl qualifyingPermissions={[CanCreateUser.id]}>
           <ListViewActions>
-            <Link to="/users/create">
-              <RIconButton
-                appearance="primary"
-                disabled={isLoading}
-                icon={<MdAdd />}
-              >
-                {t('userList.overview.newUser')}
-              </RIconButton>
-            </Link>
+            <Button
+              component={RouterLink}
+              to="/users/create"
+              variant="contained"
+              startIcon={<MdAdd />}
+              disabled={isLoading}
+            >
+              {t('userList.overview.newUser')}
+            </Button>
           </ListViewActions>
         </PermissionControl>
-        <ListFilters
-          fields={['userRole', 'text']}
-          filter={filter}
-          isLoading={isLoading}
-          onSetFilter={filter => updateFilter(filter)}
-        />
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={isLoading}
+        <DataTable
+          filters={
+            <ListFilters
+              fields={USER_FILTER_FIELDS}
+              filter={filter}
+              isLoading={isLoading}
+              onSetFilter={filter => updateFilter(filter)}
+            />
+          }
+          filterCount={countActiveFilters(USER_FILTER_FIELDS, filter)}
+          onResetFilters={() =>
+            updateFilter(clearFilters(USER_FILTER_FIELDS, filter))
+          }
+          storageKey="users"
           data={users}
+          loading={isLoading}
           sortColumn={sortField}
-          sortType={sortOrder}
-          onSortColumn={(sortColumn, sortType) => {
-            setSort(sortColumn, sortType ?? 'asc');
+          sortOrder={sortOrder}
+          onSort={(sortColumn, sortType) => {
+            setSort(sortColumn, sortType);
             setPage(1);
           }}
-        >
-          <Column
-            width={200}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
-            <RCell dataKey="createdAt">
-              {({ createdAt }: RowDataType<TinyUserFragment>) =>
+          sortable={[
+            'createdAt',
+            'modifiedAt',
+            'firstname',
+            'name',
+            'subscriptionCount',
+          ]}
+          columns={[
+            {
+              id: 'createdat',
+              label: t('userList.overview.createdAt'),
+              width: 200,
+              align: 'left',
+              sortKey: 'createdAt',
+              render: ({ createdAt }: TinyUserFragment) =>
                 t('userList.overview.createdAtDate', {
                   createdAtDate: new Date(createdAt),
-                })
-              }
-            </RCell>
-          </Column>
-          <Column
-            width={200}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
-            <RCell dataKey="modifiedAt">
-              {({ modifiedAt }: RowDataType<TinyUserFragment>) =>
+                }),
+            },
+            {
+              id: 'modifiedat',
+              label: t('userList.overview.modifiedAt'),
+              width: 200,
+              align: 'left',
+              sortKey: 'modifiedAt',
+              render: ({ modifiedAt }: TinyUserFragment) =>
                 t('userList.overview.modifiedAtDate', {
                   modifiedAtDate: new Date(modifiedAt),
-                })
-              }
-            </RCell>
-          </Column>
-          <Column
-            width={200}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
-            <RCell dataKey={'firstName'}>
-              {(rowData: RowDataType<TinyUserFragment>) => (
+                }),
+            },
+            {
+              id: 'firstname',
+              label: t('userList.overview.firstName'),
+              width: 200,
+              align: 'left',
+              render: (rowData: TinyUserFragment) => (
                 <Link to={`/users/edit/${rowData.id}`}>
                   {rowData.firstName || ''}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-          <Column
-            width={200}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('userList.overview.name')}</HeaderCell>
-            <RCell dataKey={'name'}>
-              {(rowData: RowDataType<TinyUserFragment>) => (
+              ),
+            },
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('userList.overview.name'),
+              width: 200,
+              align: 'left',
+              render: (rowData: TinyUserFragment) => (
                 <Link to={`/users/edit/${rowData.id}`}>
                   {rowData.name || t('userList.overview.unknown')}
                 </Link>
-              )}
-            </RCell>
-          </Column>
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('userCreateOrEditView.email')}</HeaderCell>
-            <RCell dataKey="email" />
-          </Column>
-          <Column
-            width={200}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('userCreateOrEditView.userRoles')}</HeaderCell>
-            <RCell dataKey="roles">
-              {(rowData: RowDataType<TinyUserFragment>) =>
+              ),
+            },
+            {
+              id: 'email',
+              label: t('userCreateOrEditView.email'),
+              width: 200,
+              align: 'left',
+              sortKey: 'email',
+              render: row => row.email,
+            },
+            {
+              id: 'userroles',
+              label: t('userCreateOrEditView.userRoles'),
+              width: 200,
+              align: 'left',
+              sortKey: 'roles',
+              render: (rowData: TinyUserFragment) =>
                 rowData.roles
                   ?.map((r: FullUserRoleFragment) => r.name)
-                  .join(', ')
-              }
-            </RCell>
-          </Column>
-          {/* subscription */}
-          <Column
-            width={200}
-            align="left"
-            resizable
-            sortable
-          >
-            <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
-            <RCell dataKey="subscriptionCount">
-              {(rowData: RowDataType<TinyUserFragment>) => {
+                  .join(', '),
+            },
+            {
+              id: 'subscriptions',
+              label: t('userList.overview.subscriptions'),
+              width: 200,
+              align: 'left',
+              sortKey: 'subscriptionCount',
+              render: (rowData: TinyUserFragment) => {
                 const user = rowData as TinyUserFragment;
                 const cell = <div>{getSubscriptionCellView(user)}</div>;
 
@@ -390,214 +363,198 @@ function UserList() {
                 }
 
                 return (
-                  <Whisper
+                  <Tooltip
                     placement="top"
-                    trigger="hover"
-                    speaker={getSubscriptionTooltip(user)}
+                    title={getSubscriptionTooltip(user)}
                   >
                     {cell}
-                  </Whisper>
+                  </Tooltip>
                 );
-              }}
-            </RCell>
-          </Column>
-          <Column
-            width={180}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <PaddedCell>
-              {(rowData: RowDataType<TinyUserFragment>) => (
+              },
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 180,
+              align: 'center',
+              fixed: true,
+              render: (rowData: TinyUserFragment) => (
                 <>
                   <PermissionControl
-                    qualifyingPermissions={['CAN_RESET_USER_PASSWORD']}
+                    qualifyingPermissions={[CanResetUserPassword.id]}
                   >
                     <IconButtonTooltip
                       caption={t('userList.overview.resetPassword')}
                     >
                       <IconButton
-                        circle
-                        size="sm"
-                        icon={<MdPassword />}
+                        size="small"
                         aria-label={t('userList.overview.resetPassword')}
                         onClick={e => {
                           setCurrentUser(rowData as TinyUserFragment);
                           setIsResetUserPasswordOpen(true);
                         }}
-                      />
+                      >
+                        <MdPassword />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                   <PermissionControl
-                    qualifyingPermissions={['CAN_RESET_USER_TOTP']}
+                    qualifyingPermissions={[CanResetUserTotp.id]}
                   >
                     <IconButtonTooltip
                       caption={t('userList.overview.resetTotp')}
                     >
                       <IconButton
-                        circle
-                        size="sm"
-                        icon={<MdLockReset />}
+                        size="small"
                         aria-label={t('userList.overview.resetTotp')}
                         disabled={!(rowData as TinyUserFragment).totpEnabled}
                         onClick={() => {
                           setCurrentUser(rowData as TinyUserFragment);
                           setIsResetTotpDialogOpen(true);
                         }}
-                      />
+                      >
+                        <MdLockReset />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
-                  <PermissionControl
-                    qualifyingPermissions={['CAN_DELETE_USER']}
-                  >
+                  <PermissionControl qualifyingPermissions={[CanDeleteUser.id]}>
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
-                        icon={<MdDelete />}
+                        size="small"
+                        color="error"
                         aria-label={t('delete')}
                         onClick={() => {
                           setConfirmationDialogOpen(true);
                           setCurrentUser(rowData as TinyUserFragment);
                         }}
-                      />
+                      >
+                        <MdDelete />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                 </>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.users.totalCount ?? 0}
-          activePage={page}
-          onChangePage={page => setPage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setPage(1);
+          state={{
+            page,
+            limit,
+            setPage,
+            setLimit: limit => {
+              setLimit(limit);
+              setPage(1);
+            },
           }}
+          totalCount={data?.users.totalCount ?? 0}
         />
       </TableWrapper>
 
       {/* reset user password */}
       {currentUser?.id && (
-        <Modal
+        <Dialog
           open={isResetUserPasswordOpen}
           onClose={() => setIsResetUserPasswordOpen(false)}
         >
-          <Modal.Header>
-            <Modal.Title>{t('userCreateOrEditView.resetPassword')}</Modal.Title>
-          </Modal.Header>
+          <DialogTitle>{t('userCreateOrEditView.resetPassword')}</DialogTitle>
 
-          <Modal.Body>
+          <DialogContent>
             <ResetUserPasswordForm
               userID={currentUser?.id}
               userName={currentUser?.name}
               onClose={() => setIsResetUserPasswordOpen(false)}
             />
-          </Modal.Body>
+          </DialogContent>
 
-          <Modal.Footer>
+          <DialogActions>
             <Button
+              variant="text"
               onClick={() => setIsResetUserPasswordOpen(false)}
-              appearance="subtle"
             >
               {t('userCreateOrEditView.cancel')}
             </Button>
-          </Modal.Footer>
-        </Modal>
+          </DialogActions>
+        </Dialog>
       )}
 
       {/* delete user modal */}
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('userCreateOrEditView.deleteUser')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('userCreateOrEditView.deleteUser')}</DialogTitle>
 
-        <Modal.Body>
+        <DialogContent>
           <DescriptionList>
             <DescriptionListItem label={t('userCreateOrEditView.name')}>
               {currentUser?.name || t('userCreateOrEditView.Unknown')}
             </DescriptionListItem>
           </DescriptionList>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            appearance="primary"
+            variant="text"
+            onClick={() => setConfirmationDialogOpen(false)}
+          >
+            {t('userCreateOrEditView.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
             disabled={isDeleting}
             onClick={handleDeleteUser}
           >
             {t('userCreateOrEditView.confirm')}
           </Button>
-          <Button
-            onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
-          >
-            {t('userCreateOrEditView.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
 
       {/* reset totp modal */}
-      <Modal
+      <Dialog
         open={isResetTotpDialogOpen}
         onClose={() => setIsResetTotpDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('userList.overview.resetTotpTitle')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('userList.overview.resetTotpTitle')}</DialogTitle>
 
-        <Modal.Body>
-          <p>
+        <DialogContent>
+          <Typography>
             {t('userList.overview.resetTotpConfirmation', {
               name: currentUser?.name || '',
             })}
-          </p>
-        </Modal.Body>
+          </Typography>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            appearance="primary"
-            color="orange"
+            variant="text"
+            onClick={() => setIsResetTotpDialogOpen(false)}
+          >
+            {t('userCreateOrEditView.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="warning"
             disabled={isResettingTotp}
             onClick={handleResetTotp}
           >
             {t('userCreateOrEditView.confirm')}
           </Button>
-          <Button
-            onClick={() => setIsResetTotpDialogOpen(false)}
-            appearance="subtle"
-          >
-            {t('userCreateOrEditView.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_USERS',
-  'CAN_GET_USER',
-  'CAN_CREATE_USER',
-  'CAN_DELETE_USER',
-  'CAN_RESET_USER_PASSWORD',
+  CanGetUsers.id,
+  CanGetUser.id,
+  CanCreateUser.id,
+  CanDeleteUser.id,
+  CanResetUserPassword.id,
 ])(UserList);
 export { CheckedPermissionComponent as UserList };

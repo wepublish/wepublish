@@ -1,26 +1,27 @@
 import styled from '@emotion/styled';
+import { Drawer, IconButton } from '@mui/material';
 import { FullImageFragment } from '@wepublish/editor/api';
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAddCircle,
   MdArrowLeft,
   MdArrowRight,
-  MdBuild,
+  MdDelete,
   MdEdit,
-  MdPhoto,
 } from 'react-icons/md';
-import { Drawer, Dropdown, IconButton } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
+import { ChooseEditImage } from '../atoms/chooseEditImage';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
-import { PlaceholderInput } from '../atoms/placeholderInput';
 import { TypographicTextArea } from '../atoms/typographicTextArea';
+import { DRAWER_WIDTHS } from '../drawer';
 import { GalleryListEditPanel } from '../panel/galleryListEditPanel';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
-import { ImagePanel, Panel } from './imageBlock';
 import { ImageGalleryBlockValue } from './types';
+
+const GALLERY_IMAGE_HEIGHT = 300;
 
 const Block = styled.div`
   display: flex;
@@ -68,9 +69,9 @@ export function ImageGalleryBlock({
   autofocus,
   disabled,
 }: BlockProps<ImageGalleryBlockValue>) {
-  const [isGalleryListEditModalOpen, setGalleryListEditModalOpen] =
-    useState(false);
-
+  const [isGalleryListEditModalOpen, setGalleryListEditModalOpen] = useState(
+    () => Boolean(autofocus) && !value.images[0].image
+  );
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
@@ -88,12 +89,6 @@ export function ImageGalleryBlock({
 
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (autofocus && !value.images[0].image) {
-      setGalleryListEditModalOpen(true);
-    }
-  }, []);
-
   function handleImageChange(image: FullImageFragment | null) {
     onChange({
       ...value,
@@ -104,6 +99,19 @@ export function ImageGalleryBlock({
         },
       }),
     });
+  }
+
+  function handleRemove() {
+    if (isNewIndex) {
+      setIndex(Math.max(value.images.length - 1, 0));
+
+      return;
+    }
+
+    const images = value.images.filter((_image, at) => at !== index);
+
+    setIndex(Math.min(index, Math.max(images.length - 1, 0)));
+    onChange({ ...value, images });
   }
 
   function handleCaptionChange(caption: string) {
@@ -127,12 +135,14 @@ export function ImageGalleryBlock({
           >
             <IconButton
               aria-label={t('blocks.imageGallery.panels.editGallery')}
-              icon={<MdEdit />}
               onClick={() => setGalleryListEditModalOpen(true)}
               disabled={disabled}
-            />
+            >
+              <MdEdit />
+            </IconButton>
           </IconButtonTooltip>
         </EditIconWrapper>
+
         <IsNewWrapper>
           <IsNew>
             {index + 1} / {Math.max(index + 1, value.images.length)}{' '}
@@ -145,72 +155,66 @@ export function ImageGalleryBlock({
           >
             <LeftArrow
               aria-label={t('blocks.imageGallery.overview.previousImage')}
-              icon={<MdArrowLeft />}
               onClick={() => setIndex(index => index - 1)}
               disabled={disabled || !hasPrevious}
-            />
+            >
+              <MdArrowLeft />
+            </LeftArrow>
           </IconButtonTooltip>
           <IconButtonTooltip
             caption={t('blocks.imageGallery.overview.nextImage')}
           >
             <RightArrow
               aria-label={t('blocks.imageGallery.overview.nextImage')}
-              icon={<MdArrowRight />}
               onClick={() => setIndex(index => index + 1)}
               disabled={disabled || !hasNext}
-            />
+            >
+              <MdArrowRight />
+            </RightArrow>
           </IconButtonTooltip>
+
           <IconButtonTooltip
             caption={t('blocks.imageGallery.overview.addImage')}
           >
             <IconButton
               aria-label={t('blocks.imageGallery.overview.addImage')}
-              icon={<MdAddCircle />}
               onClick={() => setIndex(value.images.length)}
               disabled={disabled || isNewIndex}
-            />
+            >
+              <MdAddCircle />
+            </IconButton>
+          </IconButtonTooltip>
+
+          <IconButtonTooltip
+            caption={t('blocks.imageGallery.overview.removeImage')}
+          >
+            <IconButton
+              color="error"
+              aria-label={t('blocks.imageGallery.overview.removeImage')}
+              onClick={handleRemove}
+              disabled={
+                disabled ||
+                (isNewIndex ? !value.images.length : value.images.length < 2)
+              }
+            >
+              <MdDelete />
+            </IconButton>
           </IconButtonTooltip>
         </LeftArrowWrapper>
       </Block>
-      <Panel
-        bordered
-        bodyFill
-      >
-        <PlaceholderInput
-          onAddClick={() => setChooseModalOpen(true)}
-          addLabel={t('blocks.image.overview.chooseImage')}
-        >
-          {image && (
-            <ImagePanel image={image}>
-              <Dropdown
-                renderToggle={(
-                  props: object,
-                  ref: React.Ref<HTMLButtonElement>
-                ) => (
-                  <IconButton
-                    {...props}
-                    ref={ref}
-                    icon={<MdBuild />}
-                    circle
-                    appearance="subtle"
-                    data-on-media
-                    title={t('chooseEditImage.imageOptions')}
-                    aria-label={t('chooseEditImage.imageOptions')}
-                  />
-                )}
-              >
-                <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-                  <MdPhoto /> {t('blocks.image.overview.chooseImage')}
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => setEditModalOpen(true)}>
-                  <MdEdit /> {t('blocks.image.overview.editImage')}
-                </Dropdown.Item>
-                {/* TODO: Meta sync */}
-              </Dropdown>
-            </ImagePanel>
-          )}
-        </PlaceholderInput>
-      </Panel>
+      <ChooseEditImage
+        onSelect={(value: FullImageFragment | null) => {
+          setChooseModalOpen(false);
+          handleImageChange(value);
+        }}
+        image={image}
+        disabled={!!disabled}
+        maxHeight={GALLERY_IMAGE_HEIGHT}
+        openChooseModalOpen={() => setChooseModalOpen(true)}
+        openEditModalOpen={() => setEditModalOpen(true)}
+        removeImage={() => handleImageChange(null)}
+      />
+
       <TypographicTextArea
         variant="subtitle2"
         align="center"
@@ -222,8 +226,16 @@ export function ImageGalleryBlock({
         }}
       />
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -234,21 +246,41 @@ export function ImageGalleryBlock({
           }}
         />
       </Drawer>
+
       {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel
-            id={image!.id}
+            id={image.id}
             onClose={() => setEditModalOpen(false)}
+            onSave={() => setEditModalOpen(false)}
           />
         </Drawer>
       )}
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isGalleryListEditModalOpen}
-        size="sm"
         onClose={() => setGalleryListEditModalOpen(false)}
       >
         <GalleryListEditPanel

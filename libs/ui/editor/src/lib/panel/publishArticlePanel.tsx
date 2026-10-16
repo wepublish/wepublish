@@ -1,6 +1,13 @@
+import {
+  Alert,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import { CanPublishArticle } from '@wepublish/permissions';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, Modal } from 'rsuite';
 
 import {
   createCheckedPermissionComponent,
@@ -37,17 +44,15 @@ function PublishArticlePanel({
 
   return (
     <>
-      <Modal.Header>
-        <Modal.Title>{t('articleEditor.panels.publishArticle')}</Modal.Title>
-      </Modal.Header>
+      <DialogTitle>{t('articleEditor.panels.publishArticle')}</DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         {publishedAt && publishedAt > now && (
-          <Message type="warning">
+          <Alert severity="warning">
             {t('articleEditor.panels.articlePending', {
               pendingPublishDate: publishedAt,
             })}
-          </Message>
+          </Alert>
         )}
 
         <div style={{ maxWidth: '200px' }}>
@@ -64,7 +69,7 @@ function PublishArticlePanel({
             marginTop: '0.25rem',
             marginBottom: '2rem',
             fontSize: '0.75rem',
-            color: 'var(--rs-text-secondary)',
+            color: 'text.secondary',
           }}
         >
           {firstPublishedAtDate ?
@@ -197,27 +202,28 @@ function PublishArticlePanel({
             {metadata.socialMediaImage?.filename}
           </DescriptionListItemWithMessage>
         </DescriptionList>
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
-          appearance="primary"
+          variant="text"
+          onClick={() => onClose()}
+        >
+          {t('articleEditor.panels.close')}
+        </Button>
+
+        <Button
+          variant="contained"
           disabled={!publishedAt || !metadata.slug}
           onClick={() => onConfirm(publishedAt!)}
         >
           {t('articleEditor.panels.confirm')}
         </Button>
-        <Button
-          appearance="subtle"
-          onClick={() => onClose()}
-        >
-          {t('articleEditor.panels.close')}
-        </Button>
-      </Modal.Footer>
+      </DialogActions>
     </>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_PUBLISH_ARTICLE',
+  CanPublishArticle.id,
 ])(PublishArticlePanel);
 export { CheckedPermissionComponent as PublishArticlePanel };

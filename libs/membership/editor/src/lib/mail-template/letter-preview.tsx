@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface LetterPreviewProps {
@@ -15,21 +15,16 @@ export interface LetterPreviewProps {
  */
 export function LetterPreview({ pdf, height = '100%' }: LetterPreviewProps) {
   const { t } = useTranslation();
-  const [url, setUrl] = useState<string | null>(null);
-
-  useEffect(() => {
+  const url = useMemo(() => {
     const bytes = Uint8Array.from(atob(pdf), character =>
       character.charCodeAt(0)
     );
-    const objectUrl = URL.createObjectURL(
-      new Blob([bytes], { type: 'application/pdf' })
-    );
 
-    setUrl(objectUrl);
-
-    // Revoked on the next preview, otherwise every re-render leaks a document.
-    return () => URL.revokeObjectURL(objectUrl);
+    return URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
   }, [pdf]);
+
+  // Revoked on the next preview, otherwise every re-render leaks a document.
+  useEffect(() => () => URL.revokeObjectURL(url), [url]);
 
   return (
     <div

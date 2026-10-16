@@ -4,6 +4,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { forwardRef } from 'react';
 import { LetterLayoutEdit } from './letter-layout-edit';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme({ cssVariables: true });
 
 const layoutQuery = vi.fn();
 const updateLayout = vi.fn();
@@ -90,18 +93,20 @@ const layout = {
 
 const renderEdit = (path = '/letterlayouts/edit/layout-1') =>
   render(
-    <MemoryRouter initialEntries={[path]}>
-      <Routes>
-        <Route
-          path="/letterlayouts/edit/:id"
-          element={<LetterLayoutEdit />}
-        />
-        <Route
-          path="/letterlayouts/create"
-          element={<LetterLayoutEdit />}
-        />
-      </Routes>
-    </MemoryRouter>
+    <ThemeProvider theme={theme}>
+      <MemoryRouter initialEntries={[path]}>
+        <Routes>
+          <Route
+            path="/letterlayouts/edit/:id"
+            element={<LetterLayoutEdit />}
+          />
+          <Route
+            path="/letterlayouts/create"
+            element={<LetterLayoutEdit />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 const nameInput = () =>
@@ -203,14 +208,16 @@ describe('LetterLayoutEdit', () => {
 
     previewState.data = { letterLayoutPreview: { pdf: 'JVBERi0=' } };
     rerender(
-      <MemoryRouter initialEntries={['/letterlayouts/edit/layout-1']}>
-        <Routes>
-          <Route
-            path="/letterlayouts/edit/:id"
-            element={<LetterLayoutEdit />}
-          />
-        </Routes>
-      </MemoryRouter>
+      <ThemeProvider theme={theme}>
+        <MemoryRouter initialEntries={['/letterlayouts/edit/layout-1']}>
+          <Routes>
+            <Route
+              path="/letterlayouts/edit/:id"
+              element={<LetterLayoutEdit />}
+            />
+          </Routes>
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
     expect(screen.getByTestId('letter-preview')).toHaveTextContent('JVBERi0=');

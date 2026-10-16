@@ -1,6 +1,9 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 
 import { LetterAppendixPicker } from './letter-appendix-picker';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme({ cssVariables: true });
 
 const useQuery = vi.fn();
 
@@ -43,13 +46,15 @@ describe('LetterAppendixPicker', () => {
 
   it('offers only pdf documents', () => {
     render(
-      <LetterAppendixPicker
-        value={null}
-        onChange={vi.fn()}
-      />
+      <ThemeProvider theme={theme}>
+        <LetterAppendixPicker
+          value={null}
+          onChange={vi.fn()}
+        />
+      </ThemeProvider>
     );
 
-    fireEvent.click(screen.getByRole('combobox'));
+    fireEvent.mouseDown(screen.getByRole('combobox'));
 
     expect(screen.getByText('QR-Einzahlungsschein')).toBeTruthy();
     expect(screen.getByText('agb')).toBeTruthy();
@@ -59,24 +64,30 @@ describe('LetterAppendixPicker', () => {
   it('reports the chosen document', () => {
     const onChange = vi.fn();
     render(
-      <LetterAppendixPicker
-        value={null}
-        onChange={onChange}
-      />
+      <ThemeProvider theme={theme}>
+        <LetterAppendixPicker
+          value={null}
+          onChange={onChange}
+        />
+      </ThemeProvider>
     );
 
-    fireEvent.click(screen.getByRole('combobox'));
-    fireEvent.click(screen.getByText('QR-Einzahlungsschein'));
+    fireEvent.mouseDown(screen.getByRole('combobox'));
+    fireEvent.click(
+      screen.getByRole('option', { name: 'QR-Einzahlungsschein' })
+    );
 
     expect(onChange).toHaveBeenCalledWith('qr-bill');
   });
 
   it('shows the chosen document', () => {
     render(
-      <LetterAppendixPicker
-        value="qr-bill"
-        onChange={vi.fn()}
-      />
+      <ThemeProvider theme={theme}>
+        <LetterAppendixPicker
+          value="qr-bill"
+          onChange={vi.fn()}
+        />
+      </ThemeProvider>
     );
 
     expect(screen.getByText('QR-Einzahlungsschein')).toBeTruthy();

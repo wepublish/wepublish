@@ -9,34 +9,39 @@ import {
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  DRAWER_WIDTHS,
+  enqueueSnackbar,
   ImageSelectPanel,
   InfoTooltip,
   ListViewContainer,
   ListViewHeader,
+  useSeededState,
 } from '@wepublish/ui/editor';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdImage } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Button,
-  Drawer,
-  Form,
-  Input,
-  InputNumber,
-  Message,
-  Modal,
-  Panel,
-  Stack,
-  toaster,
-  Toggle,
-} from 'rsuite';
-import { MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE, showErrors } from '../common';
+import { MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE } from '../common';
 import {
   HtmlSourceEditor,
   HtmlSourceEditorHandle,
 } from '../mail-template/html-source-editor';
 import { LetterPreview } from '../mail-template/letter-preview';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+  FormControl,
+  FormLabel,
+  Stack,
+  Switch,
+  TextField,
+} from '@mui/material';
 
 /** The tallest band the API accepts; mirrors the renderer's cap. */
 const BAND_MAX_MM = 40;
@@ -64,31 +69,20 @@ function LetterLayoutEdit() {
   const headerRef = useRef<HtmlSourceEditorHandle>(null);
   const footerRef = useRef<HtmlSourceEditorHandle>(null);
 
-  const { data, error } = useQuery(LetterLayoutByIdDocument, {
+  const { data } = useQuery(LetterLayoutByIdDocument, {
     variables: { id: id ?? '' },
     skip: !isEdit,
   });
 
-  useEffect(() => {
-    if (error) {
-      showErrors(error);
-    }
-  }, [error]);
-
-  useEffect(() => {
-    const layout = data?.letterLayout;
-
-    if (!layout) {
-      return;
-    }
-
+  // Takes the loaded stationery over once; the fields are edited from then on.
+  useSeededState(data?.letterLayout, layout => {
     setName(layout.name);
     setIsDefault(layout.isDefault);
     setHeaderHtml(layout.headerHtml);
     setFooterHtml(layout.footerHtml);
     setHeaderHeightMm(layout.headerHeightMm);
     setFooterHeightMm(layout.footerHeightMm);
-  }, [data]);
+  });
 
   const [createLayout, { loading: creating }] = useMutation(
     CreateLetterLayoutDocument,
@@ -112,9 +106,7 @@ function LetterLayoutEdit() {
 
   const save = async (close: boolean) => {
     if (!name.trim()) {
-      toaster.push(
-        <Message type="error">{t('letterLayouts.nameRequired')}</Message>
-      );
+      enqueueSnackbar(t('letterLayouts.nameRequired'), { variant: 'error' });
       return;
     }
 
@@ -171,18 +163,26 @@ function LetterLayoutEdit() {
     value: number,
     onChange: (value: number) => void
   ) => (
-    <Form.Group style={{ marginBottom: 0 }}>
-      <Form.ControlLabel>
+    <FormControl
+      style={{ marginBottom: 0 }}
+      fullWidth
+      sx={{ marginBottom: 3 }}
+    >
+      <FormLabel>
         {label} <InfoTooltip text={hint} />
-      </Form.ControlLabel>
-      <InputNumber
-        min={0}
-        max={BAND_MAX_MM}
+      </FormLabel>
+      <TextField
+        type="number"
         value={value}
-        onChange={next => onChange(Math.max(0, Number(next) || 0))}
-        style={{ width: 120 }}
+        onChange={event =>
+          onChange(
+            Math.min(BAND_MAX_MM, Math.max(0, Number(event.target.value) || 0))
+          )
+        }
+        slotProps={{ htmlInput: { min: 0, max: BAND_MAX_MM } }}
+        sx={{ width: 120 }}
       />
-    </Form.Group>
+    </FormControl>
   );
 
   const bandPanel = (
@@ -191,38 +191,43 @@ function LetterLayoutEdit() {
     onChange: (value: string) => void,
     ref: typeof headerRef
   ) => (
-    <Panel
-      bordered
-      header={
-        <Stack
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <span>
-            {t(`letterLayouts.${band}`)}{' '}
-            <InfoTooltip text={t('letterLayouts.htmlHint')} />
-          </span>
-          <Button
-            size="sm"
-            appearance="subtle"
-            startIcon={<MdImage />}
-            onClick={() => setImageTarget(band)}
-          >
-            {t('letterLayouts.insertImage')}
-          </Button>
-        </Stack>
-      }
-      style={{ flex: 1, minWidth: 360, background: 'var(--rs-bg-card)' }}
+    <Card
+      variant="outlined"
+      sx={{ flex: 1, minWidth: 360, bgcolor: 'background.paper' }}
     >
-      <div style={{ height: BAND_EDITOR_HEIGHT }}>
-        <HtmlSourceEditor
-          ref={ref}
-          value={html}
-          onChange={onChange}
-          minHeight={BAND_EDITOR_HEIGHT}
-        />
-      </div>
-    </Panel>
+      <CardHeader
+        title={
+          <Stack
+            direction="row"
+            sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+          >
+            <span>
+              {t(`letterLayouts.${band}`)}{' '}
+              <InfoTooltip text={t('letterLayouts.htmlHint')} />
+            </span>
+            <Button
+              variant="text"
+              size="small"
+              startIcon={<MdImage />}
+              onClick={() => setImageTarget(band)}
+            >
+              {t('letterLayouts.insertImage')}
+            </Button>
+          </Stack>
+        }
+      />
+
+      <CardContent>
+        <div style={{ height: BAND_EDITOR_HEIGHT }}>
+          <HtmlSourceEditor
+            ref={ref}
+            value={html}
+            onChange={onChange}
+            minHeight={BAND_EDITOR_HEIGHT}
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 
   return (
@@ -235,23 +240,26 @@ function LetterLayoutEdit() {
             : t('letterLayouts.createHeader')}
           </h2>
         </ListViewHeader>
-        <Stack spacing={8}>
+        <Stack
+          direction="row"
+          spacing={1}
+        >
           <Button
-            appearance="ghost"
+            variant="outlined"
             loading={previewLoading}
             onClick={showPreview}
           >
             {t('letterLayouts.preview')}
           </Button>
           <Button
-            appearance="primary"
+            variant="contained"
             loading={saving}
             onClick={() => save(false)}
           >
             {t('save')}
           </Button>
           <Button
-            appearance="primary"
+            variant="contained"
             loading={saving}
             onClick={() => save(true)}
           >
@@ -260,48 +268,63 @@ function LetterLayoutEdit() {
         </Stack>
       </ListViewContainer>
 
-      <Panel
-        bordered
-        style={{ marginTop: 20, background: 'var(--rs-bg-card)' }}
+      <Card
+        variant="outlined"
+        sx={{ marginTop: 2.5, bgcolor: 'background.paper' }}
       >
-        <Form fluid>
-          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-            <Form.Group style={{ flex: 2, minWidth: 240, marginBottom: 0 }}>
-              <Form.ControlLabel htmlFor="letter-layout-name">
-                {t('letterLayouts.name')} *
-              </Form.ControlLabel>
-              <Input
-                id="letter-layout-name"
-                aria-label={t('letterLayouts.name')}
-                value={name}
-                onChange={value => setName(value)}
-              />
-            </Form.Group>
-            {heightField(
-              t('letterLayouts.headerHeight'),
-              t('letterLayouts.headerHeightHint'),
-              headerHeightMm,
-              setHeaderHeightMm
-            )}
-            {heightField(
-              t('letterLayouts.footerHeight'),
-              t('letterLayouts.footerHeightHint'),
-              footerHeightMm,
-              setFooterHeightMm
-            )}
-            <Form.Group style={{ marginBottom: 0 }}>
-              <Form.ControlLabel>
-                {t('letterLayouts.isDefault')}{' '}
-                <InfoTooltip text={t('letterLayouts.isDefaultHelp')} />
-              </Form.ControlLabel>
-              <Toggle
-                checked={isDefault}
-                onChange={setIsDefault}
-              />
-            </Form.Group>
-          </div>
-        </Form>
-      </Panel>
+        <CardContent>
+          <Stack
+            spacing={3}
+            sx={{ width: '100%' }}
+          >
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+              <FormControl
+                style={{ flex: 2, minWidth: 240, marginBottom: 0 }}
+                fullWidth
+                sx={{ marginBottom: 3 }}
+              >
+                <FormLabel htmlFor="letter-layout-name">
+                  {t('letterLayouts.name')} *
+                </FormLabel>
+                <TextField
+                  id="letter-layout-name"
+                  value={name}
+                  onChange={event => setName(event.target.value)}
+                  slotProps={{
+                    htmlInput: { 'aria-label': t('letterLayouts.name') },
+                  }}
+                />
+              </FormControl>
+              {heightField(
+                t('letterLayouts.headerHeight'),
+                t('letterLayouts.headerHeightHint'),
+                headerHeightMm,
+                setHeaderHeightMm
+              )}
+              {heightField(
+                t('letterLayouts.footerHeight'),
+                t('letterLayouts.footerHeightHint'),
+                footerHeightMm,
+                setFooterHeightMm
+              )}
+              <FormControl
+                style={{ marginBottom: 0 }}
+                fullWidth
+                sx={{ marginBottom: 3 }}
+              >
+                <FormLabel>
+                  {t('letterLayouts.isDefault')}{' '}
+                  <InfoTooltip text={t('letterLayouts.isDefaultHelp')} />
+                </FormLabel>
+                <Switch
+                  checked={isDefault}
+                  onChange={(_event, checked) => setIsDefault(checked)}
+                />
+              </FormControl>
+            </div>
+          </Stack>
+        </CardContent>
+      </Card>
 
       <div
         style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 16 }}
@@ -311,8 +334,18 @@ function LetterLayoutEdit() {
       </div>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              display: 'flex',
+              flexDirection: 'column',
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={imageTarget !== null}
-        size="sm"
         onClose={() => setImageTarget(null)}
       >
         <ImageSelectPanel
@@ -321,20 +354,19 @@ function LetterLayoutEdit() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
-        size="full"
+        maxWidth="lg"
       >
-        <Modal.Header>
-          <Modal.Title>{t('letterLayouts.previewTitle')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body style={{ height: '80vh' }}>
+        <DialogTitle>{t('letterLayouts.previewTitle')}</DialogTitle>
+        <DialogContent style={{ height: '80vh' }}>
           {previewData?.letterLayoutPreview.pdf && (
             <LetterPreview pdf={previewData.letterLayoutPreview.pdf} />
           )}
-        </Modal.Body>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

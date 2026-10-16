@@ -1,5 +1,5 @@
 import { Box, Button, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type MailchimpSubscribeFormProps = {
   signupUrl: string;
