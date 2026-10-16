@@ -1,5 +1,6 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
+import { FeaturesService } from '@wepublish/features/api';
 import { LetterContext } from '@wepublish/letter/api';
 import {
   LetterAddressPosition,
@@ -18,13 +19,15 @@ const makeService = (
   prisma: any,
   mailContext: any = { sendMail: vi.fn() },
   recipientService: any = {},
-  letterContext: any = { sendLetter: vi.fn(), renderLetter: vi.fn() }
+  letterContext: any = { sendLetter: vi.fn(), renderLetter: vi.fn() },
+  features: any = { isEnabled: vi.fn(async () => true) }
 ) =>
   new MailSendJobService(
     prisma as PrismaClient,
     mailContext as unknown as MailContext,
     letterContext as unknown as LetterContext,
-    recipientService as MailSendRecipientService
+    recipientService as MailSendRecipientService,
+    features as FeaturesService
   );
 
 const template = (context: string | null) => ({
@@ -890,5 +893,50 @@ describe('MailSendJobService.previewForAudience as letter', () => {
         printMode: LetterPrintMode.duplex,
       })
     );
+  });
+});
+
+// The channel is an argument, so the guard decorator cannot see it: the
+// service refuses letters itself while the feature is off.
+describe('letter channel behind the paper-letters feature', () => {
+  const audience = { base: MailRecipientBase.allUsers } as any;
+  const featureOff = { isEnabled: vi.fn(async () => false) };
+
+  it('refuses to create a letter job while the feature is off', async () => {
+    const service = makeService({}, {}, {}, undefined, featureOff);
+
+    await expect(
+      service.createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      )
+    ).rejects.toThrow(ForbiddenException);
+    expect(featureOff.isEnabled).toHaveBeenCalledWith('paper-letters');
+  });
+
+  it('refuses a letter preview while the feature is off', async () => {
+    const service = makeService({}, {}, {}, undefined, featureOff);
+
+    await expect(
+      service.previewForAudience({
+        mailTemplateId: 'tpl-1',
+        audience,
+        channel: MailChannel.letter,
+      })
+    ).rejects.toThrow(ForbiddenException);
+  });
+
+  it('still creates mail jobs', async () => {
+    const service = makeService(
+      fakePrisma(),
+      {},
+      { count: vi.fn(async () => 0) },
+      undefined,
+      featureOff
+    );
+
+    await expect(
+      service.createJob({ mailTemplateId: 'tpl-1', audience }, 'editor-1')
+    ).resolves.toMatchObject({ channel: MailChannel.mail });
   });
 });

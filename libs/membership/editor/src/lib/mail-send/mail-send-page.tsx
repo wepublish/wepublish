@@ -2,7 +2,6 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import {
   CreateMailSendJobDocument,
   LetterAddressPosition,
-  LetterChannelAvailableDocument,
   LetterDeliveryProduct,
   LetterPrintMode,
   LetterPrintSpectrum,
@@ -75,6 +74,7 @@ import {
   toaster,
 } from 'rsuite';
 import { showErrors, useShowErrors } from '../common';
+import { useLetterChannel } from '../mail-template/use-letter-channel';
 import { mailErrorHelpKey } from './mail-log-common';
 import {
   CancelJobButton,
@@ -215,11 +215,7 @@ function MailSendPage() {
   } = useQuery(MailTemplateDocument);
   // Without a letter integration every send is a mail, so there is no channel
   // to choose and nothing to say about it.
-  const { data: letterChannelData, error: letterChannelError } = useQuery(
-    LetterChannelAvailableDocument
-  );
-  useShowErrors(letterChannelError);
-  const letterAvailable = !!letterChannelData?.letterChannelAvailable;
+  const { letterAvailable } = useLetterChannel();
   const { data: memberPlanData, error: memberPlanError } = useQuery(
     MemberPlanListDocument,
     {
