@@ -154,6 +154,22 @@ database boundary.
 
 ---
 
+### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
+
+The `ci` configuration in [nx.json](../../nx.json) sets `maxWorkers: 1`.
+`test-backend` runs 10 Nx tasks at once on a 4-vCPU GitHub runner, and without
+the cap every task started its own pool of ~3 workers. With ~30 processes on 4
+cores and coverage on, a test was ~30× slower than locally, and MUI specs around
+0.7 s hit the 15 s `testTimeout` (`ui-editor`, 2026-10-16). Don't raise
+`testTimeout` or drop the cap to "speed CI up". Make a slow spec cheaper instead.
+In happy-dom the cost is mostly `getComputedStyle`, which MUI's Popper and
+`TextareaAutosize` call on every open or render.
+
+Local runs don't use `-c ci`. When reproducing CI locally with `-c ci`, add
+`--maxWorkers=4` to get your cores back.
+
+---
+
 ### ⚠️ Every Dragonfly key must start with `REDIS_KEY_PREFIX`
 
 All media share database 0; a medium's user may only touch `<prefix>:*` /
