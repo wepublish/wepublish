@@ -5,13 +5,26 @@ import {
   MailChannel,
   SetDeliveryModeForAudienceDocument,
 } from '@wepublish/editor/api';
-import { humanizeError, useAuthorisation } from '@wepublish/ui/editor';
+import {
+  humanizeError,
+  useAuthorisation,
+  enqueueSnackbar,
+} from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdMarkunreadMailbox } from 'react-icons/md';
-import { Button, Message, Modal, Radio, RadioGroup, toaster } from 'rsuite';
 
 import { usePaperLetterFlow } from './use-paper-letter-flow';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+} from '@mui/material';
 
 export type DeliveryModeAudienceActionProps = {
   audience: MailAudienceInput;
@@ -39,26 +52,12 @@ export function DeliveryModeAudienceAction({
   });
   const [apply, { loading }] = useMutation(SetDeliveryModeForAudienceDocument, {
     onError: error =>
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-        >
-          {humanizeError(error)}
-        </Message>
-      ),
+      enqueueSnackbar(humanizeError(error), { variant: 'error' }),
     onCompleted: ({ setDeliveryModeForAudience: result }) => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t(`deliveryMode.audience.done.${channel}`, result)}
-        </Message>
-      );
+      enqueueSnackbar(t(`deliveryMode.audience.done.${channel}`, result), {
+        variant: 'success',
+        autoHideDuration: 8000,
+      });
       setOpen(false);
     },
   });
@@ -72,34 +71,36 @@ export function DeliveryModeAudienceAction({
   return (
     <>
       <Button
-        size="sm"
-        appearance="ghost"
+        variant="outlined"
+        size="small"
         startIcon={<MdMarkunreadMailbox />}
         onClick={() => setOpen(true)}
       >
         {t('deliveryMode.audience.open')}
       </Button>
 
-      <Modal
+      <Dialog
         open={open}
         onClose={() => setOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('deliveryMode.audience.title')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+        <DialogTitle>{t('deliveryMode.audience.title')}</DialogTitle>
+        <DialogContent>
           <p>{t('deliveryMode.audience.intro')}</p>
           <RadioGroup
             value={channel}
-            onChange={value => setChannel(value as MailChannel)}
+            onChange={(_event, value) => setChannel(value as MailChannel)}
             style={{ marginBlock: 12 }}
           >
-            <Radio value={MailChannel.Letter}>
-              {t('deliveryMode.channel.letter')}
-            </Radio>
-            <Radio value={MailChannel.Mail}>
-              {t('deliveryMode.channel.mail')}
-            </Radio>
+            <FormControlLabel
+              value={MailChannel.Letter}
+              control={<Radio />}
+              label={t('deliveryMode.channel.letter')}
+            />
+            <FormControlLabel
+              value={MailChannel.Mail}
+              control={<Radio />}
+              label={t('deliveryMode.channel.mail')}
+            />
           </RadioGroup>
           {preview && (
             <p>
@@ -111,24 +112,24 @@ export function DeliveryModeAudienceAction({
               )}
             </p>
           )}
-        </Modal.Body>
-        <Modal.Footer>
+        </DialogContent>
+        <DialogActions>
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setOpen(false)}
           >
             {t('cancel')}
           </Button>
           <Button
-            appearance="primary"
+            variant="contained"
             loading={loading}
             disabled={!preview?.userCount}
             onClick={() => apply({ variables: { audience, channel } })}
           >
             {t('deliveryMode.audience.apply')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

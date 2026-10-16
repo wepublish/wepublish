@@ -2,8 +2,6 @@ import { useQuery } from '@apollo/client/react';
 import { LetterChannelAvailableDocument } from '@wepublish/editor/api';
 import { useFeature } from '@wepublish/ui/editor';
 
-import { useShowErrors } from '../common';
-
 /**
  * Whether letters can be offered: the medium has the feature, and a letter
  * integration is configured. The api refuses the question while the feature is
@@ -11,10 +9,9 @@ import { useShowErrors } from '../common';
  */
 export function useLetterChannel() {
   const paperLetters = useFeature('paper-letters');
-  const { data, error } = useQuery(LetterChannelAvailableDocument, {
+  const { data } = useQuery(LetterChannelAvailableDocument, {
     skip: !paperLetters,
   });
-  useShowErrors(error);
 
   return {
     paperLetters,

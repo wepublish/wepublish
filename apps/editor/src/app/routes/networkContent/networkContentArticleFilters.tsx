@@ -1,7 +1,8 @@
+import { Autocomplete, InputAdornment, TextField } from '@mui/material';
 import { format } from 'date-fns';
+import { DatePicker } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdSearch } from 'react-icons/md';
-import { DatePicker, Input, InputGroup, SelectPicker } from 'rsuite';
 
 import { FilterBar } from './networkContent.styles';
 import type { ArticleFilterParams, WepOneClient } from './networkContent.types';
@@ -24,62 +25,65 @@ export function NetworkContentArticleFilters({
   };
 
   const toDate = (iso: string): Date | null => {
-    if (!iso) return null;
+    if (!iso) {
+      return null;
+    }
     const d = new Date(iso);
     return isNaN(d.getTime()) ? null : d;
   };
 
   const toIso = (d: Date | null): string => {
-    if (!d || isNaN(d.getTime())) return '';
+    if (!d || isNaN(d.getTime())) {
+      return '';
+    }
     return format(d, 'yyyy-MM-dd');
   };
 
   return (
     <FilterBar>
-      <InputGroup inside>
-        <InputGroup.Addon>
-          <MdSearch />
-        </InputGroup.Addon>
+      <TextField
+        type="search"
+        label={t('networkContentPage.searchLabel')}
+        value={filters.search}
+        onChange={event => updateFilter({ search: event.target.value })}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <MdSearch />
+              </InputAdornment>
+            ),
+          },
+        }}
+      />
 
-        <Input
-          type="search"
-          placeholder={t('networkContentPage.searchLabel')}
-          aria-label={t('networkContentPage.searchLabel')}
-          value={filters.search}
-          onChange={search => updateFilter({ search })}
-        />
-      </InputGroup>
-
-      <SelectPicker
-        block
-        data={clients.map(client => ({
-          label: client.name,
-          value: client.name,
-        }))}
-        placeholder={t('networkContentPage.allMedia')}
-        aria-label={t('networkContentPage.mediaFilter')}
+      <Autocomplete
+        options={clients.map(client => client.name)}
         value={filters.clientName || null}
-        onChange={clientName => updateFilter({ clientName: clientName ?? '' })}
+        onChange={(_event, clientName) =>
+          updateFilter({ clientName: clientName ?? '' })
+        }
+        renderInput={params => (
+          <TextField
+            {...params}
+            label={t('networkContentPage.mediaFilter')}
+            placeholder={t('networkContentPage.allMedia')}
+          />
+        )}
       />
 
       <DatePicker
-        block
-        oneTap
-        format="dd.MM.yyyy"
-        placeholder={t('networkContentPage.dateFrom')}
-        aria-label={t('networkContentPage.dateFrom')}
+        label={t('networkContentPage.dateFrom')}
         value={toDate(filters.dateFrom)}
         onChange={date => updateFilter({ dateFrom: toIso(date) })}
+        size="small"
       />
 
       <DatePicker
-        block
-        oneTap
-        format="dd.MM.yyyy"
-        placeholder={t('networkContentPage.dateTo')}
-        aria-label={t('networkContentPage.dateTo')}
+        label={t('networkContentPage.dateTo')}
         value={toDate(filters.dateTo)}
         onChange={date => updateFilter({ dateTo: toIso(date) })}
+        size="small"
       />
     </FilterBar>
   );

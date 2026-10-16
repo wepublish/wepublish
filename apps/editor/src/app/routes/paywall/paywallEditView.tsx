@@ -1,75 +1,71 @@
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient, useMutation } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   FullPaywallFragment,
-  MutationUpdatePaywallArgs,
   PaywallListDocument,
   UpdatePaywallDocument,
 } from '@wepublish/editor/api';
 import { CanUpdatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  enqueueSnackbar,
   humanizeError,
   SingleViewTitle,
 } from '@wepublish/ui/editor';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { PaywallForm } from './paywallForm';
+import { PaywallForm, PaywallFormValues, paywallSchema } from './paywallForm';
 
 const onErrorToast = (error: Error) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 const mapApiDataToInput = (
   paywall: FullPaywallFragment
-): MutationUpdatePaywallArgs => ({
-  ...paywall,
-  memberPlanIds: paywall.memberPlans?.map(memberPlan => memberPlan.id),
-  bypassTokens: paywall.bypasses?.map(bypass => bypass.token) || undefined,
+): PaywallFormValues => ({
+  id: paywall.id,
+  name: paywall.name,
+  description: paywall.description,
+  circumventDescription: paywall.circumventDescription,
+  upgradeDescription: paywall.upgradeDescription,
+  upgradeCircumventDescription: paywall.upgradeCircumventDescription,
+  active: paywall.active,
+  anyMemberPlan: paywall.anyMemberPlan,
+  memberPlans: paywall.memberPlans ?? undefined,
+  memberPlanIds: paywall.memberPlans?.map(memberPlan => memberPlan.id) ?? [],
+  alternativeSubscribeUrl: paywall.alternativeSubscribeUrl,
+  hideContentAfter: paywall.hideContentAfter ?? 3,
+  fadeout: paywall.fadeout ?? true,
+  bypasses: paywall.bypasses ?? [],
 });
 
 const PaywallEditView = () => {
   const { t } = useTranslation();
   const [shouldClose, setShouldClose] = useState(false);
   const navigate = useNavigate();
-  const params = useParams();
-  const { id } = params;
+  const { id } = useParams();
   const closePath = './../..';
+  const client = useApolloClient();
 
-  const [paywall, setPaywall] = useState<
-    MutationUpdatePaywallArgs & {
-      bypasses?: Array<{ id?: string; token: string }>;
-    }
-  >();
+  const form = useForm<PaywallFormValues>({
+    resolver: zodResolver(paywallSchema),
+    defaultValues: async () => {
+      const { data } = await client.query({ query: PaywallListDocument });
+      const paywall = data?.paywalls.find(candidate => candidate.id === id);
 
-  const { loading: dataLoading, data, error } = useQuery(PaywallListDocument);
+      return paywall ?
+          mapApiDataToInput(paywall)
+        : ({ bypasses: [] } as unknown as PaywallFormValues);
+    },
+  });
 
-  useEffect(() => {
-    if (error) {
-      onErrorToast(error);
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (data) {
-      const paywallToEdit = data.paywalls.find(paywall => paywall.id === id);
-
-      if (paywallToEdit) {
-        setPaywall(mapApiDataToInput(paywallToEdit));
-      }
-    }
-  }, [data, id]);
+  const name = useWatch({ control: form.control, name: 'name' });
 
   const [updatePaywall, { loading: updateLoading }] = useMutation(
     UpdatePaywallDocument,
@@ -80,54 +76,43 @@ const PaywallEditView = () => {
           if (shouldClose) {
             navigate(closePath);
           } else {
-            setPaywall(mapApiDataToInput(data.updatePaywall));
+            form.reset(mapApiDataToInput(data.updatePaywall));
           }
         }
       },
     }
   );
 
-  const loading = dataLoading || updateLoading;
-  const onSubmit = () => updatePaywall({ variables: paywall! });
-
-  const { StringType, BooleanType, ArrayType } = Schema.Types;
-  const validationModel = Schema.Model({
-    name: StringType().isRequired(),
-    active: BooleanType().isRequired(),
-    anyMemberPlan: BooleanType().isRequired(),
-    memberPlanIds: ArrayType().of(StringType()),
-    alternativeSubscribeUrl: StringType().isURL(),
-  });
-
-  if (!paywall) {
-    return;
+  if (form.formState.isLoading) {
+    return null;
   }
 
   return (
-    <Form
-      fluid
-      formValue={paywall || {}}
-      model={validationModel}
-      disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}
-    >
-      <SingleViewTitle
-        loading={loading}
-        title={t('paywall.form.editTitle', { paywall: paywall.name })}
-        loadingTitle={t('loading')}
-        saveBtnTitle={t('save')}
-        saveAndCloseBtnTitle={t('saveAndClose')}
-        closePath={closePath}
-        setCloseFn={setShouldClose}
-      />
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(({ memberPlans, bypasses, ...paywall }) =>
+          updatePaywall({
+            variables: {
+              ...paywall,
+              id: id as string,
+              bypassTokens: bypasses.map(bypass => bypass.token),
+            },
+          })
+        )}
+      >
+        <SingleViewTitle
+          loading={updateLoading}
+          title={t('paywall.form.editTitle', { paywall: name })}
+          loadingTitle={t('loading')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setShouldClose}
+        />
 
-      <PaywallForm
-        paywall={paywall}
-        onChange={changes =>
-          setPaywall(oldPaywall => ({ ...oldPaywall, ...(changes as any) }))
-        }
-      />
-    </Form>
+        <PaywallForm />
+      </form>
+    </FormProvider>
   );
 };
 

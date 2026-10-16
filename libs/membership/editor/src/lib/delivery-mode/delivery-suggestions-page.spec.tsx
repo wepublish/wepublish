@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -54,9 +55,11 @@ const answer = (name: string) =>
 
 const renderPage = () =>
   render(
-    <MemoryRouter>
-      <DeliverySuggestionsPage />
-    </MemoryRouter>
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
+      <MemoryRouter>
+        <DeliverySuggestionsPage />
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 describe('DeliverySuggestionsPage', () => {

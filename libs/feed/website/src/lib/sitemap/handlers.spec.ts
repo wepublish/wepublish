@@ -119,7 +119,6 @@ describe('createSitemapHandlers', () => {
     expect(res.statusCode).toBe(404);
   });
 
-  // the CDN then keeps serving its last good copy (stale-if-error)
   it('answers a failure with an uncacheable 500', async () => {
     const { sitemap } = createSitemapHandlers(
       { title: 'Example' },

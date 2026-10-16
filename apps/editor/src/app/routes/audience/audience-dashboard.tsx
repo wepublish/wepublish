@@ -1,12 +1,14 @@
 import { useLazyQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { DailySubscriptionStatsDocument } from '@wepublish/editor/api';
+import { CanGetAudienceStats } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  ListViewActions,
   ListViewContainer,
-  ListViewFilterArea,
   ListViewHeader,
   TableWrapper,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,13 +28,7 @@ const AudienceChartWrapper = styled('div')`
   width: 100%;
 `;
 
-const AudienceTableExportWrapper = styled('div')`
-  margin-left: 4px;
-`;
-
-const TableWrapperStyled = styled(TableWrapper)`
-  margin-top: ${({ theme }) => theme.spacing(8)};
-`;
+const TableWrapperStyled = styled(TableWrapper)``;
 
 interface AudienceDashboardProps {
   hideHeader?: boolean;
@@ -89,36 +85,36 @@ function AudienceDashboard({
     <>
       <ListViewContainer>
         {!hideHeader && (
-          <ListViewHeader>
-            <h2>{t('audienceDashboard.title')}</h2>
-          </ListViewHeader>
+          <>
+            <ListViewHeader>
+              <PageTitle>{t('audienceDashboard.title')}</PageTitle>
+            </ListViewHeader>
+
+            <ListViewActions>
+              <AudienceTableExport
+                audienceStats={audienceStats}
+                clientFilter={audienceClientFilter}
+                timeResolution={resolution}
+                loading={loading}
+              />
+            </ListViewActions>
+          </>
         )}
 
         {!hideFilter && audienceComponentFilter.filter && (
-          <ListViewFilterArea style={{ alignItems: 'center' }}>
-            <AudienceFilter
-              resolution={resolution}
-              setResolution={setResolution}
-              clientFilter={audienceClientFilter}
-              setClientFilter={setAudienceClientFilter}
-              apiFilter={audienceApiFilter}
-              setApiFilter={setAudienceApiFilter}
-              componentFilter={audienceComponentFilter}
-              setComponentFilter={setAudienceComponentFilter}
-              buildPermalink={buildPermalink}
-            />
-          </ListViewFilterArea>
+          <AudienceFilter
+            resolution={resolution}
+            setResolution={setResolution}
+            clientFilter={audienceClientFilter}
+            setClientFilter={setAudienceClientFilter}
+            apiFilter={audienceApiFilter}
+            setApiFilter={setAudienceApiFilter}
+            componentFilter={audienceComponentFilter}
+            setComponentFilter={setAudienceComponentFilter}
+            buildPermalink={buildPermalink}
+          />
         )}
       </ListViewContainer>
-
-      <AudienceTableExportWrapper>
-        <AudienceTableExport
-          audienceStats={audienceStats}
-          clientFilter={audienceClientFilter}
-          timeResolution={resolution}
-          loading={loading}
-        />
-      </AudienceTableExportWrapper>
 
       {audienceComponentFilter.chart && (
         <AudienceChartWrapper>
@@ -145,6 +141,6 @@ function AudienceDashboard({
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_AUDIENCE_STATS',
+  CanGetAudienceStats.id,
 ])(AudienceDashboard);
 export { CheckedPermissionComponent as AudienceDashboard };

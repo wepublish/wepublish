@@ -230,7 +230,8 @@
         "hiddenInfo": "Les articles masqués n’apparaissent pas dans les listes automatiques d’articles du site (p.ex. derniers articles ou pages de tags), mais restent accessibles via leur lien direct.",
         "contentUrlInfo": "L’adresse web vers laquelle les lecteur·trice·s sont dirigé·e·s en cliquant sur le teaser.",
         "teaserPropertiesInfo": "Paires clé-valeur supplémentaires que votre site peut utiliser pour des affichages particuliers. Nécessaire uniquement si les personnes qui développent votre site vous l’ont demandé. Les propriétés publiques sont visibles via l’API publique.",
-        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux"
+        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
+        "chooseFile": "Choisir un fichier"
       }
     },
     "articles": {
@@ -247,7 +248,8 @@
         "states": "Statut",
         "title": "Titre",
         "untitled": "Sans titre",
-        "updated": "Modifié le"
+        "updated": "Modifié le",
+        "slug": "Slug"
       },
       "panels": {
         "cancel": "Annuler",
@@ -558,7 +560,8 @@
           "new": "(Nouveau)",
           "previousImage": "Image précédente",
           "nextImage": "Image suivante",
-          "addImage": "Ajouter une image"
+          "addImage": "Ajouter une image",
+          "removeImage": "Supprimer l'image"
         },
         "panels": {
           "caption": "Légende",
@@ -716,6 +719,13 @@
         "doubleOptInHelp": "Les nouveaux·elles abonné·e·s reçoivent d’abord un e-mail de confirmation de Mailchimp et ne sont ajouté·e·s à la liste qu’après avoir cliqué sur le lien qu’il contient.",
         "advancedStepHelp": "Affiche les conditions dans lesquelles cette étape est sautée ou affichée, p. ex. si certaines informations sont déjà disponibles.",
         "advancedInputHelp": "Affiche d’autres réglages pour ce champ, p. ex. une description sous le champ ou une valeur par défaut."
+      },
+      "groups": {
+        "text": "Texte",
+        "media": "Médias",
+        "teasers": "Teasers",
+        "interaction": "Interaction",
+        "layout": "Mise en page"
       }
     },
     "cancel": "Annuler",
@@ -787,7 +797,8 @@
         "text": "Texte",
         "updated": "Modifié le",
         "userName": "Nom de l’utilisateur·trice",
-        "pendingUserChangesInfo": "Vous avez demandé à l’auteur·e de modifier le commentaire. Une fois modifié, il attend à nouveau d’être approuvé."
+        "pendingUserChangesInfo": "Vous avez demandé à l’auteur·e de modifier le commentaire. Une fois modifié, il attend à nouveau d’être approuvé.",
+        "states": "États"
       },
       "panels": {
         "approve": "Approuver",
@@ -855,7 +866,9 @@
       "rejected": "Refusé",
       "slugInfo": "Identifiant technique utilisé par votre site ou vos applications pour trouver ce consentement, p.ex. « newsletter ». Utilisez uniquement des minuscules, des chiffres et des tirets.",
       "defaultValueInfo": "Indique si le consentement est présélectionné pour les utilisateur·trice·s qui n’ont pas encore décidé, p.ex. comme case déjà cochée dans un formulaire.",
-      "checkedByDefault": "Cochée par défaut"
+      "checkedByDefault": "Cochée par défaut",
+      "deleteTitle": "Supprimer le consentement ?",
+      "deleteBody": "Voulez-vous supprimer définitivement «{{name}}» ? Les choix des utilisateurs disparaissent avec."
     },
     "create": "Créer",
     "createAndClose": "Créer & fermer",
@@ -929,18 +942,18 @@
       "nextSaturday": "Samedi prochain",
       "now": "Maintenant",
       "today": "Aujourd’hui",
-      "tomorrow": "Demain"
+      "tomorrow": "Demain",
+      "yesterday": "Hier",
+      "done": "OK"
     },
     "deactivated": "Désactivé",
     "delete": "Supprimer",
     "deleteBlockTemplateModal": {
       "body": "Voulez-vous vraiment supprimer le modèle de bloc « {{name}} » ?",
-      "deleteBtn": "Oui, supprimer",
       "title": "Supprimer le modèle de bloc ?"
     },
     "deletePollModal": {
       "body": "Voulez-vous vraiment supprimer le sondage « {{pollQuestion}} » ?",
-      "deleteBtn": "Oui, supprimer",
       "title": "Supprimer le sondage ?"
     },
     "draggableSubscriptionInterval": {
@@ -976,7 +989,10 @@
       "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 12 caractères.",
       "passwordCompromisedErrorMessage": "Ce mot de passe est apparu dans une fuite de données. Veuillez choisir un autre mot de passe.",
       "required": "Ce champ est requis",
-      "invalidCountry": "Veuillez sélectionner un pays valide"
+      "invalidCountry": "Veuillez sélectionner un pays valide",
+      "amountTooLowErrorMessage": "Le montant est inférieur au minimum de ce plan d'abonnement",
+      "noQuestionErrorMessage": "Veuillez saisir une question",
+      "invalidForm": "Veuillez vérifier les champs signalés"
     },
     "event": {
       "create": {
@@ -1039,7 +1055,9 @@
         "slug": "Filtrer par slug",
         "title": "Filtrer par titre",
         "includeHiddenArticles": "Inclure les articles masqués",
-        "includeHiddenPages": "Inclure les pages masquées"
+        "includeHiddenPages": "Inclure les pages masquées",
+        "label": "Filtres",
+        "states": "États"
       }
     },
     "documents": {
@@ -1140,7 +1158,8 @@
         "focalPoint": "Point focal",
         "focalPointInfo": "Faites glisser le point sur la partie la plus importante de l’image. Lorsque l’image est recadrée, p.ex. dans les teasers, cette zone reste visible.",
         "descriptionInfo": "Décrivez ce que l’on voit sur l’image. Le texte sert de texte alternatif pour les personnes utilisant un lecteur d’écran et pour les moteurs de recherche.",
-        "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien."
+        "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien.",
+        "openOriginal": "Ouvrir l'original"
       }
     },
     "importableEvent": {
@@ -1685,7 +1704,8 @@
         "polls": "Sondages",
         "topMenu": "Blocs de contenu"
       },
-      "letterLayouts": "Papier à lettres"
+      "letterLayouts": "Papier à lettres",
+      "language": "Langue"
     },
     "navigation": {
       "overview": {
@@ -1944,7 +1964,6 @@
       "answerMissing": "Votre réponse est vide. Veuillez saisir un texte.",
       "copyVoteUrl": "Copier le lien de vote",
       "copyVoteUrlHint": "Les liens de vote peuvent désormais être copiés directement dans le bloc de sondage de l’article ou de la page où le sondage est utilisé.",
-      "deleteBtn": "Supprimer",
       "deleteModalBody": "Voulez-vous supprimer irrévocablement la réponse « {{answer}} » ? Les résultats du sondage seront alors perdus.",
       "deleteModalTitle": "Supprimer ?",
       "insertYourNewAnswer": "Saisir une nouvelle réponse",
@@ -2300,7 +2319,9 @@
       "titleEdit": "Modifier le consentement de l’utilisateur",
       "user": "Utilisateur·trice",
       "value": "Valeur",
-      "uniqueConstraint": "Un consentement d’utilisateur avec le slug « {{slug}} » existe déjà. Veuillez choisir un autre slug."
+      "uniqueConstraint": "Un consentement d’utilisateur avec le slug « {{slug}} » existe déjà. Veuillez choisir un autre slug.",
+      "deleteTitle": "Supprimer le consentement de l’utilisateur ?",
+      "deleteBody": "Voulez-vous supprimer définitivement le consentement «{{name}}» de {{user}} ?"
     },
     "userCreateOrEditView": {
       "active": "Actif",
@@ -2363,7 +2384,8 @@
       "activeInfo": "Les utilisateur·trice·s inactif·ve·s ne peuvent plus se connecter, ni sur le site web ni dans l’éditeur.",
       "flairInfo": "Brève description de la fonction, p. ex. « Rédactrice en chef ». Elle s’affiche à côté du nom dans les commentaires sur le site web.",
       "propertiesInfo": "Données supplémentaires sous forme de clé et de valeur, p. ex. issues d’importations. Les propriétés publiques peuvent aussi être lues par le site web, les privées uniquement dans l’éditeur.",
-      "userRolesInfo": "Les rôles définissent les autorisations de cette personne, p. ex. ce qu’elle peut voir et faire dans l’éditeur."
+      "userRolesInfo": "Les rôles définissent les autorisations de cette personne, p. ex. ce qu’elle peut voir et faire dans l’éditeur.",
+      "addressTitle": "Adresse"
     },
     "userList": {
       "overview": {
@@ -2605,14 +2627,15 @@
       "periodicityPricingCustomHelp": "Désactivé : les prix sont calculés à partir du prix mensuel. Activé : vous définissez vos propres prix pour cet intervalle de paiement, p. ex. pour un rabais annuel."
     },
     "subscriptionEditView": {
-      "additionalSettingsTitle": "Paramètres avancés",
       "trialSubscriptionConfigured": "Cet abonnement est configuré comme un abonnement d’essai.",
       "nonExtendableNotCompatibleWithAutoRenew": "Un abonnement à renouvellement automatique doit pouvoir être prolongé. Modifiez l’un de ces paramètres.",
       "configureAsTrialSubscription": "Configurer comme abonnement d’essai",
       "subscriptionTrialNotPossible": "L’abonnement ne peut pas être configuré comme abonnement d’essai. Pour ce faire, modifiez les paramètres du plan d’abonnement.",
       "extendableWasChanged": "L’option « Extensible » a été adaptée en fonction du plan d’abonnement.",
       "extendModalTitle": "Renouveler l’abonnement plus tôt ?",
-      "extendModalBody": "L’abonnement sera prolongé de manière anticipée pour la prochaine période possible. Une facture sera établie."
+      "extendModalBody": "L’abonnement sera prolongé de manière anticipée pour la prochaine période possible. Une facture sera établie.",
+      "detailsTitle": "Offre et paiement",
+      "renewalTitle": "Durée et renouvellement"
     },
     "subscriptionListFilter": {
       "extendable": "Extensible"
@@ -2713,7 +2736,15 @@
       "rangeNextWeek": "Semaine prochaine",
       "rangeNextMonth": "Mois prochain",
       "rangeNextQuarter": "Trimestre prochain",
-      "rangeNextYear": "Année prochaine"
+      "rangeNextYear": "Année prochaine",
+      "resolution": "Résolution",
+      "range": "Période",
+      "rangeCustom": "Personnalisé",
+      "view": "Affichage",
+      "dateRange": "Du – au",
+      "subscriptionPlans": "Plans d'abonnement",
+      "rangeFrom": "Du",
+      "rangeTo": "Au"
     },
     "audience": {
       "chart": {
@@ -3517,7 +3548,9 @@
       "blockNumber": "Bloc {{number}}"
     },
     "columnConfigurator": {
-      "title": "Afficher/masquer les colonnes"
+      "title": "Colonnes",
+      "dragToReorder": "Glisser pour réordonner",
+      "reset": "Réinitialiser les colonnes"
     },
     "systemMails": {
       "title": "Compte et connexion",
@@ -3680,7 +3713,9 @@
         "period": "Période fixe",
         "days": "jours",
         "periodPlaceholder": "Choisir du – au",
-        "periodHint": "Uniquement les abonnements désactivés entre ces deux dates."
+        "periodHint": "Uniquement les abonnements désactivés entre ces deux dates.",
+        "periodFrom": "Du",
+        "periodTo": "Au"
       },
       "preview": {
         "title": "Aperçu",
@@ -3891,7 +3926,8 @@
       "customOnlyHint": "Seuls les modèles personnalisés peuvent être envoyés à un utilisateur.",
       "selectTemplate": "Choisir un modèle",
       "send": "Envoyer",
-      "sent": "E-mail envoyé"
+      "sent": "E-mail envoyé",
+      "title": "E-mails"
     },
     "mailJobs": {
       "created": "Démarré",
@@ -3988,7 +4024,10 @@
         "dateRange": "Période",
         "failuresOnly": "Échecs uniquement",
         "impersonatedOnly": "Usurpation uniquement",
-        "impersonatedOnlyInfo": "Afficher uniquement les modifications effectuées par quelqu’un connecté en tant qu’autre personne."
+        "impersonatedOnlyInfo": "Afficher uniquement les modifications effectuées par quelqu’un connecté en tant qu’autre personne.",
+        "anyAction": "Toutes les actions",
+        "dateFrom": "Du",
+        "dateTo": "Au"
       },
       "action": {
         "create": "Créé",
@@ -4020,7 +4059,8 @@
       "style": "Style",
       "title": "Styles de blocs",
       "info": "Un style permet d’afficher un bloc différemment sur votre site, p. ex. une grille de teasers en carrousel. Choisissez les types de blocs pour lesquels chaque style est disponible ; son apparence est définie par le design de votre site.",
-      "blockTypesPlaceholder": "Disponible pour les types de blocs"
+      "blockTypesPlaceholder": "Disponible pour les types de blocs",
+      "noStyle": "Aucun style"
     },
     "name": "Nom",
     "toast": {
@@ -4071,6 +4111,44 @@
       "deleteQuestion": "Supprimer « {{name}} » ? Les modèles qui l’utilisent doivent d’abord en choisir un autre.",
       "deleteConfirm": "Supprimer",
       "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
+    },
+    "autosave": {
+      "label": "Enregistrement auto",
+      "description": "Enregistrer le brouillon toutes les 30 secondes pendant que vous travaillez"
+    },
+    "colorPicker": {
+      "pickColor": "Choisir la couleur"
+    },
+    "errorBoundary": {
+      "title": "Un problème est survenu sur cette page",
+      "retry": "Réessayer",
+      "reload": "Recharger l'éditeur"
+    },
+    "listView": {
+      "table": {
+        "empty": "Rien à afficher"
+      },
+      "pagination": {
+        "total": "{{count}} entrées",
+        "pageSize": "Entrées par page",
+        "perPage": "{{count}} / page"
+      }
+    },
+    "dateRange": {
+      "from": "du",
+      "to": "au"
+    },
+    "metadataSections": {
+      "byline": "Signature",
+      "headline": "Titraille",
+      "publication": "Publication",
+      "seo": "Moteur de recherche",
+      "stats": "Statistiques"
+    },
+    "metadataHints": {
+      "socialMediaDescriptionFallback": "Utilise sinon la description SEO",
+      "socialMediaImageFallback": "Utilise sinon l'image de l'article.",
+      "socialMediaTitleFallback": "Utilise sinon le titre SEO"
     }
   }
 }

@@ -1,12 +1,19 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Drawer, IconButton, TextField } from '@mui/material';
+import {
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
-import { Drawer, IconButton, Input as RInput } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { ChooseEditImage } from '../atoms/chooseEditImage';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import { DRAWER_WIDTHS } from '../drawer';
 import { ImageEditPanel } from '../panel/imageEditPanel';
 import { ImageSelectPanel } from '../panel/imageSelectPanel';
 import { LinkPageBreakEditPanel } from '../panel/linkPageBreakEditPanel';
@@ -14,7 +21,7 @@ import { isFunctionalUpdate } from '../utility';
 import { RichTextBlock } from './richTextBlock/rich-text-block';
 import { LinkPageBreakBlockValue, RichTextBlockValue } from './types';
 
-const Input = styled(RInput)`
+const Input = styled(TextField)`
   font-size: 24px;
   margin-bottom: 20px;
 `;
@@ -63,11 +70,13 @@ export function LinkPageBreakBlock({
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (autofocus) focusRef.current?.focus();
+    if (autofocus) {
+      focusRef.current?.focus();
+    }
   }, []);
 
   const handleRichTextChange = useCallback(
-    (richText: React.SetStateAction<RichTextBlockValue['richText']>) =>
+    (richText: SetStateAction<RichTextBlockValue['richText']>) =>
       onChange(value => ({
         ...value,
         richText:
@@ -86,18 +95,23 @@ export function LinkPageBreakBlock({
         <IconWrapper>
           <IconButtonTooltip caption={t('blocks.linkPageBreak.editSettings')}>
             <IconButton
-              size="lg"
+              size="large"
               aria-label={t('blocks.linkPageBreak.editSettings')}
-              icon={<MdEdit />}
               onClick={() => setEditPanelOpen(true)}
-            />
+            >
+              <MdEdit />
+            </IconButton>
           </IconButtonTooltip>
         </IconWrapper>
       </LinkPage>
+
       <ContentWrapper>
         <ChooseImageWrapper>
           <ChooseEditImage
-            header={''}
+            onSelect={image => {
+              setChooseModalOpen(false);
+              onChange(value => ({ ...value, image, imageID: image.id }));
+            }}
             image={image}
             disabled={false}
             openChooseModalOpen={() => setChooseModalOpen(true)}
@@ -105,17 +119,16 @@ export function LinkPageBreakBlock({
             removeImage={() =>
               onChange(value => ({ ...value, image: undefined }))
             }
-            minHeight={150}
           />
         </ChooseImageWrapper>
 
         <InputWrapper>
-          <Input
+          <TextField
             ref={focusInputRef}
             placeholder={t('blocks.linkPageBreak.title')}
             value={text}
             disabled={disabled}
-            onChange={text => onChange({ ...value, text })}
+            onChange={event => onChange({ ...value, text: event.target.value })}
           />
 
           <RichTextBlock
@@ -126,8 +139,16 @@ export function LinkPageBreakBlock({
       </ContentWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -140,8 +161,18 @@ export function LinkPageBreakBlock({
       </Drawer>
       {image && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => setEditModalOpen(false)}
         >
           <ImageEditPanel
@@ -152,8 +183,16 @@ export function LinkPageBreakBlock({
         </Drawer>
       )}
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditPanelOpen}
-        size="sm"
         onClose={() => setEditPanelOpen(false)}
       >
         <LinkPageBreakEditPanel

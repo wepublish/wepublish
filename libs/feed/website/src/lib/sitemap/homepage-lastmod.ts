@@ -2,8 +2,6 @@ import { SitemapHomepageQuery } from '@wepublish/website/api';
 
 type MaybeDate = string | null | undefined;
 
-// The generated block union is deeply nested; the walker only needs these
-// fields, read off whichever block or teaser carries them.
 type Teaser = {
   article?: { latest: { publishedAt?: MaybeDate } } | null;
   page?: { latest: { publishedAt?: MaybeDate } } | null;
@@ -35,10 +33,6 @@ const newest = (dates: MaybeDate[]) =>
     .filter((date): date is string => !!date)
     .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0];
 
-/**
- * When the homepage last changed: the newest of its own publication, the
- * articles, pages and events it teases, and the block templates it uses.
- */
 export const homepageLastmod = (
   page: SitemapHomepageQuery['page'] | undefined
 ): string | undefined =>

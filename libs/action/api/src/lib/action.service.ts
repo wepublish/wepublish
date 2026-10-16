@@ -142,7 +142,6 @@ export class ActionService {
       [ActionType.EventCreated]: events,
     };
 
-    // no or an empty selection means every type
     const selected =
       types?.length ? types : (Object.keys(loaders) as ActionType[]);
 

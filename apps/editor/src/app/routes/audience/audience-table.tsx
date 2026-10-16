@@ -1,17 +1,13 @@
 import styled from '@emotion/styled';
-import ListIcon from '@rsuite/icons/List';
-import { DailySubscriptionStats } from '@wepublish/editor/api';
-import { InfoTooltip } from '@wepublish/ui/editor';
+import { Button } from '@mui/material';
+import { DataTable, DataTableColumn, InfoTooltip } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Table } from 'rsuite';
-import { RowDataType } from 'rsuite-table';
+import { MdList } from 'react-icons/md';
 
 import { AudienceDetailDrawer } from './audience-detail-drawer';
-import { AudienceStatsComputed } from './useAudience';
 import { AudienceClientFilter, TimeResolution } from './audience-filter-params';
-
-const { Column, HeaderCell, Cell } = Table;
+import { AudienceStatsComputed } from './useAudience';
 
 const HeaderText = styled.span`
   min-width: 0;
@@ -67,261 +63,234 @@ export function AudienceTable({
     Omit<AudienceStatsComputed, 'predictedSubscriptionRenewalCount'> | undefined
   >(undefined);
 
+  const countColumn = (
+    id: keyof AudienceStatsComputed & string,
+    label: string,
+    info: string
+  ): DataTableColumn<AudienceStatsComputed> => ({
+    id,
+    label: (
+      <HeaderLabel
+        label={label}
+        info={info}
+      />
+    ),
+    width: 150,
+    render: row => String(row[id] ?? ''),
+  });
+
+  const columns: DataTableColumn<AudienceStatsComputed>[] = [
+    {
+      id: 'date',
+      alwaysVisible: true,
+      label: t('audienceTable.header.date'),
+      width: 140,
+      render: row => (
+        <>
+          {timeResolution === 'monthly' && (
+            <span>{t('audienceTable.byDate')}</span>
+          )}{' '}
+          {new Date(row.date).toLocaleDateString(language, {
+            dateStyle: 'medium',
+          })}
+        </>
+      ),
+    },
+  ];
+
+  if (replacedSubscriptionCount) {
+    columns.push(
+      countColumn(
+        'replacedSubscriptionCount',
+        t('audience.legend.replacedSubscriptionCount'),
+        t('audience.legend.info.replacedSubscriptionCount')
+      )
+    );
+  }
+
+  if (createdSubscriptionCount) {
+    columns.push(
+      countColumn(
+        'createdSubscriptionCount',
+        t('audience.legend.createdSubscriptionCount'),
+        t('audience.legend.info.createdSubscriptionCount')
+      )
+    );
+  }
+
+  if (renewedSubscriptionCount) {
+    columns.push(
+      countColumn(
+        'renewedSubscriptionCount',
+        t('audience.legend.renewedSubscriptionCount'),
+        t('audience.legend.info.renewedSubscriptionCount')
+      )
+    );
+  }
+
+  if (predictedSubscriptionRenewalCount) {
+    columns.push(
+      {
+        id: 'predictedRenewalHigh',
+        label: (
+          <HeaderLabel
+            label={t(
+              'audience.legend.predictedSubscriptionRenewalCountPerDay.highProbability'
+            )}
+            info={t(
+              'audienceTable.predictedSubscriptionRenewalCountPerDay.highProbabilityInfo'
+            )}
+          />
+        ),
+        width: 150,
+        render: row =>
+          String(
+            row.predictedSubscriptionRenewalCount?.perDayHighProbability ?? ''
+          ),
+      },
+      {
+        id: 'predictedRenewalLow',
+        label: (
+          <HeaderLabel
+            label={t(
+              'audience.legend.predictedSubscriptionRenewalCountPerDay.lowProbability'
+            )}
+            info={t(
+              'audienceTable.predictedSubscriptionRenewalCountPerDay.lowProbabilityInfo'
+            )}
+          />
+        ),
+        width: 150,
+        render: row =>
+          String(
+            row.predictedSubscriptionRenewalCount?.perDayLowProbability ?? ''
+          ),
+      }
+    );
+  }
+
+  if (endingSubscriptionCount) {
+    columns.push(
+      countColumn(
+        'endingSubscriptionCount',
+        t('audience.legend.endingSubscriptionCount'),
+        t('audience.legend.info.endingSubscriptionCount')
+      )
+    );
+  }
+
+  columns.push({
+    id: 'totalNewSubscriptions',
+    label: (
+      <HeaderLabel
+        label={t('audience.legend.totalNewSubscriptions')}
+        info={t('audienceTable.totalNewSubscriptionsInfo')}
+      />
+    ),
+    width: 150,
+    render: row => <strong>{row.totalNewSubscriptions}</strong>,
+  });
+
+  if (overdueSubscriptionCount) {
+    columns.push(
+      countColumn(
+        'overdueSubscriptionCount',
+        t('audience.legend.overdueSubscriptionCount'),
+        t('audience.legend.info.overdueSubscriptionCount')
+      )
+    );
+  }
+
+  if (deactivatedSubscriptionCount) {
+    columns.push(
+      countColumn(
+        'deactivatedSubscriptionCount',
+        t('audience.legend.deactivatedSubscriptionCount'),
+        t('audience.legend.info.deactivatedSubscriptionCount')
+      )
+    );
+  }
+
+  if (totalActiveSubscriptionCount) {
+    columns.push(
+      countColumn(
+        'totalActiveSubscriptionCount',
+        t('audience.legend.totalActiveSubscriptionCount'),
+        t('audience.legend.info.totalActiveSubscriptionCount')
+      )
+    );
+  }
+
+  columns.push(
+    {
+      id: 'renewalRate',
+      label: (
+        <HeaderLabel
+          label={t('audience.legend.renewalRate')}
+          info={t('audienceTable.renewalRateInfo')}
+        />
+      ),
+      width: 150,
+      render: row => (
+        <>
+          <span>
+            ({row.renewedAndReplaced} / {row.totalToBeRenewed})
+          </span>{' '}
+          <strong>{row.renewalRate}%</strong>
+        </>
+      ),
+    },
+    {
+      id: 'cancellationRate',
+      label: (
+        <HeaderLabel
+          label={t('audience.legend.cancellationRate')}
+          info={t('audienceTable.cancellationRateInfo')}
+        />
+      ),
+      width: 150,
+      render: row => (
+        <>
+          <span>
+            (
+            {row.deactivatedSubscriptionCount * -1 +
+              row.overdueSubscriptionCount * -1}{' '}
+            / {row.totalToBeRenewed})
+          </span>{' '}
+          <strong>{row.cancellationRate}%</strong>
+        </>
+      ),
+    },
+    {
+      id: 'action',
+      label: t('action'),
+      width: 180,
+      align: 'center',
+      fixed: true,
+      render: row => (
+        <Button
+          variant="contained"
+          size="small"
+          startIcon={<MdList />}
+          onClick={() => setSelectedAudienceStats(row)}
+        >
+          {t('audienceTable.showUsers')}
+        </Button>
+      ),
+    }
+  );
+
   return (
     <>
-      <Table
+      <DataTable
+        storageKey="audience"
         data={audienceStats}
-        style={{ width: '100%' }}
-        virtualized
-        height={800}
+        columns={columns}
         loading={loading}
-      >
-        <Column
-          resizable
-          width={140}
-        >
-          <HeaderCell>{t('audienceTable.header.date')}</HeaderCell>
-          <Cell dataKey="date">
-            {(rowData: RowDataType<DailySubscriptionStats>) => (
-              <>
-                {timeResolution === 'monthly' && (
-                  <span>{t('audienceTable.byDate')}</span>
-                )}{' '}
-                {new Date(rowData.date).toLocaleDateString(language, {
-                  dateStyle: 'medium',
-                })}
-              </>
-            )}
-          </Cell>
-        </Column>
-
-        {replacedSubscriptionCount && (
-          <Column
-            resizable
-            width={150}
-          >
-            <HeaderCell>
-              <HeaderLabel
-                label={t('audience.legend.replacedSubscriptionCount')}
-                info={t('audience.legend.info.replacedSubscriptionCount')}
-              />
-            </HeaderCell>
-
-            <Cell dataKey="replacedSubscriptionCount" />
-          </Column>
-        )}
-
-        {createdSubscriptionCount && (
-          <Column
-            resizable
-            width={150}
-          >
-            <HeaderCell>
-              <HeaderLabel
-                label={t('audience.legend.createdSubscriptionCount')}
-                info={t('audience.legend.info.createdSubscriptionCount')}
-              />
-            </HeaderCell>
-            <Cell dataKey="createdSubscriptionCount" />
-          </Column>
-        )}
-
-        {renewedSubscriptionCount && (
-          <Column
-            resizable
-            width={150}
-          >
-            <HeaderCell>
-              <HeaderLabel
-                label={t('audience.legend.renewedSubscriptionCount')}
-                info={t('audience.legend.info.renewedSubscriptionCount')}
-              />
-            </HeaderCell>
-            <Cell dataKey="renewedSubscriptionCount" />
-          </Column>
-        )}
-
-        {predictedSubscriptionRenewalCount && (
-          <>
-            <Column
-              resizable
-              width={150}
-            >
-              <HeaderCell>
-                <HeaderLabel
-                  label={t(
-                    'audience.legend.predictedSubscriptionRenewalCountPerDay.highProbability'
-                  )}
-                  info={t(
-                    'audienceTable.predictedSubscriptionRenewalCountPerDay.highProbabilityInfo'
-                  )}
-                />
-              </HeaderCell>
-              <Cell dataKey="predictedSubscriptionRenewalCount.perDayHighProbability" />
-            </Column>
-            <Column
-              resizable
-              width={150}
-            >
-              <HeaderCell>
-                <HeaderLabel
-                  label={t(
-                    'audience.legend.predictedSubscriptionRenewalCountPerDay.lowProbability'
-                  )}
-                  info={t(
-                    'audienceTable.predictedSubscriptionRenewalCountPerDay.lowProbabilityInfo'
-                  )}
-                />
-              </HeaderCell>
-              <Cell dataKey="predictedSubscriptionRenewalCount.perDayLowProbability" />
-            </Column>
-          </>
-        )}
-
-        {endingSubscriptionCount && (
-          <Column
-            resizable
-            width={150}
-          >
-            <HeaderCell>
-              <HeaderLabel
-                label={t('audience.legend.endingSubscriptionCount')}
-                info={t('audience.legend.info.endingSubscriptionCount')}
-              />
-            </HeaderCell>
-            <Cell dataKey="endingSubscriptionCount" />
-          </Column>
-        )}
-
-        <Column
-          resizable
-          width={150}
-        >
-          <HeaderCell>
-            <HeaderLabel
-              label={t('audience.legend.totalNewSubscriptions')}
-              info={t('audienceTable.totalNewSubscriptionsInfo')}
-            />
-          </HeaderCell>
-          <Cell dataKey="totalNewSubscriptions">
-            {(rowData: RowDataType<AudienceStatsComputed>) => (
-              <strong>{rowData.totalNewSubscriptions}</strong>
-            )}
-          </Cell>
-        </Column>
-
-        {overdueSubscriptionCount && (
-          <Column
-            resizable
-            width={150}
-          >
-            <HeaderCell>
-              <HeaderLabel
-                label={t('audience.legend.overdueSubscriptionCount')}
-                info={t('audience.legend.info.overdueSubscriptionCount')}
-              />
-            </HeaderCell>
-            <Cell dataKey="overdueSubscriptionCount" />
-          </Column>
-        )}
-
-        {deactivatedSubscriptionCount && (
-          <Column
-            resizable
-            width={150}
-          >
-            <HeaderCell>
-              <HeaderLabel
-                label={t('audience.legend.deactivatedSubscriptionCount')}
-                info={t('audience.legend.info.deactivatedSubscriptionCount')}
-              />
-            </HeaderCell>
-            <Cell dataKey="deactivatedSubscriptionCount" />
-          </Column>
-        )}
-
-        {totalActiveSubscriptionCount && (
-          <Column
-            resizable
-            width={150}
-          >
-            <HeaderCell>
-              <HeaderLabel
-                label={t('audience.legend.totalActiveSubscriptionCount')}
-                info={t('audience.legend.info.totalActiveSubscriptionCount')}
-              />
-            </HeaderCell>
-
-            <Cell dataKey="totalActiveSubscriptionCount" />
-          </Column>
-        )}
-        <Column
-          resizable
-          width={150}
-        >
-          <HeaderCell>
-            <HeaderLabel
-              label={t('audience.legend.renewalRate')}
-              info={t('audienceTable.renewalRateInfo')}
-            />
-          </HeaderCell>
-          <Cell dataKey="renewalRate">
-            {(rowData: RowDataType<AudienceStatsComputed>) => (
-              <>
-                <span>
-                  ({rowData.renewedAndReplaced} / {rowData.totalToBeRenewed})
-                </span>{' '}
-                <strong>{rowData.renewalRate}%</strong>
-              </>
-            )}
-          </Cell>
-        </Column>
-        <Column
-          resizable
-          width={150}
-        >
-          <HeaderCell>
-            <HeaderLabel
-              label={t('audience.legend.cancellationRate')}
-              info={t('audienceTable.cancellationRateInfo')}
-            />
-          </HeaderCell>
-          <Cell dataKey="cancellationRate">
-            {(rowData: RowDataType<AudienceStatsComputed>) => (
-              <>
-                <span>
-                  (
-                  {rowData.deactivatedSubscriptionCount * -1 +
-                    rowData.overdueSubscriptionCount * -1}{' '}
-                  / {rowData.totalToBeRenewed})
-                </span>{' '}
-                <strong>{rowData.cancellationRate}%</strong>
-              </>
-            )}
-          </Cell>
-        </Column>
-        <Column
-          width={180}
-          align="center"
-          fixed="right"
-        >
-          <HeaderCell align="center">{t('action')}</HeaderCell>
-          <Cell dataKey="action">
-            {(rowData: RowDataType<AudienceStatsComputed>) => (
-              <Button
-                size="xs"
-                appearance="primary"
-                startIcon={<ListIcon />}
-                onClick={() =>
-                  setSelectedAudienceStats(rowData as AudienceStatsComputed)
-                }
-              >
-                {t('audienceTable.showUsers')}
-              </Button>
-            )}
-          </Cell>
-        </Column>
-      </Table>
+        getRowId={row => row.date}
+        virtualize
+        maxHeight={800}
+      />
 
       <AudienceDetailDrawer
         audienceStats={selectedAudienceStats}

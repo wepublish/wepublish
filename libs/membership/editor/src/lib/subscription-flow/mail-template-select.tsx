@@ -4,7 +4,6 @@ import {
   SubscriptionEvent,
   SubscriptionFlowFragment,
 } from '@wepublish/editor/api';
-import { SelectPicker, Toggle } from 'rsuite';
 import { SubscriptionClientContext } from './graphql-client-context';
 import {
   DecoratedSubscriptionInterval,
@@ -15,8 +14,16 @@ import {
 import { useTranslation } from 'react-i18next';
 import { MdUnsubscribe } from 'react-icons/md';
 import { useAuthorisation } from '@wepublish/ui/editor';
+import {
+  FormControlLabel,
+  MenuItem,
+  Stack,
+  Switch,
+  TextField,
+} from '@mui/material';
 import { formatTemplateLabel } from '../mail-template/mail-placeholders';
 import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
+import { CanUpdateSubscriptionFlow } from '@wepublish/permissions';
 
 interface MailTemplateSelectProps {
   mailTemplates: TinyMailTemplateFragment[];
@@ -37,7 +44,7 @@ export function MailTemplateSelect({
 }: MailTemplateSelectProps) {
   const { t } = useTranslation();
   const canUpdateSubscriptionFlow = useAuthorisation(
-    'CAN_UPDATE_SUBSCRIPTION_FLOW'
+    CanUpdateSubscriptionFlow.id
   );
 
   const client = useContext(SubscriptionClientContext);
@@ -86,44 +93,61 @@ export function MailTemplateSelect({
     });
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <SelectPicker
-        block
-        style={{ flex: 1 }}
-        data={mailTemplates.map(mailTemplate => ({
-          label: formatTemplateLabel(
-            mailTemplate.name,
-            mailTemplate.context,
-            (k, f) => t(k, f)
-          ),
-          value: mailTemplate.id,
-        }))}
+    <Stack
+      direction="row"
+      spacing={1}
+      sx={{ alignItems: 'center' }}
+    >
+      <TextField
+        select
         disabled={!canUpdateSubscriptionFlow}
-        defaultValue={subscriptionInterval?.object.mailTemplate?.id}
-        onSelect={createOrUpdateInterval}
-        onClean={deleteInterval}
-        placeholder={
-          <>
-            <MdUnsubscribe
-              size={16}
-              style={{ marginRight: '5px' }}
-            />
-            {t('mailTemplateSelect.noMailSentSelectNow')}
-          </>
-        }
-      />
+        value={subscriptionInterval?.object.mailTemplate?.id ?? ''}
+        onChange={event => {
+          if (event.target.value) {
+            createOrUpdateInterval(event.target.value);
+          } else {
+            deleteInterval();
+          }
+        }}
+        slotProps={{ select: { displayEmpty: true } }}
+        fullWidth
+      >
+        <MenuItem value="">
+          <MdUnsubscribe
+            size={16}
+            style={{ marginRight: '5px' }}
+          />
+          {t('mailTemplateSelect.noMailSentSelectNow')}
+        </MenuItem>
+
+        {mailTemplates.map(mailTemplate => (
+          <MenuItem
+            key={mailTemplate.id}
+            value={mailTemplate.id}
+          >
+            {formatTemplateLabel(
+              mailTemplate.name,
+              mailTemplate.context,
+              (k, f) => t(k, f)
+            )}
+          </MenuItem>
+        ))}
+      </TextField>
       {paperLetterFlow && subscriptionInterval && (
-        <Toggle
-          size="sm"
-          aria-label={t('mailTemplateSelect.sendAsLetter')}
+        <FormControlLabel
           title={t('mailTemplateSelect.sendAsLetterHint')}
-          checked={subscriptionInterval.object.sendAsLetter}
-          disabled={!canUpdateSubscriptionFlow}
-          onChange={setSendAsLetter}
-        >
-          {t('mailTemplateSelect.sendAsLetter')}
-        </Toggle>
+          control={
+            <Switch
+              size="small"
+              checked={subscriptionInterval.object.sendAsLetter}
+              disabled={!canUpdateSubscriptionFlow}
+              onChange={(_event, checked) => setSendAsLetter(checked)}
+            />
+          }
+          label={t('mailTemplateSelect.sendAsLetter')}
+          sx={{ whiteSpace: 'nowrap' }}
+        />
       )}
-    </div>
+    </Stack>
   );
 }

@@ -20,10 +20,10 @@ const Wrapper = styled(Box, {
 })<{ minHeight: number }>`
   height: 100%;
   min-height: ${({ minHeight }) => minHeight}px;
-  border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: var(--rs-radius-md);
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
   overflow: hidden;
-  background-color: var(--rs-bg-card);
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
 
   /* The @uiw root div must fill the wrapper so .cm-editor's 100% height
      resolves and the scroller scrolls instead of overflowing. */

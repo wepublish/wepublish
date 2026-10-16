@@ -1,5 +1,22 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tabs,
+  Typography,
+} from '@mui/material';
 import {
   ConfirmAllDeliverySuggestionsDocument,
   ConfirmDeliverySuggestionDocument,
@@ -9,36 +26,22 @@ import {
   RecomputeDeliverySuggestionsDocument,
 } from '@wepublish/editor/api';
 import {
+  enqueueSnackbar,
   humanizeError,
   ListViewContainer,
   ListViewHeader,
+  PageTitle,
+  Pagination,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdRefresh } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  Message,
-  Modal,
-  Nav,
-  Pagination,
-  Table,
-  toaster,
-} from 'rsuite';
 
 const PAGE_SIZE = 50;
 
 const showError = (error: unknown) =>
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-    >
-      {humanizeError(error as never)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error as never), { variant: 'error' });
 
 /** `emailQuality:dead` → `emailQuality_dead`: a colon would be a namespace to i18next. */
 const reasonKey = (reason: string) => reason.replace(':', '_');
@@ -65,27 +68,20 @@ export function DeliverySuggestionsPage() {
     counts.refetch();
     list.refetch();
   };
-  const mutationOptions = { onCompleted: refresh, onError: showError };
 
   const [confirmOne, { loading: confirmingOne }] = useMutation(
     ConfirmDeliverySuggestionDocument,
-    mutationOptions
+    { onCompleted: refresh, onError: showError }
   );
   const [confirmAll, { loading: confirmingAll }] = useMutation(
     ConfirmAllDeliverySuggestionsDocument,
     {
       onError: showError,
       onCompleted: ({ confirmAllDeliverySuggestions: result }) => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={6000}
-          >
-            {t('deliveryMode.confirmedAll', result)}
-          </Message>
-        );
+        enqueueSnackbar(t('deliveryMode.confirmedAll', result), {
+          variant: 'success',
+          autoHideDuration: 6000,
+        });
         refresh();
       },
     }
@@ -95,16 +91,10 @@ export function DeliverySuggestionsPage() {
     {
       onError: showError,
       onCompleted: ({ recomputeDeliverySuggestions: result }) => {
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={6000}
-          >
-            {t('deliveryMode.recomputed', result)}
-          </Message>
-        );
+        enqueueSnackbar(t('deliveryMode.recomputed', result), {
+          variant: 'success',
+          autoHideDuration: 6000,
+        });
         refresh();
       },
     }
@@ -118,46 +108,57 @@ export function DeliverySuggestionsPage() {
   const totalCount = list.data?.deliverySuggestions.totalCount ?? 0;
 
   return (
-    <ListViewContainer>
-      <ListViewHeader>
-        <h2>{t('deliveryMode.suggestionsTitle')}</h2>
-        <Typography
-          variant="body2"
-          sx={{ color: 'var(--rs-text-secondary)' }}
-        >
-          {t('deliveryMode.suggestionsIntro')}
-        </Typography>
-      </ListViewHeader>
+    <>
+      <ListViewContainer>
+        <ListViewHeader>
+          <PageTitle>{t('deliveryMode.suggestionsTitle')}</PageTitle>
+          <Typography
+            variant="body2"
+            sx={{ color: 'text.secondary' }}
+          >
+            {t('deliveryMode.suggestionsIntro')}
+          </Typography>
+        </ListViewHeader>
+      </ListViewContainer>
 
-      <div
-        style={{
-          display: 'flex',
-          gap: 12,
-          flexWrap: 'wrap',
+      <Stack
+        direction="row"
+        spacing={1.5}
+        useFlexGap
+        sx={{
           alignItems: 'center',
           justifyContent: 'space-between',
+          flexWrap: 'wrap',
         }}
       >
-        <Nav
-          appearance="tabs"
-          activeKey={kind}
-          onSelect={key => {
-            setKind(key as DeliverySuggestionKind);
+        <Tabs
+          value={kind}
+          onChange={(_event, value) => {
+            setKind(value as DeliverySuggestionKind);
             setPage(1);
           }}
         >
-          <Nav.Item eventKey={DeliverySuggestionKind.ToLetter}>
-            {t('deliveryMode.kind.toLetter', { count: total?.toLetter ?? 0 })}
-          </Nav.Item>
-          <Nav.Item eventKey={DeliverySuggestionKind.ToMail}>
-            {t('deliveryMode.kind.toMail', { count: total?.toMail ?? 0 })}
-          </Nav.Item>
-        </Nav>
+          <Tab
+            value={DeliverySuggestionKind.ToLetter}
+            label={t('deliveryMode.kind.toLetter', {
+              count: total?.toLetter ?? 0,
+            })}
+          />
+          <Tab
+            value={DeliverySuggestionKind.ToMail}
+            label={t('deliveryMode.kind.toMail', {
+              count: total?.toMail ?? 0,
+            })}
+          />
+        </Tabs>
 
-        <div style={{ display: 'flex', gap: 8 }}>
+        <Stack
+          direction="row"
+          spacing={1}
+        >
           <Button
-            size="sm"
-            appearance="ghost"
+            variant="outlined"
+            size="small"
             loading={recomputing}
             startIcon={<MdRefresh />}
             onClick={() => recompute()}
@@ -165,110 +166,110 @@ export function DeliverySuggestionsPage() {
             {t('deliveryMode.recompute')}
           </Button>
           <Button
-            size="sm"
-            appearance="primary"
+            variant="contained"
+            size="small"
             disabled={!shown}
             loading={confirmingAll}
             onClick={() => setAskAll(true)}
           >
             {t('deliveryMode.confirmAll', { count: shown })}
           </Button>
-        </div>
-      </div>
+        </Stack>
+      </Stack>
 
-      <Table
-        autoHeight
-        data={nodes}
-        loading={list.loading}
-        style={{ marginTop: 16 }}
-      >
-        <Table.Column flexGrow={2}>
-          <Table.HeaderCell>{t('deliveryMode.table.user')}</Table.HeaderCell>
-          <Table.Cell>
-            {(row: (typeof nodes)[number]) => (
-              <Link to={`/users/edit/${row.user.id}`}>
-                {[row.user.firstName, row.user.name].filter(Boolean).join(' ')}{' '}
-                <span style={{ color: 'var(--rs-text-secondary)' }}>
-                  {row.user.email}
-                </span>
-              </Link>
-            )}
-          </Table.Cell>
-        </Table.Column>
-        <Table.Column flexGrow={2}>
-          <Table.HeaderCell>
-            {t('deliveryMode.table.emailQuality')}
-          </Table.HeaderCell>
-          <Table.Cell>
-            {(row: (typeof nodes)[number]) =>
-              row.emailQuality ?
-                `${t(`mailSend.emailSegments.${row.emailQuality.level}`)} · ${row.emailQuality.reason} · ${new Date(row.emailQuality.since).toLocaleDateString()}`
-              : '–'
-            }
-          </Table.Cell>
-        </Table.Column>
-        <Table.Column flexGrow={2}>
-          <Table.HeaderCell>{t('deliveryMode.table.reason')}</Table.HeaderCell>
-          <Table.Cell>
-            {(row: (typeof nodes)[number]) =>
-              t(`deliveryMode.reason.${reasonKey(row.reason)}`)
-            }
-          </Table.Cell>
-        </Table.Column>
-        <Table.Column flexGrow={1}>
-          <Table.HeaderCell>{t('deliveryMode.table.since')}</Table.HeaderCell>
-          <Table.Cell>
-            {(row: (typeof nodes)[number]) =>
-              new Date(row.createdAt).toLocaleDateString()
-            }
-          </Table.Cell>
-        </Table.Column>
-        <Table.Column width={140}>
-          <Table.HeaderCell> </Table.HeaderCell>
-          <Table.Cell style={{ padding: 6 }}>
-            {(row: (typeof nodes)[number]) => (
-              <Button
-                size="xs"
-                appearance="primary"
-                loading={confirmingOne}
-                onClick={() => confirmOne({ variables: { id: row.id } })}
-              >
-                {t('deliveryMode.confirm')}
-              </Button>
-            )}
-          </Table.Cell>
-        </Table.Column>
-      </Table>
+      <TableContainer sx={{ marginTop: 2 }}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <strong>{t('deliveryMode.table.user')}</strong>
+              </TableCell>
+              <TableCell>
+                <strong>{t('deliveryMode.table.emailQuality')}</strong>
+              </TableCell>
+              <TableCell>
+                <strong>{t('deliveryMode.table.reason')}</strong>
+              </TableCell>
+              <TableCell>
+                <strong>{t('deliveryMode.table.since')}</strong>
+              </TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {nodes.map(row => (
+              <TableRow key={row.id}>
+                <TableCell>
+                  <Link to={`/users/edit/${row.user.id}`}>
+                    {[row.user.firstName, row.user.name]
+                      .filter(Boolean)
+                      .join(' ')}{' '}
+                    <Box
+                      component="span"
+                      sx={{ color: 'text.secondary' }}
+                    >
+                      {row.user.email}
+                    </Box>
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  {row.emailQuality ?
+                    `${t(`mailSend.emailSegments.${row.emailQuality.level}`)} · ${row.emailQuality.reason} · ${new Date(row.emailQuality.since).toLocaleDateString()}`
+                  : '–'}
+                </TableCell>
+                <TableCell>
+                  {t(`deliveryMode.reason.${reasonKey(row.reason)}`)}
+                </TableCell>
+                <TableCell>
+                  {new Date(row.createdAt).toLocaleDateString()}
+                </TableCell>
+                <TableCell align="right">
+                  <Button
+                    variant="contained"
+                    size="small"
+                    loading={confirmingOne}
+                    onClick={() => confirmOne({ variables: { id: row.id } })}
+                  >
+                    {t('deliveryMode.confirm')}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       {totalCount > PAGE_SIZE && (
-        <Pagination
-          style={{ marginTop: 12 }}
-          total={totalCount}
-          limit={PAGE_SIZE}
-          activePage={page}
-          onChangePage={setPage}
-        />
+        <Box sx={{ marginTop: 1.5 }}>
+          <Pagination
+            state={{
+              page,
+              limit: PAGE_SIZE,
+              setPage,
+              setLimit: () => undefined /* page size is fixed here */,
+            }}
+            totalCount={totalCount}
+          />
+        </Box>
       )}
 
-      <Modal
+      <Dialog
         open={askAll}
         onClose={() => setAskAll(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('deliveryMode.confirmAllTitle')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+        <DialogTitle>{t('deliveryMode.confirmAllTitle')}</DialogTitle>
+        <DialogContent>
           {t(`deliveryMode.confirmAllText.${kind}`, { count: shown })}
-        </Modal.Body>
-        <Modal.Footer>
+        </DialogContent>
+        <DialogActions>
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setAskAll(false)}
           >
             {t('cancel')}
           </Button>
           <Button
-            appearance="primary"
+            variant="contained"
             onClick={() => {
               setAskAll(false);
               confirmAll({ variables: { kind } });
@@ -276,8 +277,8 @@ export function DeliverySuggestionsPage() {
           >
             {t('deliveryMode.confirmAllYes')}
           </Button>
-        </Modal.Footer>
-      </Modal>
-    </ListViewContainer>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }

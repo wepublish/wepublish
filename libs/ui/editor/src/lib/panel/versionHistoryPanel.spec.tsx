@@ -8,7 +8,7 @@ import {
   VersionHistoryRevision,
 } from './versionHistoryPanel';
 
-const theme = createTheme();
+const theme = createTheme({ cssVariables: true });
 
 // Translate to the raw key so assertions stay deterministic and locale-agnostic.
 vi.mock('react-i18next', () => ({
