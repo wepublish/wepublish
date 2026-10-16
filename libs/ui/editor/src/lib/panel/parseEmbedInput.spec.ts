@@ -1,3 +1,9 @@
+/**
+ * happy-dom loads the page of every iframe it parses, so the pasted
+ * `<iframe src="/embedded">` would hit http://localhost:3000 for real.
+ *
+ * @vitest-environment-options {"settings": {"navigation": {"disableChildFrameNavigation": true}, "handleDisabledFileLoadingAsSuccess": true}}
+ */
 import { EmbedType } from '../blocks/types';
 import { parseEmbedInput } from './parseEmbedInput';
 
