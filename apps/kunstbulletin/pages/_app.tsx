@@ -21,9 +21,11 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import { minimalTheme } from '@wepublish/ui';
 import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  WebsiteShellProps,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
@@ -82,9 +84,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -111,6 +115,8 @@ function CustomApp({
     () => createTheme(minimalTheme, settings?.theme ?? {}),
     [settings]
   );
+
+  const shell = getWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
@@ -141,12 +147,14 @@ function CustomApp({
               </Head>
 
               <Spacer>
-                <NavBar
-                  categorySlugs={[['categories', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                />
+                {shell.showNavigation && (
+                  <NavBar
+                    categorySlugs={[['categories', 'about-us']]}
+                    slug="main"
+                    headerSlug="header"
+                    iconSlug="icons"
+                  />
+                )}
 
                 <main>
                   <MainSpacer maxWidth="lg">
@@ -154,11 +162,13 @@ function CustomApp({
                   </MainSpacer>
                 </main>
 
-                <FooterContainer
-                  slug="footer"
-                  categorySlugs={[['categories', 'about-us']]}
-                  iconSlug="icons"
-                />
+                {shell.showFooter && (
+                  <FooterContainer
+                    slug="footer"
+                    categorySlugs={[['categories', 'about-us']]}
+                    iconSlug="icons"
+                  />
+                )}
               </Spacer>
 
               <RoutedAdminBar />
