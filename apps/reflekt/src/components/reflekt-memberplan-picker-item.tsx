@@ -1,21 +1,26 @@
 import styled from '@emotion/styled';
 import { Radio, useRadioGroup } from '@mui/material';
 import {
+  calculatePeriodAmount,
   CurrencyNumberSpinner,
   formatCurrency,
+  getPeriodPriceRange,
+  isFixedAmountLayout,
   MemberPlanItemContent,
   MemberPlanItemName,
   MemberPlanItemPicker,
   MemberPlanItemPrice,
   MemberPlanItemWrapper,
+  showsAmountInput,
 } from '@wepublish/membership/website';
+import { PaymentPeriodicity } from '@wepublish/website/api';
 import {
   BuilderMemberPlanItemProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { getMonthlyEquivalentRange } from '@wepublish/membership/website';
 import { forwardRef } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { euclidCircularB, robotoMono } from '../theme';
@@ -43,6 +48,13 @@ export const MemberPlanItem = forwardRef<
     slug,
     shortDescription,
     periodicityPricing,
+    paymentPeriodicity,
+    showPeriodicity,
+    amountLayout,
+    amount,
+    onAmountChange,
+    availablePaymentMethods,
+    defaultPaymentPeriodicity,
     currency,
     extendable,
     goodies,
@@ -60,25 +72,25 @@ export const MemberPlanItem = forwardRef<
   const radioGroup = useRadioGroup();
   const isChecked = props.checked ?? radioGroup?.value === id;
   const { t } = useTranslation();
-  const {
-    control,
-    formState: { errors },
-    setValue,
-  } = useFormContext();
-
-  const monthlyAmount = useWatch({
-    control,
-    name: 'monthlyAmount',
-    disabled: !isChecked,
-  }) as number;
+  const errors = useFormContext()?.formState.errors;
+  const monthlyAmount = isChecked ? amount : undefined;
 
   const hasFixedAmount =
     amountPerMonthMax != null && amountPerMonthMax === amountPerMonthMin;
 
-  const hasInCardFreeInput = tags?.includes('inline-slider');
+  const hasInCardFreeInput =
+    isFixedAmountLayout(amountLayout) && showsAmountInput(amountLayout);
 
-  const displayedAmountPerMonth =
-    isChecked && monthlyAmount != null ? monthlyAmount : amountPerMonthMin;
+  const memberPlan = { periodicityPricing };
+
+  const yearlyPriceRange = getPeriodPriceRange(
+    memberPlan,
+    PaymentPeriodicity.Yearly
+  );
+  const yearlyCents =
+    isChecked && monthlyAmount != null ?
+      calculatePeriodAmount(monthlyAmount, PaymentPeriodicity.Yearly)
+    : yearlyPriceRange.amountMin;
 
   return (
     <MemberPlanItemWrapper className={className}>
@@ -88,13 +100,9 @@ export const MemberPlanItem = forwardRef<
 
           <MemberPlanItemPrice>
             {t('subscribe.memberplan.price', {
-              yearlyAmount: Math.round((displayedAmountPerMonth * 12) / 100),
+              yearlyAmount: Math.round(yearlyCents / 100),
               amountPerMonthMin,
-              yearlyPrice: formatCurrency(
-                Math.ceil((amountPerMonthMin / 100) * 12),
-                currency,
-                locale
-              ),
+              yearlyPrice: formatCurrency(yearlyCents / 100, currency, locale),
               monthlyPrice: formatCurrency(
                 amountPerMonthMin / 100,
                 currency,
@@ -121,14 +129,14 @@ export const MemberPlanItem = forwardRef<
             value={(monthlyAmount ?? amountPerMonthMin) / 100}
             onValueChange={spinnerValue => {
               if (spinnerValue != null) {
-                setValue('monthlyAmount', Math.round(spinnerValue * 100));
+                onAmountChange?.(Math.round(spinnerValue * 100));
               }
             }}
             helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
           />
         )}
 
-        {hasInCardFreeInput && isChecked && errors.monthlyAmount && (
+        {hasInCardFreeInput && isChecked && errors?.monthlyAmount && (
           <MemberPlanItemAmountError>
             {errors.monthlyAmount.message?.toString()}
           </MemberPlanItemAmountError>

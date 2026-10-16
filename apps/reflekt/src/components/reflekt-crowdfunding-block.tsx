@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 import { formatCurrency } from '@wepublish/membership/website';
 import { CrowdfundingGoalType, Currency } from '@wepublish/website/api';
 import { BuilderCrowdfundingBlockProps } from '@wepublish/website/builder';
-import { ElementType, useEffect, useState } from 'react';
+import { ElementType } from 'react';
 import { Trans } from 'react-i18next';
 
 import theme, { euclidCircularB, robotoMono } from '../theme';
@@ -14,6 +14,22 @@ import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 // Normalize to a single canonical apostrophe.
 const formatNumber = (value: number, locale = 'de-CH') =>
   new Intl.NumberFormat(locale).format(value).replace(/[’ʼ]/g, "'");
+
+const HERO_CURRENT_GOAL_FILL = '#E8382E';
+
+const getDaysRemaining = (countSubscriptionsUntil?: string | null) => {
+  if (!countSubscriptionsUntil) {
+    return null;
+  }
+
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+  const remaining = Math.ceil(
+    (new Date(countSubscriptionsUntil).getTime() - Date.now()) /
+      millisecondsPerDay
+  );
+
+  return Math.max(0, remaining);
+};
 
 const Wrapper = styled('div')`
   display: grid;
@@ -92,26 +108,58 @@ const HeroDays = styled(Typography)<{ component?: ElementType }>`
   color: ${({ theme }) => theme.palette.common.white};
 `;
 
+const HeroBarCurrentGoalFill = styled('div', {
+  shouldForwardProp: prop => prop !== 'start' && prop !== 'end',
+})<{ start: number; end: number }>`
+  position: absolute;
+  inset: 0 auto 0 ${({ start }) => start}%;
+  width: ${({ start, end }) => Math.max(0, end - start)}%;
+  background-color: ${HERO_CURRENT_GOAL_FILL};
+`;
+
+const HeroGoalMarkers = styled('div')`
+  position: relative;
+  height: ${theme.spacing(3)};
+`;
+
+const HeroGoalMarker = styled('div', {
+  shouldForwardProp: prop => prop !== 'position',
+})<{ position: number }>`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: ${({ position }) => position}%;
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing(1)};
+  transform: translateX(-100%);
+`;
+
+const HeroGoalMarkerLabel = styled('span')`
+  font-family: ${[robotoMono.style.fontFamily, 'monospace'].join(',')};
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1;
+  white-space: nowrap;
+  color: ${({ theme }) => theme.palette.common.white};
+
+  ${theme.breakpoints.up('md')} {
+    font-size: 0.875rem;
+  }
+`;
+
+const HeroGoalMarkerTick = styled('span')`
+  align-self: stretch;
+  width: 2px;
+  margin-bottom: ${theme.spacing(-1)};
+  background-color: ${({ theme }) => theme.palette.common.white};
+`;
+
 export const ReflektCrowdfundingBlock = ({
   crowdfunding,
   blockStyle,
 }: BuilderCrowdfundingBlockProps) => {
-  const countSubscriptionsUntil = crowdfunding?.countSubscriptionsUntil;
-  const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (!countSubscriptionsUntil) {
-      setDaysRemaining(null);
-      return;
-    }
-
-    const millisecondsPerDay = 1000 * 60 * 60 * 24;
-    const remaining = Math.ceil(
-      (new Date(countSubscriptionsUntil).getTime() - Date.now()) /
-        millisecondsPerDay
-    );
-    setDaysRemaining(Math.max(0, remaining));
-  }, [countSubscriptionsUntil]);
+  const daysRemaining = getDaysRemaining(crowdfunding?.countSubscriptionsUntil);
 
   if (!crowdfunding) {
     return null;
@@ -130,45 +178,92 @@ export const ReflektCrowdfundingBlock = ({
 
   const isHero = blockStyle === ReflektBlockStyles.CrowdfundingHero;
 
+  const formatGoalValue = (amount: number) =>
+    isRevenueGoal ?
+      formatCurrency(amount / 100, Currency.Chf)
+    : formatNumber(amount);
+
+  const currentValue = isRevenueGoal ? revenue : subscriptions;
+  const reachedGoals = [...(crowdfunding.goals ?? [])]
+    .filter(goal => goal.amount < goalAmount)
+    .sort((goalA, goalB) => goalA.amount - goalB.amount);
+  const hasReachedGoals = reachedGoals.length > 0;
+  const reachedPercent =
+    hasReachedGoals ?
+      (reachedGoals[reachedGoals.length - 1].amount / goalAmount) * 100
+    : 0;
+  const currentPercent = Math.min(100, Math.max(0, progress));
+  const allGoalsReached = hasReachedGoals && currentValue >= goalAmount;
+
   const titleContent = (
     <Trans
       i18nKey="crowdfunding.stats.progressOfGoal"
       values={{
         type: crowdfunding.goalType,
-        current:
-          isRevenueGoal ?
-            formatCurrency(revenue / 100, Currency.Chf)
-          : formatNumber(subscriptions),
-        goal:
-          isRevenueGoal ?
-            formatCurrency(goalAmount / 100, Currency.Chf)
-          : formatNumber(goalAmount),
+        current: formatGoalValue(currentValue),
+        goal: formatGoalValue(goalAmount),
       }}
     />
   );
 
-  const daysContent =
-    daysRemaining != null ?
+  const heroTitleContent =
+    allGoalsReached ?
       <Trans
-        i18nKey="crowdfunding.stats.daysRemaining"
-        values={{ days: daysRemaining }}
+        i18nKey="crowdfunding.stats.allGoalsReached"
+        values={{
+          type: crowdfunding.goalType,
+          current: formatGoalValue(currentValue),
+          goal: formatGoalValue(goalAmount),
+        }}
       />
-    : null;
+    : titleContent;
+
+  const renderDays = (days: number) => (
+    <Trans
+      i18nKey="crowdfunding.stats.daysRemaining"
+      values={{ days }}
+    />
+  );
+
+  const daysContent = daysRemaining != null ? renderDays(daysRemaining) : null;
+  const heroDaysContent = allGoalsReached ? renderDays(0) : daysContent;
 
   if (isHero) {
     return (
       <Wrapper>
+        {hasReachedGoals && (
+          <HeroGoalMarkers>
+            {reachedGoals.map(goal => (
+              <HeroGoalMarker
+                key={goal.id}
+                position={(goal.amount / goalAmount) * 100}
+              >
+                <HeroGoalMarkerLabel>
+                  {formatGoalValue(goal.amount)} 🎉
+                </HeroGoalMarkerLabel>
+                <HeroGoalMarkerTick />
+              </HeroGoalMarker>
+            ))}
+          </HeroGoalMarkers>
+        )}
+
         <HeroBar>
-          <HeroBarFill progress={progress} />
-          <HeroBarTitle>{titleContent}</HeroBarTitle>
+          <HeroBarFill progress={hasReachedGoals ? reachedPercent : progress} />
+          {hasReachedGoals && (
+            <HeroBarCurrentGoalFill
+              start={reachedPercent}
+              end={currentPercent}
+            />
+          )}
+          <HeroBarTitle>{heroTitleContent}</HeroBarTitle>
         </HeroBar>
 
-        {daysContent && (
+        {heroDaysContent && (
           <HeroDays
             variant="caption"
             component="p"
           >
-            {daysContent}
+            {heroDaysContent}
           </HeroDays>
         )}
       </Wrapper>
@@ -188,6 +283,7 @@ export const ReflektCrowdfundingBlock = ({
         <Caption
           variant="caption"
           component="p"
+          suppressHydrationWarning
         >
           {daysContent}
         </Caption>
