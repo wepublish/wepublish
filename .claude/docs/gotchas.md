@@ -845,6 +845,29 @@ reproduce.
 
 ---
 
+### ⚠️ An incomplete Apollo mock turns a story spec into a race
+
+Apollo 4's `MockLink` delays each response by a random 20–50 ms. When two
+queries return the same normalised object (a `PublicSubscription` in both
+`Subscriptions` and `Invoices`), and its mock lacks a fragment field
+(`Missing field 'goodie' while writing result` in stderr), the second response
+leaves the object incomplete. Apollo then refetches the first query, finds its
+mock used up, and the component shows "No more mocked responses" instead of its
+content. That depends on which response comes first and how fast the runner
+renders, so `membership-website`'s "should render Extend" failed now and then on
+CI and never locally (2026-10-16).
+
+Type a mock with `satisfies Exact<…Fragment>`, never `as`, so a missing field
+shows in the editor. Stories aren't type-checked in CI (excluded from
+`tsconfig.lib.json`). Write "no value" as `null`, not `undefined`. Treat any
+`Missing field` line in a spec's stderr as a bug. Fixed delays (`delay` on each
+mock) turn the race into a test that fails every time.
+
+Pinned by `subscription-list-container.spec.tsx` ("should keep the list when
+the invoices arrive after the subscriptions").
+
+---
+
 ### ⚠️ `theme.palette` is the light scheme, frozen
 
 The editor builds one theme with both colour schemes and `cssVariables`, so
