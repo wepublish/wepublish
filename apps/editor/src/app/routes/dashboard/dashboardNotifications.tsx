@@ -1,15 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import {
   MarkNotificationReadDocument,
   NotificationReadsDocument,
   NotificationSource,
 } from '@wepublish/editor/api';
 import { usePeriodicJobNotifications } from '@wepublish/membership/editor';
+import { CanGetPeriodicJobLog } from '@wepublish/permissions';
 import {
-  ListViewActions,
-  ListViewContainer,
-  ListViewHeader,
   NotificationSeverity,
   SEVERITY_ORDER,
   useHasPermission,
@@ -17,8 +16,7 @@ import {
 import { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Button, Panel } from 'rsuite';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { useOneMessageNotifications } from '../../oneMessages/oneMessages';
 import {
@@ -40,7 +38,7 @@ const Section = styled.div`
 
 const EMPTY_SET: ReadonlySet<string> = new Set();
 
-const JOB_LOG_PERMISSION = ['CAN_GET_PERIODIC_JOB_LOG'];
+const JOB_LOG_PERMISSION = [CanGetPeriodicJobLog.id];
 
 /**
  * Every source contributes its notifications to ONE list, which is then sorted
@@ -133,32 +131,31 @@ export function DashboardNotifications() {
   );
 
   return (
-    <Panel
+    <Card
+      variant="outlined"
       hidden={!items.length}
-      header={
-        <ListViewContainer>
-          <ListViewHeader>
-            <h2>{t('dashboard.notifications')}</h2>
-          </ListViewHeader>
-
-          <ListViewActions>
-            <Link to="/notifications">
-              <Button
-                appearance="primary"
-                endIcon={<MdChevronRight />}
-              >
-                {t('dashboard.showAllNotifications')}
-              </Button>
-            </Link>
-          </ListViewActions>
-        </ListViewContainer>
-      }
-      bordered
     >
-      <Section>{items}</Section>
+      <CardHeader
+        title={t('dashboard.notifications')}
+        slotProps={{ title: { variant: 'h2' } }}
+        action={
+          <Button
+            component={RouterLink}
+            to="/notifications"
+            variant="text"
+            endIcon={<MdChevronRight />}
+          >
+            {t('dashboard.showAllNotifications')}
+          </Button>
+        }
+      />
 
-      {actionRequired.overlay}
-      {news.overlay}
-    </Panel>
+      <CardContent>
+        <Section>{items}</Section>
+
+        {actionRequired.overlay}
+        {news.overlay}
+      </CardContent>
+    </Card>
   );
 }

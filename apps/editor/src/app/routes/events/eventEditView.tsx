@@ -1,38 +1,43 @@
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient, useMutation } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   EventDocument,
   FullEventFragment,
-  FullImageFragment,
-  MutationUpdateEventArgs,
   UpdateEventDocument,
 } from '@wepublish/editor/api';
-import { humanizeError, SingleViewTitle } from '@wepublish/ui/editor';
-import { useEffect, useState } from 'react';
+import {
+  enqueueSnackbar,
+  humanizeError,
+  SingleViewTitle,
+} from '@wepublish/ui/editor';
+import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { EventForm } from './eventForm';
+import { EventForm, EventFormValues, eventSchema } from './eventForm';
 
 const onErrorToast = (error: Error) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
-const mapApiDataToInput = (
-  event: FullEventFragment
-): MutationUpdateEventArgs & { image?: FullImageFragment | null } => ({
-  ...event,
+const mapApiDataToInput = (event: FullEventFragment): EventFormValues => ({
+  id: event.id,
+  name: event.name,
+  location: event.location,
+  startsAt: event.startsAt,
+  endsAt: event.endsAt,
+  lead: event.lead,
+  description: event.description ?? undefined,
+  status: event.status,
+  image: event.image,
   imageId: event.image?.id,
+  tags: event.tags ?? undefined,
   tagIds: event.tags?.map(tag => tag.id),
+  externalSourceName: event.externalSourceName ?? undefined,
 });
 
 export const EventEditView = () => {
@@ -40,37 +45,22 @@ export const EventEditView = () => {
   const eventId = id!;
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const client = useApolloClient();
 
   const closePath = '/events';
-  const [event, setEvent] = useState<
-    MutationUpdateEventArgs & { image?: FullImageFragment | null }
-  >({
-    id: eventId,
-  });
-
   const [shouldClose, setShouldClose] = useState(false);
 
-  const {
-    loading: dataLoading,
-    data: eventData,
-    error: eventError,
-  } = useQuery(EventDocument, {
-    variables: {
-      id: eventId,
+  const form = useForm<EventFormValues>({
+    resolver: zodResolver(eventSchema),
+    defaultValues: async () => {
+      const { data } = await client.query({
+        query: EventDocument,
+        variables: { id: eventId },
+      });
+
+      return mapApiDataToInput(data!.event);
     },
   });
-
-  useEffect(() => {
-    if (eventError) {
-      onErrorToast(eventError);
-    }
-  }, [eventError]);
-
-  useEffect(() => {
-    if (eventData?.event) {
-      setEvent(mapApiDataToInput(eventData.event));
-    }
-  }, [eventData]);
 
   const [updateEvent, { loading: updateLoading }] = useMutation(
     UpdateEventDocument,
@@ -82,56 +72,41 @@ export const EventEditView = () => {
         }
 
         if (data.updateEvent) {
-          setEvent(mapApiDataToInput(data.updateEvent));
+          form.reset(mapApiDataToInput(data.updateEvent));
         }
       },
     }
   );
 
-  const loading = dataLoading || updateLoading;
-
-  const onSubmit = () => {
-    const { image, ...eventWithoutImage } = event!;
-
-    if (!eventWithoutImage.endsAt) {
-      eventWithoutImage.endsAt = null;
-    }
-
-    updateEvent({ variables: eventWithoutImage });
-  };
-
-  const { StringType, DateType } = Schema.Types;
-  const validationModel = Schema.Model({
-    name: StringType().isRequired(),
-    status: StringType().isRequired(),
-    startsAt: DateType().isRequired(),
-    endsAt: DateType().min(new Date(event.startsAt ?? new Date())),
-  });
+  if (form.formState.isLoading) {
+    return null;
+  }
 
   return (
-    <Form
-      fluid
-      formValue={event || {}}
-      model={validationModel}
-      disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}
-    >
-      <SingleViewTitle
-        loading={loading}
-        title={t('event.edit.title')}
-        loadingTitle={t('event.edit.title')}
-        saveBtnTitle={t('save')}
-        saveAndCloseBtnTitle={t('saveAndClose')}
-        closePath={closePath}
-        setCloseFn={setShouldClose}
-      />
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit(({ image, tags, ...event }) =>
+          updateEvent({
+            variables: {
+              ...event,
+              id: eventId,
+              endsAt: event.endsAt || null,
+            },
+          })
+        )}
+      >
+        <SingleViewTitle
+          loading={updateLoading}
+          title={t('event.edit.title')}
+          loadingTitle={t('event.edit.title')}
+          saveBtnTitle={t('save')}
+          saveAndCloseBtnTitle={t('saveAndClose')}
+          closePath={closePath}
+          setCloseFn={setShouldClose}
+        />
 
-      <EventForm
-        event={event}
-        onChange={changes =>
-          setEvent(oldEvent => ({ ...oldEvent, ...(changes as any) }))
-        }
-      />
-    </Form>
+        <EventForm />
+      </form>
+    </FormProvider>
   );
 };

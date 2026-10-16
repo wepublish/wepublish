@@ -216,6 +216,9 @@ export const createVitestConfig = ({
       ],
       setupFiles: [
         join(workspaceRoot, 'vitest.setup-tests.ts'),
+        ...(environment === 'happy-dom' ?
+          [join(workspaceRoot, 'vitest.setup-dom.ts')]
+        : []),
         ...(nest ? [join(workspaceRoot, 'vitest.setup-nest.ts')] : []),
         ...setupFiles.map((file) => join(dir, file)),
       ],
@@ -224,15 +227,7 @@ export const createVitestConfig = ({
       coverage: {
         provider: 'v8',
         reporter: ['html', 'text', 'lcov'],
-        // A leaf folder per project: Vitest empties `reportsDirectory` when a run
-        // starts, so `coverage/libs/richtext` would wipe the files of the
-        // `libs/richtext/api` run going on in parallel inside it.
-        reportsDirectory: join(
-          workspaceRoot,
-          'coverage',
-          relative(workspaceRoot, dir),
-          'report'
-        ),
+        reportsDirectory: join(workspaceRoot, 'coverage', relative(workspaceRoot, dir)),
         include: ['src/**/*.{js,jsx,ts,tsx}'],
         exclude: ['**/*.stories.{js,jsx,ts,tsx}'],
       },

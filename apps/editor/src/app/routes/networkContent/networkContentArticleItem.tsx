@@ -1,7 +1,7 @@
+import { Button } from '@mui/material';
 import { IconButtonTooltip } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdDownload, MdLink } from 'react-icons/md';
-import { Button } from 'rsuite';
 
 import {
   ActionColumn,
@@ -74,8 +74,8 @@ export function NetworkContentArticleItem({
             })}
           >
             <Button
-              size="sm"
-              appearance="primary"
+              variant="contained"
+              size="small"
               startIcon={<MdDownload />}
               onClick={() => onImport(peerMatch.peerId, article.source_id)}
             >
@@ -84,8 +84,8 @@ export function NetworkContentArticleItem({
           </IconButtonTooltip>
         : <IconButtonTooltip caption={t('networkContentDashboard.noPeer')}>
             <Button
-              size="sm"
-              appearance="ghost"
+              variant="outlined"
+              size="small"
               startIcon={<MdLink />}
               onClick={onShowPeerInfo}
             >

@@ -27,8 +27,8 @@ declare global {
 }
 
 export interface FacebookContextState {
-  readonly isLoaded: boolean;
-  readonly isLoading: boolean;
+  isLoaded: boolean;
+  isLoading: boolean;
 
   load(): void;
 }
@@ -52,7 +52,7 @@ export function FacebookProvider({
     true
   );
 
-  const [isLoaded, setLoaded] = useState(false);
+  const [isLoaded, setLoaded] = useState(() => Boolean(window.FB));
 
   const contextValue = useMemo(
     () => ({
@@ -64,23 +64,17 @@ export function FacebookProvider({
   );
 
   useEffect(() => {
+    const init = () => window.FB.init({ xfbml: false, version: 'v4.0' });
+
     if (window.FB) {
-      window.FB.init({
-        xfbml: false,
-        version: 'v4.0',
-      });
-
-      setLoaded(true);
-    } else {
-      window.fbAsyncInit = () => {
-        window.FB.init({
-          xfbml: false,
-          version: 'v4.0',
-        });
-
-        setLoaded(true);
-      };
+      init();
+      return;
     }
+
+    window.fbAsyncInit = () => {
+      init();
+      setLoaded(true);
+    };
 
     return () => {
       window.fbAsyncInit = null;

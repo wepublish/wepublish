@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
-import { Tooltip } from '@mui/material';
+import { Tooltip, useTheme } from '@mui/material';
 import {
   OneChannelConnectionState,
   OneChannelStatusDocument,
@@ -8,9 +8,9 @@ import {
 } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 
+import { paletteColor } from '../paletteColor';
+
 const StyledVersion = styled.div`
-  /* Sits below the footer's icon buttons; the dot lines up with the column
-     their icons occupy, so the row reads as part of the same rail. */
   padding: 4px 8px 10px 16px;
   display: flex;
   align-items: center;
@@ -18,9 +18,7 @@ const StyledVersion = styled.div`
   width: 100%;
   box-sizing: border-box;
   cursor: default;
-  /* Sits outside the Sidenav/Navbar elements that paint the rail, so it carries
-     their background itself — otherwise the grey stops above this row. */
-  background-color: var(--rs-navbar-default-bg, #f7f7fa);
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 const StatusDot = styled.span<{ dotColor: string }>`
@@ -47,13 +45,14 @@ const ConnectorLabel = styled.div`
 const UNKNOWN_VERSION = '<!- VERSION UNKNOWN -!>';
 
 const DOT_COLORS: Record<OneChannelConnectionState, string> = {
-  [OneChannelConnectionState.Connected]: 'var(--rs-state-success)',
-  [OneChannelConnectionState.Failing]: 'var(--rs-state-warning)',
-  [OneChannelConnectionState.NotConfigured]: 'var(--rs-state-error)',
+  [OneChannelConnectionState.Connected]: 'success.main',
+  [OneChannelConnectionState.Failing]: 'warning.main',
+  [OneChannelConnectionState.NotConfigured]: 'error.main',
 };
 
 export function Version() {
   const { t } = useTranslation();
+  const theme = useTheme();
   const { data: versionData } = useQuery(VersionInformationDocument);
   const { data: channelData } = useQuery(OneChannelStatusDocument);
 
@@ -131,11 +130,12 @@ export function Version() {
     <Tooltip title={<span style={{ whiteSpace: 'pre-line' }}>{tooltip}</span>}>
       <StyledVersion aria-label={tooltip}>
         <StatusDot
-          dotColor={
+          dotColor={paletteColor(
+            theme,
             status ?
               DOT_COLORS[status.state]
             : DOT_COLORS[OneChannelConnectionState.NotConfigured]
-          }
+          )}
           role="img"
         />
         <ConnectorLabel>{t('oneChannel.label')}</ConnectorLabel>

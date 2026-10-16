@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
+import { Button } from '@mui/material';
 import { NotificationItem, NotificationSeverity } from '@wepublish/ui/editor';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'rsuite';
 
 import { useOneMessages } from './oneMessages.hooks';
 import type { Severity } from './oneMessages.types';
@@ -89,8 +89,8 @@ export function useOneMessageNotifications({
         actions={
           onMarkRead && message.dismissible ?
             <Button
-              size="sm"
-              appearance="default"
+              variant="outlined"
+              size="small"
               onClick={() => onMarkRead(String(message.id))}
             >
               {t('notifications.markAsRead')}

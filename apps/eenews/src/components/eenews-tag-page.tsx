@@ -58,7 +58,7 @@ const TopicHeroInner = styled('div')`
 
 const PageTitle = styled(Typography)`
   display: block;
-  margin: 0;
+  margin-top: 0;
   font-family: ${({ theme }) => theme.typography.fontFamily};
   font-size: 38px;
   line-height: 1;

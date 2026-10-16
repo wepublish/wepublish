@@ -2,28 +2,37 @@ import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Autocomplete,
   Button,
   Card,
   CardActions,
   CardContent,
+  Checkbox,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  MenuItem,
+  Stack,
+  TextField as MuiTextField,
   Typography,
 } from '@mui/material';
 import { SettingProvider } from '@wepublish/editor/api';
-import { InfoTooltip, Textarea } from '@wepublish/ui/editor';
+import { enqueueSnackbar, InfoTooltip, Textarea } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
-import { ComponentType, ReactNode, useMemo, useState } from 'react';
+import {
+  ChangeEvent,
+  ComponentType,
+  ReactNode,
+  useMemo,
+  useState,
+} from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  Checkbox,
-  CheckPicker,
-  Form,
-  Message,
-  Modal,
-  SelectPicker,
-  toaster,
-} from 'rsuite';
 import { z } from 'zod';
 
 const HeaderWrapper = styled.div`
@@ -137,7 +146,9 @@ export function SingleGenericIntegrationForm<
   const [updateSettings, { loading: updating }] = useMutation(mutation, {});
 
   const formatLastLoaded = (date?: Date | string) => {
-    if (!date) return null;
+    if (!date) {
+      return null;
+    }
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     return new Intl.DateTimeFormat('de-CH', {
       dateStyle: 'short',
@@ -169,13 +180,9 @@ export function SingleGenericIntegrationForm<
         },
       });
 
-      toaster.push(
-        <Message type="success">{t('integrations.updateSuccess')}</Message>
-      );
+      enqueueSnackbar(t('integrations.updateSuccess'), { variant: 'success' });
     } catch (e) {
-      toaster.push(
-        <Message type="error">{t('integrations.updateError')}</Message>
-      );
+      enqueueSnackbar(t('integrations.updateError'), { variant: 'error' });
 
       console.error(e);
     }
@@ -195,17 +202,20 @@ export function SingleGenericIntegrationForm<
   const logo = getLogo?.(setting);
 
   return (
-    <Form onSubmit={() => onSubmit()}>
-      <Form.Stack fluid>
-        {/* Form.Stack is a column flexbox with `align-items: flex-start`, and
-            its `fluid` only widens `.rs-form-group` children — so the card has
-            to claim the full width itself or it shrinks to its content. */}
+    <form
+      onSubmit={event => {
+        event.preventDefault();
+        onSubmit();
+      }}
+    >
+      <Stack
+        spacing={3}
+        sx={{ width: '100%' }}
+      >
         <Card
           variant="outlined"
           sx={{
-            alignSelf: 'stretch',
-            width: '100%',
-            borderRadius: 'var(--rs-radius-lg)',
+            borderRadius: 1,
           }}
         >
           <CardContent>
@@ -227,11 +237,11 @@ export function SingleGenericIntegrationForm<
             </Typography>
 
             {resolvedFields.map(({ info, ...field }) => (
-              <Form.Group
-                controlId={`${String(field.name)}-${setting.id}`}
+              <FormControl
                 key={String(field.name)}
+                fullWidth
               >
-                <Form.Label>
+                <FormLabel>
                   {field.type === 'checkbox' ?
                     ' '
                   : <>
@@ -244,7 +254,7 @@ export function SingleGenericIntegrationForm<
                       )}
                     </>
                   }
-                </Form.Label>
+                </FormLabel>
 
                 <Controller
                   name={field.name}
@@ -260,48 +270,71 @@ export function SingleGenericIntegrationForm<
                   }) => {
                     if (field.type === 'select') {
                       return (
-                        <SelectPicker
-                          data={field.options || []}
-                          value={value}
+                        <MuiTextField
+                          select
+                          value={value ?? ''}
                           onChange={onChange}
                           disabled={field.disabled}
-                          cleanable={false}
-                          searchable={field.searchable ?? false}
+                          fullWidth
                           {...restField}
-                        />
+                        >
+                          {(field.options || []).map(option => (
+                            <MenuItem
+                              key={option.value}
+                              value={option.value}
+                            >
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </MuiTextField>
                       );
                     }
 
                     if (field.type === 'checkPicker') {
                       return (
-                        <CheckPicker
-                          data={field.options || []}
+                        <Autocomplete
+                          multiple
+                          disableCloseOnSelect
+                          options={(field.options || []).map(
+                            option => option.value
+                          )}
+                          getOptionLabel={value =>
+                            (field.options || []).find(
+                              option => option.value === value
+                            )?.label ?? String(value)
+                          }
                           value={value || []}
-                          onChange={val => onChange(val)}
+                          onChange={(_event, chosen) => onChange(chosen)}
                           disabled={field.disabled}
-                          cleanable={false}
-                          searchable={field.searchable ?? false}
                           {...restField}
+                          renderInput={params => <MuiTextField {...params} />}
                         />
                       );
                     }
 
                     if (field.type === 'checkbox') {
                       return (
-                        <Checkbox
-                          checked={!!value}
-                          onChange={(_, c) => onChange(c)}
-                          disabled={field.disabled}
-                          {...restField}
-                        >
-                          {field.label}
-                          {info && (
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={!!value}
+                              onChange={(_event, c) => onChange(c)}
+                              disabled={field.disabled}
+                              {...restField}
+                            />
+                          }
+                          label={
                             <>
-                              {' '}
-                              <InfoTooltip text={info} />
+                              {field.label}
+                              {info && (
+                                <>
+                                  {' '}
+                                  <InfoTooltip text={info} />
+                                </>
+                              )}
                             </>
-                          )}
-                        </Checkbox>
+                          }
+                        />
                       );
                     }
 
@@ -316,26 +349,35 @@ export function SingleGenericIntegrationForm<
                       );
                     }
 
+                    const Field =
+                      field.type === 'textarea' ? Textarea : MuiTextField;
+
                     return (
-                      <Form.Control
+                      <Field
                         value={value}
                         onChange={
                           field.type === 'number' ?
-                            (text: string) =>
-                              onChange(text === '' ? null : Number(text))
+                            (event: ChangeEvent<HTMLInputElement>) =>
+                              onChange(
+                                event.target.value === '' ?
+                                  null
+                                : Number(event.target.value)
+                              )
                           : onChange
                         }
-                        errorMessage={fieldState.error?.message}
-                        accepter={
-                          field.type === 'textarea' ? Textarea : undefined
-                        }
-                        {...field}
+                        error={!!fieldState.error}
+                        helperText={fieldState.error?.message}
+                        type={field.type}
+                        placeholder={field.placeholder}
+                        disabled={field.disabled}
+                        autoComplete={field.autoComplete}
+                        fullWidth
                         {...restField}
                       />
                     );
                   }}
                 />
-              </Form.Group>
+              </FormControl>
             ))}
 
             {setting.lastLoadedAt && (
@@ -372,19 +414,17 @@ export function SingleGenericIntegrationForm<
             {renderActions?.(setting)}
           </CardActions>
         </Card>
-      </Form.Stack>
+      </Stack>
 
-      <Modal
+      <Dialog
         open={!!pendingTypeChange}
         onClose={() => setPendingTypeChange(null)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('integrations.typeChangeTitle')}</Modal.Title>
-        </Modal.Header>
+        <DialogTitle>{t('integrations.typeChangeTitle')}</DialogTitle>
 
-        <Modal.Body>{t('integrations.typeChangeWarning')}</Modal.Body>
+        <DialogContent>{t('integrations.typeChangeWarning')}</DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
             variant="text"
             onClick={() => setPendingTypeChange(null)}
@@ -407,8 +447,8 @@ export function SingleGenericIntegrationForm<
           >
             {t('integrations.typeChangeConfirm')}
           </Button>
-        </Modal.Footer>
-      </Modal>
-    </Form>
+        </DialogActions>
+      </Dialog>
+    </form>
   );
 }

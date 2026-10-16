@@ -1,5 +1,14 @@
-import styled from '@emotion/styled';
 import { useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
+import {
+  Button,
+  Card,
+  CardContent,
+  IconButton,
+  MenuItem,
+  Stack,
+  TextField,
+} from '@mui/material';
 import {
   BlockTemplateDocument,
   BlockTemplateListDocument,
@@ -8,12 +17,6 @@ import {
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit, MdOutput, MdRefresh } from 'react-icons/md';
-import {
-  ButtonToolbar,
-  IconButton,
-  Panel as RPanel,
-  SelectPicker,
-} from 'rsuite';
 
 import { BlockMapType, BlockProps } from '../atoms/blockList';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
@@ -40,9 +43,9 @@ const Preview = styled.div`
   user-select: none;
 `;
 
-const PreviewItem = styled(RPanel)`
+const PreviewItem = styled(Card)`
   padding: 0;
-  background-color: var(--rs-bg-well);
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 const PreviewLabel = styled.div`
@@ -51,8 +54,8 @@ const PreviewLabel = styled.div`
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border-bottom: 1px solid var(--rs-border-primary);
-  color: var(--rs-text-secondary);
+  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const PreviewBlock = styled.div`
@@ -101,54 +104,73 @@ export const BlockTemplateBlock = ({
   return (
     <Wrapper>
       <Toolbar>
-        <SelectPicker
-          block
-          cleanable
-          virtualized
+        <TextField
+          select
+          label={t('blocks.blockTemplate.select')}
           disabled={disabled}
-          loading={loading}
-          data={templates.map(({ id, name }) => ({ value: id, label: name }))}
-          value={selectedTemplate?.id ?? null}
-          placeholder={t('blocks.blockTemplate.select')}
-          onChange={id =>
+          value={selectedTemplate?.id ?? ''}
+          onChange={event =>
             onChange({
-              template: templates.find(template => template.id === id) ?? null,
+              template:
+                templates.find(
+                  template => template.id === event.target.value
+                ) ?? null,
             })
           }
-        />
+          slotProps={{ select: { displayEmpty: true } }}
+          fullWidth
+        >
+          <MenuItem value="">{t('blocks.blockTemplate.select')}</MenuItem>
 
-        <ButtonToolbar>
+          {templates.map(({ id, name }) => (
+            <MenuItem
+              key={id}
+              value={id}
+            >
+              {name}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{ flexWrap: 'wrap' }}
+        >
           <IconButtonTooltip caption={t('blocks.blockTemplate.reload')}>
             <IconButton
               aria-label={t('blocks.blockTemplate.reload')}
-              icon={<MdRefresh />}
               onClick={event => {
                 refetch();
                 event.preventDefault();
               }}
-            />
+            >
+              <MdRefresh />
+            </IconButton>
           </IconButtonTooltip>
-          <IconButton
-            icon={<MdEdit />}
+          <Button
+            variant="outlined"
+            startIcon={<MdEdit />}
             disabled={!selectedTemplate}
             href={
               selectedTemplate ?
                 `/block-content/templates/edit/${selectedTemplate.id}`
-              : undefined
+              : ''
             }
             target="_blank"
           >
             {t('blocks.blockTemplate.editTemplate')}
-          </IconButton>
+          </Button>
 
-          <IconButton
-            icon={<MdOutput />}
+          <Button
+            variant="outlined"
+            startIcon={<MdOutput />}
             disabled={disabled || !onReplace || !blocks.length}
             onClick={() => setConfirmOpen(true)}
           >
             {t('blocks.blockTemplate.useContent')}
-          </IconButton>
-        </ButtonToolbar>
+          </Button>
+        </Stack>
       </Toolbar>
 
       {!!selectedTemplate && (
@@ -161,22 +183,23 @@ export const BlockTemplateBlock = ({
 
               return (
                 <PreviewItem
+                  variant="outlined"
                   key={block.key}
-                  bordered
-                  bodyFill
                 >
-                  <PreviewLabel>
-                    {icon}
-                    <span>{t(label)}</span>
-                  </PreviewLabel>
+                  <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+                    <PreviewLabel>
+                      {icon}
+                      <span>{t(label)}</span>
+                    </PreviewLabel>
 
-                  <PreviewBlock>
-                    {field({
-                      value: block.value,
-                      onChange: () => undefined,
-                      disabled: true,
-                    })}
-                  </PreviewBlock>
+                    <PreviewBlock>
+                      {field({
+                        value: block.value,
+                        onChange: () => undefined,
+                        disabled: true,
+                      })}
+                    </PreviewBlock>
+                  </CardContent>
                 </PreviewItem>
               );
             })}

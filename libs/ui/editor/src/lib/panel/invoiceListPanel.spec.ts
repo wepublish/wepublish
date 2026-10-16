@@ -6,7 +6,6 @@ const invoice = (id: string, createdAt: string, dueAt?: string | null) =>
   ({ id, createdAt, dueAt }) as unknown as InvoiceFragment;
 
 describe('sortByBillingDate', () => {
-  // imported history: created at the import moment, billed long before
   const imported2023 = invoice(
     'imported-2023',
     '2026-09-01T00:00:00.000Z',

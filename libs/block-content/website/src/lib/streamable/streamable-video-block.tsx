@@ -4,7 +4,7 @@ import {
   FullStreamableVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderStreamableVideoBlockProps } from '@wepublish/website/builder';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 
 export const isStreamableVideoBlock = (

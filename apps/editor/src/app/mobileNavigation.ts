@@ -8,9 +8,12 @@ export function useMobileNavigation() {
   const toggle = useCallback(() => setOpen(current => !current), []);
   const close = useCallback(() => setOpen(false), []);
 
-  useEffect(() => {
+  const [lastPath, setLastPath] = useState(pathname);
+
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
     setOpen(false);
-  }, [pathname]);
+  }
 
   useEffect(() => {
     if (!open) {
