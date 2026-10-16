@@ -1,0 +1,874 @@
+{
+  "scenarios": {
+    "health": {
+      "label": "GET /health",
+      "description": "Tiny JSON response. Isolates per-request adapter overhead.",
+      "adapters": {
+        "express": {
+          "label": "@nestjs/platform-express",
+          "rps": 12390.19,
+          "latencyMean": 3.53,
+          "latencyP99": 7,
+          "throughput": 11682909.1,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 3685.8,
+              "latencyMean": 13.16,
+              "latencyP99": 99,
+              "throughput": 3474892.8,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 11140,
+              "latencyMean": 3.98,
+              "latencyP99": 13,
+              "throughput": 10504936.73,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 12406.19,
+              "latencyMean": 3.53,
+              "latencyP99": 7,
+              "throughput": 11697803.64,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 12977.82,
+              "latencyMean": 3.34,
+              "latencyP99": 7,
+              "throughput": 12236241.46,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 12390.19,
+              "latencyMean": 3.53,
+              "latencyP99": 7,
+              "throughput": 11682909.1,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "node": {
+          "label": "@nestjs/platform-node",
+          "rps": 32538.19,
+          "latencyMean": 1.05,
+          "latencyP99": 3,
+          "throughput": 29348957.1,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 14487.2,
+              "latencyMean": 2.95,
+              "latencyP99": 26,
+              "throughput": 13066240,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 31468.37,
+              "latencyMean": 1.09,
+              "latencyP99": 3,
+              "throughput": 28385280,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 32538.19,
+              "latencyMean": 1.05,
+              "latencyP99": 3,
+              "throughput": 29348957.1,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 32745.46,
+              "latencyMean": 1.05,
+              "latencyP99": 2,
+              "throughput": 29530670.55,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 32630.55,
+              "latencyMean": 1.05,
+              "latencyP99": 3,
+              "throughput": 29430877.1,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "express-bare": {
+          "label": "@nestjs/platform-express (bare)",
+          "rps": 14083.28,
+          "latencyMean": 3.11,
+          "latencyP99": 6,
+          "throughput": 3506455.28,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 4517.3,
+              "latencyMean": 10.59,
+              "latencyP99": 64,
+              "throughput": 1124684.8,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 11267.82,
+              "latencyMean": 4.02,
+              "latencyP99": 17,
+              "throughput": 2805620.37,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 14083.28,
+              "latencyMean": 3.11,
+              "latencyP99": 6,
+              "throughput": 3506455.28,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 14120.37,
+              "latencyMean": 3.1,
+              "latencyP99": 6,
+              "throughput": 3515578.19,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 14119.64,
+              "latencyMean": 3.1,
+              "latencyP99": 6,
+              "throughput": 3515578.19,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "node-bare": {
+          "label": "@nestjs/platform-node (bare)",
+          "rps": 40205.1,
+          "latencyMean": 1.02,
+          "latencyP99": 2,
+          "throughput": 7437405.1,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 15974.6,
+              "latencyMean": 2.65,
+              "latencyP99": 26,
+              "throughput": 2955161.6,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 24484.8,
+              "latencyMean": 1.58,
+              "latencyP99": 10,
+              "throughput": 4529254.41,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 40859.64,
+              "latencyMean": 1.01,
+              "latencyP99": 2,
+              "throughput": 7558795.64,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 40822.4,
+              "latencyMean": 1.02,
+              "latencyP99": 2,
+              "throughput": 7551385.6,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 40205.1,
+              "latencyMean": 1.02,
+              "latencyP99": 2,
+              "throughput": 7437405.1,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        }
+      },
+      "deltaPct": 162.612518452098,
+      "deltaBarePct": 185.48108111178644,
+      "expressMiddlewareCostPct": -12.021986355451288,
+      "nodeMiddlewareCostPct": -19.06949615844756
+    },
+    "route-param": {
+      "label": "GET /articles/:id",
+      "description": "Route-parameter matching plus a small JSON body.",
+      "adapters": {
+        "express": {
+          "label": "@nestjs/platform-express",
+          "rps": 11962.4,
+          "latencyMean": 3.65,
+          "latencyP99": 7,
+          "throughput": 11987353.6,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 4835.2,
+              "latencyMean": 9.79,
+              "latencyP99": 54,
+              "throughput": 4844339.2,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 12489.82,
+              "latencyMean": 3.47,
+              "latencyP99": 7,
+              "throughput": 12514024.73,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 11962.4,
+              "latencyMean": 3.65,
+              "latencyP99": 7,
+              "throughput": 11987353.6,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 11804,
+              "latencyMean": 3.72,
+              "latencyP99": 7,
+              "throughput": 11827386.19,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 12489.1,
+              "latencyMean": 3.46,
+              "latencyP99": 7,
+              "throughput": 12513280,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "node": {
+          "label": "@nestjs/platform-node",
+          "rps": 30840,
+          "latencyMean": 1.07,
+          "latencyP99": 3,
+          "throughput": 29606632.73,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 11267.2,
+              "latencyMean": 3.94,
+              "latencyP99": 32,
+              "throughput": 10815897.6,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 30770.19,
+              "latencyMean": 1.07,
+              "latencyP99": 3,
+              "throughput": 29538117.82,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 30840,
+              "latencyMean": 1.07,
+              "latencyP99": 3,
+              "throughput": 29606632.73,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 30880.73,
+              "latencyMean": 1.07,
+              "latencyP99": 3,
+              "throughput": 29645358.55,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 30908.37,
+              "latencyMean": 1.07,
+              "latencyP99": 3,
+              "throughput": 29669189.82,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "express-bare": {
+          "label": "@nestjs/platform-express (bare)",
+          "rps": 13569.82,
+          "latencyMean": 3.33,
+          "latencyP99": 6,
+          "throughput": 4179781.82,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 5052.11,
+              "latencyMean": 9.41,
+              "latencyP99": 67,
+              "throughput": 1556019.2,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 13465.1,
+              "latencyMean": 3.36,
+              "latencyP99": 7,
+              "throughput": 4146920.73,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 13569.82,
+              "latencyMean": 3.33,
+              "latencyP99": 6,
+              "throughput": 4179781.82,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 13593.1,
+              "latencyMean": 3.33,
+              "latencyP99": 6,
+              "throughput": 4187042.91,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 14075.28,
+              "latencyMean": 3.22,
+              "latencyP99": 6,
+              "throughput": 4335243.64,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "node-bare": {
+          "label": "@nestjs/platform-node (bare)",
+          "rps": 37450.19,
+          "latencyMean": 1.03,
+          "latencyP99": 2,
+          "throughput": 9101684.37,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 14945.6,
+              "latencyMean": 2.85,
+              "latencyP99": 17,
+              "throughput": 3631513.6,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 37723.64,
+              "latencyMean": 1.03,
+              "latencyP99": 2,
+              "throughput": 9165730.91,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 37726.55,
+              "latencyMean": 1.03,
+              "latencyP99": 2,
+              "throughput": 9167965.1,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 37365.82,
+              "latencyMean": 1.03,
+              "latencyP99": 2,
+              "throughput": 9080087.28,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 37450.19,
+              "latencyMean": 1.03,
+              "latencyP99": 2,
+              "throughput": 9101684.37,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        }
+      },
+      "deltaPct": 157.80779776633452,
+      "deltaBarePct": 175.9814794890426,
+      "expressMiddlewareCostPct": -11.845551377984382,
+      "nodeMiddlewareCostPct": -17.650618060949764
+    },
+    "json-body": {
+      "label": "POST /echo",
+      "description": "JSON request body parsing (body-parser vs built-in parser).",
+      "adapters": {
+        "express": {
+          "label": "@nestjs/platform-express",
+          "rps": 10980,
+          "latencyMean": 4.06,
+          "latencyP99": 8,
+          "throughput": 10935202.91,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 5674.8,
+              "latencyMean": 8.35,
+              "latencyP99": 53,
+              "throughput": 5651251.2,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 10939.28,
+              "latencyMean": 4.06,
+              "latencyP99": 8,
+              "throughput": 10895732.37,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 11500.73,
+              "latencyMean": 3.87,
+              "latencyP99": 8,
+              "throughput": 11455022.55,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 11466.55,
+              "latencyMean": 3.87,
+              "latencyP99": 8,
+              "throughput": 11420765.1,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 10980,
+              "latencyMean": 4.06,
+              "latencyP99": 8,
+              "throughput": 10935202.91,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "node": {
+          "label": "@nestjs/platform-node",
+          "rps": 27117.82,
+          "latencyMean": 1.19,
+          "latencyP99": 3,
+          "throughput": 25868101.82,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 15081.6,
+              "latencyMean": 2.79,
+              "latencyP99": 21,
+              "throughput": 14385561.6,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 27171.64,
+              "latencyMean": 1.19,
+              "latencyP99": 3,
+              "throughput": 25920232.73,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 27001.46,
+              "latencyMean": 1.19,
+              "latencyP99": 3,
+              "throughput": 25756392.73,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 27122.19,
+              "latencyMean": 1.18,
+              "latencyP99": 3,
+              "throughput": 25868101.82,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 27117.82,
+              "latencyMean": 1.19,
+              "latencyP99": 3,
+              "throughput": 25871080.73,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "express-bare": {
+          "label": "@nestjs/platform-express (bare)",
+          "rps": 12272.8,
+          "latencyMean": 3.56,
+          "latencyP99": 7,
+          "throughput": 3706470.4,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 8278,
+              "latencyMean": 5.51,
+              "latencyP99": 30,
+              "throughput": 2500300.8,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 12218.55,
+              "latencyMean": 3.57,
+              "latencyP99": 7,
+              "throughput": 3689844.37,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 12308.73,
+              "latencyMean": 3.52,
+              "latencyP99": 7,
+              "throughput": 3717213.1,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 12317.46,
+              "latencyMean": 3.53,
+              "latencyP99": 7,
+              "throughput": 3720005.82,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 12272.8,
+              "latencyMean": 3.56,
+              "latencyP99": 7,
+              "throughput": 3706470.4,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "node-bare": {
+          "label": "@nestjs/platform-node (bare)",
+          "rps": 32213.1,
+          "latencyMean": 1.05,
+          "latencyP99": 3,
+          "throughput": 7634013.1,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 18575.6,
+              "latencyMean": 2.2,
+              "latencyP99": 15,
+              "throughput": 4402278.41,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 32984.73,
+              "latencyMean": 1.05,
+              "latencyP99": 2,
+              "throughput": 7816471.28,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 32021.1,
+              "latencyMean": 1.05,
+              "latencyP99": 3,
+              "throughput": 7589701.82,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 32371.64,
+              "latencyMean": 1.04,
+              "latencyP99": 3,
+              "throughput": 7671994.19,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 32213.1,
+              "latencyMean": 1.05,
+              "latencyP99": 3,
+              "throughput": 7634013.1,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        }
+      },
+      "deltaPct": 146.97468123861566,
+      "deltaBarePct": 162.47555570041067,
+      "expressMiddlewareCostPct": -10.533863503031087,
+      "nodeMiddlewareCostPct": -15.817415896017456
+    },
+    "large-payload": {
+      "label": "GET /payload",
+      "description": "~45KB JSON response. Serialization-dominated; adapters converge.",
+      "adapters": {
+        "express": {
+          "label": "@nestjs/platform-express",
+          "rps": 5446,
+          "latencyMean": 8.7,
+          "latencyP99": 17,
+          "throughput": 313702958.55,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 4803.2,
+              "latencyMean": 9.93,
+              "latencyP99": 28,
+              "throughput": 276666777.61,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 5473.28,
+              "latencyMean": 8.65,
+              "latencyP99": 17,
+              "throughput": 315228160,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 5446,
+              "latencyMean": 8.7,
+              "latencyP99": 17,
+              "throughput": 313702958.55,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 5444.19,
+              "latencyMean": 8.7,
+              "latencyP99": 17,
+              "throughput": 313607633.46,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 5482.73,
+              "latencyMean": 8.64,
+              "latencyP99": 17,
+              "throughput": 315823941.82,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "node": {
+          "label": "@nestjs/platform-node",
+          "rps": 9516,
+          "latencyMean": 4.76,
+          "latencyP99": 10,
+          "throughput": 547809466.19,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 9614.91,
+              "latencyMean": 4.71,
+              "latencyP99": 10,
+              "throughput": 553409815.28,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 9376.37,
+              "latencyMean": 4.85,
+              "latencyP99": 10,
+              "throughput": 539730664.73,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 9526.91,
+              "latencyMean": 4.76,
+              "latencyP99": 10,
+              "throughput": 548298007.28,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 9516,
+              "latencyMean": 4.77,
+              "latencyP99": 10,
+              "throughput": 547809466.19,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 9513.1,
+              "latencyMean": 4.76,
+              "latencyP99": 10,
+              "throughput": 547559237.82,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "express-bare": {
+          "label": "@nestjs/platform-express (bare)",
+          "rps": 5776.8,
+          "latencyMean": 8.16,
+          "latencyP99": 16,
+          "throughput": 328728576,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 5747.1,
+              "latencyMean": 8.2,
+              "latencyP99": 16,
+              "throughput": 327024640,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 5776.8,
+              "latencyMean": 8.16,
+              "latencyP99": 16,
+              "throughput": 328728576,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 5783.1,
+              "latencyMean": 8.14,
+              "latencyP99": 16,
+              "throughput": 329097960.73,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 5772.55,
+              "latencyMean": 8.16,
+              "latencyP99": 16,
+              "throughput": 328502178.91,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 5793.64,
+              "latencyMean": 8.12,
+              "latencyP99": 16,
+              "throughput": 329693742.55,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        },
+        "node-bare": {
+          "label": "@nestjs/platform-node (bare)",
+          "rps": 10116,
+          "latencyMean": 4.36,
+          "latencyP99": 9,
+          "throughput": 574929454.55,
+          "non2xx": 0,
+          "errors": 0,
+          "rounds": [
+            {
+              "rps": 8809,
+              "latencyMean": 5.13,
+              "latencyP99": 19,
+              "throughput": 500721254.4,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 10185.82,
+              "latencyMean": 4.33,
+              "latencyP99": 9,
+              "throughput": 578933108.37,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 10187.21,
+              "latencyMean": 4.32,
+              "latencyP99": 9,
+              "throughput": 579076096,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 10106.55,
+              "latencyMean": 4.37,
+              "latencyP99": 9,
+              "throughput": 574595816.73,
+              "non2xx": 0,
+              "errors": 0
+            },
+            {
+              "rps": 10116,
+              "latencyMean": 4.36,
+              "latencyP99": 9,
+              "throughput": 574929454.55,
+              "non2xx": 0,
+              "errors": 0
+            }
+          ]
+        }
+      },
+      "deltaPct": 74.73374954094749,
+      "deltaBarePct": 75.11425010386372,
+      "expressMiddlewareCostPct": -5.7263536906245704,
+      "nodeMiddlewareCostPct": -5.931198102016608
+    }
+  },
+  "config": {
+    "duration": 10,
+    "connections": 50,
+    "rounds": 5,
+    "warmup": 3
+  },
+  "env": {
+    "node": "v22.23.3",
+    "platform": "darwin 22.5.0",
+    "arch": "arm64",
+    "cpu": "Apple M1 Pro",
+    "cores": 8,
+    "memoryGB": 16
+  }
+}

@@ -2,7 +2,7 @@ import './instrument.ts';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { preloadOptionalPackages } from './preload-optional-packages';
-import { ExpressAdapter } from '@nestjs/platform-express';
+import { NodeAdapter } from '@nestjs/platform-node';
 import { AppModule } from './nestapp/app.module';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -12,8 +12,8 @@ import { MAIL_WEBHOOK_PATH_PREFIX } from '@wepublish/mail/api';
 import helmet from 'helmet';
 
 import { MAX_PAYLOAD_SIZE } from '@wepublish/utils/api';
-import { json, urlencoded } from 'body-parser';
-import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import { json, urlencoded } from '@nestjs/platform-node/body-parser/body-parser.js';
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { PAYMENT_WEBHOOK_PATH_PREFIX } from '@wepublish/payment/api';
 import { graphqlUploadExpress } from 'graphql-upload';
 
@@ -23,10 +23,10 @@ async function bootstrap() {
   preloadOptionalPackages();
 
   // The adapter is passed explicitly rather than left to Nest's default
-  // lookup: Nest 12 resolves it with `() => import('@nestjs/platform-express')`,
-  // a dynamic import webpack does not follow, so the package never makes it
-  // into the bundle and the pkg binary boots without an HTTP driver.
-  const nestApp = await NestFactory.create(AppModule, new ExpressAdapter(), {
+  // lookup: Nest 12 resolves it with a dynamic import webpack does not follow,
+  // so the package never makes it into the bundle and the pkg binary boots
+  // without an HTTP driver.
+  const nestApp = await NestFactory.create(AppModule, new NodeAdapter(), {
     bodyParser: false,
   });
   nestApp.enableCors({
@@ -42,10 +42,10 @@ async function bootstrap() {
   const jsonParser = json({ limit: MAX_PAYLOAD_SIZE });
 
   // Apply JSON parsing only when the path doesn't match any webhook prefix
-  const conditionalJson: RequestHandler = (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  const conditionalJson = (
+    req: NodeRequest,
+    res: NodeResponse,
+    next: (err?: unknown) => void
   ) => {
     const path: string = req.path ?? req.url;
     for (let i = 0; i < skipPrefixes.length; i++) {
