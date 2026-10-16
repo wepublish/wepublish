@@ -3240,6 +3240,10 @@
       },
       "theme": {
         "title": "Theme",
+        "exportTheme": "Export theme",
+        "importTheme": "Import theme",
+        "importSuccess": "Theme imported. Click «Save» to persist.",
+        "importError": "The theme file could not be read.",
         "palette": {
           "primary": "Primary",
           "primaryMain": "Main color of the website. Used for links, navigation, buttons, etc.",
