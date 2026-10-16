@@ -1,5 +1,6 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
+import { FeaturesService } from '@wepublish/features/api';
 import { LetterContext } from '@wepublish/letter/api';
 import {
   LetterAddressPosition,
@@ -18,13 +19,15 @@ const makeService = (
   prisma: any,
   mailContext: any = { sendMail: vi.fn() },
   recipientService: any = {},
-  letterContext: any = { sendLetter: vi.fn(), renderLetter: vi.fn() }
+  letterContext: any = { sendLetter: vi.fn(), renderLetter: vi.fn() },
+  features: any = { isEnabled: vi.fn(async () => true) }
 ) =>
   new MailSendJobService(
     prisma as PrismaClient,
     mailContext as unknown as MailContext,
     letterContext as unknown as LetterContext,
-    recipientService as MailSendRecipientService
+    recipientService as MailSendRecipientService,
+    features as FeaturesService
   );
 
 const template = (context: string | null) => ({
@@ -253,6 +256,62 @@ const recipientServiceFor = (users: string[]) => {
 };
 
 const audience = { base: MailRecipientBase.allUsers };
+
+const postalUser = {
+  id: 'u1',
+  email: 'u1@x.ch',
+  firstName: 'Jane',
+  name: 'Doe',
+  address: {
+    company: null,
+    streetAddress: 'Musterstrasse',
+    streetAddressNumber: '7',
+    streetAddress2: null,
+    streetAddress2Number: null,
+    zipCode: '8000',
+    city: 'Zürich',
+    country: 'CH',
+  },
+};
+
+describe('previewForAudience as a letter', () => {
+  const recipientService = {
+    resolvePage: vi.fn(async () => [{ user: postalUser }]),
+  };
+
+  it('prints the preview on the stationery the template points at', async () => {
+    const prisma = fakePrisma({
+      ...template('custom'),
+      htmlContent: '<p>Hallo</p>',
+      subject: 'Brief',
+      letterLayoutId: 'layout-1',
+    });
+    const layout = { headerHtml: '<b>Zwölf</b>' };
+    const letterContext = {
+      renderLetter: vi.fn(async () => Buffer.from('%PDF-1.4 preview')),
+      resolveLayout: vi.fn(async () => layout),
+    };
+
+    const preview = await makeService(
+      prisma,
+      undefined,
+      recipientService,
+      letterContext
+    ).previewForAudience({
+      mailTemplateId: 'tpl-1',
+      audience,
+      channel: MailChannel.letter,
+    });
+
+    expect(letterContext.resolveLayout).toHaveBeenCalledWith('layout-1');
+    expect(letterContext.renderLetter).toHaveBeenCalledWith(
+      expect.objectContaining({ layout })
+    );
+    expect(Buffer.from(preview.pdf ?? '', 'base64').toString()).toBe(
+      '%PDF-1.4 preview'
+    );
+  });
+});
 
 /**
  * Put a job straight into the fake database. Tests that exercise the send loop
@@ -782,5 +841,102 @@ describe('MailSendJobService', () => {
         )
       ).rejects.toThrow(BadRequestException);
     });
+  });
+});
+
+describe('MailSendJobService.previewForAudience as letter', () => {
+  it('previews the template appendix with the chosen print mode', async () => {
+    const user = {
+      id: 'u1',
+      email: 'jane@example.com',
+      firstName: 'Jane',
+      name: 'Doe',
+      address: {
+        company: null,
+        streetAddress: 'Musterstrasse',
+        streetAddressNumber: '7',
+        streetAddress2: null,
+        streetAddress2Number: null,
+        zipCode: '8000',
+        city: 'Zürich',
+        country: 'CH',
+      },
+    };
+    const prisma = {
+      mailTemplate: {
+        findUnique: vi.fn(async () => ({
+          ...template('custom'),
+          subject: 'Rechnung',
+          htmlContent: '<p>Hallo</p>',
+          letterAppendixId: 'qr-bill',
+        })),
+      },
+    };
+    const renderLetter = vi.fn(async () => Buffer.from('%PDF-1.4 letter'));
+    const service = makeService(
+      prisma,
+      {},
+      { resolvePage: vi.fn(async () => [{ user }]) },
+      { renderLetter, resolveLayout: vi.fn(async () => null) }
+    );
+
+    await service.previewForAudience({
+      mailTemplateId: 'tpl-1',
+      audience: { base: 'allUsers' } as any,
+      channel: MailChannel.letter,
+      print: { printMode: LetterPrintMode.duplex } as any,
+    });
+
+    expect(renderLetter).toHaveBeenCalledWith(
+      expect.objectContaining({
+        template: { htmlContent: '<p>Hallo</p>', letterAppendixId: 'qr-bill' },
+        printMode: LetterPrintMode.duplex,
+      })
+    );
+  });
+});
+
+// The channel is an argument, so the guard decorator cannot see it: the
+// service refuses letters itself while the feature is off.
+describe('letter channel behind the paper-letters feature', () => {
+  const audience = { base: MailRecipientBase.allUsers } as any;
+  const featureOff = { isEnabled: vi.fn(async () => false) };
+
+  it('refuses to create a letter job while the feature is off', async () => {
+    const service = makeService({}, {}, {}, undefined, featureOff);
+
+    await expect(
+      service.createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      )
+    ).rejects.toThrow(ForbiddenException);
+    expect(featureOff.isEnabled).toHaveBeenCalledWith('paper-letters');
+  });
+
+  it('refuses a letter preview while the feature is off', async () => {
+    const service = makeService({}, {}, {}, undefined, featureOff);
+
+    await expect(
+      service.previewForAudience({
+        mailTemplateId: 'tpl-1',
+        audience,
+        channel: MailChannel.letter,
+      })
+    ).rejects.toThrow(ForbiddenException);
+  });
+
+  it('still creates mail jobs', async () => {
+    const service = makeService(
+      fakePrisma(),
+      {},
+      { count: vi.fn(async () => 0) },
+      undefined,
+      featureOff
+    );
+
+    await expect(
+      service.createJob({ mailTemplateId: 'tpl-1', audience }, 'editor-1')
+    ).resolves.toMatchObject({ channel: MailChannel.mail });
   });
 });

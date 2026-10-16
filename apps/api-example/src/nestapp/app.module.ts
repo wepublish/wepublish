@@ -36,7 +36,7 @@ import {
   GoogleAnalyticsService,
 } from '@wepublish/google-analytics/api';
 import { HealthModule } from '@wepublish/health';
-import { MediaAdapterModule } from '@wepublish/image/api';
+import { MediaAdapter, MediaAdapterModule } from '@wepublish/image/api';
 import {
   GraphqlResponseCacheModule,
   KvTtlCacheModule,
@@ -74,6 +74,7 @@ import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
 import { SessionModule } from '@wepublish/session/api';
 import { OneModule } from '@wepublish/one/api';
+import { FeaturesModule } from '@wepublish/features/api';
 import {
   SettingModule,
   SettingName,
@@ -179,15 +180,19 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       global: true,
     }),
     LettersModule.registerAsync({
-      useFactory: async (registry: ProviderRegistryService) => {
+      useFactory: async (
+        registry: ProviderRegistryService,
+        mediaAdapter: MediaAdapter
+      ) => {
         await registry.ensureLoaded();
 
         return {
           letterProvider: registry.letterProvider,
           pdfRenderer: registry.pdfRenderer,
+          documentUrl: (id: string) => mediaAdapter.getDocumentURL({ id }),
         };
       },
-      inject: [ProviderRegistryService],
+      inject: [ProviderRegistryService, MediaAdapter],
       global: true,
     }),
     TrackingPixelsModule.registerAsync({
@@ -254,6 +259,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       },
     }),
 
+    FeaturesModule,
     OneModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

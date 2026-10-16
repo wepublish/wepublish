@@ -30,6 +30,8 @@ import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailLogList,
   MailSendPage,
+  LetterLayoutEdit,
+  LetterLayoutList,
   MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
@@ -40,6 +42,7 @@ import {
   AuthContext,
   AuthDispatchActionType,
   AuthDispatchContext,
+  createCheckedFeatureComponent,
 } from '@wepublish/ui/editor';
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -140,6 +143,12 @@ const Logout = () => {
     />
   );
 };
+
+// Stationery only exists for letters, which ship dark.
+const PaperLetterLayoutList =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutList);
+const PaperLetterLayoutEdit =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutEdit);
 
 export function App() {
   const { i18n } = useTranslation();
@@ -1087,6 +1096,30 @@ export function App() {
               element={
                 <Base>
                   <MailTemplateEdit />
+                </Base>
+              }
+            />
+            <Route
+              path="letterlayouts"
+              element={
+                <Base>
+                  <PaperLetterLayoutList />
+                </Base>
+              }
+            />
+            <Route
+              path="letterlayouts/create"
+              element={
+                <Base>
+                  <PaperLetterLayoutEdit />
+                </Base>
+              }
+            />
+            <Route
+              path="letterlayouts/edit/:id"
+              element={
+                <Base>
+                  <PaperLetterLayoutEdit />
                 </Base>
               }
             />

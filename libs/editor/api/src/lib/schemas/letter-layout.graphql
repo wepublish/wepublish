@@ -1,0 +1,51 @@
+fragment TinyLetterLayout on LetterLayoutModel {
+  id
+  name
+  isDefault
+}
+
+fragment FullLetterLayout on LetterLayoutModel {
+  ...TinyLetterLayout
+  createdAt
+  modifiedAt
+  headerHtml
+  footerHtml
+  headerHeightMm
+  footerHeightMm
+}
+
+query LetterLayouts {
+  letterLayouts {
+    ...TinyLetterLayout
+  }
+}
+
+query LetterLayoutById($id: String!) {
+  letterLayout(id: $id) {
+    ...FullLetterLayout
+  }
+}
+
+query LetterLayoutPreview($input: LetterLayoutPreviewInput!) {
+  letterLayoutPreview(input: $input) {
+    pdf
+  }
+}
+
+mutation CreateLetterLayout($input: LetterLayoutInput!) {
+  createLetterLayout(input: $input) {
+    ...FullLetterLayout
+  }
+}
+
+mutation UpdateLetterLayout($id: String!, $input: LetterLayoutInput!) {
+  updateLetterLayout(id: $id, input: $input) {
+    ...FullLetterLayout
+  }
+}
+
+mutation DeleteLetterLayout($id: String!) {
+  deleteLetterLayout(id: $id) {
+    id
+  }
+}

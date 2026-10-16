@@ -1,6 +1,7 @@
 import { User, UserAddress } from '@prisma/client';
 import {
   canReceiveLetters,
+  countryName,
   LetterAddressError,
   normalizeCountry,
   toLetterAddress,
@@ -119,5 +120,39 @@ describe('canReceiveLetters', () => {
   it('answers without throwing', () => {
     expect(canReceiveLetters(user({}))).toBe(true);
     expect(canReceiveLetters(user(null))).toBe(false);
+  });
+});
+
+describe('countryName', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it('spells out the countries Neue Wege sends to', () => {
+    expect(countryName('CH')).toBe('Schweiz');
+    expect(countryName('DE')).toBe('Deutschland');
+    expect(countryName('AT')).toBe('Österreich');
+    expect(countryName('LI')).toBe('Liechtenstein');
+  });
+
+  // The api runs as a pkg-built binary whose Node has only reduced ICU data:
+  // `Intl.DisplayNames` there knows no region names and echoes the code back,
+  // which put «CH» into the address window that Pingen reads.
+  it('does not depend on the region names of the running Node', async () => {
+    vi.spyOn(Intl, 'DisplayNames').mockImplementation(function () {
+      return { of: (code: string) => code } as unknown as Intl.DisplayNames;
+    });
+    // load the module the way the binary does: with that Intl from the start
+    vi.resetModules();
+    const fresh = await import('./letter-recipient');
+
+    expect(fresh.countryName('CH')).toBe('Schweiz');
+    expect(fresh.countryName('DE')).toBe('Deutschland');
+  });
+
+  it('accepts lower case codes', () => {
+    expect(countryName('ch')).toBe('Schweiz');
+  });
+
+  it('keeps a code it does not know as given rather than dropping it', () => {
+    expect(countryName('ZZ')).toBe('ZZ');
   });
 });

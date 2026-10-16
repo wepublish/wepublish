@@ -31,11 +31,39 @@ type or credentials on the existing row instead.
 
 ## PDF Renderer
 
+Everything letter-related ships dark behind the `paper-letters` feature
+(`libs/features`): the letter provider and pdf renderer integrations, letter
+layouts, `letterChannelAvailable` / letter previews, and the letter channel of
+the communication tool (`MailSendJobService.assertChannelAllowed`). The editor
+asks `letterChannelAvailable` only through `useLetterChannel()`
+(`libs/membership/editor/.../use-letter-channel.ts`), which skips the query while
+the feature is off — the api refuses it then. Locally: `WEP_FEATURES=paper-letters`.
+
 Renders letters to pdf. One `settings.pdfrenderer` row; editors switch by its
 `type` (which clears the other type's credentials).
 
 - Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
 - Cloudflare Browser Rendering
+
+A template's `letterAppendixId` (an uploaded pdf `Document`, e.g. a static
+QR-bill) is appended after rendering by `appendPdf` (pdf-lib, renderer-agnostic)
+— CH recipients only, padded to an odd page for duplex (Pingen's QR paper rules).
+
+### Letter layouts (Briefpapier)
+
+`LetterLayout` rows (`letter_layouts`, CRUD in `libs/letter/api/src/lib/letter-layout/`,
+editor under `/letterlayouts`) hold header and footer HTML plus their band
+heights. A letter prints on the template's `letterLayoutId`, else on the row
+with `isDefault`, else bare (`LetterContext.resolveLayout`). The bands are
+`position: fixed` so Chromium repeats them on every page, and the body sits in
+a table whose repeated `thead`/`tfoot` spacers keep the text out of them; see
+`composeLetter` in `libs/letter/api/src/lib/letter-renderer.ts`. Bands are
+capped at 40mm so a header cannot reach Pingen's franking zone, and the page 1
+address window stays at 60mm whatever the header height. Header and footer
+HTML take the same `{{placeholders}}` as the body. Images must be absolute
+URLs the renderer can fetch (Gotenberg in docker cannot resolve `localhost`),
+with a fixed `height` so the logo stays inside its band. Mails never see a
+layout: only the letter path consults it.
 
 ## Analytics Provider
 
@@ -57,3 +85,15 @@ Impersonation (One signs in as a user of this medium) is off unless
 editor redeems at `/login/impersonate/:jwt` — a route that accepts nothing but
 an impersonation grant, since it skips TOTP and any other JWT pointed at it
 would be a way around two-factor.
+
+**Feature toggles** come from One too: per medium, staff-only (One's
+`ClientFeatures`).
+- Every heartbeat sends the registry (`FEATURES` in `libs/features`). One
+  answers `200 {features: {key: bool}}`, the complete state, which
+  `FeaturesService.apply` stores in `medium_features`; a key One leaves out is
+  switched off.
+- One also pushes a change at once via `applyMediumFeatures` (scope
+  `write:features`).
+- A `204`, an older One or One being down changes nothing: the last known
+  state stays. `WEP_FEATURES=a,b` switches flags on locally or in review
+  builds without One.

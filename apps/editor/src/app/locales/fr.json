@@ -1254,6 +1254,9 @@
         "preview": "Aperçu",
         "sendTest": "Envoyer un test",
         "previewLetter": "Aperçu en lettre",
+        "letterAppendix": "Bulletin QR (PDF)",
+        "letterAppendixNone": "Aucun",
+        "letterAppendixHelp": "PDF des «Documents» imprimé après les pages de la lettre, p. ex. un bulletin QR (A4, bulletin au bord inférieur). Uniquement pour les adresses en Suisse ; en impression recto verso, une page blanche est ajoutée si nécessaire pour que le bulletin soit sur un recto.",
         "letterPreviewTitle": "Aperçu de la lettre",
         "selectMailType": "Veuillez d’abord choisir une utilisation.",
         "selectMailTypePlaceholder": "Choisir une utilisation …",
@@ -1267,7 +1270,11 @@
         "sampleSubscriptionHelp": "Choisissez un abonnement existant pour remplir l’aperçu et l’e-mail de test avec ses données réelles. Sans sélection, des données d’exemple fictives sont utilisées. L’e-mail de test n’est envoyé qu’à vous.",
         "bodyModeHelp": "Visuel : modifiez le contenu comme dans un traitement de texte. HTML : modifiez directement le code source – pour utilisateur·trice·s avancé·e·s. Texte brut : la version texte pour les programmes de messagerie sans HTML ; elle est générée automatiquement.",
         "backgroundHelp": "Couleur de la surface autour du contenu de l’e-mail.",
-        "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement."
+        "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement.",
+        "letterLayout": "Papier à lettres",
+        "letterLayoutDefault": "Par défaut ({{name}})",
+        "letterLayoutNone": "Par défaut (aucun)",
+        "letterLayoutHelp": "En-tête et pied de page lorsque ce modèle est imprimé en lettre. Sans effet pour les e-mails."
       },
       "editor": {
         "undo": "Annuler",
@@ -1616,7 +1623,8 @@
         "crowdfundings": "Crowdfundings",
         "polls": "Sondages",
         "topMenu": "Blocs de contenu"
-      }
+      },
+      "letterLayouts": "Papier à lettres"
     },
     "navigation": {
       "overview": {
@@ -3932,6 +3940,32 @@
     "listInput": {
       "dragToReorder": "Glisser pour modifier l’ordre",
       "add": "Ajouter une entrée"
+    },
+    "letterLayouts": {
+      "title": "Papier à lettres",
+      "intro": "En-tête et pied de page des lettres imprimées. Les modèles d’envoi utilisent le papier par défaut, sauf s’ils en choisissent un autre.",
+      "create": "Créer un papier à lettres",
+      "createHeader": "Créer un papier à lettres",
+      "editHeader": "Modifier le papier à lettres",
+      "name": "Nom",
+      "nameRequired": "Veuillez saisir un nom.",
+      "isDefault": "Papier par défaut",
+      "isDefaultHelp": "Les modèles sans papier propre sont imprimés sur le papier par défaut. Il ne peut y en avoir qu’un.",
+      "default": "Par défaut",
+      "header": "En-tête",
+      "footer": "Pied de page",
+      "headerHeight": "Hauteur de l’en-tête (mm)",
+      "footerHeight": "Hauteur du pied de page (mm)",
+      "heightHint": "Au maximum 40 mm, pour que l’en-tête n’empiète pas sur la zone d’affranchissement de Pingen. Les deux se répètent sur chaque page.",
+      "htmlHint": "HTML avec des variables comme {{user_firstName}}. Indiquez les tailles en mm et donnez aux images une largeur et une hauteur fixes.",
+      "insertImage": "Insérer une image",
+      "preview": "Aperçu",
+      "previewTitle": "Lettre type sur ce papier",
+      "saved": "Papier à lettres enregistré",
+      "deleteTitle": "Supprimer le papier à lettres",
+      "deleteQuestion": "Supprimer « {{name}} » ? Les modèles qui l’utilisent doivent d’abord en choisir un autre.",
+      "deleteConfirm": "Supprimer",
+      "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
     }
   }
 }

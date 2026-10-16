@@ -307,6 +307,8 @@ model Document {
   fileSize    Int
   extension   String
 
+  mailTemplates MailTemplate[]
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([title])
@@ -1593,6 +1595,10 @@ model MailTemplate {
   // installs migrating from the remote-template model. Not used for sending.
   externalMailTemplateId String? @unique
 
+  // Uploaded pdf printed after the letter pages (e.g. a static QR-bill).
+  letterAppendixId String?
+  letterAppendix   Document? @relation(fields: [letterAppendixId], references: [id], onDelete: SetNull)
+
   subscriptionIntervals SubscriptionInterval[]
 
   userFlowMails UserFlowMail[]
@@ -1601,7 +1607,37 @@ model MailTemplate {
 
   mailSendJobs MailSendJob[]
 
+  // Stationery a letter printed from this template is set on. Null means the
+  // default layout; the medium is still the send job's choice.
+  letterLayout   LetterLayout? @relation(fields: [letterLayoutId], references: [id])
+  letterLayoutId String?
+
   @@map("mail_templates")
+}
+
+// Stationery for printed letters: a header and a footer repeated on every
+// page of the pdf. Independent of the template, which only carries the words,
+// so the same words can still go out as a mail without any of this.
+model LetterLayout {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name String @unique
+
+  headerHtml String @default("")
+  footerHtml String @default("")
+
+  // Height of the band reserved for each, in millimetres from the sheet edge.
+  headerHeightMm Int @default(30)
+  footerHeightMm Int @default(20)
+
+  // The layout templates without one of their own are printed with.
+  isDefault Boolean @default(false)
+
+  mailTemplates MailTemplate[]
+
+  @@map("letter_layouts")
 }
 
 model PeriodicJob {
@@ -2419,6 +2455,17 @@ model OneChannelState {
   lastSuccessAt DateTime? @db.Timestamptz(3)
 
   @@map("one_channel_state")
+}
+
+/// Feature toggles of this medium, as last received from We.Publish One.
+model MediumFeature {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+  key        String   @unique
+  enabled    Boolean  @default(false)
+
+  @@map("medium_features")
 }
 
 enum AuditLogAction {

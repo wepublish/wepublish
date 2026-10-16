@@ -118,7 +118,11 @@ import {
   CanUpdateTag,
   CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
-import { PermissionControl, Version } from '@wepublish/ui/editor';
+import {
+  FeatureControl,
+  PermissionControl,
+  Version,
+} from '@wepublish/ui/editor';
 import { de, enUS, fr } from 'date-fns/locale';
 import { forwardRef, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -1185,6 +1189,25 @@ export function Base({ children }: BaseProps) {
                         {t('navbar.mailTemplates')}
                       </Nav.Item>
                     </PermissionControl>
+
+                    {/* LETTER LAYOUTS */}
+                    <FeatureControl feature="paper-letters">
+                      <PermissionControl
+                        qualifyingPermissions={[
+                          CanGetMailTemplates.id,
+                          CanUpdateMailTemplates.id,
+                        ]}
+                      >
+                        <Nav.Item
+                          as={NavLink}
+                          href="/letterlayouts"
+                          active={path === 'letterlayouts'}
+                          icon={<MdDescription />}
+                        >
+                          {t('navbar.letterLayouts')}
+                        </Nav.Item>
+                      </PermissionControl>
+                    </FeatureControl>
 
                     {/* SENT MAILS */}
                     <PermissionControl
