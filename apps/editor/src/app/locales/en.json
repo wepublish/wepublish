@@ -3234,6 +3234,10 @@
       },
       "theme": {
         "title": "Theme",
+        "exportTheme": "Export theme",
+        "importTheme": "Import theme",
+        "importSuccess": "Theme imported. Click «Save» to persist.",
+        "importError": "The theme file could not be read.",
         "palette": {
           "primary": "Primary",
           "primaryMain": "Main color of the website. Used for links, navigation, buttons, etc.",
@@ -3934,7 +3938,8 @@
       "footer": "Footer",
       "headerHeight": "Header height (mm)",
       "footerHeight": "Footer height (mm)",
-      "heightHint": "At most 40 mm, so the header stays clear of the Pingen franking zone. Both repeat on every page.",
+      "headerHeightHint": "At most 40 mm, so the header stays clear of the franking zone. It repeats on every page; 0 mm leaves it out.",
+      "footerHeightHint": "At most 40 mm. The letter text keeps this much space from the bottom edge. The footer repeats on every page; 0 mm leaves it out.",
       "htmlHint": "HTML with placeholders such as {{user_firstName}}. Use mm for sizes and give images a fixed width and height.",
       "insertImage": "Insert image",
       "preview": "Preview",

@@ -132,6 +132,17 @@ describe('LetterLayoutEdit', () => {
     expect(screen.getByDisplayValue('20')).toBeInTheDocument();
   });
 
+  it('explains each band height on its own', () => {
+    renderEdit();
+
+    expect(
+      screen.getByLabelText('letterLayouts.headerHeightHint')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('letterLayouts.footerHeightHint')
+    ).toBeInTheDocument();
+  });
+
   it('saves what was edited', () => {
     renderEdit();
 
