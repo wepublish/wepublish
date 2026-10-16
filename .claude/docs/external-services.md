@@ -42,6 +42,39 @@ the feature is off — the api refuses it then. Locally: `WEP_FEATURES=paper-let
 Renders letters to pdf. One `settings.pdfrenderer` row; editors switch by its
 `type` (which clears the other type's credentials).
 
+### Letters instead of mails per user (`paper-letter-flow`)
+
+Automated subscription mails can reach a user as a printed letter. The pieces:
+
+- `UserDeliveryPreference` (`user_delivery_preferences`): per user `channel`
+  mail|letter, `origin` manual|suggestion, reason, who/when. No row = mail.
+  Service `libs/membership/api/src/lib/delivery-mode/`, permission
+  `CanManageUserDeliveryMode`, resolver gated by both letter features.
+- `SubscriptionInterval.sendAsLetter`: only events switched on in the flow
+  editor («auch als Brief») print; user-flow mails (login, password, email
+  change) never do. The three senders (periodic job, legacy `member-context`,
+  renewal success) pass it as `asLetter` into `MailController`.
+- `MailController.sendMail` (`libs/mail/api`) branches before mailing when
+  `asLetter`, the user prefers letters and the `LETTER_SENDER` is configured;
+  it reloads the user with address and falls back to mail without a usable
+  one. The letter is logged under the same `mailIdentifier`/`type` as a mail
+  would be, so retried runs skip it. A failed print throws
+  `LetterDeliveryError`; the periodic job steps over it.
+- `LETTER_SENDER` is a `GatedLetterSender` from `LettersModule`
+  (`libs/letter/api`): `isConfigured()` = `paper-letters` && `paper-letter-flow`
+  && letter integration configured. The feature keys live only there and in
+  the resolvers/editor gates.
+- Print options for unattended sends come from `SettingLetterProvider.default*`
+  (editor → Integrations → Briefversand), over `DEFAULT_PRINT`
+  (`letter-print-defaults.ts`).
+- Nothing switches on its own: the nightly `DeliverySuggestionService`
+  (after email quality) rebuilds `user_delivery_suggestions` — dead or
+  placeholder address with a usable postal address → `toLetter`;
+  suggestion-made letter users that became `active` → `toMail`; manual
+  switches are never suggested back. Admins confirm on `/deliverysuggestions`
+  (single or all; a stale one is dropped and refused), switch single users on
+  the user page, or an audience from the communication tool.
+
 - Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
 - Cloudflare Browser Rendering
 

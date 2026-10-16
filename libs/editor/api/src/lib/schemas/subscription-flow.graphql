@@ -51,12 +51,14 @@ mutation CreateSubscriptionInterval(
   $memberPlanId: String
   $daysAwayFromEnding: Int
   $mailTemplateId: String
+  $sendAsLetter: Boolean
   $event: SubscriptionEvent!
 ) {
   createSubscriptionInterval(
     subscriptionFlowId: $subscriptionFlowId
     daysAwayFromEnding: $daysAwayFromEnding
     mailTemplateId: $mailTemplateId
+    sendAsLetter: $sendAsLetter
     event: $event
   ) {
     ...SubscriptionFlow
@@ -68,11 +70,13 @@ mutation UpdateSubscriptionInterval(
   $memberPlanId: String
   $daysAwayFromEnding: Int
   $mailTemplateId: String
+  $sendAsLetter: Boolean
 ) {
   updateSubscriptionInterval(
     id: $id
     daysAwayFromEnding: $daysAwayFromEnding
     mailTemplateId: $mailTemplateId
+    sendAsLetter: $sendAsLetter
   ) {
     ...SubscriptionFlow
   }
@@ -111,6 +115,7 @@ fragment SubscriptionInterval on SubscriptionInterval {
   id
   daysAwayFromEnding
   event
+  sendAsLetter
   mailTemplate {
     ...MailTemplateRef
   }

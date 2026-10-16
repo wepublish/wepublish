@@ -6,6 +6,7 @@ import { NIGHT_CLAIM_MS, PeriodicJobService } from './periodic-job.service';
 import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
 import { MailLogSyncService } from '../mail-send/mail-log-sync.service';
 import { EmailQualityService } from '../email-quality/email-quality.service';
+import { DeliverySuggestionService } from '../delivery-mode/delivery-suggestion.service';
 
 const SCHEDULE =
   process.env['PERIODIC_JOB_EXECUTION_SCHEDULE'] || '0 0 3 * * *';
@@ -83,6 +84,12 @@ export class PeriodicJobExecutor {
     );
     await this.runStep('Email quality', EmailQualityService, service =>
       service.recomputeAll()
+    );
+    // Built from tonight's levels, so it comes after them.
+    await this.runStep(
+      'Delivery suggestions',
+      DeliverySuggestionService,
+      service => service.recomputeAll()
     );
   }
 

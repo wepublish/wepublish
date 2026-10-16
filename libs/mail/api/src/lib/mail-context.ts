@@ -7,6 +7,7 @@ import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 import { composeMail, MailTemplateContent } from './mail-renderer';
 import { EmailQualityRecorder } from './email-quality-recorder';
+import { LetterSender } from './letter-sender';
 
 export interface SendComposedMailProps {
   readonly mailTemplateId: string;
@@ -109,6 +110,8 @@ export interface MailContextProps {
   readonly kv: KvTtlCacheService;
   readonly jwtGenerator: (userId: string) => Promise<string>;
   readonly emailQualityRecorder?: EmailQualityRecorder;
+  /** Prints automated mails for users in letter mode; absent without letters. */
+  readonly letterSender?: LetterSender;
 }
 
 @Injectable()
@@ -118,6 +121,7 @@ export class MailContext implements MailContextInterface {
   kv: KvTtlCacheService;
   jwtGenerator: (userId: string) => Promise<string>;
   emailQualityRecorder?: EmailQualityRecorder;
+  letterSender?: LetterSender;
 
   constructor(props: MailContextProps) {
     this.mailProvider = props.mailProvider;
@@ -125,6 +129,7 @@ export class MailContext implements MailContextInterface {
     this.kv = props.kv;
     this.jwtGenerator = props.jwtGenerator;
     this.emailQualityRecorder = props.emailQualityRecorder;
+    this.letterSender = props.letterSender;
   }
 
   async sendMail(

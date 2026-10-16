@@ -30,6 +30,7 @@ import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailLogList,
   MailSendPage,
+  DeliverySuggestionsPage,
   LetterLayoutEdit,
   LetterLayoutList,
   MailTemplateEdit,
@@ -149,6 +150,9 @@ const PaperLetterLayoutList =
   createCheckedFeatureComponent('paper-letters')(LetterLayoutList);
 const PaperLetterLayoutEdit =
   createCheckedFeatureComponent('paper-letters')(LetterLayoutEdit);
+const PaperLetterDeliverySuggestions = createCheckedFeatureComponent(
+  'paper-letter-flow'
+)(DeliverySuggestionsPage);
 
 export function App() {
   const { i18n } = useTranslation();
@@ -1138,6 +1142,14 @@ export function App() {
               element={
                 <Base>
                   <MailSendPage />
+                </Base>
+              }
+            />
+            <Route
+              path="deliverysuggestions"
+              element={
+                <Base>
+                  <PaperLetterDeliverySuggestions />
                 </Base>
               }
             />

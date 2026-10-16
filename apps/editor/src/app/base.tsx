@@ -133,9 +133,9 @@ import {
   MdAutorenew,
   MdBadge,
   MdBookOnline,
+  MdBrightnessAuto,
   MdCardGiftcard,
   MdChat,
-  MdBrightnessAuto,
   MdContentCopy,
   MdCountertops,
   MdCreditCard,
@@ -148,11 +148,13 @@ import {
   MdFileCopy,
   MdGroup,
   MdGroups,
+  MdHistory,
   MdHub,
   MdLightMode,
   MdLocationPin,
   MdLogout,
   MdMail,
+  MdMarkunreadMailbox,
   MdMenu,
   MdMoney,
   MdMultilineChart,
@@ -167,7 +169,6 @@ import {
   MdQueryStats,
   MdSell,
   MdSend,
-  MdHistory,
   MdSettings,
   MdSettingsInputAntenna,
   MdSignpost,
@@ -1154,6 +1155,22 @@ export function Base({ children }: BaseProps) {
                         {t('navbar.mailSend')}
                       </Nav.Item>
                     </PermissionControl>
+
+                    {/* DELIVERY SUGGESTIONS (letters instead of mails) */}
+                    <FeatureControl feature="paper-letter-flow">
+                      <PermissionControl
+                        qualifyingPermissions={[CanGetUsers.id]}
+                      >
+                        <Nav.Item
+                          as={NavLink}
+                          href="/deliverysuggestions"
+                          active={path === 'deliverysuggestions'}
+                          icon={<MdMarkunreadMailbox />}
+                        >
+                          {t('navbar.deliverySuggestions')}
+                        </Nav.Item>
+                      </PermissionControl>
+                    </FeatureControl>
 
                     {/* AUTOMATIC MAILS (subscription mailing + system mails) */}
                     <PermissionControl

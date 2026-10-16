@@ -24,6 +24,9 @@ export const unselectPassword: Record<
     | 'notificationConfirmations'
     | 'emailQuality'
     | 'emailQualityEvents'
+    | 'deliveryPreference'
+    | 'deliverySuggestion'
+    | 'deliveryPreferenceChanges'
   >,
   boolean
 > = {

@@ -31,6 +31,7 @@ import {
 } from '@wepublish/ui/editor';
 import {
   SendMailToUserPanel,
+  UserDeliveryModePanel,
   UserMailLogPanel,
 } from '@wepublish/membership/editor';
 import { userCountryNames } from '@wepublish/user';
@@ -1108,6 +1109,15 @@ function UserEditView() {
                 >
                   <UserMailLogPanel userId={userId} />
                 </Panel>
+              </Col>
+            </Row>
+          )}
+
+          {/* letters instead of mails; hidden without the paper-letter flow */}
+          {isEditRoute && userId && (
+            <Row gutter={10}>
+              <Col xs={12}>
+                <UserDeliveryModePanel userId={userId} />
               </Col>
             </Row>
           )}

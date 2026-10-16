@@ -19,6 +19,7 @@ import {
   EMAIL_QUALITY_RECORDER,
   EmailQualityRecorder,
 } from './email-quality-recorder';
+import { LETTER_SENDER, LetterSender } from './letter-sender';
 
 @Module({
   imports: [PrismaModule],
@@ -55,7 +56,8 @@ export class MailsModule {
           { mailProvider, jwtGenerator }: MailsModuleOptions,
           prisma: PrismaClient,
           kv: KvTtlCacheService,
-          emailQualityRecorder?: EmailQualityRecorder
+          emailQualityRecorder?: EmailQualityRecorder,
+          letterSender?: LetterSender
         ) =>
           new MailContext({
             prisma,
@@ -63,12 +65,14 @@ export class MailsModule {
             kv,
             jwtGenerator,
             emailQualityRecorder,
+            letterSender,
           }),
         inject: [
           MAILS_MODULE_OPTIONS,
           PrismaClient,
           KvTtlCacheService,
           { token: EMAIL_QUALITY_RECORDER, optional: true },
+          { token: LETTER_SENDER, optional: true },
         ],
       },
     ];
