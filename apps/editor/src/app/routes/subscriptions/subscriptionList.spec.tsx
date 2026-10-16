@@ -131,6 +131,26 @@ describe('SubscriptionList', () => {
     expect(screen.queryByTestId('reactivateSubscription')).toBeNull();
   });
 
+  it('keeps the delete action in place whether or not it can reactivate', async () => {
+    mockSubscriptions([subscription, deactivatedSubscription]);
+    renderList();
+
+    const [running, deactivated] = await screen.findAllByTestId(
+      'subscriptionActions'
+    );
+
+    for (const cell of [running, deactivated]) {
+      expect(getComputedStyle(cell).gridTemplateColumns).toBe('repeat(2, 1fr)');
+      expect(cell.children[0]).toContainElement(
+        cell.querySelector('[data-testid="deleteSubscription"]')
+      );
+    }
+
+    expect(deactivated.children[1]).toContainElement(
+      screen.getByTestId('reactivateSubscription')
+    );
+  });
+
   it('marks a deactivated subscription next to its member plan', async () => {
     mockSubscriptions([deactivatedSubscription]);
     renderList();
