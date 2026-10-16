@@ -1,6 +1,3 @@
-export * from './lib/storage-client/storage-client.module';
-export * from './lib/storage-client/storage-client.service';
-
 export * from './lib/media-service/media.service';
 export * from './lib/media-service/parse-json-pipe';
 export * from './lib/media-service/supported-images-validator';
