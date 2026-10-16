@@ -62,7 +62,7 @@
         "configurations": {
           "ci": {
             "coverage": true,
-            "maxWorkers": 2
+            "maxWorkers": 1
           }
         }
       }
