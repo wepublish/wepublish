@@ -61,7 +61,8 @@
         },
         "configurations": {
           "ci": {
-            "coverage": true
+            "coverage": true,
+            "maxWorkers": 1
           }
         }
       }

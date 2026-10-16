@@ -48,6 +48,7 @@ import {
   MailchimpFormInterestOptionValue,
   MailchimpFormStepValue,
   MailchimpFormSuccessOptionValue,
+  nameForPickedInterest,
 } from './types';
 
 const Panel = styled(Card)`
@@ -352,10 +353,7 @@ function MailchimpFormInterestOptionItem({
                     const id = option.value;
                     onChange({
                       id: id ?? '',
-                      name:
-                        !value.name || value.name === interestLabel(value.id) ?
-                          (interestLabel(id) ?? '')
-                        : value.name,
+                      name: nameForPickedInterest(value, id, interestLabel),
                     });
                   }}
                   disableClearable

@@ -11,6 +11,19 @@ vi.mock('@apollo/client/react', async importOriginal => ({
   useApolloClient: () => ({ query: vi.fn(async () => ({ data: {} })) }),
 }));
 
+// The dropped files are a byte long; exifr would fail on them and log a
+// RangeError for every drop.
+vi.mock('./imageMetaData', async importOriginal => ({
+  ...(await importOriginal<typeof import('./imageMetaData')>()),
+  readImageMetaData: vi.fn(async () => ({
+    title: '',
+    description: '',
+    source: '',
+    link: '',
+    licence: '',
+  })),
+}));
+
 const dropFile = (target: HTMLElement, file: File) => {
   const dataTransfer = {
     files: [file],

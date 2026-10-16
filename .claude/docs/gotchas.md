@@ -154,6 +154,26 @@ database boundary.
 
 ---
 
+### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
+
+The `ci` configuration in [nx.json](../../nx.json) sets `maxWorkers: 1`.
+`test-backend` runs 10 Nx tasks at once on a 4-vCPU GitHub runner, and without
+the cap every task started its own pool of ~3 workers. With ~30 processes on 4
+cores and coverage on, a test was ~30× slower than locally, and MUI specs around
+0.7 s hit the 15 s `testTimeout` (`ui-editor`, 2026-10-16). Don't raise
+`testTimeout` or drop the cap to "speed CI up". Make a slow spec cheaper instead.
+Each uncached run (all 92 tasks) took ~11 min with the cap and 9 m 04 s
+without it, but the run without it failed. Two workers were tried and gave
+nothing: 11 m 24 s, and `membership-editor` timed out again (2026-10-16, one
+run each).
+In happy-dom the cost is mostly `getComputedStyle`, which MUI's Popper and
+`TextareaAutosize` call on every open or render.
+
+Local runs don't use `-c ci`. When reproducing CI locally with `-c ci`, add
+`--maxWorkers=4` to get your cores back.
+
+---
+
 ### ⚠️ Every Dragonfly key must start with `REDIS_KEY_PREFIX`
 
 All media share database 0; a medium's user may only touch `<prefix>:*` /
@@ -889,6 +909,29 @@ Pinned by `apps/editor/src/app/routes/pages/pageList.spec.tsx` ("does not
 refetch when a column is hidden"), which seeds the stored list state first: with
 nothing in storage the hook falls back to a stable default and the bug cannot
 reproduce.
+
+---
+
+### ⚠️ An incomplete Apollo mock turns a story spec into a race
+
+Apollo 4's `MockLink` delays each response by a random 20–50 ms. When two
+queries return the same normalised object (a `PublicSubscription` in both
+`Subscriptions` and `Invoices`), and its mock lacks a fragment field
+(`Missing field 'goodie' while writing result` in stderr), the second response
+leaves the object incomplete. Apollo then refetches the first query, finds its
+mock used up, and the component shows "No more mocked responses" instead of its
+content. That depends on which response comes first and how fast the runner
+renders, so `membership-website`'s "should render Extend" failed now and then on
+CI and never locally (2026-10-16).
+
+Type a mock with `satisfies Exact<…Fragment>`, never `as`, so a missing field
+shows in the editor. Stories aren't type-checked in CI (excluded from
+`tsconfig.lib.json`). Write "no value" as `null`, not `undefined`. Treat any
+`Missing field` line in a spec's stderr as a bug. Fixed delays (`delay` on each
+mock) turn the race into a test that fails every time.
+
+Pinned by `subscription-list-container.spec.tsx` ("should keep the list when
+the invoices arrive after the subscriptions").
 
 ---
 

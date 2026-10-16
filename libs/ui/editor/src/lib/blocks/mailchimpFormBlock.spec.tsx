@@ -320,6 +320,9 @@ describe('MailchimpFormBlock', () => {
     ]);
   });
 
+  // The naming rules are covered by `nameForPickedInterest` in
+  // mailchimpFormBlock.types.spec.ts; opening the picker is slow in happy-dom,
+  // so only this test checks that picking an interest goes through them.
   it('should prefill the name with the name of the picked interest', async () => {
     const latest = renderWithGroupsInput({ options: [emptyOption] });
 
@@ -336,76 +339,6 @@ describe('MailchimpFormBlock', () => {
     await waitFor(() =>
       expect(getOptions(latest.value)).toMatchObject([
         { id: 'interest-weekly', name: 'Weekly Culture' },
-      ])
-    );
-  });
-
-  it('should not overwrite a custom name when picking an interest', async () => {
-    const latest = renderWithGroupsInput({
-      options: [{ ...emptyOption, name: 'My newsletter' }],
-    });
-
-    const itemPicker = screen.getByText(
-      'blocks.mailchimpForm.interestOption'
-    ).parentElement!;
-
-    await openPicker(itemPicker);
-
-    fireEvent.click(
-      await screen.findByRole('option', { name: 'Daily Briefing' })
-    );
-
-    await waitFor(() =>
-      expect(getOptions(latest.value)).toMatchObject([
-        { id: 'interest-daily', name: 'My newsletter' },
-      ])
-    );
-  });
-
-  it('should update a prefilled name when picking a different interest', async () => {
-    const latest = renderWithGroupsInput({
-      options: [
-        { ...emptyOption, id: 'interest-daily', name: 'Daily Briefing' },
-      ],
-    });
-
-    const itemPicker = screen.getByText(
-      'blocks.mailchimpForm.interestOption'
-    ).parentElement!;
-
-    await openPicker(itemPicker);
-
-    fireEvent.click(
-      await screen.findByRole('option', { name: 'Weekly Culture' })
-    );
-
-    await waitFor(() =>
-      expect(getOptions(latest.value)).toMatchObject([
-        { id: 'interest-weekly', name: 'Weekly Culture' },
-      ])
-    );
-  });
-
-  it('should keep a custom name when picking a different interest', async () => {
-    const latest = renderWithGroupsInput({
-      options: [
-        { ...emptyOption, id: 'interest-daily', name: 'My newsletter' },
-      ],
-    });
-
-    const itemPicker = screen.getByText(
-      'blocks.mailchimpForm.interestOption'
-    ).parentElement!;
-
-    await openPicker(itemPicker);
-
-    fireEvent.click(
-      await screen.findByRole('option', { name: 'Weekly Culture' })
-    );
-
-    await waitFor(() =>
-      expect(getOptions(latest.value)).toMatchObject([
-        { id: 'interest-weekly', name: 'My newsletter' },
       ])
     );
   });

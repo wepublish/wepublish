@@ -15,19 +15,21 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   AsyncSessionProvider,
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
+  WebsiteShellProps,
 } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
+  createWithApiClient,
   FullSessionWithTokenWithoutUserFragment,
   WebsiteSettingsFragment,
-  createWithApiClient,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
@@ -122,9 +124,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -146,6 +150,8 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const shell = getWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
@@ -215,12 +221,14 @@ function CustomApp({
                 </Head>
 
                 <Spacer>
-                  <NavBar
-                    categorySlugs={[['pages']]}
-                    slug="main"
-                    headerSlug="header"
-                    iconSlug="icons"
-                  />
+                  {shell.showNavigation && (
+                    <NavBar
+                      categorySlugs={[['pages']]}
+                      slug="main"
+                      headerSlug="header"
+                      iconSlug="icons"
+                    />
+                  )}
 
                   <Main>
                     <Container maxWidth="lg">
@@ -229,12 +237,14 @@ function CustomApp({
                     </Container>
                   </Main>
 
-                  <FooterContainer
-                    slug="main"
-                    categorySlugs={[['pages']]}
-                    iconSlug="icons"
-                    hideBannerOnIntersecting={false}
-                  />
+                  {shell.showFooter && (
+                    <FooterContainer
+                      slug="main"
+                      categorySlugs={[['pages']]}
+                      iconSlug="icons"
+                      hideBannerOnIntersecting={false}
+                    />
+                  )}
                 </Spacer>
 
                 <RoutedAdminBar />

@@ -123,6 +123,20 @@ export interface MailchimpFormInterestOptionValue {
   image?: FullImageFragment | null;
 }
 
+/**
+ * The name an interest option gets when another interest is picked: an empty
+ * name or the label of the previous interest follows the pick, a name the
+ * editor typed stays.
+ */
+export const nameForPickedInterest = (
+  option: Pick<MailchimpFormInterestOptionValue, 'id' | 'name'>,
+  pickedId: string | null,
+  labelOf: (id: string | null) => string | undefined
+) =>
+  !option.name || option.name === labelOf(option.id) ?
+    (labelOf(pickedId) ?? '')
+  : option.name;
+
 export interface MailchimpFormFieldConfigValue {
   inputType?: string | null;
   name?: string | null;
