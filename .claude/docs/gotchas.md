@@ -154,14 +154,17 @@ database boundary.
 
 ---
 
-### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
+### ⚠️ CI caps Vitest at two workers per project — `maxWorkers` is load-bearing
 
-The `ci` configuration in [nx.json](../../nx.json) sets `maxWorkers: 1`.
+The `ci` configuration in [nx.json](../../nx.json) sets `maxWorkers: 2`.
 `test-backend` runs 10 Nx tasks at once on a 4-vCPU GitHub runner, and without
 the cap every task started its own pool of ~3 workers. With ~30 processes on 4
 cores and coverage on, a test was ~30× slower than locally, and MUI specs around
 0.7 s hit the 15 s `testTimeout` (`ui-editor`, 2026-10-16). Don't raise
 `testTimeout` or drop the cap to "speed CI up". Make a slow spec cheaper instead.
+`maxWorkers: 1` overshot: with all 92 tasks uncached the test step went from
+9 m 04 s to 11 m 05 s, and the median task from 9 s to 30 s, because small
+projects ran their files one after another (#3161, one run each side).
 In happy-dom the cost is mostly `getComputedStyle`, which MUI's Popper and
 `TextareaAutosize` call on every open or render.
 
