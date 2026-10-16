@@ -162,6 +162,10 @@ the cap every task started its own pool of ~3 workers. With ~30 processes on 4
 cores and coverage on, a test was ~30× slower than locally, and MUI specs around
 0.7 s hit the 15 s `testTimeout` (`ui-editor`, 2026-10-16). Don't raise
 `testTimeout` or drop the cap to "speed CI up". Make a slow spec cheaper instead.
+Each uncached run (all 92 tasks) took ~11 min with the cap and 9 m 04 s
+without it, but the run without it failed. Two workers were tried and gave
+nothing: 11 m 24 s, and `membership-editor` timed out again (2026-10-16, one
+run each).
 In happy-dom the cost is mostly `getComputedStyle`, which MUI's Popper and
 `TextareaAutosize` call on every open or render.
 
