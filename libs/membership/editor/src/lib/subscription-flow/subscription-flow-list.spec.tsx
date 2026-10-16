@@ -199,17 +199,15 @@ describe('SubscriptionFlowList', () => {
       renderPage();
 
       fireEvent.click(
-        screen.getByRole('button', { name: 'subscriptionFlow.addDay' })
+        screen.getByText('subscriptionFlow.addDay', { selector: 'button' })
       );
       fireEvent.click(
-        await screen.findByRole('button', { name: 'subscriptionFlow.add' })
+        await screen.findByText('subscriptionFlow.add', { selector: 'button' })
       );
 
       expect(screen.getByText(dayLabel(-3))).toBeTruthy();
 
-      fireEvent.click(
-        screen.getByRole('button', { name: 'subscriptionFlow.deleteMail' })
-      );
+      fireEvent.click(screen.getByLabelText('subscriptionFlow.deleteMail'));
 
       expect(screen.queryByText(dayLabel(-3))).toBeNull();
     });
@@ -244,9 +242,7 @@ describe('SubscriptionFlowList', () => {
 
       expect(emptySelects()).toHaveLength(2);
       expect(
-        within(dayRow()).getAllByRole('button', {
-          name: 'subscriptionFlow.deleteMail',
-        })
+        within(dayRow()).getAllByLabelText('subscriptionFlow.deleteMail')
       ).toHaveLength(1);
     });
 
@@ -262,9 +258,7 @@ describe('SubscriptionFlowList', () => {
         })
       );
       fireEvent.click(
-        within(dayRow()).getByRole('button', {
-          name: 'subscriptionFlow.deleteMail',
-        })
+        within(dayRow()).getByLabelText('subscriptionFlow.deleteMail')
       );
 
       expect(
@@ -278,10 +272,10 @@ describe('SubscriptionFlowList', () => {
       const { rerender } = renderPage();
 
       fireEvent.click(
-        screen.getByRole('button', { name: 'subscriptionFlow.addDay' })
+        screen.getByText('subscriptionFlow.addDay', { selector: 'button' })
       );
       fireEvent.click(
-        await screen.findByRole('button', { name: 'subscriptionFlow.add' })
+        await screen.findByText('subscriptionFlow.add', { selector: 'button' })
       );
 
       mockQueries([
@@ -292,9 +286,7 @@ describe('SubscriptionFlowList', () => {
       ]);
       rerender(page());
 
-      fireEvent.click(
-        screen.getByRole('button', { name: 'subscriptionFlow.deleteMail' })
-      );
+      fireEvent.click(screen.getByLabelText('subscriptionFlow.deleteMail'));
 
       expect(
         mutationFor(DeleteSubscriptionIntervalDocument)
@@ -429,14 +421,12 @@ describe('SubscriptionFlowList', () => {
       const customBlock = screen.getByRole('region', {
         name: 'subscriptionFlow.flowNumber(1)',
       });
-      const removeButtons = within(customBlock).getAllByRole('button', {
-        name: 'subscriptionFlow.deleteMail',
-      });
+      const removeButtons = within(customBlock).getAllByLabelText(
+        'subscriptionFlow.deleteMail'
+      );
 
       expect(
-        within(defaultBlock).queryAllByRole('button', {
-          name: 'subscriptionFlow.deleteMail',
-        })
+        within(defaultBlock).queryAllByLabelText('subscriptionFlow.deleteMail')
       ).toHaveLength(0);
       expect(removeButtons).toHaveLength(1);
 
