@@ -102,7 +102,7 @@ export function MarkBubbleMenu() {
       <ToggleButtonGroup
         tabIndex={-1}
         size="small"
-        sx={{ background: 'var(--rs-bg-overlay)' }}
+        sx={{ bgcolor: 'background.paper' }}
         value={Object.entries({
           bold: editorState.isBold,
           italic: editorState.isItalic,
@@ -173,7 +173,7 @@ export function MarkBubbleMenu() {
 
             <LinkPopover
               open={linkOpen}
-              anchorEl={linkButtonRef.current}
+              anchorEl={() => linkButtonRef.current!}
               onClose={() => setLinkOpen(false)}
             />
           </>

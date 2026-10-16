@@ -1,12 +1,19 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen, within } from '@testing-library/react';
+import { ReactNode } from 'react';
 import { MdSave } from 'react-icons/md';
 
 import { StateColor } from '../utility';
 import { EditorHeader, EditorHeaderButton } from './editorHeader';
 
+const theme = createTheme({ cssVariables: true });
+
+const renderWithTheme = (ui: ReactNode) =>
+  render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
+
 describe('EditorHeader', () => {
   it('shows the state of the document together with when it was saved', () => {
-    render(
+    renderWithTheme(
       <EditorHeader
         state={StateColor.published}
         stateLabel="Published on 1 Sep"
@@ -21,7 +28,7 @@ describe('EditorHeader', () => {
   });
 
   it('keeps the primary actions after the secondary ones', () => {
-    render(
+    renderWithTheme(
       <EditorHeader
         state={StateColor.draft}
         stateLabel="Draft"
@@ -35,12 +42,29 @@ describe('EditorHeader', () => {
     expect(metadata.textContent).toBe('Metadata');
     expect(publish.textContent).toBe('Publish');
   });
+
+  it('keeps the status action beside the status, ahead of the buttons', () => {
+    renderWithTheme(
+      <EditorHeader
+        state={StateColor.draft}
+        stateLabel="Draft"
+        statusAction={<button>Autosave</button>}
+        secondaryActions={<button>Metadata</button>}
+        primaryActions={<button>Publish</button>}
+      />
+    );
+
+    expect(
+      screen.getAllByRole('button').map(button => button.textContent)
+    ).toEqual(['Autosave', 'Metadata', 'Publish']);
+  });
 });
 
 describe('EditorHeaderButton', () => {
   it('stays named for screen readers when its label collapses', () => {
-    render(
+    renderWithTheme(
       <EditorHeaderButton
+        variant="outlined"
         icon={<MdSave />}
         label="Save"
       />

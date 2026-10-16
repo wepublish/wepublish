@@ -1,11 +1,20 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
 import {
   DeleteLetterLayoutDocument,
@@ -23,7 +32,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdEdit } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, IconButton, Modal, Stack, Tag } from 'rsuite';
 import { MUTATION_OPTIONS_WITH_SUCCESS_MESSAGE, showErrors } from '../common';
 
 function LetterLayoutList() {
@@ -53,20 +61,23 @@ function LetterLayoutList() {
       <ListViewContainer>
         <ListViewHeader>
           <h2>{t('letterLayouts.title')}</h2>
-          <p style={{ color: 'var(--rs-text-secondary)', maxWidth: 720 }}>
+          <Typography
+            component="p"
+            sx={{ color: 'text.secondary', maxWidth: 720 }}
+          >
             {t('letterLayouts.intro')}
-          </p>
+          </Typography>
         </ListViewHeader>
         <PermissionControl
           qualifyingPermissions={['CAN_CREATE_MAIL-TEMPLATES']}
         >
           <Link to="/letterlayouts/create">
-            <IconButton
-              appearance="primary"
-              icon={<MdAdd />}
+            <Button
+              variant="contained"
+              startIcon={<MdAdd />}
             >
               {t('letterLayouts.create')}
-            </IconButton>
+            </Button>
           </Link>
         </PermissionControl>
       </ListViewContainer>
@@ -84,43 +95,47 @@ function LetterLayoutList() {
               <TableRow key={layout.id}>
                 <TableCell>
                   <Stack
-                    spacing={8}
-                    alignItems="center"
+                    direction="row"
+                    sx={{ alignItems: 'center' }}
+                    spacing={1}
                   >
                     <Link to={`/letterlayouts/edit/${layout.id}`}>
                       {layout.name}
                     </Link>
                     {layout.isDefault && (
-                      <Tag color="blue">{t('letterLayouts.default')}</Tag>
+                      <Chip
+                        color="primary"
+                        label={t('letterLayouts.default')}
+                      />
                     )}
                   </Stack>
                 </TableCell>
                 <TableCell align="right">
                   <Stack
-                    spacing={4}
-                    justifyContent="flex-end"
+                    direction="row"
+                    sx={{ justifyContent: 'flex-end' }}
+                    spacing={0.5}
                   >
                     <IconButtonTooltip caption={t('edit')}>
                       <IconButton
                         aria-label={t('edit')}
-                        icon={<MdEdit />}
-                        circle
-                        size="sm"
+                        size="small"
                         onClick={() =>
                           navigate(`/letterlayouts/edit/${layout.id}`)
                         }
-                      />
+                      >
+                        <MdEdit />
+                      </IconButton>
                     </IconButtonTooltip>
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         aria-label={t('delete')}
-                        icon={<MdDelete />}
-                        color="red"
-                        appearance="ghost"
-                        circle
-                        size="sm"
+                        color="error"
+                        size="small"
                         onClick={() => setToDelete(layout)}
-                      />
+                      >
+                        <MdDelete />
+                      </IconButton>
                     </IconButtonTooltip>
                   </Stack>
                 </TableCell>
@@ -137,21 +152,20 @@ function LetterLayoutList() {
         </Table>
       </TableContainer>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={!!toDelete}
         onClose={() => setToDelete(null)}
-        size="sm"
+        maxWidth="sm"
       >
-        <Modal.Header>
-          <Modal.Title>{t('letterLayouts.deleteTitle')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+        <DialogTitle>{t('letterLayouts.deleteTitle')}</DialogTitle>
+        <DialogContent>
           {t('letterLayouts.deleteQuestion', { name: toDelete?.name })}
-        </Modal.Body>
-        <Modal.Footer>
+        </DialogContent>
+        <DialogActions>
           <Button
-            appearance="primary"
-            color="red"
+            variant="contained"
+            color="error"
             onClick={() => {
               if (toDelete) {
                 deleteLayout({ variables: { id: toDelete.id } });
@@ -162,13 +176,13 @@ function LetterLayoutList() {
             {t('letterLayouts.deleteConfirm')}
           </Button>
           <Button
-            appearance="subtle"
+            variant="text"
             onClick={() => setToDelete(null)}
           >
             {t('cancel')}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

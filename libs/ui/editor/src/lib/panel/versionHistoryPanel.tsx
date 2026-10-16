@@ -16,6 +16,7 @@ import {
   Skeleton,
   Tooltip,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { format, formatDistanceToNow, isAfter, Locale } from 'date-fns';
 import { de, enUS, fr } from 'date-fns/locale';
@@ -32,6 +33,8 @@ import {
   MdSchedule,
   MdVisibility,
 } from 'react-icons/md';
+
+import { paletteColor } from '../paletteColor';
 
 const DATE_LOCALES: Record<string, Locale> = {
   en: enUS,
@@ -116,17 +119,19 @@ const Header = styled.div`
   align-items: center;
   gap: 12px;
   padding: 20px 24px;
+  flex-shrink: 0;
 `;
 
 const HeaderIcon = styled.div`
   font-size: 26px;
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.palette.primary.main};
+  color: ${({ theme }) => theme.vars.palette.primary.main};
 `;
 
 const ScrollArea = styled.div`
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 16px 24px 32px;
 `;
@@ -137,6 +142,13 @@ const Timeline = styled.ol`
   padding: 0;
 `;
 
+const Connector = styled.div`
+  flex: 1;
+  width: 2px;
+  margin-top: 2px;
+  background-color: ${({ theme }) => theme.vars.palette.divider};
+`;
+
 const TimelineItem = styled.li`
   position: relative;
   display: grid;
@@ -144,7 +156,7 @@ const TimelineItem = styled.li`
   gap: 16px;
   padding-bottom: 20px;
 
-  &:last-of-type .timeline-connector {
+  &:last-of-type ${Connector} {
     display: none;
   }
 `;
@@ -169,24 +181,17 @@ const Dot = styled.div<{ dotColor: string }>`
   z-index: 1;
 `;
 
-const Connector = styled.div`
-  flex: 1;
-  width: 2px;
-  margin-top: 2px;
-  background-color: ${({ theme }) => theme.palette.divider};
-`;
-
 const Card = styled.div<{ isCurrent: boolean }>`
   border: 1px solid
     ${({ isCurrent, theme }) =>
-      isCurrent ? theme.palette.primary.main : theme.palette.divider};
-  border-radius: var(--rs-radius-md);
+      isCurrent ? theme.vars.palette.primary.main : theme.vars.palette.divider};
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
   padding: 12px 14px;
-  background: ${({ theme }) => theme.palette.background.paper};
+  background: ${({ theme }) => theme.vars.palette.background.paper};
   transition: border-color 0.15s;
 
   &:hover {
-    border-color: ${({ theme }) => theme.palette.primary.light};
+    border-color: ${({ theme }) => theme.vars.palette.primary.light};
   }
 `;
 
@@ -208,7 +213,7 @@ const EmptyState = styled.div`
   align-items: center;
   gap: 12px;
   text-align: center;
-  color: ${({ theme }) => theme.palette.text.secondary};
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   padding: 48px 16px;
 `;
 
@@ -216,11 +221,11 @@ const stateMeta: Record<
   RevisionState,
   { color: 'success' | 'info' | 'warning' | 'default'; hex: string }
 > = {
-  published: { color: 'success', hex: 'var(--rs-state-success)' },
-  pending: { color: 'info', hex: 'var(--rs-state-info)' },
-  draft: { color: 'warning', hex: 'var(--rs-state-warning)' },
-  superseded: { color: 'default', hex: 'var(--rs-text-secondary)' },
-  archived: { color: 'default', hex: 'var(--rs-gray-400)' },
+  published: { color: 'success', hex: 'success.main' },
+  pending: { color: 'info', hex: 'info.main' },
+  draft: { color: 'warning', hex: 'warning.main' },
+  superseded: { color: 'default', hex: 'text.secondary' },
+  archived: { color: 'default', hex: 'grey.400' },
 };
 
 const stateIcon: Record<RevisionState, ReactElement> = {
@@ -282,6 +287,7 @@ export function VersionHistory({
   onPreview,
 }: VersionHistoryProps) {
   const { t, i18n } = useTranslation();
+  const theme = useTheme();
   const [pendingRestore, setPendingRestore] =
     useState<VersionHistoryRevision | null>(null);
 
@@ -385,9 +391,13 @@ export function VersionHistory({
                 return (
                   <TimelineItem key={revision.id}>
                     <Rail>
-                      <Dot dotColor={meta.hex}>{stateIcon[state]}</Dot>
-                      <Connector className="timeline-connector" />
+                      <Dot dotColor={paletteColor(theme, meta.hex)}>
+                        {stateIcon[state]}
+                      </Dot>
+
+                      <Connector />
                     </Rail>
+
                     <Card isCurrent={isCurrent}>
                       <CardTopRow>
                         <Chip
@@ -593,7 +603,6 @@ export function VersionHistory({
           </Button>
           <Button
             variant="contained"
-            startIcon={<MdRestore />}
             onClick={async () => {
               if (pendingRestore) {
                 const id = pendingRestore.id;

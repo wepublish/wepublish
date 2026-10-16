@@ -31,6 +31,7 @@ const Editor = styled(EditorContent)`
     *:first-child {
       margin-top: 0;
     }
+
     *:last-child {
       margin-bottom: 0;
     }
@@ -39,7 +40,7 @@ const Editor = styled(EditorContent)`
   pre {
     border-radius: 6px;
     padding: ${({ theme }) => theme.spacing(1.5)};
-    background-color: ${({ theme }) => theme.palette.grey[800]};
+    background-color: ${({ theme }) => theme.vars.palette.grey[800]};
     color: ${({ theme }) =>
       theme.palette.getContrastText(theme.palette.grey[800])};
   }
@@ -49,15 +50,15 @@ const Editor = styled(EditorContent)`
     align-items: center;
     padding: ${({ theme }) => theme.spacing(0.75, 2.5)};
     border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-    background-color: ${({ theme }) => theme.palette.primary.main};
-    color: ${({ theme }) => theme.palette.primary.contrastText};
+    background-color: ${({ theme }) => theme.vars.palette.primary.main};
+    color: ${({ theme }) => theme.vars.palette.primary.contrastText};
     font-weight: 600;
     text-decoration: none;
   }
 
   a[data-variant='buttonLinkSecondary'] {
-    background-color: ${({ theme }) => theme.palette.secondary.main};
-    color: ${({ theme }) => theme.palette.secondary.contrastText};
+    background-color: ${({ theme }) => theme.vars.palette.secondary.main};
+    color: ${({ theme }) => theme.vars.palette.secondary.contrastText};
   }
 
   // MUI theme
@@ -92,7 +93,7 @@ const Editor = styled(EditorContent)`
 
   // Blockquote
   blockquote {
-    border-left: 3px solid ${({ theme }) => theme.palette.text.disabled};
+    border-left: 3px solid ${({ theme }) => theme.vars.palette.text.disabled};
     margin: 1.5rem 0;
     padding-left: 1rem;
   }
@@ -107,7 +108,7 @@ const Editor = styled(EditorContent)`
 
     td,
     th {
-      border: 1px solid var(--rs-border-primary);
+      border: 1px solid ${({ theme }) => theme.vars.palette.divider};
       box-sizing: border-box;
       min-width: 1em;
       padding: 6px 8px;
@@ -120,12 +121,13 @@ const Editor = styled(EditorContent)`
     }
 
     th {
-      background-color: ${({ theme }) =>
-        theme.palette.mode === 'dark' ?
-          theme.palette.grey['800']
-        : theme.palette.grey['300']};
+      background-color: ${({ theme }) => theme.vars.palette.grey['300']};
       font-weight: bold;
       text-align: left;
+    }
+
+    [data-mui-color-scheme='dark'] & th {
+      background-color: ${({ theme }) => theme.vars.palette.grey['800']};
     }
   }
 
@@ -141,7 +143,7 @@ const Editor = styled(EditorContent)`
 
   // Placeholder
   .is-empty::before {
-    color: ${({ theme }) => theme.palette.grey[400]};
+    color: ${({ theme }) => theme.vars.palette.grey[400]};
     content: attr(data-placeholder);
     float: left;
     height: 0;
@@ -149,7 +151,9 @@ const Editor = styled(EditorContent)`
   }
 
   .ProseMirror-selectednode:not(img):not(pre):not(.react-renderer) {
-    background-color: rgb(from var(--rs-primary-500) r g b / 13%);
+    background-color: rgb(
+      from ${({ theme }) => theme.vars.palette.primary.main} r g b / 13%
+    );
     border-radius: 0.5rem;
 
     &:is(blockquote) {

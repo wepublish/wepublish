@@ -1,4 +1,5 @@
-import { useLazyQuery } from '@apollo/client/react';
+import { useQuery } from '@apollo/client/react';
+import { Box, Grid } from '@mui/material';
 import {
   CommentItemType,
   CommentListDocument,
@@ -6,10 +7,8 @@ import {
   CommentState,
   FullCommentFragment,
 } from '@wepublish/editor/api';
-import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
-import { Col, Row } from 'rsuite';
 
 import { CommentPreview, RevisionProps } from './commentPreview';
 import { CreateCommentBtn } from './createCommentBtn';
@@ -36,11 +35,12 @@ function ChildComments({
   );
 
   return (
-    <div
-      style={{
-        marginTop: '20px',
-        borderLeft: '1px var(--rs-border-primary) solid',
-        paddingLeft: '20px',
+    <Box
+      sx={{
+        marginTop: 2.5,
+        borderLeft: '1px solid',
+        borderLeftColor: 'divider',
+        paddingLeft: 2.5,
       }}
     >
       {childComments.map(childComment => (
@@ -70,7 +70,7 @@ function ChildComments({
           />
         </div>
       ))}
-    </div>
+    </Box>
   );
 }
 
@@ -88,63 +88,51 @@ export function CommentHistory({
   originComment,
 }: CommentHistoryProps) {
   const { t } = useTranslation();
-  const [comments, setComments] = useState<FullCommentFragment[] | undefined>();
+  const { data, refetch } = useQuery(CommentListDocument, {
+    variables: {
+      filter: {
+        itemType: commentItemType,
+        itemID: commentItemID,
+        states: [
+          CommentState.Approved,
+          CommentState.PendingUserChanges,
+          CommentState.PendingApproval,
+          CommentState.Rejected,
+        ],
+      },
+      sort: CommentSort.CreatedAt,
+      take: 1000,
+    },
+  });
 
-  const [fetchCommentList, { data }] = useLazyQuery(CommentListDocument);
-
-  const fetchComments = useCallback(
-    () =>
-      fetchCommentList({
-        variables: {
-          filter: {
-            itemType: commentItemType,
-            itemID: commentItemID,
-            states: [
-              CommentState.Approved,
-              CommentState.PendingUserChanges,
-              CommentState.PendingApproval,
-              CommentState.Rejected,
-            ],
-          },
-          sort: CommentSort.CreatedAt,
-          take: 1000,
-        },
-      }),
-    [fetchCommentList, commentItemType, commentItemID]
-  );
-
-  useEffect(() => {
-    setComments(data?.comments?.nodes);
-  }, [data]);
-
-  // re-load comments whenever the comment id changes
-  useEffect(() => {
-    fetchComments();
-  }, [originComment?.id]);
+  const comments = data?.comments?.nodes;
 
   return (
     <>
-      <Row
-        align="bottom"
-        justify="end"
+      <Grid
+        container
+        spacing={2}
+        sx={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}
       >
-        <Col
+        <Grid
+          size={{ xs: 12 }}
+          container
+          spacing={2}
           style={{ textAlign: 'end', paddingBottom: '20px' }}
-          span={24}
         >
           <CreateCommentBtn
             itemID={commentItemID}
             itemType={commentItemType}
             text={t('commentHistory.addComment')}
-            color="green"
-            appearance="ghost"
+            color="success"
+            variant="outlined"
             icon={<MdAdd />}
             onCommentCreated={async () => {
-              await fetchComments();
+              await refetch();
             }}
           />
-        </Col>
-      </Row>
+        </Grid>
+      </Grid>
 
       {comments &&
         comments.map(tmpComment => (

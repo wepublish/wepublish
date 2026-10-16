@@ -3,10 +3,18 @@ import {
   PaymentPeriodicity,
   SortOrder,
 } from '@wepublish/editor/api';
+import imageCompression from 'browser-image-compression';
 import { de, enUS, fr } from 'date-fns/locale';
 import { DocumentNode, OperationDefinitionNode } from 'graphql';
 import nanoid from 'nanoid';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 export const addOrUpdateOneInArray = (
   array: Record<string | 'id', any>[] | null | undefined,
@@ -97,8 +105,9 @@ export function getOperationNameFromDocument(node: DocumentNode) {
     node => node.kind === 'OperationDefinition'
   ) as OperationDefinitionNode;
 
-  if (!firstOperation?.name?.value)
+  if (!firstOperation?.name?.value) {
     throw new Error("Coulnd't find operation name.");
+  }
   return firstOperation.name.value;
 }
 
@@ -106,7 +115,9 @@ export function transformCssStringToObject(
   styleCustom: string
 ): Record<string, unknown> {
   const styleRules = styleCustom.split(';');
-  if (styleRules.length === 0) return {};
+  if (styleRules.length === 0) {
+    return {};
+  }
   return styleRules.reduce(
     (previousValue: Record<string, unknown>, currentValue: string) => {
       const [key, value] = currentValue.split(':');
@@ -253,7 +264,7 @@ export function isValueConstructor<T>(value: T | (() => T)): value is () => T {
 }
 
 export function isFunctionalUpdate<T>(
-  value: React.SetStateAction<T>
+  value: SetStateAction<T>
 ): value is (value: T) => T {
   return typeof value === 'function';
 }
@@ -263,3 +274,10 @@ export const AVAILABLE_LANG = [
   { id: 'fr', lang: 'fr_FR', name: 'Français', locale: fr },
   { id: 'de', lang: 'de_CH', name: 'Deutsch', locale: de },
 ];
+
+export async function compressImageForUpload(file: File): Promise<File> {
+  const maxSizeMB = getImgMinSizeToCompress();
+  const sizeInMB = file.size / (1024 * 1024);
+
+  return sizeInMB > maxSizeMB ? imageCompression(file, { maxSizeMB }) : file;
+}

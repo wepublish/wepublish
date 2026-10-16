@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 
 import { ListInput } from './listInput';
@@ -7,27 +8,27 @@ vi.mock('react-i18next', () => ({
 }));
 
 describe('ListInput', () => {
-  it('does not clip the corners of the fields in an item', () => {
+  it('gives the fields the whole width of the row', () => {
     render(
-      <ListInput
-        value={[{ id: 'a', value: 'key' }]}
-        onChange={vi.fn()}
-        defaultValue=""
-      >
-        {({ value }) => (
-          <input
-            data-testid="field"
-            defaultValue={value}
-          />
-        )}
-      </ListInput>
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <ListInput
+          value={[{ id: 'a', value: 'key' }]}
+          onChange={vi.fn()}
+          defaultValue=""
+        >
+          {({ value }) => (
+            <input
+              data-testid="field"
+              value={value}
+              onChange={() => undefined}
+            />
+          )}
+        </ListInput>
+      </ThemeProvider>
     );
 
-    // the item panel is only a layout wrapper; rsuite's overflow: hidden
-    // with the editor's larger panel radius cut off the fields' rounded
-    // corners (and focus rings) at its edges
-    const panel = screen.getByTestId('field').closest('.rs-panel');
+    const fields = screen.getByTestId('field').parentElement as HTMLElement;
 
-    expect(getComputedStyle(panel as Element).overflow).toBe('visible');
+    expect(getComputedStyle(fields).flexGrow).toBe('1');
   });
 });

@@ -1,7 +1,8 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 // @vitest-environment-options {"settings":{"disableIframePageLoading":true}}
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import type { ReactElement } from 'react';
-import { toaster } from 'rsuite';
+import { enqueueSnackbar } from '@wepublish/ui/editor';
+import { ReactNode } from 'react';
 import type { Mock } from 'vitest';
 
 import { OpenPreviewOptions, startPreviewHandshake } from './openPreview';
@@ -15,9 +16,9 @@ vi.mock('./openPreview', () => ({
   startPreviewHandshake: vi.fn(),
 }));
 
-vi.mock('rsuite', async importOriginal => ({
-  ...(await importOriginal<typeof import('rsuite')>()),
-  toaster: { push: vi.fn() },
+vi.mock('@wepublish/ui/editor', async importOriginal => ({
+  ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
+  enqueueSnackbar: vi.fn(),
 }));
 
 const PREVIEW_URL = 'https://example.com/a/test?preview';
@@ -28,11 +29,13 @@ const cleanup = vi.fn();
 const handshakeOptions = (call = 0) =>
   (startPreviewHandshake as Mock).mock.calls[call][2] as OpenPreviewOptions;
 
-const pushedToast = () =>
-  (toaster.push as Mock).mock.calls[0][0] as ReactElement<{
-    type: string;
-    children: string;
-  }>;
+const lastSnackbar = () =>
+  (enqueueSnackbar as Mock).mock.calls[0] as [string, { variant: string }];
+
+const theme = createTheme({ cssVariables: true });
+
+const renderWithTheme = (ui: ReactNode) =>
+  render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
 
 describe('PreviewFrame', () => {
   const frameWindow = { postMessage: vi.fn() };
@@ -60,7 +63,7 @@ describe('PreviewFrame', () => {
   });
 
   const renderFrame = (props: Partial<Parameters<typeof PreviewFrame>[0]>) =>
-    render(
+    renderWithTheme(
       <PreviewFrame
         previewUrl={PREVIEW_URL}
         device="mobile"
@@ -109,13 +112,15 @@ describe('PreviewFrame', () => {
     });
 
     rerender(
-      <PreviewFrame
-        previewUrl={PREVIEW_URL}
-        device="tablet"
-        title="Preview"
-        createToken={newCreateToken}
-        onSilence={newOnSilence}
-      />
+      <ThemeProvider theme={theme}>
+        <PreviewFrame
+          previewUrl={PREVIEW_URL}
+          device="tablet"
+          title="Preview"
+          createToken={newCreateToken}
+          onSilence={newOnSilence}
+        />
+      </ThemeProvider>
     );
 
     await expect(handshakeOptions().createToken()).resolves.toBe('token-1');
@@ -132,12 +137,14 @@ describe('PreviewFrame', () => {
     const { rerender } = renderFrame({});
 
     rerender(
-      <PreviewFrame
-        previewUrl={OTHER_PREVIEW_URL}
-        device="mobile"
-        title="Preview"
-        createToken={vi.fn()}
-      />
+      <ThemeProvider theme={theme}>
+        <PreviewFrame
+          previewUrl={OTHER_PREVIEW_URL}
+          device="mobile"
+          title="Preview"
+          createToken={vi.fn()}
+        />
+      </ThemeProvider>
     );
 
     expect(cleanup).toHaveBeenCalledTimes(1);
@@ -169,7 +176,7 @@ describe('PreviewControls', () => {
   });
 
   const renderControls = (onDeviceChange = vi.fn()) =>
-    render(
+    renderWithTheme(
       <PreviewControls
         device="tablet"
         onDeviceChange={onDeviceChange}
@@ -203,10 +210,10 @@ describe('PreviewControls', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'preview.copyUrl' }));
 
-    await waitFor(() => expect(toaster.push).toHaveBeenCalled());
+    await waitFor(() => expect(enqueueSnackbar).toHaveBeenCalled());
     expect(writeText).toHaveBeenCalledWith(PREVIEW_URL);
-    expect(pushedToast().props.type).toBe('success');
-    expect(pushedToast().props.children).toBe('preview.urlCopied');
+    expect(lastSnackbar()[0]).toBe('preview.urlCopied');
+    expect(lastSnackbar()[1].variant).toBe('success');
   });
 
   it('reports when the preview url could not be copied', async () => {
@@ -215,8 +222,8 @@ describe('PreviewControls', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'preview.copyUrl' }));
 
-    await waitFor(() => expect(toaster.push).toHaveBeenCalled());
-    expect(pushedToast().props.type).toBe('error');
-    expect(pushedToast().props.children).toBe('preview.urlCopyFailed');
+    await waitFor(() => expect(enqueueSnackbar).toHaveBeenCalled());
+    expect(lastSnackbar()[0]).toBe('preview.urlCopyFailed');
+    expect(lastSnackbar()[1].variant).toBe('error');
   });
 });

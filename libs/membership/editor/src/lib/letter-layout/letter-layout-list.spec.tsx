@@ -3,6 +3,9 @@ import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { LetterLayoutList } from './letter-layout-list';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme({ cssVariables: true });
 
 const layoutsQuery = vi.fn();
 const deleteLayout = vi.fn();
@@ -52,9 +55,11 @@ beforeEach(() => {
 
 const renderList = () =>
   render(
-    <MemoryRouter>
-      <LetterLayoutList />
-    </MemoryRouter>
+    <ThemeProvider theme={theme}>
+      <MemoryRouter>
+        <LetterLayoutList />
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 describe('LetterLayoutList', () => {

@@ -14,10 +14,10 @@ import {
 import { usePageVisibility } from 'react-page-visibility';
 
 export interface AuthContextState {
-  readonly session?: {
-    readonly email: string;
-    readonly sessionToken: string;
-    readonly sessionRoles?: FullUserRoleFragment[];
+  session?: {
+    email: string;
+    sessionToken: string;
+    sessionRoles?: FullUserRoleFragment[];
   } | null;
 }
 
@@ -29,16 +29,16 @@ export enum AuthDispatchActionType {
 }
 
 export interface AuthDispatchLoginAction {
-  readonly type: AuthDispatchActionType.Login;
-  readonly payload: {
-    readonly email: string;
-    readonly sessionToken: string;
-    readonly sessionRoles?: FullUserRoleFragment[];
+  type: AuthDispatchActionType.Login;
+  payload: {
+    email: string;
+    sessionToken: string;
+    sessionRoles?: FullUserRoleFragment[];
   } | null;
 }
 
 export interface AuthDispatchLogoutAction {
-  readonly type: AuthDispatchActionType.Logout;
+  type: AuthDispatchActionType.Logout;
 }
 
 export type AuthDispatchAction =
@@ -68,7 +68,7 @@ export function authReducer(
 }
 
 export interface AuthProviderProps {
-  readonly children?: ReactNode;
+  children?: ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {

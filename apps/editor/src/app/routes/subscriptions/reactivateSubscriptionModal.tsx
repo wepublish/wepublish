@@ -5,14 +5,20 @@ import {
 } from '@wepublish/editor/api';
 import { PAYMENT_PERIODICITY_MONTHS } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
-import { Button, Modal } from 'rsuite';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 
 const Intro = styled.p`
   margin-bottom: 20px;
 `;
 
 const Summary = styled.div`
-  border: 1px solid var(--rs-border-primary, #e5e5ea);
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
   border-radius: 6px;
   overflow: hidden;
 `;
@@ -23,8 +29,8 @@ const SummaryHeader = styled.div`
   justify-content: space-between;
   gap: 16px;
   padding: 12px 16px;
-  background-color: var(--rs-bg-well, #f7f7fa);
-  border-bottom: 1px solid var(--rs-border-primary, #e5e5ea);
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
+  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
 `;
 
 const MemberPlanName = styled.span`
@@ -48,7 +54,7 @@ const Facts = styled.dl`
 `;
 
 const FactLabel = styled.dt`
-  color: var(--rs-text-secondary, #8e8e93);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   font-weight: 400;
 `;
 
@@ -61,8 +67,8 @@ const Deactivation = styled.div`
   display: grid;
   gap: 4px;
   padding: 12px 16px;
-  border-top: 1px solid var(--rs-border-primary, #e5e5ea);
-  background-color: var(--rs-message-error-bg, #fff2f2);
+  border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  background-color: ${({ theme }) => theme.vars.palette.error.light};
   font-size: 13px;
 `;
 
@@ -71,7 +77,7 @@ const DeactivationDate = styled.span`
 `;
 
 const DeactivationHint = styled.span`
-  color: var(--rs-text-secondary, #8e8e93);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 export interface ReactivateSubscriptionModalProps {
@@ -113,19 +119,17 @@ export function ReactivateSubscriptionModal({
     : undefined;
 
   return (
-    <Modal
+    <Dialog
+      fullWidth
       open={open}
-      size="sm"
-      backdrop="static"
+      maxWidth="sm"
       onClose={onClose}
     >
-      <Modal.Header>
-        <Modal.Title>
-          {t('userSubscriptionEdit.reactivation.modalTitle')}
-        </Modal.Title>
-      </Modal.Header>
+      <DialogTitle>
+        {t('userSubscriptionEdit.reactivation.modalTitle')}
+      </DialogTitle>
 
-      <Modal.Body>
+      <DialogContent>
         <Intro>
           {t('userSubscriptionEdit.reactivation.modalMessage', {
             userName:
@@ -190,25 +194,25 @@ export function ReactivateSubscriptionModal({
             </Deactivation>
           )}
         </Summary>
-      </Modal.Body>
+      </DialogContent>
 
-      <Modal.Footer>
+      <DialogActions>
         <Button
-          appearance="primary"
+          variant="text"
+          onClick={onClose}
+        >
+          {t('cancel')}
+        </Button>
+
+        <Button
+          variant="contained"
           disabled={loading}
           loading={loading}
           onClick={onConfirm}
         >
           {t('userSubscriptionEdit.reactivation.confirm')}
         </Button>
-
-        <Button
-          appearance="subtle"
-          onClick={onClose}
-        >
-          {t('cancel')}
-        </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 }

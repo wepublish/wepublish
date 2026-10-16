@@ -42,7 +42,7 @@
     },
     "test": {
       "executor": "@nx/vitest:test",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}/report"],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "configFile": "{projectRoot}/vitest.config.ts",
         "watch": false

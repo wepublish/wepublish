@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { Button, Card, CardContent, Drawer } from '@mui/material';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
-import { Drawer, IconButton, Panel as RPanel } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { PlaceholderInput } from '../atoms/placeholderInput';
+import { DRAWER_WIDTHS } from '../drawer';
 import { EmbedEditPanel } from '../panel/embedEditPanel';
 import { BildwurfAdEmbed } from './embeds/bildwurfAd';
 import { FacebookPostEmbed, FacebookVideoEmbed } from './embeds/facebook';
@@ -20,14 +21,14 @@ import { VimeoVideoEmbed } from './embeds/vimeo';
 import { YouTubeVideoEmbed } from './embeds/youTube';
 import { EmbedBlockValue, EmbedType } from './types';
 
-const Panel = styled(RPanel, {
+const Panel = styled(Card, {
   shouldForwardProp: prop => prop !== 'isEmpty',
 })<{ isEmpty: boolean }>`
   display: grid;
   height: ${({ isEmpty }) => (isEmpty ? '300px' : undefined)};
   padding: 0;
   overflow: hidden;
-  background-color: var(--rs-bg-well);
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 const Wrapper = styled.div`
@@ -48,45 +49,53 @@ export function EmbedBlock({
   onChange,
   autofocus,
 }: BlockProps<EmbedBlockValue>) {
-  const [isEmbedDialogOpen, setEmbedDialogOpen] = useState(false);
   const isEmpty = value.type === EmbedType.Other && value.url === undefined;
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (autofocus && isEmpty) {
-      setEmbedDialogOpen(true);
-    }
-  }, []);
+  const [isEmbedDialogOpen, setEmbedDialogOpen] = useState(
+    () => Boolean(autofocus) && isEmpty
+  );
 
   return (
     <>
       <Panel
-        bodyFill
-        bordered
+        variant="outlined"
         isEmpty={isEmpty}
       >
-        <PlaceholderInput
-          onAddClick={() => setEmbedDialogOpen(true)}
-          addLabel={t('blocks.embeds.overview.editEmbed')}
-        >
-          {!isEmpty && (
-            <Wrapper>
-              <IconWrapper>
-                <IconButton
-                  size="lg"
-                  icon={<MdEdit />}
-                  onClick={() => setEmbedDialogOpen(true)}
-                >
-                  {t('blocks.embeds.overview.editEmbed')}
-                </IconButton>
-              </IconWrapper>
-              <EmbedPreview value={value} />
-            </Wrapper>
-          )}
-        </PlaceholderInput>
+        <CardContent>
+          <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+            <PlaceholderInput
+              onAddClick={() => setEmbedDialogOpen(true)}
+              addLabel={t('blocks.embeds.overview.editEmbed')}
+            >
+              {!isEmpty && (
+                <Wrapper>
+                  <IconWrapper>
+                    <Button
+                      variant="outlined"
+                      startIcon={<MdEdit />}
+                      size="large"
+                      onClick={() => setEmbedDialogOpen(true)}
+                    >
+                      {t('blocks.embeds.overview.editEmbed')}
+                    </Button>
+                  </IconWrapper>
+                  <EmbedPreview value={value} />
+                </Wrapper>
+              )}
+            </PlaceholderInput>
+          </CardContent>
+        </CardContent>
       </Panel>
       <Drawer
-        size="sm"
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEmbedDialogOpen}
         onClose={() => setEmbedDialogOpen(false)}
       >
@@ -104,7 +113,7 @@ export function EmbedBlock({
 }
 
 export interface EmbedPreviewProps {
-  readonly value: EmbedBlockValue;
+  value: EmbedBlockValue;
 }
 
 export function EmbedPreview({ value }: EmbedPreviewProps) {

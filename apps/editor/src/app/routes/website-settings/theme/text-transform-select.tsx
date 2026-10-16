@@ -29,7 +29,6 @@ export const TextTransformSelect = memo(
           ref={ref}
           name={name}
           value={value ?? ''}
-          size="small"
           displayEmpty
           error={!!error}
           onChange={e =>

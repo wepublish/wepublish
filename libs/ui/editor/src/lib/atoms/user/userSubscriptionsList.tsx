@@ -1,11 +1,29 @@
 import styled from '@emotion/styled';
 import {
+  Button,
+  Chip,
+  ChipProps,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tooltip,
+} from '@mui/material';
+import {
   FullSubscriptionFragment,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
   UserSubscriptionFragment,
 } from '@wepublish/editor/api';
-import { TFunction } from 'i18next';
+import {
+  CanCreateSubscription,
+  CanDeleteSubscription,
+  CanGetSubscription,
+  CanGetSubscriptions,
+} from '@wepublish/permissions';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LiaFileInvoiceSolid } from 'react-icons/lia';
@@ -16,44 +34,34 @@ import {
   MdDisabledByDefault,
   MdDone,
   MdEdit,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowRight,
   MdOutlineCheckBox,
   MdOutlineCheckBoxOutlineBlank,
   MdRefresh,
   MdSubdirectoryArrowRight,
 } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import {
-  IconButton,
-  Notification,
-  Table as RTable,
-  Tag,
-  toaster,
-  Tooltip,
-  Whisper,
-} from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
+import { Link as RouterLink } from 'react-router-dom';
 
-// import {NewSubscriptionButton} from '../../routes/subscriptionList'
+import { enqueueSnackbar } from '../../snackbar/snackbar';
 import {
   createCheckedPermissionComponent,
   useAuthorisation,
 } from '../permissionControl';
 import { SingleLineTooltip } from '../singleLineTooltip';
 
-const { Column, HeaderCell, Cell: RCell } = RTable;
-
 const NewSubscriptionButtonWrapper = styled.div`
-  margin-top: 20px;
+  margin-top: ${({ theme }) => theme.spacing(2.5)};
 `;
 
 const PeriodRange = styled('span')`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding-left: 18px;
+  gap: ${({ theme }) => theme.spacing(0.75)};
+  padding-left: ${({ theme }) => theme.spacing(2.25)};
 
   svg {
-    color: var(--rs-text-secondary, #8e8e93);
+    color: ${({ theme }) => theme.vars.palette.text.secondary};
     font-size: 16px;
   }
 `;
@@ -66,8 +74,6 @@ const AmountCell = styled('span')`
   white-space: nowrap;
 `;
 
-// px (not em): header and body cells render at different font sizes,
-// so em-based widths would misalign the header with the digits
 const AMOUNT_UNIT_WIDTH = '68px';
 const AMOUNT_UNIT_GAP = '5px';
 
@@ -86,10 +92,10 @@ const AmountHeader = styled('span')`
 const IconText = styled('span')`
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: ${({ theme }) => theme.spacing(0.625)};
 
   svg {
-    color: var(--rs-text-secondary, #8e8e93);
+    color: ${({ theme }) => theme.vars.palette.text.secondary};
   }
 `;
 
@@ -97,8 +103,10 @@ const ConfirmedIcon = styled('span')<{ isConfirmed: boolean }>`
   display: inline-flex;
   align-items: center;
   font-size: 18px;
-  color: ${({ isConfirmed }) =>
-    isConfirmed ? '#22c55e' : 'var(--rs-text-secondary, #8e8e93)'};
+  color: ${({ theme, isConfirmed }) =>
+    isConfirmed ?
+      theme.vars.palette.success.main
+    : theme.vars.palette.text.secondary};
 `;
 
 const InvoiceIconWrapper = styled('span')`
@@ -108,7 +116,7 @@ const InvoiceIconWrapper = styled('span')`
 `;
 
 const InvoiceIcon = styled(LiaFileInvoiceSolid)`
-  color: grey;
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   font-size: 26px;
 `;
 
@@ -123,40 +131,30 @@ const StatusPill = styled('span')<{ pillColor: string }>`
   height: 14px;
   border-radius: 50%;
   background-color: ${({ pillColor }) => pillColor};
-  color: white;
+  color: ${({ theme }) => theme.vars.palette.common.white};
   font-size: 10px;
-  box-shadow: 0 0 0 2px white;
+  box-shadow: 0 0 0 2px ${({ theme }) => theme.vars.palette.background.paper};
 `;
 
 const IdButton = styled('button')`
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: ${({ theme }) => theme.spacing(0.5)};
   border: none;
   background: transparent;
   padding: 0;
   cursor: pointer;
+  color: inherit;
   font: inherit;
 `;
 
-const Table = styled(RTable)`
-  .rs-table-row.subscription-row-expandable {
-    cursor: pointer;
-  }
-
-  /* no hover effect on 2nd-level (period) rows */
-  && .rs-table-row.period-row:hover,
-  && .rs-table-row.period-row:hover .rs-table-cell-group,
-  && .rs-table-row.period-row:hover .rs-table-cell {
-    background-color: var(--rs-bg-card);
-  }
+const SubscriptionRow = styled(TableRow)<{ expandable: boolean }>`
+  cursor: ${({ expandable }) => (expandable ? 'pointer' : 'default')};
 `;
 
-/* keep the circle compact so the 18px icon dominates it;
-   &&& beats rsuite's size-based padding rules */
-const EditIconButton = styled(IconButton)`
-  &&& {
-    padding: 4px;
+const PeriodTableRow = styled(TableRow)`
+  &:hover {
+    background-color: transparent;
   }
 `;
 
@@ -174,11 +172,17 @@ type SubscriptionStatus = {
   color: 'red' | 'blue' | 'green' | 'orange' | 'yellow';
 };
 
-/**
- * Truthful subscription status: "active" means started AND paid up — not
- * merely "not deactivated" (imported subscriptions often expire without a
- * deactivation record).
- */
+const STATUS_CHIP: Record<
+  SubscriptionStatus['color'],
+  { color: ChipProps['color']; variant: ChipProps['variant'] }
+> = {
+  red: { color: 'error', variant: 'filled' },
+  blue: { color: 'info', variant: 'filled' },
+  green: { color: 'success', variant: 'filled' },
+  orange: { color: 'warning', variant: 'filled' },
+  yellow: { color: 'warning', variant: 'outlined' },
+};
+
 export function getSubscriptionStatus(
   subscription: UserSubscriptionFragment,
   now = new Date()
@@ -204,24 +208,10 @@ export function getSubscriptionStatus(
 
 type SubscriptionPeriod = UserSubscriptionFragment['periods'][0];
 
-type PeriodRow = {
-  rowType: 'period';
-  id: string;
-  currency: string;
-  period: SubscriptionPeriod;
-};
-
-type SubscriptionRow = {
-  rowType: 'subscription';
-  id: string;
+type Row = {
   subscription: UserSubscriptionFragment;
-  /** marker consumed by the action column's dataKey: rows without it get
-   *  merged under the tree column's colSpan (period rows) */
-  actionMarker: true;
-  children?: PeriodRow[];
+  periods: SubscriptionPeriod[];
 };
-
-type TableRow = SubscriptionRow | PeriodRow;
 
 interface UserSubscriptionsProps {
   subscriptions?: UserSubscriptionFragment[] | null;
@@ -230,25 +220,25 @@ interface UserSubscriptionsProps {
 
 export const NewSubscriptionButton = ({
   isLoading,
-  t,
   userId,
 }: {
   isLoading?: boolean;
-  t: TFunction<'translation'>;
   userId?: string;
 }) => {
-  const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION');
+  const { t } = useTranslation();
+  const canCreate = useAuthorisation(CanCreateSubscription.id);
   const urlToRedirect = `/subscriptions/create${userId ? `${`?userId=${userId}`}` : ''}`;
+
   return (
-    <Link to={urlToRedirect}>
-      <IconButton
-        appearance="primary"
-        disabled={isLoading || !canCreate}
-      >
-        <MdAdd />
-        {t('subscriptionList.overview.newSubscription')}
-      </IconButton>
-    </Link>
+    <Button
+      component={RouterLink}
+      to={urlToRedirect}
+      variant="text"
+      startIcon={<MdAdd />}
+      disabled={isLoading || !canCreate}
+    >
+      {t('subscriptionList.overview.newSubscription')}
+    </Button>
   );
 };
 
@@ -298,10 +288,6 @@ function UserSubscriptionsList({
     }
   }
 
-  /**
-   * Deactivation details (date + reason) for the status tooltip of
-   * deactivated subscriptions.
-   */
   function deactivationTitle(
     deactivation: NonNullable<UserSubscriptionFragment['deactivation']>
   ) {
@@ -313,7 +299,7 @@ function UserSubscriptionsList({
     });
   }
 
-  const rows = useMemo<SubscriptionRow[]>(() => {
+  const rows = useMemo<Row[]>(() => {
     const isActive = (subscription: UserSubscriptionFragment) =>
       getSubscriptionStatus(subscription).label ===
       'userSubscriptionList.table.active';
@@ -323,384 +309,270 @@ function UserSubscriptionsList({
     return [...(subscriptions ?? [])]
       .sort(
         (a, b) =>
-          // active subscriptions first, then by furthest paidUntil
           Number(isActive(b)) - Number(isActive(a)) ||
           paidUntilTime(b) - paidUntilTime(a) ||
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )
-      .map(subscription => {
-        const periods: PeriodRow[] = [...subscription.periods]
-          .sort(
-            (a, b) =>
-              new Date(b.startsAt).getTime() - new Date(a.startsAt).getTime()
-          )
-          .map(period => ({
-            rowType: 'period',
-            id: period.id,
-            currency: subscription.currency,
-            period,
-          }));
-
-        return {
-          rowType: 'subscription',
-          id: subscription.id,
-          subscription,
-          actionMarker: true as const,
-          ...(periods.length ? { children: periods } : {}),
-        };
-      });
+      .map(subscription => ({
+        subscription,
+        periods: [...subscription.periods].sort(
+          (a, b) =>
+            new Date(b.startsAt).getTime() - new Date(a.startsAt).getTime()
+        ),
+      }));
   }, [subscriptions]);
 
-  const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
+  const [expanded, setExpanded] = useState<string[]>([]);
 
   const toggleExpanded = (id: string) =>
-    setExpandedRowKeys(keys =>
+    setExpanded(keys =>
       keys.includes(id) ? keys.filter(key => key !== id) : [...keys, id]
     );
 
+  const copyInvoiceId = (invoiceID: string) => {
+    navigator.clipboard.writeText(invoiceID);
+    enqueueSnackbar(t('invoice.table.idCopied'), {
+      variant: 'success',
+      autoHideDuration: 2000,
+    });
+  };
+
   return (
     <>
-      <Table
-        autoHeight
-        wordWrap="break-word"
-        isTree
-        rowKey="id"
-        expandedRowKeys={expandedRowKeys}
-        onExpandChange={(_expanded, rowData) =>
-          toggleExpanded((rowData as TableRow).id)
-        }
-        rowClassName={rowData => {
-          const row = rowData as TableRow | undefined;
+      <TableContainer sx={{ overflowX: 'auto' }}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                {`${t('userSubscriptionList.table.subscription')} / ${t(
+                  'userSubscriptionList.periodRange'
+                )}`}
+              </TableCell>
+              <TableCell>{t('invoice.table.action')}</TableCell>
+              <TableCell>{t('invoice.table.status')}</TableCell>
+              <TableCell>{t('userSubscriptionList.table.created')}</TableCell>
+              <TableCell>{t('userSubscriptionList.table.start')}</TableCell>
+              <TableCell>
+                {t('userSubscriptionList.table.periodicity')}
+              </TableCell>
+              <TableCell align="right">
+                <AmountHeader>{t('invoice.total')}</AmountHeader>
+              </TableCell>
+              <TableCell>{t('userSubscriptionList.table.paidUntil')}</TableCell>
+              <TableCell>{t('userSubscriptionList.table.renewal')}</TableCell>
+              <TableCell>{t('userSubscriptionList.table.confirmed')}</TableCell>
+              <TableCell>{t('invoice.invoiceNo')}</TableCell>
+            </TableRow>
+          </TableHead>
 
-          if (row?.rowType === 'period') {
-            return 'period-row';
-          }
+          <TableBody>
+            {rows.map(({ subscription, periods }) => {
+              const status = getSubscriptionStatus(subscription);
+              const isExpandable = periods.length > 0;
+              const isExpanded = expanded.includes(subscription.id);
 
-          return (
-              row?.rowType === 'subscription' && (row.children?.length ?? 0) > 0
-            ) ?
-              'subscription-row-expandable'
-            : '';
-        }}
-        onRowClick={(rowData, event) => {
-          const row = rowData as TableRow;
+              const statusChip = (
+                <Chip
+                  size="small"
+                  label={t(status.label)}
+                  color={STATUS_CHIP[status.color].color}
+                  variant={STATUS_CHIP[status.color].variant}
+                />
+              );
 
-          // links, buttons and the expand caret keep their own behavior
-          // (the caret already toggles via onExpandChange - handling it here
-          // too would toggle twice and cancel out)
-          if (
-            (event.target as HTMLElement).closest(
-              'a, button, .rs-table-cell-expand-wrapper, .rs-table-cell-expand-icon'
-            )
-          ) {
-            return;
-          }
-
-          if (row.rowType === 'subscription' && row.children?.length) {
-            toggleExpanded(row.id);
-          }
-        }}
-        data={rows as RowDataType<TableRow>[]}
-      >
-        {/* subscription / period range (tree column); spans the action
-            column on period rows (their actionMarker is undefined) */}
-        <Column
-          width={320}
-          colSpan={2}
-        >
-          <HeaderCell>
-            {`${t('userSubscriptionList.table.subscription')} / ${t(
-              'userSubscriptionList.periodRange'
-            )}`}
-          </HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<TableRow>) =>
-              rowData.rowType === 'subscription' ?
-                <SubscriptionName>
-                  {rowData.subscription.memberPlan.name}
-                </SubscriptionName>
-              : <PeriodRange>
-                  <MdSubdirectoryArrowRight />
-                  {`${formatDate(rowData.period.startsAt)} – ${formatDate(
-                    rowData.period.endsAt
-                  )}`}
-                </PeriodRange>
-            }
-          </RCell>
-        </Column>
-
-        {/* actions */}
-        <Column width={80}>
-          <HeaderCell>{t('invoice.table.action')}</HeaderCell>
-          <RCell dataKey="actionMarker">
-            {(rowData: RowDataType<TableRow>) =>
-              rowData.rowType === 'subscription' ?
-                <Link
-                  to={`/subscriptions/edit/${rowData.subscription.id}?userId=${userId}`}
-                >
-                  <Whisper
-                    placement="top"
-                    trigger="hover"
-                    speaker={
-                      <Tooltip>
-                        {t('userSubscriptionList.editSubscription')}
-                      </Tooltip>
+              return [
+                <SubscriptionRow
+                  key={subscription.id}
+                  hover
+                  expandable={isExpandable}
+                  onClick={event => {
+                    if ((event.target as HTMLElement).closest('a, button')) {
+                      return;
                     }
-                  >
-                    <EditIconButton
-                      icon={<MdEdit size={16} />}
-                      circle
-                      size="xs"
-                      appearance="ghost"
-                      aria-label={t('userSubscriptionList.editSubscription')}
-                    />
-                  </Whisper>
-                </Link>
-              : null
-            }
-          </RCell>
-        </Column>
 
-        {/* status: subscription tag / period invoice-paid pill */}
-        <Column width={110}>
-          <HeaderCell>{t('invoice.table.status')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<TableRow>) => {
-              if (rowData.rowType === 'subscription') {
-                const subscriptionStatus = getSubscriptionStatus(
-                  rowData.subscription
-                );
-                const statusTag = (
-                  <Tag color={subscriptionStatus.color}>
-                    {t(subscriptionStatus.label)}
-                  </Tag>
-                );
+                    if (isExpandable) {
+                      toggleExpanded(subscription.id);
+                    }
+                  }}
+                >
+                  <TableCell>
+                    {isExpandable && (
+                      <IconButton
+                        size="small"
+                        aria-label={t('userSubscriptionList.periodRange')}
+                        aria-expanded={isExpanded}
+                        onClick={() => toggleExpanded(subscription.id)}
+                      >
+                        {isExpanded ?
+                          <MdKeyboardArrowDown />
+                        : <MdKeyboardArrowRight />}
+                      </IconButton>
+                    )}
 
-                return rowData.subscription.deactivation ?
-                    <Whisper
-                      placement="top"
-                      trigger="hover"
-                      speaker={
-                        <Tooltip>
-                          {deactivationTitle(rowData.subscription.deactivation)}
-                        </Tooltip>
+                    <SubscriptionName>
+                      {subscription.memberPlan.name}
+                    </SubscriptionName>
+                  </TableCell>
+
+                  <TableCell>
+                    <Tooltip title={t('userSubscriptionList.editSubscription')}>
+                      <IconButton
+                        component={RouterLink}
+                        to={`/subscriptions/edit/${subscription.id}?userId=${userId}`}
+                        size="small"
+                        aria-label={t('userSubscriptionList.editSubscription')}
+                      >
+                        <MdEdit size={16} />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+
+                  <TableCell>
+                    {subscription.deactivation ?
+                      <Tooltip
+                        title={deactivationTitle(subscription.deactivation)}
+                      >
+                        {statusChip}
+                      </Tooltip>
+                    : statusChip}
+                  </TableCell>
+
+                  <TableCell>{formatDate(subscription.createdAt)}</TableCell>
+                  <TableCell>{formatDate(subscription.startsAt)}</TableCell>
+                  <TableCell>{paymentPeriodicity(subscription)}</TableCell>
+
+                  <TableCell align="right">
+                    <AmountCell>
+                      {(subscription.monthlyAmount / 100).toFixed(2)}
+                      <AmountUnit>
+                        {`${subscription.currency}${t(
+                          'userSubscriptionList.table.perMonthSuffix'
+                        )}`}
+                      </AmountUnit>
+                    </AmountCell>
+                  </TableCell>
+
+                  <TableCell>
+                    {subscription.paidUntil ?
+                      formatDate(subscription.paidUntil)
+                    : t('userSubscriptionList.invoiceUnpaid')}
+                  </TableCell>
+
+                  <TableCell>
+                    <IconText>
+                      {subscription.autoRenew && !subscription.deactivation ?
+                        <>
+                          <MdRefresh />
+                          {t('userSubscriptionList.table.renewsAutomatically')}
+                        </>
+                      : <>
+                          <MdDisabledByDefault />
+                          {t('userSubscriptionList.table.expires')}
+                        </>
+                      }
+                    </IconText>
+                  </TableCell>
+
+                  <TableCell>
+                    <ConfirmedIcon
+                      isConfirmed={subscription.confirmed}
+                      aria-label={
+                        subscription.confirmed ?
+                          t('userSubscriptionList.confirmed')
+                        : t('userSubscriptionList.unconfirmed')
                       }
                     >
-                      {statusTag}
-                    </Whisper>
-                  : statusTag;
-              }
+                      {subscription.confirmed ?
+                        <MdOutlineCheckBox />
+                      : <MdOutlineCheckBoxOutlineBlank />}
+                    </ConfirmedIcon>
+                  </TableCell>
 
-              const status =
-                rowData.period.isPaid ?
-                  {
-                    title: t('userSubscriptionList.invoicePaid'),
-                    color: '#22c55e',
-                    icon: <MdDone />,
-                  }
-                : {
-                    title: t('userSubscriptionList.invoiceUnpaid'),
-                    color: '#eab308',
-                    icon: <MdAccessTime />,
-                  };
+                  <TableCell />
+                </SubscriptionRow>,
 
-              return (
-                <Whisper
-                  placement="top"
-                  trigger="hover"
-                  speaker={<Tooltip>{status.title}</Tooltip>}
-                >
-                  <InvoiceIconWrapper>
-                    <InvoiceIcon />
+                ...(isExpanded ?
+                  periods.map(period => {
+                    const invoiceStatus =
+                      period.isPaid ?
+                        {
+                          title: t('userSubscriptionList.invoicePaid'),
+                          color: '#22c55e',
+                          icon: <MdDone />,
+                        }
+                      : {
+                          title: t('userSubscriptionList.invoiceUnpaid'),
+                          color: '#eab308',
+                          icon: <MdAccessTime />,
+                        };
 
-                    <StatusPill pillColor={status.color}>
-                      {status.icon}
-                    </StatusPill>
-                  </InvoiceIconWrapper>
-                </Whisper>
-              );
-            }}
-          </RCell>
-        </Column>
+                    return (
+                      <PeriodTableRow key={period.id}>
+                        <TableCell colSpan={2}>
+                          <PeriodRange>
+                            <MdSubdirectoryArrowRight />
+                            {`${formatDate(period.startsAt)} – ${formatDate(
+                              period.endsAt
+                            )}`}
+                          </PeriodRange>
+                        </TableCell>
 
-        {/* subscription created at */}
-        <Column width={100}>
-          <HeaderCell>{t('userSubscriptionList.table.created')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<TableRow>) =>
-              rowData.rowType === 'subscription' ?
-                formatDate(rowData.subscription.createdAt)
-              : null
-            }
-          </RCell>
-        </Column>
+                        <TableCell>
+                          <Tooltip title={invoiceStatus.title}>
+                            <InvoiceIconWrapper>
+                              <InvoiceIcon />
 
-        {/* subscription start */}
-        <Column width={100}>
-          <HeaderCell>{t('userSubscriptionList.table.start')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<TableRow>) =>
-              rowData.rowType === 'subscription' ?
-                formatDate(rowData.subscription.startsAt)
-              : null
-            }
-          </RCell>
-        </Column>
+                              <StatusPill pillColor={invoiceStatus.color}>
+                                {invoiceStatus.icon}
+                              </StatusPill>
+                            </InvoiceIconWrapper>
+                          </Tooltip>
+                        </TableCell>
 
-        {/* payment periodicity */}
-        <Column width={140}>
-          <HeaderCell>{t('userSubscriptionList.table.periodicity')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<TableRow>) =>
-              rowData.rowType === 'subscription' ?
-                paymentPeriodicity(rowData.subscription)
-              : null
-            }
-          </RCell>
-        </Column>
+                        <TableCell colSpan={3} />
 
-        {/* amount: monthly for subscriptions, period total for periods */}
-        <Column
-          width={165}
-          align="right"
-        >
-          <HeaderCell>
-            <AmountHeader>{t('invoice.total')}</AmountHeader>
-          </HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<TableRow>) =>
-              rowData.rowType === 'subscription' ?
-                <AmountCell>
-                  {(rowData.subscription.monthlyAmount / 100).toFixed(2)}
-                  <AmountUnit>
-                    {`${rowData.subscription.currency}${t(
-                      'userSubscriptionList.table.perMonthSuffix'
-                    )}`}
-                  </AmountUnit>
-                </AmountCell>
-              : <AmountCell>
-                  {(rowData.period.amount / 100).toFixed(2)}
-                  <AmountUnit>{rowData.currency}</AmountUnit>
-                </AmountCell>
-            }
-          </RCell>
-        </Column>
+                        <TableCell align="right">
+                          <AmountCell>
+                            {(period.amount / 100).toFixed(2)}
+                            <AmountUnit>{subscription.currency}</AmountUnit>
+                          </AmountCell>
+                        </TableCell>
 
-        {/* paid until */}
-        <Column width={110}>
-          <HeaderCell>{t('userSubscriptionList.table.paidUntil')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<TableRow>) =>
-              rowData.rowType === 'subscription' ?
-                rowData.subscription.paidUntil ?
-                  formatDate(rowData.subscription.paidUntil)
-                : t('userSubscriptionList.invoiceUnpaid')
-              : null
-            }
-          </RCell>
-        </Column>
+                        <TableCell colSpan={3} />
 
-        {/* auto renewal */}
-        <Column width={150}>
-          <HeaderCell>{t('userSubscriptionList.table.renewal')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<TableRow>) =>
-              rowData.rowType === 'subscription' ?
-                <IconText>
-                  {(
-                    rowData.subscription.autoRenew &&
-                    !rowData.subscription.deactivation
-                  ) ?
-                    <>
-                      <MdRefresh />
-                      {t('userSubscriptionList.table.renewsAutomatically')}
-                    </>
-                  : <>
-                      <MdDisabledByDefault />
-                      {t('userSubscriptionList.table.expires')}
-                    </>
-                  }
-                </IconText>
-              : null
-            }
-          </RCell>
-        </Column>
-
-        {/* confirmed */}
-        <Column width={90}>
-          <HeaderCell>{t('userSubscriptionList.table.confirmed')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<TableRow>) =>
-              rowData.rowType === 'subscription' ?
-                <ConfirmedIcon
-                  isConfirmed={rowData.subscription.confirmed}
-                  aria-label={
-                    rowData.subscription.confirmed ?
-                      t('userSubscriptionList.confirmed')
-                    : t('userSubscriptionList.unconfirmed')
-                  }
-                >
-                  {rowData.subscription.confirmed ?
-                    <MdOutlineCheckBox />
-                  : <MdOutlineCheckBoxOutlineBlank />}
-                </ConfirmedIcon>
-              : null
-            }
-          </RCell>
-        </Column>
-
-        {/* invoice number (periods only) */}
-        <Column
-          flexGrow={1}
-          minWidth={110}
-        >
-          <HeaderCell>{t('invoice.invoiceNo')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<TableRow>) =>
-              rowData.rowType === 'period' ?
-                <Whisper
-                  placement="top"
-                  trigger="hover"
-                  speaker={
-                    <SingleLineTooltip>
-                      {rowData.period.invoiceID}
-                    </SingleLineTooltip>
-                  }
-                >
-                  <IdButton
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(rowData.period.invoiceID);
-                      toaster.push(
-                        <Notification
-                          type="success"
-                          header={t('invoice.table.idCopied')}
-                          duration={2000}
-                        />,
-                        { placement: 'topEnd' }
-                      );
-                    }}
-                  >
-                    {rowData.period.invoiceID.slice(0, 4)}…
-                    <MdContentCopy />
-                  </IdButton>
-                </Whisper>
-              : null
-            }
-          </RCell>
-        </Column>
-      </Table>
+                        <TableCell>
+                          <SingleLineTooltip title={period.invoiceID}>
+                            <IdButton
+                              type="button"
+                              onClick={() => copyInvoiceId(period.invoiceID)}
+                            >
+                              {period.invoiceID.slice(0, 4)}…
+                              <MdContentCopy />
+                            </IdButton>
+                          </SingleLineTooltip>
+                        </TableCell>
+                      </PeriodTableRow>
+                    );
+                  })
+                : []),
+              ];
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       <NewSubscriptionButtonWrapper>
-        {NewSubscriptionButton({ t, userId })}
+        <NewSubscriptionButton userId={userId} />
       </NewSubscriptionButtonWrapper>
     </>
   );
 }
+
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_SUBSCRIPTION',
-  'CAN_GET_SUBSCRIPTIONS',
-  'CAN_DELETE_SUBSCRIPTION',
-  'CAN_CREATE_SUBSCRIPTION',
+  CanGetSubscription.id,
+  CanGetSubscriptions.id,
+  CanDeleteSubscription.id,
+  CanCreateSubscription.id,
 ])(UserSubscriptionsList);
+
 export { CheckedPermissionComponent as UserSubscriptionsList };
