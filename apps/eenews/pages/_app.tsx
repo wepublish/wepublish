@@ -14,9 +14,11 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  WebsiteShellProps,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
@@ -116,9 +118,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -142,6 +146,8 @@ function CustomApp({
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
   const theme = eenewsTheme;
+
+  const shell = getWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
@@ -208,19 +214,21 @@ function CustomApp({
                 <AdblockOverlay />
 
                 <Spacer>
-                  <NavBar
-                    slug="main"
-                    headerSlug="header"
-                    categorySlugs={[
-                      [
-                        'mega-themen',
-                        'mega-dossiers',
-                        'mega-region',
-                        'mega-about',
-                        'mega-about-secondary',
-                      ],
-                    ]}
-                  />
+                  {shell.showNavigation && (
+                    <NavBar
+                      slug="main"
+                      headerSlug="header"
+                      categorySlugs={[
+                        [
+                          'mega-themen',
+                          'mega-dossiers',
+                          'mega-region',
+                          'mega-about',
+                          'mega-about-secondary',
+                        ],
+                      ]}
+                    />
+                  )}
 
                   <MainContent>
                     <ContentArea>
@@ -231,10 +239,12 @@ function CustomApp({
                     </SkyscraperPlacer>
                   </MainContent>
 
-                  <FooterContainer
-                    slug="footer-konto"
-                    categorySlugs={[['footer-themen', 'footer-magazin']]}
-                  />
+                  {shell.showFooter && (
+                    <FooterContainer
+                      slug="footer-konto"
+                      categorySlugs={[['footer-themen', 'footer-magazin']]}
+                    />
+                  )}
                 </Spacer>
 
                 <RoutedAdminBar />

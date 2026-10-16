@@ -15,9 +15,11 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  WebsiteShellProps,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
@@ -68,9 +70,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: {
@@ -118,6 +122,8 @@ function CustomApp({
     (typeof window !== 'undefined' ?
       (window.PUBLIC_ENV as typeof publicEnv)
     : undefined);
+
+  const shell = getWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
@@ -167,20 +173,27 @@ function CustomApp({
 
               <MainGrid>
                 <ThemeProvider theme={navbarTheme}>
-                  <NavBar
-                    slug="main"
-                    categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
-                    headerSlug="header"
-                    iconSlug="icons"
-                  />
+                  {shell.showNavigation && (
+                    <NavBar
+                      slug="main"
+                      categorySlugs={[
+                        ['basel-briefing', 'other'],
+                        ['about-us'],
+                      ]}
+                      headerSlug="header"
+                      iconSlug="icons"
+                    />
+                  )}
                 </ThemeProvider>
 
                 <Component {...pageProps} />
 
-                <Footer
-                  slug="main"
-                  categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
-                />
+                {shell.showFooter && (
+                  <Footer
+                    slug="main"
+                    categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
+                  />
+                )}
               </MainGrid>
 
               <RoutedAdminBar />
