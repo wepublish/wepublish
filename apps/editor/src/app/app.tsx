@@ -42,6 +42,7 @@ import {
   AuthContext,
   AuthDispatchActionType,
   AuthDispatchContext,
+  createCheckedFeatureComponent,
 } from '@wepublish/ui/editor';
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -142,6 +143,12 @@ const Logout = () => {
     />
   );
 };
+
+// Stationery only exists for letters, which ship dark.
+const PaperLetterLayoutList =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutList);
+const PaperLetterLayoutEdit =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutEdit);
 
 export function App() {
   const { i18n } = useTranslation();
@@ -1096,7 +1103,7 @@ export function App() {
               path="letterlayouts"
               element={
                 <Base>
-                  <LetterLayoutList />
+                  <PaperLetterLayoutList />
                 </Base>
               }
             />
@@ -1104,7 +1111,7 @@ export function App() {
               path="letterlayouts/create"
               element={
                 <Base>
-                  <LetterLayoutEdit />
+                  <PaperLetterLayoutEdit />
                 </Base>
               }
             />
@@ -1112,7 +1119,7 @@ export function App() {
               path="letterlayouts/edit/:id"
               element={
                 <Base>
-                  <LetterLayoutEdit />
+                  <PaperLetterLayoutEdit />
                 </Base>
               }
             />
