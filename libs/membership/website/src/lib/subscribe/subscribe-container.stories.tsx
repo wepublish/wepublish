@@ -238,8 +238,8 @@ export const Default: StoryObj<typeof SubscribeContainer> = {
           result: {
             data: {
               createSubscriptionInfo: {
-                discountCodeValid: undefined,
-                discountPercent: undefined,
+                discountCodeValid: null,
+                discountPercent: null,
               },
             },
           },

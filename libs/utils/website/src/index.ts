@@ -22,6 +22,7 @@ export * from './lib/with-jwt-handler';
 export * from './lib/handle-jwt-login';
 export * from './lib/with-session-provider';
 export * from './lib/with-builder-router';
+export * from './lib/website-shell';
 export * from './lib/i18n-formatter';
 export * from './lib/components/daily-briefing-teaser';
 export * from './lib/website-token';

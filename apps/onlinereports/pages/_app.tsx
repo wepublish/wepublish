@@ -20,9 +20,11 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  WebsiteShellProps,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
@@ -167,9 +169,11 @@ const AdvertisementPlacer = styled('div')`
   }
 `;
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -191,6 +195,8 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const shell = getWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
@@ -257,14 +263,16 @@ function CustomApp({
                 <AdblockOverlay />
 
                 <Spacer>
-                  <NavBar
-                    categorySlugs={[['categories', 'about-us']]}
-                    slug="main"
-                    headerSlug="header"
-                    iconSlug="icons"
-                    loginBtn={{ href: '/login' }}
-                    profileBtn={{ href: '/profile' }}
-                  />
+                  {shell.showNavigation && (
+                    <NavBar
+                      categorySlugs={[['categories', 'about-us']]}
+                      slug="main"
+                      headerSlug="header"
+                      iconSlug="icons"
+                      loginBtn={{ href: '/login' }}
+                      profileBtn={{ href: '/profile' }}
+                    />
+                  )}
 
                   <MainContainer>
                     <MainContent>
@@ -279,12 +287,14 @@ function CustomApp({
                     <Advertisement type={'half-page'} />
                   </AdvertisementPlacer>
 
-                  <FooterContainer
-                    slug="footer"
-                    categorySlugs={[['about-us']]}
-                    iconSlug="icons"
-                    wepublishLogo="hidden"
-                  />
+                  {shell.showFooter && (
+                    <FooterContainer
+                      slug="footer"
+                      categorySlugs={[['about-us']]}
+                      iconSlug="icons"
+                      wepublishLogo="hidden"
+                    />
+                  )}
                 </Spacer>
 
                 <RoutedAdminBar />
