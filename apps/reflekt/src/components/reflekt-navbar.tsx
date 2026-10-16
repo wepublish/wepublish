@@ -18,6 +18,7 @@ import {
   BuilderNavbarProps,
   IconButton,
   Link,
+  useCloseOnNavigation,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
@@ -528,7 +529,6 @@ const NavPaper = ({
   className,
   children,
   iconItems,
-  handleItemClick,
 }: PropsWithChildren<{
   loginBtn?: ButtonProps | null;
   main: FullNavigationFragment | null | undefined;
@@ -538,7 +538,6 @@ const NavPaper = ({
   isTransitioning: boolean;
   className?: string;
   iconItems?: FullNavigationFragment | null;
-  handleItemClick: () => void;
 }>) => {
   const {
     elements: { Link },
@@ -556,7 +555,6 @@ const NavPaper = ({
           <Link
             key={index}
             href={navigationLinkToUrl(link)}
-            onClick={() => handleItemClick()}
             color="inherit"
             target="_blank"
             rel="noopener noreferrer"
@@ -572,7 +570,6 @@ const NavPaper = ({
         <RegisterNewsletterButton
           variant="buttonLinkMain"
           href="/newsletter"
-          onClick={() => handleItemClick()}
         >
           Newsletter
         </RegisterNewsletterButton>
@@ -619,7 +616,6 @@ const NavPaper = ({
                         <Link
                           variant={'headerCategoryLink'}
                           href={url}
-                          onClick={closeMenu}
                         >
                           {link.label}
                         </Link>
@@ -743,6 +739,18 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       onMenuToggle?.(newState);
     }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
+    const closeMenu = useCallback(() => {
+      setIsTransitioning(true);
+
+      if (controlledIsMenuOpen === undefined) {
+        setInternalMenuOpen(false);
+      }
+
+      onMenuToggle?.(false);
+    }, [controlledIsMenuOpen, onMenuToggle]);
+
+    useCloseOnNavigation(closeMenu);
+
     const router = useRouter();
 
     const mainItems = data?.navigations?.find(({ key }) => key === slug);
@@ -842,12 +850,6 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                     'buttonLinkMain'
                   )
                 }
-                onClick={() => {
-                  if (controlledIsMenuOpen === undefined) {
-                    setInternalMenuOpen(false);
-                  }
-                  onMenuToggle?.(false);
-                }}
               >
                 {hasUnpaidInvoices && profileBtn ?
                   <Box
@@ -879,17 +881,11 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               loginBtn={loginBtn}
               main={mainItems}
               categories={categories}
-              closeMenu={toggleMenu}
+              closeMenu={closeMenu}
               isMenuOpen={isMenuOpen}
               isTransitioning={isTransitioning}
               className={navPaperClassName}
               iconItems={iconItems}
-              handleItemClick={() => {
-                if (controlledIsMenuOpen === undefined) {
-                  setInternalMenuOpen(false);
-                }
-                onMenuToggle?.(false);
-              }}
             />
           )}
         </AppBar>

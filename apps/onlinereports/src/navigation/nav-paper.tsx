@@ -174,7 +174,6 @@ export const NavPaper = ({
               key={index}
               color="inherit"
               underline="none"
-              onClick={closeMenu}
             >
               <H4
                 component="span"
@@ -213,7 +212,6 @@ export const NavPaper = ({
                         color="inherit"
                         underline="none"
                         css={navPaperLinkStyling(theme)}
-                        onClick={closeMenu}
                       >
                         <H6
                           component="span"
@@ -254,7 +252,6 @@ export const MemberButtons = ({
           href={loginBtn.href}
           variant="contained"
           color="secondary"
-          onClick={closeMenu}
         >
           Login
         </Button>
@@ -268,7 +265,6 @@ export const MemberButtons = ({
               href={profileBtn.href}
               variant="contained"
               color="secondary"
-              onClick={closeMenu}
             >
               Mein Konto
             </Button>
@@ -280,7 +276,6 @@ export const MemberButtons = ({
               href={subscribeBtn.href}
               variant="contained"
               color="accent"
-              onClick={closeMenu}
             >
               Meine Abos
             </Button>
