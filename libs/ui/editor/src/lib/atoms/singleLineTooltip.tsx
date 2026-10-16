@@ -1,13 +1,16 @@
 import styled from '@emotion/styled';
-import { Tooltip } from 'rsuite';
+import { Tooltip, TooltipProps } from '@mui/material';
+import { tooltipClasses } from '@mui/material/Tooltip';
 
-/**
- * Tooltip for ids and other unbreakable values: rsuite caps tooltips at
- * 250px, which wraps a UUID onto two lines. This one grows to its content
- * and only wraps when the viewport is narrower than that.
- */
-export const SingleLineTooltip = styled(Tooltip)`
-  && {
+export const SingleLineTooltip = styled(
+  ({ className, ...props }: TooltipProps) => (
+    <Tooltip
+      {...props}
+      classes={{ popper: className }}
+    />
+  )
+)`
+  & .${tooltipClasses.tooltip} {
     width: max-content;
     max-width: calc(100vw - 32px);
   }

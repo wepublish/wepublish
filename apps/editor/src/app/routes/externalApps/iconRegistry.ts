@@ -1,4 +1,4 @@
-import React from 'react';
+import { ComponentType } from 'react';
 import * as icons from 'react-icons/md';
 
 /**
@@ -10,11 +10,11 @@ import * as icons from 'react-icons/md';
 
 function generateIconRegistry(): Record<
   string,
-  { label: string; icon: React.ComponentType<{ size?: number }> }
+  { label: string; icon: ComponentType<{ size?: number }> }
 > {
   const registry: Record<
     string,
-    { label: string; icon: React.ComponentType<{ size?: number }> }
+    { label: string; icon: ComponentType<{ size?: number }> }
   > = {};
 
   // Extract all icon exports from react-icons/md
@@ -36,7 +36,7 @@ function generateIconRegistry(): Record<
 
       registry[key] = {
         label,
-        icon: component as React.ComponentType<{ size?: number }>,
+        icon: component as ComponentType<{ size?: number }>,
       };
     }
   });

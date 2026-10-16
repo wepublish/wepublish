@@ -2,7 +2,6 @@ import { useLazyQuery, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Box,
   Button,
   CircularProgress,
   createTheme,
@@ -15,15 +14,20 @@ import {
   WebsiteSettingsDocument,
 } from '@wepublish/editor/api';
 import { minimalTheme } from '@wepublish/ui';
-import { humanizeError } from '@wepublish/ui/editor';
-import { memo, PropsWithChildren, useRef, useState } from 'react';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
+import {
+  memo,
+  PropsWithChildren,
+  SyntheticEvent,
+  useRef,
+  useState,
+} from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { MdArrowBack, MdFileDownload, MdFileUpload } from 'react-icons/md';
-import { Link } from 'react-router-dom';
-import { Message, toaster } from 'rsuite';
+import { MdFileDownload, MdFileUpload } from 'react-icons/md';
 import { z } from 'zod';
 
+import { WebsiteSettingsHeader } from './website-settings-header';
 import { downloadJson } from './theme/download-json';
 import { PaletteList } from './theme/palette-list';
 import { normalizeTheme, themeSchema } from './theme/schema';
@@ -36,7 +40,7 @@ import { TypographyList } from './theme/typography-list';
 
 const WebsiteThemeWrapper = styled.form`
   display: grid;
-  gap: 24px;
+  gap: ${({ theme }) => theme.spacing(3)};
   grid-auto-columns: auto;
 `;
 
@@ -87,37 +91,23 @@ export const WebsiteTheme = memo(() => {
     {
       onCompleted: () => {
         setImportedFonts([]);
-        toaster.push(
-          <Message
-            type="success"
-            showIcon
-            closable
-            duration={3000}
-          >
-            {t('websiteSettings.saveSuccess')}
-          </Message>
-        );
+        enqueueSnackbar(t('websiteSettings.saveSuccess'), {
+          variant: 'success',
+          autoHideDuration: 3000,
+        });
       },
       onError: error => {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={8000}
-          >
-            {humanizeError(error)}
-          </Message>
-        );
+        enqueueSnackbar(humanizeError(error), {
+          variant: 'error',
+          autoHideDuration: 8000,
+        });
       },
     }
   );
 
   const [activeTab, setActiveTab] = useState<number>(0);
-  const handleChange = (
-    event: React.SyntheticEvent,
-    newValue: typeof activeTab
-  ) => setActiveTab(newValue);
+  const handleChange = (event: SyntheticEvent, newValue: typeof activeTab) =>
+    setActiveTab(newValue);
 
   const form = useForm<z.infer<typeof themeSchema>>({
     resolver: zodResolver(themeSchema),
@@ -163,27 +153,15 @@ export const WebsiteTheme = memo(() => {
       form.reset(theme);
       setImportedFonts(fonts);
 
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('websiteSettings.theme.importSuccess')}
-        </Message>
-      );
+      enqueueSnackbar(t('websiteSettings.theme.importSuccess'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
     } catch {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={5000}
-        >
-          {t('websiteSettings.theme.importError')}
-        </Message>
-      );
+      enqueueSnackbar(t('websiteSettings.theme.importError'), {
+        variant: 'error',
+        autoHideDuration: 5000,
+      });
     }
   };
 
@@ -199,15 +177,42 @@ export const WebsiteTheme = memo(() => {
 
   return (
     <WebsiteThemeWrapper onSubmit={onSubmit}>
-      <Link to={'/settings/website'}>
+      <WebsiteSettingsHeader title={t('websiteSettings.theme.title')}>
         <Button
-          size="small"
-          variant="text"
-          startIcon={<MdArrowBack />}
+          type="button"
+          variant="outlined"
+          startIcon={<MdFileUpload />}
+          onClick={() => fileInputRef.current?.click()}
         >
-          {t('websiteSettings.backToOverview')}
+          {t('websiteSettings.theme.importTheme')}
         </Button>
-      </Link>
+
+        <Button
+          type="button"
+          variant="outlined"
+          startIcon={<MdFileDownload />}
+          onClick={exportTheme}
+        >
+          {t('websiteSettings.theme.exportTheme')}
+        </Button>
+
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          loading={saving}
+        >
+          {t('save')}
+        </Button>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/json"
+          hidden
+          onChange={importTheme}
+        />
+      </WebsiteSettingsHeader>
 
       <FormProvider {...form}>
         <Tabs
@@ -238,51 +243,6 @@ export const WebsiteTheme = memo(() => {
         >
           <TypographyList name={'typography'} />
         </CustomTabPanel>
-
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={saving}
-          >
-            {saving && (
-              <CircularProgress
-                size={14}
-                color="inherit"
-                sx={{ mr: 1 }}
-              />
-            )}
-
-            {t('save')}
-          </Button>
-
-          <Button
-            type="button"
-            variant="outlined"
-            startIcon={<MdFileDownload />}
-            onClick={exportTheme}
-          >
-            {t('websiteSettings.theme.exportTheme')}
-          </Button>
-
-          <Button
-            type="button"
-            variant="outlined"
-            startIcon={<MdFileUpload />}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            {t('websiteSettings.theme.importTheme')}
-          </Button>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="application/json"
-            hidden
-            onChange={importTheme}
-          />
-        </Box>
       </FormProvider>
     </WebsiteThemeWrapper>
   );

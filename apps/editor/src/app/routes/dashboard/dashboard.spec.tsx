@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -32,11 +33,15 @@ vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ActivityFeed: () => <div data-testid="activity-content" />,
 }));
 
+const theme = createTheme({ cssVariables: true });
+
 const renderDashboard = () =>
   render(
-    <MemoryRouter>
-      <Dashboard />
-    </MemoryRouter>
+    <ThemeProvider theme={theme}>
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 const shownCards = (container: HTMLElement) =>

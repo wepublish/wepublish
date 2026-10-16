@@ -1,196 +1,166 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { useEffect } from 'react';
-import { IconButton, Message, Table as RTable, toaster } from 'rsuite';
+import { useState } from 'react';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
+  DataTable,
+  enqueueSnackbar,
   humanizeError,
   IconButtonTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  Table,
   TableWrapper,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import {
   DeleteUserConsentDocument,
-  FullUserConsentFragment,
   UserConsentsDocument,
 } from '@wepublish/editor/api';
-import { RowDataType } from 'rsuite-table';
+import { IconButton, Button } from '@mui/material';
 
-const { Column, HeaderCell, Cell } = RTable;
+import { DeleteConsentDialog } from './delete-consent-dialog';
 
 const onErrorToast = (error: Error) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
-/* eslint-disable-next-line */
-export interface UserConsentListProps {}
-
-export function UserConsentList(props: UserConsentListProps) {
+export function UserConsentList() {
   const { t } = useTranslation();
-
-  const consentValues = [
-    {
-      value: true,
-      label: t('consents.accepted'),
-    },
-    {
-      value: false,
-      label: t('consents.rejected'),
-    },
-  ];
-
-  const { loading, data, refetch, error } = useQuery(UserConsentsDocument);
-
-  useEffect(() => {
-    if (error) {
-      onErrorToast(error);
-    }
-  }, [error]);
+  const { loading, data, refetch } = useQuery(UserConsentsDocument);
 
   const [deleteUserConsent] = useMutation(DeleteUserConsentDocument, {
     onError: onErrorToast,
     onCompleted: () => {
-      toaster.push(
-        <Message
-          type="success"
-          showIcon
-          closable
-          duration={3000}
-        >
-          {t('toast.deletedSuccess')}
-        </Message>
-      );
+      enqueueSnackbar(t('toast.deletedSuccess'), {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
       refetch();
     },
   });
 
-  const onDeleteUserConsent = (id: string) => {
-    deleteUserConsent({
-      variables: {
-        id,
-      },
-    });
+  const [userConsentToDelete, setUserConsentToDelete] = useState<{
+    id: string;
+    name: string;
+    user: string;
+  }>();
+
+  const onDeleteUserConsent = () => {
+    if (!userConsentToDelete) {
+      return;
+    }
+
+    deleteUserConsent({ variables: { id: userConsentToDelete.id } });
+    setUserConsentToDelete(undefined);
   };
 
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('userConsents.title')}</h2>
+          <PageTitle>{t('userConsents.title')}</PageTitle>
         </ListViewHeader>
         <ListViewActions>
-          <Link to="/userConsents/create">
-            <IconButton
-              appearance="primary"
-              disabled={loading}
-              icon={<MdAdd />}
-            >
-              {t('userConsents.create')}
-            </IconButton>
-          </Link>
+          <Button
+            component={RouterLink}
+            to="/userConsents/create"
+            variant="contained"
+            startIcon={<MdAdd />}
+            disabled={loading}
+          >
+            {t('userConsents.create')}
+          </Button>
         </ListViewActions>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
+          storageKey="user-consents"
           data={data?.userConsents || []}
-        >
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('userConsents.user')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullUserConsentFragment>) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'user',
+              alwaysVisible: true,
+              label: t('userConsents.user'),
+              width: 200,
+              render: rowData => (
                 <Link to={`/userConsents/edit/${rowData.id}`}>
                   {(rowData.user.firstName || '') + ' ' + rowData.user.name}
                 </Link>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('userConsents.consentName')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullUserConsentFragment>) => (
-                <span>{rowData.consent.name}</span>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('userConsents.consentSlug')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullUserConsentFragment>) => (
-                <span>{rowData.consent.slug}</span>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('userConsents.value')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<FullUserConsentFragment>) => (
+              ),
+            },
+            {
+              id: 'consentname',
+              label: t('userConsents.consentName'),
+              width: 200,
+              alwaysVisible: true,
+              render: rowData => <span>{rowData.consent.name}</span>,
+            },
+            {
+              id: 'consentslug',
+              label: t('userConsents.consentSlug'),
+              width: 200,
+              render: rowData => <span>{rowData.consent.slug}</span>,
+            },
+            {
+              id: 'value',
+              label: t('userConsents.value'),
+              width: 200,
+              render: rowData => (
                 <span>
                   {rowData.value ?
                     t('consents.accepted')
                   : t('consents.rejected')}
                 </span>
-              )}
-            </Cell>
-          </Column>
-
-          <Column
-            width={100}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <Cell
-              align="center"
-              style={{ padding: '6px 0' }}
-            >
-              {(rowData: RowDataType<FullUserConsentFragment>) => (
+              ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 100,
+              align: 'center',
+              fixed: true,
+              render: rowData => (
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     aria-label={t('delete')}
-                    icon={<MdDelete />}
-                    color="red"
-                    appearance="ghost"
-                    circle
-                    size="sm"
-                    onClick={() => onDeleteUserConsent(rowData.id)}
-                  />
+                    color="error"
+                    size="small"
+                    onClick={() =>
+                      setUserConsentToDelete({
+                        id: rowData.id,
+                        name: rowData.consent.name,
+                        user: rowData.user.name,
+                      })
+                    }
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
-              )}
-            </Cell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
+
+      <DeleteConsentDialog
+        open={Boolean(userConsentToDelete)}
+        title={t('userConsents.deleteTitle')}
+        onClose={() => setUserConsentToDelete(undefined)}
+        onConfirm={onDeleteUserConsent}
+      >
+        {t('userConsents.deleteBody', {
+          name: userConsentToDelete?.name,
+          user: userConsentToDelete?.user,
+        })}
+      </DeleteConsentDialog>
     </>
   );
 }

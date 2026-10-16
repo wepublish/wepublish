@@ -230,7 +230,8 @@
         "hiddenInfo": "Ausgeblendete Artikel erscheinen nicht in automatischen Artikellisten auf der Website (z.B. neueste Artikel oder Tag-Seiten), bleiben aber über ihren direkten Link erreichbar.",
         "contentUrlInfo": "Die Webadresse, zu der Leser*innen beim Klick auf den Teaser gelangen.",
         "teaserPropertiesInfo": "Zusätzliche Schlüssel-Wert-Paare, die deine Website für spezielle Darstellungen nutzen kann. Nur nötig, wenn die Entwickler*innen deiner Website dich darum gebeten haben. Öffentliche Eigenschaften sind über die öffentliche API sichtbar.",
-        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
+        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
+        "chooseFile": "Datei wählen"
       }
     },
     "articles": {
@@ -247,7 +248,8 @@
         "states": "Status",
         "title": "Titel",
         "untitled": "Ohne Titel",
-        "updated": "Bearbeitet"
+        "updated": "Bearbeitet",
+        "slug": "Slug"
       },
       "panels": {
         "cancel": "Abbrechen",
@@ -558,7 +560,8 @@
           "new": "(Neu)",
           "previousImage": "Vorheriges Bild",
           "nextImage": "Nächstes Bild",
-          "addImage": "Bild hinzufügen"
+          "addImage": "Bild hinzufügen",
+          "removeImage": "Bild entfernen"
         },
         "panels": {
           "caption": "Bildunterschrift",
@@ -716,6 +719,13 @@
         "doubleOptInHelp": "Neue Abonnentinnen und Abonnenten erhalten zuerst eine Bestätigungs-E-Mail von Mailchimp und werden erst in die Liste aufgenommen, wenn sie auf den Link darin klicken.",
         "advancedStepHelp": "Zeigt Bedingungen, wann dieser Schritt übersprungen oder angezeigt wird, z. B. wenn bestimmte Angaben bereits vorhanden sind.",
         "advancedInputHelp": "Zeigt weitere Einstellungen für dieses Feld, z. B. eine Beschreibung unter dem Feld oder einen Standardwert."
+      },
+      "groups": {
+        "text": "Text",
+        "media": "Medien",
+        "teasers": "Teaser",
+        "interaction": "Interaktion",
+        "layout": "Layout"
       }
     },
     "cancel": "Abbrechen",
@@ -787,7 +797,8 @@
         "text": "Text",
         "updated": "Bearbeitet",
         "userName": "Benutzername",
-        "pendingUserChangesInfo": "Du hast die Verfasserin oder den Verfasser gebeten, den Kommentar zu überarbeiten. Nach der Überarbeitung wartet er wieder auf Freigabe."
+        "pendingUserChangesInfo": "Du hast die Verfasserin oder den Verfasser gebeten, den Kommentar zu überarbeiten. Nach der Überarbeitung wartet er wieder auf Freigabe.",
+        "states": "Status"
       },
       "panels": {
         "approve": "Annehmen",
@@ -855,7 +866,9 @@
       "rejected": "Abgelehnt",
       "slugInfo": "Technische Kennung, über die deine Website oder Apps diese Einwilligung finden, z.B. «newsletter». Verwende nur Kleinbuchstaben, Zahlen und Bindestriche.",
       "defaultValueInfo": "Ob die Einwilligung für Benutzer*innen, die noch nicht entschieden haben, vorausgewählt ist, z.B. als bereits angekreuzte Checkbox in einem Formular.",
-      "checkedByDefault": "Standardmässig angekreuzt"
+      "checkedByDefault": "Standardmässig angekreuzt",
+      "deleteTitle": "Einwilligung löschen?",
+      "deleteBody": "Soll «{{name}}» endgültig gelöscht werden? Die Entscheidungen der Nutzer:innen dazu verschwinden mit."
     },
     "create": "Erstellen",
     "createAndClose": "Erstellen & Schliessen",
@@ -929,18 +942,18 @@
       "nextSaturday": "Nächsten Samstag",
       "now": "Jetzt",
       "today": "Heute",
-      "tomorrow": "Morgen"
+      "tomorrow": "Morgen",
+      "yesterday": "Gestern",
+      "done": "OK"
     },
     "deactivated": "Deaktiviert",
     "delete": "Löschen",
     "deleteBlockTemplateModal": {
       "body": "Willst du die Block-Vorlage «{{name}}» wirklich löschen?",
-      "deleteBtn": "Ja, löschen",
       "title": "Blockvorlage löschen?"
     },
     "deletePollModal": {
       "body": "Willst du die Umfrage «{{pollQuestion}}» wirklich löschen?",
-      "deleteBtn": "Ja, löschen",
       "title": "Umfrage löschen?"
     },
     "draggableSubscriptionInterval": {
@@ -976,7 +989,10 @@
       "passwordTooShortErrorMessage": "Das Passwort muss mindestens 12 Zeichen lang sein",
       "passwordCompromisedErrorMessage": "Dieses Passwort ist in einem Datenleck aufgetaucht. Bitte wähle ein anderes Passwort.",
       "required": "Dieses Feld ist erforderlich",
-      "invalidCountry": "Bitte ein gültiges Land auswählen"
+      "invalidCountry": "Bitte ein gültiges Land auswählen",
+      "amountTooLowErrorMessage": "Der Betrag liegt unter dem Minimum dieses Abos",
+      "noQuestionErrorMessage": "Bitte gib eine Frage ein",
+      "invalidForm": "Bitte überprüfe die markierten Felder"
     },
     "event": {
       "create": {
@@ -1039,7 +1055,9 @@
         "slug": "Nach Slug filtern",
         "title": "Nach Titel filtern",
         "includeHiddenArticles": "Ausgeblendete Artikel",
-        "includeHiddenPages": "Ausgeblendete Seiten"
+        "includeHiddenPages": "Ausgeblendete Seiten",
+        "label": "Filter",
+        "states": "Status"
       }
     },
     "documents": {
@@ -1140,7 +1158,8 @@
         "focalPoint": "Bildfokus",
         "focalPointInfo": "Ziehe den Punkt auf den wichtigsten Bereich des Bildes. Wird das Bild zugeschnitten, z.B. in Teasern, bleibt dieser Bereich sichtbar.",
         "descriptionInfo": "Beschreibe, was auf dem Bild zu sehen ist. Der Text dient als Alternativtext für Menschen mit Screenreader und für Suchmaschinen.",
-        "linkUrlInfo": "Webadresse, die sich öffnet, wenn Leser*innen auf das Bild klicken. Leer lassen, wenn das Bild kein Link sein soll."
+        "linkUrlInfo": "Webadresse, die sich öffnet, wenn Leser*innen auf das Bild klicken. Leer lassen, wenn das Bild kein Link sein soll.",
+        "openOriginal": "Original öffnen"
       }
     },
     "importableEvent": {
@@ -1624,7 +1643,8 @@
       "mailLog": "Abgeschlossene Sendungen",
       "communication": "Kommunikation",
       "auditLog": "Audit-Log",
-      "letterLayouts": "Briefpapier"
+      "letterLayouts": "Briefpapier",
+      "language": "Sprache"
     },
     "navigation": {
       "overview": {
@@ -1883,7 +1903,6 @@
       "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
       "copyVoteUrl": "Abstimmungs-Link kopieren",
       "copyVoteUrlHint": "Die Abstimmungs-Links können nun direkt im Umfrage-Block des Artikels oder der Seite kopiert werden, in welchem die Umfrage verwendet wird.",
-      "deleteBtn": "Löschen",
       "deleteModalBody": "Willst du die Antwort «{{answer}}» unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
       "deleteModalTitle": "Löschen?",
       "insertYourNewAnswer": "Neue Antwort eingeben",
@@ -2216,7 +2235,9 @@
       "titleEdit": "Benutzer-Einwilligung bearbeiten",
       "user": "Benutzer",
       "value": "Wert",
-      "uniqueConstraint": "Eine Benutzer-Einwilligung mit dem Slug «{{slug}}» existiert bereits. Bitte wähle einen anderen Slug."
+      "uniqueConstraint": "Eine Benutzer-Einwilligung mit dem Slug «{{slug}}» existiert bereits. Bitte wähle einen anderen Slug.",
+      "deleteTitle": "Nutzer-Einwilligung löschen?",
+      "deleteBody": "Soll die Einwilligung «{{name}}» von {{user}} endgültig gelöscht werden?"
     },
     "userCreateOrEditView": {
       "active": "Aktiv",
@@ -2267,7 +2288,8 @@
       "activeInfo": "Inaktive Benutzer:innen können sich nicht mehr anmelden – weder auf der Website noch im Editor.",
       "flairInfo": "Kurze Beschreibung der Funktion, z.B. «Chefredaktorin». Wird auf der Website bei Kommentaren neben dem Namen angezeigt.",
       "propertiesInfo": "Zusätzliche Daten als Schlüssel und Wert, z.B. aus Importen. Öffentliche Eigenschaften kann auch die Website lesen, private nur der Editor.",
-      "userRolesInfo": "Rollen legen die Berechtigungen dieser Person fest, z.B. was sie im Editor sehen und tun darf."
+      "userRolesInfo": "Rollen legen die Berechtigungen dieser Person fest, z.B. was sie im Editor sehen und tun darf.",
+      "addressTitle": "Adresse"
     },
     "userList": {
       "overview": {
@@ -2509,14 +2531,15 @@
       "periodicityPricingCustomHelp": "Aus: Die Preise werden aus dem Monatspreis hochgerechnet. Ein: Du legst für dieses Zahlungsintervall eigene Preise fest, z. B. für einen Jahresrabatt."
     },
     "subscriptionEditView": {
-      "additionalSettingsTitle": "Erweiterte Einstellungen",
       "trialSubscriptionConfigured": "Dieses Abo ist als Probeabo konfiguriert.",
       "nonExtendableNotCompatibleWithAutoRenew": "Ein sich automatisch erneuerndes Abo muss verlängerbar sein. Ändere einen dieser Parameter.",
       "configureAsTrialSubscription": "Als Probeabo konfigurieren",
       "subscriptionTrialNotPossible": "Das Abo kann nicht als Probeabo konfiguriert werden. Ändere hierzu die Einstellungen des Abo-Plans.",
       "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst.",
       "extendModalTitle": "Abo frühzeitig verlängern?",
-      "extendModalBody": "Das Abo wird frühzeitig um die nächstmögliche Periode verlängert. Es wird eine Rechnung erstellt."
+      "extendModalBody": "Das Abo wird frühzeitig um die nächstmögliche Periode verlängert. Es wird eine Rechnung erstellt.",
+      "detailsTitle": "Plan und Zahlung",
+      "renewalTitle": "Laufzeit und Verlängerung"
     },
     "subscriptionListFilter": {
       "extendable": "Verlängerbar"
@@ -2625,7 +2648,15 @@
       "rangeNextWeek": "Nächste Woche",
       "rangeNextMonth": "Nächster Monat",
       "rangeNextQuarter": "Nächstes Quartal",
-      "rangeNextYear": "Nächstes Jahr"
+      "rangeNextYear": "Nächstes Jahr",
+      "resolution": "Auflösung",
+      "range": "Zeitraum",
+      "rangeCustom": "Benutzerdefiniert",
+      "view": "Ansicht",
+      "dateRange": "Von – bis",
+      "subscriptionPlans": "Abo-Pläne",
+      "rangeFrom": "Von",
+      "rangeTo": "Bis"
     },
     "audience": {
       "chart": {
@@ -3425,7 +3456,9 @@
       "blockNumber": "Block {{number}}"
     },
     "columnConfigurator": {
-      "title": "Spalten ein-/ausblenden"
+      "title": "Spalten",
+      "dragToReorder": "Zum Umsortieren ziehen",
+      "reset": "Spalten zurücksetzen"
     },
     "systemMails": {
       "title": "Konto & Login",
@@ -3574,7 +3607,9 @@
         "period": "Fester Zeitraum",
         "days": "Tage",
         "periodPlaceholder": "Von – bis wählen",
-        "periodHint": "Nur Abos, die zwischen diesen beiden Daten deaktiviert wurden."
+        "periodHint": "Nur Abos, die zwischen diesen beiden Daten deaktiviert wurden.",
+        "periodFrom": "Von",
+        "periodTo": "Bis"
       },
       "preview": {
         "title": "Vorschau",
@@ -3785,7 +3820,8 @@
       "customOnlyHint": "An einen einzelnen Benutzer können nur benutzerdefinierte Vorlagen gesendet werden.",
       "selectTemplate": "Vorlage auswählen",
       "send": "Senden",
-      "sent": "E-Mail gesendet"
+      "sent": "E-Mail gesendet",
+      "title": "E-Mails"
     },
     "mailJobs": {
       "created": "Gestartet",
@@ -3874,7 +3910,10 @@
         "dateRange": "Zeitraum",
         "failuresOnly": "Nur Fehlschläge",
         "impersonatedOnly": "Nur Impersonation",
-        "impersonatedOnlyInfo": "Zeigt nur Änderungen, die jemand gemacht hat, während er oder sie als andere Person angemeldet war."
+        "impersonatedOnlyInfo": "Zeigt nur Änderungen, die jemand gemacht hat, während er oder sie als andere Person angemeldet war.",
+        "anyAction": "Alle Aktionen",
+        "dateFrom": "Von",
+        "dateTo": "Bis"
       },
       "action": {
         "create": "Erstellt",
@@ -3898,7 +3937,8 @@
       "style": "Stil",
       "title": "Block-Stile",
       "info": "Mit einem Style zeigst du einen Block auf deiner Website anders an, z. B. ein Teaser-Raster als Slider. Wähle, für welche Blocktypen ein Style verfügbar ist; wie er aussieht, bestimmt das Design deiner Website.",
-      "blockTypesPlaceholder": "Verfügbar für Blocktypen"
+      "blockTypesPlaceholder": "Verfügbar für Blocktypen",
+      "noStyle": "Kein Stil"
     },
     "name": "Name",
     "toast": {
@@ -3949,6 +3989,44 @@
       "deleteQuestion": "«{{name}}» löschen? Vorlagen, die darauf drucken, müssen zuerst ein anderes wählen.",
       "deleteConfirm": "Löschen",
       "noLayouts": "Noch kein Briefpapier. Erstelle eines, damit Briefe eine Kopf- und Fusszeile bekommen."
+    },
+    "autosave": {
+      "label": "Automatisch speichern",
+      "description": "Den Entwurf beim Arbeiten alle 30 Sekunden speichern"
+    },
+    "colorPicker": {
+      "pickColor": "Farbe auswählen"
+    },
+    "errorBoundary": {
+      "title": "Auf dieser Seite ist etwas schiefgelaufen",
+      "retry": "Erneut versuchen",
+      "reload": "Editor neu laden"
+    },
+    "listView": {
+      "table": {
+        "empty": "Nichts vorhanden"
+      },
+      "pagination": {
+        "total": "{{count}} Einträge",
+        "pageSize": "Einträge pro Seite",
+        "perPage": "{{count}} / Seite"
+      }
+    },
+    "dateRange": {
+      "from": "von",
+      "to": "bis"
+    },
+    "metadataSections": {
+      "byline": "Autorenzeile",
+      "headline": "Titel",
+      "publication": "Veröffentlichung",
+      "seo": "Suchmaschine",
+      "stats": "Statistik"
+    },
+    "metadataHints": {
+      "socialMediaDescriptionFallback": "Nutzt sonst die SEO-Beschreibung",
+      "socialMediaImageFallback": "Nutzt sonst das Bild des Artikels.",
+      "socialMediaTitleFallback": "Nutzt sonst den SEO-Titel"
     }
   }
 }

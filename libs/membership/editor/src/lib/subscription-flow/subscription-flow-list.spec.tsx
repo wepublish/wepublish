@@ -53,7 +53,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 const page = () => (
-  <ThemeProvider theme={createTheme()}>
+  <ThemeProvider theme={createTheme({ cssVariables: true })}>
     <SubscriptionFlowList />
   </ThemeProvider>
 );

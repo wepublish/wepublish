@@ -10,7 +10,7 @@ import { Md60FpsSelect, MdInvertColors, MdSecurity } from 'react-icons/md';
 import { WithUserDecorator } from '@wepublish/storybook';
 import { mockImage } from '@wepublish/storybook/mocks';
 import nanoid from 'nanoid';
-import React from 'react';
+import { Fragment } from 'react';
 import { userEvent, within } from 'storybook/test';
 import { wait } from '@wepublish/testing';
 import { mockUser } from '@wepublish/storybook/mocks';
@@ -361,11 +361,11 @@ export const WithChildren = {
   args: {
     ...Default.args,
     children: [
-      <React.Fragment key="icons">
+      <Fragment key="icons">
         <MdInvertColors size="32" />
         <Md60FpsSelect size="32" />
         <MdSecurity size="32" />
-      </React.Fragment>,
+      </Fragment>,
     ],
   },
 };

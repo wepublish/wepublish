@@ -18,8 +18,8 @@ declare global {
 }
 
 export interface InstagramContextState {
-  readonly isLoaded: boolean;
-  readonly isLoading: boolean;
+  isLoaded: boolean;
+  isLoading: boolean;
 
   load(): void;
 }

@@ -230,7 +230,8 @@
         "hiddenInfo": "Hidden articles do not appear in automatic article lists on the website (e.g. latest articles or tag pages), but remain reachable via their direct link.",
         "contentUrlInfo": "The web address readers are taken to when they click on the teaser.",
         "teaserPropertiesInfo": "Additional key-value pairs your website can use for special display options. Only needed if the people who develop your website asked you to set them. Public properties are visible via the public API.",
-        "enterSocialMediaImage": "Please add an image for social media"
+        "enterSocialMediaImage": "Please add an image for social media",
+        "chooseFile": "Choose file"
       }
     },
     "articles": {
@@ -247,7 +248,8 @@
         "states": "States",
         "title": "Title",
         "untitled": "Untitled",
-        "updated": "Modified"
+        "updated": "Modified",
+        "slug": "Slug"
       },
       "panels": {
         "cancel": "Cancel",
@@ -558,7 +560,8 @@
           "new": "(New)",
           "previousImage": "Previous image",
           "nextImage": "Next image",
-          "addImage": "Add image"
+          "addImage": "Add image",
+          "removeImage": "Remove image"
         },
         "panels": {
           "caption": "Caption",
@@ -716,6 +719,13 @@
         "doubleOptInHelp": "New subscribers first receive a confirmation email from Mailchimp and are only added to the list once they click the link in it.",
         "advancedStepHelp": "Shows conditions for when this step is skipped or shown, e.g. if certain information is already available.",
         "advancedInputHelp": "Shows more settings for this field, e.g. a description below the field or a default value."
+      },
+      "groups": {
+        "text": "Text",
+        "media": "Media",
+        "teasers": "Teasers",
+        "interaction": "Interaction",
+        "layout": "Layout"
       }
     },
     "cancel": "Cancel",
@@ -787,7 +797,8 @@
         "text": "Text",
         "updated": "Modified",
         "userName": "Username",
-        "pendingUserChangesInfo": "You asked the author to revise the comment. Once they have edited it, it is pending approval again."
+        "pendingUserChangesInfo": "You asked the author to revise the comment. Once they have edited it, it is pending approval again.",
+        "states": "States"
       },
       "panels": {
         "approve": "Approve",
@@ -855,7 +866,9 @@
       "rejected": "Rejected",
       "slugInfo": "Technical identifier your website or apps use to find this consent, e.g. «newsletter». Use lowercase letters, numbers and hyphens only.",
       "defaultValueInfo": "Whether the consent is pre-selected for users who have not decided yet, e.g. as a pre-ticked checkbox in a form.",
-      "checkedByDefault": "Checked by default"
+      "checkedByDefault": "Checked by default",
+      "deleteTitle": "Delete consent?",
+      "deleteBody": "Do you want to delete «{{name}}» permanently? The choices users made for it go with it."
     },
     "create": "Create",
     "createAndClose": "Create & Close",
@@ -929,18 +942,18 @@
       "nextSaturday": "Next Saturday",
       "now": "Now",
       "today": "Today",
-      "tomorrow": "Tomorrow"
+      "tomorrow": "Tomorrow",
+      "yesterday": "Yesterday",
+      "done": "OK"
     },
     "deactivated": "Deactivated",
     "delete": "Delete",
     "deleteBlockTemplateModal": {
       "body": "Do you really want to delete the block template \"{{name}}\"?",
-      "deleteBtn": "Yes, delete",
       "title": "Delete Block Template?"
     },
     "deletePollModal": {
       "body": "Do you really want to delete the poll \"{{pollQuestion}}\"?",
-      "deleteBtn": "Yes, delete",
       "title": "Delete Poll?"
     },
     "draggableSubscriptionInterval": {
@@ -976,7 +989,10 @@
       "passwordTooShortErrorMessage": "Password must be at least 12 characters long",
       "passwordCompromisedErrorMessage": "This password has appeared in a data breach. Please choose a different password.",
       "required": "This field is required",
-      "invalidCountry": "Please select a valid country"
+      "invalidCountry": "Please select a valid country",
+      "amountTooLowErrorMessage": "The amount is below the minimum of this subscription plan",
+      "noQuestionErrorMessage": "Please enter a question",
+      "invalidForm": "Please check the highlighted fields"
     },
     "event": {
       "create": {
@@ -1039,7 +1055,9 @@
         "slug": "Filter by slug",
         "title": "Filter by title",
         "includeHiddenArticles": "Include hidden",
-        "includeHiddenPages": "Include hidden"
+        "includeHiddenPages": "Include hidden",
+        "label": "Filters",
+        "states": "States"
       }
     },
     "documents": {
@@ -1140,7 +1158,8 @@
         "focalPoint": "Focal point",
         "focalPointInfo": "Drag the point onto the most important part of the image. When the image is cropped, e.g. in teasers, this area stays visible.",
         "descriptionInfo": "Describe what can be seen in the image. The text is used as alternative text for people using screen readers and for search engines.",
-        "linkUrlInfo": "Web address that opens when readers click on the image. Leave empty if the image should not be a link."
+        "linkUrlInfo": "Web address that opens when readers click on the image. Leave empty if the image should not be a link.",
+        "openOriginal": "Open original"
       }
     },
     "importableEvent": {
@@ -1625,7 +1644,8 @@
       "mailLog": "Completed mailings",
       "communication": "Communication",
       "auditLog": "Audit log",
-      "letterLayouts": "Stationery"
+      "letterLayouts": "Stationery",
+      "language": "Language"
     },
     "navigation": {
       "overview": {
@@ -1884,7 +1904,6 @@
       "answerMissing": "Please enter your answer.",
       "copyVoteUrl": "Copy voting link",
       "copyVoteUrlHint": "The voting links can now be copied directly in the poll block of the article or page the poll is used in.",
-      "deleteBtn": "Delete",
       "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
       "deleteModalTitle": "Delete?",
       "insertYourNewAnswer": "Enter a new answer",
@@ -2264,7 +2283,9 @@
       "titleEdit": "Edit User Consent",
       "user": "User",
       "value": "Value",
-      "uniqueConstraint": "A user consent with slug '{{slug}}' already exists. Please choose a different slug."
+      "uniqueConstraint": "A user consent with slug '{{slug}}' already exists. Please choose a different slug.",
+      "deleteTitle": "Delete user consent?",
+      "deleteBody": "Do you want to delete the consent «{{name}}» of {{user}} permanently?"
     },
     "userCreateOrEditView": {
       "active": "Active",
@@ -2315,7 +2336,8 @@
       "activeInfo": "Inactive users can no longer log in, neither on the website nor in the editor.",
       "flairInfo": "Short description of the person's role, e.g. \"Editor-in-chief\". It is shown next to their name in comments on the website.",
       "propertiesInfo": "Additional data as key and value, e.g. from imports. Public properties can also be read by the website, private ones only in the editor.",
-      "userRolesInfo": "Roles define the permissions of this person, e.g. what they may see and do in the editor."
+      "userRolesInfo": "Roles define the permissions of this person, e.g. what they may see and do in the editor.",
+      "addressTitle": "Address"
     },
     "userList": {
       "overview": {
@@ -2495,7 +2517,8 @@
       "areYouSureBody": "The style \"{{ blockStyle }}\" will be deleted permanently and cannot be undone.",
       "areYouSureConfirmation": "Delete style",
       "info": "A style lets you show a block differently on your website, e.g. a teaser grid as a slider. Select the block types each style is available for; how it looks is defined by your website's design.",
-      "blockTypesPlaceholder": "Available for block types"
+      "blockTypesPlaceholder": "Available for block types",
+      "noStyle": "No style"
     },
     "blockTemplates": {
       "list": {
@@ -2568,14 +2591,15 @@
       "periodicityPricingCustomHelp": "Off: the prices are derived from the monthly price. On: you set your own prices for this payment interval, e.g. for a yearly discount."
     },
     "subscriptionEditView": {
-      "additionalSettingsTitle": "Advanced settings",
       "trialSubscriptionConfigured": "This subscription is configured as a trial subscription.",
       "nonExtendableNotCompatibleWithAutoRenew": "An automatically renewing subscription must be renewable. Change one of these parameters.",
       "configureAsTrialSubscription": "Configure as a trial subscription",
       "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan.",
       "extendableWasChanged": "The “Extendable” option has been adjusted according to the subscription plan.",
       "extendModalTitle": "Extend your subscription early?",
-      "extendModalBody": "The subscription will be extended early for the next possible period. An invoice will be issued."
+      "extendModalBody": "The subscription will be extended early for the next possible period. An invoice will be issued.",
+      "detailsTitle": "Plan and payment",
+      "renewalTitle": "Term and renewal"
     },
     "subscriptionListFilter": {
       "extendable": "Extendable"
@@ -2684,7 +2708,15 @@
       "rangeNextWeek": "Next Week",
       "rangeNextMonth": "Next Month",
       "rangeNextQuarter": "Next Quarter",
-      "rangeNextYear": "Next Year"
+      "rangeNextYear": "Next Year",
+      "resolution": "Resolution",
+      "range": "Range",
+      "rangeCustom": "Custom",
+      "view": "View",
+      "dateRange": "From – to",
+      "subscriptionPlans": "Subscription plans",
+      "rangeFrom": "From",
+      "rangeTo": "To"
     },
     "audience": {
       "chart": {
@@ -3484,7 +3516,9 @@
       "blockNumber": "Block {{number}}"
     },
     "columnConfigurator": {
-      "title": "Show/hide columns"
+      "title": "Columns",
+      "dragToReorder": "Drag to reorder",
+      "reset": "Reset columns"
     },
     "mailSend": {
       "steps": {
@@ -3592,7 +3626,9 @@
         "period": "Fixed period",
         "days": "days",
         "periodPlaceholder": "Pick from – to",
-        "periodHint": "Only subscriptions deactivated between these two dates."
+        "periodHint": "Only subscriptions deactivated between these two dates.",
+        "periodFrom": "From",
+        "periodTo": "To"
       },
       "preview": {
         "title": "Preview",
@@ -3803,7 +3839,8 @@
       "customOnlyHint": "Only custom templates can be sent to a single user.",
       "selectTemplate": "Select template",
       "send": "Send",
-      "sent": "Email sent"
+      "sent": "Email sent",
+      "title": "Emails"
     },
     "mailJobs": {
       "created": "Started",
@@ -3892,7 +3929,10 @@
         "dateRange": "Date range",
         "failuresOnly": "Failures only",
         "impersonatedOnly": "Impersonation only",
-        "impersonatedOnlyInfo": "Only show changes that someone made while logged in as another person."
+        "impersonatedOnlyInfo": "Only show changes that someone made while logged in as another person.",
+        "anyAction": "Any action",
+        "dateFrom": "From",
+        "dateTo": "To"
       },
       "action": {
         "create": "Created",
@@ -3949,6 +3989,44 @@
       "deleteQuestion": "Delete “{{name}}”? Templates printing on it have to choose another first.",
       "deleteConfirm": "Delete",
       "noLayouts": "No stationery yet. Create one so letters get a header and footer."
+    },
+    "autosave": {
+      "label": "Autosave",
+      "description": "Save the draft every 30 seconds while you work"
+    },
+    "colorPicker": {
+      "pickColor": "Pick color"
+    },
+    "errorBoundary": {
+      "title": "Something went wrong on this page",
+      "retry": "Try again",
+      "reload": "Reload the editor"
+    },
+    "listView": {
+      "table": {
+        "empty": "Nothing to show"
+      },
+      "pagination": {
+        "total": "{{count}} entries",
+        "pageSize": "Entries per page",
+        "perPage": "{{count}} / page"
+      }
+    },
+    "dateRange": {
+      "from": "from",
+      "to": "to"
+    },
+    "metadataSections": {
+      "byline": "Byline",
+      "headline": "Headline",
+      "publication": "Publication",
+      "seo": "Search engine",
+      "stats": "Stats"
+    },
+    "metadataHints": {
+      "socialMediaDescriptionFallback": "Falls back to the SEO description",
+      "socialMediaImageFallback": "Falls back to the article image when empty.",
+      "socialMediaTitleFallback": "Falls back to the SEO title"
     }
   }
 }

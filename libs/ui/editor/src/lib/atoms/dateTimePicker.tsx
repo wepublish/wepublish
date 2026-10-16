@@ -1,17 +1,9 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { Button } from '@mui/material';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  ButtonGroup,
-  ButtonToolbar,
-  DatePicker,
-  Form,
-  Popover as RPopover,
-  Whisper,
-} from 'rsuite';
 
-import { InfoTrigger } from './infoTooltip';
+import { DatePicker, useCloseCalendar } from './datePicker';
 
 export interface DateTimePreset {
   label: string;
@@ -27,28 +19,37 @@ export interface DateTimePickerProps {
   timeRanges?: DateTimePreset[];
   helpInfo?: string;
   disabled?: boolean;
+  helperText?: string;
 }
 
-const Header = styled.div`
-  margin: 5px auto;
+const Footer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing(1)};
+  padding-top: ${({ theme }) => theme.spacing(1)};
+  border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
 `;
 
-const Popover = styled(RPopover)`
-  max-width: 300px;
+const Shortcuts = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
-const Presets = styled.div`
-  display: grid;
-  gap: 3px;
-  min-width: 260px;
-  padding: 5px 0;
-`;
+function DoneButton({ label }: { label: string }) {
+  const close = useCloseCalendar();
 
-const PresetsButton = styled(Button)`
-  white-space: break-spaces;
-  padding: 3px;
-  margin: 1px;
-`;
+  return (
+    <Button
+      size="small"
+      variant="contained"
+      onClick={close}
+    >
+      {label}
+    </Button>
+  );
+}
 
 export function DateTimePicker({
   dateTime,
@@ -58,127 +59,97 @@ export function DateTimePicker({
   timeRanges,
   helpInfo,
   disabled,
+  helperText,
 }: DateTimePickerProps) {
   const { t } = useTranslation();
 
   const [dateSelection, setDateSelection] = useState<Date | null>(
     dateTime ?? null
   );
+  const time = dateTime?.getTime() ?? null;
+  const [seededTime, setSeededTime] = useState(time);
 
-  useEffect(() => {
+  if (time !== seededTime) {
+    setSeededTime(time);
     setDateSelection(dateTime ?? null);
-  }, [dateTime]);
+  }
 
   const dateButtonPresets = dateRanges ?? [
     { label: t('dateTimePicker.today'), offset: 0 },
     { label: t('dateTimePicker.tomorrow'), offset: 1 },
-    {
-      label: t('dateTimePicker.nextMonday'),
-      offset: new Date().getDay() === 1 ? 7 : (1 - new Date().getDay() + 7) % 7,
-    },
-    {
-      label: t('dateTimePicker.nextSaturday'),
-      offset: 6 - new Date().getDay(),
-    },
   ];
 
-  const timeButtonPresets = timeRanges ?? [
-    { label: t('dateTimePicker.now'), offset: 0 },
-    { label: t('dateTimePicker.hour', { hour: '5' }), offset: 5 },
-    { label: t('dateTimePicker.hour', { hour: '14' }), offset: 14 },
-  ];
-
-  const handleDatePresetButton = (offset: number) => {
+  const dayFor = (offset: number) => {
     const day = new Date();
+
     if (dateSelection) {
       day.setHours(dateSelection.getHours());
       day.setMinutes(dateSelection.getMinutes());
     }
+
     day.setDate(day.getDate() + offset);
-    setDateSelection(day);
-    changeDate(day);
+
+    return day;
+  };
+
+  const timeButtonPresets = timeRanges ?? [
+    { label: t('dateTimePicker.now'), offset: 0 },
+  ];
+
+  const timeNow = () => {
+    const day = dateSelection ? new Date(dateSelection) : new Date();
+    const now = new Date();
+
+    day.setHours(now.getHours());
+    day.setMinutes(now.getMinutes());
+
+    return day;
   };
 
   const handleChange = (value: Date | null) => {
-    setDateSelection(value ?? null);
+    setDateSelection(value);
     changeDate(value ?? undefined);
   };
 
-  const handleTimePresetButton = (hour: number) => {
-    const day = dateSelection ? new Date(dateSelection) : new Date();
-    if (hour === 0) {
-      const now = new Date();
-      day.setHours(now.getHours());
-      day.setMinutes(now.getMinutes());
-      setDateSelection(day);
-      changeDate(day);
-    } else {
-      day.setHours(hour, 0, 0);
-      setDateSelection(day);
-      changeDate(day);
-    }
-  };
-
   return (
-    <>
-      <Header>
-        <Form.Label>{label}</Form.Label>
-        {helpInfo ?
-          <Whisper
-            placement="right"
-            trigger="hover"
-            controlId="control-id-hover"
-            speaker={
-              <Popover>
-                <p>{helpInfo}</p>
-              </Popover>
-            }
-          >
-            <InfoTrigger aria-label={helpInfo} />
-          </Whisper>
-        : ''}
-      </Header>
+    <DatePicker
+      withTime
+      clearable
+      fullWidth
+      label={label}
+      value={dateSelection}
+      onChange={handleChange}
+      disabled={disabled}
+      error={Boolean(helperText)}
+      helperText={helperText ?? helpInfo}
+    >
+      <Footer>
+        <Shortcuts>
+          {dateButtonPresets.map(preset => (
+            <Button
+              key={preset.label}
+              size="small"
+              variant="text"
+              onClick={() => handleChange(dayFor(preset.offset))}
+            >
+              {preset.label}
+            </Button>
+          ))}
 
-      <DatePicker
-        block
-        disabled={disabled}
-        cleanable
-        format="dd.MM.yyyy HH:mm"
-        value={dateSelection}
-        onSelect={handleChange}
-        onChange={handleChange}
-        renderExtraFooter={() => (
-          <Presets>
-            <ButtonToolbar>
-              <ButtonGroup justified>
-                {dateButtonPresets.map((datePreset, i) => (
-                  <PresetsButton
-                    key={i}
-                    size="xs"
-                    onClick={() => handleDatePresetButton(datePreset.offset)}
-                  >
-                    {datePreset.label}
-                  </PresetsButton>
-                ))}
-              </ButtonGroup>
-            </ButtonToolbar>
+          {timeButtonPresets.map(preset => (
+            <Button
+              key={preset.label}
+              size="small"
+              variant="text"
+              onClick={() => handleChange(timeNow())}
+            >
+              {preset.label}
+            </Button>
+          ))}
+        </Shortcuts>
 
-            <ButtonToolbar>
-              <ButtonGroup justified>
-                {timeButtonPresets.map((timePreset, i) => (
-                  <PresetsButton
-                    key={i}
-                    size="xs"
-                    onClick={() => handleTimePresetButton(timePreset.offset)}
-                  >
-                    {timePreset.label}
-                  </PresetsButton>
-                ))}
-              </ButtonGroup>
-            </ButtonToolbar>
-          </Presets>
-        )}
-      />
-    </>
+        <DoneButton label={t('dateTimePicker.done')} />
+      </Footer>
+    </DatePicker>
   );
 }

@@ -1,17 +1,15 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import { Button, Stack, TextField } from '@mui/material';
 import { ResetPasswordWithTokenDocument } from '@wepublish/editor/api';
-import { LoginTemplate } from '@wepublish/ui/editor';
-import React, { FormEvent, useEffect, useRef, useState } from 'react';
+import { enqueueSnackbar, LoginTemplate } from '@wepublish/ui/editor';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Button, Form as RForm, Message, toaster } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
 
-const { Group, Label, Control } = RForm;
-
-const Form = styled(RForm)`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -21,7 +19,7 @@ const Description = styled.p`
   text-align: center;
   margin-bottom: 16px;
   font-size: 14px;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const BackLink = styled.a`
@@ -29,7 +27,7 @@ const BackLink = styled.a`
   text-align: center;
   margin-top: 12px;
   font-size: 13px;
-  color: var(--rs-text-link);
+  color: ${({ theme }) => theme.vars.palette.primary.main};
   cursor: pointer;
   text-decoration: none;
   &:hover {
@@ -57,33 +55,23 @@ export function SetNewPassword() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
-    if (!password || !passwordRepeat) return;
+    if (!password || !passwordRepeat) {
+      return;
+    }
 
     if (password !== passwordRepeat) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('setNewPassword.mismatch')}
-        </Message>
-      );
+      enqueueSnackbar(t('setNewPassword.mismatch'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       return;
     }
 
     if (!token) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {t('setNewPassword.invalidLink')}
-        </Message>
-      );
+      enqueueSnackbar(t('setNewPassword.invalidLink'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       return;
     }
 
@@ -91,23 +79,20 @@ export function SetNewPassword() {
       await resetPassword({ variables: { token, password } });
       setSuccess(true);
     } catch (error: any) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={8000}
-        >
-          {error?.message || t('setNewPassword.error')}
-        </Message>
-      );
+      enqueueSnackbar(error?.message || t('setNewPassword.error'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
     }
   }
 
   return (
     <LoginTemplate backgroundChildren={<Background />}>
       <Form>
-        <RForm.Stack fluid>
+        <Stack
+          direction="column"
+          spacing={3}
+        >
           {success ?
             <>
               <Description>{t('setNewPassword.success')}</Description>
@@ -116,32 +101,29 @@ export function SetNewPassword() {
           : <>
               <Description>{t('setNewPassword.description')}</Description>
 
-              <Group controlId="newPassword">
-                <Label>{t('setNewPassword.password')}</Label>
-                <Control
-                  inputRef={passwordInputRef}
-                  name="password"
-                  type="password"
-                  value={password}
-                  autoComplete="new-password"
-                  onChange={(value: string) => setPassword(value)}
-                />
-              </Group>
+              <TextField
+                label={<>{t('setNewPassword.password')}</>}
+                inputRef={passwordInputRef}
+                name="password"
+                type="password"
+                value={password}
+                autoComplete="new-password"
+                onChange={event => setPassword(event.target.value)}
+                fullWidth
+              />
 
-              <Group controlId="newPasswordRepeat">
-                <Label>{t('setNewPassword.passwordRepeat')}</Label>
-
-                <Control
-                  name="passwordRepeat"
-                  type="password"
-                  value={passwordRepeat}
-                  autoComplete="new-password"
-                  onChange={(value: string) => setPasswordRepeat(value)}
-                />
-              </Group>
+              <TextField
+                label={<>{t('setNewPassword.passwordRepeat')}</>}
+                name="passwordRepeat"
+                type="password"
+                value={passwordRepeat}
+                autoComplete="new-password"
+                onChange={event => setPasswordRepeat(event.target.value)}
+                fullWidth
+              />
 
               <Button
-                appearance="primary"
+                variant="contained"
                 type="submit"
                 disabled={loading || !password || !passwordRepeat}
                 onClick={handleSubmit}
@@ -154,7 +136,7 @@ export function SetNewPassword() {
               </BackLink>
             </>
           }
-        </RForm.Stack>
+        </Stack>
       </Form>
     </LoginTemplate>
   );

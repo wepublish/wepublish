@@ -1,7 +1,7 @@
-import { IconButtonTooltip } from '@wepublish/ui/editor';
+import { Button, CircularProgress, Typography } from '@mui/material';
+import { IconButtonTooltip, Pagination } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdCheck, MdLink } from 'react-icons/md';
-import { Button, Loader, Pagination } from 'rsuite';
 
 import { CLIENTS_PER_PAGE } from './networkContent.hooks';
 import {
@@ -60,13 +60,18 @@ export function NetworkMediaList({
   return (
     <Card aria-labelledby="network-media-title">
       <CardHeader>
-        <h3 id="network-media-title">{t('networkContentPage.mediaTitle')}</h3>
+        <Typography
+          variant="h3"
+          id="network-media-title"
+        >
+          {t('networkContentPage.mediaTitle')}
+        </Typography>
         {!loading && !error && <CardCount>{totalCount}</CardCount>}
       </CardHeader>
 
       {loading && (
         <CenteredContainer>
-          <Loader />
+          <CircularProgress />
         </CenteredContainer>
       )}
 
@@ -116,8 +121,8 @@ export function NetworkMediaList({
                   caption={t('networkContentDashboard.noPeer')}
                 >
                   <Button
-                    size="xs"
-                    appearance="ghost"
+                    variant="outlined"
+                    size="small"
                     startIcon={<MdLink />}
                     onClick={() => onConnectClient?.(client)}
                   >
@@ -132,14 +137,13 @@ export function NetworkMediaList({
       {!loading && !error && totalPages > 1 && (
         <CardFooter>
           <Pagination
-            prev
-            next
-            size="sm"
-            maxButtons={5}
-            total={totalCount}
-            limit={CLIENTS_PER_PAGE}
-            activePage={page + 1}
-            onChangePage={nextPage => onPageChange(nextPage - 1)}
+            state={{
+              page: page + 1,
+              limit: CLIENTS_PER_PAGE,
+              setPage: nextPage => onPageChange(nextPage - 1),
+              setLimit: () => undefined /* page size was fixed here */,
+            }}
+            totalCount={totalCount}
           />
         </CardFooter>
       )}

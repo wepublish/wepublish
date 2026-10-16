@@ -7,13 +7,10 @@ export type DashboardCardId =
 
 export type DashboardCardDefinition = {
   id: DashboardCardId;
-  /** Sticky cards are always shown, in this slot of the two-column grid. */
   sticky?: { row: number; col: number };
-  /** May span both columns instead of one. */
   canSpanFullWidth?: true;
 };
 
-// Sticky cards in slot order, then the default order of the configurable ones.
 export const DASHBOARD_CARDS: DashboardCardDefinition[] = [
   { id: 'notifications', sticky: { row: 1, col: 1 } },
   { id: 'network', sticky: { row: 1, col: 2 } },
@@ -24,7 +21,6 @@ export const DASHBOARD_CARDS: DashboardCardDefinition[] = [
 
 export type DashboardLayout = {
   version: 1;
-  /** Configurable cards only, in display order. */
   cards: { id: DashboardCardId; visible: boolean; fullWidth?: true }[];
 };
 

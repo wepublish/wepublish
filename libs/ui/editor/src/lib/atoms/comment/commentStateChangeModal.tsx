@@ -1,6 +1,19 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  MenuItem,
+  Stack,
+  Typography,
+} from '@mui/material';
+import {
   ApproveCommentDocument,
   CommentRejectionReason,
   CommentRevisionFragment,
@@ -12,20 +25,13 @@ import {
 import { toPlaintext } from '@wepublish/richtext';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdReplay } from 'react-icons/md';
-import {
-  Button,
-  Dropdown,
-  Message,
-  Modal,
-  Panel,
-  Timeline,
-  toaster,
-} from 'rsuite';
+import { MdArrowDropDown, MdReplay } from 'react-icons/md';
 
+import { ClickMenu } from '../../popover/click-menu';
+import { enqueueSnackbar } from '../../snackbar';
 import { DescriptionList, DescriptionListItem } from '../descriptionList';
 
-const ParentCommentPanel = styled(Panel)`
+const ParentCommentPanel = styled(Card)`
   margin-right: 40px;
   font-style: italic;
   color: lightslategrey;
@@ -36,7 +42,7 @@ const IconWrapper = styled.div`
   margin-left: 10px;
 `;
 
-const RevisionPanel = styled(Panel)`
+const RevisionPanel = styled(Card)`
   max-height: 300px;
   overflow-y: scroll;
 `;
@@ -53,6 +59,17 @@ function mapModalTitle(commentState: CommentState): string {
   }
 }
 
+export function mapRejectionReasonToLabel(
+  rejectionReason: CommentRejectionReason
+) {
+  switch (rejectionReason) {
+    case CommentRejectionReason.Spam:
+      return 'comments.panels.rejectionReasons.spam';
+    case CommentRejectionReason.Misconduct:
+      return 'comments.panels.rejectionReasons.misconduct';
+  }
+}
+
 export function mapCommentActionToBtnTitle(commentState: CommentState) {
   switch (commentState) {
     case CommentState.Approved:
@@ -62,17 +79,6 @@ export function mapCommentActionToBtnTitle(commentState: CommentState) {
       return 'comments.panels.requestChanges';
     case CommentState.Rejected:
       return 'comments.panels.reject';
-  }
-}
-
-export function mapRejectionReasonToLabel(
-  rejectionReason: CommentRejectionReason
-) {
-  switch (rejectionReason) {
-    case CommentRejectionReason.Spam:
-      return 'comments.panels.rejectionReasons.spam';
-    case CommentRejectionReason.Misconduct:
-      return 'comments.panels.rejectionReasons.misconduct';
   }
 }
 
@@ -93,7 +99,6 @@ export function CommentStateChangeModal({
   onClose,
 }: CommentStateChangeModalProps) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState<boolean>(false);
   const [rejectionReason, setRejectionReason] =
     useState<CommentRejectionReason>();
 
@@ -111,21 +116,15 @@ export function CommentStateChangeModal({
       errorApprove?.message ??
       errorRequestingChanges?.message ??
       errorRejecting?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [errorApprove, errorRequestingChanges, errorRejecting]);
 
   async function changeState() {
-    if (!comment) return;
+    if (!comment) {
+      return;
+    }
     switch (newCommentState) {
       case CommentState.Approved:
         await approveComment({
@@ -138,7 +137,7 @@ export function CommentStateChangeModal({
             }
           },
         });
-        setOpen(false);
+        onClose?.();
         break;
       case CommentState.PendingUserChanges:
         if (!rejectionReason) {
@@ -157,7 +156,7 @@ export function CommentStateChangeModal({
             }
           },
         });
-        setOpen(false);
+        onClose?.();
         break;
       case CommentState.Rejected:
         await rejectComment({
@@ -173,7 +172,7 @@ export function CommentStateChangeModal({
             }
           },
         });
-        setOpen(false);
+        onClose?.();
         break;
     }
   }
@@ -186,20 +185,7 @@ export function CommentStateChangeModal({
     );
   }, [comment.revisions]);
 
-  // handling the modal visibility
-  useEffect(() => {
-    if (comment && comment.state !== newCommentState) {
-      setOpen(true);
-    } else {
-      setOpen(false);
-    }
-  }, [newCommentState]);
-
-  useEffect(() => {
-    if (!open && onClose) {
-      onClose();
-    }
-  }, [open]);
+  const open = Boolean(comment) && comment.state !== newCommentState;
 
   const printUsername =
     comment?.user?.name ?
@@ -209,17 +195,13 @@ export function CommentStateChangeModal({
       )}`;
 
   return (
-    <Modal
+    <Dialog
+      fullWidth
       open={open}
-      size="sm"
-      overflow
+      maxWidth="sm"
     >
-      <Modal.Header onClose={() => setOpen(false)}>
-        <Modal.Title>
-          <div>{t(mapModalTitle(newCommentState))}</div>
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
+      <DialogTitle>{t(mapModalTitle(newCommentState))}</DialogTitle>
+      <DialogContent>
         <DescriptionList>
           <DescriptionListItem label={t('comments.panels.id')}>
             {comment?.id}
@@ -242,22 +224,27 @@ export function CommentStateChangeModal({
 
           {comment?.parentComment && (
             <DescriptionListItem label={t('comments.panels.parent')}>
-              <ParentCommentPanel bordered>
-                <>
-                  <div>
-                    {t('comments.panels.parentDate', {
-                      parentDate: new Date(comment.parentComment.createdAt),
-                    })}
-                  </div>
-                  <p>{printUsername}:</p>
+              <ParentCommentPanel>
+                <CardContent>
+                  <CardContent>
+                    <>
+                      <div>
+                        {t('comments.panels.parentDate', {
+                          parentDate: new Date(comment.parentComment.createdAt),
+                        })}
+                      </div>
+                      <Typography>{printUsername}:</Typography>
 
-                  {toPlaintext(
-                    comment.parentComment.revisions[
-                      comment.parentComment.revisions.length - 1
-                    ]?.text?.content
-                  )}
-                </>
+                      {toPlaintext(
+                        comment.parentComment.revisions[
+                          comment.parentComment.revisions.length - 1
+                        ]?.text?.content
+                      )}
+                    </>
+                  </CardContent>
+                </CardContent>
               </ParentCommentPanel>
+
               <IconWrapper>
                 <MdReplay rotate={180} />
               </IconWrapper>
@@ -275,79 +262,90 @@ export function CommentStateChangeModal({
                 : 'comments.panels.requestChangesReason'
               )}
             >
-              <Dropdown
-                title={t(
-                  rejectionReason ? mapRejectionReasonToLabel(rejectionReason)
-                  : newCommentState === CommentState.Rejected ?
-                    'comments.panels.rejectionReason'
-                  : 'comments.panels.requestChangesReason'
-                )}
-                placement="topEnd"
+              <ClickMenu
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                trigger={
+                  <Button
+                    variant="outlined"
+                    endIcon={<MdArrowDropDown />}
+                  >
+                    {t(
+                      rejectionReason ?
+                        mapRejectionReasonToLabel(rejectionReason)
+                      : newCommentState === CommentState.Rejected ?
+                        'comments.panels.rejectionReason'
+                      : 'comments.panels.requestChangesReason'
+                    )}
+                  </Button>
+                }
               >
-                <Dropdown.Item
-                  key={CommentRejectionReason.Spam}
-                  active={CommentRejectionReason.Spam === rejectionReason}
-                  onSelect={() =>
-                    setRejectionReason(CommentRejectionReason.Spam)
-                  }
-                >
-                  {t(mapRejectionReasonToLabel(CommentRejectionReason.Spam))}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  key={CommentRejectionReason.Misconduct}
-                  active={CommentRejectionReason.Misconduct === rejectionReason}
-                  onSelect={() => {
-                    setRejectionReason(CommentRejectionReason.Misconduct);
-                  }}
-                >
-                  {t(
-                    mapRejectionReasonToLabel(CommentRejectionReason.Misconduct)
-                  )}
-                </Dropdown.Item>
-              </Dropdown>
+                {close =>
+                  [
+                    CommentRejectionReason.Spam,
+                    CommentRejectionReason.Misconduct,
+                  ].map(reason => (
+                    <MenuItem
+                      key={reason}
+                      onClick={() => {
+                        setRejectionReason(reason);
+                        close();
+                      }}
+                    >
+                      {t(mapRejectionReasonToLabel(reason))}
+                    </MenuItem>
+                  ))
+                }
+              </ClickMenu>
             </DescriptionListItem>
           : null}
 
           <DescriptionListItem label={t('comments.panels.revisions')} />
-          <RevisionPanel bordered>
-            <Timeline align="left">
-              {sortedRevisions.length ?
-                sortedRevisions.map(({ text, createdAt }, index) => (
-                  <Timeline.Item
-                    key={`timeline-item-${index}`}
-                    className={index === 0 ? 'rs-timeline-item-last' : ''}
-                  >
-                    <div>
-                      {t('comments.panels.revisionCreatedAtDate', {
-                        revisionCreatedAtDate: new Date(createdAt),
-                      })}
-                    </div>
+          <RevisionPanel>
+            <CardContent>
+              <CardContent>
+                <Stack
+                  direction="column"
+                  spacing={2}
+                  divider={<Divider flexItem />}
+                >
+                  {sortedRevisions.map(({ text, createdAt }, index) => (
+                    <div key={`revision-${index}`}>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        component="div"
+                      >
+                        {t('comments.panels.revisionCreatedAtDate', {
+                          revisionCreatedAtDate: new Date(createdAt),
+                        })}
+                      </Typography>
 
-                    {toPlaintext(text?.content)}
-                  </Timeline.Item>
-                ))
-              : null}
-            </Timeline>
+                      {toPlaintext(text?.content)}
+                    </div>
+                  ))}
+                </Stack>
+              </CardContent>
+            </CardContent>
           </RevisionPanel>
         </DescriptionList>
-      </Modal.Body>
-      <Modal.Footer>
+      </DialogContent>
+      <DialogActions>
         <Button
+          variant="text"
+          onClick={() => onClose?.()}
+        >
+          {t('comments.panels.cancel')}
+        </Button>
+
+        <Button
+          variant="contained"
           disabled={isApproving || isRequestingChanges || isRejecting}
-          appearance={'primary'}
           onClick={async () => await changeState()}
         >
           {t(mapCommentActionToBtnTitle(newCommentState))}
         </Button>
-        <Button
-          onClick={() => {
-            setOpen(false);
-          }}
-          appearance="subtle"
-        >
-          {t('comments.panels.cancel')}
-        </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 }

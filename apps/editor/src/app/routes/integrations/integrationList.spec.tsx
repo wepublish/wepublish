@@ -28,7 +28,7 @@ const renderWith = (features: string[]) => {
   featuresQuery.mockReturnValue({ data: { features }, loading: false });
 
   return render(
-    <ThemeProvider theme={createTheme()}>
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
       <AuthContext.Provider value={session}>
         <FeaturesProvider>
           <MemoryRouter>

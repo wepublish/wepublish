@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import { DocumentListDocument } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
-import { SelectPicker } from 'rsuite';
+import { MenuItem, TextField } from '@mui/material';
 
 const PDF = 'application/pdf';
 
@@ -32,16 +32,23 @@ export function LetterAppendixPicker({
     }));
 
   return (
-    <SelectPicker
-      block
-      searchable={options.length > 8}
-      loading={loading}
-      data={options}
-      value={value}
-      onChange={next => onChange(next ?? null)}
-      // Same as the other pickers in the sticky header row.
-      popupStyle={{ zIndex: 100 }}
-      placeholder={t('mailTemplates.edit.letterAppendixNone')}
-    />
+    <TextField
+      select
+      fullWidth
+      disabled={loading && !options.length}
+      value={value ?? ''}
+      onChange={event => onChange(event.target.value || null)}
+      slotProps={{ select: { displayEmpty: true } }}
+    >
+      <MenuItem value="">{t('mailTemplates.edit.letterAppendixNone')}</MenuItem>
+      {options.map(option => (
+        <MenuItem
+          key={option.value}
+          value={option.value}
+        >
+          {option.label}
+        </MenuItem>
+      ))}
+    </TextField>
   );
 }
