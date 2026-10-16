@@ -41,6 +41,9 @@ import { LetterPreview } from '../mail-template/letter-preview';
 /** The tallest band the API accepts; mirrors the renderer's cap. */
 const BAND_MAX_MM = 40;
 
+/** Height of the header and footer code editors, in px. */
+const BAND_EDITOR_HEIGHT = 240;
+
 type Band = 'header' | 'footer';
 
 function LetterLayoutEdit() {
@@ -164,12 +167,13 @@ function LetterLayoutEdit() {
 
   const heightField = (
     label: string,
+    hint: string,
     value: number,
     onChange: (value: number) => void
   ) => (
     <Form.Group style={{ marginBottom: 0 }}>
       <Form.ControlLabel>
-        {label} <InfoTooltip text={t('letterLayouts.heightHint')} />
+        {label} <InfoTooltip text={hint} />
       </Form.ControlLabel>
       <InputNumber
         min={0}
@@ -210,11 +214,12 @@ function LetterLayoutEdit() {
       }
       style={{ flex: 1, minWidth: 360, background: 'var(--rs-bg-card)' }}
     >
-      <div style={{ height: 240 }}>
+      <div style={{ height: BAND_EDITOR_HEIGHT }}>
         <HtmlSourceEditor
           ref={ref}
           value={html}
           onChange={onChange}
+          minHeight={BAND_EDITOR_HEIGHT}
         />
       </div>
     </Panel>
@@ -274,11 +279,13 @@ function LetterLayoutEdit() {
             </Form.Group>
             {heightField(
               t('letterLayouts.headerHeight'),
+              t('letterLayouts.headerHeightHint'),
               headerHeightMm,
               setHeaderHeightMm
             )}
             {heightField(
               t('letterLayouts.footerHeight'),
+              t('letterLayouts.footerHeightHint'),
               footerHeightMm,
               setFooterHeightMm
             )}
