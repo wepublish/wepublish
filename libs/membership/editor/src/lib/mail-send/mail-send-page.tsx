@@ -74,6 +74,7 @@ import {
   toaster,
 } from 'rsuite';
 import { showErrors, useShowErrors } from '../common';
+import { DeliveryModeAudienceAction } from '../delivery-mode/delivery-mode-audience-action';
 import { useLetterChannel } from '../mail-template/use-letter-channel';
 import { mailErrorHelpKey } from './mail-log-common';
 import {
@@ -966,13 +967,16 @@ function MailSendPage() {
 
               {recipientSummary({
                 action: (
-                  <Button
-                    appearance="primary"
-                    disabled={!canSend}
-                    onClick={() => setConfirmOpen(true)}
-                  >
-                    <MdSend /> {t('mailSend.send')}
-                  </Button>
+                  <Stack spacing={8}>
+                    <DeliveryModeAudienceAction audience={audience} />
+                    <Button
+                      appearance="primary"
+                      disabled={!canSend}
+                      onClick={() => setConfirmOpen(true)}
+                    >
+                      <MdSend /> {t('mailSend.send')}
+                    </Button>
+                  </Stack>
                 ),
               })}
 

@@ -26,7 +26,7 @@ import {
 import {
   canReceiveLetters,
   LetterContext,
-  LetterPrintSettings,
+  printSettings,
   toLetterAddress,
 } from '@wepublish/letter/api';
 import {
@@ -71,23 +71,6 @@ const MAX_AUTO_RESUMES = 5;
 const INTERRUPTED_ERROR = 'Job was interrupted and will be continued.';
 const ABANDONED_ERROR =
   'Job was interrupted repeatedly and stopped. Continue it manually to send the remaining mails.';
-
-/** What a letter send falls back to when the editor picks no print options. */
-const DEFAULT_PRINT: LetterPrintSettings = {
-  addressPosition: 'left',
-  deliveryProduct: 'cheap',
-  printMode: 'simplex',
-  printSpectrum: 'grayscale',
-};
-
-function printSettings(print?: LetterPrintInput | null): LetterPrintSettings {
-  return {
-    addressPosition: print?.addressPosition ?? DEFAULT_PRINT.addressPosition,
-    deliveryProduct: print?.deliveryProduct ?? DEFAULT_PRINT.deliveryProduct,
-    printMode: print?.printMode ?? DEFAULT_PRINT.printMode,
-    printSpectrum: print?.printSpectrum ?? DEFAULT_PRINT.printSpectrum,
-  };
-}
 
 export interface MailSendJobCounts {
   total: number;

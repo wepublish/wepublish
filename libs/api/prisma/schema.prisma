@@ -1306,6 +1306,9 @@ model User {
   loginCodes                UserLoginCode[]
   emailQuality              UserEmailQuality?
   emailQualityEvents        EmailQualityEvent[]
+  deliveryPreference        UserDeliveryPreference?
+  deliverySuggestion        DeliverySuggestion?
+  deliveryPreferenceChanges UserDeliveryPreference[] @relation("DeliveryPreferenceChangedBy")
 
   @@index([createdAt])
   @@map("users")
@@ -1594,6 +1597,8 @@ model SubscriptionInterval {
   daysAwayFromEnding Int?              @db.SmallInt
   mailTemplate       MailTemplate?     @relation(fields: [mailTemplateId], references: [id])
   mailTemplateId     String?
+  /// Users in letter mode get this event printed; everyone else still gets the mail.
+  sendAsLetter       Boolean           @default(false)
 
   subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
   subscriptionFlowId String
@@ -1952,6 +1957,12 @@ model SettingLetterProvider {
 
   autoSend                 Boolean @default(false)
   placeholderEmailContains String?
+
+  /// How letters nobody chose print options for are printed (automated sends).
+  defaultAddressPosition LetterAddressPosition?
+  defaultDeliveryProduct LetterDeliveryProduct?
+  defaultPrintMode       LetterPrintMode?
+  defaultPrintSpectrum   LetterPrintSpectrum?
 
   @@map("settings.letterprovider")
 }
@@ -2617,4 +2628,53 @@ model UserEmailQuality {
 
   @@index([level])
   @@map("user_email_quality")
+}
+
+enum DeliveryPreferenceOrigin {
+  /// Set by an admin; final until an admin changes it.
+  manual
+  /// Set by confirming a suggestion; may be suggested back.
+  suggestion
+}
+
+/// How automated subscription mails reach this user. No row means mail.
+model UserDeliveryPreference {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  channel MailChannel
+  origin  DeliveryPreferenceOrigin
+  /// Why, e.g. `emailQuality:dead`, `placeholderEmail` or `bulk`.
+  reason  String?
+
+  changedByUserId String?
+  changedBy       User?    @relation("DeliveryPreferenceChangedBy", fields: [changedByUserId], references: [id], onDelete: SetNull)
+  changedAt       DateTime @db.Timestamptz(3)
+
+  @@index([channel, origin])
+  @@map("user_delivery_preferences")
+}
+
+enum DeliverySuggestionKind {
+  toLetter
+  toMail
+}
+
+/// Open suggestions to change a user's delivery mode, rebuilt nightly as a set.
+model DeliverySuggestion {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  kind   DeliverySuggestionKind
+  reason String
+
+  @@index([kind])
+  @@map("user_delivery_suggestions")
 }

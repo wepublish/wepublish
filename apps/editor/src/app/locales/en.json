@@ -1507,6 +1507,8 @@
       "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal."
     },
     "mailTemplateSelect": {
+      "sendAsLetter": "also as letter",
+      "sendAsLetterHint": "People with delivery by letter get this message printed instead of emailed.",
       "noMailSentSelectNow": "Do not send an email"
     },
     "memberPlanEdit": {
@@ -1569,7 +1571,63 @@
       "title": "Subscription Plans",
       "paymentProviderStatusInfo": "✅ means every payment method of this plan is connected to a payment provider. ❌ means at least one payment method has no provider, so readers cannot pay with it."
     },
+    "deliveryMode": {
+      "panelTitle": "Delivery of automated messages",
+      "channel": {
+        "mail": "By email",
+        "letter": "By letter"
+      },
+      "origin": {
+        "manual": "Switched by hand",
+        "suggestion": "Switched from a suggestion"
+      },
+      "reason": {
+        "emailQuality_dead": "Email address dead",
+        "placeholderEmail": "Placeholder address",
+        "bulk": "Audience",
+        "emailQuality_active": "Email address active again"
+      },
+      "noAddress": "No usable postal address – letters are not possible.",
+      "switchToLetter": "Switch to letters",
+      "switchToMail": "Switch to email",
+      "suggestionsTitle": "Delivery suggestions",
+      "suggestionsIntro": "Who should get letters because of a dead or placeholder address, and who could get emails again. Nothing changes without a confirmation.",
+      "kind": {
+        "toLetter": "To letters ({{count}})",
+        "toMail": "Back to email ({{count}})"
+      },
+      "recompute": "Recompute now",
+      "recomputed": "Recomputed: {{toLetter}} to letters, {{toMail}} back to email, {{removed}} settled.",
+      "confirm": "Confirm",
+      "confirmAll": "Confirm all ({{count}})",
+      "confirmAllTitle": "Confirm all suggestions",
+      "confirmAllText": {
+        "toLetter": "{{count}} people will get their automated messages as letters from now on.",
+        "toMail": "{{count}} people will get their automated messages by email again."
+      },
+      "confirmAllYes": "Yes, confirm all",
+      "confirmedAll": "{{confirmed}} confirmed, {{skipped}} no longer applied.",
+      "table": {
+        "user": "Person",
+        "emailQuality": "Email status",
+        "reason": "Reason",
+        "since": "Suggested since"
+      },
+      "audience": {
+        "open": "Change delivery of the audience",
+        "title": "Change delivery of the audience",
+        "intro": "Everyone in the chosen audience will get their automated messages this way from now on:",
+        "previewLetter": "{{userCount}} people; {{withoutAddressCount}} of them without a usable address will be skipped.",
+        "previewMail": "{{userCount}} people.",
+        "apply": "Switch",
+        "done": {
+          "letter": "{{changed}} switched to letters, {{skippedWithoutAddress}} skipped without address.",
+          "mail": "{{changed}} switched to email."
+        }
+      }
+    },
     "navbar": {
+      "deliverySuggestions": "Letter suggestions",
       "articles": "Articles",
       "authors": "Authors",
       "banners": "Banners",
@@ -3050,7 +3108,11 @@
         "organisationId": "Organisation ID",
         "webhookSigningKey": "Webhook Signing Key",
         "autoSend": "Send letters automatically",
-        "placeholderEmailContains": "Placeholder email contains"
+        "placeholderEmailContains": "Placeholder email contains",
+        "defaultAddressPosition": "Address window (automated letters)",
+        "defaultDeliveryProduct": "Delivery (automated letters)",
+        "defaultPrintMode": "Print (automated letters)",
+        "defaultPrintSpectrum": "Colour (automated letters)"
       },
       "mailSettings": {
         "type": "Type",

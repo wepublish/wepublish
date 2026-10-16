@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import {
   EmailQualityEventSource,
+  MailChannel,
   MailLogState,
   MailLogType,
   PrismaClient,
@@ -14,6 +15,7 @@ import {
   qualityTypeForRejectReason,
   recordEmailQualitySafely,
 } from './email-quality-recorder';
+import { LetterDeliveryError, LetterRecipient } from './letter-sender';
 
 export enum mailLogType {
   SubscriptionFlow,
@@ -48,6 +50,12 @@ export type MailControllerConfig = {
    * needs to reference the entry regardless of how the delivery turns out.
    */
   mailLogId?: string;
+  /**
+   * This event is switched to letters: a recipient in letter mode gets it
+   * printed instead of mailed. Only subscription-flow senders set it; a login
+   * link or a password reset is no use on paper.
+   */
+  asLetter?: boolean;
 };
 
 export class MailController {
@@ -90,7 +98,7 @@ export class MailController {
    * Build the data for passing it to the mail templates
    * @returns a HashMap of configuration data
    */
-  private async buildData() {
+  private async buildData(purlOrigin: 'mail' | 'letter' = 'mail') {
     const template = await this.prismaService.mailTemplate.findUnique({
       where: { id: this.config.mailTemplateId },
       select: { subject: true, htmlContent: true, textContent: true },
@@ -101,7 +109,7 @@ export class MailController {
       optionalData: this.config.optionalData,
       jwtOverride: this.config.jwtOverride,
       mode: 'send',
-      purlOrigin: 'mail',
+      purlOrigin,
       mintJwt: !template || templateUsesJwt(template),
     });
   }
@@ -124,6 +132,20 @@ export class MailController {
     const mailLogId = this.config.mailLogId ?? randomUUID();
     const recipientEmail =
       this.config.recipientEmailOverride ?? this.config.recipient.email;
+
+    // Before the placeholder check: a placeholder address is exactly who a
+    // letter is for.
+    const letterRecipient = await this.resolveLetterRecipient(mailLogId);
+
+    if (letterRecipient === 'handled') {
+      return;
+    }
+
+    if (letterRecipient) {
+      await this.sendAsLetter(mailLogId, letterRecipient);
+
+      return;
+    }
 
     if (await this.mailContext.isPlaceholderEmail(recipientEmail)) {
       this.logger.warn(
@@ -194,17 +216,118 @@ export class MailController {
     );
   }
 
+  /**
+   * The user with their address when this send goes to paper: the event is
+   * switched to letters, the user prefers them, and letters can be printed.
+   * Anything missing means the mail goes out as usual — except a placeholder
+   * address without a usable postal one, which can be reached neither way;
+   * that is logged and `handled`.
+   */
+  private async resolveLetterRecipient(
+    mailLogId: string
+  ): Promise<LetterRecipient | 'handled' | null> {
+    const sender = this.mailContext.letterSender;
+
+    if (!this.config.asLetter || !sender) {
+      return null;
+    }
+
+    const preference =
+      await this.prismaService.userDeliveryPreference.findUnique({
+        where: { userId: this.config.recipient.id },
+      });
+
+    if (preference?.channel !== MailChannel.letter) {
+      return null;
+    }
+
+    if (!(await sender.isConfigured())) {
+      this.logger.warn(
+        `No letter integration is configured; mailing <${this.config.recipient.email}> instead.`
+      );
+
+      return null;
+    }
+
+    // The callers hand in a bare user; the address lives in its own row.
+    const user = await this.prismaService.user.findUnique({
+      where: { id: this.config.recipient.id },
+      include: { address: true },
+    });
+
+    if (!user || !sender.canReceiveLetters(user)) {
+      if (
+        await this.mailContext.isPlaceholderEmail(this.config.recipient.email)
+      ) {
+        this.logger.warn(
+          `<${this.config.recipient.email}> prefers letters but has no usable postal address and no real email.`
+        );
+        await this.writeLog(
+          mailLogId,
+          MailLogState.rejected,
+          null,
+          'LETTER_ADDRESS_UNUSABLE',
+          undefined,
+          MailChannel.letter
+        );
+
+        return 'handled';
+      }
+
+      this.logger.warn(
+        `<${this.config.recipient.email}> prefers letters but has no usable postal address; mailing instead.`
+      );
+
+      return null;
+    }
+
+    return user;
+  }
+
+  /**
+   * Print instead of mail. The letter side writes the log entry, submitted or
+   * rejected, under the same identifier a mail would get, so a retried run
+   * recognises it.
+   */
+  private async sendAsLetter(
+    mailLogId: string,
+    recipient: LetterRecipient
+  ): Promise<void> {
+    try {
+      await this.mailContext.letterSender!.sendLetter({
+        mailTemplateId: this.config.mailTemplateId,
+        recipient,
+        data: await this.buildData('letter'),
+        mailLogId,
+        mailSendJobId: this.config.mailSendJobId,
+        log: {
+          mailIdentifier: this.generateMailIdentifier(),
+          type: MAIL_LOG_TYPE_MAP[this.config.mailType],
+        },
+      });
+    } catch (error) {
+      throw new LetterDeliveryError(
+        `Letter <${mailLogId}> for <${this.config.recipient.email}> failed: ${
+          (error as Error).message
+        }`,
+        error
+      );
+    }
+  }
+
   private async writeLog(
     mailLogId: string,
     state: MailLogState,
     subject: string | null,
     error: string | null,
-    providerMessageID?: string
+    providerMessageID?: string,
+    channel: MailChannel = MailChannel.mail
   ): Promise<void> {
     try {
       await this.prismaService.mailLog.create({
         data: {
           id: mailLogId,
+          channel,
           recipient: {
             connect: {
               id: this.config.recipient.id,

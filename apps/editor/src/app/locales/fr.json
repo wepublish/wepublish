@@ -1506,6 +1506,8 @@
       "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel."
     },
     "mailTemplateSelect": {
+      "sendAsLetter": "aussi par lettre",
+      "sendAsLetterHint": "Les personnes avec distribution par lettre reçoivent ce message imprimé au lieu de l’e-mail.",
       "noMailSentSelectNow": "Ne pas envoyer d’e-mail"
     },
     "memberPlanEdit": {
@@ -1568,7 +1570,63 @@
       "editFlowShort": "Flux de communication",
       "paymentProviderStatusInfo": "✅ signifie que tous les moyens de paiement de ce plan sont reliés à un prestataire de paiement. ❌ signifie qu’au moins un moyen de paiement n’a pas de prestataire et que les lecteur·rice·s ne peuvent donc pas payer avec."
     },
+    "deliveryMode": {
+      "panelTitle": "Distribution des messages automatiques",
+      "channel": {
+        "mail": "Par e-mail",
+        "letter": "Par lettre"
+      },
+      "origin": {
+        "manual": "Changé manuellement",
+        "suggestion": "Changé suite à une suggestion"
+      },
+      "reason": {
+        "emailQuality_dead": "Adresse e-mail morte",
+        "placeholderEmail": "Adresse fictive",
+        "bulk": "Public cible",
+        "emailQuality_active": "Adresse e-mail à nouveau active"
+      },
+      "noAddress": "Pas d’adresse postale utilisable – les lettres ne sont pas possibles.",
+      "switchToLetter": "Passer aux lettres",
+      "switchToMail": "Passer à l’e-mail",
+      "suggestionsTitle": "Suggestions de distribution",
+      "suggestionsIntro": "Qui devrait recevoir des lettres à cause d’une adresse morte ou fictive, et qui pourrait à nouveau recevoir des e-mails. Rien ne change sans confirmation.",
+      "kind": {
+        "toLetter": "Vers les lettres ({{count}})",
+        "toMail": "Retour à l’e-mail ({{count}})"
+      },
+      "recompute": "Recalculer maintenant",
+      "recomputed": "Recalculé : {{toLetter}} vers les lettres, {{toMail}} retour à l’e-mail, {{removed}} réglés.",
+      "confirm": "Confirmer",
+      "confirmAll": "Tout confirmer ({{count}})",
+      "confirmAllTitle": "Confirmer toutes les suggestions",
+      "confirmAllText": {
+        "toLetter": "{{count}} personnes recevront désormais leurs messages automatiques par lettre.",
+        "toMail": "{{count}} personnes recevront à nouveau leurs messages automatiques par e-mail."
+      },
+      "confirmAllYes": "Oui, tout confirmer",
+      "confirmedAll": "{{confirmed}} confirmées, {{skipped}} ne s’appliquaient plus.",
+      "table": {
+        "user": "Personne",
+        "emailQuality": "Statut e-mail",
+        "reason": "Raison",
+        "since": "Suggéré depuis"
+      },
+      "audience": {
+        "open": "Changer la distribution du public cible",
+        "title": "Changer la distribution du public cible",
+        "intro": "Toutes les personnes du public cible choisi recevront désormais leurs messages automatiques ainsi :",
+        "previewLetter": "{{userCount}} personnes ; {{withoutAddressCount}} d’entre elles sans adresse utilisable seront ignorées.",
+        "previewMail": "{{userCount}} personnes.",
+        "apply": "Changer",
+        "done": {
+          "letter": "{{changed}} passées aux lettres, {{skippedWithoutAddress}} ignorées sans adresse.",
+          "mail": "{{changed}} passées à l’e-mail."
+        }
+      }
+    },
     "navbar": {
+      "deliverySuggestions": "Suggestions de lettres",
       "articles": "Articles",
       "authors": "Auteur·trice·s",
       "commentRating": "Système d’évaluation",
@@ -3143,7 +3201,11 @@
         "organisationId": "ID d’organisation",
         "webhookSigningKey": "Clé de signature du webhook",
         "autoSend": "Envoyer les lettres automatiquement",
-        "placeholderEmailContains": "L’e-mail de substitution contient"
+        "placeholderEmailContains": "L’e-mail de substitution contient",
+        "defaultAddressPosition": "Fenêtre d’adresse (lettres automatiques)",
+        "defaultDeliveryProduct": "Distribution (lettres automatiques)",
+        "defaultPrintMode": "Impression (lettres automatiques)",
+        "defaultPrintSpectrum": "Couleur (lettres automatiques)"
       }
     },
     "websiteSettings": {

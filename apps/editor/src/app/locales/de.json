@@ -1506,6 +1506,8 @@
       "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die Daten der jeweiligen Person ersetzt, z. B. durch ihren Vornamen. So wird jede E-Mail persönlich."
     },
     "mailTemplateSelect": {
+      "sendAsLetter": "auch als Brief",
+      "sendAsLetterHint": "Personen mit Zustellung per Brief bekommen diese Mitteilung gedruckt statt per E-Mail.",
       "noMailSentSelectNow": "Keine E-Mail senden"
     },
     "memberPlanEdit": {
@@ -1568,7 +1570,63 @@
       "title": "Abo-Pläne",
       "paymentProviderStatusInfo": "✅ heisst, alle Zahlungsmethoden dieses Abo-Plans sind mit einem Zahlungsanbieter verbunden. ❌ heisst, mindestens einer Zahlungsmethode fehlt der Anbieter – damit können Leser:innen nicht bezahlen."
     },
+    "deliveryMode": {
+      "panelTitle": "Zustellung automatischer Mitteilungen",
+      "channel": {
+        "mail": "Per E-Mail",
+        "letter": "Per Brief"
+      },
+      "origin": {
+        "manual": "Von Hand umgestellt",
+        "suggestion": "Nach Vorschlag umgestellt"
+      },
+      "reason": {
+        "emailQuality_dead": "E-Mail-Adresse tot",
+        "placeholderEmail": "Platzhalter-Adresse",
+        "bulk": "Zielgruppe",
+        "emailQuality_active": "E-Mail-Adresse wieder aktiv"
+      },
+      "noAddress": "Keine brieftaugliche Postadresse – Briefe sind nicht möglich.",
+      "switchToLetter": "Auf Brief umstellen",
+      "switchToMail": "Auf E-Mail umstellen",
+      "suggestionsTitle": "Vorschläge zur Zustellung",
+      "suggestionsIntro": "Wer wegen einer toten oder Platzhalter-Adresse Briefe bekommen sollte, und wer wieder E-Mails bekommen könnte. Nichts ändert sich ohne Bestätigung.",
+      "kind": {
+        "toLetter": "Auf Brief ({{count}})",
+        "toMail": "Zurück auf E-Mail ({{count}})"
+      },
+      "recompute": "Jetzt neu berechnen",
+      "recomputed": "Neu berechnet: {{toLetter}} auf Brief, {{toMail}} zurück auf E-Mail, {{removed}} erledigt.",
+      "confirm": "Bestätigen",
+      "confirmAll": "Alle bestätigen ({{count}})",
+      "confirmAllTitle": "Alle Vorschläge bestätigen",
+      "confirmAllText": {
+        "toLetter": "{{count}} Personen bekommen ihre automatischen Mitteilungen künftig als Brief.",
+        "toMail": "{{count}} Personen bekommen ihre automatischen Mitteilungen wieder per E-Mail."
+      },
+      "confirmAllYes": "Ja, alle bestätigen",
+      "confirmedAll": "{{confirmed}} bestätigt, {{skipped}} galten nicht mehr.",
+      "table": {
+        "user": "Person",
+        "emailQuality": "E-Mail-Status",
+        "reason": "Grund",
+        "since": "Vorgeschlagen seit"
+      },
+      "audience": {
+        "open": "Zustellung der Zielgruppe ändern",
+        "title": "Zustellung der Zielgruppe ändern",
+        "intro": "Alle Personen der gewählten Zielgruppe bekommen ihre automatischen Mitteilungen künftig so:",
+        "previewLetter": "{{userCount}} Personen; {{withoutAddressCount}} davon ohne brieftaugliche Adresse werden übersprungen.",
+        "previewMail": "{{userCount}} Personen.",
+        "apply": "Umstellen",
+        "done": {
+          "letter": "{{changed}} auf Brief umgestellt, {{skippedWithoutAddress}} ohne Adresse übersprungen.",
+          "mail": "{{changed}} auf E-Mail umgestellt."
+        }
+      }
+    },
     "navbar": {
+      "deliverySuggestions": "Brief-Vorschläge",
       "articles": "Artikel",
       "authors": "Autor*innen",
       "banners": "Banner",
@@ -2984,7 +3042,11 @@
         "organisationId": "Organisations-ID",
         "webhookSigningKey": "Webhook Signing Key",
         "autoSend": "Briefe automatisch versenden",
-        "placeholderEmailContains": "Platzhalter-E-Mail enthält"
+        "placeholderEmailContains": "Platzhalter-E-Mail enthält",
+        "defaultAddressPosition": "Adressfenster (automatische Briefe)",
+        "defaultDeliveryProduct": "Zustellung (automatische Briefe)",
+        "defaultPrintMode": "Druck (automatische Briefe)",
+        "defaultPrintSpectrum": "Farbe (automatische Briefe)"
       },
       "mailSettings": {
         "type": "Typ",

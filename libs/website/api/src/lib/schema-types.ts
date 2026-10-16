@@ -1047,6 +1047,72 @@ export type DeletePollVotesResult = {
   count: Scalars['Int']['output'];
 };
 
+export type DeliveryModeAudiencePreview = {
+  __typename: 'DeliveryModeAudiencePreview';
+  /** People in the audience. */
+  userCount: Scalars['Int']['output'];
+  /** People without a usable postal address; they are skipped when moving to letters. */
+  withoutAddressCount: Scalars['Int']['output'];
+};
+
+export type DeliveryModeBulkResult = {
+  __typename: 'DeliveryModeBulkResult';
+  changed: Scalars['Int']['output'];
+  skippedWithoutAddress: Scalars['Int']['output'];
+};
+
+/** manual: set by an admin, final until an admin changes it. suggestion: set by confirming a suggestion, may be suggested back. */
+export enum DeliveryPreferenceOrigin {
+  Manual = 'manual',
+  Suggestion = 'suggestion'
+}
+
+export type DeliverySuggestionConfirmAllResult = {
+  __typename: 'DeliverySuggestionConfirmAllResult';
+  confirmed: Scalars['Int']['output'];
+  /** Suggestions that no longer applied. */
+  skipped: Scalars['Int']['output'];
+};
+
+export type DeliverySuggestionCounts = {
+  __typename: 'DeliverySuggestionCounts';
+  toLetter: Scalars['Int']['output'];
+  toMail: Scalars['Int']['output'];
+};
+
+export type DeliverySuggestionEmailQuality = {
+  __typename: 'DeliverySuggestionEmailQuality';
+  level: EmailQualityLevel;
+  reason: Scalars['String']['output'];
+  since: Scalars['DateTime']['output'];
+};
+
+/** toLetter: move to printed letters. toMail: move back to mail. */
+export enum DeliverySuggestionKind {
+  ToLetter = 'toLetter',
+  ToMail = 'toMail'
+}
+
+export type DeliverySuggestionModel = {
+  __typename: 'DeliverySuggestionModel';
+  /** Suggested since. */
+  createdAt: Scalars['DateTime']['output'];
+  emailQuality?: Maybe<DeliverySuggestionEmailQuality>;
+  id: Scalars['String']['output'];
+  kind: DeliverySuggestionKind;
+  /** Why, e.g. emailQuality:dead or placeholderEmail. */
+  reason: Scalars['String']['output'];
+  user: MailLogRecipient;
+};
+
+export type DeliverySuggestionRecomputeResult = {
+  __typename: 'DeliverySuggestionRecomputeResult';
+  /** Suggestions that no longer apply. */
+  removed: Scalars['Int']['output'];
+  toLetter: Scalars['Int']['output'];
+  toMail: Scalars['Int']['output'];
+};
+
 export type DiscountCode = HasMemberPlanLc & {
   __typename: 'DiscountCode';
   code: Scalars['String']['output'];
@@ -2899,8 +2965,12 @@ export type Mutation = {
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
+  /** Apply every open suggestion of a direction */
+  confirmAllDeliverySuggestions: DeliverySuggestionConfirmAllResult;
   /** Confirms that the manual action required by a changelog entry has been completed. Requires the permission to update settings. */
   confirmChangelogEntry: ChangelogEntry;
+  /** Apply one suggestion; refused when it no longer holds */
+  confirmDeliverySuggestion: Scalars['Boolean']['output'];
   /** Confirms a pending email change with the token from the confirmation email. */
   confirmEmailChange: SensitiveDataUser;
   /** Confirms a notification for the whole instance, recording who confirmed it. Requires authentication. */
@@ -3154,6 +3224,8 @@ export type Mutation = {
   reactivateSubscription: PublicSubscription;
   /** Removes the cancellation of one of the authenticated user's own subscriptions. If the subscription is no longer paid for, a new invoice is created. */
   reactivateUserSubscription: PublicSubscription;
+  /** Rebuild the suggestions now instead of waiting for the night */
+  recomputeDeliverySuggestions: DeliverySuggestionRecomputeResult;
   /** Pull late delivery states from the mail provider, then re-evaluate everyone's email quality. The nightly job does the same; this is for looking at a campaign's result now. */
   refreshEmailQuality: EmailQualityRefreshModel;
   /** This mutation registers a new member by providing name, email, and other required information. */
@@ -3205,6 +3277,10 @@ export type Mutation = {
   sendTestMailTemplate?: Maybe<Scalars['Boolean']['output']>;
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String']['output'];
+  /** Switch everyone in an audience; letters skip people without a usable address */
+  setDeliveryModeForAudience: DeliveryModeBulkResult;
+  /** Switch a user between mailed and printed subscription mails */
+  setUserDeliveryMode: UserDeliveryPreferenceModel;
   /** Ask the mail provider for the current delivery state of mails that are still open. Complements the provider webhook, which is not reachable in local development. */
   syncMailLogStates: MailLogSyncModel;
   /** Sends a test email for the given event */
@@ -3376,9 +3452,19 @@ export type MutationCancelUserSubscriptionArgs = {
 };
 
 
+export type MutationConfirmAllDeliverySuggestionsArgs = {
+  kind: DeliverySuggestionKind;
+};
+
+
 export type MutationConfirmChangelogEntryArgs = {
   id: Scalars['String']['input'];
   locale?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationConfirmDeliverySuggestionArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -3574,6 +3660,10 @@ export type MutationCreateLetterProviderSettingArgs = {
   autoSend?: InputMaybe<Scalars['Boolean']['input']>;
   clientId?: InputMaybe<Scalars['String']['input']>;
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  defaultAddressPosition?: InputMaybe<LetterAddressPosition>;
+  defaultDeliveryProduct?: InputMaybe<LetterDeliveryProduct>;
+  defaultPrintMode?: InputMaybe<LetterPrintMode>;
+  defaultPrintSpectrum?: InputMaybe<LetterPrintSpectrum>;
   environment?: InputMaybe<LetterProviderEnvironment>;
   id: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
@@ -3828,6 +3918,7 @@ export type MutationCreateSubscriptionIntervalArgs = {
   daysAwayFromEnding?: InputMaybe<Scalars['Int']['input']>;
   event: SubscriptionEvent;
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  sendAsLetter?: InputMaybe<Scalars['Boolean']['input']>;
   subscriptionFlowId: Scalars['String']['input'];
 };
 
@@ -4391,6 +4482,19 @@ export type MutationSendWebsiteLoginArgs = {
 };
 
 
+export type MutationSetDeliveryModeForAudienceArgs = {
+  audience: MailAudienceInput;
+  channel: MailChannel;
+};
+
+
+export type MutationSetUserDeliveryModeArgs = {
+  channel: MailChannel;
+  reason?: InputMaybe<Scalars['String']['input']>;
+  userId: Scalars['String']['input'];
+};
+
+
 export type MutationSyncMailLogStatesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -4629,6 +4733,10 @@ export type MutationUpdateLetterProviderSettingArgs = {
   autoSend?: InputMaybe<Scalars['Boolean']['input']>;
   clientId?: InputMaybe<Scalars['String']['input']>;
   clientSecret?: InputMaybe<Scalars['String']['input']>;
+  defaultAddressPosition?: InputMaybe<LetterAddressPosition>;
+  defaultDeliveryProduct?: InputMaybe<LetterDeliveryProduct>;
+  defaultPrintMode?: InputMaybe<LetterPrintMode>;
+  defaultPrintSpectrum?: InputMaybe<LetterPrintSpectrum>;
   environment?: InputMaybe<LetterProviderEnvironment>;
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -4868,6 +4976,7 @@ export type MutationUpdateSubscriptionIntervalArgs = {
   daysAwayFromEnding?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['String']['input'];
   mailTemplateId?: InputMaybe<Scalars['String']['input']>;
+  sendAsLetter?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -5260,6 +5369,12 @@ export type PaginatedComments = {
   __typename: 'PaginatedComments';
   nodes: Array<Comment>;
   pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedDeliverySuggestions = {
+  __typename: 'PaginatedDeliverySuggestions';
+  nodes: Array<DeliverySuggestionModel>;
   totalCount: Scalars['Int']['output'];
 };
 
@@ -6044,6 +6159,12 @@ export type Query = {
    *
    */
   dailySubscriptionStats: Array<DailySubscriptionStats>;
+  /** What switching an audience's delivery mode would touch */
+  deliveryModeAudiencePreview: DeliveryModeAudiencePreview;
+  /** How many suggestions are open, per direction */
+  deliverySuggestionCounts: DeliverySuggestionCounts;
+  /** Open suggestions to move users to letters or back to mail */
+  deliverySuggestions: PaginatedDeliverySuggestions;
   /** Returns an discountCode by id or discountCode. */
   discountCode: DiscountCode;
   /** This query returns a list of discountCodes */
@@ -6331,6 +6452,8 @@ export type Query = {
    *
    */
   userConsents: Array<UserConsent>;
+  /** How a user's automated subscription mails are delivered */
+  userDeliveryPreference: UserDeliveryPreferenceModel;
   /** Get all invoices for the authenticated user */
   userInvoices: Array<Invoice>;
   /** The current personal login link of a user, without the code itself. */
@@ -6534,6 +6657,19 @@ export type QueryDailySubscriptionStatsArgs = {
   end?: InputMaybe<Scalars['DateTime']['input']>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']['input']>>;
   start: Scalars['DateTime']['input'];
+};
+
+
+export type QueryDeliveryModeAudiencePreviewArgs = {
+  audience: MailAudienceInput;
+  channel: MailChannel;
+};
+
+
+export type QueryDeliverySuggestionsArgs = {
+  kind: DeliverySuggestionKind;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -7150,6 +7286,11 @@ export type QueryUserConsentsArgs = {
 };
 
 
+export type QueryUserDeliveryPreferenceArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
 export type QueryUserLoginCodeArgs = {
   userId: Scalars['String']['input'];
 };
@@ -7412,6 +7553,10 @@ export type SettingLetterProvider = SettingProvider & {
   autoSend: Scalars['Boolean']['output'];
   clientId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  defaultAddressPosition?: Maybe<LetterAddressPosition>;
+  defaultDeliveryProduct?: Maybe<LetterDeliveryProduct>;
+  defaultPrintMode?: Maybe<LetterPrintMode>;
+  defaultPrintSpectrum?: Maybe<LetterPrintSpectrum>;
   environment: LetterProviderEnvironment;
   id: Scalars['String']['output'];
   lastLoadedAt: Scalars['DateTime']['output'];
@@ -7869,6 +8014,8 @@ export type SubscriptionInterval = {
   event: SubscriptionEvent;
   id: Scalars['String']['output'];
   mailTemplate?: Maybe<MailTemplateRef>;
+  /** Users in letter mode get this event printed instead of mailed. */
+  sendAsLetter: Scalars['Boolean']['output'];
 };
 
 export type SubscriptionPeriod = {
@@ -8298,6 +8445,18 @@ export type UserCreatedAction = BaseAction & HasUserLc & {
   date: Scalars['DateTime']['output'];
   user: User;
   userId: Scalars['String']['output'];
+};
+
+export type UserDeliveryPreferenceModel = {
+  __typename: 'UserDeliveryPreferenceModel';
+  /** Whether the postal address is complete enough for letters; letters cannot be chosen otherwise. */
+  canReceiveLetters: Scalars['Boolean']['output'];
+  changedAt?: Maybe<Scalars['DateTime']['output']>;
+  changedBy?: Maybe<MailLogRecipient>;
+  /** How automated subscription mails reach this user. */
+  channel: MailChannel;
+  origin?: Maybe<DeliveryPreferenceOrigin>;
+  reason?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserEmailQualityModel = {
