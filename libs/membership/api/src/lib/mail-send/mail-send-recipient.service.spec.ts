@@ -1616,8 +1616,10 @@ describe('audience filtering by mail history', () => {
   });
 
   it('combines with the email segments', async () => {
+    // Segments load the placeholder patterns from both of their sources.
     const prisma = {
       user: { count: vi.fn(async () => 0) },
+      setting: { findUnique: vi.fn(async () => null) },
       settingLetterProvider: { findMany: vi.fn(async () => []) },
     };
 
