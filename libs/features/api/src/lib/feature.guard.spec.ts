@@ -2,21 +2,18 @@ import { ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { GUARDS_METADATA } from '@nestjs/common/constants';
 import { Reflector } from '@nestjs/core';
 import { ONE_OF_METADATA_KEY } from '@wepublish/nest-modules';
-import type { FeatureKey } from '@wepublish/features';
 import type { Mock } from 'vitest';
 import { Feature } from './feature.decorator';
 import { FeatureGuard } from './feature.guard';
 import { FeaturesService } from './features.service';
 
-const key = (value: string) => value as FeatureKey;
-
 class Resolver {
-  @Feature(key('newsletter'))
+  @Feature('newsletter')
   gated() {
     return true;
   }
 
-  @Feature(key('newsletter'), key('print-export'))
+  @Feature('newsletter', 'print-export')
   doublyGated() {
     return true;
   }
@@ -26,7 +23,7 @@ class Resolver {
   }
 }
 
-@Feature(key('newsletter'))
+@Feature('newsletter')
 class GatedResolver {
   anything() {
     return true;
