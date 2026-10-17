@@ -108,6 +108,11 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
 - Website components are built through the **Website Builder** — get shared
   components from `useWebsiteBuilder()` rather than importing them directly, so
   tenants can override them.
+- Website components read the router through `BuilderRouterContext` (provided by
+  `withBuilderRouter`), never `next/router` directly. UI that must close on a
+  route change — navbars, menus, overlays — calls `useCloseOnNavigation(close)`
+  from `@wepublish/website/builder` instead of hanging `onClick` handlers on
+  every link; `useBuilderRouterEvent` covers the other router events.
 - Every new website component needs a Storybook story; stories are how these
   components are tested. See [testing.md](testing.md).
 - Forms use React Hook Form with Zod resolvers. Icons come from React Icons.

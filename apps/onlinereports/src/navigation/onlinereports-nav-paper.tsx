@@ -61,12 +61,10 @@ export const NavPaperStructure = styled(NavStructure)`
 
 type OnlineReportsNavCategoryProps = {
   navigation: FullNavigationFragment;
-  closeMenu: () => void;
 };
 
 export const NavigationCategory = ({
   navigation: nav,
-  closeMenu,
 }: OnlineReportsNavCategoryProps) => {
   const theme = useTheme();
   const subItemsToggle = useToggle();
@@ -91,7 +89,6 @@ export const NavigationCategory = ({
                 color="inherit"
                 underline="none"
                 css={navPaperLinkStyling(theme)}
-                onClick={closeMenu}
               >
                 <NavigationSubItem>{link.label}</NavigationSubItem>
               </Link>
@@ -129,7 +126,6 @@ export const OnlineReportsNavPaper = ({
               <Link
                 href="/search"
                 color="inherit"
-                onClick={closeMenu}
               >
                 <IconButton
                   size="large"
@@ -145,7 +141,6 @@ export const OnlineReportsNavPaper = ({
               <IconButton
                 size="large"
                 aria-label="Menu"
-                onClick={closeMenu}
                 color={'inherit'}
               >
                 <MdClose />
@@ -159,7 +154,6 @@ export const OnlineReportsNavPaper = ({
                 <NavigationCategory
                   key={nav.id}
                   navigation={nav}
-                  closeMenu={closeMenu}
                 />
               ))}
             {main?.links.map((link, index) => {
@@ -170,9 +164,7 @@ export const OnlineReportsNavPaper = ({
                   href={url}
                   color="inherit"
                 >
-                  <NavigationTopItem onClick={closeMenu}>
-                    {link.label}
-                  </NavigationTopItem>
+                  <NavigationTopItem>{link.label}</NavigationTopItem>
                 </Link>
               );
             })}

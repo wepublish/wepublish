@@ -20,6 +20,7 @@ import {
   BuilderNavbarProps,
   IconButton,
   Link,
+  useCloseOnNavigation,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
@@ -687,7 +688,6 @@ const NavPaper = ({
                         <Link
                           variant={'categoryLink'}
                           href={navigationLinkToUrl(link)}
-                          onClick={closeMenu}
                         >
                           {link.label}
                         </Link>
@@ -717,9 +717,6 @@ const NavPaper = ({
         {!hasUser && loginBtn && (
           <LoginLogoutTab
             variant="navbarTab"
-            onClick={() => {
-              closeMenu();
-            }}
             href={loginBtn.href}
           >
             Login
@@ -839,6 +836,16 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
       onMenuToggle?.(newState);
     }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
+
+    const closeMenu = useCallback(() => {
+      if (controlledIsMenuOpen === undefined) {
+        setInternalMenuOpen(false);
+      }
+
+      onMenuToggle?.(false);
+    }, [controlledIsMenuOpen, onMenuToggle]);
+
+    useCloseOnNavigation(closeMenu);
 
     const { t } = useTranslation();
 
@@ -1001,12 +1008,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                   sx={buttonStyles}
                   size="medium"
                   {...profileBtn}
-                  onClick={() => {
-                    if (controlledIsMenuOpen === undefined) {
-                      setInternalMenuOpen(false);
-                    }
-                    onMenuToggle?.(false);
-                  }}
                 >
                   <Box sx={{ display: { xs: 'none', md: 'contents' } }}>
                     Offene
@@ -1022,13 +1023,9 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 aria-label="Instagram"
                 title="Instagram"
                 color={'inherit'}
-                onClick={() => {
-                  if (controlledIsMenuOpen === undefined) {
-                    setInternalMenuOpen(false);
-                  }
-                  onMenuToggle?.(false);
-                  router.push('https://www.instagram.com/tsri.ch/');
-                }}
+                onClick={() =>
+                  router.push('https://www.instagram.com/tsri.ch/')
+                }
               >
                 <FiInstagram />
               </NavbarInstaButton>
@@ -1038,13 +1035,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 aria-label="Suche"
                 title="Suche"
                 color={'inherit'}
-                onClick={() => {
-                  if (controlledIsMenuOpen === undefined) {
-                    setInternalMenuOpen(false);
-                  }
-                  onMenuToggle?.(false);
-                  router.push('/search');
-                }}
+                onClick={() => router.push('/search')}
               >
                 <FiSearch />
               </NavbarSearchButton>
@@ -1099,12 +1090,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 <OpenInvoiceTab
                   variant="navbarTab"
                   href={profileBtn.href}
-                  onClick={() => {
-                    if (controlledIsMenuOpen === undefined) {
-                      setInternalMenuOpen(false);
-                    }
-                    onMenuToggle?.(false);
-                  }}
                 >
                   <MdWarning
                     size={12}
@@ -1128,7 +1113,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               loginBtn={loginBtn}
               main={mainItems}
               categories={categories}
-              closeMenu={toggleMenu}
+              closeMenu={closeMenu}
               isMenuOpen={isMenuOpen}
               className={navPaperClassName}
             >

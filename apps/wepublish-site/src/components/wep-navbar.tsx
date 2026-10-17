@@ -17,6 +17,7 @@ import {
   BuilderNavbarProps,
   IconButton,
   Link,
+  useCloseOnNavigation,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
@@ -646,6 +647,18 @@ const Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(function WepNavbar(
     onMenuToggle?.(newState);
   }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
+  const closeMenu = useCallback(() => {
+    setIsTransitioning(true);
+
+    if (controlledIsMenuOpen === undefined) {
+      setInternalMenuOpen(false);
+    }
+
+    onMenuToggle?.(false);
+  }, [controlledIsMenuOpen, onMenuToggle]);
+
+  useCloseOnNavigation(closeMenu);
+
   const {
     elements: { Link, Button },
   } = useWebsiteBuilder();
@@ -784,12 +797,6 @@ const Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(function WepNavbar(
                 sx={buttonStyles}
                 size="medium"
                 {...profileBtn}
-                onClick={() => {
-                  if (controlledIsMenuOpen === undefined) {
-                    setInternalMenuOpen(false);
-                  }
-                  onMenuToggle?.(false);
-                }}
               >
                 <Box sx={{ display: { xs: 'none', md: 'unset' } }}>Offene</Box>
                 &nbsp;Rechnung
@@ -803,7 +810,7 @@ const Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(function WepNavbar(
             loginBtn={loginBtn}
             main={mainItems}
             categories={categories}
-            closeMenu={toggleMenu}
+            closeMenu={closeMenu}
             isMenuOpen={true}
             isTransitioning={isTransitioning}
             className={navPaperClassName}

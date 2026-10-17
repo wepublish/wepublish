@@ -18,6 +18,7 @@ import {
   BuilderNavbarProps,
   IconButton,
   Link,
+  useCloseOnNavigation,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import {
@@ -556,6 +557,16 @@ export function HauptstadtNavbar({
     onMenuToggle?.(newState);
   }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
+  const closeMenu = useCallback(() => {
+    if (controlledIsMenuOpen === undefined) {
+      setInternalMenuOpen(false);
+    }
+
+    onMenuToggle?.(false);
+  }, [controlledIsMenuOpen, onMenuToggle]);
+
+  useCloseOnNavigation(closeMenu);
+
   const mainItems = data?.navigations?.find(({ key }) => key === slug);
   const headerItems = data?.navigations?.find(({ key }) => key === headerSlug);
   const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
@@ -710,7 +721,7 @@ export function HauptstadtNavbar({
           loginBtn={loginBtn}
           main={mainItems}
           categories={categories}
-          closeMenu={toggleMenu}
+          closeMenu={closeMenu}
           isMenuOpen={isMenuOpen}
           className={navPaperClassName}
         >
@@ -718,13 +729,6 @@ export function HauptstadtNavbar({
             <Link
               key={index}
               href={navigationLinkToUrl(link)}
-              onClick={() => {
-                if (controlledIsMenuOpen === undefined) {
-                  setInternalMenuOpen(false);
-                }
-
-                onMenuToggle?.(false);
-              }}
               color="inherit"
             >
               <TextToIcon
@@ -908,7 +912,6 @@ const NavPaper = ({
               key={index}
               color="inherit"
               underline="none"
-              onClick={closeMenu}
             >
               <H4
                 component="span"
@@ -926,7 +929,6 @@ const NavPaper = ({
               LinkComponent={Link}
               variant="contained"
               color="warning"
-              onClick={closeMenu}
               startIcon={<MdWarning />}
               {...profileBtn}
             >
@@ -938,7 +940,6 @@ const NavPaper = ({
               LinkComponent={Link}
               variant="contained"
               color="warning"
-              onClick={closeMenu}
               startIcon={<MdWarning />}
               {...subscribeBtn}
             >
@@ -951,7 +952,6 @@ const NavPaper = ({
               LinkComponent={Link}
               variant="contained"
               color="secondary"
-              onClick={closeMenu}
               {...subscribeBtn}
             >
               {t('navbar.subscribe')}
@@ -963,7 +963,6 @@ const NavPaper = ({
               LinkComponent={Link}
               variant="outlined"
               color="secondary"
-              onClick={closeMenu}
               {...profileBtn}
             >
               Mein Konto
@@ -988,7 +987,6 @@ const NavPaper = ({
               LinkComponent={Link}
               variant="outlined"
               color="secondary"
-              onClick={closeMenu}
               {...loginBtn}
             >
               Login
@@ -1015,7 +1013,6 @@ const NavPaper = ({
                         color="inherit"
                         underline="none"
                         css={navPaperLinkStyling(theme)}
-                        onClick={closeMenu}
                       >
                         <H6
                           component="span"

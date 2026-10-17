@@ -5,7 +5,11 @@ import {
   FullNavigationFragment,
   NavigationListQuery,
 } from '@wepublish/website/api';
-import { BuilderNavbarProps, Link } from '@wepublish/website/builder';
+import {
+  BuilderNavbarProps,
+  Link,
+  useCloseOnNavigation,
+} from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MdClose, MdMenu, MdSearch } from 'react-icons/md';
@@ -500,10 +504,7 @@ export const EenewsNavbar = ({
 
   const close = useCallback(() => setOpen(false), []);
 
-  useEffect(() => {
-    router.events.on('routeChangeComplete', close);
-    return () => router.events.off('routeChangeComplete', close);
-  }, [router.events, close]);
+  useCloseOnNavigation(close);
 
   const onToggle = () => {
     setOpen(o => !o);

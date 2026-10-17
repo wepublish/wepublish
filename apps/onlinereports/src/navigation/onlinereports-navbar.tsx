@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
 import { css, GlobalStyles, Theme } from '@mui/material';
 import { FullNavigationFragment } from '@wepublish/website/api';
-import { BuilderNavbarProps } from '@wepublish/website/builder';
+import {
+  BuilderNavbarProps,
+  useCloseOnNavigation,
+} from '@wepublish/website/builder';
 
 import { useToggle } from '../use-toggle';
 import { OnlineReportsNavAppBar } from './onlinereports-nav-app-bar';
@@ -86,6 +89,8 @@ export function OnlineReportsNavbar({
   const menuToggle = useToggle();
   const { mainItems, headerItems, iconItems, categories } =
     getMenuItems(menuProps);
+
+  useCloseOnNavigation(menuToggle.off);
 
   return (
     <NavbarWrapper className={className}>
