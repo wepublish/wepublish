@@ -3,7 +3,7 @@ import { PageRevision } from './page.model';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { Property } from '@wepublish/property/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
-import { hasPermission } from '@wepublish/permissions/api';
+import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
 import { BlockContent, SlotTeasersLoader } from '@wepublish/block-content/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { CanGetPage } from '@wepublish/permissions';
@@ -24,7 +24,7 @@ export class PageRevisionResolver {
     const properties = revision.properties;
 
     return properties?.filter(
-      prop => prop.public || hasPermission(CanGetPage, user?.roles ?? [])
+      prop => prop.public || hasPermission(CanGetPage, permissionsOf(user))
     );
   }
 
