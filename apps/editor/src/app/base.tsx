@@ -126,6 +126,7 @@ import {
 } from '@wepublish/permissions';
 import {
   ClickMenu,
+  CommandPaletteTrigger,
   Link,
   PermissionControl,
   SidebarNav,
@@ -189,7 +190,7 @@ import {
 
 import { ColorModePreference, useColorMode } from './colorMode';
 import { useMobileNavigation } from './mobileNavigation';
-import { onlyLatestOpen } from './sidebarMenu';
+import { useSidebarMenu } from './sidebarMenu';
 import { Logo } from './ui/logo';
 
 export interface BaseProps {
@@ -307,6 +308,11 @@ const Brand = styled(Link)`
   svg :is(path, use)[fill='white'] {
     fill: ${({ theme }) => theme.vars.palette.background.default};
   }
+`;
+
+const Search = styled(CommandPaletteTrigger)`
+  margin: 0 12px 10px;
+  width: calc(100% - 24px);
 `;
 
 const Sidenav = styled(List)`
@@ -431,13 +437,7 @@ export function Base({ children }: BaseProps) {
   const { preference: colorModePreference, setPreference: setColorMode } =
     useColorMode();
   const mobileNavigation = useMobileNavigation();
-  const [openMenus, setOpenMenus] = useState<string[]>([]);
-  const [readerChose, setReaderChose] = useState(false);
-
-  const toggleMenu = (key: string, wasOpen: boolean) => {
-    setReaderChose(true);
-    setOpenMenus(current => onlyLatestOpen(current, wasOpen ? [] : [key]));
-  };
+  const { openMenus, followsRoute, toggleMenu } = useSidebarMenu();
 
   const [uiLanguage, setUILanguage] = useStickyState(
     AVAILABLE_LANG[0].id,
@@ -477,13 +477,15 @@ export function Base({ children }: BaseProps) {
             <Logo />
           </Brand>
 
+          <Search />
+
           <Sidenav>
             <SidebarNav>
               <SidebarNavMenu
                 title={t('navbar.dashboard')}
                 icon={<MdPieChartOutline />}
                 open={openMenus.includes('dashboard')}
-                openIfCurrent={!readerChose}
+                openIfCurrent={followsRoute}
                 onToggle={wasOpen => toggleMenu('dashboard', wasOpen)}
               >
                 <SidebarNavItem
@@ -535,7 +537,7 @@ export function Base({ children }: BaseProps) {
                   title={t('navbar.articles')}
                   icon={<MdDescription />}
                   open={openMenus.includes('articles')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('articles', wasOpen)}
                 >
                   <PermissionControl
@@ -624,7 +626,7 @@ export function Base({ children }: BaseProps) {
                   title={t('navbar.pages')}
                   icon={<MdDashboard />}
                   open={openMenus.includes('pages')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('pages', wasOpen)}
                 >
                   <PermissionControl
@@ -677,7 +679,7 @@ export function Base({ children }: BaseProps) {
                   title={t('navbar.blocks.topMenu')}
                   icon={<MdOutlineGridView />}
                   open={openMenus.includes('block-content')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('block-content', wasOpen)}
                 >
                   <PermissionControl
@@ -753,7 +755,7 @@ export function Base({ children }: BaseProps) {
                   title={t('navbar.comments')}
                   icon={<MdChat />}
                   open={openMenus.includes('comments')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('comments', wasOpen)}
                 >
                   <PermissionControl
@@ -815,7 +817,7 @@ export function Base({ children }: BaseProps) {
                   title={t('navbar.events')}
                   icon={<MdEvent />}
                   open={openMenus.includes('events')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('events', wasOpen)}
                 >
                   <PermissionControl
@@ -882,7 +884,7 @@ export function Base({ children }: BaseProps) {
                   title={t('navbar.media')}
                   icon={<MdPhoto />}
                   open={openMenus.includes('media')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('media', wasOpen)}
                 >
                   <PermissionControl
@@ -958,7 +960,7 @@ export function Base({ children }: BaseProps) {
                   title={t('navbar.authors')}
                   icon={<MdGroup />}
                   open={openMenus.includes('authors')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('authors', wasOpen)}
                 >
                   <PermissionControl
@@ -1016,7 +1018,7 @@ export function Base({ children }: BaseProps) {
                   title={t('navbar.audience')}
                   icon={<MdGroups />}
                   open={openMenus.includes('audience')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('audience', wasOpen)}
                 >
                   <PermissionControl
@@ -1091,7 +1093,7 @@ export function Base({ children }: BaseProps) {
                   title={t('navbar.communication')}
                   icon={<MdMail />}
                   open={openMenus.includes('communication')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('communication', wasOpen)}
                 >
                   <PermissionControl
@@ -1168,7 +1170,7 @@ export function Base({ children }: BaseProps) {
                   title={t('navbar.subscriptionPlans')}
                   icon={<MdBadge />}
                   open={openMenus.includes('usersAndSubscriptions')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen =>
                     toggleMenu('usersAndSubscriptions', wasOpen)
                   }
@@ -1247,7 +1249,7 @@ export function Base({ children }: BaseProps) {
                   title={t('navbar.peering')}
                   icon={<MdSettingsInputAntenna />}
                   open={openMenus.includes('peering')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('peering', wasOpen)}
                 >
                   <SidebarNavItem
@@ -1290,7 +1292,7 @@ export function Base({ children }: BaseProps) {
                   icon={<MdSettings />}
                   title={t('navbar.settings')}
                   open={openMenus.includes('settings')}
-                  openIfCurrent={!readerChose}
+                  openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('settings', wasOpen)}
                 >
                   <PermissionControl

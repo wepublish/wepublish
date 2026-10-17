@@ -3905,6 +3905,59 @@
       "socialMediaDescriptionFallback": "Utilise sinon la description SEO",
       "socialMediaImageFallback": "Utilise sinon l'image de l'article.",
       "socialMediaTitleFallback": "Utilise sinon le titre SEO"
+    },
+    "commandPalette": {
+      "title": "Palette de commandes",
+      "placeholder": "Où voulez-vous aller ?",
+      "empty": "Aucun résultat pour",
+      "groups": {
+        "favourite": "Favoris",
+        "navigate": "Aller à",
+        "create": "Créer",
+        "account": "Compte"
+      },
+      "hints": {
+        "move": "pour naviguer",
+        "select": "pour ouvrir",
+        "close": "pour fermer"
+      },
+      "pages": {
+        "peerProfile": "Profil de peering"
+      },
+      "create": {
+        "article": "Créer un article",
+        "articleTag": "Créer un tag d'article",
+        "paywall": "Créer un paywall",
+        "page": "Créer une page",
+        "pageTag": "Créer un tag de page",
+        "crowdfunding": "Créer un crowdfunding",
+        "blockTemplate": "Créer un modèle de bloc",
+        "commentTag": "Créer un tag de commentaire",
+        "event": "Créer un événement",
+        "eventTag": "Créer un tag d'événement",
+        "image": "Téléverser une image",
+        "document": "Téléverser un document",
+        "navigation": "Créer une navigation",
+        "banner": "Créer une bannière",
+        "author": "Créer un auteur",
+        "authorTag": "Créer un tag d'auteur",
+        "user": "Créer un utilisateur",
+        "subscription": "Créer un abonnement",
+        "consent": "Créer un consentement",
+        "userConsent": "Créer un consentement utilisateur",
+        "mailTemplate": "Créer un modèle d'e-mail",
+        "memberPlan": "Créer un plan d'abonnement",
+        "paymentMethod": "Créer un moyen de paiement",
+        "discountCode": "Créer un code de réduction",
+        "goodie": "Créer un goodie",
+        "peer": "Créer un peer",
+        "userRole": "Créer un rôle utilisateur",
+        "token": "Générer un token"
+      },
+      "trigger": "Rechercher ou aller à…",
+      "keys": {
+        "escape": "échap"
+      }
     }
   }
 }
