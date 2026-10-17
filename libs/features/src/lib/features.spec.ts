@@ -9,18 +9,15 @@ const registry: readonly Feature[] = [
   { key: 'newsletter', description: 'Newsletter editor', stage: 'alpha' },
 ];
 
-// widened: the registry may be empty, and an empty tuple has `never` entries
-const features: readonly Feature[] = FEATURES;
-
 describe('FEATURES', () => {
   it('has unique keys', () => {
-    const keys = features.map(feature => feature.key);
+    const keys = FEATURES.map(feature => feature.key);
 
     expect(new Set(keys).size).toBe(keys.length);
   });
 
   it('only has keys that One accepts', () => {
-    for (const feature of features) {
+    for (const feature of FEATURES) {
       expect(feature.key).toMatch(FEATURE_KEY_PATTERN);
     }
   });

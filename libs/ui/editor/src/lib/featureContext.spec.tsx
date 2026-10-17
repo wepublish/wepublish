@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 
 import { render, screen } from '@testing-library/react';
-import type { FeatureKey } from '@wepublish/features';
 
 import { AuthContext } from './authContext';
 import {
@@ -29,12 +28,10 @@ vi.mock('@apollo/client/react', async importOriginal => {
   };
 });
 
-const newsletter = 'newsletter' as FeatureKey;
-
 const loggedIn = { session: { email: 'karl@wepublish.ch', sessionToken: 't' } };
 
 function Probe() {
-  return <span>{useFeature(newsletter) ? 'on' : 'off'}</span>;
+  return <span>{useFeature('newsletter') ? 'on' : 'off'}</span>;
 }
 
 function renderWith(
@@ -97,7 +94,7 @@ describe('useFeature', () => {
 describe('FeatureControl', () => {
   it('renders its children when the feature is on', () => {
     renderWith(
-      <FeatureControl feature={newsletter}>
+      <FeatureControl feature="newsletter">
         <span>Newsletter menu</span>
       </FeatureControl>,
       { features: ['newsletter'] }
@@ -108,7 +105,7 @@ describe('FeatureControl', () => {
 
   it('renders nothing when the feature is off', () => {
     renderWith(
-      <FeatureControl feature={newsletter}>
+      <FeatureControl feature="newsletter">
         <span>Newsletter menu</span>
       </FeatureControl>,
       { features: [] }
@@ -120,7 +117,7 @@ describe('FeatureControl', () => {
 
 describe('createCheckedFeatureComponent', () => {
   const Page = ({ title }: { title: string }) => <h1>{title}</h1>;
-  const GatedPage = createCheckedFeatureComponent(newsletter)(Page);
+  const GatedPage = createCheckedFeatureComponent('newsletter')(Page);
 
   it('renders the page with its props when the feature is on', () => {
     renderWith(<GatedPage title="Newsletter" />, { features: ['newsletter'] });
