@@ -313,6 +313,28 @@ model Document {
   @@map("documents")
 }
 
+model ApiToken {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  name      String
+  tokenHash String   @unique
+  prefix    String
+  scopes    String[]
+
+  expiresAt  DateTime  @db.Timestamptz(3)
+  revokedAt  DateTime? @db.Timestamptz(3)
+  lastUsedAt DateTime? @db.Timestamptz(3)
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([createdById])
+  @@map("api-tokens.tokens")
+}
+
 enum CommentItemType {
   article @map("article")
   page    @map("page")
@@ -1226,6 +1248,7 @@ model User {
   changelogConfirmations    ChangelogEntry[]
   notificationReads         NotificationRead[]
   notificationConfirmations NotificationConfirmation[]
+  apiTokens                 ApiToken[]
 
   @@index([createdAt])
   @@map("users")
