@@ -54,3 +54,10 @@ describe('isKnownFeature', () => {
     expect(isKnownFeature('surely-not-a-feature')).toBe(false);
   });
 });
+
+describe('registered features', () => {
+  it('ships paper letters dark, with the per-user flow on top', () => {
+    expect(isKnownFeature('paper-letters')).toBe(true);
+    expect(isKnownFeature('paper-letter-flow')).toBe(true);
+  });
+});
