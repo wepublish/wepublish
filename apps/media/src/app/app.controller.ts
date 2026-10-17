@@ -20,7 +20,9 @@ import {
   MediaService,
   SupportedImagesValidator,
   SupportedDocumentsValidator,
+  SupportedVideosValidator,
   getExtensionForMimeType,
+  getExtensionForVideoMimeType,
   JwtAuthGuard,
 } from '@wepublish/media/api';
 import {
@@ -41,6 +43,14 @@ let S3_HOST_CHECKED = false;
 
 /** Sanitize user-provided IDs to prevent path traversal */
 const sanitizeId = (id: string): string => id.replace(/[^a-zA-Z0-9_-]/g, '');
+
+const VIDEO_MAX_BYTES =
+  (() => {
+    const mb = parseInt(process.env['VIDEO_MAX_UPLOAD_MB'] ?? '', 10);
+    return isNaN(mb) || mb <= 0 ? 500 : mb;
+  })() *
+  1000 *
+  1000;
 
 @Controller({
   version: '1',
@@ -176,6 +186,47 @@ export class AppController {
   @Delete(':imageId')
   async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
     await this.media.deleteImage(imageId);
+
+    return res.sendStatus(204);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('video')
+  @UseInterceptors(
+    FileInterceptor('file', { limits: { fileSize: VIDEO_MAX_BYTES } })
+  )
+  async uploadVideo(
+    @Res() res: Response,
+    @Query('videoId') videoId: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: true,
+        validators: [new SupportedVideosValidator()],
+      })
+    )
+    uploadedFile: Express.Multer.File
+  ) {
+    const safeVideoId = sanitizeId(videoId);
+    const { size } = await this.media.saveVideo(
+      safeVideoId,
+      uploadedFile.buffer,
+      uploadedFile.mimetype,
+      uploadedFile.originalname
+    );
+
+    res.status(201).send({
+      id: safeVideoId,
+      filename: uploadedFile.originalname,
+      fileSize: size,
+      mimeType: uploadedFile.mimetype,
+      extension: getExtensionForVideoMimeType(uploadedFile.mimetype),
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('video/:videoId')
+  async deleteVideo(@Res() res: Response, @Param('videoId') videoId: string) {
+    await this.media.deleteVideo(sanitizeId(videoId));
 
     return res.sendStatus(204);
   }

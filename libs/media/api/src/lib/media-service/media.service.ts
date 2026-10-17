@@ -334,6 +334,51 @@ export class MediaService {
     );
   }
 
+  public async saveVideo(
+    videoId: string,
+    video: Buffer,
+    mimeType: string,
+    originalFilename: string
+  ) {
+    const objectKey = `videos/${videoId}/${originalFilename}`;
+    await this.storage.saveFile(
+      this.config.uploadBucket,
+      objectKey,
+      video,
+      video.length,
+      { 'Content-Type': mimeType }
+    );
+    return { size: video.length };
+  }
+
+  public async getVideoUri(videoId: string): Promise<ImageURIObject> {
+    const files = await this.storage.listFiles(
+      this.config.uploadBucket,
+      `videos/${videoId}/`,
+      false
+    );
+    const uploadedFile = files[0];
+    if (!uploadedFile?.name) {
+      return { uri: `videos/${videoId}`, exists: false };
+    }
+
+    return { uri: uploadedFile.name, exists: true };
+  }
+
+  public async deleteVideo(videoId: string) {
+    const uploadFiles = await this.storage.listFiles(
+      this.config.uploadBucket,
+      `videos/${videoId}/`,
+      true
+    );
+    if (uploadFiles.length) {
+      await this.storage.deleteFiles(
+        this.config.uploadBucket,
+        uploadFiles.map(f => f.name || '')
+      );
+    }
+  }
+
   public async saveDocument(
     documentId: string,
     document: Buffer,

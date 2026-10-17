@@ -22,6 +22,7 @@ import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
 import { DocumentModule } from '@wepublish/document/api';
+import { VideoModule } from '@wepublish/video/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -256,6 +257,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     ChangelogModule,
     ConsentModule,
     DocumentModule,
+    VideoModule,
     StatsModule,
     SettingModule,
     ExternalAppsModule,

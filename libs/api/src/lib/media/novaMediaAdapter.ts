@@ -7,6 +7,7 @@ import {
   ImageTransformation,
   MediaAdapter,
   UploadDocument,
+  UploadVideo,
   UploadImage,
 } from '@wepublish/image/api';
 import {
@@ -344,6 +345,81 @@ export class NovaMediaAdapter implements MediaAdapter {
 
   async getDocumentThumbnailURL(document: { id: string }): Promise<string> {
     return `${this.url}/document/${document.id}/thumbnail`;
+  }
+
+  async uploadVideo(fileUpload: Promise<FileUpload>): Promise<UploadVideo> {
+    const form = new FormData();
+
+    const {
+      filename: inputFilename,
+      mimetype,
+      createReadStream,
+    }: FileUpload = await fileUpload;
+    form.append('file', createReadStream(), {
+      filename: inputFilename,
+      contentType: mimetype,
+    });
+
+    return this._uploadVideo(form);
+  }
+
+  async _uploadVideo(form: FormData): Promise<UploadVideo> {
+    form.hasKnownLength = () => false;
+
+    const videoId = uuidv4();
+    const token = await this.generateAuthToken(videoId, 'upload');
+    const uploadUrl = new URL(`${this.internalURL}/video`);
+    uploadUrl.searchParams.set('videoId', videoId);
+
+    const response = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${token}` },
+      body: form,
+      signal: AbortSignal.timeout(50000) as any,
+    });
+
+    if (response.status >= 400) {
+      throw new MediaServerError(
+        mediaServerErrorMessage(response, await parseErrorBody(response))
+      );
+    }
+
+    const json = await response.json();
+
+    const { id, filename, fileSize, mimeType, extension } = json;
+
+    return { id, filename, fileSize, mimeType, extension };
+  }
+
+  async deleteVideo(id: string): Promise<boolean> {
+    const token = await this.generateAuthToken(id, 'delete');
+
+    const response = await fetch(`${this.internalURL}/video/${id}`, {
+      method: 'DELETE',
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    if (response.status >= 400) {
+      throw new MediaServerError(
+        mediaServerErrorMessage(response, await parseErrorBody(response))
+      );
+    }
+
+    return true;
+  }
+
+  async getVideoURL(video: {
+    id: string;
+    filename?: string | null;
+    extension?: string;
+  }): Promise<string> {
+    const name =
+      video.filename ?
+        `${encodeURIComponent(video.filename)}${video.extension ?? ''}`
+      : '';
+    return name ?
+        `${this.url}/video/${video.id}/${name}`
+      : `${this.url}/video/${video.id}`;
   }
 
   /**
