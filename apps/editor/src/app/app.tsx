@@ -68,6 +68,7 @@ import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView
 import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { DocumentList } from './routes/documents/documentList';
+import { VideoList } from './routes/videos/videoList';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
@@ -647,6 +648,31 @@ export function App() {
               element={
                 <Base>
                   <DocumentList />
+                </Base>
+              }
+            />
+            {/* Videos Routes */}
+            <Route
+              path="videos"
+              element={
+                <Base>
+                  <VideoList />
+                </Base>
+              }
+            />
+            <Route
+              path="/videos/upload"
+              element={
+                <Base>
+                  <VideoList />
+                </Base>
+              }
+            />
+            <Route
+              path="/videos/edit/:id"
+              element={
+                <Base>
+                  <VideoList />
                 </Base>
               }
             />

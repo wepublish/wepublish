@@ -1113,6 +1113,55 @@
         "uploadFailed": "Le téléversement a échoué. Veuillez réessayer."
       }
     },
+    "videos": {
+      "overview": {
+        "description": "Description",
+        "videoLibrary": "Bibliothèque de videos",
+        "copyLink": "Copier le lien",
+        "edit": "Modifier",
+        "fileSize": "Taille du fichier",
+        "filename": "Nom du fichier",
+        "noDescription": "Pas de description",
+        "openLink": "Ouvrir",
+        "preview": "Aperçu",
+        "storageFull": "Limite de stockage atteinte",
+        "storageUsage": "{{used}} / {{limit}} utilisés ({{count}} fichier(s))",
+        "storageWarning": "Stockage presque plein",
+        "title": "Titre",
+        "unlimited": "Illimité",
+        "untitled": "Sans titre",
+        "uploadVideo": "Téléverser un video",
+        "storageUsageInfo": "Taille totale de tous les videos téléversés. Une fois la limite atteinte, vous ne pourrez téléverser de nouveaux videos qu’après en avoir supprimé d’anciens."
+      },
+      "panels": {
+        "cancel": "Annuler",
+        "close": "Fermer",
+        "confirm": "Confirmer",
+        "created": "Créé",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteVideo": "Supprimer le video ?",
+        "description": "Description",
+        "videoUpdated": "Video mis à jour",
+        "dropVideo": "Déposez un fichier ici ou cliquez pour sélectionner",
+        "editVideo": "Modifier le video",
+        "fileSize": "Taille du fichier",
+        "fileTooLarge": "Le fichier est trop volumineux. Taille maximale : {{maxSize}} Mo.",
+        "filename": "Nom du fichier",
+        "information": "Informations",
+        "maxFileSize": "Taille maximale du fichier : {{maxSize}} Mo",
+        "invalidVideo": "Type de fichier non pris en charge. Formats acceptés : PDF, Word, Excel, PowerPoint, OpenVideo, CSV, TXT, JSON, XML, ZIP",
+        "linkCopied": "Lien copié dans le presse-papiers",
+        "notFound": "Video introuvable !",
+        "publicLink": "Lien public",
+        "title": "Titre",
+        "untitled": "Sans titre",
+        "updated": "Mis à jour",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Téléverser",
+        "uploadVideo": "Téléverser un video",
+        "uploadFailed": "Le téléversement a échoué. Veuillez réessayer."
+      }
+    },
     "images": {
       "overview": {
         "description": "Description",
@@ -1593,6 +1642,7 @@
       "events": "Événements",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
+      "videoLibrary": "Videos",
       "imageLibrary": "Images",
       "importableEvents": "Événements importables",
       "media": "Fichiers",

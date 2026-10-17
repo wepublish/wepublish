@@ -3005,6 +3005,9 @@ type Mutation {
   """Deletes an existing userrole."""
   deleteUserRole(id: String!): UserRole!
 
+  """Deletes an existing video."""
+  deleteVideo(id: String!): String!
+
   """
   Discards the current draft and reverts to the latest published revision.
   """
@@ -3352,6 +3355,9 @@ type Mutation {
   """
   updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
 
+  """Updates an existing video."""
+  updateVideo(description: String, id: String!, title: String): Video!
+
   """Updates the website settings."""
   updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
@@ -3366,6 +3372,9 @@ type Mutation {
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPointX: Float! = 0.5, focalPointY: Float! = 0.5, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
+
+  """Uploads a new video."""
+  uploadVideo(description: String, file: Upload!, filename: String, title: String): Video!
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -3714,6 +3723,12 @@ type PaginatedTags {
 
 type PaginatedUserRoles {
   nodes: [UserRole!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedVideos {
+  nodes: [Video!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -4827,6 +4842,15 @@ type Query {
   ): PaginatedSensitiveDataUsers!
   versionInformation: VersionInformation!
 
+  """Returns a video by id."""
+  video(id: String!): Video!
+
+  """Returns the current video storage usage and limit."""
+  videoStorageUsage: VideoStorageUsage!
+
+  """Returns a paginated list of videos based on the filters given."""
+  videos(cursorId: String, filter: VideoFilter, order: SortOrder = Descending, skip: Int = 0, sort: VideoSort = ModifiedAt, take: Int = 10): PaginatedVideos!
+
   """
   Returns the website settings, requires authentication to get sensitive settings.
   """
@@ -5894,6 +5918,34 @@ enum UserSubscriptionStatus {
 
 type VersionInformation {
   version: String!
+}
+
+type Video {
+  createdAt: DateTime!
+  description: String
+  extension: String!
+  fileSize: Int!
+  filename: String
+  id: String!
+  mimeType: String!
+  modifiedAt: DateTime!
+  title: String
+  url: String!
+}
+
+input VideoFilter {
+  title: String
+}
+
+enum VideoSort {
+  CreatedAt
+  ModifiedAt
+}
+
+type VideoStorageUsage {
+  limitBytes: Float!
+  usedBytes: Float!
+  videoCount: Int!
 }
 
 type VimeoVideoBlock implements BaseBlock {

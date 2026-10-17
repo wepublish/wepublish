@@ -79,11 +79,16 @@ export class JwtAuthGuard implements CanActivate {
     // Document endpoints use documentId
     // DELETE /v1/document/:documentId → params.documentId
     // POST /v1/document?documentId=... → query.documentId
+    // Video endpoints use videoId
+    // DELETE /v1/video/:videoId → params.videoId
+    // POST /v1/video?videoId=... → query.videoId
     return (
       request.params?.imageId ||
       request.query?.imageId ||
       request.params?.documentId ||
       request.query?.documentId ||
+      request.params?.videoId ||
+      request.query?.videoId ||
       null
     );
   }

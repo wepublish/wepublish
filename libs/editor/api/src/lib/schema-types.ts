@@ -2897,6 +2897,8 @@ export type Mutation = {
   deleteUserConsent: UserConsent;
   /** Deletes an existing userrole. */
   deleteUserRole: UserRole;
+  /** Deletes an existing video. */
+  deleteVideo: Scalars['String']['output'];
   /** Discards the current draft and reverts to the latest published revision. */
   discardArticleDraft: Article;
   /** Discards the current draft and reverts to the latest published revision. */
@@ -3095,6 +3097,8 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
+  /** Updates an existing video. */
+  updateVideo: Video;
   /** Updates the website settings. */
   updateWebsiteSettings: WebsiteSettings;
   upgradeUserSubscription: Payment;
@@ -3104,6 +3108,8 @@ export type Mutation = {
   uploadImage: Image;
   /** This mutation allows to upload and update the user's profile image. */
   uploadUserProfileImage?: Maybe<SensitiveDataUser>;
+  /** Uploads a new video. */
+  uploadVideo: Video;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
   voteOnPoll?: Maybe<PollVote>;
 };
@@ -3866,6 +3872,11 @@ export type MutationDeleteUserConsentArgs = {
 
 
 export type MutationDeleteUserRoleArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteVideoArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -4638,6 +4649,13 @@ export type MutationUpdateUserSubscriptionArgs = {
 };
 
 
+export type MutationUpdateVideoArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationUpdateWebsiteSettingsArgs = {
   ads?: InputMaybe<WebsiteAdsInput>;
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
@@ -4691,6 +4709,14 @@ export type MutationUploadUserProfileImageArgs = {
   link?: InputMaybe<Scalars['String']['input']>;
   source?: InputMaybe<Scalars['String']['input']>;
   tags: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUploadVideoArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  file: Scalars['Upload']['input'];
+  filename?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -5072,6 +5098,13 @@ export type PaginatedTags = {
 export type PaginatedUserRoles = {
   __typename: 'PaginatedUserRoles';
   nodes: Array<UserRole>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedVideos = {
+  __typename: 'PaginatedVideos';
+  nodes: Array<Video>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
@@ -5998,6 +6031,12 @@ export type Query = {
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
+  /** Returns a video by id. */
+  video: Video;
+  /** Returns the current video storage usage and limit. */
+  videoStorageUsage: VideoStorageUsage;
+  /** Returns a paginated list of videos based on the filters given. */
+  videos: PaginatedVideos;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
 };
@@ -6793,6 +6832,21 @@ export type QueryUsersArgs = {
   skip?: Scalars['Int']['input'];
   sort?: UserSort;
   take?: Scalars['Int']['input'];
+};
+
+
+export type QueryVideoArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryVideosArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<VideoFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<VideoSort>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QuoteBlock = BaseBlock & HasImage & {
@@ -7896,6 +7950,36 @@ export enum UserSubscriptionStatus {
 export type VersionInformation = {
   __typename: 'VersionInformation';
   version: Scalars['String']['output'];
+};
+
+export type Video = {
+  __typename: 'Video';
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  extension: Scalars['String']['output'];
+  fileSize: Scalars['Int']['output'];
+  filename?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  mimeType: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  title?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
+};
+
+export type VideoFilter = {
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum VideoSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
+}
+
+export type VideoStorageUsage = {
+  __typename: 'VideoStorageUsage';
+  limitBytes: Scalars['Float']['output'];
+  usedBytes: Scalars['Float']['output'];
+  videoCount: Scalars['Int']['output'];
 };
 
 export type VimeoVideoBlock = BaseBlock & {

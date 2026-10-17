@@ -413,10 +413,7 @@ export class NovaMediaAdapter implements MediaAdapter {
     filename?: string | null;
     extension?: string;
   }): Promise<string> {
-    const name =
-      video.filename ?
-        `${encodeURIComponent(video.filename)}${video.extension ?? ''}`
-      : '';
+    const name = video.filename ? encodeURIComponent(video.filename) : '';
     return name ?
         `${this.url}/video/${video.id}/${name}`
       : `${this.url}/video/${video.id}`;

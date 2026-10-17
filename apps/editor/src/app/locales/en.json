@@ -1113,6 +1113,55 @@
         "uploadFailed": "Upload failed. Please try again."
       }
     },
+    "videos": {
+      "overview": {
+        "description": "Description",
+        "videoLibrary": "Video Library",
+        "copyLink": "Copy Link",
+        "edit": "Edit",
+        "fileSize": "File Size",
+        "filename": "Filename",
+        "noDescription": "No Description",
+        "openLink": "Open",
+        "preview": "Preview",
+        "storageFull": "Storage limit reached",
+        "storageUsage": "{{used}} / {{limit}} used ({{count}} files)",
+        "storageWarning": "Storage almost full",
+        "title": "Title",
+        "unlimited": "Unlimited",
+        "untitled": "Untitled",
+        "uploadVideo": "Upload Video",
+        "storageUsageInfo": "Total size of all uploaded videos. Once the limit is reached, you can only upload new videos after deleting old ones."
+      },
+      "panels": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "created": "Created",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteVideo": "Delete video?",
+        "description": "Description",
+        "videoUpdated": "Video Updated",
+        "dropVideo": "Drop file here or click to select",
+        "editVideo": "Edit Video",
+        "fileSize": "File size",
+        "fileTooLarge": "File is too large. Maximum size is {{maxSize}} MB.",
+        "filename": "Filename",
+        "information": "Information",
+        "maxFileSize": "Maximum file size: {{maxSize}} MB",
+        "invalidVideo": "Unsupported file type. Supported: PDF, Word, Excel, PowerPoint, OpenVideo, CSV, TXT, JSON, XML, ZIP",
+        "linkCopied": "Link copied to clipboard",
+        "notFound": "Video not found!",
+        "publicLink": "Public Link",
+        "title": "Title",
+        "untitled": "Untitled",
+        "updated": "Updated",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Upload",
+        "uploadVideo": "Upload Video",
+        "uploadFailed": "Upload failed. Please try again."
+      }
+    },
     "images": {
       "overview": {
         "description": "Description",
@@ -1602,6 +1651,7 @@
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Documents",
+      "videoLibrary": "Videos",
       "imageLibrary": "Images",
       "importableEvents": "Importable Events",
       "media": "Files",
