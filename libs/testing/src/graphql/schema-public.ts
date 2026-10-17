@@ -213,6 +213,41 @@ export type ArticleTeaserInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Audio = {
+  __typename?: 'Audio';
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  /** Length in seconds, as the browser reported it on upload. */
+  duration?: Maybe<Scalars['Float']['output']>;
+  extension: Scalars['String']['output'];
+  fileSize: Scalars['Int']['output'];
+  filename?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  license?: Maybe<Scalars['String']['output']>;
+  link?: Maybe<Scalars['String']['output']>;
+  mimeType: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  source?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
+};
+
+export type AudioFilter = {
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum AudioSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
+}
+
+export type AudioStorageUsage = {
+  __typename?: 'AudioStorageUsage';
+  audioCount: Scalars['Int']['output'];
+  limitBytes: Scalars['Float']['output'];
+  usedBytes: Scalars['Float']['output'];
+};
+
 export type AuditLog = {
   __typename?: 'AuditLog';
   action: AuditLogAction;
@@ -2816,6 +2851,8 @@ export type Mutation = {
   deleteAllMailchimpSyncErrors: Scalars['Boolean']['output'];
   /** Deletes an article. */
   deleteArticle: Scalars['String']['output'];
+  /** Deletes an existing audio. */
+  deleteAudio: Scalars['String']['output'];
   /** Deletes an existing author. */
   deleteAuthor: Author;
   deleteBanner?: Maybe<Scalars['Boolean']['output']>;
@@ -2897,6 +2934,8 @@ export type Mutation = {
   deleteUserConsent: UserConsent;
   /** Deletes an existing userrole. */
   deleteUserRole: UserRole;
+  /** Deletes an existing video. */
+  deleteVideo: Scalars['String']['output'];
   /** Discards the current draft and reverts to the latest published revision. */
   discardArticleDraft: Article;
   /** Discards the current draft and reverts to the latest published revision. */
@@ -3003,6 +3042,8 @@ export type Mutation = {
   updateAnalyticsProviderSetting: SettingAnalyticsProvider;
   /** Updates an article. */
   updateArticle: Article;
+  /** Updates an existing audio. */
+  updateAudio: Audio;
   /** Updates an existing author. */
   updateAuthor: Author;
   updateBanner: Banner;
@@ -3095,15 +3136,21 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
+  /** Updates an existing video. */
+  updateVideo: Video;
   /** Updates the website settings. */
   updateWebsiteSettings: WebsiteSettings;
   upgradeUserSubscription: Payment;
+  /** Uploads a new audio. */
+  uploadAudio: Audio;
   /** Uploads a new document. */
   uploadDocument: Document;
   /** Uploads a new image. */
   uploadImage: Image;
   /** This mutation allows to upload and update the user's profile image. */
   uploadUserProfileImage?: Maybe<SensitiveDataUser>;
+  /** Uploads a new video. */
+  uploadVideo: Video;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
   voteOnPoll?: Maybe<PollVote>;
 };
@@ -3685,6 +3732,11 @@ export type MutationDeleteArticleArgs = {
 };
 
 
+export type MutationDeleteAudioArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteAuthorArgs = {
   id: Scalars['String']['input'];
 };
@@ -3866,6 +3918,11 @@ export type MutationDeleteUserConsentArgs = {
 
 
 export type MutationDeleteUserRoleArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteVideoArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -4169,6 +4226,16 @@ export type MutationUpdateArticleArgs = {
   socialMediaImageID?: InputMaybe<Scalars['String']['input']>;
   socialMediaTitle?: InputMaybe<Scalars['String']['input']>;
   tagIds: Array<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateAudioArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  license?: InputMaybe<Scalars['String']['input']>;
+  link?: InputMaybe<Scalars['String']['input']>;
+  source?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -4638,6 +4705,16 @@ export type MutationUpdateUserSubscriptionArgs = {
 };
 
 
+export type MutationUpdateVideoArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  license?: InputMaybe<Scalars['String']['input']>;
+  link?: InputMaybe<Scalars['String']['input']>;
+  source?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationUpdateWebsiteSettingsArgs = {
   ads?: InputMaybe<WebsiteAdsInput>;
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
@@ -4656,6 +4733,18 @@ export type MutationUpgradeUserSubscriptionArgs = {
   paymentMethodId: Scalars['String']['input'];
   subscriptionId: Scalars['String']['input'];
   successURL?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUploadAudioArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  duration?: InputMaybe<Scalars['Float']['input']>;
+  file: Scalars['Upload']['input'];
+  filename?: InputMaybe<Scalars['String']['input']>;
+  license?: InputMaybe<Scalars['String']['input']>;
+  link?: InputMaybe<Scalars['String']['input']>;
+  source?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4692,6 +4781,21 @@ export type MutationUploadUserProfileImageArgs = {
   source?: InputMaybe<Scalars['String']['input']>;
   tags: Array<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUploadVideoArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  duration?: InputMaybe<Scalars['Float']['input']>;
+  file: Scalars['Upload']['input'];
+  filename?: InputMaybe<Scalars['String']['input']>;
+  height?: InputMaybe<Scalars['Int']['input']>;
+  license?: InputMaybe<Scalars['String']['input']>;
+  link?: InputMaybe<Scalars['String']['input']>;
+  poster?: InputMaybe<Scalars['Upload']['input']>;
+  source?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  width?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -4906,6 +5010,13 @@ export type PaginatedArticles = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type PaginatedAudios = {
+  __typename?: 'PaginatedAudios';
+  nodes: Array<Audio>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type PaginatedAuditLogs = {
   __typename?: 'PaginatedAuditLogs';
   nodes: Array<AuditLog>;
@@ -5072,6 +5183,13 @@ export type PaginatedTags = {
 export type PaginatedUserRoles = {
   __typename?: 'PaginatedUserRoles';
   nodes: Array<UserRole>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaginatedVideos = {
+  __typename?: 'PaginatedVideos';
+  nodes: Array<Video>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
@@ -5661,6 +5779,12 @@ export type Query = {
   articleRevisions: PaginatedArticleRevisions;
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles;
+  /** Returns a audio by id. */
+  audio: Audio;
+  /** Returns the current audio storage usage and limit. */
+  audioStorageUsage: AudioStorageUsage;
+  /** Returns a paginated list of audios based on the filters given. */
+  audios: PaginatedAudios;
   /** Returns a paginated list of audit log entries based on the filters given. */
   auditLogs: PaginatedAuditLogs;
   /** Get an author by ID or slug */
@@ -5998,6 +6122,12 @@ export type Query = {
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
+  /** Returns a video by id. */
+  video: Video;
+  /** Returns the current video storage usage and limit. */
+  videoStorageUsage: VideoStorageUsage;
+  /** Returns a paginated list of videos based on the filters given. */
+  videos: PaginatedVideos;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
 };
@@ -6055,6 +6185,21 @@ export type QueryArticlesArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<ArticleSort>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryAudioArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryAudiosArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<AudioFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<AudioSort>;
   take?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -6793,6 +6938,21 @@ export type QueryUsersArgs = {
   skip?: Scalars['Int']['input'];
   sort?: UserSort;
   take?: Scalars['Int']['input'];
+};
+
+
+export type QueryVideoArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryVideosArgs = {
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<VideoFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<VideoSort>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QuoteBlock = BaseBlock & HasImage & {
@@ -7896,6 +8056,45 @@ export enum UserSubscriptionStatus {
 export type VersionInformation = {
   __typename?: 'VersionInformation';
   version: Scalars['String']['output'];
+};
+
+export type Video = {
+  __typename?: 'Video';
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  /** Length in seconds, as the browser reported it on upload. */
+  duration?: Maybe<Scalars['Float']['output']>;
+  extension: Scalars['String']['output'];
+  fileSize: Scalars['Int']['output'];
+  filename?: Maybe<Scalars['String']['output']>;
+  hasPoster: Scalars['Boolean']['output'];
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['String']['output'];
+  license?: Maybe<Scalars['String']['output']>;
+  link?: Maybe<Scalars['String']['output']>;
+  mimeType: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  posterUrl?: Maybe<Scalars['String']['output']>;
+  source?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
+  width?: Maybe<Scalars['Int']['output']>;
+};
+
+export type VideoFilter = {
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum VideoSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
+}
+
+export type VideoStorageUsage = {
+  __typename?: 'VideoStorageUsage';
+  limitBytes: Scalars['Float']['output'];
+  usedBytes: Scalars['Float']['output'];
+  videoCount: Scalars['Int']['output'];
 };
 
 export type VimeoVideoBlock = BaseBlock & {

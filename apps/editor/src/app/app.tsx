@@ -68,6 +68,12 @@ import { DiscountCodeEditView } from './routes/discountCode/discountCodeEditView
 import { DiscountCodeList } from './routes/discountCode/discountCodeList';
 import { DiscountCodeUsageView } from './routes/discountCode/discountCodeUsageView';
 import { DocumentList } from './routes/documents/documentList';
+import { AudioEditRoute } from './routes/audio/audioEditRoute';
+import { AudioList } from './routes/audio/audioList';
+import { AudioUploadRoute } from './routes/audio/audioUploadRoute';
+import { VideoEditRoute } from './routes/videos/videoEditRoute';
+import { VideoList } from './routes/videos/videoList';
+import { VideoUploadRoute } from './routes/videos/videoUploadRoute';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
@@ -650,6 +656,42 @@ export function App() {
                 </Base>
               }
             />
+            {/* Videos Routes */}
+            <Route
+              path="videos"
+              element={
+                <Base>
+                  <VideoList />
+                </Base>
+              }
+            >
+              <Route
+                path="upload"
+                element={<VideoUploadRoute />}
+              />
+              <Route
+                path="edit/:id"
+                element={<VideoEditRoute />}
+              />
+            </Route>
+            {/* Audio Routes */}
+            <Route
+              path="audio"
+              element={
+                <Base>
+                  <AudioList />
+                </Base>
+              }
+            >
+              <Route
+                path="upload"
+                element={<AudioUploadRoute />}
+              />
+              <Route
+                path="edit/:id"
+                element={<AudioEditRoute />}
+              />
+            </Route>
             {/* Navigations Routes */}
             <Route
               path="navigations"
