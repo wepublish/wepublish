@@ -1642,6 +1642,23 @@
           "letter": "{{changed}} passées aux lettres, {{skippedWithoutAddress}} ignorées sans adresse.",
           "mail": "{{changed}} passées à l’e-mail."
         }
+      },
+      "bulk": {
+        "title": "Manuellement par public cible",
+        "intro": "Délimiter le public comme pour les envois manuels et changer la distribution pour toutes ces personnes.",
+        "people": "{{count}} personnes dans ce public",
+        "history": {
+          "title": "Derniers changements",
+          "empty": "Aucun changement par public cible pour l’instant.",
+          "when": "Quand",
+          "who": "Qui",
+          "channel": "Distribution",
+          "people": "Personnes",
+          "changed": "Changées",
+          "skipped": "Ignorées",
+          "filter": "Public cible",
+          "unknownUser": "Inconnu"
+        }
       }
     },
     "navbar": {
@@ -3772,6 +3789,50 @@
           "grayscale": "Niveaux de gris",
           "color": "En couleur"
         }
+      },
+      "mailHistory": {
+        "label": "Messages reçus",
+        "hint": "Uniquement les personnes qui ont reçu (ou non) un modèle donné. S’applique à chaque base.",
+        "add": "Ajouter une condition",
+        "remove": "Supprimer la condition",
+        "received": "a reçu",
+        "notReceived": "n’a pas reçu",
+        "template": "Choisir un modèle …",
+        "state": "Statut",
+        "anyState": "Indifférent",
+        "channel": "Canal",
+        "anyChannel": "Indifférent",
+        "sentBetween": "Envoyé entre",
+        "match": {
+          "all": "Toutes les conditions doivent être remplies",
+          "any": "Une condition suffit"
+        },
+        "states": {
+          "submitted": "Transmis",
+          "accepted": "Accepté",
+          "delivered": "Distribué",
+          "deferred": "Différé",
+          "bounced": "Rebond",
+          "rejected": "Refusé",
+          "dispatched": "Posté",
+          "undeliverable": "Non distribuable",
+          "canceled": "Annulé"
+        }
+      },
+      "audienceSummary": {
+        "base": "Base",
+        "memberPlans": "Formules",
+        "state": "Statut de l’abonnement",
+        "segments": "Statut e-mail",
+        "mailHistory": "Messages",
+        "received": "reçu",
+        "notReceived": "non reçu",
+        "between": "{{from}} – {{to}}",
+        "from": "dès le {{from}}",
+        "to": "jusqu’au {{to}}",
+        "matchAny": "une condition suffit",
+        "matchAll": "toutes les conditions",
+        "more": "{{count}} autres filtres"
       }
     },
     "mailLog": {

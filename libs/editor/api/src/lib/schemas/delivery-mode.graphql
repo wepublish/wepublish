@@ -59,6 +59,31 @@ query DeliveryModeAudiencePreview(
   deliveryModeAudiencePreview(audience: $audience, channel: $channel) {
     userCount
     withoutAddressCount
+    segments {
+      segment
+      userCount
+    }
+  }
+}
+
+query DeliveryModeBulkChanges($skip: Int, $take: Int) {
+  deliveryModeBulkChanges(skip: $skip, take: $take) {
+    nodes {
+      id
+      createdAt
+      channel
+      audience
+      userCount
+      changed
+      skippedWithoutAddress
+      changedBy {
+        id
+        email
+        name
+        firstName
+      }
+    }
+    totalCount
   }
 }
 

@@ -11,7 +11,11 @@ import {
   EmailQualityLevel,
   MailChannel,
 } from '@prisma/client';
-import { MailLogRecipient } from '../mail-send/mail-send.model';
+import { GraphQLJSONObject } from 'graphql-type-json';
+import {
+  MailLogRecipient,
+  MailSegmentCount,
+} from '../mail-send/mail-send.model';
 
 registerEnumType(DeliveryPreferenceOrigin, {
   name: 'DeliveryPreferenceOrigin',
@@ -111,6 +115,52 @@ export class DeliveryModeAudiencePreview {
       'People without a usable postal address; they are skipped when moving to letters.',
   })
   withoutAddressCount!: number;
+
+  @Field(() => [MailSegmentCount], {
+    description: 'How the people split by email segment.',
+  })
+  segments!: MailSegmentCount[];
+}
+
+@ObjectType({
+  description:
+    'One bulk switch of an audience, kept for the record with the filter that chose them.',
+})
+export class DeliveryModeBulkChangeModel {
+  @Field()
+  id!: string;
+
+  @Field(() => GraphQLISODateTime)
+  createdAt!: Date;
+
+  @Field(() => MailChannel)
+  channel!: MailChannel;
+
+  @Field(() => GraphQLJSONObject, {
+    description: 'The MailAudienceInput that was applied.',
+  })
+  audience!: Record<string, unknown>;
+
+  @Field(() => Int, { description: 'People the filter matched.' })
+  userCount!: number;
+
+  @Field(() => Int)
+  changed!: number;
+
+  @Field(() => Int)
+  skippedWithoutAddress!: number;
+
+  @Field(() => MailLogRecipient, { nullable: true })
+  changedBy?: MailLogRecipient | null;
+}
+
+@ObjectType()
+export class PaginatedDeliveryModeBulkChanges {
+  @Field(() => [DeliveryModeBulkChangeModel])
+  nodes!: DeliveryModeBulkChangeModel[];
+
+  @Field(() => Int)
+  totalCount!: number;
 }
 
 @ObjectType()

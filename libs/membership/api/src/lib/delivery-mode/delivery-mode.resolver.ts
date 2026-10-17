@@ -15,6 +15,7 @@ import {
   DeliverySuggestionConfirmAllResult,
   DeliverySuggestionCounts,
   DeliverySuggestionRecomputeResult,
+  PaginatedDeliveryModeBulkChanges,
   PaginatedDeliverySuggestions,
   UserDeliveryPreferenceModel,
 } from './delivery-mode.model';
@@ -68,6 +69,17 @@ export class DeliveryModeResolver {
     @Args('channel', { type: () => MailChannel }) channel: MailChannel
   ) {
     return this.preferences.previewAudience(audience, channel);
+  }
+
+  @Permissions(CanManageUserDeliveryMode)
+  @Query(() => PaginatedDeliveryModeBulkChanges, {
+    description: `Recent bulk switches of an audience's delivery mode, newest first`,
+  })
+  deliveryModeBulkChanges(
+    @Args('skip', { type: () => Int, nullable: true }) skip = 0,
+    @Args('take', { type: () => Int, nullable: true }) take = 20
+  ) {
+    return this.preferences.listBulkChanges(skip, Math.min(take, 100));
   }
 
   @Permissions(CanManageUserDeliveryMode)

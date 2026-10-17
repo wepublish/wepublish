@@ -1004,6 +1004,9 @@ type DeletePollVotesResult {
 }
 
 type DeliveryModeAudiencePreview {
+  """How the people split by email segment."""
+  segments: [MailSegmentCount!]!
+
   """People in the audience."""
   userCount: Int!
 
@@ -1011,6 +1014,23 @@ type DeliveryModeAudiencePreview {
   People without a usable postal address; they are skipped when moving to letters.
   """
   withoutAddressCount: Int!
+}
+
+"""
+One bulk switch of an audience, kept for the record with the filter that chose them.
+"""
+type DeliveryModeBulkChangeModel {
+  """The MailAudienceInput that was applied."""
+  audience: JSONObject!
+  changed: Int!
+  changedBy: MailLogRecipient
+  channel: MailChannel!
+  createdAt: DateTime!
+  id: String!
+  skippedWithoutAddress: Int!
+
+  """People the filter matched."""
+  userCount: Int!
 }
 
 type DeliveryModeBulkResult {
@@ -2053,6 +2073,11 @@ input MailAudienceInput {
   """
   isPaid: Boolean
 
+  """
+  Applies to every base: which mails the person did or did not receive. An empty list means no restriction.
+  """
+  mailHistory: MailHistoryFilterInput
+
   """Restrict to subscriptions of these member plans."""
   memberPlanIDs: [String!]
   paymentMethodID: String
@@ -2091,6 +2116,45 @@ enum MailEmailSegment {
   placeholder
   unknown
   unresponsive
+}
+
+input MailHistoryCondition {
+  """Only mails sent on this channel. Absent means either."""
+  channel: MailChannel
+
+  """Sent on or after."""
+  from: DateTime
+
+  """The mail template that was, or was not, sent."""
+  mailTemplateId: String!
+
+  """
+  true: keeps people who did NOT receive such a mail, including people with no mail at all.
+  """
+  negate: Boolean
+
+  """
+  Only mails that ended in one of these states. Empty or absent means any.
+  """
+  states: [MailLogState!]
+
+  """Sent on or before."""
+  to: DateTime
+}
+
+input MailHistoryFilterInput {
+  conditions: [MailHistoryCondition!]!
+
+  """Defaults to all."""
+  match: MailHistoryMatch
+}
+
+"""
+all: every condition must hold (AND). any: one condition suffices (OR).
+"""
+enum MailHistoryMatch {
+  all
+  any
 }
 
 input MailLogFilter {
@@ -4020,6 +4084,11 @@ type PaginatedComments {
   totalCount: Int!
 }
 
+type PaginatedDeliveryModeBulkChanges {
+  nodes: [DeliveryModeBulkChangeModel!]!
+  totalCount: Int!
+}
+
 type PaginatedDeliverySuggestions {
   nodes: [DeliverySuggestionModel!]!
   totalCount: Int!
@@ -4849,6 +4918,9 @@ type Query {
 
   """What switching an audience's delivery mode would touch"""
   deliveryModeAudiencePreview(audience: MailAudienceInput!, channel: MailChannel!): DeliveryModeAudiencePreview!
+
+  """Recent bulk switches of an audience's delivery mode, newest first"""
+  deliveryModeBulkChanges(skip: Int, take: Int): PaginatedDeliveryModeBulkChanges!
 
   """How many suggestions are open, per direction"""
   deliverySuggestionCounts: DeliverySuggestionCounts!

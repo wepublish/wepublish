@@ -6,6 +6,7 @@ import {
 import {
   MailEmailFilter,
   MailEmailSegment,
+  MailHistoryMatch,
   MailRecipientBase,
   MailSubscriptionState,
 } from './mail-send.model';
@@ -1450,5 +1451,213 @@ describe('audience filtering (semantics)', () => {
         )
       ).toBe(MailEmailSegment.placeholder);
     });
+  });
+});
+
+describe('audience filtering by mail history', () => {
+  const days = (offset: number) =>
+    new Date(Date.now() + offset * 24 * 60 * 60 * 1000);
+
+  const userWhereFor = async (audience: any) => {
+    const prisma = { user: { count: vi.fn(async () => 0) } };
+    await makeService(prisma).count(audience);
+
+    return (prisma.user.count as Mock).mock.calls[0][0]?.where;
+  };
+
+  const subscriptionWhereFor = async (audience: any) => {
+    const prisma = { subscription: { count: vi.fn(async () => 0) } };
+    await makeService(prisma).count(audience);
+
+    return (prisma.subscription.count as Mock).mock.calls[0][0].where;
+  };
+
+  const invoiceMail = (overrides: Record<string, any> = {}) => ({
+    mailTemplateId: 'invoice',
+    state: 'delivered',
+    channel: 'mail',
+    sentDate: days(-3),
+    ...overrides,
+  });
+
+  const person = (mailSent: any[]) => ({ mailSent });
+
+  const condition = (overrides: Record<string, any> = {}) => ({
+    mailTemplateId: 'invoice',
+    ...overrides,
+  });
+
+  const included = async (row: any, mailHistory: any) =>
+    matches(
+      row,
+      await userWhereFor({ base: MailRecipientBase.allUsers, mailHistory })
+    );
+
+  it('keeps the people who were sent the template', async () => {
+    const history = { conditions: [condition()] };
+
+    expect(await included(person([invoiceMail()]), history)).toBe(true);
+    expect(
+      await included(
+        person([invoiceMail({ mailTemplateId: 'other' })]),
+        history
+      )
+    ).toBe(false);
+    expect(await included(person([]), history)).toBe(false);
+  });
+
+  it('keeps the people who were not sent it, including people without any mail', async () => {
+    // The point of `none` over `NOT`: a person with no log at all must stay.
+    const history = { conditions: [condition({ negate: true })] };
+
+    expect(await included(person([]), history)).toBe(true);
+    expect(
+      await included(
+        person([invoiceMail({ mailTemplateId: 'other' })]),
+        history
+      )
+    ).toBe(true);
+    expect(await included(person([invoiceMail()]), history)).toBe(false);
+  });
+
+  it('narrows to the given delivery states, any state when none are given', async () => {
+    const bounced = { conditions: [condition({ states: ['bounced'] })] };
+
+    expect(await included(person([invoiceMail()]), bounced)).toBe(false);
+    expect(
+      await included(person([invoiceMail({ state: 'bounced' })]), bounced)
+    ).toBe(true);
+    expect(
+      await included(person([invoiceMail()]), {
+        conditions: [condition({ states: [] })],
+      })
+    ).toBe(true);
+  });
+
+  it('narrows to the given channel', async () => {
+    const printed = { conditions: [condition({ channel: 'letter' })] };
+
+    expect(await included(person([invoiceMail()]), printed)).toBe(false);
+    expect(
+      await included(person([invoiceMail({ channel: 'letter' })]), printed)
+    ).toBe(true);
+  });
+
+  it('bounds the send date on either side, inclusively, from iso strings too', async () => {
+    const lastWeek = {
+      conditions: [
+        condition({
+          from: days(-7).toISOString(),
+          to: days(-1).toISOString(),
+        }),
+      ],
+    };
+
+    expect(await included(person([invoiceMail()]), lastWeek)).toBe(true);
+    expect(
+      await included(person([invoiceMail({ sentDate: days(-10) })]), lastWeek)
+    ).toBe(false);
+    expect(
+      await included(person([invoiceMail({ sentDate: days(-10) })]), {
+        conditions: [condition({ to: days(-1) })],
+      })
+    ).toBe(true);
+  });
+
+  it('requires every condition by default and one of them with any', async () => {
+    const both = [condition(), condition({ mailTemplateId: 'reminder' })];
+    const onlyInvoice = person([invoiceMail()]);
+
+    expect(await included(onlyInvoice, { conditions: both })).toBe(false);
+    expect(
+      await included(onlyInvoice, {
+        match: MailHistoryMatch.all,
+        conditions: both,
+      })
+    ).toBe(false);
+    expect(
+      await included(onlyInvoice, {
+        match: MailHistoryMatch.any,
+        conditions: both,
+      })
+    ).toBe(true);
+  });
+
+  it('lets any mix a sent and a not-sent condition', async () => {
+    const history = {
+      match: MailHistoryMatch.any,
+      conditions: [
+        condition({ mailTemplateId: 'reminder' }),
+        condition({ mailTemplateId: 'invoice', negate: true }),
+      ],
+    };
+
+    // Never got the invoice: in. Got the invoice but also the reminder: in.
+    expect(await included(person([]), history)).toBe(true);
+    expect(
+      await included(
+        person([invoiceMail(), invoiceMail({ mailTemplateId: 'reminder' })]),
+        history
+      )
+    ).toBe(true);
+    // Got only the invoice: out.
+    expect(await included(person([invoiceMail()]), history)).toBe(false);
+  });
+
+  it('adds nothing for an empty list of conditions', async () => {
+    const prisma = { user: { count: vi.fn(async () => 0) } };
+
+    await makeService(prisma).count({
+      base: MailRecipientBase.allUsers,
+      mailHistory: { conditions: [] },
+    });
+
+    expect((prisma.user.count as Mock).mock.calls[0][0]).toBeUndefined();
+  });
+
+  it('combines with the email segments', async () => {
+    const prisma = {
+      user: { count: vi.fn(async () => 0) },
+      settingLetterProvider: { findMany: vi.fn(async () => []) },
+    };
+
+    await makeService(prisma).count({
+      base: MailRecipientBase.allUsers,
+      emailSegments: [MailEmailSegment.dead],
+      mailHistory: { conditions: [condition()] },
+    });
+
+    const where = (prisma.user.count as Mock).mock.calls[0][0].where;
+
+    expect(JSON.stringify(where)).toContain('"mailSent"');
+    expect(JSON.stringify(where)).toContain('"emailQuality"');
+  });
+
+  it('applies to the owner for the subscription audiences', async () => {
+    const where = await subscriptionWhereFor({
+      base: MailRecipientBase.hasSubscription,
+      mailHistory: { conditions: [condition()] },
+    });
+    const owner = (mailSent: any[]) => ({
+      confirmed: true,
+      deactivation: null,
+      paidUntil: days(20),
+      user: { mailSent },
+    });
+
+    expect(matches(owner([invoiceMail()]), where)).toBe(true);
+    expect(matches(owner([]), where)).toBe(false);
+  });
+
+  it('applies to the people without an active subscription too', async () => {
+    const where = await userWhereFor({
+      base: MailRecipientBase.noActiveSubscription,
+      mailHistory: { conditions: [condition({ negate: true })] },
+    });
+
+    expect(matches({ subscriptions: [], mailSent: [] }, where)).toBe(true);
+    expect(
+      matches({ subscriptions: [], mailSent: [invoiceMail()] }, where)
+    ).toBe(false);
   });
 });

@@ -1049,10 +1049,27 @@ export type DeletePollVotesResult = {
 
 export type DeliveryModeAudiencePreview = {
   __typename: 'DeliveryModeAudiencePreview';
+  /** How the people split by email segment. */
+  segments: Array<MailSegmentCount>;
   /** People in the audience. */
   userCount: Scalars['Int']['output'];
   /** People without a usable postal address; they are skipped when moving to letters. */
   withoutAddressCount: Scalars['Int']['output'];
+};
+
+/** One bulk switch of an audience, kept for the record with the filter that chose them. */
+export type DeliveryModeBulkChangeModel = {
+  __typename: 'DeliveryModeBulkChangeModel';
+  /** The MailAudienceInput that was applied. */
+  audience: Scalars['JSONObject']['output'];
+  changed: Scalars['Int']['output'];
+  changedBy?: Maybe<MailLogRecipient>;
+  channel: MailChannel;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  skippedWithoutAddress: Scalars['Int']['output'];
+  /** People the filter matched. */
+  userCount: Scalars['Int']['output'];
 };
 
 export type DeliveryModeBulkResult = {
@@ -2088,6 +2105,8 @@ export type MailAudienceInput = {
   isCanceled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Subscribers audience only: true keeps only subscriptions that are currently paid up (started and paidUntil in the future); false keeps the rest. Grace periods are not considered. */
   isPaid?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Applies to every base: which mails the person did or did not receive. An empty list means no restriction. */
+  mailHistory?: InputMaybe<MailHistoryFilterInput>;
   /** Restrict to subscriptions of these member plans. */
   memberPlanIDs?: InputMaybe<Array<Scalars['String']['input']>>;
   paymentMethodID?: InputMaybe<Scalars['String']['input']>;
@@ -2118,6 +2137,33 @@ export enum MailEmailSegment {
   Placeholder = 'placeholder',
   Unknown = 'unknown',
   Unresponsive = 'unresponsive'
+}
+
+export type MailHistoryCondition = {
+  /** Only mails sent on this channel. Absent means either. */
+  channel?: InputMaybe<MailChannel>;
+  /** Sent on or after. */
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The mail template that was, or was not, sent. */
+  mailTemplateId: Scalars['String']['input'];
+  /** true: keeps people who did NOT receive such a mail, including people with no mail at all. */
+  negate?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Only mails that ended in one of these states. Empty or absent means any. */
+  states?: InputMaybe<Array<MailLogState>>;
+  /** Sent on or before. */
+  to?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type MailHistoryFilterInput = {
+  conditions: Array<MailHistoryCondition>;
+  /** Defaults to all. */
+  match?: InputMaybe<MailHistoryMatch>;
+};
+
+/** all: every condition must hold (AND). any: one condition suffices (OR). */
+export enum MailHistoryMatch {
+  All = 'all',
+  Any = 'any'
 }
 
 export type MailLogFilter = {
@@ -5372,6 +5418,12 @@ export type PaginatedComments = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type PaginatedDeliveryModeBulkChanges = {
+  __typename: 'PaginatedDeliveryModeBulkChanges';
+  nodes: Array<DeliveryModeBulkChangeModel>;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type PaginatedDeliverySuggestions = {
   __typename: 'PaginatedDeliverySuggestions';
   nodes: Array<DeliverySuggestionModel>;
@@ -6161,6 +6213,8 @@ export type Query = {
   dailySubscriptionStats: Array<DailySubscriptionStats>;
   /** What switching an audience's delivery mode would touch */
   deliveryModeAudiencePreview: DeliveryModeAudiencePreview;
+  /** Recent bulk switches of an audience's delivery mode, newest first */
+  deliveryModeBulkChanges: PaginatedDeliveryModeBulkChanges;
   /** How many suggestions are open, per direction */
   deliverySuggestionCounts: DeliverySuggestionCounts;
   /** Open suggestions to move users to letters or back to mail */
@@ -6663,6 +6717,12 @@ export type QueryDailySubscriptionStatsArgs = {
 export type QueryDeliveryModeAudiencePreviewArgs = {
   audience: MailAudienceInput;
   channel: MailChannel;
+};
+
+
+export type QueryDeliveryModeBulkChangesArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 

@@ -18,6 +18,7 @@ function setup() {
       skippedWithoutAddress: 0,
     })),
     previewAudience: vi.fn(),
+    listBulkChanges: vi.fn(async () => ({ nodes: [], totalCount: 0 })),
   };
   const suggestions = {
     list: vi.fn(),
@@ -48,6 +49,7 @@ describe('DeliveryModeResolver', () => {
       'confirmAllDeliverySuggestions',
       'setDeliveryModeForAudience',
       'recomputeDeliverySuggestions',
+      'deliveryModeBulkChanges',
     ] as const) {
       expect(
         Reflect.getMetadata(
@@ -105,6 +107,14 @@ describe('DeliveryModeResolver', () => {
       toMail: 0,
       removed: 0,
     });
+  });
+
+  it('pages the bulk switches with sensible defaults', async () => {
+    const { resolver, preferences } = setup();
+
+    await resolver.deliveryModeBulkChanges();
+
+    expect(preferences.listBulkChanges).toHaveBeenCalledWith(0, 20);
   });
 
   it('pages suggestions with sensible defaults', async () => {
