@@ -15,6 +15,11 @@ const STATE_COLORS: Record<
   [MailLogState.Deferred]: 'warning',
   [MailLogState.Bounced]: 'error',
   [MailLogState.Rejected]: 'error',
+  // Letter-only. A letter is handed to a print vendor, so it passes through
+  // states a mail has no equivalent for.
+  [MailLogState.Dispatched]: 'primary',
+  [MailLogState.Undeliverable]: 'error',
+  [MailLogState.Canceled]: 'warning',
 };
 
 /**

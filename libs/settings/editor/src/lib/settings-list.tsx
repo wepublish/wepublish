@@ -2,6 +2,7 @@ import { useApolloClient, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
   SettingName,
+  LoginCodeSecondFactor,
   SettingsListDocument,
   UpdateSettingDocument,
 } from '@wepublish/editor/api';
@@ -45,6 +46,7 @@ import {
   FormLabel,
   Grid,
   InputAdornment,
+  MenuItem,
   Stack,
   TextField,
 } from '@mui/material';
@@ -90,6 +92,26 @@ const SETTINGS = {
   [SettingName.SendLoginJwtExpiresMin]: {
     label: 'settingList.loginMinutes',
     value: 0,
+  },
+  [SettingName.LoginCodeEnabled]: {
+    label: 'settingList.loginCodeEnabled',
+    value: false,
+  },
+  [SettingName.LoginCodeMaxUses]: {
+    label: 'settingList.loginCodeMaxUses',
+    value: 5,
+  },
+  [SettingName.LoginCodeValidDays]: {
+    label: 'settingList.loginCodeValidDays',
+    value: 90,
+  },
+  [SettingName.LoginCodeSecondFactor]: {
+    label: 'settingList.loginCodeSecondFactor',
+    value: LoginCodeSecondFactor.None,
+  },
+  [SettingName.PlaceholderEmailPatterns]: {
+    label: 'settingList.placeholderEmailPatterns',
+    value: '',
   },
   [SettingName.ResetPasswordJwtExpiresMin]: {
     label: 'settingList.passwordToken',
@@ -157,6 +179,8 @@ const EMPTY_SETTINGS = Object.fromEntries(
 
 const NUMBER_FALLBACK_RANGES: Partial<Record<SettingName, [number, number]>> = {
   [SettingName.SessionTtlDays]: [1, 365],
+  [SettingName.LoginCodeMaxUses]: [1, 100],
+  [SettingName.LoginCodeValidDays]: [1, 365],
   [SettingName.SendLoginJwtExpiresMin]: [1, 10080],
   [SettingName.ResetPasswordJwtExpiresMin]: [10, 10080],
   [SettingName.PeeringTimeoutMs]: [1000, 10000],
@@ -556,6 +580,89 @@ function SettingList() {
                           t('settingList.info.loginMinutes'),
                           t('settingList.minutes')
                         )}
+
+                        {renderToggle(
+                          SettingName.LoginCodeEnabled,
+                          t('settingList.warnings.loginCodeEnabled')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.LoginCodeMaxUses,
+                          t('settingList.warnings.loginCodeMaxUses'),
+                          t('settingList.loginCodeUses')
+                        )}
+
+                        {renderNumberInput(
+                          SettingName.LoginCodeValidDays,
+                          t('settingList.warnings.loginCodeValidDays'),
+                          t('settingList.days')
+                        )}
+
+                        <Controller
+                          control={control}
+                          name={SettingName.LoginCodeSecondFactor}
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              select
+                              value={
+                                (field.value as LoginCodeSecondFactor) ??
+                                LoginCodeSecondFactor.None
+                              }
+                              label={
+                                <SettingLabel
+                                  label={t(
+                                    SETTINGS[SettingName.LoginCodeSecondFactor]
+                                      .label
+                                  )}
+                                  info={t(
+                                    'settingList.warnings.loginCodeSecondFactor'
+                                  )}
+                                />
+                              }
+                              disabled={isDisabled}
+                              fullWidth
+                            >
+                              {Object.values(LoginCodeSecondFactor).map(
+                                value => (
+                                  <MenuItem
+                                    key={value}
+                                    value={value}
+                                  >
+                                    {t(
+                                      `settingList.loginCodeSecondFactorOptions.${value}`
+                                    )}
+                                  </MenuItem>
+                                )
+                              )}
+                            </TextField>
+                          )}
+                        />
+
+                        <Controller
+                          control={control}
+                          name={SettingName.PlaceholderEmailPatterns}
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              value={(field.value as string | null) ?? ''}
+                              label={
+                                <SettingLabel
+                                  label={t(
+                                    SETTINGS[
+                                      SettingName.PlaceholderEmailPatterns
+                                    ].label
+                                  )}
+                                  info={t(
+                                    'settingList.warnings.placeholderEmailPatterns'
+                                  )}
+                                />
+                              }
+                              disabled={isDisabled}
+                              fullWidth
+                            />
+                          )}
+                        />
 
                         {renderNumberInput(
                           SettingName.ResetPasswordJwtExpiresMin,

@@ -41,6 +41,7 @@ import {
   KvTtlCacheModule,
   KvTtlCacheService,
 } from '@wepublish/kv-ttl-cache/api';
+import { LoginCodeModule, LoginCodeService } from '@wepublish/login-code/api';
 import { MailsModule } from '@wepublish/mail/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 import {
@@ -134,6 +135,14 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     }),
     AuthorModule,
     PrismaModule,
+    LoginCodeModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        websiteURL: config.get('WEBSITE_URL') || 'http://localhost:3000',
+      }),
+      inject: [ConfigService],
+      global: true,
+    }),
     ProviderRegistryModule.forRootAsync({
       imports: [ConfigModule, PrismaModule],
       inject: [ConfigService, PrismaClient],
@@ -145,7 +154,8 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
       useFactory: async (
         config: ConfigService,
         prisma: PrismaClient,
-        registry: ProviderRegistryService
+        registry: ProviderRegistryService,
+        loginCodeService: LoginCodeService
       ) => {
         await registry.ensureLoaded();
 
@@ -165,6 +175,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
 
         return {
           mailProvider: registry.mailProvider,
+          purlProvider: loginCodeService,
           jwtGenerator: (userId: string) =>
             generateJWT({
               id: userId,
@@ -175,7 +186,12 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
             }),
         };
       },
-      inject: [ConfigService, PrismaClient, ProviderRegistryService],
+      inject: [
+        ConfigService,
+        PrismaClient,
+        ProviderRegistryService,
+        LoginCodeService,
+      ],
       global: true,
     }),
     TrackingPixelsModule.registerAsync({

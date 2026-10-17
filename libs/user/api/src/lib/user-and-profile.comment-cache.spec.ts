@@ -1,7 +1,10 @@
 import type { Mock } from 'vitest';
 import { Test } from '@nestjs/testing';
 import { Prisma, PrismaClient, User } from '@prisma/client';
-import { SessionCacheInvalidator } from '@wepublish/authentication/api';
+import {
+  AuthenticationService,
+  SessionCacheInvalidator,
+} from '@wepublish/authentication/api';
 import { ImageUploadService } from '@wepublish/image/api';
 import { PublicContentCacheInvalidator } from '@wepublish/kv-ttl-cache/api';
 import { MailContext, MailchimpContactService } from '@wepublish/mail/api';
@@ -232,6 +235,10 @@ describe('UserService comment cache', () => {
           },
         },
         { provide: UserDataloaderService, useValue: { prime: vi.fn() } },
+        {
+          provide: AuthenticationService,
+          useValue: { revokeUserSessions: vi.fn().mockResolvedValue(0) },
+        },
         {
           provide: SessionCacheInvalidator,
           useValue: { invalidate: vi.fn().mockResolvedValue(undefined) },

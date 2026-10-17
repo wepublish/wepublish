@@ -83,7 +83,9 @@ export const SessionProvider = memo<
   }, []);
 
   return (
-    <SessionTokenContext.Provider value={[user, !!token, setCookieAndToken]}>
+    <SessionTokenContext.Provider
+      value={[user, !!token, setCookieAndToken, fetchMe]}
+    >
       {children}
     </SessionTokenContext.Provider>
   );

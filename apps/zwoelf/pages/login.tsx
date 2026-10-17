@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import {
   IntendedRouteStorageKey,
   LoginFormContainer,
@@ -14,11 +13,7 @@ import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-
-const LoginWrapper = styled('div')`
-  display: grid;
-  justify-content: center;
-`;
+import { LoginWrapper } from '../src/login-wrapper';
 
 type LoginProps = { sessionToken?: FullSessionWithTokenWithoutUserFragment };
 
@@ -38,7 +33,8 @@ export default function Login({ sessionToken }: LoginProps) {
   if (hasUser && typeof window !== 'undefined') {
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();
     deleteCookie(IntendedRouteStorageKey);
-    const route = intendedRoute ?? '/after-login';
+    const route =
+      router.query?.loginCode ? '/welcome' : (intendedRoute ?? '/after-login');
 
     router.replace(route);
   }
@@ -51,6 +47,8 @@ export default function Login({ sessionToken }: LoginProps) {
         defaults={{
           email: router.query?.mail as string | undefined,
           requirePassword: !!router.query?.requirePassword,
+          loginCode: router.query?.loginCode as string | undefined,
+          useLoginCode: !!router.query?.loginCode,
         }}
       />
     </LoginWrapper>
