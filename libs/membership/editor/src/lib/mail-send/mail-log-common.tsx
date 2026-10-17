@@ -1,5 +1,5 @@
 import { Typography, Stack, Chip } from '@mui/material';
-import { MailLogState, MailLogType } from '@wepublish/editor/api';
+import { MailChannel, MailLogState, MailLogType } from '@wepublish/editor/api';
 import { InfoTrigger, ClickPopover } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +15,11 @@ const STATE_COLORS: Record<
   [MailLogState.Deferred]: 'warning',
   [MailLogState.Bounced]: 'error',
   [MailLogState.Rejected]: 'error',
+  // Letter-only. A letter is handed to a print vendor, so it passes through
+  // states a mail has no equivalent for.
+  [MailLogState.Dispatched]: 'primary',
+  [MailLogState.Undeliverable]: 'error',
+  [MailLogState.Canceled]: 'warning',
 };
 
 /**
@@ -24,10 +29,13 @@ const STATE_COLORS: Record<
 const STATE_ORDER: MailLogState[] = [
   MailLogState.Submitted,
   MailLogState.Accepted,
+  MailLogState.Dispatched,
   MailLogState.Delivered,
   MailLogState.Deferred,
   MailLogState.Bounced,
+  MailLogState.Undeliverable,
   MailLogState.Rejected,
+  MailLogState.Canceled,
 ];
 
 /**
@@ -308,4 +316,41 @@ export function formatDateTime(value?: string | null): string {
     dateStyle: 'medium',
     timeStyle: 'short',
   });
+}
+
+/**
+ * The medium a log entry went out through. A letter also shows the address it
+ * was sent to — on an envelope that is what tells two letters apart, where a
+ * mail has its subject line.
+ */
+export function MailLogChannelCell({
+  channel,
+  address,
+}: {
+  channel: MailChannel;
+  address?: string | null;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <Stack
+      direction="column"
+      spacing={0.25}
+      sx={{ alignItems: 'flex-start' }}
+    >
+      <Chip
+        size="small"
+        color={channel === MailChannel.Letter ? 'secondary' : 'info'}
+        label={t(`mailLog.channels.${channel}`)}
+      />
+      {address && (
+        <Typography
+          variant="caption"
+          sx={{ color: 'text.secondary' }}
+        >
+          {address}
+        </Typography>
+      )}
+    </Stack>
+  );
 }
