@@ -842,6 +842,13 @@ export const CanGetMailLogs: Permission = {
   deprecated: false,
 };
 
+export const CanManageUserDeliveryMode: Permission = {
+  id: 'CAN_MANAGE_USER-DELIVERY-MODE',
+  description:
+    'Allows to switch users between mailed and printed subscription mails, singly or by audience, and to confirm suggestions.',
+  deprecated: false,
+};
+
 /**
  * System mails
  */
@@ -1375,6 +1382,7 @@ export const AllPermissions = [
   CanSendTestMailTemplates,
   CanSendMailTemplates,
   CanGetMailLogs,
+  CanManageUserDeliveryMode,
   CanGetSystemMails,
   CanUpdateSystemMails,
   CanTestSystemMails,
@@ -1496,6 +1504,7 @@ export const EditorPermissions = [
   CanGetSubscriptionFlows,
   CanGetMailTemplates,
   CanGetMailLogs,
+  CanManageUserDeliveryMode,
   CanGetPeriodicJobLog,
   CanCreateApprovedComment,
   CanCreateBlockTemplate,

@@ -1523,6 +1523,8 @@
       "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal."
     },
     "mailTemplateSelect": {
+      "sendAsLetter": "also as letter",
+      "sendAsLetterHint": "People with delivery by letter get this message printed instead of emailed.",
       "noMailSentSelectNow": "Do not send an email"
     },
     "memberPlanEdit": {
@@ -1585,7 +1587,80 @@
       "title": "Subscription Plans",
       "paymentProviderStatusInfo": "✅ means every payment method of this plan is connected to a payment provider. ❌ means at least one payment method has no provider, so readers cannot pay with it."
     },
+    "deliveryMode": {
+      "panelTitle": "Delivery of automated messages",
+      "channel": {
+        "mail": "By email",
+        "letter": "By letter"
+      },
+      "origin": {
+        "manual": "Switched by hand",
+        "suggestion": "Switched from a suggestion"
+      },
+      "reason": {
+        "emailQuality_dead": "Email address dead",
+        "placeholderEmail": "Placeholder address",
+        "bulk": "Audience",
+        "emailQuality_active": "Email address active again"
+      },
+      "noAddress": "No usable postal address – letters are not possible.",
+      "switchToLetter": "Switch to letters",
+      "switchToMail": "Switch to email",
+      "suggestionsTitle": "Delivery suggestions",
+      "suggestionsIntro": "Who should get letters because of a dead or placeholder address, and who could get emails again. Nothing changes without a confirmation.",
+      "kind": {
+        "toLetter": "To letters ({{count}})",
+        "toMail": "Back to email ({{count}})"
+      },
+      "recompute": "Recompute now",
+      "recomputed": "Recomputed: {{toLetter}} to letters, {{toMail}} back to email, {{removed}} settled.",
+      "confirm": "Confirm",
+      "confirmAll": "Confirm all ({{count}})",
+      "confirmAllTitle": "Confirm all suggestions",
+      "confirmAllText": {
+        "toLetter": "{{count}} people will get their automated messages as letters from now on.",
+        "toMail": "{{count}} people will get their automated messages by email again."
+      },
+      "confirmAllYes": "Yes, confirm all",
+      "confirmedAll": "{{confirmed}} confirmed, {{skipped}} no longer applied.",
+      "table": {
+        "user": "Person",
+        "emailQuality": "Email status",
+        "reason": "Reason",
+        "since": "Suggested since"
+      },
+      "audience": {
+        "open": "Change delivery of the audience",
+        "title": "Change delivery of the audience",
+        "intro": "Everyone in the chosen audience will get their automated messages this way from now on:",
+        "previewLetter": "{{userCount}} people; {{withoutAddressCount}} of them without a usable address will be skipped.",
+        "previewMail": "{{userCount}} people.",
+        "apply": "Switch",
+        "done": {
+          "letter": "{{changed}} switched to letters, {{skippedWithoutAddress}} skipped without address.",
+          "mail": "{{changed}} switched to email."
+        }
+      },
+      "bulk": {
+        "title": "Manually by audience",
+        "intro": "Narrow the audience like for manual sends and switch delivery for everyone in it.",
+        "people": "{{count}} people in this audience",
+        "history": {
+          "title": "Recent switches",
+          "empty": "No switch by audience yet.",
+          "when": "When",
+          "who": "Who",
+          "channel": "Delivery",
+          "people": "People",
+          "changed": "Switched",
+          "skipped": "Skipped",
+          "filter": "Audience",
+          "unknownUser": "Unknown"
+        }
+      }
+    },
     "navbar": {
+      "deliverySuggestions": "Letter suggestions",
       "articles": "Articles",
       "authors": "Authors",
       "banners": "Banners",
@@ -2058,9 +2133,14 @@
         "newArticlePeering": "Will not affect already created articles",
         "newArticlePaywall": "Will not affect already created articles",
         "subscriptionUpgradeModel": "When enabled, an upgrade always charges the difference between the new and current plan price, regardless of how much time is left in the current period. When disabled, only the unused (pro-rated) remainder of the current period is credited.",
-        "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime."
+        "sessionTtlDays": "How long a login stays valid before signing in again is required. Applies from the next login; sessions already open keep their lifetime.",
+        "emailQualityUnresponsiveAfterDays": "An email address counts as “unresponsive” when this many days passed without a login or a click in a mail, although mails were delivered. Re-evaluated nightly and via “Refresh statuses”.",
+        "emailQualityMinMailsForUnresponsive": "This many mails must have been delivered to the address before it can count as “unresponsive”."
       },
       "sessionTtlDays": "Session lifetime",
+      "emailQuality": "Email quality",
+      "emailQualityUnresponsiveAfterDays": "“Unresponsive” after … days",
+      "emailQualityMinMailsForUnresponsive": "… delivered mails",
       "info": {
         "allowCommentEditing": "Readers can still change the text of their own comments after posting them.",
         "commentCharLimit": "Maximum number of characters a comment may contain. Longer comments cannot be submitted.",
@@ -2295,6 +2375,7 @@
       "confirm": "Confirm",
       "country": "Country",
       "createNewUser": "Create new user",
+      "emailQuality": "Email status: {{level}} – {{reason}}, since {{since}}",
       "deleteUser": "Delete User?",
       "email": "Email",
       "errorCreatingUser": "User could not be created. Unexpected error: {{error}}",
@@ -3038,7 +3119,11 @@
         "organisationId": "Organisation ID",
         "webhookSigningKey": "Webhook Signing Key",
         "autoSend": "Send letters automatically",
-        "placeholderEmailContains": "Placeholder email contains"
+        "placeholderEmailContains": "Placeholder email contains",
+        "defaultAddressPosition": "Address window (automated letters)",
+        "defaultDeliveryProduct": "Delivery (automated letters)",
+        "defaultPrintMode": "Print (automated letters)",
+        "defaultPrintSpectrum": "Colour (automated letters)"
       },
       "mailSettings": {
         "type": "Type",
@@ -3609,16 +3694,24 @@
         "memberPlan": "Subscription plan",
         "address": "Address",
         "withAddress": "Address present",
-        "withoutAddress": "No valid address – will be skipped"
+        "withoutAddress": "No valid address – will be skipped",
+        "emailSegment": "Email status"
       },
       "endedWithinDays": "Deactivated within the last … days",
       "endedWithinDaysHint": "Only subscriptions deactivated in this window.",
-      "emailFilter": {
-        "label": "Email address",
-        "all": "All",
-        "placeholder": "Placeholders only",
-        "real": "Real only",
-        "hint": "Placeholder addresses are defined in the letter integration."
+      "emailSegments": {
+        "label": "Email status",
+        "placeholder": "Placeholder address",
+        "dead": "Dead (bounce, invalid, complaint, unsubscribed)",
+        "unresponsive": "Unresponsive",
+        "unknown": "Unknown",
+        "active": "Active",
+        "pick": "Any status",
+        "hint": "Several statuses mean any of them. “Unresponsive”: mails were delivered but there has been no login or click for a long time (setting “Email quality”). Reachable by letter: placeholder + dead.",
+        "overview": "People in this audience by email status (regardless of the selection)",
+        "refresh": "Refresh statuses",
+        "refreshing": "Refreshing statuses …",
+        "refreshed": "{{updated}} delivery states fetched from the provider ({{checked}} checked), {{recomputed}} people re-evaluated."
       },
       "endedWindow": {
         "label": "When the subscription was deactivated",
@@ -3685,7 +3778,51 @@
         }
       },
       "stateHelp": "Active: confirmed, not deactivated and paid. Pending: taken out but not confirmed yet, e.g. because the first payment is still missing. Deactivated: the subscription has ended or its end is already scheduled.",
-      "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves."
+      "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves.",
+      "mailHistory": {
+        "label": "Messages received",
+        "hint": "Only people who were (or were not) sent a given template. Applies to every base.",
+        "add": "Add condition",
+        "remove": "Remove condition",
+        "received": "was sent",
+        "notReceived": "was not sent",
+        "template": "Choose template …",
+        "state": "Status",
+        "anyState": "Any",
+        "channel": "Channel",
+        "anyChannel": "Any",
+        "sentBetween": "Sent between",
+        "match": {
+          "all": "All conditions must hold",
+          "any": "One condition is enough"
+        },
+        "states": {
+          "submitted": "Submitted",
+          "accepted": "Accepted",
+          "delivered": "Delivered",
+          "deferred": "Deferred",
+          "bounced": "Bounced",
+          "rejected": "Rejected",
+          "dispatched": "Dispatched",
+          "undeliverable": "Undeliverable",
+          "canceled": "Canceled"
+        }
+      },
+      "audienceSummary": {
+        "base": "Base",
+        "memberPlans": "Member plans",
+        "state": "Subscription status",
+        "segments": "Email status",
+        "mailHistory": "Messages",
+        "received": "received",
+        "notReceived": "not received",
+        "between": "{{from}} – {{to}}",
+        "from": "from {{from}}",
+        "to": "until {{to}}",
+        "matchAny": "one condition is enough",
+        "matchAll": "all conditions",
+        "more": "{{count}} more filters"
+      }
     },
     "mailLog": {
       "title": "Completed mailings",
@@ -3881,6 +4018,14 @@
         "failed": "Failed",
         "sending": "Delivering",
         "interrupted": "Interrupted"
+      },
+      "outcome": {
+        "title": "Result",
+        "hint": "Delivery states and clicks come from the mail provider – bounces often hours or days later. “Address dead” counts the recipients whose address is considered dead by now. “Refresh statuses” pulls what the provider has not reported yet.",
+        "delivered": "Delivered",
+        "bounced": "Bounced / rejected",
+        "dead": "Address dead",
+        "clicked": "Clicked"
       },
       "recipientState": {
         "pending": "Pending",

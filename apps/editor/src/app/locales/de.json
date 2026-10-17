@@ -1522,6 +1522,8 @@
       "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die Daten der jeweiligen Person ersetzt, z. B. durch ihren Vornamen. So wird jede E-Mail persönlich."
     },
     "mailTemplateSelect": {
+      "sendAsLetter": "auch als Brief",
+      "sendAsLetterHint": "Personen mit Zustellung per Brief bekommen diese Mitteilung gedruckt statt per E-Mail.",
       "noMailSentSelectNow": "Keine E-Mail senden"
     },
     "memberPlanEdit": {
@@ -1584,7 +1586,80 @@
       "title": "Abo-Pläne",
       "paymentProviderStatusInfo": "✅ heisst, alle Zahlungsmethoden dieses Abo-Plans sind mit einem Zahlungsanbieter verbunden. ❌ heisst, mindestens einer Zahlungsmethode fehlt der Anbieter – damit können Leser:innen nicht bezahlen."
     },
+    "deliveryMode": {
+      "panelTitle": "Zustellung automatischer Mitteilungen",
+      "channel": {
+        "mail": "Per E-Mail",
+        "letter": "Per Brief"
+      },
+      "origin": {
+        "manual": "Von Hand umgestellt",
+        "suggestion": "Nach Vorschlag umgestellt"
+      },
+      "reason": {
+        "emailQuality_dead": "E-Mail-Adresse tot",
+        "placeholderEmail": "Platzhalter-Adresse",
+        "bulk": "Zielgruppe",
+        "emailQuality_active": "E-Mail-Adresse wieder aktiv"
+      },
+      "noAddress": "Keine brieftaugliche Postadresse – Briefe sind nicht möglich.",
+      "switchToLetter": "Auf Brief umstellen",
+      "switchToMail": "Auf E-Mail umstellen",
+      "suggestionsTitle": "Vorschläge zur Zustellung",
+      "suggestionsIntro": "Wer wegen einer toten oder Platzhalter-Adresse Briefe bekommen sollte, und wer wieder E-Mails bekommen könnte. Nichts ändert sich ohne Bestätigung.",
+      "kind": {
+        "toLetter": "Auf Brief ({{count}})",
+        "toMail": "Zurück auf E-Mail ({{count}})"
+      },
+      "recompute": "Jetzt neu berechnen",
+      "recomputed": "Neu berechnet: {{toLetter}} auf Brief, {{toMail}} zurück auf E-Mail, {{removed}} erledigt.",
+      "confirm": "Bestätigen",
+      "confirmAll": "Alle bestätigen ({{count}})",
+      "confirmAllTitle": "Alle Vorschläge bestätigen",
+      "confirmAllText": {
+        "toLetter": "{{count}} Personen bekommen ihre automatischen Mitteilungen künftig als Brief.",
+        "toMail": "{{count}} Personen bekommen ihre automatischen Mitteilungen wieder per E-Mail."
+      },
+      "confirmAllYes": "Ja, alle bestätigen",
+      "confirmedAll": "{{confirmed}} bestätigt, {{skipped}} galten nicht mehr.",
+      "table": {
+        "user": "Person",
+        "emailQuality": "E-Mail-Status",
+        "reason": "Grund",
+        "since": "Vorgeschlagen seit"
+      },
+      "audience": {
+        "open": "Zustellung der Zielgruppe ändern",
+        "title": "Zustellung der Zielgruppe ändern",
+        "intro": "Alle Personen der gewählten Zielgruppe bekommen ihre automatischen Mitteilungen künftig so:",
+        "previewLetter": "{{userCount}} Personen; {{withoutAddressCount}} davon ohne brieftaugliche Adresse werden übersprungen.",
+        "previewMail": "{{userCount}} Personen.",
+        "apply": "Umstellen",
+        "done": {
+          "letter": "{{changed}} auf Brief umgestellt, {{skippedWithoutAddress}} ohne Adresse übersprungen.",
+          "mail": "{{changed}} auf E-Mail umgestellt."
+        }
+      },
+      "bulk": {
+        "title": "Manuell nach Zielgruppe",
+        "intro": "Zielgruppe wie bei den manuellen Sendungen eingrenzen und die Zustellung für alle darin umstellen.",
+        "people": "{{count}} Personen in dieser Zielgruppe",
+        "history": {
+          "title": "Letzte Umstellungen",
+          "empty": "Noch keine Umstellung nach Zielgruppe.",
+          "when": "Wann",
+          "who": "Wer",
+          "channel": "Zustellung",
+          "people": "Personen",
+          "changed": "Umgestellt",
+          "skipped": "Übersprungen",
+          "filter": "Zielgruppe",
+          "unknownUser": "Unbekannt"
+        }
+      }
+    },
     "navbar": {
+      "deliverySuggestions": "Brief-Vorschläge",
       "articles": "Artikel",
       "authors": "Autor*innen",
       "banners": "Banner",
@@ -2044,9 +2119,14 @@
         "newArticlePaywall": "Hat keinen Einfluss auf bereits erstellte Artikel",
         "subscriptionUpgradeModel": "Wenn aktiviert, wird bei einem Upgrade immer die Differenz zwischen dem neuen und dem aktuellen Plan-Preis verrechnet, unabhängig davon, wie viel Zeit in der aktuellen Periode noch verbleibt. Wenn deaktiviert, wird nur das ungenutzte (anteilige) Restguthaben der aktuellen Periode angerechnet.",
         "sessionTtlDays": "Wie lange eine Anmeldung gültig bleibt, bevor man sich neu anmelden muss. Gilt ab der nächsten Anmeldung; bestehende Sitzungen behalten ihre Laufzeit.",
+        "emailQualityUnresponsiveAfterDays": "Eine E-Mail-Adresse gilt als «reagiert nicht», wenn so viele Tage lang weder ein Login noch ein Klick in einer Mail erfolgt ist, obwohl Mails zugestellt wurden. Wird nächtlich und über «Status aktualisieren» neu bewertet.",
+        "emailQualityMinMailsForUnresponsive": "So viele Mails müssen an die Adresse zugestellt worden sein, bevor sie als «reagiert nicht» gelten kann.",
         "showPendingWhenNotPublished": "Dadurch werden geplante Artikel und Seiten öffentlich sichtbar (und damit auch für Crawler), obwohl sie noch nie publiziert wurden."
       },
       "sessionTtlDays": "Gültigkeitsdauer der Anmeldung",
+      "emailQuality": "E-Mail-Qualität",
+      "emailQualityUnresponsiveAfterDays": "«Reagiert nicht» nach … Tagen",
+      "emailQualityMinMailsForUnresponsive": "… zugestellten Mails",
       "activeSubscriptionsApiPublic": "API für aktive Abos öffentlich zugänglich machen",
       "expectedRevenueApiPublic": "API für erwartete Einnahmen öffentlich zugänglich machen",
       "newDeactivationsApiPublic": "API für neue Deaktivierungen öffentlich zugänglich machen",
@@ -2247,6 +2327,7 @@
       "confirm": "Bestätigen",
       "country": "Land",
       "createNewUser": "Neue:n Benutzer:in erstellen",
+      "emailQuality": "E-Mail-Status: {{level}} – {{reason}}, seit {{since}}",
       "deleteUser": "Benutzer:in löschen?",
       "email": "E-Mail",
       "errorCreatingUser": "Benutzer:in konnte nicht erstellt werden. Unerwarteter Fehler: {{error}}",
@@ -2977,7 +3058,11 @@
         "organisationId": "Organisations-ID",
         "webhookSigningKey": "Webhook Signing Key",
         "autoSend": "Briefe automatisch versenden",
-        "placeholderEmailContains": "Platzhalter-E-Mail enthält"
+        "placeholderEmailContains": "Platzhalter-E-Mail enthält",
+        "defaultAddressPosition": "Adressfenster (automatische Briefe)",
+        "defaultDeliveryProduct": "Zustellung (automatische Briefe)",
+        "defaultPrintMode": "Druck (automatische Briefe)",
+        "defaultPrintSpectrum": "Farbe (automatische Briefe)"
       },
       "mailSettings": {
         "type": "Typ",
@@ -3590,16 +3675,24 @@
         "memberPlan": "Abo-Plan",
         "address": "Adresse",
         "withAddress": "Adresse vorhanden",
-        "withoutAddress": "Keine gültige Adresse – wird nicht verschickt"
+        "withoutAddress": "Keine gültige Adresse – wird nicht verschickt",
+        "emailSegment": "E-Mail-Status"
       },
       "endedWithinDays": "Deaktiviert innerhalb der letzten … Tage",
       "endedWithinDaysHint": "Nur Abos, die in diesem Zeitraum deaktiviert wurden.",
-      "emailFilter": {
-        "label": "E-Mail-Adresse",
-        "all": "Alle",
-        "placeholder": "Nur Platzhalter",
-        "real": "Nur echt",
-        "hint": "Platzhalter-Adressen werden in der Brief-Integration festgelegt."
+      "emailSegments": {
+        "label": "E-Mail-Status",
+        "placeholder": "Platzhalter-Adresse",
+        "dead": "Nicht erreichbar (Bounce, ungültig, Beschwerde, abgemeldet)",
+        "unresponsive": "Reagiert nicht",
+        "unknown": "Unbekannt",
+        "active": "Aktiv",
+        "pick": "Alle Status",
+        "hint": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»). Per Brief erreichen: Platzhalter + Nicht erreichbar.",
+        "overview": "Personen dieser Zielgruppe nach E-Mail-Status (unabhängig von der Auswahl)",
+        "refresh": "Status aktualisieren",
+        "refreshing": "Status werden aktualisiert …",
+        "refreshed": "{{updated}} Zustellstatus vom Provider geholt ({{checked}} geprüft), {{recomputed}} Personen neu bewertet."
       },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
@@ -3666,7 +3759,51 @@
         }
       },
       "stateHelp": "Aktiv: bestätigt, nicht deaktiviert und bezahlt. Ausstehend: abgeschlossen, aber noch nicht bestätigt – z. B. weil die erste Zahlung noch fehlt. Deaktiviert: Das Abo wurde beendet oder die Beendigung ist bereits eingetragen.",
-      "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst."
+      "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst.",
+      "mailHistory": {
+        "label": "Erhaltene Mitteilungen",
+        "hint": "Nur Personen, die eine bestimmte Vorlage erhalten (oder nicht erhalten) haben. Gilt für jede Basis.",
+        "add": "Bedingung hinzufügen",
+        "remove": "Bedingung entfernen",
+        "received": "hat erhalten",
+        "notReceived": "hat nicht erhalten",
+        "template": "Vorlage wählen …",
+        "state": "Status",
+        "anyState": "Beliebig",
+        "channel": "Kanal",
+        "anyChannel": "Beliebig",
+        "sentBetween": "Versandt zwischen",
+        "match": {
+          "all": "Alle Bedingungen müssen zutreffen",
+          "any": "Eine Bedingung genügt"
+        },
+        "states": {
+          "submitted": "Übermittelt",
+          "accepted": "Angenommen",
+          "delivered": "Zugestellt",
+          "deferred": "Verzögert",
+          "bounced": "Bounce",
+          "rejected": "Abgelehnt",
+          "dispatched": "Aufgegeben",
+          "undeliverable": "Unzustellbar",
+          "canceled": "Storniert"
+        }
+      },
+      "audienceSummary": {
+        "base": "Basis",
+        "memberPlans": "Abo-Pläne",
+        "state": "Abo-Status",
+        "segments": "E-Mail-Status",
+        "mailHistory": "Mitteilungen",
+        "received": "erhalten",
+        "notReceived": "nicht erhalten",
+        "between": "{{from}} – {{to}}",
+        "from": "ab {{from}}",
+        "to": "bis {{to}}",
+        "matchAny": "eine Bedingung genügt",
+        "matchAll": "alle Bedingungen",
+        "more": "{{count}} weitere Filter"
+      }
     },
     "mailLog": {
       "title": "Abgeschlossene Sendungen",
@@ -3862,6 +3999,14 @@
         "failed": "Fehlgeschlagen",
         "sending": "In Zustellung",
         "interrupted": "Unterbrochen"
+      },
+      "outcome": {
+        "title": "Ergebnis",
+        "hint": "Zustellstatus und Klicks meldet der Mail-Provider – Bounces oft erst nach Stunden oder Tagen. «Nicht erreichbar» zählt die Empfänger:innen, deren Adresse inzwischen als nicht erreichbar gilt. «Status aktualisieren» holt nach, was der Provider noch nicht gemeldet hat.",
+        "delivered": "Zugestellt",
+        "bounced": "Bounces / abgelehnt",
+        "dead": "Nicht erreichbar",
+        "clicked": "Geklickt"
       },
       "recipientState": {
         "pending": "Ausstehend",

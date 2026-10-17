@@ -165,6 +165,7 @@ import {
   MdLocationPin,
   MdLogout,
   MdMail,
+  MdMarkunreadMailbox,
   MdMenu,
   MdMoney,
   MdMultilineChart,
@@ -1105,6 +1106,17 @@ export function Base({ children }: BaseProps) {
                       {t('navbar.mailSend')}
                     </SidebarNavItem>
                   </PermissionControl>
+
+                  <FeatureControl feature="paper-letter-flow">
+                    <PermissionControl qualifyingPermissions={[CanGetUsers.id]}>
+                      <SidebarNavItem
+                        href="/deliverysuggestions"
+                        icon={<MdMarkunreadMailbox />}
+                      >
+                        {t('navbar.deliverySuggestions')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
 
                   <PermissionControl
                     qualifyingPermissions={[

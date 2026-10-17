@@ -11,7 +11,10 @@ import { RenewalSuccessMailService } from './renewal-success-mail.service';
 const INVOICE_ID = 'inv-2';
 const PERIOD_START = new Date('2026-08-01T00:00:00.000Z');
 
-const createFlows = (mailTemplate: { id: string } | null) => [
+const createFlows = (
+  mailTemplate: { id: string } | null,
+  sendAsLetter = false
+) => [
   {
     id: 'default-flow',
     default: true,
@@ -25,6 +28,7 @@ const createFlows = (mailTemplate: { id: string } | null) => [
         event: SubscriptionEvent.RENEWAL_SUCCESS,
         daysAwayFromEnding: null,
         mailTemplate,
+        sendAsLetter,
       },
     ],
   },
@@ -72,6 +76,7 @@ type SetupOptions = {
   earlierPeriods?: number;
   claimCount?: number;
   mailTemplate?: { id: string } | null;
+  sendAsLetter?: boolean;
   flowsReject?: boolean;
   findUniqueRejects?: boolean;
 };
@@ -82,6 +87,7 @@ async function setup(options: SetupOptions = {}) {
     earlierPeriods = 1,
     claimCount = 1,
     mailTemplate = { id: 'mt-renewal-success' },
+    sendAsLetter = false,
     flowsReject = false,
     findUniqueRejects = false,
   } = options;
@@ -91,7 +97,7 @@ async function setup(options: SetupOptions = {}) {
       findMany:
         flowsReject ?
           vi.fn().mockRejectedValue(new Error('database is down'))
-        : vi.fn().mockResolvedValue(createFlows(mailTemplate)),
+        : vi.fn().mockResolvedValue(createFlows(mailTemplate, sendAsLetter)),
     },
     invoice: {
       findUnique:
@@ -151,6 +157,22 @@ describe('RenewalSuccessMailService', () => {
     expect(sent.optionalData.invoice.subscription).toBeUndefined();
     expect(sent.optionalData.invoice.items).toBeUndefined();
     expect(sent.optionalData.invoice.subscriptionPeriods).toBeUndefined();
+  });
+
+  it('hands the letter switch of the interval to the mail', async () => {
+    const { service, mailContext } = await setup({ sendAsLetter: true });
+
+    await service.onInvoicePaid(INVOICE_ID);
+
+    expect(mailContext.sendMail.mock.calls[0][0].asLetter).toBe(true);
+  });
+
+  it('mails by default when the interval is not switched to letters', async () => {
+    const { service, mailContext } = await setup();
+
+    await service.onInvoicePaid(INVOICE_ID);
+
+    expect(mailContext.sendMail.mock.calls[0][0].asLetter).toBe(false);
   });
 
   it('loads the invoice with exactly the relations the mail payload needs', async () => {
@@ -323,6 +345,7 @@ describe('RenewalSuccessMailService.templateForPayment', () => {
 
     await expect(service.templateForPayment(INVOICE_ID)).resolves.toEqual({
       mailTemplateId: 'mt-renewal-success',
+      sendAsLetter: false,
     });
   });
 

@@ -1522,6 +1522,8 @@
       "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel."
     },
     "mailTemplateSelect": {
+      "sendAsLetter": "aussi par lettre",
+      "sendAsLetterHint": "Les personnes avec distribution par lettre reçoivent ce message imprimé au lieu de l’e-mail.",
       "noMailSentSelectNow": "Ne pas envoyer d’e-mail"
     },
     "memberPlanEdit": {
@@ -1584,7 +1586,80 @@
       "editFlowShort": "Flux de communication",
       "paymentProviderStatusInfo": "✅ signifie que tous les moyens de paiement de ce plan sont reliés à un prestataire de paiement. ❌ signifie qu’au moins un moyen de paiement n’a pas de prestataire et que les lecteur·rice·s ne peuvent donc pas payer avec."
     },
+    "deliveryMode": {
+      "panelTitle": "Distribution des messages automatiques",
+      "channel": {
+        "mail": "Par e-mail",
+        "letter": "Par lettre"
+      },
+      "origin": {
+        "manual": "Changé manuellement",
+        "suggestion": "Changé suite à une suggestion"
+      },
+      "reason": {
+        "emailQuality_dead": "Adresse e-mail morte",
+        "placeholderEmail": "Adresse fictive",
+        "bulk": "Public cible",
+        "emailQuality_active": "Adresse e-mail à nouveau active"
+      },
+      "noAddress": "Pas d’adresse postale utilisable – les lettres ne sont pas possibles.",
+      "switchToLetter": "Passer aux lettres",
+      "switchToMail": "Passer à l’e-mail",
+      "suggestionsTitle": "Suggestions de distribution",
+      "suggestionsIntro": "Qui devrait recevoir des lettres à cause d’une adresse morte ou fictive, et qui pourrait à nouveau recevoir des e-mails. Rien ne change sans confirmation.",
+      "kind": {
+        "toLetter": "Vers les lettres ({{count}})",
+        "toMail": "Retour à l’e-mail ({{count}})"
+      },
+      "recompute": "Recalculer maintenant",
+      "recomputed": "Recalculé : {{toLetter}} vers les lettres, {{toMail}} retour à l’e-mail, {{removed}} réglés.",
+      "confirm": "Confirmer",
+      "confirmAll": "Tout confirmer ({{count}})",
+      "confirmAllTitle": "Confirmer toutes les suggestions",
+      "confirmAllText": {
+        "toLetter": "{{count}} personnes recevront désormais leurs messages automatiques par lettre.",
+        "toMail": "{{count}} personnes recevront à nouveau leurs messages automatiques par e-mail."
+      },
+      "confirmAllYes": "Oui, tout confirmer",
+      "confirmedAll": "{{confirmed}} confirmées, {{skipped}} ne s’appliquaient plus.",
+      "table": {
+        "user": "Personne",
+        "emailQuality": "Statut e-mail",
+        "reason": "Raison",
+        "since": "Suggéré depuis"
+      },
+      "audience": {
+        "open": "Changer la distribution du public cible",
+        "title": "Changer la distribution du public cible",
+        "intro": "Toutes les personnes du public cible choisi recevront désormais leurs messages automatiques ainsi :",
+        "previewLetter": "{{userCount}} personnes ; {{withoutAddressCount}} d’entre elles sans adresse utilisable seront ignorées.",
+        "previewMail": "{{userCount}} personnes.",
+        "apply": "Changer",
+        "done": {
+          "letter": "{{changed}} passées aux lettres, {{skippedWithoutAddress}} ignorées sans adresse.",
+          "mail": "{{changed}} passées à l’e-mail."
+        }
+      },
+      "bulk": {
+        "title": "Manuellement par public cible",
+        "intro": "Délimiter le public comme pour les envois manuels et changer la distribution pour toutes ces personnes.",
+        "people": "{{count}} personnes dans ce public",
+        "history": {
+          "title": "Derniers changements",
+          "empty": "Aucun changement par public cible pour l’instant.",
+          "when": "Quand",
+          "who": "Qui",
+          "channel": "Distribution",
+          "people": "Personnes",
+          "changed": "Changées",
+          "skipped": "Ignorées",
+          "filter": "Public cible",
+          "unknownUser": "Inconnu"
+        }
+      }
+    },
     "navbar": {
+      "deliverySuggestions": "Suggestions de lettres",
       "articles": "Articles",
       "authors": "Auteur·trice·s",
       "commentRating": "Système d’évaluation",
@@ -2040,11 +2115,16 @@
         "invoiceReminders": "Nombre de rappels de paiement par facture (un rappel par jour).",
         "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu’elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
+        "emailQualityUnresponsiveAfterDays": "Une adresse e-mail est considérée « sans réaction » lorsque ce nombre de jours s’est écoulé sans connexion ni clic dans un e-mail, alors que des e-mails ont été remis. Réévalué chaque nuit et via « Actualiser les statuts ».",
+        "emailQualityMinMailsForUnresponsive": "Ce nombre d’e-mails doit avoir été remis à l’adresse avant qu’elle puisse être considérée « sans réaction ».",
         "newArticlePaywall": "N’affectera pas les articles déjà créés",
         "newArticlePeering": "N’affectera pas les articles déjà créés",
         "showPendingWhenNotPublished": "Cela exposera publiquement les articles et pages en attente (et donc aussi les robots d’indexation), même s’ils n’ont encore jamais été publiés."
       },
       "sessionTtlDays": "Durée de validité de la connexion",
+      "emailQuality": "Qualité des e-mails",
+      "emailQualityUnresponsiveAfterDays": "« Sans réaction » après … jours",
+      "emailQualityMinMailsForUnresponsive": "… e-mails remis",
       "activeSubscriptionsApiPublic": "Rendre l’API des abonnements actifs accessible au public",
       "expectedRevenueApiPublic": "Rendre l’API des revenus attendus accessible au public",
       "newDeactivationsApiPublic": "Rendre l’API des nouvelles désactivations accessible au public",
@@ -2247,6 +2327,7 @@
       "confirm": "Confirmer",
       "country": "Pays",
       "createNewUser": "Créer un·e nouvel·le utilisateur·trice",
+      "emailQuality": "Statut e-mail : {{level}} – {{reason}}, depuis {{since}}",
       "deleteUser": "Supprimer l’utilisateur·trice ?",
       "email": "E-mail",
       "errorCreatingUser": "L’utilisateur·trice n’a pas pu être créé·e. Erreur inattendue : {{error}}",
@@ -3136,7 +3217,11 @@
         "organisationId": "ID d’organisation",
         "webhookSigningKey": "Clé de signature du webhook",
         "autoSend": "Envoyer les lettres automatiquement",
-        "placeholderEmailContains": "L’e-mail de substitution contient"
+        "placeholderEmailContains": "L’e-mail de substitution contient",
+        "defaultAddressPosition": "Fenêtre d’adresse (lettres automatiques)",
+        "defaultDeliveryProduct": "Distribution (lettres automatiques)",
+        "defaultPrintMode": "Impression (lettres automatiques)",
+        "defaultPrintSpectrum": "Couleur (lettres automatiques)"
       }
     },
     "websiteSettings": {
@@ -3582,16 +3667,24 @@
         "memberPlan": "Plan d’abonnement",
         "address": "Adresse",
         "withAddress": "Adresse disponible",
-        "withoutAddress": "Pas d’adresse valide – ne sera pas envoyé"
+        "withoutAddress": "Pas d’adresse valide – ne sera pas envoyé",
+        "emailSegment": "Statut e-mail"
       },
       "endedWithinDays": "Désactivé au cours des … derniers jours",
       "endedWithinDaysHint": "Uniquement les abonnements désactivés dans cette période.",
-      "emailFilter": {
-        "label": "Adresse e-mail",
-        "all": "Toutes",
-        "placeholder": "Uniquement les substituts",
-        "real": "Uniquement les réelles",
-        "hint": "Les adresses de substitution sont définies dans l’intégration courrier."
+      "emailSegments": {
+        "label": "Statut e-mail",
+        "placeholder": "Adresse de substitution",
+        "dead": "Injoignable (rebond, invalide, plainte, désabonnée)",
+        "unresponsive": "Sans réaction",
+        "unknown": "Inconnu",
+        "active": "Active",
+        "pick": "Tous les statuts",
+        "hint": "Plusieurs statuts signifient « l’un ou l’autre ». « Sans réaction » : des e-mails ont été remis, mais aucune connexion ni aucun clic depuis longtemps (réglage « Qualité des e-mails »). À atteindre par courrier : substitution + injoignable.",
+        "overview": "Personnes de cette audience par statut e-mail (indépendamment de la sélection)",
+        "refresh": "Actualiser les statuts",
+        "refreshing": "Actualisation des statuts …",
+        "refreshed": "{{updated}} statuts de remise récupérés chez le fournisseur ({{checked}} vérifiés), {{recomputed}} personnes réévaluées."
       },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
@@ -3658,6 +3751,50 @@
           "grayscale": "Niveaux de gris",
           "color": "En couleur"
         }
+      },
+      "mailHistory": {
+        "label": "Messages reçus",
+        "hint": "Uniquement les personnes qui ont reçu (ou non) un modèle donné. S’applique à chaque base.",
+        "add": "Ajouter une condition",
+        "remove": "Supprimer la condition",
+        "received": "a reçu",
+        "notReceived": "n’a pas reçu",
+        "template": "Choisir un modèle …",
+        "state": "Statut",
+        "anyState": "Indifférent",
+        "channel": "Canal",
+        "anyChannel": "Indifférent",
+        "sentBetween": "Envoyé entre",
+        "match": {
+          "all": "Toutes les conditions doivent être remplies",
+          "any": "Une condition suffit"
+        },
+        "states": {
+          "submitted": "Transmis",
+          "accepted": "Accepté",
+          "delivered": "Distribué",
+          "deferred": "Différé",
+          "bounced": "Rebond",
+          "rejected": "Refusé",
+          "dispatched": "Posté",
+          "undeliverable": "Non distribuable",
+          "canceled": "Annulé"
+        }
+      },
+      "audienceSummary": {
+        "base": "Base",
+        "memberPlans": "Formules",
+        "state": "Statut de l’abonnement",
+        "segments": "Statut e-mail",
+        "mailHistory": "Messages",
+        "received": "reçu",
+        "notReceived": "non reçu",
+        "between": "{{from}} – {{to}}",
+        "from": "dès le {{from}}",
+        "to": "jusqu’au {{to}}",
+        "matchAny": "une condition suffit",
+        "matchAll": "toutes les conditions",
+        "more": "{{count}} autres filtres"
       }
     },
     "mailLog": {
@@ -3854,6 +3991,14 @@
         "failed": "En échec",
         "sending": "En cours de remise",
         "interrupted": "Interrompus"
+      },
+      "outcome": {
+        "title": "Résultat",
+        "hint": "Les statuts de remise et les clics viennent du fournisseur d’e-mails – les rebonds souvent des heures ou des jours plus tard. « Injoignable » compte les destinataires dont l’adresse est désormais considérée comme injoignable. « Actualiser les statuts » récupère ce que le fournisseur n’a pas encore signalé.",
+        "delivered": "Remis",
+        "bounced": "Rebonds / refusés",
+        "dead": "Injoignable",
+        "clicked": "Cliqués"
       },
       "recipientState": {
         "pending": "En attente",
