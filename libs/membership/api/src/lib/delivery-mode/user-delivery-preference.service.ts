@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   DeliveryPreferenceOrigin,
   MailChannel,
+  Prisma,
   PrismaClient,
 } from '@prisma/client';
 import { canReceiveLetters } from '@wepublish/letter/api';
@@ -10,6 +11,7 @@ import { MailSendRecipientService } from '../mail-send/mail-send-recipient.servi
 import {
   DeliveryModeAudiencePreview,
   DeliveryModeBulkResult,
+  PaginatedDeliveryModeBulkChanges,
   UserDeliveryPreferenceModel,
 } from './delivery-mode.model';
 
@@ -92,6 +94,7 @@ export class UserDeliveryPreferenceService {
     changedByUserId: string
   ): Promise<DeliveryModeBulkResult> {
     let skip = 0;
+    let userCount = 0;
     let changed = 0;
     let skippedWithoutAddress = 0;
 
@@ -109,6 +112,8 @@ export class UserDeliveryPreferenceService {
       }
 
       for (const { user } of page) {
+        userCount++;
+
         if (channel === MailChannel.letter && !canReceiveLetters(user)) {
           skippedWithoutAddress++;
           continue;
@@ -125,20 +130,58 @@ export class UserDeliveryPreferenceService {
       skip += page.length;
     }
 
+    // The preference rows only remember their last change; this keeps which
+    // filter it was, for the record.
+    await this.prisma.deliveryModeBulkChange.create({
+      data: {
+        channel,
+        audience: audience as unknown as Prisma.InputJsonValue,
+        userCount,
+        changed,
+        skippedWithoutAddress,
+        changedByUserId,
+      },
+    });
+
     return { changed, skippedWithoutAddress };
+  }
+
+  async listBulkChanges(
+    skip: number,
+    take: number
+  ): Promise<PaginatedDeliveryModeBulkChanges> {
+    const [nodes, totalCount] = await Promise.all([
+      this.prisma.deliveryModeBulkChange.findMany({
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take,
+        include: { changedBy: changedBySelect },
+      }),
+      this.prisma.deliveryModeBulkChange.count(),
+    ]);
+
+    return {
+      nodes: nodes.map(node => ({
+        ...node,
+        audience: node.audience as Record<string, unknown>,
+      })),
+      totalCount,
+    };
   }
 
   async previewAudience(
     audience: MailAudienceInput,
     channel: MailChannel
   ): Promise<DeliveryModeAudiencePreview> {
-    const userCount = await this.recipients.countUsers(audience);
-    const withoutAddressCount =
+    const [userCount, withoutAddressCount, segments] = await Promise.all([
+      this.recipients.countUsers(audience),
       channel === MailChannel.letter ?
-        await this.recipients.countWithoutAddress(audience, MailChannel.letter)
-      : 0;
+        this.recipients.countWithoutAddress(audience, MailChannel.letter)
+      : Promise.resolve(0),
+      this.recipients.countUsersBySegment(audience),
+    ]);
 
-    return { userCount, withoutAddressCount };
+    return { userCount, withoutAddressCount, segments };
   }
 
   private async store(

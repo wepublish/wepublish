@@ -41,6 +41,11 @@ function setup(users: ReturnType<typeof user>[] = [user('u1')]) {
     deliverySuggestion: {
       deleteMany: vi.fn(async () => ({ count: 1 })),
     },
+    deliveryModeBulkChange: {
+      create: vi.fn(async ({ data }: any) => ({ id: 'change-1', ...data })),
+      findMany: vi.fn(async () => []),
+      count: vi.fn(async () => 0),
+    },
   };
   const recipients = {
     resolvePage: vi.fn(async (_a: unknown, skip: number) =>
@@ -50,6 +55,9 @@ function setup(users: ReturnType<typeof user>[] = [user('u1')]) {
     countWithoutAddress: vi.fn(
       async () => users.filter(u => !u.address).length
     ),
+    countUsersBySegment: vi.fn(async () => [
+      { segment: 'placeholder', userCount: 1 },
+    ]),
   };
   const service = new UserDeliveryPreferenceService(
     prisma as unknown as PrismaClient,
@@ -201,6 +209,68 @@ describe('UserDeliveryPreferenceService', () => {
         MailChannel.letter
       );
     });
+
+    // The per-user preference only keeps its last change; which filter put a
+    // few hundred people on letters is otherwise lost the moment it is done.
+    it('records the switch with the filter and the counts', async () => {
+      const { service, prisma } = setup([
+        user('u1'),
+        user('u2', false),
+        user('u3'),
+      ]);
+      const filtered = {
+        base: MailRecipientBase.hasSubscription,
+        memberPlanIDs: ['plan-1'],
+      } as any;
+
+      await service.setForAudience(filtered, MailChannel.letter, 'admin');
+
+      expect(prisma.deliveryModeBulkChange.create).toHaveBeenCalledWith({
+        data: {
+          channel: MailChannel.letter,
+          audience: filtered,
+          userCount: 3,
+          changed: 2,
+          skippedWithoutAddress: 1,
+          changedByUserId: 'admin',
+        },
+      });
+    });
+
+    it('records a switch that touched nobody, so the attempt is visible', async () => {
+      const { service, prisma } = setup([]);
+
+      await service.setForAudience(audience, MailChannel.letter, 'admin');
+
+      expect(prisma.deliveryModeBulkChange.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ userCount: 0, changed: 0 }),
+      });
+    });
+  });
+
+  describe('listBulkChanges', () => {
+    it('pages the newest first, with who did it', async () => {
+      const { service, prisma } = setup();
+      prisma.deliveryModeBulkChange.findMany.mockResolvedValue([
+        { id: 'change-1' },
+      ] as never);
+      prisma.deliveryModeBulkChange.count.mockResolvedValue(7 as never);
+
+      await expect(service.listBulkChanges(20, 10)).resolves.toEqual({
+        nodes: [{ id: 'change-1' }],
+        totalCount: 7,
+      });
+      expect(prisma.deliveryModeBulkChange.findMany).toHaveBeenCalledWith({
+        orderBy: { createdAt: 'desc' },
+        skip: 20,
+        take: 10,
+        include: {
+          changedBy: {
+            select: { id: true, email: true, name: true, firstName: true },
+          },
+        },
+      });
+    });
   });
 
   describe('previewAudience', () => {
@@ -209,7 +279,11 @@ describe('UserDeliveryPreferenceService', () => {
 
       await expect(
         service.previewAudience(audience, MailChannel.letter)
-      ).resolves.toEqual({ userCount: 2, withoutAddressCount: 1 });
+      ).resolves.toEqual({
+        userCount: 2,
+        withoutAddressCount: 1,
+        segments: [{ segment: 'placeholder', userCount: 1 }],
+      });
     });
 
     it('has nobody to skip when moving to mail', async () => {
@@ -217,7 +291,11 @@ describe('UserDeliveryPreferenceService', () => {
 
       await expect(
         service.previewAudience(audience, MailChannel.mail)
-      ).resolves.toEqual({ userCount: 2, withoutAddressCount: 0 });
+      ).resolves.toEqual({
+        userCount: 2,
+        withoutAddressCount: 0,
+        segments: [{ segment: 'placeholder', userCount: 1 }],
+      });
       expect(recipients.countWithoutAddress).not.toHaveBeenCalled();
     });
   });

@@ -1273,6 +1273,7 @@ model User {
   deliveryPreference        UserDeliveryPreference?
   deliverySuggestion        DeliverySuggestion?
   deliveryPreferenceChanges UserDeliveryPreference[] @relation("DeliveryPreferenceChangedBy")
+  deliveryModeBulkChanges   DeliveryModeBulkChange[] @relation("DeliveryModeBulkChangedBy")
 
   @@index([createdAt])
   @@map("users")
@@ -2619,6 +2620,28 @@ model UserDeliveryPreference {
 
   @@index([channel, origin])
   @@map("user_delivery_preferences")
+}
+
+/// One bulk switch of an audience's delivery mode, kept for the record: the
+/// per-user preference only remembers its last change, not which filter
+/// produced it.
+model DeliveryModeBulkChange {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  channel MailChannel
+  /// The MailAudienceInput as applied, like MailSendJob.recipientFilter.
+  audience Json
+
+  userCount             Int
+  changed               Int
+  skippedWithoutAddress Int
+
+  changedByUserId String?
+  changedBy       User?   @relation("DeliveryModeBulkChangedBy", fields: [changedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt(sort: Desc)])
+  @@map("user_delivery_bulk_changes")
 }
 
 enum DeliverySuggestionKind {

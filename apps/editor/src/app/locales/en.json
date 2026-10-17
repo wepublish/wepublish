@@ -1640,6 +1640,23 @@
           "letter": "{{changed}} switched to letters, {{skippedWithoutAddress}} skipped without address.",
           "mail": "{{changed}} switched to email."
         }
+      },
+      "bulk": {
+        "title": "Manually by audience",
+        "intro": "Narrow the audience like for manual sends and switch delivery for everyone in it.",
+        "people": "{{count}} people in this audience",
+        "history": {
+          "title": "Recent switches",
+          "empty": "No switch by audience yet.",
+          "when": "When",
+          "who": "Who",
+          "channel": "Delivery",
+          "people": "People",
+          "changed": "Switched",
+          "skipped": "Skipped",
+          "filter": "Audience",
+          "unknownUser": "Unknown"
+        }
       }
     },
     "navbar": {
@@ -3761,7 +3778,51 @@
         }
       },
       "stateHelp": "Active: confirmed, not deactivated and paid. Pending: taken out but not confirmed yet, e.g. because the first payment is still missing. Deactivated: the subscription has ended or its end is already scheduled.",
-      "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves."
+      "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves.",
+      "mailHistory": {
+        "label": "Messages received",
+        "hint": "Only people who were (or were not) sent a given template. Applies to every base.",
+        "add": "Add condition",
+        "remove": "Remove condition",
+        "received": "was sent",
+        "notReceived": "was not sent",
+        "template": "Choose template …",
+        "state": "Status",
+        "anyState": "Any",
+        "channel": "Channel",
+        "anyChannel": "Any",
+        "sentBetween": "Sent between",
+        "match": {
+          "all": "All conditions must hold",
+          "any": "One condition is enough"
+        },
+        "states": {
+          "submitted": "Submitted",
+          "accepted": "Accepted",
+          "delivered": "Delivered",
+          "deferred": "Deferred",
+          "bounced": "Bounced",
+          "rejected": "Rejected",
+          "dispatched": "Dispatched",
+          "undeliverable": "Undeliverable",
+          "canceled": "Canceled"
+        }
+      },
+      "audienceSummary": {
+        "base": "Base",
+        "memberPlans": "Member plans",
+        "state": "Subscription status",
+        "segments": "Email status",
+        "mailHistory": "Messages",
+        "received": "received",
+        "notReceived": "not received",
+        "between": "{{from}} – {{to}}",
+        "from": "from {{from}}",
+        "to": "until {{to}}",
+        "matchAny": "one condition is enough",
+        "matchAll": "all conditions",
+        "more": "{{count}} more filters"
+      }
     },
     "mailLog": {
       "title": "Completed mailings",

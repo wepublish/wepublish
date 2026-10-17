@@ -12,6 +12,8 @@ import {
   MailAudienceInput,
   MailEmailFilter,
   MailEmailSegment,
+  MailHistoryCondition,
+  MailHistoryMatch,
   MailRecipientBase,
   MailSubscriptionState,
 } from './mail-send.model';
@@ -174,7 +176,7 @@ export class MailSendRecipientService {
     audience: MailAudienceInput,
     channel?: MailChannel | null
   ): Promise<number> {
-    const email = await this.buildEmailWhere(audience);
+    const email = await this.buildUserLevelWhere(audience);
 
     if (this.oncePerUser(channel)) {
       return this.prisma.user.count({
@@ -246,7 +248,7 @@ export class MailSendRecipientService {
       return this.countUsers(audience);
     }
 
-    const email = await this.buildEmailWhere(audience);
+    const email = await this.buildUserLevelWhere(audience);
 
     switch (audience.base) {
       case MailRecipientBase.allUsers:
@@ -283,7 +285,7 @@ export class MailSendRecipientService {
    * subscriptions is two recipients — and receives two mails.
    */
   async countUsers(audience: MailAudienceInput): Promise<number> {
-    const email = await this.buildEmailWhere(audience);
+    const email = await this.buildUserLevelWhere(audience);
 
     if (audience.base === MailRecipientBase.allUsers && !email) {
       return this.prisma.user.count();
@@ -380,7 +382,7 @@ export class MailSendRecipientService {
     take: number,
     channel?: MailChannel | null
   ): Promise<MailRecipient[]> {
-    const email = await this.buildEmailWhere(audience);
+    const email = await this.buildUserLevelWhere(audience);
 
     if (this.oncePerUser(channel)) {
       return this.resolveUserPage(audience, email, skip, take);
@@ -478,7 +480,7 @@ export class MailSendRecipientService {
     }
 
     const [email, missingCount] = await Promise.all([
-      this.buildEmailWhere(audience),
+      this.buildUserLevelWhere(audience),
       this.countWithoutAddress(audience, channel),
     ]);
 
@@ -592,6 +594,75 @@ export class MailSendRecipientService {
    * The user-level part of the audience: the placeholder/real filter and the
    * email segments, both on top of whatever the base selects.
    */
+  /**
+   * Everything that narrows the people on top of the base: the email filter
+   * and segments, and what they were or were not sent. One filter on the
+   * user, so the subscription audiences apply it to the owner.
+   */
+  private async buildUserLevelWhere(
+    audience: MailAudienceInput
+  ): Promise<Prisma.UserWhereInput | null> {
+    const parts = [
+      await this.buildEmailWhere(audience),
+      this.buildMailHistoryWhere(audience),
+    ].filter((part): part is Prisma.UserWhereInput => part !== null);
+
+    if (!parts.length) {
+      return null;
+    }
+
+    return parts.length === 1 ? parts[0] : { AND: parts };
+  }
+
+  private buildMailHistoryWhere(
+    audience: MailAudienceInput
+  ): Prisma.UserWhereInput | null {
+    const conditions = audience.mailHistory?.conditions ?? [];
+
+    if (!conditions.length) {
+      return null;
+    }
+
+    const parts = conditions.map(condition =>
+      this.mailHistoryConditionWhere(condition)
+    );
+
+    if (parts.length === 1) {
+      return parts[0];
+    }
+
+    return audience.mailHistory?.match === MailHistoryMatch.any ?
+        { OR: parts }
+      : { AND: parts };
+  }
+
+  /** One condition on the person's mail log, as a filter on the person. */
+  private mailHistoryConditionWhere(
+    condition: MailHistoryCondition
+  ): Prisma.UserWhereInput {
+    const log: Prisma.MailLogWhereInput = {
+      mailTemplateId: condition.mailTemplateId,
+    };
+
+    if (condition.states?.length) {
+      log.state = { in: condition.states };
+    }
+
+    if (condition.channel) {
+      log.channel = condition.channel;
+    }
+
+    if (condition.from || condition.to) {
+      log.sentDate = this.dateRange(condition.from, condition.to);
+    }
+
+    // `none` is a relation filter (NOT EXISTS), not a negated column, so a
+    // person with no mail at all is kept. Never `NOT` here.
+    return condition.negate ?
+        { mailSent: { none: log } }
+      : { mailSent: { some: log } };
+  }
+
   private async buildEmailWhere(
     audience: MailAudienceInput
   ): Promise<Prisma.UserWhereInput | null> {

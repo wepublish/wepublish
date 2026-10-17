@@ -4,11 +4,16 @@ import { DeliveryModeAudienceAction } from './delivery-mode-audience-action';
 
 const preview = vi.fn();
 const mutate = vi.fn(async () => ({ data: {} }));
+const mutationOptions = { current: undefined as any };
 
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: (_document: unknown, options?: unknown) => preview(options),
-  useMutation: () => [mutate, { loading: false }],
+  useMutation: (_document: unknown, options?: unknown) => {
+    mutationOptions.current = options;
+
+    return [mutate, { loading: false }];
+  },
 }));
 
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
@@ -75,6 +80,25 @@ describe('DeliveryModeAudienceAction', () => {
       expect.objectContaining({
         variables: { audience, channel: 'letter' },
       })
+    );
+  });
+
+  it('tells the caller what the switch did, so counts and lists can refresh', () => {
+    const onDone = vi.fn();
+    render(
+      <DeliveryModeAudienceAction
+        audience={audience}
+        onDone={onDone}
+      />
+    );
+
+    mutationOptions.current.onCompleted({
+      setDeliveryModeForAudience: { changed: 3, skippedWithoutAddress: 1 },
+    });
+
+    expect(onDone).toHaveBeenCalledWith(
+      { changed: 3, skippedWithoutAddress: 1 },
+      'letter'
     );
   });
 

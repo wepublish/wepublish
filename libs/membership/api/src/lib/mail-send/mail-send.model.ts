@@ -145,10 +145,73 @@ export class LetterPrintInput {
   printSpectrum?: LetterPrintSpectrum;
 }
 
+/** How several mail-history conditions combine. */
+export enum MailHistoryMatch {
+  all = 'all',
+  any = 'any',
+}
+
+registerEnumType(MailHistoryMatch, {
+  name: 'MailHistoryMatch',
+  description:
+    'all: every condition must hold (AND). any: one condition suffices (OR).',
+});
+
+@InputType()
+export class MailHistoryCondition {
+  @Field({ description: 'The mail template that was, or was not, sent.' })
+  mailTemplateId!: string;
+
+  @Field({
+    nullable: true,
+    description:
+      'true: keeps people who did NOT receive such a mail, including people with no mail at all.',
+  })
+  negate?: boolean;
+
+  @Field(() => [MailLogState], {
+    nullable: true,
+    description:
+      'Only mails that ended in one of these states. Empty or absent means any.',
+  })
+  states?: MailLogState[];
+
+  @Field(() => MailChannel, {
+    nullable: true,
+    description: 'Only mails sent on this channel. Absent means either.',
+  })
+  channel?: MailChannel;
+
+  @Field(() => Date, { nullable: true, description: 'Sent on or after.' })
+  from?: Date;
+
+  @Field(() => Date, { nullable: true, description: 'Sent on or before.' })
+  to?: Date;
+}
+
+@InputType()
+export class MailHistoryFilterInput {
+  @Field(() => MailHistoryMatch, {
+    nullable: true,
+    description: 'Defaults to all.',
+  })
+  match?: MailHistoryMatch;
+
+  @Field(() => [MailHistoryCondition])
+  conditions!: MailHistoryCondition[];
+}
+
 @InputType()
 export class MailAudienceInput {
   @Field(() => MailRecipientBase)
   base!: MailRecipientBase;
+
+  @Field(() => MailHistoryFilterInput, {
+    nullable: true,
+    description:
+      'Applies to every base: which mails the person did or did not receive. An empty list means no restriction.',
+  })
+  mailHistory?: MailHistoryFilterInput;
 
   @Field(() => MailEmailFilter, {
     nullable: true,

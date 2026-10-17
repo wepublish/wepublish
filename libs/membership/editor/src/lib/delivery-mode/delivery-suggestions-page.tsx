@@ -37,6 +37,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdRefresh } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { DeliveryModeAudienceSection } from './delivery-mode-audience-section';
 
 const PAGE_SIZE = 50;
 
@@ -252,6 +253,8 @@ export function DeliverySuggestionsPage() {
           />
         </Box>
       )}
+
+      <DeliveryModeAudienceSection />
 
       <Dialog
         open={askAll}

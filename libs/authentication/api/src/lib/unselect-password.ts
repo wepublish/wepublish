@@ -27,6 +27,7 @@ export const unselectPassword: Record<
     | 'deliveryPreference'
     | 'deliverySuggestion'
     | 'deliveryPreferenceChanges'
+    | 'deliveryModeBulkChanges'
   >,
   boolean
 > = {

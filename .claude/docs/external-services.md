@@ -73,7 +73,19 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   suggestion-made letter users that became `active` → `toMail`; manual
   switches are never suggested back. Admins confirm on `/deliverysuggestions`
   (single or all; a stale one is dropped and refused), switch single users on
-  the user page, or an audience from the communication tool.
+  the user page, or an audience: from the communication tool's send step, or
+  from the «Manuell nach Zielgruppe» section below the suggestions, which
+  embeds the same `AudienceFilter` (`libs/membership/editor/src/lib/mail-send/audience/`).
+- Every audience switch is recorded in `DeliveryModeBulkChange`
+  (`user_delivery_bulk_changes`: channel, the `MailAudienceInput` as JSON,
+  counts, who, when; query `deliveryModeBulkChanges`), because the preference
+  rows only keep their last change. The section lists the recent ones with the
+  filter read back as phrases (`describeAudience`).
+- `MailAudienceInput.mailHistory` filters any base by the mail log:
+  `{ match: all|any, conditions: [{ mailTemplateId, negate, states?, channel?, from?, to? }] }`.
+  Built in `mail-send-recipient.service.ts` as `mailSent: { some | none }`
+  on the user (`none` for «not sent», never `NOT`, so people without any mail
+  stay in), ANDed with the email segments through `buildUserLevelWhere`.
 
 - Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
 - Cloudflare Browser Rendering

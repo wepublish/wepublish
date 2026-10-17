@@ -21,6 +21,11 @@ vi.mock('@apollo/client/react', async importOriginal => ({
   ],
 }));
 
+// Has its own spec; here it only has to be on the page.
+vi.mock('./delivery-mode-audience-section', () => ({
+  DeliveryModeAudienceSection: () => <div>audience-section</div>,
+}));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, options?: Record<string, unknown>) =>
@@ -69,6 +74,12 @@ describe('DeliverySuggestionsPage', () => {
   });
 
   afterEach(cleanup);
+
+  it('offers the manual switch by audience below the suggestions', () => {
+    renderPage();
+
+    expect(screen.getByText('audience-section')).toBeTruthy();
+  });
 
   it('lists the suggestions to move to letters first', () => {
     renderPage();

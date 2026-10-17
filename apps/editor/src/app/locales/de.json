@@ -1639,6 +1639,23 @@
           "letter": "{{changed}} auf Brief umgestellt, {{skippedWithoutAddress}} ohne Adresse übersprungen.",
           "mail": "{{changed}} auf E-Mail umgestellt."
         }
+      },
+      "bulk": {
+        "title": "Manuell nach Zielgruppe",
+        "intro": "Zielgruppe wie bei den manuellen Sendungen eingrenzen und die Zustellung für alle darin umstellen.",
+        "people": "{{count}} Personen in dieser Zielgruppe",
+        "history": {
+          "title": "Letzte Umstellungen",
+          "empty": "Noch keine Umstellung nach Zielgruppe.",
+          "when": "Wann",
+          "who": "Wer",
+          "channel": "Zustellung",
+          "people": "Personen",
+          "changed": "Umgestellt",
+          "skipped": "Übersprungen",
+          "filter": "Zielgruppe",
+          "unknownUser": "Unbekannt"
+        }
       }
     },
     "navbar": {
@@ -3742,7 +3759,51 @@
         }
       },
       "stateHelp": "Aktiv: bestätigt, nicht deaktiviert und bezahlt. Ausstehend: abgeschlossen, aber noch nicht bestätigt – z. B. weil die erste Zahlung noch fehlt. Deaktiviert: Das Abo wurde beendet oder die Beendigung ist bereits eingetragen.",
-      "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst."
+      "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst.",
+      "mailHistory": {
+        "label": "Erhaltene Mitteilungen",
+        "hint": "Nur Personen, die eine bestimmte Vorlage erhalten (oder nicht erhalten) haben. Gilt für jede Basis.",
+        "add": "Bedingung hinzufügen",
+        "remove": "Bedingung entfernen",
+        "received": "hat erhalten",
+        "notReceived": "hat nicht erhalten",
+        "template": "Vorlage wählen …",
+        "state": "Status",
+        "anyState": "Beliebig",
+        "channel": "Kanal",
+        "anyChannel": "Beliebig",
+        "sentBetween": "Versandt zwischen",
+        "match": {
+          "all": "Alle Bedingungen müssen zutreffen",
+          "any": "Eine Bedingung genügt"
+        },
+        "states": {
+          "submitted": "Übermittelt",
+          "accepted": "Angenommen",
+          "delivered": "Zugestellt",
+          "deferred": "Verzögert",
+          "bounced": "Bounce",
+          "rejected": "Abgelehnt",
+          "dispatched": "Aufgegeben",
+          "undeliverable": "Unzustellbar",
+          "canceled": "Storniert"
+        }
+      },
+      "audienceSummary": {
+        "base": "Basis",
+        "memberPlans": "Abo-Pläne",
+        "state": "Abo-Status",
+        "segments": "E-Mail-Status",
+        "mailHistory": "Mitteilungen",
+        "received": "erhalten",
+        "notReceived": "nicht erhalten",
+        "between": "{{from}} – {{to}}",
+        "from": "ab {{from}}",
+        "to": "bis {{to}}",
+        "matchAny": "eine Bedingung genügt",
+        "matchAll": "alle Bedingungen",
+        "more": "{{count}} weitere Filter"
+      }
     },
     "mailLog": {
       "title": "Abgeschlossene Sendungen",

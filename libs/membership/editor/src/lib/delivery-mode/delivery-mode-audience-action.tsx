@@ -28,6 +28,11 @@ import {
 
 export type DeliveryModeAudienceActionProps = {
   audience: MailAudienceInput;
+  /** Called once a switch went through, with what it did. */
+  onDone?: (
+    result: { changed: number; skippedWithoutAddress: number },
+    channel: MailChannel
+  ) => void;
 };
 
 /**
@@ -37,6 +42,7 @@ export type DeliveryModeAudienceActionProps = {
  */
 export function DeliveryModeAudienceAction({
   audience,
+  onDone,
 }: DeliveryModeAudienceActionProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -59,6 +65,7 @@ export function DeliveryModeAudienceAction({
         autoHideDuration: 8000,
       });
       setOpen(false);
+      onDone?.(result, channel);
     },
   });
 
