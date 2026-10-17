@@ -1113,6 +1113,55 @@
         "uploadFailed": "Upload fehlgeschlagen. Bitte versuche es erneut."
       }
     },
+    "videos": {
+      "overview": {
+        "description": "Beschreibung",
+        "videoLibrary": "Videosnbibliothek",
+        "copyLink": "Link kopieren",
+        "edit": "Bearbeiten",
+        "fileSize": "Dateigrösse",
+        "filename": "Dateiname",
+        "noDescription": "Keine Beschreibung",
+        "openLink": "Öffnen",
+        "preview": "Vorschau",
+        "storageFull": "Speicherlimit erreicht",
+        "storageUsage": "{{used}} / {{limit}} verwendet ({{count}} Dateien)",
+        "storageWarning": "Speicher fast voll",
+        "title": "Titel",
+        "unlimited": "Unbegrenzt",
+        "untitled": "Ohne Titel",
+        "uploadVideo": "Video hochladen",
+        "storageUsageInfo": "Gesamtgrösse aller hochgeladenen Videos. Ist das Limit erreicht, kannst du erst wieder neue Videos hochladen, wenn du alte löschst."
+      },
+      "panels": {
+        "cancel": "Abbrechen",
+        "close": "Schliessen",
+        "confirm": "Bestätigen",
+        "created": "Erstellt",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteVideo": "Video löschen?",
+        "description": "Beschreibung",
+        "videoUpdated": "Video aktualisiert",
+        "dropVideo": "Datei hier ablegen oder klicken zum Auswählen",
+        "editVideo": "Video bearbeiten",
+        "fileSize": "Dateigrösse",
+        "fileTooLarge": "Datei ist zu gross. Maximale Grösse ist {{maxSize}} MB.",
+        "filename": "Dateiname",
+        "information": "Informationen",
+        "maxFileSize": "Maximale Dateigrösse: {{maxSize}} MB",
+        "invalidVideo": "Nicht unterstützter Dateityp. Unterstützt: PDF, Word, Excel, PowerPoint, OpenVideo, CSV, TXT, JSON, XML, ZIP",
+        "linkCopied": "Link in Zwischenablage kopiert",
+        "notFound": "Video nicht gefunden!",
+        "publicLink": "Öffentlicher Link",
+        "title": "Titel",
+        "untitled": "Ohne Titel",
+        "updated": "Aktualisiert",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Hochladen",
+        "uploadVideo": "Video hochladen",
+        "uploadFailed": "Upload fehlgeschlagen. Bitte versuche es erneut."
+      }
+    },
     "images": {
       "overview": {
         "description": "Beschreibung",
@@ -1601,6 +1650,7 @@
       "events": "Events",
       "eventTags": "Tags",
       "documentLibrary": "Dokumente",
+      "videoLibrary": "Videos",
       "imageLibrary": "Bilder",
       "importableEvents": "Importierbare Events",
       "media": "Dateien",

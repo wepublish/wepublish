@@ -39,6 +39,10 @@ import {
   CanDeleteCommentRatingSystem,
   CanDeleteConsent,
   CanDeleteDocument,
+  CanCreateVideo,
+  CanDeleteVideo,
+  CanGetVideo,
+  CanGetVideos,
   CanDeleteEvent,
   CanDeleteExternalApp,
   CanDeleteImage,
@@ -152,6 +156,7 @@ import {
   MdDarkMode,
   MdDashboard,
   MdDescription,
+  MdVideoLibrary,
   MdEvent,
   MdExtension,
   MdFactCheck,
@@ -914,6 +919,22 @@ export function Base({ children }: BaseProps) {
                       icon={<MdDescription />}
                     >
                       {t('navbar.documentLibrary')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetVideos.id,
+                      CanGetVideo.id,
+                      CanCreateVideo.id,
+                      CanDeleteVideo.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/videos"
+                      icon={<MdVideoLibrary />}
+                    >
+                      {t('navbar.videoLibrary')}
                     </SidebarNavItem>
                   </PermissionControl>
                 </SidebarNavMenu>

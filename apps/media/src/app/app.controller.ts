@@ -389,6 +389,74 @@ export class AppController {
     res.redirect(HTTP_CODE_FOUND, url);
   }
 
+  @Get('video/:videoId/:filename')
+  async getVideoWithFilename(
+    @Res() res: Response,
+    @Req() req: Request,
+    @Param('videoId') videoId: string
+  ) {
+    return this.getVideo(res, req, videoId);
+  }
+
+  @Get('video/:videoId')
+  async getVideo(
+    @Res() res: Response,
+    @Req() req: Request,
+    @Param('videoId') videoId: string
+  ) {
+    const safeId = sanitizeId(videoId);
+    const cacheKey = `vid-${safeId}`;
+
+    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
+
+    if (uriFromCache) {
+      if (!uriFromCache.exists && this.fallbackUrl) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+        return;
+      }
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        httpCode = HTTP_CODE_NOT_FOUND;
+      } else {
+        this.setProductionCacheHeaders(res);
+        await this.linkCache.set(cacheKey, uriFromCache);
+      }
+      res.redirect(
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
+      );
+      return;
+    }
+
+    if (this.fallbackUrl && !(await this.media.hasVideo(safeId))) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+      return;
+    }
+
+    const { uri, exists } = await this.media.getVideoUri(safeId);
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!S3_HOST_CHECKED) {
+      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
+    }
+
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
+      if (!this.fallbackUrl) {
+        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      }
+      return;
+    }
+
+    await this.linkCache.set(cacheKey, { uri, exists: true });
+    this.setProductionCacheHeaders(res);
+    res.redirect(HTTP_CODE_FOUND, url);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Delete('document/:documentId')
   async deleteDocument(
