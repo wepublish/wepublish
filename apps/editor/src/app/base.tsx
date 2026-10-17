@@ -126,6 +126,7 @@ import {
 } from '@wepublish/permissions';
 import {
   ClickMenu,
+  FeatureControl,
   Link,
   PermissionControl,
   SidebarNav,
@@ -164,6 +165,7 @@ import {
   MdLocationPin,
   MdLogout,
   MdMail,
+  MdMarkunreadMailbox,
   MdMenu,
   MdMoney,
   MdMultilineChart,
@@ -1105,6 +1107,17 @@ export function Base({ children }: BaseProps) {
                     </SidebarNavItem>
                   </PermissionControl>
 
+                  <FeatureControl feature="paper-letter-flow">
+                    <PermissionControl qualifyingPermissions={[CanGetUsers.id]}>
+                      <SidebarNavItem
+                        href="/deliverysuggestions"
+                        icon={<MdMarkunreadMailbox />}
+                      >
+                        {t('navbar.deliverySuggestions')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
+
                   <PermissionControl
                     qualifyingPermissions={[
                       CanGetSubscriptionFlows.id,
@@ -1133,6 +1146,22 @@ export function Base({ children }: BaseProps) {
                       {t('navbar.mailTemplates')}
                     </SidebarNavItem>
                   </PermissionControl>
+
+                  <FeatureControl feature="paper-letters">
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetMailTemplates.id,
+                        CanUpdateMailTemplates.id,
+                      ]}
+                    >
+                      <SidebarNavItem
+                        href="/letterlayouts"
+                        icon={<MdDescription />}
+                      >
+                        {t('navbar.letterLayouts')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
 
                   <PermissionControl
                     qualifyingPermissions={[CanGetMailLogs.id]}

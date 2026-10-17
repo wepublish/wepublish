@@ -28,6 +28,9 @@ import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailLogList,
   MailSendPage,
+  DeliverySuggestionsPage,
+  LetterLayoutEdit,
+  LetterLayoutList,
   MailTemplateEdit,
   MailTemplateList,
   MemberPlanEdit,
@@ -38,6 +41,7 @@ import {
   AuthContext,
   AuthDispatchActionType,
   AuthDispatchContext,
+  createCheckedFeatureComponent,
   SnackbarHost,
   useReportQueryErrors,
 } from '@wepublish/ui/editor';
@@ -135,6 +139,15 @@ const Logout = () => {
     />
   );
 };
+
+// Stationery only exists for letters, which ship dark.
+const PaperLetterLayoutList =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutList);
+const PaperLetterLayoutEdit =
+  createCheckedFeatureComponent('paper-letters')(LetterLayoutEdit);
+const PaperLetterDeliverySuggestions = createCheckedFeatureComponent(
+  'paper-letter-flow'
+)(DeliverySuggestionsPage);
 
 export function App() {
   const { session } = useContext(AuthContext);
@@ -1025,6 +1038,30 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="letterlayouts"
+              element={
+                <Base>
+                  <PaperLetterLayoutList />
+                </Base>
+              }
+            />
+            <Route
+              path="letterlayouts/create"
+              element={
+                <Base>
+                  <PaperLetterLayoutEdit />
+                </Base>
+              }
+            />
+            <Route
+              path="letterlayouts/edit/:id"
+              element={
+                <Base>
+                  <PaperLetterLayoutEdit />
+                </Base>
+              }
+            />
             {/* System mails are now part of the automatic mails view */}
             <Route
               path="systemmails"
@@ -1040,6 +1077,14 @@ export function App() {
               element={
                 <Base>
                   <MailSendPage />
+                </Base>
+              }
+            />
+            <Route
+              path="deliverysuggestions"
+              element={
+                <Base>
+                  <PaperLetterDeliverySuggestions />
                 </Base>
               }
             />

@@ -1,12 +1,18 @@
 import { BadRequestException } from '@nestjs/common';
 import { MailContext } from '@wepublish/mail/api';
+import { LetterContext } from '@wepublish/letter/api';
 import { PrismaClient } from '@prisma/client';
 import { MailTemplateService } from './mail-template.service';
 
-const makeService = (prisma: any, mailContext: any = {}) =>
+const makeService = (
+  prisma: any,
+  mailContext: any = {},
+  letterContext: any = {}
+) =>
   new MailTemplateService(
     prisma as PrismaClient,
-    mailContext as unknown as MailContext
+    mailContext as unknown as MailContext,
+    letterContext as unknown as LetterContext
   );
 
 describe('MailTemplateService', () => {
@@ -182,6 +188,214 @@ describe('MailTemplateService', () => {
 
       expect(result.subject).toBe('Hi Jane — Jahres-Abo');
       expect(result.html).toContain('CHF 10.00');
+    });
+  });
+
+  describe('isLetterChannelAvailable', () => {
+    it.each([true, false])(
+      'reports whether letters are configured (%s)',
+      async configured => {
+        const service = makeService(
+          {},
+          {},
+          { isConfigured: async () => configured }
+        );
+
+        expect(await service.isLetterChannelAvailable()).toBe(configured);
+      }
+    );
+  });
+
+  describe('previewLetter', () => {
+    const renderLetter = () =>
+      vi.fn(async () => Buffer.from('%PDF-1.4 letter'));
+    const resolveLayout = vi.fn(async () => null);
+
+    it('previews the chosen appendix with the letter', async () => {
+      const render = renderLetter();
+      const service = makeService(
+        {},
+        {},
+        { renderLetter: render, resolveLayout }
+      );
+
+      await service.previewLetter({
+        contextId: 'renewal',
+        subscriptionId: null,
+        html: '<p>Hallo</p>',
+        letterAppendixId: 'qr-bill',
+      });
+
+      expect(render).toHaveBeenCalledWith(
+        expect.objectContaining({
+          template: {
+            htmlContent: '<p>Hallo</p>',
+            letterAppendixId: 'qr-bill',
+          },
+        })
+      );
+    });
+
+    it('renders the draft with sample data and a sample address', async () => {
+      const render = renderLetter();
+      const service = makeService(
+        {},
+        {},
+        { renderLetter: render, resolveLayout }
+      );
+
+      const result = await service.previewLetter({
+        contextId: 'renewal',
+        subscriptionId: null,
+        html: '<p>{{optional_subscription_memberPlan_name}}</p>',
+      });
+
+      expect(Buffer.from(result.pdf, 'base64').toString()).toBe(
+        '%PDF-1.4 letter'
+      );
+      expect(render).toHaveBeenCalledWith(
+        expect.objectContaining({
+          template: {
+            htmlContent: '<p>{{optional_subscription_memberPlan_name}}</p>',
+          },
+          addressPosition: 'left',
+          data: expect.objectContaining({
+            user: expect.objectContaining({ firstName: 'Jane' }),
+            optional: expect.objectContaining({
+              subscription: expect.objectContaining({ id: expect.any(String) }),
+            }),
+          }),
+          recipient: expect.objectContaining({
+            name: 'Jane Doe',
+            zip: expect.any(String),
+            city: expect.any(String),
+            country: 'CH',
+          }),
+        })
+      );
+    });
+
+    it("addresses the letter to the chosen subscription's user", async () => {
+      const render = renderLetter();
+      const user = {
+        id: 'u1',
+        firstName: 'Max',
+        name: 'Muster',
+        address: {
+          company: null,
+          streetAddress: 'Bahnhofstrasse',
+          streetAddressNumber: '1',
+          streetAddress2: null,
+          streetAddress2Number: null,
+          zipCode: '3000',
+          city: 'Bern',
+          country: 'Schweiz',
+        },
+      };
+      const prisma = {
+        subscription: {
+          findUnique: vi.fn(async () => ({ id: 's1', user })),
+        },
+        invoice: { findFirst: vi.fn(async () => null) },
+      };
+      const service = makeService(
+        prisma,
+        {},
+        { renderLetter: render, resolveLayout }
+      );
+
+      await service.previewLetter({
+        contextId: 'subscription',
+        subscriptionId: 's1',
+        html: '<p>Hallo</p>',
+      });
+
+      expect(prisma.subscription.findUnique).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: expect.objectContaining({
+            user: { include: { address: true } },
+          }),
+        })
+      );
+      expect(render).toHaveBeenCalledWith(
+        expect.objectContaining({
+          recipient: expect.objectContaining({
+            name: 'Max Muster',
+            street: 'Bahnhofstrasse',
+            city: 'Bern',
+            country: 'CH',
+          }),
+        })
+      );
+    });
+
+    it('prints the draft on the stationery the editor chose', async () => {
+      const render = renderLetter();
+      const layout = { headerHtml: '<b>Zwölf</b>' };
+      const resolveLayout = vi.fn(async () => layout);
+      const service = makeService(
+        {},
+        {},
+        { renderLetter: render, resolveLayout }
+      );
+
+      await service.previewLetter({
+        contextId: 'renewal',
+        subscriptionId: null,
+        html: '<p>Hallo</p>',
+        letterLayoutId: 'layout-1',
+      });
+
+      expect(resolveLayout).toHaveBeenCalledWith('layout-1');
+      expect(render).toHaveBeenCalledWith(expect.objectContaining({ layout }));
+    });
+
+    it('prints the draft on the default stationery when none is chosen', async () => {
+      const render = renderLetter();
+      const resolveLayout = vi.fn(async () => null);
+      const service = makeService(
+        {},
+        {},
+        { renderLetter: render, resolveLayout }
+      );
+
+      await service.previewLetter({
+        contextId: 'renewal',
+        subscriptionId: null,
+        html: '<p>Hallo</p>',
+      });
+
+      expect(resolveLayout).toHaveBeenCalledWith(undefined);
+      expect(render).toHaveBeenCalledWith(
+        expect.objectContaining({ layout: null })
+      );
+    });
+
+    it('refuses a subscription whose user has no usable address', async () => {
+      const render = renderLetter();
+      const prisma = {
+        subscription: {
+          findUnique: vi.fn(async () => ({
+            id: 's1',
+            user: { id: 'u1', email: 'max@example.com', address: null },
+          })),
+        },
+        invoice: { findFirst: vi.fn(async () => null) },
+      };
+      const service = makeService(
+        prisma,
+        {},
+        { renderLetter: render, resolveLayout }
+      );
+
+      await expect(
+        service.previewLetter({
+          contextId: 'subscription',
+          subscriptionId: 's1',
+          html: '<p>Hallo</p>',
+        })
+      ).rejects.toThrow(BadRequestException);
+      expect(render).not.toHaveBeenCalled();
     });
   });
 

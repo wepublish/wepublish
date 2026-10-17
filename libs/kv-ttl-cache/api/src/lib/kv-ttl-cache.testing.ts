@@ -8,6 +8,8 @@ export const INTEGRATION_NAMESPACES = [
   'settings:ai',
   'settings:analyticsprovider',
   'settings:syncprovider',
+  'settings:letterprovider',
+  'settings:pdfrenderer',
 ];
 
 export class FakeDragonfly extends MemoryAtomicStore {

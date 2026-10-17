@@ -227,8 +227,10 @@
       "SettingAIProvider",
       "SettingAnalyticsProvider",
       "SettingChallengeProvider",
+      "SettingLetterProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
+      "SettingPdfRenderer",
       "SettingSyncProvider",
       "SettingTrackingPixelProvider"
     ],

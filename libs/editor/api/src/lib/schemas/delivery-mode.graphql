@@ -1,0 +1,127 @@
+fragment UserDeliveryPreference on UserDeliveryPreferenceModel {
+  channel
+  origin
+  reason
+  changedAt
+  changedBy {
+    id
+    email
+    name
+    firstName
+  }
+  canReceiveLetters
+}
+
+fragment DeliverySuggestion on DeliverySuggestionModel {
+  id
+  kind
+  reason
+  createdAt
+  user {
+    id
+    email
+    name
+    firstName
+  }
+  emailQuality {
+    level
+    reason
+    since
+  }
+}
+
+query UserDeliveryPreference($userId: String!) {
+  userDeliveryPreference(userId: $userId) {
+    ...UserDeliveryPreference
+  }
+}
+
+query DeliverySuggestions($kind: DeliverySuggestionKind!, $skip: Int, $take: Int) {
+  deliverySuggestions(kind: $kind, skip: $skip, take: $take) {
+    nodes {
+      ...DeliverySuggestion
+    }
+    totalCount
+  }
+}
+
+query DeliverySuggestionCounts {
+  deliverySuggestionCounts {
+    toLetter
+    toMail
+  }
+}
+
+query DeliveryModeAudiencePreview(
+  $audience: MailAudienceInput!
+  $channel: MailChannel!
+) {
+  deliveryModeAudiencePreview(audience: $audience, channel: $channel) {
+    userCount
+    withoutAddressCount
+    segments {
+      segment
+      userCount
+    }
+  }
+}
+
+query DeliveryModeBulkChanges($skip: Int, $take: Int) {
+  deliveryModeBulkChanges(skip: $skip, take: $take) {
+    nodes {
+      id
+      createdAt
+      channel
+      audience
+      userCount
+      changed
+      skippedWithoutAddress
+      changedBy {
+        id
+        email
+        name
+        firstName
+      }
+    }
+    totalCount
+  }
+}
+
+mutation SetUserDeliveryMode(
+  $userId: String!
+  $channel: MailChannel!
+  $reason: String
+) {
+  setUserDeliveryMode(userId: $userId, channel: $channel, reason: $reason) {
+    ...UserDeliveryPreference
+  }
+}
+
+mutation ConfirmDeliverySuggestion($id: String!) {
+  confirmDeliverySuggestion(id: $id)
+}
+
+mutation ConfirmAllDeliverySuggestions($kind: DeliverySuggestionKind!) {
+  confirmAllDeliverySuggestions(kind: $kind) {
+    confirmed
+    skipped
+  }
+}
+
+mutation SetDeliveryModeForAudience(
+  $audience: MailAudienceInput!
+  $channel: MailChannel!
+) {
+  setDeliveryModeForAudience(audience: $audience, channel: $channel) {
+    changed
+    skippedWithoutAddress
+  }
+}
+
+mutation RecomputeDeliverySuggestions {
+  recomputeDeliverySuggestions {
+    toLetter
+    toMail
+    removed
+  }
+}

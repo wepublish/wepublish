@@ -29,6 +29,87 @@ mutations only succeed while none exists (the editor then shows «Einrichten»),
 and there is no delete mutation, so a medium never ends up without one. Change
 type or credentials on the existing row instead.
 
+## PDF Renderer
+
+Everything letter-related ships dark behind the `paper-letters` feature
+(`libs/features`): the letter provider and pdf renderer integrations, letter
+layouts, `letterChannelAvailable` / letter previews, and the letter channel of
+the communication tool (`MailSendJobService.assertChannelAllowed`). The editor
+asks `letterChannelAvailable` only through `useLetterChannel()`
+(`libs/membership/editor/.../use-letter-channel.ts`), which skips the query while
+the feature is off — the api refuses it then. Locally: `WEP_FEATURES=paper-letters`.
+
+Renders letters to pdf. One `settings.pdfrenderer` row; editors switch by its
+`type` (which clears the other type's credentials).
+
+### Letters instead of mails per user (`paper-letter-flow`)
+
+Automated subscription mails can reach a user as a printed letter. The pieces:
+
+- `UserDeliveryPreference` (`user_delivery_preferences`): per user `channel`
+  mail|letter, `origin` manual|suggestion, reason, who/when. No row = mail.
+  Service `libs/membership/api/src/lib/delivery-mode/`, permission
+  `CanManageUserDeliveryMode`, resolver gated by both letter features.
+- `SubscriptionInterval.sendAsLetter`: only events switched on in the flow
+  editor («auch als Brief») print; user-flow mails (login, password, email
+  change) never do. The three senders (periodic job, legacy `member-context`,
+  renewal success) pass it as `asLetter` into `MailController`.
+- `MailController.sendMail` (`libs/mail/api`) branches before mailing when
+  `asLetter`, the user prefers letters and the `LETTER_SENDER` is configured;
+  it reloads the user with address and falls back to mail without a usable
+  one. The letter is logged under the same `mailIdentifier`/`type` as a mail
+  would be, so retried runs skip it. A failed print throws
+  `LetterDeliveryError`; the periodic job steps over it.
+- `LETTER_SENDER` is a `GatedLetterSender` from `LettersModule`
+  (`libs/letter/api`): `isConfigured()` = `paper-letters` && `paper-letter-flow`
+  && letter integration configured. The feature keys live only there and in
+  the resolvers/editor gates.
+- Print options for unattended sends come from `SettingLetterProvider.default*`
+  (editor → Integrations → Briefversand), over `DEFAULT_PRINT`
+  (`letter-print-defaults.ts`).
+- Nothing switches on its own: the nightly `DeliverySuggestionService`
+  (after email quality) rebuilds `user_delivery_suggestions` — dead or
+  placeholder address with a usable postal address → `toLetter`;
+  suggestion-made letter users that became `active` → `toMail`; manual
+  switches are never suggested back. Admins confirm on `/deliverysuggestions`
+  (single or all; a stale one is dropped and refused), switch single users on
+  the user page, or an audience: from the communication tool's send step, or
+  from the «Manuell nach Zielgruppe» section below the suggestions, which
+  embeds the same `AudienceFilter` (`libs/membership/editor/src/lib/mail-send/audience/`).
+- Every audience switch is recorded in `DeliveryModeBulkChange`
+  (`user_delivery_bulk_changes`: channel, the `MailAudienceInput` as JSON,
+  counts, who, when; query `deliveryModeBulkChanges`), because the preference
+  rows only keep their last change. The section lists the recent ones with the
+  filter read back as phrases (`describeAudience`).
+- `MailAudienceInput.mailHistory` filters any base by the mail log:
+  `{ match: all|any, conditions: [{ mailTemplateId, negate, states?, channel?, from?, to? }] }`.
+  Built in `mail-send-recipient.service.ts` as `mailSent: { some | none }`
+  on the user (`none` for «not sent», never `NOT`, so people without any mail
+  stay in), ANDed with the email segments through `buildUserLevelWhere`.
+
+- Gotenberg (self-hosted, the default; `gotenberg` service in docker-compose)
+- Cloudflare Browser Rendering
+
+A template's `letterAppendixId` (an uploaded pdf `Document`, e.g. a static
+QR-bill) is appended after rendering by `appendPdf` (pdf-lib, renderer-agnostic)
+— CH recipients only, padded to an odd page for duplex (Pingen's QR paper rules).
+
+### Letter layouts (Briefpapier)
+
+`LetterLayout` rows (`letter_layouts`, CRUD in `libs/letter/api/src/lib/letter-layout/`,
+editor under `/letterlayouts`) hold header and footer HTML plus their band
+heights. A letter prints on the template's `letterLayoutId`, else on the row
+with `isDefault`, else bare (`LetterContext.resolveLayout`). The bands are
+`position: fixed` so Chromium repeats them on every page, and the body sits in
+a table whose repeated `thead`/`tfoot` spacers keep the text out of them; see
+`composeLetter` in `libs/letter/api/src/lib/letter-renderer.ts`. Bands are
+capped at 40mm so a header cannot reach Pingen's franking zone, and the page 1
+address window stays at 60mm whatever the header height. Header and footer
+HTML take the same `{{placeholders}}` as the body. Images must be absolute
+URLs the renderer can fetch (Gotenberg in docker cannot resolve `localhost`),
+with a fixed `height` so the logo stays inside its band. Mails never see a
+layout: only the letter path consults it.
+
 ## Analytics Provider
 
 - Google Analytics

@@ -2,6 +2,7 @@ import {
   useUser,
   IntendedRouteStorageKey,
   IntendedRouteExpiryInSeconds,
+  sanitizeIntendedRoute,
 } from '@wepublish/authentication/website';
 import { setCookie } from 'cookies-next';
 import { add } from 'date-fns';
@@ -18,7 +19,7 @@ const AuthGuard = ({ children }: PropsWithChildren) => {
   const { hasUser } = useUser();
 
   if (!hasUser && typeof window !== 'undefined') {
-    setCookie(IntendedRouteStorageKey, router.asPath, {
+    setCookie(IntendedRouteStorageKey, sanitizeIntendedRoute(router.asPath), {
       expires: add(new Date(), {
         seconds: IntendedRouteExpiryInSeconds,
       }),

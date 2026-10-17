@@ -1,6 +1,35 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
-import { PrismaClient } from '@prisma/client';
+import { FeaturesService } from '@wepublish/features/api';
+
+const defaultBuildMailData = vi.fn(
+  async ({
+    recipient,
+    optionalData,
+    jwtOverride,
+  }: {
+    recipient: Record<string, unknown>;
+    optionalData: Record<string, unknown>;
+    jwtOverride?: string;
+  }) => ({
+    user: recipient,
+    optional: optionalData,
+    jwt: jwtOverride ?? 'test-jwt-token',
+    currentDate: new Date(),
+    purl: '',
+    purlCode: '',
+    purlQr: '',
+  })
+);
+import { LetterContext } from '@wepublish/letter/api';
+import {
+  LetterAddressPosition,
+  LetterDeliveryProduct,
+  LetterPrintMode,
+  LetterPrintSpectrum,
+  MailChannel,
+  PrismaClient,
+} from '@prisma/client';
 import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailRecipientBase } from './mail-send.model';
@@ -9,12 +38,19 @@ import type { Mock } from 'vitest';
 const makeService = (
   prisma: any,
   mailContext: any = { sendMail: vi.fn() },
-  recipientService: any = {}
+  recipientService: any = {},
+  letterContext: any = { sendLetter: vi.fn(), renderLetter: vi.fn() },
+  features: any = { isEnabled: vi.fn(async () => true) }
 ) =>
   new MailSendJobService(
     prisma as PrismaClient,
-    mailContext as unknown as MailContext,
-    recipientService as MailSendRecipientService
+    {
+      buildMailData: defaultBuildMailData,
+      ...mailContext,
+    } as unknown as MailContext,
+    letterContext as unknown as LetterContext,
+    recipientService as MailSendRecipientService,
+    features as FeaturesService
   );
 
 const template = (context: string | null) => ({
@@ -244,6 +280,62 @@ const recipientServiceFor = (users: string[]) => {
 
 const audience = { base: MailRecipientBase.allUsers };
 
+const postalUser = {
+  id: 'u1',
+  email: 'u1@x.ch',
+  firstName: 'Jane',
+  name: 'Doe',
+  address: {
+    company: null,
+    streetAddress: 'Musterstrasse',
+    streetAddressNumber: '7',
+    streetAddress2: null,
+    streetAddress2Number: null,
+    zipCode: '8000',
+    city: 'Zürich',
+    country: 'CH',
+  },
+};
+
+describe('previewForAudience as a letter', () => {
+  const recipientService = {
+    resolvePage: vi.fn(async () => [{ user: postalUser }]),
+  };
+
+  it('prints the preview on the stationery the template points at', async () => {
+    const prisma = fakePrisma({
+      ...template('custom'),
+      htmlContent: '<p>Hallo</p>',
+      subject: 'Brief',
+      letterLayoutId: 'layout-1',
+    });
+    const layout = { headerHtml: '<b>Zwölf</b>' };
+    const letterContext = {
+      renderLetter: vi.fn(async () => Buffer.from('%PDF-1.4 preview')),
+      resolveLayout: vi.fn(async () => layout),
+    };
+
+    const preview = await makeService(
+      prisma,
+      undefined,
+      recipientService,
+      letterContext
+    ).previewForAudience({
+      mailTemplateId: 'tpl-1',
+      audience,
+      channel: MailChannel.letter,
+    });
+
+    expect(letterContext.resolveLayout).toHaveBeenCalledWith('layout-1');
+    expect(letterContext.renderLetter).toHaveBeenCalledWith(
+      expect.objectContaining({ layout })
+    );
+    expect(Buffer.from(preview.pdf ?? '', 'base64').toString()).toBe(
+      '%PDF-1.4 preview'
+    );
+  });
+});
+
 /**
  * Put a job straight into the fake database. Tests that exercise the send loop
  * do not go through `createJob`, whose fire-and-forget drain would race them.
@@ -403,6 +495,119 @@ describe('MailSendJobService', () => {
 
       expect(mailContext.sendMail).toHaveBeenCalledTimes(2);
       expect(prisma.jobs[0].status).toBe('done');
+    });
+  });
+
+  describe('letter channel', () => {
+    it('posts letters instead of mails and records the print options', async () => {
+      const prisma = fakePrisma();
+      const recipientService = recipientServiceFor(['u1', 'u2']);
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+      const letterContext = { sendLetter: vi.fn(async () => 'log-1') };
+
+      await makeService(
+        prisma,
+        mailContext,
+        recipientService,
+        letterContext
+      ).createJob(
+        {
+          mailTemplateId: 'tpl-1',
+          audience,
+          channel: MailChannel.letter,
+          print: { deliveryProduct: LetterDeliveryProduct.fast },
+        },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(mailContext.sendMail).not.toHaveBeenCalled();
+      expect(letterContext.sendLetter).toHaveBeenCalledTimes(2);
+      expect(letterContext.sendLetter).toHaveBeenCalledWith(
+        expect.objectContaining({
+          print: {
+            // The one option the send chose; the rest fall back to the defaults.
+            deliveryProduct: LetterDeliveryProduct.fast,
+            addressPosition: LetterAddressPosition.left,
+            printMode: LetterPrintMode.simplex,
+            printSpectrum: LetterPrintSpectrum.grayscale,
+          },
+        })
+      );
+      expect(prisma.jobs[0].status).toBe('done');
+    });
+
+    it('plans and queues a letter send once per person', async () => {
+      const prisma = fakePrisma();
+      const recipientService = recipientServiceFor(['u1']);
+
+      await makeService(
+        prisma,
+        { sendMail: vi.fn(async () => undefined) },
+        recipientService,
+        { sendLetter: vi.fn(async () => 'log-1') }
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(recipientService.count).toHaveBeenCalledWith(
+        audience,
+        MailChannel.letter
+      );
+      expect(recipientService.resolvePage).toHaveBeenCalledWith(
+        audience,
+        0,
+        expect.any(Number),
+        MailChannel.letter
+      );
+    });
+
+    it('records a letter that could not be posted and keeps going', async () => {
+      const prisma = fakePrisma();
+      const recipientService = recipientServiceFor(['u1', 'u2']);
+      const letterContext = {
+        sendLetter: vi
+          .fn()
+          .mockRejectedValueOnce(new Error('no postal address'))
+          .mockResolvedValue('log-2'),
+      };
+
+      await makeService(
+        prisma,
+        { sendMail: vi.fn() },
+        recipientService,
+        letterContext
+      ).createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      );
+      await settle(prisma);
+
+      expect(prisma.entries.map((entry: any) => entry.state)).toEqual([
+        'failed',
+        'sent',
+      ]);
+      expect(prisma.entries[0].error).toBe('no postal address');
+    });
+
+    it('defaults to mail when no channel is chosen', async () => {
+      const prisma = fakePrisma();
+      const recipientService = recipientServiceFor(['u1']);
+      const mailContext = { sendMail: vi.fn(async () => undefined) };
+      const letterContext = { sendLetter: vi.fn() };
+
+      await makeService(
+        prisma,
+        mailContext,
+        recipientService,
+        letterContext
+      ).createJob({ mailTemplateId: 'tpl-1', audience }, 'editor-1');
+      await settle(prisma);
+
+      expect(mailContext.sendMail).toHaveBeenCalledTimes(1);
+      expect(letterContext.sendLetter).not.toHaveBeenCalled();
     });
   });
 
@@ -659,5 +864,102 @@ describe('MailSendJobService', () => {
         )
       ).rejects.toThrow(BadRequestException);
     });
+  });
+});
+
+describe('MailSendJobService.previewForAudience as letter', () => {
+  it('previews the template appendix with the chosen print mode', async () => {
+    const user = {
+      id: 'u1',
+      email: 'jane@example.com',
+      firstName: 'Jane',
+      name: 'Doe',
+      address: {
+        company: null,
+        streetAddress: 'Musterstrasse',
+        streetAddressNumber: '7',
+        streetAddress2: null,
+        streetAddress2Number: null,
+        zipCode: '8000',
+        city: 'Zürich',
+        country: 'CH',
+      },
+    };
+    const prisma = {
+      mailTemplate: {
+        findUnique: vi.fn(async () => ({
+          ...template('custom'),
+          subject: 'Rechnung',
+          htmlContent: '<p>Hallo</p>',
+          letterAppendixId: 'qr-bill',
+        })),
+      },
+    };
+    const renderLetter = vi.fn(async () => Buffer.from('%PDF-1.4 letter'));
+    const service = makeService(
+      prisma,
+      {},
+      { resolvePage: vi.fn(async () => [{ user }]) },
+      { renderLetter, resolveLayout: vi.fn(async () => null) }
+    );
+
+    await service.previewForAudience({
+      mailTemplateId: 'tpl-1',
+      audience: { base: 'allUsers' } as any,
+      channel: MailChannel.letter,
+      print: { printMode: LetterPrintMode.duplex } as any,
+    });
+
+    expect(renderLetter).toHaveBeenCalledWith(
+      expect.objectContaining({
+        template: { htmlContent: '<p>Hallo</p>', letterAppendixId: 'qr-bill' },
+        printMode: LetterPrintMode.duplex,
+      })
+    );
+  });
+});
+
+// The channel is an argument, so the guard decorator cannot see it: the
+// service refuses letters itself while the feature is off.
+describe('letter channel behind the paper-letters feature', () => {
+  const audience = { base: MailRecipientBase.allUsers } as any;
+  const featureOff = { isEnabled: vi.fn(async () => false) };
+
+  it('refuses to create a letter job while the feature is off', async () => {
+    const service = makeService({}, {}, {}, undefined, featureOff);
+
+    await expect(
+      service.createJob(
+        { mailTemplateId: 'tpl-1', audience, channel: MailChannel.letter },
+        'editor-1'
+      )
+    ).rejects.toThrow(ForbiddenException);
+    expect(featureOff.isEnabled).toHaveBeenCalledWith('paper-letters');
+  });
+
+  it('refuses a letter preview while the feature is off', async () => {
+    const service = makeService({}, {}, {}, undefined, featureOff);
+
+    await expect(
+      service.previewForAudience({
+        mailTemplateId: 'tpl-1',
+        audience,
+        channel: MailChannel.letter,
+      })
+    ).rejects.toThrow(ForbiddenException);
+  });
+
+  it('still creates mail jobs', async () => {
+    const service = makeService(
+      fakePrisma(),
+      {},
+      { count: vi.fn(async () => 0) },
+      undefined,
+      featureOff
+    );
+
+    await expect(
+      service.createJob({ mailTemplateId: 'tpl-1', audience }, 'editor-1')
+    ).resolves.toMatchObject({ channel: MailChannel.mail });
   });
 });
