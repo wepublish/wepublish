@@ -242,7 +242,6 @@ function ImageList() {
               state={{ modalLocation: location }}
               variant="contained"
               startIcon={<MdOutlineAddPhotoAlternate />}
-              disabled={isLoading}
             >
               {t('images.overview.uploadImage')}
             </Button>
