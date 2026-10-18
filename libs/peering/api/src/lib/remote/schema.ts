@@ -76,6 +76,38 @@ export enum AnalyticsProviderType {
   Google = 'GOOGLE'
 }
 
+export type ApiToken = {
+  __typename?: 'ApiToken';
+  createdAt: Scalars['DateTime']['output'];
+  /** The user who created this token. Null once that user is deleted. */
+  createdBy?: Maybe<User>;
+  createdById?: Maybe<Scalars['String']['output']>;
+  /** When the token stops working. Every token has one. */
+  expiresAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  lastUsedAt?: Maybe<Scalars['DateTime']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  /** The non-secret start of the token, so a key can be told apart from another without revealing it. */
+  prefix: Scalars['String']['output'];
+  revokedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The permissions this token carries. Bounded at creation by what its creator holds. */
+  scopes: Array<Scalars['String']['output']>;
+};
+
+export enum ApiTokenSort {
+  CreatedAt = 'CreatedAt',
+  LastUsedAt = 'LastUsedAt',
+  Name = 'Name'
+}
+
+/** A revoked token counts as revoked even once it has also expired. */
+export enum ApiTokenStatus {
+  Active = 'Active',
+  Expired = 'Expired',
+  Revoked = 'Revoked'
+}
+
 export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   __typename?: 'Article';
   createdAt: Scalars['DateTime']['output'];
@@ -880,6 +912,14 @@ export type CreateSubscriptionInfo = {
   __typename?: 'CreateSubscriptionInfo';
   discountCodeValid?: Maybe<Scalars['Boolean']['output']>;
   discountPercent?: Maybe<Scalars['Float']['output']>;
+};
+
+/** A newly created token. The secret is returned exactly once and cannot be retrieved again. */
+export type CreatedApiToken = {
+  __typename?: 'CreatedApiToken';
+  apiToken: ApiToken;
+  /** The secret. Store it now — it is never shown again. */
+  token: Scalars['String']['output'];
 };
 
 export type Crowdfunding = {
@@ -2713,6 +2753,8 @@ export type Mutation = {
   createAISetting: SettingAiProvider;
   /** Creates a new analytics provider setting. */
   createAnalyticsProviderSetting: SettingAnalyticsProvider;
+  /** Creates an api token and returns its secret. The secret is shown once and cannot be retrieved again. */
+  createApiToken: CreatedApiToken;
   /** Creates an article. */
   createArticle: Article;
   /** Creates a new author. */
@@ -2976,6 +3018,8 @@ export type Mutation = {
   revertUserSubscriptionUpgrade: PublicSubscription;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean']['output'];
+  /** Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately. */
+  revokeApiToken: ApiToken;
   revokeImpersonationSessions: Scalars['Int']['output'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String']['output'];
@@ -3186,6 +3230,13 @@ export type MutationCreateAnalyticsProviderSettingArgs = {
   name?: InputMaybe<Scalars['String']['input']>;
   property?: InputMaybe<Scalars['String']['input']>;
   type: AnalyticsProviderType;
+};
+
+
+export type MutationCreateApiTokenArgs = {
+  expiresAt: Scalars['DateTime']['input'];
+  name: Scalars['String']['input'];
+  scopes: Array<Scalars['String']['input']>;
 };
 
 
@@ -4071,6 +4122,11 @@ export type MutationRevertUserSubscriptionUpgradeArgs = {
 };
 
 
+export type MutationRevokeApiTokenArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationRevokeImpersonationSessionsArgs = {
   ids?: InputMaybe<Array<Scalars['String']['input']>>;
 };
@@ -4892,6 +4948,13 @@ export type PageTeaserInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type PaginatedApiTokens = {
+  __typename?: 'PaginatedApiTokens';
+  nodes: Array<ApiToken>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type PaginatedArticleRevisions = {
   __typename?: 'PaginatedArticleRevisions';
   nodes: Array<ArticleRevision>;
@@ -5653,6 +5716,8 @@ export type Query = {
   analyticsProviderSetting: SettingAnalyticsProvider;
   /** Returns all analytics provider settings. */
   analyticsProviderSettings: Array<SettingAnalyticsProvider>;
+  /** Returns your own api tokens, or everyone's with CAN_GET_ALL_API_TOKENS. Secrets are never included. */
+  apiTokens: PaginatedApiTokens;
   /** Returns an article by id or slug. */
   article: Article;
   /** Returns a single article revision including its full content. */
@@ -6025,6 +6090,17 @@ export type QueryAnalyticsProviderSettingArgs = {
 
 export type QueryAnalyticsProviderSettingsArgs = {
   filter?: InputMaybe<SettingAnalyticsProviderFilter>;
+};
+
+
+export type QueryApiTokensArgs = {
+  createdById?: InputMaybe<Scalars['String']['input']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<ApiTokenSort>;
+  status?: InputMaybe<ApiTokenStatus>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 

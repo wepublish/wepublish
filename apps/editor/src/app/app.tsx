@@ -100,6 +100,8 @@ import { SubscriptionList } from './routes/subscriptions/subscriptionList';
 import { TagCreateView } from './routes/tags/tagCreateView';
 import { TagEditView } from './routes/tags/tagEditView';
 import { TagList } from './routes/tags/tagList';
+import { ApiTokenGenerateRoute } from './routes/apiTokens/apiTokenGenerateRoute';
+import { ApiTokenList } from './routes/apiTokens/apiTokenList';
 import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
@@ -1096,6 +1098,19 @@ export function App() {
               }
             />
             {/* Tokens Routes */}
+            <Route
+              path="api-tokens"
+              element={
+                <Base>
+                  <ApiTokenList />
+                </Base>
+              }
+            >
+              <Route
+                path="generate"
+                element={<ApiTokenGenerateRoute />}
+              />
+            </Route>
             <Route
               path="tokens"
               element={
