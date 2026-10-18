@@ -745,6 +745,9 @@ a case in `use-seeded-state.spec.tsx`.
 The same render guards the cure: a view with async `defaultValues` should
 return nothing until `formState.isLoading` clears.
 
+Don't reach for the hook in new code at all — see code-style.md. It is kept
+for the views that still use it.
+
 ---
 
 ### ⚠️ `DataTable`'s body memo must depend on the columns
