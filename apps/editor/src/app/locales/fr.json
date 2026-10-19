@@ -1252,7 +1252,7 @@
       "goToLogin": "Aller à la connexion"
     },
     "mailTemplates": {
-      "availableTemplates": "Modèles d’envoi",
+      "availableTemplates": "Modèles de message",
       "cancel": "Annuler",
       "content": "Contenu",
       "create": "Créer un modèle",
@@ -1472,7 +1472,7 @@
         "subscription": "Autour de l’abonnement lui-même : nouvellement souscrit, confirmé ou désactivé. En plus : les données de l’abonnement comme le montant et la durée.",
         "renewal": "Renouvellement automatique — réussi ou échoué. En plus : le nom du plan et du moyen de paiement ainsi que les données de facturation.",
         "invoiceCreation": "Dès qu’une nouvelle facture a été créée. En plus : la facture et l’abonnement correspondant.",
-        "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Envois manuels ». En plus : l’abonnement et les dernières factures.",
+        "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Messages manuels ». En plus : l’abonnement et les dernières factures.",
         "customNoSubscription": "Un e-mail libre aux personnes sans abonnement, p. ex. une invitation ou une relance. Seuls les champs du destinataire sont disponibles — les champs d’abonnement restent vides."
       },
       "placeholderDescriptions": {
@@ -1521,11 +1521,11 @@
         "optional_invoices_0_id": "ID de la dernière facture (tableau, index 0).",
         "optional_invoices_0_description": "Description de la dernière facture."
       },
-      "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Envois manuels ».",
+      "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Messages manuels ».",
       "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Imprimer aussi en lettre",
+      "sendAsLetter": "Aussi par lettre",
       "sendAsLetterHint": "Les personnes au canal lettre reçoivent ce message imprimé au lieu de l’e-mail.",
       "noMailSentSelectNow": "Ne pas envoyer d’e-mail"
     },
@@ -1602,7 +1602,7 @@
       "reason": {
         "emailQuality_dead": "Adresse e-mail injoignable",
         "placeholderEmail": "Adresse fictive",
-        "bulk": "Par public cible",
+        "bulk": "Par groupe d’utilisateurs",
         "emailQuality_active": "Adresse e-mail à nouveau active",
         "kept": "Conservé"
       },
@@ -1610,7 +1610,7 @@
       "switchToLetter": "Passer à la lettre",
       "switchToMail": "Passer à l’e-mail",
       "suggestionsTitle": "Canal de distribution",
-      "suggestionsIntro": "Le canal de distribution détermine si une personne reçoit ses messages automatiques par e-mail ou par lettre. Il est changé à la main, suite à une suggestion ou par public cible. Les suggestions sont calculées chaque nuit à partir de la qualité des e-mails et ne prennent effet qu’une fois appliquées.",
+      "suggestionsIntro": "Le canal de distribution détermine si une personne reçoit ses messages automatiques par e-mail ou par lettre. Il est changé à la main, sur la base d’une suggestion ou via des filtres de groupe d’utilisateurs. Les suggestions sont calculées chaque jour à partir des retours automatiques sur la délivrabilité des e-mails, mais ne prennent effet qu’après confirmation manuelle.",
       "kind": {
         "toLetter": "Passer à la lettre ({{count}})",
         "toMail": "Passer à l’e-mail ({{count}})"
@@ -1646,26 +1646,26 @@
       },
       "bulk": {
         "title": "Changer un public cible",
-        "intro": "Délimiter le public cible comme pour les envois manuels et changer le canal de distribution de toutes ces personnes.",
+        "intro": "Délimiter le public cible comme pour les messages manuels et changer le canal de distribution de toutes ces personnes.",
         "people": "{{count}} personnes dans ce public",
         "history": {
-          "title": "Changements par public cible",
-          "empty": "Aucun changement par public cible pour l’instant.",
+          "title": "Changements par groupe d’utilisateurs",
+          "empty": "Aucun changement par groupe d’utilisateurs pour l’instant.",
           "when": "Quand",
           "who": "Par",
           "channel": "Canal de distribution",
           "people": "Personnes",
           "changed": "Changées",
           "skipped": "Ignorées",
-          "filter": "Public cible",
+          "filter": "Groupe d’utilisateurs",
           "unknownUser": "Inconnu"
         }
       }
     },
     "deliveryChannel": {
       "tabs": {
-        "suggestions": "Suggestions ({{count}})",
-        "assign": "Changer un public cible",
+        "suggestions": "Changements proposés ({{count}})",
+        "assign": "Changer un groupe d’utilisateurs",
         "history": "Historique",
         "overview": "Vue d’ensemble"
       },
@@ -1673,15 +1673,16 @@
         "defaultChannel": "{{label}} (par défaut)",
         "people": "{{count}} personnes",
         "showPeople": "Afficher les personnes",
-        "openSuggestions": "{{count}} suggestions ouvertes",
-        "review": "Examiner",
-        "printed": "Imprimés : {{printed}} sur {{total}} messages automatiques",
-        "openFlows": "Vers les messages automatiques",
+        "openSuggestions": "{{count}} ouvertes",
+        "review": "Examiner les suggestions",
         "peopleOn": "Personnes au canal {{channel}}",
         "search": "Rechercher un nom ou une adresse e-mail",
         "lastChange": "Dernier changement",
-        "noDecision": "Sans décision propre",
-        "empty": "Personne sur ce canal."
+        "noDecision": "Aucun (par défaut)",
+        "empty": "Personne sur ce canal.",
+        "channelHeading": "Canal de distribution",
+        "suggestionsHeading": "Changements proposés",
+        "activeFor": "Activé pour {{count}} types de messages automatiques"
       },
       "suggestions": {
         "cardTitle": "{{move}} · {{count}} suggestions",
@@ -1701,7 +1702,7 @@
       "assign": {
         "steps": {
           "audience": {
-            "title": "Public cible",
+            "title": "Groupe d’utilisateurs",
             "description": "Qui est concerné"
           },
           "channel": {
@@ -1714,25 +1715,28 @@
           }
         },
         "people": "{{count}} personnes",
-        "noAddress": "{{count}} personnes sans adresse postale complète restent à l’e-mail.",
+        "noAddress": "{{count}} personnes sans adresse postale complète ne peuvent pas passer à la lettre et restent à l’e-mail.",
         "summary": {
           "letter": "{{changed}} passeront à la lettre, {{skipped}} sans adresse postale complète restent à l’e-mail.",
           "mail": "{{changed}} passeront à l’e-mail."
         },
-        "confirmTitle": "Faire passer le public cible à {{channel}} ?",
+        "confirmTitle": "Faire passer le groupe d’utilisateurs à {{channel}} ?",
         "showHistory": "Afficher dans l’historique",
-        "again": "Nouveau changement"
+        "again": "Nouveau changement",
+        "unreachableEmail": "{{count}} personnes avec une adresse e-mail injoignable (fictive ou morte) sont tout de même changées – les e-mails ne leur parviendront pas.",
+        "filterTitle": "Filtrer le groupe d’utilisateurs"
       },
       "history": {
         "allChannels": "Tous"
       },
       "user": {
         "switched": "Canal de distribution passé à {{channel}}.",
-        "manageAll": "Gérer tous les canaux de distribution",
-        "suggestion": "Suggestion : {{move}}"
+        "suggestion": "Suggestion : {{move}}",
+        "channelLabel": "Canal de distribution des messages automatiques :",
+        "emailUnreachable": "Adresse e-mail injoignable ({{segment}}) – les e-mails ne parviendront pas à cette personne."
       },
       "flows": {
-        "letterHint": "Les messages marqués « Imprimer aussi en lettre » parviennent imprimés aux personnes au canal lettre ; les autres reçoivent un e-mail.",
+        "letterHint": "Les messages marqués « Aussi par lettre » parviennent imprimés aux personnes au canal lettre ; les autres reçoivent un e-mail.",
         "manage": "Gérer les canaux de distribution"
       }
     },
@@ -1762,7 +1766,7 @@
         "system": "Comme le système"
       },
       "logout": "Déconnexion",
-      "mailTemplates": "Modèles d’envoi",
+      "mailTemplates": "Modèles de message",
       "memberPlans": "Plans d’abonnement",
       "navigations": "Menus",
       "pages": "Pages",
@@ -1785,8 +1789,8 @@
       "audienceDashboard": "Tableau de bord",
       "integrations": "Intégrations",
       "apps": "Applications",
-      "mailSend": "Envois manuels",
-      "mailLog": "Envois terminés",
+      "mailSend": "Messages manuels",
+      "mailLog": "Messages envoyés",
       "communication": "Communication",
       "auditLog": "Journal d’audit",
       "banners": "Bannières",
@@ -3713,7 +3717,7 @@
       "summary": {
         "title": "Résumé"
       },
-      "title": "Envois manuels",
+      "title": "Messages manuels",
       "template": "Modèle d’envoi",
       "selectTemplate": "Choisir un modèle",
       "audience": {
@@ -3916,10 +3920,10 @@
         "matchAll": "toutes les conditions",
         "more": "{{count}} autres filtres"
       },
-      "deliveryChannelHandOff": "Changer durablement le canal de distribution de ce public cible …"
+      "deliveryChannelHandOff": "Changer durablement le canal de distribution de ce groupe d’utilisateurs …"
     },
     "mailLog": {
-      "title": "Envois terminés",
+      "title": "Messages envoyés",
       "empty": "Aucun e-mail trouvé.",
       "sentDate": "Date",
       "template": "Modèle",
@@ -3937,7 +3941,7 @@
         "title": "Filtres",
         "reset": "Réinitialiser les filtres",
         "typeHint": "Ce qui a déclenché l’envoi.",
-        "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Envois manuels ». Sélectionnez-en un pour ne voir que ses e-mails.",
+        "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Messages manuels ». Sélectionnez-en un pour ne voir que ses e-mails.",
         "channel": "Envoi"
       },
       "types": {
@@ -3948,7 +3952,7 @@
       },
       "error": "Erreur",
       "typeDescriptions": {
-        "manual": "Envoyé à la main via « Envois manuels » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
+        "manual": "Envoyé à la main via « Messages manuels » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
         "subscriptionFlow": "Programmé depuis « Messages automatiques », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",
         "userFlow": "Déclenché immédiatement par une action ou un événement précis. Exemples : lien de connexion demandé, adresse e-mail modifiée, échec du paiement de renouvellement.",
         "systemMail": "E-mails de compte, configurés sous « Messages automatiques », section « Compte et connexion ». Exemples : e-mail de bienvenue après l’inscription, réinitialisation du mot de passe."
@@ -3991,7 +3995,7 @@
         },
         "templateMissing": {
           "cause": "Le modèle d’envoi utilisé n’existe plus.",
-          "fix": "Choisissez un modèle existant sous « Modèles d’envoi » ou recréez-le, puis relancez l’envoi."
+          "fix": "Choisissez un modèle existant sous « Modèles de message » ou recréez-le, puis relancez l’envoi."
         },
         "generic": {
           "cause": "Le serveur a refusé l’envoi avec le message ci-dessous.",
@@ -4066,12 +4070,13 @@
     },
     "userMail": {
       "sendTitle": "Envoyer un e-mail",
-      "logTitle": "Envois terminés",
+      "logTitle": "Messages envoyés",
       "customOnlyHint": "Seuls les modèles personnalisés peuvent être envoyés à un utilisateur.",
       "selectTemplate": "Choisir un modèle",
       "send": "Envoyer",
       "sent": "E-mail envoyé",
-      "title": "E-mails"
+      "title": "E-mails",
+      "titleWithLetters": "Messages"
     },
     "mailJobs": {
       "created": "Démarré",
@@ -4231,7 +4236,7 @@
     },
     "letterLayouts": {
       "title": "Papier à lettres",
-      "intro": "En-tête et pied de page des lettres imprimées. Les modèles d’envoi utilisent le papier par défaut, sauf s’ils en choisissent un autre.",
+      "intro": "En-tête et pied de page des lettres imprimées. Les modèles de message utilisent le papier par défaut, sauf s’ils en choisissent un autre.",
       "create": "Créer un papier à lettres",
       "createHeader": "Créer un papier à lettres",
       "editHeader": "Modifier le papier à lettres",

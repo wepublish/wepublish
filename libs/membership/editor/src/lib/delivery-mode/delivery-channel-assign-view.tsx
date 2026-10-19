@@ -101,6 +101,10 @@ export function DeliveryChannelAssignView() {
   const userCount = preview?.userCount ?? 0;
   const skipped = preview?.withoutAddressCount ?? 0;
   const target = deliveryChannel(channel);
+  // People the chosen channel will not reach; they are switched anyway.
+  const unreachable = (preview?.segments ?? [])
+    .filter(({ segment }) => target.unreachableEmailSegments.includes(segment))
+    .reduce((sum, { userCount: people }) => sum + people, 0);
   // The preview belongs to the current audience only once it has loaded for
   // it; while it is on its way, nothing may be agreed to.
   const settled = !loading && !!preview;
@@ -132,13 +136,13 @@ export function DeliveryChannelAssignView() {
             variant="outlined"
             style={{ marginTop: 16 }}
           >
-            <CardHeader
-              title={t('deliveryChannel.assign.steps.audience.title')}
-            />
+            <CardHeader title={t('deliveryChannel.assign.filterTitle')} />
             <CardContent>
+              {/* The card's title already says what is being filtered. */}
               <AudienceFilter
                 state={state}
                 onChange={update}
+                baseLabel={null}
               />
             </CardContent>
           </Card>
@@ -165,6 +169,7 @@ export function DeliveryChannelAssignView() {
             onShowRecipients={
               canListRecipients ? () => setRecipientsOpen(true) : undefined
             }
+            showRecipientsLabel={t('deliveryChannel.overview.showPeople')}
           />
 
           {canListRecipients && (
@@ -174,6 +179,8 @@ export function DeliveryChannelAssignView() {
               audience={audience}
               channel={MailChannel.Letter}
               totalCount={userCount}
+              title={t('deliveryChannel.assign.people', { count: userCount })}
+              withoutAddressLabel={t('deliveryMode.noAddress')}
             />
           )}
 
@@ -218,6 +225,17 @@ export function DeliveryChannelAssignView() {
                   sx={{ marginTop: 1.5 }}
                 >
                   {t('deliveryChannel.assign.noAddress', { count: skipped })}
+                </Alert>
+              )}
+
+              {settled && unreachable > 0 && (
+                <Alert
+                  severity="warning"
+                  sx={{ marginTop: 1.5 }}
+                >
+                  {t('deliveryChannel.assign.unreachableEmail', {
+                    count: unreachable,
+                  })}
                 </Alert>
               )}
             </CardContent>

@@ -6,9 +6,11 @@ import {
   screen,
   within,
 } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 
-import { UserDeliveryModePanel } from './user-delivery-mode-panel';
+import {
+  UserDeliveryChannelControls,
+  UserDeliveryChannelNotes,
+} from './user-delivery-mode-panel';
 
 const queries = vi.fn();
 const mutate = vi.fn();
@@ -62,6 +64,7 @@ const preference = (overrides = {}) => ({
   changedAt: null,
   changedBy: null,
   canReceiveLetters: true,
+  emailSegment: 'active',
   ...overrides,
 });
 
@@ -88,14 +91,11 @@ const answer = (name: string) => {
   }
 };
 
-const renderPanel = () =>
-  render(
-    <MemoryRouter>
-      <UserDeliveryModePanel userId="u1" />
-    </MemoryRouter>
-  );
+const renderControls = () =>
+  render(<UserDeliveryChannelControls userId="u1" />);
+const renderNotes = () => render(<UserDeliveryChannelNotes userId="u1" />);
 
-describe('UserDeliveryModePanel', () => {
+describe('UserDeliveryChannelControls', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     allowed.mockReturnValue(true);
@@ -106,16 +106,31 @@ describe('UserDeliveryModePanel', () => {
 
   afterEach(cleanup);
 
-  it('offers letters to a user who gets mails and has an address', () => {
-    renderPanel();
+  const pill = (channel: string) =>
+    screen
+      .getByText(`deliveryMode.channel.${channel}`)
+      .closest('.MuiChip-root') as HTMLElement;
 
-    expect(screen.getByText('deliveryMode.channel.mail')).toBeTruthy();
-    const button = screen.getByRole('button', {
-      name: 'deliveryMode.switchToLetter',
-    }) as HTMLButtonElement;
-    expect(button.disabled).toBe(false);
+  it('names the setting and shows every channel as a pill, the current one filled', () => {
+    renderControls();
 
-    fireEvent.click(button);
+    expect(screen.getByText('deliveryChannel.user.channelLabel')).toBeTruthy();
+    expect(pill('mail').className).toMatch(/MuiChip-filled/);
+    expect(pill('letter').className).toMatch(/MuiChip-outlined/);
+    // Both carry their channel's icon, so they read as one pair.
+    expect(pill('mail').querySelector('svg')).toBeTruthy();
+    expect(pill('letter').querySelector('svg')).toBeTruthy();
+  });
+
+  it('switches by clicking the other pill', () => {
+    renderControls();
+
+    // Only the other pill invites a click (pointer, hover tint).
+    expect(pill('letter').className).toMatch(/MuiChip-clickable/);
+    expect(pill('mail').className).not.toMatch(/MuiChip-clickable/);
+    fireEvent.click(
+      screen.getByRole('button', { name: 'deliveryMode.channel.letter' })
+    );
 
     expect(mutate).toHaveBeenCalledWith(
       'SetUserDeliveryMode',
@@ -127,46 +142,30 @@ describe('UserDeliveryModePanel', () => {
 
   it('cannot offer letters without a complete postal address', () => {
     currentPreference = preference({ canReceiveLetters: false });
-    renderPanel();
+    renderControls();
 
-    const button = screen.getByRole('button', {
-      name: 'deliveryMode.switchToLetter',
-    }) as HTMLButtonElement;
-    expect(button.disabled).toBe(true);
-    expect(screen.getByText('deliveryMode.noAddress')).toBeTruthy();
+    expect(pill('letter').getAttribute('aria-disabled')).toBe('true');
+    fireEvent.click(pill('letter'));
+    expect(mutate).not.toHaveBeenCalled();
   });
 
-  it('says in one line how a letter user got there, and offers the way back', () => {
-    currentPreference = preference({
-      channel: 'letter',
-      origin: 'suggestion',
-      reason: 'emailQuality:dead',
-      changedAt: '2026-10-16T08:00:00.000Z',
-      changedBy: { id: 'a', email: 'a@x.ch', name: 'Admin', firstName: null },
-    });
-    renderPanel();
+  it('offers the way back to a letter user', () => {
+    currentPreference = preference({ channel: 'letter' });
+    renderControls();
 
-    expect(screen.getByText('deliveryMode.channel.letter')).toBeTruthy();
-    expect(
-      screen.getByText(
-        /^deliveryMode\.origin\.suggestion · deliveryMode\.reason\.emailQuality_dead · .+ · Admin$/
-      )
-    ).toBeTruthy();
-
+    expect(pill('letter').className).toMatch(/MuiChip-filled/);
     fireEvent.click(
-      screen.getByRole('button', { name: 'deliveryMode.switchToMail' })
+      screen.getByRole('button', { name: 'deliveryMode.channel.mail' })
     );
 
     expect(mutate).toHaveBeenCalledWith(
       'SetUserDeliveryMode',
-      expect.objectContaining({
-        variables: { userId: 'u1', channel: 'mail' },
-      })
+      expect.objectContaining({ variables: { userId: 'u1', channel: 'mail' } })
     );
   });
 
   it('says so once a switch went through', () => {
-    renderPanel();
+    renderControls();
 
     const { onCompleted } = mutationOptions.mock.calls.find(
       ([name]) => name === 'SetUserDeliveryMode'
@@ -181,37 +180,89 @@ describe('UserDeliveryModePanel', () => {
     );
   });
 
-  it('shows the channel to everyone, the switch only to those who may', () => {
+  it('shows the pair to everyone, but only those who may can click', () => {
     allowed.mockReturnValue(false);
-    renderPanel();
+    renderControls();
 
-    expect(screen.getByText('deliveryMode.channel.mail')).toBeTruthy();
-    expect(
-      screen.queryByRole('button', { name: 'deliveryMode.switchToLetter' })
-    ).toBeNull();
+    expect(pill('mail')).toBeTruthy();
+    expect(pill('letter')).toBeTruthy();
+    expect(screen.queryAllByRole('button')).toHaveLength(0);
   });
 
-  it('points to where all delivery channels are managed', () => {
-    renderPanel();
+  it('no longer points anywhere else', () => {
+    renderControls();
 
-    expect(
-      screen
-        .getByRole('link', { name: 'deliveryChannel.user.manageAll' })
-        .getAttribute('href')
-    ).toBe('/deliverychannel');
+    expect(screen.queryByRole('link')).toBeNull();
+  });
+});
+
+describe('UserDeliveryChannelNotes', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    allowed.mockReturnValue(true);
+    currentPreference = preference();
+    openSuggestion = null;
+    queries.mockImplementation(answer);
+  });
+
+  afterEach(cleanup);
+
+  it('keeps how the person got there to the overview', () => {
+    currentPreference = preference({
+      channel: 'letter',
+      origin: 'suggestion',
+      reason: 'emailQuality:dead',
+      changedAt: '2026-10-16T08:00:00.000Z',
+      changedBy: { id: 'a', email: 'a@x.ch', name: 'Admin', firstName: null },
+    });
+    const { container } = renderNotes();
+
+    expect(screen.queryByText(/deliveryMode\.origin\./)).toBeNull();
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it('says why letters are out of reach', () => {
+    currentPreference = preference({ canReceiveLetters: false });
+    renderNotes();
+
+    expect(screen.getByText('deliveryMode.noAddress')).toBeTruthy();
+  });
+
+  it.each(['placeholder', 'dead'])(
+    'says that email does not reach a %s address, without refusing it',
+    segment => {
+      currentPreference = preference({
+        channel: 'letter',
+        emailSegment: segment,
+      });
+      renderNotes();
+
+      expect(
+        screen.getByText(
+          `deliveryChannel.user.emailUnreachable:{"segment":"mailSend.emailSegments.${segment}"}`
+        )
+      ).toBeTruthy();
+    }
+  );
+
+  it('says nothing about a reachable address', () => {
+    currentPreference = preference({
+      channel: 'letter',
+      emailSegment: 'active',
+    });
+    const { container } = renderNotes();
+
+    expect(container).toBeEmptyDOMElement();
   });
 
   it("shows the person's open suggestion and applies it", () => {
     openSuggestion = suggestion;
-    renderPanel();
+    renderNotes();
 
     expect(
       screen.getByText(
         'deliveryChannel.user.suggestion:{"move":"deliveryMode.switchToLetter"}'
       )
-    ).toBeTruthy();
-    expect(
-      screen.getByText('deliveryMode.reason.emailQuality_dead')
     ).toBeTruthy();
 
     fireEvent.click(
@@ -226,7 +277,7 @@ describe('UserDeliveryModePanel', () => {
 
   it('keeps the person where they are only after saying what that means', () => {
     openSuggestion = suggestion;
-    renderPanel();
+    renderNotes();
 
     fireEvent.click(
       screen.getByRole('button', { name: 'deliveryChannel.suggestions.keep' })
@@ -251,9 +302,9 @@ describe('UserDeliveryModePanel', () => {
     );
   });
 
-  it('has no suggestion to show when nothing is open', () => {
-    renderPanel();
+  it('takes no room when there is nothing to say', () => {
+    const { container } = renderNotes();
 
-    expect(screen.queryByText(/^deliveryChannel\.user\.suggestion/)).toBeNull();
+    expect(container).toBeEmptyDOMElement();
   });
 });

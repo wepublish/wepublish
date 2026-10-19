@@ -1252,7 +1252,7 @@
       "goToLogin": "Zum Login"
     },
     "mailTemplates": {
-      "availableTemplates": "Sendungsvorlagen",
+      "availableTemplates": "Mitteilungsvorlagen",
       "cancel": "Abbrechen",
       "content": "Inhalt",
       "create": "Vorlage erstellen",
@@ -1472,7 +1472,7 @@
         "subscription": "Rund um das Abo selbst: neu abgeschlossen, bestätigt oder deaktiviert. Zusätzlich verfügbar: Abo-Stammdaten wie Betrag und Laufzeit.",
         "renewal": "Automatische Verlängerung – erfolgreich oder fehlgeschlagen. Zusätzlich verfügbar: Plan- und Zahlungsmethoden-Name sowie die Rechnungsdaten.",
         "invoiceCreation": "Sobald eine neue Rechnung erstellt wurde. Zusätzlich verfügbar: die Rechnung und das zugehörige Abo.",
-        "custom": "Frei verschickbare E-Mail an Abonnent:innen, z.B. ein Newsletter über «Manuelle Sendungen». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
+        "custom": "Frei verschickbare E-Mail an Abonnent:innen, z.B. ein Newsletter über «Manuelle Mitteilungen». Zusätzlich verfügbar: das Abo und die letzten Rechnungen.",
         "customNoSubscription": "Frei verschickbare E-Mail an Personen ohne Abo, z.B. eine Einladung oder Reaktivierung. Verfügbar sind nur die Empfänger-Felder – Abo-Platzhalter bleiben leer."
       },
       "placeholderDescriptions": {
@@ -1521,12 +1521,12 @@
         "optional_invoices_0_id": "ID der neuesten Rechnung (Array, Index 0).",
         "optional_invoices_0_description": "Beschreibung der neuesten Rechnung."
       },
-      "statusHelp": "Ein Häkchen bedeutet: Eine automatische E-Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische E-Mail nutzt sie – über «Manuelle Sendungen» kannst du sie trotzdem von Hand verschicken.",
+      "statusHelp": "Ein Häkchen bedeutet: Eine automatische E-Mail verwendet diese Vorlage. «Nicht verwendet» bedeutet: Keine automatische E-Mail nutzt sie – über «Manuelle Mitteilungen» kannst du sie trotzdem von Hand verschicken.",
       "placeholdersInfo": "Platzhalter werden beim Versand automatisch durch die Daten der jeweiligen Person ersetzt, z. B. durch ihren Vornamen. So wird jede E-Mail persönlich."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Auch als Brief drucken",
-      "sendAsLetterHint": "Personen mit Zustellweg Brief bekommen diese Mitteilung gedruckt statt per E-Mail.",
+      "sendAsLetter": "Auch per Brief",
+      "sendAsLetterHint": "Personen mit Zustellkanal Brief bekommen diese Mitteilung gedruckt statt per E-Mail.",
       "noMailSentSelectNow": "Keine E-Mail senden"
     },
     "memberPlanEdit": {
@@ -1590,7 +1590,7 @@
       "paymentProviderStatusInfo": "✅ heisst, alle Zahlungsmethoden dieses Abo-Plans sind mit einem Zahlungsanbieter verbunden. ❌ heisst, mindestens einer Zahlungsmethode fehlt der Anbieter – damit können Leser:innen nicht bezahlen."
     },
     "deliveryMode": {
-      "panelTitle": "Zustellweg",
+      "panelTitle": "Zustellkanal",
       "channel": {
         "mail": "E-Mail",
         "letter": "Brief"
@@ -1602,15 +1602,15 @@
       "reason": {
         "emailQuality_dead": "E-Mail-Adresse nicht erreichbar",
         "placeholderEmail": "Platzhalter-Adresse",
-        "bulk": "Nach Zielgruppe",
+        "bulk": "Nach Benutzergruppe",
         "emailQuality_active": "E-Mail-Adresse wieder aktiv",
         "kept": "Beibehalten"
       },
       "noAddress": "Ohne vollständige Postadresse – Brief nicht möglich.",
       "switchToLetter": "Auf Brief umstellen",
       "switchToMail": "Auf E-Mail umstellen",
-      "suggestionsTitle": "Zustellweg",
-      "suggestionsIntro": "Der Zustellweg legt fest, ob eine Person ihre automatischen Mitteilungen per E-Mail oder per Brief bekommt. Er wird von Hand, nach Vorschlag oder nach Zielgruppe umgestellt. Vorschläge entstehen jede Nacht aus der E-Mail-Qualität und gelten erst, wenn sie übernommen werden.",
+      "suggestionsTitle": "Zustellkanal",
+      "suggestionsIntro": "Der Zustellkanal legt fest, ob ein User seine automatischen Mitteilungen per E-Mail oder per Brief bekommt. Er wird von Hand, vorschlag-basiert oder über Benutzergruppen-Filter umgestellt. Vorschläge werden täglich auf Basis von automatischen Rückmeldungen zur E-Mail-Zustellbarkeit berechnet, werden jedoch erst nach der manuellen Bestätigung übernommen.",
       "kind": {
         "toLetter": "Auf Brief umstellen ({{count}})",
         "toMail": "Auf E-Mail umstellen ({{count}})"
@@ -1621,23 +1621,23 @@
       "confirmAll": "Alle {{count}} übernehmen",
       "confirmAllTitle": "Alle Vorschläge übernehmen",
       "confirmAllText": {
-        "toLetter": "{{count}} Personen bekommen ihre automatischen Mitteilungen künftig per Brief.",
-        "toMail": "{{count}} Personen bekommen ihre automatischen Mitteilungen wieder per E-Mail."
+        "toLetter": "{{count}} User bekommen ihre automatischen Mitteilungen künftig per Brief.",
+        "toMail": "{{count}} User bekommen ihre automatischen Mitteilungen wieder per E-Mail."
       },
       "confirmAllYes": "Ja, alle übernehmen",
       "confirmedAll": "{{confirmed}} übernommen, {{skipped}} galten nicht mehr.",
       "table": {
-        "user": "Person",
+        "user": "User",
         "emailQuality": "E-Mail-Status",
         "reason": "Grund",
         "since": "Vorgeschlagen seit"
       },
       "audience": {
-        "open": "Zustellweg der Zielgruppe umstellen",
-        "title": "Zustellweg der Zielgruppe umstellen",
-        "intro": "Alle Personen der gewählten Zielgruppe bekommen ihre automatischen Mitteilungen künftig so:",
-        "previewLetter": "{{userCount}} Personen; {{withoutAddressCount}} davon ohne vollständige Postadresse bleiben bei E-Mail.",
-        "previewMail": "{{userCount}} Personen.",
+        "open": "Zustellkanal der Zielgruppe umstellen",
+        "title": "Zustellkanal der Zielgruppe umstellen",
+        "intro": "Alle User der gewählten Zielgruppe bekommen ihre automatischen Mitteilungen künftig so:",
+        "previewLetter": "{{userCount}} User; {{withoutAddressCount}} davon ohne vollständige Postadresse bleiben bei E-Mail.",
+        "previewMail": "{{userCount}} User.",
         "apply": "Umstellen",
         "done": {
           "letter": "{{changed}} auf Brief umgestellt, {{skippedWithoutAddress}} ohne vollständige Postadresse bleiben bei E-Mail.",
@@ -1646,51 +1646,52 @@
       },
       "bulk": {
         "title": "Zielgruppe umstellen",
-        "intro": "Zielgruppe wie bei den manuellen Sendungen eingrenzen und den Zustellweg für alle darin umstellen.",
-        "people": "{{count}} Personen in dieser Zielgruppe",
+        "intro": "Zielgruppe wie bei den manuellen Mitteilungen eingrenzen und den Zustellkanal für alle darin umstellen.",
+        "people": "{{count}} User in dieser Zielgruppe",
         "history": {
-          "title": "Umstellungen nach Zielgruppe",
-          "empty": "Noch keine Umstellung nach Zielgruppe.",
+          "title": "Umstellungen nach Benutzergruppe",
+          "empty": "Noch keine Umstellung nach Benutzergruppe.",
           "when": "Wann",
           "who": "Durch",
-          "channel": "Zustellweg",
-          "people": "Personen",
+          "channel": "Zustellkanal",
+          "people": "User",
           "changed": "Umgestellt",
           "skipped": "Übersprungen",
-          "filter": "Zielgruppe",
+          "filter": "Benutzergruppe",
           "unknownUser": "Unbekannt"
         }
       }
     },
     "deliveryChannel": {
       "tabs": {
-        "suggestions": "Vorschläge ({{count}})",
-        "assign": "Zielgruppe umstellen",
+        "suggestions": "Änderungsvorschläge ({{count}})",
+        "assign": "Zustellkanal für Benutzergruppe umstellen",
         "history": "Verlauf",
         "overview": "Übersicht"
       },
       "overview": {
         "defaultChannel": "{{label}} (Standard)",
-        "people": "{{count}} Personen",
-        "showPeople": "Personen anzeigen",
-        "openSuggestions": "{{count}} offene Vorschläge",
-        "review": "Prüfen",
-        "printed": "Gedruckt werden: {{printed}} von {{total}} automatischen Mitteilungen",
-        "openFlows": "Zu den automatischen Mitteilungen",
-        "peopleOn": "Personen mit Zustellweg {{channel}}",
+        "people": "{{count}} User",
+        "showPeople": "User anzeigen",
+        "openSuggestions": "{{count}} offene",
+        "review": "Vorschläge prüfen",
+        "peopleOn": "User mit Zustellkanal {{channel}}",
         "search": "Name oder E-Mail-Adresse suchen",
         "lastChange": "Letzte Änderung",
-        "noDecision": "Ohne eigene Entscheidung",
-        "empty": "Niemand mit diesem Zustellweg."
+        "noDecision": "Keine (Standard)",
+        "empty": "Niemand mit diesem Zustellkanal.",
+        "channelHeading": "Zustellkanal",
+        "suggestionsHeading": "Änderungsvorschläge",
+        "activeFor": "Bei {{count}} automatischen Mitteilungstypen aktiviert"
       },
       "suggestions": {
         "cardTitle": "{{move}} · {{count}} Vorschläge",
         "empty": "Keine offenen Vorschläge für {{channel}}. Sie werden jede Nacht neu berechnet.",
         "keep": "Beibehalten",
-        "keepTitle": "Zustellweg beibehalten?",
-        "keepText": "{{name}} bleibt bei {{channel}}. Das gilt als Entscheidung von Hand: die nächtliche Berechnung schlägt diese Person nicht mehr vor, in keine Richtung.",
+        "keepTitle": "Zustellkanal beibehalten?",
+        "keepText": "{{name}} bleibt bei {{channel}}. Das gilt als Entscheidung von Hand: die nächtliche Berechnung schlägt diesen User nicht mehr vor, in keine Richtung.",
         "keepYes": "Ja, beibehalten",
-        "readOnly": "Vorschläge übernehmen oder beibehalten kann nur, wer Zustellwege verwalten darf.",
+        "readOnly": "Vorschläge übernehmen oder beibehalten kann nur, wer Zustellkanäle verwalten darf.",
         "emailStatus": {
           "dead": "Nicht erreichbar seit {{date}}",
           "active": "Aktiv seit {{date}}",
@@ -1701,11 +1702,11 @@
       "assign": {
         "steps": {
           "audience": {
-            "title": "Zielgruppe",
+            "title": "Benutzergruppe",
             "description": "Wer umgestellt wird"
           },
           "channel": {
-            "title": "Zustellweg",
+            "title": "Zustellkanal",
             "description": "Wohin"
           },
           "review": {
@@ -1713,31 +1714,34 @@
             "description": "Letzter Blick"
           }
         },
-        "people": "{{count}} Personen",
-        "noAddress": "{{count}} Personen ohne vollständige Postadresse bleiben bei E-Mail.",
+        "people": "{{count}} User",
+        "noAddress": "{{count}} User ohne vollständige Postadresse können nicht auf Brief umgestellt werden und bleiben bei E-Mail.",
         "summary": {
           "letter": "{{changed}} werden auf Brief umgestellt, {{skipped}} ohne vollständige Postadresse bleiben bei E-Mail.",
           "mail": "{{changed}} werden auf E-Mail umgestellt."
         },
-        "confirmTitle": "Zielgruppe auf {{channel}} umstellen?",
+        "confirmTitle": "Benutzergruppe auf {{channel}} umstellen?",
         "showHistory": "Im Verlauf anzeigen",
-        "again": "Neue Umstellung"
+        "again": "Neue Umstellung",
+        "unreachableEmail": "{{count}} User mit nicht erreichbarer E-Mail-Adresse (Platzhalter oder unzustellbar) werden trotzdem umgestellt – Mitteilungen per E-Mail kommen dort nicht an.",
+        "filterTitle": "Benutzergruppe filtern"
       },
       "history": {
         "allChannels": "Alle"
       },
       "user": {
-        "switched": "Zustellweg auf {{channel}} umgestellt.",
-        "manageAll": "Alle Zustellwege verwalten",
-        "suggestion": "Vorschlag: {{move}}"
+        "switched": "Zustellkanal auf {{channel}} umgestellt.",
+        "suggestion": "Vorschlag: {{move}}",
+        "channelLabel": "Zustellkanal für automatische Mitteilungen:",
+        "emailUnreachable": "E-Mail-Adresse nicht erreichbar ({{segment}}) – Mitteilungen per E-Mail kommen nicht an."
       },
       "flows": {
-        "letterHint": "Mitteilungen mit «Auch als Brief drucken» erreichen Personen mit Zustellweg Brief gedruckt; alle anderen gehen per E-Mail.",
-        "manage": "Zustellwege verwalten"
+        "letterHint": "Mitteilungen mit «Auch per Brief» erreichen User mit Zustellkanal Brief in gedruckter Form; alle anderen gehen per E-Mail.",
+        "manage": "Zustellkanäle verwalten"
       }
     },
     "navbar": {
-      "deliverySuggestions": "Zustellweg",
+      "deliverySuggestions": "Zustellkanal",
       "articles": "Artikel",
       "authors": "Autor*innen",
       "banners": "Banner",
@@ -1770,7 +1774,7 @@
         "system": "Wie System"
       },
       "logout": "Logout",
-      "mailTemplates": "Sendungsvorlagen",
+      "mailTemplates": "Mitteilungsvorlagen",
       "memberPlans": "Abo-Pläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
@@ -1793,8 +1797,8 @@
       "audienceDashboard": "Dashboard",
       "integrations": "Integrationen",
       "apps": "Apps",
-      "mailSend": "Manuelle Sendungen",
-      "mailLog": "Abgeschlossene Sendungen",
+      "mailSend": "Manuelle Mitteilungen",
+      "mailLog": "Gesendete Mitteilungen",
       "communication": "Kommunikation",
       "auditLog": "Audit-Log",
       "letterLayouts": "Briefpapier",
@@ -3707,7 +3711,7 @@
           "description": "Zielgruppe und Filter"
         },
         "content": {
-          "title": "Inhalt & Zustellweg",
+          "title": "Inhalt & Zustellkanal",
           "description": "Vorlage, E-Mail oder Brief"
         },
         "send": {
@@ -3721,7 +3725,7 @@
       "summary": {
         "title": "Zusammenfassung"
       },
-      "title": "Manuelle Sendungen",
+      "title": "Manuelle Mitteilungen",
       "template": "Sendungsvorlage",
       "selectTemplate": "Vorlage auswählen",
       "audience": {
@@ -3848,7 +3852,7 @@
       "lettersCount": "{{count}} Briefe an {{people}} Personen",
       "confirmTextLetter": "Diesen Brief an {{count}} Empfänger:innen senden?",
       "channel": {
-        "label": "Zustellweg",
+        "label": "Zustellkanal",
         "mail": "E-Mail",
         "letter": "Brief",
         "withoutAddress": "{{count}} der Empfänger:innen haben keine brauchbare Postadresse und werden übersprungen."
@@ -3890,7 +3894,7 @@
         "template": "Vorlage wählen …",
         "state": "Status",
         "anyState": "Beliebig",
-        "channel": "Zustellweg",
+        "channel": "Zustellkanal",
         "anyChannel": "Beliebig",
         "sentBetween": "Versandt zwischen",
         "match": {
@@ -3924,10 +3928,10 @@
         "matchAll": "alle Bedingungen",
         "more": "{{count}} weitere Filter"
       },
-      "deliveryChannelHandOff": "Zustellweg dieser Zielgruppe dauerhaft umstellen …"
+      "deliveryChannelHandOff": "Zustellkanal dieser Benutzergruppe dauerhaft umstellen …"
     },
     "mailLog": {
-      "title": "Abgeschlossene Sendungen",
+      "title": "Gesendete Mitteilungen",
       "empty": "Keine E-Mails gefunden.",
       "sentDate": "Datum",
       "template": "Vorlage",
@@ -3946,7 +3950,7 @@
         "reset": "Filter zurücksetzen",
         "typeHint": "Wodurch der Versand angestossen wurde.",
         "channel": "Versand",
-        "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «Manuelle Sendungen» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."
+        "jobHelp": "Ein Versand fasst alle E-Mails zusammen, die mit einem Klick über «Manuelle Mitteilungen» verschickt wurden. Wähle einen aus, um nur dessen E-Mails zu sehen."
       },
       "types": {
         "subscriptionFlow": "Abo-E-Mail",
@@ -3956,7 +3960,7 @@
       },
       "error": "Fehler",
       "typeDescriptions": {
-        "manual": "Von Hand über «Manuelle Sendungen» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
+        "manual": "Von Hand über «Manuelle Mitteilungen» oder «Test senden» verschickt. Beispiel: Newsletter an alle Abonnent:innen.",
         "subscriptionFlow": "Zeitgesteuert aus «Automatische Mitteilungen», berechnet ab dem Abo-Datum. Beispiele: Erinnerung 14 Tage vor Ablauf, Mahnung nach unbezahlter Rechnung.",
         "userFlow": "Sofort ausgelöst durch eine konkrete Aktion oder ein Ereignis. Beispiele: Login-Link angefordert, E-Mail-Adresse geändert, Zahlung für die Verlängerung fehlgeschlagen.",
         "systemMail": "Konto-E-Mails, konfiguriert unter «Automatische Mitteilungen» im Abschnitt «Konto & Login». Beispiele: Willkommens-E-Mail nach Registrierung, Passwort zurücksetzen."
@@ -3999,7 +4003,7 @@
         },
         "templateMissing": {
           "cause": "Die verwendete Sendungsvorlage existiert nicht mehr.",
-          "fix": "Wähle unter «Sendungsvorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
+          "fix": "Wähle unter «Mitteilungsvorlagen» eine vorhandene Vorlage aus bzw. lege sie neu an und starte den Versand erneut."
         },
         "generic": {
           "cause": "Der E-Mail-Server hat den Versand mit der unten stehenden Meldung abgelehnt.",
@@ -4074,12 +4078,13 @@
     },
     "userMail": {
       "sendTitle": "E-Mail senden",
-      "logTitle": "Abgeschlossene Sendungen",
+      "logTitle": "Gesendete Mitteilungen",
       "customOnlyHint": "An einen einzelnen Benutzer können nur benutzerdefinierte Vorlagen gesendet werden.",
       "selectTemplate": "Vorlage auswählen",
       "send": "Senden",
       "sent": "E-Mail gesendet",
-      "title": "E-Mails"
+      "title": "E-Mails",
+      "titleWithLetters": "Mitteilungen"
     },
     "mailJobs": {
       "created": "Gestartet",
@@ -4231,7 +4236,7 @@
     },
     "letterLayouts": {
       "title": "Briefpapier",
-      "intro": "Kopf- und Fusszeile für gedruckte Briefe. Sendungsvorlagen drucken auf dem Standard-Briefpapier, sofern sie kein eigenes wählen.",
+      "intro": "Kopf- und Fusszeile für gedruckte Briefe. Mitteilungsvorlagen drucken auf dem Standard-Briefpapier, sofern sie kein eigenes wählen.",
       "create": "Briefpapier erstellen",
       "createHeader": "Briefpapier erstellen",
       "editHeader": "Briefpapier bearbeiten",

@@ -142,11 +142,12 @@ function SuggestionCard({
   const to = deliveryChannel(move.to);
 
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(PAGE_SIZE);
   const [askAll, setAskAll] = useState(false);
   const [keeping, setKeeping] = useState<Row | null>(null);
 
   const list = useQuery(DeliverySuggestionsDocument, {
-    variables: { kind, skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE },
+    variables: { kind, skip: (page - 1) * limit, take: limit },
   });
 
   const [confirmOne, { loading: confirming }] = useMutation(
@@ -294,14 +295,15 @@ function SuggestionCard({
           </TableContainer>
         }
 
-        {totalCount > PAGE_SIZE && (
+        {/* Also once the size was changed, so it can be changed back. */}
+        {(totalCount > limit || limit !== PAGE_SIZE) && (
           <Box sx={{ marginTop: 1.5 }}>
             <Pagination
               state={{
                 page,
-                limit: PAGE_SIZE,
+                limit,
                 setPage,
-                setLimit: () => undefined /* page size is fixed here */,
+                setLimit,
               }}
               totalCount={totalCount}
             />

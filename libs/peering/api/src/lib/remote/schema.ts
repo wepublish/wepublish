@@ -1103,6 +1103,8 @@ export type DeliveryChannelUserModel = {
   changedBy?: Maybe<MailLogRecipient>;
   /** How automated subscription mails reach this user. */
   channel: MailChannel;
+  /** How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen. */
+  emailSegment: MailEmailSegment;
   origin?: Maybe<DeliveryPreferenceOrigin>;
   reason?: Maybe<Scalars['String']['output']>;
   user: MailLogRecipient;
@@ -8645,6 +8647,8 @@ export type UserDeliveryPreferenceModel = {
   changedBy?: Maybe<MailLogRecipient>;
   /** How automated subscription mails reach this user. */
   channel: MailChannel;
+  /** How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen. */
+  emailSegment: MailEmailSegment;
   origin?: Maybe<DeliveryPreferenceOrigin>;
   reason?: Maybe<Scalars['String']['output']>;
 };

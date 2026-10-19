@@ -1,10 +1,25 @@
 import type { ChipProps } from '@mui/material';
-import { DeliverySuggestionKind, MailChannel } from '@wepublish/editor/api';
-import { useMemo } from 'react';
+import {
+  DeliverySuggestionKind,
+  MailChannel,
+  MailEmailSegment,
+} from '@wepublish/editor/api';
+import { createElement, useMemo } from 'react';
 import type { IconType } from 'react-icons';
-import { MdMailOutline, MdMarkunreadMailbox } from 'react-icons/md';
+// Both outline glyphs, so the two channels read as a pair wherever they meet.
+import { MdMailOutline, MdOutlineMarkunreadMailbox } from 'react-icons/md';
 
 import { useLetterChannel } from '../mail-template/use-letter-channel';
+
+/**
+ * The mailbox glyph fills its box where the envelope leaves air around
+ * itself; drawn a little smaller the two weigh the same side by side.
+ */
+const LetterIcon: IconType = props =>
+  createElement(MdOutlineMarkunreadMailbox, {
+    ...props,
+    style: { ...props.style, transform: 'scale(0.85)' },
+  });
 
 export type DeliveryChannelInfo = {
   channel: MailChannel;
@@ -18,6 +33,10 @@ export type DeliveryChannelInfo = {
   needsPostalAddress: boolean;
   /** Where a person is without a decision of their own. */
   isDefault: boolean;
+  /** Whether an automated message reaches the people on this channel through it. */
+  coversMessage: (message: { sendAsLetter: boolean }) => boolean;
+  /** Email segments this channel does not reach; a switch is still allowed, with a warning. */
+  unreachableEmailSegments: MailEmailSegment[];
 };
 
 /** Without a decision of their own, a person gets email. */
@@ -36,15 +55,27 @@ const CHANNELS: Record<MailChannel, Omit<DeliveryChannelInfo, 'channel'>> = {
     colour: 'primary',
     needsPostalAddress: false,
     isDefault: true,
+    // Every message goes by email; printing is the exception, per event.
+    coversMessage: () => true,
+    // A placeholder is no mailbox; a dead address bounces. Email stays the
+    // default one may always fall back to, so this only warns.
+    unreachableEmailSegments: [
+      MailEmailSegment.Placeholder,
+      MailEmailSegment.Dead,
+    ],
   },
   [MailChannel.Letter]: {
     labelKey: 'deliveryMode.channel.letter',
     switchToKey: 'deliveryMode.switchToLetter',
     countKey: 'mailSend.lettersCount',
-    icon: MdMarkunreadMailbox,
-    colour: 'warning',
+    icon: LetterIcon,
+    // The same colour as email: a channel is not a warning.
+    colour: 'primary',
     needsPostalAddress: true,
     isDefault: false,
+    coversMessage: message => message.sendAsLetter,
+    // Letters are about the postal address, not the mailbox.
+    unreachableEmailSegments: [],
   },
 };
 

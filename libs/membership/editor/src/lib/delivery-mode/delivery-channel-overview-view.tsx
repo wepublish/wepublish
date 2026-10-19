@@ -1,11 +1,9 @@
 import { useQuery } from '@apollo/client/react';
 import {
   Box,
-  Button,
   Card,
-  CardActions,
+  CardActionArea,
   CardContent,
-  Chip,
   Stack,
   Table,
   TableBody,
@@ -21,17 +19,61 @@ import {
   DeliverySuggestionCountsDocument,
   MailChannel,
   SubscriptionFlowsDocument,
+  SystemMailsDocument,
+  UserEvent,
   UsersByDeliveryChannelDocument,
 } from '@wepublish/editor/api';
 import { Pagination, useAuthorisation } from '@wepublish/ui/editor';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MdSwapHoriz } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 import { deliveryChannel } from './channels';
 import { describeDeliveryChange } from './delivery-change';
 
 const PAGE_SIZE = 20;
+
+/** Equal-height tiles whose link texts sit on one line across the row. */
+const TILE = {
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+} as const;
+const ACTION_AREA = {
+  ...TILE,
+  alignItems: 'stretch',
+  justifyContent: 'flex-start',
+} as const;
+
+/** A strip flush with the tile's top edge, naming what the tile is about. */
+const TileHeading = ({ children }: { children: ReactNode }) => (
+  <Typography
+    variant="overline"
+    sx={{
+      display: 'block',
+      px: 2,
+      py: 0.5,
+      bgcolor: 'action.hover',
+      borderBottom: 1,
+      borderColor: 'divider',
+      color: 'text.secondary',
+      lineHeight: 2,
+    }}
+  >
+    {children}
+  </Typography>
+);
+
+/** Reads as a link but is only text: the tile around it is the control. */
+const TileLink = ({ children }: { children: ReactNode }) => (
+  <Typography
+    variant="body2"
+    sx={{ px: 2, pb: 1.5, color: 'primary.main', fontWeight: 500 }}
+  >
+    {children}
+  </Typography>
+);
 
 const formatDate = (iso: string) => new Date(iso).toLocaleDateString();
 
@@ -42,25 +84,33 @@ const formatDate = (iso: string) => new Date(iso).toLocaleDateString();
  */
 export function DeliveryChannelOverviewView() {
   const { t } = useTranslation();
+  // The automated messages are the subscription flows' events plus the
+  // account mails; the coverage shows only to those who may see both.
   const canSeeFlows = useAuthorisation('CAN_GET_SUBSCRIPTION_FLOWS');
+  const canSeeSystemMails = useAuthorisation('CAN_GET_SYSTEM_MAILS');
+  const canSeeCoverage = !!canSeeFlows && !!canSeeSystemMails;
 
   // Letters first: who is on the default channel is rarely the question.
   const [channel, setChannel] = useState<MailChannel>(MailChannel.Letter);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(PAGE_SIZE);
 
   const counts = useQuery(DeliveryChannelCountsDocument);
   const suggestions = useQuery(DeliverySuggestionCountsDocument);
   const flows = useQuery(SubscriptionFlowsDocument, {
     variables: { defaultFlowOnly: false },
-    skip: !canSeeFlows,
+    skip: !canSeeCoverage,
+  });
+  const systemMails = useQuery(SystemMailsDocument, {
+    skip: !canSeeCoverage,
   });
   const people = useQuery(UsersByDeliveryChannelDocument, {
     variables: {
       channel,
       search: search || undefined,
-      skip: (page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
+      skip: (page - 1) * limit,
+      take: limit,
     },
   });
 
@@ -71,8 +121,14 @@ export function DeliveryChannelOverviewView() {
   const intervals = (flows.data?.subscriptionFlows ?? []).flatMap(
     flow => flow.intervals
   );
-  const sent = intervals.filter(interval => interval.mailTemplate);
-  const printed = sent.filter(interval => interval.sendAsLetter);
+  // Account mails are automated messages too; they only ever go by email,
+  // and a test mail is not a message to anyone.
+  const sent: { sendAsLetter: boolean }[] = [
+    ...intervals.filter(interval => interval.mailTemplate),
+    ...(systemMails.data?.systemMails ?? [])
+      .filter(mail => mail.mailTemplate && mail.event !== UserEvent.TestMail)
+      .map(() => ({ sendAsLetter: false })),
+  ];
 
   const nodes = people.data?.usersByDeliveryChannel.nodes ?? [];
   const totalCount = people.data?.usersByDeliveryChannel.totalCount ?? 0;
@@ -94,88 +150,131 @@ export function DeliveryChannelOverviewView() {
         {(counts.data?.deliveryChannelCounts ?? []).map(count => {
           const info = deliveryChannel(count.channel);
 
+          const active = count.channel === channel;
+
           return (
+            // The tile itself says whose people the list below shows.
             <Card
               key={count.channel}
               variant="outlined"
+              aria-current={active ? 'true' : undefined}
+              sx={{
+                ...TILE,
+                ...(active && {
+                  borderColor: 'primary.main',
+                  boxShadow: theme =>
+                    `inset 0 0 0 1px ${theme.vars.palette.primary.main}`,
+                }),
+              }}
             >
-              <CardContent>
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  sx={{ alignItems: 'center' }}
-                >
-                  <info.icon />
-                  <Typography variant="subtitle1">
-                    {info.isDefault ?
-                      t('deliveryChannel.overview.defaultChannel', {
-                        label: t(info.labelKey),
-                      })
-                    : t(info.labelKey)}
+              {/* The whole tile is the button; the link text at the foot
+                  only says what clicking does. */}
+              <CardActionArea
+                sx={ACTION_AREA}
+                onClick={() => show(count.channel)}
+              >
+                <TileHeading>
+                  {t('deliveryChannel.overview.channelHeading')}
+                </TileHeading>
+                <CardContent sx={{ flexGrow: 1, width: '100%' }}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ alignItems: 'center' }}
+                  >
+                    <info.icon />
+                    <Typography variant="subtitle1">
+                      {info.isDefault ?
+                        t('deliveryChannel.overview.defaultChannel', {
+                          label: t(info.labelKey),
+                        })
+                      : t(info.labelKey)}
+                    </Typography>
+                  </Stack>
+                  <Typography
+                    variant="h5"
+                    sx={{ marginTop: 1 }}
+                  >
+                    {t('deliveryChannel.overview.people', {
+                      count: count.userCount,
+                    })}
                   </Typography>
-                </Stack>
-                <Typography
-                  variant="h5"
-                  sx={{ marginTop: 1 }}
-                >
-                  {t('deliveryChannel.overview.people', {
-                    count: count.userCount,
-                  })}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  size="small"
-                  variant={count.channel === channel ? 'contained' : 'text'}
-                  onClick={() => show(count.channel)}
-                >
-                  {t('deliveryChannel.overview.showPeople')}
-                </Button>
-              </CardActions>
+                  {/* For how many configured message types this channel is
+                      active: all of them by email, the printed ones by
+                      letter. Only for those who may see the flows. */}
+                  {canSeeCoverage && flows.data && systemMails.data && (
+                    <Typography
+                      variant="caption"
+                      sx={{ display: 'block', color: 'text.secondary' }}
+                    >
+                      {t('deliveryChannel.overview.activeFor', {
+                        count: sent.filter(info.coversMessage).length,
+                      })}
+                    </Typography>
+                  )}
+                </CardContent>
+                <TileLink>{t('deliveryChannel.overview.showPeople')}</TileLink>
+              </CardActionArea>
             </Card>
           );
         })}
 
-        <Card variant="outlined">
-          <CardContent>
-            <Typography variant="subtitle1">
-              {t('deliveryChannel.overview.openSuggestions', { count: open })}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button
-              size="small"
-              component={Link}
-              to="/deliverychannel/suggestions"
-            >
-              {t('deliveryChannel.overview.review')}
-            </Button>
-          </CardActions>
+        <Card
+          variant="outlined"
+          sx={TILE}
+        >
+          <CardActionArea
+            sx={ACTION_AREA}
+            component={Link}
+            to="/deliverychannel/suggestions"
+          >
+            <TileHeading>
+              {t('deliveryChannel.overview.suggestionsHeading')}
+            </TileHeading>
+            <CardContent sx={{ flexGrow: 1, width: '100%' }}>
+              {/* The same icons as the channel tiles, with the move between
+                  them, on the row where those tiles name their channel. */}
+              <Typography
+                variant="subtitle1"
+                component="div"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  // Icons alone are shorter than a line of text; take the
+                  // line's height so the rows of the three tiles align.
+                  minHeight: theme =>
+                    `${theme.typography.subtitle1.lineHeight}em`,
+                }}
+              >
+                {(counts.data?.deliveryChannelCounts ?? []).map(
+                  (count, index) => {
+                    const Icon = deliveryChannel(count.channel).icon;
+
+                    return (
+                      <Box
+                        key={count.channel}
+                        component="span"
+                        sx={{ display: 'contents' }}
+                      >
+                        {index > 0 && <MdSwapHoriz />}
+                        <Icon />
+                      </Box>
+                    );
+                  }
+                )}
+              </Typography>
+              <Typography
+                variant="h5"
+                sx={{ marginTop: 1 }}
+              >
+                {t('deliveryChannel.overview.openSuggestions', { count: open })}
+              </Typography>
+            </CardContent>
+            <TileLink>{t('deliveryChannel.overview.review')}</TileLink>
+          </CardActionArea>
         </Card>
       </Box>
-
-      {canSeeFlows && flows.data && (
-        <Stack
-          direction="row"
-          spacing={1.5}
-          useFlexGap
-          sx={{ alignItems: 'center', flexWrap: 'wrap', marginTop: 2 }}
-        >
-          <Typography variant="body2">
-            {t('deliveryChannel.overview.printed', {
-              printed: printed.length,
-              total: sent.length,
-            })}
-          </Typography>
-          <Button
-            size="small"
-            component={Link}
-            to="/communicationflows/edit/default"
-          >
-            {t('deliveryChannel.overview.openFlows')}
-          </Button>
-        </Stack>
-      )}
 
       <Stack
         direction="row"
@@ -238,13 +337,8 @@ export function DeliveryChannelOverviewView() {
                       </Box>
                     </Link>
                   </TableCell>
-                  <TableCell>
-                    <Chip
-                      size="small"
-                      color={info.colour}
-                      icon={<info.icon />}
-                      label={t(info.labelKey)}
-                    />
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                    {t(info.labelKey)}
                   </TableCell>
                   <TableCell>
                     {describeDeliveryChange(t, row, formatDate) ??
@@ -265,14 +359,15 @@ export function DeliveryChannelOverviewView() {
         </Table>
       </TableContainer>
 
-      {totalCount > PAGE_SIZE && (
+      {/* Also once the size was changed, so it can be changed back. */}
+      {(totalCount > limit || limit !== PAGE_SIZE) && (
         <Box sx={{ marginTop: 1.5 }}>
           <Pagination
             state={{
               page,
-              limit: PAGE_SIZE,
+              limit,
               setPage,
-              setLimit: () => undefined /* page size is fixed here */,
+              setLimit,
             }}
             totalCount={totalCount}
           />

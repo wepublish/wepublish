@@ -47,6 +47,20 @@ describe('delivery channels', () => {
     expect(deliveryChannel(MailChannel.Mail).needsPostalAddress).toBe(false);
   });
 
+  it('knows which automated messages a channel covers', () => {
+    const printed = { sendAsLetter: true };
+    const mailed = { sendAsLetter: false };
+
+    expect(deliveryChannel(MailChannel.Mail).coversMessage(printed)).toBe(true);
+    expect(deliveryChannel(MailChannel.Mail).coversMessage(mailed)).toBe(true);
+    expect(deliveryChannel(MailChannel.Letter).coversMessage(printed)).toBe(
+      true
+    );
+    expect(deliveryChannel(MailChannel.Letter).coversMessage(mailed)).toBe(
+      false
+    );
+  });
+
   it('offers letters only where a letter integration is set up', () => {
     letterChannel.mockReturnValue({
       paperLetters: true,

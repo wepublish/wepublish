@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
-  Alert,
   Box,
   CircularProgress,
   Link as MuiLink,
@@ -269,22 +268,20 @@ function SubscriptionFlowBlocks({
         {/* Which messages print at all is decided here, per event; who gets
             them printed is decided in the delivery channel area. */}
         {paperLetterFlow && (
-          <Alert
-            severity="info"
-            sx={{ marginBottom: 2 }}
-            action={
-              <MuiLink
-                component={Link}
-                to="/deliverychannel"
-                variant="body2"
-                sx={{ alignSelf: 'center', whiteSpace: 'nowrap' }}
-              >
-                {t('deliveryChannel.flows.manage')}
-              </MuiLink>
-            }
+          // One quiet line across the whole grid, not a block of its own.
+          <Typography
+            variant="caption"
+            sx={{ gridColumn: '1 / -1', color: 'text.secondary' }}
           >
-            {t('deliveryChannel.flows.letterHint')}
-          </Alert>
+            {t('deliveryChannel.flows.letterHint')}{' '}
+            <MuiLink
+              component={Link}
+              to="/deliverychannel"
+              variant="caption"
+            >
+              {t('deliveryChannel.flows.manage')}
+            </MuiLink>
+          </Typography>
         )}
 
         {subscriptionFlows.subscriptionFlows.map(subscriptionFlow => {

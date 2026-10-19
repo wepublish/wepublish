@@ -33,6 +33,8 @@ export type AudienceFilterProps = {
   onChange: (patch: Partial<AudienceFilterState>) => void;
   /** Shown under the base choice, e.g. a warning about the chosen template. */
   children?: ReactNode;
+  /** The label over the base choice; null when the surroundings name it already. */
+  baseLabel?: ReactNode | null;
 };
 
 /**
@@ -45,6 +47,7 @@ export function AudienceFilter({
   state,
   onChange,
   children,
+  baseLabel,
 }: AudienceFilterProps) {
   const { t } = useTranslation();
   const { data: memberPlanData } = useQuery(MemberPlanListDocument, {
@@ -110,7 +113,9 @@ export function AudienceFilter({
       sx={{ width: '100%' }}
     >
       <FormControl fullWidth>
-        <FormLabel>{t('mailSend.base.label')}</FormLabel>
+        {baseLabel !== null && (
+          <FormLabel>{baseLabel ?? t('mailSend.base.label')}</FormLabel>
+        )}
         <RadioGroup
           value={state.base}
           onChange={(_event, value) =>

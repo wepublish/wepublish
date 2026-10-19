@@ -41,7 +41,8 @@ import {
 } from '@wepublish/editor/api';
 import {
   SendMailToUserPanel,
-  UserDeliveryModePanel,
+  UserDeliveryChannelControls,
+  UserDeliveryChannelNotes,
   UserMailLogPanel,
 } from '@wepublish/membership/editor';
 import { isLoginCodeEnabled } from './login-code-enabled';
@@ -70,6 +71,7 @@ import {
   toggleRequiredLabel,
   useActionMailQuestion,
   useAuthorisation,
+  useFeature,
   UserSubscriptionsList,
 } from '@wepublish/ui/editor';
 import { userCountryNames } from '@wepublish/user';
@@ -294,6 +296,8 @@ function UserEditView() {
     loadError !== undefined;
   const canResetPassword = useAuthorisation(CanResetUserPassword.id);
   const canResetTotp = useAuthorisation(CanResetUserTotp.id);
+  // The mail panel also lists printed letters once the medium has them.
+  const paperLetters = useFeature('paper-letters');
 
   const [resetUserTotp, { loading: isResettingTotp }] = useMutation(
     ResetUserTotpDocument
@@ -1249,7 +1253,30 @@ function UserEditView() {
 
               {isEditRoute && userId && (
                 <Card>
-                  <CardHeader title={t('userMail.title')} />
+                  {/* With letters, the log below holds them too, and the
+                      person's delivery channel belongs beside the title. */}
+                  <CardHeader
+                    title={
+                      <Box
+                        component="span"
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          flexWrap: 'wrap',
+                          columnGap: 3,
+                          rowGap: 1,
+                        }}
+                      >
+                        {t(
+                          paperLetters ?
+                            'userMail.titleWithLetters'
+                          : 'userMail.title'
+                        )}
+                        <UserDeliveryChannelControls userId={userId} />
+                      </Box>
+                    }
+                  />
+                  <UserDeliveryChannelNotes userId={userId} />
 
                   <CardContent>
                     <SendMailToUserPanel userId={userId} />
@@ -1261,11 +1288,6 @@ function UserEditView() {
                     <UserMailLogPanel userId={userId} />
                   </CardContent>
                 </Card>
-              )}
-
-              {/* letters instead of mails; hidden without the paper-letter flow */}
-              {isEditRoute && userId && (
-                <UserDeliveryModePanel userId={userId} />
               )}
             </PanelStack>
           )}
