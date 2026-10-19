@@ -23,6 +23,7 @@ import { ChangelogModule } from '@wepublish/changelog/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
+import { ApiTokenModule } from '@wepublish/api-token/api';
 import { DocumentModule } from '@wepublish/document/api';
 import { EventModule } from '@wepublish/event/api';
 import {
@@ -288,6 +289,7 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
     AuditLogModule,
     ChangelogModule,
     ConsentModule,
+    ApiTokenModule,
     DocumentModule,
     StatsModule,
     SettingModule,

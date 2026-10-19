@@ -1,9 +1,13 @@
-import styled from '@emotion/styled';
 import { Button } from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DatePicker, useCloseCalendar } from './datePicker';
+import {
+  DatePicker,
+  DatePickerDone,
+  DatePickerFooter,
+  DatePickerShortcuts,
+} from './datePicker';
 
 export interface DateTimePreset {
   label: string;
@@ -20,35 +24,6 @@ export interface DateTimePickerProps {
   helpInfo?: string;
   disabled?: boolean;
   helperText?: string;
-}
-
-const Footer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: ${({ theme }) => theme.spacing(1)};
-  padding-top: ${({ theme }) => theme.spacing(1)};
-  border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
-`;
-
-const Shortcuts = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: ${({ theme }) => theme.spacing(0.5)};
-`;
-
-function DoneButton({ label }: { label: string }) {
-  const close = useCloseCalendar();
-
-  return (
-    <Button
-      size="small"
-      variant="contained"
-      onClick={close}
-    >
-      {label}
-    </Button>
-  );
 }
 
 export function DateTimePicker({
@@ -123,13 +98,14 @@ export function DateTimePicker({
       error={Boolean(helperText)}
       helperText={helperText ?? helpInfo}
     >
-      <Footer>
-        <Shortcuts>
+      <DatePickerFooter>
+        <DatePickerShortcuts>
           {dateButtonPresets.map(preset => (
             <Button
               key={preset.label}
               size="small"
               variant="text"
+              onMouseDown={event => event.preventDefault()}
               onClick={() => handleChange(dayFor(preset.offset))}
             >
               {preset.label}
@@ -141,15 +117,16 @@ export function DateTimePicker({
               key={preset.label}
               size="small"
               variant="text"
+              onMouseDown={event => event.preventDefault()}
               onClick={() => handleChange(timeNow())}
             >
               {preset.label}
             </Button>
           ))}
-        </Shortcuts>
+        </DatePickerShortcuts>
 
-        <DoneButton label={t('dateTimePicker.done')} />
-      </Footer>
+        <DatePickerDone />
+      </DatePickerFooter>
     </DatePicker>
   );
 }
