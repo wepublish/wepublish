@@ -4,6 +4,10 @@ import { GraphQLModule, Query, Resolver } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { createMock, PartialMocked } from '@wepublish/testing';
+import {
+  LoginCodeSecondFactor,
+  LoginCodeSecondFactorService,
+} from '@wepublish/login-code/api';
 import { SessionResolver } from './session.resolver';
 import { SessionService } from './session.service';
 
@@ -86,6 +90,13 @@ describe('SessionResolver', () => {
         {
           provide: SessionService,
           useValue: sessionService,
+        },
+        {
+          provide: LoginCodeSecondFactorService,
+          useValue: {
+            getFactor: async () => LoginCodeSecondFactor.none,
+            mask: async (user: unknown) => user,
+          },
         },
       ],
     }).compile();

@@ -48,7 +48,7 @@ export class MailsModule {
       {
         provide: MailContext,
         useFactory: (
-          { mailProvider, jwtGenerator }: MailsModuleOptions,
+          { mailProvider, jwtGenerator, purlProvider }: MailsModuleOptions,
           prisma: PrismaClient,
           kv: KvTtlCacheService
         ) =>
@@ -57,6 +57,7 @@ export class MailsModule {
             mailProvider,
             kv,
             jwtGenerator,
+            purlProvider,
           }),
         inject: [MAILS_MODULE_OPTIONS, PrismaClient, KvTtlCacheService],
       },

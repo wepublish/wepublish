@@ -60,6 +60,10 @@ describe('session cache after authentication changes', () => {
       {} as never,
       {} as never,
       {} as never,
+      {} as never,
+      {} as never,
+      {} as never,
+      {} as never,
       sessionCache as unknown as SessionCacheInvalidator
     );
 

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { ImageModule } from '@wepublish/image/api';
 import { MailchimpContactModule } from '@wepublish/mail/api';
+import { AuthenticationModule } from '@wepublish/authentication/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { SessionCacheModule } from '@wepublish/authentication/api';
 import { GraphqlResponseCacheModule } from '@wepublish/kv-ttl-cache/api';
@@ -38,6 +39,7 @@ import { UserSubscriptionOverviewDataloader } from './user-subscription-overview
     ImageModule,
     HttpModule,
     MailchimpContactModule,
+    AuthenticationModule,
     SessionCacheModule,
   ],
   providers: [

@@ -35,9 +35,15 @@ const Consumer = () => {
   return null;
 };
 
+const meRequests = { count: 0 };
+
 const meMock = {
   request: { query: MeDocument },
-  result: { data: { me: null } },
+  result: () => {
+    meRequests.count += 1;
+
+    return { data: { me: null } };
+  },
   maxUsageCount: Number.POSITIVE_INFINITY,
 };
 
@@ -60,6 +66,22 @@ describe('SessionProvider', () => {
     setParent(window);
     sessionStorage.clear();
     deleteCookie(AuthTokenStorageKey);
+    meRequests.count = 0;
+  });
+
+  // The user is fetched once when the session is set. A page that changes the
+  // user on the API, such as the one confirming a new address, asks for it
+  // again through the context instead of waiting for a full reload.
+  it('fetches the user again on request', async () => {
+    renderProvider();
+    await setToken(session);
+    await waitFor(() => expect(meRequests.count).toBe(1));
+
+    await act(async () => {
+      await context?.[3]?.();
+    });
+
+    await waitFor(() => expect(meRequests.count).toBe(2));
   });
 
   describe('inside a cross-site frame (editor preview)', () => {
