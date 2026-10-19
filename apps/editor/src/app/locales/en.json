@@ -1607,7 +1607,7 @@
       "noAddress": "No complete postal address – letter not possible.",
       "switchToLetter": "Switch to letter",
       "switchToMail": "Switch to email",
-      "suggestionsTitle": "Delivery channel",
+      "suggestionsTitle": "Delivery channel for automated messages",
       "suggestionsIntro": "The delivery channel decides whether a user gets their automated messages by email or by letter. It is switched by hand, based on a suggestion, or through user group filters. Suggestions are computed daily from automatic feedback on email deliverability, but only take effect after manual confirmation.",
       "kind": {
         "toLetter": "Switch to letter ({{count}})",
@@ -1664,7 +1664,7 @@
       "tabs": {
         "suggestions": "Suggested changes ({{count}})",
         "assign": "Switch a user group",
-        "history": "History",
+        "history": "History of user group switches",
         "overview": "Overview"
       },
       "overview": {
@@ -1684,7 +1684,7 @@
       },
       "suggestions": {
         "cardTitle": "{{move}} · {{count}} suggestions",
-        "empty": "No open suggestions for {{channel}}. They are recomputed every night.",
+        "empty": "No open suggestions for a switch to {{channel}}.",
         "keep": "Keep",
         "keepTitle": "Keep the delivery channel?",
         "keepText": "{{name}} stays on {{channel}}. This counts as a decision by hand: the nightly run never suggests this person again, in either direction.",
@@ -1695,7 +1695,8 @@
           "active": "Active since {{date}}",
           "unresponsive": "Unresponsive since {{date}}",
           "unknown": "Unknown since {{date}}"
-        }
+        },
+        "recomputedDaily": "(recomputed automatically every day)"
       },
       "assign": {
         "steps": {
@@ -1722,7 +1723,8 @@
         "showHistory": "Show in history",
         "again": "New switch",
         "unreachableEmail": "{{count}} people with an unreachable email address (placeholder or dead) are switched anyway – email will not reach them.",
-        "filterTitle": "Filter the user group"
+        "filterTitle": "Filter the user group",
+        "segmentsLabel": "Filter the user group by email status"
       },
       "history": {
         "allChannels": "All"
@@ -3867,7 +3869,7 @@
       "autoRenewHelp": "Yes: the subscription renews itself at the end of the period and is charged again. No: it runs out unless the person renews it themselves.",
       "mailHistory": {
         "label": "Messages received",
-        "hint": "Only people who were (or were not) sent a given template. Applies to every base.",
+        "hint": "Only people who did (or did not) get a given template — on one channel only, if you like.",
         "add": "Add condition",
         "remove": "Remove condition",
         "received": "was sent",

@@ -100,6 +100,13 @@ describe('RecipientSummary', () => {
     ).toBeNull();
   });
 
+  it('names the email-status split the way the caller wants', () => {
+    renderSummary({ segmentsLabel: 'Leute nach Status' });
+
+    expect(screen.getByText('Leute nach Status')).toBeTruthy();
+    expect(screen.queryByText('mailSend.emailSegments.overview')).toBeNull();
+  });
+
   it('names the list the way the caller wants, as the people are not always recipients', () => {
     renderSummary({ showRecipientsLabel: 'Leute anzeigen' });
 

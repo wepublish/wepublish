@@ -94,6 +94,17 @@ describe('DeliverySuggestionsView', () => {
 
   afterEach(cleanup);
 
+  it('is headed once, with how the suggestions come about', () => {
+    renderView();
+
+    expect(
+      screen.getByText('deliveryChannel.overview.suggestionsHeading')
+    ).toBeTruthy();
+    expect(
+      screen.getByText('deliveryChannel.suggestions.recomputedDaily')
+    ).toBeTruthy();
+  });
+
   it('shows one card per move, the move away from email first, named by what it does', () => {
     renderView();
 

@@ -32,6 +32,7 @@ export function RecipientSummary({
   missing,
   onShowRecipients,
   showRecipientsLabel,
+  segmentsLabel,
   action,
 }: {
   loading: boolean;
@@ -50,6 +51,8 @@ export function RecipientSummary({
   onShowRecipients?: () => void;
   /** The people are recipients only in the send tool; others name them. */
   showRecipientsLabel?: ReactNode;
+  /** Over the email-status tiles; the send tool and the switch word it differently. */
+  segmentsLabel?: ReactNode;
   action?: ReactElement;
 }) {
   const { t } = useTranslation();
@@ -104,7 +107,7 @@ export function RecipientSummary({
               variant="caption"
               sx={{ color: 'text.secondary' }}
             >
-              {t('mailSend.emailSegments.overview')}
+              {segmentsLabel ?? t('mailSend.emailSegments.overview')}
             </Typography>
             {segmentCounts.map(({ segment, userCount: people }) => (
               <Button

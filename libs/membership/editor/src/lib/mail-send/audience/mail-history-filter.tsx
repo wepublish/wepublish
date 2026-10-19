@@ -200,7 +200,12 @@ export function MailHistoryFilter({ value, onChange }: MailHistoryFilterProps) {
                       channel: (event.target.value as MailChannel) || null,
                     })
                   }
-                  slotProps={{ select: { displayEmpty: true } }}
+                  // «Beliebig» is shown for the empty value, so the label must
+                  // sit above it from the start, not float over it.
+                  slotProps={{
+                    select: { displayEmpty: true },
+                    inputLabel: { shrink: true },
+                  }}
                   style={{ minWidth: 150 }}
                 >
                   <MenuItem value="">

@@ -190,6 +190,17 @@ describe('MailHistoryFilter', () => {
     );
   });
 
+  it('keeps the channel label out of the way of «Beliebig» before any click', () => {
+    renderFilter({ match: MailHistoryMatch.All, rows: [row()] });
+
+    // The input label (a div in this MUI) and the fieldset legend both carry
+    // the text; only the label has the shrink state.
+    const label = screen
+      .getAllByText('mailSend.mailHistory.channel')
+      .find(element => element.classList.contains('MuiInputLabel-root'));
+    expect(label?.className).toMatch(/MuiInputLabel-shrink/);
+  });
+
   it('hides the channel choice while letters are not available', () => {
     renderFilter({ match: MailHistoryMatch.All, rows: [row()] });
     // MUI renders a field label twice (label and fieldset legend).

@@ -1606,8 +1606,8 @@
       "noAddress": "Ohne vollständige Postadresse – Brief nicht möglich.",
       "switchToLetter": "Auf Brief umstellen",
       "switchToMail": "Auf E-Mail umstellen",
-      "suggestionsTitle": "Zustellkanal",
-      "suggestionsIntro": "Der Zustellkanal legt fest, ob ein User seine automatischen Mitteilungen per E-Mail oder per Brief bekommt. Er wird von Hand, vorschlag-basiert oder über Benutzergruppen-Filter umgestellt. Vorschläge werden täglich auf Basis von automatischen Rückmeldungen zur E-Mail-Zustellbarkeit berechnet, werden jedoch erst nach der manuellen Bestätigung übernommen.",
+      "suggestionsTitle": "Zustellkanal für automatische Mitteilungen",
+      "suggestionsIntro": "Der Zustellkanal legt fest, ob ein User seine automatischen Mitteilungen per E-Mail oder per Brief bekommt. Er wird von Hand, vorschlag-basiert oder über Benutzergruppen-Filter umgestellt. Vorschläge werden täglich auf Basis von automatischen Rückmeldungen zur E-Mail-Zustellbarkeit berechnet, kommen jedoch erst nach der manuellen Bestätigung zur Anwendung.",
       "kind": {
         "toLetter": "Auf Brief umstellen ({{count}})",
         "toMail": "Auf E-Mail umstellen ({{count}})"
@@ -1663,7 +1663,7 @@
       "tabs": {
         "suggestions": "Änderungsvorschläge ({{count}})",
         "assign": "Zustellkanal für Benutzergruppe umstellen",
-        "history": "Verlauf",
+        "history": "Verlauf Benutzergruppen-Umstellung",
         "overview": "Übersicht"
       },
       "overview": {
@@ -1683,7 +1683,7 @@
       },
       "suggestions": {
         "cardTitle": "{{move}} · {{count}} Vorschläge",
-        "empty": "Keine offenen Vorschläge für {{channel}}. Sie werden jede Nacht neu berechnet.",
+        "empty": "Keine offenen Vorschläge für Umstellung auf {{channel}}.",
         "keep": "Beibehalten",
         "keepTitle": "Zustellkanal beibehalten?",
         "keepText": "{{name}} bleibt bei {{channel}}. Das gilt als Entscheidung von Hand: die nächtliche Berechnung schlägt diesen User nicht mehr vor, in keine Richtung.",
@@ -1694,7 +1694,8 @@
           "active": "Aktiv seit {{date}}",
           "unresponsive": "Reagiert nicht seit {{date}}",
           "unknown": "Unbekannt seit {{date}}"
-        }
+        },
+        "recomputedDaily": "(täglich automatisch neu berechnet)"
       },
       "assign": {
         "steps": {
@@ -1721,7 +1722,8 @@
         "showHistory": "Im Verlauf anzeigen",
         "again": "Neue Umstellung",
         "unreachableEmail": "{{count}} User mit nicht erreichbarer E-Mail-Adresse (Platzhalter oder unzustellbar) werden trotzdem umgestellt – Mitteilungen per E-Mail kommen dort nicht an.",
-        "filterTitle": "Benutzergruppe filtern"
+        "filterTitle": "Benutzergruppe filtern",
+        "segmentsLabel": "Benutzergruppe nach E-Mail-Status filtern"
       },
       "history": {
         "allChannels": "Alle"
@@ -3699,10 +3701,10 @@
         "hasSubscription": "Abonnent:innen (mit Abo)",
         "noActiveSubscription": "Ohne aktives Abo",
         "endedSubscription": "Rückgewinnung – Abo kürzlich deaktiviert",
-        "allUsersHint": "Alle registrierten Personen, unabhängig von einem Abo.",
-        "hasSubscriptionHint": "Personen mit einem Abo.",
-        "noActiveSubscriptionHint": "Personen ohne aktives Abo.",
-        "endedSubscriptionHint": "Personen, deren Abo kürzlich deaktiviert wurde und die seither kein neues Abo haben.",
+        "allUsersHint": "Alle registrierten User, unabhängig von einem Abo.",
+        "hasSubscriptionHint": "User mit einem Abo.",
+        "noActiveSubscriptionHint": "User ohne aktives Abo.",
+        "endedSubscriptionHint": "User, deren Abo kürzlich deaktiviert wurde und die seither kein neues Abo haben.",
         "placeholderNote": {
           "allUsers": "Abo-Platzhalter bleiben leer.",
           "hasSubscription": "Abo-Platzhalter sind verfügbar.",
@@ -3775,10 +3777,10 @@
         "active": "Aktiv",
         "pick": "Alle Status",
         "hint": "Mehrere Status gelten als «oder». «Reagiert nicht»: Mails wurden zugestellt, aber seit längerem kein Login und kein Klick (Einstellung «E-Mail-Qualität»). Per Brief erreichen: Platzhalter + Nicht erreichbar.",
-        "overview": "Personen dieser Zielgruppe nach E-Mail-Status (unabhängig von der Auswahl)",
+        "overview": "User dieser Zielgruppe nach E-Mail-Status (unabhängig von der Auswahl)",
         "refresh": "Status aktualisieren",
         "refreshing": "Status werden aktualisiert …",
-        "refreshed": "{{updated}} Zustellstatus vom Provider geholt ({{checked}} geprüft), {{recomputed}} Personen neu bewertet."
+        "refreshed": "{{updated}} Zustellstatus vom Provider geholt ({{checked}} geprüft), {{recomputed}} User neu bewertet."
       },
       "endedWindow": {
         "label": "Zeitraum der Abo-Deaktivierung",
@@ -3848,7 +3850,7 @@
       "autoRenewHelp": "Ja: Das Abo verlängert sich am Ende der Laufzeit von selbst und wird erneut verrechnet. Nein: Es läuft aus, ausser die Person verlängert es selbst.",
       "mailHistory": {
         "label": "Erhaltene Mitteilungen",
-        "hint": "Nur Personen, die eine bestimmte Vorlage erhalten (oder nicht erhalten) haben. Gilt für jede Basis.",
+        "hint": "Nur User, die eine bestimmte Vorlage erhalten (oder nicht erhalten) haben – auf Wunsch nur über einen bestimmten Zustellkanal.",
         "add": "Bedingung hinzufügen",
         "remove": "Bedingung entfernen",
         "received": "hat erhalten",
