@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
 import { DeliveryChannelOverviewView } from './delivery-channel-overview-view';
-import { DeliveryModeAudienceSection } from './delivery-mode-audience-section';
+import { DeliveryChannelAssignView } from './delivery-channel-assign-view';
 import { DeliveryModeBulkChanges } from './delivery-mode-bulk-changes';
 import { DeliverySuggestionsView } from './delivery-suggestions-view';
 import { usePaperLetterFlow } from './use-paper-letter-flow';
@@ -50,7 +50,7 @@ export function DeliveryChannelPage() {
         {
           key: 'assign',
           label: t('deliveryChannel.tabs.assign'),
-          element: <DeliveryModeAudienceSection />,
+          element: <DeliveryChannelAssignView />,
         },
       ]
     : []),
