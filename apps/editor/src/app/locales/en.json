@@ -1723,6 +1723,15 @@
       },
       "history": {
         "allChannels": "All"
+      },
+      "user": {
+        "switched": "Delivery channel switched to {{channel}}.",
+        "manageAll": "Manage all delivery channels",
+        "suggestion": "Suggestion: {{move}}"
+      },
+      "flows": {
+        "letterHint": "Messages marked «Also print as letter» reach people on the letter channel in print; everyone else gets email.",
+        "manage": "Manage delivery channels"
       }
     },
     "navbar": {

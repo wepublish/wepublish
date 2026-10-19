@@ -1,5 +1,11 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { Typography, CircularProgress, Box } from '@mui/material';
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  Link as MuiLink,
+  Typography,
+} from '@mui/material';
 import {
   CreateSubscriptionFlowDocument,
   CreateSubscriptionIntervalDocument,
@@ -30,8 +36,9 @@ import {
   MdCelebration,
   MdTune,
 } from 'react-icons/md';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { DEFAULT_MUTATION_OPTIONS } from '../common';
+import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { MailBlock, MailBlocks } from '../mail-settings-layout';
 import { SystemMailSection } from '../system-mail/system-mail-section';
 import { FlowFilters } from './filter/flow-filters';
@@ -128,6 +135,7 @@ function SubscriptionFlowBlocks({
   memberPlan,
 }: SubscriptionFlowBlocksProps) {
   const { t } = useTranslation();
+  const paperLetterFlow = usePaperLetterFlow();
   const countedMemberPlanId = defaultFlowOnly ? undefined : memberPlanId;
 
   const {
@@ -258,6 +266,27 @@ function SubscriptionFlowBlocks({
           deleteSubscriptionFlow,
         }}
       >
+        {/* Which messages print at all is decided here, per event; who gets
+            them printed is decided in the delivery channel area. */}
+        {paperLetterFlow && (
+          <Alert
+            severity="info"
+            sx={{ marginBottom: 2 }}
+            action={
+              <MuiLink
+                component={Link}
+                to="/deliverychannel"
+                variant="body2"
+                sx={{ alignSelf: 'center', whiteSpace: 'nowrap' }}
+              >
+                {t('deliveryChannel.flows.manage')}
+              </MuiLink>
+            }
+          >
+            {t('deliveryChannel.flows.letterHint')}
+          </Alert>
+        )}
+
         {subscriptionFlows.subscriptionFlows.map(subscriptionFlow => {
           if (defaultFlowOnly) {
             return (

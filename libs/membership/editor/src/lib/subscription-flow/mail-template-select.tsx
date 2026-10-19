@@ -13,7 +13,7 @@ import {
 } from './subscription-flow-list';
 import { useTranslation } from 'react-i18next';
 import { MdUnsubscribe } from 'react-icons/md';
-import { useAuthorisation } from '@wepublish/ui/editor';
+import { InfoTooltip, useAuthorisation } from '@wepublish/ui/editor';
 import {
   FormControlLabel,
   MenuItem,
@@ -134,19 +134,24 @@ export function MailTemplateSelect({
         ))}
       </TextField>
       {paperLetterFlow && subscriptionInterval && (
-        <FormControlLabel
-          title={t('mailTemplateSelect.sendAsLetterHint')}
-          control={
-            <Switch
-              size="small"
-              checked={subscriptionInterval.object.sendAsLetter}
-              disabled={!canUpdateSubscriptionFlow}
-              onChange={(_event, checked) => setSendAsLetter(checked)}
-            />
-          }
-          label={t('mailTemplateSelect.sendAsLetter')}
-          sx={{ whiteSpace: 'nowrap' }}
-        />
+        <Stack
+          direction="row"
+          sx={{ alignItems: 'center', whiteSpace: 'nowrap' }}
+        >
+          <FormControlLabel
+            control={
+              <Switch
+                size="small"
+                checked={subscriptionInterval.object.sendAsLetter}
+                disabled={!canUpdateSubscriptionFlow}
+                onChange={(_event, checked) => setSendAsLetter(checked)}
+              />
+            }
+            label={t('mailTemplateSelect.sendAsLetter')}
+            sx={{ marginRight: 0 }}
+          />
+          <InfoTooltip text={t('mailTemplateSelect.sendAsLetterHint')} />
+        </Stack>
       )}
     </Stack>
   );

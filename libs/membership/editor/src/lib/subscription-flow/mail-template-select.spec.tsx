@@ -1,4 +1,5 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { SubscriptionEvent } from '@wepublish/editor/api';
 
 import { SubscriptionClientContext } from './graphql-client-context';
@@ -38,14 +39,19 @@ const interval = (sendAsLetter: boolean) =>
 
 const renderSelect = (subscriptionInterval?: any) =>
   render(
-    <SubscriptionClientContext.Provider value={client as any}>
-      <MailTemplateSelect
-        mailTemplates={[{ id: 'mt-1', name: 'Invoice', context: null } as any]}
-        subscriptionInterval={subscriptionInterval}
-        subscriptionFlow={{ id: 'flow-1' } as any}
-        event={SubscriptionEvent.InvoiceCreation}
-      />
-    </SubscriptionClientContext.Provider>
+    // The tooltip reads the theme, as it does in the app.
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
+      <SubscriptionClientContext.Provider value={client as any}>
+        <MailTemplateSelect
+          mailTemplates={
+            [{ id: 'mt-1', name: 'Invoice', context: null }] as any
+          }
+          subscriptionInterval={subscriptionInterval}
+          subscriptionFlow={{ id: 'flow-1' } as any}
+          event={SubscriptionEvent.InvoiceCreation}
+        />
+      </SubscriptionClientContext.Provider>
+    </ThemeProvider>
   );
 
 describe('MailTemplateSelect letter switch', () => {
@@ -64,6 +70,20 @@ describe('MailTemplateSelect letter switch', () => {
     expect(client.updateSubscriptionInterval).toHaveBeenCalledWith({
       variables: { id: 'interval-1', sendAsLetter: true },
     });
+  });
+
+  it('explains the switch in a tooltip, not a title attribute', () => {
+    renderSelect(interval(false));
+
+    expect(
+      screen.getByLabelText('mailTemplateSelect.sendAsLetterHint')
+    ).toBeTruthy();
+    expect(
+      screen
+        .getByLabelText('mailTemplateSelect.sendAsLetter')
+        .closest('label')
+        ?.getAttribute('title')
+    ).toBeNull();
   });
 
   it('has nothing to switch before a template is chosen', () => {
