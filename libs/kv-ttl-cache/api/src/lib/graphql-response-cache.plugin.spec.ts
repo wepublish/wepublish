@@ -6,6 +6,7 @@ import {
   GraphqlResponseCachePlugin,
   PUBLIC_CONTENT_NAMESPACE,
   PublicContentCacheInvalidator,
+  limitAnswerCache,
   skipAnswerCache,
 } from './graphql-response-cache.plugin';
 import { MemoryAtomicStore } from './kv-ttl-cache-atomic-store';
@@ -60,6 +61,10 @@ const createApi = async (dragonfly: FakeDragonfly) => {
 
           if (id === 'not-to-store') {
             skipAnswerCache(context);
+          }
+
+          if (id.startsWith('timed-')) {
+            limitAnswerCache(context, Number(id.slice('timed-'.length)));
           }
 
           if (failNext) {
@@ -280,6 +285,45 @@ describe('GraphqlResponseCachePlugin', () => {
       await api.query(off);
 
       expect(api.calls.article).toBe(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('drops an answer once a resolver says it goes stale', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+
+    try {
+      const api = await start();
+      const timed = '{ article(id: "timed-60") { id title } }';
+
+      await api.query(timed);
+      vi.advanceTimersByTime(59_000);
+      await api.query(timed);
+
+      expect(api.calls.article).toBe(1);
+
+      vi.advanceTimersByTime(5_000);
+      await api.query(timed);
+
+      expect(api.calls.article).toBe(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('never keeps an answer longer than the resolvers allow', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+
+    try {
+      const api = await start();
+      const timed = '{ article(id: "timed-900") { id title } }';
+
+      await api.query(timed);
+      vi.advanceTimersByTime(301_000);
+      await api.query(timed);
+
+      expect(api.calls.article).toBe(2);
     } finally {
       vi.useRealTimers();
     }

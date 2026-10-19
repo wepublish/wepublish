@@ -38,10 +38,15 @@ export function maskTime(input: string): string {
 
 export interface CalendarTimeInputProps {
   value?: string;
+  label?: string;
   onChange?: (time: string) => void;
 }
 
-export function CalendarTimeInput({ value, onChange }: CalendarTimeInputProps) {
+export function CalendarTimeInput({
+  value,
+  label,
+  onChange,
+}: CalendarTimeInputProps) {
   const [time, setTime] = useState(value ?? '');
   const [seeded, setSeeded] = useState(value);
 
@@ -66,6 +71,8 @@ export function CalendarTimeInput({ value, onChange }: CalendarTimeInputProps) {
         value={time}
         placeholder="HH:MM"
         onChange={event => handleChange(event.target.value)}
+        onFocus={event => event.target.select()}
+        onMouseUp={event => event.preventDefault()}
         slotProps={{
           htmlInput: {
             // A native focus change blurs the date input first, and the
@@ -78,7 +85,7 @@ export function CalendarTimeInput({ value, onChange }: CalendarTimeInputProps) {
                 event.currentTarget.focus();
               }
             },
-            'aria-label': 'time',
+            'aria-label': label ?? 'time',
             inputMode: 'numeric',
             maxLength: COMPLETE,
           },

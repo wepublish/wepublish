@@ -1,18 +1,19 @@
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Context, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { PageRevision } from './page.model';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { Property } from '@wepublish/property/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
-import { BlockContent, SlotTeasersLoader } from '@wepublish/block-content/api';
+import { BlockContent, BlockTreeLoader } from '@wepublish/block-content/api';
+import { limitAnswerCache } from '@wepublish/kv-ttl-cache/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { CanGetPage } from '@wepublish/permissions';
 
 @Resolver(() => PageRevision)
 export class PageRevisionResolver {
   constructor(
-    @Inject(forwardRef(() => SlotTeasersLoader))
-    private slotTeasersLoader: SlotTeasersLoader,
+    @Inject(forwardRef(() => BlockTreeLoader))
+    private blockTreeLoader: BlockTreeLoader,
     private imageDataloaderService: ImageDataloaderService
   ) {}
 
@@ -51,9 +52,36 @@ export class PageRevisionResolver {
   }
 
   @ResolveField(() => [BlockContent])
-  async blocks(@Parent() parent: PageRevision) {
-    return await this.slotTeasersLoader.loadSlotTeasersIntoBlocks(
-      parent.blocks
-    );
+  async blocks(
+    @Parent() parent: PageRevision,
+    @Args('onlyDisplayed', {
+      type: () => Boolean,
+      defaultValue: true,
+      description: 'Omits blocks that should be hidden.',
+    })
+    onlyDisplayed: boolean,
+    @Context() context: object
+  ) {
+    const changeAt = await this.blockTreeLoader.nextChange(parent.blocks);
+
+    if (changeAt) {
+      limitAnswerCache(
+        context,
+        Math.ceil(
+          (changeAt.getTime() - this.blockTreeLoader.now.getTime()) / 1000
+        )
+      );
+    }
+
+    return this.blockTreeLoader.loadBlocks(parent.blocks, { onlyDisplayed });
+  }
+
+  @ResolveField(() => Date, {
+    nullable: true,
+    description:
+      'When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed.',
+  })
+  async blocksChangeAt(@Parent() parent: PageRevision) {
+    return this.blockTreeLoader.nextChange(parent.blocks);
   }
 }

@@ -7,6 +7,7 @@ export {
   PUBLIC_CONTENT_NAMESPACE,
   PUBLIC_COMMENTS_NAMESPACE,
   PublicContentCacheInvalidator,
+  limitAnswerCache,
   skipAnswerCache,
   contentCacheNamespace,
   CONTENT_CACHE_TTL_SECONDS,

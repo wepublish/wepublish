@@ -226,10 +226,26 @@ const asksOnlyCacheableQueries = asksOnly(CACHEABLE_QUERIES);
 const asksOnlySameForEveryoneQueries = asksOnly(SAME_FOR_EVERYONE_QUERIES);
 
 const answersNotToStore = new WeakSet<object>();
+const answerTtlLimits = new WeakMap<object, number>();
 
 export const skipAnswerCache = (context: object | null | undefined) => {
   if (context) {
     answersNotToStore.add(context);
+  }
+};
+
+export const limitAnswerCache = (
+  context: object | null | undefined,
+  seconds: number
+) => {
+  if (!context || !(seconds > 0)) {
+    return;
+  }
+
+  const limit = answerTtlLimits.get(context);
+
+  if (limit === undefined || seconds < limit) {
+    answerTtlLimits.set(context, seconds);
   }
 };
 
@@ -425,13 +441,16 @@ export class GraphqlResponseCachePlugin implements ApolloServerPlugin<Context> {
           return;
         }
 
+        const ttl =
+          hasLiveBlock(result.data) ?
+            LIVE_RESPONSE_TTL_SECONDS
+          : RESPONSE_TTL_SECONDS;
+
         await kv.setNs(
           RESPONSE_NAMESPACE,
           key,
           result,
-          hasLiveBlock(result.data) ?
-            LIVE_RESPONSE_TTL_SECONDS
-          : RESPONSE_TTL_SECONDS
+          Math.min(ttl, answerTtlLimits.get(contextValue) ?? ttl)
         );
       },
     };

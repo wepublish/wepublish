@@ -16,6 +16,7 @@ export type {
   ArticleRevision,
   ArticleRevisionAuthor,
   ArticleRevisionAuthorInput,
+  ArticleRevisionBlocksArgs,
   ArticleRevisionFilter,
   ArticleTeaser,
   ArticleTeaserInput,
@@ -44,7 +45,12 @@ export type {
   BlockTemplate,
   BlockTemplateBlock,
   BlockTemplateBlockInput,
+  BlockTemplateBlocksArgs,
   BlockTemplateFilter,
+  BlockTimeOfDay,
+  BlockTimeOfDayInput,
+  BlockTiming,
+  BlockTimingInput,
   BlockWithAlignment,
   BlockWithAlignmentInput,
   BreakBlock,
@@ -469,6 +475,7 @@ export type {
   PageModelInput,
   PageNavigationLink,
   PageRevision,
+  PageRevisionBlocksArgs,
   PageRevisionFilter,
   PageTeaser,
   PageTeaserInput,
@@ -831,6 +838,7 @@ export {
   UserRoleSort,
   UserSort,
   UserSubscriptionStatus,
+  Weekday,
 } from './lib/schema-types';
 
 export { default as possibleTypes } from './lib/possible-types';
