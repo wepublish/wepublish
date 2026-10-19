@@ -1719,6 +1719,9 @@
         "confirmTitle": "Zielgruppe auf {{channel}} umstellen?",
         "showHistory": "Im Verlauf anzeigen",
         "again": "Neue Umstellung"
+      },
+      "history": {
+        "allChannels": "Alle"
       }
     },
     "navbar": {

@@ -1720,6 +1720,9 @@
         "confirmTitle": "Switch the audience to {{channel}}?",
         "showHistory": "Show in history",
         "again": "New switch"
+      },
+      "history": {
+        "allChannels": "All"
       }
     },
     "navbar": {
