@@ -109,7 +109,10 @@ export function DeliverySuggestionsPage() {
   const totalCount = list.data?.deliverySuggestions.totalCount ?? 0;
 
   return (
-    <>
+    // The editor's content frame is a scrolling flex column; a block with its
+    // own overflow (tables, cards) would shrink and scroll inside it instead of
+    // the page scrolling. Opt out of shrinking, like the other long pages.
+    <div style={{ flexShrink: 0 }}>
       <ListViewContainer>
         <ListViewHeader>
           <PageTitle>{t('deliveryMode.suggestionsTitle')}</PageTitle>
@@ -282,6 +285,6 @@ export function DeliverySuggestionsPage() {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </div>
   );
 }
