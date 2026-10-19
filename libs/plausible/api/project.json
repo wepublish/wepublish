@@ -1,0 +1,25 @@
+{
+  "name": "plausible-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/plausible/api/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/plausible/api",
+        "tsConfig": "libs/plausible/api/tsconfig.lib.json",
+        "packageJson": "libs/plausible/api/package.json",
+        "main": "libs/plausible/api/src/index.ts",
+        "rootDir": "."
+      }
+    },
+    "test": {
+      "options": {
+        "config": "../../../{projectRoot}/vitest.config.ts"
+      }
+    }
+  }
+}
