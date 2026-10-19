@@ -1631,6 +1631,7 @@
       "subscriptions": "Abonnements",
       "subscriptionSettings": "Automatische E-Mails",
       "tokens": "Tokens",
+      "apiTokens": "API-Schlüssel",
       "userConsents": "Benutzer-Einwilligungen",
       "userRoles": "Benutzerrollen",
       "users": "User",
@@ -3966,6 +3967,59 @@
       "trigger": "Suchen oder springen…",
       "keys": {
         "escape": "esc"
+      }
+    },
+    "apiTokenList": {
+      "overview": {
+        "apiTokens": "API-Schlüssel",
+        "apiTokensInfo": "Mit einem API-Schlüssel kann ein Skript oder ein anderes System die API nutzen, ohne sich als Person anzumelden. Ein Schlüssel hat nur die Rechte, die Sie ihm geben.",
+        "generateToken": "API-Schlüssel erstellen",
+        "name": "Name",
+        "prefix": "Schlüssel",
+        "scopes": "Rechte",
+        "scopeCount_one": "{{count}} Recht",
+        "scopeCount_other": "{{count}} Rechte",
+        "lastUsed": "Zuletzt verwendet",
+        "never": "Nie verwendet",
+        "status": "Status",
+        "active": "Aktiv",
+        "revoked": "Widerrufen",
+        "revoke": "Widerrufen",
+        "lastUsedDate": "{{lastUsedDate, ccc PP p}}",
+        "expires": "Läuft ab",
+        "expired": "Abgelaufen",
+        "expiresDate": "{{expiresDate, ccc PP p}}",
+        "owner": "Besitzer",
+        "ownerUnknown": "Gelöschte Person",
+        "filterByOwner": "Nach Besitzer filtern",
+        "anyStatus": "Jeder Status"
+      },
+      "panels": {
+        "generateToken": "API-Schlüssel erstellen",
+        "generate": "Erstellen",
+        "close": "Schliessen",
+        "name": "Name",
+        "scopes": "Rechte",
+        "scopesHelp": "Sie können nur Rechte vergeben, die Sie selbst haben.",
+        "creationSuccess": "Ihr API-Schlüssel wurde erstellt.",
+        "copy": "Schlüssel kopieren",
+        "copied": "Schlüssel kopiert",
+        "tokenWarning": "Kopieren Sie den Schlüssel jetzt. Er wird nur einmal angezeigt und lässt sich nicht erneut abrufen – wenn er verloren geht, erstellen Sie einen neuen.",
+        "revokeToken": "API-Schlüssel widerrufen",
+        "revokeTokenText": "«{{name}}» wirklich widerrufen? Alles, was diesen Schlüssel nutzt, funktioniert sofort nicht mehr.",
+        "cancel": "Abbrechen",
+        "confirm": "Widerrufen",
+        "noScopes": "Wähle mindestens eine Berechtigung.",
+        "expiresAt": "Läuft ab",
+        "expiresAtHelp": "Höchstens drei Jahre ab heute.",
+        "expiresInThePast": "Dieses Datum liegt in der Vergangenheit.",
+        "in30Days": "30 Tage",
+        "in90Days": "90 Tage",
+        "inAYear": "Ein Jahr",
+        "in3Years": "3 Jahre",
+        "expiresRequired": "Wähle ein Datum. Ein Schlüssel muss ablaufen.",
+        "expiresTooLate": "Ein Schlüssel darf nicht länger als drei Jahre gültig sein.",
+        "longLivedWarning": "Ein Schlüssel mit mehr als einem Jahr Laufzeit ist nicht empfohlen. Je länger er existiert, desto länger funktioniert er auch, wenn er abhandenkommt."
       }
     }
   }

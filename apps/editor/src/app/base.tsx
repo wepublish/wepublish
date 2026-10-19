@@ -50,6 +50,9 @@ import {
   CanDeletePoll,
   CanDeleteSubscription,
   CanDeleteTag,
+  CanCreateApiToken,
+  CanGetApiTokens,
+  CanRevokeApiToken,
   CanDeleteToken,
   CanDeleteUser,
   CanDeleteUserRole,
@@ -185,6 +188,7 @@ import {
   MdStar,
   MdStyle,
   MdTranslate,
+  MdKey,
   MdVpnKey,
 } from 'react-icons/md';
 
@@ -1295,6 +1299,21 @@ export function Base({ children }: BaseProps) {
                   openIfCurrent={followsRoute}
                   onToggle={wasOpen => toggleMenu('settings', wasOpen)}
                 >
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      CanGetApiTokens.id,
+                      CanCreateApiToken.id,
+                      CanRevokeApiToken.id,
+                    ]}
+                  >
+                    <SidebarNavItem
+                      href="/api-tokens"
+                      icon={<MdKey />}
+                    >
+                      {t('navbar.apiTokens')}
+                    </SidebarNavItem>
+                  </PermissionControl>
+
                   <PermissionControl
                     qualifyingPermissions={[CanGetAuditLogs.id]}
                   >
