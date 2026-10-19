@@ -227,6 +227,10 @@ export function CommandPalette() {
     () => groupMatches(matches, !query.trim()),
     [matches, query]
   );
+  const displayed = useMemo(
+    () => groups.flatMap(group => group.matches),
+    [groups]
+  );
 
   const [wasOpen, setWasOpen] = useState(isOpen);
 
@@ -243,7 +247,7 @@ export function CommandPalette() {
     resultsRef.current
       ?.querySelector(`#${CSS.escape(rowId(activeIndex))}`)
       ?.scrollIntoView?.({ block: 'nearest' });
-  }, [activeIndex, matches]);
+  }, [activeIndex, displayed]);
 
   const run = (match: CommandMatch | undefined) => {
     if (!match) {
@@ -255,12 +259,12 @@ export function CommandPalette() {
   };
 
   const move = (delta: number) => {
-    if (!matches.length) {
+    if (!displayed.length) {
       return;
     }
 
     setActiveIndex(
-      current => (current + delta + matches.length) % matches.length
+      current => (current + delta + displayed.length) % displayed.length
     );
   };
 
@@ -269,8 +273,8 @@ export function CommandPalette() {
       ArrowDown: () => move(1),
       ArrowUp: () => move(-1),
       Home: () => setActiveIndex(0),
-      End: () => setActiveIndex(Math.max(matches.length - 1, 0)),
-      Enter: () => run(matches[activeIndex]),
+      End: () => setActiveIndex(Math.max(displayed.length - 1, 0)),
+      Enter: () => run(displayed[activeIndex]),
     };
 
     const handler = keys[event.key];
@@ -325,7 +329,7 @@ export function CommandPalette() {
             aria-expanded="true"
             aria-controls={LIST_ID}
             aria-activedescendant={
-              matches.length ? rowId(activeIndex) : undefined
+              displayed.length ? rowId(activeIndex) : undefined
             }
             aria-label={t('commandPalette.title')}
             autoComplete="off"
@@ -382,7 +386,7 @@ export function CommandPalette() {
             ))}
           </div>
 
-          {!matches.length && (
+          {!displayed.length && (
             <Empty>
               {t('commandPalette.empty')} <strong>{query.trim()}</strong>
             </Empty>
