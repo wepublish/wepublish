@@ -1605,14 +1605,14 @@
       "noAddress": "Keine brieftaugliche Postadresse – Briefe sind nicht möglich.",
       "switchToLetter": "Auf Brief umstellen",
       "switchToMail": "Auf E-Mail umstellen",
-      "suggestionsTitle": "Vorschläge zur Zustellung",
-      "suggestionsIntro": "Wer wegen einer toten oder Platzhalter-Adresse Briefe bekommen sollte, und wer wieder E-Mails bekommen könnte. Nichts ändert sich ohne Bestätigung.",
+      "suggestionsTitle": "Versandkanal zuweisen",
+      "suggestionsIntro": "Zuweisen der Zustellungsform von Nachrichten für jede:n Nutzer:in, automatische Vorschläge oder per manueller Auswahl. Vorschläge werden angezeigt, wenn es mindestens eine Person gibt, die betroffen ist und müssen bestätigt werden, um wirksam zu werden.",
       "kind": {
-        "toLetter": "Auf Brief ({{count}})",
-        "toMail": "Zurück auf E-Mail ({{count}})"
+        "toLetter": "Per Brief ({{count}})",
+        "toMail": "Per E-Mail ({{count}})"
       },
       "recompute": "Jetzt neu berechnen",
-      "recomputed": "Neu berechnet: {{toLetter}} auf Brief, {{toMail}} zurück auf E-Mail, {{removed}} erledigt.",
+      "recomputed": "Neu berechnet: {{toLetter}} per Brief, {{toMail}} per E-Mail, {{removed}} erledigt.",
       "confirm": "Bestätigen",
       "confirmAll": "Alle bestätigen ({{count}})",
       "confirmAllTitle": "Alle Vorschläge bestätigen",
@@ -1659,7 +1659,7 @@
       }
     },
     "navbar": {
-      "deliverySuggestions": "Brief-Vorschläge",
+      "deliverySuggestions": "Versandkanal",
       "articles": "Artikel",
       "authors": "Autor*innen",
       "banners": "Banner",
