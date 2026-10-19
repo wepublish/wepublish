@@ -156,6 +156,11 @@ describe('DeliveryChannelAssignView', () => {
   });
 
   it('speaks of users, not recipients: nothing is sent here', () => {
+    preview = {
+      userCount: 12,
+      withoutAddressCount: 0,
+      segments: [{ segment: 'dead', userCount: 2 }],
+    };
     renderView();
 
     expect(
@@ -164,6 +169,10 @@ describe('DeliveryChannelAssignView', () => {
       })
     ).toBeTruthy();
     expect(screen.queryByText(/mailSend\.showRecipients/)).toBeNull();
+    expect(
+      screen.getByText('deliveryChannel.assign.segmentsLabel')
+    ).toBeTruthy();
+    expect(screen.queryByText(/mailSend\.emailSegments\.overview/)).toBeNull();
   });
 
   it('explains a missing address in its own terms inside the list', () => {

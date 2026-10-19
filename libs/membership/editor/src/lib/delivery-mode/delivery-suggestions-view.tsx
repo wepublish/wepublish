@@ -87,8 +87,33 @@ export function DeliverySuggestionsView() {
     <div>
       <Stack
         direction="row"
-        sx={{ justifyContent: 'flex-end', marginBottom: 2 }}
+        spacing={2}
+        useFlexGap
+        sx={{
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          marginBottom: 2,
+        }}
       >
+        {/* Said once here, so the cards need not repeat it. */}
+        <Stack
+          direction="row"
+          spacing={1.5}
+          useFlexGap
+          sx={{ alignItems: 'baseline', flexWrap: 'wrap' }}
+        >
+          <Typography variant="h6">
+            {t('deliveryChannel.overview.suggestionsHeading')}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{ color: 'text.secondary' }}
+          >
+            {t('deliveryChannel.suggestions.recomputedDaily')}
+          </Typography>
+        </Stack>
+
         {canManage ?
           <Button
             variant="outlined"

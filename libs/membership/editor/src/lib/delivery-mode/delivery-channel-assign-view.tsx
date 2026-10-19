@@ -170,6 +170,7 @@ export function DeliveryChannelAssignView() {
               canListRecipients ? () => setRecipientsOpen(true) : undefined
             }
             showRecipientsLabel={t('deliveryChannel.overview.showPeople')}
+            segmentsLabel={t('deliveryChannel.assign.segmentsLabel')}
           />
 
           {canListRecipients && (

@@ -1609,7 +1609,7 @@
       "noAddress": "Sans adresse postale complète – lettre impossible.",
       "switchToLetter": "Passer à la lettre",
       "switchToMail": "Passer à l’e-mail",
-      "suggestionsTitle": "Canal de distribution",
+      "suggestionsTitle": "Canal de distribution des messages automatiques",
       "suggestionsIntro": "Le canal de distribution détermine si une personne reçoit ses messages automatiques par e-mail ou par lettre. Il est changé à la main, sur la base d’une suggestion ou via des filtres de groupe d’utilisateurs. Les suggestions sont calculées chaque jour à partir des retours automatiques sur la délivrabilité des e-mails, mais ne prennent effet qu’après confirmation manuelle.",
       "kind": {
         "toLetter": "Passer à la lettre ({{count}})",
@@ -1666,7 +1666,7 @@
       "tabs": {
         "suggestions": "Changements proposés ({{count}})",
         "assign": "Changer un groupe d’utilisateurs",
-        "history": "Historique",
+        "history": "Historique des changements par groupe",
         "overview": "Vue d’ensemble"
       },
       "overview": {
@@ -1686,7 +1686,7 @@
       },
       "suggestions": {
         "cardTitle": "{{move}} · {{count}} suggestions",
-        "empty": "Aucune suggestion ouverte pour {{channel}}. Elles sont recalculées chaque nuit.",
+        "empty": "Aucune suggestion ouverte pour un passage à {{channel}}.",
         "keep": "Conserver",
         "keepTitle": "Conserver le canal de distribution ?",
         "keepText": "{{name}} reste sur {{channel}}. Cela vaut comme décision manuelle : le calcul nocturne ne proposera plus cette personne, dans aucune direction.",
@@ -1697,7 +1697,8 @@
           "active": "Active depuis le {{date}}",
           "unresponsive": "Sans réaction depuis le {{date}}",
           "unknown": "Inconnu depuis le {{date}}"
-        }
+        },
+        "recomputedDaily": "(recalculées automatiquement chaque jour)"
       },
       "assign": {
         "steps": {
@@ -1724,7 +1725,8 @@
         "showHistory": "Afficher dans l’historique",
         "again": "Nouveau changement",
         "unreachableEmail": "{{count}} personnes avec une adresse e-mail injoignable (fictive ou morte) sont tout de même changées – les e-mails ne leur parviendront pas.",
-        "filterTitle": "Filtrer le groupe d’utilisateurs"
+        "filterTitle": "Filtrer le groupe d’utilisateurs",
+        "segmentsLabel": "Filtrer le groupe d’utilisateurs par statut e-mail"
       },
       "history": {
         "allChannels": "Tous"
@@ -3878,7 +3880,7 @@
       },
       "mailHistory": {
         "label": "Messages reçus",
-        "hint": "Uniquement les personnes qui ont reçu (ou non) un modèle donné. S’applique à chaque base.",
+        "hint": "Seules les personnes ayant (ou n’ayant pas) reçu un modèle donné – au besoin via un seul canal.",
         "add": "Ajouter une condition",
         "remove": "Supprimer la condition",
         "received": "a reçu",
