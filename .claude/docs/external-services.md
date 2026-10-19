@@ -71,16 +71,30 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   (after email quality) rebuilds `user_delivery_suggestions` — dead or
   placeholder address with a usable postal address → `toLetter`;
   suggestion-made letter users that became `active` → `toMail`; manual
-  switches are never suggested back. Admins confirm on `/deliverysuggestions`
-  (single or all; a stale one is dropped and refused), switch single users on
-  the user page, or an audience: from the communication tool's send step, or
-  from the «Manuell nach Zielgruppe» section below the suggestions, which
-  embeds the same `AudienceFilter` (`libs/membership/editor/src/lib/mail-send/audience/`).
+  decisions are never suggested again, in either direction. A suggestion is
+  answered with `confirmDeliverySuggestion` (re-validated; a stale one is
+  dropped and refused) or `keepDeliverySuggestion`, which stores the user's
+  current channel as a manual decision with reason `kept` — that is what makes
+  «Beibehalten» survive the nightly recompute without a column of its own.
+- Editor: one area, «Zustellweg», at `/deliverychannel/:view`
+  (`libs/membership/editor/src/lib/delivery-mode/delivery-channel-page.tsx`,
+  `/deliverysuggestions` redirects). Views: `overview` (default; counts per
+  channel from `deliveryChannelCounts`, the people of one channel from
+  `usersByDeliveryChannel`, open suggestions, how many flow events print),
+  `suggestions` (a card per move, Übernehmen / Beibehalten), `assign` (a
+  three-step wizard over the send tool's `AudienceFilter`; the send page hands
+  its audience over through `location.state`), `history`. The user page card
+  switches one person and answers their `userDeliverySuggestion`. Reads need
+  `CanGetUsers` (`CanGetUser` per user), writes `CanManageUserDeliveryMode`.
+  Everything the editor knows about a channel (label, icon, default, needs a
+  postal address, which move a suggestion kind is) sits in `channels.ts`; the
+  api still speaks `toLetter|toMail`.
 - Every audience switch is recorded in `DeliveryModeBulkChange`
   (`user_delivery_bulk_changes`: channel, the `MailAudienceInput` as JSON,
-  counts, who, when; query `deliveryModeBulkChanges`), because the preference
-  rows only keep their last change. The section lists the recent ones with the
-  filter read back as phrases (`describeAudience`).
+  counts, who, when; query `deliveryModeBulkChanges(channel?)`), because the
+  preference rows only keep their last change. The history view lists them
+  with the filter read back as phrases (`describeAudience`, names through
+  `useAudienceLookups`, shared with the wizard's review step).
 - `MailAudienceInput.mailHistory` filters any base by the mail log:
   `{ match: all|any, conditions: [{ mailTemplateId, negate, states?, channel?, from?, to? }] }`.
   Built in `mail-send-recipient.service.ts` as `mailSent: { some | none }`

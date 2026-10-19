@@ -993,16 +993,16 @@ flex item. A block with its own overflow, which MUI's `TableContainer`
 `min-height: 0` and shrinks: the table grows a vertical scrollbar and the card
 clips its content, while the page itself does not scroll.
 
-Seen on `/deliverysuggestions` on 2026-10-19: the audience filter card was cut
-off and the suggestions table scrolled on its own.
+Seen on the delivery suggestions page on 2026-10-19: the audience filter card
+was cut off and the suggestions table scrolled on its own.
 
 Wrapping the page in `<div style={{ flexShrink: 0 }}>` keeps it one
 non-shrinking block, so the frame scrolls it as a whole. `mail-send-page.tsx`,
 `mail-template-edit.tsx` and `mail-log-list.tsx` do this already; list pages
 built on `TableWrapper` + `fillHeight` want the opposite and must not.
 
-**Load-bearing:** the wrapper div in `delivery-suggestions-page.tsx` and the
-three pages above.
+**Load-bearing:** the wrapper div in `delivery-channel-page.tsx` (its views
+render inside it and must not add one of their own) and the three pages above.
 
 Nothing guards this — a regression here is silent until someone resizes the
 window.
