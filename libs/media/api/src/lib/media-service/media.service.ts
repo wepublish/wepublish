@@ -22,6 +22,8 @@ import {
   getMimeTypeForExtension,
   DocumentCategory,
 } from './supported-documents-validator';
+import { getMimeTypeForAudioExtension } from './supported-audios-validator';
+import { getMimeTypeForVideoExtension } from './supported-videos-validator';
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol(
   'MEDIA_SERVICE_MODULE_OPTIONS'
@@ -383,7 +385,60 @@ export class MediaService {
       return { uri: `videos/${videoId}`, exists: false };
     }
 
-    return { uri: uploadedFile.name, exists: true };
+    const objectUri = uploadedFile.name;
+
+    const [contentType, copiedContentType] = await Promise.all([
+      this.getVideoContentType(objectUri),
+      this.getStoredContentType(this.config.transformationBucket, objectUri),
+    ]);
+    if (copiedContentType === contentType) {
+      return { uri: objectUri, exists: true };
+    }
+
+    try {
+      const stream = await this.storage.getFile(
+        this.config.uploadBucket,
+        objectUri
+      );
+
+      const chunks: Buffer[] = [];
+      for await (const chunk of stream) {
+        chunks.push(Buffer.from(chunk));
+      }
+      const buffer = Buffer.concat(chunks);
+
+      await this.storage.saveFile(
+        this.config.transformationBucket,
+        objectUri,
+        buffer,
+        buffer.length,
+        { 'Content-Type': contentType }
+      );
+
+      return { uri: objectUri, exists: true };
+    } catch (e: any) {
+      if (e.code === 'NoSuchKey') {
+        return { uri: objectUri, exists: false };
+      }
+      throw e;
+    }
+  }
+
+  private async getVideoContentType(objectUri: string): Promise<string> {
+    const uploadedContentType = await this.getStoredContentType(
+      this.config.uploadBucket,
+      objectUri
+    );
+    if (
+      uploadedContentType &&
+      !GENERIC_CONTENT_TYPES.includes(uploadedContentType)
+    ) {
+      return uploadedContentType;
+    }
+    return (
+      getMimeTypeForVideoExtension(path.extname(objectUri)) ??
+      GENERIC_CONTENT_TYPE
+    );
   }
 
   public async deleteVideo(videoId: string) {
@@ -428,7 +483,60 @@ export class MediaService {
       return { uri: `audios/${audioId}`, exists: false };
     }
 
-    return { uri: uploadedFile.name, exists: true };
+    const objectUri = uploadedFile.name;
+
+    const [contentType, copiedContentType] = await Promise.all([
+      this.getAudioContentType(objectUri),
+      this.getStoredContentType(this.config.transformationBucket, objectUri),
+    ]);
+    if (copiedContentType === contentType) {
+      return { uri: objectUri, exists: true };
+    }
+
+    try {
+      const stream = await this.storage.getFile(
+        this.config.uploadBucket,
+        objectUri
+      );
+
+      const chunks: Buffer[] = [];
+      for await (const chunk of stream) {
+        chunks.push(Buffer.from(chunk));
+      }
+      const buffer = Buffer.concat(chunks);
+
+      await this.storage.saveFile(
+        this.config.transformationBucket,
+        objectUri,
+        buffer,
+        buffer.length,
+        { 'Content-Type': contentType }
+      );
+
+      return { uri: objectUri, exists: true };
+    } catch (e: any) {
+      if (e.code === 'NoSuchKey') {
+        return { uri: objectUri, exists: false };
+      }
+      throw e;
+    }
+  }
+
+  private async getAudioContentType(objectUri: string): Promise<string> {
+    const uploadedContentType = await this.getStoredContentType(
+      this.config.uploadBucket,
+      objectUri
+    );
+    if (
+      uploadedContentType &&
+      !GENERIC_CONTENT_TYPES.includes(uploadedContentType)
+    ) {
+      return uploadedContentType;
+    }
+    return (
+      getMimeTypeForAudioExtension(path.extname(objectUri)) ??
+      GENERIC_CONTENT_TYPE
+    );
   }
 
   public async deleteAudio(audioId: string) {
@@ -542,6 +650,24 @@ export class MediaService {
     return (
       getMimeTypeForExtension(path.extname(objectUri)) ?? GENERIC_CONTENT_TYPE
     );
+  }
+
+  public async hasVideo(videoId: string): Promise<boolean> {
+    const files = await this.storage.listFiles(
+      this.config.uploadBucket,
+      `videos/${videoId}/`,
+      false
+    );
+    return files.length > 0;
+  }
+
+  public async hasAudio(audioId: string): Promise<boolean> {
+    const files = await this.storage.listFiles(
+      this.config.uploadBucket,
+      `audios/${audioId}/`,
+      false
+    );
+    return files.length > 0;
   }
 
   public async hasDocument(documentId: string): Promise<boolean> {

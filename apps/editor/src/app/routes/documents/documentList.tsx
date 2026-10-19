@@ -180,7 +180,6 @@ function DocumentList() {
                 state={{ modalLocation: location }}
                 variant="contained"
                 startIcon={<MdOutlineUploadFile />}
-                disabled={isLoading}
               >
                 {t('documents.overview.uploadDocument')}
               </Button>
@@ -278,7 +277,11 @@ function DocumentList() {
               width: 200,
               align: 'left',
               render: rowData => (
-                <Typography>{rowData.filename || ''}</Typography>
+                <Typography>
+                  {rowData.filename ?
+                    `${rowData.filename}${rowData.extension ?? ''}`
+                  : ''}
+                </Typography>
               ),
             },
             {

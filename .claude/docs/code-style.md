@@ -127,6 +127,15 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
   multi-column view. `FormSectionTitle` heads a *group*; a heading over one
   control is that control's `FormLabel`. Never wrap `RichTextBlock` in a card or a bordered box —
   the editor draws its own outlined surface, so a wrapper is a second border.
+- **`useSeededState` is for the code that already has it, never for new code.**
+  It copies an external value into local state and re-copies when the value
+  changes — a mirror, and mirrors drift. Where the source is a query feeding a
+  form, `useForm`'s `values` (with `resetOptions: {keepDirtyValues: true}`)
+  does the same job and keeps what the user has typed, which the seed throws
+  away on every refetch; `videoEditPanel.tsx` is the worked example. Where the
+  source is the route, derive straight from it — `videoList.tsx` opens its
+  drawers on `location.pathname` and closes them by navigating, so there is no
+  second copy to fall out of step.
 - **A dialog's confirming action goes last**, so it lands bottom-right with
   the dismissive one to its left — Material's order, and what the rest of the
   editor's 57 dialogs now do. It is `variant="contained"` (a destructive one

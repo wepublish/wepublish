@@ -429,10 +429,7 @@ export class NovaMediaAdapter implements MediaAdapter {
     filename?: string | null;
     extension?: string;
   }): Promise<string> {
-    const name =
-      video.filename ?
-        `${encodeURIComponent(video.filename)}${video.extension ?? ''}`
-      : '';
+    const name = video.filename ? encodeURIComponent(video.filename) : '';
     return name ?
         `${this.url}/video/${video.id}/${name}`
       : `${this.url}/video/${video.id}`;
@@ -504,10 +501,7 @@ export class NovaMediaAdapter implements MediaAdapter {
     filename?: string | null;
     extension?: string;
   }): Promise<string> {
-    const name =
-      audio.filename ?
-        `${encodeURIComponent(audio.filename)}${audio.extension ?? ''}`
-      : '';
+    const name = audio.filename ? encodeURIComponent(audio.filename) : '';
     return name ?
         `${this.url}/audio/${audio.id}/${name}`
       : `${this.url}/audio/${audio.id}`;

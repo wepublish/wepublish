@@ -49,3 +49,5 @@ export * from './textarea';
 export * from './typographicTextArea';
 export * from './typography';
 export * from './version';
+export * from './mediaBitrate';
+export * from './readMediaMetadata';
