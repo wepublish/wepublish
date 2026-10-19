@@ -421,6 +421,7 @@ export enum DiscountCodesort {
 }
 
 export enum EditorBlockType {
+  Author = 'Author',
   BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',

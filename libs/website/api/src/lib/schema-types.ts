@@ -1129,6 +1129,7 @@ export type DocumentStorageUsage = {
 };
 
 export enum EditorBlockType {
+  Author = 'Author',
   BlockTemplate = 'BlockTemplate',
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',

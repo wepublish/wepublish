@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
+import { Card, CardContent } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Panel as RPanel } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { PlaceholderInput } from '../atoms/placeholderInput';
@@ -31,10 +31,12 @@ const JobTitle = styled.div`
   text-align: center;
 `;
 
-const Panel = styled(RPanel)`
+const Panel = styled(Card)`
   display: grid;
   min-height: 200px;
   width: 100%;
+  padding: 0;
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 const PickerWrapper = styled.div`
@@ -45,36 +47,37 @@ const PickerWrapper = styled.div`
 export const AuthorBlock = ({
   value,
   onChange,
-  autofocus,
 }: BlockProps<AuthorBlockValue>) => {
   const { t } = useTranslation();
   const { author } = value;
 
   return (
     <Author>
-      <Panel bodyFill>
-        <PlaceholderInput onAddClick={() => undefined}>
-          <Content>
-            {author && (
-              <>
-                <Name>{author.name}</Name>
-                {author.jobTitle && <JobTitle>{author.jobTitle}</JobTitle>}
-              </>
-            )}
+      <Panel variant="outlined">
+        <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+          <PlaceholderInput onAddClick={() => undefined}>
+            <Content>
+              {author && (
+                <>
+                  <Name>{author.name}</Name>
+                  {author.jobTitle && <JobTitle>{author.jobTitle}</JobTitle>}
+                </>
+              )}
 
-            <PickerWrapper>
-              <AuthorSelectPicker
-                name="author"
-                selectedAuthor={author}
-                setSelectedAuthor={selectedAuthor =>
-                  onChange({ ...value, author: selectedAuthor })
-                }
-              />
-            </PickerWrapper>
+              <PickerWrapper>
+                <AuthorSelectPicker
+                  name="author"
+                  selectedAuthor={author}
+                  setSelectedAuthor={selectedAuthor =>
+                    onChange({ ...value, author: selectedAuthor })
+                  }
+                />
+              </PickerWrapper>
 
-            {!author && <div>{t('blocks.author.placeholder')}</div>}
-          </Content>
-        </PlaceholderInput>
+              {!author && <div>{t('blocks.author.placeholder')}</div>}
+            </Content>
+          </PlaceholderInput>
+        </CardContent>
       </Panel>
     </Author>
   );

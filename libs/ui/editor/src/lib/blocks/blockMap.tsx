@@ -354,6 +354,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [EditorBlockType.Author]: {
+    group: 'teasers',
     field: props => <AuthorBlock {...props} />,
     defaultValue: { author: null, blockStyle: undefined },
     label: 'blocks.author.label',
