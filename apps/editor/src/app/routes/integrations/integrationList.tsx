@@ -35,9 +35,11 @@ import mailChimpLogo from './assets/mailchimp.webp';
 import mailgunLogo from './assets/mailgun.svg';
 import mollieLogo from './assets/mollie.webp';
 import payrexxLogo from './assets/payrexx.webp';
+import plausibleLogo from './assets/plausible.svg';
 import proLitterisLogo from './assets/proLitteris.svg';
 import slackLogo from './assets/slack.webp';
 import stripeLogo from './assets/stripe.svg';
+import umamiLogo from './assets/umami.svg';
 import vercelLogo from './assets/vercel.svg';
 
 const Wrapper = styled.div`
@@ -121,7 +123,7 @@ export function IntegrationList() {
       permission: CanGetAnalyticsProviderSettings.id,
       path: '/integrations/analytics',
       icon: MdAnalytics,
-      logos: [googleLogo],
+      logos: [googleLogo, plausibleLogo, umamiLogo],
     },
     {
       title: t('integrations.mailchimpSync'),

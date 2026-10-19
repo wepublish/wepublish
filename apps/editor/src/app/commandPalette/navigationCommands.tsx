@@ -764,14 +764,6 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     perform: ({ navigate }) => navigate('/settings/website/analytics'),
   },
   {
-    id: 'websiteMail',
-    titleKey: 'websiteSettings.mail.title',
-    sectionKey: 'websiteSettings.navbar',
-    icon: <MdMail />,
-    permissions: [CanGetWebsiteSettings.id, CanUpdateWebsiteSettings.id],
-    perform: ({ navigate }) => navigate('/settings/website/mail'),
-  },
-  {
     id: 'websiteAds',
     titleKey: 'websiteSettings.ads.title',
     sectionKey: 'websiteSettings.navbar',

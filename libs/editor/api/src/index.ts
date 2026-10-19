@@ -648,7 +648,6 @@ export type {
   VimeoVideoBlock,
   WebsiteAds,
   WebsiteAnalytics,
-  WebsiteMail,
   WebsiteRemoteFont,
   WebsiteSettings,
   YouTubeVideoBlock,

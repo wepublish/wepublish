@@ -102,6 +102,7 @@
       "@wepublish/permissions": ["libs/permissions/src/index.ts"],
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
       "@wepublish/phrase/api": ["libs/phrase/api/src/index.ts"],
+      "@wepublish/plausible/api": ["libs/plausible/api/src/index.ts"],
       "@wepublish/poll/api": ["libs/poll/api/src/index.ts"],
       "@wepublish/property/api": ["libs/property/api/src/index.ts"],
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
@@ -125,6 +126,7 @@
       "@wepublish/tracking-pixel/api": ["libs/tracking-pixel/api/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
+      "@wepublish/umami/api": ["libs/umami/api/src/index.ts"],
       "@wepublish/user": ["libs/user/src/index.ts"],
       "@wepublish/user-subscription/api": [
         "libs/user-subscription/api/src/index.ts"

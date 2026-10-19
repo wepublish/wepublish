@@ -20,9 +20,19 @@ export class AnalyticsProviderSettingsService {
   ) {}
 
   private encryptSecretsIfPresent<
-    T extends { credentials?: SettingAnalyticsCredentialsInput | null },
-  >(data: T): Omit<T, 'credentials'> & { credentials?: string | null } {
-    const { credentials, ...rest } = data;
+    T extends {
+      credentials?: SettingAnalyticsCredentialsInput | null;
+      apiKey?: string | null;
+    },
+  >(
+    data: T
+  ): Omit<T, 'credentials' | 'apiKey'> & { credentials?: string | null } {
+    const { credentials, apiKey, ...rest } = data;
+
+    // Plausible and Umami store their api key where Google stores its credentials
+    if (apiKey) {
+      return { ...rest, credentials: this.crypto.encrypt(apiKey) };
+    }
 
     if (credentials === undefined) {
       return rest;
@@ -106,10 +116,21 @@ export class AnalyticsProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    const returnValue = await this.prisma.settingAnalyticsProvider.update({
-      where: { id },
-      data: filteredUpdateData,
+    const returnValue = await this.prisma.$transaction(async transaction => {
+      // Only one provider can power Hot & Trending
+      if (updateData.hotAndTrending) {
+        await transaction.settingAnalyticsProvider.updateMany({
+          where: { id: { not: id }, hotAndTrending: true },
+          data: { hotAndTrending: false },
+        });
+      }
+
+      return transaction.settingAnalyticsProvider.update({
+        where: { id },
+        data: filteredUpdateData,
+      });
     });
+
     await this.kv.resetNamespace('settings:analyticsprovider');
     return returnValue;
   }

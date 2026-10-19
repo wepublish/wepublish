@@ -3067,7 +3067,20 @@
         "articlePrefixInfo": "The part of the address that comes before an article's slug on your website. Only page views of addresses starting with it count as article reads.",
         "propertyInfo": "The numeric ID of your Google Analytics 4 property (not the G-… measurement ID). You find it in Google Analytics under «Admin» → «Property details».",
         "credentialsInfo": "The JSON key file of a Google Cloud service account with read access to your Analytics property. Drag the file into the box below; it is only stored when you save.",
-        "readFileError": "The file could not be read."
+        "readFileError": "The file could not be read.",
+        "hotAndTrending": "Use for Hot & Trending",
+        "hotAndTrendingInfo": "Hot & Trending reads its page views from this provider. Only one provider can be used at a time, choosing this one turns it off for the others.",
+        "apiKey": "API key",
+        "plausibleApiKeyInfo": "A Stats API key from your Plausible account settings («API Keys»). On Plausible Cloud the Stats API needs a Business plan.",
+        "umamiApiKeyInfo": "An API key from Umami Cloud («Settings» → «API keys»), or the token of a user with access to the website for a self-hosted Umami.",
+        "plausibleSiteId": "Site domain",
+        "plausibleSiteIdInfo": "The domain of the site as you added it to Plausible, e.g. example.com.",
+        "umamiWebsiteId": "Website ID",
+        "umamiWebsiteIdInfo": "The ID of the website in Umami. You find it under «Settings» → «Websites» → «Edit».",
+        "plausibleUrl": "Plausible URL",
+        "plausibleUrlInfo": "Only needed for a self-hosted Plausible, e.g. https://plausible.example.com. Leave it empty to use plausible.io.",
+        "umamiUrl": "Umami API URL",
+        "umamiUrlInfo": "Only needed for a self-hosted Umami, e.g. https://umami.example.com/api. Leave it empty to use Umami Cloud."
       },
       "mailchimpSync": "Mailchimp Sync",
       "mailchimpSyncSettings": {
@@ -3175,7 +3188,7 @@
       "paymentProviderInfo": "Services that process the payments for subscriptions, e.g. Payrexx, Stripe, Mollie or invoices via Bexio.",
       "trackingPixelInfo": "Adds the ProLitteris counting pixel to your articles so that their reads count towards your copyright royalties.",
       "mailProviderInfo": "The service We.Publish uses to send emails, such as login links, payment reminders or subscription confirmations.",
-      "analyticsInfo": "Reads the page views from Google Analytics to find out which articles are currently read the most (Hot & Trending).",
+      "analyticsInfo": "Reads the page views from Google Analytics, Plausible or Umami to find out which articles are currently read the most (Hot & Trending).",
       "mailchimpSyncInfo": "Transfers all active user accounts and their subscription data to a Mailchimp audience every night, so you can target newsletters by subscription.",
       "lastLoadedInfo": "When We.Publish last loaded this configuration, e.g. to process a payment. This shows you whether the integration is in use.",
       "setUp": "Set up",
@@ -3216,16 +3229,13 @@
           "pro": "<url>Piwik PRO</url> is a privacy-focused analytics platform and an alternative to Google Analytics.",
           "proLocator": "You can find it in the Menu > Administration > Site > ID of your administration panel",
           "proInvalid": "Must be a valid Piwik ID (e.g., xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
-        }
-      },
-      "mail": {
-        "title": "Mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Enable Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> is an email marketing platform that lets you manage newsletters and subscriber lists. This gives the website access to your newsletters and lets it display them.",
-          "apiKeyLocator": "You can find it in the <url>API keys section</url> of your Mailchimp account. Make sure that it is a Mailchimp key and not a Mandrill key.",
-          "apiKeyInvalid": "Must be a valid Mailchimp API-Key (e.g., XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)"
+        },
+        "umami": {
+          "title": "Umami",
+          "enable": "Enable Umami",
+          "um": "<url>Umami</url> is a privacy-focused, open source alternative to Google Analytics.",
+          "umLocator": "You can find it in the <url>website settings</url> of your Umami dashboard",
+          "umInvalid": "Must be a valid website ID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
         }
       },
       "ads": {

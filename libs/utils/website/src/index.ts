@@ -18,6 +18,7 @@ export * from './lib/pages/tag-page';
 export * from './lib/pages/document-page';
 
 export * from './lib/routed-admin-bar';
+export * from './lib/third-party-scripts';
 export * from './lib/with-jwt-handler';
 export * from './lib/handle-jwt-login';
 export * from './lib/with-session-provider';

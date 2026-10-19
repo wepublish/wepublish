@@ -34,6 +34,8 @@ export class WebsiteAnalytics {
   plausible!: KeyEnabled;
   @Field(() => KeyEnabled)
   piwik!: KeyEnabled;
+  @Field(() => KeyEnabled)
+  umami!: KeyEnabled;
 }
 
 @InputType()
@@ -46,18 +48,8 @@ export class WebsiteAnalyticsInput {
   plausible!: KeyEnabledInput;
   @Field(() => KeyEnabledInput)
   piwik!: KeyEnabledInput;
-}
-
-@ObjectType()
-export class WebsiteMail {
-  @Field(() => KeyEnabled, { nullable: true })
-  mailchimp?: KeyEnabled;
-}
-
-@InputType()
-export class WebsiteMailInput {
   @Field(() => KeyEnabledInput)
-  mailchimp!: KeyEnabledInput;
+  umami!: KeyEnabledInput;
 }
 
 @ObjectType()
@@ -122,9 +114,6 @@ export class WebsiteSettings {
   @Field(() => WebsiteAnalytics)
   analytics!: WebsiteAnalytics;
 
-  @Field(() => WebsiteMail)
-  mail!: WebsiteMail;
-
   @Field(() => WebsiteAds)
   ads!: WebsiteAds;
 
@@ -139,8 +128,6 @@ export class WebsiteSettings {
 export class UpdateWebsiteSettingsInput {
   @Field(() => WebsiteAnalyticsInput, { nullable: true })
   analytics?: WebsiteAnalyticsInput;
-  @Field(() => WebsiteMailInput, { nullable: true })
-  mail?: WebsiteMailInput;
   @Field(() => WebsiteAdsInput, { nullable: true })
   ads?: WebsiteAdsInput;
   @Field(() => GraphQLJSONObject, { nullable: true })

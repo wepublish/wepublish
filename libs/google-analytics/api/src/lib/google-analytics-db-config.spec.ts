@@ -81,6 +81,8 @@ describe('GoogleAnalyticsDbConfig', () => {
     expect(table.rows.get('google-analytics')).toMatchObject({
       type: AnalyticsProviderType.GOOGLE,
       name: 'Google Analytics',
+      // Google Analytics has been the Hot & Trending provider before Plausible and Umami
+      hotAndTrending: true,
     });
   });
 

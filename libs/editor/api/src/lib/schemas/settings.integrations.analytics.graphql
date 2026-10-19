@@ -10,6 +10,8 @@ query SettingsIntegrationsAnalytics {
 
     articlePrefix
     property
+    url
+    hotAndTrending
   }
 }
 
@@ -19,6 +21,9 @@ mutation UpdateAnalyticsProviderSetting(
   $property: String
   $articlePrefix: String
   $credentials: SettingAnalyticsCredentialsInput
+  $apiKey: String
+  $url: String
+  $hotAndTrending: Boolean
 ) {
   updateAnalyticsProviderSetting(
     id: $id
@@ -26,6 +31,9 @@ mutation UpdateAnalyticsProviderSetting(
     property: $property
     articlePrefix: $articlePrefix
     credentials: $credentials
+    apiKey: $apiKey
+    url: $url
+    hotAndTrending: $hotAndTrending
   ) {
     id
     createdAt
@@ -37,6 +45,8 @@ mutation UpdateAnalyticsProviderSetting(
 
     articlePrefix
     property
+    url
+    hotAndTrending
   }
 }
 

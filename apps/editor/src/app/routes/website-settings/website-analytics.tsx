@@ -64,6 +64,16 @@ const analyticsSchema = z.object({
       .or(z.literal(''))
       .nullish(),
   }),
+  umami: z.object({
+    enabled: z.boolean(),
+    key: z
+      .string({
+        errorMap: lazyMessage('websiteSettings.analytics.umami.umInvalid'),
+      })
+      .uuid()
+      .or(z.literal(''))
+      .nullish(),
+  }),
 });
 
 export const WebsiteAnalyticsWrapper = styled.form`
@@ -123,6 +133,7 @@ export const WebsiteAnalytics = () => {
   });
   const plausibleEnabled = useWatch({ control, name: 'plausible.enabled' });
   const piwikEnabled = useWatch({ control, name: 'piwik.enabled' });
+  const umamiEnabled = useWatch({ control, name: 'umami.enabled' });
 
   const onSubmit = handleSubmit(data => {
     updateWebsiteSettings({
@@ -464,6 +475,93 @@ export const WebsiteAnalytics = () => {
               helperText={
                 error?.message || (
                   <Trans i18nKey="websiteSettings.analytics.piwik.proLocator" />
+                )
+              }
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 600,
+                          color: 'text.secondary',
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ID
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          : <></>
+        }
+      />
+      <Typography variant="h3">
+        {t('websiteSettings.analytics.umami.title')}
+      </Typography>
+      <Controller
+        name="umami.enabled"
+        control={control}
+        render={({ field }) => (
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  {...field}
+                  checked={!!field.value}
+                />
+              }
+              label={t('websiteSettings.analytics.umami.enable')}
+            />
+
+            <Typography
+              variant="body2"
+              component={Explainer}
+            >
+              <Trans
+                i18nKey="websiteSettings.analytics.umami.um"
+                components={{
+                  url: (
+                    <MuiLink
+                      href="https://umami.is"
+                      target="_blank"
+                      rel="noreferrer"
+                    />
+                  ),
+                }}
+              />
+            </Typography>
+          </div>
+        )}
+      />
+      <Controller
+        name="umami.key"
+        control={control}
+        render={({ field, fieldState: { error } }) =>
+          umamiEnabled ?
+            <TextField
+              {...field}
+              label="Umami Website ID"
+              placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              error={!!error}
+              helperText={
+                error?.message || (
+                  <Trans
+                    i18nKey="websiteSettings.analytics.umami.umLocator"
+                    components={{
+                      url: (
+                        <MuiLink
+                          href="https://umami.is/docs/collect-data"
+                          target="_blank"
+                          rel="noreferrer"
+                        />
+                      ),
+                    }}
+                  />
                 )
               }
               slotProps={{

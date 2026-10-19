@@ -49,10 +49,9 @@ export class WebsiteSettingsService {
           input.analytics?.piwik.enabled ?? settings.analyticsPiwikEnabled,
         analyticsPiwikId: input.analytics?.piwik.key,
 
-        // Mail
-        mailMailchimpEnabled:
-          input.mail?.mailchimp.enabled ?? settings.mailMailchimpEnabled,
-        mailMailchimpKey: input.mail?.mailchimp.key,
+        analyticsUmamiEnabled:
+          input.analytics?.umami.enabled ?? settings.analyticsUmamiEnabled,
+        analyticsUmamiId: input.analytics?.umami.key,
 
         // Ads
         adsSparkLoopEnabled:

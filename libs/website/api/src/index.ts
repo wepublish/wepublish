@@ -748,8 +748,6 @@ export type {
   WebsiteAdsInput,
   WebsiteAnalytics,
   WebsiteAnalyticsInput,
-  WebsiteMail,
-  WebsiteMailInput,
   WebsiteRemoteFont,
   WebsiteRemoteFontInput,
   WebsiteSettings,
