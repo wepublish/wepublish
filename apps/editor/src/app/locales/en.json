@@ -1609,14 +1609,14 @@
       "noAddress": "No usable postal address – letters are not possible.",
       "switchToLetter": "Switch to letters",
       "switchToMail": "Switch to email",
-      "suggestionsTitle": "Delivery suggestions",
-      "suggestionsIntro": "Who should get letters because of a dead or placeholder address, and who could get emails again. Nothing changes without a confirmation.",
+      "suggestionsTitle": "Assign delivery channel",
+      "suggestionsIntro": "Assign how messages reach each user, by automatic suggestion or by manual selection. Suggestions appear once at least one person is affected and must be confirmed to take effect.",
       "kind": {
-        "toLetter": "To letters ({{count}})",
-        "toMail": "Back to email ({{count}})"
+        "toLetter": "By letter ({{count}})",
+        "toMail": "By email ({{count}})"
       },
       "recompute": "Recompute now",
-      "recomputed": "Recomputed: {{toLetter}} to letters, {{toMail}} back to email, {{removed}} settled.",
+      "recomputed": "Recomputed: {{toLetter}} by letter, {{toMail}} by email, {{removed}} settled.",
       "confirm": "Confirm",
       "confirmAll": "Confirm all ({{count}})",
       "confirmAllTitle": "Confirm all suggestions",
@@ -1663,7 +1663,7 @@
       }
     },
     "navbar": {
-      "deliverySuggestions": "Letter suggestions",
+      "deliverySuggestions": "Delivery channel",
       "articles": "Articles",
       "authors": "Authors",
       "banners": "Banners",

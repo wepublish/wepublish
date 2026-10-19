@@ -15,7 +15,6 @@ import {
   TableHead,
   TableRow,
   Tabs,
-  Typography,
 } from '@mui/material';
 import {
   ConfirmAllDeliverySuggestionsDocument,
@@ -28,6 +27,7 @@ import {
 import {
   enqueueSnackbar,
   humanizeError,
+  InfoTooltip,
   ListViewContainer,
   ListViewHeader,
   PageTitle,
@@ -116,12 +116,7 @@ export function DeliverySuggestionsPage() {
       <ListViewContainer>
         <ListViewHeader>
           <PageTitle>{t('deliveryMode.suggestionsTitle')}</PageTitle>
-          <Typography
-            variant="body2"
-            sx={{ color: 'text.secondary' }}
-          >
-            {t('deliveryMode.suggestionsIntro')}
-          </Typography>
+          <InfoTooltip text={t('deliveryMode.suggestionsIntro')} />
         </ListViewHeader>
       </ListViewContainer>
 
