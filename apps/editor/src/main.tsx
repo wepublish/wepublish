@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { IconContext } from 'react-icons';
 
 import { App } from './app/app';
+import { EditorCommandPaletteProvider } from './app/commandPalette/editorCommandPalette';
 import { initI18N } from './app/i18n';
 import { createEditorTheme } from './app/theme';
 import { ElementID } from './shared/elementID';
@@ -90,15 +91,17 @@ const onDOMContentLoaded = async () => {
     <ApolloProvider client={client}>
       <AuthProvider>
         <FeaturesProvider>
-          <IconContext.Provider value={{ className: 'rs-icon' }}>
-            <FacebookProvider sdkLanguage={'en_US'}>
-              <InstagramProvider>
-                <TwitterProvider>
-                  <ThemedApp />
-                </TwitterProvider>
-              </InstagramProvider>
-            </FacebookProvider>
-          </IconContext.Provider>
+          <EditorCommandPaletteProvider>
+            <IconContext.Provider value={{ className: 'rs-icon' }}>
+              <FacebookProvider sdkLanguage={'en_US'}>
+                <InstagramProvider>
+                  <TwitterProvider>
+                    <ThemedApp />
+                  </TwitterProvider>
+                </InstagramProvider>
+              </FacebookProvider>
+            </IconContext.Provider>
+          </EditorCommandPaletteProvider>
         </FeaturesProvider>
       </AuthProvider>
     </ApolloProvider>

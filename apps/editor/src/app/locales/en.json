@@ -1632,6 +1632,7 @@
       "subscriptions": "Subscriptions",
       "subscriptionSettings": "Automatic emails",
       "tokens": "Tokens",
+      "apiTokens": "API Keys",
       "userConsents": "User Consents",
       "userRoles": "User Roles",
       "users": "Users",
@@ -4027,6 +4028,114 @@
       "socialMediaDescriptionFallback": "Falls back to the SEO description",
       "socialMediaImageFallback": "Falls back to the article image when empty.",
       "socialMediaTitleFallback": "Falls back to the SEO title"
+    },
+    "commandPalette": {
+      "title": "Command palette",
+      "placeholder": "Where do you want to go?",
+      "empty": "Nothing matches",
+      "groups": {
+        "favourite": "Favourites",
+        "navigate": "Go to",
+        "create": "Create",
+        "account": "Account"
+      },
+      "hints": {
+        "move": "to navigate",
+        "select": "to open",
+        "close": "to close"
+      },
+      "pages": {
+        "peerProfile": "Own peer profile"
+      },
+      "create": {
+        "article": "Create article",
+        "articleTag": "Create article tag",
+        "paywall": "Create paywall",
+        "page": "Create page",
+        "pageTag": "Create page tag",
+        "crowdfunding": "Create crowdfunding",
+        "blockTemplate": "Create block template",
+        "commentTag": "Create comment tag",
+        "event": "Create event",
+        "eventTag": "Create event tag",
+        "image": "Upload image",
+        "document": "Upload document",
+        "navigation": "Create navigation",
+        "banner": "Create banner",
+        "author": "Create author",
+        "authorTag": "Create author tag",
+        "user": "Create user",
+        "subscription": "Create subscription",
+        "consent": "Create consent",
+        "userConsent": "Create user consent",
+        "mailTemplate": "Create email template",
+        "letterLayout": "Create stationery",
+        "memberPlan": "Create subscription plan",
+        "paymentMethod": "Create payment method",
+        "discountCode": "Create discount code",
+        "goodie": "Create goodie",
+        "peer": "Create peer",
+        "userRole": "Create user role",
+        "token": "Generate token",
+        "apiToken": "Generate API key"
+      },
+      "trigger": "Search or jump to…",
+      "keys": {
+        "escape": "esc"
+      }
+    },
+    "apiTokenList": {
+      "overview": {
+        "apiTokens": "API Keys",
+        "apiTokensInfo": "API keys let a script or another system call the API without signing in as a person. A key only carries the permissions you give it.",
+        "generateToken": "Create API key",
+        "name": "Name",
+        "prefix": "Key",
+        "scopes": "Permissions",
+        "scopeCount_one": "{{count}} permission",
+        "scopeCount_other": "{{count}} permissions",
+        "lastUsed": "Last used",
+        "never": "Never used",
+        "status": "Status",
+        "active": "Active",
+        "revoked": "Revoked",
+        "revoke": "Revoke",
+        "lastUsedDate": "{{lastUsedDate, ccc PP p}}",
+        "expires": "Expires",
+        "expired": "Expired",
+        "expiresDate": "{{expiresDate, ccc PP p}}",
+        "owner": "Owner",
+        "ownerUnknown": "Deleted user",
+        "filterByOwner": "Filter by owner",
+        "anyStatus": "Any status"
+      },
+      "panels": {
+        "generateToken": "Create API key",
+        "generate": "Create",
+        "close": "Close",
+        "name": "Name",
+        "scopes": "Permissions",
+        "scopesHelp": "You can only grant permissions you hold yourself.",
+        "creationSuccess": "Your API key has been created.",
+        "copy": "Copy key",
+        "copied": "Key copied",
+        "tokenWarning": "Copy this key now. It is shown once and cannot be retrieved again — if you lose it, create a new one.",
+        "revokeToken": "Revoke API key",
+        "revokeTokenText": "Really revoke «{{name}}»? Anything using this key stops working immediately.",
+        "cancel": "Cancel",
+        "confirm": "Revoke",
+        "noScopes": "Pick at least one permission.",
+        "expiresAt": "Expires",
+        "expiresAtHelp": "At most three years from today.",
+        "expiresInThePast": "That date has already passed.",
+        "in30Days": "30 days",
+        "in90Days": "90 days",
+        "inAYear": "A year",
+        "in3Years": "3 years",
+        "expiresRequired": "Pick a date. A key has to expire.",
+        "expiresTooLate": "A key cannot last longer than three years.",
+        "longLivedWarning": "A key that lives longer than a year is not recommended. The longer it exists, the longer a leaked key keeps working."
+      }
     }
   }
 }

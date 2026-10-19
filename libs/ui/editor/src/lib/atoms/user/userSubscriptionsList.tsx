@@ -26,13 +26,10 @@ import {
 } from '@wepublish/permissions';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LiaFileInvoiceSolid } from 'react-icons/lia';
 import {
-  MdAccessTime,
   MdAdd,
   MdContentCopy,
   MdDisabledByDefault,
-  MdDone,
   MdEdit,
   MdKeyboardArrowDown,
   MdKeyboardArrowRight,
@@ -44,6 +41,7 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 
 import { enqueueSnackbar } from '../../snackbar/snackbar';
+import { InvoiceStatusIcon } from '../invoiceStatusIcon';
 import {
   createCheckedPermissionComponent,
   useAuthorisation,
@@ -107,33 +105,6 @@ const ConfirmedIcon = styled('span')<{ isConfirmed: boolean }>`
     isConfirmed ?
       theme.vars.palette.success.main
     : theme.vars.palette.text.secondary};
-`;
-
-const InvoiceIconWrapper = styled('span')`
-  position: relative;
-  display: inline-flex;
-  vertical-align: middle;
-`;
-
-const InvoiceIcon = styled(LiaFileInvoiceSolid)`
-  color: ${({ theme }) => theme.vars.palette.text.secondary};
-  font-size: 26px;
-`;
-
-const StatusPill = styled('span')<{ pillColor: string }>`
-  position: absolute;
-  right: -5px;
-  top: 55%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: ${({ pillColor }) => pillColor};
-  color: ${({ theme }) => theme.vars.palette.common.white};
-  font-size: 10px;
-  box-shadow: 0 0 0 2px ${({ theme }) => theme.vars.palette.background.paper};
 `;
 
 const IdButton = styled('button')`
@@ -496,14 +467,12 @@ function UserSubscriptionsList({
                     const invoiceStatus =
                       period.isPaid ?
                         {
+                          status: 'paid' as const,
                           title: t('userSubscriptionList.invoicePaid'),
-                          color: '#22c55e',
-                          icon: <MdDone />,
                         }
                       : {
+                          status: 'unpaid' as const,
                           title: t('userSubscriptionList.invoiceUnpaid'),
-                          color: '#eab308',
-                          icon: <MdAccessTime />,
                         };
 
                     return (
@@ -518,15 +487,10 @@ function UserSubscriptionsList({
                         </TableCell>
 
                         <TableCell>
-                          <Tooltip title={invoiceStatus.title}>
-                            <InvoiceIconWrapper>
-                              <InvoiceIcon />
-
-                              <StatusPill pillColor={invoiceStatus.color}>
-                                {invoiceStatus.icon}
-                              </StatusPill>
-                            </InvoiceIconWrapper>
-                          </Tooltip>
+                          <InvoiceStatusIcon
+                            status={invoiceStatus.status}
+                            title={invoiceStatus.title}
+                          />
                         </TableCell>
 
                         <TableCell colSpan={3} />

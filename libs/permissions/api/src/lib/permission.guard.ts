@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { PERMISSIONS_METADATA_KEY } from './permission.decorator';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Permission } from '@wepublish/permissions';
-import { hasPermission } from './has-permission';
+import { hasPermission, permissionsOf } from './has-permission';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -28,6 +28,6 @@ export class PermissionsGuard implements CanActivate {
       return false;
     }
 
-    return hasPermission(permissions, session.roles);
+    return hasPermission(permissions, permissionsOf(session));
   }
 }
