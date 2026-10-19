@@ -76,7 +76,14 @@ const routerPaths = () => {
   return paths;
 };
 
-const NOT_A_DESTINATION = [/^\/login/, /^\/$/, /:/, /^\/systemmails$/];
+// Redirects to a route that is reachable itself.
+const NOT_A_DESTINATION = [
+  /^\/login/,
+  /^\/$/,
+  /:/,
+  /^\/systemmails$/,
+  /^\/deliverysuggestions$/,
+];
 
 const commandPaths = () => {
   const paths: string[] = [];

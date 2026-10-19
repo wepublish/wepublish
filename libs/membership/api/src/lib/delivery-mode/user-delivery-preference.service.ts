@@ -9,13 +9,34 @@ import { canReceiveLetters } from '@wepublish/letter/api';
 import { MailAudienceInput } from '../mail-send/mail-send.model';
 import { MailSendRecipientService } from '../mail-send/mail-send-recipient.service';
 import {
+  DeliveryChannelCount,
   DeliveryModeAudiencePreview,
   DeliveryModeBulkResult,
+  PaginatedDeliveryChannelUsers,
   PaginatedDeliveryModeBulkChanges,
   UserDeliveryPreferenceModel,
 } from './delivery-mode.model';
 
 const PAGE_SIZE = 500;
+
+/** Without a row a person gets mail. */
+const DEFAULT_CHANNEL = MailChannel.mail;
+
+const channelWhere = (channel: MailChannel): Prisma.UserWhereInput =>
+  channel === DEFAULT_CHANNEL ?
+    {
+      OR: [
+        { deliveryPreference: null },
+        { deliveryPreference: { is: { channel } } },
+      ],
+    }
+  : { deliveryPreference: { is: { channel } } };
+
+const searchWhere = (search: string): Prisma.UserWhereInput => ({
+  OR: (['name', 'firstName', 'email'] as const).map(field => ({
+    [field]: { contains: search, mode: 'insensitive' as const },
+  })),
+});
 
 export type DeliveryPreferenceChange = {
   origin: DeliveryPreferenceOrigin;
@@ -51,7 +72,7 @@ export class UserDeliveryPreferenceService {
     ]);
 
     return {
-      channel: preference?.channel ?? MailChannel.mail,
+      channel: preference?.channel ?? DEFAULT_CHANNEL,
       origin: preference?.origin ?? null,
       reason: preference?.reason ?? null,
       changedAt: preference?.changedAt ?? null,
@@ -146,18 +167,88 @@ export class UserDeliveryPreferenceService {
     return { changed, skippedWithoutAddress };
   }
 
-  async listBulkChanges(
+  /** Every channel with its people, the default one first. */
+  async channelCounts(): Promise<DeliveryChannelCount[]> {
+    const [userCount, groups] = await Promise.all([
+      this.prisma.user.count(),
+      this.prisma.userDeliveryPreference.groupBy({
+        by: ['channel'],
+        _count: { _all: true },
+      }),
+    ]);
+    const stored = (channel: MailChannel) =>
+      groups.find(group => group.channel === channel)?._count._all ?? 0;
+    const others = Object.values(MailChannel).filter(
+      channel => channel !== DEFAULT_CHANNEL
+    );
+    const elsewhere = others.reduce((sum, channel) => sum + stored(channel), 0);
+
+    return [
+      { channel: DEFAULT_CHANNEL, userCount: userCount - elsewhere },
+      ...others.map(channel => ({ channel, userCount: stored(channel) })),
+    ];
+  }
+
+  async listByChannel(
+    channel: MailChannel,
+    search: string | undefined,
     skip: number,
     take: number
+  ): Promise<PaginatedDeliveryChannelUsers> {
+    const term = search?.trim();
+    const where =
+      term ?
+        { AND: [channelWhere(channel), searchWhere(term)] }
+      : channelWhere(channel);
+
+    const [users, totalCount] = await Promise.all([
+      this.prisma.user.findMany({
+        where,
+        orderBy: [{ name: 'asc' }, { firstName: 'asc' }, { id: 'asc' }],
+        skip,
+        take,
+        include: {
+          address: true,
+          deliveryPreference: { include: { changedBy: changedBySelect } },
+        },
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+
+    return {
+      totalCount,
+      nodes: users.map(user => ({
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          firstName: user.firstName,
+        },
+        channel: user.deliveryPreference?.channel ?? DEFAULT_CHANNEL,
+        origin: user.deliveryPreference?.origin ?? null,
+        reason: user.deliveryPreference?.reason ?? null,
+        changedAt: user.deliveryPreference?.changedAt ?? null,
+        changedBy: user.deliveryPreference?.changedBy ?? null,
+        canReceiveLetters: canReceiveLetters(user),
+      })),
+    };
+  }
+
+  async listBulkChanges(
+    skip: number,
+    take: number,
+    channel?: MailChannel
   ): Promise<PaginatedDeliveryModeBulkChanges> {
+    const where = channel ? { channel } : undefined;
     const [nodes, totalCount] = await Promise.all([
       this.prisma.deliveryModeBulkChange.findMany({
+        where,
         orderBy: { createdAt: 'desc' },
         skip,
         take,
         include: { changedBy: changedBySelect },
       }),
-      this.prisma.deliveryModeBulkChange.count(),
+      this.prisma.deliveryModeBulkChange.count({ where }),
     ]);
 
     return {

@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { DeliveryModeAudienceSection } from './delivery-mode-audience-section';
@@ -142,12 +142,10 @@ describe('DeliveryModeAudienceSection', () => {
     );
   });
 
-  it('refreshes the recent switches once a switch went through', () => {
+  it('leaves the record of switches to its own view', () => {
     renderSection();
 
-    expect(screen.getByText('bulk-changes:0')).toBeTruthy();
-    fireEvent.click(screen.getByRole('button', { name: 'action' }));
-    expect(screen.getByText('bulk-changes:1')).toBeTruthy();
+    expect(screen.queryByText(/bulk-changes/)).toBeNull();
   });
 
   it('offers the recipient list only to those allowed to see it', () => {

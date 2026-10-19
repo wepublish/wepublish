@@ -12,6 +12,26 @@ fragment UserDeliveryPreference on UserDeliveryPreferenceModel {
   canReceiveLetters
 }
 
+fragment DeliveryChannelUser on DeliveryChannelUserModel {
+  user {
+    id
+    email
+    name
+    firstName
+  }
+  channel
+  origin
+  reason
+  changedAt
+  changedBy {
+    id
+    email
+    name
+    firstName
+  }
+  canReceiveLetters
+}
+
 fragment DeliverySuggestion on DeliverySuggestionModel {
   id
   kind
@@ -33,6 +53,38 @@ fragment DeliverySuggestion on DeliverySuggestionModel {
 query UserDeliveryPreference($userId: String!) {
   userDeliveryPreference(userId: $userId) {
     ...UserDeliveryPreference
+  }
+}
+
+query UserDeliverySuggestion($userId: String!) {
+  userDeliverySuggestion(userId: $userId) {
+    ...DeliverySuggestion
+  }
+}
+
+query DeliveryChannelCounts {
+  deliveryChannelCounts {
+    channel
+    userCount
+  }
+}
+
+query UsersByDeliveryChannel(
+  $channel: MailChannel!
+  $search: String
+  $skip: Int
+  $take: Int
+) {
+  usersByDeliveryChannel(
+    channel: $channel
+    search: $search
+    skip: $skip
+    take: $take
+  ) {
+    nodes {
+      ...DeliveryChannelUser
+    }
+    totalCount
   }
 }
 
@@ -66,8 +118,8 @@ query DeliveryModeAudiencePreview(
   }
 }
 
-query DeliveryModeBulkChanges($skip: Int, $take: Int) {
-  deliveryModeBulkChanges(skip: $skip, take: $take) {
+query DeliveryModeBulkChanges($skip: Int, $take: Int, $channel: MailChannel) {
+  deliveryModeBulkChanges(skip: $skip, take: $take, channel: $channel) {
     nodes {
       id
       createdAt
@@ -99,6 +151,10 @@ mutation SetUserDeliveryMode(
 
 mutation ConfirmDeliverySuggestion($id: String!) {
   confirmDeliverySuggestion(id: $id)
+}
+
+mutation KeepDeliverySuggestion($id: String!) {
+  keepDeliverySuggestion(id: $id)
 }
 
 mutation ConfirmAllDeliverySuggestions($kind: DeliverySuggestionKind!) {

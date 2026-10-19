@@ -91,7 +91,9 @@ function setup({
         return list.slice(skip ?? 0, (skip ?? 0) + (take ?? list.length));
       }),
       findUnique: vi.fn(async ({ where }: any) => {
-        const row = rows.find(r => r.id === where.id);
+        const row = rows.find(r =>
+          where.userId ? r.userId === where.userId : r.id === where.id
+        );
         return row ?
             { ...row, user: users.find(u => u.id === row.userId) }
           : null;
@@ -119,7 +121,10 @@ function setup({
     canReceiveLetters: vi.fn(),
     sendLetter: vi.fn(),
   };
-  const preferences = { set: vi.fn(async () => undefined) };
+  const preferences = {
+    set: vi.fn(async () => undefined),
+    get: vi.fn(async () => ({ channel: MailChannel.mail })),
+  };
 
   const service = new DeliverySuggestionService(
     prisma as unknown as PrismaClient,
@@ -405,6 +410,98 @@ describe('DeliverySuggestionService.confirm', () => {
       service.confirmAll(DeliverySuggestionKind.toLetter, 'admin')
     ).resolves.toEqual({ confirmed: 1, skipped: 1 });
     expect(preferences.set).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('DeliverySuggestionService.keep', () => {
+  const suggestion = {
+    id: 's1',
+    userId: 'dead',
+    kind: DeliverySuggestionKind.toLetter,
+    reason: 'emailQuality:dead',
+  };
+
+  it('stores the current channel as a manual decision, which the night never overrides', async () => {
+    const { service, preferences } = setup({
+      users: [fakeUser('dead')],
+      suggestions: [suggestion],
+    });
+    preferences.get.mockResolvedValue({ channel: MailChannel.mail });
+
+    await service.keep('s1', 'admin');
+
+    expect(preferences.get).toHaveBeenCalledWith('dead');
+    expect(preferences.set).toHaveBeenCalledWith('dead', MailChannel.mail, {
+      origin: DeliveryPreferenceOrigin.manual,
+      reason: 'kept',
+      changedByUserId: 'admin',
+    });
+  });
+
+  it('keeps letters for someone suggested back to email', async () => {
+    const { service, preferences } = setup({
+      users: [fakeUser('back')],
+      suggestions: [
+        {
+          id: 's2',
+          userId: 'back',
+          kind: DeliverySuggestionKind.toMail,
+          reason: 'emailQuality:active',
+        },
+      ],
+    });
+    preferences.get.mockResolvedValue({ channel: MailChannel.letter });
+
+    await service.keep('s2', 'admin');
+
+    expect(preferences.set).toHaveBeenCalledWith(
+      'back',
+      MailChannel.letter,
+      expect.objectContaining({ reason: 'kept' })
+    );
+  });
+
+  it('refuses an unknown suggestion', async () => {
+    const { service, preferences } = setup();
+
+    await expect(service.keep('missing', 'admin')).rejects.toBeInstanceOf(
+      BadRequestException
+    );
+    expect(preferences.set).not.toHaveBeenCalled();
+  });
+});
+
+describe('DeliverySuggestionService.userSuggestion', () => {
+  it("answers with the person's open suggestion", async () => {
+    const { service } = setup({
+      users: [fakeUser('dead')],
+      suggestions: [
+        {
+          id: 's1',
+          userId: 'dead',
+          kind: DeliverySuggestionKind.toLetter,
+          reason: 'emailQuality:dead',
+        },
+      ],
+    });
+
+    await expect(service.userSuggestion('dead')).resolves.toEqual(
+      expect.objectContaining({
+        id: 's1',
+        kind: DeliverySuggestionKind.toLetter,
+        reason: 'emailQuality:dead',
+        user: expect.objectContaining({ id: 'dead' }),
+        emailQuality: expect.objectContaining({
+          level: EmailQualityLevel.dead,
+        }),
+      })
+    );
+  });
+
+  it('answers with null when nothing is open', async () => {
+    const { service } = setup({ users: [fakeUser('dead')] });
+
+    await expect(service.userSuggestion('dead')).resolves.toBeNull();
   });
 });
 

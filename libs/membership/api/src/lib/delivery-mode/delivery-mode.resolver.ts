@@ -10,11 +10,14 @@ import {
 import { Permissions } from '@wepublish/permissions/api';
 import { MailAudienceInput } from '../mail-send/mail-send.model';
 import {
+  DeliveryChannelCount,
   DeliveryModeAudiencePreview,
   DeliveryModeBulkResult,
   DeliverySuggestionConfirmAllResult,
   DeliverySuggestionCounts,
+  DeliverySuggestionModel,
   DeliverySuggestionRecomputeResult,
+  PaginatedDeliveryChannelUsers,
   PaginatedDeliveryModeBulkChanges,
   PaginatedDeliverySuggestions,
   UserDeliveryPreferenceModel,
@@ -37,6 +40,41 @@ export class DeliveryModeResolver {
   })
   userDeliveryPreference(@Args('userId') userId: string) {
     return this.preferences.get(userId);
+  }
+
+  @Permissions(CanGetUser)
+  @Query(() => DeliverySuggestionModel, {
+    nullable: true,
+    description: `The open suggestion for one user, if any`,
+  })
+  userDeliverySuggestion(@Args('userId') userId: string) {
+    return this.suggestions.userSuggestion(userId);
+  }
+
+  @Permissions(CanGetUsers)
+  @Query(() => [DeliveryChannelCount], {
+    description: `How many people each channel reaches, the default channel first`,
+  })
+  deliveryChannelCounts() {
+    return this.preferences.channelCounts();
+  }
+
+  @Permissions(CanGetUsers)
+  @Query(() => PaginatedDeliveryChannelUsers, {
+    description: `The people on one channel, by name, with how they got there`,
+  })
+  usersByDeliveryChannel(
+    @Args('channel', { type: () => MailChannel }) channel: MailChannel,
+    @Args('search', { nullable: true }) search?: string,
+    @Args('skip', { type: () => Int, nullable: true }) skip = 0,
+    @Args('take', { type: () => Int, nullable: true }) take = 20
+  ) {
+    return this.preferences.listByChannel(
+      channel,
+      search,
+      skip,
+      Math.min(take, 100)
+    );
   }
 
   @Permissions(CanGetUsers)
@@ -77,9 +115,11 @@ export class DeliveryModeResolver {
   })
   deliveryModeBulkChanges(
     @Args('skip', { type: () => Int, nullable: true }) skip = 0,
-    @Args('take', { type: () => Int, nullable: true }) take = 20
+    @Args('take', { type: () => Int, nullable: true }) take = 20,
+    @Args('channel', { type: () => MailChannel, nullable: true })
+    channel?: MailChannel
   ) {
-    return this.preferences.listBulkChanges(skip, Math.min(take, 100));
+    return this.preferences.listBulkChanges(skip, Math.min(take, 100), channel);
   }
 
   @Permissions(CanManageUserDeliveryMode)
@@ -110,6 +150,19 @@ export class DeliveryModeResolver {
     @Args('id') id: string
   ) {
     await this.suggestions.confirm(id, session.user.id);
+
+    return true;
+  }
+
+  @Permissions(CanManageUserDeliveryMode)
+  @Mutation(() => Boolean, {
+    description: `Decline one suggestion: the user stays on their channel as a manual decision, never suggested again`,
+  })
+  async keepDeliverySuggestion(
+    @CurrentUser() session: UserSession,
+    @Args('id') id: string
+  ) {
+    await this.suggestions.keep(id, session.user.id);
 
     return true;
   }

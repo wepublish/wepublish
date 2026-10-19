@@ -12,7 +12,6 @@ import { useAudienceState } from '../mail-send/audience/audience-state';
 import { RecipientListModal } from '../mail-send/audience/recipient-list-modal';
 import { RecipientSummary } from '../mail-send/audience/recipient-summary';
 import { DeliveryModeAudienceAction } from './delivery-mode-audience-action';
-import { DeliveryModeBulkChanges } from './delivery-mode-bulk-changes';
 import { usePaperLetterFlow } from './use-paper-letter-flow';
 
 /**
@@ -30,7 +29,6 @@ export function DeliveryModeAudienceSection() {
 
   const { state, update, audience } = useAudienceState();
   const [recipientsOpen, setRecipientsOpen] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
 
   const { data, loading, refetch } = useQuery(
     DeliveryModeAudiencePreviewDocument,
@@ -67,7 +65,7 @@ export function DeliveryModeAudienceSection() {
           headline={t('deliveryMode.bulk.people', { count: userCount })}
           count={userCount}
           userCount={userCount}
-          isLetter
+          channel={MailChannel.Letter}
           withoutAddressCount={preview?.withoutAddressCount ?? 0}
           segmentCounts={preview?.segments ?? []}
           selectedSegments={state.emailSegments}
@@ -87,10 +85,7 @@ export function DeliveryModeAudienceSection() {
           action={
             <DeliveryModeAudienceAction
               audience={audience}
-              onDone={() => {
-                refetch();
-                setRefreshKey(key => key + 1);
-              }}
+              onDone={() => refetch()}
             />
           }
         />
@@ -104,8 +99,6 @@ export function DeliveryModeAudienceSection() {
             totalCount={userCount}
           />
         )}
-
-        <DeliveryModeBulkChanges refreshKey={refreshKey} />
       </CardContent>
     </Card>
   );

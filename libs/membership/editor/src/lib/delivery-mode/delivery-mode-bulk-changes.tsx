@@ -25,7 +25,7 @@ const TAKE = 20;
 
 export type DeliveryModeBulkChangesProps = {
   /** Bump to reload, e.g. right after a switch went through. */
-  refreshKey: number;
+  refreshKey?: number;
 };
 
 /**
@@ -34,7 +34,7 @@ export type DeliveryModeBulkChangesProps = {
  * answers "why is this person on letters" without opening anything.
  */
 export function DeliveryModeBulkChanges({
-  refreshKey,
+  refreshKey = 0,
 }: DeliveryModeBulkChangesProps) {
   const { t, i18n } = useTranslation();
   const { data, refetch } = useQuery(DeliveryModeBulkChangesDocument, {

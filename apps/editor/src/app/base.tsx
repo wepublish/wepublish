@@ -1116,7 +1116,7 @@ export function Base({ children }: BaseProps) {
                   <FeatureControl feature="paper-letter-flow">
                     <PermissionControl qualifyingPermissions={[CanGetUsers.id]}>
                       <SidebarNavItem
-                        href="/deliverysuggestions"
+                        href="/deliverychannel"
                         icon={<MdMarkunreadMailbox />}
                       >
                         {t('navbar.deliverySuggestions')}

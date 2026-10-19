@@ -33,10 +33,13 @@ function setup(users: ReturnType<typeof user>[] = [user('u1')]) {
       findUnique: vi.fn(
         async ({ where }: any) => users.find(u => u.id === where.id) ?? null
       ),
+      findMany: vi.fn(async () => [] as unknown[]),
+      count: vi.fn(async () => users.length),
     },
     userDeliveryPreference: {
       findUnique: vi.fn(async () => null),
       upsert: vi.fn(async ({ create }: any) => create),
+      groupBy: vi.fn(async () => [] as unknown[]),
     },
     deliverySuggestion: {
       deleteMany: vi.fn(async () => ({ count: 1 })),
@@ -270,6 +273,156 @@ describe('UserDeliveryPreferenceService', () => {
           },
         },
       });
+    });
+
+    it('narrows to one channel when asked', async () => {
+      const { service, prisma } = setup();
+
+      await service.listBulkChanges(0, 20, MailChannel.letter);
+
+      expect(prisma.deliveryModeBulkChange.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { channel: MailChannel.letter } })
+      );
+      expect(prisma.deliveryModeBulkChange.count).toHaveBeenCalledWith({
+        where: { channel: MailChannel.letter },
+      });
+    });
+  });
+
+  describe('channelCounts', () => {
+    it('counts everyone without a row on the default channel, email', async () => {
+      const { service, prisma } = setup();
+      prisma.user.count.mockResolvedValue(10);
+      prisma.userDeliveryPreference.groupBy.mockResolvedValue([
+        { channel: MailChannel.letter, _count: { _all: 3 } },
+        { channel: MailChannel.mail, _count: { _all: 2 } },
+      ]);
+
+      await expect(service.channelCounts()).resolves.toEqual([
+        { channel: MailChannel.mail, userCount: 7 },
+        { channel: MailChannel.letter, userCount: 3 },
+      ]);
+    });
+
+    it('names every channel, also an empty one', async () => {
+      const { service, prisma } = setup();
+      prisma.user.count.mockResolvedValue(4);
+
+      await expect(service.channelCounts()).resolves.toEqual([
+        { channel: MailChannel.mail, userCount: 4 },
+        { channel: MailChannel.letter, userCount: 0 },
+      ]);
+    });
+  });
+
+  describe('listByChannel', () => {
+    const changedAt = new Date('2026-10-10T08:00:00.000Z');
+    const admin = { id: 'admin', email: 'a@x.ch', name: 'A', firstName: null };
+
+    it('lists the people on letters with how they got there', async () => {
+      const { service, prisma } = setup();
+      prisma.user.findMany.mockResolvedValue([
+        {
+          ...user('u1'),
+          deliveryPreference: {
+            channel: MailChannel.letter,
+            origin: DeliveryPreferenceOrigin.manual,
+            reason: 'bulk',
+            changedAt,
+            changedBy: admin,
+          },
+        },
+      ]);
+      prisma.user.count.mockResolvedValue(1);
+
+      await expect(
+        service.listByChannel(MailChannel.letter, undefined, 0, 20)
+      ).resolves.toEqual({
+        totalCount: 1,
+        nodes: [
+          {
+            user: {
+              id: 'u1',
+              email: 'u1@example.com',
+              name: 'Doe',
+              firstName: 'Jane',
+            },
+            channel: MailChannel.letter,
+            origin: DeliveryPreferenceOrigin.manual,
+            reason: 'bulk',
+            changedAt,
+            changedBy: admin,
+            canReceiveLetters: true,
+          },
+        ],
+      });
+      expect(prisma.user.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            deliveryPreference: { is: { channel: MailChannel.letter } },
+          },
+          skip: 0,
+          take: 20,
+        })
+      );
+    });
+
+    it('counts people without a row as email', async () => {
+      const { service, prisma } = setup();
+      prisma.user.findMany.mockResolvedValue([
+        { ...user('u1', false), deliveryPreference: null },
+      ]);
+
+      const { nodes } = await service.listByChannel(
+        MailChannel.mail,
+        undefined,
+        0,
+        20
+      );
+
+      expect(nodes[0]).toEqual(
+        expect.objectContaining({
+          channel: MailChannel.mail,
+          origin: null,
+          reason: null,
+          changedAt: null,
+          changedBy: null,
+          canReceiveLetters: false,
+        })
+      );
+      expect(prisma.user.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            OR: [
+              { deliveryPreference: null },
+              { deliveryPreference: { is: { channel: MailChannel.mail } } },
+            ],
+          },
+        })
+      );
+    });
+
+    it('searches by name, first name and email address', async () => {
+      const { service, prisma } = setup();
+
+      await service.listByChannel(MailChannel.letter, ' muster ', 20, 10);
+
+      const where = {
+        AND: [
+          { deliveryPreference: { is: { channel: MailChannel.letter } } },
+          {
+            OR: [
+              { name: { contains: 'muster', mode: 'insensitive' } },
+              { firstName: { contains: 'muster', mode: 'insensitive' } },
+              { email: { contains: 'muster', mode: 'insensitive' } },
+            ],
+          },
+        ],
+      };
+      expect(prisma.user.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where, skip: 20, take: 10 })
+      );
+      expect(prisma.user.count).toHaveBeenCalledWith({ where });
     });
   });
 

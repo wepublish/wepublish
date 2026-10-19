@@ -530,7 +530,7 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     icon: <MdMarkunreadMailbox />,
     permissions: [CanGetUsers.id],
     feature: 'paper-letter-flow',
-    perform: ({ navigate }) => navigate('/deliverysuggestions'),
+    perform: ({ navigate }) => navigate('/deliverychannel'),
   },
   {
     id: 'subscriptionSettings',

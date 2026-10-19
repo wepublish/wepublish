@@ -27,17 +27,12 @@ import {
 import {
   enqueueSnackbar,
   humanizeError,
-  InfoTooltip,
-  ListViewContainer,
-  ListViewHeader,
-  PageTitle,
   Pagination,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdRefresh } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { DeliveryModeAudienceSection } from './delivery-mode-audience-section';
 
 const PAGE_SIZE = 50;
 
@@ -109,17 +104,7 @@ export function DeliverySuggestionsPage() {
   const totalCount = list.data?.deliverySuggestions.totalCount ?? 0;
 
   return (
-    // The editor's content frame is a scrolling flex column; a block with its
-    // own overflow (tables, cards) would shrink and scroll inside it instead of
-    // the page scrolling. Opt out of shrinking, like the other long pages.
-    <div style={{ flexShrink: 0 }}>
-      <ListViewContainer>
-        <ListViewHeader>
-          <PageTitle>{t('deliveryMode.suggestionsTitle')}</PageTitle>
-          <InfoTooltip text={t('deliveryMode.suggestionsIntro')} />
-        </ListViewHeader>
-      </ListViewContainer>
-
+    <div>
       <Stack
         direction="row"
         spacing={1.5}
@@ -251,8 +236,6 @@ export function DeliverySuggestionsPage() {
           />
         </Box>
       )}
-
-      <DeliveryModeAudienceSection />
 
       <Dialog
         open={askAll}

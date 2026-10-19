@@ -1,4 +1,4 @@
-import { MailEmailSegment } from '@wepublish/editor/api';
+import { MailChannel, MailEmailSegment } from '@wepublish/editor/api';
 import {
   Alert,
   Button,
@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { deliveryChannel } from '../../delivery-mode/channels';
 import { EmailQualityRefreshButton } from '../email-quality-refresh-button';
 
 /**
@@ -22,7 +23,7 @@ export function RecipientSummary({
   headline,
   count,
   userCount,
-  isLetter,
+  channel,
   withoutAddressCount,
   segmentCounts,
   selectedSegments,
@@ -37,7 +38,7 @@ export function RecipientSummary({
   headline?: ReactNode;
   count: number;
   userCount: number;
-  isLetter: boolean;
+  channel: MailChannel;
   withoutAddressCount: number;
   segmentCounts: { segment: MailEmailSegment; userCount: number }[];
   selectedSegments: MailEmailSegment[];
@@ -49,6 +50,7 @@ export function RecipientSummary({
   action?: ReactElement;
 }) {
   const { t } = useTranslation();
+  const { countKey, needsPostalAddress } = deliveryChannel(channel);
 
   return (
     <Card
@@ -68,14 +70,7 @@ export function RecipientSummary({
             <span>
               {loading ?
                 t('mailSend.counting')
-              : (headline ??
-                t(
-                  isLetter ?
-                    'mailSend.lettersCount'
-                  : 'mailSend.recipientsCountPerPerson',
-                  { count, people: userCount }
-                ))
-              }
+              : (headline ?? t(countKey, { count, people: userCount }))}
             </span>
             {onShowRecipients && (
               <Button
@@ -124,7 +119,7 @@ export function RecipientSummary({
           </Stack>
         )}
 
-        {isLetter && withoutAddressCount > 0 && (
+        {needsPostalAddress && withoutAddressCount > 0 && (
           <Alert
             severity="warning"
             style={{ marginTop: 12 }}

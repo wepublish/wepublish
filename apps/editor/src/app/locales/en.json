@@ -1526,8 +1526,8 @@
       "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "also as letter",
-      "sendAsLetterHint": "People with delivery by letter get this message printed instead of emailed.",
+      "sendAsLetter": "Also print as letter",
+      "sendAsLetterHint": "People on the letter channel get this message printed instead of emailed.",
       "noMailSentSelectNow": "Do not send an email"
     },
     "memberPlanEdit": {
@@ -1591,41 +1591,42 @@
       "paymentProviderStatusInfo": "✅ means every payment method of this plan is connected to a payment provider. ❌ means at least one payment method has no provider, so readers cannot pay with it."
     },
     "deliveryMode": {
-      "panelTitle": "Delivery of automated messages",
+      "panelTitle": "Delivery channel",
       "channel": {
-        "mail": "By email",
-        "letter": "By letter"
+        "mail": "Email",
+        "letter": "Letter"
       },
       "origin": {
-        "manual": "Switched by hand",
-        "suggestion": "Switched from a suggestion"
+        "manual": "By hand",
+        "suggestion": "From a suggestion"
       },
       "reason": {
-        "emailQuality_dead": "Email address dead",
+        "emailQuality_dead": "Email address unreachable",
         "placeholderEmail": "Placeholder address",
-        "bulk": "Audience",
-        "emailQuality_active": "Email address active again"
+        "bulk": "By audience",
+        "emailQuality_active": "Email address active again",
+        "kept": "Kept"
       },
-      "noAddress": "No usable postal address – letters are not possible.",
-      "switchToLetter": "Switch to letters",
+      "noAddress": "No complete postal address – letter not possible.",
+      "switchToLetter": "Switch to letter",
       "switchToMail": "Switch to email",
-      "suggestionsTitle": "Assign delivery channel",
-      "suggestionsIntro": "Assign how messages reach each user, by automatic suggestion or by manual selection. Suggestions appear once at least one person is affected and must be confirmed to take effect.",
+      "suggestionsTitle": "Delivery channel",
+      "suggestionsIntro": "The delivery channel decides whether a person gets their automated messages by email or by letter. It is switched by hand, from a suggestion or by audience. Suggestions are made every night from the email quality and only take effect once applied.",
       "kind": {
-        "toLetter": "By letter ({{count}})",
-        "toMail": "By email ({{count}})"
+        "toLetter": "Switch to letter ({{count}})",
+        "toMail": "Switch to email ({{count}})"
       },
-      "recompute": "Recompute now",
-      "recomputed": "Recomputed: {{toLetter}} by letter, {{toMail}} by email, {{removed}} settled.",
-      "confirm": "Confirm",
-      "confirmAll": "Confirm all ({{count}})",
-      "confirmAllTitle": "Confirm all suggestions",
+      "recompute": "Recompute suggestions",
+      "recomputed": "Recomputed: {{toLetter}} to letter, {{toMail}} to email, {{removed}} settled.",
+      "confirm": "Apply",
+      "confirmAll": "Apply all {{count}}",
+      "confirmAllTitle": "Apply all suggestions",
       "confirmAllText": {
-        "toLetter": "{{count}} people will get their automated messages as letters from now on.",
+        "toLetter": "{{count}} people will get their automated messages by letter from now on.",
         "toMail": "{{count}} people will get their automated messages by email again."
       },
-      "confirmAllYes": "Yes, confirm all",
-      "confirmedAll": "{{confirmed}} confirmed, {{skipped}} no longer applied.",
+      "confirmAllYes": "Yes, apply all",
+      "confirmedAll": "{{confirmed}} applied, {{skipped}} no longer applied.",
       "table": {
         "user": "Person",
         "emailQuality": "Email status",
@@ -1633,33 +1634,55 @@
         "since": "Suggested since"
       },
       "audience": {
-        "open": "Change delivery of the audience",
-        "title": "Change delivery of the audience",
+        "open": "Switch the audience’s delivery channel",
+        "title": "Switch the audience’s delivery channel",
         "intro": "Everyone in the chosen audience will get their automated messages this way from now on:",
-        "previewLetter": "{{userCount}} people; {{withoutAddressCount}} of them without a usable address will be skipped.",
+        "previewLetter": "{{userCount}} people; {{withoutAddressCount}} of them without a complete postal address stay on email.",
         "previewMail": "{{userCount}} people.",
         "apply": "Switch",
         "done": {
-          "letter": "{{changed}} switched to letters, {{skippedWithoutAddress}} skipped without address.",
+          "letter": "{{changed}} switched to letter, {{skippedWithoutAddress}} without a complete postal address stay on email.",
           "mail": "{{changed}} switched to email."
         }
       },
       "bulk": {
-        "title": "Manually by audience",
-        "intro": "Narrow the audience like for manual sends and switch delivery for everyone in it.",
+        "title": "Switch an audience",
+        "intro": "Narrow the audience like for manual sends and switch the delivery channel for everyone in it.",
         "people": "{{count}} people in this audience",
         "history": {
-          "title": "Recent switches",
+          "title": "Switches by audience",
           "empty": "No switch by audience yet.",
           "when": "When",
-          "who": "Who",
-          "channel": "Delivery",
+          "who": "By",
+          "channel": "Delivery channel",
           "people": "People",
           "changed": "Switched",
           "skipped": "Skipped",
           "filter": "Audience",
           "unknownUser": "Unknown"
         }
+      }
+    },
+    "deliveryChannel": {
+      "tabs": {
+        "suggestions": "Suggestions ({{count}})",
+        "assign": "Switch an audience",
+        "history": "History",
+        "overview": "Overview"
+      },
+      "overview": {
+        "defaultChannel": "{{label}} (default)",
+        "people": "{{count}} people",
+        "showPeople": "Show people",
+        "openSuggestions": "{{count}} open suggestions",
+        "review": "Review",
+        "printed": "Printed: {{printed}} of {{total}} automated messages",
+        "openFlows": "Go to automated messages",
+        "peopleOn": "People on {{channel}}",
+        "search": "Search name or email address",
+        "lastChange": "Last change",
+        "noDecision": "No decision of their own",
+        "empty": "Nobody on this channel."
       }
     },
     "navbar": {
@@ -1708,7 +1731,7 @@
       "settings": "Settings",
       "subscriptionPlans": "Subscription Plans",
       "subscriptions": "Subscriptions",
-      "subscriptionSettings": "Automatic emails",
+      "subscriptionSettings": "Automated messages",
       "tokens": "Tokens",
       "apiTokens": "API Keys",
       "userConsents": "User Consents",
@@ -2178,7 +2201,7 @@
       }
     },
     "automaticMails": {
-      "title": "Automatic emails",
+      "title": "Automated messages",
       "intro": "Here you decide which email template goes out automatically for which event. Pick a template per event – or leave it on “Do not send an email” if nothing should go out. The ⓘ icon explains every event.",
       "example": "Example: {{example}}"
     },
@@ -2223,7 +2246,7 @@
       "addMail": "Add email",
       "deleteMail": "Remove email",
       "defaultFlow": "Default flow",
-      "defaultFlowDescription": "Applies to every subscription no other flow matches. Changes here also apply under «Automatic emails».",
+      "defaultFlowDescription": "Applies to every subscription no other flow matches. Changes here also apply under «Automated messages».",
       "flowNumber": "Flow {{number}}",
       "newFlow": "New flow",
       "newDayTitle": "New day in the timeline",
@@ -3651,11 +3674,11 @@
           "description": "Audience and filters"
         },
         "content": {
-          "title": "Content & delivery",
+          "title": "Content & delivery channel",
           "description": "Template, email or letter"
         },
         "send": {
-          "title": "Send email",
+          "title": "Send",
           "description": "Review and send"
         }
       },
@@ -3786,7 +3809,7 @@
       "lettersCount": "{{count}} letters to {{people}} people",
       "confirmTextLetter": "Send this letter to {{count}} recipients?",
       "channel": {
-        "label": "Delivery",
+        "label": "Delivery channel",
         "mail": "Email",
         "letter": "Letter",
         "withoutAddress": "{{count}} of the recipients have no usable postal address and will be skipped."
@@ -3828,7 +3851,7 @@
         "template": "Choose template …",
         "state": "Status",
         "anyState": "Any",
-        "channel": "Channel",
+        "channel": "Delivery channel",
         "anyChannel": "Any",
         "sentBetween": "Sent between",
         "match": {
@@ -3894,9 +3917,9 @@
       "error": "Error",
       "typeDescriptions": {
         "manual": "Sent by hand via “Manual mailings” or “Send test”. Example: a newsletter to all subscribers.",
-        "subscriptionFlow": "Time-based, from “Automatic emails”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
+        "subscriptionFlow": "Time-based, from “Automated messages”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
         "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
-        "systemMail": "Account mails, configured under “Automatic emails” in the “Account & login” section. Examples: welcome mail after registration, password reset."
+        "systemMail": "Account mails, configured under “Automated messages” in the “Account & login” section. Examples: welcome mail after registration, password reset."
       },
       "errorHelp": {
         "causeTitle": "What happened?",
