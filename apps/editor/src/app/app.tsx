@@ -45,6 +45,7 @@ import { useContext, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { Base } from './base';
+import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalette';
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
 import { LoginImpersonate } from './loginImpersonate';
@@ -221,6 +222,8 @@ export function App() {
       <SnackbarHost />
       <BrowserRouter>
         <RouteErrorBoundary>
+          <EditorCommandPaletteSurface />
+
           <Routes>
             <Route
               path="login"

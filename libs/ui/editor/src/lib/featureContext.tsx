@@ -33,6 +33,8 @@ export function FeaturesProvider({ children }: PropsWithChildren) {
   );
 }
 
+export const useFeatures = () => useContext(FeaturesContext);
+
 /**
  * Whether this medium has a feature switched on in We.Publish One.
  * Unlike `useHasPermission` this is false until the answer is known: a feature
