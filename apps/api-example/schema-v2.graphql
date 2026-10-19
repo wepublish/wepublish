@@ -59,6 +59,41 @@ enum AnalyticsProviderType {
   GOOGLE
 }
 
+type ApiToken {
+  createdAt: DateTime!
+
+  """The user who created this token. Null once that user is deleted."""
+  createdBy: User
+  createdById: String
+
+  """When the token stops working."""
+  expiresAt: DateTime!
+  id: String!
+  lastUsedAt: DateTime
+  modifiedAt: DateTime!
+  name: String!
+
+  """The non-secret start of the token"""
+  prefix: String!
+  revokedAt: DateTime
+
+  """The permissions this token carries."""
+  scopes: [String!]!
+}
+
+enum ApiTokenSort {
+  CreatedAt
+  LastUsedAt
+  Name
+}
+
+"""A revoked token counts as revoked even once it has also expired."""
+enum ApiTokenStatus {
+  Active
+  Expired
+  Revoked
+}
+
 type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   createdAt: DateTime!
   disableComments: Boolean!
@@ -837,6 +872,16 @@ input CreateExternalAppInput {
 type CreateSubscriptionInfo {
   discountCodeValid: Boolean
   discountPercent: Float
+}
+
+"""
+A newly created token. The secret is returned exactly once and cannot be retrieved again.
+"""
+type CreatedApiToken {
+  apiToken: ApiToken!
+
+  """The secret."""
+  token: String!
 }
 
 type Crowdfunding {
@@ -2874,6 +2919,18 @@ type Mutation {
   """Creates a new analytics provider setting."""
   createAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String!, name: String, property: String, type: AnalyticsProviderType!): SettingAnalyticsProvider!
 
+  """
+  Creates an api token and returns its secret. The secret is shown once and cannot be retrieved again.
+  """
+  createApiToken(
+    """When the token stops working."""
+    expiresAt: DateTime!
+    name: String!
+
+    """The permissions this token carries."""
+    scopes: [String!]!
+  ): CreatedApiToken!
+
   """Creates an article."""
   createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
@@ -3364,6 +3421,11 @@ type Mutation {
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
+
+  """
+  Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately.
+  """
+  revokeApiToken(id: String!): ApiToken!
   revokeImpersonationSessions(ids: [String!]): Int!
 
   """
@@ -3773,6 +3835,12 @@ input PageTeaserInput {
   pageID: String
   preTitle: String
   title: String
+}
+
+type PaginatedApiTokens {
+  nodes: [ApiToken!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type PaginatedArticleRevisions {
@@ -4497,6 +4565,22 @@ type Query {
 
   """Returns all analytics provider settings."""
   analyticsProviderSettings(filter: SettingAnalyticsProviderFilter): [SettingAnalyticsProvider!]!
+
+  """
+  Returns your own api tokens, or everyone's with CAN_GET_ALL_API_TOKENS. Secrets are never included.
+  """
+  apiTokens(
+    """
+    Only tokens created by this user. Ignored without CAN_GET_ALL_API_TOKENS, which already limits you to your own.
+    """
+    createdById: String
+    cursorId: String
+    order: SortOrder = Descending
+    skip: Int = 0
+    sort: ApiTokenSort = CreatedAt
+    status: ApiTokenStatus
+    take: Int = 10
+  ): PaginatedApiTokens!
 
   """Returns an article by id or slug."""
   article(id: String, slug: String): Article!
