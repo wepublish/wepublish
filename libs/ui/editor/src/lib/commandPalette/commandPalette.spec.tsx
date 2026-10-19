@@ -19,6 +19,7 @@ const theme = createTheme({ cssVariables: true });
 const articles = vi.fn();
 const createArticle = vi.fn();
 const tags = vi.fn();
+const peerArticles = vi.fn();
 
 const commands = (): Command[] => [
   {
@@ -83,10 +84,48 @@ const selected = () =>
     .getAllByRole('option')
     .find(row => row.getAttribute('aria-selected') === 'true')?.textContent;
 
+const interleavedCommands = (): Command[] => [
+  {
+    id: 'articles',
+    group: 'navigate',
+    title: 'Articles',
+    icon: null,
+    perform: articles,
+  },
+  {
+    id: 'createArticle',
+    group: 'create',
+    title: 'Article draft',
+    icon: null,
+    perform: createArticle,
+  },
+  {
+    id: 'peerArticles',
+    group: 'navigate',
+    title: 'Peer articles',
+    icon: null,
+    perform: peerArticles,
+  },
+];
+
+const renderInterleaved = () =>
+  render(<CommandPalette />, {
+    wrapper: ({ children }: { children: ReactNode }) => (
+      <ThemeProvider theme={theme}>
+        <MemoryRouter>
+          <CommandPaletteProvider commands={interleavedCommands()}>
+            {children}
+          </CommandPaletteProvider>
+        </MemoryRouter>
+      </ThemeProvider>
+    ),
+  });
+
 beforeEach(() => {
   articles.mockClear();
   createArticle.mockClear();
   tags.mockClear();
+  peerArticles.mockClear();
 });
 
 describe('CommandPalette', () => {
@@ -190,6 +229,35 @@ describe('CommandPalette', () => {
     press('Home');
 
     expect(selected()).toContain('Articles');
+  });
+
+  it('runs the command the reader sees selected, whatever group it sits in', () => {
+    const performs: Record<string, ReturnType<typeof vi.fn>> = {
+      Articles: articles,
+      'Article draft': createArticle,
+      'Peer articles': peerArticles,
+    };
+
+    renderInterleaved();
+    pressHotkey();
+    type('article');
+
+    const titles = rows().map(row => row ?? '');
+
+    titles.forEach((title, index) => {
+      for (let step = 0; step < index; step++) {
+        press('ArrowDown');
+      }
+
+      expect(selected()).toBe(title);
+
+      press('Enter');
+
+      expect(performs[title]).toHaveBeenCalledTimes(1);
+
+      pressHotkey();
+      type('article');
+    });
   });
 
   it('runs the selected command on Enter and closes', async () => {
