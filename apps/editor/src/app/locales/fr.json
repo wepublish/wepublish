@@ -1670,7 +1670,6 @@
         "overview": "Vue d’ensemble"
       },
       "overview": {
-        "defaultChannel": "{{label}} (par défaut)",
         "people": "{{count}} personnes",
         "showPeople": "Afficher les personnes",
         "openSuggestions": "{{count}} ouvertes",
@@ -1680,9 +1679,10 @@
         "lastChange": "Dernier changement",
         "noDecision": "Aucun (par défaut)",
         "empty": "Personne sur ce canal.",
-        "channelHeading": "Canal de distribution",
         "suggestionsHeading": "Changements proposés",
-        "activeFor": "Activé pour {{count}} types de messages automatiques"
+        "activeFor": "Activé pour {{count}} types de messages automatiques",
+        "channelHeadingDefault": "Canal de distribution (par défaut)",
+        "channelHeadingAlternative": "Canal de distribution (alternatif)"
       },
       "suggestions": {
         "cardTitle": "{{move}} · {{count}} suggestions",

@@ -59,7 +59,21 @@ const TileHeading = ({ children }: { children: ReactNode }) => (
       borderColor: 'divider',
       color: 'text.secondary',
       lineHeight: 2,
+      // One line, whatever the role in brackets adds.
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     }}
+  >
+    {children}
+  </Typography>
+);
+
+/** The quiet line between a tile's title row and its big number. */
+const TileNote = ({ children }: { children: ReactNode }) => (
+  <Typography
+    variant="caption"
+    sx={{ display: 'block', color: 'text.secondary' }}
   >
     {children}
   </Typography>
@@ -130,6 +144,8 @@ export function DeliveryChannelOverviewView() {
       .map(() => ({ sendAsLetter: false })),
   ];
 
+  const coverageReady = canSeeCoverage && !!flows.data && !!systemMails.data;
+
   const nodes = people.data?.usersByDeliveryChannel.nodes ?? [];
   const totalCount = people.data?.usersByDeliveryChannel.totalCount ?? 0;
 
@@ -144,7 +160,7 @@ export function DeliveryChannelOverviewView() {
         sx={{
           display: 'grid',
           gap: 2,
-          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
         }}
       >
         {(counts.data?.deliveryChannelCounts ?? []).map(count => {
@@ -174,7 +190,11 @@ export function DeliveryChannelOverviewView() {
                 onClick={() => show(count.channel)}
               >
                 <TileHeading>
-                  {t('deliveryChannel.overview.channelHeading')}
+                  {t(
+                    info.isDefault ?
+                      'deliveryChannel.overview.channelHeadingDefault'
+                    : 'deliveryChannel.overview.channelHeadingAlternative'
+                  )}
                 </TileHeading>
                 <CardContent sx={{ flexGrow: 1, width: '100%' }}>
                   <Stack
@@ -184,13 +204,21 @@ export function DeliveryChannelOverviewView() {
                   >
                     <info.icon />
                     <Typography variant="subtitle1">
-                      {info.isDefault ?
-                        t('deliveryChannel.overview.defaultChannel', {
-                          label: t(info.labelKey),
-                        })
-                      : t(info.labelKey)}
+                      {t(info.labelKey)}
                     </Typography>
                   </Stack>
+                  {/* What the channel carries comes before who is on it. For
+                      how many configured message types it is active: all by
+                      email, the printed ones by letter — only for those who
+                      may see the flows; the line stays, so the counts of the
+                      three tiles keep one height. */}
+                  <TileNote>
+                    {coverageReady ?
+                      t('deliveryChannel.overview.activeFor', {
+                        count: sent.filter(info.coversMessage).length,
+                      })
+                    : ' '}
+                  </TileNote>
                   <Typography
                     variant="h5"
                     sx={{ marginTop: 1 }}
@@ -199,19 +227,6 @@ export function DeliveryChannelOverviewView() {
                       count: count.userCount,
                     })}
                   </Typography>
-                  {/* For how many configured message types this channel is
-                      active: all of them by email, the printed ones by
-                      letter. Only for those who may see the flows. */}
-                  {canSeeCoverage && flows.data && systemMails.data && (
-                    <Typography
-                      variant="caption"
-                      sx={{ display: 'block', color: 'text.secondary' }}
-                    >
-                      {t('deliveryChannel.overview.activeFor', {
-                        count: sent.filter(info.coversMessage).length,
-                      })}
-                    </Typography>
-                  )}
                 </CardContent>
                 <TileLink>{t('deliveryChannel.overview.showPeople')}</TileLink>
               </CardActionArea>
@@ -264,6 +279,10 @@ export function DeliveryChannelOverviewView() {
                   }
                 )}
               </Typography>
+              {/* The same line the channel tiles spend on their coverage. */}
+              <TileNote>
+                {t('deliveryChannel.suggestions.recomputedDaily')}
+              </TileNote>
               <Typography
                 variant="h5"
                 sx={{ marginTop: 1 }}

@@ -1670,7 +1670,6 @@
         "overview": "Übersicht"
       },
       "overview": {
-        "defaultChannel": "{{label}} (Standard)",
         "people": "{{count}} User",
         "showPeople": "User anzeigen",
         "openSuggestions": "{{count}} offene",
@@ -1680,9 +1679,10 @@
         "lastChange": "Letzte Änderung",
         "noDecision": "Keine (Standard)",
         "empty": "Niemand mit diesem Zustellkanal.",
-        "channelHeading": "Zustellkanal",
         "suggestionsHeading": "Änderungsvorschläge",
-        "activeFor": "Bei {{count}} automatischen Mitteilungstypen aktiviert"
+        "activeFor": "Bei {{count}} automatischen Mitteilungstypen aktiviert",
+        "channelHeadingDefault": "Zustellkanal (Standard)",
+        "channelHeadingAlternative": "Zustellkanal (Alternativ)"
       },
       "suggestions": {
         "cardTitle": "{{move}} · {{count}} Vorschläge",
