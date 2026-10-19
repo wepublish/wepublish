@@ -1752,8 +1752,10 @@
         "value": "Wert",
         "slugInfo": "Der letzte Teil der Webadresse der Seite, z.B. «ueber-uns». Verwende nur Kleinbuchstaben, Zahlen und Bindestriche. Eine spätere Änderung macht bestehende Links ungültig.",
         "hiddenInfo": "Ausgeblendete Seiten erscheinen nicht in automatischen Listen auf der Website, bleiben aber über ihren direkten Link erreichbar.",
-        "hideHeaderFooter": "Header und Footer ausblenden",
-        "hideHeaderFooterInfo": "Blendet den Header und den Footer der Website auf dieser Seite aus, z.B. für Landingpages.",
+        "hideHeader": "Header ausblenden",
+        "hideHeaderInfo": "Blendet den Header der Website auf dieser Seite aus, z.B. für Landingpages.",
+        "hideFooter": "Footer ausblenden",
+        "hideFooterInfo": "Blendet den Footer der Website auf dieser Seite aus, z.B. für Landingpages.",
         "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen"
       }
     },

@@ -5,7 +5,8 @@ exports[`PageService > should create an page 1`] = `
   {
     "data": {
       "hidden": false,
-      "hideHeaderFooter": undefined,
+      "hideFooter": undefined,
+      "hideHeader": undefined,
       "revisions": {
         "create": {
           "blocks": [
@@ -767,7 +768,8 @@ exports[`PageService > should update an page 2`] = `
   {
     "data": {
       "hidden": false,
-      "hideHeaderFooter": undefined,
+      "hideFooter": undefined,
+      "hideHeader": undefined,
       "revisions": {
         "create": {
           "blocks": [

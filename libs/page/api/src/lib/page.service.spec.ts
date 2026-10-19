@@ -557,13 +557,14 @@ describe('PageService', () => {
   });
 
   describe('hide header and footer', () => {
-    it('should store hideHeaderFooter when creating a page', async () => {
+    it('should store hideHeader and hideFooter separately when creating a page', async () => {
       prismaMock.page.create?.mockResolvedValue({ id: '1234' });
 
       await service.createPage(
         {
           hidden: false,
-          hideHeaderFooter: true,
+          hideHeader: false,
+          hideFooter: true,
           properties: [],
           tagIds: [],
           blocks: [],
@@ -572,18 +573,20 @@ describe('PageService', () => {
       );
 
       expect(prismaMock.page.create?.mock.calls[0][0].data).toMatchObject({
-        hideHeaderFooter: true,
+        hideHeader: false,
+        hideFooter: true,
       });
     });
 
-    it('should store hideHeaderFooter when updating a page', async () => {
+    it('should store hideHeader and hideFooter separately when updating a page', async () => {
       prismaMock.page.findUnique?.mockResolvedValue({ id: '123', tags: [] });
 
       await service.updatePage(
         {
           id: '123',
           hidden: false,
-          hideHeaderFooter: true,
+          hideHeader: true,
+          hideFooter: false,
           properties: [],
           tagIds: [],
           blocks: [],
@@ -592,15 +595,17 @@ describe('PageService', () => {
       );
 
       expect(prismaMock.page.update?.mock.calls[0][0].data).toMatchObject({
-        hideHeaderFooter: true,
+        hideHeader: true,
+        hideFooter: false,
       });
     });
 
-    it('should keep hideHeaderFooter when duplicating a page', async () => {
+    it('should keep hideHeader and hideFooter when duplicating a page', async () => {
       prismaMock.page.findUnique?.mockResolvedValue({
         id: '1234',
         hidden: false,
-        hideHeaderFooter: true,
+        hideHeader: true,
+        hideFooter: false,
         tags: [],
         revisions: [
           {
@@ -618,7 +623,8 @@ describe('PageService', () => {
       await service.duplicatePage('1234', '1');
 
       expect(prismaMock.page.create?.mock.calls[0][0].data).toMatchObject({
-        hideHeaderFooter: true,
+        hideHeader: true,
+        hideFooter: false,
       });
     });
   });

@@ -20,7 +20,8 @@ fragment SlimPage on Page {
   url
   slug
   hidden
-  hideHeaderFooter
+  hideHeader
+  hideFooter
 
   tags {
     ...FullTag

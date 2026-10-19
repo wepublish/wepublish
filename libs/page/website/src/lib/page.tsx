@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { css, GlobalStyles } from '@mui/material';
 import {
   ContentWrapper,
   PreviewStatusBanner,
@@ -7,22 +6,10 @@ import {
 } from '@wepublish/content/website';
 import {
   BuilderPageProps,
-  footerContainerClassName,
-  navbarContainerClassName,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 
 export const PageWrapper = styled(ContentWrapper)``;
-
-const hideHeaderFooter = (
-  <GlobalStyles
-    styles={css`
-      .${navbarContainerClassName}, .${footerContainerClassName} {
-        display: none !important;
-      }
-    `}
-  />
-);
 
 export function Page({
   className,
@@ -42,7 +29,6 @@ export function Page({
       {data?.page && <PreviewStatusBanner />}
 
       {data?.page && <PageSEO page={data.page} />}
-      {data?.page?.hideHeaderFooter && hideHeaderFooter}
 
       {data?.page && (
         <Blocks

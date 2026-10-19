@@ -1,5 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { ComponentType } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { fireEvent, render as rtlRender, screen } from '@testing-library/react';
+import { ComponentType, ReactElement } from 'react';
 
 import { PageMetadata, PageMetadataPanel } from './pageMetadataPanel';
 
@@ -34,40 +35,54 @@ const metadata: PageMetadata = {
   properties: [],
 };
 
-const getToggle = () =>
-  screen.getByRole<HTMLInputElement>('switch', {
-    name: /^pageEditor\.panels\.hideHeaderFooter\b/,
+const theme = createTheme({ cssVariables: true });
+const render = (ui: ReactElement) =>
+  rtlRender(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
+
+const getCheckbox = (key: 'hideHeader' | 'hideFooter') =>
+  screen.getByRole<HTMLInputElement>('checkbox', {
+    name: new RegExp(`^pageEditor\\.panels\\.${key}\\b`),
   });
 
 describe('PageMetadataPanel', () => {
   it('shows header and footer by default', () => {
     render(<PageMetadataPanel value={metadata} />);
 
-    expect(getToggle().checked).toBe(false);
+    expect(getCheckbox('hideHeader').checked).toBe(false);
+    expect(getCheckbox('hideFooter').checked).toBe(false);
   });
 
-  it('reflects a page that hides header and footer', () => {
-    render(
-      <PageMetadataPanel value={{ ...metadata, hideHeaderFooter: true }} />
-    );
+  it('reflects a page that hides only the header', () => {
+    render(<PageMetadataPanel value={{ ...metadata, hideHeader: true }} />);
 
-    expect(getToggle().checked).toBe(true);
+    expect(getCheckbox('hideHeader').checked).toBe(true);
+    expect(getCheckbox('hideFooter').checked).toBe(false);
   });
 
-  it('emits hideHeaderFooter when toggled', () => {
-    const onChange = vi.fn();
-    render(
-      <PageMetadataPanel
-        value={metadata}
-        onChange={onChange}
-      />
-    );
+  it('reflects a page that hides only the footer', () => {
+    render(<PageMetadataPanel value={{ ...metadata, hideFooter: true }} />);
 
-    fireEvent.click(getToggle());
-
-    expect(onChange).toHaveBeenCalledWith({
-      ...metadata,
-      hideHeaderFooter: true,
-    });
+    expect(getCheckbox('hideHeader').checked).toBe(false);
+    expect(getCheckbox('hideFooter').checked).toBe(true);
   });
+
+  it.each(['hideHeader', 'hideFooter'] as const)(
+    'emits only %s when toggled',
+    key => {
+      const onChange = vi.fn();
+      render(
+        <PageMetadataPanel
+          value={metadata}
+          onChange={onChange}
+        />
+      );
+
+      fireEvent.click(getCheckbox(key));
+
+      expect(onChange).toHaveBeenCalledWith({
+        ...metadata,
+        [key]: true,
+      });
+    }
+  );
 });

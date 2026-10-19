@@ -107,7 +107,10 @@ export class Page {
   hidden!: boolean;
 
   @Field()
-  hideHeaderFooter!: boolean;
+  hideHeader!: boolean;
+
+  @Field()
+  hideFooter!: boolean;
 
   @Field({ nullable: true })
   publishedAt?: Date;
@@ -194,7 +197,10 @@ export class CreatePageInput extends OmitType(
   hidden!: boolean;
 
   @Field({ defaultValue: false })
-  hideHeaderFooter?: boolean;
+  hideHeader?: boolean;
+
+  @Field({ defaultValue: false })
+  hideFooter?: boolean;
 
   @Field(() => [BlockContentInput])
   blocks!: BlockContentInput[];

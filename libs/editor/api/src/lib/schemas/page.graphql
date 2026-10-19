@@ -47,7 +47,8 @@ mutation CreatePage(
   $properties: [PropertyInput!]!
   $slug: String
   $hidden: Boolean = false
-  $hideHeaderFooter: Boolean = false
+  $hideHeader: Boolean = false
+  $hideFooter: Boolean = false
   $socialMediaDescription: String
   $socialMediaImageID: String
   $socialMediaTitle: String
@@ -63,7 +64,8 @@ mutation CreatePage(
     properties: $properties
     slug: $slug
     hidden: $hidden
-    hideHeaderFooter: $hideHeaderFooter
+    hideHeader: $hideHeader
+    hideFooter: $hideFooter
     socialMediaDescription: $socialMediaDescription
     socialMediaImageID: $socialMediaImageID
     socialMediaTitle: $socialMediaTitle
@@ -84,7 +86,8 @@ mutation UpdatePage(
   $properties: [PropertyInput!]!
   $slug: String
   $hidden: Boolean = false
-  $hideHeaderFooter: Boolean = false
+  $hideHeader: Boolean = false
+  $hideFooter: Boolean = false
   $socialMediaDescription: String
   $socialMediaImageID: String
   $socialMediaTitle: String
@@ -101,7 +104,8 @@ mutation UpdatePage(
     properties: $properties
     slug: $slug
     hidden: $hidden
-    hideHeaderFooter: $hideHeaderFooter
+    hideHeader: $hideHeader
+    hideFooter: $hideFooter
     socialMediaDescription: $socialMediaDescription
     socialMediaImageID: $socialMediaImageID
     socialMediaTitle: $socialMediaTitle

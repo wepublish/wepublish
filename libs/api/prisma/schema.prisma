@@ -872,7 +872,8 @@ model Page {
 
   slug   String?
   hidden Boolean @default(false)
-  hideHeaderFooter Boolean @default(false)
+  hideHeader Boolean @default(false)
+  hideFooter Boolean @default(false)
 
   revisions               PageRevision[]
   navigations             NavigationLink[]

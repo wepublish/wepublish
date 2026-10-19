@@ -11,7 +11,6 @@ import {
   BuilderContainerProps,
   BuilderNavbarProps,
   LinkContext,
-  navbarContainerClassName,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { PropsWithChildren } from 'react';
@@ -70,9 +69,7 @@ export function NavbarContainer({
         data={data}
         loading={loading}
         error={error}
-        className={[className, navbarContainerClassName]
-          .filter(Boolean)
-          .join(' ')}
+        className={className}
         logo={logo}
         hasUnpaidInvoices={!!hasUnpaidInvoices}
         hasRunningSubscription={!!hasRunningSubscription}

@@ -119,7 +119,8 @@ export class PageService {
     {
       slug,
       hidden,
-      hideHeaderFooter,
+      hideHeader,
+      hideFooter,
       tagIds,
       properties,
       blocks,
@@ -131,7 +132,8 @@ export class PageService {
       data: {
         slug,
         hidden,
-        hideHeaderFooter,
+        hideHeader,
+        hideFooter,
         tags: {
           createMany: {
             data: tagIds.map(tagId => ({
@@ -160,7 +162,8 @@ export class PageService {
     {
       id,
       hidden,
-      hideHeaderFooter,
+      hideHeader,
+      hideFooter,
       slug,
       tagIds,
       properties,
@@ -185,7 +188,8 @@ export class PageService {
       data: {
         slug,
         hidden,
-        hideHeaderFooter,
+        hideHeader,
+        hideFooter,
         revisions: {
           updateMany: {
             where: {
@@ -410,7 +414,8 @@ export class PageService {
     const result = await this.prisma.page.create({
       data: {
         hidden: page.hidden,
-        hideHeaderFooter: page.hideHeaderFooter,
+        hideHeader: page.hideHeader,
+        hideFooter: page.hideFooter,
         tags: {
           createMany: {
             data: page.tags.map(({ tagId }) => ({

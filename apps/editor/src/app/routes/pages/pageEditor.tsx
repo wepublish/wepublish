@@ -159,7 +159,8 @@ function PageEditor() {
     url: '',
     properties: [],
     hidden: false,
-    hideHeaderFooter: false,
+    hideHeader: false,
+    hideFooter: false,
     image: undefined,
     socialMediaTitle: undefined,
     socialMediaDescription: undefined,
@@ -297,7 +298,7 @@ function PageEditor() {
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (pageData?.page && !hasChanged && !skipRepopulate.current) {
-      const { latest, tags, hidden, hideHeaderFooter, slug, url } =
+      const { latest, tags, hidden, hideHeader, hideFooter, slug, url } =
         pageData.page;
       const {
         title,
@@ -328,7 +329,8 @@ function PageEditor() {
         url,
         properties,
         hidden,
-        hideHeaderFooter,
+        hideHeader,
+        hideFooter,
         image: image || undefined,
         socialMediaTitle: socialMediaTitle || '',
         socialMediaDescription: socialMediaDescription || '',
@@ -452,7 +454,8 @@ function PageEditor() {
       seoTitle: metadata.seoTitle || undefined,
       seoDescription: metadata.seoDescription || undefined,
       hidden: metadata.hidden ?? false,
-      hideHeaderFooter: metadata.hideHeaderFooter ?? false,
+      hideHeader: metadata.hideHeader ?? false,
+      hideFooter: metadata.hideFooter ?? false,
       imageID: metadata.image?.id,
       tagIds: metadata.tags,
       properties: metadata.properties,

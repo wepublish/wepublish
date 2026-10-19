@@ -34,7 +34,8 @@ fragment PageWithoutBlocks on Page {
   url
   previewUrl
   hidden
-  hideHeaderFooter
+  hideHeader
+  hideFooter
 
   tags {
     ...FullTag

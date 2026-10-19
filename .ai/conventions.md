@@ -152,6 +152,16 @@ reader types.
 The palette itself is generic and lives in
 [libs/ui/editor/src/lib/commandPalette](../libs/ui/editor/src/lib/commandPalette).
 
+### Website shell (header / footer per route)
+
+Every tenant `_app.tsx` renders `NavBar` / `FooterContainer` only when
+`getWebsiteShell(pageProps)` says so. A route hides them by returning
+`shell: {showNavigation?, showFooter?}` in its `getStaticProps` props, so
+don't hide them with CSS. Page routes (`[slug].tsx`, `index.tsx`) build
+`shell` from the page's `hideHeader` / `hideFooter` with `getPageShell`
+([website-shell.ts](../libs/utils/website/src/lib/website-shell.ts)). A new
+tenant has to do the same.
+
 ## File naming
 
 - Nest: `<name>.module.ts`, `<name>.service.ts`, `<name>.resolver.ts`,
