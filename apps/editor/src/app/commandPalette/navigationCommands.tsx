@@ -524,15 +524,6 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     perform: ({ navigate }) => navigate('/mailsend'),
   },
   {
-    id: 'deliverySuggestions',
-    titleKey: 'navbar.deliverySuggestions',
-    sectionKey: 'navbar.communication',
-    icon: <MdMarkunreadMailbox />,
-    permissions: [CanGetUsers.id],
-    feature: 'paper-letter-flow',
-    perform: ({ navigate }) => navigate('/deliverychannel'),
-  },
-  {
     id: 'subscriptionSettings',
     titleKey: 'navbar.subscriptionSettings',
     sectionKey: 'navbar.communication',
@@ -543,6 +534,15 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
       CanUpdateSystemMails.id,
     ],
     perform: ({ navigate }) => navigate('/communicationflows/edit/default'),
+  },
+  {
+    id: 'deliverySuggestions',
+    titleKey: 'navbar.deliverySuggestions',
+    sectionKey: 'navbar.communication',
+    icon: <MdMarkunreadMailbox />,
+    permissions: [CanGetUsers.id],
+    feature: 'paper-letter-flow',
+    perform: ({ navigate }) => navigate('/deliverychannel'),
   },
   {
     id: 'mailTemplates',

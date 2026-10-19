@@ -137,6 +137,14 @@ describe('editor command registry', () => {
     );
   });
 
+  it('lists the delivery channel right after the automated messages it delivers', () => {
+    const ids = allCommands.map(({ id }) => id);
+
+    expect(ids.indexOf('deliverySuggestions')).toBe(
+      ids.indexOf('subscriptionSettings') + 1
+    );
+  });
+
   it('marks the three favourites, and nothing else', () => {
     expect(
       allCommands.filter(({ favourite }) => favourite).map(({ id }) => id)

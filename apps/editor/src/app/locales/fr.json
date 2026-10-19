@@ -3717,9 +3717,15 @@
         "noActiveSubscription": "Sans abonnement actif",
         "endedSubscription": "Reconquête — abonnement désactivé récemment",
         "allUsersHint": "Toutes les personnes inscrites, avec ou sans abonnement.",
-        "hasSubscriptionHint": "Personnes avec un abonnement. Les champs d’abonnement sont disponibles.",
-        "noActiveSubscriptionHint": "Personnes sans abonnement actif. Les champs d’abonnement restent vides.",
-        "endedSubscriptionHint": "Personnes dont l’abonnement a été désactivé récemment et qui n’ont pas repris d’abonnement depuis. L’abonnement désactivé est joint à l’e-mail, ses champs sont donc disponibles."
+        "hasSubscriptionHint": "Personnes avec un abonnement.",
+        "noActiveSubscriptionHint": "Personnes sans abonnement actif.",
+        "endedSubscriptionHint": "Personnes dont l’abonnement a été désactivé récemment et qui ne se sont pas réabonnées depuis.",
+        "placeholderNote": {
+          "allUsers": "Les champs d’abonnement restent vides.",
+          "hasSubscription": "Les champs d’abonnement sont disponibles.",
+          "noActiveSubscription": "Les champs d’abonnement restent vides.",
+          "endedSubscription": "L’abonnement désactivé est joint : ses champs sont disponibles."
+        }
       },
       "memberPlans": "Plans d’abonnement",
       "memberPlansAll": "Tous les plans d’abonnement",
@@ -3900,7 +3906,8 @@
         "matchAny": "une condition suffit",
         "matchAll": "toutes les conditions",
         "more": "{{count}} autres filtres"
-      }
+      },
+      "deliveryChannelHandOff": "Changer durablement le canal de distribution de ce public cible …"
     },
     "mailLog": {
       "title": "Envois terminés",
