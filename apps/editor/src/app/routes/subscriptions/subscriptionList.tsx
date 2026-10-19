@@ -55,6 +55,13 @@ const Actions = styled(ListViewActions)`
   grid-column: 3;
 `;
 
+const ActionCell = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  justify-items: center;
+`;
+
 const DeactivationInfo = styled.span`
   display: inline-flex;
   margin-left: 4px;
@@ -275,7 +282,7 @@ function SubscriptionList() {
               align: 'center',
               fixed: true,
               render: (rowData: TinySubscriptionFragment) => (
-                <>
+                <ActionCell data-testid="subscriptionActions">
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       size="small"
@@ -315,7 +322,7 @@ function SubscriptionList() {
                       </IconButton>
                     </IconButtonTooltip>
                   )}
-                </>
+                </ActionCell>
               ),
             },
           ]}
