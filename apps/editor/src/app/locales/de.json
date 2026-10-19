@@ -3687,9 +3687,15 @@
         "noActiveSubscription": "Ohne aktives Abo",
         "endedSubscription": "Rückgewinnung – Abo kürzlich deaktiviert",
         "allUsersHint": "Alle registrierten Personen, unabhängig von einem Abo.",
-        "hasSubscriptionHint": "Personen mit einem Abo. Abo-Platzhalter sind verfügbar.",
-        "noActiveSubscriptionHint": "Personen ohne aktives Abo. Abo-Platzhalter bleiben leer.",
-        "endedSubscriptionHint": "Personen, deren Abo kürzlich deaktiviert wurde und die seither kein neues Abo haben. Das deaktivierte Abo wird mitgeschickt – die Abo-Platzhalter stehen also zur Verfügung."
+        "hasSubscriptionHint": "Personen mit einem Abo.",
+        "noActiveSubscriptionHint": "Personen ohne aktives Abo.",
+        "endedSubscriptionHint": "Personen, deren Abo kürzlich deaktiviert wurde und die seither kein neues Abo haben.",
+        "placeholderNote": {
+          "allUsers": "Abo-Platzhalter bleiben leer.",
+          "hasSubscription": "Abo-Platzhalter sind verfügbar.",
+          "noActiveSubscription": "Abo-Platzhalter bleiben leer.",
+          "endedSubscription": "Das deaktivierte Abo wird mitgeschickt – die Abo-Platzhalter stehen zur Verfügung."
+        }
       },
       "memberPlans": "Abo-Pläne",
       "memberPlansAll": "Alle Abo-Pläne",
@@ -3870,7 +3876,8 @@
         "matchAny": "eine Bedingung genügt",
         "matchAll": "alle Bedingungen",
         "more": "{{count}} weitere Filter"
-      }
+      },
+      "deliveryChannelHandOff": "Zustellweg dieser Zielgruppe dauerhaft umstellen …"
     },
     "mailLog": {
       "title": "Abgeschlossene Sendungen",

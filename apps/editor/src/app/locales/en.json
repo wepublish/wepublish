@@ -3706,9 +3706,15 @@
         "noActiveSubscription": "Without active subscription",
         "endedSubscription": "Win-back — subscription deactivated recently",
         "allUsersHint": "Everyone registered, with or without a subscription.",
-        "hasSubscriptionHint": "People with a subscription. Subscription placeholders are available.",
-        "noActiveSubscriptionHint": "People without an active subscription. Subscription placeholders stay empty.",
-        "endedSubscriptionHint": "People whose subscription was deactivated recently and who have not subscribed again since. The deactivated subscription is attached to the email, so its placeholders are available."
+        "hasSubscriptionHint": "People with a subscription.",
+        "noActiveSubscriptionHint": "People without an active subscription.",
+        "endedSubscriptionHint": "People whose subscription was deactivated recently and who have not subscribed again since.",
+        "placeholderNote": {
+          "allUsers": "Subscription placeholders stay empty.",
+          "hasSubscription": "Subscription placeholders are available.",
+          "noActiveSubscription": "Subscription placeholders stay empty.",
+          "endedSubscription": "The deactivated subscription is attached, so its placeholders are available."
+        }
       },
       "memberPlans": "Subscription plans",
       "memberPlansAll": "All subscription plans",
@@ -3889,7 +3895,8 @@
         "matchAny": "one condition is enough",
         "matchAll": "all conditions",
         "more": "{{count}} more filters"
-      }
+      },
+      "deliveryChannelHandOff": "Switch this audience’s delivery channel for good …"
     },
     "mailLog": {
       "title": "Completed mailings",

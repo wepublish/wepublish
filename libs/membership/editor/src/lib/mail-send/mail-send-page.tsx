@@ -22,6 +22,7 @@ import {
   ListViewContainer,
   ListViewHeader,
   PageTitle,
+  useAuthorisation,
 } from '@wepublish/ui/editor';
 import {
   Alert,
@@ -37,6 +38,7 @@ import {
   DialogTitle,
   FormControlLabel,
   FormLabel,
+  Link as MuiLink,
   MenuItem,
   Radio,
   RadioGroup,
@@ -62,7 +64,7 @@ import {
 } from './mail-job-common';
 import { MailPreview } from '../mail-template/mail-preview';
 import { LetterPreview } from '../mail-template/letter-preview';
-import { DeliveryModeAudienceAction } from '../delivery-mode/delivery-mode-audience-action';
+import { usePaperLetterFlow } from '../delivery-mode/use-paper-letter-flow';
 import { AudienceFilter } from './audience/audience-filter';
 import { useAudienceState } from './audience/audience-state';
 import {
@@ -148,6 +150,12 @@ function MailSendPage() {
     audience,
   } = useAudienceState();
   const emailSegments = audienceState.emailSegments;
+
+  // The lasting switch of this audience lives in the delivery channel area;
+  // the send page only points there, for those who may switch at all.
+  const paperLetterFlow = usePaperLetterFlow();
+  const canManageDelivery = useAuthorisation('CAN_MANAGE_USER-DELIVERY-MODE');
+  const canHandOverToDelivery = paperLetterFlow && !!canManageDelivery;
 
   const [channel, setChannel] = useState<MailChannel>(MailChannel.Mail);
   const [print, setPrint] = useState<PrintSettings>(DEFAULT_PRINT);
@@ -392,6 +400,15 @@ function MailSendPage() {
                     state={audienceState}
                     onChange={updateAudience}
                   >
+                    {/* What the picked base means for the template's
+                        placeholders is the send page's business, not the
+                        filter's: the same filter also switches channels. */}
+                    <Typography
+                      variant="caption"
+                      sx={{ display: 'block', color: 'text.secondary' }}
+                    >
+                      {t(`mailSend.base.placeholderNote.${audienceState.base}`)}
+                    </Typography>
                     <MissingPlaceholdersWarning missing={missing} />
                   </AudienceFilter>
                 </CardContent>
@@ -444,9 +461,19 @@ function MailSendPage() {
                 action: (
                   <Stack
                     direction="row"
-                    spacing={1}
+                    spacing={2}
+                    sx={{ alignItems: 'center' }}
                   >
-                    <DeliveryModeAudienceAction audience={audience} />
+                    {canHandOverToDelivery && (
+                      <MuiLink
+                        component={Link}
+                        to="/deliverychannel/assign"
+                        state={{ audience: audienceState }}
+                        variant="body2"
+                      >
+                        {t('mailSend.deliveryChannelHandOff')}
+                      </MuiLink>
+                    )}
                     <Button
                       variant="contained"
                       disabled={!canSend}
@@ -511,17 +538,17 @@ function MailSendPage() {
         </DialogContent>
         <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setConfirmOpen(false)}
+          >
+            {t('mailSend.cancel')}
+          </Button>
+          <Button
             variant="contained"
             loading={creating}
             onClick={onConfirm}
           >
             {t('mailSend.confirm')}
-          </Button>
-          <Button
-            variant="text"
-            onClick={() => setConfirmOpen(false)}
-          >
-            {t('mailSend.cancel')}
           </Button>
         </DialogActions>
       </Dialog>

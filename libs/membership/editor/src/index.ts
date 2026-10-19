@@ -14,7 +14,6 @@ export * from './lib/mail-send/user-mail-log';
 export * from './lib/delivery-mode/use-paper-letter-flow';
 export * from './lib/delivery-mode/user-delivery-mode-panel';
 export * from './lib/delivery-mode/delivery-channel-page';
-export * from './lib/delivery-mode/delivery-mode-audience-action';
 export * from './lib/memberplan/memberplan-edit';
 export * from './lib/system-mail/system-mail-section';
 export * from './lib/subscription-flow/subscription-flow-list';

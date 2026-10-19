@@ -1113,17 +1113,6 @@ export function Base({ children }: BaseProps) {
                     </SidebarNavItem>
                   </PermissionControl>
 
-                  <FeatureControl feature="paper-letter-flow">
-                    <PermissionControl qualifyingPermissions={[CanGetUsers.id]}>
-                      <SidebarNavItem
-                        href="/deliverychannel"
-                        icon={<MdMarkunreadMailbox />}
-                      >
-                        {t('navbar.deliverySuggestions')}
-                      </SidebarNavItem>
-                    </PermissionControl>
-                  </FeatureControl>
-
                   <PermissionControl
                     qualifyingPermissions={[
                       CanGetSubscriptionFlows.id,
@@ -1138,6 +1127,18 @@ export function Base({ children }: BaseProps) {
                       {t('navbar.subscriptionSettings')}
                     </SidebarNavItem>
                   </PermissionControl>
+
+                  {/* Right after the messages whose way it decides. */}
+                  <FeatureControl feature="paper-letter-flow">
+                    <PermissionControl qualifyingPermissions={[CanGetUsers.id]}>
+                      <SidebarNavItem
+                        href="/deliverychannel"
+                        icon={<MdMarkunreadMailbox />}
+                      >
+                        {t('navbar.deliverySuggestions')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
 
                   <PermissionControl
                     qualifyingPermissions={[

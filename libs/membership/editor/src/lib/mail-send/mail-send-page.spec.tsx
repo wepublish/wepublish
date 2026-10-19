@@ -6,7 +6,7 @@ import {
   screen,
   within,
 } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import { MailSendPage } from './mail-send-page';
 
@@ -64,8 +64,8 @@ vi.mock('../mail-template/use-letter-channel', () => ({
   useLetterChannel: () => ({ paperLetters: true, letterAvailable: true }),
 }));
 
-vi.mock('../delivery-mode/delivery-mode-audience-action', () => ({
-  DeliveryModeAudienceAction: () => <button>deliveryMode.audience.open</button>,
+vi.mock('../delivery-mode/use-paper-letter-flow', () => ({
+  usePaperLetterFlow: () => true,
 }));
 
 vi.mock('./email-quality-refresh-button', () => ({
@@ -134,11 +134,27 @@ const lastPreviewAudience = () =>
     .filter(([name]) => name === 'MailSendRecipientPreview')
     .at(-1)?.[1].variables;
 
+/** Stands in for the wizard: shows which audience the send page handed over. */
+function AssignProbe() {
+  const { state } = useLocation();
+
+  return <div>handed-over:{state?.audience?.base}</div>;
+}
+
 const renderPage = () =>
   render(
     <ThemeProvider theme={createTheme({ cssVariables: true })}>
       <MemoryRouter>
-        <MailSendPage />
+        <Routes>
+          <Route
+            path="/"
+            element={<MailSendPage />}
+          />
+          <Route
+            path="/deliverychannel/assign"
+            element={<AssignProbe />}
+          />
+        </Routes>
       </MemoryRouter>
     </ThemeProvider>
   );
@@ -272,19 +288,53 @@ describe('MailSendPage (characterisation)', () => {
     );
   });
 
-  it('offers the delivery switch next to the send button on the last step', () => {
+  it('hands the audience over to the delivery channel wizard instead of switching here', () => {
+    renderPage();
+    goToAudience();
+    pickBase('hasSubscription');
+    fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
+
+    expect(
+      screen.queryByRole('button', { name: 'deliveryMode.audience.open' })
+    ).toBeNull();
+    const handOff = screen.getByRole('link', {
+      name: 'mailSend.deliveryChannelHandOff',
+    });
+    expect(handOff.getAttribute('href')).toBe('/deliverychannel/assign');
+
+    fireEvent.click(handOff);
+
+    expect(screen.getByText('handed-over:hasSubscription')).toBeTruthy();
+  });
+
+  it('says which placeholders the chosen audience can fill, below the picker', () => {
+    renderPage();
+    goToAudience();
+
+    expect(
+      screen.getByText('mailSend.base.placeholderNote.allUsers')
+    ).toBeTruthy();
+    pickBase('endedSubscription');
+    expect(
+      screen.getByText('mailSend.base.placeholderNote.endedSubscription')
+    ).toBeTruthy();
+  });
+
+  it('sends from the last step after asking, cancel on the left', () => {
     renderPage();
     goToAudience();
     fireEvent.click(screen.getByRole('button', { name: /mailSend\.next/ }));
 
-    expect(
-      screen.getByRole('button', { name: 'deliveryMode.audience.open' })
-    ).toBeTruthy();
     const send = screen.getByRole('button', { name: /mailSend\.send$/ });
     expect(send.hasAttribute('disabled')).toBe(false);
 
     fireEvent.click(send);
     const dialog = screen.getByRole('dialog');
+    expect(
+      within(dialog)
+        .getAllByRole('button')
+        .map(button => button.textContent)
+    ).toEqual(['mailSend.cancel', 'mailSend.confirm']);
     fireEvent.click(
       within(dialog).getByRole('button', { name: 'mailSend.confirm' })
     );
