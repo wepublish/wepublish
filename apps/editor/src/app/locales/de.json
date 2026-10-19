@@ -1679,6 +1679,21 @@
         "lastChange": "Letzte Änderung",
         "noDecision": "Ohne eigene Entscheidung",
         "empty": "Niemand mit diesem Zustellweg."
+      },
+      "suggestions": {
+        "cardTitle": "{{move}} · {{count}} Vorschläge",
+        "empty": "Keine offenen Vorschläge für {{channel}}. Sie werden jede Nacht neu berechnet.",
+        "keep": "Beibehalten",
+        "keepTitle": "Zustellweg beibehalten?",
+        "keepText": "{{name}} bleibt bei {{channel}}. Das gilt als Entscheidung von Hand: die nächtliche Berechnung schlägt diese Person nicht mehr vor, in keine Richtung.",
+        "keepYes": "Ja, beibehalten",
+        "readOnly": "Vorschläge übernehmen oder beibehalten kann nur, wer Zustellwege verwalten darf.",
+        "emailStatus": {
+          "dead": "Nicht erreichbar seit {{date}}",
+          "active": "Aktiv seit {{date}}",
+          "unresponsive": "Reagiert nicht seit {{date}}",
+          "unknown": "Unbekannt seit {{date}}"
+        }
       }
     },
     "navbar": {

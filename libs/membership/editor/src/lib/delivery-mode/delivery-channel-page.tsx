@@ -14,7 +14,7 @@ import { Link, useParams } from 'react-router-dom';
 import { DeliveryChannelOverviewView } from './delivery-channel-overview-view';
 import { DeliveryModeAudienceSection } from './delivery-mode-audience-section';
 import { DeliveryModeBulkChanges } from './delivery-mode-bulk-changes';
-import { DeliverySuggestionsPage } from './delivery-suggestions-page';
+import { DeliverySuggestionsView } from './delivery-suggestions-view';
 import { usePaperLetterFlow } from './use-paper-letter-flow';
 
 type View = { key: string; label: string; element: ReactNode };
@@ -43,7 +43,7 @@ export function DeliveryChannelPage() {
     {
       key: 'suggestions',
       label: t('deliveryChannel.tabs.suggestions', { count: open }),
-      element: <DeliverySuggestionsPage />,
+      element: <DeliverySuggestionsView />,
     },
     ...(flow && canManage ?
       [

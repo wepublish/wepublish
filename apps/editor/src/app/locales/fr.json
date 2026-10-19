@@ -1679,6 +1679,21 @@
         "lastChange": "Dernier changement",
         "noDecision": "Sans décision propre",
         "empty": "Personne sur ce canal."
+      },
+      "suggestions": {
+        "cardTitle": "{{move}} · {{count}} suggestions",
+        "empty": "Aucune suggestion ouverte pour {{channel}}. Elles sont recalculées chaque nuit.",
+        "keep": "Conserver",
+        "keepTitle": "Conserver le canal de distribution ?",
+        "keepText": "{{name}} reste sur {{channel}}. Cela vaut comme décision manuelle : le calcul nocturne ne proposera plus cette personne, dans aucune direction.",
+        "keepYes": "Oui, conserver",
+        "readOnly": "Seules les personnes autorisées à gérer les canaux de distribution peuvent appliquer ou conserver les suggestions.",
+        "emailStatus": {
+          "dead": "Injoignable depuis le {{date}}",
+          "active": "Active depuis le {{date}}",
+          "unresponsive": "Sans réaction depuis le {{date}}",
+          "unknown": "Inconnu depuis le {{date}}"
+        }
       }
     },
     "navbar": {

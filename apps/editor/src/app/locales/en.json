@@ -1680,6 +1680,21 @@
         "lastChange": "Last change",
         "noDecision": "No decision of their own",
         "empty": "Nobody on this channel."
+      },
+      "suggestions": {
+        "cardTitle": "{{move}} · {{count}} suggestions",
+        "empty": "No open suggestions for {{channel}}. They are recomputed every night.",
+        "keep": "Keep",
+        "keepTitle": "Keep the delivery channel?",
+        "keepText": "{{name}} stays on {{channel}}. This counts as a decision by hand: the nightly run never suggests this person again, in either direction.",
+        "keepYes": "Yes, keep",
+        "readOnly": "Only people who may manage delivery channels can apply or keep suggestions.",
+        "emailStatus": {
+          "dead": "Unreachable since {{date}}",
+          "active": "Active since {{date}}",
+          "unresponsive": "Unresponsive since {{date}}",
+          "unknown": "Unknown since {{date}}"
+        }
       }
     },
     "navbar": {
