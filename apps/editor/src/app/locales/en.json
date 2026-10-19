@@ -1608,7 +1608,7 @@
       "switchToLetter": "Switch to letter",
       "switchToMail": "Switch to email",
       "suggestionsTitle": "Delivery channel for automated messages",
-      "suggestionsIntro": "The delivery channel decides whether a user gets their automated messages by email or by letter. It is switched by hand, based on a suggestion, or through user group filters. Suggestions are computed daily from automatic feedback on email deliverability, but only take effect after manual confirmation.",
+      "suggestionsIntro": "The delivery channel decides whether a user gets their automated messages by email or by letter. Switching happens by hand, based on a suggestion, or through user group filters. Suggestions are computed daily from automatic feedback on email deliverability, but only take effect after manual confirmation.",
       "kind": {
         "toLetter": "Switch to letter ({{count}})",
         "toMail": "Switch to email ({{count}})"

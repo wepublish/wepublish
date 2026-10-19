@@ -1607,7 +1607,7 @@
       "switchToLetter": "Auf Brief umstellen",
       "switchToMail": "Auf E-Mail umstellen",
       "suggestionsTitle": "Zustellkanal für automatische Mitteilungen",
-      "suggestionsIntro": "Der Zustellkanal legt fest, ob ein User seine automatischen Mitteilungen per E-Mail oder per Brief bekommt. Er wird von Hand, vorschlag-basiert oder über Benutzergruppen-Filter umgestellt. Vorschläge werden täglich auf Basis von automatischen Rückmeldungen zur E-Mail-Zustellbarkeit berechnet, kommen jedoch erst nach der manuellen Bestätigung zur Anwendung.",
+      "suggestionsIntro": "Der Zustellkanal legt fest, ob ein User seine automatischen Mitteilungen per E-Mail oder per Brief bekommt. Die Umstellung erfolgt von Hand, vorschlag-basiert oder über Benutzergruppen-Filter. Vorschläge werden täglich auf Basis von automatischen Rückmeldungen zur E-Mail-Zustellbarkeit berechnet, kommen jedoch erst nach der manuellen Bestätigung zur Anwendung.",
       "kind": {
         "toLetter": "Auf Brief umstellen ({{count}})",
         "toMail": "Auf E-Mail umstellen ({{count}})"
