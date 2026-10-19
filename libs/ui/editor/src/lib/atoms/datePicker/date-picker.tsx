@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import {
   createContext,
   forwardRef,
@@ -11,6 +11,7 @@ import {
   useState,
 } from 'react';
 import ReactDatePicker from 'react-datepicker';
+import { useTranslation } from 'react-i18next';
 import { MdClear, MdEvent } from 'react-icons/md';
 
 import { MaterialCalendarStyles } from './material-calendar';
@@ -29,6 +30,37 @@ const FullWidthWrapper = styled.div`
 const CloseCalendarContext = createContext<() => void>(() => undefined);
 
 export const useCloseCalendar = () => useContext(CloseCalendarContext);
+
+export const DatePickerFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing(1)};
+  padding-top: ${({ theme }) => theme.spacing(1)};
+  border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
+`;
+
+export const DatePickerShortcuts = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+`;
+
+export function DatePickerDone() {
+  const { t } = useTranslation();
+  const close = useCloseCalendar();
+
+  return (
+    <Button
+      size="small"
+      variant="contained"
+      onMouseDown={event => event.preventDefault()}
+      onClick={close}
+    >
+      {t('dateTimePicker.done')}
+    </Button>
+  );
+}
 
 export const DATE_FORMAT = 'dd.MM.yyyy';
 export const DATE_TIME_FORMAT = 'dd.MM.yyyy HH:mm';

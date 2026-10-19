@@ -3912,6 +3912,59 @@
       "socialMediaDescriptionFallback": "Nutzt sonst die SEO-Beschreibung",
       "socialMediaImageFallback": "Nutzt sonst das Bild des Artikels.",
       "socialMediaTitleFallback": "Nutzt sonst den SEO-Titel"
+    },
+    "commandPalette": {
+      "title": "Befehlspalette",
+      "placeholder": "Wohin möchtest du?",
+      "empty": "Keine Treffer für",
+      "groups": {
+        "favourite": "Favoriten",
+        "navigate": "Gehe zu",
+        "create": "Erstellen",
+        "account": "Konto"
+      },
+      "hints": {
+        "move": "zum Navigieren",
+        "select": "zum Öffnen",
+        "close": "zum Schliessen"
+      },
+      "pages": {
+        "peerProfile": "Eigenes Peer-Profil"
+      },
+      "create": {
+        "article": "Artikel erstellen",
+        "articleTag": "Artikel-Tag erstellen",
+        "paywall": "Paywall erstellen",
+        "page": "Seite erstellen",
+        "pageTag": "Seiten-Tag erstellen",
+        "crowdfunding": "Crowdfunding erstellen",
+        "blockTemplate": "Block-Vorlage erstellen",
+        "commentTag": "Kommentar-Tag erstellen",
+        "event": "Event erstellen",
+        "eventTag": "Event-Tag erstellen",
+        "image": "Bild hochladen",
+        "document": "Dokument hochladen",
+        "navigation": "Navigation erstellen",
+        "banner": "Banner erstellen",
+        "author": "Autor:in erstellen",
+        "authorTag": "Autor:innen-Tag erstellen",
+        "user": "Benutzer:in erstellen",
+        "subscription": "Abo erstellen",
+        "consent": "Einwilligung erstellen",
+        "userConsent": "Benutzer-Einwilligung erstellen",
+        "mailTemplate": "E-Mail-Vorlage erstellen",
+        "memberPlan": "Abo-Plan erstellen",
+        "paymentMethod": "Zahlungsmethode erstellen",
+        "discountCode": "Rabattcode erstellen",
+        "goodie": "Goodie erstellen",
+        "peer": "Peer erstellen",
+        "userRole": "Benutzerrolle erstellen",
+        "token": "Token generieren"
+      },
+      "trigger": "Suchen oder springen…",
+      "keys": {
+        "escape": "esc"
+      }
     }
   }
 }
