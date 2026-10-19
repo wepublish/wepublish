@@ -49,6 +49,7 @@ import { useContext, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { Base } from './base';
+import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalette';
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
 import { LoginImpersonate } from './loginImpersonate';
@@ -103,6 +104,8 @@ import { SubscriptionList } from './routes/subscriptions/subscriptionList';
 import { TagCreateView } from './routes/tags/tagCreateView';
 import { TagEditView } from './routes/tags/tagEditView';
 import { TagList } from './routes/tags/tagList';
+import { ApiTokenGenerateRoute } from './routes/apiTokens/apiTokenGenerateRoute';
+import { ApiTokenList } from './routes/apiTokens/apiTokenList';
 import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
@@ -234,6 +237,8 @@ export function App() {
       <SnackbarHost />
       <BrowserRouter>
         <RouteErrorBoundary>
+          <EditorCommandPaletteSurface />
+
           <Routes>
             <Route
               path="login"
@@ -1138,6 +1143,19 @@ export function App() {
               }
             />
             {/* Tokens Routes */}
+            <Route
+              path="api-tokens"
+              element={
+                <Base>
+                  <ApiTokenList />
+                </Base>
+              }
+            >
+              <Route
+                path="generate"
+                element={<ApiTokenGenerateRoute />}
+              />
+            </Route>
             <Route
               path="tokens"
               element={

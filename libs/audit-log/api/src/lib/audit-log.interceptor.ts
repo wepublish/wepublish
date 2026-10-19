@@ -31,6 +31,17 @@ type Actor = Pick<
 >;
 
 export const describeActor = (session: AuthSession | undefined): Actor => {
+  if (session?.type === AuthSessionType.ApiToken) {
+    return {
+      actorType: AuditLogActorType.token,
+      userId: null,
+      userEmail: null,
+      tokenName: session.name,
+      sessionId: session.id,
+      impersonatedBy: null,
+    };
+  }
+
   if (session?.type === AuthSessionType.Token) {
     return {
       actorType: AuditLogActorType.token,

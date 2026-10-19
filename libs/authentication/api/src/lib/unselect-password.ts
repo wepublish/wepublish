@@ -28,6 +28,7 @@ export const unselectPassword: Record<
     | 'deliverySuggestion'
     | 'deliveryPreferenceChanges'
     | 'deliveryModeBulkChanges'
+    | 'apiTokens'
   >,
   boolean
 > = {

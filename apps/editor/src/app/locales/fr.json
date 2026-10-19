@@ -1698,6 +1698,7 @@
       "subscriptions": "Abonnements",
       "subscriptionSettings": "E-mails automatiques",
       "tokens": "Tokens",
+      "apiTokens": "Clés API",
       "userConsents": "Consentements des utilisateur·trice·s",
       "userRoles": "Rôles des utilisateur·trice·s",
       "users": "Utilisateur·trice·s",
@@ -4172,6 +4173,113 @@
       "socialMediaDescriptionFallback": "Utilise sinon la description SEO",
       "socialMediaImageFallback": "Utilise sinon l'image de l'article.",
       "socialMediaTitleFallback": "Utilise sinon le titre SEO"
+    },
+    "commandPalette": {
+      "title": "Palette de commandes",
+      "placeholder": "Où voulez-vous aller ?",
+      "empty": "Aucun résultat pour",
+      "groups": {
+        "favourite": "Favoris",
+        "navigate": "Aller à",
+        "create": "Créer",
+        "account": "Compte"
+      },
+      "hints": {
+        "move": "pour naviguer",
+        "select": "pour ouvrir",
+        "close": "pour fermer"
+      },
+      "pages": {
+        "peerProfile": "Profil de peering"
+      },
+      "create": {
+        "article": "Créer un article",
+        "articleTag": "Créer un tag d'article",
+        "paywall": "Créer un paywall",
+        "page": "Créer une page",
+        "pageTag": "Créer un tag de page",
+        "crowdfunding": "Créer un crowdfunding",
+        "blockTemplate": "Créer un modèle de bloc",
+        "commentTag": "Créer un tag de commentaire",
+        "event": "Créer un événement",
+        "eventTag": "Créer un tag d'événement",
+        "image": "Téléverser une image",
+        "document": "Téléverser un document",
+        "navigation": "Créer une navigation",
+        "banner": "Créer une bannière",
+        "author": "Créer un auteur",
+        "authorTag": "Créer un tag d'auteur",
+        "user": "Créer un utilisateur",
+        "subscription": "Créer un abonnement",
+        "consent": "Créer un consentement",
+        "userConsent": "Créer un consentement utilisateur",
+        "mailTemplate": "Créer un modèle d'e-mail",
+        "letterLayout": "Créer un papier à lettres",
+        "memberPlan": "Créer un plan d'abonnement",
+        "paymentMethod": "Créer un moyen de paiement",
+        "discountCode": "Créer un code de réduction",
+        "goodie": "Créer un goodie",
+        "peer": "Créer un peer",
+        "userRole": "Créer un rôle utilisateur",
+        "token": "Générer un token"
+      },
+      "trigger": "Rechercher ou aller à…",
+      "keys": {
+        "escape": "échap"
+      }
+    },
+    "apiTokenList": {
+      "overview": {
+        "apiTokens": "Clés API",
+        "apiTokensInfo": "Une clé API permet à un script ou à un autre système d'utiliser l'API sans se connecter en tant que personne. Une clé ne porte que les droits que vous lui donnez.",
+        "generateToken": "Créer une clé API",
+        "name": "Nom",
+        "prefix": "Clé",
+        "scopes": "Droits",
+        "scopeCount_one": "{{count}} droit",
+        "scopeCount_other": "{{count}} droits",
+        "lastUsed": "Dernière utilisation",
+        "never": "Jamais utilisée",
+        "status": "Statut",
+        "active": "Active",
+        "revoked": "Révoquée",
+        "revoke": "Révoquer",
+        "lastUsedDate": "{{lastUsedDate, ccc PP p}}",
+        "expires": "Expire le",
+        "expired": "Expirée",
+        "expiresDate": "{{expiresDate, ccc PP p}}",
+        "owner": "Propriétaire",
+        "ownerUnknown": "Personne supprimée",
+        "filterByOwner": "Filtrer par propriétaire",
+        "anyStatus": "Tout statut"
+      },
+      "panels": {
+        "generateToken": "Créer une clé API",
+        "generate": "Créer",
+        "close": "Fermer",
+        "name": "Nom",
+        "scopes": "Droits",
+        "scopesHelp": "Vous ne pouvez accorder que les droits que vous possédez vous-même.",
+        "creationSuccess": "Votre clé API a été créée.",
+        "copy": "Copier la clé",
+        "copied": "Clé copiée",
+        "tokenWarning": "Copiez cette clé maintenant. Elle n'est affichée qu'une fois et ne peut pas être récupérée — si vous la perdez, créez-en une nouvelle.",
+        "revokeToken": "Révoquer la clé API",
+        "revokeTokenText": "Révoquer « {{name}} » ? Tout ce qui utilise cette clé cessera immédiatement de fonctionner.",
+        "cancel": "Annuler",
+        "confirm": "Révoquer",
+        "noScopes": "Choisissez au moins une autorisation.",
+        "expiresAt": "Expire le",
+        "expiresAtHelp": "Trois ans au maximum à partir d’aujourd’hui.",
+        "expiresInThePast": "Cette date est déjà passée.",
+        "in30Days": "30 jours",
+        "in90Days": "90 jours",
+        "inAYear": "Un an",
+        "in3Years": "3 ans",
+        "expiresRequired": "Choisissez une date. Une clé doit expirer.",
+        "expiresTooLate": "Une clé ne peut pas durer plus de trois ans.",
+        "longLivedWarning": "Une clé valable plus d’un an n’est pas recommandée. Plus elle existe longtemps, plus une clé divulguée reste utilisable."
+      }
     }
   }
 }

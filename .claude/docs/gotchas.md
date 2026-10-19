@@ -60,8 +60,8 @@ See [testing.md](testing.md).
 > imported by a relative path.
 
 `vitest.shared.ts` in turn re-reads `tsconfig.base.json` and rebuilds the
-`@wepublish/*` aliases itself, so *"imports resolve to their source files instead
-of built output"*.
+`@wepublish/*` aliases itself, so _"imports resolve to their source files instead
+of built output"_.
 
 **Load-bearing.** Removing the exemption makes every `vitest.config.ts` fail
 lint; "fixing" the relative import to an alias breaks resolution, because the
@@ -90,8 +90,8 @@ cleanup task with its own PR — not something to flip while doing unrelated wor
 
 [eslint.config.mjs](../../eslint.config.mjs) errors on:
 
-- `styled` from `@mui/material` → *"Please import `styled` from `@emotion/styled`
-  instead."* Mixing the two produces components that ignore the Emotion theme.
+- `styled` from `@mui/material` → _"Please import `styled` from `@emotion/styled`
+  instead."_ Mixing the two produces components that ignore the Emotion theme.
 - `SensitiveDataUser` from `@wepublish/user/api` → import it **only** when the
   sensitive fields are genuinely required; otherwise use `User`.
 
@@ -193,8 +193,8 @@ under the prefix; a new command needs a look at the ACL first.
 ### ⚠️ `KvTtlCacheModule` builds `CACHE_MANAGER` itself; only listed namespaces leave the process
 
 Not `CacheModule.register`: `@nestjs/cache-manager` checks `store instanceof
-Keyv`, which fails under Vitest (ESM vs CJS `keyv`) with *"Cannot read
-properties of undefined (reading 'includes')"*. Only `SHARED_NAMESPACES` go to
+Keyv`, which fails under Vitest (ESM vs CJS `keyv`) with _"Cannot read
+properties of undefined (reading 'includes')"_. Only `SHARED_NAMESPACES` go to
 Dragonfly; integration settings (`settings:*`) must never be added (startup
 throws). Values are JSON even in memory (master kept live objects):
 `kv-ttl-cache-serializer.ts` keeps `Date`s and Prisma `Decimal`s
@@ -237,7 +237,7 @@ loads `.env` too (`ConfigModule.forRoot()`), so to run it without Dragonfly set
 ### ⚠️ BullMQ on our Dragonfly needs three things
 
 Verified with bullmq 6.3.11 on v2.0.0 (2026-10-01): Dragonfly must run with
-`--lock_on_hashtags` (else *"script tried accessing undeclared key"*), the
+`--lock_on_hashtags` (else _"script tried accessing undeclared key"_), the
 queue `prefix` must be `{<REDIS_KEY_PREFIX>}`, and a node-redis `connection`
 must drop `name` in `duplicate()` — the worker's `CLIENT SETNAME` is denied by
 `-client`, and Dragonfly cannot allow single subcommands. The flag is not in
@@ -285,13 +285,13 @@ that cookie there. The JWT handshake then succeeds, but every following request
 goes out without a session and the banner says "Du siehst die veröffentlichte
 Version" (prod, 2026-10-06; reproduced in Chromium, Firefox and WebKit: cookie
 not stored, 0 authenticated API requests). Locally it works, because
-`localhost:3000` and `localhost:4204` are the *same site* — ports do not count.
+`localhost:3000` and `localhost:4204` are the _same site_ — ports do not count.
 Reproduce with a host page on `127.0.0.1` around `localhost:4204`.
 
 A framed page therefore also writes the token to `sessionStorage`, which
 `authLink` falls back to. Making the cookie `SameSite=None` instead would loosen
 it for every page and is partitioned or blocked in some browsers. Writing
-`sessionStorage` for *top-level* pages too breaks logout: it only clears the
+`sessionStorage` for _top-level_ pages too breaks logout: it only clears the
 browser side, so a per-tab copy would keep other tabs logged in (and in preview
 mode) after logging out in one.
 
@@ -375,6 +375,7 @@ than ~100 reads do not.
 Pinned by `fast-string-prototype.spec.ts` and `shared-store.fast-strings.spec.ts`
 (fresh `node --allow-natives-syntax`); a new place that loads `@keyv/redis` or
 `@redis/client` needs the same call.
+
 ### ⚠️ The Sentry packages must move as one, and must stay on 11+
 
 [package.json](../../package.json) keeps `@sentry/nestjs`, `@sentry/nextjs`,
@@ -400,9 +401,9 @@ v11 renames: `beforeSendSpan` gets a streamed span with `attributes`, not
 — a subpath export node10 `moduleResolution` cannot see, so every app needs
 `moduleResolution: bundler`.
 
-**The API boots with a warning, and it is accurate — leave it:** *"Failed to
+**The API boots with a warning, and it is accurate — leave it:** _"Failed to
 register diagnostics-channel injection hooks, so channel-based integrations
-will not record spans."* v11 instruments `express`, `graphql`, `@nestjs/*`,
+will not record spans."_ v11 instruments `express`, `graphql`, `@nestjs/*`,
 `pg` and Prisma via diagnostics channels injected by runtime module hooks,
 which the `@yao-pkg/pkg` binary cannot register. Errors still report; span
 detail is lost. Two fixes failed on 2026-10-05 — do not redo them:
@@ -445,8 +446,8 @@ bundle for `require("<pkg>")`.
 peer with `import.meta.resolve('@nestjs/axios')` and loads it with
 `await import(...)`. Neither works inside a snapshot, and no amount of
 bundling changes that — adding `HttpModule` to the health module was tried on
-2026-10-05 and the binary still aborted on boot with *The "@nestjs/axios"
-package is missing*. `@nestjs/axios` was installed and working the whole time;
+2026-10-05 and the binary still aborted on boot with _The "@nestjs/axios"
+package is missing_. `@nestjs/axios` was installed and working the whole time;
 `HttpService` is used normally via DI in provider-registry, user, image and
 event-import. The fix is to not instantiate the indicator at all:
 [http-ping.health.ts](../../libs/health/api/src/lib/http-ping.health.ts)
@@ -458,8 +459,8 @@ of the two it does** — `grep` it for `import.meta.resolve` and `await import(`
 as well as `loadPackage`. Only the first kind is bundleable.
 
 Three have bitten so far: `@nestjs/platform-express`, `@nestjs/axios` and
-`@as-integrations/express5` (*The "@as-integrations/express5" package is
-missing*, from `ApolloDriver`). The last one also sat in **devDependencies**
+`@as-integrations/express5` (_The "@as-integrations/express5" package is
+missing_, from `ApolloDriver`). The last one also sat in **devDependencies**
 even though GraphQLModule needs it at runtime — a runtime peer belongs in
 `dependencies`, and a sweep that only reads `dependencies` will not see it.
 
@@ -568,7 +569,7 @@ provider returned `null`, unmounted the editor, and every remounted query
 re-ran under the `network-only` default.
 
 **Load-bearing:** `loading && !data` (not `loading`) in the provider's return,
-and the `if (!isPageActive) return` guard, which keeps the tab *losing* focus
+and the `if (!isPageActive) return` guard, which keeps the tab _losing_ focus
 from triggering the same round trip.
 
 Pinned by [authContext.spec.tsx](../../libs/ui/editor/src/lib/authContext.spec.tsx).
@@ -700,14 +701,14 @@ Pinned by `feature.guard.spec.ts` and `featureContext.spec.tsx`.
 
 ### ⚠️ A backtick inside a CSS comment ends the Emotion template literal
 
-A `/* … */` comment inside a styled template is still *inside a JavaScript
-template literal*, so a backtick in it closes the string. Writing
+A `/* … */` comment inside a styled template is still _inside a JavaScript
+template literal_, so a backtick in it closes the string. Writing
 
 ```
   /* The channel var rather than `alpha()`, so the tint follows the scheme. */
 ```
 
-inside `styled.span\`…\`` produced `TS1005: ',' expected` three lines later
+inside `styled.span\`…\``produced`TS1005: ',' expected` three lines later
 (`userSubscriptionsList.tsx:185`), pointing at code that was perfectly fine —
 the parse had already gone off the rails at the backtick.
 
@@ -752,7 +753,7 @@ onClick={() => {
 ```
 
 `@typescript-eslint/no-non-null-assertion` warns on these; under the compiler
-the warnings on optional *state* are worth treating as errors.
+the warnings on optional _state_ are worth treating as errors.
 
 **Load-bearing:** `RouteErrorBoundary` in `apps/editor/src/app/app.tsx` is what
 makes this class of bug visible at all — without it React unmounts the tree and
@@ -769,10 +770,12 @@ memoises the call against it:
 ```js
 // what the compiler emits for `const a = watch('alpha')`
 if ($[0] !== watch) {
-  t0 = watch("alpha");   // never re-runs: `watch` never changes
+  t0 = watch('alpha'); // never re-runs: `watch` never changes
   $[0] = watch;
   $[1] = t0;
-} else { t0 = $[1]; }
+} else {
+  t0 = $[1];
+}
 ```
 
 The field is read on the first render and never again. On screen that is a
@@ -787,7 +790,7 @@ settings, `bypasses.${index}.token` — subscribe to the parent once with
 `useWatch({ control })` or `useWatch({control, name: 'bypasses'})` and index
 into the result.
 
-This is also why components taking `watch` were quietly *skipped* by the
+This is also why components taking `watch` were quietly _skipped_ by the
 compiler before ("Compilation Skipped: Use of incompatible library"); removing
 `watch` lets it compile them, which can surface fresh `set-state-in-effect`
 errors in code that was never checked.
@@ -850,7 +853,7 @@ leaves the caller's `columns` untouched.
 there for why dense did not suit). rsuite's `<Form fluid>` spaced its controls
 for you, and the codemod turned it into `<Stack sx={{ width: '100%' }}>`,
 which does not. With no margin and no gap the fields sit flush and the second
-field's floating label lands *on the border of the first* — visible on the
+field's floating label lands _on the border of the first_ — visible on the
 crowdfunding form, the poll editor, the article metadata panel and the
 settings page.
 
@@ -875,7 +878,7 @@ get spacing that `gap` should provide.
 
 ---
 
-### ⚠️ A row tint has to be a background *image*, not a background colour
+### ⚠️ A row tint has to be a background _image_, not a background colour
 
 The list row states (`approved`, `pending-approval`, `rejected`, …) are
 7-12% alphas defined in `editorGlobalStyles.tsx`. Painted as
@@ -884,7 +887,7 @@ The list row states (`approved`, `pending-approval`, `rejected`, …) are
 — so the pinned Actions column became translucent and the rows scrolling
 underneath showed straight through it on a narrow viewport.
 
-As `background-image: linear-gradient(tint, tint)` the tint layers *over* the
+As `background-image: linear-gradient(tint, tint)` the tint layers _over_ the
 cell's own background instead of replacing it: a pinned cell keeps its opaque
 `background.paper` underneath and comes out the same colour as its neighbours.
 Anything else pinned in a tinted row needs the same treatment.
@@ -909,7 +912,7 @@ every label.
 
 `set` in `libs/ui/src/lib/hooks/use-local-storage.ts` ends with
 `window.dispatchEvent(new StorageEvent('storage'))` so other hooks sharing the
-same key stay in sync. The listener fires for *every* mounted instance, whatever
+same key stay in sync. The listener fires for _every_ mounted instance, whatever
 key it holds, and each one re-reads its own entry and calls
 `setValue(deserialize(item))` — a brand new object for an untouched value.
 
@@ -966,7 +969,7 @@ A styled component that reads `theme.palette.background.paper` therefore paints
 white in dark mode: the dashboard's "Customize dashboard" dialog had white rows
 with grey-on-white labels until its five reads were switched to `theme.vars`.
 Exceptions are deliberate: `analyticsIntegrationForm` passes
-`theme.palette.success.light` through `lighten()` — a colour *function* cannot
+`theme.palette.success.light` through `lighten()` — a colour _function_ cannot
 take a CSS variable — and pairs it with an explicit
 `[data-mui-color-scheme='dark'] &` branch.
 
@@ -974,7 +977,7 @@ take a CSS variable — and pairs it with an explicit
 colour. A grep for `theme.palette.` outside a dark-mode branch is the check.
 
 Pinned by `apps/editor/src/app/routes/dashboard/dashboardConfig.spec.tsx`,
-which reads the *emitted* rule rather than the computed value — jsdom resolves
+which reads the _emitted_ rule rather than the computed value — jsdom resolves
 `var(--mui-palette-background-paper, #fff)` to the light fallback baked into
 it, so `getComputedStyle` cannot tell the two apart.
 
@@ -1006,7 +1009,7 @@ window.
 
 ## Adding an entry
 
-Keep the house style: a future agent must be able to tell *why* the obvious
+Keep the house style: a future agent must be able to tell _why_ the obvious
 change is wrong without re-running your debugging session.
 
 ```markdown
@@ -1024,7 +1027,7 @@ refactor.>
 **Load-bearing:** <which specific lines must not be removed, and what happens
 if they are.>
 
-Pinned by `<path/to/the.spec.ts>`  ← if a test guards it. If nothing guards it,
+Pinned by `<path/to/the.spec.ts>` ← if a test guards it. If nothing guards it,
 say so explicitly: "Nothing guards this — a regression here is silent."
 ```
 
