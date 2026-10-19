@@ -30,8 +30,8 @@ vi.mock('./use-paper-letter-flow', () => ({
 vi.mock('./delivery-channel-overview-view', () => ({
   DeliveryChannelOverviewView: () => <div>overview-view</div>,
 }));
-vi.mock('./delivery-suggestions-page', () => ({
-  DeliverySuggestionsPage: () => <div>suggestions-view</div>,
+vi.mock('./delivery-suggestions-view', () => ({
+  DeliverySuggestionsView: () => <div>suggestions-view</div>,
 }));
 vi.mock('./delivery-mode-audience-section', () => ({
   DeliveryModeAudienceSection: () => <div>assign-view</div>,
@@ -128,6 +128,12 @@ describe('DeliveryChannelPage', () => {
         .getByRole('tab', { name: 'deliveryChannel.tabs.history' })
         .getAttribute('aria-selected')
     ).toBe('true');
+  });
+
+  it('shows the suggestions under their own address', () => {
+    renderAt('/deliverychannel/suggestions');
+
+    expect(screen.getByText('suggestions-view')).toBeTruthy();
   });
 
   it('falls back to the overview for an address it does not know', () => {

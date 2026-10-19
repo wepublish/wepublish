@@ -1,9 +1,11 @@
 import { renderHook } from '@testing-library/react';
-import { MailChannel } from '@wepublish/editor/api';
+import { DeliverySuggestionKind, MailChannel } from '@wepublish/editor/api';
 
 import {
   DEFAULT_DELIVERY_CHANNEL,
   deliveryChannel,
+  SUGGESTION_KINDS,
+  suggestionMove,
   useDeliveryChannels,
 } from './channels';
 
@@ -61,5 +63,25 @@ describe('delivery channels', () => {
     });
 
     expect(channelsOffered()).toEqual([MailChannel.Mail, MailChannel.Letter]);
+  });
+
+  it('reads a suggestion as a move from one channel to another', () => {
+    expect(suggestionMove(DeliverySuggestionKind.ToLetter)).toEqual({
+      kind: DeliverySuggestionKind.ToLetter,
+      from: MailChannel.Mail,
+      to: MailChannel.Letter,
+    });
+    expect(suggestionMove(DeliverySuggestionKind.ToMail)).toEqual({
+      kind: DeliverySuggestionKind.ToMail,
+      from: MailChannel.Letter,
+      to: MailChannel.Mail,
+    });
+  });
+
+  it('lists the move away from email first', () => {
+    expect(SUGGESTION_KINDS).toEqual([
+      DeliverySuggestionKind.ToLetter,
+      DeliverySuggestionKind.ToMail,
+    ]);
   });
 });

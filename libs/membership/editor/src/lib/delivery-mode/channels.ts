@@ -1,5 +1,5 @@
 import type { ChipProps } from '@mui/material';
-import { MailChannel } from '@wepublish/editor/api';
+import { DeliverySuggestionKind, MailChannel } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import type { IconType } from 'react-icons';
 import { MdMailOutline, MdMarkunreadMailbox } from 'react-icons/md';
@@ -51,6 +51,40 @@ const CHANNELS: Record<MailChannel, Omit<DeliveryChannelInfo, 'channel'>> = {
 export const deliveryChannel = (channel: MailChannel): DeliveryChannelInfo => ({
   channel,
   ...CHANNELS[channel],
+});
+
+export type SuggestionMove = {
+  kind: DeliverySuggestionKind;
+  from: MailChannel;
+  to: MailChannel;
+};
+
+/**
+ * The api names a suggestion by its direction (toLetter, toMail); the editor
+ * reads it as a move between two channels, here and nowhere else.
+ */
+const MOVES: Record<DeliverySuggestionKind, Omit<SuggestionMove, 'kind'>> = {
+  [DeliverySuggestionKind.ToLetter]: {
+    from: MailChannel.Mail,
+    to: MailChannel.Letter,
+  },
+  [DeliverySuggestionKind.ToMail]: {
+    from: MailChannel.Letter,
+    to: MailChannel.Mail,
+  },
+};
+
+/** The move away from the default first: that is where the work is. */
+export const SUGGESTION_KINDS = [
+  DeliverySuggestionKind.ToLetter,
+  DeliverySuggestionKind.ToMail,
+];
+
+export const suggestionMove = (
+  kind: DeliverySuggestionKind
+): SuggestionMove => ({
+  kind,
+  ...MOVES[kind],
 });
 
 /**
