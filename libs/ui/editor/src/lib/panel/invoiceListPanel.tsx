@@ -10,7 +10,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Tooltip,
 } from '@mui/material';
 import {
   InvoiceFragment,
@@ -25,41 +24,18 @@ import {
 } from '@wepublish/permissions';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LiaFileInvoiceSolid } from 'react-icons/lia';
-import { MdAccessTime, MdClose, MdContentCopy, MdDone } from 'react-icons/md';
+import { MdContentCopy } from 'react-icons/md';
 
-import { createCheckedPermissionComponent, SingleLineTooltip } from '../atoms';
+import {
+  createCheckedPermissionComponent,
+  InvoiceStatus,
+  InvoiceStatusIcon,
+  SingleLineTooltip,
+} from '../atoms';
 import { useActionMailQuestion } from '../hooks';
 import { DataTable } from '../listView/data-table';
 import { ListColumn } from '../listView/list-columns';
 import { enqueueSnackbar } from '../snackbar';
-
-const InvoiceIconWrapper = styled('span')`
-  position: relative;
-  display: inline-flex;
-  vertical-align: middle;
-`;
-
-const InvoiceIcon = styled(LiaFileInvoiceSolid)`
-  color: grey;
-  font-size: 26px;
-`;
-
-const StatusPill = styled('span')<{ pillColor: string }>`
-  position: absolute;
-  right: -5px;
-  top: 55%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: ${({ pillColor }) => pillColor};
-  color: white;
-  font-size: 10px;
-  box-shadow: 0 0 0 2px ${({ theme }) => theme.vars.palette.background.paper};
-`;
 
 const IdButton = styled('button')`
   display: inline-flex;
@@ -191,36 +167,24 @@ function InvoiceListPanel({
         resizable: false,
         alwaysVisible: true,
         render: invoice => {
-          const status =
+          const status: { status: InvoiceStatus; title: string } =
             invoice.paidAt ?
               {
+                status: 'paid',
                 title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
-                color: 'success.main',
-                icon: <MdDone />,
               }
             : invoice.canceledAt ?
               {
+                status: 'canceled',
                 title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
-                color: 'error.main',
-                icon: <MdClose />,
               }
-            : {
-                title: t('invoice.unpaid'),
-                color: 'warning.main',
-                icon: <MdAccessTime />,
-              };
+            : { status: 'unpaid', title: t('invoice.unpaid') };
 
           return (
-            <Tooltip
+            <InvoiceStatusIcon
+              status={status.status}
               title={status.title}
-              placement="top"
-            >
-              <InvoiceIconWrapper>
-                <InvoiceIcon />
-
-                <StatusPill pillColor={status.color}>{status.icon}</StatusPill>
-              </InvoiceIconWrapper>
-            </Tooltip>
+            />
           );
         },
       },
