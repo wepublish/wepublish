@@ -14,10 +14,6 @@
       "theMember": "ce membre"
     },
     "lastSavedAt": "Dernier enregistrement {{date, ccc PP pp}}",
-    "autosave": {
-      "label": "Enregistrement auto",
-      "description": "Enregistrer le brouillon toutes les 30 secondes pendant que vous travaillez"
-    },
     "preview": {
       "backToEditor": "Éditeur",
       "mobile": "Mobile",
@@ -147,7 +143,6 @@
         "displayOptions": "Options d’affichage",
         "dontChangeSlug": "Veuillez ne pas changer le slug une fois l’article publié.",
         "draft": "Brouillon",
-        "chooseFile": "Choisir un fichier",
         "dropImage": "Glisser l’image ici",
         "editTeaser": "Modifier le teaser",
         "enterAuthors": "Veuillez ajouter un·e auteur·trice",
@@ -235,12 +230,12 @@
         "hiddenInfo": "Les articles masqués n’apparaissent pas dans les listes automatiques d’articles du site (p.ex. derniers articles ou pages de tags), mais restent accessibles via leur lien direct.",
         "contentUrlInfo": "L’adresse web vers laquelle les lecteur·trice·s sont dirigé·e·s en cliquant sur le teaser.",
         "teaserPropertiesInfo": "Paires clé-valeur supplémentaires que votre site peut utiliser pour des affichages particuliers. Nécessaire uniquement si les personnes qui développent votre site vous l’ont demandé. Les propriétés publiques sont visibles via l’API publique.",
-        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux"
+        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
+        "chooseFile": "Choisir un fichier"
       }
     },
     "articles": {
       "overview": {
-        "slug": "Slug",
         "articles": "Articles",
         "authors": "Auteur·trice·s",
         "draft": "Brouillon",
@@ -253,7 +248,8 @@
         "states": "Statut",
         "title": "Titre",
         "untitled": "Sans titre",
-        "updated": "Modifié le"
+        "updated": "Modifié le",
+        "slug": "Slug"
       },
       "panels": {
         "cancel": "Annuler",
@@ -560,12 +556,12 @@
       "imageGallery": {
         "label": "Galerie",
         "overview": {
-          "removeImage": "Supprimer l'image",
           "caption": "Légende",
           "new": "(Nouveau)",
           "previousImage": "Image précédente",
           "nextImage": "Image suivante",
-          "addImage": "Ajouter une image"
+          "addImage": "Ajouter une image",
+          "removeImage": "Supprimer l'image"
         },
         "panels": {
           "caption": "Légende",
@@ -856,8 +852,6 @@
     },
     "confirm": "Confirmer",
     "consents": {
-      "deleteTitle": "Supprimer le consentement ?",
-      "deleteBody": "Voulez-vous supprimer définitivement «{{name}}» ? Les choix des utilisateurs disparaissent avec.",
       "create": "Créer un nouveau consentement",
       "defaultValue": "Valeur par défaut",
       "defaultValueTitle": "Valeur par défaut (cochée par défaut)",
@@ -872,7 +866,9 @@
       "rejected": "Refusé",
       "slugInfo": "Identifiant technique utilisé par votre site ou vos applications pour trouver ce consentement, p.ex. « newsletter ». Utilisez uniquement des minuscules, des chiffres et des tirets.",
       "defaultValueInfo": "Indique si le consentement est présélectionné pour les utilisateur·trice·s qui n’ont pas encore décidé, p.ex. comme case déjà cochée dans un formulaire.",
-      "checkedByDefault": "Cochée par défaut"
+      "checkedByDefault": "Cochée par défaut",
+      "deleteTitle": "Supprimer le consentement ?",
+      "deleteBody": "Voulez-vous supprimer définitivement «{{name}}» ? Les choix des utilisateurs disparaissent avec."
     },
     "create": "Créer",
     "createAndClose": "Créer & fermer",
@@ -941,14 +937,14 @@
       "networkContentInfo": "Les derniers articles d’autres médias du réseau We.Publish. Vous pouvez les reprendre dans votre éditeur (importer) et les publier sur votre site."
     },
     "dateTimePicker": {
-      "yesterday": "Hier",
-      "done": "OK",
       "hour": "{{hour}}:00",
       "nextMonday": "Lundi prochain",
       "nextSaturday": "Samedi prochain",
       "now": "Maintenant",
       "today": "Aujourd’hui",
-      "tomorrow": "Demain"
+      "tomorrow": "Demain",
+      "yesterday": "Hier",
+      "done": "OK"
     },
     "deactivated": "Désactivé",
     "delete": "Supprimer",
@@ -977,14 +973,12 @@
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
       "invalidUrlErrorMessage": "Veuillez entrer une adresse URL valide",
       "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} {{currency}}.",
-      "amountTooLowErrorMessage": "Le montant est inférieur au minimum de ce plan d'abonnement",
       "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 si le champ est laissé vide",
       "noCallToActionImageErrorMessage": "Veuillez entrer une image pour l’appel à l’action",
       "noEmailErrorMessage": "Veuillez entrer une adresse e-mail",
       "noImageErrorMessage": "Veuillez ajouter une image",
       "noMemberPlanErrorMessage": "Veuillez sélectionner un plan d’abonnement",
       "noNameErrorMessage": "Veuillez entrer un nom",
-      "noQuestionErrorMessage": "Veuillez saisir une question",
       "noPasswordErrorMessage": "Veuillez entrer un mot de passe",
       "noPaymentMethodErrorMessage": "Veuillez sélectionner une méthode de paiement",
       "noPaymentPeriodicityErrorMessage": "Veuillez sélectionner une périodicité de paiement",
@@ -996,6 +990,8 @@
       "passwordCompromisedErrorMessage": "Ce mot de passe est apparu dans une fuite de données. Veuillez choisir un autre mot de passe.",
       "required": "Ce champ est requis",
       "invalidCountry": "Veuillez sélectionner un pays valide",
+      "amountTooLowErrorMessage": "Le montant est inférieur au minimum de ce plan d'abonnement",
+      "noQuestionErrorMessage": "Veuillez saisir une question",
       "invalidForm": "Veuillez vérifier les champs signalés"
     },
     "event": {
@@ -1044,7 +1040,6 @@
     },
     "filterableList": {
       "filter": {
-        "label": "Filtres",
         "dates": "Dates",
         "description": "Filtrer par description",
         "isDraft": "Brouillon",
@@ -1061,6 +1056,7 @@
         "title": "Filtrer par titre",
         "includeHiddenArticles": "Inclure les articles masqués",
         "includeHiddenPages": "Inclure les pages masquées",
+        "label": "Filtres",
         "states": "États"
       }
     },
@@ -1147,7 +1143,6 @@
         "link": "Lien",
         "linkUrl": "Lien de destination",
         "notFound": "Image introuvable !",
-        "openOriginal": "Ouvrir l'original",
         "resizedImage": "La taille de l’image est automatiquement réduite à environ {{sizeMB}} Mo lors du téléversement.",
         "source": "Source",
         "sourceLink": "Lien vers la source originale de l’image.",
@@ -1163,7 +1158,8 @@
         "focalPoint": "Point focal",
         "focalPointInfo": "Faites glisser le point sur la partie la plus importante de l’image. Lorsque l’image est recadrée, p.ex. dans les teasers, cette zone reste visible.",
         "descriptionInfo": "Décrivez ce que l’on voit sur l’image. Le texte sert de texte alternatif pour les personnes utilisant un lecteur d’écran et pour les moteurs de recherche.",
-        "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien."
+        "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien.",
+        "openOriginal": "Ouvrir l'original"
       }
     },
     "importableEvent": {
@@ -1256,7 +1252,7 @@
       "goToLogin": "Aller à la connexion"
     },
     "mailTemplates": {
-      "availableTemplates": "Modèles d’e-mail disponibles",
+      "availableTemplates": "Modèles de message",
       "cancel": "Annuler",
       "content": "Contenu",
       "create": "Créer un modèle",
@@ -1276,6 +1272,11 @@
         "testRecipientPlaceholder": "Votre e-mail de compte",
         "preview": "Aperçu",
         "sendTest": "Envoyer un test",
+        "previewLetter": "Aperçu en lettre",
+        "letterAppendix": "Bulletin QR (PDF)",
+        "letterAppendixNone": "Aucun",
+        "letterAppendixHelp": "PDF des «Documents» imprimé après les pages de la lettre, p. ex. un bulletin QR (A4, bulletin au bord inférieur). Uniquement pour les adresses en Suisse ; en impression recto verso, une page blanche est ajoutée si nécessaire pour que le bulletin soit sur un recto.",
+        "letterPreviewTitle": "Aperçu de la lettre",
         "selectMailType": "Veuillez d’abord choisir une utilisation.",
         "selectMailTypePlaceholder": "Choisir une utilisation …",
         "testRecipientHint": "Les e-mails de test sont toujours envoyés à votre propre compte.",
@@ -1288,7 +1289,11 @@
         "sampleSubscriptionHelp": "Choisissez un abonnement existant pour remplir l’aperçu et l’e-mail de test avec ses données réelles. Sans sélection, des données d’exemple fictives sont utilisées. L’e-mail de test n’est envoyé qu’à vous.",
         "bodyModeHelp": "Visuel : modifiez le contenu comme dans un traitement de texte. HTML : modifiez directement le code source – pour utilisateur·trice·s avancé·e·s. Texte brut : la version texte pour les programmes de messagerie sans HTML ; elle est générée automatiquement.",
         "backgroundHelp": "Couleur de la surface autour du contenu de l’e-mail.",
-        "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement."
+        "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement.",
+        "letterLayout": "Papier à lettres",
+        "letterLayoutDefault": "Par défaut ({{name}})",
+        "letterLayoutNone": "Par défaut (aucun)",
+        "letterLayoutHelp": "En-tête et pied de page lorsque ce modèle est imprimé en lettre. Sans effet pour les e-mails."
       },
       "editor": {
         "undo": "Annuler",
@@ -1396,6 +1401,9 @@
         "user_lastLogin": "Dernière connexion",
         "user_createdAt": "Compte créé le",
         "jwt": "Jeton de connexion (JWT)",
+        "purl": "Lien de connexion personnel",
+        "purlCode": "Code de connexion personnel",
+        "purlQr": "Code QR de connexion personnel",
         "currentDate": "Date actuelle",
         "optional_subscription_id": "ID d’abonnement",
         "optional_subscription_monthlyAmount": "Montant mensuel",
@@ -1464,7 +1472,7 @@
         "subscription": "Autour de l’abonnement lui-même : nouvellement souscrit, confirmé ou désactivé. En plus : les données de l’abonnement comme le montant et la durée.",
         "renewal": "Renouvellement automatique — réussi ou échoué. En plus : le nom du plan et du moyen de paiement ainsi que les données de facturation.",
         "invoiceCreation": "Dès qu’une nouvelle facture a été créée. En plus : la facture et l’abonnement correspondant.",
-        "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Envoyer un e-mail ». En plus : l’abonnement et les dernières factures.",
+        "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Messages manuels ». En plus : l’abonnement et les dernières factures.",
         "customNoSubscription": "Un e-mail libre aux personnes sans abonnement, p. ex. une invitation ou une relance. Seuls les champs du destinataire sont disponibles — les champs d’abonnement restent vides."
       },
       "placeholderDescriptions": {
@@ -1513,10 +1521,12 @@
         "optional_invoices_0_id": "ID de la dernière facture (tableau, index 0).",
         "optional_invoices_0_description": "Description de la dernière facture."
       },
-      "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Envoyer un e-mail ».",
+      "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Messages manuels ».",
       "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel."
     },
     "mailTemplateSelect": {
+      "sendAsLetter": "Aussi par lettre",
+      "sendAsLetterHint": "Les personnes au canal lettre reçoivent ce message imprimé au lieu de l’e-mail.",
       "noMailSentSelectNow": "Ne pas envoyer d’e-mail"
     },
     "memberPlanEdit": {
@@ -1579,7 +1589,161 @@
       "editFlowShort": "Flux de communication",
       "paymentProviderStatusInfo": "✅ signifie que tous les moyens de paiement de ce plan sont reliés à un prestataire de paiement. ❌ signifie qu’au moins un moyen de paiement n’a pas de prestataire et que les lecteur·rice·s ne peuvent donc pas payer avec."
     },
+    "deliveryMode": {
+      "panelTitle": "Canal de distribution",
+      "channel": {
+        "mail": "E-mail",
+        "letter": "Lettre"
+      },
+      "origin": {
+        "manual": "À la main",
+        "suggestion": "Suite à une suggestion"
+      },
+      "reason": {
+        "emailQuality_dead": "Adresse e-mail injoignable",
+        "placeholderEmail": "Adresse fictive",
+        "bulk": "Par groupe d’utilisateurs",
+        "emailQuality_active": "Adresse e-mail à nouveau active",
+        "kept": "Conservé"
+      },
+      "noAddress": "Sans adresse postale complète – lettre impossible.",
+      "switchToLetter": "Passer à la lettre",
+      "switchToMail": "Passer à l’e-mail",
+      "suggestionsTitle": "Canal de distribution des messages automatiques",
+      "suggestionsIntro": "Le canal de distribution détermine si une personne reçoit ses messages automatiques par e-mail ou par lettre. Le changement se fait à la main, sur la base d’une suggestion ou via des filtres de groupe d’utilisateurs. Les suggestions sont calculées chaque jour à partir des retours automatiques sur la délivrabilité des e-mails, mais ne prennent effet qu’après confirmation manuelle.",
+      "kind": {
+        "toLetter": "Passer à la lettre ({{count}})",
+        "toMail": "Passer à l’e-mail ({{count}})"
+      },
+      "recompute": "Recalculer les suggestions",
+      "recomputed": "Recalculé : {{toLetter}} vers la lettre, {{toMail}} vers l’e-mail, {{removed}} réglées.",
+      "confirm": "Appliquer",
+      "confirmAll": "Appliquer les {{count}}",
+      "confirmAllTitle": "Appliquer toutes les suggestions",
+      "confirmAllText": {
+        "toLetter": "{{count}} personnes recevront désormais leurs messages automatiques par lettre.",
+        "toMail": "{{count}} personnes recevront à nouveau leurs messages automatiques par e-mail."
+      },
+      "confirmAllYes": "Oui, tout appliquer",
+      "confirmedAll": "{{confirmed}} appliquées, {{skipped}} ne s’appliquaient plus.",
+      "table": {
+        "user": "Personne",
+        "emailQuality": "Statut e-mail",
+        "reason": "Raison",
+        "since": "Suggéré depuis"
+      },
+      "audience": {
+        "open": "Changer le canal de distribution du public cible",
+        "title": "Changer le canal de distribution du public cible",
+        "intro": "Toutes les personnes du public cible choisi recevront désormais leurs messages automatiques ainsi :",
+        "previewLetter": "{{userCount}} personnes ; {{withoutAddressCount}} d’entre elles sans adresse postale complète restent à l’e-mail.",
+        "previewMail": "{{userCount}} personnes.",
+        "apply": "Changer",
+        "done": {
+          "letter": "{{changed}} passées à la lettre, {{skippedWithoutAddress}} sans adresse postale complète restent à l’e-mail.",
+          "mail": "{{changed}} passées à l’e-mail."
+        }
+      },
+      "bulk": {
+        "title": "Changer un public cible",
+        "intro": "Délimiter le public cible comme pour les messages manuels et changer le canal de distribution de toutes ces personnes.",
+        "people": "{{count}} personnes dans ce public",
+        "history": {
+          "title": "Changements par groupe d’utilisateurs",
+          "empty": "Aucun changement par groupe d’utilisateurs pour l’instant.",
+          "when": "Quand",
+          "who": "Par",
+          "channel": "Canal de distribution",
+          "people": "Personnes",
+          "changed": "Changées",
+          "skipped": "Ignorées",
+          "filter": "Groupe d’utilisateurs",
+          "unknownUser": "Inconnu"
+        }
+      }
+    },
+    "deliveryChannel": {
+      "tabs": {
+        "suggestions": "Changements proposés ({{count}})",
+        "assign": "Changer un groupe d’utilisateurs",
+        "history": "Historique des changements par groupe",
+        "overview": "Vue d’ensemble"
+      },
+      "overview": {
+        "people": "{{count}} personnes",
+        "showPeople": "Afficher les personnes",
+        "openSuggestions": "{{count}} ouvertes",
+        "review": "Examiner les suggestions",
+        "peopleOn": "Personnes au canal {{channel}}",
+        "search": "Rechercher un nom ou une adresse e-mail",
+        "lastChange": "Dernier changement",
+        "noDecision": "Aucun (par défaut)",
+        "empty": "Personne sur ce canal.",
+        "suggestionsHeading": "Changements proposés",
+        "activeFor": "Activé pour {{count}} types de messages automatiques",
+        "channelHeadingDefault": "Canal de distribution (par défaut)",
+        "channelHeadingAlternative": "Canal de distribution (alternatif)"
+      },
+      "suggestions": {
+        "cardTitle": "{{move}} · {{count}} suggestions",
+        "empty": "Aucune suggestion ouverte pour un passage à {{channel}}.",
+        "keep": "Conserver",
+        "keepTitle": "Conserver le canal de distribution ?",
+        "keepText": "{{name}} reste sur {{channel}}. Cela vaut comme décision manuelle : le calcul nocturne ne proposera plus cette personne, dans aucune direction.",
+        "keepYes": "Oui, conserver",
+        "readOnly": "Seules les personnes autorisées à gérer les canaux de distribution peuvent appliquer ou conserver les suggestions.",
+        "emailStatus": {
+          "dead": "Injoignable depuis le {{date}}",
+          "active": "Active depuis le {{date}}",
+          "unresponsive": "Sans réaction depuis le {{date}}",
+          "unknown": "Inconnu depuis le {{date}}"
+        },
+        "recomputedDaily": "(recalculées automatiquement chaque jour)"
+      },
+      "assign": {
+        "steps": {
+          "audience": {
+            "title": "Groupe d’utilisateurs",
+            "description": "Qui est concerné"
+          },
+          "channel": {
+            "title": "Canal de distribution",
+            "description": "Vers lequel"
+          },
+          "review": {
+            "title": "Vérifier et changer",
+            "description": "Dernier coup d’œil"
+          }
+        },
+        "people": "{{count}} personnes",
+        "noAddress": "{{count}} personnes sans adresse postale complète ne peuvent pas passer à la lettre et restent à l’e-mail.",
+        "summary": {
+          "letter": "{{changed}} passeront à la lettre, {{skipped}} sans adresse postale complète restent à l’e-mail.",
+          "mail": "{{changed}} passeront à l’e-mail."
+        },
+        "confirmTitle": "Faire passer le groupe d’utilisateurs à {{channel}} ?",
+        "showHistory": "Afficher dans l’historique",
+        "again": "Nouveau changement",
+        "unreachableEmail": "{{count}} personnes avec une adresse e-mail injoignable (fictive ou morte) sont tout de même changées – les e-mails ne leur parviendront pas.",
+        "filterTitle": "Filtrer le groupe d’utilisateurs",
+        "segmentsLabel": "Filtrer le groupe d’utilisateurs par statut e-mail"
+      },
+      "history": {
+        "allChannels": "Tous"
+      },
+      "user": {
+        "switched": "Canal de distribution passé à {{channel}}.",
+        "suggestion": "Suggestion : {{move}}",
+        "channelLabel": "Canal de distribution des messages automatiques :",
+        "emailUnreachable": "Adresse e-mail injoignable ({{segment}}) – les e-mails ne parviendront pas à cette personne."
+      },
+      "flows": {
+        "letterHint": "Les messages marqués « Aussi par lettre » parviennent imprimés aux personnes au canal lettre ; les autres reçoivent un e-mail.",
+        "manage": "Gérer les canaux de distribution"
+      }
+    },
     "navbar": {
+      "deliverySuggestions": "Canal de distribution",
       "articles": "Articles",
       "authors": "Auteur·trice·s",
       "commentRating": "Système d’évaluation",
@@ -1604,7 +1768,7 @@
         "system": "Comme le système"
       },
       "logout": "Déconnexion",
-      "mailTemplates": "Modèles d’e-mail",
+      "mailTemplates": "Modèles de message",
       "memberPlans": "Plans d’abonnement",
       "navigations": "Menus",
       "pages": "Pages",
@@ -1616,7 +1780,7 @@
       "settings": "Paramètres",
       "subscriptionPlans": "Plans d’abonnement",
       "subscriptions": "Abonnements",
-      "subscriptionSettings": "E-mails automatiques",
+      "subscriptionSettings": "Messages automatiques",
       "tokens": "Tokens",
       "apiTokens": "Clés API",
       "userConsents": "Consentements des utilisateur·trice·s",
@@ -1627,8 +1791,8 @@
       "audienceDashboard": "Tableau de bord",
       "integrations": "Intégrations",
       "apps": "Applications",
-      "mailSend": "Envoyer un e-mail",
-      "mailLog": "E-mails envoyés",
+      "mailSend": "Messages manuels",
+      "mailLog": "Messages envoyés",
       "communication": "Communication",
       "auditLog": "Journal d’audit",
       "banners": "Bannières",
@@ -1639,6 +1803,7 @@
         "polls": "Sondages",
         "topMenu": "Blocs de contenu"
       },
+      "letterLayouts": "Papier à lettres",
       "language": "Langue"
     },
     "navigation": {
@@ -2015,6 +2180,19 @@
       "guestPollVote": "Autoriser les votes anonymes dans les sondages",
       "login": "Connexion",
       "loginMinutes": "Durée de validité du token de connexion par e-mail",
+      "loginCodeEnabled": "Activer les codes de connexion personnels",
+      "loginCodeMaxUses": "Code de connexion personnel : utilisations maximales",
+      "loginCodeValidDays": "Code de connexion personnel : durée de validité",
+      "loginCodeSecondFactor": "Code de connexion personnel : deuxième facteur",
+      "placeholderEmailPatterns": "Adresses e-mail de substitution (motifs)",
+      "loginCodeSecondFactorOptions": {
+        "none": "Aucun",
+        "postalCode": "Code postal",
+        "city": "Localité",
+        "firstName": "Prénom",
+        "lastName": "Nom"
+      },
+      "loginCodeUses": "utilisations",
       "minutes": "minutes",
       "ms": "millisecondes",
       "passwordToken": "Durée de validité du token de réinitialisation du mot de passe par e-mail",
@@ -2033,13 +2211,23 @@
         "guestCommentRating": "Autoriser les votes des utilisateur·trice·s non authentifié·e·s sur les commentaires.",
         "guestPollVote": "Autoriser les votes des utilisateur·trice·s non authentifié·e·s pour les sondages.",
         "invoiceReminders": "Nombre de rappels de paiement par facture (un rappel par jour).",
+        "loginCodeEnabled": "Permet de se connecter avec des codes de connexion personnels envoyés par e-mail ou par courrier ({{purl}}, {{purlCode}}, {{purlQr}}). Désactivé, ces espaces réservés restent vides, aucun code n’est émis et la page de connexion ne propose pas la connexion avec un code. Les liens de connexion envoyés par e-mail ({{jwt}}) ne sont pas concernés et fonctionnent toujours.",
+        "loginCodeMaxUses": "Nombre d’utilisations d’un code de connexion personnel (p. ex. reçu par courrier, {{purl}}) avant expiration. Par défaut : 5.",
+        "loginCodeValidDays": "Nombre de jours pendant lesquels un code de connexion personnel reste valable. Par défaut : 90.",
+        "loginCodeSecondFactor": "Information figurant sur le courrier, demandée en plus lorsqu’une personne connectée avec un code de connexion personnel enregistre une véritable adresse e-mail (uniquement pour les comptes avec e-mail de substitution). Protège contre les codes devinés – code postal recommandé. Après 5 échecs, la session est terminée.",
+        "placeholderEmailPatterns": "Motifs de texte séparés par des virgules, p. ex. @substitution.exemple.org. Les comptes dont l’adresse e-mail contient l’un des motifs sont considérés comme des substituts : aucun e-mail ne leur est envoyé et leurs sessions restent limitées jusqu’à la confirmation d’une véritable adresse. S’applique en plus du motif du prestataire de courrier.",
         "subscriptionUpgradeModel": "Lorsque cette option est activée, une mise à niveau facture toujours la différence entre le prix du nouveau plan et celui du plan actuel, quel que soit le temps restant dans la période en cours. Lorsqu’elle est désactivée, seul le solde restant (au prorata) non utilisé de la période en cours est crédité.",
         "sessionTtlDays": "Combien de temps une connexion reste valable avant de devoir se reconnecter. S’applique dès la prochaine connexion ; les sessions ouvertes gardent leur durée.",
+        "emailQualityUnresponsiveAfterDays": "Une adresse e-mail est considérée « sans réaction » lorsque ce nombre de jours s’est écoulé sans connexion ni clic dans un e-mail, alors que des e-mails ont été remis. Réévalué chaque nuit et via « Actualiser les statuts ».",
+        "emailQualityMinMailsForUnresponsive": "Ce nombre d’e-mails doit avoir été remis à l’adresse avant qu’elle puisse être considérée « sans réaction ».",
         "newArticlePaywall": "N’affectera pas les articles déjà créés",
         "newArticlePeering": "N’affectera pas les articles déjà créés",
         "showPendingWhenNotPublished": "Cela exposera publiquement les articles et pages en attente (et donc aussi les robots d’indexation), même s’ils n’ont encore jamais été publiés."
       },
       "sessionTtlDays": "Durée de validité de la connexion",
+      "emailQuality": "Qualité des e-mails",
+      "emailQualityUnresponsiveAfterDays": "« Sans réaction » après … jours",
+      "emailQualityMinMailsForUnresponsive": "… e-mails remis",
       "activeSubscriptionsApiPublic": "Rendre l’API des abonnements actifs accessible au public",
       "expectedRevenueApiPublic": "Rendre l’API des revenus attendus accessible au public",
       "newDeactivationsApiPublic": "Rendre l’API des nouvelles désactivations accessible au public",
@@ -2070,7 +2258,7 @@
       }
     },
     "automaticMails": {
-      "title": "E-mails automatiques",
+      "title": "Messages automatiques",
       "intro": "Définissez ici quel modèle d’e-mail est envoyé automatiquement pour quel événement. Choisissez un modèle par événement – ou laissez « Ne pas envoyer d’e-mail » si rien ne doit partir. L’icône ⓘ explique chaque événement.",
       "example": "Exemple : {{example}}"
     },
@@ -2115,7 +2303,7 @@
       "addMail": "Ajouter un e-mail",
       "deleteMail": "Retirer l’e-mail",
       "defaultFlow": "Flux par défaut",
-      "defaultFlowDescription": "S’applique à tous les abonnements auxquels aucun autre flux ne correspond. Les modifications s’appliquent aussi sous « E-mails automatiques ».",
+      "defaultFlowDescription": "S’applique à tous les abonnements auxquels aucun autre flux ne correspond. Les modifications s’appliquent aussi sous « Messages automatiques ».",
       "flowNumber": "Flux {{number}}",
       "newFlow": "Nouveau flux",
       "newDayTitle": "Nouveau jour dans la chronologie",
@@ -2222,8 +2410,6 @@
     },
     "untitled": "Sans titre",
     "userConsents": {
-      "deleteTitle": "Supprimer le consentement de l’utilisateur ?",
-      "deleteBody": "Voulez-vous supprimer définitivement le consentement «{{name}}» de {{user}} ?",
       "consentName": "Nom du consentement",
       "consentSlug": "Slug du consentement",
       "create": "Créer un nouveau consentement de l’utilisateur",
@@ -2232,10 +2418,11 @@
       "titleEdit": "Modifier le consentement de l’utilisateur",
       "user": "Utilisateur·trice",
       "value": "Valeur",
-      "uniqueConstraint": "Un consentement d’utilisateur avec le slug « {{slug}} » existe déjà. Veuillez choisir un autre slug."
+      "uniqueConstraint": "Un consentement d’utilisateur avec le slug « {{slug}} » existe déjà. Veuillez choisir un autre slug.",
+      "deleteTitle": "Supprimer le consentement de l’utilisateur ?",
+      "deleteBody": "Voulez-vous supprimer définitivement le consentement «{{name}}» de {{user}} ?"
     },
     "userCreateOrEditView": {
-      "addressTitle": "Adresse",
       "active": "Actif",
       "cancel": "Annuler",
       "city": "Ville",
@@ -2243,6 +2430,7 @@
       "confirm": "Confirmer",
       "country": "Pays",
       "createNewUser": "Créer un·e nouvel·le utilisateur·trice",
+      "emailQuality": "Statut e-mail : {{level}} – {{reason}}, depuis {{since}}",
       "deleteUser": "Supprimer l’utilisateur·trice ?",
       "email": "E-mail",
       "errorCreatingUser": "L’utilisateur·trice n’a pas pu être créé·e. Erreur inattendue : {{error}}",
@@ -2255,6 +2443,17 @@
       "passwordChangeSuccess": "Le mot de passe a été changé avec succès !",
       "passwordHeader": "Mots de passe & accès",
       "totpHeader": "Authentification à deux facteurs",
+      "loginCode": {
+        "header": "Code de connexion personnel",
+        "status": "Valable jusqu’au {{expiresAt}} · {{usesRemaining}} utilisations restantes sur {{maxUses}} · dernière utilisation : {{lastUsedAt}}",
+        "never": "jamais",
+        "none": "Aucun code de connexion personnel n’a encore été émis pour cette personne. Il est créé automatiquement lors du premier envoi d’un e-mail ou d’un courrier contenant {{purl}}.",
+        "revoke": "Révoquer",
+        "reissue": "Réémettre",
+        "issued": "Nouveau code (affiché une seule fois) :",
+        "secondFactorAvailable": "Le deuxième facteur « {{factor}} » est renseigné pour cette personne.",
+        "secondFactorMissing": "Le deuxième facteur « {{factor}} » manque pour cette personne – sans cette information, elle ne peut pas enregistrer d’adresse e-mail."
+      },
       "totpEnabled": "L’authentification à deux facteurs est activée pour cet utilisateur.",
       "totpDisabled": "L’authentification à deux facteurs n’est pas encore configurée. L’utilisateur sera invité à la configurer lors de sa prochaine connexion à l’éditeur.",
       "totpExemptInfo": "Cet utilisateur est exempté de l’exigence d’authentification à deux facteurs.",
@@ -2284,7 +2483,8 @@
       "activeInfo": "Les utilisateur·trice·s inactif·ve·s ne peuvent plus se connecter, ni sur le site web ni dans l’éditeur.",
       "flairInfo": "Brève description de la fonction, p. ex. « Rédactrice en chef ». Elle s’affiche à côté du nom dans les commentaires sur le site web.",
       "propertiesInfo": "Données supplémentaires sous forme de clé et de valeur, p. ex. issues d’importations. Les propriétés publiques peuvent aussi être lues par le site web, les privées uniquement dans l’éditeur.",
-      "userRolesInfo": "Les rôles définissent les autorisations de cette personne, p. ex. ce qu’elle peut voir et faire dans l’éditeur."
+      "userRolesInfo": "Les rôles définissent les autorisations de cette personne, p. ex. ce qu’elle peut voir et faire dans l’éditeur.",
+      "addressTitle": "Adresse"
     },
     "userList": {
       "overview": {
@@ -2526,15 +2726,15 @@
       "periodicityPricingCustomHelp": "Désactivé : les prix sont calculés à partir du prix mensuel. Activé : vous définissez vos propres prix pour cet intervalle de paiement, p. ex. pour un rabais annuel."
     },
     "subscriptionEditView": {
-      "detailsTitle": "Offre et paiement",
-      "renewalTitle": "Durée et renouvellement",
       "trialSubscriptionConfigured": "Cet abonnement est configuré comme un abonnement d’essai.",
       "nonExtendableNotCompatibleWithAutoRenew": "Un abonnement à renouvellement automatique doit pouvoir être prolongé. Modifiez l’un de ces paramètres.",
       "configureAsTrialSubscription": "Configurer comme abonnement d’essai",
       "subscriptionTrialNotPossible": "L’abonnement ne peut pas être configuré comme abonnement d’essai. Pour ce faire, modifiez les paramètres du plan d’abonnement.",
       "extendableWasChanged": "L’option « Extensible » a été adaptée en fonction du plan d’abonnement.",
       "extendModalTitle": "Renouveler l’abonnement plus tôt ?",
-      "extendModalBody": "L’abonnement sera prolongé de manière anticipée pour la prochaine période possible. Une facture sera établie."
+      "extendModalBody": "L’abonnement sera prolongé de manière anticipée pour la prochaine période possible. Une facture sera établie.",
+      "detailsTitle": "Offre et paiement",
+      "renewalTitle": "Durée et renouvellement"
     },
     "subscriptionListFilter": {
       "extendable": "Extensible"
@@ -2614,12 +2814,6 @@
       }
     },
     "audienceFilter": {
-      "resolution": "Résolution",
-      "range": "Période",
-      "rangeCustom": "Personnalisé",
-      "view": "Affichage",
-      "dateRange": "Du – au",
-      "subscriptionPlans": "Plans d'abonnement",
       "copyPermalink": "Copier le permalien",
       "permalinkCopied": "Permalien avec une période fixe copié dans le presse-papiers",
       "permalinkCopyFailed": "Impossible de copier le permalien",
@@ -2642,6 +2836,12 @@
       "rangeNextMonth": "Mois prochain",
       "rangeNextQuarter": "Trimestre prochain",
       "rangeNextYear": "Année prochaine",
+      "resolution": "Résolution",
+      "range": "Période",
+      "rangeCustom": "Personnalisé",
+      "view": "Affichage",
+      "dateRange": "Du – au",
+      "subscriptionPlans": "Plans d'abonnement",
       "rangeFrom": "Du",
       "rangeTo": "Au"
     },
@@ -2876,6 +3076,7 @@
       "paymentProvider": "Fournisseur de paiement",
       "trackingPixel": "Pixel de suivi",
       "mailProvider": "Fournisseur de messagerie",
+      "pdfRenderer": "Moteur de rendu PDF",
       "back": "Retour aux intégrations",
       "unknown": "Intégration inconnue",
       "notFound": "Intégration non trouvée",
@@ -2945,6 +3146,15 @@
         "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon."
       },
       "placeholderSecret": "Inchangé (masqué)",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "ID de compte Cloudflare",
+        "cloudflareApiToken": "Jeton d'API Cloudflare",
+        "gotenbergUrl": "URL de Gotenberg",
+        "gotenbergUsername": "Nom d'utilisateur Gotenberg",
+        "gotenbergPassword": "Mot de passe Gotenberg",
+        "timeoutMs": "Délai d'attente (ms)"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "Adresse de l’expéditeur",
@@ -3111,7 +3321,22 @@
       "mailchimpSyncInfo": "Transfère chaque nuit tous les comptes utilisateur actifs et leurs données d’abonnement vers une audience Mailchimp, afin de cibler vos newsletters selon l’abonnement.",
       "lastLoadedInfo": "Moment où We.Publish a chargé cette configuration pour la dernière fois, p. ex. pour traiter un paiement. Vous voyez ainsi si l’intégration est utilisée.",
       "setUp": "Configurer",
-      "setUpHint": "Pas encore configurée. Configurez cette intégration pour que l’éditeur et votre site puissent l’utiliser."
+      "setUpHint": "Pas encore configurée. Configurez cette intégration pour que l’éditeur et votre site puissent l’utiliser.",
+      "letterProvider": "Prestataire de courrier",
+      "letterSettings": {
+        "type": "Type",
+        "environment": "Environnement",
+        "clientId": "ID client",
+        "clientSecret": "Secret client",
+        "organisationId": "ID d’organisation",
+        "webhookSigningKey": "Clé de signature du webhook",
+        "autoSend": "Envoyer les lettres automatiquement",
+        "placeholderEmailContains": "L’e-mail de substitution contient",
+        "defaultAddressPosition": "Fenêtre d’adresse (lettres automatiques)",
+        "defaultDeliveryProduct": "Distribution (lettres automatiques)",
+        "defaultPrintMode": "Impression (lettres automatiques)",
+        "defaultPrintSpectrum": "Couleur (lettres automatiques)"
+      }
     },
     "websiteSettings": {
       "backToOverview": "Retour à la vue d’ensemble",
@@ -3422,8 +3647,8 @@
       "blockNumber": "Bloc {{number}}"
     },
     "columnConfigurator": {
-      "dragToReorder": "Glisser pour réordonner",
       "title": "Colonnes",
+      "dragToReorder": "Glisser pour réordonner",
       "reset": "Réinitialiser les colonnes"
     },
     "systemMails": {
@@ -3437,6 +3662,7 @@
         "login_link": "Lien de connexion",
         "password_reset": "Réinitialisation du mot de passe",
         "email_change": "Adresse e-mail modifiée",
+        "email_verification": "Adresse e-mail confirmée",
         "test_mail": "E-mail de test"
       },
       "eventInfo": {
@@ -3460,6 +3686,11 @@
           "description": "Part à la nouvelle adresse lorsque quelqu’un modifie son adresse e-mail. Le changement n’est effectif qu’après confirmation.",
           "example": "« Merci de confirmer votre nouvelle adresse e-mail. »"
         },
+        "email_verification": {
+          "short": "Confirmer l’adresse actuelle.",
+          "description": "Part à l’adresse actuelle lorsque quelqu’un la confirme, par exemple après une connexion avec un lien personnel reçu par courrier.",
+          "example": "« Merci de confirmer votre adresse e-mail. »"
+        },
         "test_mail": {
           "short": "Uniquement pour vos tests.",
           "description": "N’est jamais envoyé automatiquement aux lectrices et lecteurs. Utilisez ce modèle pour tester vous-même l’envoi.",
@@ -3471,14 +3702,14 @@
       "steps": {
         "audience": {
           "title": "Choisir les destinataires",
-          "description": "Audience et filtres"
+          "description": "Public cible et filtres"
         },
         "content": {
-          "title": "Contenu de l’e-mail",
-          "description": "Modèle et aperçu"
+          "title": "Contenu et canal de distribution",
+          "description": "Modèle, e-mail ou lettre"
         },
         "send": {
-          "title": "Envoyer l’e-mail",
+          "title": "Envoyer",
           "description": "Vérifier et envoyer"
         }
       },
@@ -3488,22 +3719,28 @@
       "summary": {
         "title": "Résumé"
       },
-      "title": "Envoyer un e-mail",
-      "template": "Modèle d’e-mail",
+      "title": "Messages manuels",
+      "template": "Modèle d’envoi",
       "selectTemplate": "Choisir un modèle",
       "audience": {
         "title": "Destinataires"
       },
       "base": {
-        "label": "Audience",
+        "label": "Public cible",
         "allUsers": "Tous les utilisateurs",
         "hasSubscription": "Abonnés (avec abonnement)",
         "noActiveSubscription": "Sans abonnement actif",
         "endedSubscription": "Reconquête — abonnement désactivé récemment",
         "allUsersHint": "Toutes les personnes inscrites, avec ou sans abonnement.",
-        "hasSubscriptionHint": "Personnes avec un abonnement. Les champs d’abonnement sont disponibles.",
-        "noActiveSubscriptionHint": "Personnes sans abonnement actif. Les champs d’abonnement restent vides.",
-        "endedSubscriptionHint": "Personnes dont l’abonnement a été désactivé récemment et qui n’ont pas repris d’abonnement depuis. L’abonnement désactivé est joint à l’e-mail, ses champs sont donc disponibles."
+        "hasSubscriptionHint": "Personnes avec un abonnement.",
+        "noActiveSubscriptionHint": "Personnes sans abonnement actif.",
+        "endedSubscriptionHint": "Personnes dont l’abonnement a été désactivé récemment et qui ne se sont pas réabonnées depuis.",
+        "placeholderNote": {
+          "allUsers": "Les champs d’abonnement restent vides.",
+          "hasSubscription": "Les champs d’abonnement sont disponibles.",
+          "noActiveSubscription": "Les champs d’abonnement restent vides.",
+          "endedSubscription": "L’abonnement désactivé est joint : ses champs sont disponibles."
+        }
       },
       "memberPlans": "Plans d’abonnement",
       "memberPlansAll": "Tous les plans d’abonnement",
@@ -3521,9 +3758,8 @@
       "yes": "Oui",
       "no": "Non",
       "counting": "Comptage des destinataires …",
-      "recipientsCount": "{{count}} destinataires",
       "send": "Envoyer",
-      "templateNeedsSubscription": "Ce modèle nécessite une audience basée sur les abonnements afin de remplir ses champs d’abonnement.",
+      "templateNeedsSubscription": "Ce modèle nécessite un public cible basé sur les abonnements afin de remplir ses champs d’abonnement.",
       "confirmTitle": "Envoyer un e-mail",
       "confirmText": "Envoyer cet e-mail à {{count}} destinataires ?",
       "confirm": "Envoyer",
@@ -3554,10 +3790,28 @@
         "loading": "Chargement des destinataires …",
         "email": "E-mail",
         "name": "Nom",
-        "memberPlan": "Plan d’abonnement"
+        "memberPlan": "Plan d’abonnement",
+        "address": "Adresse",
+        "withAddress": "Adresse disponible",
+        "withoutAddress": "Pas d’adresse valide – ne sera pas envoyé",
+        "emailSegment": "Statut e-mail"
       },
       "endedWithinDays": "Désactivé au cours des … derniers jours",
       "endedWithinDaysHint": "Uniquement les abonnements désactivés dans cette période.",
+      "emailSegments": {
+        "label": "Statut e-mail",
+        "placeholder": "Adresse de substitution",
+        "dead": "Injoignable (rebond, invalide, plainte, désabonnée)",
+        "unresponsive": "Sans réaction",
+        "unknown": "Inconnu",
+        "active": "Active",
+        "pick": "Tous les statuts",
+        "hint": "Plusieurs statuts signifient « l’un ou l’autre ». « Sans réaction » : des e-mails ont été remis, mais aucune connexion ni aucun clic depuis longtemps (réglage « Qualité des e-mails »). À atteindre par courrier : substitution + injoignable.",
+        "overview": "Personnes de cette audience par statut e-mail (indépendamment de la sélection)",
+        "refresh": "Actualiser les statuts",
+        "refreshing": "Actualisation des statuts …",
+        "refreshed": "{{updated}} statuts de remise récupérés chez le fournisseur ({{checked}} vérifiés), {{recomputed}} personnes réévaluées."
+      },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
         "relative": "Derniers … jours",
@@ -3574,7 +3828,8 @@
         "firstRecipient": "Premier·ère destinataire",
         "hint": "À quoi ressemble l’e-mail pour cette personne — avec ses données réelles.",
         "loading": "Chargement de l’aperçu …",
-        "noRecipients": "Aucun destinataire — ajustez d’abord le public."
+        "noRecipients": "Aucun destinataire — ajustez d’abord le public cible.",
+        "letterTitle": "Aperçu de la lettre"
       },
       "recipientsCountPerPerson": "{{count}} e-mails à {{people}} personnes",
       "endsAtHint": "Date de résiliation, sinon la date jusqu’à laquelle l’abonnement est payé.",
@@ -3588,11 +3843,89 @@
       "endsAt": "Fin de l’abonnement",
       "from": "À partir du",
       "to": "Jusqu’au",
+      "lettersCount": "{{count}} lettres à {{people}} personnes",
+      "confirmTextLetter": "Envoyer cette lettre à {{count}} destinataires ?",
       "stateHelp": "Actif : confirmé, non désactivé et payé. En attente : souscrit mais pas encore confirmé, p. ex. parce que le premier paiement manque encore. Désactivé : l’abonnement est terminé ou sa fin est déjà enregistrée.",
-      "autoRenewHelp": "Oui : l’abonnement se renouvelle automatiquement à la fin de la période et est à nouveau facturé. Non : il expire, sauf si la personne le renouvelle elle-même."
+      "autoRenewHelp": "Oui : l’abonnement se renouvelle automatiquement à la fin de la période et est à nouveau facturé. Non : il expire, sauf si la personne le renouvelle elle-même.",
+      "channel": {
+        "label": "Canal de distribution",
+        "mail": "E-mail",
+        "letter": "Lettre",
+        "withoutAddress": "{{count}} des destinataires n’ont pas d’adresse postale utilisable et seront ignoré·e·s."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Fenêtre d’adresse",
+          "left": "Gauche",
+          "right": "Droite"
+        },
+        "deliveryProduct": {
+          "label": "Distribution",
+          "cheap": "Économique (Courrier B)",
+          "fast": "Rapide (Courrier A)",
+          "premium": "Premium",
+          "registered": "Recommandé",
+          "bulk": "Envoi en nombre"
+        },
+        "printMode": {
+          "label": "Impression",
+          "simplex": "Recto",
+          "duplex": "Recto verso"
+        },
+        "printSpectrum": {
+          "label": "Couleur",
+          "grayscale": "Niveaux de gris",
+          "color": "En couleur"
+        }
+      },
+      "mailHistory": {
+        "label": "Messages reçus",
+        "hint": "Seules les personnes ayant (ou n’ayant pas) reçu un modèle donné – au besoin via un seul canal.",
+        "add": "Ajouter une condition",
+        "remove": "Supprimer la condition",
+        "received": "a reçu",
+        "notReceived": "n’a pas reçu",
+        "template": "Choisir un modèle …",
+        "state": "Statut",
+        "anyState": "Indifférent",
+        "channel": "Canal de distribution",
+        "anyChannel": "Indifférent",
+        "sentBetween": "Envoyé entre",
+        "match": {
+          "all": "Toutes les conditions doivent être remplies",
+          "any": "Une condition suffit"
+        },
+        "states": {
+          "submitted": "Transmis",
+          "accepted": "Accepté",
+          "delivered": "Distribué",
+          "deferred": "Différé",
+          "bounced": "Rebond",
+          "rejected": "Refusé",
+          "dispatched": "Posté",
+          "undeliverable": "Non distribuable",
+          "canceled": "Annulé"
+        }
+      },
+      "audienceSummary": {
+        "base": "Base",
+        "memberPlans": "Formules",
+        "state": "Statut de l’abonnement",
+        "segments": "Statut e-mail",
+        "mailHistory": "Messages",
+        "received": "reçu",
+        "notReceived": "non reçu",
+        "between": "{{from}} – {{to}}",
+        "from": "dès le {{from}}",
+        "to": "jusqu’au {{to}}",
+        "matchAny": "une condition suffit",
+        "matchAll": "toutes les conditions",
+        "more": "{{count}} autres filtres"
+      },
+      "deliveryChannelHandOff": "Changer durablement le canal de distribution de ce groupe d’utilisateurs …"
     },
     "mailLog": {
-      "title": "E-mails envoyés",
+      "title": "Messages envoyés",
       "empty": "Aucun e-mail trouvé.",
       "sentDate": "Date",
       "template": "Modèle",
@@ -3610,7 +3943,8 @@
         "title": "Filtres",
         "reset": "Réinitialiser les filtres",
         "typeHint": "Ce qui a déclenché l’envoi.",
-        "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Envoyer un e-mail ». Sélectionnez-en un pour ne voir que ses e-mails."
+        "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Messages manuels ». Sélectionnez-en un pour ne voir que ses e-mails.",
+        "channel": "Envoi"
       },
       "types": {
         "subscriptionFlow": "Mailing d’abonnement",
@@ -3620,10 +3954,10 @@
       },
       "error": "Erreur",
       "typeDescriptions": {
-        "manual": "Envoyé à la main via « Envoyer un e-mail » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
-        "subscriptionFlow": "Programmé depuis « E-mails automatiques », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",
+        "manual": "Envoyé à la main via « Messages manuels » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
+        "subscriptionFlow": "Programmé depuis « Messages automatiques », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",
         "userFlow": "Déclenché immédiatement par une action ou un événement précis. Exemples : lien de connexion demandé, adresse e-mail modifiée, échec du paiement de renouvellement.",
-        "systemMail": "E-mails de compte, configurés sous « E-mails automatiques », section « Compte et connexion ». Exemples : e-mail de bienvenue après l’inscription, réinitialisation du mot de passe."
+        "systemMail": "E-mails de compte, configurés sous « Messages automatiques », section « Compte et connexion ». Exemples : e-mail de bienvenue après l’inscription, réinitialisation du mot de passe."
       },
       "errorHelp": {
         "causeTitle": "Que s’est-il passé ?",
@@ -3662,8 +3996,8 @@
           "fix": "Configurez un fournisseur sous Paramètres › Intégrations › Fournisseur de messagerie (SMTP, Mailgun, Mailchimp ou Slack)."
         },
         "templateMissing": {
-          "cause": "Le modèle d’e-mail utilisé n’existe plus.",
-          "fix": "Choisissez un modèle existant sous « Modèles d’e-mail » ou recréez-le, puis relancez l’envoi."
+          "cause": "Le modèle d’envoi utilisé n’existe plus.",
+          "fix": "Choisissez un modèle existant sous « Modèles de message » ou recréez-le, puis relancez l’envoi."
         },
         "generic": {
           "cause": "Le serveur a refusé l’envoi avec le message ci-dessous.",
@@ -3713,22 +4047,43 @@
           "name": "rejected — Rejeté",
           "meaning": "L’e-mail n’a jamais été envoyé. Soit We.Publish n’a pas pu le remettre (configuration du fournisseur absente ou erronée), soit le fournisseur l’a refusé d’emblée : domaine d’envoi non vérifié (« unsigned »), adresse sur la liste de suppression du fournisseur après un hard bounce ou une plainte pour spam, destinataire désabonné, ou limite d’envoi du compte atteinte.",
           "next": "La colonne « Erreur » indique la raison – survolez-la pour la cause et la solution. Corrigez la cause et renvoyez : rien n’est réessayé automatiquement."
+        },
+        "dispatched": {
+          "name": "Expédiée",
+          "meaning": "Le prestataire d’impression a imprimé la lettre et l’a remise à la Poste.",
+          "next": "Rien à faire. Le statut passe à « distribuée » dès que la Poste signale la distribution."
+        },
+        "undeliverable": {
+          "name": "Non distribuable",
+          "meaning": "La Poste n’a pas pu distribuer la lettre et l’a retournée.",
+          "next": "Vérifiez l’adresse du ou de la destinataire et renvoyez la lettre."
+        },
+        "canceled": {
+          "name": "Annulée",
+          "meaning": "La lettre a été retirée avant d’être imprimée.",
+          "next": "Rien à faire. Rien n’a été imprimé ni facturé."
         }
+      },
+      "channel": "Envoi",
+      "channels": {
+        "mail": "E-mail",
+        "letter": "Lettre"
       }
     },
     "userMail": {
-      "title": "E-mails",
       "sendTitle": "Envoyer un e-mail",
-      "logTitle": "E-mails envoyés",
+      "logTitle": "Messages envoyés",
       "customOnlyHint": "Seuls les modèles personnalisés peuvent être envoyés à un utilisateur.",
       "selectTemplate": "Choisir un modèle",
       "send": "Envoyer",
-      "sent": "E-mail envoyé"
+      "sent": "E-mail envoyé",
+      "title": "E-mails",
+      "titleWithLetters": "Messages"
     },
     "mailJobs": {
       "created": "Démarré",
       "template": "Modèle",
-      "audience": "Destinataires",
+      "audience": "Public cible",
       "state": "Statut",
       "progress": "Progression",
       "details": "Détails",
@@ -3764,6 +4119,14 @@
         "failed": "En échec",
         "sending": "En cours de remise",
         "interrupted": "Interrompus"
+      },
+      "outcome": {
+        "title": "Résultat",
+        "hint": "Les statuts de remise et les clics viennent du fournisseur d’e-mails – les rebonds souvent des heures ou des jours plus tard. « Injoignable » compte les destinataires dont l’adresse est désormais considérée comme injoignable. « Actualiser les statuts » récupère ce que le fournisseur n’a pas encore signalé.",
+        "delivered": "Remis",
+        "bounced": "Rebonds / refusés",
+        "dead": "Injoignable",
+        "clicked": "Cliqués"
       },
       "recipientState": {
         "pending": "En attente",
@@ -3869,12 +4232,43 @@
     "placeholderInput": {
       "add": "Ajouter"
     },
-    "colorPicker": {
-      "pickColor": "Choisir la couleur"
-    },
     "listInput": {
       "dragToReorder": "Glisser pour modifier l’ordre",
       "add": "Ajouter une entrée"
+    },
+    "letterLayouts": {
+      "title": "Papier à lettres",
+      "intro": "En-tête et pied de page des lettres imprimées. Les modèles de message utilisent le papier par défaut, sauf s’ils en choisissent un autre.",
+      "create": "Créer un papier à lettres",
+      "createHeader": "Créer un papier à lettres",
+      "editHeader": "Modifier le papier à lettres",
+      "name": "Nom",
+      "nameRequired": "Veuillez saisir un nom.",
+      "isDefault": "Papier par défaut",
+      "isDefaultHelp": "Les modèles sans papier propre sont imprimés sur le papier par défaut. Il ne peut y en avoir qu’un.",
+      "default": "Par défaut",
+      "header": "En-tête",
+      "footer": "Pied de page",
+      "headerHeight": "Hauteur de l’en-tête (mm)",
+      "footerHeight": "Hauteur du pied de page (mm)",
+      "headerHeightHint": "Au maximum 40 mm, pour que l’en-tête n’empiète pas sur la zone d’affranchissement. Il se répète sur chaque page ; 0 mm le supprime.",
+      "footerHeightHint": "Au maximum 40 mm. Le texte de la lettre garde cet espace par rapport au bord inférieur. Le pied de page se répète sur chaque page ; 0 mm le supprime.",
+      "htmlHint": "HTML avec des variables comme {{user_firstName}}. Indiquez les tailles en mm et donnez aux images une largeur et une hauteur fixes.",
+      "insertImage": "Insérer une image",
+      "preview": "Aperçu",
+      "previewTitle": "Lettre type sur ce papier",
+      "saved": "Papier à lettres enregistré",
+      "deleteTitle": "Supprimer le papier à lettres",
+      "deleteQuestion": "Supprimer « {{name}} » ? Les modèles qui l’utilisent doivent d’abord en choisir un autre.",
+      "deleteConfirm": "Supprimer",
+      "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
+    },
+    "autosave": {
+      "label": "Enregistrement auto",
+      "description": "Enregistrer le brouillon toutes les 30 secondes pendant que vous travaillez"
+    },
+    "colorPicker": {
+      "pickColor": "Choisir la couleur"
     },
     "errorBoundary": {
       "title": "Un problème est survenu sur cette page",
@@ -3947,6 +4341,7 @@
         "consent": "Créer un consentement",
         "userConsent": "Créer un consentement utilisateur",
         "mailTemplate": "Créer un modèle d'e-mail",
+        "letterLayout": "Créer un papier à lettres",
         "memberPlan": "Créer un plan d'abonnement",
         "paymentMethod": "Créer un moyen de paiement",
         "discountCode": "Créer un code de réduction",

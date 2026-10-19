@@ -477,6 +477,31 @@ packaged binary.
 
 ---
 
+### ⚠️ The API binary's `Intl` has no locale data: never take names from it
+
+The API's Node comes from `@yao-pkg/pkg`, built with reduced ICU. Its
+`Intl.DisplayNames` knows no region names and hands the code back:
+`new Intl.DisplayNames(['de'], { type: 'region' }).of('CH')` is `'CH'` in the
+binary (and `'ZZ'` for the unknown region), `'Schweiz'` in plain Node —
+locally, in tests and in CI. Verified 2026-10-13 with a pkg-built
+`node22` binary: ICU 78.2, resolved locale `en-US`.
+
+It shipped «CH» into the address window of Neue Wege's letters, which Pingen
+reads, although every test and the local preview showed «Schweiz».
+
+Take country names from `i18n-iso-countries` (its `langs/` are a pkg asset in
+`docker/api_build_package.json`), as `countryName` in
+[`letter-recipient.ts`](../../libs/letter/api/src/lib/letter-recipient.ts)
+does. The same applies to locale-dependent `Intl` output in general (month
+names, `toLocaleDateString('de-CH')` and friends): assume English or raw values
+in the binary.
+
+Pinned by `libs/letter/api/src/lib/letter-recipient.spec.ts` («does not depend
+on the region names of the running Node»), which loads the module with an
+`Intl` that echoes codes.
+
+---
+
 ### ⚠️ Express 5 has no bare `*` route
 
 [apps/editor/src/server-app.ts](../../apps/editor/src/server-app.ts) serves
@@ -564,6 +589,63 @@ check-then-write at boot (`findUnique` then `create`) and even Prisma's
 
 Pinned by `google-analytics-db-config.spec.ts` and the "several replicas" cases
 in `reconcile-provider-registry.spec.ts`, whose fakes race like Prisma does.
+
+### ⚠️ The mail webhook answers 200 to a payload it cannot process — only a bad signature is a 401
+
+[mail.webhook.ts](../../libs/mail/api/src/lib/mail.webhook.ts) catches every
+error after `webhookForSendMail` and still returns 200; a
+`MailWebhookSignatureError` becomes 401. Returning 500 looks more honest but
+is wrong for every provider we have or plan: Mandrill and Mailgun retry on 5xx
+and fail the same way again, and Brevo retries only 429/timeouts and **drops
+the event for good** on any other answer (verified in Brevo's retry docs,
+2026-10-11), so a 500 would lose a bounce forever. Evidence stays in our log,
+and the nightly `MailLogSyncService` poll reconciles what a webhook missed.
+
+**Load-bearing:** the `catch` that logs and falls through to
+`res.status(200)`, and the `instanceof MailWebhookSignatureError` → 401 branch.
+Providers must throw `MailWebhookSignatureError`, not a plain `Error`, for a
+failed signature.
+
+Pinned by `libs/mail/api/src/lib/mail.webhook.spec.ts` ("refuses a call that
+does not come from the provider", "answers 200 to a payload it cannot handle").
+
+---
+
+### ⚠️ The letter sheet keeps `@page { margin: 0 }`; stationery space comes from the table spacers
+
+`composeLetter` (`libs/letter/api/src/lib/letter-renderer.ts`) positions the
+Pingen address window absolutely at 60mm from the sheet top and puts the
+header/footer bands in `position: fixed` boxes. Space for the bands on every
+page is reserved by the `thead`/`tfoot` spacer rows of the `.flow` table, which
+Chromium repeats per page, and page 1's body offset is reduced by the header
+spacer so the text still starts at 90mm.
+
+Reserving the bands with `@page` margins instead moves the address window by
+the top margin and Pingen rejects the letter; a fixed box offset into the
+margin area is clipped by Chromium. The band cap of 40mm (`LAYOUT_BAND_MAX_MM`)
+keeps a header out of the franking zone, whose bottom edge is at 87.5mm.
+
+**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows,
+and `CONTENT_TOP_MM - headerSpace` for the body padding.
+
+Pinned by `libs/letter/api/src/lib/letter-renderer.spec.ts`.
+
+### ⚠️ `prisma migrate dev` refuses to run against a database other branches migrated
+
+The local Postgres is shared by every worktree. Once a migration from another
+branch has been applied to it, `prisma migrate dev` in a worktree that lacks
+that folder reports it as missing and wants to reset the database, which drops
+every table (`migrate status` still says "up to date", it does not flag extra
+migrations).
+
+Write the migration by hand instead: `npx prisma migrate diff
+--from-config-datasource --to-schema libs/api/prisma/schema.prisma --script`
+prints the SQL (strip the parts that belong to the other branches), put it in a
+`YYYYMMDDHHMMSS_name/migration.sql` folder, then `npx prisma migrate deploy`
+applies only the pending folders and does not care about extra ones
+(verified 2026-10-15 with `20261015100000_letter_layout`).
+
+Nothing guards this — a reset here is silent until the data is gone.
 
 ---
 
@@ -900,6 +982,30 @@ which reads the _emitted_ rule rather than the computed value — jsdom resolves
 it, so `getComputedStyle` cannot tell the two apart.
 
 ---
+
+### ⚠️ A long editor page must opt out of shrinking, or its tables and cards scroll inside themselves
+
+The editor shell (`apps/editor/src/app/base.tsx`) is `100vh` with the content
+frame as a flex column that scrolls (`flex: 1 1 auto; overflow-y: auto`). A
+page that returns a fragment hands every top-level block to that column as a
+flex item. A block with its own overflow, which MUI's `TableContainer`
+(`overflow-x: auto`) and `Card` (`overflow: hidden`) both set, gets
+`min-height: 0` and shrinks: the table grows a vertical scrollbar and the card
+clips its content, while the page itself does not scroll.
+
+Seen on the delivery suggestions page on 2026-10-19: the audience filter card
+was cut off and the suggestions table scrolled on its own.
+
+Wrapping the page in `<div style={{ flexShrink: 0 }}>` keeps it one
+non-shrinking block, so the frame scrolls it as a whole. `mail-send-page.tsx`,
+`mail-template-edit.tsx` and `mail-log-list.tsx` do this already; list pages
+built on `TableWrapper` + `fillHeight` want the opposite and must not.
+
+**Load-bearing:** the wrapper div in `delivery-channel-page.tsx` (its views
+render inside it and must not add one of their own) and the three pages above.
+
+Nothing guards this — a regression here is silent until someone resizes the
+window.
 
 ## Adding an entry
 
