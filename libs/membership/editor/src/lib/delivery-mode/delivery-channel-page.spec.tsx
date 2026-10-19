@@ -33,8 +33,8 @@ vi.mock('./delivery-channel-overview-view', () => ({
 vi.mock('./delivery-suggestions-view', () => ({
   DeliverySuggestionsView: () => <div>suggestions-view</div>,
 }));
-vi.mock('./delivery-mode-audience-section', () => ({
-  DeliveryModeAudienceSection: () => <div>assign-view</div>,
+vi.mock('./delivery-channel-assign-view', () => ({
+  DeliveryChannelAssignView: () => <div>assign-view</div>,
 }));
 vi.mock('./delivery-mode-bulk-changes', () => ({
   DeliveryModeBulkChanges: () => <div>history-view</div>,
@@ -134,6 +134,12 @@ describe('DeliveryChannelPage', () => {
     renderAt('/deliverychannel/suggestions');
 
     expect(screen.getByText('suggestions-view')).toBeTruthy();
+  });
+
+  it('shows the switch by audience under its own address', () => {
+    renderAt('/deliverychannel/assign');
+
+    expect(screen.getByText('assign-view')).toBeTruthy();
   });
 
   it('falls back to the overview for an address it does not know', () => {

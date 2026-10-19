@@ -1697,6 +1697,31 @@
           "unresponsive": "Sans réaction depuis le {{date}}",
           "unknown": "Inconnu depuis le {{date}}"
         }
+      },
+      "assign": {
+        "steps": {
+          "audience": {
+            "title": "Public cible",
+            "description": "Qui est concerné"
+          },
+          "channel": {
+            "title": "Canal de distribution",
+            "description": "Vers lequel"
+          },
+          "review": {
+            "title": "Vérifier et changer",
+            "description": "Dernier coup d’œil"
+          }
+        },
+        "people": "{{count}} personnes",
+        "noAddress": "{{count}} personnes sans adresse postale complète restent à l’e-mail.",
+        "summary": {
+          "letter": "{{changed}} passeront à la lettre, {{skipped}} sans adresse postale complète restent à l’e-mail.",
+          "mail": "{{changed}} passeront à l’e-mail."
+        },
+        "confirmTitle": "Faire passer le public cible à {{channel}} ?",
+        "showHistory": "Afficher dans l’historique",
+        "again": "Nouveau changement"
       }
     },
     "navbar": {

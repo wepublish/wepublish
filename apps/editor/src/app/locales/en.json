@@ -1698,6 +1698,31 @@
           "unresponsive": "Unresponsive since {{date}}",
           "unknown": "Unknown since {{date}}"
         }
+      },
+      "assign": {
+        "steps": {
+          "audience": {
+            "title": "Audience",
+            "description": "Who is switched"
+          },
+          "channel": {
+            "title": "Delivery channel",
+            "description": "To which"
+          },
+          "review": {
+            "title": "Review & switch",
+            "description": "Last look"
+          }
+        },
+        "people": "{{count}} people",
+        "noAddress": "{{count}} people without a complete postal address stay on email.",
+        "summary": {
+          "letter": "{{changed}} will be switched to letter, {{skipped}} without a complete postal address stay on email.",
+          "mail": "{{changed}} will be switched to email."
+        },
+        "confirmTitle": "Switch the audience to {{channel}}?",
+        "showHistory": "Show in history",
+        "again": "New switch"
       }
     },
     "navbar": {

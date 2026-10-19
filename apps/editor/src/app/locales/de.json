@@ -1697,6 +1697,31 @@
           "unresponsive": "Reagiert nicht seit {{date}}",
           "unknown": "Unbekannt seit {{date}}"
         }
+      },
+      "assign": {
+        "steps": {
+          "audience": {
+            "title": "Zielgruppe",
+            "description": "Wer umgestellt wird"
+          },
+          "channel": {
+            "title": "Zustellweg",
+            "description": "Wohin"
+          },
+          "review": {
+            "title": "Prüfen & umstellen",
+            "description": "Letzter Blick"
+          }
+        },
+        "people": "{{count}} Personen",
+        "noAddress": "{{count}} Personen ohne vollständige Postadresse bleiben bei E-Mail.",
+        "summary": {
+          "letter": "{{changed}} werden auf Brief umgestellt, {{skipped}} ohne vollständige Postadresse bleiben bei E-Mail.",
+          "mail": "{{changed}} werden auf E-Mail umgestellt."
+        },
+        "confirmTitle": "Zielgruppe auf {{channel}} umstellen?",
+        "showHistory": "Im Verlauf anzeigen",
+        "again": "Neue Umstellung"
       }
     },
     "navbar": {
