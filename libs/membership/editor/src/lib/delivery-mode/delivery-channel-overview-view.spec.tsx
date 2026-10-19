@@ -117,23 +117,50 @@ describe('DeliveryChannelOverviewView', () => {
 
   afterEach(cleanup);
 
-  it('counts the people on every channel and marks the default', () => {
+  it('counts the people on every channel and marks the default in the heading', () => {
     renderView();
+    const tileOf = (count: number) =>
+      screen
+        .getByText(`deliveryChannel.overview.people:{"count":${count}}`)
+        .closest('.MuiCard-root') as HTMLElement;
 
     expect(
-      screen.getByText(
-        'deliveryChannel.overview.defaultChannel:{"label":"deliveryMode.channel.mail"}'
+      within(tileOf(1100)).getByText(
+        'deliveryChannel.overview.channelHeadingDefault'
       )
     ).toBeTruthy();
     expect(
-      screen.getByText('deliveryChannel.overview.people:{"count":1100}')
+      within(tileOf(7)).getByText(
+        'deliveryChannel.overview.channelHeadingAlternative'
+      )
     ).toBeTruthy();
-
-    const letterTile = screen
-      .getByText('deliveryChannel.overview.people:{"count":7}')
-      .closest('.MuiCard-root') as HTMLElement;
+    // The channel row names the channel alone; its role is in the heading.
     expect(
-      within(letterTile).getByText('deliveryMode.channel.letter')
+      within(tileOf(1100)).getByText('deliveryMode.channel.mail')
+    ).toBeTruthy();
+    expect(
+      within(tileOf(7)).getByText('deliveryMode.channel.letter')
+    ).toBeTruthy();
+    expect(
+      screen.queryByText(/deliveryChannel\.overview\.defaultChannel/)
+    ).toBeNull();
+  });
+
+  it('puts what the channel carries before who is on it', () => {
+    renderView();
+    const mailTile = screen
+      .getByText('deliveryChannel.overview.people:{"count":1100}')
+      .closest('.MuiCard-root') as HTMLElement;
+    const activeFor = within(mailTile).getByText(
+      /deliveryChannel\.overview\.activeFor/
+    );
+    const people = within(mailTile).getByText(
+      'deliveryChannel.overview.people:{"count":1100}'
+    );
+
+    expect(
+      activeFor.compareDocumentPosition(people) &
+        Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy();
   });
 
@@ -185,7 +212,9 @@ describe('DeliveryChannelOverviewView', () => {
     expect(tileOf(1100).getAttribute('aria-current')).toBeNull();
 
     fireEvent.click(
-      within(tileOf(1100)).getByText('deliveryChannel.overview.channelHeading')
+      within(tileOf(1100)).getByText(
+        'deliveryChannel.overview.channelHeadingDefault'
+      )
     );
 
     expect(tileOf(1100).getAttribute('aria-current')).toBe('true');
@@ -236,8 +265,14 @@ describe('DeliveryChannelOverviewView', () => {
     renderView();
 
     expect(
-      screen.getAllByText('deliveryChannel.overview.channelHeading')
+      screen.getAllByText(/deliveryChannel\.overview\.channelHeading/)
     ).toHaveLength(2);
+    expect(
+      screen.getByText('deliveryChannel.overview.channelHeadingDefault')
+    ).toBeTruthy();
+    expect(
+      screen.getByText('deliveryChannel.overview.channelHeadingAlternative')
+    ).toBeTruthy();
     const suggestions = screen
       .getByText('deliveryChannel.overview.suggestionsHeading')
       .closest('.MuiCard-root') as HTMLElement;
@@ -245,6 +280,23 @@ describe('DeliveryChannelOverviewView', () => {
       within(suggestions).getByText(
         'deliveryChannel.overview.openSuggestions:{"count":3}'
       )
+    ).toBeTruthy();
+  });
+
+  it('gives the suggestions tile the same lines as the channel tiles, so the counts align', () => {
+    renderView();
+    const suggestions = screen
+      .getByText('deliveryChannel.overview.suggestionsHeading')
+      .closest('.MuiCard-root') as HTMLElement;
+    const note = within(suggestions).getByText(
+      'deliveryChannel.suggestions.recomputedDaily'
+    );
+    const count = within(suggestions).getByText(
+      'deliveryChannel.overview.openSuggestions:{"count":3}'
+    );
+
+    expect(
+      note.compareDocumentPosition(count) & Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy();
   });
 

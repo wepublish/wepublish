@@ -1668,7 +1668,6 @@
         "overview": "Overview"
       },
       "overview": {
-        "defaultChannel": "{{label}} (default)",
         "people": "{{count}} people",
         "showPeople": "Show people",
         "openSuggestions": "{{count}} open",
@@ -1678,9 +1677,10 @@
         "lastChange": "Last change",
         "noDecision": "None (default)",
         "empty": "Nobody on this channel.",
-        "channelHeading": "Delivery channel",
         "suggestionsHeading": "Suggested changes",
-        "activeFor": "Active for {{count}} automated message types"
+        "activeFor": "Active for {{count}} automated message types",
+        "channelHeadingDefault": "Delivery channel (default)",
+        "channelHeadingAlternative": "Delivery channel (alternative)"
       },
       "suggestions": {
         "cardTitle": "{{move}} · {{count}} suggestions",
