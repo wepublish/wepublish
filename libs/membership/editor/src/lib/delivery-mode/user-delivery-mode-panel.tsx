@@ -1,16 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
   Alert,
+  Box,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Link as MuiLink,
   Stack,
   Typography,
 } from '@mui/material';
@@ -28,17 +25,17 @@ import {
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 
 import {
+  DEFAULT_DELIVERY_CHANNEL,
   deliveryChannel,
   suggestionMove,
   useDeliveryChannels,
 } from './channels';
-import { describeDeliveryChange, reasonKey } from './delivery-change';
+import { reasonKey } from './delivery-change';
 import { usePaperLetterFlow } from './use-paper-letter-flow';
 
-export type UserDeliveryModePanelProps = {
+export type UserDeliveryChannelProps = {
   userId: string;
 };
 
@@ -56,16 +53,15 @@ const showError = (error: unknown) =>
 const formatDate = (iso: string) => new Date(iso).toLocaleDateString();
 
 /**
- * Which way this person's automated messages go, how that came about, and the
- * switch between channels for those who may. An open suggestion for the
- * person is answered right here, apply or keep.
+ * The person's channel, their open suggestion and the ways to change both.
+ * Two components read it so the controls can sit in a card's header and the
+ * notes in its body; Apollo answers the second reader from the cache.
  */
-export function UserDeliveryModePanel({ userId }: UserDeliveryModePanelProps) {
+function useUserDeliveryChannel(userId: string) {
   const { t } = useTranslation();
   const enabled = usePaperLetterFlow();
   const canManage = !!useAuthorisation('CAN_MANAGE_USER-DELIVERY-MODE');
   const channels = useDeliveryChannels();
-  const [keeping, setKeeping] = useState(false);
 
   const { data } = useQuery(UserDeliveryPreferenceDocument, {
     variables: { userId },
@@ -94,150 +90,201 @@ export function UserDeliveryModePanel({ userId }: UserDeliveryModePanelProps) {
     ConfirmDeliverySuggestionDocument,
     { refetchQueries: REFRESH, onError: showError }
   );
-  const [keep, { loading: keepLoading }] = useMutation(
+  const [keep, { loading: keeping }] = useMutation(
     KeepDeliverySuggestionDocument,
     { refetchQueries: REFRESH, onError: showError }
   );
 
   const preference = data?.userDeliveryPreference;
-  const suggestion = suggested?.userDeliverySuggestion;
 
-  if (!enabled || !preference) {
+  return {
+    t,
+    canManage,
+    channels,
+    preference: enabled ? preference : undefined,
+    suggestion: enabled ? suggested?.userDeliverySuggestion : undefined,
+    switchTo: (channel: Parameters<typeof deliveryChannel>[0]) =>
+      setMode({ variables: { userId, channel } }),
+    switching,
+    confirm: (id: string) => confirm({ variables: { id } }),
+    confirming,
+    keep: (id: string) => keep({ variables: { id } }),
+    keeping,
+  };
+}
+
+/**
+ * For a card header: which way this person's automated messages go, and the
+ * switch to the other channels for those who may.
+ */
+export function UserDeliveryChannelControls({
+  userId,
+}: UserDeliveryChannelProps) {
+  const { t, canManage, channels, preference, switchTo, switching } =
+    useUserDeliveryChannel(userId);
+
+  if (!preference) {
+    return null;
+  }
+
+  return (
+    <Stack
+      direction="row"
+      spacing={1}
+      useFlexGap
+      sx={{ alignItems: 'center', flexWrap: 'wrap' }}
+    >
+      <Typography
+        variant="caption"
+        sx={{ color: 'text.secondary' }}
+      >
+        {t('deliveryChannel.user.channelLabel')}
+      </Typography>
+      {/* One pill per channel, the current one filled; clicking another is
+          the switch, for those who may. */}
+      {channels.map(option => {
+        const active = option.channel === preference.channel;
+        const outOfReach =
+          option.needsPostalAddress && !preference.canReceiveLetters;
+        const clickable = canManage && !active && !switching;
+
+        return (
+          <Chip
+            key={option.channel}
+            size="small"
+            variant={active ? 'filled' : 'outlined'}
+            color={option.colour}
+            icon={<option.icon />}
+            label={t(option.labelKey)}
+            disabled={outOfReach}
+            onClick={clickable ? () => switchTo(option.channel) : undefined}
+          />
+        );
+      })}
+    </Stack>
+  );
+}
+
+/**
+ * For the card's body: why letters may be out of reach, and the person's
+ * open suggestion to apply or keep. Renders nothing when there is nothing
+ * to say.
+ */
+export function UserDeliveryChannelNotes({ userId }: UserDeliveryChannelProps) {
+  const {
+    t,
+    canManage,
+    preference,
+    suggestion,
+    confirm,
+    confirming,
+    keep,
+    keeping,
+  } = useUserDeliveryChannel(userId);
+  const [asking, setAsking] = useState(false);
+
+  if (!preference) {
     return null;
   }
 
   const current = deliveryChannel(preference.channel);
   const move = suggestion && suggestionMove(suggestion.kind);
+  // Email may always be chosen; say when it will not reach this person.
+  const emailUnreachable = deliveryChannel(
+    DEFAULT_DELIVERY_CHANNEL
+  ).unreachableEmailSegments.includes(preference.emailSegment);
+
+  // How the person got onto their channel stays with the overview; here only
+  // what asks for a decision or explains a pill.
+  if (preference.canReceiveLetters && !emailUnreachable && !suggestion) {
+    return null;
+  }
 
   return (
-    <Card
-      variant="outlined"
-      sx={{ bgcolor: 'background.paper' }}
-    >
-      <CardHeader title={t('deliveryMode.panelTitle')} />
+    <Box sx={{ px: 2, pb: 1.5 }}>
+      <Stack
+        spacing={1}
+        sx={{ alignItems: 'flex-start' }}
+      >
+        {!preference.canReceiveLetters && (
+          <Typography
+            variant="caption"
+            sx={{ color: 'text.secondary' }}
+          >
+            {t('deliveryMode.noAddress')}
+          </Typography>
+        )}
 
-      <CardContent>
-        <Stack
-          sx={{ alignItems: 'flex-start' }}
-          spacing={1.5}
-          direction="column"
-        >
-          <Chip
-            color={current.colour}
-            icon={<current.icon />}
-            label={t(current.labelKey)}
-          />
+        {emailUnreachable && (
+          <Typography
+            variant="caption"
+            sx={{ color: 'warning.main' }}
+          >
+            {t('deliveryChannel.user.emailUnreachable', {
+              segment: t(`mailSend.emailSegments.${preference.emailSegment}`),
+            })}
+          </Typography>
+        )}
 
-          {preference.origin && (
-            <Typography
-              variant="caption"
-              sx={{ display: 'block', color: 'text.secondary' }}
-            >
-              {describeDeliveryChange(t, preference, formatDate)}
-            </Typography>
-          )}
-
-          {!preference.canReceiveLetters && (
-            <Typography
-              variant="caption"
-              sx={{ display: 'block', color: 'text.secondary' }}
-            >
-              {t('deliveryMode.noAddress')}
-            </Typography>
-          )}
-
-          {suggestion && move && (
-            <Alert
-              severity="info"
-              sx={{ width: '100%' }}
-            >
-              <Stack spacing={1}>
-                <strong>
-                  {t('deliveryChannel.user.suggestion', {
-                    move: t(deliveryChannel(move.to).switchToKey),
-                  })}
-                </strong>
+        {suggestion && move && (
+          <Alert
+            severity="info"
+            sx={{ width: '100%' }}
+          >
+            <Stack spacing={1}>
+              <strong>
+                {t('deliveryChannel.user.suggestion', {
+                  move: t(deliveryChannel(move.to).switchToKey),
+                })}
+              </strong>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{ alignItems: 'center' }}
+              >
+                <Chip
+                  size="small"
+                  label={t(
+                    `deliveryMode.reason.${reasonKey(suggestion.reason)}`
+                  )}
+                />
+                <Typography variant="caption">
+                  {t('deliveryMode.table.since')}{' '}
+                  {formatDate(suggestion.createdAt)}
+                </Typography>
+              </Stack>
+              {canManage && (
                 <Stack
                   direction="row"
                   spacing={1}
-                  sx={{ alignItems: 'center' }}
                 >
-                  <Chip
+                  <Button
+                    variant="outlined"
                     size="small"
-                    label={t(
-                      `deliveryMode.reason.${reasonKey(suggestion.reason)}`
-                    )}
-                  />
-                  <Typography variant="caption">
-                    {t('deliveryMode.table.since')}{' '}
-                    {formatDate(suggestion.createdAt)}
-                  </Typography>
-                </Stack>
-                {canManage && (
-                  <Stack
-                    direction="row"
-                    spacing={1}
+                    loading={confirming}
+                    onClick={() => confirm(suggestion.id)}
                   >
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      loading={confirming}
-                      onClick={() =>
-                        confirm({ variables: { id: suggestion.id } })
-                      }
-                    >
-                      {t('deliveryMode.confirm')}
-                    </Button>
-                    <Button
-                      variant="text"
-                      size="small"
-                      onClick={() => setKeeping(true)}
-                    >
-                      {t('deliveryChannel.suggestions.keep')}
-                    </Button>
-                  </Stack>
-                )}
-              </Stack>
-            </Alert>
-          )}
-
-          {/* The way back to the default is the quiet one. */}
-          {canManage &&
-            channels
-              .filter(({ channel }) => channel !== preference.channel)
-              .map(target => (
-                <Button
-                  key={target.channel}
-                  variant={target.isDefault ? 'outlined' : 'contained'}
-                  loading={switching}
-                  disabled={
-                    target.needsPostalAddress && !preference.canReceiveLetters
-                  }
-                  onClick={() =>
-                    setMode({
-                      variables: { userId, channel: target.channel },
-                    })
-                  }
-                >
-                  {t(target.switchToKey)}
-                </Button>
-              ))}
-
-          <MuiLink
-            component={Link}
-            to="/deliverychannel"
-            variant="body2"
-          >
-            {t('deliveryChannel.user.manageAll')}
-          </MuiLink>
-        </Stack>
-      </CardContent>
+                    {t('deliveryMode.confirm')}
+                  </Button>
+                  <Button
+                    variant="text"
+                    size="small"
+                    onClick={() => setAsking(true)}
+                  >
+                    {t('deliveryChannel.suggestions.keep')}
+                  </Button>
+                </Stack>
+              )}
+            </Stack>
+          </Alert>
+        )}
+      </Stack>
 
       {/* Keeping is a manual decision: the nightly run never proposes this
           person again, in either direction. Say so before it happens. */}
       <Dialog
-        open={keeping}
-        onClose={() => setKeeping(false)}
+        open={asking}
+        onClose={() => setAsking(false)}
       >
         <DialogTitle>{t('deliveryChannel.suggestions.keepTitle')}</DialogTitle>
         <DialogContent>
@@ -252,18 +299,18 @@ export function UserDeliveryModePanel({ userId }: UserDeliveryModePanelProps) {
         <DialogActions>
           <Button
             variant="text"
-            onClick={() => setKeeping(false)}
+            onClick={() => setAsking(false)}
           >
             {t('cancel')}
           </Button>
           <Button
             variant="contained"
-            loading={keepLoading}
+            loading={keeping}
             onClick={() => {
-              setKeeping(false);
+              setAsking(false);
 
               if (suggestion) {
-                keep({ variables: { id: suggestion.id } });
+                keep(suggestion.id);
               }
             }}
           >
@@ -271,6 +318,6 @@ export function UserDeliveryModePanel({ userId }: UserDeliveryModePanelProps) {
           </Button>
         </DialogActions>
       </Dialog>
-    </Card>
+    </Box>
   );
 }

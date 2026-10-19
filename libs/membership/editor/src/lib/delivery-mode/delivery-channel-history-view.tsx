@@ -41,9 +41,10 @@ export function DeliveryChannelHistoryView() {
 
   const [channel, setChannel] = useState<MailChannel | undefined>();
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(PAGE_SIZE);
 
   const { data, loading } = useQuery(DeliveryModeBulkChangesDocument, {
-    variables: { skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE, channel },
+    variables: { skip: (page - 1) * limit, take: limit, channel },
     fetchPolicy: 'cache-and-network',
   });
 
@@ -175,14 +176,15 @@ export function DeliveryChannelHistoryView() {
         </TableContainer>
       }
 
-      {totalCount > PAGE_SIZE && (
+      {/* Also once the size was changed, so it can be changed back. */}
+      {(totalCount > limit || limit !== PAGE_SIZE) && (
         <Box sx={{ marginTop: 1.5 }}>
           <Pagination
             state={{
               page,
-              limit: PAGE_SIZE,
+              limit,
               setPage,
-              setLimit: () => undefined /* page size is fixed here */,
+              setLimit,
             }}
             totalCount={totalCount}
           />

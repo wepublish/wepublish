@@ -51,7 +51,7 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   Service `libs/membership/api/src/lib/delivery-mode/`, permission
   `CanManageUserDeliveryMode`, resolver gated by both letter features.
 - `SubscriptionInterval.sendAsLetter`: only events switched on in the flow
-  editor («auch als Brief») print; user-flow mails (login, password, email
+  editor («Auch per Brief») print; user-flow mails (login, password, email
   change) never do. The three senders (periodic job, legacy `member-context`,
   renewal success) pass it as `asLetter` into `MailController`.
 - `MailController.sendMail` (`libs/mail/api`) branches before mailing when
@@ -76,7 +76,7 @@ Automated subscription mails can reach a user as a printed letter. The pieces:
   dropped and refused) or `keepDeliverySuggestion`, which stores the user's
   current channel as a manual decision with reason `kept` — that is what makes
   «Beibehalten» survive the nightly recompute without a column of its own.
-- Editor: one area, «Zustellweg», at `/deliverychannel/:view`
+- Editor: one area, «Zustellkanal», at `/deliverychannel/:view`
   (`libs/membership/editor/src/lib/delivery-mode/delivery-channel-page.tsx`,
   `/deliverysuggestions` redirects). Views: `overview` (default; counts per
   channel from `deliveryChannelCounts`, the people of one channel from

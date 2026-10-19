@@ -99,4 +99,13 @@ describe('RecipientSummary', () => {
       screen.queryByRole('button', { name: 'mailSend.showRecipients' })
     ).toBeNull();
   });
+
+  it('names the list the way the caller wants, as the people are not always recipients', () => {
+    renderSummary({ showRecipientsLabel: 'Leute anzeigen' });
+
+    expect(screen.getByRole('button', { name: 'Leute anzeigen' })).toBeTruthy();
+    expect(
+      screen.queryByRole('button', { name: 'mailSend.showRecipients' })
+    ).toBeNull();
+  });
 });

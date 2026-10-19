@@ -4,7 +4,10 @@ import {
   MailChannel,
   PrismaClient,
 } from '@prisma/client';
-import { MailRecipientBase } from '../mail-send/mail-send.model';
+import {
+  MailEmailSegment,
+  MailRecipientBase,
+} from '../mail-send/mail-send.model';
 import { MailSendRecipientService } from '../mail-send/mail-send-recipient.service';
 import { UserDeliveryPreferenceService } from './user-delivery-preference.service';
 
@@ -51,6 +54,7 @@ function setup(users: ReturnType<typeof user>[] = [user('u1')]) {
     },
   };
   const recipients = {
+    placeholderPatterns: vi.fn(async () => ['@placeholder.local']),
     resolvePage: vi.fn(async (_a: unknown, skip: number) =>
       skip === 0 ? users.map(u => ({ user: u })) : []
     ),
@@ -84,7 +88,29 @@ describe('UserDeliveryPreferenceService', () => {
         changedAt: null,
         changedBy: null,
         canReceiveLetters: true,
+        emailSegment: MailEmailSegment.unknown,
       });
+    });
+
+    it('says how the email address fares, so a switch to email can be weighed', async () => {
+      const dead = {
+        ...user('dead'),
+        emailQuality: { level: 'dead' },
+      };
+      const placeholder = {
+        ...user('p'),
+        email: 'p@placeholder.local',
+        emailQuality: { level: 'active' },
+      };
+      const { service } = setup([dead, placeholder]);
+
+      await expect(service.get('dead')).resolves.toEqual(
+        expect.objectContaining({ emailSegment: MailEmailSegment.dead })
+      );
+      // A placeholder is no mailbox, whatever its quality says.
+      await expect(service.get('p')).resolves.toEqual(
+        expect.objectContaining({ emailSegment: MailEmailSegment.placeholder })
+      );
     });
 
     it('reports the stored preference and whether letters are possible', async () => {
@@ -105,6 +131,7 @@ describe('UserDeliveryPreferenceService', () => {
         changedAt,
         changedBy: { id: 'admin', email: 'a@x.ch', name: 'A', firstName: null },
         canReceiveLetters: false,
+        emailSegment: MailEmailSegment.unknown,
       });
     });
   });
@@ -353,6 +380,7 @@ describe('UserDeliveryPreferenceService', () => {
             changedAt,
             changedBy: admin,
             canReceiveLetters: true,
+            emailSegment: MailEmailSegment.unknown,
           },
         ],
       });

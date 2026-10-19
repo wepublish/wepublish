@@ -19,7 +19,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdCancel, MdCheckCircle } from 'react-icons/md';
 
@@ -38,12 +38,18 @@ export function RecipientListModal({
   audience,
   channel,
   totalCount,
+  title,
+  withoutAddressLabel,
 }: {
   open: boolean;
   onClose: () => void;
   audience: MailAudienceInput;
   channel: MailChannel;
   totalCount: number;
+  /** The people are recipients only in the send tool; others name them. */
+  title?: ReactNode;
+  /** What a missing address means here: unsent, or simply not a letter. */
+  withoutAddressLabel?: string;
 }) {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
@@ -82,7 +88,7 @@ export function RecipientListModal({
       maxWidth="md"
     >
       <DialogTitle>
-        {t('mailSend.recipientList.title', { count: totalCount })}
+        {title ?? t('mailSend.recipientList.title', { count: totalCount })}
       </DialogTitle>
       <DialogContent style={{ maxHeight: '65vh' }}>
         {loading && !recipients.length ?
@@ -144,7 +150,10 @@ export function RecipientListModal({
                       : <MdCancel
                           size={18}
                           color="#f44336"
-                          title={t('mailSend.recipientList.withoutAddress')}
+                          title={
+                            withoutAddressLabel ??
+                            t('mailSend.recipientList.withoutAddress')
+                          }
                         />
                       }
                     </TableCell>

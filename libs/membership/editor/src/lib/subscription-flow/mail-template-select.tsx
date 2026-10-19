@@ -148,7 +148,9 @@ export function MailTemplateSelect({
               />
             }
             label={t('mailTemplateSelect.sendAsLetter')}
-            sx={{ marginRight: 0 }}
+            // The label's own negative margin would eat the row's gap now that
+            // it no longer sits directly in the row.
+            sx={{ marginLeft: 0, marginRight: 0 }}
           />
           <InfoTooltip text={t('mailTemplateSelect.sendAsLetterHint')} />
         </Stack>

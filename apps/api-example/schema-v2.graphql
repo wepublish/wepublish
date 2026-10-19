@@ -1066,6 +1066,11 @@ type DeliveryChannelUserModel {
 
   """How automated subscription mails reach this user."""
   channel: MailChannel!
+
+  """
+  How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen.
+  """
+  emailSegment: MailEmailSegment!
   origin: DeliveryPreferenceOrigin
   reason: String
   user: MailLogRecipient!
@@ -6535,6 +6540,11 @@ type UserDeliveryPreferenceModel {
 
   """How automated subscription mails reach this user."""
   channel: MailChannel!
+
+  """
+  How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen.
+  """
+  emailSegment: MailEmailSegment!
   origin: DeliveryPreferenceOrigin
   reason: String
 }

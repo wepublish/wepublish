@@ -73,6 +73,17 @@ const answer = (name: string) => {
           ],
         },
       };
+    case 'SystemMails':
+      return {
+        data: {
+          systemMails: [
+            { event: 'LOGIN_LINK', mailTemplate: { id: 't', name: 'T' } },
+            { event: 'EMAIL_CHANGE', mailTemplate: { id: 't', name: 'T' } },
+            { event: 'PASSWORD_RESET', mailTemplate: null },
+            { event: 'TEST_MAIL', mailTemplate: { id: 't', name: 'T' } },
+          ],
+        },
+      };
     case 'UsersByDeliveryChannel':
       return {
         data: { usersByDeliveryChannel: { nodes: [person], totalCount: 1 } },
@@ -140,19 +151,72 @@ describe('DeliveryChannelOverviewView', () => {
         /deliveryMode\.origin\.manual · deliveryMode\.reason\.kept · .* · Admin/
       )
     ).toBeTruthy();
+    // The channel is plain text in the row, not a pill.
+    const row = within(
+      screen
+        .getByRole('link', { name: /Jane Doe/ })
+        .closest('tr') as HTMLElement
+    );
+    const channel = row.getByText('deliveryMode.channel.letter');
+    expect(channel.closest('.MuiChip-root')).toBeNull();
+    expect(channel.closest('td')?.querySelector('svg')).toBeNull();
   });
 
-  it('shows the people of a channel from its tile', () => {
+  it('shows the people of a channel from anywhere on its tile', () => {
     renderView();
 
     fireEvent.click(
-      screen.getAllByRole('button', {
-        name: 'deliveryChannel.overview.showPeople',
-      })[0]
+      screen.getByText('deliveryChannel.overview.people:{"count":1100}')
     );
 
     expect(variablesOf('UsersByDeliveryChannel').at(-1)).toEqual(
       expect.objectContaining({ channel: 'mail', skip: 0 })
+    );
+  });
+
+  it('marks the tile whose people are listed, and keeps every link a link', () => {
+    renderView();
+    const tileOf = (count: number) =>
+      screen
+        .getByText(`deliveryChannel.overview.people:{"count":${count}}`)
+        .closest('.MuiCard-root') as HTMLElement;
+
+    expect(tileOf(7).getAttribute('aria-current')).toBe('true');
+    expect(tileOf(1100).getAttribute('aria-current')).toBeNull();
+
+    fireEvent.click(
+      within(tileOf(1100)).getByText('deliveryChannel.overview.channelHeading')
+    );
+
+    expect(tileOf(1100).getAttribute('aria-current')).toBe('true');
+    expect(tileOf(7).getAttribute('aria-current')).toBeNull();
+    // The tile is the button; the link text inside is only text.
+    for (const text of screen.getAllByText(
+      'deliveryChannel.overview.showPeople'
+    )) {
+      expect(text.closest('.MuiButton-root')).toBeNull();
+    }
+  });
+
+  it('lets the reader choose how many people a page shows', () => {
+    queries.mockImplementation((name: string) =>
+      name === 'UsersByDeliveryChannel' ?
+        {
+          data: { usersByDeliveryChannel: { nodes: [person], totalCount: 45 } },
+          loading: false,
+        }
+      : answer(name)
+    );
+    renderView();
+
+    // A native select: change it straight to the size wanted.
+    fireEvent.change(
+      screen.getByRole('combobox', { name: 'listView.pagination.pageSize' }),
+      { target: { value: '50' } }
+    );
+
+    expect(variablesOf('UsersByDeliveryChannel').at(-1)).toEqual(
+      expect.objectContaining({ skip: 0, take: 50 })
     );
   });
 
@@ -168,45 +232,88 @@ describe('DeliveryChannelOverviewView', () => {
     );
   });
 
+  it('says what each tile is about', () => {
+    renderView();
+
+    expect(
+      screen.getAllByText('deliveryChannel.overview.channelHeading')
+    ).toHaveLength(2);
+    const suggestions = screen
+      .getByText('deliveryChannel.overview.suggestionsHeading')
+      .closest('.MuiCard-root') as HTMLElement;
+    expect(
+      within(suggestions).getByText(
+        'deliveryChannel.overview.openSuggestions:{"count":3}'
+      )
+    ).toBeTruthy();
+  });
+
+  it('pictures the suggestions as a move between the channels', () => {
+    renderView();
+    const suggestions = screen
+      .getByText('deliveryChannel.overview.suggestionsHeading')
+      .closest('.MuiCard-root') as HTMLElement;
+
+    // Email, the swap, letter — the same icons the channel tiles use.
+    expect(suggestions.querySelectorAll('svg')).toHaveLength(3);
+  });
+
   it('points to the open suggestions of both directions', () => {
     renderView();
 
     expect(
       screen.getByText('deliveryChannel.overview.openSuggestions:{"count":3}')
     ).toBeTruthy();
+    // The whole tile is the link.
     expect(
       screen
-        .getByRole('link', { name: 'deliveryChannel.overview.review' })
-        .getAttribute('href')
+        .getByText('deliveryChannel.overview.suggestionsHeading')
+        .closest('a')
+        ?.getAttribute('href')
     ).toBe('/deliverychannel/suggestions');
   });
 
-  it('says how many automated messages are printed at all', () => {
+  it('says per channel how many automated messages it covers', () => {
     renderView();
+    const tileOf = (count: number) =>
+      screen
+        .getByText(`deliveryChannel.overview.people:{"count":${count}}`)
+        .closest('.MuiCard-root') as HTMLElement;
 
+    // Three subscription events and two account mails are configured (a
+    // test mail is not a message to anyone); all go by email, only the two
+    // printed subscription events by letter.
     expect(
-      screen.getByText(
-        'deliveryChannel.overview.printed:{"printed":2,"total":3}'
+      within(tileOf(1100)).getByText(
+        'deliveryChannel.overview.activeFor:{"count":5}'
       )
     ).toBeTruthy();
     expect(
-      screen
-        .getByRole('link', { name: 'deliveryChannel.overview.openFlows' })
-        .getAttribute('href')
-    ).toBe('/communicationflows/edit/default');
-  });
-
-  it('leaves out the printed messages for people who may not see the flows', () => {
-    allowed.mockImplementation(
-      permission => permission !== 'CAN_GET_SUBSCRIPTION_FLOWS'
-    );
-    renderView();
-
-    expect(screen.queryByText(/deliveryChannel\.overview\.printed/)).toBeNull();
+      within(tileOf(7)).getByText(
+        'deliveryChannel.overview.activeFor:{"count":2}'
+      )
+    ).toBeTruthy();
     expect(
-      queries.mock.calls.find(([name]) => name === 'SubscriptionFlows')?.[1]
-    ).toEqual(expect.objectContaining({ skip: true }));
+      screen.queryByText(/deliveryChannel\.overview\.openFlows/)
+    ).toBeNull();
   });
+
+  it.each(['CAN_GET_SUBSCRIPTION_FLOWS', 'CAN_GET_SYSTEM_MAILS'])(
+    'leaves out the coverage for people who lack %s',
+    missing => {
+      allowed.mockImplementation(permission => permission !== missing);
+      renderView();
+
+      expect(
+        screen.queryByText(/deliveryChannel\.overview\.activeFor/)
+      ).toBeNull();
+      for (const name of ['SubscriptionFlows', 'SystemMails']) {
+        expect(
+          queries.mock.calls.find(([operation]) => operation === name)?.[1]
+        ).toEqual(expect.objectContaining({ skip: true }));
+      }
+    }
+  );
 
   it('says so when nobody is on the channel', () => {
     queries.mockImplementation((name: string) =>

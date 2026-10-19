@@ -24,12 +24,17 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+const features = vi.fn(() => new Set<string>());
+
 vi.mock('@wepublish/ui/editor', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/ui/editor')>()),
   createCheckedPermissionComponent: () => (component: unknown) => component,
   PermissionControl: ({ children }: { children: React.ReactNode }) => children,
   useAuthorisation: () => true,
+  useFeature: (feature: string) => features().has(feature),
 }));
+
+afterEach(() => features.mockReturnValue(new Set()));
 
 const { useQuery } = await import('@apollo/client/react');
 const mockedUseQuery = useQuery as unknown as Mock;
@@ -234,5 +239,16 @@ describe('UserEditView', () => {
     );
     expect(screen.queryByText('userMail.logTitle')).not.toBeInTheDocument();
     expect(screen.queryByText('userMail.sendTitle')).not.toBeInTheDocument();
+  });
+
+  it('names the panel after everything it shows once letters exist', async () => {
+    features.mockReturnValue(new Set(['paper-letters']));
+    mockQueries([[UserDocument, { user }]]);
+    renderAt('/users/edit/user-1');
+
+    expect(
+      await screen.findByText('userMail.titleWithLetters')
+    ).toBeInTheDocument();
+    expect(screen.queryByText('userMail.title')).not.toBeInTheDocument();
   });
 });

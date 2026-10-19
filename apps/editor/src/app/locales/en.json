@@ -1253,7 +1253,7 @@
     },
     "name": "Name",
     "mailTemplates": {
-      "availableTemplates": "Mailing templates",
+      "availableTemplates": "Message templates",
       "cancel": "Cancel",
       "content": "Content",
       "create": "Create template",
@@ -1470,7 +1470,7 @@
         "subscription": "Covers the subscription itself: newly started, confirmed or deactivated. Additionally available: subscription data such as amount and term.",
         "renewal": "Automatic renewal — successful or failed. Additionally available: plan and payment method names plus the invoice data.",
         "invoiceCreation": "As soon as a new invoice has been created. Additionally available: the invoice and its subscription.",
-        "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Manual mailings”. Additionally available: the subscription and the latest invoices.",
+        "custom": "A mail you send freely to subscribers, e.g. a newsletter via “Manual messages”. Additionally available: the subscription and the latest invoices.",
         "customNoSubscription": "A mail you send freely to people without a subscription, e.g. an invitation or win-back. Only the recipient fields are available — subscription placeholders stay empty."
       },
       "placeholderDescriptions": {
@@ -1519,11 +1519,11 @@
         "optional_invoices_0_id": "ID of the latest invoice (array, index 0).",
         "optional_invoices_0_description": "Description of the latest invoice."
       },
-      "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual mailings».",
+      "statusHelp": "A check mark means an automatic email uses this template. «Unused» means no automatic email uses it — you can still send it by hand via «Manual messages».",
       "placeholdersInfo": "Placeholders are replaced automatically with each recipient's data when the email is sent, e.g. their first name. This makes every email personal."
     },
     "mailTemplateSelect": {
-      "sendAsLetter": "Also print as letter",
+      "sendAsLetter": "Also by letter",
       "sendAsLetterHint": "People on the letter channel get this message printed instead of emailed.",
       "noMailSentSelectNow": "Do not send an email"
     },
@@ -1600,7 +1600,7 @@
       "reason": {
         "emailQuality_dead": "Email address unreachable",
         "placeholderEmail": "Placeholder address",
-        "bulk": "By audience",
+        "bulk": "By user group",
         "emailQuality_active": "Email address active again",
         "kept": "Kept"
       },
@@ -1608,7 +1608,7 @@
       "switchToLetter": "Switch to letter",
       "switchToMail": "Switch to email",
       "suggestionsTitle": "Delivery channel",
-      "suggestionsIntro": "The delivery channel decides whether a person gets their automated messages by email or by letter. It is switched by hand, from a suggestion or by audience. Suggestions are made every night from the email quality and only take effect once applied.",
+      "suggestionsIntro": "The delivery channel decides whether a user gets their automated messages by email or by letter. It is switched by hand, based on a suggestion, or through user group filters. Suggestions are computed daily from automatic feedback on email deliverability, but only take effect after manual confirmation.",
       "kind": {
         "toLetter": "Switch to letter ({{count}})",
         "toMail": "Switch to email ({{count}})"
@@ -1644,26 +1644,26 @@
       },
       "bulk": {
         "title": "Switch an audience",
-        "intro": "Narrow the audience like for manual sends and switch the delivery channel for everyone in it.",
+        "intro": "Narrow the audience like for manual messages and switch the delivery channel for everyone in it.",
         "people": "{{count}} people in this audience",
         "history": {
-          "title": "Switches by audience",
-          "empty": "No switch by audience yet.",
+          "title": "Switches by user group",
+          "empty": "No switch by user group yet.",
           "when": "When",
           "who": "By",
           "channel": "Delivery channel",
           "people": "People",
           "changed": "Switched",
           "skipped": "Skipped",
-          "filter": "Audience",
+          "filter": "User group",
           "unknownUser": "Unknown"
         }
       }
     },
     "deliveryChannel": {
       "tabs": {
-        "suggestions": "Suggestions ({{count}})",
-        "assign": "Switch an audience",
+        "suggestions": "Suggested changes ({{count}})",
+        "assign": "Switch a user group",
         "history": "History",
         "overview": "Overview"
       },
@@ -1671,15 +1671,16 @@
         "defaultChannel": "{{label}} (default)",
         "people": "{{count}} people",
         "showPeople": "Show people",
-        "openSuggestions": "{{count}} open suggestions",
-        "review": "Review",
-        "printed": "Printed: {{printed}} of {{total}} automated messages",
-        "openFlows": "Go to automated messages",
+        "openSuggestions": "{{count}} open",
+        "review": "Review suggestions",
         "peopleOn": "People on {{channel}}",
         "search": "Search name or email address",
         "lastChange": "Last change",
-        "noDecision": "No decision of their own",
-        "empty": "Nobody on this channel."
+        "noDecision": "None (default)",
+        "empty": "Nobody on this channel.",
+        "channelHeading": "Delivery channel",
+        "suggestionsHeading": "Suggested changes",
+        "activeFor": "Active for {{count}} automated message types"
       },
       "suggestions": {
         "cardTitle": "{{move}} · {{count}} suggestions",
@@ -1699,7 +1700,7 @@
       "assign": {
         "steps": {
           "audience": {
-            "title": "Audience",
+            "title": "User group",
             "description": "Who is switched"
           },
           "channel": {
@@ -1712,25 +1713,28 @@
           }
         },
         "people": "{{count}} people",
-        "noAddress": "{{count}} people without a complete postal address stay on email.",
+        "noAddress": "{{count}} people without a complete postal address cannot be switched to letter and stay on email.",
         "summary": {
           "letter": "{{changed}} will be switched to letter, {{skipped}} without a complete postal address stay on email.",
           "mail": "{{changed}} will be switched to email."
         },
-        "confirmTitle": "Switch the audience to {{channel}}?",
+        "confirmTitle": "Switch the user group to {{channel}}?",
         "showHistory": "Show in history",
-        "again": "New switch"
+        "again": "New switch",
+        "unreachableEmail": "{{count}} people with an unreachable email address (placeholder or dead) are switched anyway – email will not reach them.",
+        "filterTitle": "Filter the user group"
       },
       "history": {
         "allChannels": "All"
       },
       "user": {
         "switched": "Delivery channel switched to {{channel}}.",
-        "manageAll": "Manage all delivery channels",
-        "suggestion": "Suggestion: {{move}}"
+        "suggestion": "Suggestion: {{move}}",
+        "channelLabel": "Delivery channel for automated messages:",
+        "emailUnreachable": "Email address unreachable ({{segment}}) – email will not reach this person."
       },
       "flows": {
-        "letterHint": "Messages marked «Also print as letter» reach people on the letter channel in print; everyone else gets email.",
+        "letterHint": "Messages marked «Also by letter» reach people on the letter channel in print; everyone else gets email.",
         "manage": "Manage delivery channels"
       }
     },
@@ -1768,7 +1772,7 @@
         "system": "Match system"
       },
       "logout": "Logout",
-      "mailTemplates": "Mailing templates",
+      "mailTemplates": "Message templates",
       "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
       "pages": "Pages",
@@ -1791,8 +1795,8 @@
       "audienceDashboard": "Dashboard",
       "integrations": "Integrations",
       "apps": "Apps",
-      "mailSend": "Manual mailings",
-      "mailLog": "Completed mailings",
+      "mailSend": "Manual messages",
+      "mailLog": "Sent messages",
       "communication": "Communication",
       "auditLog": "Audit log",
       "letterLayouts": "Stationery",
@@ -3702,7 +3706,7 @@
       "summary": {
         "title": "Summary"
       },
-      "title": "Manual mailings",
+      "title": "Manual messages",
       "template": "Mailing template",
       "selectTemplate": "Select template",
       "audience": {
@@ -3905,10 +3909,10 @@
         "matchAll": "all conditions",
         "more": "{{count}} more filters"
       },
-      "deliveryChannelHandOff": "Switch this audience’s delivery channel for good …"
+      "deliveryChannelHandOff": "Switch this user group’s delivery channel for good …"
     },
     "mailLog": {
-      "title": "Completed mailings",
+      "title": "Sent messages",
       "empty": "No emails found.",
       "sentDate": "Date",
       "template": "Template",
@@ -3927,7 +3931,7 @@
         "reset": "Reset filters",
         "typeHint": "What triggered this send.",
         "channel": "Delivery",
-        "jobHelp": "A send job groups all emails sent with one click via «Manual mailings». Pick one to see only its emails."
+        "jobHelp": "A send job groups all emails sent with one click via «Manual messages». Pick one to see only its emails."
       },
       "types": {
         "subscriptionFlow": "Subscription mailing",
@@ -3937,7 +3941,7 @@
       },
       "error": "Error",
       "typeDescriptions": {
-        "manual": "Sent by hand via “Manual mailings” or “Send test”. Example: a newsletter to all subscribers.",
+        "manual": "Sent by hand via “Manual messages” or “Send test”. Example: a newsletter to all subscribers.",
         "subscriptionFlow": "Time-based, from “Automated messages”, scheduled off the subscription date. Examples: reminder 14 days before it ends, dunning after an unpaid invoice.",
         "userFlow": "Triggered immediately by a concrete action or event. Examples: login link requested, email address changed, renewal payment failed.",
         "systemMail": "Account mails, configured under “Automated messages” in the “Account & login” section. Examples: welcome mail after registration, password reset."
@@ -3980,7 +3984,7 @@
         },
         "templateMissing": {
           "cause": "The mailing template used here no longer exists.",
-          "fix": "Pick an existing template under “Mailing templates” or create it again, then start the send once more."
+          "fix": "Pick an existing template under “Message templates” or create it again, then start the send once more."
         },
         "generic": {
           "cause": "The mail server rejected the send with the message below.",
@@ -4055,12 +4059,13 @@
     },
     "userMail": {
       "sendTitle": "Send email",
-      "logTitle": "Completed mailings",
+      "logTitle": "Sent messages",
       "customOnlyHint": "Only custom templates can be sent to a single user.",
       "selectTemplate": "Select template",
       "send": "Send",
       "sent": "Email sent",
-      "title": "Emails"
+      "title": "Emails",
+      "titleWithLetters": "Messages"
     },
     "mailJobs": {
       "created": "Started",
@@ -4193,7 +4198,7 @@
     },
     "letterLayouts": {
       "title": "Stationery",
-      "intro": "Header and footer for printed letters. Mailing templates print on the default stationery unless they choose their own.",
+      "intro": "Header and footer for printed letters. Message templates print on the default stationery unless they choose their own.",
       "create": "Create stationery",
       "createHeader": "Create stationery",
       "editHeader": "Edit stationery",

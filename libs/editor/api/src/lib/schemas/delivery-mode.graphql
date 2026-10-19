@@ -10,6 +10,7 @@ fragment UserDeliveryPreference on UserDeliveryPreferenceModel {
     firstName
   }
   canReceiveLetters
+  emailSegment
 }
 
 fragment DeliveryChannelUser on DeliveryChannelUserModel {

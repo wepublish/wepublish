@@ -155,6 +155,62 @@ describe('DeliveryChannelAssignView', () => {
     ).toBe(true);
   });
 
+  it('speaks of users, not recipients: nothing is sent here', () => {
+    renderView();
+
+    expect(
+      screen.getByRole('button', {
+        name: 'deliveryChannel.overview.showPeople',
+      })
+    ).toBeTruthy();
+    expect(screen.queryByText(/mailSend\.showRecipients/)).toBeNull();
+  });
+
+  it('explains a missing address in its own terms inside the list', () => {
+    queries.mockImplementation((name: string) =>
+      name === 'MailSendRecipients' ?
+        {
+          data: {
+            mailSendRecipients: {
+              nodes: [
+                {
+                  id: 'r1',
+                  email: 'jane@example.com',
+                  name: 'Doe',
+                  firstName: 'Jane',
+                  memberPlanName: null,
+                  emailSegment: 'dead',
+                  hasAddress: false,
+                },
+              ],
+              totalCount: 1,
+            },
+          },
+          loading: false,
+        }
+      : answer(name)
+    );
+    renderView();
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'deliveryChannel.overview.showPeople',
+      })
+    );
+
+    expect(screen.getByTitle('deliveryMode.noAddress')).toBeTruthy();
+    expect(
+      screen.queryByTitle('mailSend.recipientList.withoutAddress')
+    ).toBeNull();
+  });
+
+  it('heads the filter as filtering the user group, and lets the filter drop its own label', () => {
+    renderView();
+
+    expect(screen.getByText('deliveryChannel.assign.filterTitle')).toBeTruthy();
+    expect(filterProps.mock.calls[0][0].baseLabel).toBeNull();
+  });
+
   it('starts from the audience the send page hands over', () => {
     renderView({ audience: { emailSegments: ['placeholder'] } });
 
@@ -182,6 +238,38 @@ describe('DeliveryChannelAssignView', () => {
     expect(
       screen.getByText('deliveryChannel.assign.noAddress:{"count":3}')
     ).toBeTruthy();
+  });
+
+  it('warns, but does not refuse, when email will not reach some of them', () => {
+    preview = {
+      userCount: 12,
+      withoutAddressCount: 0,
+      segments: [
+        { segment: 'placeholder', userCount: 3 },
+        { segment: 'dead', userCount: 2 },
+        { segment: 'active', userCount: 7 },
+      ],
+    };
+    renderView();
+    next();
+    pick('deliveryMode.channel.mail');
+
+    expect(
+      screen.getByText('deliveryChannel.assign.unreachableEmail:{"count":5}')
+    ).toBeTruthy();
+    expect(
+      (
+        screen.getByRole('button', {
+          name: 'mailSend.next',
+        }) as HTMLButtonElement
+      ).disabled
+    ).toBe(false);
+
+    // Letters are about the postal address, not the mailbox.
+    pick('deliveryMode.channel.letter');
+    expect(
+      screen.queryByText(/deliveryChannel\.assign\.unreachableEmail/)
+    ).toBeNull();
   });
 
   it('offers no letters where none can be sent', () => {

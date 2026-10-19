@@ -6,8 +6,14 @@ import {
   PrismaClient,
 } from '@prisma/client';
 import { canReceiveLetters } from '@wepublish/letter/api';
-import { MailAudienceInput } from '../mail-send/mail-send.model';
-import { MailSendRecipientService } from '../mail-send/mail-send-recipient.service';
+import {
+  MailAudienceInput,
+  MailEmailSegment,
+} from '../mail-send/mail-send.model';
+import {
+  emailSegmentOf,
+  MailSendRecipientService,
+} from '../mail-send/mail-send-recipient.service';
 import {
   DeliveryChannelCount,
   DeliveryModeAudiencePreview,
@@ -60,15 +66,16 @@ export class UserDeliveryPreferenceService {
   ) {}
 
   async get(userId: string): Promise<UserDeliveryPreferenceModel> {
-    const [user, preference] = await Promise.all([
+    const [user, preference, patterns] = await Promise.all([
       this.prisma.user.findUnique({
         where: { id: userId },
-        include: { address: true },
+        include: { address: true, emailQuality: { select: { level: true } } },
       }),
       this.prisma.userDeliveryPreference.findUnique({
         where: { userId },
         include: { changedBy: changedBySelect },
       }),
+      this.recipients.placeholderPatterns(),
     ]);
 
     return {
@@ -78,6 +85,9 @@ export class UserDeliveryPreferenceService {
       changedAt: preference?.changedAt ?? null,
       changedBy: preference?.changedBy ?? null,
       canReceiveLetters: !!user && canReceiveLetters(user),
+      // Email can always be chosen; whether it reaches anyone is worth a word.
+      emailSegment:
+        user ? emailSegmentOf(user, patterns) : MailEmailSegment.unknown,
     };
   }
 
@@ -201,7 +211,7 @@ export class UserDeliveryPreferenceService {
         { AND: [channelWhere(channel), searchWhere(term)] }
       : channelWhere(channel);
 
-    const [users, totalCount] = await Promise.all([
+    const [users, totalCount, patterns] = await Promise.all([
       this.prisma.user.findMany({
         where,
         orderBy: [{ name: 'asc' }, { firstName: 'asc' }, { id: 'asc' }],
@@ -209,10 +219,12 @@ export class UserDeliveryPreferenceService {
         take,
         include: {
           address: true,
+          emailQuality: { select: { level: true } },
           deliveryPreference: { include: { changedBy: changedBySelect } },
         },
       }),
       this.prisma.user.count({ where }),
+      this.recipients.placeholderPatterns(),
     ]);
 
     return {
@@ -230,6 +242,7 @@ export class UserDeliveryPreferenceService {
         changedAt: user.deliveryPreference?.changedAt ?? null,
         changedBy: user.deliveryPreference?.changedBy ?? null,
         canReceiveLetters: canReceiveLetters(user),
+        emailSegment: emailSegmentOf(user, patterns),
       })),
     };
   }

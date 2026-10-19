@@ -31,6 +31,7 @@ export function RecipientSummary({
   onRefreshed,
   missing,
   onShowRecipients,
+  showRecipientsLabel,
   action,
 }: {
   loading: boolean;
@@ -47,6 +48,8 @@ export function RecipientSummary({
   missing: string[];
   /** Absent when the viewer may not see the list. */
   onShowRecipients?: () => void;
+  /** The people are recipients only in the send tool; others name them. */
+  showRecipientsLabel?: ReactNode;
   action?: ReactElement;
 }) {
   const { t } = useTranslation();
@@ -79,7 +82,7 @@ export function RecipientSummary({
                 disabled={count === 0}
                 onClick={onShowRecipients}
               >
-                {t('mailSend.showRecipients')}
+                {showRecipientsLabel ?? t('mailSend.showRecipients')}
               </Button>
             )}
           </Stack>

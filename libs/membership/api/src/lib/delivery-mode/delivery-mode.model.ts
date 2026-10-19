@@ -13,6 +13,7 @@ import {
 } from '@prisma/client';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import {
+  MailEmailSegment,
   MailLogRecipient,
   MailSegmentCount,
 } from '../mail-send/mail-send.model';
@@ -52,6 +53,12 @@ export class UserDeliveryPreferenceModel {
       'Whether the postal address is complete enough for letters; letters cannot be chosen otherwise.',
   })
   canReceiveLetters!: boolean;
+
+  @Field(() => MailEmailSegment, {
+    description:
+      'How the email address fares: a placeholder or dead address is not reached by email, though email may still be chosen.',
+  })
+  emailSegment!: MailEmailSegment;
 }
 
 @ObjectType({ description: 'One person and how their messages reach them.' })
