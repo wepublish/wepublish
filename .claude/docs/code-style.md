@@ -56,42 +56,81 @@ export const Wrapper = styled(ContentWrapper)<{ fadeout?: boolean }>`
 - Comments inside a template literal are one of the few legitimate uses of
   comments in this codebase — a `nth-child` selector rule usually needs one.
 - **Editor UI: no hard-coded colours.** The editor has a dark mode (follows the
-  OS, overridable in the sidebar; `apps/editor/src/app/colorMode.tsx`). rsuite's
-  `CustomProvider theme` swaps every `--rs-*` variable, MUI gets
-  `createEditorTheme(mode)`. Use `var(--rs-bg-card)`, `--rs-bg-well`,
-  `--rs-bg-overlay`, `--rs-text-primary`/`-secondary`, `--rs-border-primary`,
-  `--rs-state-*` in Emotion, palette paths in MUI `sx`. Editor-specific tokens
-  (`--wep-shell-*`, `--wep-state-*`, …) live in
-  `apps/editor/src/app/editorGlobalStyles.tsx`. `--rs-gray-*` and `--rs-primary-50`
-  stay light in dark mode — don't use them for surfaces. Keep the MUI palette as
-  real hex (code runs `lighten()`/alpha math on it). Fixed colours are only for
-  user data (picked colours, defaults), email content and QR codes.
-- **Editor layout is responsive.** Below 900 px the sidebar becomes a drawer;
-  at ≤ 640 px rsuite `Col`s stack (global rule in `editorGlobalStyles.tsx`).
-  The shared `Table` from `@wepublish/ui/editor` scales `width` columns to the
-  available width (`listView/fit-column-widths.ts`) and releases `fixed`
+  OS, overridable in the sidebar; `apps/editor/src/app/colorMode.tsx`) and
+  `createEditorTheme()` is the single source of colour. It builds **both**
+  schemes into one theme with `cssVariables`, so switching mode sets
+  `data-mui-color-scheme` on the root rather than handing React a new theme.
+  That has one consequence everywhere:
+  - In Emotion read `${({ theme }) => theme.vars.palette.text.secondary}` —
+    **`theme.vars.palette`, never `theme.palette`**, which holds the light
+    scheme's literals and would never change.
+  - In `sx` use palette paths (`color: 'text.secondary'`); in a map of state to
+    colour store the *path* and resolve it with `paletteColor(theme, path)`.
+  - There is no `theme.palette.mode` to branch on. Write the light rule and
+    override it under `[data-mui-color-scheme='dark'] &`, or `theme.applyStyles
+    ('dark', {…})` where an object is wanted (see `MuiAlert` in `theme.ts`).
+  - `theme.palette` is still the place to read a real hex when code runs
+    `lighten()`/alpha math; prefer the `…Channel` vars
+    (`rgba(${theme.vars.palette.success.mainChannel} / 0.5)`) when the result
+    has to follow the scheme.
+  Editor-specific tokens (`--wep-shell-*`, `--wep-state-*`, …) live in
+  `apps/editor/src/app/editorGlobalStyles.tsx`, keyed off the same attribute.
+  Fixed colours are only for user data (picked colours, defaults), email
+  content and QR codes.
+  Two traps: `theme.shape.borderRadius` is a number typed `number | string`, so
+  raw CSS needs `${…}px` and fractional radii need `calc()`; and a palette path
+  is **not** resolved inside `styleOverrides`, which take the callback form.
+- **Editor layout is responsive.** Below 900 px the sidebar becomes a drawer.
+  The shared `DataTable` from `@wepublish/ui/editor` scales `width` columns to
+  the available width (`listView/fit-column-widths.ts`) and releases `fixed`
   columns under 600 px — so don't hand-tune column widths to a screen size.
-  List pages use that `Table`, not rsuite's, or columns don't fill the width.
-- **Drawers scroll only `Drawer.Body`.** `editorGlobalStyles.tsx` turns every
-  ancestor of `Drawer.Header` + `Drawer.Body` into a flex column (also through
-  `<Form>` and its `.rs-form-stack`). Don't give the body a fixed height or set
-  `overflow` on `.rs-drawer-dialog` — rsuite's `calc(100% - 76px)` broke with
-  our 77 px header and `overflow: scroll` drew empty scrollbars.
-- **Icon-only actions are `<IconButton circle size="sm" …>`** — delete adds
-  `appearance="ghost" color="red"`. A global rule renders them borderless with a
-  coloured icon; add `data-on-media` when the button sits on an image so it
+  List pages use that table, not a hand-rolled one, or columns don't fill the
+  width.
+- **Drawers scroll only `DrawerBody`.** `DrawerHeader`/`DrawerBody` are the
+  shared styled elements from `@wepublish/ui/editor`; the body is the flex
+  child that scrolls. Don't give it a fixed height — a hard-coded
+  `calc(100% - header)` breaks the moment the header wraps.
+- **Icon-only actions are `<IconButton size="small" …>`** — delete adds
+  `color="error"`. Add `data-on-media` when the button sits on an image so it
   keeps a solid background.
 - **Help and labels:** icon-only buttons get `IconButtonTooltip` + `aria-label`;
   non-obvious fields get `<InfoTooltip text={t('…')} />` after the label (never
   filled `MdInfo`). List action columns use `t('action')`, centred, `fixed="right"`.
-  Toggles carry their label on the right via `<Toggle label={…} />` — no
-  `checkedChildren`, no separate «on/off» text. Radii: `var(--rs-radius-md)` for
-  controls and inner boxes, `var(--rs-radius-lg)` for cards and panels.
+  Switches carry their label on the right via `<FormControlLabel control={<Switch
+  …/>} label={…} />` — no separate «on/off» text. Radii come from the theme:
+  `theme.shape.borderRadius` (8px) for cards and panels, `calc(… * 0.75)` for
+  controls and inner boxes; in `sx` that is `borderRadius: 1` and `0.75`.
 - **Document editors use `EditorHeader`** (`@wepublish/ui/editor`) inside
   `EditorTemplate`: status chip + last-saved on the left, `EditorHeaderButton`s
   on the right (secondary subtle, Save/Publish primary). Labels collapse to
   icons by container width (`collapse="md" | "sm" | false`). The bar bleeds to
   the content card's edges through `--wep-page-padding-*` set in `base.tsx`.
+- **An edit panel's form *is* the record.** `useForm` fetches what it edits
+  through `defaultValues` as an async callback (`useApolloClient().query`),
+  rather than a `useQuery` whose result is copied into a parallel set of
+  `useState`s. One place holds the answer, so nothing has to be kept in step,
+  `formState.isLoading` covers the fetch, and the save handler receives values
+  the schema has already accepted. Fields are `Controller`s; a derived field
+  (a slug following a name) is written with `setValue`. The worked example is
+  `paymentMethodEditPanel.tsx`, pinned by its spec. Two traps: the Save button
+  is `type="submit"` *only* — an `onClick` that calls the save as well bypasses
+  validation entirely; and a panel with `useAuthorisation` needs an
+  `AuthContext` in its tests or every control renders disabled. Read fields
+  with `useWatch({control, name})`, never a bare `watch('x')` — the compiler
+  memoises that call and the value never changes again (gotchas.md). Render
+  nothing until `formState.isLoading` clears: before that every field is
+  `undefined`, which the list-valued ones throw on. Errors belong next to the
+  field as `helperText`, not in a toast, and a schema that carries messages is
+  a factory taking `t` (`createBannerSchema(t)`) so they are translated. A
+  single column of fields gets no cards: `FormFields` + `FormSectionTitle`
+  from `@wepublish/ui/editor` are the layout, and a card is for a genuinely
+  multi-column view. `FormSectionTitle` heads a *group*; a heading over one
+  control is that control's `FormLabel`. Never wrap `RichTextBlock` in a card or a bordered box —
+  the editor draws its own outlined surface, so a wrapper is a second border.
+- **A dialog's confirming action goes last**, so it lands bottom-right with
+  the dismissive one to its left — Material's order, and what the rest of the
+  editor's 57 dialogs now do. It is `variant="contained"` (a destructive one
+  also `color="error"`); the dismissive action is `variant="text"`.
 - **Editor errors shown to users go through `humanizeError(error)`** from
   `@wepublish/ui/editor`, never raw `error.message` — it turns Prisma, network
   and permission failures into `errors.*` translations. Error toasts use

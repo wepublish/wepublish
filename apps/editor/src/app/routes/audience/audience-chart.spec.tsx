@@ -1,4 +1,6 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
+import { ReactNode } from 'react';
 
 import { FlowTooltipBody } from './audience-chart';
 
@@ -23,7 +25,7 @@ const series = [
 ];
 
 const renderBody = (datum: Record<string, unknown>, monthly = false) =>
-  render(
+  renderWithTheme(
     <FlowTooltipBody
       date="20. Sept. 2026"
       datum={datum}
@@ -32,6 +34,11 @@ const renderBody = (datum: Record<string, unknown>, monthly = false) =>
       formatNumber={value => String(value)}
     />
   );
+
+const theme = createTheme({ cssVariables: true });
+
+const renderWithTheme = (ui: ReactNode) =>
+  render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
 
 describe('FlowTooltipBody', () => {
   it('says that nothing happened on a day without activity', () => {

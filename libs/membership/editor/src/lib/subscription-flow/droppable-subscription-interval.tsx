@@ -15,13 +15,13 @@ const DropArea = styled('div')<{ active?: boolean; hover?: boolean }>`
   margin: -6px;
   padding: 4px;
   border: 2px dashed
-    ${({ active, hover }) =>
-      hover ? 'var(--rs-primary-500)'
-      : active ? 'var(--rs-border-primary)'
+    ${({ active, hover, theme }) =>
+      hover ? `${theme.vars.palette.primary.main}`
+      : active ? `${theme.vars.palette.divider}`
       : 'transparent'};
-  border-radius: var(--rs-radius-md);
-  background-color: ${({ hover }) =>
-    hover ? 'var(--rs-bg-well)' : 'transparent'};
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  background-color: ${({ hover, theme }) =>
+    hover ? `${theme.vars.palette.background.default}` : 'transparent'};
   transition:
     border-color 150ms ease,
     background-color 150ms ease;
@@ -32,11 +32,11 @@ const DropHere = styled('span')`
   top: -10px;
   right: 12px;
   padding: 0 6px;
-  background-color: var(--rs-bg-card);
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
   font-size: 11px;
   font-weight: 600;
   line-height: 16px;
-  color: var(--rs-primary-500);
+  color: ${({ theme }) => theme.vars.palette.primary.main};
   pointer-events: none;
 `;
 

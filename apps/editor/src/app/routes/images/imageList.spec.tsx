@@ -1,7 +1,8 @@
-import type { Mock } from 'vitest';
+import { useQuery } from '@apollo/client/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { useQuery } from '@apollo/client/react';
+import type { Mock } from 'vitest';
 
 import { ImageList } from './imageList';
 
@@ -35,11 +36,35 @@ beforeEach(() => {
 describe('ImageList', () => {
   it('loads enough images to fill the page by default', () => {
     render(
-      <MemoryRouter initialEntries={['/images']}>
-        <ImageList />
-      </MemoryRouter>
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <MemoryRouter initialEntries={['/images']}>
+          <ImageList />
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
     expect(lastVariables()).toEqual(expect.objectContaining({ take: 50 }));
+  });
+
+  it('searches from either layout', () => {
+    const searchIn = (layout: 'grid' | 'list') => {
+      localStorage.setItem('imageListLayout', layout);
+
+      const { getByRole, unmount } = render(
+        <ThemeProvider theme={createTheme({ cssVariables: true })}>
+          <MemoryRouter>
+            <ImageList />
+          </MemoryRouter>
+        </ThemeProvider>
+      );
+
+      const search = getByRole('textbox', { name: 'search' });
+      unmount();
+
+      return search;
+    };
+
+    expect(searchIn('grid')).toBeTruthy();
+    expect(searchIn('list')).toBeTruthy();
   });
 });

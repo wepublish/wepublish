@@ -1,68 +1,42 @@
 import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  ConsentsDocument,
-  MutationCreateUserConsentArgs,
-  MutationUpdateUserConsentArgs,
-  UserListDocument,
-} from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
-import { useEffect } from 'react';
+  Autocomplete,
+  CircularProgress,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Switch,
+  TextField,
+} from '@mui/material';
+import { ConsentsDocument, UserListDocument } from '@wepublish/editor/api';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  Form,
-  Loader,
-  Message,
-  Panel,
-  SelectPicker,
-  toaster,
-  Toggle,
-} from 'rsuite';
+import { z } from 'zod';
 
-type UserConsentFormData = Partial<
-  MutationCreateUserConsentArgs & MutationUpdateUserConsentArgs
->;
+export const userConsentSchema = z.object({
+  id: z.string().optional(),
+  userId: z.string().min(1),
+  consentId: z.string().min(1),
+  value: z.boolean(),
+});
+
+export type UserConsentFormValues = z.infer<typeof userConsentSchema>;
 
 type UserConsentFormProps = {
   isEdit?: boolean;
-  userConsent: UserConsentFormData;
-  onChange: (changes: Partial<UserConsentFormData>) => void;
 };
-
-const FormCard = styled(Panel)`
-  width: 100%;
-  max-width: 640px;
-  overflow: initial;
-`;
 
 const Fields = styled.div`
   display: grid;
-  gap: 20px;
-
-  .rs-form-group {
-    margin-bottom: 0;
-  }
+  gap: ${({ theme }) => theme.spacing(2.5)};
+  width: 100%;
+  max-width: 640px;
 `;
 
-const onErrorToast = (error: Error) => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
-};
-
-export const UserConsentForm = ({
-  userConsent,
-  onChange,
-  isEdit,
-}: UserConsentFormProps) => {
+export const UserConsentForm = ({ isEdit }: UserConsentFormProps) => {
   const { t } = useTranslation();
+  const { control } = useFormContext<UserConsentFormValues>();
 
   const { loading: loadingUsers, data: userData } = useQuery(UserListDocument, {
     variables: {
@@ -70,69 +44,103 @@ export const UserConsentForm = ({
     },
   });
 
-  const {
-    loading: loadingConsents,
-    data: consentsData,
-    error: consentsError,
-  } = useQuery(ConsentsDocument);
-
-  useEffect(() => {
-    if (consentsError) {
-      onErrorToast(consentsError);
-    }
-  }, [consentsError]);
+  const { loading: loadingConsents, data: consentsData } =
+    useQuery(ConsentsDocument);
 
   const consentsValues =
-    consentsData?.consents?.map(c => ({
-      value: c.id,
-      label: c.name,
+    consentsData?.consents?.map(consent => ({
+      value: consent.id,
+      label: consent.name,
     })) || [];
 
   const userValues =
-    userData?.users?.nodes?.map(c => ({
-      value: c.id,
-      label: c.name,
+    userData?.users?.nodes?.map(user => ({
+      value: user.id,
+      label: user.name,
     })) || [];
 
   if (loadingUsers || loadingConsents) {
-    return <Loader />;
+    return <CircularProgress />;
   }
 
   return (
-    <FormCard bordered>
-      <Fields>
-        <Form.Group controlId="userId">
-          <Form.Label>{t('dashboard.user')}</Form.Label>
-          <SelectPicker
-            key="userId"
-            placeholder={t('dashboard.user')}
-            block
-            disabled={isEdit}
-            data={userValues}
-            value={userConsent.userId ?? null}
-            onChange={value => onChange({ userId: value ?? undefined })}
-          />
-        </Form.Group>
+    <Fields>
+      <Controller
+        control={control}
+        name="userId"
+        render={({ field, fieldState: { error } }) => (
+          <FormControl fullWidth>
+            <FormLabel>{t('dashboard.user')}</FormLabel>
+            <Autocomplete
+              options={userValues}
+              getOptionLabel={option => option.label}
+              isOptionEqualToValue={(option, selected) =>
+                option.value === selected.value
+              }
+              value={
+                userValues.find(option => option.value === field.value) ?? null
+              }
+              onChange={(_event, option) => field.onChange(option?.value ?? '')}
+              disabled={isEdit}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  placeholder={t('dashboard.user')}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                />
+              )}
+            />
+          </FormControl>
+        )}
+      />
 
-        <Form.Group controlId="consentId">
-          <Form.Label>{t('consents.consent')}</Form.Label>
-          <SelectPicker
-            key="consentId"
-            placeholder={t('consents.consent')}
-            block
-            disabled={isEdit}
-            data={consentsValues}
-            value={userConsent.consentId ?? null}
-            onChange={value => onChange({ consentId: value ?? undefined })}
-          />
-        </Form.Group>
+      <Controller
+        control={control}
+        name="consentId"
+        render={({ field, fieldState: { error } }) => (
+          <FormControl fullWidth>
+            <FormLabel>{t('consents.consent')}</FormLabel>
+            <Autocomplete
+              options={consentsValues}
+              getOptionLabel={option => option.label}
+              isOptionEqualToValue={(option, selected) =>
+                option.value === selected.value
+              }
+              value={
+                consentsValues.find(option => option.value === field.value) ??
+                null
+              }
+              onChange={(_event, option) => field.onChange(option?.value ?? '')}
+              disabled={isEdit}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  placeholder={t('consents.consent')}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                />
+              )}
+            />
+          </FormControl>
+        )}
+      />
 
-        <Toggle
-          checked={!!userConsent.value}
-          label={t('consents.accepted')}
-          onChange={value => onChange({ value })}
-        />
-      </Fields>
-    </FormCard>
+      <Controller
+        control={control}
+        name="value"
+        render={({ field }) => (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={Boolean(field.value)}
+                onChange={(_event, value) => field.onChange(value)}
+              />
+            }
+            label={t('consents.accepted')}
+          />
+        )}
+      />
+    </Fields>
   );
 };

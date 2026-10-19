@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
+import { useSeededState } from '../hooks/use-seeded-state';
 
 type UseSelectableListProps = {
   ids?: string[];
@@ -28,11 +30,14 @@ export function useSelectableList({ ids }: UseSelectableListProps) {
     }
   };
 
-  useEffect(() => {
-    if (ids !== undefined) {
-      setSelectedItems(ids.filter(item => selectedItems.includes(item)));
-    }
-  }, [ids]);
+  useSeededState(
+    ids,
+    available =>
+      setSelectedItems(current =>
+        current.filter(item => available.includes(item))
+      ),
+    ids?.join(',')
+  );
 
   return {
     selectedItems,

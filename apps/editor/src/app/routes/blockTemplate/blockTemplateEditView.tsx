@@ -1,5 +1,6 @@
-import styled from '@emotion/styled';
 import { useMutation, useQuery } from '@apollo/client/react';
+import styled from '@emotion/styled';
+import { Badge, IconButton } from '@mui/material';
 import {
   BlockTemplateDocument,
   CreateBlockTemplateDocument,
@@ -19,21 +20,27 @@ import {
   BlockValue,
   ConfirmActionModal,
   createCheckedPermissionComponent,
-  EditorTemplate,
-  mapBlockValueToBlockInput,
   EditorHeader,
   EditorHeaderButton,
+  EditorTemplate,
+  enqueueSnackbar,
+  mapBlockValueToBlockInput,
   PermissionControl,
   StateColor,
   TypographicTextArea,
   useAuthorisation,
   useUnsavedChangesDialog,
 } from '@wepublish/ui/editor';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdKeyboardBackspace, MdSave } from 'react-icons/md';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Badge, IconButton, Message, Notification, toaster } from 'rsuite';
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
 const NameInput = styled(TypographicTextArea)``;
 
@@ -79,27 +86,16 @@ function BlockTemplateEditView() {
     skip: !blockTemplateId,
   });
 
-  const handleChange = useCallback(
-    (blocks: React.SetStateAction<BlockValue[]>) => {
-      setBlocks(blocks);
-      setChanged(true);
-    },
-    []
-  );
+  const handleChange = useCallback((blocks: SetStateAction<BlockValue[]>) => {
+    setBlocks(blocks);
+    setChanged(true);
+  }, []);
 
   useEffect(() => {
     const error = createError?.message ?? updateError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [createError, updateError]);
 
   const hydratedRevision = useRef<string | null>(null);
@@ -150,14 +146,11 @@ function BlockTemplateEditView() {
       });
 
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('blockTemplates.edit.saved')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('blockTemplates.edit.saved'),
+        autoHideDuration: 2000,
+      });
       await refetch({ id: blockTemplateId });
     } else {
       const { data } = await createBlockTemplate({ variables: input });
@@ -168,14 +161,11 @@ function BlockTemplateEditView() {
         );
       }
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('blockTemplates.edit.created')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('blockTemplates.edit.created'),
+        autoHideDuration: 2000,
+      });
     }
   }
 
@@ -187,18 +177,19 @@ function BlockTemplateEditView() {
             state={stateColor}
             stateLabel={tagTitle}
             back={
-              <Link to="/block-content/templates">
-                <IconButton
-                  circle
-                  appearance="subtle"
-                  icon={<MdKeyboardBackspace />}
-                  title={t('blockTemplates.edit.backToList')}
-                  aria-label={t('blockTemplates.edit.backToList')}
-                  onClick={e => {
-                    if (!unsavedChangesDialog()) e.preventDefault();
-                  }}
-                />
-              </Link>
+              <IconButton
+                component={RouterLink}
+                to="/block-content/templates"
+                title={t('blockTemplates.edit.backToList')}
+                aria-label={t('blockTemplates.edit.backToList')}
+                onClick={e => {
+                  if (!unsavedChangesDialog()) {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                <MdKeyboardBackspace />
+              </IconButton>
             }
             primaryActions={
               isNew && createData == null ?
@@ -206,7 +197,7 @@ function BlockTemplateEditView() {
                   qualifyingPermissions={[CanCreateBlockTemplate.id]}
                 >
                   <EditorHeaderButton
-                    appearance="primary"
+                    variant="contained"
                     icon={<MdSave />}
                     label={t('create')}
                     collapse={false}
@@ -217,9 +208,13 @@ function BlockTemplateEditView() {
               : <PermissionControl
                   qualifyingPermissions={[CanUpdateBlockTemplate.id]}
                 >
-                  <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+                  <Badge
+                    variant="dot"
+                    color="warning"
+                    invisible={!hasChanged}
+                  >
                     <EditorHeaderButton
-                      appearance="primary"
+                      variant="contained"
                       icon={<MdSave />}
                       label={t('save')}
                       collapse={false}

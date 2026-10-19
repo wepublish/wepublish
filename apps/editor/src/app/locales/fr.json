@@ -14,6 +14,10 @@
       "theMember": "ce membre"
     },
     "lastSavedAt": "Dernier enregistrement {{date, ccc PP pp}}",
+    "autosave": {
+      "label": "Enregistrement auto",
+      "description": "Enregistrer le brouillon toutes les 30 secondes pendant que vous travaillez"
+    },
     "preview": {
       "backToEditor": "Éditeur",
       "mobile": "Mobile",
@@ -148,6 +152,7 @@
         "displayOptions": "Options d’affichage",
         "dontChangeSlug": "Veuillez ne pas changer le slug une fois l’article publié.",
         "draft": "Brouillon",
+        "chooseFile": "Choisir un fichier",
         "dropImage": "Glisser l’image ici",
         "editTeaser": "Modifier le teaser",
         "enterAuthors": "Veuillez ajouter un·e auteur·trice",
@@ -240,6 +245,7 @@
     },
     "articles": {
       "overview": {
+        "slug": "Slug",
         "articles": "Articles",
         "authors": "Auteur·trice·s",
         "draft": "Brouillon",
@@ -559,6 +565,7 @@
       "imageGallery": {
         "label": "Galerie",
         "overview": {
+          "removeImage": "Supprimer l'image",
           "caption": "Légende",
           "new": "(Nouveau)",
           "previousImage": "Image précédente",
@@ -721,6 +728,13 @@
         "doubleOptInHelp": "Les nouveaux·elles abonné·e·s reçoivent d’abord un e-mail de confirmation de Mailchimp et ne sont ajouté·e·s à la liste qu’après avoir cliqué sur le lien qu’il contient.",
         "advancedStepHelp": "Affiche les conditions dans lesquelles cette étape est sautée ou affichée, p. ex. si certaines informations sont déjà disponibles.",
         "advancedInputHelp": "Affiche d’autres réglages pour ce champ, p. ex. une description sous le champ ou une valeur par défaut."
+      },
+      "groups": {
+        "text": "Texte",
+        "media": "Médias",
+        "teasers": "Teasers",
+        "interaction": "Interaction",
+        "layout": "Mise en page"
       }
     },
     "cancel": "Annuler",
@@ -792,7 +806,8 @@
         "text": "Texte",
         "updated": "Modifié le",
         "userName": "Nom de l’utilisateur·trice",
-        "pendingUserChangesInfo": "Vous avez demandé à l’auteur·e de modifier le commentaire. Une fois modifié, il attend à nouveau d’être approuvé."
+        "pendingUserChangesInfo": "Vous avez demandé à l’auteur·e de modifier le commentaire. Une fois modifié, il attend à nouveau d’être approuvé.",
+        "states": "États"
       },
       "panels": {
         "approve": "Approuver",
@@ -846,6 +861,8 @@
     },
     "confirm": "Confirmer",
     "consents": {
+      "deleteTitle": "Supprimer le consentement ?",
+      "deleteBody": "Voulez-vous supprimer définitivement «{{name}}» ? Les choix des utilisateurs disparaissent avec.",
       "create": "Créer un nouveau consentement",
       "defaultValue": "Valeur par défaut",
       "defaultValueTitle": "Valeur par défaut (cochée par défaut)",
@@ -929,6 +946,8 @@
       "networkContentInfo": "Les derniers articles d’autres médias du réseau We.Publish. Vous pouvez les reprendre dans votre éditeur (importer) et les publier sur votre site."
     },
     "dateTimePicker": {
+      "yesterday": "Hier",
+      "done": "OK",
       "hour": "{{hour}}:00",
       "nextMonday": "Lundi prochain",
       "nextSaturday": "Samedi prochain",
@@ -940,12 +959,10 @@
     "delete": "Supprimer",
     "deleteBlockTemplateModal": {
       "body": "Voulez-vous vraiment supprimer le modèle de bloc « {{name}} » ?",
-      "deleteBtn": "Oui, supprimer",
       "title": "Supprimer le modèle de bloc ?"
     },
     "deletePollModal": {
       "body": "Voulez-vous vraiment supprimer le sondage « {{pollQuestion}} » ?",
-      "deleteBtn": "Oui, supprimer",
       "title": "Supprimer le sondage ?"
     },
     "draggableSubscriptionInterval": {
@@ -965,12 +982,14 @@
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
       "invalidUrlErrorMessage": "Veuillez entrer une adresse URL valide",
       "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} {{currency}}.",
+      "amountTooLowErrorMessage": "Le montant est inférieur au minimum de ce plan d'abonnement",
       "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 si le champ est laissé vide",
       "noCallToActionImageErrorMessage": "Veuillez entrer une image pour l’appel à l’action",
       "noEmailErrorMessage": "Veuillez entrer une adresse e-mail",
       "noImageErrorMessage": "Veuillez ajouter une image",
       "noMemberPlanErrorMessage": "Veuillez sélectionner un plan d’abonnement",
       "noNameErrorMessage": "Veuillez entrer un nom",
+      "noQuestionErrorMessage": "Veuillez saisir une question",
       "noPasswordErrorMessage": "Veuillez entrer un mot de passe",
       "noPaymentMethodErrorMessage": "Veuillez sélectionner une méthode de paiement",
       "noPaymentPeriodicityErrorMessage": "Veuillez sélectionner une périodicité de paiement",
@@ -981,7 +1000,8 @@
       "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 12 caractères.",
       "passwordCompromisedErrorMessage": "Ce mot de passe est apparu dans une fuite de données. Veuillez choisir un autre mot de passe.",
       "required": "Ce champ est requis",
-      "invalidCountry": "Veuillez sélectionner un pays valide"
+      "invalidCountry": "Veuillez sélectionner un pays valide",
+      "invalidForm": "Veuillez vérifier les champs signalés"
     },
     "event": {
       "create": {
@@ -1029,6 +1049,7 @@
     },
     "filterableList": {
       "filter": {
+        "label": "Filtres",
         "dates": "Dates",
         "description": "Filtrer par description",
         "isDraft": "Brouillon",
@@ -1044,7 +1065,8 @@
         "slug": "Filtrer par slug",
         "title": "Filtrer par titre",
         "includeHiddenArticles": "Inclure les articles masqués",
-        "includeHiddenPages": "Inclure les pages masquées"
+        "includeHiddenPages": "Inclure les pages masquées",
+        "states": "États"
       }
     },
     "documents": {
@@ -1130,6 +1152,7 @@
         "link": "Lien",
         "linkUrl": "Lien de destination",
         "notFound": "Image introuvable !",
+        "openOriginal": "Ouvrir l'original",
         "resizedImage": "La taille de l’image est automatiquement réduite à environ {{sizeMB}} Mo lors du téléversement.",
         "source": "Source",
         "sourceLink": "Lien vers la source originale de l’image.",
@@ -1619,7 +1642,8 @@
         "crowdfundings": "Crowdfundings",
         "polls": "Sondages",
         "topMenu": "Blocs de contenu"
-      }
+      },
+      "language": "Langue"
     },
     "navigation": {
       "overview": {
@@ -1880,7 +1904,6 @@
       "answerMissing": "Votre réponse est vide. Veuillez saisir un texte.",
       "copyVoteUrl": "Copier le lien de vote",
       "copyVoteUrlHint": "Les liens de vote peuvent désormais être copiés directement dans le bloc de sondage de l’article ou de la page où le sondage est utilisé.",
-      "deleteBtn": "Supprimer",
       "deleteModalBody": "Voulez-vous supprimer irrévocablement la réponse « {{answer}} » ? Les résultats du sondage seront alors perdus.",
       "deleteModalTitle": "Supprimer ?",
       "insertYourNewAnswer": "Saisir une nouvelle réponse",
@@ -2205,6 +2228,8 @@
     },
     "untitled": "Sans titre",
     "userConsents": {
+      "deleteTitle": "Supprimer le consentement de l’utilisateur ?",
+      "deleteBody": "Voulez-vous supprimer définitivement le consentement «{{name}}» de {{user}} ?",
       "consentName": "Nom du consentement",
       "consentSlug": "Slug du consentement",
       "create": "Créer un nouveau consentement de l’utilisateur",
@@ -2216,6 +2241,7 @@
       "uniqueConstraint": "Un consentement d’utilisateur avec le slug « {{slug}} » existe déjà. Veuillez choisir un autre slug."
     },
     "userCreateOrEditView": {
+      "addressTitle": "Adresse",
       "active": "Actif",
       "cancel": "Annuler",
       "city": "Ville",
@@ -2506,7 +2532,8 @@
       "periodicityPricingCustomHelp": "Désactivé : les prix sont calculés à partir du prix mensuel. Activé : vous définissez vos propres prix pour cet intervalle de paiement, p. ex. pour un rabais annuel."
     },
     "subscriptionEditView": {
-      "additionalSettingsTitle": "Paramètres avancés",
+      "detailsTitle": "Offre et paiement",
+      "renewalTitle": "Durée et renouvellement",
       "trialSubscriptionConfigured": "Cet abonnement est configuré comme un abonnement d’essai.",
       "nonExtendableNotCompatibleWithAutoRenew": "Un abonnement à renouvellement automatique doit pouvoir être prolongé. Modifiez l’un de ces paramètres.",
       "configureAsTrialSubscription": "Configurer comme abonnement d’essai",
@@ -2593,6 +2620,12 @@
       }
     },
     "audienceFilter": {
+      "resolution": "Résolution",
+      "range": "Période",
+      "rangeCustom": "Personnalisé",
+      "view": "Affichage",
+      "dateRange": "Du – au",
+      "subscriptionPlans": "Plans d'abonnement",
       "copyPermalink": "Copier le permalien",
       "permalinkCopied": "Permalien avec une période fixe copié dans le presse-papiers",
       "permalinkCopyFailed": "Impossible de copier le permalien",
@@ -2614,7 +2647,9 @@
       "rangeNextWeek": "Semaine prochaine",
       "rangeNextMonth": "Mois prochain",
       "rangeNextQuarter": "Trimestre prochain",
-      "rangeNextYear": "Année prochaine"
+      "rangeNextYear": "Année prochaine",
+      "rangeFrom": "Du",
+      "rangeTo": "Au"
     },
     "audience": {
       "chart": {
@@ -3143,6 +3178,10 @@
       },
       "theme": {
         "title": "Thème",
+        "exportTheme": "Exporter le thème",
+        "importTheme": "Importer le thème",
+        "importSuccess": "Thème importé. Cliquez sur «Enregistrer» pour l'appliquer.",
+        "importError": "Le fichier de thème n'a pas pu être lu.",
         "palette": {
           "primary": "Primaire",
           "primaryMain": "Couleur principale du site. Utilisée pour les liens, la navigation, les boutons, etc.",
@@ -3389,7 +3428,9 @@
       "blockNumber": "Bloc {{number}}"
     },
     "columnConfigurator": {
-      "title": "Afficher/masquer les colonnes"
+      "dragToReorder": "Glisser pour réordonner",
+      "title": "Colonnes",
+      "reset": "Réinitialiser les colonnes"
     },
     "systemMails": {
       "title": "Compte et connexion",
@@ -3529,7 +3570,9 @@
         "period": "Période fixe",
         "days": "jours",
         "periodPlaceholder": "Choisir du – au",
-        "periodHint": "Uniquement les abonnements désactivés entre ces deux dates."
+        "periodHint": "Uniquement les abonnements désactivés entre ces deux dates.",
+        "periodFrom": "Du",
+        "periodTo": "Au"
       },
       "preview": {
         "title": "Aperçu",
@@ -3680,6 +3723,7 @@
       }
     },
     "userMail": {
+      "title": "E-mails",
       "sendTitle": "Envoyer un e-mail",
       "logTitle": "E-mails envoyés",
       "customOnlyHint": "Seuls les modèles personnalisés peuvent être envoyés à un utilisateur.",
@@ -3774,7 +3818,10 @@
         "dateRange": "Période",
         "failuresOnly": "Échecs uniquement",
         "impersonatedOnly": "Usurpation uniquement",
-        "impersonatedOnlyInfo": "Afficher uniquement les modifications effectuées par quelqu’un connecté en tant qu’autre personne."
+        "impersonatedOnlyInfo": "Afficher uniquement les modifications effectuées par quelqu’un connecté en tant qu’autre personne.",
+        "anyAction": "Toutes les actions",
+        "dateFrom": "Du",
+        "dateTo": "Au"
       },
       "action": {
         "create": "Créé",
@@ -3806,7 +3853,8 @@
       "style": "Style",
       "title": "Styles de blocs",
       "info": "Un style permet d’afficher un bloc différemment sur votre site, p. ex. une grille de teasers en carrousel. Choisissez les types de blocs pour lesquels chaque style est disponible ; son apparence est définie par le design de votre site.",
-      "blockTypesPlaceholder": "Disponible pour les types de blocs"
+      "blockTypesPlaceholder": "Disponible pour les types de blocs",
+      "noStyle": "Aucun style"
     },
     "name": "Nom",
     "toast": {
@@ -3827,9 +3875,43 @@
     "placeholderInput": {
       "add": "Ajouter"
     },
+    "colorPicker": {
+      "pickColor": "Choisir la couleur"
+    },
     "listInput": {
       "dragToReorder": "Glisser pour modifier l’ordre",
       "add": "Ajouter une entrée"
+    },
+    "errorBoundary": {
+      "title": "Un problème est survenu sur cette page",
+      "retry": "Réessayer",
+      "reload": "Recharger l'éditeur"
+    },
+    "listView": {
+      "table": {
+        "empty": "Rien à afficher"
+      },
+      "pagination": {
+        "total": "{{count}} entrées",
+        "pageSize": "Entrées par page",
+        "perPage": "{{count}} / page"
+      }
+    },
+    "dateRange": {
+      "from": "du",
+      "to": "au"
+    },
+    "metadataSections": {
+      "byline": "Signature",
+      "headline": "Titraille",
+      "publication": "Publication",
+      "seo": "Moteur de recherche",
+      "stats": "Statistiques"
+    },
+    "metadataHints": {
+      "socialMediaDescriptionFallback": "Utilise sinon la description SEO",
+      "socialMediaImageFallback": "Utilise sinon l'image de l'article.",
+      "socialMediaTitleFallback": "Utilise sinon le titre SEO"
     }
   }
 }

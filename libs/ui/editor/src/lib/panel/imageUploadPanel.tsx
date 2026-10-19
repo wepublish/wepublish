@@ -1,13 +1,51 @@
 import styled from '@emotion/styled';
+import { Button, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { MdUploadFile } from 'react-icons/md';
-import { Button, Drawer, Form, Notification, toaster } from 'rsuite';
 
 import { FileDropInput } from '../atoms';
+import {
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '../drawer';
+import { enqueueSnackbar } from '../snackbar';
 import { getImgMinSizeToCompress } from '../utility';
 
-const InputWrapper = styled.div`
-  height: 100px;
+const Upload = styled.div`
+  height: 100%;
+  display: grid;
+  align-content: center;
+`;
+
+const DropZone = styled.div`
+  min-height: 280px;
+  display: grid;
+`;
+
+const Content = styled.div`
+  display: grid;
+  justify-items: center;
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+const IconCircle = styled.div`
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: ${({ theme }) => theme.spacing(1)};
+  border-radius: 50%;
+  background-color: rgba(
+    ${({ theme }) => theme.vars.palette.primary.mainChannel} / 0.12
+  );
+  color: ${({ theme }) => theme.vars.palette.primary.main};
+  font-size: 28px;
+`;
+
+const Title = styled(Typography)`
+  color: ${({ theme }) => theme.vars.palette.text.primary};
 `;
 
 export interface ImageUploadPanelProps {
@@ -17,20 +55,20 @@ export interface ImageUploadPanelProps {
 
 export function ImageUploadPanel({ onClose, onUpload }: ImageUploadPanelProps) {
   const { t } = useTranslation();
+
   async function handleDrop(files: File[]) {
-    if (files.length === 0) return;
+    if (files.length === 0) {
+      return;
+    }
 
     const file = files[0];
 
     if (!file.type.startsWith('image')) {
-      toaster.push(
-        <Notification
-          type="error"
-          header={t('articleEditor.panels.invalidImage')}
-          duration={5000}
-        />,
-        { placement: 'topEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'error',
+        title: t('articleEditor.panels.invalidImage'),
+        autoHideDuration: 5000,
+      });
     }
 
     onUpload(file);
@@ -38,34 +76,49 @@ export function ImageUploadPanel({ onClose, onUpload }: ImageUploadPanelProps) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('articleEditor.panels.uploadImage')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('articleEditor.panels.uploadImage')}</DrawerTitle>
 
-        <Drawer.Actions>
+        <DrawerActions>
           <Button
-            appearance={'subtle'}
+            variant="text"
             onClick={() => onClose?.()}
           >
             {t('articleEditor.panels.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
-        <InputWrapper>
-          <FileDropInput
-            icon={<MdUploadFile />}
-            text={t('articleEditor.panels.dropImage')}
-            onDrop={handleDrop}
-          />
-        </InputWrapper>
-        <Form.Label>
-          <br />
-          {t('images.panels.resizedImage', {
-            sizeMB: getImgMinSizeToCompress(),
-          })}
-        </Form.Label>
-      </Drawer.Body>
+      <DrawerBody>
+        <Upload>
+          <DropZone>
+            <FileDropInput onDrop={handleDrop}>
+              <Content>
+                <IconCircle>
+                  <MdUploadFile />
+                </IconCircle>
+
+                <Title variant="subtitle1">
+                  {t('articleEditor.panels.dropImage')}
+                </Title>
+
+                <Button variant="outlined">
+                  {t('articleEditor.panels.chooseFile')}
+                </Button>
+
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                >
+                  {t('images.panels.resizedImage', {
+                    sizeMB: getImgMinSizeToCompress(),
+                  })}
+                </Typography>
+              </Content>
+            </FileDropInput>
+          </DropZone>
+        </Upload>
+      </DrawerBody>
     </>
   );
 }

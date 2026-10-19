@@ -14,9 +14,11 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  WebsiteShellProps,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
@@ -87,9 +89,11 @@ const ButtonLink = styled('a')`
   color: ${({ theme }) => theme.palette.primary.contrastText};
 `;
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -127,6 +131,8 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const shell = getWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
@@ -173,32 +179,34 @@ function CustomApp({
               </Head>
 
               <Spacer>
-                <NavBar
-                  categorySlugs={[['categories', 'other'], ['about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                >
-                  <ButtonLink href="/search">
-                    <MdSearch size="32" />
-                  </ButtonLink>
+                {shell.showNavigation && (
+                  <NavBar
+                    categorySlugs={[['categories', 'other'], ['about-us']]}
+                    slug="main"
+                    headerSlug="header"
+                    iconSlug="icons"
+                  >
+                    <ButtonLink href="/search">
+                      <MdSearch size="32" />
+                    </ButtonLink>
 
-                  <ButtonLink href="https://www.facebook.com/mannschaftmagazin">
-                    <MdFacebook size="32" />
-                  </ButtonLink>
+                    <ButtonLink href="https://www.facebook.com/mannschaftmagazin">
+                      <MdFacebook size="32" />
+                    </ButtonLink>
 
-                  <ButtonLink href="https://www.instagram.com/mannschaftmagazin">
-                    <FaInstagram size="32" />
-                  </ButtonLink>
+                    <ButtonLink href="https://www.instagram.com/mannschaftmagazin">
+                      <FaInstagram size="32" />
+                    </ButtonLink>
 
-                  <ButtonLink href="https://bsky.app/profile/mannschaftmagazin.bsky.social">
-                    <FaBluesky size="32" />
-                  </ButtonLink>
+                    <ButtonLink href="https://bsky.app/profile/mannschaftmagazin.bsky.social">
+                      <FaBluesky size="32" />
+                    </ButtonLink>
 
-                  <ButtonLink href="https://www.tiktok.com/@mannschaftmagazin">
-                    <FaTiktok size="32" />
-                  </ButtonLink>
-                </NavBar>
+                    <ButtonLink href="https://www.tiktok.com/@mannschaftmagazin">
+                      <FaTiktok size="32" />
+                    </ButtonLink>
+                  </NavBar>
+                )}
 
                 <main>
                   <MainSpacer maxWidth="lg">
@@ -206,11 +214,13 @@ function CustomApp({
                   </MainSpacer>
                 </main>
 
-                <FooterContainer
-                  slug="footer"
-                  categorySlugs={[['categories', 'about-us']]}
-                  iconSlug="icons"
-                />
+                {shell.showFooter && (
+                  <FooterContainer
+                    slug="footer"
+                    categorySlugs={[['categories', 'about-us']]}
+                    iconSlug="icons"
+                  />
+                )}
               </Spacer>
 
               <RoutedAdminBar />

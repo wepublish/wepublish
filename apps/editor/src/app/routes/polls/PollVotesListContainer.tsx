@@ -8,6 +8,12 @@ import {
   SortOrder as SortOrderV2,
 } from '@wepublish/editor/api';
 import {
+  CanCreatePoll,
+  CanDeletePoll,
+  CanGetPoll,
+  CanUpdatePoll,
+} from '@wepublish/permissions';
+import {
   createCheckedPermissionComponent,
   createOptionalMapper,
   usePaginatedQueryContainer,
@@ -58,9 +64,9 @@ function PollVoteListContainer() {
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_POLL',
-  'CAN_CREATE_POLL',
-  'CAN_UPDATE_POLL',
-  'CAN_DELETE_POLL',
+  CanGetPoll.id,
+  CanCreatePoll.id,
+  CanUpdatePoll.id,
+  CanDeletePoll.id,
 ])(PollVoteListContainer);
 export { CheckedPermissionComponent as PollVoteListContainer };

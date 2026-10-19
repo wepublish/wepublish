@@ -1,5 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
+import {
+  normalizeListNesting,
+  RichtextElements,
+  RichtextJSONDocument,
+} from '@wepublish/richtext';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
@@ -927,11 +931,13 @@ export class SlateToPmMigrator {
   }
 
   migrate(slate: Array<any>): RichtextJSONDocument {
-    const result = {
+    // A slate list-item may hold list-items directly; tiptap needs them in a
+    // list (`listItem > bulletList > listItem`), or they render as `<li><li>`.
+    const result = normalizeListNesting({
       type: 'doc',
       attrs: undefined,
       content: slate.flatMap(slateToPm),
-    } satisfies RichtextJSONDocument;
+    } satisfies RichtextJSONDocument);
 
     this.logger.debug(`Previous: ${JSON.stringify(slate)}`);
     this.logger.debug(`Next: ${JSON.stringify(result)}`);
@@ -1275,6 +1281,147 @@ export class SlateToPmMigrator {
     } else if (changed === 0) {
       this.stopCron(
         'slate.remigrateBuggyEntities',
+        `no progress (${matched} matched, 0 changed)`
+      );
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // TEMPORARY nested-list repair — runs AUTOMATICALLY on deploy, like the
+  // re-migrations above, and stops itself once nothing matches.
+  //
+  // The slate migration turned a slate list-item holding list-items directly
+  // into `listItem > listItem` (no list in between), which renders as invalid
+  // `<li><li>` and breaks hydration. `migrate` no longer does that; these passes
+  // repair what it already wrote. They fix the CURRENT richtext in place (not
+  // from `slateRichText`), so edits made since the migration are kept — an
+  // editor save does not repair it, tiptap loads the content unchecked.
+  // Idempotent; remove once it has run on every instance.
+  // ───────────────────────────────────────────────────────────────────────────
+
+  // A listItem with a listItem child. Recursive; `[*]` matches any child.
+  private static readonly NESTED_LIST_ITEM =
+    '$.** ? (@.type == "listItem" && @.content[*].type == "listItem")';
+
+  // Repairs every richtext document (`type: "doc"`) anywhere in `value`, so
+  // richtext inside flex blocks, listicles, breaks etc. is covered without
+  // listing each block type.
+  private normalizeNestedListsDeep(value: unknown): unknown {
+    if (Array.isArray(value)) {
+      return value.map(item => this.normalizeNestedListsDeep(item));
+    }
+    if (!value || typeof value !== 'object') {
+      return value;
+    }
+    if ((value as { type?: unknown }).type === 'doc') {
+      return normalizeListNesting(value as RichtextJSONDocument);
+    }
+    return Object.fromEntries(
+      Object.entries(value).map(([key, child]) => [
+        key,
+        this.normalizeNestedListsDeep(child),
+      ])
+    );
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS, {
+    name: 'slate.normalizeNestedListsInArticles',
+    waitForCompletion: true,
+  })
+  async normalizeNestedListsInArticles() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.normalizeNestedListsInArticles',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
+    await this.remigrateRevisionTable(
+      'slate.normalizeNestedListsInArticles',
+      'articles.revisions',
+      SlateToPmMigrator.NESTED_LIST_ITEM,
+      blocks => this.normalizeNestedListsDeep(blocks) as any[]
+    );
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS, {
+    name: 'slate.normalizeNestedListsInPages',
+    waitForCompletion: true,
+  })
+  async normalizeNestedListsInPages() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.normalizeNestedListsInPages',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
+    await this.remigrateRevisionTable(
+      'slate.normalizeNestedListsInPages',
+      'pages.revisions',
+      SlateToPmMigrator.NESTED_LIST_ITEM,
+      blocks => this.normalizeNestedListsDeep(blocks) as any[]
+    );
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS, {
+    name: 'slate.normalizeNestedListsInEntities',
+    waitForCompletion: true,
+  })
+  async normalizeNestedListsInEntities() {
+    if (
+      await this.isAnotherReplicasTurn(
+        'slate.normalizeNestedListsInEntities',
+        FIVE_SECONDS
+      )
+    ) {
+      return;
+    }
+
+    let matched = 0;
+    let changed = 0;
+    const changedRows = new Map<MigratedTable, number>();
+    for (const { table, target } of SlateToPmMigrator.BUGGY_ENTITY_COLUMNS) {
+      const rows = await this.prisma.$queryRawUnsafe<
+        { id: string; value: unknown }[]
+      >(
+        `SELECT id, "${target}" AS value FROM "${table}"
+         WHERE "${target}" @? $1::jsonpath
+         LIMIT 100`,
+        SlateToPmMigrator.NESTED_LIST_ITEM
+      );
+      matched += rows.length;
+      for (const row of rows) {
+        const value =
+          typeof row.value === 'string' ? JSON.parse(row.value) : row.value;
+        const next = this.normalizeNestedListsDeep(value);
+        if (JSON.stringify(next) === JSON.stringify(value)) {
+          continue;
+        }
+        changed++;
+        changedRows.set(table, (changedRows.get(table) ?? 0) + 1);
+        await this.prisma.$executeRawUnsafe(
+          `UPDATE "${table}" SET "${target}" = $1::jsonb WHERE id = $2`,
+          JSON.stringify(next),
+          row.id
+        );
+        this.logger.log(
+          `Normalized nested lists in ${table}.${target} ${row.id}`
+        );
+      }
+    }
+    for (const [table, rows] of changedRows) {
+      await this.forgetMigrated(table, rows);
+    }
+    if (matched === 0) {
+      this.stopCron('slate.normalizeNestedListsInEntities', 'none left');
+    } else if (changed === 0) {
+      this.stopCron(
+        'slate.normalizeNestedListsInEntities',
         `no progress (${matched} matched, 0 changed)`
       );
     }

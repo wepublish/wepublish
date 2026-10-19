@@ -1,4 +1,5 @@
 import type { Mock } from 'vitest';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
@@ -79,11 +80,15 @@ const mockSubscriptions = (nodes: unknown[]) =>
     loading: false,
   });
 
+const theme = createTheme({ cssVariables: true });
+
 const renderList = () =>
   render(
-    <MemoryRouter>
-      <SubscriptionList />
-    </MemoryRouter>
+    <ThemeProvider theme={theme}>
+      <MemoryRouter>
+        <SubscriptionList />
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 beforeEach(() => {
@@ -93,12 +98,57 @@ beforeEach(() => {
 });
 
 describe('SubscriptionList', () => {
+  it('clears the filter without rebuilding its fields', () => {
+    mockSubscriptions([subscription]);
+    renderList();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /filterableList.filter.label/ })
+    );
+
+    const autoRenew = screen.getByRole('combobox', {
+      name: 'userSubscriptionEdit.autoRenew',
+    });
+    fireEvent.change(
+      screen.getByRole('textbox', { name: 'userSubscriptionEdit.startsAt' }),
+      { target: { value: '01.01.2026 - 31.01.2026' } }
+    );
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'filterableList.filter.reset' })
+    );
+
+    expect(
+      screen.getByRole('combobox', { name: 'userSubscriptionEdit.autoRenew' })
+    ).toBe(autoRenew);
+  });
+
   it('offers no reactivation for a running subscription', async () => {
     mockSubscriptions([subscription]);
     renderList();
 
     expect(await screen.findByTestId('deleteSubscription')).toBeTruthy();
     expect(screen.queryByTestId('reactivateSubscription')).toBeNull();
+  });
+
+  it('keeps the delete action in place whether or not it can reactivate', async () => {
+    mockSubscriptions([subscription, deactivatedSubscription]);
+    renderList();
+
+    const [running, deactivated] = await screen.findAllByTestId(
+      'subscriptionActions'
+    );
+
+    for (const cell of [running, deactivated]) {
+      expect(getComputedStyle(cell).gridTemplateColumns).toBe('repeat(2, 1fr)');
+      expect(cell.children[0]).toContainElement(
+        cell.querySelector('[data-testid="deleteSubscription"]')
+      );
+    }
+
+    expect(deactivated.children[1]).toContainElement(
+      screen.getByTestId('reactivateSubscription')
+    );
   });
 
   it('marks a deactivated subscription next to its member plan', async () => {

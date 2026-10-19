@@ -1,30 +1,18 @@
+import { enqueueSnackbar } from '@wepublish/ui/editor';
 import { TFunction } from 'i18next';
-import { Message, toaster } from 'rsuite';
 
 export async function copyLinkToClipboard(url: string, t: TFunction) {
   try {
     await navigator.clipboard.writeText(url);
 
-    toaster.push(
-      <Message
-        type="success"
-        showIcon
-        closable
-        duration={3000}
-      >
-        {t('copyLink.copied')}
-      </Message>
-    );
+    enqueueSnackbar(t('copyLink.copied'), {
+      variant: 'success',
+      autoHideDuration: 3000,
+    });
   } catch {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {t('copyLink.failed')}
-      </Message>
-    );
+    enqueueSnackbar(t('copyLink.failed'), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   }
 }

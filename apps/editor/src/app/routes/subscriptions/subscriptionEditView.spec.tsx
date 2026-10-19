@@ -1,3 +1,6 @@
+import '@testing-library/jest-dom/vitest';
+
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 import {
   InvoicesDocument,
@@ -12,10 +15,11 @@ import type { Mock } from 'vitest';
 
 import { SubscriptionEditView } from './subscriptionEditView';
 
-const { mutationFor } = vi.hoisted(() => {
+const { mutationFor, queryStore } = vi.hoisted(() => {
   const mutations = new Map<unknown, Mock>();
 
   return {
+    queryStore: new Map<unknown, unknown>(),
     mutationFor: (document: unknown) => {
       if (!mutations.has(document)) {
         mutations.set(
@@ -33,8 +37,11 @@ vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
   useQuery: vi.fn(),
   useLazyQuery: () => [vi.fn(), { loading: false }],
-  // only the create and cancel flows query through the client (their mails)
-  useApolloClient: () => ({ query: vi.fn(async () => ({ data: {} })) }),
+  useApolloClient: () => ({
+    query: async ({ query }: { query: unknown }) => ({
+      data: (queryStore.get(query) as { data?: unknown })?.data,
+    }),
+  }),
   useMutation: (document: unknown) => [
     mutationFor(document),
     { loading: false },
@@ -139,21 +146,28 @@ const mockQueries = (deactivation: unknown, canRevertUpgrade = false) => {
   ]);
   const fallback = { loading: false, refetch, data: undefined };
 
+  queryStore.clear();
+  results.forEach((result, document) => queryStore.set(document, result));
+
   mockedUseQuery.mockImplementation(
     (document: unknown) => results.get(document) ?? fallback
   );
 };
 
+const theme = createTheme({ cssVariables: true });
+
 const renderEditView = () =>
   render(
-    <MemoryRouter initialEntries={['/subscriptions/edit/subscription-1']}>
-      <Routes>
-        <Route
-          path="/subscriptions/edit/:id"
-          element={<SubscriptionEditView />}
-        />
-      </Routes>
-    </MemoryRouter>
+    <ThemeProvider theme={theme}>
+      <MemoryRouter initialEntries={['/subscriptions/edit/subscription-1']}>
+        <Routes>
+          <Route
+            path="/subscriptions/edit/:id"
+            element={<SubscriptionEditView />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 beforeEach(() => {
@@ -163,6 +177,27 @@ beforeEach(() => {
 });
 
 describe('SubscriptionEditView', () => {
+  it('turns off auto renew when the subscription stops being extendable', async () => {
+    mockQueries(null);
+    renderEditView();
+
+    const autoRenew = await screen.findByRole('checkbox', {
+      name: 'userSubscriptionEdit.autoRenew',
+    });
+    expect(autoRenew).toBeChecked();
+
+    fireEvent.click(
+      screen.getByRole('checkbox', { name: 'memberplanForm.extendableToggle' })
+    );
+
+    expect(
+      screen.queryByRole('checkbox', {
+        name: 'userSubscriptionEdit.autoRenew',
+      })
+    ).toBeNull();
+    expect(screen.queryByText('userSubscriptionEdit.renewNow')).toBeNull();
+  });
+
   it('offers no reactivation for a running subscription', async () => {
     mockQueries(null);
     renderEditView();

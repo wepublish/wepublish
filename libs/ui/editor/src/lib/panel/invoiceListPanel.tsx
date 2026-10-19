@@ -1,63 +1,41 @@
-import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
+import { useApolloClient, useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
+import {
+  Alert,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import {
   InvoiceFragment,
   InvoicePaymentMailDocument,
   MarkInvoiceAsPaidDocument,
-  MeDocument,
 } from '@wepublish/editor/api';
+import {
+  CanCreateInvoice,
+  CanDeleteInvoice,
+  CanGetInvoice,
+  CanGetInvoices,
+} from '@wepublish/permissions';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LiaFileInvoiceSolid } from 'react-icons/lia';
-import { MdAccessTime, MdClose, MdContentCopy, MdDone } from 'react-icons/md';
+import { MdContentCopy } from 'react-icons/md';
+
 import {
-  Button,
-  Message,
-  Modal,
-  Notification,
-  Panel as RPanel,
-  Table as RTable,
-  toaster,
-  Tooltip,
-  Whisper,
-} from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
-
-import { createCheckedPermissionComponent, SingleLineTooltip } from '../atoms';
+  createCheckedPermissionComponent,
+  InvoiceStatus,
+  InvoiceStatusIcon,
+  SingleLineTooltip,
+} from '../atoms';
 import { useActionMailQuestion } from '../hooks';
-import { ColumnConfigurator } from '../listView/column-configurator';
-import { ListColumn, renderListColumns } from '../listView/list-columns';
-import { Table } from '../listView/list-view';
-import { useColumnConfig } from '../listView/use-column-config';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
-
-const InvoiceIconWrapper = styled('span')`
-  position: relative;
-  display: inline-flex;
-  vertical-align: middle;
-`;
-
-const InvoiceIcon = styled(LiaFileInvoiceSolid)`
-  color: grey;
-  font-size: 26px;
-`;
-
-const StatusPill = styled('span')<{ pillColor: string }>`
-  position: absolute;
-  right: -5px;
-  top: 55%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: ${({ pillColor }) => pillColor};
-  color: white;
-  font-size: 10px;
-  box-shadow: 0 0 0 2px var(--rs-bg-card);
-`;
+import { DataTable } from '../listView/data-table';
+import { ListColumn } from '../listView/list-columns';
+import { enqueueSnackbar } from '../snackbar';
 
 const IdButton = styled('button')`
   display: inline-flex;
@@ -75,10 +53,6 @@ const formatDate = (date: string | Date) =>
     timeZone: 'europe/zurich',
   });
 
-/**
- * dueAt is the billing date: imported history carries its real period start
- * there, while createdAt is the moment of the import.
- */
 const billingDate = (invoice: Pick<InvoiceFragment, 'createdAt' | 'dueAt'>) =>
   invoice.dueAt ?? invoice.createdAt;
 
@@ -98,12 +72,6 @@ export const sortByBillingDate = <
 const findGoodieItem = (invoice: InvoiceFragment) =>
   invoice.items?.find(({ goodieId }) => goodieId);
 
-const PanelHeader = styled('div')`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-`;
-
 export interface InvoiceListPanelProps {
   subscriptionId?: string;
   invoices?: InvoiceFragment[];
@@ -119,10 +87,8 @@ function InvoiceListPanel({
   disabled,
   onInvoicePaid,
 }: InvoiceListPanelProps) {
-  const { data: me } = useQuery(MeDocument, {});
   const { t } = useTranslation();
   const [invoiceToPay, setInvoiceToPay] = useState<InvoiceFragment>();
-  // latest first by default; the date column header toggles
   const [sortType, setSortType] = useState<'asc' | 'desc'>('desc');
   const sortedInvoices = useMemo(
     () => sortByBillingDate(invoices ?? [], sortType),
@@ -137,29 +103,24 @@ function InvoiceListPanel({
         label: t('invoice.invoiceNo'),
         width: 110,
         render: invoice => (
-          <Whisper
+          <SingleLineTooltip
+            title={invoice.id}
             placement="top"
-            trigger="hover"
-            speaker={<SingleLineTooltip>{invoice.id}</SingleLineTooltip>}
           >
             <IdButton
               type="button"
               onClick={() => {
                 navigator.clipboard.writeText(invoice.id);
-                toaster.push(
-                  <Notification
-                    type="success"
-                    header={t('invoice.table.idCopied')}
-                    duration={2000}
-                  />,
-                  { placement: 'topEnd' }
-                );
+                enqueueSnackbar(t('invoice.table.idCopied'), {
+                  variant: 'success',
+                  autoHideDuration: 2000,
+                });
               }}
             >
               {invoice.id.slice(0, 4)}…
               <MdContentCopy />
             </IdButton>
-          </Whisper>
+          </SingleLineTooltip>
         ),
       },
       {
@@ -169,12 +130,13 @@ function InvoiceListPanel({
         alwaysVisible: true,
         sortable: true,
         dataKey: 'dueAt',
+        sortKey: 'dueAt',
         render: invoice => formatDate(billingDate(invoice)),
       },
       {
         id: 'description',
         label: t('invoice.table.description'),
-        flexGrow: 1,
+        width: 260,
         minWidth: 160,
         resizable: false,
         alwaysVisible: true,
@@ -202,49 +164,50 @@ function InvoiceListPanel({
         id: 'status',
         label: t('invoice.table.status'),
         width: 80,
+        resizable: false,
         alwaysVisible: true,
         render: invoice => {
-          const status =
+          const status: { status: InvoiceStatus; title: string } =
             invoice.paidAt ?
               {
+                status: 'paid',
                 title: `${t('invoice.paidAt')} ${formatDate(invoice.paidAt)}`,
-                color: 'var(--rs-state-success)',
-                icon: <MdDone />,
               }
             : invoice.canceledAt ?
               {
+                status: 'canceled',
                 title: `${t('invoice.canceledAt')} ${formatDate(invoice.canceledAt)}`,
-                color: 'var(--rs-state-error)',
-                icon: <MdClose />,
               }
-            : {
-                title: t('invoice.unpaid'),
-                color: 'var(--rs-state-warning)',
-                icon: <MdAccessTime />,
-              };
+            : { status: 'unpaid', title: t('invoice.unpaid') };
 
           return (
-            <Whisper
-              placement="top"
-              trigger="hover"
-              speaker={<Tooltip>{status.title}</Tooltip>}
-            >
-              <InvoiceIconWrapper>
-                <InvoiceIcon />
-
-                <StatusPill pillColor={status.color}>{status.icon}</StatusPill>
-              </InvoiceIconWrapper>
-            </Whisper>
+            <InvoiceStatusIcon
+              status={status.status}
+              title={status.title}
+            />
           );
         },
       },
+      {
+        id: 'action',
+        label: t('action'),
+        width: 160,
+        align: 'center',
+        fixed: true,
+        render: (invoice: InvoiceFragment) =>
+          !invoice.paidAt && !invoice.canceledAt ?
+            <Button
+              size="small"
+              variant="contained"
+              disabled={disabled}
+              onClick={() => setInvoiceToPay(invoice)}
+            >
+              {t('invoice.payManually')}
+            </Button>
+          : null,
+      },
     ],
-    [t]
-  );
-
-  const { isVisible, toggle, configurableColumns } = useColumnConfig(
-    'subscription-invoices',
-    columns
+    [disabled, t]
   );
 
   const [markInvoiceAsPaid] = useMutation(MarkInvoiceAsPaidDocument);
@@ -257,14 +220,6 @@ function InvoiceListPanel({
     const invoice = invoiceToPay;
     setInvoiceToPay(undefined);
 
-    if (!me?.me?.id) {
-      toaster.push(
-        <Message type="error">{t('invoice.userNotLoaded')}</Message>
-      );
-
-      return;
-    }
-
     if (!invoice) {
       return;
     }
@@ -274,6 +229,7 @@ function InvoiceListPanel({
       variables: { invoiceId: invoice.id },
       fetchPolicy: 'network-only',
     });
+
     const mail = data?.invoicePaymentMail;
 
     if (!mail) {
@@ -299,115 +255,83 @@ function InvoiceListPanel({
         }),
       },
     });
+
     onInvoicePaid();
   }
 
-  const panelHeader = (
-    <PanelHeader>
-      {t('invoice.panel.invoiceHistory')}
-
-      <ColumnConfigurator
-        columns={configurableColumns}
-        isVisible={isVisible}
-        onToggle={toggle}
-      />
-    </PanelHeader>
-  );
+  const panelTitle = t('invoice.panel.invoiceHistory');
 
   if (!subscriptionId) {
     return (
-      <RPanel
-        bordered
-        header={panelHeader}
-      >
-        <Message type="error">
-          {t('invoice.panel.missingSubscriptionId')}
-        </Message>
-      </RPanel>
+      <Card>
+        <CardHeader title={panelTitle} />
+
+        <CardContent>
+          <Alert severity="error">
+            {t('invoice.panel.missingSubscriptionId')}
+          </Alert>
+        </CardContent>
+      </Card>
     );
   }
 
   if (!invoices?.length) {
     return (
-      <RPanel
-        bordered
-        header={panelHeader}
-      >
-        <Message type="info">{t('invoice.panel.noInvoices')}</Message>
-      </RPanel>
+      <Card>
+        <CardHeader title={panelTitle} />
+
+        <CardContent>
+          <Alert severity="info">{t('invoice.panel.noInvoices')}</Alert>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <RPanel
-      bordered
-      header={panelHeader}
-    >
-      <Table
-        autoHeight
-        wordWrap="break-word"
-        data={sortedInvoices}
-        sortColumn="dueAt"
-        sortType={sortType}
-        onSortColumn={(_, type) => setSortType(type ?? 'desc')}
-      >
-        {renderListColumns(columns, isVisible)}
+    <Card>
+      <CardHeader title={panelTitle} />
 
-        <Column
-          width={160}
-          align="center"
-          fixed="right"
-        >
-          <HeaderCell align="center">{t('action')}</HeaderCell>
-          <RCell>
-            {(rowData: RowDataType<InvoiceFragment>) =>
-              !rowData.paidAt && !rowData.canceledAt ?
-                <Button
-                  size="xs"
-                  appearance="primary"
-                  disabled={!me?.me?.id || disabled}
-                  onClick={() => setInvoiceToPay(rowData as InvoiceFragment)}
-                >
-                  {t('invoice.payManually')}
-                </Button>
-              : null
-            }
-          </RCell>
-        </Column>
-      </Table>
+      <CardContent>
+        <DataTable
+          data={sortedInvoices}
+          sortable={['dueAt']}
+          sortColumn="dueAt"
+          sortOrder={sortType}
+          onSort={(_column, order) => setSortType(order)}
+          getRowId={row => row.id}
+          storageKey="invoices"
+          columns={columns}
+        />
+      </CardContent>
 
-      <Modal
+      <Dialog
         open={!!invoiceToPay}
-        backdrop="static"
-        size="xs"
         onClose={closePayModal}
+        maxWidth="xs"
       >
-        <Modal.Title>{t('invoice.areYouSure')}</Modal.Title>
-        <Modal.Body>{t('invoice.manuallyPaidModalBody')}</Modal.Body>
-        <Modal.Footer>
+        <DialogTitle>{t('invoice.areYouSure')}</DialogTitle>
+        <DialogContent>{t('invoice.manuallyPaidModalBody')}</DialogContent>
+
+        <DialogActions>
+          <Button onClick={closePayModal}>{t('cancel')}</Button>
+
           <Button
-            appearance="primary"
+            variant="contained"
             onClick={payManually}
           >
             {t('confirm')}
           </Button>
-          <Button
-            appearance="subtle"
-            onClick={closePayModal}
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
 
       {actionMailDialog}
-    </RPanel>
+    </Card>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_INVOICES',
-  'CAN_GET_INVOICE',
-  'CAN_CREATE_INVOICE',
-  'CAN_DELETE_INVOICE',
+  CanGetInvoices.id,
+  CanGetInvoice.id,
+  CanCreateInvoice.id,
+  CanDeleteInvoice.id,
 ])(InvoiceListPanel);
 export { CheckedPermissionComponent as InvoiceListPanel };

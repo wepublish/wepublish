@@ -48,7 +48,7 @@ export function ColorPickerButton({
 
       <ElevatedPopper
         open={open}
-        anchorEl={anchorRef.current}
+        anchorEl={() => anchorRef.current!}
         disablePortal
         onKeyDown={e => {
           if (e.key === 'Escape') {

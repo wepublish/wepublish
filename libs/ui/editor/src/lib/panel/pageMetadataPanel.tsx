@@ -1,28 +1,38 @@
 import styled from '@emotion/styled';
 import {
+  Alert,
+  Checkbox,
+  Box,
+  Button,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
+  Stack,
+  Tab,
+  Tabs,
+  TextField,
+} from '@mui/material';
+import {
   FullImageFragment,
   FullTagFragment,
   TagType,
 } from '@wepublish/editor/api';
+import {
+  CanCreatePage,
+  CanDeletePage,
+  CanGetPage,
+  CanGetPages,
+  CanPublishPage,
+} from '@wepublish/permissions';
 import { SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdListAlt, MdSettings, MdShare } from 'react-icons/md';
-import {
-  Button,
-  Drawer,
-  Form,
-  Input,
-  Message,
-  Nav as RNav,
-  Panel,
-  TagPicker as RTagPicker,
-  Toggle,
-} from 'rsuite';
 
 import {
   ChooseEditImage,
   createCheckedPermissionComponent,
-  DeferredTextField,
   ListInput,
   ListValue,
   PermissionControl,
@@ -31,19 +41,24 @@ import {
 } from '../atoms';
 import { InfoTooltip } from '../atoms/infoTooltip';
 import { MetaDataType } from '../blocks';
+import {
+  DRAWER_WIDTHS,
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+  FormFields,
+  FormSectionTitle,
+} from '../drawer';
 import { generateID, isFunctionalUpdate } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
 import { ImageSelectPanel } from './imageSelectPanel';
 
-const Nav = styled(RNav)`
-  margin-bottom: 20px;
-`;
-
-const InputWidth60 = styled(Input)`
+const InputWidth60 = styled(TextField)`
   width: 60%;
 `;
 
-const InputWidth40 = styled(Input)`
+const InputWidth40 = styled(TextField)`
   width: 40%;
   margin-right: 8px;
 `;
@@ -53,11 +68,7 @@ const InputList = styled.div`
   flex-direction: row;
 `;
 
-const TagPicker = styled(RTagPicker)`
-  width: 100%;
-`;
-
-const FormGroup = styled(Form.Group)`
+const PropertyFlag = styled(Box)`
   flex-shrink: 0;
   padding-top: 6px;
   padding-left: 8px;
@@ -65,31 +76,31 @@ const FormGroup = styled(Form.Group)`
 `;
 
 export interface PageMetadataProperty {
-  readonly key: string;
-  readonly value: string;
-  readonly public: boolean;
+  key: string;
+  value: string;
+  public: boolean;
 }
 
 export interface PageMetadata {
-  readonly slug?: string;
-  readonly title?: string;
-  readonly description: string;
-  readonly seoTitle?: string;
-  readonly seoDescription?: string;
-  readonly tags: string[];
-  readonly defaultTags: Pick<FullTagFragment, 'id' | 'tag'>[];
-  readonly url: string;
-  readonly properties: PageMetadataProperty[];
-  readonly image?: FullImageFragment;
-  readonly socialMediaTitle?: string;
-  readonly socialMediaDescription?: string;
-  readonly socialMediaImage?: FullImageFragment;
-  readonly hidden?: boolean | null;
-  readonly hideHeaderFooter?: boolean | null;
+  slug?: string;
+  title?: string;
+  description: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  tags: string[];
+  defaultTags: Pick<FullTagFragment, 'id' | 'tag'>[];
+  url: string;
+  properties: PageMetadataProperty[];
+  image?: FullImageFragment;
+  socialMediaTitle?: string;
+  socialMediaDescription?: string;
+  socialMediaImage?: FullImageFragment;
+  hidden?: boolean | null;
+  hideHeaderFooter?: boolean | null;
 }
 
 export interface PageMetadataPanelProps {
-  readonly value: PageMetadata;
+  value: PageMetadata;
 
   onClose?(): void;
 
@@ -123,7 +134,7 @@ function PageMetadataPanel({
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General);
 
-  const isAuthorized = useAuthorisation('CAN_CREATE_PAGE');
+  const isAuthorized = useAuthorisation(CanCreatePage.id);
 
   const [metaDataProperties, setMetadataProperties] = useState<
     ListValue<PageMetadataProperty>[]
@@ -181,43 +192,19 @@ function PageMetadataPanel({
     switch (activeKey) {
       case MetaDataType.SocialMedia:
         return (
-          <Form.Stack fluid>
-            <Form.Group>
-              <Message
-                showIcon
-                type="info"
-              >
-                {t('pageEditor.panels.metadataInfo')}
-              </Message>
-            </Form.Group>
-
-            <DeferredTextField
-              controlId="socialMediaTitle"
-              name="social-media-title"
-              label={t('pageEditor.panels.socialMediaTitle')}
-              disabled={!isAuthorized}
-              value={socialMediaTitle}
-              onChange={socialMediaTitle =>
-                onChange?.({ ...value, socialMediaTitle })
-              }
-            />
-
-            <DeferredTextField
-              controlId="socialMediaDescription"
-              name="social-media-description"
-              label={t('pageEditor.panels.socialMediaDescription')}
-              disabled={!isAuthorized}
-              rows={5}
-              value={socialMediaDescription}
-              onChange={socialMediaDescription =>
-                onChange?.({ ...value, socialMediaDescription })
-              }
-            />
-
-            <Form.Group controlId="socialMediaImage">
-              <Form.Label>{t('pageEditor.panels.socialMediaImage')}</Form.Label>
+          <FormFields>
+            <FormControl fullWidth>
+              <FormLabel>
+                {t('pageEditor.panels.socialMediaImage')}{' '}
+                <InfoTooltip
+                  text={t('metadataHints.socialMediaImageFallback')}
+                />
+              </FormLabel>
               <ChooseEditImage
-                header={''}
+                onSelect={(value: FullImageFragment) => {
+                  setChooseModalOpen(false);
+                  handleImageChange(value);
+                }}
                 image={socialMediaImage}
                 disabled={false}
                 openChooseModalOpen={() => {
@@ -230,118 +217,75 @@ function PageMetadataPanel({
                   onChange?.({ ...value, socialMediaImage: undefined })
                 }
               />
-            </Form.Group>
-          </Form.Stack>
+            </FormControl>
+
+            <TextField
+              id="socialMediaTitle"
+              name="social-media-title"
+              label={t('pageEditor.panels.socialMediaTitle')}
+              disabled={!isAuthorized}
+              value={socialMediaTitle}
+              onChange={event =>
+                onChange?.({ ...value, socialMediaTitle: event.target.value })
+              }
+              helperText={t('metadataHints.socialMediaTitleFallback')}
+              fullWidth
+            />
+
+            <TextField
+              id="socialMediaDescription"
+              name="social-media-description"
+              label={t('pageEditor.panels.socialMediaDescription')}
+              disabled={!isAuthorized}
+              value={socialMediaDescription}
+              multiline
+              rows={3}
+              onChange={event =>
+                onChange?.({
+                  ...value,
+                  socialMediaDescription: event.target.value,
+                })
+              }
+              helperText={t('metadataHints.socialMediaDescriptionFallback')}
+              fullWidth
+            />
+          </FormFields>
         );
       case MetaDataType.General:
         return (
-          <Form.Stack fluid>
-            <DeferredTextField
-              controlId="pageSlug"
-              name="slug"
-              label={
-                <>
-                  {t('pageEditor.panels.slug')}{' '}
-                  <InfoTooltip text={t('pageEditor.panels.slugInfo')} />
-                </>
-              }
-              disabled={!isAuthorized}
-              value={slug}
-              onChange={slug => onChange?.({ ...value, slug })}
-            />
+          <FormFields>
+            <FormSectionTitle>
+              {t('metadataSections.headline')}
+            </FormSectionTitle>
 
-            <DeferredTextField
-              controlId="pageTitle"
+            <TextField
+              id="pageTitle"
               name="title"
               label={t('pageEditor.panels.title')}
               disabled={!isAuthorized}
               value={title}
-              onChange={title => onChange?.({ ...value, title })}
+              onChange={event =>
+                onChange?.({ ...value, title: event.target.value })
+              }
+              fullWidth
             />
 
-            <DeferredTextField
-              controlId="pageDescription"
+            <TextField
+              id="pageDescription"
               name="description"
               label={t('pageEditor.panels.description')}
               disabled={!isAuthorized}
-              multiline
               value={description}
-              onChange={description => onChange?.({ ...value, description })}
-            />
-
-            <DeferredTextField
-              controlId="pageSeoTitle"
-              name="seo-title"
-              label={t('pageEditor.panels.seoTitle')}
-              disabled={!isAuthorized}
-              value={seoTitle}
-              helpText={t('pageEditor.panels.seoTitleHelpBlock')}
-              onChange={seoTitle => onChange?.({ ...value, seoTitle })}
-            />
-
-            <DeferredTextField
-              controlId="pageSeoDescription"
-              name="seo-description"
-              label={t('pageEditor.panels.seoDescription')}
-              disabled={!isAuthorized}
-              multiline
-              value={seoDescription}
-              helpText={t('pageEditor.panels.seoDescriptionHelpBlock')}
-              onChange={seoDescription =>
-                onChange?.({ ...value, seoDescription })
+              onChange={event =>
+                onChange?.({ ...value, description: event.target.value })
               }
+              fullWidth
             />
 
-            <Form.Group controlId="pageTags">
-              <Form.Label>{t('pageEditor.panels.tags')}</Form.Label>
-              <SelectTags
-                defaultTags={defaultTags}
-                disabled={!isAuthorized}
-                selectedTags={tags}
-                setSelectedTags={tagsValue =>
-                  onChange?.({ ...value, tags: tagsValue ?? [] })
-                }
-                tagType={TagType.Page}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="hidden">
-              <Toggle
-                checked={hidden ? true : false}
-                disabled={!isAuthorized}
-                onChange={hidden => onChange?.({ ...value, hidden })}
-                label={
-                  <>
-                    {t('pageEditor.panels.hidden')}{' '}
-                    <InfoTooltip text={t('pageEditor.panels.hiddenInfo')} />
-                  </>
-                }
-              />
-            </Form.Group>
-
-            <Form.Group controlId="hideHeaderFooter">
-              <Toggle
-                checked={!!hideHeaderFooter}
-                disabled={!isAuthorized}
-                onChange={hideHeaderFooter =>
-                  onChange?.({ ...value, hideHeaderFooter })
-                }
-                label={
-                  <>
-                    {t('pageEditor.panels.hideHeaderFooter')}{' '}
-                    <InfoTooltip
-                      text={t('pageEditor.panels.hideHeaderFooterInfo')}
-                    />
-                  </>
-                }
-              />
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label>{t('pageEditor.panels.postImage')}</Form.Label>
+            <FormControl fullWidth>
+              <FormLabel>{t('pageEditor.panels.postImage')}</FormLabel>
 
               <ChooseEditImage
-                header={''}
                 image={image}
                 disabled={false}
                 openChooseModalOpen={() => {
@@ -352,29 +296,130 @@ function PageMetadataPanel({
                 }}
                 removeImage={() => onChange?.({ ...value, image: undefined })}
               />
-            </Form.Group>
-          </Form.Stack>
+            </FormControl>
+
+            <FormSectionTitle>{t('metadataSections.seo')}</FormSectionTitle>
+
+            <TextField
+              id="pageSeoTitle"
+              name="seo-title"
+              label={t('pageEditor.panels.seoTitle')}
+              disabled={!isAuthorized}
+              value={seoTitle}
+              onChange={event =>
+                onChange?.({ ...value, seoTitle: event.target.value })
+              }
+              helperText={t('pageEditor.panels.seoTitleHelpBlock')}
+              fullWidth
+            />
+
+            <TextField
+              id="pageSeoDescription"
+              name="seo-description"
+              label={t('pageEditor.panels.seoDescription')}
+              disabled={!isAuthorized}
+              value={seoDescription}
+              onChange={event =>
+                onChange?.({ ...value, seoDescription: event.target.value })
+              }
+              helperText={t('pageEditor.panels.seoDescriptionHelpBlock')}
+              fullWidth
+            />
+
+            <TextField
+              id="pageSlug"
+              name="slug"
+              label={
+                <>
+                  {t('pageEditor.panels.slug')}{' '}
+                  <InfoTooltip text={t('pageEditor.panels.slugInfo')} />
+                </>
+              }
+              disabled={!isAuthorized}
+              value={slug}
+              onChange={event =>
+                onChange?.({ ...value, slug: event.target.value })
+              }
+              fullWidth
+            />
+
+            <FormSectionTitle>
+              {t('metadataSections.publication')}
+            </FormSectionTitle>
+
+            <FormControl fullWidth>
+              <FormLabel>{t('pageEditor.panels.tags')}</FormLabel>
+              <SelectTags
+                defaultTags={defaultTags}
+                disabled={!isAuthorized}
+                selectedTags={tags}
+                setSelectedTags={tagsValue =>
+                  onChange?.({ ...value, tags: tagsValue ?? [] })
+                }
+                tagType={TagType.Page}
+              />
+            </FormControl>
+
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={hidden ?? false}
+                    disabled={!isAuthorized}
+                    onChange={(_event, hidden) =>
+                      onChange?.({ ...value, hidden })
+                    }
+                  />
+                }
+                label={
+                  <>
+                    {t('pageEditor.panels.hidden')}{' '}
+                    <InfoTooltip text={t('pageEditor.panels.hiddenInfo')} />
+                  </>
+                }
+              />
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={hideHeaderFooter ?? false}
+                    disabled={!isAuthorized}
+                    onChange={(_event, hideHeaderFooter) =>
+                      onChange?.({ ...value, hideHeaderFooter })
+                    }
+                  />
+                }
+                label={
+                  <>
+                    {t('pageEditor.panels.hideHeaderFooter')}{' '}
+                    <InfoTooltip
+                      text={t('pageEditor.panels.hideHeaderFooterInfo')}
+                    />
+                  </>
+                }
+              />
+            </FormGroup>
+          </FormFields>
         );
+
       case MetaDataType.Properties:
         return (
-          <Form.Stack fluid>
-            <Form.Group>
-              <Message
-                showIcon
-                type="info"
-              >
+          <Stack
+            spacing={3}
+            sx={{ width: '100%' }}
+          >
+            <Box>
+              <Alert severity="info">
                 {t('pageEditor.panels.propertiesInfo')}
-              </Message>
-            </Form.Group>
+              </Alert>
+            </Box>
 
-            <Form.Group controlId="pageProperties">
-              <Form.Label>{t('pageEditor.panels.properties')}</Form.Label>
+            <FormControl fullWidth>
+              <FormLabel>{t('pageEditor.panels.properties')}</FormLabel>
               <ListInput
                 disabled={!isAuthorized}
                 value={metaDataProperties}
-                onChange={propertiesItemInput =>
-                  handleMetadataPropertiesChange(propertiesItemInput)
-                }
+                onChange={handleMetadataPropertiesChange}
                 defaultValue={{ key: '', value: '', public: true }}
               >
                 {({ value, onChange }) => (
@@ -382,86 +427,94 @@ function PageMetadataPanel({
                     <InputWidth40
                       placeholder={t('pageEditor.panels.key')}
                       value={value.key}
-                      onChange={propertyKey => {
-                        onChange({ ...value, key: propertyKey });
+                      onChange={event => {
+                        onChange({ ...value, key: event.target.value });
                       }}
                     />
                     <InputWidth60
                       placeholder={t('pageEditor.panels.value')}
                       value={value.value}
-                      onChange={propertyValue => {
-                        onChange({ ...value, value: propertyValue });
+                      onChange={event => {
+                        onChange({ ...value, value: event.target.value });
                       }}
                     />
-                    <FormGroup>
-                      <Toggle
-                        checked={value.public}
-                        onChange={isPublic =>
-                          onChange({ ...value, public: isPublic })
+                    <PropertyFlag>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={value.public}
+                            onChange={(_event, isPublic) =>
+                              onChange({ ...value, public: isPublic })
+                            }
+                          />
                         }
                         label={t('pageEditor.panels.public')}
                       />
-                    </FormGroup>
+                    </PropertyFlag>
                   </InputList>
                 )}
               </ListInput>
-            </Form.Group>
-          </Form.Stack>
+            </FormControl>
+          </Stack>
         );
     }
   }
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('pageEditor.panels.metadata')}</Drawer.Title>
+      <DrawerHeader>
+        <DrawerTitle>{t('pageEditor.panels.metadata')}</DrawerTitle>
 
-        <Drawer.Actions>
-          <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
+        <DrawerActions>
+          <PermissionControl qualifyingPermissions={[CanCreatePage.id]}>
             <Button
-              appearance="primary"
+              variant="contained"
               onClick={() => onClose?.()}
             >
               {t('saveAndClose')}
             </Button>
           </PermissionControl>
-        </Drawer.Actions>
-      </Drawer.Header>
+        </DrawerActions>
+      </DrawerHeader>
 
-      <Drawer.Body>
-        <Nav
-          appearance="tabs"
-          activeKey={activeKey}
-          onSelect={activeKey => setActiveKey(activeKey)}
-        >
-          <RNav.Item
-            eventKey={MetaDataType.General}
-            icon={<MdSettings />}
-          >
-            {t('articleEditor.panels.general')}
-          </RNav.Item>
-          <RNav.Item
-            eventKey={MetaDataType.SocialMedia}
-            icon={<MdShare />}
-          >
-            {t('articleEditor.panels.socialMedia')}
-          </RNav.Item>
-          <RNav.Item
-            eventKey={MetaDataType.Properties}
-            icon={<MdListAlt />}
-          >
-            {t('pageEditor.panels.properties')}
-          </RNav.Item>
-        </Nav>
-
-        <Panel>
-          <Form disabled={!isAuthorized}>{currentContent()}</Form>
-        </Panel>
-      </Drawer.Body>
+      <Tabs
+        value={activeKey}
+        onChange={(_event, activeKey) => setActiveKey(activeKey)}
+        variant="scrollable"
+        scrollButtons="auto"
+      >
+        <Tab
+          value={MetaDataType.General}
+          icon={<MdSettings />}
+          iconPosition="start"
+          label={<>{t('articleEditor.panels.general')}</>}
+        />
+        <Tab
+          value={MetaDataType.SocialMedia}
+          icon={<MdShare />}
+          iconPosition="start"
+          label={<>{t('articleEditor.panels.socialMedia')}</>}
+        />
+        <Tab
+          value={MetaDataType.Properties}
+          icon={<MdListAlt />}
+          iconPosition="start"
+          label={<>{t('pageEditor.panels.properties')}</>}
+        />
+      </Tabs>
+      <DrawerBody>{currentContent()}</DrawerBody>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isChooseModalOpen}
-        size="sm"
         onClose={() => setChooseModalOpen(false)}
       >
         <ImageSelectPanel
@@ -474,8 +527,18 @@ function PageMetadataPanel({
       </Drawer>
       {(value.image || value.socialMediaImage) && (
         <Drawer
+          anchor="right"
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: DRAWER_WIDTHS.sm,
+                maxWidth: '100vw',
+              },
+            },
+          }}
           open={isEditModalOpen}
-          size="sm"
           onClose={() => {
             setEditModalOpen(false);
           }}
@@ -495,10 +558,10 @@ function PageMetadataPanel({
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_PAGE',
-  'CAN_GET_PAGES',
-  'CAN_CREATE_PAGE',
-  'CAN_DELETE_PAGE',
-  'CAN_PUBLISH_PAGE',
+  CanGetPage.id,
+  CanGetPages.id,
+  CanCreatePage.id,
+  CanDeletePage.id,
+  CanPublishPage.id,
 ])(PageMetadataPanel);
 export { CheckedPermissionComponent as PageMetadataPanel };

@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { CommentItemType, CreateCommentDocument } from '@wepublish/editor/api';
 import { MemoryRouter } from 'react-router-dom';
@@ -38,6 +39,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 const mockedUseQuery = useQuery as unknown as Mock;
+const refetch = vi.fn();
 
 const page = {
   __typename: 'Page',
@@ -52,7 +54,7 @@ const page = {
     __typename: 'PageRevision',
     id: 'revision-1',
     title: 'About us',
-    description: null,
+    description: 'What we do and why',
     slug: 'about',
     createdAt: '2026-09-28T15:30:00.000Z',
     publishedAt: null,
@@ -75,16 +77,78 @@ beforeEach(() => {
       },
     },
     loading: false,
-    refetch: vi.fn(),
+    refetch,
   });
+  refetch.mockClear();
 });
 
-describe('PageList', () => {
-  it('creates comments for a page as page comments', () => {
-    render(
+const renderList = () =>
+  render(
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
       <MemoryRouter>
         <PageList />
       </MemoryRouter>
+    </ThemeProvider>
+  );
+
+describe('PageList', () => {
+  it('does not refetch when a column is hidden', () => {
+    localStorage.setItem(
+      'wepublish:editor:listState:pages',
+      JSON.stringify({
+        filter: {},
+        sortField: 'modifiedAt',
+        sortOrder: 'desc',
+        limit: 10,
+      })
+    );
+
+    renderList();
+    refetch.mockClear();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'columnConfigurator.title' })
+    );
+    fireEvent.click(
+      screen.getByRole('menuitemcheckbox', { name: 'pages.overview.slug' })
+    );
+
+    expect(refetch).not.toHaveBeenCalled();
+  });
+
+  it('shows the description of a page', () => {
+    renderList();
+
+    expect(screen.getByText('What we do and why')).toBeInTheDocument();
+  });
+
+  it('offers every column but the ones that name the row', () => {
+    renderList();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'columnConfigurator.title' })
+    );
+
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'pages.overview.slug' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('menuitemcheckbox', {
+        name: 'pages.overview.publicationDate',
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'pages.overview.updated' })
+    ).toBeInTheDocument();
+  });
+
+  it('creates comments for a page as page comments', () => {
+    render(
+      <ThemeProvider theme={createTheme({ cssVariables: true })}>
+        <MemoryRouter>
+          <PageList />
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
     fireEvent.click(
@@ -122,11 +186,7 @@ describe('PageList', () => {
         refetch: vi.fn(),
       });
 
-      render(
-        <MemoryRouter>
-          <PageList />
-        </MemoryRouter>
-      );
+      renderList();
     };
 
     it('is disabled for unpublished pages', () => {

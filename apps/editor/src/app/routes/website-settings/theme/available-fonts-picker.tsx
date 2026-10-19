@@ -47,7 +47,6 @@ export const AvailableFontsPicker = memo(
             ref={ref}
             name={name}
             value={cleanValue}
-            size="small"
             displayEmpty
             onChange={handleChange}
             onBlur={onBlur}

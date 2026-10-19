@@ -438,4 +438,26 @@ describe('mergeAudienceFilterParams', () => {
 
     expect(current.get('range')).toBe('lastYear');
   });
+
+  it('falls back to the chart when the link shows nothing', () => {
+    const decoded = decodeAudienceFilter(
+      new URLSearchParams('show='),
+      defaults(),
+      NOW
+    );
+
+    expect(decoded.componentFilter.chart).toBe(true);
+    expect(decoded.componentFilter.table).toBe(false);
+  });
+
+  it('keeps one view when an old link names both', () => {
+    const decoded = decodeAudienceFilter(
+      new URLSearchParams('show=chart,table'),
+      defaults(),
+      NOW
+    );
+
+    expect(decoded.componentFilter.chart).toBe(true);
+    expect(decoded.componentFilter.table).toBe(false);
+  });
 });

@@ -1,4 +1,21 @@
+import {
+  Button,
+  Drawer,
+  Grid,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+} from '@mui/material';
 import { DailySubscriptionStatsUser } from '@wepublish/editor/api';
+import {
+  DataTable,
+  DrawerActions,
+  DrawerBody,
+  DrawerHeader,
+  DrawerTitle,
+} from '@wepublish/ui/editor';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,14 +28,10 @@ import {
   MdSpaceBar,
   MdStopCircle,
 } from 'react-icons/md';
-import { Button, Col, Drawer, Nav, Row, Sidenav, Table } from 'rsuite';
 
 import { AudienceCsvBtn } from './audience-csv-btn';
-import { AggregatedUsers, AudienceStatsComputed } from './useAudience';
 import { TimeResolution } from './audience-filter-params';
-
-const { Cell, Column, HeaderCell } = Table;
-const { Body, Header } = Sidenav;
+import { AggregatedUsers, AudienceStatsComputed } from './useAudience';
 
 const availableStats: AggregatedUsers[] = [
   'createdSubscriptionUsers',
@@ -97,108 +110,117 @@ export function AudienceDetailDrawer({
 
   return (
     <Drawer
-      placement="bottom"
-      size="full"
+      anchor="bottom"
+      slotProps={{
+        paper: {
+          sx: { display: 'flex', flexDirection: 'column', height: '80vh' },
+        },
+      }}
       open={!!audienceStats?.date}
       onClose={() => setOpen(undefined)}
     >
-      <Drawer.Header>
-        <Drawer.Title>{date}</Drawer.Title>
-        <Drawer.Actions>
+      <DrawerHeader>
+        <DrawerTitle>{date}</DrawerTitle>
+        <DrawerActions>
           <AudienceCsvBtn
             audienceStats={audienceStats}
             selectedStatKey={selectedStat}
             fileNameDate={date}
           />
           <Button
+            variant="contained"
             onClick={() => setOpen(undefined)}
-            appearance="primary"
           >
             {t('audienceDetailDrawer.close')}
           </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
-      <Drawer.Body>
-        <Row gutter={8}>
-          <Col xs={4}>
-            <Sidenav appearance="subtle">
-              <Header>{t('audienceDetailDrawer.selectStat')}</Header>
-              <Body>
-                <Nav>
-                  {availableStats.map((availableStat, index) => (
-                    <Nav.Item
-                      key={index}
-                      active={selectedStat === availableStat}
-                      onClick={() => setSelectedStat(availableStat)}
-                      icon={getIconByUserFilter(availableStat)}
-                    >
-                      {`${t(`audience.legend.${availableStat}`)} (${
-                        audienceStats?.[availableStat]?.length
-                      })`}
-                    </Nav.Item>
-                  ))}
-                </Nav>
-              </Body>
-            </Sidenav>
-          </Col>
-          <Col xs={20}>
-            <Table
-              data={audienceStats?.[selectedStat] || []}
-              style={{ width: '100%' }}
-              height={700}
-              virtualized
+        </DrawerActions>
+      </DrawerHeader>
+      <DrawerBody>
+        <Grid
+          container
+          spacing={2}
+        >
+          <Grid size={{ xs: 2 }}>
+            <List
+              component="nav"
+              subheader={
+                <ListSubheader>
+                  {t('audienceDetailDrawer.selectStat')}
+                </ListSubheader>
+              }
             >
-              <Column
-                resizable
-                width={250}
-              >
-                <HeaderCell>{t('audienceDetailDrawer.id')}</HeaderCell>
-                <Cell dataKey="id" />
-              </Column>
-              <Column
-                resizable
-                width={200}
-              >
-                <HeaderCell>{t('audienceDetailDrawer.firstName')}</HeaderCell>
-                <Cell dataKey="firstName" />
-              </Column>
-              <Column
-                resizable
-                width={200}
-              >
-                <HeaderCell>{t('audienceDetailDrawer.name')}</HeaderCell>
-                <Cell dataKey="name" />
-              </Column>
-              <Column
-                resizable
-                width={300}
-              >
-                <HeaderCell>{t('audienceDetailDrawer.email')}</HeaderCell>
-                <Cell dataKey="email" />
-              </Column>
-              <Column
-                resizable
-                width={300}
-              >
-                <HeaderCell>{t('audienceDetailDrawer.goToUser')}</HeaderCell>
-                <Cell>
-                  {(entry: DailySubscriptionStatsUser) => (
+              {availableStats.map((availableStat, index) => (
+                <ListItemButton
+                  key={index}
+                  selected={availableStat === selectedStat}
+                  onClick={() => setSelectedStat(availableStat)}
+                >
+                  <ListItemIcon sx={{ minWidth: 32 }}>
+                    {getIconByUserFilter(availableStat)}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={`${t(`audience.legend.${availableStat}`)} (${
+                      audienceStats?.[availableStat]?.length
+                    })`}
+                    slotProps={{ primary: { variant: 'body2' } }}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          </Grid>
+          <Grid size={{ xs: 10 }}>
+            <DataTable
+              data={audienceStats?.[selectedStat] || []}
+              columns={[
+                {
+                  id: 'id',
+                  label: t('audienceDetailDrawer.id'),
+                  width: 250,
+                  sortKey: 'id',
+                  render: row => row.id,
+                },
+                {
+                  id: 'firstname',
+                  label: t('audienceDetailDrawer.firstName'),
+                  width: 200,
+                  sortKey: 'firstName',
+                  render: row => row.firstName,
+                },
+                {
+                  id: 'name',
+                  label: t('audienceDetailDrawer.name'),
+                  width: 200,
+                  sortKey: 'name',
+                  render: row => row.name,
+                },
+                {
+                  id: 'email',
+                  label: t('audienceDetailDrawer.email'),
+                  width: 300,
+                  sortKey: 'email',
+                  render: row => row.email,
+                },
+                {
+                  id: 'gotouser',
+                  label: t('audienceDetailDrawer.goToUser'),
+                  width: 300,
+                  render: (entry: DailySubscriptionStatsUser) => (
                     <Button
+                      variant="outlined"
                       href={`/users/edit/${entry.id}`}
-                      size="xs"
-                      appearance={'ghost'}
+                      size="small"
                       target={'__blank'}
                       endIcon={<MdOpenInNew />}
                     >
                       {t('audienceDetailDrawer.userBtn')}
                     </Button>
-                  )}
-                </Cell>
-              </Column>
-            </Table>
-          </Col>
-        </Row>
-      </Drawer.Body>
+                  ),
+                },
+              ]}
+            />
+          </Grid>
+        </Grid>
+      </DrawerBody>
     </Drawer>
   );
 }
