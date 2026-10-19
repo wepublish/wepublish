@@ -36,8 +36,8 @@ vi.mock('./delivery-suggestions-view', () => ({
 vi.mock('./delivery-channel-assign-view', () => ({
   DeliveryChannelAssignView: () => <div>assign-view</div>,
 }));
-vi.mock('./delivery-mode-bulk-changes', () => ({
-  DeliveryModeBulkChanges: () => <div>history-view</div>,
+vi.mock('./delivery-channel-history-view', () => ({
+  DeliveryChannelHistoryView: () => <div>history-view</div>,
 }));
 
 vi.mock('react-i18next', () => ({

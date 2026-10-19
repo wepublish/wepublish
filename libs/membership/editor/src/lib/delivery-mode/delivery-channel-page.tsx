@@ -13,7 +13,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { DeliveryChannelOverviewView } from './delivery-channel-overview-view';
 import { DeliveryChannelAssignView } from './delivery-channel-assign-view';
-import { DeliveryModeBulkChanges } from './delivery-mode-bulk-changes';
+import { DeliveryChannelHistoryView } from './delivery-channel-history-view';
 import { DeliverySuggestionsView } from './delivery-suggestions-view';
 import { usePaperLetterFlow } from './use-paper-letter-flow';
 
@@ -59,7 +59,7 @@ export function DeliveryChannelPage() {
         {
           key: 'history',
           label: t('deliveryChannel.tabs.history'),
-          element: <DeliveryModeBulkChanges />,
+          element: <DeliveryChannelHistoryView />,
         },
       ]
     : []),

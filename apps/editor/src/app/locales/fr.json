@@ -1722,6 +1722,9 @@
         "confirmTitle": "Faire passer le public cible à {{channel}} ?",
         "showHistory": "Afficher dans l’historique",
         "again": "Nouveau changement"
+      },
+      "history": {
+        "allChannels": "Tous"
       }
     },
     "navbar": {
