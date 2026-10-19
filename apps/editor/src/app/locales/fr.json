@@ -1610,7 +1610,7 @@
       "switchToLetter": "Passer à la lettre",
       "switchToMail": "Passer à l’e-mail",
       "suggestionsTitle": "Canal de distribution des messages automatiques",
-      "suggestionsIntro": "Le canal de distribution détermine si une personne reçoit ses messages automatiques par e-mail ou par lettre. Il est changé à la main, sur la base d’une suggestion ou via des filtres de groupe d’utilisateurs. Les suggestions sont calculées chaque jour à partir des retours automatiques sur la délivrabilité des e-mails, mais ne prennent effet qu’après confirmation manuelle.",
+      "suggestionsIntro": "Le canal de distribution détermine si une personne reçoit ses messages automatiques par e-mail ou par lettre. Le changement se fait à la main, sur la base d’une suggestion ou via des filtres de groupe d’utilisateurs. Les suggestions sont calculées chaque jour à partir des retours automatiques sur la délivrabilité des e-mails, mais ne prennent effet qu’après confirmation manuelle.",
       "kind": {
         "toLetter": "Passer à la lettre ({{count}})",
         "toMail": "Passer à l’e-mail ({{count}})"
