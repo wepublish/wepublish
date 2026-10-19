@@ -1663,7 +1663,22 @@
       "tabs": {
         "suggestions": "Suggestions ({{count}})",
         "assign": "Changer un public cible",
-        "history": "Historique"
+        "history": "Historique",
+        "overview": "Vue d’ensemble"
+      },
+      "overview": {
+        "defaultChannel": "{{label}} (par défaut)",
+        "people": "{{count}} personnes",
+        "showPeople": "Afficher les personnes",
+        "openSuggestions": "{{count}} suggestions ouvertes",
+        "review": "Examiner",
+        "printed": "Imprimés : {{printed}} sur {{total}} messages automatiques",
+        "openFlows": "Vers les messages automatiques",
+        "peopleOn": "Personnes au canal {{channel}}",
+        "search": "Rechercher un nom ou une adresse e-mail",
+        "lastChange": "Dernier changement",
+        "noDecision": "Sans décision propre",
+        "empty": "Personne sur ce canal."
       }
     },
     "navbar": {

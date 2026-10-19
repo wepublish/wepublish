@@ -27,6 +27,9 @@ vi.mock('./use-paper-letter-flow', () => ({
 }));
 
 // Each view has its own spec; here they only have to show up in their tab.
+vi.mock('./delivery-channel-overview-view', () => ({
+  DeliveryChannelOverviewView: () => <div>overview-view</div>,
+}));
 vi.mock('./delivery-suggestions-page', () => ({
   DeliverySuggestionsPage: () => <div>suggestions-view</div>,
 }));
@@ -85,11 +88,15 @@ describe('DeliveryChannelPage', () => {
     expect(screen.getByText('deliveryMode.suggestionsIntro')).toBeTruthy();
   });
 
-  it('opens on the first view', () => {
+  it('opens on the overview', () => {
     renderAt('/deliverychannel');
 
-    expect(screen.getByText('suggestions-view')).toBeTruthy();
-    expect(tabs()[0].getAttribute('aria-selected')).toBe('true');
+    expect(screen.getByText('overview-view')).toBeTruthy();
+    expect(
+      screen
+        .getByRole('tab', { name: 'deliveryChannel.tabs.overview' })
+        .getAttribute('aria-selected')
+    ).toBe('true');
   });
 
   it('counts the open suggestions of both directions in their tab', () => {
@@ -104,6 +111,7 @@ describe('DeliveryChannelPage', () => {
     renderAt('/deliverychannel');
 
     expect(tabs().map(tab => tab.getAttribute('href'))).toEqual([
+      '/deliverychannel/overview',
       '/deliverychannel/suggestions',
       '/deliverychannel/assign',
       '/deliverychannel/history',
@@ -122,18 +130,18 @@ describe('DeliveryChannelPage', () => {
     ).toBe('true');
   });
 
-  it('falls back to the first view for an address it does not know', () => {
+  it('falls back to the overview for an address it does not know', () => {
     renderAt('/deliverychannel/nowhere');
 
-    expect(screen.getByText('suggestions-view')).toBeTruthy();
+    expect(screen.getByText('overview-view')).toBeTruthy();
   });
 
   it('keeps the switch and its record from people who may not change channels', () => {
     allowed.mockReturnValue(false);
     renderAt('/deliverychannel/assign');
 
-    expect(tabs()).toHaveLength(1);
-    expect(screen.getByText('suggestions-view')).toBeTruthy();
+    expect(tabs()).toHaveLength(2);
+    expect(screen.getByText('overview-view')).toBeTruthy();
     expect(screen.queryByText('assign-view')).toBeNull();
   });
 
@@ -142,6 +150,7 @@ describe('DeliveryChannelPage', () => {
     renderAt('/deliverychannel');
 
     expect(tabs().map(tab => tab.getAttribute('href'))).toEqual([
+      '/deliverychannel/overview',
       '/deliverychannel/suggestions',
       '/deliverychannel/history',
     ]);

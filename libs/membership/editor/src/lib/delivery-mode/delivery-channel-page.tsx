@@ -11,6 +11,7 @@ import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
+import { DeliveryChannelOverviewView } from './delivery-channel-overview-view';
 import { DeliveryModeAudienceSection } from './delivery-mode-audience-section';
 import { DeliveryModeBulkChanges } from './delivery-mode-bulk-changes';
 import { DeliverySuggestionsPage } from './delivery-suggestions-page';
@@ -34,6 +35,11 @@ export function DeliveryChannelPage() {
   const open = (counts?.toLetter ?? 0) + (counts?.toMail ?? 0);
 
   const views: View[] = [
+    {
+      key: 'overview',
+      label: t('deliveryChannel.tabs.overview'),
+      element: <DeliveryChannelOverviewView />,
+    },
     {
       key: 'suggestions',
       label: t('deliveryChannel.tabs.suggestions', { count: open }),

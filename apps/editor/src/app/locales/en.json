@@ -1664,7 +1664,22 @@
       "tabs": {
         "suggestions": "Suggestions ({{count}})",
         "assign": "Switch an audience",
-        "history": "History"
+        "history": "History",
+        "overview": "Overview"
+      },
+      "overview": {
+        "defaultChannel": "{{label}} (default)",
+        "people": "{{count}} people",
+        "showPeople": "Show people",
+        "openSuggestions": "{{count}} open suggestions",
+        "review": "Review",
+        "printed": "Printed: {{printed}} of {{total}} automated messages",
+        "openFlows": "Go to automated messages",
+        "peopleOn": "People on {{channel}}",
+        "search": "Search name or email address",
+        "lastChange": "Last change",
+        "noDecision": "No decision of their own",
+        "empty": "Nobody on this channel."
       }
     },
     "navbar": {

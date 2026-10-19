@@ -1663,7 +1663,22 @@
       "tabs": {
         "suggestions": "Vorschläge ({{count}})",
         "assign": "Zielgruppe umstellen",
-        "history": "Verlauf"
+        "history": "Verlauf",
+        "overview": "Übersicht"
+      },
+      "overview": {
+        "defaultChannel": "{{label}} (Standard)",
+        "people": "{{count}} Personen",
+        "showPeople": "Personen anzeigen",
+        "openSuggestions": "{{count}} offene Vorschläge",
+        "review": "Prüfen",
+        "printed": "Gedruckt werden: {{printed}} von {{total}} automatischen Mitteilungen",
+        "openFlows": "Zu den automatischen Mitteilungen",
+        "peopleOn": "Personen mit Zustellweg {{channel}}",
+        "search": "Name oder E-Mail-Adresse suchen",
+        "lastChange": "Letzte Änderung",
+        "noDecision": "Ohne eigene Entscheidung",
+        "empty": "Niemand mit diesem Zustellweg."
       }
     },
     "navbar": {
