@@ -12,9 +12,15 @@ import {
   SubscriptionFlowsDocument,
   SystemMailsDocument,
 } from '@wepublish/editor/api';
-import { useParams } from 'react-router-dom';
+import { MemoryRouter, useParams } from 'react-router-dom';
 
 import { SubscriptionFlowList } from './subscription-flow-list';
+
+const letterFlow = vi.fn(() => false);
+
+vi.mock('../delivery-mode/use-paper-letter-flow', () => ({
+  usePaperLetterFlow: () => letterFlow(),
+}));
 
 const { mutationFor } = vi.hoisted(() => {
   const mutations = new Map<unknown, ReturnType<typeof vi.fn>>();
@@ -146,6 +152,33 @@ describe('SubscriptionFlowList', () => {
   beforeEach(() => {
     mockedUseQuery.mockReset();
     mockedUseParams.mockReset();
+  });
+
+  describe('with the paper letter flow', () => {
+    beforeEach(() => {
+      mockedUseParams.mockReturnValue({ id: 'default' });
+      mockQueries([defaultFlow]);
+    });
+
+    afterEach(() => letterFlow.mockReturnValue(false));
+
+    it('says what printing an event means and where the channels are managed', () => {
+      letterFlow.mockReturnValue(true);
+      render(<MemoryRouter>{page()}</MemoryRouter>);
+
+      expect(screen.getByText('deliveryChannel.flows.letterHint')).toBeTruthy();
+      expect(
+        screen
+          .getByRole('link', { name: 'deliveryChannel.flows.manage' })
+          .getAttribute('href')
+      ).toBe('/deliverychannel');
+    });
+
+    it('says nothing of letters where none can be sent', () => {
+      renderPage();
+
+      expect(screen.queryByText('deliveryChannel.flows.letterHint')).toBeNull();
+    });
   });
 
   describe('for the default flow', () => {

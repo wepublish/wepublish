@@ -1725,6 +1725,15 @@
       },
       "history": {
         "allChannels": "Alle"
+      },
+      "user": {
+        "switched": "Zustellweg auf {{channel}} umgestellt.",
+        "manageAll": "Alle Zustellwege verwalten",
+        "suggestion": "Vorschlag: {{move}}"
+      },
+      "flows": {
+        "letterHint": "Mitteilungen mit «Auch als Brief drucken» erreichen Personen mit Zustellweg Brief gedruckt; alle anderen gehen per E-Mail.",
+        "manage": "Zustellwege verwalten"
       }
     },
     "navbar": {

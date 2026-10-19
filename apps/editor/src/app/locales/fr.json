@@ -1725,6 +1725,15 @@
       },
       "history": {
         "allChannels": "Tous"
+      },
+      "user": {
+        "switched": "Canal de distribution passé à {{channel}}.",
+        "manageAll": "Gérer tous les canaux de distribution",
+        "suggestion": "Suggestion : {{move}}"
+      },
+      "flows": {
+        "letterHint": "Les messages marqués « Imprimer aussi en lettre » parviennent imprimés aux personnes au canal lettre ; les autres reçoivent un e-mail.",
+        "manage": "Gérer les canaux de distribution"
       }
     },
     "navbar": {
