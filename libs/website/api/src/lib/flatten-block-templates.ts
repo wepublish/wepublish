@@ -14,7 +14,6 @@ const flatten = (
       return [block];
     }
 
-    // A block template could be referencing itself
     if (depth >= 10) {
       return [];
     }
@@ -32,11 +31,6 @@ const flatten = (
     );
   });
 
-/**
- * A flex child pairs a block with its grid alignment. When a template expands
- * to several blocks they all inherit the template block's alignment, since
- * there is no per-block alignment to take.
- */
 const flattenFlexBlocks = (
   flexBlocks: readonly StoredFlexBlock[],
   readField: FieldFunctionOptions['readField']
@@ -66,14 +60,6 @@ const flattenedBlocks = {
   ) => (existing ? flatten(existing, readField) : existing),
 };
 
-/**
- * Expands `BlockTemplateBlock`s into the blocks they reference, so consumers
- * never have to know templates exist.
- *
- * This runs on `read` rather than `merge`: during `merge` the referenced
- * `BlockTemplate` has not been written to the cache yet, so `readField` would
- * come back empty and the template's blocks would be dropped.
- */
 export const flattenBlockTemplates: Exclude<
   InMemoryCacheConfig['typePolicies'],
   undefined

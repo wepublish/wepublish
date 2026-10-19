@@ -1,28 +1,42 @@
 import styled from '@emotion/styled';
 import {
-  FullMemberPlanFragment,
-  MutationCreateDiscountCodeArgs,
-  MutationUpdateDiscountCodeArgs,
-} from '@wepublish/editor/api';
+  Box,
+  Card,
+  CardContent,
+  FormControl,
+  FormLabel,
+  TextField,
+} from '@mui/material';
+import { FullMemberPlanFragment } from '@wepublish/editor/api';
 import {
   DateTimePicker,
   InfoTooltip,
   SelectMemberPlan,
 } from '@wepublish/ui/editor';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Form, NumberInput, Panel } from 'rsuite';
+import { z } from 'zod';
 
-type DiscountCodeFormData = (
-  | MutationCreateDiscountCodeArgs
-  | MutationUpdateDiscountCodeArgs
-) & {
-  memberPlan?: Pick<FullMemberPlanFragment, 'id' | 'name'>;
-};
+export const discountCodeSchema = z
+  .object({
+    id: z.string().optional(),
+    code: z.string().min(3),
+    discountPercent: z.coerce.number().int().min(0).max(100),
+    memberPlanId: z.string().min(1),
+    memberPlan: z
+      .custom<Pick<FullMemberPlanFragment, 'id' | 'name'>>()
+      .optional(),
+    validFrom: z.string().min(1),
+    validTo: z.string().min(1),
+  })
+  .refine(value => new Date(value.validTo) >= new Date(value.validFrom), {
+    path: ['validTo'],
+  });
+
+export type DiscountCodeFormValues = z.infer<typeof discountCodeSchema>;
 
 type DiscountCodeFormProps = {
   create?: boolean;
-  discountCode: Partial<DiscountCodeFormData>;
-  onChange: (changes: Partial<DiscountCodeFormData>) => void;
 };
 
 const DiscountCodeFormWrapper = styled.div`
@@ -48,15 +62,6 @@ const CodeDiscountGrid = styled.div`
   align-self: stretch;
   gap: 16px;
 
-  .rs-form-group {
-    min-width: 0;
-  }
-
-  .rs-form-control,
-  .rs-input-group {
-    width: 100%;
-  }
-
   @media (max-width: 640px) {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -69,111 +74,133 @@ const DateRangeGrid = styled.div`
   gap: 16px;
 `;
 
-export const DiscountCodeForm = ({
-  discountCode,
-  onChange,
-  create,
-}: DiscountCodeFormProps) => {
+export const DiscountCodeForm = ({ create }: DiscountCodeFormProps) => {
   const { t } = useTranslation();
+  const { control } = useFormContext<DiscountCodeFormValues>();
+  const memberPlan = useWatch({ control, name: 'memberPlan' });
 
   return (
     <DiscountCodeFormWrapper>
       <DiscountCodeFormSection>
-        <Panel
-          bordered
+        <Card
+          variant="outlined"
           css={{ overflow: 'initial' }}
         >
-          <CodeDiscountGrid>
-            <Form.Group controlId="code">
-              <Form.Label>
-                {t('discountCode.form.code')}{' '}
-                <InfoTooltip text={t('discountCode.form.codeInfo')} />
-              </Form.Label>
-
-              <Form.Control
+          <CardContent>
+            <CodeDiscountGrid>
+              <Controller
+                control={control}
                 name="code"
-                value={(discountCode.code ?? '').toUpperCase()}
-                onChange={(code: string) => onChange({ code })}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    value={(field.value ?? '').toUpperCase()}
+                    label={
+                      <>
+                        {t('discountCode.form.code')}{' '}
+                        <InfoTooltip text={t('discountCode.form.codeInfo')} />
+                      </>
+                    }
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                    fullWidth
+                  />
+                )}
               />
-            </Form.Group>
 
-            <Form.Group controlId="discountPercent">
-              <Form.Label>
-                {t('discountCode.form.discountPercent')}{' '}
-                <InfoTooltip
-                  text={t('discountCode.form.discountPercentInfo')}
-                />
-              </Form.Label>
-
-              <Form.Control
+              <Controller
+                control={control}
                 name="discountPercent"
-                value={discountCode.discountPercent ?? 0}
-                onChange={(discountPercent: string) =>
-                  onChange({ discountPercent: +discountPercent })
-                }
-                accepter={NumberInput}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    value={field.value ?? 0}
+                    label={
+                      <>
+                        {t('discountCode.form.discountPercent')}{' '}
+                        <InfoTooltip
+                          text={t('discountCode.form.discountPercentInfo')}
+                        />
+                      </>
+                    }
+                    type="number"
+                    onChange={event => field.onChange(+event.target.value)}
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                    fullWidth
+                  />
+                )}
               />
-            </Form.Group>
-          </CodeDiscountGrid>
-        </Panel>
+            </CodeDiscountGrid>
+          </CardContent>
+        </Card>
       </DiscountCodeFormSection>
 
       <DiscountCodeFormSection>
-        <Panel
-          bordered
+        <Card
+          variant="outlined"
           css={{ overflow: 'initial' }}
         >
-          <Form.Group>
-            <Form.Label>
-              {t('discountCode.form.memberPlan')}{' '}
-              <InfoTooltip text={t('discountCode.form.memberPlanInfo')} />
-            </Form.Label>
+          <CardContent>
+            <FormControl
+              fullWidth
+              sx={{ marginBottom: 3 }}
+            >
+              <FormLabel>
+                {t('discountCode.form.memberPlan')}{' '}
+                <InfoTooltip text={t('discountCode.form.memberPlanInfo')} />
+              </FormLabel>
 
-            <Form.Control
-              name="memberPlan"
-              defaultMemberPlan={discountCode.memberPlan}
-              selectedMemberPlan={discountCode.memberPlanId}
-              setSelectedMemberPlan={(memberPlanId: string) =>
-                onChange({ memberPlanId })
-              }
-              accepter={SelectMemberPlan}
-            />
-          </Form.Group>
+              <Controller
+                control={control}
+                name="memberPlanId"
+                render={({ field }) => (
+                  <SelectMemberPlan
+                    defaultMemberPlan={memberPlan}
+                    selectedMemberPlan={field.value}
+                    setSelectedMemberPlan={field.onChange}
+                  />
+                )}
+              />
+            </FormControl>
 
-          <DateRangeGrid>
-            <Form.Group controlId="validFrom">
-              <Form.Control
+            <DateRangeGrid>
+              <Controller
+                control={control}
                 name="validFrom"
-                label={t('discountCode.form.validFrom')}
-                dateTime={
-                  discountCode.validFrom ?
-                    new Date(discountCode.validFrom)
-                  : undefined
-                }
-                changeDate={(date: Date) =>
-                  onChange({ validFrom: date?.toISOString() })
-                }
-                accepter={DateTimePicker}
+                render={({ field, fieldState: { error } }) => (
+                  <Box sx={{ marginBottom: 3 }}>
+                    <DateTimePicker
+                      label={t('discountCode.form.validFrom')}
+                      dateTime={field.value ? new Date(field.value) : undefined}
+                      changeDate={(date: Date) =>
+                        field.onChange(date?.toISOString())
+                      }
+                      helperText={error?.message}
+                    />
+                  </Box>
+                )}
               />
-            </Form.Group>
 
-            <Form.Group controlId="validTo">
-              <Form.Control
+              <Controller
+                control={control}
                 name="validTo"
-                label={t('discountCode.form.validTo')}
-                dateTime={
-                  discountCode.validTo ?
-                    new Date(discountCode.validTo)
-                  : undefined
-                }
-                changeDate={(date: Date) =>
-                  onChange({ validTo: date?.toISOString() })
-                }
-                accepter={DateTimePicker}
+                render={({ field, fieldState: { error } }) => (
+                  <Box sx={{ marginBottom: 3 }}>
+                    <DateTimePicker
+                      label={t('discountCode.form.validTo')}
+                      dateTime={field.value ? new Date(field.value) : undefined}
+                      changeDate={(date: Date) =>
+                        field.onChange(date?.toISOString())
+                      }
+                      helperText={error?.message}
+                    />
+                  </Box>
+                )}
               />
-            </Form.Group>
-          </DateRangeGrid>
-        </Panel>
+            </DateRangeGrid>
+          </CardContent>
+        </Card>
       </DiscountCodeFormSection>
     </DiscountCodeFormWrapper>
   );

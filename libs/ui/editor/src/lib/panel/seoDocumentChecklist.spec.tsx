@@ -1,5 +1,7 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen, within } from '@testing-library/react';
 import { FullImageFragment, SeoCheckStatus } from '@wepublish/editor/api';
+import { ReactElement } from 'react';
 
 import {
   getSeoDocumentChecks,
@@ -133,9 +135,14 @@ describe('getSeoDocumentChecks', () => {
   });
 });
 
+const theme = createTheme({ cssVariables: true });
+
+const renderWithTheme = (ui: ReactElement) =>
+  render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
+
 describe('SeoDocumentChecklist', () => {
   test('renders every check with its status', () => {
-    render(
+    renderWithTheme(
       <SeoDocumentChecklist
         {...complete}
         metadata={{ ...complete.metadata, seoDescription: '' }}

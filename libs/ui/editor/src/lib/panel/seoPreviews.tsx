@@ -1,12 +1,11 @@
 import 'react-og-preview/styles.css';
 
 import styled from '@emotion/styled';
-import { useTheme } from '@mui/material';
+import { Alert, useTheme } from '@mui/material';
 import { FullImageFragment } from '@wepublish/editor/api';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SocialPreview } from 'react-og-preview';
-import { Message } from 'rsuite';
 
 import { SeoPreviewData } from './seoPreviewData';
 
@@ -41,7 +40,7 @@ const PreviewTitle = styled.h6`
 
 const PreviewNote = styled.small`
   font-weight: normal;
-  color: var(--rs-text-secondary, #8e8e93);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const SocialCard = styled.div<{ maxWidth: number }>`
@@ -177,12 +176,9 @@ export function GooglePreview({ data, siteName, favicon }: GooglePreviewProps) {
   return (
     <Previews>
       {!!data.ignoredFields.length && (
-        <Message
-          showIcon
-          type="warning"
-        >
+        <Alert severity="warning">
           {t('seoPreviews.pageIgnoresSeoFields')}
-        </Message>
+        </Alert>
       )}
 
       <PreviewSection
@@ -243,12 +239,7 @@ export function SocialPreviews({ data }: SocialPreviewsProps) {
 
   return (
     <Previews className={dark ? 'dark' : undefined}>
-      <Message
-        showIcon
-        type="info"
-      >
-        {t('seoPreviews.info')}
-      </Message>
+      <Alert severity="info">{t('seoPreviews.info')}</Alert>
 
       <PreviewSection title={t('seoPreviews.facebook')}>
         <SocialCard

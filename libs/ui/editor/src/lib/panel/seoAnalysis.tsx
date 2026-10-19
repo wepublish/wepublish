@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
+import { Card, CardContent, CardHeader } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Form, Panel } from 'rsuite';
 
 import { SeoContentStats } from './seoBlockContext';
 
@@ -8,12 +8,12 @@ const Stats = styled.dl`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 8px;
-  margin: 12px 0;
+  margin: 0;
 `;
 
 const StatTitle = styled.dt`
   font-size: 12px;
-  color: var(--rs-text-secondary, #8e8e93);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const StatVal = styled.dd`
@@ -33,32 +33,34 @@ export function SeoAnalysis({ stats }: SeoAnalysisProps) {
   }
 
   return (
-    <Panel
-      bordered
-      header={t('seoAnalysis.title')}
-    >
-      <Form.Text>{t('seoAnalysis.description')}</Form.Text>
+    <Card variant="outlined">
+      <CardHeader
+        title={t('seoAnalysis.title')}
+        subheader={t('seoAnalysis.description')}
+      />
 
-      <Stats>
-        <div>
-          <StatTitle>{t('seoAnalysis.stats.wordCount')}</StatTitle>
-          <StatVal>{stats.wordCount}</StatVal>
-        </div>
-        <div>
-          <StatTitle>{t('seoAnalysis.stats.headingCount')}</StatTitle>
-          <StatVal>{stats.headingCount}</StatVal>
-        </div>
-        <div>
-          <StatTitle>{t('seoAnalysis.stats.linkCount')}</StatTitle>
-          <StatVal>{stats.linkCount}</StatVal>
-        </div>
-        <div>
-          <StatTitle>
-            {t('seoAnalysis.stats.imagesWithoutDescription')}
-          </StatTitle>
-          <StatVal>{stats.imagesWithoutDescription}</StatVal>
-        </div>
-      </Stats>
-    </Panel>
+      <CardContent>
+        <Stats>
+          <div>
+            <StatTitle>{t('seoAnalysis.stats.wordCount')}</StatTitle>
+            <StatVal>{stats.wordCount}</StatVal>
+          </div>
+          <div>
+            <StatTitle>{t('seoAnalysis.stats.headingCount')}</StatTitle>
+            <StatVal>{stats.headingCount}</StatVal>
+          </div>
+          <div>
+            <StatTitle>{t('seoAnalysis.stats.linkCount')}</StatTitle>
+            <StatVal>{stats.linkCount}</StatVal>
+          </div>
+          <div>
+            <StatTitle>
+              {t('seoAnalysis.stats.imagesWithoutDescription')}
+            </StatTitle>
+            <StatVal>{stats.imagesWithoutDescription}</StatVal>
+          </div>
+        </Stats>
+      </CardContent>
+    </Card>
   );
 }

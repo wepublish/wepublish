@@ -1,3 +1,4 @@
+import { Alert, AlertTitle } from '@mui/material';
 import {
   ComponentType,
   createElement,
@@ -6,7 +7,6 @@ import {
   useMemo,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Message } from 'rsuite';
 
 import { AuthContext } from '../authContext';
 
@@ -19,15 +19,12 @@ export function RejectionMessage({
 }: RejectionMessageProps) {
   const { t } = useTranslation();
   return (
-    <Message
-      type="error"
-      header={t('permissions.noAccess')}
-      showIcon
-    >
+    <Alert severity="error">
+      <AlertTitle>{t('permissions.noAccess')}</AlertTitle>
       {t('permissions.contactAdmin', {
         permissions: requiredPermissions.join(', '),
       })}
-    </Message>
+    </Alert>
   );
 }
 

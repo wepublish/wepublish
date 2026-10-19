@@ -13,8 +13,6 @@ import type { Mock } from 'vitest';
 
 vi.mock('@wepublish/authentication/api', async importOriginal => ({
   ...(await importOriginal<typeof import('@wepublish/authentication/api')>()),
-  // interface only exists at type level, but swc decorator metadata
-  // references it at runtime and the vitest mock proxy is strict
   ScopedJwtVerifier: vi.fn(),
   UserSession: vi.fn(),
   CurrentUser: vi.fn(() => {
@@ -43,7 +41,6 @@ const actionsQuery = `
   query Actions {
     actions {
       __typename
-
 
       ... on EventCreatedAction {
           date

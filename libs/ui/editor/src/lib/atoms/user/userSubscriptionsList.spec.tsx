@@ -1,5 +1,7 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
 import { UserSubscriptionFragment } from '@wepublish/editor/api';
+import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import {
@@ -41,6 +43,11 @@ const subscription = (
     ...overrides,
   }) as unknown as UserSubscriptionFragment;
 
+const theme = createTheme({ cssVariables: true });
+
+const renderWithTheme = (ui: ReactNode) =>
+  render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
+
 describe('getSubscriptionStatus', () => {
   const now = new Date('2026-06-01T00:00:00.000Z');
   const label = (overrides: Partial<UserSubscriptionFragment>) =>
@@ -79,7 +86,7 @@ describe('getSubscriptionStatus', () => {
 
 describe('UserSubscriptionsList', () => {
   it('lists active subscriptions first, then by furthest paidUntil', () => {
-    render(
+    renderWithTheme(
       <MemoryRouter>
         <UserSubscriptionsList
           subscriptions={[

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Skeleton } from '@mui/material';
 import { InfoTooltip } from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +20,6 @@ import {
   NameType,
   ValueType,
 } from 'recharts/types/component/DefaultTooltipContent';
-import { Placeholder } from 'rsuite';
 
 import { ColorMode, useColorMode } from '../../colorMode';
 import {
@@ -179,9 +179,10 @@ const Charts = styled.div<{ refreshing: boolean }>`
 
 const ChartCard = styled.section`
   padding: 20px 20px 12px;
-  border: 1px solid var(--wep-shell-border, var(--rs-border-primary));
-  border-radius: var(--rs-radius-lg);
-  background-color: var(--rs-bg-card);
+  border: 1px solid
+    var(--wep-shell-border, ${({ theme }) => theme.vars.palette.divider});
+  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
   box-shadow: var(--wep-surface-shadow);
 
   .rs-panel-body & {
@@ -210,7 +211,7 @@ const CardTitle = styled.h3`
   font-size: 0.9375rem;
   line-height: 1.375rem;
   font-weight: 600;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   letter-spacing: 0;
 `;
 
@@ -220,22 +221,22 @@ const HeroValue = styled.div`
   line-height: 1.1;
   font-weight: 650;
   letter-spacing: -0.03em;
-  color: var(--rs-text-heading);
+  color: ${({ theme }) => theme.vars.palette.text.primary};
 `;
 
 const Delta = styled.div<{ direction: 'up' | 'down' | 'flat' }>`
   margin-top: 6px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: ${({ direction }) =>
+  color: ${({ direction, theme }) =>
     direction === 'up' ? 'var(--wep-state-published-text, #2f6b2a)'
-    : direction === 'down' ? 'var(--rs-red-700, #c4302b)'
-    : 'var(--rs-text-secondary)'};
+    : direction === 'down' ? theme.vars.palette.error.dark
+    : theme.vars.palette.text.secondary};
 
   span {
     margin-left: 6px;
     font-weight: 400;
-    color: var(--rs-text-secondary);
+    color: ${({ theme }) => theme.vars.palette.text.secondary};
   }
 `;
 
@@ -247,7 +248,7 @@ const LegendList = styled.ul`
   padding: 0;
   list-style: none;
   font-size: 0.8125rem;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 
   li {
     display: inline-flex;
@@ -266,18 +267,19 @@ const Swatch = styled.span<{ color: string }>`
 const TooltipCard = styled.div`
   min-width: 220px;
   padding: 10px 12px;
-  border: 1px solid var(--wep-shell-border, var(--rs-border-primary));
-  border-radius: var(--rs-radius-md);
-  background-color: var(--rs-bg-overlay);
+  border: 1px solid
+    var(--wep-shell-border, ${({ theme }) => theme.vars.palette.divider});
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
   box-shadow: var(--wep-elevated-shadow);
   font-size: 0.8125rem;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const TooltipDate = styled.div`
   margin-bottom: 6px;
   font-weight: 600;
-  color: var(--rs-text-heading);
+  color: ${({ theme }) => theme.vars.palette.text.primary};
 `;
 
 const TooltipRow = styled.div`
@@ -289,7 +291,7 @@ const TooltipRow = styled.div`
 
   strong {
     font-variant-numeric: tabular-nums;
-    color: var(--rs-text-heading);
+    color: ${({ theme }) => theme.vars.palette.text.primary};
   }
 `;
 
@@ -301,13 +303,13 @@ const LineKey = styled.span<{ color: string }>`
 `;
 
 const TooltipEmpty = styled.div`
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
 `;
 
 const TooltipNet = styled(TooltipRow)`
   margin-top: 6px;
   padding-top: 6px;
-  border-top: 1px solid var(--rs-border-primary);
+  border-top: 1px solid ${({ theme }) => theme.vars.palette.divider};
 `;
 
 const roundedSegment = (
@@ -497,7 +499,13 @@ export function AudienceChart({
   }, [audienceStats]);
 
   if (!audienceStats.length) {
-    return loading ? <Placeholder.Graph active /> : null;
+    return loading ?
+        <Skeleton
+          variant="rectangular"
+          width="100%"
+          height="100%"
+        />
+      : null;
   }
 
   const axisTick = { fill: ui.tick, fontSize: 12 };

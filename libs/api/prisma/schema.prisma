@@ -2315,6 +2315,17 @@ model OneChannelState {
   @@map("one_channel_state")
 }
 
+/// Feature toggles of this medium, as last received from We.Publish One.
+model MediumFeature {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+  key        String   @unique
+  enabled    Boolean  @default(false)
+
+  @@map("medium_features")
+}
+
 enum AuditLogAction {
   create @map("create")
   update @map("update")

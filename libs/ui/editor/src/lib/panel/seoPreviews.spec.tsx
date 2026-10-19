@@ -33,18 +33,21 @@ const data: SeoPreviewData = {
 
 const renderInMode = (ui: ReactElement, mode: PaletteMode) =>
   render(
-    <ThemeProvider theme={createTheme({ palette: { mode } })}>
+    <ThemeProvider
+      theme={createTheme({ cssVariables: true, palette: { mode } })}
+    >
       {ui}
     </ThemeProvider>
   );
 
 describe('GooglePreview', () => {
   test('renders google with the document title and description', () => {
-    render(
+    renderInMode(
       <GooglePreview
         data={data}
         siteName="Example News"
-      />
+      />,
+      'light'
     );
 
     const google = within(screen.getByTestId('seo-preview-google'));
@@ -55,14 +58,15 @@ describe('GooglePreview', () => {
   });
 
   test('warns about long google titles and ignored page fields', () => {
-    render(
+    renderInMode(
       <GooglePreview
         data={{
           ...data,
           documentTitle: 'x'.repeat(61),
           ignoredFields: ['seoTitle'],
         }}
-      />
+      />,
+      'light'
     );
 
     expect(screen.getByText('seoPreviews.googleTitleTooLong')).toBeTruthy();
@@ -88,7 +92,7 @@ describe('GooglePreview', () => {
 
 describe('SocialPreviews', () => {
   test('renders the social previews with social texts and image', () => {
-    render(<SocialPreviews data={data} />);
+    renderInMode(<SocialPreviews data={data} />, 'light');
 
     for (const id of [
       'facebook',
@@ -118,7 +122,10 @@ describe('SocialPreviews', () => {
   });
 
   test('shows placeholders without an image', () => {
-    render(<SocialPreviews data={{ ...data, image: undefined }} />);
+    renderInMode(
+      <SocialPreviews data={{ ...data, image: undefined }} />,
+      'light'
+    );
 
     expect(screen.getAllByText('No image').length).toBe(5);
   });

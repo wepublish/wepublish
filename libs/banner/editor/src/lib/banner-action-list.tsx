@@ -4,7 +4,7 @@ import {
 } from '@wepublish/editor/api';
 import { InfoTooltip } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
-import { Button, Col, Form, Grid, Row, SelectPicker } from 'rsuite';
+import { Button, Grid, MenuItem, TextField } from '@mui/material';
 
 interface BannerActionListProps {
   actions: CreateBannerActionInput[];
@@ -28,65 +28,96 @@ export const BannerActionList = ({
 
   return (
     <>
-      <Grid fluid>
-        <Row>
-          <Col xs={5}>{t('banner.form.action.label')}</Col>
-          <Col xs={5}>{t('banner.form.action.url')}</Col>
-          <Col xs={5}>
+      <Grid
+        container
+        spacing={2}
+      >
+        <Grid
+          container
+          spacing={2}
+        >
+          <Grid size={{ xs: 3 }}>{t('banner.form.action.label')}</Grid>
+          <Grid size={{ xs: 3 }}>{t('banner.form.action.url')}</Grid>
+          <Grid size={{ xs: 3 }}>
             {t('banner.form.action.style')}{' '}
             <InfoTooltip text={t('banner.form.action.styleInfo')} />
-          </Col>
-          <Col xs={5}>
+          </Grid>
+          <Grid size={{ xs: 3 }}>
             {t('banner.form.action.role')}{' '}
             <InfoTooltip text={t('banner.form.action.roleInfo')} />
-          </Col>
-          <Col xs={4}>{t('action')}</Col>
-        </Row>
+          </Grid>
+          <Grid size={{ xs: 2 }}>{t('action')}</Grid>
+        </Grid>
         {actions.map((action, index) => (
-          <Row>
-            <Col xs={5}>
-              <Form.Control
-                name="label"
+          <Grid
+            container
+            spacing={2}
+          >
+            <Grid size={{ xs: 3 }}>
+              <TextField
                 value={action.label}
-                onChange={value => handleChange(index, 'label', value)}
+                onChange={event =>
+                  handleChange(index, 'label', event.target.value)
+                }
+                fullWidth
               />
-            </Col>
-            <Col xs={5}>
-              <Form.Control
-                name="url"
+            </Grid>
+            <Grid size={{ xs: 3 }}>
+              <TextField
                 value={action.url}
-                onChange={value => handleChange(index, 'url', value)}
+                onChange={event =>
+                  handleChange(index, 'url', event.target.value)
+                }
+                fullWidth
               />
-            </Col>
-            <Col xs={5}>
-              <Form.Control
-                name="style"
+            </Grid>
+            <Grid size={{ xs: 3 }}>
+              <TextField
                 value={action.style}
-                onChange={value => handleChange(index, 'style', value)}
+                onChange={event =>
+                  handleChange(index, 'style', event.target.value)
+                }
+                fullWidth
               />
-            </Col>
-            <Col xs={5}>
-              <SelectPicker
-                value={action.role}
-                data={Object.values(BannerActionRole).map(role => ({
-                  label: t(`banner.actions.role.${role}`),
-                  value: role,
-                }))}
-                cleanable={false}
-                onChange={value => handleChange(index, 'role', value as string)}
-              />
-            </Col>
-            <Col xs={4}>
-              <Button onClick={() => onRemove(index)}>
+            </Grid>
+            <Grid size={{ xs: 3 }}>
+              <TextField
+                select
+                value={action.role ?? ''}
+                onChange={event => {
+                  const value = event.target.value;
+                  handleChange(index, 'role', value as string);
+                }}
+                fullWidth
+              >
+                {Object.values(BannerActionRole).map(role => (
+                  <MenuItem
+                    key={role}
+                    value={role}
+                  >
+                    {t(`banner.actions.role.${role}`)}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid size={{ xs: 2 }}>
+              <Button
+                variant="outlined"
+                onClick={() => onRemove(index)}
+              >
                 {t('banner.list.delete')}
               </Button>
-            </Col>
-          </Row>
+            </Grid>
+          </Grid>
         ))}
 
-        <Row>
-          <Col xs={24}>
+        <Grid
+          container
+          spacing={2}
+        >
+          <Grid size={{ xs: 12 }}>
             <Button
+              variant="outlined"
               onClick={() =>
                 onAdd({
                   label: '',
@@ -98,8 +129,8 @@ export const BannerActionList = ({
             >
               {t('banner.actions.add')}
             </Button>
-          </Col>
-        </Row>
+          </Grid>
+        </Grid>
       </Grid>
     </>
   );

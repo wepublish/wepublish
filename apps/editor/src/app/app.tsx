@@ -1,5 +1,3 @@
-import 'rsuite/dist/rsuite.css';
-
 import { gql } from '@apollo/client';
 import { useMutation } from '@apollo/client/react';
 import { css, Global } from '@emotion/react';
@@ -40,22 +38,19 @@ import {
   AuthContext,
   AuthDispatchActionType,
   AuthDispatchContext,
+  SnackbarHost,
+  useReportQueryErrors,
 } from '@wepublish/ui/editor';
-import { useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useContext, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { CustomProvider } from 'rsuite';
-import de from 'rsuite/locales/de_DE';
-import enGB from 'rsuite/locales/en_GB';
-import fr from 'rsuite/locales/fr_FR';
 
 import { Base } from './base';
-import { useColorMode } from './colorMode';
 import { EditorGlobalStyles } from './editorGlobalStyles';
 import { Login } from './login';
 import { LoginImpersonate } from './loginImpersonate';
 import { LoginJwt } from './loginJwt';
 import { ResetPassword } from './resetPassword';
+import { RouteErrorBoundary } from './routeErrorBoundary';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
 import { AudienceDashboard } from './routes/audience/audience-dashboard';
@@ -143,20 +138,9 @@ const Logout = () => {
 };
 
 export function App() {
-  const { i18n } = useTranslation();
-  const [lng, setLang] = useState<Record<string, any>>(enGB);
-  const currentLanguageMap = new Map<string, any>([
-    ['fr', fr],
-    ['en', enGB],
-    ['de', de],
-  ]);
-
-  i18n.on('languageChanged', lng => {
-    setLang(currentLanguageMap.get(lng));
-  });
-
   const { session } = useContext(AuthContext);
-  const { mode: colorMode } = useColorMode();
+
+  useReportQueryErrors();
 
   useEffect(() => {
     if (session === null && !window.location.pathname.startsWith('/login')) {
@@ -167,77 +151,55 @@ export function App() {
   return (
     <>
       <Global
-        styles={css`
-          .rs-table {
-            .highlighted-row,
-            .highlighted-row &-cell-group &-cell {
-              background-color: var(--wep-row-highlight);
+        styles={theme => css`
+          .MuiTableRow-root {
+            &.highlighted-row .MuiTableCell-root {
+              background-image: linear-gradient(
+                var(--wep-row-highlight),
+                var(--wep-row-highlight)
+              );
             }
 
-            &-row.approved:not(&-row-header),
-            &-row.approved &-cell-group,
-            &-row.approved &-cell {
-              background: var(--wep-row-approved);
+            &.approved .MuiTableCell-root {
+              background-image: linear-gradient(
+                var(--wep-row-approved),
+                var(--wep-row-approved)
+              );
             }
 
-            &-row.approved &-cell-first {
+            &.approved .MuiTableCell-root:first-of-type {
               box-shadow: inset 3px 0 0 var(--wep-accent-approved);
             }
 
-            &-row.pending-user:not(&-row-header),
-            &-row.pending-user &-cell-group,
-            &-row.pending-user &-cell {
-              background: var(--wep-row-pending);
+            &.pending-user .MuiTableCell-root,
+            &.pending-approval .MuiTableCell-root {
+              background-image: linear-gradient(
+                var(--wep-row-pending),
+                var(--wep-row-pending)
+              );
             }
 
-            &-row.pending-user &-cell-first,
-            &-row.pending-approval &-cell-first {
+            &.pending-user .MuiTableCell-root:first-of-type,
+            &.pending-approval .MuiTableCell-root:first-of-type {
               box-shadow: inset 3px 0 0 var(--wep-accent-pending);
             }
 
-            &-row.pending-approval:not(&-row-header),
-            &-row.pending-approval &-cell-group,
-            &-row.pending-approval &-cell {
-              background: var(--wep-row-pending);
-            }
-
-            &-row.rejected:not(&-row-header),
-            &-row.rejected &-cell-group,
-            &-row.rejected &-cell {
-              background: rgb(83, 85, 83);
+            &.rejected .MuiTableCell-root {
+              background-color: rgb(83, 85, 83);
               color: white;
-              text-decoration: line-through;
-            }
-
-            &-hover &-row.rejected:not(&-row-header):hover,
-            &-hover &-row.rejected:hover &-cell-group,
-            &-hover &-row.rejected:hover &-cell {
-              color: var(--rs-text-secondary);
               text-decoration: line-through;
             }
           }
 
           .icon-selector {
-            fill: var(--rs-text-secondary);
+            fill: ${theme.vars.palette.text.secondary};
 
             &:hover {
-              fill: var(--rs-text-link);
+              fill: ${theme.vars.palette.primary.main};
             }
 
             svg {
               fill: inherit;
-            }
-          }
-
-          .unsaved {
-            .rs-badge-content {
-              background: darkorange;
-            }
-          }
-
-          .saved {
-            .rs-badge-content {
-              visibility: hidden;
             }
           }
 
@@ -248,45 +210,18 @@ export function App() {
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
             word-wrap: break-word;
+            white-space: normal;
           }
 
           .authorLinks div {
             overflow: visible;
           }
-
-          /* overwrite the horizontal gutter of r-suite's <Row> component */
-          .rs-row [class*='rs-col-'] {
-            margin-bottom: 5px;
-            margin-top: 5px;
-          }
-
-          // Styles missing from v6 of rsuite
-          :root {
-            --rs-form-control-width: 100%;
-            --rs-form-group-direction: column;
-            --rs-form-group-spacing: var(--rs-spacing);
-          }
-
-          .rs-picker-toggle.rs-btn {
-            max-width: 100%;
-          }
-
-          .rs-grid-container-fluid,
-          .rs-form-group {
-            width: 100%;
-          }
-
-          .rs-drawer-header {
-            width: 100%;
-          }
         `}
       />
       <EditorGlobalStyles />
-      <CustomProvider
-        locale={lng}
-        theme={colorMode}
-      >
-        <BrowserRouter>
+      <SnackbarHost />
+      <BrowserRouter>
+        <RouteErrorBoundary>
           <Routes>
             <Route
               path="login"
@@ -1231,8 +1166,8 @@ export function App() {
               element={<Logout />}
             />
           </Routes>
-        </BrowserRouter>
-      </CustomProvider>
+        </RouteErrorBoundary>
+      </BrowserRouter>
     </>
   );
 }

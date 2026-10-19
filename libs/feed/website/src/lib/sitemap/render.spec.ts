@@ -71,7 +71,6 @@ const matchesDate = (value: string, filter: DateFilter | null | undefined) => {
   }
 };
 
-/** Behaves like the API: filters by publication date, sorts, caps take at 100. */
 const fakeClient = ({
   articles = [] as SitemapArticleFragment[],
   pages = [] as SitemapPageFragment[],
@@ -129,7 +128,6 @@ const fakeClient = ({
       if (query === SitemapHomepageDocument) {
         const homepage = pages.find(({ slug }) => slug === variables?.slug);
 
-        // like the API, which answers a missing page with NotFoundException
         if (!homepage) {
           throw new Error(`Page with slug ${variables?.slug} was not found.`);
         }

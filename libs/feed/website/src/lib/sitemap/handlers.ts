@@ -35,10 +35,6 @@ const siteUrlFromRequest = (req: NextApiRequest) => {
 const siteUrlFor = (req: NextApiRequest) =>
   (process.env.WEBSITE_URL || siteUrlFromRequest(req)).replace(/\/$/, '');
 
-/**
- * Next API handlers serving a media's sitemap: `sitemap` at
- * `pages/api/sitemap.ts` and `sitemapChunk` at `pages/api/sitemap/[chunk].ts`.
- */
 export const createSitemapHandlers = (
   config: SitemapSiteConfig,
   {

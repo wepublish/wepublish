@@ -1,8 +1,9 @@
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+import { Card, CardContent, CardHeader, Typography } from '@mui/material';
 import { FullImageFragment, SeoCheckStatus } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { MdCheck, MdInfoOutline, MdWarning } from 'react-icons/md';
-import { Form, Panel } from 'rsuite';
 
 import { SeoContentStats } from './seoBlockContext';
 import { GOOGLE_DESCRIPTION_LIMIT, GOOGLE_TITLE_LIMIT } from './seoPreviews';
@@ -104,7 +105,7 @@ export const getSeoDocumentChecks = ({
 
 const Items = styled.ul`
   list-style: none;
-  margin: 12px 0 0;
+  margin: 0;
   padding: 0;
   display: grid;
   gap: 12px;
@@ -123,6 +124,7 @@ const ItemTitle = styled.div`
 
 const StatusIcon = ({ status }: { status: SeoCheckStatus }) => {
   const { t } = useTranslation();
+  const theme = useTheme();
   const label = t(`seoChecklist.status.${status}`);
 
   switch (status) {
@@ -131,7 +133,7 @@ const StatusIcon = ({ status }: { status: SeoCheckStatus }) => {
         <MdCheck
           size={24}
           aria-label={label}
-          color="var(--rs-green-500)"
+          color={theme.vars.palette.success.main}
         />
       );
     case SeoCheckStatus.Warning:
@@ -139,7 +141,7 @@ const StatusIcon = ({ status }: { status: SeoCheckStatus }) => {
         <MdWarning
           size={24}
           aria-label={label}
-          color="var(--rs-orange-500)"
+          color={theme.vars.palette.warning.main}
         />
       );
     default:
@@ -147,7 +149,7 @@ const StatusIcon = ({ status }: { status: SeoCheckStatus }) => {
         <MdInfoOutline
           size={24}
           aria-label={label}
-          color="var(--rs-blue-500)"
+          color={theme.vars.palette.info.main}
         />
       );
   }
@@ -161,39 +163,44 @@ export function SeoDocumentChecklist(props: SeoDocumentChecklistProps) {
   ).length;
 
   return (
-    <Panel
-      bordered
-      header={t('seoDocumentChecklist.title')}
-    >
-      <Form.Text>
-        {t('seoChecklist.progress', { done, total: checks.length })}
-      </Form.Text>
+    <Card variant="outlined">
+      <CardHeader
+        title={t('seoDocumentChecklist.title')}
+        subheader={t('seoChecklist.progress', { done, total: checks.length })}
+      />
 
-      <Items>
-        {checks.map(check => (
-          <Item
-            key={check.id}
-            data-testid={`seo-document-check-${check.id}`}
-          >
-            <StatusIcon status={check.status} />
+      <CardContent>
+        <Items>
+          {checks.map(check => (
+            <Item
+              key={check.id}
+              data-testid={`seo-document-check-${check.id}`}
+            >
+              <StatusIcon status={check.status} />
 
-            <div>
-              <ItemTitle>{t(`seoChecklist.items.${check.id}.title`)}</ItemTitle>
-              <Form.Text>
-                {check.status !== SeoCheckStatus.Ok ?
-                  t(
-                    `seoDocumentChecklist.reasons.${check.id}.${check.reason}`,
-                    {
-                      count: check.count,
-                      limit: check.limit,
-                    }
-                  )
-                : t(`seoChecklist.items.${check.id}.description`)}
-              </Form.Text>
-            </div>
-          </Item>
-        ))}
-      </Items>
-    </Panel>
+              <div>
+                <ItemTitle>
+                  {t(`seoChecklist.items.${check.id}.title`)}
+                </ItemTitle>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  {check.status !== SeoCheckStatus.Ok ?
+                    t(
+                      `seoDocumentChecklist.reasons.${check.id}.${check.reason}`,
+                      {
+                        count: check.count,
+                        limit: check.limit,
+                      }
+                    )
+                  : t(`seoChecklist.items.${check.id}.description`)}
+                </Typography>
+              </div>
+            </Item>
+          ))}
+        </Items>
+      </CardContent>
+    </Card>
   );
 }

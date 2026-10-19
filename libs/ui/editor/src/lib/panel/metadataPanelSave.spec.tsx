@@ -1,4 +1,5 @@
 import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -21,11 +22,15 @@ vi.mock('./seoPreviews', async importOriginal => ({
   SocialPreviews: () => <div data-testid="social-previews" />,
 }));
 
+const theme = createTheme({ cssVariables: true });
+
 const renderPanel = (panel: JSX.Element) =>
   render(
-    <MockedProvider>
-      <MemoryRouter>{panel}</MemoryRouter>
-    </MockedProvider>
+    <ThemeProvider theme={theme}>
+      <MockedProvider>
+        <MemoryRouter>{panel}</MemoryRouter>
+      </MockedProvider>
+    </ThemeProvider>
   );
 
 const pageMetadata = {

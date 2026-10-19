@@ -14,6 +14,10 @@
       "theMember": "the member"
     },
     "lastSavedAt": "Last saved {{date, ccc PP pp}}",
+    "autosave": {
+      "label": "Autosave",
+      "description": "Save the draft every 30 seconds while you work"
+    },
     "preview": {
       "backToEditor": "Editor",
       "mobile": "Mobile",
@@ -143,6 +147,7 @@
         "displayOptions": "Display Options",
         "dontChangeSlug": "Please don't change the slug once the article is published.",
         "draft": "Draft",
+        "chooseFile": "Choose file",
         "dropImage": "Drop Image Here",
         "editTeaser": "Edit Teaser",
         "enterAuthors": "Please add an author",
@@ -235,6 +240,7 @@
     },
     "articles": {
       "overview": {
+        "slug": "Slug",
         "articles": "Articles",
         "authors": "Authors",
         "draft": "Draft",
@@ -554,6 +560,7 @@
       "imageGallery": {
         "label": "Gallery",
         "overview": {
+          "removeImage": "Remove image",
           "caption": "Caption",
           "new": "(New)",
           "previousImage": "Previous image",
@@ -716,6 +723,13 @@
         "doubleOptInHelp": "New subscribers first receive a confirmation email from Mailchimp and are only added to the list once they click the link in it.",
         "advancedStepHelp": "Shows conditions for when this step is skipped or shown, e.g. if certain information is already available.",
         "advancedInputHelp": "Shows more settings for this field, e.g. a description below the field or a default value."
+      },
+      "groups": {
+        "text": "Text",
+        "media": "Media",
+        "teasers": "Teasers",
+        "interaction": "Interaction",
+        "layout": "Layout"
       }
     },
     "cancel": "Cancel",
@@ -787,7 +801,8 @@
         "text": "Text",
         "updated": "Modified",
         "userName": "Username",
-        "pendingUserChangesInfo": "You asked the author to revise the comment. Once they have edited it, it is pending approval again."
+        "pendingUserChangesInfo": "You asked the author to revise the comment. Once they have edited it, it is pending approval again.",
+        "states": "States"
       },
       "panels": {
         "approve": "Approve",
@@ -841,6 +856,8 @@
     },
     "confirm": "Confirm",
     "consents": {
+      "deleteTitle": "Delete consent?",
+      "deleteBody": "Do you want to delete «{{name}}» permanently? The choices users made for it go with it.",
       "consent": "Consent",
       "create": "Create new consent",
       "defaultValue": "Default value",
@@ -924,6 +941,8 @@
       "networkContentInfo": "The latest articles from other media in the We.Publish network. You can take them over into your editor (import) and publish them on your website."
     },
     "dateTimePicker": {
+      "yesterday": "Yesterday",
+      "done": "OK",
       "hour": "{{hour}}:00",
       "nextMonday": "Next Monday",
       "nextSaturday": "Next Saturday",
@@ -935,12 +954,10 @@
     "delete": "Delete",
     "deleteBlockTemplateModal": {
       "body": "Do you really want to delete the block template \"{{name}}\"?",
-      "deleteBtn": "Yes, delete",
       "title": "Delete Block Template?"
     },
     "deletePollModal": {
       "body": "Do you really want to delete the poll \"{{pollQuestion}}\"?",
-      "deleteBtn": "Yes, delete",
       "title": "Delete Poll?"
     },
     "draggableSubscriptionInterval": {
@@ -960,12 +977,14 @@
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
       "invalidUrlErrorMessage": "Please enter a valid URL",
       "minimalAmountPerMonth": "The minimum amount per month is {{amount}} {{currency}}.",
+      "amountTooLowErrorMessage": "The amount is below the minimum of this subscription plan",
       "noAmountErrorMessage": "Default amount will be set to 5.00 if empty",
       "noCallToActionImageErrorMessage": "Please enter a call to action image",
       "noEmailErrorMessage": "Please enter an email address",
       "noImageErrorMessage": "Please enter an image",
       "noMemberPlanErrorMessage": "Please enter a subscription plan",
       "noNameErrorMessage": "Please enter a name",
+      "noQuestionErrorMessage": "Please enter a question",
       "noPasswordErrorMessage": "Please enter a password",
       "noPaymentMethodErrorMessage": "Please enter a payment method",
       "noPaymentPeriodicityErrorMessage": "Please enter a payment periodicity",
@@ -976,7 +995,8 @@
       "passwordTooShortErrorMessage": "Password must be at least 12 characters long",
       "passwordCompromisedErrorMessage": "This password has appeared in a data breach. Please choose a different password.",
       "required": "This field is required",
-      "invalidCountry": "Please select a valid country"
+      "invalidCountry": "Please select a valid country",
+      "invalidForm": "Please check the highlighted fields"
     },
     "event": {
       "create": {
@@ -1024,6 +1044,7 @@
     },
     "filterableList": {
       "filter": {
+        "label": "Filters",
         "dates": "Dates",
         "description": "Filter by description",
         "isDraft": "Draft",
@@ -1039,7 +1060,8 @@
         "slug": "Filter by slug",
         "title": "Filter by title",
         "includeHiddenArticles": "Include hidden",
-        "includeHiddenPages": "Include hidden"
+        "includeHiddenPages": "Include hidden",
+        "states": "States"
       }
     },
     "documents": {
@@ -1125,6 +1147,7 @@
         "link": "Link",
         "linkUrl": "Target URL",
         "notFound": "Image not found!",
+        "openOriginal": "Open original",
         "resizedImage": "The image size is automatically reduced to about {{sizeMB}} MB when uploading.",
         "source": "Source",
         "sourceLink": "Link to original source of the image.",
@@ -1615,7 +1638,8 @@
       "mailSend": "Send email",
       "mailLog": "Sent emails",
       "communication": "Communication",
-      "auditLog": "Audit log"
+      "auditLog": "Audit log",
+      "language": "Language"
     },
     "navigation": {
       "overview": {
@@ -1874,7 +1898,6 @@
       "answerMissing": "Please enter your answer.",
       "copyVoteUrl": "Copy voting link",
       "copyVoteUrlHint": "The voting links can now be copied directly in the poll block of the article or page the poll is used in.",
-      "deleteBtn": "Delete",
       "deleteModalBody": "Do you want to delete the answer \"{{answer}}\" permanently? You'll lose the poll results.",
       "deleteModalTitle": "Delete?",
       "insertYourNewAnswer": "Enter a new answer",
@@ -2246,6 +2269,8 @@
     },
     "untitled": "Untitled",
     "userConsents": {
+      "deleteTitle": "Delete user consent?",
+      "deleteBody": "Do you want to delete the consent «{{name}}» of {{user}} permanently?",
       "consentName": "Consent name",
       "consentSlug": "Consent slug",
       "create": "Create new user consent",
@@ -2257,6 +2282,7 @@
       "uniqueConstraint": "A user consent with slug '{{slug}}' already exists. Please choose a different slug."
     },
     "userCreateOrEditView": {
+      "addressTitle": "Address",
       "active": "Active",
       "cancel": "Cancel",
       "city": "City",
@@ -2485,7 +2511,8 @@
       "areYouSureBody": "The style \"{{ blockStyle }}\" will be deleted permanently and cannot be undone.",
       "areYouSureConfirmation": "Delete style",
       "info": "A style lets you show a block differently on your website, e.g. a teaser grid as a slider. Select the block types each style is available for; how it looks is defined by your website's design.",
-      "blockTypesPlaceholder": "Available for block types"
+      "blockTypesPlaceholder": "Available for block types",
+      "noStyle": "No style"
     },
     "blockTemplates": {
       "list": {
@@ -2558,7 +2585,8 @@
       "periodicityPricingCustomHelp": "Off: the prices are derived from the monthly price. On: you set your own prices for this payment interval, e.g. for a yearly discount."
     },
     "subscriptionEditView": {
-      "additionalSettingsTitle": "Advanced settings",
+      "detailsTitle": "Plan and payment",
+      "renewalTitle": "Term and renewal",
       "trialSubscriptionConfigured": "This subscription is configured as a trial subscription.",
       "nonExtendableNotCompatibleWithAutoRenew": "An automatically renewing subscription must be renewable. Change one of these parameters.",
       "configureAsTrialSubscription": "Configure as a trial subscription",
@@ -2653,6 +2681,12 @@
       }
     },
     "audienceFilter": {
+      "resolution": "Resolution",
+      "range": "Range",
+      "rangeCustom": "Custom",
+      "view": "View",
+      "dateRange": "From – to",
+      "subscriptionPlans": "Subscription plans",
       "copyPermalink": "Copy permalink",
       "permalinkCopied": "Permalink with a fixed date range copied to the clipboard",
       "permalinkCopyFailed": "Could not copy the permalink",
@@ -2674,7 +2708,9 @@
       "rangeNextWeek": "Next Week",
       "rangeNextMonth": "Next Month",
       "rangeNextQuarter": "Next Quarter",
-      "rangeNextYear": "Next Year"
+      "rangeNextYear": "Next Year",
+      "rangeFrom": "From",
+      "rangeTo": "To"
     },
     "audience": {
       "chart": {
@@ -3203,6 +3239,10 @@
       },
       "theme": {
         "title": "Theme",
+        "exportTheme": "Export theme",
+        "importTheme": "Import theme",
+        "importSuccess": "Theme imported. Click «Save» to persist.",
+        "importError": "The theme file could not be read.",
         "palette": {
           "primary": "Primary",
           "primaryMain": "Main color of the website. Used for links, navigation, buttons, etc.",
@@ -3449,7 +3489,9 @@
       "blockNumber": "Block {{number}}"
     },
     "columnConfigurator": {
-      "title": "Show/hide columns"
+      "dragToReorder": "Drag to reorder",
+      "title": "Columns",
+      "reset": "Reset columns"
     },
     "mailSend": {
       "steps": {
@@ -3548,7 +3590,9 @@
         "period": "Fixed period",
         "days": "days",
         "periodPlaceholder": "Pick from – to",
-        "periodHint": "Only subscriptions deactivated between these two dates."
+        "periodHint": "Only subscriptions deactivated between these two dates.",
+        "periodFrom": "From",
+        "periodTo": "To"
       },
       "preview": {
         "title": "Preview",
@@ -3699,6 +3743,7 @@
       }
     },
     "userMail": {
+      "title": "Emails",
       "sendTitle": "Send email",
       "logTitle": "Sent emails",
       "customOnlyHint": "Only custom templates can be sent to a single user.",
@@ -4012,7 +4057,10 @@
         "dateRange": "Date range",
         "failuresOnly": "Failures only",
         "impersonatedOnly": "Impersonation only",
-        "impersonatedOnlyInfo": "Only show changes that someone made while logged in as another person."
+        "impersonatedOnlyInfo": "Only show changes that someone made while logged in as another person.",
+        "anyAction": "Any action",
+        "dateFrom": "From",
+        "dateTo": "To"
       },
       "action": {
         "create": "Created",
@@ -4039,9 +4087,43 @@
     "placeholderInput": {
       "add": "Add"
     },
+    "colorPicker": {
+      "pickColor": "Pick color"
+    },
     "listInput": {
       "dragToReorder": "Drag to change the order",
       "add": "Add entry"
+    },
+    "errorBoundary": {
+      "title": "Something went wrong on this page",
+      "retry": "Try again",
+      "reload": "Reload the editor"
+    },
+    "listView": {
+      "table": {
+        "empty": "Nothing to show"
+      },
+      "pagination": {
+        "total": "{{count}} entries",
+        "pageSize": "Entries per page",
+        "perPage": "{{count}} / page"
+      }
+    },
+    "dateRange": {
+      "from": "from",
+      "to": "to"
+    },
+    "metadataSections": {
+      "byline": "Byline",
+      "headline": "Headline",
+      "publication": "Publication",
+      "seo": "Search engine",
+      "stats": "Stats"
+    },
+    "metadataHints": {
+      "socialMediaDescriptionFallback": "Falls back to the SEO description",
+      "socialMediaImageFallback": "Falls back to the article image when empty.",
+      "socialMediaTitleFallback": "Falls back to the SEO title"
     }
   }
 }

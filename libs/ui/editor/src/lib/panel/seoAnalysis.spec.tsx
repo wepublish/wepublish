@@ -1,4 +1,6 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { render, screen } from '@testing-library/react';
+import { ReactElement } from 'react';
 
 import { SeoAnalysis } from './seoAnalysis';
 
@@ -8,6 +10,11 @@ vi.mock('react-i18next', () => ({
     i18n: { language: 'en' },
   }),
 }));
+
+const theme = createTheme({ cssVariables: true });
+
+const renderWithTheme = (ui: ReactElement) =>
+  render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
 
 const stats = {
   wordCount: 600,
@@ -19,7 +26,7 @@ const stats = {
 
 describe('SeoAnalysis', () => {
   test('shows the content stats', () => {
-    render(<SeoAnalysis stats={stats} />);
+    renderWithTheme(<SeoAnalysis stats={stats} />);
 
     expect(screen.getByText('seoAnalysis.stats.wordCount')).toBeTruthy();
     expect(screen.getByText('600')).toBeTruthy();
@@ -29,13 +36,13 @@ describe('SeoAnalysis', () => {
   });
 
   test('does not offer an analysis', () => {
-    render(<SeoAnalysis stats={stats} />);
+    renderWithTheme(<SeoAnalysis stats={stats} />);
 
     expect(screen.queryByRole('button')).toBe(null);
   });
 
   test('renders nothing without stats', () => {
-    const { container } = render(<SeoAnalysis />);
+    const { container } = renderWithTheme(<SeoAnalysis />);
 
     expect(container.innerHTML).toBe('');
   });
