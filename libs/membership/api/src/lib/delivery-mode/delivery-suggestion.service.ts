@@ -22,6 +22,7 @@ import {
 import {
   DeliverySuggestionConfirmAllResult,
   DeliverySuggestionCounts,
+  DeliverySuggestionModel,
   DeliverySuggestionRecomputeResult,
   PaginatedDeliverySuggestions,
 } from './delivery-mode.model';
@@ -52,6 +53,24 @@ const userSelect = {
   firstName: true,
   emailQuality: { select: { level: true, reason: true, since: true } },
 } as const;
+
+const toSuggestionModel = (
+  row: Prisma.DeliverySuggestionGetPayload<{
+    include: { user: { select: typeof userSelect } };
+  }>
+): DeliverySuggestionModel => ({
+  id: row.id,
+  kind: row.kind,
+  reason: row.reason,
+  createdAt: row.createdAt,
+  user: {
+    id: row.user.id,
+    email: row.user.email,
+    name: row.user.name,
+    firstName: row.user.firstName,
+  },
+  emailQuality: row.user.emailQuality ?? null,
+});
 
 /**
  * Proposes who should get letters instead of mails, and who could go back.
@@ -211,22 +230,43 @@ export class DeliverySuggestionService {
       this.prisma.deliverySuggestion.count({ where: { kind } }),
     ]);
 
-    return {
-      totalCount,
-      nodes: rows.map(row => ({
-        id: row.id,
-        kind: row.kind,
-        reason: row.reason,
-        createdAt: row.createdAt,
-        user: {
-          id: row.user.id,
-          email: row.user.email,
-          name: row.user.name,
-          firstName: row.user.firstName,
-        },
-        emailQuality: row.user.emailQuality ?? null,
-      })),
-    };
+    return { totalCount, nodes: rows.map(toSuggestionModel) };
+  }
+
+  /** The open suggestion for one person, if any. */
+  async userSuggestion(
+    userId: string
+  ): Promise<DeliverySuggestionModel | null> {
+    const row = await this.prisma.deliverySuggestion.findUnique({
+      where: { userId },
+      include: { user: { select: userSelect } },
+    });
+
+    return row ? toSuggestionModel(row) : null;
+  }
+
+  /**
+   * Answer a suggestion with "no": the person stays where they are, as a
+   * manual decision. The nightly run never proposes a manual decision again,
+   * in either direction, so the answer holds.
+   */
+  async keep(id: string, changedByUserId: string): Promise<void> {
+    const suggestion = await this.prisma.deliverySuggestion.findUnique({
+      where: { id },
+    });
+
+    if (!suggestion) {
+      throw new BadRequestException('Suggestion not found.');
+    }
+
+    const { channel } = await this.preferences.get(suggestion.userId);
+
+    // Storing the decision also removes the suggestion.
+    await this.preferences.set(suggestion.userId, channel, {
+      origin: DeliveryPreferenceOrigin.manual,
+      reason: 'kept',
+      changedByUserId,
+    });
   }
 
   /**

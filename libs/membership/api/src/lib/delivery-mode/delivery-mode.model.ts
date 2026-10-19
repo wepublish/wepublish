@@ -54,6 +54,33 @@ export class UserDeliveryPreferenceModel {
   canReceiveLetters!: boolean;
 }
 
+@ObjectType({ description: 'One person and how their messages reach them.' })
+export class DeliveryChannelUserModel extends UserDeliveryPreferenceModel {
+  @Field(() => MailLogRecipient)
+  user!: MailLogRecipient;
+}
+
+@ObjectType()
+export class PaginatedDeliveryChannelUsers {
+  @Field(() => [DeliveryChannelUserModel])
+  nodes!: DeliveryChannelUserModel[];
+
+  @Field(() => Int)
+  totalCount!: number;
+}
+
+@ObjectType()
+export class DeliveryChannelCount {
+  @Field(() => MailChannel)
+  channel!: MailChannel;
+
+  @Field(() => Int, {
+    description:
+      'People on this channel; mail also counts everyone without a decision.',
+  })
+  userCount!: number;
+}
+
 @ObjectType()
 export class DeliverySuggestionEmailQuality {
   @Field(() => EmailQualityLevel)

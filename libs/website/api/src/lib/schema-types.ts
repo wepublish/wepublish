@@ -1087,6 +1087,27 @@ export type DeletePollVotesResult = {
   count: Scalars['Int']['output'];
 };
 
+export type DeliveryChannelCount = {
+  __typename: 'DeliveryChannelCount';
+  channel: MailChannel;
+  /** People on this channel; mail also counts everyone without a decision. */
+  userCount: Scalars['Int']['output'];
+};
+
+/** One person and how their messages reach them. */
+export type DeliveryChannelUserModel = {
+  __typename: 'DeliveryChannelUserModel';
+  /** Whether the postal address is complete enough for letters; letters cannot be chosen otherwise. */
+  canReceiveLetters: Scalars['Boolean']['output'];
+  changedAt?: Maybe<Scalars['DateTime']['output']>;
+  changedBy?: Maybe<MailLogRecipient>;
+  /** How automated subscription mails reach this user. */
+  channel: MailChannel;
+  origin?: Maybe<DeliveryPreferenceOrigin>;
+  reason?: Maybe<Scalars['String']['output']>;
+  user: MailLogRecipient;
+};
+
 export type DeliveryModeAudiencePreview = {
   __typename: 'DeliveryModeAudiencePreview';
   /** How the people split by email segment. */
@@ -3285,6 +3306,8 @@ export type Mutation = {
   importPeerArticle: Article;
   /** Imports a subscription. */
   importSubscription: PublicSubscription;
+  /** Decline one suggestion: the user stays on their channel as a manual decision, never suggested again */
+  keepDeliverySuggestion: Scalars['Boolean']['output'];
   /** Likes an article. */
   likeArticle: Article;
   /** Marks an invoice as paid. */
@@ -4388,6 +4411,11 @@ export type MutationImportSubscriptionArgs = {
 };
 
 
+export type MutationKeepDeliverySuggestionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationLikeArticleArgs = {
   id: Scalars['String']['input'];
 };
@@ -5448,6 +5476,12 @@ export type PaginatedComments = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type PaginatedDeliveryChannelUsers = {
+  __typename: 'PaginatedDeliveryChannelUsers';
+  nodes: Array<DeliveryChannelUserModel>;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type PaginatedDeliveryModeBulkChanges = {
   __typename: 'PaginatedDeliveryModeBulkChanges';
   nodes: Array<DeliveryModeBulkChangeModel>;
@@ -6241,6 +6275,8 @@ export type Query = {
    *
    */
   dailySubscriptionStats: Array<DailySubscriptionStats>;
+  /** How many people each channel reaches, the default channel first */
+  deliveryChannelCounts: Array<DeliveryChannelCount>;
   /** What switching an audience's delivery mode would touch */
   deliveryModeAudiencePreview: DeliveryModeAudiencePreview;
   /** Recent bulk switches of an audience's delivery mode, newest first */
@@ -6538,6 +6574,8 @@ export type Query = {
   userConsents: Array<UserConsent>;
   /** How a user's automated subscription mails are delivered */
   userDeliveryPreference: UserDeliveryPreferenceModel;
+  /** The open suggestion for one user, if any */
+  userDeliverySuggestion?: Maybe<DeliverySuggestionModel>;
   /** Get all invoices for the authenticated user */
   userInvoices: Array<Invoice>;
   userPollVote?: Maybe<Scalars['String']['output']>;
@@ -6549,6 +6587,8 @@ export type Query = {
   userSubscriptions: Array<PublicSubscription>;
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
+  /** The people on one channel, by name, with how they got there */
+  usersByDeliveryChannel: PaginatedDeliveryChannelUsers;
   versionInformation: VersionInformation;
   /** Returns the website settings, requires authentication to get sensitive settings. */
   websiteSettings: WebsiteSettings;
@@ -6760,6 +6800,7 @@ export type QueryDeliveryModeAudiencePreviewArgs = {
 
 
 export type QueryDeliveryModeBulkChangesArgs = {
+  channel?: InputMaybe<MailChannel>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -7390,6 +7431,11 @@ export type QueryUserDeliveryPreferenceArgs = {
 };
 
 
+export type QueryUserDeliverySuggestionArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
 export type QueryUserPollVoteArgs = {
   pollId: Scalars['String']['input'];
 };
@@ -7417,6 +7463,14 @@ export type QueryUsersArgs = {
   skip?: Scalars['Int']['input'];
   sort?: UserSort;
   take?: Scalars['Int']['input'];
+};
+
+
+export type QueryUsersByDeliveryChannelArgs = {
+  channel: MailChannel;
+  search?: InputMaybe<Scalars['String']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type QuoteBlock = BaseBlock & HasImage & {

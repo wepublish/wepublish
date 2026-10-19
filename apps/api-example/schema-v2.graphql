@@ -1048,6 +1048,29 @@ type DeletePollVotesResult {
   count: Int!
 }
 
+type DeliveryChannelCount {
+  channel: MailChannel!
+
+  """People on this channel; mail also counts everyone without a decision."""
+  userCount: Int!
+}
+
+"""One person and how their messages reach them."""
+type DeliveryChannelUserModel {
+  """
+  Whether the postal address is complete enough for letters; letters cannot be chosen otherwise.
+  """
+  canReceiveLetters: Boolean!
+  changedAt: DateTime
+  changedBy: MailLogRecipient
+
+  """How automated subscription mails reach this user."""
+  channel: MailChannel!
+  origin: DeliveryPreferenceOrigin
+  reason: String
+  user: MailLogRecipient!
+}
+
 type DeliveryModeAudiencePreview {
   """How the people split by email segment."""
   segments: [MailSegmentCount!]!
@@ -3539,6 +3562,11 @@ type Mutation {
     userID: String!
   ): PublicSubscription!
 
+  """
+  Decline one suggestion: the user stays on their channel as a manual decision, never suggested again
+  """
+  keepDeliverySuggestion(id: String!): Boolean!
+
   """Likes an article."""
   likeArticle(id: String!): Article!
 
@@ -4120,6 +4148,11 @@ type PaginatedChangelogEntries {
 type PaginatedComments {
   nodes: [Comment!]!
   pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedDeliveryChannelUsers {
+  nodes: [DeliveryChannelUserModel!]!
   totalCount: Int!
 }
 
@@ -4966,11 +4999,14 @@ type Query {
   "\n      Returns daily stats in a given timeframe.\n    "
   dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
 
+  """How many people each channel reaches, the default channel first"""
+  deliveryChannelCounts: [DeliveryChannelCount!]!
+
   """What switching an audience's delivery mode would touch"""
   deliveryModeAudiencePreview(audience: MailAudienceInput!, channel: MailChannel!): DeliveryModeAudiencePreview!
 
   """Recent bulk switches of an audience's delivery mode, newest first"""
-  deliveryModeBulkChanges(skip: Int, take: Int): PaginatedDeliveryModeBulkChanges!
+  deliveryModeBulkChanges(channel: MailChannel, skip: Int, take: Int): PaginatedDeliveryModeBulkChanges!
 
   """How many suggestions are open, per direction"""
   deliverySuggestionCounts: DeliverySuggestionCounts!
@@ -5386,6 +5422,9 @@ type Query {
   """How a user's automated subscription mails are delivered"""
   userDeliveryPreference(userId: String!): UserDeliveryPreferenceModel!
 
+  """The open suggestion for one user, if any"""
+  userDeliverySuggestion(userId: String!): DeliverySuggestionModel
+
   """Get all invoices for the authenticated user"""
   userInvoices: [Invoice!]!
   userPollVote(pollId: String!): String
@@ -5419,6 +5458,9 @@ type Query {
     """Number of items to fetch"""
     take: Int! = 10
   ): PaginatedSensitiveDataUsers!
+
+  """The people on one channel, by name, with how they got there"""
+  usersByDeliveryChannel(channel: MailChannel!, search: String, skip: Int, take: Int): PaginatedDeliveryChannelUsers!
   versionInformation: VersionInformation!
 
   """

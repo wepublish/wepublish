@@ -2,7 +2,11 @@ import { DeliverySuggestionKind, MailChannel } from '@prisma/client';
 import { UserSession } from '@wepublish/authentication/api';
 import { FEATURE_METADATA_KEY } from '@wepublish/features/api';
 import { PERMISSIONS_METADATA_KEY } from '@wepublish/permissions/api';
-import { CanManageUserDeliveryMode } from '@wepublish/permissions';
+import {
+  CanGetUser,
+  CanGetUsers,
+  CanManageUserDeliveryMode,
+} from '@wepublish/permissions';
 import { DeliveryModeResolver } from './delivery-mode.resolver';
 import { DeliverySuggestionService } from './delivery-suggestion.service';
 import { UserDeliveryPreferenceService } from './user-delivery-preference.service';
@@ -19,10 +23,14 @@ function setup() {
     })),
     previewAudience: vi.fn(),
     listBulkChanges: vi.fn(async () => ({ nodes: [], totalCount: 0 })),
+    channelCounts: vi.fn(async () => []),
+    listByChannel: vi.fn(async () => ({ nodes: [], totalCount: 0 })),
   };
   const suggestions = {
     list: vi.fn(),
     counts: vi.fn(),
+    userSuggestion: vi.fn(async () => null),
+    keep: vi.fn(async () => undefined),
     confirm: vi.fn(async () => undefined),
     confirmAll: vi.fn(),
     recomputeAll: vi.fn(async () => ({ skipped: true })),
@@ -50,6 +58,7 @@ describe('DeliveryModeResolver', () => {
       'setDeliveryModeForAudience',
       'recomputeDeliverySuggestions',
       'deliveryModeBulkChanges',
+      'keepDeliverySuggestion',
     ] as const) {
       expect(
         Reflect.getMetadata(
@@ -114,7 +123,91 @@ describe('DeliveryModeResolver', () => {
 
     await resolver.deliveryModeBulkChanges();
 
-    expect(preferences.listBulkChanges).toHaveBeenCalledWith(0, 20);
+    expect(preferences.listBulkChanges).toHaveBeenCalledWith(0, 20, undefined);
+  });
+
+  it('pages the bulk switches of one channel', async () => {
+    const { resolver, preferences } = setup();
+
+    await resolver.deliveryModeBulkChanges(40, 20, MailChannel.letter);
+
+    expect(preferences.listBulkChanges).toHaveBeenCalledWith(
+      40,
+      20,
+      MailChannel.letter
+    );
+  });
+
+  it('lets anyone who may list people read the channel overview', () => {
+    for (const method of [
+      'deliveryChannelCounts',
+      'usersByDeliveryChannel',
+    ] as const) {
+      expect(
+        Reflect.getMetadata(
+          PERMISSIONS_METADATA_KEY,
+          DeliveryModeResolver.prototype[method]
+        )
+      ).toEqual([CanGetUsers]);
+    }
+  });
+
+  it("shows a person's open suggestion to whoever may see that person", () => {
+    expect(
+      Reflect.getMetadata(
+        PERMISSIONS_METADATA_KEY,
+        DeliveryModeResolver.prototype.userDeliverySuggestion
+      )
+    ).toEqual([CanGetUser]);
+  });
+
+  it('counts the people per channel', async () => {
+    const { resolver, preferences } = setup();
+    preferences.channelCounts.mockResolvedValue([
+      { channel: MailChannel.mail, userCount: 7 },
+    ] as never);
+
+    await expect(resolver.deliveryChannelCounts()).resolves.toEqual([
+      { channel: MailChannel.mail, userCount: 7 },
+    ]);
+  });
+
+  it('pages the people of a channel with sensible defaults and a cap', async () => {
+    const { resolver, preferences } = setup();
+
+    await resolver.usersByDeliveryChannel(MailChannel.letter);
+    await resolver.usersByDeliveryChannel(MailChannel.mail, 'muster', 20, 1000);
+
+    expect(preferences.listByChannel).toHaveBeenNthCalledWith(
+      1,
+      MailChannel.letter,
+      undefined,
+      0,
+      20
+    );
+    expect(preferences.listByChannel).toHaveBeenNthCalledWith(
+      2,
+      MailChannel.mail,
+      'muster',
+      20,
+      100
+    );
+  });
+
+  it('keeps a suggestion in the name of the admin', async () => {
+    const { resolver, suggestions } = setup();
+
+    await expect(resolver.keepDeliverySuggestion(session, 's1')).resolves.toBe(
+      true
+    );
+    expect(suggestions.keep).toHaveBeenCalledWith('s1', 'admin');
+  });
+
+  it("answers with a person's open suggestion", async () => {
+    const { resolver, suggestions } = setup();
+
+    await expect(resolver.userDeliverySuggestion('u1')).resolves.toBeNull();
+    expect(suggestions.userSuggestion).toHaveBeenCalledWith('u1');
   });
 
   it('pages suggestions with sensible defaults', async () => {
