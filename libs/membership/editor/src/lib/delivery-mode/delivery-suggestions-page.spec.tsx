@@ -75,10 +75,11 @@ describe('DeliverySuggestionsPage', () => {
 
   afterEach(cleanup);
 
-  it('offers the manual switch by audience below the suggestions', () => {
+  it('leaves the switch by audience and the page title to the page around it', () => {
     renderPage();
 
-    expect(screen.getByText('audience-section')).toBeTruthy();
+    expect(screen.queryByText('audience-section')).toBeNull();
+    expect(screen.queryByText('deliveryMode.suggestionsTitle')).toBeNull();
   });
 
   it('lists the suggestions to move to letters first', () => {

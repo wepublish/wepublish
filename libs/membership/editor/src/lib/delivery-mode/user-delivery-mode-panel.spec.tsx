@@ -15,6 +15,10 @@ vi.mock('./use-paper-letter-flow', () => ({
   usePaperLetterFlow: () => true,
 }));
 
+vi.mock('../mail-template/use-letter-channel', () => ({
+  useLetterChannel: () => ({ paperLetters: true, letterAvailable: true }),
+}));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));

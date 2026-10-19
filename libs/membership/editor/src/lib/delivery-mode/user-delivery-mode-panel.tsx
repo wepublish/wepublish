@@ -15,8 +15,8 @@ import {
 } from '@wepublish/editor/api';
 import { humanizeError, enqueueSnackbar } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
-import { MdMailOutline, MdMarkunreadMailbox } from 'react-icons/md';
 
+import { deliveryChannel, useDeliveryChannels } from './channels';
 import { usePaperLetterFlow } from './use-paper-letter-flow';
 
 export type UserDeliveryModePanelProps = {
@@ -42,6 +42,7 @@ export function UserDeliveryModePanel({ userId }: UserDeliveryModePanelProps) {
     onError: error =>
       enqueueSnackbar(humanizeError(error), { variant: 'error' }),
   });
+  const channels = useDeliveryChannels();
 
   const preference = data?.userDeliveryPreference;
 
@@ -49,7 +50,7 @@ export function UserDeliveryModePanel({ userId }: UserDeliveryModePanelProps) {
     return null;
   }
 
-  const isLetter = preference.channel === MailChannel.Letter;
+  const current = deliveryChannel(preference.channel);
   const switchTo = (channel: MailChannel) =>
     setMode({ variables: { userId, channel } });
 
@@ -67,9 +68,9 @@ export function UserDeliveryModePanel({ userId }: UserDeliveryModePanelProps) {
           direction="column"
         >
           <Chip
-            color={isLetter ? 'warning' : 'primary'}
-            icon={isLetter ? <MdMarkunreadMailbox /> : <MdMailOutline />}
-            label={t(`deliveryMode.channel.${preference.channel}`)}
+            color={current.colour}
+            icon={<current.icon />}
+            label={t(current.labelKey)}
           />
 
           {preference.origin && (
@@ -106,23 +107,22 @@ export function UserDeliveryModePanel({ userId }: UserDeliveryModePanelProps) {
             </Typography>
           )}
 
-          {isLetter ?
-            <Button
-              variant="outlined"
-              loading={loading}
-              onClick={() => switchTo(MailChannel.Mail)}
-            >
-              {t('deliveryMode.switchToMail')}
-            </Button>
-          : <Button
-              variant="contained"
-              loading={loading}
-              disabled={!preference.canReceiveLetters}
-              onClick={() => switchTo(MailChannel.Letter)}
-            >
-              {t('deliveryMode.switchToLetter')}
-            </Button>
-          }
+          {/* The way back to the default is the quiet one. */}
+          {channels
+            .filter(({ channel }) => channel !== preference.channel)
+            .map(target => (
+              <Button
+                key={target.channel}
+                variant={target.isDefault ? 'outlined' : 'contained'}
+                loading={loading}
+                disabled={
+                  target.needsPostalAddress && !preference.canReceiveLetters
+                }
+                onClick={() => switchTo(target.channel)}
+              >
+                {t(target.switchToKey)}
+              </Button>
+            ))}
         </Stack>
       </CardContent>
     </Card>

@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { MailEmailSegment } from '@wepublish/editor/api';
+import { MailChannel, MailEmailSegment } from '@wepublish/editor/api';
 
 import { RecipientSummary } from './recipient-summary';
 
@@ -27,7 +27,7 @@ const renderSummary = (
         loading={false}
         count={12}
         userCount={10}
-        isLetter={false}
+        channel={MailChannel.Mail}
         withoutAddressCount={0}
         segmentCounts={[{ segment: MailEmailSegment.Dead, userCount: 2 }]}
         selectedSegments={[]}
@@ -73,14 +73,22 @@ describe('RecipientSummary', () => {
     expect(onPickSegment).toHaveBeenCalledWith(MailEmailSegment.Dead);
   });
 
+  it('counts letters for a letter', () => {
+    renderSummary({ channel: MailChannel.Letter });
+
+    expect(
+      screen.getByText('mailSend.lettersCount:{"count":12,"people":10}')
+    ).toBeTruthy();
+  });
+
   it('warns about people a letter cannot reach, for letters only', () => {
-    renderSummary({ isLetter: true, withoutAddressCount: 3 });
+    renderSummary({ channel: MailChannel.Letter, withoutAddressCount: 3 });
     expect(
       screen.getByText('mailSend.channel.withoutAddress:{"count":3}')
     ).toBeTruthy();
 
     cleanup();
-    renderSummary({ isLetter: false, withoutAddressCount: 3 });
+    renderSummary({ channel: MailChannel.Mail, withoutAddressCount: 3 });
     expect(screen.queryByText(/withoutAddress/)).toBeNull();
   });
 

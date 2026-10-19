@@ -1659,6 +1659,13 @@
         }
       }
     },
+    "deliveryChannel": {
+      "tabs": {
+        "suggestions": "Vorschläge ({{count}})",
+        "assign": "Zielgruppe umstellen",
+        "history": "Verlauf"
+      }
+    },
     "navbar": {
       "deliverySuggestions": "Zustellweg",
       "articles": "Artikel",

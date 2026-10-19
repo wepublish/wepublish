@@ -28,7 +28,6 @@ import {
   Autocomplete,
   Box,
   Button,
-  Button as MuiButton,
   Card,
   CardContent,
   CardHeader,
@@ -43,23 +42,15 @@ import {
   RadioGroup,
   Stack,
   Stack as MuiStack,
-  Step,
-  StepButton,
-  Stepper,
   TextField,
   Typography,
 } from '@mui/material';
 import { ReactElement, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  MdAdd,
-  MdArrowBack,
-  MdArrowForward,
-  MdEdit,
-  MdSend,
-} from 'react-icons/md';
+import { MdAdd, MdEdit, MdSend } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useLetterChannel } from '../mail-template/use-letter-channel';
+import { canGoToStep, StepNav, WizardStepper } from './step-nav';
 import { mailErrorHelpKey } from './mail-log-common';
 import {
   CancelJobButton,
@@ -244,21 +235,8 @@ function MailSendPage() {
 
   // Once the job exists the wizard is done — stepping back would only offer
   // edits that can no longer affect the running send.
-  const canGoTo = (target: number) => {
-    if (target === step) {
-      return true;
-    }
-
-    if (jobId) {
-      return false;
-    }
-
-    if (target < step) {
-      return true;
-    }
-
-    return stepComplete.slice(step, target).every(Boolean);
-  };
+  const canGoTo = (target: number) =>
+    canGoToStep(target, { step, complete: stepComplete, locked: !!jobId });
 
   const onConfirm = async () => {
     if (!templateId) {
@@ -285,7 +263,7 @@ function MailSendPage() {
       loading={previewLoading}
       count={count}
       userCount={userCount}
-      isLetter={isLetter}
+      channel={channel}
       withoutAddressCount={withoutAddressCount}
       segmentCounts={segmentCounts}
       selectedSegments={emailSegments}
@@ -330,27 +308,15 @@ function MailSendPage() {
         }}
       >
         <Box sx={{ minWidth: 0 }}>
-          <Stepper
-            activeStep={step}
-            nonLinear
-            sx={{ marginTop: 3, marginBottom: 1 }}
-          >
-            {STEP_KEYS.map((key, index) => (
-              <Step key={key}>
-                <StepButton
-                  disabled={!canGoTo(index)}
-                  optional={
-                    <Typography variant="caption">
-                      {t(`mailSend.steps.${key}.description`)}
-                    </Typography>
-                  }
-                  onClick={() => setStep(index)}
-                >
-                  {t(`mailSend.steps.${key}.title`)}
-                </StepButton>
-              </Step>
-            ))}
-          </Stepper>
+          <WizardStepper
+            steps={STEP_KEYS.map(key => ({
+              title: t(`mailSend.steps.${key}.title`),
+              description: t(`mailSend.steps.${key}.description`),
+            }))}
+            step={step}
+            canGoTo={canGoTo}
+            onStep={setStep}
+          />
 
           {step === STEP_CONTENT && (
             <>
@@ -560,50 +526,6 @@ function MailSendPage() {
         </DialogActions>
       </Dialog>
     </div>
-  );
-}
-
-/** Back/next controls of the wizard. Either side can be left out. */
-function StepNav({
-  onBack,
-  onNext,
-  nextDisabled,
-}: {
-  onBack?: () => void;
-  onNext?: () => void;
-  nextDisabled?: boolean;
-}) {
-  const { t } = useTranslation();
-
-  return (
-    <MuiStack
-      direction="row"
-      spacing={1.5}
-      sx={{
-        justifyContent: 'flex-end',
-        marginTop: 2,
-      }}
-    >
-      {onBack && (
-        <MuiButton
-          variant="text"
-          startIcon={<MdArrowBack />}
-          onClick={onBack}
-        >
-          {t('mailSend.back')}
-        </MuiButton>
-      )}
-      {onNext && (
-        <MuiButton
-          variant="contained"
-          endIcon={<MdArrowForward />}
-          disabled={nextDisabled}
-          onClick={onNext}
-        >
-          {t('mailSend.next')}
-        </MuiButton>
-      )}
-    </MuiStack>
   );
 }
 

@@ -1659,6 +1659,13 @@
         }
       }
     },
+    "deliveryChannel": {
+      "tabs": {
+        "suggestions": "Suggestions ({{count}})",
+        "assign": "Changer un public cible",
+        "history": "Historique"
+      }
+    },
     "navbar": {
       "deliverySuggestions": "Canal de distribution",
       "articles": "Articles",

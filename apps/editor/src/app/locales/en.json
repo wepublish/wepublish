@@ -1660,6 +1660,13 @@
         }
       }
     },
+    "deliveryChannel": {
+      "tabs": {
+        "suggestions": "Suggestions ({{count}})",
+        "assign": "Switch an audience",
+        "history": "History"
+      }
+    },
     "navbar": {
       "deliverySuggestions": "Delivery channel",
       "articles": "Articles",
