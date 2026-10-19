@@ -4069,6 +4069,7 @@
         "consent": "Create consent",
         "userConsent": "Create user consent",
         "mailTemplate": "Create email template",
+        "letterLayout": "Create stationery",
         "memberPlan": "Create subscription plan",
         "paymentMethod": "Create payment method",
         "discountCode": "Create discount code",

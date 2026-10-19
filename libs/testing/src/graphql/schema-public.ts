@@ -82,16 +82,16 @@ export type ApiToken = {
   /** The user who created this token. Null once that user is deleted. */
   createdBy?: Maybe<User>;
   createdById?: Maybe<Scalars['String']['output']>;
-  /** When the token stops working. Every token has one. */
+  /** When the token stops working. */
   expiresAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
   lastUsedAt?: Maybe<Scalars['DateTime']['output']>;
   modifiedAt: Scalars['DateTime']['output'];
   name: Scalars['String']['output'];
-  /** The non-secret start of the token, so a key can be told apart from another without revealing it. */
+  /** The non-secret start of the token */
   prefix: Scalars['String']['output'];
   revokedAt?: Maybe<Scalars['DateTime']['output']>;
-  /** The permissions this token carries. Bounded at creation by what its creator holds. */
+  /** The permissions this token carries. */
   scopes: Array<Scalars['String']['output']>;
 };
 
@@ -918,7 +918,7 @@ export type CreateSubscriptionInfo = {
 export type CreatedApiToken = {
   __typename?: 'CreatedApiToken';
   apiToken: ApiToken;
-  /** The secret. Store it now — it is never shown again. */
+  /** The secret. */
   token: Scalars['String']['output'];
 };
 

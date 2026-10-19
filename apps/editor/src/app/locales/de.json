@@ -4069,6 +4069,7 @@
         "consent": "Einwilligung erstellen",
         "userConsent": "Benutzer-Einwilligung erstellen",
         "mailTemplate": "E-Mail-Vorlage erstellen",
+        "letterLayout": "Briefpapier erstellen",
         "memberPlan": "Abo-Plan erstellen",
         "paymentMethod": "Zahlungsmethode erstellen",
         "discountCode": "Rabattcode erstellen",
