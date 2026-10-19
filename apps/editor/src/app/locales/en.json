@@ -4221,7 +4221,8 @@
         "goodie": "Create goodie",
         "peer": "Create peer",
         "userRole": "Create user role",
-        "token": "Generate token"
+        "token": "Generate token",
+        "apiToken": "Generate API key"
       },
       "trigger": "Search or jump to…",
       "keys": {

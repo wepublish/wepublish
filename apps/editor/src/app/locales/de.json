@@ -4221,7 +4221,8 @@
         "goodie": "Goodie erstellen",
         "peer": "Peer erstellen",
         "userRole": "Benutzerrolle erstellen",
-        "token": "Token generieren"
+        "token": "Token generieren",
+        "apiToken": "API-Schlüssel generieren"
       },
       "trigger": "Suchen oder springen…",
       "keys": {

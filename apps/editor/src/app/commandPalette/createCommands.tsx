@@ -1,4 +1,5 @@
 import {
+  CanCreateApiToken,
   CanCreateArticle,
   CanCreateAuthor,
   CanCreateBanner,
@@ -39,6 +40,7 @@ import {
   MdEvent,
   MdFactCheck,
   MdGroup,
+  MdKey,
   MdLocationPin,
   MdMail,
   MdMoney,
@@ -256,5 +258,12 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     icon: <MdVpnKey />,
     permissions: [CanCreateToken.id],
     perform: ({ navigate }) => navigate('/tokens/generate'),
+  },
+  {
+    id: 'generateApiToken',
+    titleKey: 'commandPalette.create.apiToken',
+    icon: <MdKey />,
+    permissions: [CanCreateApiToken.id],
+    perform: ({ navigate }) => navigate('/api-tokens/generate'),
   },
 ];
