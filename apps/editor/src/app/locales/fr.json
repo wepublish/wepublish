@@ -3953,7 +3953,8 @@
         "goodie": "Créer un goodie",
         "peer": "Créer un peer",
         "userRole": "Créer un rôle utilisateur",
-        "token": "Générer un token"
+        "token": "Générer un token",
+        "apiToken": "Générer une clé API"
       },
       "trigger": "Rechercher ou aller à…",
       "keys": {

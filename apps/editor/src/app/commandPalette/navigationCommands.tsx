@@ -1,4 +1,5 @@
 import {
+  CanCreateApiToken,
   CanCreateArticle,
   CanCreateAuthor,
   CanCreateBanner,
@@ -50,6 +51,7 @@ import {
   CanDeleteUserRole,
   CanGetAISettings,
   CanGetAnalyticsProviderSettings,
+  CanGetApiTokens,
   CanGetArticle,
   CanGetArticles,
   CanGetAudienceStats,
@@ -105,6 +107,7 @@ import {
   CanPreview,
   CanPublishArticle,
   CanPublishPage,
+  CanRevokeApiToken,
   CanSendMailTemplates,
   CanTakeActionOnComment,
   CanUpdateBlockStyle,
@@ -151,6 +154,7 @@ import {
   MdGroup,
   MdHistory,
   MdHub,
+  MdKey,
   MdLocationPin,
   MdMail,
   MdMoney,
@@ -616,6 +620,18 @@ export const NAVIGATION_COMMANDS: CommandDefinition[] = [
     icon: <MdVpnKey />,
     permissions: [CanGetTokens.id, CanCreateToken.id, CanDeleteToken.id],
     perform: ({ navigate }) => navigate('/tokens'),
+  },
+  {
+    id: 'apiTokens',
+    titleKey: 'navbar.apiTokens',
+    sectionKey: 'navbar.settings',
+    icon: <MdKey />,
+    permissions: [
+      CanGetApiTokens.id,
+      CanCreateApiToken.id,
+      CanRevokeApiToken.id,
+    ],
+    perform: ({ navigate }) => navigate('/api-tokens'),
   },
   {
     id: 'auditLog',

@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import ts from 'typescript';
 
 import de from '../locales/de.json';
 import en from '../locales/en.json';
@@ -21,12 +22,58 @@ const lookup = (catalog: Catalog, key: string) =>
       string | Catalog | undefined
     >((value, part) => (value && typeof value !== 'string' ? value[part] : undefined), catalog);
 
-const routerPaths = () => {
-  const source = readFileSync(join(__dirname, '../app.tsx'), 'utf8');
+const pathOf = (tag: ts.JsxOpeningLikeElement) => {
+  if (tag.tagName.getText() !== 'Route') {
+    return undefined;
+  }
 
-  return [...source.matchAll(/\bpath="([^"]+)"/g)].map(
-    ([, path]) => `/${path.replace(/^\//, '')}`
+  const attribute = tag.attributes.properties.find(
+    property =>
+      ts.isJsxAttribute(property) && property.name.getText() === 'path'
   );
+
+  return (
+      attribute &&
+        ts.isJsxAttribute(attribute) &&
+        attribute.initializer &&
+        ts.isStringLiteral(attribute.initializer)
+    ) ?
+      attribute.initializer.text
+    : undefined;
+};
+
+/** Every route path in app.tsx, a nested route joined to its parents. */
+const routerPaths = () => {
+  const file = ts.createSourceFile(
+    'app.tsx',
+    readFileSync(join(__dirname, '../app.tsx'), 'utf8'),
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX
+  );
+  const paths: string[] = [];
+
+  const visit = (node: ts.Node, parent: string) => {
+    const tag =
+      ts.isJsxElement(node) ? node.openingElement
+      : ts.isJsxSelfClosingElement(node) ? node
+      : undefined;
+    const path = tag && pathOf(tag);
+    const full =
+      path === undefined ? parent : (
+        `${parent.replace(/\/$/, '')}/${path.replace(/^\//, '')}`
+      );
+
+    if (path !== undefined) {
+      paths.push(full);
+    }
+
+    ts.forEachChild(node, child => visit(child, full));
+  };
+
+  visit(file, '');
+
+  return paths;
 };
 
 const NOT_A_DESTINATION = [/^\/login/, /^\/$/, /:/, /^\/systemmails$/];
