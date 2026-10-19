@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Delete,
   Get,
@@ -9,18 +10,26 @@ import {
   Res,
   Req,
   UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
   NotFoundException,
   Inject,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+} from '@nestjs/platform-express';
 import {
   ImageURIObject,
   MediaService,
   SupportedImagesValidator,
   SupportedDocumentsValidator,
+  SupportedAudiosValidator,
+  SupportedVideosValidator,
   getExtensionForMimeType,
+  getExtensionForAudioMimeType,
+  getExtensionForVideoMimeType,
   JwtAuthGuard,
 } from '@wepublish/media/api';
 import {
@@ -41,6 +50,22 @@ let S3_HOST_CHECKED = false;
 
 /** Sanitize user-provided IDs to prevent path traversal */
 const sanitizeId = (id: string): string => id.replace(/[^a-zA-Z0-9_-]/g, '');
+
+const VIDEO_MAX_BYTES =
+  (() => {
+    const mb = parseInt(process.env['VIDEO_MAX_UPLOAD_MB'] ?? '', 10);
+    return isNaN(mb) || mb <= 0 ? 500 : mb;
+  })() *
+  1000 *
+  1000;
+
+const AUDIO_MAX_BYTES =
+  (() => {
+    const mb = parseInt(process.env['AUDIO_MAX_UPLOAD_MB'] ?? '', 10);
+    return isNaN(mb) || mb <= 0 ? 200 : mb;
+  })() *
+  1000 *
+  1000;
 
 @Controller({
   version: '1',
@@ -176,6 +201,111 @@ export class AppController {
   @Delete(':imageId')
   async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
     await this.media.deleteImage(imageId);
+
+    return res.sendStatus(204);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('video')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'file', maxCount: 1 },
+        { name: 'poster', maxCount: 1 },
+      ],
+      { limits: { fileSize: VIDEO_MAX_BYTES } }
+    )
+  )
+  async uploadVideo(
+    @Res() res: Response,
+    @Query('videoId') videoId: string,
+    @UploadedFiles()
+    files: {
+      file?: Express.Multer.File[];
+      poster?: Express.Multer.File[];
+    }
+  ) {
+    const uploadedFile = files.file?.[0];
+
+    if (!uploadedFile) {
+      throw new BadRequestException('A video file is required.');
+    }
+
+    if (!(await new SupportedVideosValidator().isValid(uploadedFile))) {
+      throw new BadRequestException(
+        new SupportedVideosValidator().buildErrorMessage(uploadedFile)
+      );
+    }
+
+    const safeVideoId = sanitizeId(videoId);
+    const { size } = await this.media.saveVideo(
+      safeVideoId,
+      uploadedFile.buffer,
+      uploadedFile.mimetype,
+      uploadedFile.originalname
+    );
+
+    const poster = files.poster?.[0];
+
+    if (poster) {
+      await this.media.saveVideoPoster(safeVideoId, poster.buffer);
+    }
+
+    res.status(201).send({
+      id: safeVideoId,
+      filename: uploadedFile.originalname,
+      fileSize: size,
+      mimeType: uploadedFile.mimetype,
+      extension: getExtensionForVideoMimeType(uploadedFile.mimetype),
+      hasPoster: Boolean(poster),
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('video/:videoId')
+  async deleteVideo(@Res() res: Response, @Param('videoId') videoId: string) {
+    await this.media.deleteVideo(sanitizeId(videoId));
+
+    return res.sendStatus(204);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('audio')
+  @UseInterceptors(
+    FileInterceptor('file', { limits: { fileSize: AUDIO_MAX_BYTES } })
+  )
+  async uploadAudio(
+    @Res() res: Response,
+    @Query('audioId') audioId: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: true,
+        validators: [new SupportedAudiosValidator()],
+      })
+    )
+    uploadedFile: Express.Multer.File
+  ) {
+    const safeAudioId = sanitizeId(audioId);
+    const { size } = await this.media.saveAudio(
+      safeAudioId,
+      uploadedFile.buffer,
+      uploadedFile.mimetype,
+      uploadedFile.originalname
+    );
+
+    res.status(201).send({
+      id: safeAudioId,
+      filename: uploadedFile.originalname,
+      fileSize: size,
+      mimeType: uploadedFile.mimetype,
+      extension: getExtensionForAudioMimeType(uploadedFile.mimetype),
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('audio/:audioId')
+  async deleteAudio(@Res() res: Response, @Param('audioId') audioId: string) {
+    await this.media.deleteAudio(sanitizeId(audioId));
 
     return res.sendStatus(204);
   }

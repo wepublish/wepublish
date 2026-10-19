@@ -313,6 +313,55 @@ model Document {
   @@map("documents")
 }
 
+model Video {
+  id          String   @id
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt  DateTime @updatedAt @db.Timestamptz(3)
+  filename    String?
+  title       String?
+  description String?
+  mimeType    String
+  fileSize    Int
+  extension   String
+
+  width       Int?
+  height      Int?
+  duration    Float?
+  hasPoster   Boolean  @default(false)
+
+  source      String?
+  link        String?
+  license     String?
+
+  @@index([createdAt])
+  @@index([modifiedAt])
+  @@index([title])
+  @@map("videos")
+}
+
+model Audio {
+  id          String   @id
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt  DateTime @updatedAt @db.Timestamptz(3)
+  filename    String?
+  title       String?
+  description String?
+  mimeType    String
+  fileSize    Int
+  extension   String
+
+  duration    Float?
+
+  source      String?
+  link        String?
+  license     String?
+
+  @@index([createdAt])
+  @@index([modifiedAt])
+  @@index([title])
+  @@map("audios")
+}
+
 enum CommentItemType {
   article @map("article")
   page    @map("page")

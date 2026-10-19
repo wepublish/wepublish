@@ -160,6 +160,54 @@ export const CanDeleteDocument: Permission = {
   deprecated: false,
 };
 
+export const CanCreateVideo: Permission = {
+  id: 'CAN_CREATE_VIDEO',
+  description: 'Allows to create videos',
+  deprecated: false,
+};
+
+export const CanGetVideo: Permission = {
+  id: 'CAN_GET_VIDEO',
+  description: 'Allows to get video',
+  deprecated: false,
+};
+
+export const CanGetVideos: Permission = {
+  id: 'CAN_GET_VIDEOS',
+  description: 'Allows to get all videos',
+  deprecated: false,
+};
+
+export const CanDeleteVideo: Permission = {
+  id: 'CAN_DELETE_VIDEO',
+  description: 'Allows to delete videos',
+  deprecated: false,
+};
+
+export const CanCreateAudio: Permission = {
+  id: 'CAN_CREATE_AUDIO',
+  description: 'Allows to create audios',
+  deprecated: false,
+};
+
+export const CanGetAudio: Permission = {
+  id: 'CAN_GET_AUDIO',
+  description: 'Allows to get audio',
+  deprecated: false,
+};
+
+export const CanGetAudios: Permission = {
+  id: 'CAN_GET_AUDIOS',
+  description: 'Allows to get all audios',
+  deprecated: false,
+};
+
+export const CanDeleteAudio: Permission = {
+  id: 'CAN_DELETE_AUDIO',
+  description: 'Allows to delete audios',
+  deprecated: false,
+};
+
 export const CanCreateArticle: Permission = {
   id: 'CAN_CREATE_ARTICLE',
   description: 'Allows to create articles',
@@ -1218,6 +1266,14 @@ export const AllPermissions = [
   CanGetDocument,
   CanGetDocuments,
   CanDeleteDocument,
+  CanCreateVideo,
+  CanGetVideo,
+  CanGetVideos,
+  CanDeleteVideo,
+  CanCreateAudio,
+  CanGetAudio,
+  CanGetAudios,
+  CanDeleteAudio,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,
@@ -1397,6 +1453,14 @@ export const EditorPermissions = [
   CanGetDocument,
   CanGetDocuments,
   CanDeleteDocument,
+  CanCreateVideo,
+  CanGetVideo,
+  CanGetVideos,
+  CanDeleteVideo,
+  CanCreateAudio,
+  CanGetAudio,
+  CanGetAudios,
+  CanDeleteAudio,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,
