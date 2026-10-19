@@ -70,6 +70,12 @@ export class ArticleResolver {
   files in `libs/*/api` are the pattern to copy.
 - Guard every field that exposes user or payment data with the permission
   decorators from `@wepublish/permissions/api`, and **test the deny path**.
+- A class carrying **both** `@ObjectType('X')` and `@InputType('XInput')` is
+  registered as two GraphQL types from one TS class, and Nest picks the right
+  one per context (`InputTypeFactory` resolves by class target). That is how
+  `BlockTiming` reaches every block input through `OmitType` without overriding
+  the field in ~60 derived inputs — see
+  `libs/block-content/api/src/lib/timing/`.
 
 ## Frontend codegen
 
@@ -108,6 +114,23 @@ adds about 120 ms of `gql` parsing at module load to every page.
 - A **new** codegen output must go into `.prettierignore`, or the pre-commit
   hook reformats it and every later codegen run shows a whole-file diff.
 - REST is only for external CMS connections. Everything internal is GraphQL.
+
+## Blocks that are hidden or timed
+
+`BaseBlock` carries `disabled` and `timing` (a single window of date range,
+weekdays and time of day, all parts ANDed). **The api decides what shows, not
+the website**: `ArticleRevision.blocks`, `PageRevision.blocks` and
+`BlockTemplate.blocks` take `onlyDisplayed: Boolean = true` and drop hidden
+blocks recursively, nested flex and template blocks included. The editor
+documents pass `onlyDisplayed: false` because they edit the content; anything
+built for display leaves the default alone and never looks at `disabled` or
+`timing`. `shouldDisplay` resolves the same decision as a field, for the
+editor's off-air badge.
+
+Timed blocks also have to become visible on time: the revision resolvers cap
+the answer cache through `limitAnswerCache` and publish the next boundary as
+`blocksChangeAt`, which `revalidateFor` turns into a shorter Next.js ISR
+window. The timezone comes from `TZ`, falling back to `Europe/Zurich`.
 
 ## Full end-to-end change checklist
 

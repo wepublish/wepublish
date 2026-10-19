@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import {
   BlockStylesDocument,
+  BlockTimingInput,
   EditorBlockType,
   FullBlockStyleFragment,
 } from '@wepublish/editor/api';
@@ -41,6 +42,7 @@ import {
   ValueConstructor,
 } from '../utility';
 import { AddBlockInput, AddBlockMenuItem } from './addBlockInput';
+import { BlockTimingButton } from './blockTiming';
 import { BlockGroup } from './blockGroups';
 import { IconButtonTooltip } from './iconButtonTooltip';
 import { InfoTooltip } from './infoTooltip';
@@ -254,6 +256,7 @@ export const BlockListItem = memo(function BlockListItem({
       disabled={disabled}
       onDelete={() => onDelete(index)}
       onDisable={disabled => handleValueChange({ ...value.value, disabled })}
+      onTiming={timing => handleValueChange({ ...value.value, timing })}
       onMoveUp={onMoveUp ? () => onMoveUp(index) : undefined}
       onMoveDown={onMoveDown ? () => onMoveDown(index) : undefined}
       onStyleChange={(blockStyleName, blockStyle) =>
@@ -468,6 +471,7 @@ interface ListItemWrapperProps {
 
   onDelete?: () => void;
   onDisable?: (disable: boolean) => void;
+  onTiming?: (timing: BlockTimingInput | null) => void;
   onMoveUp?: () => void;
   onMoveDown?: () => void;
   onStyleChange?: (
@@ -483,6 +487,7 @@ function ListItemWrapper({
   bare,
   disabled,
   onDisable,
+  onTiming,
   onDelete,
   onMoveUp,
   onMoveDown,
@@ -520,6 +525,15 @@ function ListItemWrapper({
             </IconButton>
           </IconButtonTooltip>
         </UpwardButtonWrapper>
+
+        <DownwardButtonWrapper>
+          <BlockTimingButton
+            timing={value.value.timing}
+            shouldDisplay={value.value.shouldDisplay}
+            disabled={disabled}
+            onChange={timing => onTiming?.(timing)}
+          />
+        </DownwardButtonWrapper>
 
         <DownwardButtonWrapper>
           <IconButtonTooltip caption={t('blockList.deleteBlock')}>

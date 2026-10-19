@@ -22,7 +22,7 @@ import {
   GRAPHQL_RESPONSES_CACHE,
   GRAPHQL_RESPONSES_PROFILE,
 } from './public-content-namespaces';
-import { isAnswerCacheSkipped } from './skip-answer-cache';
+import { answerTtlLimit, isAnswerCacheSkipped } from './skip-answer-cache';
 
 @Plugin()
 export class GraphqlResponseCachePlugin implements ApolloServerPlugin<AnswerContext> {
@@ -103,7 +103,13 @@ export class GraphqlResponseCachePlugin implements ApolloServerPlugin<AnswerCont
           return;
         }
 
-        await answers.set(key, result, answerTtlSeconds(result.data) * 1000);
+        const ttl = answerTtlSeconds(result.data);
+
+        await answers.set(
+          key,
+          result,
+          Math.min(ttl, answerTtlLimit(contextValue) ?? ttl) * 1000
+        );
       },
     };
   }

@@ -162,7 +162,15 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
 type ArticleRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
   authors: [ArticleRevisionAuthor!]!
-  blocks: [BlockContent!]!
+  blocks(
+    """Omits blocks that should be hidden."""
+    onlyDisplayed: Boolean! = true
+  ): [BlockContent!]!
+
+  """
+  When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed.
+  """
+  blocksChangeAt: DateTime
   breaking: Boolean!
   canonicalUrl: String
   createdAt: DateTime!
@@ -458,6 +466,14 @@ interface BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -510,6 +526,14 @@ type BildwurfAdBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   zoneID: String
 }
@@ -518,6 +542,11 @@ input BildwurfAdBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   zoneID: String
 }
 
@@ -567,7 +596,12 @@ type BlockStyle {
 }
 
 type BlockTemplate implements HasBlockContent {
-  blocks: [BlockContent!]!
+  blocks(
+    """
+    Omits blocks that are hidden or outside their timing. Pass `false` to edit the template.
+    """
+    onlyDisplayed: Boolean! = true
+  ): [BlockContent!]!
   createdAt: DateTime!
   id: String!
   modifiedAt: DateTime!
@@ -578,8 +612,16 @@ type BlockTemplateBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   template: BlockTemplate
   templateId: String!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -588,6 +630,11 @@ input BlockTemplateBlockInput {
   blockStyleName: String
   disabled: Boolean
   templateId: String!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 input BlockTemplateFilter {
@@ -598,6 +645,54 @@ enum BlockTemplateSort {
   CreatedAt
   ModifiedAt
   Name
+}
+
+type BlockTimeOfDay {
+  """Start of the daily window, as `HH:mm` in the site timezone."""
+  from: String!
+
+  """
+  End of the daily window, as `HH:mm` in the site timezone. An end before the start wraps over midnight.
+  """
+  to: String!
+}
+
+input BlockTimeOfDayInput {
+  """Start of the daily window, as `HH:mm` in the site timezone."""
+  from: String!
+
+  """
+  End of the daily window, as `HH:mm` in the site timezone. An end before the start wraps over midnight.
+  """
+  to: String!
+}
+
+type BlockTiming {
+  """The block is hidden before this moment."""
+  from: DateTime
+
+  """The block is only displayed during this daily window."""
+  timeOfDay: BlockTimeOfDay
+
+  """The block is hidden from this moment on."""
+  to: DateTime
+
+  """The block is only displayed on these weekdays. Empty means every day."""
+  weekdays: [Weekday!]
+}
+
+input BlockTimingInput {
+  """The block is hidden before this moment."""
+  from: DateTime
+
+  """The block is only displayed during this daily window."""
+  timeOfDay: BlockTimeOfDayInput
+
+  """The block is hidden from this moment on."""
+  to: DateTime
+
+  """The block is only displayed on these weekdays. Empty means every day."""
+  weekdays: [Weekday!]
 }
 
 enum BlockType {
@@ -656,7 +751,15 @@ type BreakBlock implements BaseBlock & HasImage {
   linkText: String
   linkURL: String
   richText: RichText
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   text: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -671,6 +774,11 @@ input BreakBlockInput {
   linkURL: String
   richText: RichText
   text: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type CalculatedRating {
@@ -772,6 +880,14 @@ type CommentBlock implements BaseBlock {
   comments: [Comment!]!
   disabled: Boolean
   filter: CommentBlockFilter!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -792,6 +908,11 @@ input CommentBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: CommentBlockFilterInput!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type CommentCreatedAction implements BaseAction & HasComment {
@@ -976,6 +1097,14 @@ type CrowdfundingBlock implements BaseBlock & HasOptionalCrowdfunding {
   crowdfunding: Crowdfunding
   crowdfundingId: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -984,6 +1113,11 @@ input CrowdfundingBlockInput {
   blockStyleName: String
   crowdfundingId: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type CrowdfundingGoal implements BaseCrowdfundingGoal {
@@ -1227,6 +1361,14 @@ type EventBlock implements BaseBlock {
   disabled: Boolean
   events: [Event!]!
   filter: EventBlockFilter!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1245,6 +1387,11 @@ input EventBlockInput {
   blockStyleName: String
   disabled: Boolean
   filter: EventBlockFilterInput!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type EventCreatedAction implements BaseAction & HasEventLc {
@@ -1361,6 +1508,14 @@ type FacebookPostBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   userID: String
 }
@@ -1370,6 +1525,11 @@ input FacebookPostBlockInput {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   userID: String
 }
 
@@ -1377,6 +1537,14 @@ type FacebookVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   userID: String
   videoID: String
@@ -1386,6 +1554,11 @@ input FacebookVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   userID: String
   videoID: String
 }
@@ -1413,6 +1586,14 @@ type FlexBlock implements BaseBlock {
   blockStyleName: String
   blocks: [BlockWithAlignment!]!
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1421,6 +1602,11 @@ input FlexBlockInput {
   blockStyleName: String
   blocks: [BlockWithAlignmentInput!]!
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type FlexTeaser {
@@ -1495,6 +1681,14 @@ type HTMLBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   html: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1503,6 +1697,11 @@ input HTMLBlockInput {
   blockStyleName: String
   disabled: Boolean
   html: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 interface HasArticle {
@@ -1649,7 +1848,15 @@ type IFrameBlock implements BaseBlock {
   disabled: Boolean
   height: Int
   sandbox: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   styleCustom: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
   url: String
@@ -1663,6 +1870,11 @@ input IFrameBlockInput {
   height: Int
   sandbox: String
   styleCustom: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
   url: String
   width: Int
@@ -1701,6 +1913,14 @@ type ImageBlock implements BaseBlock & HasImage {
   image: Image
   imageID: String
   linkUrl: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1711,6 +1931,11 @@ input ImageBlockInput {
   disabled: Boolean
   imageID: String
   linkUrl: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 input ImageFilter {
@@ -1723,6 +1948,14 @@ type ImageGalleryBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   images: [ImageGalleryImage!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1731,6 +1964,11 @@ input ImageGalleryBlockInput {
   blockStyleName: String
   disabled: Boolean
   images: [ImageGalleryImageInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type ImageGalleryImage implements HasImage {
@@ -1819,6 +2057,14 @@ type InstagramPostBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1827,6 +2073,11 @@ input InstagramPostBlockInput {
   blockStyleName: String
   disabled: Boolean
   postID: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type Invoice implements HasOptionalSubscription {
@@ -1914,6 +2165,14 @@ type ListicleBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   items: [ListicleItem!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -1922,6 +2181,11 @@ input ListicleBlockInput {
   blockStyleName: String
   disabled: Boolean
   items: [ListicleItemInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type ListicleItem implements HasImage {
@@ -2302,11 +2566,19 @@ type MailchimpFormBlock implements BaseBlock {
   doubleOptIn: Boolean
   interests: [String!]!
   listId: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   steps: [MailchimpFormStep!]!
   submitButtonLabel: String
   successPage: MailchimpFormSuccessPage
   successUrl: String
   syncProviderId: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -2325,6 +2597,11 @@ input MailchimpFormBlockInput {
   successPage: MailchimpFormSuccessPageInput
   successUrl: String
   syncProviderId: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type MailchimpFormFieldConfig {
@@ -3777,7 +4054,15 @@ type PageNavigationLink implements BaseNavigationLink & HasPage {
 
 type PageRevision implements HasBlockContent & HasOptionalUserLc {
   archivedAt: DateTime
-  blocks: [BlockContent!]!
+  blocks(
+    """Omits blocks that should be hidden."""
+    onlyDisplayed: Boolean! = true
+  ): [BlockContent!]!
+
+  """
+  When the set of displayed blocks changes next, so caches can expire in time. Null while no block is timed.
+  """
+  blocksChangeAt: DateTime
   createdAt: DateTime!
   description: String
   id: String!
@@ -4443,6 +4728,14 @@ type PolisConversationBlock implements BaseBlock {
   blockStyleName: String
   conversationID: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -4451,6 +4744,11 @@ input PolisConversationBlockInput {
   blockStyleName: String
   conversationID: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type Poll {
@@ -4484,6 +4782,14 @@ type PollBlock implements BaseBlock & HasOptionalPoll {
   disabled: Boolean
   poll: FullPoll
   pollId: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -4492,6 +4798,11 @@ input PollBlockInput {
   blockStyleName: String
   disabled: Boolean
   pollId: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 type PollExternalVote {
@@ -5278,6 +5589,14 @@ type QuoteBlock implements BaseBlock & HasImage {
   image: Image
   imageID: String
   quote: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -5288,6 +5607,11 @@ input QuoteBlockInput {
   disabled: Boolean
   imageID: String
   quote: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 enum RatingSystemType {
@@ -5323,6 +5647,14 @@ type RichTextBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   richText: RichText
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -5331,6 +5663,11 @@ input RichTextBlockInput {
   blockStyleName: String
   disabled: Boolean
   richText: RichText
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 input SendTestMailTemplateInput {
@@ -5669,6 +6006,14 @@ type SoundCloudTrackBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   trackID: String
   type: BlockType!
 }
@@ -5677,6 +6022,11 @@ input SoundCloudTrackBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   trackID: String
 }
 
@@ -5700,6 +6050,14 @@ type StreamableVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   videoID: String
 }
@@ -5708,6 +6066,11 @@ input StreamableVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   videoID: String
 }
 
@@ -5748,8 +6111,16 @@ type SubscribeBlock implements BaseBlock {
   memberPlanRenderSettings: [SubscribeBlockMemberPlanRenderSetting!]!
   memberPlans: [MemberPlan!]!
   periodicityDisplay: SubscribePeriodicityDisplay
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   showDiscountCodes: Boolean!
   showGoodies: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -5775,6 +6146,11 @@ input SubscribeBlockInput {
   periodicityDisplay: SubscribePeriodicityDisplay
   showDiscountCodes: Boolean! = false
   showGoodies: Boolean! = false
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
 }
 
 interface SubscribeBlockLayoutConfig {
@@ -5995,7 +6371,15 @@ type TeaserGridBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   numColumns: Int!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   teasers: [Teaser]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -6006,6 +6390,11 @@ input TeaserGridBlockInput {
   disabled: Boolean
   numColumns: Int!
   teasers: [TeaserInput]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -6014,6 +6403,14 @@ type TeaserGridFlexBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   flexTeasers: [FlexTeaser!]!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -6023,6 +6420,11 @@ input TeaserGridFlexBlockInput {
   blockStyleName: String
   disabled: Boolean
   flexTeasers: [FlexTeaserInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -6038,11 +6440,19 @@ type TeaserListBlock implements BaseBlock {
   blockStyleName: String
   disabled: Boolean
   filter: TeaserListBlockFilter!
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   skip: Int
   sort: TeaserListBlockSort
   take: Int
   teaserType: TeaserType!
   teasers: [Teaser]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -6065,6 +6475,11 @@ input TeaserListBlockInput {
   sort: TeaserListBlockSort
   take: Int
   teaserType: TeaserType!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -6095,8 +6510,16 @@ type TeaserSlotsAutofillConfig implements BaseBlock {
   disabled: Boolean
   enabled: Boolean!
   filter: TeaserListBlockFilter
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   sort: TeaserListBlockSort
   teaserType: TeaserType
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -6113,8 +6536,16 @@ type TeaserSlotsBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
   slots: [TeaserSlot!]!
   teasers: [Teaser]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -6125,6 +6556,11 @@ input TeaserSlotsBlockInput {
   blockStyleName: String
   disabled: Boolean
   slots: [TeaserSlotInput!]!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -6139,6 +6575,14 @@ type TikTokVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   userID: String
   videoID: String
@@ -6148,6 +6592,11 @@ input TikTokVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   userID: String
   videoID: String
 }
@@ -6158,6 +6607,14 @@ type TitleBlock implements BaseBlock {
   disabled: Boolean
   lead: String
   preTitle: String
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   title: String
   type: BlockType!
 }
@@ -6168,6 +6625,11 @@ input TitleBlockInput {
   disabled: Boolean
   lead: String
   preTitle: String
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   title: String
 }
 
@@ -6216,6 +6678,14 @@ type TwitterTweetBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   tweetID: String
   type: BlockType!
   userID: String
@@ -6225,6 +6695,11 @@ input TwitterTweetBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   tweetID: String
   userID: String
 }
@@ -6233,6 +6708,14 @@ type UnknownBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
 }
 
@@ -6408,6 +6891,14 @@ type VimeoVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   videoID: String
 }
@@ -6416,6 +6907,11 @@ input VimeoVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   videoID: String
 }
 
@@ -6472,10 +6968,29 @@ type WebsiteSettings {
   theme: JSONObject!
 }
 
+"""A day of the week, used to time blocks."""
+enum Weekday {
+  Friday
+  Monday
+  Saturday
+  Sunday
+  Thursday
+  Tuesday
+  Wednesday
+}
+
 type YouTubeVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """Whether the block should display."""
+  shouldDisplay: Boolean!
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTiming
   type: BlockType!
   videoID: String
 }
@@ -6484,5 +6999,10 @@ input YouTubeVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   disabled: Boolean
+
+  """
+  The window during which the block is displayed. Every part of it has to apply at once; without a window the block always shows.
+  """
+  timing: BlockTimingInput
   videoID: String
 }

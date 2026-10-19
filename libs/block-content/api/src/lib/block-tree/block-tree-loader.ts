@@ -1,5 +1,10 @@
 import { forwardRef, Inject, Injectable, Scope } from '@nestjs/common';
-import { ArticleTeaser, EventTeaser, Teaser, TeaserType } from './teaser.model';
+import {
+  ArticleTeaser,
+  EventTeaser,
+  Teaser,
+  TeaserType,
+} from '../teaser/teaser.model';
 import {
   isTeaserSlotsBlock,
   TeaserSlotsBlock,
@@ -11,8 +16,8 @@ import { EventService, EventSort } from '@wepublish/event/api';
 import { TeaserSlotType } from '../teaser-slot/teaser-slot.model';
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
-import { isTeaserGridFlexBlock } from './teaser-flex.model';
-import { isTeaserGridBlock } from './teaser-grid.model';
+import { isTeaserGridFlexBlock } from '../teaser/teaser-flex.model';
+import { isTeaserGridBlock } from '../teaser/teaser-grid.model';
 import {
   BlockWithAlignment,
   FlexBlock,
@@ -24,14 +29,17 @@ import {
   isBlockTemplateBlock,
 } from '../block-template/block-template.model';
 import { BlockTemplateDataloaderService } from '../block-template/block-template-dataloader.service';
+import { displayedBlocks } from '../timing/displayed-blocks';
+import { nextTimingChange, shouldDisplayBlock } from '../timing/block-timing';
 
 // extract teasers recursively
 // - teasers of hidden blocks are skipped as they aren't displayed
 const extractManualTeasers = <Block extends BaseBlock<BlockType>>(
   block: Block | undefined,
+  isHidden: (block: BaseBlock<BlockType>) => boolean,
   includeHidden = false
 ): (typeof Teaser)[] => {
-  if (!block || (block.disabled && !includeHidden)) {
+  if (!block || (isHidden(block) && !includeHidden)) {
     return [];
   }
 
@@ -42,6 +50,7 @@ const extractManualTeasers = <Block extends BaseBlock<BlockType>>(
       teasers.push(
         ...extractManualTeasers(
           nested.block as BaseBlock<BlockType>,
+          isHidden,
           includeHidden
         )
       );
@@ -52,7 +61,11 @@ const extractManualTeasers = <Block extends BaseBlock<BlockType>>(
 
   if (isBlockTemplateBlock(block)) {
     return (block.template?.blocks ?? []).flatMap(nested =>
-      extractManualTeasers(nested as BaseBlock<BlockType>, includeHidden)
+      extractManualTeasers(
+        nested as BaseBlock<BlockType>,
+        isHidden,
+        includeHidden
+      )
     );
   }
 
@@ -91,10 +104,16 @@ const extractManualTeasers = <Block extends BaseBlock<BlockType>>(
   return [];
 };
 
+export type LoadBlocksOptions = {
+  onlyDisplayed: boolean;
+};
+
 @Injectable({ scope: Scope.REQUEST })
-export class SlotTeasersLoader {
+export class BlockTreeLoader {
+  readonly now = new Date();
   private loadedTeasers: (typeof Teaser)[] = [];
-  private populatedTemplates = new WeakSet<BlockTemplate>();
+  private populatedTemplates = new WeakMap<object, BlockTemplate>();
+  private loadedBlocks = new WeakMap<object, Promise<BaseBlock<BlockType>[]>>();
 
   constructor(
     private eventService: EventService,
@@ -131,8 +150,11 @@ export class SlotTeasersLoader {
 
     // hidden blocks (and their nested blocks) are still populated for the editor,
     // but without taking teasers away from the displayed blocks
-    if (block.disabled && !hidden) {
-      loadedTeasers = [...loadedTeasers, ...extractManualTeasers(block, true)];
+    if (this.isHidden(block) && !hidden) {
+      loadedTeasers = [
+        ...loadedTeasers,
+        ...extractManualTeasers(block, this.isHidden, true),
+      ];
       hidden = true;
     }
 
@@ -169,7 +191,7 @@ export class SlotTeasersLoader {
       }
 
       const template = { ...block.template, blocks: updatedBlocks };
-      this.populatedTemplates.add(template);
+      this.populatedTemplates.set(template, template);
 
       return { ...block, template } as BlockTemplateBlock;
     }
@@ -241,21 +263,67 @@ export class SlotTeasersLoader {
     return block;
   }
 
-  isPopulatedTemplate(template: BlockTemplate) {
-    return this.populatedTemplates.has(template);
-  }
-
-  async loadSlotTeasersIntoTemplateBlocks(
-    templateBlocks: BaseBlock<BlockType>[]
+  async loadBlocks(
+    blocks: BaseBlock<BlockType>[],
+    { onlyDisplayed }: LoadBlocksOptions
   ) {
-    return this.loadSlotTeasersIntoBlocks(templateBlocks, []);
+    const loaded = await this.load(blocks, this.loadedTeasers);
+
+    return onlyDisplayed ? this.displayed(loaded) : loaded;
   }
 
-  async loadSlotTeasersIntoBlocks(
+  async loadTemplateBlocks(
+    template: BlockTemplate,
+    { onlyDisplayed }: LoadBlocksOptions
+  ) {
+    const populated = this.populatedTemplates.get(template);
+    const loaded =
+      (populated?.blocks as BaseBlock<BlockType>[] | undefined) ??
+      (await this.load(template.blocks as BaseBlock<BlockType>[], []));
+
+    return onlyDisplayed ? this.displayed(loaded) : loaded;
+  }
+
+  async nextChange(blocks: BaseBlock<BlockType>[]) {
+    return nextTimingChange(
+      await this.load(blocks, this.loadedTeasers),
+      this.now
+    );
+  }
+
+  private isHidden = (block: BaseBlock<BlockType>) =>
+    !shouldDisplayBlock(block, this.now);
+
+  private displayed(blocks: BaseBlock<BlockType>[]) {
+    return displayedBlocks(blocks, this.now, {
+      onTemplateRebuilt: (template, original) => {
+        const populated = this.populatedTemplates.get(original);
+
+        if (populated) {
+          this.populatedTemplates.set(template, populated);
+        }
+      },
+    });
+  }
+
+  private load(
     blocksToLoad: BaseBlock<BlockType>[],
-    loadedTeasers = this.loadedTeasers
+    loadedTeasers: (typeof Teaser)[]
   ) {
-    const blocks: (BaseBlock<BlockType> | undefined)[] = [];
+    const loaded =
+      this.loadedBlocks.get(blocksToLoad) ??
+      this.populate(blocksToLoad, loadedTeasers);
+
+    this.loadedBlocks.set(blocksToLoad, loaded);
+
+    return loaded;
+  }
+
+  private async populate(
+    blocksToLoad: BaseBlock<BlockType>[],
+    loadedTeasers: (typeof Teaser)[]
+  ) {
+    const blocks: BaseBlock<BlockType>[] = [];
     const revisionBlocks = (
       await Promise.all(
         blocksToLoad.map(block => this.expandBlockTemplates(block))
@@ -265,7 +333,10 @@ export class SlotTeasersLoader {
     // extract & store all manual teasers
     // - they will be completely excluded from being autofilled
     for (const block of revisionBlocks) {
-      this.addLoadedTeaser(extractManualTeasers(block), loadedTeasers);
+      this.addLoadedTeaser(
+        extractManualTeasers(block, this.isHidden),
+        loadedTeasers
+      );
     }
 
     // process each block

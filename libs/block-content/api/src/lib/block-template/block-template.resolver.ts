@@ -29,18 +29,16 @@ import {
   Inject,
   NotFoundException,
 } from '@nestjs/common';
-import { BaseBlock } from '../base-block.model';
 import { BlockContent } from '../block-content.model';
-import { BlockType } from '../block-type.model';
-import { SlotTeasersLoader } from '../teaser/slot-teasers-loader';
+import { BlockTreeLoader } from '../block-tree/block-tree-loader';
 
 @Resolver(() => BlockTemplate)
 export class BlockTemplateResolver {
   constructor(
     private blockTemplateService: BlockTemplateService,
     private blockTemplateDataLoader: BlockTemplateDataloaderService,
-    @Inject(forwardRef(() => SlotTeasersLoader))
-    private slotTeasersLoader: SlotTeasersLoader
+    @Inject(forwardRef(() => BlockTreeLoader))
+    private blockTreeLoader: BlockTreeLoader
   ) {}
 
   @Public()
@@ -92,14 +90,17 @@ export class BlockTemplateResolver {
   }
 
   @ResolveField(() => [BlockContent])
-  public async blocks(@Parent() template: BlockTemplate) {
-    if (this.slotTeasersLoader.isPopulatedTemplate(template)) {
-      return template.blocks;
-    }
-
-    return this.slotTeasersLoader.loadSlotTeasersIntoTemplateBlocks(
-      template.blocks as BaseBlock<BlockType>[]
-    );
+  public async blocks(
+    @Parent() template: BlockTemplate,
+    @Args('onlyDisplayed', {
+      type: () => Boolean,
+      defaultValue: true,
+      description:
+        'Omits blocks that are hidden or outside their timing. Pass `false` to edit the template.',
+    })
+    onlyDisplayed: boolean
+  ) {
+    return this.blockTreeLoader.loadTemplateBlocks(template, { onlyDisplayed });
   }
 }
 
