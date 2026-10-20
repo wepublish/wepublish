@@ -4,6 +4,8 @@ export * from './lib/media-service/supported-images-validator';
 export * from './lib/media-service/supported-documents-validator';
 export * from './lib/media-service/media-service.module';
 
+export * from './lib/storage/storage-fetch';
+
 export * from './lib/authentication/jwt-auth.guard';
 export * from './lib/authentication/jwt-auth.module';
 export * from './lib/authentication/jwks-client.service';

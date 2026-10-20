@@ -18,6 +18,7 @@
     "nestjs-zod": "catalog:",
     "sharp": "catalog:",
     "tslib": "catalog:",
+    "undici": "catalog:",
     "zod": "catalog:"
   }
 }

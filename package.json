@@ -394,6 +394,7 @@
     "sharp": "catalog:",
     "stripe": "catalog:",
     "tslib": "catalog:",
+    "undici": "catalog:",
     "usehooks-ts": "^3.1.1",
     "uuid": "catalog:",
     "v0-sdk": "catalog:",
