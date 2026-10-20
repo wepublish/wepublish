@@ -21,6 +21,16 @@
         }
       }
     ],
+    "typecheck": [
+      {
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/tsconfig.base.json"
+        ],
+        "cache": true
+      }
+    ],
     "lint": [
       {
         "inputs": [
