@@ -73,7 +73,7 @@ function BlockTemplateEditView() {
   const [updateBlockTemplate, { loading: isUpdating, error: updateError }] =
     useMutation(UpdateBlockTemplateDocument);
 
-  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
+  useUnsavedChangesDialog(hasChanged);
 
   const blockTemplateId = (id || createData?.createBlockTemplate.id) ?? '';
   const {
@@ -182,11 +182,6 @@ function BlockTemplateEditView() {
                 to="/block-content/templates"
                 title={t('blockTemplates.edit.backToList')}
                 aria-label={t('blockTemplates.edit.backToList')}
-                onClick={e => {
-                  if (!unsavedChangesDialog()) {
-                    e.preventDefault();
-                  }
-                }}
               >
                 <MdKeyboardBackspace />
               </IconButton>

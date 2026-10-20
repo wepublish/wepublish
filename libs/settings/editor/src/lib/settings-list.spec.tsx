@@ -15,7 +15,7 @@ import {
   sessionWithPermissions,
 } from '@wepublish/ui/editor';
 import * as v2Client from '@wepublish/editor/api';
-import { BrowserRouter } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { SettingList } from './settings-list';
 import { createTheme, ThemeProvider } from '@mui/material';
 
@@ -100,9 +100,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -141,9 +143,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -173,9 +177,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -201,9 +207,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -224,9 +232,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
@@ -252,9 +262,11 @@ describe('SettingList', () => {
             mocks={[settingsListMock, updateSettingMock, paywallListMock]}
             addTypename={false}
           >
-            <BrowserRouter>
-              <SettingList />
-            </BrowserRouter>
+            <RouterProvider
+              router={createMemoryRouter([
+                { path: '*', element: <SettingList /> },
+              ])}
+            />
           </MockedProvider>
         </AuthContext.Provider>
       </ThemeProvider>
