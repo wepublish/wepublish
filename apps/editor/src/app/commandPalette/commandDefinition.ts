@@ -1,3 +1,4 @@
+import type { FeatureKey } from '@wepublish/features';
 import type { CommandContext } from '@wepublish/ui/editor';
 import type { ReactNode } from 'react';
 
@@ -8,5 +9,6 @@ export interface CommandDefinition {
   sectionKey?: string;
   icon: ReactNode;
   permissions?: string[];
+  feature?: FeatureKey;
   perform(context: CommandContext): void;
 }

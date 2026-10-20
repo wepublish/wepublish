@@ -78,6 +78,7 @@ import {
   CanGetMailLogs,
   CanGetMailProviderSettings,
   CanGetMailTemplates,
+  CanGetNewsletterCampaigns,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetNavigation,
@@ -130,6 +131,7 @@ import {
 import {
   ClickMenu,
   CommandPaletteTrigger,
+  FeatureControl,
   Link,
   PermissionControl,
   SidebarNav,
@@ -169,6 +171,7 @@ import {
   MdLogout,
   MdMail,
   MdMenu,
+  MdNewspaper,
   MdMoney,
   MdMultilineChart,
   MdNotificationsNone,
@@ -1091,6 +1094,7 @@ export function Base({ children }: BaseProps) {
                   CanSendMailTemplates.id,
                   CanGetMailLogs.id,
                   CanGetSubscriptionFlows.id,
+                  CanGetNewsletterCampaigns.id,
                 ]}
               >
                 <SidebarNavMenu
@@ -1139,6 +1143,19 @@ export function Base({ children }: BaseProps) {
                       {t('navbar.mailTemplates')}
                     </SidebarNavItem>
                   </PermissionControl>
+
+                  <FeatureControl feature="newsletter-editor">
+                    <PermissionControl
+                      qualifyingPermissions={[CanGetNewsletterCampaigns.id]}
+                    >
+                      <SidebarNavItem
+                        href="/newsletter"
+                        icon={<MdNewspaper />}
+                      >
+                        {t('newsletter.navbar')}
+                      </SidebarNavItem>
+                    </PermissionControl>
+                  </FeatureControl>
 
                   <PermissionControl
                     qualifyingPermissions={[CanGetMailLogs.id]}
