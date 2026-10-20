@@ -82,6 +82,17 @@ when the diff touches non-Markdown files but affects no project besides the
 root `wepublish` project. The three workflow files are `sharedGlobals` in
 `nx.json`, so editing one marks every project affected.
 
+A PR that only touches docs and AI tooling (`docs/`, `agent/`, `.agents/`,
+`.ai/`, `.claude/`, any `*.md`, the editor rule files) skips lint, tests,
+typecheck, CodeQL and the review image builds. The reusable
+[changes.yml](../../.github/workflows/changes.yml) workflow runs
+[tools/ci/changes.sh](../../tools/ci/changes.sh) to decide. The gate is a
+job-level `if:`, never an `on: paths` filter: a workflow skipped by a path
+filter leaves its required checks Pending forever, while a job skipped by `if:`
+reports Success. Backend image builds are skipped by passing empty tags, so the
+required `Docker backend images / …` checks still report. Both secret scans
+always run. If the file list can't be read, everything runs.
+
 Note `website-typecheck.yml` **excludes** `api-example`, `editor`, `bka`, `media`
 — those are known not to typecheck cleanly. Do not "fix" that exclusion as a
 side quest, but do not let a change you make add a new app to that list either.
