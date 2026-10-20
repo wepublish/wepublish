@@ -1,9 +1,11 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { FeaturesService } from '@wepublish/features/api';
 import {
   MemberPlan,
   PaymentPeriodicity,
@@ -56,7 +58,8 @@ export class UserSubscriptionService {
     private memberContext: MemberContextService,
     private discountCodeservice: DiscountCodeService,
     private goodieService: GoodieService,
-    private subscriptionService: SubscriptionService
+    private subscriptionService: SubscriptionService,
+    private features: FeaturesService
   ) {}
 
   public async getUserSubscriptions(userId: string) {
@@ -267,6 +270,12 @@ export class UserSubscriptionService {
       args.paymentMethodID &&
       args.paymentMethodID !== subscription.paymentMethodID
     ) {
+      if (!(await this.features.isEnabled('renewal-payment-choice'))) {
+        throw new ForbiddenException(
+          'Feature "renewal-payment-choice" is not enabled for this medium'
+        );
+      }
+
       await this.switchPaymentMethod(subscription, args.paymentMethodID);
       subscription.paymentMethodID = args.paymentMethodID;
     }

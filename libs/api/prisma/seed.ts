@@ -219,17 +219,6 @@ const seedSettings = (prisma: PrismaClient) =>
         settingRestriction: { allowedValues: { boolChoice: true } },
       },
     }),
-    prisma.setting.upsert({
-      where: {
-        name: SettingName.SUBSCRIPTION_EXTEND_WINDOW_DAYS,
-      },
-      update: {},
-      create: {
-        name: SettingName.SUBSCRIPTION_EXTEND_WINDOW_DAYS,
-        value: 30,
-        settingRestriction: { minValue: 0, maxValue: 366 },
-      },
-    }),
 
     prisma.settingAIProvider.upsert({
       where: {

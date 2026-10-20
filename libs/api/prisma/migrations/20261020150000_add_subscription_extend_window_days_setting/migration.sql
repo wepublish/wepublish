@@ -1,1 +1,0 @@
-INSERT INTO "settings" ("modifiedAt", "name", "value", "settingRestriction") VALUES (CURRENT_TIMESTAMP, 'subscriptionExtendWindowDays', '30'::jsonb, '{"minValue": 0, "maxValue": 366}'::jsonb) ON CONFLICT ("name") DO NOTHING;

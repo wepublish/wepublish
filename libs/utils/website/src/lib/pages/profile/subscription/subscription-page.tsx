@@ -47,12 +47,7 @@ const SubscriptionListWrapper = styled('div')`
   gap: ${({ theme }) => theme.spacing(2)};
 `;
 
-type SubscriptionPageProps = {
-  /** Offer the member plan's payment methods when a reader extends early. */
-  allowPaymentMethodChoice?: boolean;
-};
-
-function SubscriptionPage({ allowPaymentMethodChoice }: SubscriptionPageProps) {
+function SubscriptionPage() {
   const {
     query: { id },
   } = useRouter();
@@ -76,7 +71,6 @@ function SubscriptionPage({ allowPaymentMethodChoice }: SubscriptionPageProps) {
         </H4>
 
         <SubscriptionListContainer
-          allowPaymentMethodChoice={allowPaymentMethodChoice}
           filter={subscriptions =>
             subscriptions.filter(subscription => subscription.id === id)
           }

@@ -16,7 +16,6 @@ import { SubscriptionPeriodDataloader } from './subscription-periods.dataloader'
 import { MemberContextModule } from '../legacy/member-context.module';
 import { SubscriptionPeriodResolver } from './subscription-period.resolver';
 import { InvoiceModule } from '../invoice/invoice.module';
-import { SettingModule } from '@wepublish/settings/api';
 
 @Module({
   imports: [
@@ -25,7 +24,6 @@ import { SettingModule } from '@wepublish/settings/api';
     PaymentMethodModule,
     MemberContextModule,
     InvoiceModule,
-    SettingModule,
   ],
   providers: [
     SubscriptionPeriodResolver,

@@ -10,6 +10,7 @@ import {
   CancelSubscriptionMutationVariables,
   ExtendSubscriptionDocument,
   ExtendSubscriptionMutation,
+  FeaturesDocument,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
   InvoicesDocument,
@@ -31,17 +32,11 @@ export type SubscriptionListContainerProps = {
     subscriptions: FullSubscriptionFragment[]
   ) => FullSubscriptionFragment[];
 } & BuilderContainerProps &
-  Partial<
-    Pick<
-      BuilderSubscriptionListProps,
-      'subscribeUrl' | 'allowPaymentMethodChoice'
-    >
-  >;
+  Partial<Pick<BuilderSubscriptionListProps, 'subscribeUrl'>>;
 
 export function SubscriptionListContainer({
   filter,
   subscribeUrl = '/mitmachen',
-  allowPaymentMethodChoice,
   className,
 }: SubscriptionListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
@@ -50,6 +45,11 @@ export function SubscriptionListContainer({
   const { SubscriptionList } = useWebsiteBuilder();
   const { data, loading, error } = useQuery(SubscriptionsDocument);
   const invoices = useQuery(InvoicesDocument);
+  // Off until the answer is there (and on errors), like `useFeature` in the
+  // editor: an unreleased feature must never flash on.
+  const features = useQuery(FeaturesDocument);
+  const allowPaymentMethodChoice =
+    features.data?.features.includes('renewal-payment-choice') ?? false;
 
   const [cancel] = useCancelSubscriptionMutationWithCacheUpdate();
   const [revertUpgrade] = useMutation(RevertSubscriptionUpgradeDocument, {

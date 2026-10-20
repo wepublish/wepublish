@@ -44,10 +44,7 @@ import { SubscriptionService } from './subscription.service';
 import { SubscriptionDataloader } from './subscription.dataloader';
 import { NotFoundException } from '@nestjs/common';
 import { SubscriptionPeriodDataloader } from './subscription-periods.dataloader';
-import { SettingDataloaderService, SettingName } from '@wepublish/settings/api';
-
-/** Used when the SUBSCRIPTION_EXTEND_WINDOW_DAYS setting has no value. */
-const DEFAULT_EXTEND_WINDOW_DAYS = 30;
+import { FeaturesService } from '@wepublish/features/api';
 
 @Resolver(() => PublicSubscription)
 export class PublicSubscriptionResolver {
@@ -60,7 +57,7 @@ export class PublicSubscriptionResolver {
     private deactivationDataloader: SubscriptionDeactivationDataloader,
     private periodDataloader: SubscriptionPeriodDataloader,
     private memberPlanDataloader: MemberPlanDataloader,
-    private settingDataloader: SettingDataloaderService
+    private features: FeaturesService
   ) {}
 
   @Permissions(CanGetSubscription)
@@ -191,7 +188,7 @@ export class PublicSubscriptionResolver {
       deactivation,
       paymentMethod,
       unpaidAndUncanceledInvoice,
-      windowSetting,
+      earlyRenewal,
     ] = await Promise.all([
       this.deactivationDataloader.load(subscription.id),
       this.paymentMethodDataloader.load(subscription.paymentMethodID),
@@ -204,19 +201,15 @@ export class PublicSubscriptionResolver {
           canceledAt: null,
         },
       }),
-      this.settingDataloader.load(SettingName.SUBSCRIPTION_EXTEND_WINDOW_DAYS),
+      this.features.isEnabled('early-renewal'),
     ]);
-
-    const windowDays =
-      typeof windowSetting?.value === 'number' ?
-        windowSetting.value
-      : DEFAULT_EXTEND_WINDOW_DAYS;
 
     /**
      * Can only extend when:
      *   Subscription is extendable
      *   Subscription is not deactivated
-     *   Subscription is about to run out (within SUBSCRIPTION_EXTEND_WINDOW_DAYS)
+     *   Subscription is about to run out (less than 1 month), unless the
+     *     medium has early renewal switched on
      *   All invoices have been paid (or cancelled)
      *   Not using a deprecated payment method
      */
@@ -224,7 +217,8 @@ export class PublicSubscriptionResolver {
       subscription.paidUntil &&
       subscription.extendable &&
       !deactivation &&
-      +add(new Date(), { days: windowDays }) > +subscription.paidUntil &&
+      (earlyRenewal ||
+        +add(new Date(), { months: 1 }) > +subscription.paidUntil) &&
       !unpaidAndUncanceledInvoice &&
       // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
       paymentMethod?.slug !== 'payrexx-subscription'

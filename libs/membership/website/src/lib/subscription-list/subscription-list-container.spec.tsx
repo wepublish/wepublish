@@ -93,4 +93,18 @@ describe('SubscriptionList Container', () => {
 
     expect(result).toHaveBeenCalled();
   });
+
+  it('offers no payment method choice while the feature is switched off', async () => {
+    render(<storiesCmp.ExtendWithoutPaymentMethodChoice />);
+    await actWait(200);
+
+    fireEvent.click(
+      screen.getByText('Jetzt verlängern', { selector: 'button' })
+    );
+
+    expect(
+      screen.getByText(/^Jetzt um .* verlängern$/, { selector: 'button' })
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
+  });
 });

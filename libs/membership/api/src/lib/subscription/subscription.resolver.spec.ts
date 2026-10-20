@@ -79,11 +79,13 @@ describe('PublicSubscriptionResolver', () => {
       vi.useRealTimers();
     });
 
-    const canExtend = (
-      paidUntil: Date,
-      windowSetting: { value: unknown } | null
-    ) => {
+    const canExtend = (paidUntil: Date, earlyRenewal: boolean) => {
       const prisma = { invoice: { findFirst: vi.fn(async () => null) } };
+      const features = {
+        isEnabled: vi.fn(async (key: string) =>
+          key === 'early-renewal' ? earlyRenewal : false
+        ),
+      };
       const resolver = new PublicSubscriptionResolver(
         null as any,
         null as any,
@@ -93,7 +95,7 @@ describe('PublicSubscriptionResolver', () => {
         { load: vi.fn(async () => null) } as any,
         null as any,
         null as any,
-        { load: vi.fn(async () => windowSetting) } as any
+        features as any
       );
 
       return resolver.canExtend({
@@ -105,17 +107,13 @@ describe('PublicSubscriptionResolver', () => {
       } as any);
     };
 
-    it('offers extending within the configured window', async () => {
-      expect(await canExtend(inDays(300), { value: 365 })).toBe(true);
+    it('offers extending at any time when early renewal is switched on', async () => {
+      expect(await canExtend(inDays(300), true)).toBe(true);
     });
 
-    it('does not offer extending before the configured window', async () => {
-      expect(await canExtend(inDays(60), { value: 45 })).toBe(false);
-    });
-
-    it('falls back to 30 days when the setting is missing', async () => {
-      expect(await canExtend(inDays(25), null)).toBe(true);
-      expect(await canExtend(inDays(60), null)).toBe(false);
+    it('offers extending only in the last month otherwise', async () => {
+      expect(await canExtend(inDays(25), false)).toBe(true);
+      expect(await canExtend(inDays(60), false)).toBe(false);
     });
   });
 });

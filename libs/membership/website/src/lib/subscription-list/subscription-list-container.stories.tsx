@@ -5,6 +5,7 @@ import {
   ReactivateSubscriptionDocument,
   Exact,
   ExtendSubscriptionDocument,
+  FeaturesDocument,
   FullInvoiceFragment,
   FullSubscriptionDeactivationFragment,
   FullSubscriptionFragment,
@@ -76,6 +77,19 @@ const invoice = {
   canceledAt: '2023-01-01',
   paidAt: null,
 } as Exact<FullInvoiceFragment>;
+
+// the profile asks which features are switched on for the medium
+const featuresMock = (features: string[]) => ({
+  request: {
+    query: FeaturesDocument,
+  },
+  maxUsageCount: 5,
+  result: {
+    data: {
+      features,
+    },
+  },
+});
 
 const intent = {
   intentSecret: 'https://example.com',
@@ -168,6 +182,7 @@ export const Default: StoryObj = {
             },
           },
         },
+        featuresMock([]),
       ],
     },
   },
@@ -308,7 +323,6 @@ const subscriptionWithPaymentMethodChoice = {
 export const ExtendWithPaymentMethodChoice: StoryObj = {
   args: {
     ...Default.args,
-    allowPaymentMethodChoice: true,
   },
   play: async ctx => {
     const canvas = within(ctx.canvasElement);
@@ -346,6 +360,7 @@ export const ExtendWithPaymentMethodChoice: StoryObj = {
             },
           },
         },
+        featuresMock(['renewal-payment-choice']),
         {
           request: {
             query: ExtendSubscriptionDocument,
@@ -362,6 +377,21 @@ export const ExtendWithPaymentMethodChoice: StoryObj = {
             },
           },
         },
+      ],
+    },
+  },
+};
+
+export const ExtendWithoutPaymentMethodChoice: StoryObj = {
+  ...ExtendWithPaymentMethodChoice,
+  parameters: {
+    apolloClient: {
+      mocks: [
+        ...ExtendWithPaymentMethodChoice.parameters!.apolloClient.mocks.filter(
+          (mock: { request: { query: unknown } }) =>
+            mock.request.query !== FeaturesDocument
+        ),
+        featuresMock([]),
       ],
     },
   },

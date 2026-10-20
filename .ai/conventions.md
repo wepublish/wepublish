@@ -99,21 +99,6 @@ gated. When the feature is ready for every medium, delete the entry and its
 `@Feature` / `FeatureControl` checks in the same change. `FeatureKey` is typed
 from the registry, so a forgotten check fails to compile.
 
-### Settings (per instance, edited in the editor)
-
-An option the medium changes itself lives in the `settings` table, not in env.
-Reference: `SUBSCRIPTION_EXTEND_WINDOW_DAYS`. Adding one touches four places:
-
-1. `SettingName` in `libs/settings/api/src/lib/setting.ts` (key = GraphQL enum
-   value, string = row name); read it via `SettingDataloaderService` or
-   `SettingsService.settingByName` with a code default for a missing row.
-2. A migration that inserts the default with `ON CONFLICT ("name") DO NOTHING`,
-   plus the same upsert in `libs/api/prisma/seed.ts`.
-3. Editor: `SETTINGS` (and `NUMBER_FALLBACK_RANGES`) plus a `renderToggle` /
-   `renderNumberInput` in `libs/settings/editor/src/lib/settings-list.tsx`;
-   labels in all three `apps/editor/src/app/locales/*.json`; snapshot update.
-4. A changelog entry (`libs/api/changelogs/README.md`).
-
 ### Models
 
 `@ObjectType()` / `@Field()` for output, `@InputType()` for input, `@ArgsType()`
