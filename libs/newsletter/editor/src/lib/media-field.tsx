@@ -1,7 +1,11 @@
+import { Drawer } from '@mui/material';
 import type { CustomField } from '@puckeditor/core';
-import { ChooseEditImage, ImageSelectPanel } from '@wepublish/ui/editor';
+import {
+  ChooseEditImage,
+  DRAWER_WIDTHS,
+  ImageSelectPanel,
+} from '@wepublish/ui/editor';
 import { useState } from 'react';
-import { Drawer } from 'rsuite';
 import { lookupImage, rememberImages } from './images';
 
 /**
@@ -29,8 +33,11 @@ function MediaPicker({
       />
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: { sx: { width: DRAWER_WIDTHS.sm, maxWidth: '100vw' } },
+        }}
         open={choosing}
-        size="sm"
         onClose={() => setChoosing(false)}
       >
         <ImageSelectPanel

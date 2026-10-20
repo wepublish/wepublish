@@ -1,4 +1,6 @@
+import type { MockedResponse } from '@apollo/client/testing';
 import { MockedProvider } from '@apollo/client/testing/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen } from '@testing-library/react';
 import {
   ArchiveNewsletterCampaignDocument,
@@ -31,13 +33,15 @@ const list = (includeArchived: boolean, campaigns: object[]) => ({
   result: { data: { newsletterCampaigns: campaigns } },
 });
 
-const renderWith = (mocks: object[]) =>
+const renderWith = (mocks: MockedResponse[]) =>
   render(
-    <MockedProvider mocks={mocks}>
-      <MemoryRouter>
-        <NewsletterCampaignList />
-      </MemoryRouter>
-    </MockedProvider>
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
+      <MockedProvider mocks={mocks}>
+        <MemoryRouter>
+          <NewsletterCampaignList />
+        </MemoryRouter>
+      </MockedProvider>
+    </ThemeProvider>
   );
 
 describe('NewsletterCampaignList', () => {
@@ -60,7 +64,9 @@ describe('NewsletterCampaignList', () => {
       list(false, []),
     ]);
 
-    fireEvent.click(await screen.findByTitle('newsletter.list.archive'));
+    fireEvent.click(
+      await screen.findByRole('button', { name: 'newsletter.list.archive' })
+    );
 
     await vi.waitFor(() => expect(archive).toHaveBeenCalled());
     await vi.waitFor(() => expect(screen.queryByText('Ausgabe 1')).toBeNull());
@@ -92,9 +98,13 @@ describe('NewsletterCampaignList', () => {
     await screen.findByText('Ausgabe 0');
     expect(screen.getByText('newsletter.list.archived')).toBeTruthy();
     // An archived issue offers restoring, not archiving it a second time.
-    expect(screen.getAllByTitle('newsletter.list.archive')).toHaveLength(1);
+    expect(
+      screen.getAllByRole('button', { name: 'newsletter.list.archive' })
+    ).toHaveLength(1);
 
-    fireEvent.click(screen.getByTitle('newsletter.list.unarchive'));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'newsletter.list.unarchive' })
+    );
 
     await vi.waitFor(() => expect(unarchive).toHaveBeenCalled());
     await vi.waitFor(() =>

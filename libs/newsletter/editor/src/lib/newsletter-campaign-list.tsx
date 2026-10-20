@@ -1,25 +1,36 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Box,
+  Button,
+  Checkbox,
+  Chip,
+  FormControlLabel,
+  TextField,
+} from '@mui/material';
+import {
   ArchiveNewsletterCampaignDocument,
   CreateNewsletterCampaignDocument,
   DuplicateNewsletterCampaignDocument,
   NewsletterCampaignsDocument,
   NewsletterCampaignStatus,
-  NewsletterCampaignSummaryFragment,
   UnarchiveNewsletterCampaignDocument,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
+  DataTable,
+  enqueueSnackbar,
+  humanizeError,
   IconButton,
+  IconButtonTooltip,
+  Link,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  PaddedCell,
+  PageTitle,
   PermissionControl,
-  Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdd,
@@ -28,33 +39,14 @@ import {
   MdUnarchive,
   MdVisibility,
 } from 'react-icons/md';
-import { Link, useNavigate } from 'react-router-dom';
-import {
-  Checkbox,
-  IconButton as RIconButton,
-  Input,
-  Message,
-  Table as RTable,
-  Tag,
-  toaster,
-} from 'rsuite';
-import { RowDataType } from 'rsuite/esm/Table';
+import { useNavigate } from 'react-router-dom';
 
-const { Column, HeaderCell, Cell: RCell } = RTable;
-
-type Row = RowDataType<NewsletterCampaignSummaryFragment>;
-
+// Query errors are reported editor-wide by useReportQueryErrors; mutations are not.
 const toastError = (error: Error) =>
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={3000}
-    >
-      {error.message}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 
 function NewsletterCampaignList() {
   const { t } = useTranslation();
@@ -62,16 +54,9 @@ function NewsletterCampaignList() {
   const [title, setTitle] = useState('');
   const [includeArchived, setIncludeArchived] = useState(false);
 
-  const { data, loading, error, refetch } = useQuery(
-    NewsletterCampaignsDocument,
-    { variables: { includeArchived } }
-  );
-
-  useEffect(() => {
-    if (error) {
-      toastError(error);
-    }
-  }, [error]);
+  const { data, loading, refetch } = useQuery(NewsletterCampaignsDocument, {
+    variables: { includeArchived },
+  });
 
   const [create, { loading: creating }] = useMutation(
     CreateNewsletterCampaignDocument,
@@ -113,165 +98,177 @@ function NewsletterCampaignList() {
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('newsletter.list.title')}</h2>
+          <PageTitle>{t('newsletter.list.title')}</PageTitle>
         </ListViewHeader>
 
         <PermissionControl
           qualifyingPermissions={['CAN_CREATE_NEWSLETTER_CAMPAIGN']}
         >
           <ListViewActions>
-            <form
+            <Box
+              component="form"
               onSubmit={submit}
-              style={{ display: 'flex', gap: 8 }}
+              sx={{ display: 'flex', gap: 1 }}
             >
-              <Input
+              <TextField
+                size="small"
                 value={title}
-                onChange={setTitle}
+                onChange={event => setTitle(event.target.value)}
                 placeholder={t('newsletter.list.titlePlaceholder')}
-                style={{ width: 320 }}
+                sx={{ width: 320 }}
               />
-              <RIconButton
+              <Button
                 type="submit"
-                appearance="primary"
-                icon={<MdAdd />}
+                variant="contained"
+                startIcon={<MdAdd />}
                 loading={creating}
                 disabled={!title.trim()}
               >
                 {t('newsletter.list.createNew')}
-              </RIconButton>
-            </form>
+              </Button>
+            </Box>
           </ListViewActions>
         </PermissionControl>
 
-        <Checkbox
-          checked={includeArchived}
-          onChange={(_, checked) => setIncludeArchived(checked)}
-        >
-          {t('newsletter.list.showArchived')}
-        </Checkbox>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={includeArchived}
+              onChange={(_, checked) => setIncludeArchived(checked)}
+            />
+          }
+          label={t('newsletter.list.showArchived')}
+        />
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
+        <DataTable
+          storageKey="newsletter-campaigns"
           data={data?.newsletterCampaigns ?? []}
-        >
-          <Column
-            width={360}
-            resizable
-          >
-            <HeaderCell>{t('newsletter.list.name')}</HeaderCell>
-            <RCell>
-              {(row: Row) => (
+          loading={loading}
+          columns={[
+            {
+              id: 'title',
+              alwaysVisible: true,
+              label: t('newsletter.list.name'),
+              width: 360,
+              render: campaign => (
                 <>
-                  <Link to={`/newsletter/edit/${row.id}`}>{row.title}</Link>
-                  {row.status === NewsletterCampaignStatus.Archived && (
-                    <>
-                      {' '}
-                      <Tag size="sm">{t('newsletter.list.archived')}</Tag>
-                    </>
+                  <Link to={`/newsletter/edit/${campaign.id}`}>
+                    {campaign.title}
+                  </Link>
+                  {campaign.status === NewsletterCampaignStatus.Archived && (
+                    <Chip
+                      size="small"
+                      label={t('newsletter.list.archived')}
+                      sx={{ ml: 1 }}
+                    />
                   )}
                 </>
-              )}
-            </RCell>
-          </Column>
-          <Column width={100}>
-            <HeaderCell>{t('newsletter.list.blocks')}</HeaderCell>
-            <RCell dataKey="blockCount" />
-          </Column>
-          <Column
-            width={200}
-            resizable
-          >
-            <HeaderCell>{t('newsletter.list.modified')}</HeaderCell>
-            <RCell>
-              {(row: Row) => new Date(row.modifiedAt).toLocaleString()}
-            </RCell>
-          </Column>
-          <Column
-            width={180}
-            resizable
-          >
-            <HeaderCell>{t('newsletter.list.mailchimp')}</HeaderCell>
-            <RCell>
-              {(row: Row) =>
-                row.mailchimpEditUrl ?
+              ),
+            },
+            {
+              id: 'blocks',
+              label: t('newsletter.list.blocks'),
+              width: 100,
+              render: campaign => campaign.blockCount,
+            },
+            {
+              id: 'modified',
+              label: t('newsletter.list.modified'),
+              width: 200,
+              render: campaign =>
+                new Date(campaign.modifiedAt).toLocaleString(),
+            },
+            {
+              id: 'mailchimp',
+              label: t('newsletter.list.mailchimp'),
+              width: 180,
+              render: campaign =>
+                campaign.mailchimpEditUrl ?
                   <a
-                    href={row.mailchimpEditUrl}
+                    href={campaign.mailchimpEditUrl}
                     target="_blank"
                     rel="noreferrer"
                   >
                     {t('newsletter.list.openDraft')}
                   </a>
-                : '—'
-              }
-            </RCell>
-          </Column>
-          <Column
-            width={160}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell>{t('newsletter.list.actions')}</HeaderCell>
-            <PaddedCell>
-              {(row: Row) => (
+                : '—',
+            },
+            {
+              id: 'actions',
+              label: t('newsletter.list.actions'),
+              width: 160,
+              align: 'center',
+              fixed: true,
+              render: campaign => (
                 <>
-                  <Link
-                    to={`/newsletter/preview/${row.id}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                  <IconButtonTooltip caption={t('newsletter.editor.preview')}>
                     <IconButton
-                      icon={<MdVisibility />}
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      title={t('newsletter.editor.preview')}
-                    />
-                  </Link>{' '}
+                      href={`/newsletter/preview/${campaign.id}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      size="small"
+                      aria-label={t('newsletter.editor.preview')}
+                    >
+                      <MdVisibility />
+                    </IconButton>
+                  </IconButtonTooltip>
+
                   <PermissionControl
                     qualifyingPermissions={['CAN_CREATE_NEWSLETTER_CAMPAIGN']}
                   >
-                    <IconButton
-                      icon={<MdContentCopy />}
-                      circle
-                      size="sm"
-                      appearance="ghost"
-                      title={t('newsletter.list.duplicate')}
-                      disabled={duplicating}
-                      onClick={() => duplicate({ variables: { id: row.id } })}
-                    />
-                  </PermissionControl>{' '}
+                    <IconButtonTooltip caption={t('newsletter.list.duplicate')}>
+                      <IconButton
+                        size="small"
+                        aria-label={t('newsletter.list.duplicate')}
+                        disabled={duplicating}
+                        onClick={() =>
+                          duplicate({ variables: { id: campaign.id } })
+                        }
+                      >
+                        <MdContentCopy />
+                      </IconButton>
+                    </IconButtonTooltip>
+                  </PermissionControl>
+
                   <PermissionControl
                     qualifyingPermissions={['CAN_DELETE_NEWSLETTER_CAMPAIGN']}
                   >
-                    {row.status === NewsletterCampaignStatus.Archived ?
-                      <IconButton
-                        icon={<MdUnarchive />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        title={t('newsletter.list.unarchive')}
-                        disabled={unarchiving}
-                        onClick={() => unarchive({ variables: { id: row.id } })}
-                      />
-                    : <IconButton
-                        icon={<MdArchive />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        title={t('newsletter.list.archive')}
-                        disabled={archiving}
-                        onClick={() => archive({ variables: { id: row.id } })}
-                      />
+                    {campaign.status === NewsletterCampaignStatus.Archived ?
+                      <IconButtonTooltip
+                        caption={t('newsletter.list.unarchive')}
+                      >
+                        <IconButton
+                          size="small"
+                          aria-label={t('newsletter.list.unarchive')}
+                          disabled={unarchiving}
+                          onClick={() =>
+                            unarchive({ variables: { id: campaign.id } })
+                          }
+                        >
+                          <MdUnarchive />
+                        </IconButton>
+                      </IconButtonTooltip>
+                    : <IconButtonTooltip caption={t('newsletter.list.archive')}>
+                        <IconButton
+                          size="small"
+                          aria-label={t('newsletter.list.archive')}
+                          disabled={archiving}
+                          onClick={() =>
+                            archive({ variables: { id: campaign.id } })
+                          }
+                        >
+                          <MdArchive />
+                        </IconButton>
+                      </IconButtonTooltip>
                     }
                   </PermissionControl>
                 </>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
     </>
   );
