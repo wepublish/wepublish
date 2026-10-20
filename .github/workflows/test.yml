@@ -26,15 +26,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
+          filter: tree:0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run test-backend --configuration=ci
+      - uses: nrwl/nx-set-shas@v5
+        if: github.event_name == 'pull_request'
+        with:
+          main-branch-name: master
+      - run: bash ./tools/ci/nx-scoped.sh -t test --exclude='*website*' -- -t test --configuration=ci --parallel=10
         env:
+          NX_SCOPE: ${{ github.event_name == 'pull_request' && (vars.NX_AFFECTED_SCOPE || 'shadow') || 'full' }}
           NODE_OPTIONS: '--max-old-space-size=4096'
           JWT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJWbdZ23hpurtFiEpnulSfJ1U4TwbkiDWmbGZSDVx3nR\n-----END PRIVATE KEY-----"
           JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA93mjXbSful1W9nAVHuYHdRfgKEF+pvkwm4/5P27J4RA=\n-----END PUBLIC KEY-----"
@@ -45,3 +51,6 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           FORK_BRANCH: ${{ github.event.pull_request.head.repo.fork && github.event.pull_request.head.label || '' }}
+
+      - run: pnpm exec nx fix-ci
+        if: always()
