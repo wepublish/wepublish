@@ -56,12 +56,8 @@ jobs:
         with:
           main-branch-name: master
 
-      - name: Backend tests
-        run: bash ./tools/ci/nx-scoped.sh -t test --exclude='*website*' -- -t test --configuration=ci --parallel=10
-
-      - name: Website tests
-        if: success() || failure()
-        run: bash ./tools/ci/nx-scoped.sh -t test --projects='*website*' -- -t test --configuration=ci --parallel=3
+      - name: Tests
+        run: bash ./tools/ci/nx-scoped.sh -t test -- -t test --configuration=ci --parallel=6
 
       - name: Upload coverage to Codecov
         run: bash ./tools/ci/codecov-upload.sh
