@@ -8,4 +8,4 @@ The We.Publish team switches both features on per medium, independently of each 
 
 **Renew at any time** (feature "early-renewal"): "Renew now" appears as soon as a subscription is active and no invoice is open.
 
-**Choosing the payment method** (feature "renewal-payment-choice"): the renewal dialog lists the payment methods the subscription's plan offers for its billing period, for example online payment instead of an invoice. The subscription then keeps the chosen method for the renewal and the periods after it. Only the payment methods set on the plan are offered (**Member plans → Payment methods**).
+**Choosing the payment method** (feature "renewal-payment-choice"): the renewal dialog lists the payment methods the subscription's plan offers for its billing period, for example online payment instead of an invoice. The subscription then keeps the chosen method for the renewal and the periods after it. Besides the reader's current payment method, only the methods set on the plan are offered (**Member plans → Payment methods**). A method removed from the plan is no longer offered to new subscribers, but existing subscriptions keep it until the reader switches.

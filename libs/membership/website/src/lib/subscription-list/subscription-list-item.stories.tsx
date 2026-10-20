@@ -409,3 +409,19 @@ export const ExtendWithPaymentMethodChoice: StoryObj = {
   },
   play: clickExtend,
 };
+
+// e.g. a subscription still billed by invoice on a plan that only offers
+// online payment to new subscribers
+export const ExtendWhenPlanOnlyOffersOnline: StoryObj = {
+  ...ExtendWithPaymentMethodChoice,
+  args: {
+    ...ExtendWithPaymentMethodChoice.args,
+    memberPlan: mockMemberPlan({
+      availablePaymentMethods: [
+        mockAvailablePaymentMethod({
+          paymentMethods: [onlinePaymentMethod],
+        }),
+      ],
+    }),
+  },
+};
