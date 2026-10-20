@@ -880,10 +880,7 @@ it, so `getComputedStyle` cannot tell the two apart.
 `renderNewsletter` lives behind `@wepublish/newsletter/email/render`, outside
 the barrel, so the editor bundle never pulls in `react-dom/server`; and
 `apps/api-example/tsconfig.app.json` sets `jsx: react-jsx`, or the API build
-fails on the lib's TSX. It renders with `renderToStaticMarkup`, **not**
-`@react-email/render`: that one loads `react-dom/server` through a dynamic
-`import()`, which the API's pkg binary (`Dockerfile`) cannot follow, so it works
-under `nx serve` and in tests and fails only in production. The editor loads
+fails on the lib's TSX. The editor loads
 the newsletter routes with `React.lazy`: Puck's stylesheet `@import`s a font
 from rsms.me, and eagerly bundled it held up every editor page. Mail
 images are asked for as `format: 'jpeg'` (png/gif kept): the media server's
@@ -893,8 +890,10 @@ GraphQL `ImageTransformation`, so the public API cannot multiply cached variants
 Pinned by `render.spec.tsx`, `newsletter-render.service.spec.ts`,
 `media.service.spec.ts` and `novaMediaAdapter.spec.ts`; Nx's
 `enforce-module-boundaries` rejects any static import of the lazy-loaded
-`newsletter-editor` in the editor app. Nothing in CI runs the pkg binary; a new
-server-side dependency needs `docker build --target api` to be trusted.
+`newsletter-editor` in the editor app. The renderer's runtime packages (`react`,
+`react-dom`, `@react-email/components`, and `tslib`, because the API's webpack
+gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
+`apps/api-example/package.json` — see [infrastructure.md](infrastructure.md).
 
 ---
 

@@ -9,11 +9,10 @@ const DOCTYPE =
 export async function renderNewsletter(
   document: NewsletterDocument
 ): Promise<string> {
-  // Not `@react-email/render`: it loads `react-dom/server` through a dynamic
-  // `import()`, which the API's pkg binary cannot follow, so every render failed
-  // in production while passing locally. Its output is this one plus React's
-  // stream marker comments. Never pretty-print either: iOS Mail and Thunderbird
-  // drop Prettier's split end tags, `</strong\n>`, and the bold run bleeds on.
+  // Not `@react-email/render`: its output is this one plus React's stream
+  // marker comments, and it loads Prettier and html-to-text, which nothing here
+  // uses. Never pretty-print either: iOS Mail and Thunderbird drop Prettier's
+  // split end tags, `</strong\n>`, and the bold run bleeds on.
   //
   // React hoists a preload link into `<head>` for every image; mail has no use
   // for it.
