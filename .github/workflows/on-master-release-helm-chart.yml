@@ -6,7 +6,7 @@ on:
       - master
     paths:
       - 'helm/charts/**/Chart.yaml'
-      - '.github/workflows/release-helm-chart.yml'
+      - '.github/workflows/on-master-release-helm-chart.yml'
 
 jobs:
   push-wepublish-chart-to-gitlab:
