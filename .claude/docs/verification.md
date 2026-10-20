@@ -80,7 +80,10 @@ everything, logs what `nx affected` would have picked, and warns if a failing
 project was outside that set. `.nxignore` hides `image/api`,
 `block-content/api`, `testing` and `storybook` from Nx, so `nx affected` never
 selects their dependents; the always-on `api-example` build is what catches
-breakage in the API ones. Even in
+breakage in the API ones. Their own tests run outside Nx: shard 1 of
+`test.yml` calls Vitest on `libs/image/api` and `libs/block-content/api` on
+every PR and every `master` push, and `codecov-upload.sh` falls back to the
+`name` in `project.json` for their Codecov flags. Even in
 `affected` mode the script runs the full set when the base doesn't resolve, or
 when the diff touches non-Markdown files but affects no project besides the
 root `wepublish` project. The three workflow files are `sharedGlobals` in

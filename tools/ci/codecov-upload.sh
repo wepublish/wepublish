@@ -28,6 +28,9 @@ for report in "${reports[@]}"; do
   root="${report#coverage/}"
   root="${root%/report/lcov.info}"
   flag="$(awk -F'\t' -v root="$root" '$1 == root { print $2 }' <<<"$roots")"
+  if [[ -z "$flag" && -f "$root/project.json" ]]; then
+    flag="$(jq -r '.name // empty' "$root/project.json")"
+  fi
   if [[ -z "$flag" ]]; then
     echo "::error::No Nx project has root '$root' (from $report)"
     exit 1
