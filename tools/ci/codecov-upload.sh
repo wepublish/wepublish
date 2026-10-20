@@ -10,6 +10,45 @@ while IFS= read -r report; do
   reports+=("$report")
 done < <(find coverage -path '*/report/lcov.info' -type f 2>/dev/null | sort)
 
+ignores=()
+while IFS= read -r pattern; do
+  ignores+=("$pattern")
+done < <(awk '
+  /^[^[:space:]#]/ { in_ignore = ($0 ~ /^ignore:/); next }
+  in_ignore && /^[[:space:]]*-/ { sub(/^[[:space:]]*-[[:space:]]*/, ""); gsub(/["\047]/, ""); print }
+' .codecov.yml)
+
+is_ignored() {
+  local file="$1" pattern
+  for pattern in ${ignores[@]+"${ignores[@]}"}; do
+    # shellcheck disable=SC2053
+    if [[ "$file" == $pattern || "$file" == $pattern/* ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+has_reportable_lines() {
+  local file
+  while IFS= read -r file; do
+    if ! is_ignored "$file"; then
+      return 0
+    fi
+  done < <(awk '/^SF:/ { file = substr($0, 4) } /^DA:/ && file != "" { print file; file = "" }' "$1")
+  return 1
+}
+
+reportable=()
+for report in ${reports[@]+"${reports[@]}"}; do
+  if has_reportable_lines "$report"; then
+    reportable+=("$report")
+  else
+    echo "Skipping $report: no lines outside the .codecov.yml ignore list."
+  fi
+done
+reports=("${reportable[@]+"${reportable[@]}"}")
+
 if [[ ${#reports[@]} -eq 0 ]]; then
   echo "No coverage reports found, nothing to upload."
   exit 0
@@ -24,7 +63,7 @@ pnpm exec nx graph --file="$graph" >/dev/null
 roots="$(jq -r '.graph.nodes | to_entries[] | "\(.value.data.root)\t\(.key)"' "$graph")"
 
 uploads="$(mktemp)"
-for report in "${reports[@]}"; do
+for report in ${reports[@]+"${reports[@]}"}; do
   root="${report#coverage/}"
   root="${root%/report/lcov.info}"
   flag="$(awk -F'\t' -v root="$root" '$1 == root { print $2 }' <<<"$roots")"
