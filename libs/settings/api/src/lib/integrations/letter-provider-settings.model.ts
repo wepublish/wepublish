@@ -8,7 +8,14 @@ import {
   OmitType,
   InputType,
 } from '@nestjs/graphql';
-import { LetterProviderEnvironment, LetterProviderType } from '@prisma/client';
+import {
+  LetterAddressPosition,
+  LetterDeliveryProduct,
+  LetterPrintMode,
+  LetterPrintSpectrum,
+  LetterProviderEnvironment,
+  LetterProviderType,
+} from '@prisma/client';
 import { SettingProvider } from './integration.model';
 
 registerEnumType(LetterProviderType, {
@@ -52,6 +59,21 @@ export class SettingLetterProvider extends SettingProvider {
       'Email addresses containing this are placeholders, not real inboxes (e.g. @placeholder.example.com).',
   })
   placeholderEmailContains?: string;
+
+  // How letters nobody chose print options for are printed, i.e. automated
+  // subscription mails for users in letter mode. The enums are registered by
+  // the membership lib, which shares this schema.
+  @Field(() => LetterAddressPosition, { nullable: true })
+  defaultAddressPosition?: LetterAddressPosition | null;
+
+  @Field(() => LetterDeliveryProduct, { nullable: true })
+  defaultDeliveryProduct?: LetterDeliveryProduct | null;
+
+  @Field(() => LetterPrintMode, { nullable: true })
+  defaultPrintMode?: LetterPrintMode | null;
+
+  @Field(() => LetterPrintSpectrum, { nullable: true })
+  defaultPrintSpectrum?: LetterPrintSpectrum | null;
 }
 
 @InputType()

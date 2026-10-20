@@ -603,6 +603,10 @@ model MailLog {
   // reach us by webhook. Null for providers that return no id.
   mailProviderMessageID String?
 
+  // Address the mail went to, so evidence about an address can be told apart
+  // from the user's current one after an email change. Null on old rows.
+  recipientEmail String?
+
   // Origin of the mail. Nullable so pre-existing rows keep working; new sends
   // always set it.
   type MailLogType?
@@ -1286,6 +1290,12 @@ model User {
   changelogConfirmations    ChangelogEntry[]
   notificationReads         NotificationRead[]
   notificationConfirmations NotificationConfirmation[]
+  emailQuality              UserEmailQuality?
+  emailQualityEvents        EmailQualityEvent[]
+  deliveryPreference        UserDeliveryPreference?
+  deliverySuggestion        DeliverySuggestion?
+  deliveryPreferenceChanges UserDeliveryPreference[] @relation("DeliveryPreferenceChangedBy")
+  deliveryModeBulkChanges   DeliveryModeBulkChange[] @relation("DeliveryModeBulkChangedBy")
   apiTokens                 ApiToken[]
 
   @@index([createdAt])
@@ -1574,6 +1584,8 @@ model SubscriptionInterval {
   daysAwayFromEnding Int?              @db.SmallInt
   mailTemplate       MailTemplate?     @relation(fields: [mailTemplateId], references: [id])
   mailTemplateId     String?
+  /// Users in letter mode get this event printed; everyone else still gets the mail.
+  sendAsLetter       Boolean           @default(false)
 
   subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
   subscriptionFlowId String
@@ -1932,6 +1944,12 @@ model SettingLetterProvider {
 
   autoSend                 Boolean @default(false)
   placeholderEmailContains String?
+
+  /// How letters nobody chose print options for are printed (automated sends).
+  defaultAddressPosition LetterAddressPosition?
+  defaultDeliveryProduct LetterDeliveryProduct?
+  defaultPrintMode       LetterPrintMode?
+  defaultPrintSpectrum   LetterPrintSpectrum?
 
   @@map("settings.letterprovider")
 }
@@ -2521,4 +2539,151 @@ model AuditLog {
   @@index([sessionId])
   @@index([entity, recordId])
   @@map("audit_logs")
+}
+
+// Ordered best -> worst. Placeholder addresses are not a level: they are
+// recognised by pattern at query time (see placeholderEmailPatterns).
+enum EmailQualityLevel {
+  active       @map("active")
+  unknown      @map("unknown")
+  unresponsive @map("unresponsive")
+  dead         @map("dead")
+}
+
+// verified / invalid are reserved for an address verification service; nothing
+// records verified yet.
+enum EmailQualityEventType {
+  hardBounce    @map("hardBounce")
+  invalid       @map("invalid")
+  blocked       @map("blocked")
+  spamComplaint @map("spamComplaint")
+  unsubscribed  @map("unsubscribed")
+  clicked       @map("clicked")
+  verified      @map("verified")
+}
+
+enum EmailQualityEventSource {
+  send         @map("send")
+  webhook      @map("webhook")
+  poll         @map("poll")
+  verification @map("verification")
+}
+
+/// Append-only evidence about how usable an email address is. Logins and
+/// confirmed email changes are not stored here: the evaluator reads them from
+/// User.lastLogin and User.emailVerifiedAt.
+model EmailQualityEvent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  occurredAt DateTime @db.Timestamptz(3)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Lowercased address the evidence is about. After an email change the old
+  /// events no longer apply.
+  email  String
+  type   EmailQualityEventType
+  source EmailQualityEventSource
+  /// Reject reason or bounce diagnosis. Never raw payloads.
+  detail String?
+
+  mailLogId String?
+  /// Provider's own id of the event, for evidence without a mail log such as
+  /// newsletter campaign bounces. Prefixed with the provider type.
+  providerEventId String?
+
+  @@unique([mailLogId, type])
+  @@unique([providerEventId])
+  @@index([userId, email, occurredAt])
+  @@map("email_quality_events")
+}
+
+/// Level derived from the events. Users without a row count as unknown.
+model UserEmailQuality {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Address the level was computed for.
+  email  String
+  level  EmailQualityLevel
+  reason String
+  since  DateTime          @db.Timestamptz(3)
+
+  lastEvaluatedAt DateTime @db.Timestamptz(3)
+  modifiedAt      DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([level])
+  @@map("user_email_quality")
+}
+
+enum DeliveryPreferenceOrigin {
+  /// Set by an admin; final until an admin changes it.
+  manual
+  /// Set by confirming a suggestion; may be suggested back.
+  suggestion
+}
+
+/// How automated subscription mails reach this user. No row means mail.
+model UserDeliveryPreference {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  channel MailChannel
+  origin  DeliveryPreferenceOrigin
+  /// Why, e.g. `emailQuality:dead`, `placeholderEmail` or `bulk`.
+  reason  String?
+
+  changedByUserId String?
+  changedBy       User?    @relation("DeliveryPreferenceChangedBy", fields: [changedByUserId], references: [id], onDelete: SetNull)
+  changedAt       DateTime @db.Timestamptz(3)
+
+  @@index([channel, origin])
+  @@map("user_delivery_preferences")
+}
+
+/// One bulk switch of an audience's delivery mode, kept for the record: the
+/// per-user preference only remembers its last change, not which filter
+/// produced it.
+model DeliveryModeBulkChange {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  channel MailChannel
+  /// The MailAudienceInput as applied, like MailSendJob.recipientFilter.
+  audience Json
+
+  userCount             Int
+  changed               Int
+  skippedWithoutAddress Int
+
+  changedByUserId String?
+  changedBy       User?   @relation("DeliveryModeBulkChangedBy", fields: [changedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt(sort: Desc)])
+  @@map("user_delivery_bulk_changes")
+}
+
+enum DeliverySuggestionKind {
+  toLetter
+  toMail
+}
+
+/// Open suggestions to change a user's delivery mode, rebuilt nightly as a set.
+model DeliverySuggestion {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  modifiedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  kind   DeliverySuggestionKind
+  reason String
+
+  @@index([kind])
+  @@map("user_delivery_suggestions")
 }

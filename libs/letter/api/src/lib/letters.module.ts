@@ -5,8 +5,11 @@ import {
   Provider,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { FeaturesService } from '@wepublish/features/api';
 import { PrismaModule } from '@wepublish/nest-modules';
+import { LETTER_SENDER } from '@wepublish/mail/api';
 import { createAsyncOptionsProvider } from '@wepublish/utils/api';
+import { GatedLetterSender } from './gated-letter-sender';
 import { LetterContext } from './letter-context';
 import { LetterLayoutResolver } from './letter-layout/letter-layout.resolver';
 import { LetterLayoutService } from './letter-layout/letter-layout.service';
@@ -37,7 +40,7 @@ export class LettersModule {
       global: options.global,
       imports: options.imports || [],
       providers: this.createAsyncProviders(options),
-      exports: [LetterContext],
+      exports: [LetterContext, LETTER_SENDER],
     };
   }
 
@@ -67,6 +70,14 @@ export class LettersModule {
             documentUrl,
           }),
         inject: [LETTERS_MODULE_OPTIONS, PrismaClient],
+      },
+      // The mail lib prints automated mails for users in letter mode through
+      // this; it only knows the token, not this lib.
+      {
+        provide: LETTER_SENDER,
+        useFactory: (context: LetterContext, features: FeaturesService) =>
+          new GatedLetterSender(context, features),
+        inject: [LetterContext, FeaturesService],
       },
     ];
   }

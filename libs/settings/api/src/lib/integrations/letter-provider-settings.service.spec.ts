@@ -77,6 +77,26 @@ describe('LetterProviderSettingsService', () => {
     expect(data['autoSend']).toBe(false);
   });
 
+  test('stores the print defaults for automated letters', async () => {
+    vi.spyOn(prisma.settingLetterProvider, 'findUnique').mockResolvedValue(
+      existing
+    );
+    const update = vi
+      .spyOn(prisma.settingLetterProvider, 'update')
+      .mockResolvedValue(existing);
+
+    await service.updateLetterProviderSetting({
+      id: 'pingen',
+      defaultPrintMode: 'duplex',
+      defaultDeliveryProduct: null,
+    } as never);
+
+    expect(update.mock.calls[0][0].data).toEqual({
+      defaultPrintMode: 'duplex',
+      defaultDeliveryProduct: null,
+    });
+  });
+
   test('leaves the configuration alone when the type stays the same', async () => {
     vi.spyOn(prisma.settingLetterProvider, 'findUnique').mockResolvedValue(
       existing

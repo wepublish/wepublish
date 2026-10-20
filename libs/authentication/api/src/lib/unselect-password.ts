@@ -22,6 +22,12 @@ export const unselectPassword: Record<
     | 'changelogConfirmations'
     | 'notificationReads'
     | 'notificationConfirmations'
+    | 'emailQuality'
+    | 'emailQualityEvents'
+    | 'deliveryPreference'
+    | 'deliverySuggestion'
+    | 'deliveryPreferenceChanges'
+    | 'deliveryModeBulkChanges'
     | 'apiTokens'
   >,
   boolean

@@ -590,6 +590,25 @@ check-then-write at boot (`findUnique` then `create`) and even Prisma's
 Pinned by `google-analytics-db-config.spec.ts` and the "several replicas" cases
 in `reconcile-provider-registry.spec.ts`, whose fakes race like Prisma does.
 
+### ⚠️ The mail webhook answers 200 to a payload it cannot process — only a bad signature is a 401
+
+[mail.webhook.ts](../../libs/mail/api/src/lib/mail.webhook.ts) catches every
+error after `webhookForSendMail` and still returns 200; a
+`MailWebhookSignatureError` becomes 401. Returning 500 looks more honest but
+is wrong for every provider we have or plan: Mandrill and Mailgun retry on 5xx
+and fail the same way again, and Brevo retries only 429/timeouts and **drops
+the event for good** on any other answer (verified in Brevo's retry docs,
+2026-10-11), so a 500 would lose a bounce forever. Evidence stays in our log,
+and the nightly `MailLogSyncService` poll reconciles what a webhook missed.
+
+**Load-bearing:** the `catch` that logs and falls through to
+`res.status(200)`, and the `instanceof MailWebhookSignatureError` → 401 branch.
+Providers must throw `MailWebhookSignatureError`, not a plain `Error`, for a
+failed signature.
+
+Pinned by `libs/mail/api/src/lib/mail.webhook.spec.ts` ("refuses a call that
+does not come from the provider", "answers 200 to a payload it cannot handle").
+
 ---
 
 ### ⚠️ The letter sheet keeps `@page { margin: 0 }`; stationery space comes from the table spacers
@@ -963,6 +982,30 @@ which reads the _emitted_ rule rather than the computed value — jsdom resolves
 it, so `getComputedStyle` cannot tell the two apart.
 
 ---
+
+### ⚠️ A long editor page must opt out of shrinking, or its tables and cards scroll inside themselves
+
+The editor shell (`apps/editor/src/app/base.tsx`) is `100vh` with the content
+frame as a flex column that scrolls (`flex: 1 1 auto; overflow-y: auto`). A
+page that returns a fragment hands every top-level block to that column as a
+flex item. A block with its own overflow, which MUI's `TableContainer`
+(`overflow-x: auto`) and `Card` (`overflow: hidden`) both set, gets
+`min-height: 0` and shrinks: the table grows a vertical scrollbar and the card
+clips its content, while the page itself does not scroll.
+
+Seen on the delivery suggestions page on 2026-10-19: the audience filter card
+was cut off and the suggestions table scrolled on its own.
+
+Wrapping the page in `<div style={{ flexShrink: 0 }}>` keeps it one
+non-shrinking block, so the frame scrolls it as a whole. `mail-send-page.tsx`,
+`mail-template-edit.tsx` and `mail-log-list.tsx` do this already; list pages
+built on `TableWrapper` + `fillHeight` want the opposite and must not.
+
+**Load-bearing:** the wrapper div in `delivery-channel-page.tsx` (its views
+render inside it and must not add one of their own) and the three pages above.
+
+Nothing guards this — a regression here is silent until someone resizes the
+window.
 
 ## Adding an entry
 
