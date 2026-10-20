@@ -730,6 +730,10 @@
         "teasers": "Teasers",
         "interaction": "Interaction",
         "layout": "Mise en page"
+      },
+      "author": {
+        "label": "Auteur·e",
+        "placeholder": "Sélectionner un·e auteur·e"
       }
     },
     "cancel": "Annuler",

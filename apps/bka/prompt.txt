@@ -1,0 +1,35 @@
+I want you to re-create the components of BKa (https://www.bka.ch/) but within the wepublish website builder ecosystem. Orientate yourself on apps/website-example, apps/hauptstadt etc but mostly stick to them.
+
+I want you to mainly focus on the individual components, like the navbar (try to use data from the CMS and try to fit in within the props of BuilderNavbarProps) and not the overall page setup as that will come from the CMS.
+
+Example components to get you started:
+
+- The mentioned navbar
+- The magazin items are teasers, theres multi versions of them for example on here: https://www.bka.ch/magazin without an image but with tags.
+- The sidebar on https://www.bka.ch/service, if you have no clue how to fit that into the wepublish block system, that is fine. Implement it already in a re-useable way (they are also used on magazin pages)
+- Authors in https://www.bka.ch/info. These probably should be a new block in the wepublish block system, it should just have you select an author and thats it.
+- Stuff that is missing on the magazin page: https://www.bka.ch/magazin/article/puristinnen-vorgewarnt
+
+Ignore the "Agenda" and "Wer & Wo" for now.
+
+On the Magazin page, the left bar should be hardcoded, the right side should come from the CMS. The CMS page should have a slug of "magazin". Just because the list is hardcoded doesn't mean that those teasers should not available in the CMS. Make it a blockstyle.
+
+We will be using teaser slots and not teaser grid or teaser list.
+
+Magazin are articles, make sure to also implement the article pages. SEO we will use what we have available.
+
+How to go about it:
+
+You have access to chrome, I want you to take screenshots from the website and compare it to the implementation of the components (for all the default theme breakpoints). Re-iterate until the visuals align. Do not import them theme directly in the styled components, use the theme as props as is normal in emotion.
+
+Feel free to write unit tests to make sure things work correctly. Do not rewrite the ContainerComponents or add extra props to them without asking me first. Feel free to also create multiple agents helping you with that.
+
+Make sure as much is SSR/SSG safe. Only use `useEffect` when needed. Don't use the useMedia hook to affect CSS, use breakpoints instead in CSS.
+
+Use the website settings where possible even for the theme. If it's not possible via the website settings, add it to the theme and make sure it's not being overriden by the settings. Use the exact fonts etc too, don't try to take similar ones.
+
+What do you available:
+
+- All magazin data is in the local database
+- Chrome skill
+- App in apps/bka

@@ -730,6 +730,10 @@
         "teasers": "Teaser",
         "interaction": "Interaktion",
         "layout": "Layout"
+      },
+      "author": {
+        "label": "Autor*in",
+        "placeholder": "Autor*in auswählen"
       }
     },
     "cancel": "Abbrechen",

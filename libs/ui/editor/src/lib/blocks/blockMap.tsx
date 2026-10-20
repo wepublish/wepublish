@@ -26,6 +26,7 @@ import {
   MdMoney,
   MdPhoto,
   MdPhotoLibrary,
+  MdPerson,
   MdQueryStats,
   MdTitle,
   MdViewList,
@@ -46,6 +47,7 @@ import { ImageGalleryBlock } from './imageGalleryBlock';
 import { LinkPageBreakBlock } from './linkPageBreakBlock';
 import { ListicleBlock } from './listicleBlock';
 import { MailchimpFormBlock } from './mailchimpFormBlock';
+import { AuthorBlock } from './authorBlock';
 import { PollBlock } from './pollBlock';
 import { QuoteBlock } from './quoteBlock';
 import { RichTextBlock } from './richTextBlock/rich-text-block';
@@ -349,6 +351,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: { poll: null, blockStyle: undefined },
     label: 'blocks.poll.label',
     icon: <MdQueryStats />,
+  },
+
+  [EditorBlockType.Author]: {
+    group: 'teasers',
+    field: props => <AuthorBlock {...props} />,
+    defaultValue: { author: null, blockStyle: undefined },
+    label: 'blocks.author.label',
+    icon: <MdPerson />,
   },
 
   [EditorBlockType.Crowdfunding]: {
