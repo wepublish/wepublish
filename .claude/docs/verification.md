@@ -17,7 +17,7 @@ projects**, then **typecheck what you touched**.
 pnpm nx affected -t lint test --uncommitted
 
 # On a feature branch, compare against the base branch instead:
-pnpm nx affected -t lint test --base=origin/development
+pnpm nx affected -t lint test --base=origin/master
 ```
 
 ```bash
@@ -36,7 +36,7 @@ missing fields you just added to `schema.prisma`, run `pnpm prisma generate`.
 When a lib has no `build` target, add one where it makes sense.
 
 If `--uncommitted` returns nothing but you know you changed files, you have
-probably already staged or committed them — use `--base=origin/development`.
+probably already staged or committed them — use `--base=origin/master`.
 
 ### Single project (while iterating)
 
@@ -72,7 +72,7 @@ still a broken change.
 | `website-typecheck.yml` | `typecheck-websites.sh $(nx-scoped.sh --list --type app)` | `tsc --noEmit` per app |
 
 All three go through [tools/ci/nx-scoped.sh](../../tools/ci/nx-scoped.sh).
-Pushes to `master`/`development` always run the full set. On PRs the
+Pushes to `master` always run the full set. On PRs the
 `NX_AFFECTED_SCOPE` repository variable picks the mode: `shadow` (the default
 when unset) still runs everything, logs what `nx affected` would have picked,
 and warns if a failing project was outside that set; `affected` runs only what
