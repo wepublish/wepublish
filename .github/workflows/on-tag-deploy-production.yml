@@ -23,7 +23,6 @@ jobs:
 
   publish-docker-base-image:
     name: ${{ needs.get-tag.outputs.project }} base image
-    if: ${{ needs.get-tag.result == 'success' }}
     needs: get-tag
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
     secrets: inherit

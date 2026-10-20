@@ -46,7 +46,6 @@ jobs:
 
   publish-docker-base-image:
     name: Docker base image
-    if: ${{ needs.date_sha_tag.result == 'success' }}
     needs: date_sha_tag
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
     secrets: inherit
@@ -80,7 +79,7 @@ jobs:
 
   publish_master_docker_website:
     name: Website
-    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker, publish-docker-base-image]
+    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker ]
     if: ${{ needs.publish_master_docker.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:

@@ -20,7 +20,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Calculate hash of the pnpm lockfile
-        id: hash
         run: |
           if [ -f pnpm-lock.yaml ]; then
             echo "HASH=$(cat pnpm-lock.yaml pnpm-workspace.yaml Dockerfile | sha256sum | awk '{print $1}')" >> $GITHUB_ENV
@@ -43,7 +42,6 @@ jobs:
             echo "image-exists=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
       - uses: docker/build-push-action@v2
         if: steps.check-image.outputs.image-exists == 'false'

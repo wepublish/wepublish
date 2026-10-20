@@ -16,33 +16,22 @@ jobs:
   check-review-deploy-label:
     runs-on: ubuntu-latest
     outputs:
-      has_label: ${{ steps.extract_project_name.outputs.has_label }}
+      has_label: ${{ steps.review_label.outputs.has_label }}
     steps:
-      - name: Check for Deploy_ Label and Extract Project Name
-        id: extract_project_name
+      - name: Check for a review_ label
+        id: review_label
         run: |
-          project_name=""
-          review_version=""
           has_label="false"
           labels=$(echo '${{ toJSON(github.event.pull_request.labels) }}' | jq -r '.[].name')
           for label in $labels; do
             if [[ "$label" == review_* ]]; then
-                review_version=$(echo "$label" | cut -d'_' -f2)
-                project_name=$(echo "$label" | cut -d'_' -f3)
                 has_label="true"
+                echo "Review label found: $label"
                 break
             fi
           done
 
           echo "has_label=$has_label" >> "$GITHUB_OUTPUT"
-          echo "review_version=$review_version" >> "$GITHUB_OUTPUT"
-          echo "project_name=$project_name" >> "$GITHUB_OUTPUT"
-
-          if [[ "$has_label" == "false" ]]; then
-            echo "No review label found. Skipping."
-          else
-            echo "Review Build Found: $review_version and found project: $project_name"
-          fi
 
   publish_docker_base_image:
     name: Docker base image
