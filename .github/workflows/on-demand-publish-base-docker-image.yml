@@ -43,6 +43,8 @@ jobs:
           fi
 
       - uses: docker/setup-buildx-action@v4
+        with:
+          cleanup: false
       - uses: docker/build-push-action@v7
         env:
           DOCKER_BUILD_SUMMARY: false
