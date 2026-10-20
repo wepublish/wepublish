@@ -76,7 +76,12 @@ Note `website-typecheck.yml` **excludes** `api-example`, `editor`, `bka`, `media
 — those are known not to typecheck cleanly. Do not "fix" that exclusion as a
 side quest, but do not let a change you make add a new app to that list either.
 
-Coverage is uploaded to Codecov with `fail_ci_if_error: true`.
+Coverage is uploaded by [tools/ci/codecov-upload.sh](../../tools/ci/codecov-upload.sh):
+one upload per Nx project, flagged with the project name, and a failed upload
+fails the job. `.codecov.yml` turns on carryforward for every flag, so a project
+that a run skipped keeps its last coverage instead of dropping to 0%. lcov paths
+are repo-relative (`projectRoot: workspaceRoot` in `vitest.shared.ts`); without
+that, every project's `src/index.ts` collides at Codecov.
 
 ## Reporting results
 

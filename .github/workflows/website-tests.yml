@@ -24,6 +24,8 @@ jobs:
           - 5432:5432
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -39,7 +41,7 @@ jobs:
 
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
+        run: bash ./tools/ci/codecov-upload.sh
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          FORK_BRANCH: ${{ github.event.pull_request.head.repo.fork && github.event.pull_request.head.label || '' }}
