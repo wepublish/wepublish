@@ -2029,6 +2029,7 @@
       "newArticlePaywall": "Neu erstellte Artikel benötigen ein Abo, um gelesen zu werden.",
       "subscriptionPlans": "Abo-Pläne",
       "subscriptionUpgradeModel": "Beim Upgrade die volle Preisdifferenz verrechnen (statt des anteiligen Restguthabens)",
+      "subscriptionExtendWindowDays": "Verlängerungsfenster (Tage vor Ablauf)",
       "warnings": {
         "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum Abstürzen bringen oder andere unvorhersehbare Folgen haben. Falls es Unsicherheiten gibt, wendet euch an eure Operators. Falls nicht, einfach fortfahren.",
         "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
@@ -2058,6 +2059,7 @@
       "info": {
         "allowCommentEditing": "Leser*innen können den Text ihrer eigenen Kommentare nach dem Abschicken noch ändern.",
         "commentCharLimit": "Maximale Anzahl Zeichen, die ein Kommentar enthalten darf. Längere Kommentare können nicht abgeschickt werden.",
+        "subscriptionExtendWindowDays": "Wie viele Tage vor Ablauf eines Abos Leser*innen im Profil «Jetzt verlängern» sehen. 30 = wie bisher; 365 = jederzeit, solange keine Rechnung offen ist.",
         "newSubscriptionsApiPublic": "Macht die neuen Abos eines gewählten Zeitraums ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
         "activeSubscriptionsApiPublic": "Macht alle aktuell aktiven Abos ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",
         "renewingSubscriptionsApiPublic": "Macht die Abos, die sich in einem gewählten Zeitraum erneuern, ohne Login über die öffentliche API abrufbar, z.B. für Live-Zahlen auf deiner Website. Die Daten sind anonymisiert. Lass die Option aus, wenn du sie nicht brauchst.",

@@ -1228,6 +1228,7 @@ export enum SettingName {
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
   SessionTtlDays = 'SESSION_TTL_DAYS',
   ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED',
+  SubscriptionExtendWindowDays = 'SUBSCRIPTION_EXTEND_WINDOW_DAYS',
   SubscriptionUpgradeBillsFullDifference = 'SUBSCRIPTION_UPGRADE_BILLS_FULL_DIFFERENCE'
 }
 

@@ -115,6 +115,7 @@
     "extendBy": "Prolonger maintenant de {subscriptionDuration}",
     "extendEarly": "Prolonger {type, select, Donation {le don} other {l'abonnement}} à l'avance ?",
     "extendEarlyConfirmation": "Nous sommes ravis que vous souhaitiez prolonger votre {type, select, Donation {don} other {abonnement}} de {subscriptionDuration} à l'avance. Continuer ?",
+    "extendPaymentMethod": "Comment souhaitez-vous payer ?",
     "noActiveSubscriptions": "Vous n'avez pas encore d'abonnement actif.",
     "subscribeNow": "S'abonner maintenant.",
     "startsAt": "{type, select, Donation {Effectué le} other {Souscrit le}} <time>{startsAt}</time>",

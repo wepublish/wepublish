@@ -15,7 +15,11 @@ import {
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 
-import { mockMemberPlan, mockPaymentMethod } from '@wepublish/storybook/mocks';
+import {
+  mockAvailablePaymentMethod,
+  mockMemberPlan,
+  mockPaymentMethod,
+} from '@wepublish/storybook/mocks';
 import { InvoiceListContainer } from '../invoice-list/invoice-list-container';
 import { waitFor, within } from 'storybook/test';
 import {
@@ -272,6 +276,92 @@ export const CancelWithInvoiceList: StoryObj = {
           },
         },
         ...Cancel.parameters!.apolloClient.mocks,
+      ],
+    },
+  },
+};
+
+const invoicePaymentMethod = mockPaymentMethod({
+  id: 'invoice',
+  name: 'Rechnung',
+  slug: 'bexio',
+});
+
+const onlinePaymentMethod = mockPaymentMethod({
+  id: 'online',
+  name: 'Online (Karte, TWINT)',
+  slug: 'payrexx',
+});
+
+const subscriptionWithPaymentMethodChoice = {
+  ...subscription,
+  paymentMethod: invoicePaymentMethod,
+  memberPlan: mockMemberPlan({
+    availablePaymentMethods: [
+      mockAvailablePaymentMethod({
+        paymentMethods: [invoicePaymentMethod, onlinePaymentMethod],
+      }),
+    ],
+  }),
+} satisfies Exact<FullSubscriptionFragment>;
+
+export const ExtendWithPaymentMethodChoice: StoryObj = {
+  args: {
+    ...Default.args,
+    allowPaymentMethodChoice: true,
+  },
+  play: async ctx => {
+    const canvas = within(ctx.canvasElement);
+    await waitFor(() => canvas.getByText('Jetzt verlängern'), {
+      timeout: 5000,
+    });
+  },
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: SubscriptionsDocument,
+          },
+          result: {
+            data: {
+              userSubscriptions: [subscriptionWithPaymentMethodChoice],
+            },
+          },
+        },
+        {
+          request: {
+            query: InvoicesDocument,
+          },
+          maxUsageCount: 2,
+          result: {
+            data: {
+              userInvoices: [
+                {
+                  ...invoice,
+                  subscription: subscriptionWithPaymentMethodChoice,
+                  paidAt: new Date('2023-01-01'),
+                },
+              ],
+            },
+          },
+        },
+        {
+          request: {
+            query: ExtendSubscriptionDocument,
+            variables: {
+              subscriptionId: subscription.id,
+              paymentMethodID: onlinePaymentMethod.id,
+              successURL: 'https://example.com/success',
+              failureURL: 'https://example.com/fail',
+            },
+          },
+          result: {
+            data: {
+              extendUserSubscription: null,
+            },
+          },
+        },
       ],
     },
   },

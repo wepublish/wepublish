@@ -84,9 +84,17 @@ export const ProfileWrapper = styled(ContentWrapper)`
 type ProfilePageProps = Omit<
   ComponentProps<typeof PersonalDataFormContainer>,
   ''
-> & { className?: string };
+> & {
+  className?: string;
+  /** Offer the member plan's payment methods when a reader extends early. */
+  allowPaymentMethodChoice?: boolean;
+};
 
-function ProfilePage({ className, ...props }: ProfilePageProps) {
+function ProfilePage({
+  className,
+  allowPaymentMethodChoice,
+  ...props
+}: ProfilePageProps) {
   const {
     elements: { H4, Alert },
   } = useWebsiteBuilder();
@@ -170,6 +178,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
           </H4>
 
           <SubscriptionListContainer
+            allowPaymentMethodChoice={allowPaymentMethodChoice}
             filter={subscriptions =>
               subscriptions.filter(
                 subscription =>
@@ -189,6 +198,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
               </H4>
 
               <SubscriptionListContainer
+                allowPaymentMethodChoice={allowPaymentMethodChoice}
                 filter={subscriptions =>
                   subscriptions.filter(
                     subscription =>

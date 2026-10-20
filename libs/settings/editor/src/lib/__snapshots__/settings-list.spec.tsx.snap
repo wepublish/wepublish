@@ -949,6 +949,99 @@ exports[`SettingList > renders successfully 1`] = `
                         </span>
                       </label>
                     </div>
+                    <div
+                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
+                    >
+                      <label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
+                        data-shrink="true"
+                        for="_r_h_"
+                        id="_r_h_-label"
+                      >
+                        settingList.subscriptionExtendWindowDays 
+                        <button
+                          aria-label="settingList.info.subscriptionExtendWindowDays"
+                          class="emotion-29 emotion-30"
+                          data-mui-internal-clone-element="true"
+                          type="button"
+                        >
+                          <svg
+                            fill="currentColor"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 0h24v24H0V0z"
+                              fill="none"
+                            />
+                            <path
+                              d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                            />
+                          </svg>
+                        </button>
+                      </label>
+                      <div
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
+                      >
+                        <input
+                          aria-invalid="false"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_h_"
+                          name="SUBSCRIPTION_EXTEND_WINDOW_DAYS"
+                          type="number"
+                          value="30"
+                        />
+                        <div
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
+                          >
+                            settingList.days
+                          </p>
+                        </div>
+                        <fieldset
+                          aria-hidden="true"
+                          class="MuiOutlinedInput-notchedOutline emotion-53"
+                        >
+                          <legend
+                            class="emotion-54"
+                          >
+                            <span>
+                              settingList.subscriptionExtendWindowDays 
+                              <button
+                                aria-label="settingList.info.subscriptionExtendWindowDays"
+                                class="emotion-29 emotion-30"
+                                data-mui-internal-clone-element="true"
+                                type="button"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="16"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 24 24"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 0h24v24H0V0z"
+                                    fill="none"
+                                  />
+                                  <path
+                                    d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                  />
+                                </svg>
+                              </button>
+                            </span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -993,8 +1086,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_h_"
-                        id="_r_h_-label"
+                        for="_r_k_"
+                        id="_r_k_-label"
                       >
                         settingList.sessionTtlDays 
                         <button
@@ -1023,21 +1116,21 @@ exports[`SettingList > renders successfully 1`] = `
                         </button>
                       </label>
                       <div
-                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-156"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
                           aria-invalid="false"
-                          class="MuiInputBase-input MuiOutlinedInput-input emotion-157"
-                          id="_r_h_"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_k_"
                           name="SESSION_TTL_DAYS"
                           type="number"
                           value="7"
                         />
                         <div
-                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-158"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
                           <p
-                            class="MuiTypography-root MuiTypography-body1 emotion-159"
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
                             settingList.days
                           </p>
@@ -1086,8 +1179,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_k_"
-                        id="_r_k_-label"
+                        for="_r_n_"
+                        id="_r_n_-label"
                       >
                         settingList.loginMinutes 
                         <button
@@ -1116,21 +1209,21 @@ exports[`SettingList > renders successfully 1`] = `
                         </button>
                       </label>
                       <div
-                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-156"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
                           aria-invalid="false"
-                          class="MuiInputBase-input MuiOutlinedInput-input emotion-157"
-                          id="_r_k_"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_n_"
                           name="SEND_LOGIN_JWT_EXPIRES_MIN"
                           type="number"
                           value="0"
                         />
                         <div
-                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-158"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
                           <p
-                            class="MuiTypography-root MuiTypography-body1 emotion-159"
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
                             settingList.minutes
                           </p>
@@ -1179,8 +1272,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_n_"
-                        id="_r_n_-label"
+                        for="_r_q_"
+                        id="_r_q_-label"
                       >
                         settingList.passwordToken 
                         <button
@@ -1209,21 +1302,21 @@ exports[`SettingList > renders successfully 1`] = `
                         </button>
                       </label>
                       <div
-                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-156"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
                           aria-invalid="false"
-                          class="MuiInputBase-input MuiOutlinedInput-input emotion-157"
-                          id="_r_n_"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_q_"
                           name="RESET_PASSWORD_JWT_EXPIRES_MIN"
                           type="number"
                           value="0"
                         />
                         <div
-                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-158"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
                           <p
-                            class="MuiTypography-root MuiTypography-body1 emotion-159"
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
                             settingList.minutes
                           </p>
@@ -1302,8 +1395,8 @@ exports[`SettingList > renders successfully 1`] = `
                       <label
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-48"
                         data-shrink="true"
-                        for="_r_q_"
-                        id="_r_q_-label"
+                        for="_r_t_"
+                        id="_r_t_-label"
                       >
                         settingList.peerToken 
                         <button
@@ -1332,21 +1425,21 @@ exports[`SettingList > renders successfully 1`] = `
                         </button>
                       </label>
                       <div
-                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-156"
+                        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-147"
                       >
                         <input
                           aria-invalid="false"
-                          class="MuiInputBase-input MuiOutlinedInput-input emotion-157"
-                          id="_r_q_"
+                          class="MuiInputBase-input MuiOutlinedInput-input emotion-148"
+                          id="_r_t_"
                           name="PEERING_TIMEOUT_MS"
                           type="number"
                           value="100"
                         />
                         <div
-                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-158"
+                          class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium emotion-149"
                         >
                           <p
-                            class="MuiTypography-root MuiTypography-body1 emotion-159"
+                            class="MuiTypography-root MuiTypography-body1 emotion-150"
                           >
                             settingList.ms
                           </p>
@@ -1479,10 +1572,10 @@ exports[`SettingList > renders successfully 1`] = `
                       </label>
                     </div>
                     <div
-                      class="MuiFormControl-root MuiFormControl-fullWidth emotion-222"
+                      class="MuiFormControl-root MuiFormControl-fullWidth emotion-234"
                     >
                       <label
-                        class="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-223"
+                        class="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-235"
                       >
                         settingList.newArticlePaywall 
                         <button
@@ -1511,13 +1604,13 @@ exports[`SettingList > renders successfully 1`] = `
                         </button>
                       </label>
                       <div
-                        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasPopupIcon emotion-226"
+                        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasPopupIcon emotion-238"
                       >
                         <div
                           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-47"
                         >
                           <div
-                            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot emotion-156"
+                            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot emotion-147"
                           >
                             <input
                               aria-autocomplete="list"
@@ -1525,19 +1618,19 @@ exports[`SettingList > renders successfully 1`] = `
                               aria-invalid="false"
                               autocapitalize="none"
                               autocomplete="off"
-                              class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-157"
-                              id="_r_v_"
+                              class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-148"
+                              id="_r_12_"
                               role="combobox"
                               spellcheck="false"
                               type="text"
                               value=""
                             />
                             <div
-                              class="MuiAutocomplete-endAdornment emotion-230"
+                              class="MuiAutocomplete-endAdornment emotion-242"
                             >
                               <button
                                 aria-label="Open"
-                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-231"
+                                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator emotion-243"
                                 tabindex="-1"
                                 title="Open"
                                 type="button"
@@ -1560,7 +1653,7 @@ exports[`SettingList > renders successfully 1`] = `
                               class="MuiOutlinedInput-notchedOutline emotion-53"
                             >
                               <legend
-                                class="emotion-234"
+                                class="emotion-246"
                               >
                                 <span
                                   aria-hidden="true"

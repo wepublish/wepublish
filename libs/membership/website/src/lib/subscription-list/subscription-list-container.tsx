@@ -1,5 +1,9 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { StripeElement, StripePayment } from '@wepublish/payment/website';
+import {
+  relativeToAbsolute,
+  StripeElement,
+  StripePayment,
+} from '@wepublish/payment/website';
 import {
   CancelSubscriptionDocument,
   CancelSubscriptionMutation,
@@ -27,11 +31,17 @@ export type SubscriptionListContainerProps = {
     subscriptions: FullSubscriptionFragment[]
   ) => FullSubscriptionFragment[];
 } & BuilderContainerProps &
-  Partial<Pick<BuilderSubscriptionListProps, 'subscribeUrl'>>;
+  Partial<
+    Pick<
+      BuilderSubscriptionListProps,
+      'subscribeUrl' | 'allowPaymentMethodChoice'
+    >
+  >;
 
 export function SubscriptionListContainer({
   filter,
   subscribeUrl = '/mitmachen',
+  allowPaymentMethodChoice,
   className,
 }: SubscriptionListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
@@ -100,6 +110,7 @@ export function SubscriptionListContainer({
       )}
 
       <SubscriptionList
+        allowPaymentMethodChoice={allowPaymentMethodChoice}
         data={filteredSubscriptions}
         loading={loading}
         error={error}
@@ -127,17 +138,23 @@ export function SubscriptionListContainer({
             },
           });
         }}
-        onExtend={async subscriptionId => {
+        onExtend={async (subscriptionId, paymentMethodID) => {
           const memberPlan = filteredSubscriptions?.userSubscriptions?.find(
             subscription => subscription.id === subscriptionId
           )?.memberPlan;
           setStripeMemberPlan(memberPlan);
 
+          // payment providers reject relative return urls
           await extend({
             variables: {
               subscriptionId,
-              failureURL: memberPlan?.failPage?.url,
-              successURL: memberPlan?.successPage?.url,
+              ...(paymentMethodID ? { paymentMethodID } : {}),
+              failureURL: relativeToAbsolute(
+                memberPlan?.failPage?.url ?? '/profile'
+              ),
+              successURL: relativeToAbsolute(
+                memberPlan?.successPage?.url ?? '/profile'
+              ),
             },
           });
         }}

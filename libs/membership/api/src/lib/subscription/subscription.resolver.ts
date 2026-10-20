@@ -44,6 +44,10 @@ import { SubscriptionService } from './subscription.service';
 import { SubscriptionDataloader } from './subscription.dataloader';
 import { NotFoundException } from '@nestjs/common';
 import { SubscriptionPeriodDataloader } from './subscription-periods.dataloader';
+import { SettingDataloaderService, SettingName } from '@wepublish/settings/api';
+
+/** Used when the SUBSCRIPTION_EXTEND_WINDOW_DAYS setting has no value. */
+const DEFAULT_EXTEND_WINDOW_DAYS = 30;
 
 @Resolver(() => PublicSubscription)
 export class PublicSubscriptionResolver {
@@ -55,7 +59,8 @@ export class PublicSubscriptionResolver {
     private paymentMethodDataloader: PaymentMethodDataloader,
     private deactivationDataloader: SubscriptionDeactivationDataloader,
     private periodDataloader: SubscriptionPeriodDataloader,
-    private memberPlanDataloader: MemberPlanDataloader
+    private memberPlanDataloader: MemberPlanDataloader,
+    private settingDataloader: SettingDataloaderService
   ) {}
 
   @Permissions(CanGetSubscription)
@@ -182,26 +187,36 @@ export class PublicSubscriptionResolver {
 
   @ResolveField(() => Boolean)
   async canExtend(@Parent() subscription: Subscription) {
-    const [deactivation, paymentMethod, unpaidAndUncanceledInvoice] =
-      await Promise.all([
-        this.deactivationDataloader.load(subscription.id),
-        this.paymentMethodDataloader.load(subscription.paymentMethodID),
-        this.prisma.invoice.findFirst({
-          where: {
-            subscription: {
-              userID: subscription.userID,
-            },
-            paidAt: null,
-            canceledAt: null,
+    const [
+      deactivation,
+      paymentMethod,
+      unpaidAndUncanceledInvoice,
+      windowSetting,
+    ] = await Promise.all([
+      this.deactivationDataloader.load(subscription.id),
+      this.paymentMethodDataloader.load(subscription.paymentMethodID),
+      this.prisma.invoice.findFirst({
+        where: {
+          subscription: {
+            userID: subscription.userID,
           },
-        }),
-      ]);
+          paidAt: null,
+          canceledAt: null,
+        },
+      }),
+      this.settingDataloader.load(SettingName.SUBSCRIPTION_EXTEND_WINDOW_DAYS),
+    ]);
+
+    const windowDays =
+      typeof windowSetting?.value === 'number' ?
+        windowSetting.value
+      : DEFAULT_EXTEND_WINDOW_DAYS;
 
     /**
      * Can only extend when:
      *   Subscription is extendable
      *   Subscription is not deactivated
-     *   Subscription is about to run out (less than 1 month)
+     *   Subscription is about to run out (within SUBSCRIPTION_EXTEND_WINDOW_DAYS)
      *   All invoices have been paid (or cancelled)
      *   Not using a deprecated payment method
      */
@@ -209,7 +224,7 @@ export class PublicSubscriptionResolver {
       subscription.paidUntil &&
       subscription.extendable &&
       !deactivation &&
-      +add(new Date(), { months: 1 }) > +subscription.paidUntil &&
+      +add(new Date(), { days: windowDays }) > +subscription.paidUntil &&
       !unpaidAndUncanceledInvoice &&
       // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
       paymentMethod?.slug !== 'payrexx-subscription'

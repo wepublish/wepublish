@@ -36,7 +36,12 @@ export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   cancel?: () => Promise<void>;
   reactivate?: () => Promise<void>;
   revertUpgrade?: () => Promise<void>;
-  extend?: () => Promise<void>;
+  extend?: (paymentMethodID?: string) => Promise<void>;
+  /**
+   * Lets the reader pick one of the member plan's payment methods when
+   * extending early (e.g. online payment instead of invoice).
+   */
+  allowPaymentMethodChoice?: boolean;
 };
 
 export type BuilderSubscriptionListProps = Pick<
@@ -49,10 +54,14 @@ export type BuilderSubscriptionListProps = Pick<
     'data' | 'loading' | 'error'
   >;
   subscribeUrl: string;
+  allowPaymentMethodChoice?: boolean;
   onCancel?: (subscriptionId: string) => Promise<void>;
   onReactivate?: (subscriptionId: string) => Promise<void>;
   onRevertUpgrade?: (subscriptionId: string) => Promise<void>;
-  onExtend?: (subscriptionId: string) => Promise<void>;
+  onExtend?: (
+    subscriptionId: string,
+    paymentMethodID?: string
+  ) => Promise<void>;
 };
 
 export type BuilderInvoiceListItemProps = FullInvoiceFragment & {

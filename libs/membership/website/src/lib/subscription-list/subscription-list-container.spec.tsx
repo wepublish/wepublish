@@ -1,7 +1,8 @@
 import { MockedProvider } from '@apollo/client/testing/react';
 import { composeStories, composeStory } from '@storybook/react';
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { actWait, addDateMock } from '@wepublish/testing';
+import { ExtendSubscriptionDocument } from '@wepublish/website/api';
 
 import meta, * as stories from './subscription-list-container.stories';
 
@@ -54,5 +55,42 @@ describe('SubscriptionList Container', () => {
     await actWait(200);
 
     expect(screen.getByText('Jetzt verlängern')).toBeInTheDocument();
+  });
+
+  it('sends the chosen payment method and absolute return urls when extending', async () => {
+    const mocks = stories.ExtendWithPaymentMethodChoice.parameters!.apolloClient
+      .mocks as Array<{ request: { query: unknown }; result: unknown }>;
+    const extendMock = mocks.find(
+      mock => mock.request.query === ExtendSubscriptionDocument
+    )!;
+    // only called when the mutation's variables match the mock's
+    const result = vi.fn(() => extendMock.result);
+    const Story = composeStory(
+      {
+        ...stories.ExtendWithPaymentMethodChoice,
+        parameters: {
+          apolloClient: {
+            mocks: mocks.map(mock =>
+              mock === extendMock ? { ...mock, result } : mock
+            ),
+          },
+        },
+      },
+      meta
+    );
+
+    render(<Story />);
+    await actWait(200);
+
+    fireEvent.click(
+      screen.getByText('Jetzt verlängern', { selector: 'button' })
+    );
+    fireEvent.click(screen.getByLabelText('Online (Karte, TWINT)'));
+    fireEvent.click(
+      screen.getByText(/^Jetzt um .* verlängern$/, { selector: 'button' })
+    );
+    await actWait(200);
+
+    expect(result).toHaveBeenCalled();
   });
 });

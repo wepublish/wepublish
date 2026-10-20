@@ -9,7 +9,11 @@ import { SubscriptionListItem } from './subscription-list-item';
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { action } from 'storybook/actions';
 import { userEvent, within } from 'storybook/test';
-import { mockMemberPlan } from '@wepublish/storybook/mocks';
+import {
+  mockAvailablePaymentMethod,
+  mockMemberPlan,
+  mockPaymentMethod,
+} from '@wepublish/storybook/mocks';
 
 export default {
   component: SubscriptionListItem,
@@ -375,4 +379,33 @@ export const WithExternalRewardLink: StoryObj = {
       externalReward: 'https://example.com',
     },
   },
+};
+
+const invoicePaymentMethod = mockPaymentMethod({
+  id: 'invoice',
+  name: 'Rechnung',
+  slug: 'bexio',
+});
+
+const onlinePaymentMethod = mockPaymentMethod({
+  id: 'online',
+  name: 'Online (Karte, TWINT)',
+  slug: 'payrexx',
+});
+
+export const ExtendWithPaymentMethodChoice: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    paymentMethod: invoicePaymentMethod,
+    memberPlan: mockMemberPlan({
+      availablePaymentMethods: [
+        mockAvailablePaymentMethod({
+          paymentMethods: [invoicePaymentMethod, onlinePaymentMethod],
+        }),
+      ],
+    }),
+    allowPaymentMethodChoice: true,
+  },
+  play: clickExtend,
 };

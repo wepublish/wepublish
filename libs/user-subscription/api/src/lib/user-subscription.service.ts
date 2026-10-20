@@ -261,6 +261,16 @@ export class UserSubscriptionService {
       );
     }
 
+    // Switch to another payment method of the member plan (e.g. from invoice
+    // to online payment) before the renewal invoice is created with it.
+    if (
+      args.paymentMethodID &&
+      args.paymentMethodID !== subscription.paymentMethodID
+    ) {
+      await this.switchPaymentMethod(subscription, args.paymentMethodID);
+      subscription.paymentMethodID = args.paymentMethodID;
+    }
+
     // Throw for unsupported payment providers
     const paymentMethod = await this.prisma.paymentMethod.findUnique({
       where: {
@@ -375,6 +385,50 @@ export class UserSubscriptionService {
       failureURL,
       migrateToTargetPaymentMethodID:
         subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined,
+    });
+  }
+
+  // Moves a subscription to another payment method its member plan offers for
+  // the subscription's periodicity and auto-renewal.
+  private async switchPaymentMethod(
+    subscription: Pick<
+      Subscription,
+      'id' | 'memberPlanID' | 'autoRenew' | 'paymentPeriodicity'
+    >,
+    paymentMethodID: string
+  ) {
+    const paymentMethod = await this.prisma.paymentMethod.findUnique({
+      where: { id: paymentMethodID, active: true },
+    });
+
+    if (!paymentMethod) {
+      throw new NotFoundException('PaymentMethod', paymentMethodID);
+    }
+
+    if (await isPaymentMethodRetired(this.prisma, paymentMethod)) {
+      throw new BadRequestException(
+        `PaymentMethod ${paymentMethod.id} is no longer offered`
+      );
+    }
+
+    const memberPlan = await this.memberPlanDataloader.load(
+      subscription.memberPlanID
+    );
+
+    if (!memberPlan) {
+      throw new NotFoundException('MemberPlan', subscription.memberPlanID);
+    }
+
+    await this.memberContext.validateSubscriptionPaymentConfiguration(
+      memberPlan,
+      subscription.autoRenew,
+      subscription.paymentPeriodicity,
+      paymentMethodID
+    );
+
+    await this.prisma.subscription.update({
+      where: { id: subscription.id },
+      data: { paymentMethodID },
     });
   }
 

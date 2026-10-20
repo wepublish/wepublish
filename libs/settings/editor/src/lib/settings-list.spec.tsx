@@ -213,7 +213,8 @@ describe('SettingList', () => {
       expect(screen.getByText('settingList.ms')).toBeInTheDocument()
     );
     expect(screen.getAllByText('settingList.minutes')).toHaveLength(2);
-    expect(screen.getByText('settingList.days')).toBeInTheDocument();
+    // session lifetime and the subscription renewal window
+    expect(screen.getAllByText('settingList.days')).toHaveLength(2);
   });
 
   test('spaces every card in the second column alike', async () => {
