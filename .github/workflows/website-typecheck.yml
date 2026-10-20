@@ -16,10 +16,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: tree:0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
-      - run: bash ./tools/typecheck-websites.sh
+      - uses: nrwl/nx-set-shas@v5
+        if: github.event_name == 'pull_request'
+        with:
+          main-branch-name: master
+      - run: |
+          apps="$(bash ./tools/ci/nx-scoped.sh --list --type app)"
+          if [[ -z "$apps" ]]; then
+            echo "No affected apps to typecheck."
+            exit 0
+          fi
+          bash ./tools/typecheck-websites.sh $apps
+        env:
+          NX_SCOPE: ${{ github.event_name == 'pull_request' && (vars.NX_AFFECTED_SCOPE || 'shadow') || 'full' }}

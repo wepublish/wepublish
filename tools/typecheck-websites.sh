@@ -4,8 +4,21 @@ set -uo pipefail
 EXCLUDE=("api-example" "editor" "bka" "media")
 failed=()
 
-for dir in apps/*/; do
-  app="$(basename "$dir")"
+if [[ $# -gt 0 ]]; then
+  apps=("$@")
+else
+  apps=()
+  for dir in apps/*/; do
+    apps+=("$(basename "$dir")")
+  done
+fi
+
+for app in "${apps[@]}"; do
+  if [[ ! -d "apps/$app" ]]; then
+    echo "No such app: $app"
+    failed+=("$app")
+    continue
+  fi
 
   skip=false
   for ex in "${EXCLUDE[@]}"; do
