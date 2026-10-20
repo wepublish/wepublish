@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
+import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { SubscriptionDeactivationReason } from '@wepublish/website/api';
 import {
   BuilderSubscriptionListItemProps,
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   MdAttachMoney,
   MdAutorenew,
@@ -78,6 +79,10 @@ const isURL = (string: string) => {
 
 export const SubscriptionListItemReward = styled('div')``;
 
+export const SubscriptionListItemPaymentMethods = styled('div')`
+  margin-top: ${({ theme }) => theme.spacing(2)};
+`;
+
 export function SubscriptionListItem({
   autoRenew,
   startsAt,
@@ -85,7 +90,8 @@ export function SubscriptionListItem({
   paymentPeriodicity,
   monthlyAmount,
   deactivation,
-  memberPlan: { image, name, currency, productType },
+  memberPlan: { image, name, currency, productType, availablePaymentMethods },
+  paymentMethod,
   extendable,
   url,
   cancel,
@@ -95,6 +101,7 @@ export function SubscriptionListItem({
   canExtend,
   externalReward,
   extend,
+  allowPaymentMethodChoice,
   className,
 }: BuilderSubscriptionListItemProps) {
   const {
@@ -119,6 +126,41 @@ export function SubscriptionListItem({
   const [confirmReactivate, setConfirmReactivate] = useState(false);
   const [confirmRevertUpgrade, setConfirmRevertUpgrade] = useState(false);
   const [confirmExtend, setConfirmExtend] = useState<boolean>(false);
+
+  // The plan's payment methods for this subscription's billing period, so the
+  // reader can e.g. switch from invoice to online payment when extending early.
+  const paymentMethodOptions = useMemo(() => {
+    if (!allowPaymentMethodChoice) {
+      return [];
+    }
+
+    const options = (availablePaymentMethods ?? [])
+      .filter(
+        ({ paymentPeriodicities, forceAutoRenewal }) =>
+          (!paymentPeriodicity ||
+            paymentPeriodicities.includes(paymentPeriodicity)) &&
+          (!forceAutoRenewal || autoRenew)
+      )
+      .flatMap(({ paymentMethods }) => paymentMethods);
+
+    return options.filter(
+      (option, index) =>
+        options.findIndex(({ id }) => id === option.id) === index
+    );
+  }, [
+    allowPaymentMethodChoice,
+    availablePaymentMethods,
+    paymentPeriodicity,
+    autoRenew,
+  ]);
+  const showPaymentMethodChoice = paymentMethodOptions.length > 1;
+  const [chosenPaymentMethodId, setChosenPaymentMethodId] = useState(
+    paymentMethod?.id
+  );
+  const selectedPaymentMethodId =
+    paymentMethodOptions.some(({ id }) => id === chosenPaymentMethodId) ?
+      chosenPaymentMethodId
+    : paymentMethodOptions[0]?.id;
 
   return (
     <SubscriptionListItemWrapper className={className}>
@@ -391,7 +433,11 @@ export function SubscriptionListItem({
         onCancel={() => setConfirmExtend(false)}
         onSubmit={async () => {
           setConfirmExtend(false);
-          await callAction(extend)();
+          await callAction(async () => {
+            await extend?.(
+              showPaymentMethodChoice ? selectedPaymentMethodId : undefined
+            );
+          })();
         }}
         submitText={t('subscription.extendBy', {
           subscriptionDuration,
@@ -409,6 +455,29 @@ export function SubscriptionListItem({
             subscriptionDuration,
           })}
         </Paragraph>
+
+        {showPaymentMethodChoice && (
+          <SubscriptionListItemPaymentMethods>
+            <Paragraph gutterBottom={false}>
+              {t('subscription.extendPaymentMethod')}
+            </Paragraph>
+
+            <RadioGroup
+              aria-label={t('subscription.extendPaymentMethod')}
+              value={selectedPaymentMethodId}
+              onChange={(_, value) => setChosenPaymentMethodId(value)}
+            >
+              {paymentMethodOptions.map(({ id, name }) => (
+                <FormControlLabel
+                  key={id}
+                  value={id}
+                  control={<Radio />}
+                  label={name}
+                />
+              ))}
+            </RadioGroup>
+          </SubscriptionListItemPaymentMethods>
+        )}
       </Modal>
     </SubscriptionListItemWrapper>
   );

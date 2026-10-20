@@ -44,6 +44,7 @@ import { SubscriptionService } from './subscription.service';
 import { SubscriptionDataloader } from './subscription.dataloader';
 import { NotFoundException } from '@nestjs/common';
 import { SubscriptionPeriodDataloader } from './subscription-periods.dataloader';
+import { FeaturesService } from '@wepublish/features/api';
 
 @Resolver(() => PublicSubscription)
 export class PublicSubscriptionResolver {
@@ -55,7 +56,8 @@ export class PublicSubscriptionResolver {
     private paymentMethodDataloader: PaymentMethodDataloader,
     private deactivationDataloader: SubscriptionDeactivationDataloader,
     private periodDataloader: SubscriptionPeriodDataloader,
-    private memberPlanDataloader: MemberPlanDataloader
+    private memberPlanDataloader: MemberPlanDataloader,
+    private features: FeaturesService
   ) {}
 
   @Permissions(CanGetSubscription)
@@ -182,26 +184,32 @@ export class PublicSubscriptionResolver {
 
   @ResolveField(() => Boolean)
   async canExtend(@Parent() subscription: Subscription) {
-    const [deactivation, paymentMethod, unpaidAndUncanceledInvoice] =
-      await Promise.all([
-        this.deactivationDataloader.load(subscription.id),
-        this.paymentMethodDataloader.load(subscription.paymentMethodID),
-        this.prisma.invoice.findFirst({
-          where: {
-            subscription: {
-              userID: subscription.userID,
-            },
-            paidAt: null,
-            canceledAt: null,
+    const [
+      deactivation,
+      paymentMethod,
+      unpaidAndUncanceledInvoice,
+      earlyRenewal,
+    ] = await Promise.all([
+      this.deactivationDataloader.load(subscription.id),
+      this.paymentMethodDataloader.load(subscription.paymentMethodID),
+      this.prisma.invoice.findFirst({
+        where: {
+          subscription: {
+            userID: subscription.userID,
           },
-        }),
-      ]);
+          paidAt: null,
+          canceledAt: null,
+        },
+      }),
+      this.features.isEnabled('early-renewal'),
+    ]);
 
     /**
      * Can only extend when:
      *   Subscription is extendable
      *   Subscription is not deactivated
-     *   Subscription is about to run out (less than 1 month)
+     *   Subscription is about to run out (less than 1 month), unless the
+     *     medium has early renewal switched on
      *   All invoices have been paid (or cancelled)
      *   Not using a deprecated payment method
      */
@@ -209,7 +217,8 @@ export class PublicSubscriptionResolver {
       subscription.paidUntil &&
       subscription.extendable &&
       !deactivation &&
-      +add(new Date(), { months: 1 }) > +subscription.paidUntil &&
+      (earlyRenewal ||
+        +add(new Date(), { months: 1 }) > +subscription.paidUntil) &&
       !unpaidAndUncanceledInvoice &&
       // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
       paymentMethod?.slug !== 'payrexx-subscription'

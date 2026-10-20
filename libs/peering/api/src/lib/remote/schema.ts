@@ -4185,6 +4185,7 @@ export type MutationEnableTotpArgs = {
 
 export type MutationExtendUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodID?: InputMaybe<Scalars['String']['input']>;
   subscriptionId: Scalars['String']['input'];
   successURL?: InputMaybe<Scalars['String']['input']>;
 };

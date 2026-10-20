@@ -313,11 +313,13 @@ mutation ExtendSubscription(
   $subscriptionId: String!
   $successURL: String
   $failureURL: String
+  $paymentMethodID: String
 ) {
   extendUserSubscription(
     subscriptionId: $subscriptionId
     successURL: $successURL
     failureURL: $failureURL
+    paymentMethodID: $paymentMethodID
   ) {
     ...FullPayment
   }

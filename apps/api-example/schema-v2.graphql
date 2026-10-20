@@ -3315,7 +3315,16 @@ type Mutation {
   enableTotp(totpToken: String!): Boolean!
 
   """Allows authenticated users to extend existing subscriptions"""
-  extendUserSubscription(failureURL: String, subscriptionId: String!, successURL: String): Payment!
+  extendUserSubscription(
+    failureURL: String
+
+    """
+    Switch the subscription to another payment method of its member plan before renewing, e.g. from invoice to online payment.
+    """
+    paymentMethodID: String
+    subscriptionId: String!
+    successURL: String
+  ): Payment!
 
   """
   Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration.

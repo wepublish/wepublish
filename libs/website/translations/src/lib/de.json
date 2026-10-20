@@ -118,6 +118,7 @@
     "extendBy": "Jetzt um {subscriptionDuration} verlängern",
     "extendEarly": "{type, select, Donation {Spende} other {Abo}} frühzeitig verlängern?",
     "extendEarlyConfirmation": "Wir freuen uns, dass du dein {type, select, Donation {Spende} other {Abo}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
+    "extendPaymentMethod": "Wie möchtest du bezahlen?",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
     "subscribeNow": "Jetzt ein Abo lösen.",
     "startsAt": "Abgeschlossen am <time>{startsAt}</time>",

@@ -54,3 +54,10 @@ describe('isKnownFeature', () => {
     expect(isKnownFeature('surely-not-a-feature')).toBe(false);
   });
 });
+
+describe('registered features', () => {
+  it('ships early renewal and the payment method choice dark, separately', () => {
+    expect(isKnownFeature('early-renewal')).toBe(true);
+    expect(isKnownFeature('renewal-payment-choice')).toBe(true);
+  });
+});

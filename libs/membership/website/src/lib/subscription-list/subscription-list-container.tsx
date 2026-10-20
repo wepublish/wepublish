@@ -1,11 +1,16 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { StripeElement, StripePayment } from '@wepublish/payment/website';
+import {
+  relativeToAbsolute,
+  StripeElement,
+  StripePayment,
+} from '@wepublish/payment/website';
 import {
   CancelSubscriptionDocument,
   CancelSubscriptionMutation,
   CancelSubscriptionMutationVariables,
   ExtendSubscriptionDocument,
   ExtendSubscriptionMutation,
+  FeaturesDocument,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
   InvoicesDocument,
@@ -40,6 +45,11 @@ export function SubscriptionListContainer({
   const { SubscriptionList } = useWebsiteBuilder();
   const { data, loading, error } = useQuery(SubscriptionsDocument);
   const invoices = useQuery(InvoicesDocument);
+  // Off until the answer is there (and on errors), like `useFeature` in the
+  // editor: an unreleased feature must never flash on.
+  const features = useQuery(FeaturesDocument);
+  const allowPaymentMethodChoice =
+    features.data?.features.includes('renewal-payment-choice') ?? false;
 
   const [cancel] = useCancelSubscriptionMutationWithCacheUpdate();
   const [revertUpgrade] = useMutation(RevertSubscriptionUpgradeDocument, {
@@ -100,6 +110,7 @@ export function SubscriptionListContainer({
       )}
 
       <SubscriptionList
+        allowPaymentMethodChoice={allowPaymentMethodChoice}
         data={filteredSubscriptions}
         loading={loading}
         error={error}
@@ -127,17 +138,23 @@ export function SubscriptionListContainer({
             },
           });
         }}
-        onExtend={async subscriptionId => {
+        onExtend={async (subscriptionId, paymentMethodID) => {
           const memberPlan = filteredSubscriptions?.userSubscriptions?.find(
             subscription => subscription.id === subscriptionId
           )?.memberPlan;
           setStripeMemberPlan(memberPlan);
 
+          // payment providers reject relative return urls
           await extend({
             variables: {
               subscriptionId,
-              failureURL: memberPlan?.failPage?.url,
-              successURL: memberPlan?.successPage?.url,
+              ...(paymentMethodID ? { paymentMethodID } : {}),
+              failureURL: relativeToAbsolute(
+                memberPlan?.failPage?.url ?? '/profile'
+              ),
+              successURL: relativeToAbsolute(
+                memberPlan?.successPage?.url ?? '/profile'
+              ),
             },
           });
         }}

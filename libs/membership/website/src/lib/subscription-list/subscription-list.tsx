@@ -25,6 +25,7 @@ export const SubscriptionList = ({
   onExtend,
   className,
   subscribeUrl,
+  allowPaymentMethodChoice,
 }: BuilderSubscriptionListProps) => {
   const {
     SubscriptionListItem,
@@ -51,7 +52,10 @@ export const SubscriptionList = ({
         <SubscriptionListItem
           key={subscription.id}
           {...subscription}
-          extend={async () => await onExtend?.(subscription.id)}
+          allowPaymentMethodChoice={allowPaymentMethodChoice}
+          extend={async paymentMethodID =>
+            await onExtend?.(subscription.id, paymentMethodID)
+          }
           cancel={async () => await onCancel?.(subscription.id)}
           reactivate={
             onReactivate ?
