@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
   CreateTokenDocument,
@@ -71,6 +72,13 @@ beforeEach(() => {
   createToken.mockResolvedValue({ data: undefined });
 });
 
+const renderPanel = () =>
+  render(
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
+      <TokenGeneratePanel />
+    </ThemeProvider>
+  );
+
 const typeName = (name: string) =>
   fireEvent.change(screen.getByPlaceholderText('tokenList.panels.name'), {
     target: { value: name },
@@ -78,10 +86,10 @@ const typeName = (name: string) =>
 
 describe('TokenGeneratePanel', () => {
   it('creates the token with the roles that were picked', async () => {
-    render(<TokenGeneratePanel />);
+    renderPanel();
     typeName('export');
 
-    fireEvent.click(screen.getByRole('combobox'));
+    fireEvent.mouseDown(screen.getByRole('combobox'));
     fireEvent.click(await screen.findByText('print-export'));
     fireEvent.click(screen.getByText('tokenList.panels.generate'));
 
@@ -93,7 +101,7 @@ describe('TokenGeneratePanel', () => {
   });
 
   it('warns that a token without roles may do nothing, and still creates it', async () => {
-    render(<TokenGeneratePanel />);
+    renderPanel();
     typeName('peer');
 
     expect(screen.getByText('tokenList.panels.noRolesWarning')).toBeTruthy();

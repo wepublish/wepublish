@@ -7,6 +7,7 @@ import {
   MailLogState,
   PrismaClient,
 } from '@prisma/client';
+import { PageSizes, PDFDocument } from 'pdf-lib';
 import { LetterContext, LetterPrintSettings } from './letter-context';
 import { BaseLetterProvider } from './letter-provider/base-letter-provider';
 import {
@@ -15,6 +16,7 @@ import {
 } from './letter-provider/letter-provider.interface';
 import { UserWithAddress } from './letter-recipient';
 import { PdfRenderer } from './pdf/pdf-renderer';
+import type { Mock } from 'vitest';
 
 const recipient: LetterAddress = {
   name: 'Jane Doe',
@@ -49,11 +51,25 @@ const print: LetterPrintSettings = {
   printSpectrum: LetterPrintSpectrum.grayscale,
 };
 
+const makePdf = async (pages: number) => {
+  const doc = await PDFDocument.create();
+
+  for (let i = 0; i < pages; i++) {
+    doc.addPage(PageSizes.A4);
+  }
+
+  return Buffer.from(await doc.save());
+};
+
+const pageCount = async (pdf: Buffer) =>
+  (await PDFDocument.load(pdf)).getPageCount();
+
 function createContext(
   sendLetter: BaseLetterProvider['sendLetter'] = vi.fn().mockResolvedValue({
     providerLetterID: 'pingen-1',
     state: LetterState.submitted,
-  })
+  }),
+  template: Record<string, unknown> = {}
 ) {
   const rendered: string[] = [];
 
@@ -62,11 +78,17 @@ function createContext(
     render: async (html: string) => {
       rendered.push(html);
 
-      return Buffer.from('%PDF-1.4 rendered');
+      return makePdf(1);
     },
   };
 
   const create = vi.fn();
+  const documentUrl = vi.fn(async (id: string) => `https://media/${id}.pdf`);
+
+  const layouts = {
+    findUnique: vi.fn().mockResolvedValue(null),
+    findFirst: vi.fn().mockResolvedValue(null),
+  };
 
   const prisma = {
     mailTemplate: {
@@ -74,8 +96,12 @@ function createContext(
         id: 'template-1',
         subject: 'Ihre Rechnung',
         htmlContent: '<p>Hallo {{user_firstName}}</p>',
+        letterLayoutId: null,
+        letterAppendixId: null,
+        ...template,
       }),
     },
+    letterLayout: layouts,
     mailLog: { create },
   } as unknown as PrismaClient;
 
@@ -87,10 +113,132 @@ function createContext(
     } as unknown as BaseLetterProvider,
     prisma,
     pdfRenderer,
+    documentUrl,
   });
 
-  return { context, rendered, create };
+  return { context, rendered, create, prisma, layouts, documentUrl };
 }
+
+describe('LetterContext appendix', () => {
+  const fetchMock = vi.fn();
+
+  beforeEach(async () => {
+    const appendix = await makePdf(1);
+    fetchMock.mockReset();
+    fetchMock.mockImplementation(async () => new Response(appendix));
+    vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  const render = (
+    context: LetterContext,
+    props: {
+      letterAppendixId?: string | null;
+      country?: string;
+      printMode?: LetterPrintMode;
+    }
+  ) =>
+    context.renderLetter({
+      template: {
+        htmlContent: '<p>Hallo</p>',
+        letterAppendixId: props.letterAppendixId,
+      },
+      addressPosition: LetterAddressPosition.left,
+      data: {},
+      recipient: { ...recipient, country: props.country ?? 'CH' },
+      printMode: props.printMode,
+    });
+
+  it('leaves the letter alone without an appendix', async () => {
+    const { context } = createContext();
+
+    expect(await pageCount(await render(context, {}))).toBe(1);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('appends the appendix for a recipient in Switzerland', async () => {
+    const { context, documentUrl } = createContext();
+
+    const pdf = await render(context, { letterAppendixId: 'qr-bill' });
+
+    expect(await pageCount(pdf)).toBe(2);
+    expect(documentUrl).toHaveBeenCalledWith('qr-bill');
+    expect(fetchMock).toHaveBeenCalledWith('https://media/qr-bill.pdf');
+  });
+
+  it('pads to an odd page for duplex printing', async () => {
+    const { context } = createContext();
+
+    const pdf = await render(context, {
+      letterAppendixId: 'qr-bill',
+      printMode: LetterPrintMode.duplex,
+    });
+
+    expect(await pageCount(pdf)).toBe(3);
+  });
+
+  it('skips the appendix for a recipient abroad', async () => {
+    const { context } = createContext();
+
+    const pdf = await render(context, {
+      letterAppendixId: 'qr-bill',
+      country: 'DE',
+    });
+
+    expect(await pageCount(pdf)).toBe(1);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('fetches each appendix only once', async () => {
+    const { context } = createContext();
+
+    await render(context, { letterAppendixId: 'qr-bill' });
+    await render(context, { letterAppendixId: 'qr-bill' });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('fails when the appendix is not a pdf', async () => {
+    fetchMock.mockImplementation(async () => new Response('<html>'));
+    const { context } = createContext();
+
+    await expect(
+      render(context, { letterAppendixId: 'qr-bill' })
+    ).rejects.toThrow(/not a pdf/i);
+  });
+
+  it('sends the template appendix with the chosen print mode', async () => {
+    const sendLetter = vi.fn().mockResolvedValue({
+      providerLetterID: 'pingen-1',
+      state: LetterState.submitted,
+    });
+    const { context } = createContext(sendLetter, {
+      letterAppendixId: 'qr-bill',
+    });
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print: { ...print, printMode: LetterPrintMode.duplex },
+    });
+
+    expect(await pageCount(sendLetter.mock.calls[0][0].file)).toBe(3);
+  });
+});
+
+const layout = (name: string) => ({
+  id: `layout-${name}`,
+  name,
+  headerHtml: `<b>${name} header</b>`,
+  footerHtml: `<i>${name} footer</i>`,
+  headerHeightMm: 30,
+  footerHeightMm: 20,
+  isDefault: false,
+});
 
 describe('LetterContext.renderLetter', () => {
   it('renders the template and the address window into one sheet', async () => {
@@ -122,7 +270,87 @@ describe('LetterContext.renderLetter', () => {
   });
 });
 
+describe('LetterContext.resolveLayout', () => {
+  it('takes the layout a template points at', async () => {
+    const { context, layouts } = createContext();
+    layouts.findUnique.mockResolvedValue(layout('invoice'));
+
+    const resolved = await context.resolveLayout('layout-invoice');
+
+    expect(layouts.findUnique).toHaveBeenCalledWith({
+      where: { id: 'layout-invoice' },
+    });
+    expect(resolved?.headerHtml).toBe('<b>invoice header</b>');
+  });
+
+  it('falls back to the default layout', async () => {
+    const { context, layouts } = createContext();
+    layouts.findFirst.mockResolvedValue(layout('default'));
+
+    const resolved = await context.resolveLayout(null);
+
+    expect(layouts.findFirst).toHaveBeenCalledWith({
+      where: { isDefault: true },
+    });
+    expect(resolved?.footerHtml).toBe('<i>default footer</i>');
+  });
+
+  it('is nothing while no layout exists', async () => {
+    const { context } = createContext();
+
+    expect(await context.resolveLayout(null)).toBeNull();
+  });
+});
+
 describe('LetterContext.sendLetter', () => {
+  it('prints the letter on the stationery the template points at', async () => {
+    const { context, rendered, prisma, layouts } = createContext();
+    (prisma.mailTemplate.findUnique as Mock).mockResolvedValue({
+      id: 'template-1',
+      subject: 'Ihre Rechnung',
+      htmlContent: '<p>Hallo</p>',
+      letterLayoutId: 'layout-invoice',
+    });
+    layouts.findUnique.mockResolvedValue(layout('invoice'));
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    expect(rendered[0]).toContain('<b>invoice header</b>');
+    expect(rendered[0]).toContain('<i>invoice footer</i>');
+  });
+
+  it('prints on the default stationery when the template has none', async () => {
+    const { context, rendered, layouts } = createContext();
+    layouts.findFirst.mockResolvedValue(layout('default'));
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    expect(rendered[0]).toContain('<b>default header</b>');
+  });
+
+  it('prints without stationery while none exists', async () => {
+    const { context, rendered } = createContext();
+
+    await context.sendLetter({
+      mailTemplateId: 'template-1',
+      recipient: user,
+      data: { user },
+      print,
+    });
+
+    expect(rendered[0]).not.toContain('letter-header');
+  });
+
   it('posts the rendered letter and logs it on the letter channel', async () => {
     const sendLetter = vi.fn().mockResolvedValue({
       providerLetterID: 'pingen-1',

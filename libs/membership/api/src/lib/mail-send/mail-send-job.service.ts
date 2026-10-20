@@ -748,9 +748,15 @@ export class MailSendJobService {
         );
       }
 
+      const print = printSettings(input.print);
       const pdf = await this.letterContext.renderLetter({
-        template: { htmlContent: template.htmlContent },
-        addressPosition: printSettings(input.print).addressPosition,
+        template: {
+          htmlContent: template.htmlContent,
+          letterAppendixId: template.letterAppendixId,
+        },
+        layout: await this.letterContext.resolveLayout(template.letterLayoutId),
+        addressPosition: print.addressPosition,
+        printMode: print.printMode,
         data: { user: recipient.user, optional: optionalData },
         recipient: toLetterAddress(recipient.user),
       });

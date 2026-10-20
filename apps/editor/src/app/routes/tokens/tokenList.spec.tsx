@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import {
   fireEvent,
   render,
@@ -96,9 +97,11 @@ beforeEach(() => {
 
 const renderList = () =>
   render(
-    <MemoryRouter initialEntries={['/tokens']}>
-      <TokenList />
-    </MemoryRouter>
+    <ThemeProvider theme={createTheme({ cssVariables: true })}>
+      <MemoryRouter initialEntries={['/tokens']}>
+        <TokenList />
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 describe('TokenList', () => {
@@ -115,7 +118,7 @@ describe('TokenList', () => {
     fireEvent.click(screen.getAllByLabelText('tokenList.panels.editRoles')[1]!);
     const dialog = await screen.findByRole('dialog');
 
-    fireEvent.click(within(dialog).getByRole('combobox'));
+    fireEvent.mouseDown(within(dialog).getByRole('combobox'));
     fireEvent.click(await screen.findByText('Peer'));
     fireEvent.click(within(dialog).getByText('save'));
 

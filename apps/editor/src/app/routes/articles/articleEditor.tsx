@@ -1,12 +1,15 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  Button as MuiButton,
-  Dialog as MuiDialog,
-  DialogActions as MuiDialogActions,
-  DialogContent as MuiDialogContent,
-  DialogContentText as MuiDialogContentText,
-  DialogTitle as MuiDialogTitle,
+  Badge,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Drawer,
+  IconButton,
 } from '@mui/material';
 import {
   ArticleDocument,
@@ -25,7 +28,14 @@ import {
   SettingsListDocument,
   UpdateArticleDocument,
 } from '@wepublish/editor/api';
-import { CanPreview } from '@wepublish/permissions';
+import {
+  CanCreateArticle,
+  CanDeleteArticle,
+  CanGetArticle,
+  CanGetArticles,
+  CanPreview,
+  CanPublishArticle,
+} from '@wepublish/permissions';
 import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
 import type { AggregatedValidation } from '@wepublish/ui/editor';
 import {
@@ -37,10 +47,12 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   DocumentUrlProvider,
+  DRAWER_WIDTHS,
   EditorHeader,
   EditorHeaderButton,
   EditorTemplate,
   EditorValidationProvider,
+  enqueueSnackbar,
   InfoData,
   ListicleBlockListValue,
   mapBlockValueToBlockInput,
@@ -53,11 +65,19 @@ import {
   TitleBlockListValue,
   TitleBlockValue,
   useAuthorisation,
+  useSeededState,
   useUnsavedChangesDialog,
   VersionHistory,
   VersionHistoryRevision,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
@@ -69,17 +89,9 @@ import {
   MdRemoveRedEye,
   MdSave,
 } from 'react-icons/md';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import {
-  Badge,
-  Drawer,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Notification,
-  toaster,
-} from 'rsuite';
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
+import { AutosaveToggle } from '../../autosaveToggle';
 import { LastSavedAt } from '../../lastSavedAt';
 import {
   PreviewControls,
@@ -87,6 +99,7 @@ import {
   PreviewFrame,
 } from '../../previewFrame';
 import { useAutosave } from '../../useAutosave';
+import { useAutosaveEnabled } from '../../useAutosaveEnabled';
 
 const EditorContent = styled.div`
   width: 100%;
@@ -198,23 +211,18 @@ function ArticleEditor() {
 
   const { data: settingsData } = useQuery(SettingsListDocument);
 
-  useEffect(() => {
-    if (settingsData) {
-      setMetadata(meta => ({
-        ...meta,
-        shared:
-          meta.shared ??
-          !!settingsData.settings.find(
-            setting => setting.name === SettingName.NewArticlePeering
-          )?.value,
-        paywall:
-          meta.paywall ??
-          (settingsData.settings.find(
-            setting => setting.name === SettingName.NewArticlePaywall
-          )?.value as string | null | undefined),
-      }));
-    }
-  }, [settingsData]);
+  useSeededState(settingsData, settings => {
+    const setting = (name: SettingName) =>
+      settings.settings.find(candidate => candidate.name === name)?.value;
+
+    setMetadata(meta => ({
+      ...meta,
+      shared: meta.shared ?? !!setting(SettingName.NewArticlePeering),
+      paywall:
+        meta.paywall ??
+        (setting(SettingName.NewArticlePaywall) as string | null | undefined),
+    }));
+  });
 
   const isNew = id === undefined;
   const [blocks, setBlocks] = useState<BlockValue[]>(
@@ -335,17 +343,15 @@ function ArticleEditor() {
   const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
   const showPreview = isPreviewOpen && !isPreviewDisabled;
 
-  const isAuthorized = useAuthorisation('CAN_CREATE_ARTICLE');
+  const isAuthorized = useAuthorisation(CanCreateArticle.id);
 
-  const handleChange = useCallback(
-    (blocks: React.SetStateAction<BlockValue[]>) => {
-      setBlocks(blocks);
-      changeVersion.current++;
-      setChanged(true);
-    },
-    []
-  );
+  const handleChange = useCallback((blocks: SetStateAction<BlockValue[]>) => {
+    setBlocks(blocks);
+    changeVersion.current++;
+    setChanged(true);
+  }, []);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (articleData?.article && !hasChanged && !skipRepopulate.current) {
       const {
@@ -416,30 +422,36 @@ function ArticleEditor() {
       setBlocks(blocks.map(blockForQueryBlock));
     }
   }, [articleData]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
-  const [stateColor, setStateColor] = useState<StateColor>(StateColor.none);
-  const [tagTitle, setTagTitle] = useState<string>('');
+  const { stateColor, tagTitle } = (() => {
+    const pending = articleData?.article?.pending;
 
-  useEffect(() => {
-    if (articleData?.article?.pending) {
-      setStateColor(StateColor.pending);
-      setTagTitle(
-        t('articleEditor.overview.pending', {
-          date: new Date(articleData?.article?.pending?.publishedAt ?? ''),
-        })
-      );
-    } else if (articleData?.article?.latest.publishedAt) {
-      setStateColor(StateColor.published);
-      setTagTitle(
-        t('articleEditor.overview.published', {
-          date: new Date(articleData?.article?.latest?.publishedAt ?? ''),
-        })
-      );
-    } else {
-      setStateColor(StateColor.draft);
-      setTagTitle(t('articleEditor.overview.unpublished'));
+    if (pending) {
+      return {
+        stateColor: StateColor.pending,
+        tagTitle: t('articleEditor.overview.pending', {
+          date: new Date(pending.publishedAt ?? ''),
+        }),
+      };
     }
-  }, [articleData, hasChanged, t]);
+
+    const publishedAt = articleData?.article?.latest.publishedAt;
+
+    if (publishedAt) {
+      return {
+        stateColor: StateColor.published,
+        tagTitle: t('articleEditor.overview.published', {
+          date: new Date(publishedAt),
+        }),
+      };
+    }
+
+    return {
+      stateColor: StateColor.draft,
+      tagTitle: t('articleEditor.overview.unpublished'),
+    };
+  })();
 
   useEffect(() => {
     const error =
@@ -449,17 +461,9 @@ function ArticleEditor() {
       publishError?.message ??
       restoreError?.message ??
       discardError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [
     createError,
     updateError,
@@ -484,14 +488,11 @@ function ArticleEditor() {
       setChanged(false);
       await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
 
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('discardDraft.success')}
-          duration={2000}
-        />,
-        { placement: 'topEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('discardDraft.success'),
+        autoHideDuration: 2000,
+      });
     }
   }
 
@@ -514,14 +515,11 @@ function ArticleEditor() {
         setChanged(false);
         await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
 
-        toaster.push(
-          <Notification
-            type="success"
-            header={t('versionHistory.restored')}
-            duration={2000}
-          />,
-          { placement: 'topEnd' }
-        );
+        enqueueSnackbar('', {
+          variant: 'success',
+          title: t('versionHistory.restored'),
+          autoHideDuration: 2000,
+        });
 
         setVersionHistoryOpen(false);
       }
@@ -652,17 +650,12 @@ function ArticleEditor() {
       reason === 'publish' ?
         t('articleEditor.publishValidationFailed')
       : t('articleEditor.saveValidationFailed');
-    toaster.push(
-      <Message
-        type="error"
-        showIcon={false}
-        closable
-        duration={8000}
-      >
+    enqueueSnackbar(
+      <>
         <strong>{header}</strong>
         <div>{summaries || t('articleEditor.validationFailedGeneric')}</div>
-      </Message>,
-      { placement: 'topEnd' }
+      </>,
+      { variant: 'error', autoHideDuration: 8000 }
     );
     return false;
   }
@@ -679,14 +672,11 @@ function ArticleEditor() {
       skipRepopulate.current = false;
       markSaved();
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('articleEditor.overview.draftSaved')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('articleEditor.overview.draftSaved'),
+        autoHideDuration: 2000,
+      });
       await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
     } else {
       const { data } = await createArticle({ variables: input });
@@ -694,14 +684,11 @@ function ArticleEditor() {
         navigate(`/articles/edit/${data?.createArticle.id}`, { replace: true });
       }
       setChanged(false);
-      toaster.push(
-        <Notification
-          type="success"
-          header={t('articleEditor.overview.draftCreated')}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t('articleEditor.overview.draftCreated'),
+        autoHideDuration: 2000,
+      });
     }
   }
 
@@ -725,19 +712,18 @@ function ArticleEditor() {
       setChanged(false);
     }
 
-    toaster.push(
-      <Notification
-        type="success"
-        header={t('articleEditor.overview.draftAutosaved')}
-        duration={2000}
-      />,
-      { placement: 'bottomEnd' }
-    );
+    enqueueSnackbar('', {
+      variant: 'success',
+      title: t('articleEditor.overview.draftAutosaved'),
+      autoHideDuration: 2000,
+    });
     await reloadRevisions();
   }
 
+  const [autosaveEnabled] = useAutosaveEnabled();
+
   const { markSaved } = useAutosave({
-    enabled: !isDisabled && !!articleID,
+    enabled: autosaveEnabled && !isDisabled && !!articleID,
     hasChanged,
     onAutosave: handleAutosave,
   });
@@ -747,16 +733,10 @@ function ArticleEditor() {
       return;
     }
     if (!metadata.slug) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {t('articleEditor.overview.noSlug')}
-        </Message>
-      );
+      enqueueSnackbar(t('articleEditor.overview.noSlug'), {
+        variant: 'error',
+        autoHideDuration: null,
+      });
       return;
     }
 
@@ -784,46 +764,33 @@ function ArticleEditor() {
 
       setChanged(false);
 
-      toaster.push(
-        <Notification
-          type="success"
-          header={t(
-            publishedAt <= new Date() ?
-              'articleEditor.overview.articlePublished'
-            : 'articleEditor.overview.articlePending'
-          )}
-          duration={2000}
-        />,
-        { placement: 'bottomEnd' }
-      );
+      enqueueSnackbar('', {
+        variant: 'success',
+        title: t(
+          publishedAt <= new Date() ?
+            'articleEditor.overview.articlePublished'
+          : 'articleEditor.overview.articlePending'
+        ),
+        autoHideDuration: 2000,
+      });
     }
     await Promise.all([refetch({ id: articleID }), reloadRevisions()]);
   }
 
   useEffect(() => {
     if (isNotFound) {
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {t('articleEditor.overview.notFound')}
-        </Message>
-      );
+      enqueueSnackbar(t('articleEditor.overview.notFound'), {
+        variant: 'error',
+        autoHideDuration: null,
+      });
     }
   }, [isNotFound, t]);
 
-  const [infoData, setInfoData] = useState<InfoData>({
-    charCount: 0,
-  });
-
-  useEffect(() => {
-    setInfoData({
-      charCount: wordCounter(blocks),
-    });
-  }, [isMetaDrawerOpen]);
+  const infoData = useMemo<InfoData>(
+    () => ({ charCount: isMetaDrawerOpen ? wordCounter(blocks) : 0 }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isMetaDrawerOpen]
+  );
 
   return (
     <>
@@ -834,24 +801,26 @@ function ArticleEditor() {
             state={stateColor}
             stateLabel={tagTitle}
             meta={<LastSavedAt date={articleData?.article?.latest.createdAt} />}
+            statusAction={<AutosaveToggle disabled={isDisabled || isNew} />}
             back={
-              <Link to="/articles">
-                <RIconButton
-                  circle
-                  appearance="subtle"
-                  icon={<MdKeyboardBackspace />}
-                  title={t('articleEditor.overview.back')}
-                  aria-label={t('articleEditor.overview.back')}
-                  onClick={e => {
-                    if (!unsavedChangesDialog()) e.preventDefault();
-                  }}
-                />
-              </Link>
+              <IconButton
+                component={RouterLink}
+                to="/articles"
+                title={t('articleEditor.overview.back')}
+                aria-label={t('articleEditor.overview.back')}
+                onClick={e => {
+                  if (!unsavedChangesDialog()) {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                <MdKeyboardBackspace />
+              </IconButton>
             }
             secondaryActions={
               <>
                 <EditorHeaderButton
-                  appearance="subtle"
+                  variant="text"
                   icon={<MdIntegrationInstructions />}
                   label={t('articleEditor.overview.metadata')}
                   disabled={isDisabled}
@@ -864,10 +833,10 @@ function ArticleEditor() {
                 {!isNew && (
                   <>
                     <PermissionControl
-                      qualifyingPermissions={['CAN_GET_ARTICLE']}
+                      qualifyingPermissions={[CanGetArticle.id]}
                     >
                       <EditorHeaderButton
-                        appearance="subtle"
+                        variant="text"
                         icon={<MdHistory />}
                         label={t('versionHistory.title')}
                         disabled={isDisabled}
@@ -884,10 +853,10 @@ function ArticleEditor() {
                     {articleData?.article?.draft &&
                       articleData?.article?.published && (
                         <PermissionControl
-                          qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                          qualifyingPermissions={[CanCreateArticle.id]}
                         >
                           <EditorHeaderButton
-                            appearance="subtle"
+                            variant="text"
                             icon={<MdDeleteOutline />}
                             label={t('discardDraft.button')}
                             disabled={isDisabled}
@@ -908,7 +877,7 @@ function ArticleEditor() {
                   )}
 
                   <EditorHeaderButton
-                    appearance={showPreview ? 'ghost' : 'subtle'}
+                    variant="outlined"
                     icon={showPreview ? <MdEdit /> : <MdRemoveRedEye />}
                     label={
                       showPreview ?
@@ -924,10 +893,10 @@ function ArticleEditor() {
             primaryActions={
               isNew && createData == null ?
                 <PermissionControl
-                  qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                  qualifyingPermissions={[CanCreateArticle.id]}
                 >
                   <EditorHeaderButton
-                    appearance="primary"
+                    variant="contained"
                     icon={<MdSave />}
                     label={t('create')}
                     collapse={false}
@@ -936,10 +905,15 @@ function ArticleEditor() {
                   />
                 </PermissionControl>
               : <PermissionControl
-                  qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                  qualifyingPermissions={[CanCreateArticle.id]}
                 >
-                  <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+                  <Badge
+                    variant="dot"
+                    color="warning"
+                    invisible={!hasChanged}
+                  >
                     <EditorHeaderButton
+                      variant="outlined"
                       icon={<MdSave />}
                       label={t('save')}
                       collapse="sm"
@@ -949,20 +923,18 @@ function ArticleEditor() {
                   </Badge>
 
                   <PermissionControl
-                    qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}
+                    qualifyingPermissions={[CanPublishArticle.id]}
                   >
                     <Badge
-                      className={
-                        (
-                          articleData?.article?.draft ||
-                          !articleData?.article?.published
-                        ) ?
-                          'unsaved'
-                        : 'saved'
+                      variant="dot"
+                      color="warning"
+                      invisible={
+                        !articleData?.article?.draft &&
+                        !!articleData?.article?.published
                       }
                     >
                       <EditorHeaderButton
-                        appearance="primary"
+                        variant="contained"
                         icon={<MdCloudUpload />}
                         label={t('articleEditor.overview.publish')}
                         collapse={false}
@@ -993,15 +965,9 @@ function ArticleEditor() {
               return jwtData?.createJWTForWebsiteLogin?.token;
             }}
             onSilence={() =>
-              toaster.push(
-                <Message
-                  type="warning"
-                  showIcon
-                  closable
-                >
-                  {t('previewHandshake.notResponding')}
-                </Message>
-              )
+              enqueueSnackbar(t('previewHandshake.notResponding'), {
+                variant: 'warning',
+              })
             }
           />
         )}
@@ -1022,8 +988,16 @@ function ArticleEditor() {
       </EditorTemplate>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.md,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isMetaDrawerOpen}
-        size="md"
         onClose={() => setMetaDrawerOpen(false)}
       >
         <ArticleMetadataPanel
@@ -1043,9 +1017,10 @@ function ArticleEditor() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
+        fullWidth
         open={isPublishDialogOpen}
-        size="sm"
+        maxWidth="sm"
         onClose={() => setPublishDialogOpen(false)}
       >
         <PublishArticlePanel
@@ -1062,7 +1037,7 @@ function ArticleEditor() {
             setPublishDialogOpen(false);
           }}
         />
-      </Modal>
+      </Dialog>
 
       <VersionHistory
         open={isVersionHistoryOpen}
@@ -1091,41 +1066,43 @@ function ArticleEditor() {
         blocks={(previewRevision?.blocks ?? []).map(blockForQueryBlock)}
       />
 
-      <MuiDialog
+      <Dialog
         open={isDiscardDialogOpen}
         onClose={() => setDiscardDialogOpen(false)}
       >
-        <MuiDialogTitle>{t('discardDraft.confirm.title')}</MuiDialogTitle>
-        <MuiDialogContent>
-          <MuiDialogContentText>
+        <DialogTitle>{t('discardDraft.confirm.title')}</DialogTitle>
+
+        <DialogContent>
+          <DialogContentText>
             {t('discardDraft.confirm.message')}
-          </MuiDialogContentText>
-        </MuiDialogContent>
-        <MuiDialogActions>
-          <MuiButton onClick={() => setDiscardDialogOpen(false)}>
+          </DialogContentText>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={() => setDiscardDialogOpen(false)}>
             {t('discardDraft.confirm.cancel')}
-          </MuiButton>
-          <MuiButton
+          </Button>
+
+          <Button
             color="error"
             variant="contained"
-            startIcon={<MdDeleteOutline />}
             onClick={() => {
               setDiscardDialogOpen(false);
               handleDiscardDraft();
             }}
           >
             {t('discardDraft.confirm.confirm')}
-          </MuiButton>
-        </MuiDialogActions>
-      </MuiDialog>
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_ARTICLE',
-  'CAN_GET_ARTICLES',
-  'CAN_CREATE_ARTICLE',
-  'CAN_DELETE_ARTICLE',
+  CanGetArticle.id,
+  CanGetArticles.id,
+  CanCreateArticle.id,
+  CanDeleteArticle.id,
 ])(ArticleEditor);
 export { CheckedPermissionComponent as ArticleEditor };

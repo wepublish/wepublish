@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
 import {
   Box,
@@ -17,11 +17,11 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
+  Drawer,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { FullImageFragment } from '@wepublish/editor/api';
-import { ImageSelectPanel } from '@wepublish/ui/editor';
-import { Drawer } from 'rsuite';
+import { ImageSelectPanel, DRAWER_WIDTHS } from '@wepublish/ui/editor';
 import {
   MdFormatAlignCenter,
   MdFormatAlignLeft,
@@ -37,7 +37,6 @@ import {
   MdLaptopMac,
   MdLink,
   MdPhoneIphone,
-  MdPhotoLibrary,
   MdSmartButton,
   MdRedo,
   MdStrikethroughS,
@@ -64,9 +63,9 @@ const EditorWrapper = styled(Box)`
   flex-direction: column;
   height: 100%;
   min-height: 480px;
-  border: 1px solid ${({ theme }) => theme.palette.divider};
-  border-radius: var(--rs-radius-md);
-  background-color: var(--rs-bg-card);
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  background-color: ${({ theme }) => theme.vars.palette.background.paper};
   overflow: hidden;
 `;
 
@@ -76,7 +75,7 @@ const Toolbar = styled(Box)`
   gap: 4px;
   align-items: center;
   padding: 6px;
-  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
+  border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
   flex-shrink: 0;
 `;
 
@@ -89,7 +88,7 @@ const Canvas = styled(Box)`
   min-height: 0;
   overflow: auto;
   padding: 24px 16px;
-  background-color: ${({ theme }) => theme.palette.grey[100]};
+  background-color: ${({ theme }) => theme.vars.palette.grey[100]};
   display: flex;
   justify-content: center;
 `;
@@ -98,7 +97,7 @@ const DeviceFrame = styled(Box)`
   width: 100%;
   align-self: stretch;
   background-color: #ffffff;
-  border-radius: var(--rs-radius-md);
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: max-width 0.2s ease;
@@ -341,7 +340,10 @@ const HtmlVisualEditorComponent = forwardRef<
   // The iframe listeners are registered once per load, so read the callback
   // through a ref to avoid calling a stale one.
   const onActivateRef = useRef(onActivate);
-  onActivateRef.current = onActivate;
+
+  useEffect(() => {
+    onActivateRef.current = onActivate;
+  });
 
   const getDoc = (): Document | null =>
     frameRef.current?.contentDocument ?? null;
@@ -1056,7 +1058,6 @@ const HtmlVisualEditorComponent = forwardRef<
             <TextField
               autoFocus
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.linkUrl', 'URL')}
               placeholder="https://"
               value={linkDialog.url}
@@ -1070,7 +1071,6 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <TextField
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.linkText', 'Link text')}
               value={linkDialog.text}
               onChange={event =>
@@ -1121,7 +1121,6 @@ const HtmlVisualEditorComponent = forwardRef<
           >
             <Button
               variant="outlined"
-              startIcon={<MdPhotoLibrary />}
               onClick={() => setLibraryOpen(true)}
             >
               {t(
@@ -1132,7 +1131,6 @@ const HtmlVisualEditorComponent = forwardRef<
             <TextField
               autoFocus
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.imageUrl', 'Image URL')}
               placeholder="https://"
               value={imageDialog.url}
@@ -1142,7 +1140,6 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <TextField
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.imageAlt', 'Alternative text')}
               helperText={t('mailTemplates.editor.imageAltHelp')}
               value={imageDialog.alt}
@@ -1152,7 +1149,6 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <TextField
               fullWidth
-              size="small"
               label={t(
                 'mailTemplates.editor.imageWidth',
                 'Width (px, optional)'
@@ -1168,7 +1164,6 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <TextField
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.imageLink', 'Link (optional)')}
               placeholder="https://"
               value={imageDialog.link}
@@ -1214,7 +1209,6 @@ const HtmlVisualEditorComponent = forwardRef<
             <TextField
               autoFocus
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.buttonText', 'Button text')}
               value={buttonDialog.text}
               onChange={event =>
@@ -1226,7 +1220,6 @@ const HtmlVisualEditorComponent = forwardRef<
             />
             <TextField
               fullWidth
-              size="small"
               label={t('mailTemplates.editor.buttonUrl', 'Link URL')}
               placeholder="https://"
               value={buttonDialog.url}
@@ -1249,7 +1242,6 @@ const HtmlVisualEditorComponent = forwardRef<
             >
               <TextField
                 select
-                size="small"
                 label={t('mailTemplates.editor.buttonSize', 'Size')}
                 value={buttonDialog.size}
                 onChange={event =>
@@ -1303,8 +1295,16 @@ const HtmlVisualEditorComponent = forwardRef<
         </DialogActions>
       </Dialog>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={libraryOpen}
-        size="sm"
         onClose={() => setLibraryOpen(false)}
       >
         <ImageSelectPanel

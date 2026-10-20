@@ -1,6 +1,18 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  ButtonGroup as MuiButtonGroup,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@mui/material';
+import {
   DeleteImageDocument,
   FullImageFragment,
   ImageListDocument,
@@ -8,24 +20,31 @@ import {
   LocalStorageKey,
 } from '@wepublish/editor/api';
 import {
+  CanCreateImage,
+  CanDeleteImage,
+  CanGetImage,
+  CanGetImages,
+} from '@wepublish/permissions';
+import {
   createCheckedPermissionComponent,
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
+  DataTable,
+  DRAWER_WIDTHS,
   IconButton,
   IconButtonTooltip,
   ImageEditPanel,
   ImageUploadAndEditPanel,
+  Link,
   ListViewActions,
   ListViewContainer,
-  ListViewFilterArea,
   ListViewHeader,
-  PaddedCell,
+  Pagination,
   PermissionControl,
-  Table,
   TableWrapper,
   useListViewState,
+  useSeededState,
+  PageTitle,
 } from '@wepublish/ui/editor';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdDelete,
@@ -35,35 +54,26 @@ import {
   MdViewList,
   MdViewModule,
 } from 'react-icons/md';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
-  Button,
-  ButtonGroup as RButtonGroup,
-  Drawer,
-  IconButton as RIconButton,
-  Input,
-  InputGroup,
-  Modal,
-  Pagination,
-  Table as RTable,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
+  Link as RouterLink,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 
 export enum ImageListLayout {
   Grid = 'grid',
   List = 'list',
 }
 
-const { Column, HeaderCell, Cell: RCell } = RTable;
-
 const Img = styled.img`
   height: 70px;
   width: auto;
   display: block;
   margin: 0 auto;
-  border-radius: var(--rs-radius-md);
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
 `;
-const ButtonGroup = styled(RButtonGroup)`
+const ButtonGroup = styled(MuiButtonGroup)`
   margin-top: 12px;
 `;
 
@@ -74,7 +84,7 @@ const GridImg = styled.img`
   padding: 0;
   object-fit: cover;
   overflow: hidden;
-  color: var(--rs-text-secondary);
+  color: ${({ theme }) => theme.vars.palette.text.secondary};
   font-size: 12px;
   text-align: center;
   transition: transform 0.2s ease;
@@ -110,9 +120,9 @@ const ImageWrapper = styled.div`
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  border: 1px solid var(--rs-border-primary);
-  border-radius: var(--rs-radius-md);
-  background-color: var(--rs-bg-well);
+  border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+  border-radius: ${({ theme }) => `calc(${theme.shape.borderRadius}px * 0.75)`};
+  background-color: ${({ theme }) => theme.vars.palette.background.default};
 `;
 
 const Overlay = styled.div`
@@ -155,8 +165,6 @@ function ImageList() {
   const isUploadRoute = location.pathname.includes('upload');
   const isEditRoute = location.pathname.includes('edit');
 
-  const [images, setImages] = useState<FullImageFragment[]>([]);
-
   const { filter, setFilter, limit, setLimit } = useListViewState<string>(
     'images',
     { defaultFilter: '', defaultLimit: 50 }
@@ -193,6 +201,8 @@ function ImageList() {
     variables: listVariables,
   });
 
+  const images = data?.images.nodes ?? [];
+
   const [deleteImage, { loading: isDeleting }] = useMutation(
     DeleteImageDocument,
     {}
@@ -201,99 +211,98 @@ function ImageList() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (data?.images?.nodes) {
-      setImages(data.images.nodes as React.SetStateAction<FullImageFragment[]>);
-    }
-  }, [data?.images]);
-
-  useEffect(() => {
     refetch(listVariables);
   }, [filter, activePage, limit]);
 
-  useEffect(() => {
-    if (isUploadRoute) {
-      setUploadModalOpen(true);
-    }
+  useSeededState(
+    isUploadRoute || isEditRoute ? location.pathname : undefined,
+    () => {
+      if (isUploadRoute) {
+        setUploadModalOpen(true);
+      }
 
-    if (isEditRoute) {
-      setEditModalOpen(true);
-      setEditID(id);
+      if (isEditRoute) {
+        setEditModalOpen(true);
+        setEditID(id);
+      }
     }
-  }, [location]);
+  );
 
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>{t('images.overview.imageLibrary')}</h2>
+          <PageTitle>{t('images.overview.imageLibrary')}</PageTitle>
         </ListViewHeader>
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
+        <PermissionControl qualifyingPermissions={[CanCreateImage.id]}>
           <ListViewActions>
-            <Link
+            <Button
+              component={RouterLink}
               to="/images/upload"
               state={{ modalLocation: location }}
+              variant="contained"
+              startIcon={<MdOutlineAddPhotoAlternate />}
+              disabled={isLoading}
             >
-              <RIconButton
-                appearance="primary"
-                disabled={isLoading}
-                icon={<MdOutlineAddPhotoAlternate />}
-              >
-                {t('images.overview.uploadImage')}
-              </RIconButton>
-            </Link>
+              {t('images.overview.uploadImage')}
+            </Button>
           </ListViewActions>
         </PermissionControl>
-
-        <ListViewFilterArea>
-          <InputGroup>
-            <Input
-              value={filter}
-              onChange={value => {
-                setFilter(value);
-                setActivePage(1);
-              }}
-            />
-            <InputGroup.Addon>
-              <MdSearch />
-            </InputGroup.Addon>
-          </InputGroup>
-        </ListViewFilterArea>
       </ListViewContainer>
 
-      <ButtonGroup size="lg">
-        <IconButtonTooltip caption={t('images.overview.gridView')}>
-          <RIconButton
-            aria-label={t('images.overview.gridView')}
-            aria-pressed={layout === ImageListLayout.Grid}
-            active={layout === ImageListLayout.Grid}
-            onClick={() => {
-              setLayout(ImageListLayout.Grid);
-              localStorage.setItem(
-                LocalStorageKey.ImageListLayout,
-                ImageListLayout.Grid
-              );
-            }}
-            appearance={layout === ImageListLayout.Grid ? 'ghost' : 'default'}
-            icon={<MdViewModule />}
-          />
-        </IconButtonTooltip>
-        <IconButtonTooltip caption={t('images.overview.listView')}>
-          <RIconButton
-            aria-label={t('images.overview.listView')}
-            aria-pressed={layout === ImageListLayout.List}
-            onClick={() => {
-              setLayout(ImageListLayout.List);
-              localStorage.setItem(
-                LocalStorageKey.ImageListLayout,
-                ImageListLayout.List
-              );
-            }}
-            appearance={layout === ImageListLayout.List ? 'ghost' : 'default'}
-            active={layout === ImageListLayout.List}
-            icon={<MdViewList />}
-          />
-        </IconButtonTooltip>
-      </ButtonGroup>
+      <ListToolbar>
+        <ButtonGroup size="large">
+          <IconButtonTooltip caption={t('images.overview.gridView')}>
+            <IconButton
+              aria-label={t('images.overview.gridView')}
+              aria-pressed={layout === ImageListLayout.Grid}
+              onClick={() => {
+                setLayout(ImageListLayout.Grid);
+                localStorage.setItem(
+                  LocalStorageKey.ImageListLayout,
+                  ImageListLayout.Grid
+                );
+              }}
+            >
+              <MdViewModule />
+            </IconButton>
+          </IconButtonTooltip>
+          <IconButtonTooltip caption={t('images.overview.listView')}>
+            <IconButton
+              aria-label={t('images.overview.listView')}
+              aria-pressed={layout === ImageListLayout.List}
+              onClick={() => {
+                setLayout(ImageListLayout.List);
+                localStorage.setItem(
+                  LocalStorageKey.ImageListLayout,
+                  ImageListLayout.List
+                );
+              }}
+            >
+              <MdViewList />
+            </IconButton>
+          </IconButtonTooltip>
+        </ButtonGroup>
+
+        <Search
+          label={t('search')}
+          size="small"
+          value={filter}
+          onChange={event => {
+            setFilter(event.target.value);
+            setActivePage(1);
+          }}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <MdSearch />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+      </ListToolbar>
 
       <TableWrapper>
         {layout === ImageListLayout.List ?
@@ -311,29 +320,30 @@ function ImageList() {
         }
 
         <Pagination
-          limit={limit}
-          limitOptions={DEFAULT_TABLE_PAGE_SIZES}
-          maxButtons={DEFAULT_MAX_TABLE_PAGES}
-          first
-          last
-          prev
-          next
-          ellipsis
-          boundaryLinks
-          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-          total={data?.images.totalCount ?? 0}
-          activePage={activePage}
-          onChangePage={page => setActivePage(page)}
-          onChangeLimit={limit => {
-            setLimit(limit);
-            setActivePage(1);
+          state={{
+            page: activePage,
+            limit,
+            setPage: setActivePage,
+            setLimit: limit => {
+              setLimit(limit);
+              setActivePage(1);
+            },
           }}
+          totalCount={data?.images.totalCount ?? 0}
         />
       </TableWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isUploadModalOpen}
-        size="sm"
         onClose={() => {
           setUploadModalOpen(false);
           navigate('/images');
@@ -351,8 +361,16 @@ function ImageList() {
         />
       </Drawer>
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isEditModalOpen}
-        size="sm"
         onClose={() => {
           setEditModalOpen(false);
           navigate('/images');
@@ -366,23 +384,33 @@ function ImageList() {
           }}
         />
       </Drawer>
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Title>{t('images.panels.deleteImage')}</Modal.Title>
+        <DialogTitle>{t('images.panels.deleteImage')}</DialogTitle>
 
-        <Modal.Body>
-          <p>
+        <DialogContent>
+          <Typography>
             {`${currentImage?.filename || t('images.panels.untitled')}${currentImage?.extension}` ||
               '-'}
-          </p>
-          <p>{currentImage?.title || t('images.panels.untitled')}</p>
-          <p>{currentImage?.description || '-'}</p>
-        </Modal.Body>
+          </Typography>
+          <Typography>
+            {currentImage?.title || t('images.panels.untitled')}
+          </Typography>
+          <Typography>{currentImage?.description || '-'}</Typography>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setConfirmationDialogOpen(false)}
+          >
+            {t('images.panels.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
             disabled={isDeleting}
             onClick={async () => {
               if (!currentImage) {
@@ -397,7 +425,9 @@ function ImageList() {
                     variables: listVariables,
                   });
 
-                  if (!query) return;
+                  if (!query) {
+                    return;
+                  }
 
                   cache.writeQuery<ImageListQuery>({
                     query: ImageListDocument,
@@ -416,27 +446,21 @@ function ImageList() {
               });
               setConfirmationDialogOpen(false);
             }}
-            color="red"
+            color="error"
           >
             {t('images.panels.confirm')}
           </Button>
-          <Button
-            onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
-          >
-            {t('images.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_GET_IMAGES',
-  'CAN_GET_IMAGE',
-  'CAN_DELETE_IMAGE',
-  'CAN_CREATE_IMAGE',
+  CanGetImages.id,
+  CanGetImage.id,
+  CanDeleteImage.id,
+  CanCreateImage.id,
 ])(ImageList);
 export { CheckedPermissionComponent as ImageList };
 
@@ -447,6 +471,19 @@ interface ImageGridViewProps {
   setCurrentImage(image: FullImageFragment): void;
   setConfirmationDialogOpen(isOpen: boolean): void;
 }
+
+const ListToolbar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing(2)};
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
+`;
+
+const Search = styled(TextField)`
+  width: 320px;
+  max-width: 100%;
+`;
 
 const ImageGridView = ({
   images,
@@ -466,18 +503,17 @@ const ImageGridView = ({
                   <IconButtonTooltip caption={t('delete')}>
                     <GridIcon
                       aria-label={t('delete')}
-                      icon={<MdDelete />}
-                      circle
-                      size="md"
-                      appearance="default"
-                      color="red"
+                      size="medium"
+                      color="error"
                       data-on-media
                       onClick={event => {
                         event.preventDefault();
                         setCurrentImage(image);
                         setConfirmationDialogOpen(true);
                       }}
-                    />
+                    >
+                      <MdDelete />
+                    </GridIcon>
                   </IconButtonTooltip>
                   {image?.title && <ImgDesc>{image?.title}</ImgDesc>}
                 </Overlay>
@@ -502,116 +538,98 @@ const ImageListView = ({
 }: ImageGridViewProps) => {
   const { t } = useTranslation();
   return (
-    <Table
-      fillHeight
+    <DataTable
+      storageKey="images"
       data={images}
-      rowHeight={100}
       loading={isLoading}
-      wordWrap
-      className={'displayThreeLinesOnly'}
-    >
-      <Column
-        width={160}
-        align="left"
-        resizable
-      >
-        <HeaderCell>{t('images.overview.image')}</HeaderCell>
-        <RCell>
-          {(rowData: RowDataType<FullImageFragment>) => (
+      columns={[
+        {
+          id: 'image',
+          label: t('images.overview.image'),
+          width: 160,
+          align: 'left',
+          render: rowData => (
             <Link to={`/images/edit/${rowData.id}`}>
               <Img src={rowData.thumbURL || ''} />
             </Link>
-          )}
-        </RCell>
-      </Column>
-      <Column
-        width={160}
-        align="left"
-        resizable
-      >
-        <HeaderCell>{t('images.overview.title')}</HeaderCell>
-        <RCell className="displayThreeLinesOnly">
-          {(rowData: RowDataType<FullImageFragment>) => (
-            <p className={'displayThreeLinesOnly'}>
+          ),
+        },
+        {
+          id: 'title',
+          alwaysVisible: true,
+          label: t('images.overview.title'),
+          width: 160,
+          align: 'left',
+          render: rowData => (
+            <Typography className={'displayThreeLinesOnly'}>
               {rowData.title ? rowData.title : t('images.overview.untitled')}
-            </p>
-          )}
-        </RCell>
-      </Column>
-      <Column
-        width={340}
-        align="left"
-        resizable
-      >
-        <HeaderCell>{t('images.overview.description')}</HeaderCell>
-        <RCell className={'displayThreeLinesOnly'}>
-          {(rowData: RowDataType<FullImageFragment>) => (
-            <p className={'displayThreeLinesOnly'}>
+            </Typography>
+          ),
+        },
+        {
+          id: 'description',
+          label: t('images.overview.description'),
+          width: 340,
+          align: 'left',
+          render: rowData => (
+            <Typography className={'displayThreeLinesOnly'}>
               {rowData.description ?
                 rowData.description
               : t('images.overview.noDescription')}
-            </p>
-          )}
-        </RCell>
-      </Column>
-
-      <Column
-        width={250}
-        align="left"
-        resizable
-      >
-        <HeaderCell>{t('images.overview.filename')}</HeaderCell>
-        <RCell>
-          {(rowData: RowDataType<FullImageFragment>) => (
-            <p className={'displayThreeLinesOnly'}>
+            </Typography>
+          ),
+        },
+        {
+          id: 'filename',
+          label: t('images.overview.filename'),
+          width: 250,
+          align: 'left',
+          render: rowData => (
+            <Typography className={'displayThreeLinesOnly'}>
               {rowData.filename ? rowData.filename : ''}
-            </p>
-          )}
-        </RCell>
-      </Column>
-
-      <Column
-        width={140}
-        align="center"
-        fixed="right"
-      >
-        <HeaderCell align="center">{t('action')}</HeaderCell>
-        <PaddedCell>
-          {(rowData: RowDataType<FullImageFragment>) => (
+            </Typography>
+          ),
+        },
+        {
+          id: 'action',
+          label: t('action'),
+          width: 140,
+          align: 'center',
+          fixed: true,
+          render: rowData => (
             <>
-              <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
+              <PermissionControl qualifyingPermissions={[CanCreateImage.id]}>
                 <IconButtonTooltip caption={t('images.overview.edit')}>
-                  <Link to={`/images/edit/${rowData.id}`}>
-                    <IconButton
-                      aria-label={t('images.overview.edit')}
-                      icon={<MdEdit />}
-                      circle
-                      size="sm"
-                    />
-                  </Link>
+                  <IconButton
+                    component={RouterLink}
+                    to={`/images/edit/${rowData.id}`}
+                    aria-label={t('images.overview.edit')}
+                    size="small"
+                  >
+                    <MdEdit />
+                  </IconButton>
                 </IconButtonTooltip>
               </PermissionControl>
-              <PermissionControl qualifyingPermissions={['CAN_DELETE_IMAGE']}>
+              <PermissionControl qualifyingPermissions={[CanDeleteImage.id]}>
                 <IconButtonTooltip caption={t('delete')}>
                   <IconButton
                     aria-label={t('delete')}
-                    icon={<MdDelete />}
-                    circle
-                    size="sm"
-                    appearance="ghost"
-                    color="red"
+                    size="small"
+                    color="error"
                     onClick={event => {
                       event.preventDefault();
                       setCurrentImage(rowData as FullImageFragment);
                       setConfirmationDialogOpen(true);
                     }}
-                  />
+                  >
+                    <MdDelete />
+                  </IconButton>
                 </IconButtonTooltip>
               </PermissionControl>
             </>
-          )}
-        </PaddedCell>
-      </Column>
-    </Table>
+          ),
+        },
+      ]}
+    />
   );
 };

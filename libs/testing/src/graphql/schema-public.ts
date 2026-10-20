@@ -76,6 +76,38 @@ export enum AnalyticsProviderType {
   Google = 'GOOGLE'
 }
 
+export type ApiToken = {
+  __typename?: 'ApiToken';
+  createdAt: Scalars['DateTime']['output'];
+  /** The user who created this token. Null once that user is deleted. */
+  createdBy?: Maybe<User>;
+  createdById?: Maybe<Scalars['String']['output']>;
+  /** When the token stops working. */
+  expiresAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  lastUsedAt?: Maybe<Scalars['DateTime']['output']>;
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+  /** The non-secret start of the token */
+  prefix: Scalars['String']['output'];
+  revokedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The permissions this token carries. */
+  scopes: Array<Scalars['String']['output']>;
+};
+
+export enum ApiTokenSort {
+  CreatedAt = 'CreatedAt',
+  LastUsedAt = 'LastUsedAt',
+  Name = 'Name'
+}
+
+/** A revoked token counts as revoked even once it has also expired. */
+export enum ApiTokenStatus {
+  Active = 'Active',
+  Expired = 'Expired',
+  Revoked = 'Revoked'
+}
+
 export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   __typename?: 'Article';
   createdAt: Scalars['DateTime']['output'];
@@ -882,6 +914,14 @@ export type CreateSubscriptionInfo = {
   __typename?: 'CreateSubscriptionInfo';
   discountCodeValid?: Maybe<Scalars['Boolean']['output']>;
   discountPercent?: Maybe<Scalars['Float']['output']>;
+};
+
+/** A newly created token. The secret is returned exactly once and cannot be retrieved again. */
+export type CreatedApiToken = {
+  __typename?: 'CreatedApiToken';
+  apiToken: ApiToken;
+  /** The secret. */
+  token: Scalars['String']['output'];
 };
 
 export type Crowdfunding = {
@@ -1882,6 +1922,45 @@ export enum LetterDeliveryProduct {
   Registered = 'registered'
 }
 
+export type LetterLayoutInput = {
+  footerHeightMm: Scalars['Int']['input'];
+  footerHtml: Scalars['String']['input'];
+  headerHeightMm: Scalars['Int']['input'];
+  headerHtml: Scalars['String']['input'];
+  isDefault: Scalars['Boolean']['input'];
+  name: Scalars['String']['input'];
+};
+
+/** Stationery for printed letters: a header and a footer repeated on every page of the pdf. */
+export type LetterLayoutModel = {
+  __typename?: 'LetterLayoutModel';
+  createdAt: Scalars['DateTime']['output'];
+  /** Height of the footer band in millimetres from the bottom edge. */
+  footerHeightMm: Scalars['Int']['output'];
+  footerHtml: Scalars['String']['output'];
+  /** Height of the header band in millimetres from the top edge. */
+  headerHeightMm: Scalars['Int']['output'];
+  headerHtml: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  /** Templates without stationery of their own print on this one. */
+  isDefault: Scalars['Boolean']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type LetterLayoutPreviewInput = {
+  footerHeightMm: Scalars['Int']['input'];
+  footerHtml: Scalars['String']['input'];
+  headerHeightMm: Scalars['Int']['input'];
+  headerHtml: Scalars['String']['input'];
+};
+
+export type LetterLayoutPreviewModel = {
+  __typename?: 'LetterLayoutPreviewModel';
+  /** A sample letter on this stationery, as base64 pdf. */
+  pdf: Scalars['String']['output'];
+};
+
 export type LetterPrintInput = {
   addressPosition?: InputMaybe<LetterAddressPosition>;
   deliveryProduct?: InputMaybe<LetterDeliveryProduct>;
@@ -2223,6 +2302,9 @@ export type MailTemplateInput = {
   context?: InputMaybe<MailTemplateContext>;
   description?: InputMaybe<Scalars['String']['input']>;
   htmlContent: Scalars['String']['input'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
+  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   subject: Scalars['String']['input'];
   textContent?: InputMaybe<Scalars['String']['input']>;
@@ -2240,6 +2322,10 @@ export type MailTemplateModel = {
   description?: Maybe<Scalars['String']['output']>;
   htmlContent: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: Maybe<Scalars['String']['output']>;
+  /** Stationery a letter printed from this template is set on; null means the default. */
+  letterLayoutId?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   status: Scalars['String']['output'];
   subject: Scalars['String']['output'];
@@ -2250,6 +2336,10 @@ export type MailTemplatePreviewInput = {
   /** Mail type / context id, e.g. "renewal". */
   contextId: Scalars['String']['input'];
   htmlContent: Scalars['String']['input'];
+  /** Uploaded pdf printed after the letter pages, e.g. a QR-bill. */
+  letterAppendixId?: InputMaybe<Scalars['String']['input']>;
+  /** Stationery to show a letter preview on; null for the default. */
+  letterLayoutId?: InputMaybe<Scalars['String']['input']>;
   subject: Scalars['String']['input'];
   /** Subscription to take sample data from. */
   subscriptionId?: InputMaybe<Scalars['String']['input']>;
@@ -2791,6 +2881,8 @@ export type Mutation = {
   addMailchimpContact: MailchimpSubscribeResult;
   /** Adds a new comment made by you. */
   addUserComment: Comment;
+  /** Called by We.Publish One. Replaces the feature state of this medium and returns the features now switched on. */
+  applyMediumFeatures: Array<Scalars['String']['output']>;
   /** Approves a comment */
   approveComment: Comment;
   /** Stop a running send job. Unsent recipients stay open and can be continued. */
@@ -2811,6 +2903,8 @@ export type Mutation = {
   createAnalyticsProviderSetting: SettingAnalyticsProvider;
   /** Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected. */
   createAndChargeInvoices: Scalars['Boolean']['output'];
+  /** Creates an api token and returns its secret. The secret is shown once and cannot be retrieved again. */
+  createApiToken: CreatedApiToken;
   /** Creates an article. */
   createArticle: Article;
   /** Creates a new author. */
@@ -2847,6 +2941,8 @@ export type Mutation = {
   createInvoice: Invoice;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  /** Create a letter layout. */
+  createLetterLayout: LetterLayoutModel;
   /** Creates a new letter provider setting. */
   createLetterProviderSetting: SettingLetterProvider;
   /** Sets up the mail provider. Only possible while none is configured. */
@@ -2948,6 +3044,8 @@ export type Mutation = {
   deleteImage: Scalars['String']['output'];
   /** Deletes an existing invoice. A PAID invoice is billing history and is only deleted with cascade: true (removes its billing period and items along). */
   deleteInvoice: Invoice;
+  /** Delete a letter layout. Refused while a mail template still prints on it. */
+  deleteLetterLayout: LetterLayoutModel;
   /** Deletes an existing letter provider setting. */
   deleteLetterProviderSetting: SettingLetterProvider;
   /** Delete an existing mail template */
@@ -3082,6 +3180,8 @@ export type Mutation = {
   revertUserSubscriptionUpgrade: PublicSubscription;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean']['output'];
+  /** Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately. */
+  revokeApiToken: ApiToken;
   revokeImpersonationSessions: Scalars['Int']['output'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String']['output'];
@@ -3146,6 +3246,8 @@ export type Mutation = {
   updateImage: Image;
   /** Updates an existing invoice. */
   updateInvoice: Invoice;
+  /** Update a letter layout. */
+  updateLetterLayout: LetterLayoutModel;
   /** Updates an existing letter provider setting. */
   updateLetterProviderSetting: SettingLetterProvider;
   /** Updates an existing mail provider setting. */
@@ -3239,6 +3341,11 @@ export type MutationAddUserCommentArgs = {
 };
 
 
+export type MutationApplyMediumFeaturesArgs = {
+  features: Scalars['JSONObject']['input'];
+};
+
+
 export type MutationApproveCommentArgs = {
   id: Scalars['String']['input'];
 };
@@ -3300,6 +3407,13 @@ export type MutationCreateAnalyticsProviderSettingArgs = {
 
 export type MutationCreateAndChargeInvoicesArgs = {
   password: Scalars['String']['input'];
+};
+
+
+export type MutationCreateApiTokenArgs = {
+  expiresAt: Scalars['DateTime']['input'];
+  name: Scalars['String']['input'];
+  scopes: Array<Scalars['String']['input']>;
 };
 
 
@@ -3452,6 +3566,11 @@ export type MutationCreateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']['input']>;
   scheduledDeactivationAt: Scalars['DateTime']['input'];
   subscriptionID?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationCreateLetterLayoutArgs = {
+  input: LetterLayoutInput;
 };
 
 
@@ -3898,6 +4017,11 @@ export type MutationDeleteInvoiceArgs = {
 };
 
 
+export type MutationDeleteLetterLayoutArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteLetterProviderSettingArgs = {
   id: Scalars['String']['input'];
 };
@@ -4226,6 +4350,11 @@ export type MutationRevertUserSubscriptionUpgradeArgs = {
 };
 
 
+export type MutationRevokeApiTokenArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationRevokeImpersonationSessionsArgs = {
   ids?: InputMaybe<Array<Scalars['String']['input']>>;
 };
@@ -4489,6 +4618,12 @@ export type MutationUpdateInvoiceArgs = {
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']['input']>;
   scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']['input']>;
   subscriptionID?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateLetterLayoutArgs = {
+  id: Scalars['String']['input'];
+  input: LetterLayoutInput;
 };
 
 
@@ -5084,6 +5219,13 @@ export type PageTeaserInput = {
   pageID?: InputMaybe<Scalars['String']['input']>;
   preTitle?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PaginatedApiTokens = {
+  __typename?: 'PaginatedApiTokens';
+  nodes: Array<ApiToken>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaginatedArticleRevisions = {
@@ -5852,6 +5994,8 @@ export type Query = {
   analyticsProviderSetting: SettingAnalyticsProvider;
   /** Returns all analytics provider settings. */
   analyticsProviderSettings: Array<SettingAnalyticsProvider>;
+  /** Returns your own api tokens, or everyone's with CAN_GET_ALL_API_TOKENS. Secrets are never included. */
+  apiTokens: PaginatedApiTokens;
   /** Returns an article by id or slug. */
   article: Article;
   /** Returns a single article revision including its full content. */
@@ -5947,6 +6091,8 @@ export type Query = {
   externalApp: ExternalApp;
   /** Returns all external apps. Requires authentication. */
   externalApps: Array<ExternalApp>;
+  /** The features switched on for this medium in We.Publish One (or through WEP_FEATURES). */
+  features: Array<Scalars['String']['output']>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
   /** Returns a goodie by id. */
@@ -5992,6 +6138,12 @@ export type Query = {
   invoices: InvoiceConnection;
   /** Whether a letter integration is configured, so letters can be previewed and sent */
   letterChannelAvailable: Scalars['Boolean']['output'];
+  /** A single letter layout. */
+  letterLayout: LetterLayoutModel;
+  /** A sample letter printed on the given, possibly unsaved, stationery. */
+  letterLayoutPreview: LetterLayoutPreviewModel;
+  /** All letter layouts, the default first. */
+  letterLayouts: Array<LetterLayoutModel>;
   /** Returns a single letter provider setting by id. */
   letterProviderSetting: SettingLetterProvider;
   /** Returns all letter provider settings. */
@@ -6234,6 +6386,17 @@ export type QueryAnalyticsProviderSettingArgs = {
 
 export type QueryAnalyticsProviderSettingsArgs = {
   filter?: InputMaybe<SettingAnalyticsProviderFilter>;
+};
+
+
+export type QueryApiTokensArgs = {
+  createdById?: InputMaybe<Scalars['String']['input']>;
+  cursorId?: InputMaybe<Scalars['String']['input']>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<ApiTokenSort>;
+  status?: InputMaybe<ApiTokenStatus>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6538,6 +6701,16 @@ export type QueryInvoicesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryLetterLayoutArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryLetterLayoutPreviewArgs = {
+  input: LetterLayoutPreviewInput;
 };
 
 

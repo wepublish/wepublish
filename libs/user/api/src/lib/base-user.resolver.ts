@@ -3,7 +3,7 @@ import { BaseUser, SensitiveDataUser } from './user.model';
 import { Property } from '@wepublish/property/api';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
-import { hasPermission } from '@wepublish/permissions/api';
+import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
 import { CanGetUser } from '@wepublish/permissions';
 
 @Resolver(() => BaseUser)
@@ -29,7 +29,7 @@ export class BaseUserResolver {
     @CurrentUser() user: UserSession | undefined
   ) {
     return properties?.filter(
-      prop => prop.public || hasPermission(CanGetUser, user?.roles ?? [])
+      prop => prop.public || hasPermission(CanGetUser, permissionsOf(user))
     );
   }
 }

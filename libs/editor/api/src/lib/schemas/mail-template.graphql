@@ -79,6 +79,8 @@ fragment FullMailTemplate on MailTemplateModel {
   ...TinyMailTemplate
   htmlContent
   textContent
+  letterLayoutId
+  letterAppendixId
 }
 
 fragment FullMailProvider on MailProviderModel {

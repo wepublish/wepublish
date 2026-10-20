@@ -11,7 +11,8 @@ export class OneClientService {
     @Inject(ONE_URL_TOKEN) private oneURL: string
   ) {}
 
-  async post(path: string, scope: string, body: unknown): Promise<void> {
+  /** Resolves with One's json answer, or nothing when One sent no json. */
+  async post(path: string, scope: string, body: unknown): Promise<unknown> {
     const token = await this.jwtService.generateScopedJWT({
       scope,
       audience: this.oneURL,
@@ -31,5 +32,13 @@ export class OneClientService {
     if (!response.ok) {
       throw new Error(`${response.status} ${response.statusText}`);
     }
+
+    const contentType = response.headers?.get('content-type') ?? '';
+
+    if (response.status === 204 || !contentType.includes('application/json')) {
+      return undefined;
+    }
+
+    return response.json();
   }
 }

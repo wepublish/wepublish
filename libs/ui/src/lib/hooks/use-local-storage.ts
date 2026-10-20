@@ -15,11 +15,14 @@ export const useLocalStorage = <I>(
   const [value, setValue] = useState(defaultValue);
   const previousValue = useRef(defaultValue);
   const currentValue = useRef(defaultValue);
+  const storedRaw = useRef<string | null>(null);
 
   const remove = useCallback(() => {
     if (typeof window === 'undefined') {
       return undefined;
     }
+
+    storedRaw.current = null;
 
     return localStorage.removeItem(key);
   }, [key]);
@@ -32,7 +35,9 @@ export const useLocalStorage = <I>(
 
       setValue(newVal);
 
-      localStorage.setItem(key, serializeRef.current(newVal));
+      const raw = serializeRef.current(newVal);
+      storedRaw.current = raw;
+      localStorage.setItem(key, raw);
       window.dispatchEvent(new StorageEvent('storage'));
     },
     [key]
@@ -49,6 +54,7 @@ export const useLocalStorage = <I>(
     const item = localStorage.getItem(key);
 
     if (item) {
+      storedRaw.current = item;
       setValue(deserializeRef.current(item));
     }
   }, [key, defaultValue]);
@@ -58,6 +64,12 @@ export const useLocalStorage = <I>(
       // manually fired event
       if (!e.storageArea) {
         const item = localStorage.getItem(key);
+
+        if (item === storedRaw.current) {
+          return;
+        }
+
+        storedRaw.current = item;
         setValue(item ? deserializeRef.current(item) : undefined);
       }
     };

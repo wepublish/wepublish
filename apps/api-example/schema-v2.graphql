@@ -59,6 +59,41 @@ enum AnalyticsProviderType {
   GOOGLE
 }
 
+type ApiToken {
+  createdAt: DateTime!
+
+  """The user who created this token. Null once that user is deleted."""
+  createdBy: User
+  createdById: String
+
+  """When the token stops working."""
+  expiresAt: DateTime!
+  id: String!
+  lastUsedAt: DateTime
+  modifiedAt: DateTime!
+  name: String!
+
+  """The non-secret start of the token"""
+  prefix: String!
+  revokedAt: DateTime
+
+  """The permissions this token carries."""
+  scopes: [String!]!
+}
+
+enum ApiTokenSort {
+  CreatedAt
+  LastUsedAt
+  Name
+}
+
+"""A revoked token counts as revoked even once it has also expired."""
+enum ApiTokenStatus {
+  Active
+  Expired
+  Revoked
+}
+
 type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   createdAt: DateTime!
   disableComments: Boolean!
@@ -840,6 +875,16 @@ input CreateExternalAppInput {
 type CreateSubscriptionInfo {
   discountCodeValid: Boolean
   discountPercent: Float
+}
+
+"""
+A newly created token. The secret is returned exactly once and cannot be retrieved again.
+"""
+type CreatedApiToken {
+  apiToken: ApiToken!
+
+  """The secret."""
+  token: String!
 }
 
 type Crowdfunding {
@@ -1813,6 +1858,48 @@ enum LetterDeliveryProduct {
   registered
 }
 
+input LetterLayoutInput {
+  footerHeightMm: Int!
+  footerHtml: String!
+  headerHeightMm: Int!
+  headerHtml: String!
+  isDefault: Boolean!
+  name: String!
+}
+
+"""
+Stationery for printed letters: a header and a footer repeated on every page of the pdf.
+"""
+type LetterLayoutModel {
+  createdAt: DateTime!
+
+  """Height of the footer band in millimetres from the bottom edge."""
+  footerHeightMm: Int!
+  footerHtml: String!
+
+  """Height of the header band in millimetres from the top edge."""
+  headerHeightMm: Int!
+  headerHtml: String!
+  id: String!
+
+  """Templates without stationery of their own print on this one."""
+  isDefault: Boolean!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+input LetterLayoutPreviewInput {
+  footerHeightMm: Int!
+  footerHtml: String!
+  headerHeightMm: Int!
+  headerHtml: String!
+}
+
+type LetterLayoutPreviewModel {
+  """A sample letter on this stationery, as base64 pdf."""
+  pdf: String!
+}
+
 input LetterPrintInput {
   addressPosition: LetterAddressPosition
   deliveryProduct: LetterDeliveryProduct
@@ -2212,6 +2299,10 @@ input MailTemplateInput {
   context: MailTemplateContext
   description: String
   htmlContent: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+  letterLayoutId: String
   name: String!
   subject: String!
   textContent: String
@@ -2227,6 +2318,14 @@ type MailTemplateModel {
   description: String
   htmlContent: String!
   id: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+
+  """
+  Stationery a letter printed from this template is set on; null means the default.
+  """
+  letterLayoutId: String
   name: String!
   status: String!
   subject: String!
@@ -2237,6 +2336,12 @@ input MailTemplatePreviewInput {
   """Mail type / context id, e.g. "renewal"."""
   contextId: String!
   htmlContent: String!
+
+  """Uploaded pdf printed after the letter pages, e.g. a QR-bill."""
+  letterAppendixId: String
+
+  """Stationery to show a letter preview on; null for the default."""
+  letterLayoutId: String
   subject: String!
 
   """Subscription to take sample data from."""
@@ -2783,6 +2888,11 @@ type Mutation {
   """Adds a new comment made by you."""
   addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
 
+  """
+  Called by We.Publish One. Replaces the feature state of this medium and returns the features now switched on.
+  """
+  applyMediumFeatures(features: JSONObject!): [String!]!
+
   """Approves a comment"""
   approveComment(id: String!): Comment!
 
@@ -2830,6 +2940,18 @@ type Mutation {
   Runs the invoice creation and charging steps of the daily periodic job on demand, without affecting the job run log. Requires an editor session and is additionally password protected.
   """
   createAndChargeInvoices(password: String!): Boolean!
+
+  """
+  Creates an api token and returns its secret. The secret is shown once and cannot be retrieved again.
+  """
+  createApiToken(
+    """When the token stops working."""
+    expiresAt: DateTime!
+    name: String!
+
+    """The permissions this token carries."""
+    scopes: [String!]!
+  ): CreatedApiToken!
 
   """Creates an article."""
   createArticle(authors: [ArticleRevisionAuthorInput!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoDescription: String, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
@@ -2881,6 +3003,9 @@ type Mutation {
 
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
+
+  """Create a letter layout."""
+  createLetterLayout(input: LetterLayoutInput!): LetterLayoutModel!
 
   """Creates a new letter provider setting."""
   createLetterProviderSetting(
@@ -3079,6 +3204,11 @@ type Mutation {
   Deletes an existing invoice. A PAID invoice is billing history and is only deleted with cascade: true (removes its billing period and items along).
   """
   deleteInvoice(cascade: Boolean, id: String!): Invoice!
+
+  """
+  Delete a letter layout. Refused while a mail template still prints on it.
+  """
+  deleteLetterLayout(id: String!): LetterLayoutModel!
 
   """Deletes an existing letter provider setting."""
   deleteLetterProviderSetting(id: String!): SettingLetterProvider!
@@ -3330,6 +3460,11 @@ type Mutation {
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
+
+  """
+  Revokes one of your api tokens, or anyone's with CAN_REVOKE_ALL_API_TOKENS. The token stops working immediately.
+  """
+  revokeApiToken(id: String!): ApiToken!
   revokeImpersonationSessions(ids: [String!]): Int!
 
   """
@@ -3429,6 +3564,9 @@ type Mutation {
 
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
+
+  """Update a letter layout."""
+  updateLetterLayout(id: String!, input: LetterLayoutInput!): LetterLayoutModel!
 
   """Updates an existing letter provider setting."""
   updateLetterProviderSetting(
@@ -3752,6 +3890,12 @@ input PageTeaserInput {
   pageID: String
   preTitle: String
   title: String
+}
+
+type PaginatedApiTokens {
+  nodes: [ApiToken!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type PaginatedArticleRevisions {
@@ -4477,6 +4621,22 @@ type Query {
   """Returns all analytics provider settings."""
   analyticsProviderSettings(filter: SettingAnalyticsProviderFilter): [SettingAnalyticsProvider!]!
 
+  """
+  Returns your own api tokens, or everyone's with CAN_GET_ALL_API_TOKENS. Secrets are never included.
+  """
+  apiTokens(
+    """
+    Only tokens created by this user. Ignored without CAN_GET_ALL_API_TOKENS, which already limits you to your own.
+    """
+    createdById: String
+    cursorId: String
+    order: SortOrder = Descending
+    skip: Int = 0
+    sort: ApiTokenSort = CreatedAt
+    status: ApiTokenStatus
+    take: Int = 10
+  ): PaginatedApiTokens!
+
   """Returns an article by id or slug."""
   article(id: String, slug: String): Article!
 
@@ -4669,6 +4829,11 @@ type Query {
   """Returns all external apps. Requires authentication."""
   externalApps(filter: ExternalAppFilter): [ExternalApp!]!
 
+  """
+  The features switched on for this medium in We.Publish One (or through WEP_FEATURES).
+  """
+  features: [String!]!
+
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!
 
@@ -4732,6 +4897,15 @@ type Query {
   Whether a letter integration is configured, so letters can be previewed and sent
   """
   letterChannelAvailable: Boolean!
+
+  """A single letter layout."""
+  letterLayout(id: String!): LetterLayoutModel!
+
+  """A sample letter printed on the given, possibly unsaved, stationery."""
+  letterLayoutPreview(input: LetterLayoutPreviewInput!): LetterLayoutPreviewModel!
+
+  """All letter layouts, the default first."""
+  letterLayouts: [LetterLayoutModel!]!
 
   """Returns a single letter provider setting by id."""
   letterProviderSetting(id: String!): SettingLetterProvider!

@@ -15,10 +15,6 @@ export type SitemapConfig = {
   siteUrl: string;
 };
 
-/**
- * @deprecated Use `createSitemapHandlers`, which pages through the archive,
- * can split it into a sitemap index and dates the homepage by its teasers.
- */
 export const generateSitemap =
   ({ lang = 'de', title, siteUrl }: SitemapConfig) =>
   (

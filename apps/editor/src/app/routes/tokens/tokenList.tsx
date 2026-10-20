@@ -1,5 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+} from '@mui/material';
+import {
   DeleteTokenDocument,
   FullTokenFragment,
   TokenListDocument,
@@ -7,7 +15,15 @@ import {
   UserRoleListDocument,
 } from '@wepublish/editor/api';
 import {
+  CanCreateToken,
+  CanDeleteToken,
+  CanGetTokens,
+} from '@wepublish/permissions';
+import {
   createCheckedPermissionComponent,
+  DataTable,
+  DRAWER_WIDTHS,
+  enqueueSnackbar,
   getOperationNameFromDocument,
   IconButton,
   IconButtonTooltip,
@@ -15,29 +31,17 @@ import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  PaddedCell,
   PermissionControl,
-  Table,
   TableWrapper,
   TokenGeneratePanel,
   TokenRolePicker,
+  useSeededState,
+  PageTitle,
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDelete, MdEdit, MdGeneratingTokens } from 'react-icons/md';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {
-  Button,
-  Drawer,
-  IconButton as RIconButton,
-  Message,
-  Modal,
-  Table as RTable,
-  toaster,
-} from 'rsuite';
-import { RowDataType } from 'rsuite-table';
-
-const { Column, HeaderCell, Cell: RCell } = RTable;
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 
 function TokenList() {
   const location = useLocation();
@@ -82,140 +86,128 @@ function TokenList() {
       tokenListError?.message ??
       deleteTokenError?.message ??
       updateTokenError?.message;
-    if (error)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {error}
-        </Message>
-      );
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error', autoHideDuration: null });
+    }
   }, [tokenListError, deleteTokenError, updateTokenError]);
 
-  useEffect(() => {
-    if (isGenerateRoute) {
-      setTokenGeneratePanelOpen(true);
-    }
-  }, [location]);
+  useSeededState(isGenerateRoute ? location.pathname : undefined, () =>
+    setTokenGeneratePanelOpen(true)
+  );
 
   return (
     <>
       <ListViewContainer>
         <ListViewHeader>
-          <h2>
+          <PageTitle>
             {t('tokenList.overview.tokens')}{' '}
             <InfoTooltip text={t('tokenList.overview.tokensInfo')} />
-          </h2>
+          </PageTitle>
         </ListViewHeader>
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_TOKEN']}>
+        <PermissionControl qualifyingPermissions={[CanCreateToken.id]}>
           <ListViewActions>
-            <Link to="/tokens/generate">
-              <RIconButton
-                appearance="primary"
-                disabled={isTokenListLoading}
-                icon={<MdGeneratingTokens />}
-              >
-                {t('tokenList.overview.generateToken')}
-              </RIconButton>
-            </Link>
+            <Button
+              component={RouterLink}
+              to="/tokens/generate"
+              variant="contained"
+              startIcon={<MdGeneratingTokens />}
+              disabled={isTokenListLoading}
+            >
+              {t('tokenList.overview.generateToken')}
+            </Button>
           </ListViewActions>
         </PermissionControl>
       </ListViewContainer>
 
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={isTokenListLoading}
+        <DataTable
+          storageKey="tokens"
           data={tokenListData?.tokens ?? []}
-        >
-          <Column
-            width={400}
-            align="left"
-            resizable
-          >
-            <HeaderCell>{t('tokenList.panels.name')}</HeaderCell>
-            <RCell dataKey="name" />
-          </Column>
-
-          <Column
-            flexGrow={1}
-            align="left"
-          >
-            <HeaderCell>{t('tokenList.panels.roles')}</HeaderCell>
-            <RCell>
-              {(rowData: RowDataType<FullTokenFragment>) =>
-                rowData.roleIDs?.length ?
-                  rowData.roleIDs
-                    .map((id: string) => roleNames.get(id) ?? id)
-                    .join(', ')
-                : t('tokenList.panels.noRoles')
-              }
-            </RCell>
-          </Column>
-
-          <Column
-            width={120}
-            align="center"
-            fixed="right"
-          >
-            <HeaderCell align="center">{t('action')}</HeaderCell>
-            <PaddedCell>
-              {(rowData: RowDataType<FullTokenFragment>) => (
+          loading={isTokenListLoading}
+          columns={[
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('tokenList.panels.name'),
+              width: 400,
+              align: 'left',
+              sortKey: 'name',
+              render: row => row.name,
+            },
+            {
+              id: 'roles',
+              label: t('tokenList.panels.roles'),
+              align: 'left',
+              render: row =>
+                row.roleIDs?.length ?
+                  row.roleIDs.map(id => roleNames.get(id) ?? id).join(', ')
+                : t('tokenList.panels.noRoles'),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 120,
+              align: 'center',
+              fixed: true,
+              render: rowData => (
                 <>
                   <PermissionControl
-                    qualifyingPermissions={['CAN_CREATE_TOKEN']}
+                    qualifyingPermissions={[CanCreateToken.id]}
                   >
                     <IconButtonTooltip
                       caption={t('tokenList.panels.editRoles')}
                     >
                       <IconButton
-                        icon={<MdEdit />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
+                        size="small"
                         aria-label={t('tokenList.panels.editRoles')}
                         onClick={() => {
                           setTokenToEdit(rowData as FullTokenFragment);
                           setEditedRoleIDs(rowData.roleIDs ?? []);
                         }}
-                      />
+                      >
+                        <MdEdit />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                   <PermissionControl
-                    qualifyingPermissions={['CAN_DELETE_TOKEN']}
+                    qualifyingPermissions={[CanDeleteToken.id]}
                   >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
-                        icon={<MdDelete />}
-                        circle
-                        size="sm"
-                        appearance="ghost"
-                        color="red"
+                        size="small"
+                        color="error"
                         aria-label={t('delete')}
                         onClick={() => {
                           setConfirmationDialogOpen(true);
                           setCurrentToken(rowData as FullTokenFragment);
                         }}
-                      />
+                      >
+                        <MdDelete />
+                      </IconButton>
                     </IconButtonTooltip>
                   </PermissionControl>
                 </>
-              )}
-            </PaddedCell>
-          </Column>
-        </Table>
+              ),
+            },
+          ]}
+        />
       </TableWrapper>
 
       <Drawer
+        anchor="right"
+        slotProps={{
+          paper: {
+            sx: {
+              width: DRAWER_WIDTHS.sm,
+              maxWidth: '100vw',
+            },
+          },
+        }}
         open={isTokenGeneratePanelOpen}
         onClose={() => {
           setTokenGeneratePanelOpen(false);
           navigate('/tokens');
         }}
-        size="sm"
       >
         <TokenGeneratePanel
           onClose={() => {
@@ -225,29 +217,37 @@ function TokenList() {
         />
       </Drawer>
 
-      <Modal
+      <Dialog
         open={!!tokenToEdit}
         onClose={() => setTokenToEdit(undefined)}
+        fullWidth
+        maxWidth="sm"
       >
-        <Modal.Header>
-          <Modal.Title>
-            {t('tokenList.panels.editRolesOf', { name: tokenToEdit?.name })}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+        <DialogTitle>
+          {t('tokenList.panels.editRolesOf', { name: tokenToEdit?.name })}
+        </DialogTitle>
+        <DialogContent>
           <p>{t('tokenList.panels.rolesInfo')}</p>
           <TokenRolePicker
             value={editedRoleIDs}
             disabled={isUpdating}
             onChange={setEditedRoleIDs}
           />
-        </Modal.Body>
-        <Modal.Footer>
+        </DialogContent>
+        <DialogActions>
           <Button
-            appearance="primary"
+            variant="text"
+            onClick={() => setTokenToEdit(undefined)}
+          >
+            {t('tokenList.panels.cancel')}
+          </Button>
+          <Button
+            variant="contained"
             disabled={isUpdating}
             onClick={async () => {
-              if (!tokenToEdit) return;
+              if (!tokenToEdit) {
+                return;
+              }
 
               await updateToken({
                 variables: { id: tokenToEdit.id, roleIDs: editedRoleIDs },
@@ -257,54 +257,50 @@ function TokenList() {
           >
             {t('save')}
           </Button>
-          <Button
-            onClick={() => setTokenToEdit(undefined)}
-            appearance="subtle"
-          >
-            {t('tokenList.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
 
-      <Modal
+      <Dialog
         open={isConfirmationDialogOpen}
         onClose={() => setConfirmationDialogOpen(false)}
       >
-        <Modal.Header>
-          <Modal.Title>{t('tokenList.panels.deleteToken')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+        <DialogTitle>{t('tokenList.panels.deleteToken')}</DialogTitle>
+        <DialogContent>
           {t('tokenList.panels.deleteTokenText', {
             name: currentToken?.name || currentToken?.id,
           })}
-        </Modal.Body>
-        <Modal.Footer>
+        </DialogContent>
+        <DialogActions>
           <Button
+            variant="text"
+            onClick={() => setConfirmationDialogOpen(false)}
+          >
+            {t('tokenList.panels.cancel')}
+          </Button>
+
+          <Button
+            variant="contained"
             disabled={isDeleting}
             onClick={async () => {
-              if (!currentToken) return;
+              if (!currentToken) {
+                return;
+              }
 
               await deleteToken({ variables: { id: currentToken.id } });
               setConfirmationDialogOpen(false);
             }}
-            color="red"
+            color="error"
           >
             {t('tokenList.panels.confirm')}
           </Button>
-          <Button
-            onClick={() => setConfirmationDialogOpen(false)}
-            appearance="subtle"
-          >
-            {t('tokenList.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  'CAN_CREATE_TOKEN',
-  'CAN_GET_TOKENS',
-  'CAN_DELETE_TOKEN',
+  CanCreateToken.id,
+  CanGetTokens.id,
+  CanDeleteToken.id,
 ])(TokenList);
 export { CheckedPermissionComponent as TokenList };

@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react';
+import { Autocomplete, TextField } from '@mui/material';
 import { UserRoleListDocument } from '@wepublish/editor/api';
-import { CheckPicker } from 'rsuite';
+import { useTranslation } from 'react-i18next';
 
 export interface TokenRolePickerProps {
   value: string[];
@@ -14,22 +15,33 @@ export function TokenRolePicker({
   onChange,
   disabled,
 }: TokenRolePickerProps) {
+  const { t } = useTranslation();
   const { data, loading } = useQuery(UserRoleListDocument, {
     variables: { take: 200 },
   });
 
+  const roles = (data?.userRoles.nodes ?? []).map(role => ({
+    id: role.id,
+    name: role.name,
+  }));
+
   return (
-    <CheckPicker
-      block
-      placement="auto"
-      value={value}
-      disabled={disabled}
+    <Autocomplete
+      multiple
+      disableCloseOnSelect
+      options={roles}
       loading={loading}
-      data={(data?.userRoles.nodes ?? []).map(role => ({
-        value: role.id,
-        label: role.name,
-      }))}
-      onChange={roleIDs => onChange(roleIDs ?? [])}
+      disabled={disabled}
+      value={roles.filter(role => value.includes(role.id))}
+      getOptionLabel={role => role.name}
+      isOptionEqualToValue={(option, selected) => option.id === selected.id}
+      onChange={(_, selected) => onChange(selected.map(role => role.id))}
+      renderInput={params => (
+        <TextField
+          {...params}
+          label={t('tokenList.panels.roles')}
+        />
+      )}
     />
   );
 }

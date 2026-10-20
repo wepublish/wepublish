@@ -1,9 +1,9 @@
 import { useMutation } from '@apollo/client/react';
+import { CircularProgress } from '@mui/material';
 import { ImportPeerArticleDocument } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Loader } from 'rsuite';
 
 import {
   useNetworkClients,
@@ -58,7 +58,9 @@ export default function NetworkContentDashboard() {
   );
 
   const handleConfirmImport = () => {
-    if (!articleToImport) return;
+    if (!articleToImport) {
+      return;
+    }
 
     importPeerArticle({
       variables: {
@@ -92,7 +94,7 @@ export default function NetworkContentDashboard() {
   if (loading) {
     return (
       <CenteredContainer>
-        <Loader />
+        <CircularProgress />
       </CenteredContainer>
     );
   }

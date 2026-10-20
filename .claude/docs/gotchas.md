@@ -60,8 +60,8 @@ See [testing.md](testing.md).
 > imported by a relative path.
 
 `vitest.shared.ts` in turn re-reads `tsconfig.base.json` and rebuilds the
-`@wepublish/*` aliases itself, so *"imports resolve to their source files instead
-of built output"*.
+`@wepublish/*` aliases itself, so _"imports resolve to their source files instead
+of built output"_.
 
 **Load-bearing.** Removing the exemption makes every `vitest.config.ts` fail
 lint; "fixing" the relative import to an alias breaks resolution, because the
@@ -90,8 +90,8 @@ cleanup task with its own PR — not something to flip while doing unrelated wor
 
 [eslint.config.mjs](../../eslint.config.mjs) errors on:
 
-- `styled` from `@mui/material` → *"Please import `styled` from `@emotion/styled`
-  instead."* Mixing the two produces components that ignore the Emotion theme.
+- `styled` from `@mui/material` → _"Please import `styled` from `@emotion/styled`
+  instead."_ Mixing the two produces components that ignore the Emotion theme.
 - `SensitiveDataUser` from `@wepublish/user/api` → import it **only** when the
   sensitive fields are genuinely required; otherwise use `User`.
 
@@ -154,6 +154,26 @@ database boundary.
 
 ---
 
+### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
+
+The `ci` configuration in [nx.json](../../nx.json) sets `maxWorkers: 1`.
+`test-backend` runs 10 Nx tasks at once on a 4-vCPU GitHub runner, and without
+the cap every task started its own pool of ~3 workers. With ~30 processes on 4
+cores and coverage on, a test was ~30× slower than locally, and MUI specs around
+0.7 s hit the 15 s `testTimeout` (`ui-editor`, 2026-10-16). Don't raise
+`testTimeout` or drop the cap to "speed CI up". Make a slow spec cheaper instead.
+Each uncached run (all 92 tasks) took ~11 min with the cap and 9 m 04 s
+without it, but the run without it failed. Two workers were tried and gave
+nothing: 11 m 24 s, and `membership-editor` timed out again (2026-10-16, one
+run each).
+In happy-dom the cost is mostly `getComputedStyle`, which MUI's Popper and
+`TextareaAutosize` call on every open or render.
+
+Local runs don't use `-c ci`. When reproducing CI locally with `-c ci`, add
+`--maxWorkers=4` to get your cores back.
+
+---
+
 ### ⚠️ Every Dragonfly key must start with `REDIS_KEY_PREFIX`
 
 All media share database 0; a medium's user may only touch `<prefix>:*` /
@@ -173,8 +193,8 @@ under the prefix; a new command needs a look at the ACL first.
 ### ⚠️ `KvTtlCacheModule` builds `CACHE_MANAGER` itself; only listed namespaces leave the process
 
 Not `CacheModule.register`: `@nestjs/cache-manager` checks `store instanceof
-Keyv`, which fails under Vitest (ESM vs CJS `keyv`) with *"Cannot read
-properties of undefined (reading 'includes')"*. Only `SHARED_NAMESPACES` go to
+Keyv`, which fails under Vitest (ESM vs CJS `keyv`) with _"Cannot read
+properties of undefined (reading 'includes')"_. Only `SHARED_NAMESPACES` go to
 Dragonfly; integration settings (`settings:*`) must never be added (startup
 throws). Values are JSON even in memory (master kept live objects):
 `kv-ttl-cache-serializer.ts` keeps `Date`s and Prisma `Decimal`s
@@ -217,7 +237,7 @@ loads `.env` too (`ConfigModule.forRoot()`), so to run it without Dragonfly set
 ### ⚠️ BullMQ on our Dragonfly needs three things
 
 Verified with bullmq 6.3.11 on v2.0.0 (2026-10-01): Dragonfly must run with
-`--lock_on_hashtags` (else *"script tried accessing undeclared key"*), the
+`--lock_on_hashtags` (else _"script tried accessing undeclared key"_), the
 queue `prefix` must be `{<REDIS_KEY_PREFIX>}`, and a node-redis `connection`
 must drop `name` in `duplicate()` — the worker's `CLIENT SETNAME` is denied by
 `-client`, and Dragonfly cannot allow single subcommands. The flag is not in
@@ -265,13 +285,13 @@ that cookie there. The JWT handshake then succeeds, but every following request
 goes out without a session and the banner says "Du siehst die veröffentlichte
 Version" (prod, 2026-10-06; reproduced in Chromium, Firefox and WebKit: cookie
 not stored, 0 authenticated API requests). Locally it works, because
-`localhost:3000` and `localhost:4204` are the *same site* — ports do not count.
+`localhost:3000` and `localhost:4204` are the _same site_ — ports do not count.
 Reproduce with a host page on `127.0.0.1` around `localhost:4204`.
 
 A framed page therefore also writes the token to `sessionStorage`, which
 `authLink` falls back to. Making the cookie `SameSite=None` instead would loosen
 it for every page and is partitioned or blocked in some browsers. Writing
-`sessionStorage` for *top-level* pages too breaks logout: it only clears the
+`sessionStorage` for _top-level_ pages too breaks logout: it only clears the
 browser side, so a per-tab copy would keep other tabs logged in (and in preview
 mode) after logging out in one.
 
@@ -355,6 +375,7 @@ than ~100 reads do not.
 Pinned by `fast-string-prototype.spec.ts` and `shared-store.fast-strings.spec.ts`
 (fresh `node --allow-natives-syntax`); a new place that loads `@keyv/redis` or
 `@redis/client` needs the same call.
+
 ### ⚠️ The Sentry packages must move as one, and must stay on 11+
 
 [package.json](../../package.json) keeps `@sentry/nestjs`, `@sentry/nextjs`,
@@ -380,9 +401,9 @@ v11 renames: `beforeSendSpan` gets a streamed span with `attributes`, not
 — a subpath export node10 `moduleResolution` cannot see, so every app needs
 `moduleResolution: bundler`.
 
-**The API boots with a warning, and it is accurate — leave it:** *"Failed to
+**The API boots with a warning, and it is accurate — leave it:** _"Failed to
 register diagnostics-channel injection hooks, so channel-based integrations
-will not record spans."* v11 instruments `express`, `graphql`, `@nestjs/*`,
+will not record spans."_ v11 instruments `express`, `graphql`, `@nestjs/*`,
 `pg` and Prisma via diagnostics channels injected by runtime module hooks,
 which the `@yao-pkg/pkg` binary cannot register. Errors still report; span
 detail is lost. Two fixes failed on 2026-10-05 — do not redo them:
@@ -425,8 +446,8 @@ bundle for `require("<pkg>")`.
 peer with `import.meta.resolve('@nestjs/axios')` and loads it with
 `await import(...)`. Neither works inside a snapshot, and no amount of
 bundling changes that — adding `HttpModule` to the health module was tried on
-2026-10-05 and the binary still aborted on boot with *The "@nestjs/axios"
-package is missing*. `@nestjs/axios` was installed and working the whole time;
+2026-10-05 and the binary still aborted on boot with _The "@nestjs/axios"
+package is missing_. `@nestjs/axios` was installed and working the whole time;
 `HttpService` is used normally via DI in provider-registry, user, image and
 event-import. The fix is to not instantiate the indicator at all:
 [http-ping.health.ts](../../libs/health/api/src/lib/http-ping.health.ts)
@@ -438,8 +459,8 @@ of the two it does** — `grep` it for `import.meta.resolve` and `await import(`
 as well as `loadPackage`. Only the first kind is bundleable.
 
 Three have bitten so far: `@nestjs/platform-express`, `@nestjs/axios` and
-`@as-integrations/express5` (*The "@as-integrations/express5" package is
-missing*, from `ApolloDriver`). The last one also sat in **devDependencies**
+`@as-integrations/express5` (_The "@as-integrations/express5" package is
+missing_, from `ApolloDriver`). The last one also sat in **devDependencies**
 even though GraphQLModule needs it at runtime — a runtime peer belongs in
 `dependencies`, and a sweep that only reads `dependencies` will not see it.
 
@@ -548,7 +569,7 @@ provider returned `null`, unmounted the editor, and every remounted query
 re-ran under the `network-only` default.
 
 **Load-bearing:** `loading && !data` (not `loading`) in the provider's return,
-and the `if (!isPageActive) return` guard, which keeps the tab *losing* focus
+and the `if (!isPageActive) return` guard, which keeps the tab _losing_ focus
 from triggering the same round trip.
 
 Pinned by [authContext.spec.tsx](../../libs/ui/editor/src/lib/authContext.spec.tsx).
@@ -568,6 +589,44 @@ check-then-write at boot (`findUnique` then `create`) and even Prisma's
 
 Pinned by `google-analytics-db-config.spec.ts` and the "several replicas" cases
 in `reconcile-provider-registry.spec.ts`, whose fakes race like Prisma does.
+
+---
+
+### ⚠️ The letter sheet keeps `@page { margin: 0 }`; stationery space comes from the table spacers
+
+`composeLetter` (`libs/letter/api/src/lib/letter-renderer.ts`) positions the
+Pingen address window absolutely at 60mm from the sheet top and puts the
+header/footer bands in `position: fixed` boxes. Space for the bands on every
+page is reserved by the `thead`/`tfoot` spacer rows of the `.flow` table, which
+Chromium repeats per page, and page 1's body offset is reduced by the header
+spacer so the text still starts at 90mm.
+
+Reserving the bands with `@page` margins instead moves the address window by
+the top margin and Pingen rejects the letter; a fixed box offset into the
+margin area is clipped by Chromium. The band cap of 40mm (`LAYOUT_BAND_MAX_MM`)
+keeps a header out of the franking zone, whose bottom edge is at 87.5mm.
+
+**Load-bearing:** `margin: 0` in the `@page` rule, the thead/tfoot spacer rows,
+and `CONTENT_TOP_MM - headerSpace` for the body padding.
+
+Pinned by `libs/letter/api/src/lib/letter-renderer.spec.ts`.
+
+### ⚠️ `prisma migrate dev` refuses to run against a database other branches migrated
+
+The local Postgres is shared by every worktree. Once a migration from another
+branch has been applied to it, `prisma migrate dev` in a worktree that lacks
+that folder reports it as missing and wants to reset the database, which drops
+every table (`migrate status` still says "up to date", it does not flag extra
+migrations).
+
+Write the migration by hand instead: `npx prisma migrate diff
+--from-config-datasource --to-schema libs/api/prisma/schema.prisma --script`
+prints the SQL (strip the parts that belong to the other branches), put it in a
+`YYYYMMDDHHMMSS_name/migration.sql` folder, then `npx prisma migrate deploy`
+applies only the pending folders and does not care about extra ones
+(verified 2026-10-15 with `20261015100000_letter_layout`).
+
+Nothing guards this — a reset here is silent until the data is gone.
 
 ---
 
@@ -598,9 +657,316 @@ that error list.
 
 ---
 
+### ⚠️ `@Feature` is a plain guard, not `OneOf` — and `useFeature` starts at false
+
+[feature.decorator.ts](../../libs/features/api/src/lib/feature.decorator.ts)
+uses `UseGuards(FeatureGuard)`, unlike `@Permissions`, `@Authenticated` and
+`@Settings`, which all add to `OneOf`.
+
+`OneOf` passes when **any** listed guard passes, so a feature check added to it
+would be skipped whenever the user has the permission. That is every admin:
+`addPredefinedPermissions` gives the admin role all of them. A method-level
+`UseGuards` runs after the global guards and adds an AND.
+
+In the editor, `useHasPermission` answers `true` while the roles are loading.
+`useFeature` deliberately answers `false` until the `features` query is back,
+so an unreleased menu item never flashes in.
+
+**Load-bearing:** the `UseGuards` in `Feature()`, and the `?? false` in
+`useFeature`. Wrapping either in the permission pattern opens unreleased
+features to every admin, or briefly to everyone.
+
+Pinned by `feature.guard.spec.ts` and `featureContext.spec.tsx`.
+
+---
+
+### ⚠️ A backtick inside a CSS comment ends the Emotion template literal
+
+A `/* … */` comment inside a styled template is still _inside a JavaScript
+template literal_, so a backtick in it closes the string. Writing
+
+```
+  /* The channel var rather than `alpha()`, so the tint follows the scheme. */
+```
+
+inside `styled.span\`…\``produced`TS1005: ',' expected` three lines later
+(`userSubscriptionsList.tsx:185`), pointing at code that was perfectly fine —
+the parse had already gone off the rails at the backtick.
+
+The obvious alternative — escaping it as `` \` `` — works for the compiler but
+puts a stray backslash in the emitted CSS comment. Just write the name without
+backticks: `alpha()`, not `` `alpha()` ``.
+
+**Load-bearing:** nothing enforces this; `tsc` reports it as a syntax error in
+the wrong place, which is what makes it expensive. Nothing guards this — a
+regression here is caught by the build, but the message will mislead you.
+
+---
+
+### ⚠️ A `!` non-null assertion inside a handler can crash the page under the React Compiler
+
+`apps/editor` compiles with `babel-plugin-react-compiler`. The compiler reads
+values out of a handler to decide what to memoise, so
+
+```tsx
+const [articleToImport, setArticleToImport] = useState<{articleId: string}>()
+…
+<Button onClick={() => importPeerArticle({
+  variables: { articleId: articleToImport!.articleId },
+})} />
+```
+
+dereferenced `articleToImport` **during render**, while the dialog was closed
+and the state was `undefined`. `/articles/peer` rendered a blank editor with
+`Cannot read properties of undefined (reading 'articleId')` — and because the
+element is built eagerly, it happened even though the dialog had `open={false}`
+and the handler had never run.
+
+The obvious alternative — leaving the `!` because "TypeScript is happy and the
+handler only runs when it is set" — is exactly the assumption the compiler does
+not share. Guard instead:
+
+```tsx
+onClick={() => {
+  if (!articleToImport) return
+  …
+}}
+```
+
+`@typescript-eslint/no-non-null-assertion` warns on these; under the compiler
+the warnings on optional _state_ are worth treating as errors.
+
+**Load-bearing:** `RouteErrorBoundary` in `apps/editor/src/app/app.tsx` is what
+makes this class of bug visible at all — without it React unmounts the tree and
+Sentry swallows the message, leaving a blank page and an empty console. Pinned
+by `routeErrorBoundary.spec.tsx`.
+
+---
+
+### ⚠️ `watch('x')` is read once under the React Compiler — use `useWatch`
+
+react-hook-form's `watch` is a function with a stable identity, so the compiler
+memoises the call against it:
+
+```js
+// what the compiler emits for `const a = watch('alpha')`
+if ($[0] !== watch) {
+  t0 = watch('alpha'); // never re-runs: `watch` never changes
+  $[0] = watch;
+  $[1] = t0;
+} else {
+  t0 = $[1];
+}
+```
+
+The field is read on the first render and never again. On screen that is a
+member plan whose pricing panel stays on "enable a payment interval first"
+after one is enabled, and an analytics toggle whose id field never appears.
+Nothing throws, so it reads as a layout bug rather than a stale read.
+
+`useWatch({ control, name })` is a hook: it subscribes, and the compiler leaves
+it alone. Every editor read is one (`grep "[^e]watch("` under `apps/editor` and
+the editor libs comes back empty). Where a hook cannot go — a `map` over
+settings, `bypasses.${index}.token` — subscribe to the parent once with
+`useWatch({ control })` or `useWatch({control, name: 'bypasses'})` and index
+into the result.
+
+This is also why components taking `watch` were quietly _skipped_ by the
+compiler before ("Compilation Skipped: Use of incompatible library"); removing
+`watch` lets it compile them, which can surface fresh `set-state-in-effect`
+errors in code that was never checked.
+
+---
+
+### ⚠️ The compiler turns a hoisted inner function into a `const`
+
+A function declaration inside a hook callback that another inner function
+closes over is emitted as `const clampPoint = function clampPoint(…)`, while
+the call site above it stays where it was:
+
+```js
+t1 = () => {
+  setTransform(point);                    // ← runs first
+  const clampPoint = function clampPoint(p) { … };   // ← no longer hoisted
+  function setTransform(p) { return clampPoint(p); }
+};
+```
+
+`libs/ui/editor/src/lib/atoms/draggable.tsx` did exactly this and the image
+edit panel died with `Cannot access 'clampPoint' before initialization` — the
+focal-point picker, so every image drawer in the editor. Declare helpers above
+their first call inside effects; JavaScript's hoisting is not a guarantee once
+the compiler has been through.
+
+---
+
+### ⚠️ `useSeededState` compares with `Object.is`, and that is load-bearing
+
+`NaN !== NaN`, so a plain `!==` sees a new value every render and seeds
+forever — "Too many re-renders" from inside `CurrencyInput`. An amount derived
+from a form whose async `defaultValues` has not resolved (`monthlyAmount *
+months` where `monthlyAmount` is still `undefined`) is exactly that. Pinned by
+a case in `use-seeded-state.spec.tsx`.
+
+The same render guards the cure: a view with async `defaultValues` should
+return nothing until `formState.isLoading` clears.
+
+---
+
+### ⚠️ `DataTable`'s body memo must depend on the columns
+
+`libs/ui/editor/src/lib/listView/data-table.tsx` memoises the rendered rows so
+that dragging a column — which updates sizing state on every mousemove — does
+not re-render every cell. The deps have to include `columnDefs`: a cell may
+draw from something outside its row (a second query's answer), and that reaches
+the table as a new `columns` array while `rows` keeps its identity.
+
+Left out, the import-events list never redrew its "imported" buttons when the
+ids query landed, which read as a flaky test rather than a bug. A drag is
+unaffected by the extra dep, because the sizing state is the table's own and
+leaves the caller's `columns` untouched.
+
+---
+
+### ⚠️ A form group has to space itself — the theme gives controls no margin
+
+`MuiFormControl` is `margin: 'none'` in the editor theme (see the comment
+there for why dense did not suit). rsuite's `<Form fluid>` spaced its controls
+for you, and the codemod turned it into `<Stack sx={{ width: '100%' }}>`,
+which does not. With no margin and no gap the fields sit flush and the second
+field's floating label lands _on the border of the first_ — visible on the
+crowdfunding form, the poll editor, the article metadata panel and the
+settings page.
+
+So every form group carries `spacing={3}`, and
+`tools/rsuite-to-mui/codemods/form-bare.mjs` and `form-stack.mjs` emit it, so
+a re-run does not undo the fix. When a group spaces itself, a child carrying
+`sx={{ marginBottom: 3 }}` is the old manual spacing and doubles the gap —
+63 of those came out with the fix.
+
+New groups should use `FormFields` from `@wepublish/ui/editor` instead; the
+`Stack` form is what the migration left behind.
+
+---
+
+### ⚠️ `CardContent` inside `CardContent` is padding inside padding
+
+The settings page nested three deep (`Card > CardContent > CardContent >
+CardHeader + CardContent`), which is 48px of padding before a single control
+and a header indented away from its own card's edge. A card is
+`CardHeader` + one `CardContent`; anything more is a wrapper someone added to
+get spacing that `gap` should provide.
+
+---
+
+### ⚠️ A row tint has to be a background _image_, not a background colour
+
+The list row states (`approved`, `pending-approval`, `rejected`, …) are
+7-12% alphas defined in `editorGlobalStyles.tsx`. Painted as
+`background-color` on `.MuiTableCell-root`, they beat the pinned column's own
+`background-color` on specificity (two classes vs one class and an attribute)
+— so the pinned Actions column became translucent and the rows scrolling
+underneath showed straight through it on a narrow viewport.
+
+As `background-image: linear-gradient(tint, tint)` the tint layers _over_ the
+cell's own background instead of replacing it: a pinned cell keeps its opaque
+`background.paper` underneath and comes out the same colour as its neighbours.
+Anything else pinned in a tinted row needs the same treatment.
+
+---
+
+### ⚠️ The editor's grids were written for `xl`, which starts at 1536px
+
+The audience dashboard laid its three regions out at `xl` only, so on any
+ordinary laptop every one of them fell back to `xs: 12` and the page became a
+single tall stack — eight metric toggles one per row across a 1200px card.
+`lg` (1200px) is the breakpoint that matches the editor's own layout; check
+for `xl:` before concluding a screen is "just badly designed".
+
+A field alone on its row wants the whole row, too: `subscriptionEditView` had
+single-child rows at `xs: 6`, which left half the column empty and wrapped
+every label.
+
+---
+
+### ⚠️ `useLocalStorage` broadcasts to every hook on the page
+
+`set` in `libs/ui/src/lib/hooks/use-local-storage.ts` ends with
+`window.dispatchEvent(new StorageEvent('storage'))` so other hooks sharing the
+same key stay in sync. The listener fires for _every_ mounted instance, whatever
+key it holds, and each one re-reads its own entry and calls
+`setValue(deserialize(item))` — a brand new object for an untouched value.
+
+On the page list that meant hiding a column (a write to
+`wepublish:editor:listColumns:pages`) handed `useListViewState('pages')` a new
+`filter` identity, which re-ran `useEffect(() => refetch(…), [filter, …])` and
+blanked the rows while the query came back. The article list had no such effect,
+which is why only one of the two flickered.
+
+**Load-bearing:** the `item === storedRaw.current` early return in the listener.
+Without it any `useLocalStorage` write re-renders every other consumer in the
+app. The redundant `refetch` effect is gone from `pageList` as well — `useQuery`
+already refetches when its variables change.
+
+Pinned by `apps/editor/src/app/routes/pages/pageList.spec.tsx` ("does not
+refetch when a column is hidden"), which seeds the stored list state first: with
+nothing in storage the hook falls back to a stable default and the bug cannot
+reproduce.
+
+---
+
+### ⚠️ An incomplete Apollo mock turns a story spec into a race
+
+Apollo 4's `MockLink` delays each response by a random 20–50 ms. When two
+queries return the same normalised object (a `PublicSubscription` in both
+`Subscriptions` and `Invoices`), and its mock lacks a fragment field
+(`Missing field 'goodie' while writing result` in stderr), the second response
+leaves the object incomplete. Apollo then refetches the first query, finds its
+mock used up, and the component shows "No more mocked responses" instead of its
+content. That depends on which response comes first and how fast the runner
+renders, so `membership-website`'s "should render Extend" failed now and then on
+CI and never locally (2026-10-16).
+
+Type a mock with `satisfies Exact<…Fragment>`, never `as`, so a missing field
+shows in the editor. Stories aren't type-checked in CI (excluded from
+`tsconfig.lib.json`). Write "no value" as `null`, not `undefined`. Treat any
+`Missing field` line in a spec's stderr as a bug. Fixed delays (`delay` on each
+mock) turn the race into a test that fails every time.
+
+Pinned by `subscription-list-container.spec.tsx` ("should keep the list when
+the invoices arrive after the subscriptions").
+
+---
+
+### ⚠️ `theme.palette` is the light scheme, frozen
+
+The editor builds one theme with both colour schemes and `cssVariables`, so
+the live colours live in `theme.vars.palette.*` (which compile to
+`var(--mui-palette-…)` and follow `data-mui-color-scheme`). `theme.palette.*`
+is whatever the light scheme was at `createTheme` time — it never changes with
+the toggle.
+
+A styled component that reads `theme.palette.background.paper` therefore paints
+white in dark mode: the dashboard's "Customize dashboard" dialog had white rows
+with grey-on-white labels until its five reads were switched to `theme.vars`.
+Exceptions are deliberate: `analyticsIntegrationForm` passes
+`theme.palette.success.light` through `lighten()` — a colour _function_ cannot
+take a CSS variable — and pairs it with an explicit
+`[data-mui-color-scheme='dark'] &` branch.
+
+**Load-bearing:** `theme.vars.` in every styled rule that names a palette
+colour. A grep for `theme.palette.` outside a dark-mode branch is the check.
+
+Pinned by `apps/editor/src/app/routes/dashboard/dashboardConfig.spec.tsx`,
+which reads the _emitted_ rule rather than the computed value — jsdom resolves
+`var(--mui-palette-background-paper, #fff)` to the light fallback baked into
+it, so `getComputedStyle` cannot tell the two apart.
+
+---
+
 ## Adding an entry
 
-Keep the house style: a future agent must be able to tell *why* the obvious
+Keep the house style: a future agent must be able to tell _why_ the obvious
 change is wrong without re-running your debugging session.
 
 ```markdown
@@ -618,7 +984,7 @@ refactor.>
 **Load-bearing:** <which specific lines must not be removed, and what happens
 if they are.>
 
-Pinned by `<path/to/the.spec.ts>`  ← if a test guards it. If nothing guards it,
+Pinned by `<path/to/the.spec.ts>` ← if a test guards it. If nothing guards it,
 say so explicitly: "Nothing guards this — a regression here is silent."
 ```
 

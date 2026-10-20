@@ -1,4 +1,4 @@
-import { ModuleMetadata, Provider, Type } from '@nestjs/common';
+import { InjectionToken, ModuleMetadata, Provider, Type } from '@nestjs/common';
 
 export interface ModuleAsyncOptions<OptionsType>
   extends Pick<ModuleMetadata, 'imports'> {
@@ -6,7 +6,8 @@ export interface ModuleAsyncOptions<OptionsType>
   useExisting?: Type<OptionsType>;
   useClass?: Type<OptionsType>;
   useFactory?: (...args: any[]) => Promise<OptionsType> | OptionsType;
-  inject?: Type[];
+  // Any token Nest can inject, abstract classes (e.g. `MediaAdapter`) included.
+  inject?: InjectionToken[];
 }
 
 export const createAsyncOptionsProvider = <OptionsType>(

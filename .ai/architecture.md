@@ -123,6 +123,7 @@ Frontend (Apollo Client)
 - `@PreviewMode()` for draft content access
 - External apps (`libs/external-apps/api`): the editor mints a 4 h EdDSA JWT per opened app (`createExternalAppToken`, audience = the app's origin) and hands it over in the URL fragment (`#token=…`, never a query parameter: fragments reach no server or log); apps verify it via `GET /external-apps/userinfo` or the JWKS at `/.well-known/jwks.json`
 - API tokens (`libs/peering/api`, editor Peering → Tokens): a request with `Authorization: Bearer <token>` and `User-Agent: We.Publish/1.0 Peering` gets the permissions of the token's `roleIDs`; roles are set when creating or editing the token (`createToken` / `updateToken`), and a token without roles may do nothing
+- Per-medium feature toggles (`libs/features`, state from We.Publish One): `@Feature('key')` in the API, `useFeature` / `FeatureControl` in the editor — see [conventions.md](conventions.md#feature-toggles-per-medium)
 
 ## Import Aliases
 

@@ -15,3 +15,7 @@ export * from './lib/pdf/base-pdf-renderer';
 export * from './lib/pdf/cloudflare-pdf-renderer';
 export * from './lib/pdf/gotenberg-pdf-renderer';
 export * from './lib/pdf/create-pdf-renderer';
+export * from './lib/letter-sample-data';
+export * from './lib/letter-layout/letter-layout.model';
+export * from './lib/letter-layout/letter-layout.service';
+export * from './lib/letter-layout/letter-layout.resolver';

@@ -1,6 +1,16 @@
 import { useMutation } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  TextField,
+} from '@mui/material';
+import {
   CreatePollExternalVoteSourceDocument,
   DeletePollExternalVoteSourceDocument,
   FullPollFragment,
@@ -11,23 +21,13 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import {
-  Button,
-  Col,
-  IconButton,
-  Message,
-  Modal,
-  NumberInput,
-  Row as RRow,
-  Table,
-  toaster,
-} from 'rsuite';
-import FormControl from 'rsuite/FormControl';
-import { RowDataType } from 'rsuite-table';
+
 import { humanizeError } from '../../humanizeError';
+import { DataTable, DataTableColumn } from '../../listView/data-table';
+import { enqueueSnackbar } from '../../snackbar';
 import { IconButtonTooltip } from '../iconButtonTooltip';
 
-const Row = styled(RRow)`
+const Row = styled(Grid)`
   margin-top: 20px;
 `;
 
@@ -84,82 +84,63 @@ export function ExternalVoteTable({
     });
   }
 
-  /**
-   * UI helper function
-   */
-  function iterateAnswerColumns() {
-    return poll?.answers?.map((answer: PollAnswer) => (
-      <Table.Column
-        key={answer.id}
-        width={150}
-      >
-        <Table.HeaderCell>{answer.answer}</Table.HeaderCell>
-        <Table.Cell>
-          {(
-            externalVoteSource: RowDataType<PollExternalVoteSourceFragment>
-          ) => (
-            <NumberInput
-              value={
-                externalVoteSource.voteAmounts?.find(
-                  (externalVote: PollExternalVote) =>
-                    externalVote.answerId === answer.id
-                )?.amount || 0
-              }
-              onChange={(newValue: string | number | null) => {
-                changeSource(
-                  answer,
-                  externalVoteSource as PollExternalVoteSourceFragment,
-                  newValue ?? 0
-                );
-              }}
-            />
-          )}
-        </Table.Cell>
-      </Table.Column>
-    ));
+  function answerColumns(): DataTableColumn<PollExternalVoteSourceFragment>[] {
+    return (poll?.answers ?? []).map((answer: PollAnswer) => ({
+      id: `answer-${answer.id}`,
+      label: answer.answer,
+      width: 150,
+      render: externalVoteSource => (
+        <TextField
+          type="number"
+          value={
+            externalVoteSource.voteAmounts?.find(
+              (externalVote: PollExternalVote) =>
+                externalVote.answerId === answer.id
+            )?.amount || 0
+          }
+          onChange={event => {
+            changeSource(answer, externalVoteSource, event.target.value);
+          }}
+        />
+      ),
+    }));
   }
 
   return (
-    <Table
+    <DataTable
+      storageKey="poll-external-votes"
       data={poll?.externalVoteSources || []}
       loading={loading}
-      autoHeight
-      rowHeight={64}
-    >
-      {/* source columns */}
-      <Table.Column>
-        <Table.HeaderCell>
-          {t('pollExternalVotes.sourceHeaderCell')}
-        </Table.HeaderCell>
-        <Table.Cell>{(voteSource: any) => voteSource.source}</Table.Cell>
-      </Table.Column>
-      {iterateAnswerColumns()}
-      {/* delete button */}
-      <Table.Column
-        width={100}
-        align="center"
-        fixed="right"
-      >
-        <Table.HeaderCell align="center">{t('action')}</Table.HeaderCell>
-        <Table.Cell>
-          {(voteSource: RowDataType<PollExternalVoteSourceFragment>) => (
+      getRowId={row => row.id}
+      columns={[
+        {
+          id: 'source',
+          label: t('pollExternalVotes.sourceHeaderCell'),
+          width: 200,
+          render: voteSource => voteSource.source,
+        },
+        ...answerColumns(),
+        {
+          id: 'action',
+          label: t('action'),
+          width: 100,
+          align: 'center',
+          fixed: true,
+          render: voteSource => (
             <IconButtonTooltip caption={t('delete')}>
               <IconButton
-                circle
-                size="sm"
-                appearance="ghost"
-                color="red"
+                size="small"
+                color="error"
                 aria-label={t('delete')}
-                icon={<MdDelete />}
-                onClick={() =>
-                  onClickDeleteBtn(voteSource as PollExternalVoteSourceFragment)
-                }
-              />
+                onClick={() => onClickDeleteBtn(voteSource)}
+              >
+                <MdDelete />
+              </IconButton>
             </IconButtonTooltip>
-          )}
-        </Table.Cell>
-      </Table.Column>
-    </Table>
+          ),
+        },
+      ]}
+    />
   );
 }
 
@@ -182,43 +163,25 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
   }, [loading]);
 
   const onErrorToast = (error: Error) => {
-    toaster.push(
-      <Message
-        type="error"
-        showIcon
-        closable
-        duration={8000}
-      >
-        {humanizeError(error)}
-      </Message>
-    );
+    enqueueSnackbar(humanizeError(error), {
+      variant: 'error',
+      autoHideDuration: 8000,
+    });
   };
 
   async function createPoll() {
     if (!newSource) {
-      toaster.push(
-        <Message
-          showIcon
-          type="error"
-          closable
-          duration={8000}
-        >
-          {t('pollExternalVotes.emptySource')}
-        </Message>
-      );
+      enqueueSnackbar(t('pollExternalVotes.emptySource'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       return;
     }
     if (!poll) {
-      toaster.push(
-        <Message
-          showIcon
-          type="error"
-          closable
-          duration={8000}
-        >
-          {t('pollExternalVotes.noPollAvailable')}
-        </Message>
-      );
+      enqueueSnackbar(t('pollExternalVotes.noPollAvailable'), {
+        variant: 'error',
+        autoHideDuration: 8000,
+      });
       return;
     }
 
@@ -242,24 +205,28 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
     setNewSource(undefined);
   }
   return (
-    <Row>
-      <Col xs={12}>
-        <FormControl
+    <Row
+      container
+      spacing={2}
+    >
+      <Grid size={{ xs: 12, md: 6 }}>
+        <TextField
+          fullWidth
           name="addNewSource"
           placeholder={t('pollExternalVotes.newSourcePlaceholder')}
           value={newSource || ''}
-          onChange={setNewSource}
+          onChange={event => setNewSource(event.target.value)}
         />
-      </Col>
-      <Col xs={12}>
-        <IconButton
-          icon={<MdAdd />}
-          appearance="primary"
+      </Grid>
+      <Grid size={{ xs: 12, md: 6 }}>
+        <Button
+          variant="contained"
+          startIcon={<MdAdd />}
           onClick={createPoll}
         >
           {t('pollExternalVotes.addSourceBtn')}
-        </IconButton>
-      </Col>
+        </Button>
+      </Grid>
     </Row>
   );
 }
@@ -316,30 +283,32 @@ export function DeleteModal({
   }
 
   return (
-    <Modal open={openModal}>
-      <Modal.Title>{t('pollExternalVotes.deleteTitle')}</Modal.Title>
-      <Modal.Body>
+    <Dialog open={openModal}>
+      <DialogTitle>{t('pollExternalVotes.deleteTitle')}</DialogTitle>
+      <DialogContent>
         {t('pollExternalVotes.deleteBody', { source: sourceToDelete?.source })}
-      </Modal.Body>
-      <Modal.Footer>
+      </DialogContent>
+      <DialogActions>
         <Button
-          appearance="primary"
-          onClick={async () => {
-            await deletePoll();
-          }}
-        >
-          {t('pollExternalVotes.deleteExternalVoteBtn')}
-        </Button>
-        <Button
-          appearance="subtle"
+          variant="text"
           onClick={() => {
             closeModal();
           }}
         >
           {t('cancel')}
         </Button>
-      </Modal.Footer>
-    </Modal>
+
+        <Button
+          variant="contained"
+          color="error"
+          onClick={async () => {
+            await deletePoll();
+          }}
+        >
+          {t('pollExternalVotes.deleteExternalVoteBtn')}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

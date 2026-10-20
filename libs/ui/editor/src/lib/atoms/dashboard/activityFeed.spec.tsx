@@ -1,11 +1,16 @@
 import type { Mock } from 'vitest';
 import { useQuery } from '@apollo/client/react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { cloneElement, ReactElement } from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { toaster } from 'rsuite';
 
+import { enqueueSnackbar } from '../../snackbar/snackbar';
 import { ACTIVITY_FILTER_STORAGE_KEY, ActivityFeed } from './activityFeed';
+
+vi.mock('../../snackbar/snackbar', () => ({
+  enqueueSnackbar: vi.fn(),
+}));
 
 vi.mock('@apollo/client/react', async importOriginal => ({
   ...(await importOriginal<typeof import('@apollo/client/react')>()),
@@ -60,11 +65,15 @@ const actions = [
   },
 ];
 
+const theme = createTheme({ cssVariables: true });
+
 const renderFeed = () =>
   render(
-    <MemoryRouter>
-      <ActivityFeed />
-    </MemoryRouter>
+    <ThemeProvider theme={theme}>
+      <MemoryRouter>
+        <ActivityFeed />
+      </MemoryRouter>
+    </ThemeProvider>
   );
 
 describe('ActivityFeed', () => {
@@ -100,7 +109,7 @@ describe('ActivityFeed', () => {
     expect(within(commentTile).getByText('Anna Leserin')).toBeTruthy();
     expect(within(commentTile).getByText(longComment)).toBeTruthy();
 
-    fireEvent.focus(within(commentTile).getByRole('link'));
+    fireEvent.mouseOver(within(commentTile).getByRole('link'));
 
     expect((await screen.findByRole('tooltip')).textContent).toContain(
       longComment
@@ -113,7 +122,7 @@ describe('ActivityFeed', () => {
     const [, articleTile] = within(screen.getByRole('list')).getAllByRole(
       'listitem'
     );
-    fireEvent.focus(within(articleTile).getByRole('link'));
+    fireEvent.mouseOver(within(articleTile).getByRole('link'));
     await new Promise(resolve => setTimeout(resolve, 50));
 
     expect(screen.queryByRole('tooltip')).toBeNull();
@@ -298,7 +307,6 @@ describe('ActivityFeed', () => {
   });
 
   it('shows a short note instead of an error toast when activities cannot be loaded', () => {
-    const push = vi.spyOn(toaster, 'push');
     mockedUseQuery.mockReturnValue({
       data: undefined,
       error: new Error('Forbidden'),
@@ -307,7 +315,7 @@ describe('ActivityFeed', () => {
     renderFeed();
 
     expect(screen.getByText('dashboard.activityUnavailable')).toBeTruthy();
-    expect(push).not.toHaveBeenCalled();
+    expect(enqueueSnackbar).not.toHaveBeenCalled();
   });
 
   it('says so when there is no activity yet', () => {

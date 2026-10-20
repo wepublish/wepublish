@@ -254,6 +254,62 @@ const recipientServiceFor = (users: string[]) => {
 
 const audience = { base: MailRecipientBase.allUsers };
 
+const postalUser = {
+  id: 'u1',
+  email: 'u1@x.ch',
+  firstName: 'Jane',
+  name: 'Doe',
+  address: {
+    company: null,
+    streetAddress: 'Musterstrasse',
+    streetAddressNumber: '7',
+    streetAddress2: null,
+    streetAddress2Number: null,
+    zipCode: '8000',
+    city: 'Zürich',
+    country: 'CH',
+  },
+};
+
+describe('previewForAudience as a letter', () => {
+  const recipientService = {
+    resolvePage: vi.fn(async () => [{ user: postalUser }]),
+  };
+
+  it('prints the preview on the stationery the template points at', async () => {
+    const prisma = fakePrisma({
+      ...template('custom'),
+      htmlContent: '<p>Hallo</p>',
+      subject: 'Brief',
+      letterLayoutId: 'layout-1',
+    });
+    const layout = { headerHtml: '<b>Zwölf</b>' };
+    const letterContext = {
+      renderLetter: vi.fn(async () => Buffer.from('%PDF-1.4 preview')),
+      resolveLayout: vi.fn(async () => layout),
+    };
+
+    const preview = await makeService(
+      prisma,
+      undefined,
+      recipientService,
+      letterContext
+    ).previewForAudience({
+      mailTemplateId: 'tpl-1',
+      audience,
+      channel: MailChannel.letter,
+    });
+
+    expect(letterContext.resolveLayout).toHaveBeenCalledWith('layout-1');
+    expect(letterContext.renderLetter).toHaveBeenCalledWith(
+      expect.objectContaining({ layout })
+    );
+    expect(Buffer.from(preview.pdf ?? '', 'base64').toString()).toBe(
+      '%PDF-1.4 preview'
+    );
+  });
+});
+
 /**
  * Put a job straight into the fake database. Tests that exercise the send loop
  * do not go through `createJob`, whose fire-and-forget drain would race them.
@@ -782,5 +838,57 @@ describe('MailSendJobService', () => {
         )
       ).rejects.toThrow(BadRequestException);
     });
+  });
+});
+
+describe('MailSendJobService.previewForAudience as letter', () => {
+  it('previews the template appendix with the chosen print mode', async () => {
+    const user = {
+      id: 'u1',
+      email: 'jane@example.com',
+      firstName: 'Jane',
+      name: 'Doe',
+      address: {
+        company: null,
+        streetAddress: 'Musterstrasse',
+        streetAddressNumber: '7',
+        streetAddress2: null,
+        streetAddress2Number: null,
+        zipCode: '8000',
+        city: 'Zürich',
+        country: 'CH',
+      },
+    };
+    const prisma = {
+      mailTemplate: {
+        findUnique: vi.fn(async () => ({
+          ...template('custom'),
+          subject: 'Rechnung',
+          htmlContent: '<p>Hallo</p>',
+          letterAppendixId: 'qr-bill',
+        })),
+      },
+    };
+    const renderLetter = vi.fn(async () => Buffer.from('%PDF-1.4 letter'));
+    const service = makeService(
+      prisma,
+      {},
+      { resolvePage: vi.fn(async () => [{ user }]) },
+      { renderLetter, resolveLayout: vi.fn(async () => null) }
+    );
+
+    await service.previewForAudience({
+      mailTemplateId: 'tpl-1',
+      audience: { base: 'allUsers' } as any,
+      channel: MailChannel.letter,
+      print: { printMode: LetterPrintMode.duplex } as any,
+    });
+
+    expect(renderLetter).toHaveBeenCalledWith(
+      expect.objectContaining({
+        template: { htmlContent: '<p>Hallo</p>', letterAppendixId: 'qr-bill' },
+        printMode: LetterPrintMode.duplex,
+      })
+    );
   });
 });

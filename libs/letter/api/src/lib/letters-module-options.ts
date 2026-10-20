@@ -7,6 +7,8 @@ export const LETTERS_MODULE_OPTIONS = 'LETTERS_MODULE_OPTIONS';
 export interface LettersModuleOptions {
   letterProvider: BaseLetterProvider;
   pdfRenderer: PdfRenderer;
+  /** Where an uploaded document can be downloaded, for letter appendices. */
+  documentUrl?: (documentId: string) => Promise<string>;
 }
 
 export type LettersModuleAsyncOptions =

@@ -15,9 +15,11 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  WebsiteShellProps,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
@@ -73,9 +75,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -97,6 +101,8 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const shell = getWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
@@ -131,21 +137,25 @@ function CustomApp({
                 />
               </Head>
 
-              <NavBar
-                categorySlugs={[['categories', 'about-us']]}
-                slug="main"
-                headerSlug="header"
-                iconSlug="icons"
-              />
+              {shell.showNavigation && (
+                <NavBar
+                  categorySlugs={[['categories', 'about-us']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
+                />
+              )}
 
               <ContentSpacer>
                 <Component {...pageProps} />
               </ContentSpacer>
 
-              <Footer
-                slug="main"
-                categorySlugs={[['sonstiges', 'other'], ['about-us']]}
-              />
+              {shell.showFooter && (
+                <Footer
+                  slug="main"
+                  categorySlugs={[['sonstiges', 'other'], ['about-us']]}
+                />
+              )}
 
               <RoutedAdminBar />
 

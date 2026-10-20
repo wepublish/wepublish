@@ -1,30 +1,38 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
+  Autocomplete,
+  Button,
+  Divider,
+  Paper,
+  PaperProps,
+  TextField,
+} from '@mui/material';
+import {
   AuthorListDocument,
   CreateAuthorDocument,
   FullAuthorFragment,
 } from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Message, SelectPicker, toaster } from 'rsuite';
 
 import { PeerAvatar } from '../atoms/peer/peerAvatar';
-import { getOperationNameFromDocument } from '../utility';
 import { humanizeError } from '../humanizeError';
+import { enqueueSnackbar } from '../snackbar';
+import { getOperationNameFromDocument } from '../utility';
 
 const ButtonWrapper = styled.div`
   margin: 8px;
 `;
 
 export interface AuthorSelectPickerProps {
-  readonly className?: string;
-  readonly disabled?: boolean;
-  readonly name?: string;
-  readonly selectedAuthor?: FullAuthorFragment | null;
+  className?: string;
+  disabled?: boolean;
+  name?: string;
+  selectedAuthor?: FullAuthorFragment | null;
   /** Authors already picked elsewhere; they are hidden from the options. */
-  readonly excludeIds?: readonly string[];
+  excludeIds?: string[];
   setSelectedAuthor(author: FullAuthorFragment | null): void;
 }
 
@@ -33,16 +41,10 @@ export interface AuthorSelectPickerProps {
  * @param error
  */
 const showErrors = (error: Error): void => {
-  toaster.push(
-    <Message
-      type="error"
-      showIcon
-      closable
-      duration={8000}
-    >
-      {humanizeError(error)}
-    </Message>
-  );
+  enqueueSnackbar(humanizeError(error), {
+    variant: 'error',
+    autoHideDuration: 8000,
+  });
 };
 
 export function AuthorSelectPicker({
@@ -56,18 +58,9 @@ export function AuthorSelectPicker({
   const { t } = useTranslation();
   const [authorsFilter, setAuthorsFilter] = useState('');
 
-  const { data: authorsData, error: authorListError } = useQuery(
-    AuthorListDocument,
-    {
-      variables: { filter: authorsFilter || undefined, take: 10 },
-    }
-  );
-
-  useEffect(() => {
-    if (authorListError) {
-      showErrors(authorListError);
-    }
-  }, [authorListError]);
+  const { data: authorsData } = useQuery(AuthorListDocument, {
+    variables: { filter: authorsFilter || undefined, take: 10 },
+  });
 
   const [createAuthor] = useMutation(CreateAuthorDocument, {
     refetchQueries: [getOperationNameFromDocument(AuthorListDocument)],
@@ -110,51 +103,61 @@ export function AuthorSelectPicker({
     }
   }
 
+  const PaperWithCreate = useCallback(
+    ({ children, ...props }: PaperProps) => (
+      <Paper {...props}>
+        {children}
+
+        {authorsFilter && !authorsData?.authors.nodes.length ?
+          <>
+            <Divider />
+            <ButtonWrapper onMouseDown={event => event.preventDefault()}>
+              <Button
+                variant="contained"
+                onClick={() => handleCreateAuthor()}
+              >
+                {t('articles.panels.createAuthorProfile', {
+                  name: authorsFilter,
+                })}
+              </Button>
+            </ButtonWrapper>
+          </>
+        : null}
+      </Paper>
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [authorsFilter, authorsData, t]
+  );
+
   return (
-    <SelectPicker
-      block
-      cleanable
-      virtualized
+    <Autocomplete
+      options={availableAuthors}
+      getOptionLabel={author => author.name}
+      isOptionEqualToValue={(option, selected) => option.id === selected.id}
+      filterOptions={options => options}
+      value={selectedAuthor ?? null}
+      onChange={(_event, author) => setSelectedAuthor(author)}
+      onInputChange={(_event, value, reason) =>
+        setAuthorsFilter(reason === 'input' ? value : '')
+      }
       disabled={disabled}
       className={className}
-      name={name}
-      value={selectedAuthor?.id ?? null}
-      data={availableAuthors.map(author => ({
-        value: author.id,
-        label: author.name,
-        peer: author.peer,
-      }))}
-      placeholder={t('articleEditor.panels.selectAuthor')}
-      onSearch={searchKeyword => {
-        setAuthorsFilter(searchKeyword);
-      }}
-      onChange={authorId => {
-        setSelectedAuthor(
-          availableAuthors.find(({ id }) => id === authorId) ?? null
-        );
-      }}
-      onExit={() => {
-        setAuthorsFilter('');
-      }}
-      renderMenuItem={(
-        label: ReactNode,
-        item: { peer?: FullAuthorFragment['peer'] }
-      ) => <PeerAvatar peer={item.peer}>{label}</PeerAvatar>}
-      renderExtraFooter={() =>
-        authorsFilter &&
-        !authorsData?.authors.nodes.length && (
-          <ButtonWrapper>
-            <Button
-              onClick={() => handleCreateAuthor()}
-              appearance="primary"
-            >
-              {t('articles.panels.createAuthorProfile', {
-                name: authorsFilter,
-              })}
-            </Button>
-          </ButtonWrapper>
-        )
-      }
+      renderOption={({ key, ...props }, author) => (
+        <li
+          key={key}
+          {...props}
+        >
+          <PeerAvatar peer={author.peer}>{author.name}</PeerAvatar>
+        </li>
+      )}
+      slots={{ paper: PaperWithCreate }}
+      renderInput={params => (
+        <TextField
+          {...params}
+          name={name}
+          placeholder={t('articleEditor.panels.selectAuthor')}
+        />
+      )}
     />
   );
 }

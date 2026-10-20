@@ -71,7 +71,7 @@ const renderPanel = () => {
     </MemoryRouter>
   );
 
-  const panel = container.querySelector('.rs-panel');
+  const panel = container.querySelector('.MuiCard-root');
 
   if (!panel) {
     throw new Error('panel not rendered');
@@ -82,7 +82,7 @@ const renderPanel = () => {
 
 /** The titles of the rendered notifications, in the order they appear. */
 const renderedOrder = () =>
-  Array.from(document.querySelectorAll('.rs-message')).map(
+  Array.from(document.querySelectorAll('[role="alert"]')).map(
     node => node.textContent ?? ''
   );
 

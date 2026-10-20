@@ -13,11 +13,10 @@ import {
   ExternalAppsDocument,
   ExternalAppsTarget,
 } from '@wepublish/editor/api';
-import { humanizeError } from '@wepublish/ui/editor';
+import { enqueueSnackbar, humanizeError } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdExtension } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { Message, toaster } from 'rsuite';
 
 import { ICON_REGISTRY } from '../externalApps/iconRegistry';
 import { openExternalApp } from '../externalApps/openExternalApp';
@@ -42,7 +41,7 @@ const AppIconBox = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ theme }) => theme.palette?.primary?.main};
+  color: ${({ theme }) => theme.vars.palette.primary.main};
 `;
 
 const EmptyText = styled(Typography)`
@@ -127,15 +126,9 @@ export function ExternalAppsDashboard() {
                 if (app.target === ExternalAppsTarget.Blank) {
                   openExternalApp(app.url, () => mintToken(app.id)).catch(
                     (mintError: unknown) =>
-                      toaster.push(
-                        <Message
-                          type="error"
-                          showIcon
-                          closable
-                        >
-                          {humanizeError(mintError)}
-                        </Message>
-                      )
+                      enqueueSnackbar(humanizeError(mintError), {
+                        variant: 'error',
+                      })
                   );
                 } else if (app.target === ExternalAppsTarget.Iframe) {
                   navigate(`/external-app/${app.id}`);

@@ -55,7 +55,9 @@ export default function NetworkContentDashboard() {
   );
 
   const handleConfirmImport = () => {
-    if (!articleToImport) return;
+    if (!articleToImport) {
+      return;
+    }
 
     importPeerArticle({
       variables: {

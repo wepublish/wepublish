@@ -146,6 +146,8 @@ export class MailTemplatesResolver {
       subscriptionId: input.subscriptionId,
       currentUserId: user.user.id,
       html: input.htmlContent,
+      letterLayoutId: input.letterLayoutId,
+      letterAppendixId: input.letterAppendixId,
     });
   }
 
