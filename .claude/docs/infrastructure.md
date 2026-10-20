@@ -23,8 +23,13 @@
 
 ### Runtime dependencies of api, media and editor
 
-pnpm workspace. `apps/api-example`, `apps/media` and `apps/editor` are the only
-workspace packages besides the root; each `package.json` lists exactly the
+pnpm workspace. `apps/api-example`, `apps/media`, `apps/editor` and
+`docker/migration` are the only workspace packages besides the root.
+`docker/migration` holds the runtime dependencies of the migration image
+(`prisma migrate deploy`, seed, changelog sync), and the image ships its
+`pnpm deploy --prod` output; the Dockerfile has no `npm install`/`npx` left
+(`sentry-cli` is the pinned root devDependency `@sentry/cli`). Each app
+`package.json` lists exactly the
 packages its webpack bundle `require()`s at runtime, as `"catalog:"` entries
 whose versions live in the `catalog:` of `pnpm-workspace.yaml` (the root
 `package.json` points at the same entries). The image ships the bundle plus
@@ -85,8 +90,8 @@ The migration container (and `pnpm run migrate` locally) runs three steps in ord
    (uses the developer's local Claude Code login, no API key). Entries support
    translations via `changelog.<locale>.md` files (de/en/fr).
    The sync source files are compiled standalone in the Dockerfile seed stage
-   (`docker/tsconfig.yaml_seed`), so they must stay dependency-free (node builtins
-   plus `@prisma/client` only).
+   (`docker/tsconfig.yaml_seed`), so they may only import node builtins and the
+   packages in `docker/migration/package.json`.
 
 ## Infrastructure as Code
 

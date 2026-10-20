@@ -129,6 +129,9 @@ jobs:
   build-and-push-docker-migration:
     name: Build and push migration
     runs-on: ubuntu-latest
+    needs: calculate-base-image-tag
+    env:
+      BUILD_IMAGE_TAG: ${{ needs.calculate-base-image-tag.outputs.hashed_tag }}
     if: inputs.migration_tags != ''
     steps:
       - uses: docker/login-action@v4
@@ -155,6 +158,7 @@ jobs:
           tags: |
             ${{ inputs.migration_tags }}
           build-args: |
+            BUILD_IMAGE=${{ env.BUILD_IMAGE_TAG }}
             SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
             SENTRY_ORG=wepublish-foundation
             SENTRY_PROJECT=wepublish-cms

@@ -3,6 +3,7 @@ packages:
   - apps/api-example
   - apps/editor
   - apps/media
+  - docker/migration
 
 strictPeerDependencies: false
 
@@ -10,6 +11,7 @@ strictPeerDependencies: false
 allowBuilds:
   '@parcel/watcher': true
   '@prisma/engines': true
+  '@sentry/cli': true
   '@sentry/node-cpu-profiler': true
   '@swc/core': true
   esbuild: true
@@ -62,6 +64,7 @@ catalog:
   cross-fetch: '^3.0.4'
   dataloader: '^2.0.0'
   date-fns: '^4.1.0'
+  dotenv: '^17.4.2'
   express: '^5.2.1'
   form-data: '^3.0.0'
   graphql: '^16.7.1'
@@ -85,7 +88,9 @@ catalog:
   nodemailer: '^9.0.3'
   otpauth: '^9.5.0'
   passport-http-bearer: '^1.0.1'
+  pg: '^8.20.0'
   pino: '^6.11.0'
+  prisma: 7.5.0
   prosemirror-model: '^1.25.8'
   qs: '^6.9.1'
   ramda: '^0.28.0'
