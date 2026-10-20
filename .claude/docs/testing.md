@@ -196,12 +196,16 @@ config spec, an `index.spec.ts` that catches circular imports, and a
 
 ### Editor libs (Vitest + Apollo mocks)
 
-The editor is a React Router SPA talking to Apollo. Wrap in `BrowserRouter` and
-`MockedProvider`, and stub `getApiClientV2` when the component uses the v2 client:
+The editor is a React Router SPA talking to Apollo, on a data router
+(`createBrowserRouter`) so `useBlocker` works — `useUnsavedChangesDialog` throws
+under a plain `BrowserRouter`. Render with
+`<RouterProvider router={createMemoryRouter([{ path: '*', element: <X /> }])} />`
+and `MockedProvider`, and stub `getApiClientV2` when the component uses the v2
+client:
 
 ```tsx
 import { MockedProvider, MockLink } from '@apollo/client/testing';
-import { BrowserRouter } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import * as v2Client from '@wepublish/editor/api';
 
 vi.spyOn(v2Client, 'getApiClientV2').mockReturnValue(
