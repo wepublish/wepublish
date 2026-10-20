@@ -14,10 +14,6 @@
       "theMember": "ce membre"
     },
     "lastSavedAt": "Dernier enregistrement {{date, ccc PP pp}}",
-    "autosave": {
-      "label": "Enregistrement auto",
-      "description": "Enregistrer le brouillon toutes les 30 secondes pendant que vous travaillez"
-    },
     "preview": {
       "backToEditor": "Éditeur",
       "mobile": "Mobile",
@@ -147,7 +143,6 @@
         "displayOptions": "Options d’affichage",
         "dontChangeSlug": "Veuillez ne pas changer le slug une fois l’article publié.",
         "draft": "Brouillon",
-        "chooseFile": "Choisir un fichier",
         "dropImage": "Glisser l’image ici",
         "editTeaser": "Modifier le teaser",
         "enterAuthors": "Veuillez ajouter un·e auteur·trice",
@@ -235,12 +230,12 @@
         "hiddenInfo": "Les articles masqués n’apparaissent pas dans les listes automatiques d’articles du site (p.ex. derniers articles ou pages de tags), mais restent accessibles via leur lien direct.",
         "contentUrlInfo": "L’adresse web vers laquelle les lecteur·trice·s sont dirigé·e·s en cliquant sur le teaser.",
         "teaserPropertiesInfo": "Paires clé-valeur supplémentaires que votre site peut utiliser pour des affichages particuliers. Nécessaire uniquement si les personnes qui développent votre site vous l’ont demandé. Les propriétés publiques sont visibles via l’API publique.",
-        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux"
+        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
+        "chooseFile": "Choisir un fichier"
       }
     },
     "articles": {
       "overview": {
-        "slug": "Slug",
         "articles": "Articles",
         "authors": "Auteur·trice·s",
         "draft": "Brouillon",
@@ -253,7 +248,8 @@
         "states": "Statut",
         "title": "Titre",
         "untitled": "Sans titre",
-        "updated": "Modifié le"
+        "updated": "Modifié le",
+        "slug": "Slug"
       },
       "panels": {
         "cancel": "Annuler",
@@ -560,12 +556,12 @@
       "imageGallery": {
         "label": "Galerie",
         "overview": {
-          "removeImage": "Supprimer l'image",
           "caption": "Légende",
           "new": "(Nouveau)",
           "previousImage": "Image précédente",
           "nextImage": "Image suivante",
-          "addImage": "Ajouter une image"
+          "addImage": "Ajouter une image",
+          "removeImage": "Supprimer l'image"
         },
         "panels": {
           "caption": "Légende",
@@ -856,8 +852,6 @@
     },
     "confirm": "Confirmer",
     "consents": {
-      "deleteTitle": "Supprimer le consentement ?",
-      "deleteBody": "Voulez-vous supprimer définitivement «{{name}}» ? Les choix des utilisateurs disparaissent avec.",
       "create": "Créer un nouveau consentement",
       "defaultValue": "Valeur par défaut",
       "defaultValueTitle": "Valeur par défaut (cochée par défaut)",
@@ -872,7 +866,9 @@
       "rejected": "Refusé",
       "slugInfo": "Identifiant technique utilisé par votre site ou vos applications pour trouver ce consentement, p.ex. « newsletter ». Utilisez uniquement des minuscules, des chiffres et des tirets.",
       "defaultValueInfo": "Indique si le consentement est présélectionné pour les utilisateur·trice·s qui n’ont pas encore décidé, p.ex. comme case déjà cochée dans un formulaire.",
-      "checkedByDefault": "Cochée par défaut"
+      "checkedByDefault": "Cochée par défaut",
+      "deleteTitle": "Supprimer le consentement ?",
+      "deleteBody": "Voulez-vous supprimer définitivement «{{name}}» ? Les choix des utilisateurs disparaissent avec."
     },
     "create": "Créer",
     "createAndClose": "Créer & fermer",
@@ -941,14 +937,14 @@
       "networkContentInfo": "Les derniers articles d’autres médias du réseau We.Publish. Vous pouvez les reprendre dans votre éditeur (importer) et les publier sur votre site."
     },
     "dateTimePicker": {
-      "yesterday": "Hier",
-      "done": "OK",
       "hour": "{{hour}}:00",
       "nextMonday": "Lundi prochain",
       "nextSaturday": "Samedi prochain",
       "now": "Maintenant",
       "today": "Aujourd’hui",
-      "tomorrow": "Demain"
+      "tomorrow": "Demain",
+      "yesterday": "Hier",
+      "done": "OK"
     },
     "deactivated": "Désactivé",
     "delete": "Supprimer",
@@ -977,14 +973,12 @@
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
       "invalidUrlErrorMessage": "Veuillez entrer une adresse URL valide",
       "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} {{currency}}.",
-      "amountTooLowErrorMessage": "Le montant est inférieur au minimum de ce plan d'abonnement",
       "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 si le champ est laissé vide",
       "noCallToActionImageErrorMessage": "Veuillez entrer une image pour l’appel à l’action",
       "noEmailErrorMessage": "Veuillez entrer une adresse e-mail",
       "noImageErrorMessage": "Veuillez ajouter une image",
       "noMemberPlanErrorMessage": "Veuillez sélectionner un plan d’abonnement",
       "noNameErrorMessage": "Veuillez entrer un nom",
-      "noQuestionErrorMessage": "Veuillez saisir une question",
       "noPasswordErrorMessage": "Veuillez entrer un mot de passe",
       "noPaymentMethodErrorMessage": "Veuillez sélectionner une méthode de paiement",
       "noPaymentPeriodicityErrorMessage": "Veuillez sélectionner une périodicité de paiement",
@@ -996,6 +990,8 @@
       "passwordCompromisedErrorMessage": "Ce mot de passe est apparu dans une fuite de données. Veuillez choisir un autre mot de passe.",
       "required": "Ce champ est requis",
       "invalidCountry": "Veuillez sélectionner un pays valide",
+      "amountTooLowErrorMessage": "Le montant est inférieur au minimum de ce plan d'abonnement",
+      "noQuestionErrorMessage": "Veuillez saisir une question",
       "invalidForm": "Veuillez vérifier les champs signalés"
     },
     "event": {
@@ -1044,7 +1040,6 @@
     },
     "filterableList": {
       "filter": {
-        "label": "Filtres",
         "dates": "Dates",
         "description": "Filtrer par description",
         "isDraft": "Brouillon",
@@ -1061,6 +1056,7 @@
         "title": "Filtrer par titre",
         "includeHiddenArticles": "Inclure les articles masqués",
         "includeHiddenPages": "Inclure les pages masquées",
+        "label": "Filtres",
         "states": "États"
       }
     },
@@ -1147,7 +1143,6 @@
         "link": "Lien",
         "linkUrl": "Lien de destination",
         "notFound": "Image introuvable !",
-        "openOriginal": "Ouvrir l'original",
         "resizedImage": "La taille de l’image est automatiquement réduite à environ {{sizeMB}} Mo lors du téléversement.",
         "source": "Source",
         "sourceLink": "Lien vers la source originale de l’image.",
@@ -1163,7 +1158,8 @@
         "focalPoint": "Point focal",
         "focalPointInfo": "Faites glisser le point sur la partie la plus importante de l’image. Lorsque l’image est recadrée, p.ex. dans les teasers, cette zone reste visible.",
         "descriptionInfo": "Décrivez ce que l’on voit sur l’image. Le texte sert de texte alternatif pour les personnes utilisant un lecteur d’écran et pour les moteurs de recherche.",
-        "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien."
+        "linkUrlInfo": "Adresse web qui s’ouvre lorsque les lecteur·trice·s cliquent sur l’image. Laissez vide si l’image ne doit pas être un lien.",
+        "openOriginal": "Ouvrir l'original"
       }
     },
     "importableEvent": {
@@ -1256,7 +1252,7 @@
       "goToLogin": "Aller à la connexion"
     },
     "mailTemplates": {
-      "availableTemplates": "Modèles d’e-mail disponibles",
+      "availableTemplates": "Modèles d’envoi",
       "cancel": "Annuler",
       "content": "Contenu",
       "create": "Créer un modèle",
@@ -1276,6 +1272,11 @@
         "testRecipientPlaceholder": "Votre e-mail de compte",
         "preview": "Aperçu",
         "sendTest": "Envoyer un test",
+        "previewLetter": "Aperçu en lettre",
+        "letterAppendix": "Bulletin QR (PDF)",
+        "letterAppendixNone": "Aucun",
+        "letterAppendixHelp": "PDF des «Documents» imprimé après les pages de la lettre, p. ex. un bulletin QR (A4, bulletin au bord inférieur). Uniquement pour les adresses en Suisse ; en impression recto verso, une page blanche est ajoutée si nécessaire pour que le bulletin soit sur un recto.",
+        "letterPreviewTitle": "Aperçu de la lettre",
         "selectMailType": "Veuillez d’abord choisir une utilisation.",
         "selectMailTypePlaceholder": "Choisir une utilisation …",
         "testRecipientHint": "Les e-mails de test sont toujours envoyés à votre propre compte.",
@@ -1288,7 +1289,11 @@
         "sampleSubscriptionHelp": "Choisissez un abonnement existant pour remplir l’aperçu et l’e-mail de test avec ses données réelles. Sans sélection, des données d’exemple fictives sont utilisées. L’e-mail de test n’est envoyé qu’à vous.",
         "bodyModeHelp": "Visuel : modifiez le contenu comme dans un traitement de texte. HTML : modifiez directement le code source – pour utilisateur·trice·s avancé·e·s. Texte brut : la version texte pour les programmes de messagerie sans HTML ; elle est générée automatiquement.",
         "backgroundHelp": "Couleur de la surface autour du contenu de l’e-mail.",
-        "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement."
+        "contentWidthHelp": "Largeur maximale du contenu en pixels. 600 px est une valeur éprouvée qui s’affiche bien dans la plupart des programmes de messagerie. Sur les petits écrans, le contenu se rétrécit automatiquement.",
+        "letterLayout": "Papier à lettres",
+        "letterLayoutDefault": "Par défaut ({{name}})",
+        "letterLayoutNone": "Par défaut (aucun)",
+        "letterLayoutHelp": "En-tête et pied de page lorsque ce modèle est imprimé en lettre. Sans effet pour les e-mails."
       },
       "editor": {
         "undo": "Annuler",
@@ -1464,7 +1469,7 @@
         "subscription": "Autour de l’abonnement lui-même : nouvellement souscrit, confirmé ou désactivé. En plus : les données de l’abonnement comme le montant et la durée.",
         "renewal": "Renouvellement automatique — réussi ou échoué. En plus : le nom du plan et du moyen de paiement ainsi que les données de facturation.",
         "invoiceCreation": "Dès qu’une nouvelle facture a été créée. En plus : la facture et l’abonnement correspondant.",
-        "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Envoyer un e-mail ». En plus : l’abonnement et les dernières factures.",
+        "custom": "Un e-mail libre aux abonné·e·s, p. ex. une newsletter via « Envois manuels ». En plus : l’abonnement et les dernières factures.",
         "customNoSubscription": "Un e-mail libre aux personnes sans abonnement, p. ex. une invitation ou une relance. Seuls les champs du destinataire sont disponibles — les champs d’abonnement restent vides."
       },
       "placeholderDescriptions": {
@@ -1513,7 +1518,7 @@
         "optional_invoices_0_id": "ID de la dernière facture (tableau, index 0).",
         "optional_invoices_0_description": "Description de la dernière facture."
       },
-      "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Envoyer un e-mail ».",
+      "statusHelp": "Une coche signifie qu’un e-mail automatique utilise ce modèle. « Inutilisé » signifie qu’aucun e-mail automatique ne l’utilise – vous pouvez tout de même l’envoyer manuellement via « Envois manuels ».",
       "placeholdersInfo": "Les espaces réservés sont remplacés automatiquement à l’envoi par les données de chaque destinataire, p. ex. son prénom. Chaque e-mail devient ainsi personnel."
     },
     "mailTemplateSelect": {
@@ -1604,7 +1609,7 @@
         "system": "Comme le système"
       },
       "logout": "Déconnexion",
-      "mailTemplates": "Modèles d’e-mail",
+      "mailTemplates": "Modèles d’envoi",
       "memberPlans": "Plans d’abonnement",
       "navigations": "Menus",
       "pages": "Pages",
@@ -1627,8 +1632,8 @@
       "audienceDashboard": "Tableau de bord",
       "integrations": "Intégrations",
       "apps": "Applications",
-      "mailSend": "Envoyer un e-mail",
-      "mailLog": "E-mails envoyés",
+      "mailSend": "Envois manuels",
+      "mailLog": "Envois terminés",
       "communication": "Communication",
       "auditLog": "Journal d’audit",
       "banners": "Bannières",
@@ -1639,6 +1644,7 @@
         "polls": "Sondages",
         "topMenu": "Blocs de contenu"
       },
+      "letterLayouts": "Papier à lettres",
       "language": "Langue"
     },
     "navigation": {
@@ -2222,8 +2228,6 @@
     },
     "untitled": "Sans titre",
     "userConsents": {
-      "deleteTitle": "Supprimer le consentement de l’utilisateur ?",
-      "deleteBody": "Voulez-vous supprimer définitivement le consentement «{{name}}» de {{user}} ?",
       "consentName": "Nom du consentement",
       "consentSlug": "Slug du consentement",
       "create": "Créer un nouveau consentement de l’utilisateur",
@@ -2232,10 +2236,11 @@
       "titleEdit": "Modifier le consentement de l’utilisateur",
       "user": "Utilisateur·trice",
       "value": "Valeur",
-      "uniqueConstraint": "Un consentement d’utilisateur avec le slug « {{slug}} » existe déjà. Veuillez choisir un autre slug."
+      "uniqueConstraint": "Un consentement d’utilisateur avec le slug « {{slug}} » existe déjà. Veuillez choisir un autre slug.",
+      "deleteTitle": "Supprimer le consentement de l’utilisateur ?",
+      "deleteBody": "Voulez-vous supprimer définitivement le consentement «{{name}}» de {{user}} ?"
     },
     "userCreateOrEditView": {
-      "addressTitle": "Adresse",
       "active": "Actif",
       "cancel": "Annuler",
       "city": "Ville",
@@ -2284,7 +2289,8 @@
       "activeInfo": "Les utilisateur·trice·s inactif·ve·s ne peuvent plus se connecter, ni sur le site web ni dans l’éditeur.",
       "flairInfo": "Brève description de la fonction, p. ex. « Rédactrice en chef ». Elle s’affiche à côté du nom dans les commentaires sur le site web.",
       "propertiesInfo": "Données supplémentaires sous forme de clé et de valeur, p. ex. issues d’importations. Les propriétés publiques peuvent aussi être lues par le site web, les privées uniquement dans l’éditeur.",
-      "userRolesInfo": "Les rôles définissent les autorisations de cette personne, p. ex. ce qu’elle peut voir et faire dans l’éditeur."
+      "userRolesInfo": "Les rôles définissent les autorisations de cette personne, p. ex. ce qu’elle peut voir et faire dans l’éditeur.",
+      "addressTitle": "Adresse"
     },
     "userList": {
       "overview": {
@@ -2526,15 +2532,15 @@
       "periodicityPricingCustomHelp": "Désactivé : les prix sont calculés à partir du prix mensuel. Activé : vous définissez vos propres prix pour cet intervalle de paiement, p. ex. pour un rabais annuel."
     },
     "subscriptionEditView": {
-      "detailsTitle": "Offre et paiement",
-      "renewalTitle": "Durée et renouvellement",
       "trialSubscriptionConfigured": "Cet abonnement est configuré comme un abonnement d’essai.",
       "nonExtendableNotCompatibleWithAutoRenew": "Un abonnement à renouvellement automatique doit pouvoir être prolongé. Modifiez l’un de ces paramètres.",
       "configureAsTrialSubscription": "Configurer comme abonnement d’essai",
       "subscriptionTrialNotPossible": "L’abonnement ne peut pas être configuré comme abonnement d’essai. Pour ce faire, modifiez les paramètres du plan d’abonnement.",
       "extendableWasChanged": "L’option « Extensible » a été adaptée en fonction du plan d’abonnement.",
       "extendModalTitle": "Renouveler l’abonnement plus tôt ?",
-      "extendModalBody": "L’abonnement sera prolongé de manière anticipée pour la prochaine période possible. Une facture sera établie."
+      "extendModalBody": "L’abonnement sera prolongé de manière anticipée pour la prochaine période possible. Une facture sera établie.",
+      "detailsTitle": "Offre et paiement",
+      "renewalTitle": "Durée et renouvellement"
     },
     "subscriptionListFilter": {
       "extendable": "Extensible"
@@ -2614,12 +2620,6 @@
       }
     },
     "audienceFilter": {
-      "resolution": "Résolution",
-      "range": "Période",
-      "rangeCustom": "Personnalisé",
-      "view": "Affichage",
-      "dateRange": "Du – au",
-      "subscriptionPlans": "Plans d'abonnement",
       "copyPermalink": "Copier le permalien",
       "permalinkCopied": "Permalien avec une période fixe copié dans le presse-papiers",
       "permalinkCopyFailed": "Impossible de copier le permalien",
@@ -2642,6 +2642,12 @@
       "rangeNextMonth": "Mois prochain",
       "rangeNextQuarter": "Trimestre prochain",
       "rangeNextYear": "Année prochaine",
+      "resolution": "Résolution",
+      "range": "Période",
+      "rangeCustom": "Personnalisé",
+      "view": "Affichage",
+      "dateRange": "Du – au",
+      "subscriptionPlans": "Plans d'abonnement",
       "rangeFrom": "Du",
       "rangeTo": "Au"
     },
@@ -2876,6 +2882,7 @@
       "paymentProvider": "Fournisseur de paiement",
       "trackingPixel": "Pixel de suivi",
       "mailProvider": "Fournisseur de messagerie",
+      "pdfRenderer": "Moteur de rendu PDF",
       "back": "Retour aux intégrations",
       "unknown": "Intégration inconnue",
       "notFound": "Intégration non trouvée",
@@ -2945,6 +2952,15 @@
         "bexioMarkInvoiceAsOpenInfo": "Si activé, Bexio passe la facture à « ouverte » après l’envoi, au lieu de la laisser en brouillon."
       },
       "placeholderSecret": "Inchangé (masqué)",
+      "pdfRendererSettings": {
+        "type": "Type",
+        "cloudflareAccountId": "ID de compte Cloudflare",
+        "cloudflareApiToken": "Jeton d'API Cloudflare",
+        "gotenbergUrl": "URL de Gotenberg",
+        "gotenbergUsername": "Nom d'utilisateur Gotenberg",
+        "gotenbergPassword": "Mot de passe Gotenberg",
+        "timeoutMs": "Délai d'attente (ms)"
+      },
       "mailSettings": {
         "type": "Type",
         "fromAddress": "Adresse de l’expéditeur",
@@ -3111,7 +3127,18 @@
       "mailchimpSyncInfo": "Transfère chaque nuit tous les comptes utilisateur actifs et leurs données d’abonnement vers une audience Mailchimp, afin de cibler vos newsletters selon l’abonnement.",
       "lastLoadedInfo": "Moment où We.Publish a chargé cette configuration pour la dernière fois, p. ex. pour traiter un paiement. Vous voyez ainsi si l’intégration est utilisée.",
       "setUp": "Configurer",
-      "setUpHint": "Pas encore configurée. Configurez cette intégration pour que l’éditeur et votre site puissent l’utiliser."
+      "setUpHint": "Pas encore configurée. Configurez cette intégration pour que l’éditeur et votre site puissent l’utiliser.",
+      "letterProvider": "Prestataire de courrier",
+      "letterSettings": {
+        "type": "Type",
+        "environment": "Environnement",
+        "clientId": "ID client",
+        "clientSecret": "Secret client",
+        "organisationId": "ID d’organisation",
+        "webhookSigningKey": "Clé de signature du webhook",
+        "autoSend": "Envoyer les lettres automatiquement",
+        "placeholderEmailContains": "L’e-mail de substitution contient"
+      }
     },
     "websiteSettings": {
       "backToOverview": "Retour à la vue d’ensemble",
@@ -3422,8 +3449,8 @@
       "blockNumber": "Bloc {{number}}"
     },
     "columnConfigurator": {
-      "dragToReorder": "Glisser pour réordonner",
       "title": "Colonnes",
+      "dragToReorder": "Glisser pour réordonner",
       "reset": "Réinitialiser les colonnes"
     },
     "systemMails": {
@@ -3474,8 +3501,8 @@
           "description": "Audience et filtres"
         },
         "content": {
-          "title": "Contenu de l’e-mail",
-          "description": "Modèle et aperçu"
+          "title": "Contenu et envoi",
+          "description": "Modèle, e-mail ou lettre"
         },
         "send": {
           "title": "Envoyer l’e-mail",
@@ -3488,8 +3515,8 @@
       "summary": {
         "title": "Résumé"
       },
-      "title": "Envoyer un e-mail",
-      "template": "Modèle d’e-mail",
+      "title": "Envois manuels",
+      "template": "Modèle d’envoi",
       "selectTemplate": "Choisir un modèle",
       "audience": {
         "title": "Destinataires"
@@ -3521,7 +3548,6 @@
       "yes": "Oui",
       "no": "Non",
       "counting": "Comptage des destinataires …",
-      "recipientsCount": "{{count}} destinataires",
       "send": "Envoyer",
       "templateNeedsSubscription": "Ce modèle nécessite une audience basée sur les abonnements afin de remplir ses champs d’abonnement.",
       "confirmTitle": "Envoyer un e-mail",
@@ -3554,10 +3580,20 @@
         "loading": "Chargement des destinataires …",
         "email": "E-mail",
         "name": "Nom",
-        "memberPlan": "Plan d’abonnement"
+        "memberPlan": "Plan d’abonnement",
+        "address": "Adresse",
+        "withAddress": "Adresse disponible",
+        "withoutAddress": "Pas d’adresse valide – ne sera pas envoyé"
       },
       "endedWithinDays": "Désactivé au cours des … derniers jours",
       "endedWithinDaysHint": "Uniquement les abonnements désactivés dans cette période.",
+      "emailFilter": {
+        "label": "Adresse e-mail",
+        "all": "Toutes",
+        "placeholder": "Uniquement les substituts",
+        "real": "Uniquement les réelles",
+        "hint": "Les adresses de substitution sont définies dans l’intégration courrier."
+      },
       "endedWindow": {
         "label": "Période de désactivation de l’abonnement",
         "relative": "Derniers … jours",
@@ -3574,7 +3610,8 @@
         "firstRecipient": "Premier·ère destinataire",
         "hint": "À quoi ressemble l’e-mail pour cette personne — avec ses données réelles.",
         "loading": "Chargement de l’aperçu …",
-        "noRecipients": "Aucun destinataire — ajustez d’abord le public."
+        "noRecipients": "Aucun destinataire — ajustez d’abord le public.",
+        "letterTitle": "Aperçu de la lettre"
       },
       "recipientsCountPerPerson": "{{count}} e-mails à {{people}} personnes",
       "endsAtHint": "Date de résiliation, sinon la date jusqu’à laquelle l’abonnement est payé.",
@@ -3588,11 +3625,44 @@
       "endsAt": "Fin de l’abonnement",
       "from": "À partir du",
       "to": "Jusqu’au",
+      "lettersCount": "{{count}} lettres à {{people}} personnes",
+      "confirmTextLetter": "Envoyer cette lettre à {{count}} destinataires ?",
       "stateHelp": "Actif : confirmé, non désactivé et payé. En attente : souscrit mais pas encore confirmé, p. ex. parce que le premier paiement manque encore. Désactivé : l’abonnement est terminé ou sa fin est déjà enregistrée.",
-      "autoRenewHelp": "Oui : l’abonnement se renouvelle automatiquement à la fin de la période et est à nouveau facturé. Non : il expire, sauf si la personne le renouvelle elle-même."
+      "autoRenewHelp": "Oui : l’abonnement se renouvelle automatiquement à la fin de la période et est à nouveau facturé. Non : il expire, sauf si la personne le renouvelle elle-même.",
+      "channel": {
+        "label": "Envoi",
+        "mail": "E-mail",
+        "letter": "Lettre",
+        "withoutAddress": "{{count}} des destinataires n’ont pas d’adresse postale utilisable et seront ignoré·e·s."
+      },
+      "print": {
+        "addressPosition": {
+          "label": "Fenêtre d’adresse",
+          "left": "Gauche",
+          "right": "Droite"
+        },
+        "deliveryProduct": {
+          "label": "Distribution",
+          "cheap": "Économique (Courrier B)",
+          "fast": "Rapide (Courrier A)",
+          "premium": "Premium",
+          "registered": "Recommandé",
+          "bulk": "Envoi en nombre"
+        },
+        "printMode": {
+          "label": "Impression",
+          "simplex": "Recto",
+          "duplex": "Recto verso"
+        },
+        "printSpectrum": {
+          "label": "Couleur",
+          "grayscale": "Niveaux de gris",
+          "color": "En couleur"
+        }
+      }
     },
     "mailLog": {
-      "title": "E-mails envoyés",
+      "title": "Envois terminés",
       "empty": "Aucun e-mail trouvé.",
       "sentDate": "Date",
       "template": "Modèle",
@@ -3610,7 +3680,8 @@
         "title": "Filtres",
         "reset": "Réinitialiser les filtres",
         "typeHint": "Ce qui a déclenché l’envoi.",
-        "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Envoyer un e-mail ». Sélectionnez-en un pour ne voir que ses e-mails."
+        "jobHelp": "Un envoi regroupe tous les e-mails envoyés en un clic via « Envois manuels ». Sélectionnez-en un pour ne voir que ses e-mails.",
+        "channel": "Envoi"
       },
       "types": {
         "subscriptionFlow": "Mailing d’abonnement",
@@ -3620,7 +3691,7 @@
       },
       "error": "Erreur",
       "typeDescriptions": {
-        "manual": "Envoyé à la main via « Envoyer un e-mail » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
+        "manual": "Envoyé à la main via « Envois manuels » ou « Envoyer un test ». Exemple : newsletter à tou·te·s les abonné·e·s.",
         "subscriptionFlow": "Programmé depuis « E-mails automatiques », calculé à partir de la date d’abonnement. Exemples : rappel 14 jours avant la fin, relance après une facture impayée.",
         "userFlow": "Déclenché immédiatement par une action ou un événement précis. Exemples : lien de connexion demandé, adresse e-mail modifiée, échec du paiement de renouvellement.",
         "systemMail": "E-mails de compte, configurés sous « E-mails automatiques », section « Compte et connexion ». Exemples : e-mail de bienvenue après l’inscription, réinitialisation du mot de passe."
@@ -3662,8 +3733,8 @@
           "fix": "Configurez un fournisseur sous Paramètres › Intégrations › Fournisseur de messagerie (SMTP, Mailgun, Mailchimp ou Slack)."
         },
         "templateMissing": {
-          "cause": "Le modèle d’e-mail utilisé n’existe plus.",
-          "fix": "Choisissez un modèle existant sous « Modèles d’e-mail » ou recréez-le, puis relancez l’envoi."
+          "cause": "Le modèle d’envoi utilisé n’existe plus.",
+          "fix": "Choisissez un modèle existant sous « Modèles d’envoi » ou recréez-le, puis relancez l’envoi."
         },
         "generic": {
           "cause": "Le serveur a refusé l’envoi avec le message ci-dessous.",
@@ -3713,17 +3784,37 @@
           "name": "rejected — Rejeté",
           "meaning": "L’e-mail n’a jamais été envoyé. Soit We.Publish n’a pas pu le remettre (configuration du fournisseur absente ou erronée), soit le fournisseur l’a refusé d’emblée : domaine d’envoi non vérifié (« unsigned »), adresse sur la liste de suppression du fournisseur après un hard bounce ou une plainte pour spam, destinataire désabonné, ou limite d’envoi du compte atteinte.",
           "next": "La colonne « Erreur » indique la raison – survolez-la pour la cause et la solution. Corrigez la cause et renvoyez : rien n’est réessayé automatiquement."
+        },
+        "dispatched": {
+          "name": "Expédiée",
+          "meaning": "Le prestataire d’impression a imprimé la lettre et l’a remise à la Poste.",
+          "next": "Rien à faire. Le statut passe à « distribuée » dès que la Poste signale la distribution."
+        },
+        "undeliverable": {
+          "name": "Non distribuable",
+          "meaning": "La Poste n’a pas pu distribuer la lettre et l’a retournée.",
+          "next": "Vérifiez l’adresse du ou de la destinataire et renvoyez la lettre."
+        },
+        "canceled": {
+          "name": "Annulée",
+          "meaning": "La lettre a été retirée avant d’être imprimée.",
+          "next": "Rien à faire. Rien n’a été imprimé ni facturé."
         }
+      },
+      "channel": "Envoi",
+      "channels": {
+        "mail": "E-mail",
+        "letter": "Lettre"
       }
     },
     "userMail": {
-      "title": "E-mails",
       "sendTitle": "Envoyer un e-mail",
-      "logTitle": "E-mails envoyés",
+      "logTitle": "Envois terminés",
       "customOnlyHint": "Seuls les modèles personnalisés peuvent être envoyés à un utilisateur.",
       "selectTemplate": "Choisir un modèle",
       "send": "Envoyer",
-      "sent": "E-mail envoyé"
+      "sent": "E-mail envoyé",
+      "title": "E-mails"
     },
     "mailJobs": {
       "created": "Démarré",
@@ -3869,12 +3960,43 @@
     "placeholderInput": {
       "add": "Ajouter"
     },
-    "colorPicker": {
-      "pickColor": "Choisir la couleur"
-    },
     "listInput": {
       "dragToReorder": "Glisser pour modifier l’ordre",
       "add": "Ajouter une entrée"
+    },
+    "letterLayouts": {
+      "title": "Papier à lettres",
+      "intro": "En-tête et pied de page des lettres imprimées. Les modèles d’envoi utilisent le papier par défaut, sauf s’ils en choisissent un autre.",
+      "create": "Créer un papier à lettres",
+      "createHeader": "Créer un papier à lettres",
+      "editHeader": "Modifier le papier à lettres",
+      "name": "Nom",
+      "nameRequired": "Veuillez saisir un nom.",
+      "isDefault": "Papier par défaut",
+      "isDefaultHelp": "Les modèles sans papier propre sont imprimés sur le papier par défaut. Il ne peut y en avoir qu’un.",
+      "default": "Par défaut",
+      "header": "En-tête",
+      "footer": "Pied de page",
+      "headerHeight": "Hauteur de l’en-tête (mm)",
+      "footerHeight": "Hauteur du pied de page (mm)",
+      "headerHeightHint": "Au maximum 40 mm, pour que l’en-tête n’empiète pas sur la zone d’affranchissement. Il se répète sur chaque page ; 0 mm le supprime.",
+      "footerHeightHint": "Au maximum 40 mm. Le texte de la lettre garde cet espace par rapport au bord inférieur. Le pied de page se répète sur chaque page ; 0 mm le supprime.",
+      "htmlHint": "HTML avec des variables comme {{user_firstName}}. Indiquez les tailles en mm et donnez aux images une largeur et une hauteur fixes.",
+      "insertImage": "Insérer une image",
+      "preview": "Aperçu",
+      "previewTitle": "Lettre type sur ce papier",
+      "saved": "Papier à lettres enregistré",
+      "deleteTitle": "Supprimer le papier à lettres",
+      "deleteQuestion": "Supprimer « {{name}} » ? Les modèles qui l’utilisent doivent d’abord en choisir un autre.",
+      "deleteConfirm": "Supprimer",
+      "noLayouts": "Pas encore de papier à lettres. Créez-en un pour que les lettres aient un en-tête et un pied de page."
+    },
+    "autosave": {
+      "label": "Enregistrement auto",
+      "description": "Enregistrer le brouillon toutes les 30 secondes pendant que vous travaillez"
+    },
+    "colorPicker": {
+      "pickColor": "Choisir la couleur"
     },
     "errorBoundary": {
       "title": "Un problème est survenu sur cette page",
@@ -3947,6 +4069,7 @@
         "consent": "Créer un consentement",
         "userConsent": "Créer un consentement utilisateur",
         "mailTemplate": "Créer un modèle d'e-mail",
+        "letterLayout": "Créer un papier à lettres",
         "memberPlan": "Créer un plan d'abonnement",
         "paymentMethod": "Créer un moyen de paiement",
         "discountCode": "Créer un code de réduction",
