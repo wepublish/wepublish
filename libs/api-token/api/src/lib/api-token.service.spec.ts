@@ -1,4 +1,5 @@
-import { ForbiddenException } from '@nestjs/common';
+import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import { EXPIRED_API_TOKEN } from '@wepublish/authentication/api';
 
 import { API_TOKEN_PREFIX, hashApiToken } from './api-token.crypto';
 import { ApiTokenStatus } from './api-token.model';
@@ -167,7 +168,7 @@ describe('resolveToken', () => {
     expect(await service(prisma).resolveToken('wep_x')).toBeNull();
   });
 
-  it('rejects an expired token', async () => {
+  it('rejects an expired token loudly, so the integrator knows to rotate it', async () => {
     const prisma = prismaMock();
     prisma.store.push({
       ...valid,
@@ -176,7 +177,10 @@ describe('resolveToken', () => {
       expiresAt: new Date(Date.now() - 1000),
     });
 
-    expect(await service(prisma).resolveToken('wep_x')).toBeNull();
+    const resolving = service(prisma).resolveToken('wep_x');
+
+    await expect(resolving).rejects.toThrow(UnauthorizedException);
+    await expect(resolving).rejects.toMatchObject({ cause: EXPIRED_API_TOKEN });
   });
 
   it('accepts a token that has not expired yet', async () => {

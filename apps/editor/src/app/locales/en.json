@@ -3980,6 +3980,8 @@
         "lastUsedDate": "{{lastUsedDate, ccc PP p}}",
         "expires": "Expires",
         "expired": "Expired",
+        "expiresInDays_one": "Expires in {{count}} day",
+        "expiresInDays_other": "Expires in {{count}} days",
         "expiresDate": "{{expiresDate, ccc PP p}}",
         "owner": "Owner",
         "ownerUnknown": "Deleted user",
