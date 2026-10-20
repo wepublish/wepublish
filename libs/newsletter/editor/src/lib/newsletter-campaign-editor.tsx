@@ -9,7 +9,7 @@
  */
 import { useMutation } from '@apollo/client/react';
 import { Puck } from '@puckeditor/core';
-import type { Config, Data } from '@puckeditor/core';
+import type { Data } from '@puckeditor/core';
 import '@puckeditor/core/puck.css';
 import {
   getApiClientV2,
@@ -23,11 +23,14 @@ import {
   UpdateNewsletterCampaignDocument,
 } from '@wepublish/editor/api';
 import { articleIdsIn, NewsletterDocument } from '@wepublish/newsletter/email';
-import { createCheckedPermissionComponent } from '@wepublish/ui/editor';
+import {
+  createCheckedPermissionComponent,
+  PermissionControl,
+} from '@wepublish/ui/editor';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { loadArticles, loadArticlesByIds } from './articles';
+import { ArticleChoice, loadArticles, loadArticlesByIds } from './articles';
 import { createConfig } from './config';
 import { fromPuckData, toPuckData } from './convert';
 import { EditorStyles } from './editor-styles';
@@ -50,7 +53,7 @@ function NewsletterCampaignEditor() {
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [title, setTitle] = useState('');
   const [data, setData] = useState<Data | null>(null);
-  const [config, setConfig] = useState<Config | null>(null);
+  const [articles, setArticles] = useState<ArticleChoice[]>([]);
   const [status, setStatus] = useState(t('newsletter.editor.loading'));
   const [failed, setFailed] = useState(false);
   const [draft, setDraft] = useState<DraftCampaign | null>(null);
@@ -71,6 +74,10 @@ function NewsletterCampaignEditor() {
   const plugins = useMemo(() => sidebarPlugins(t), [t]);
 
   const settings = useMemo(() => ({ title, setTitle }), [title]);
+
+  // Rebuilt from the cached article list when the language changes, without
+  // touching the campaign document — `t` must not trigger the load effect below.
+  const config = useMemo(() => createConfig(articles, t), [articles, t]);
 
   const [updateCampaign] = useMutation(UpdateNewsletterCampaignDocument);
   const [publishCampaign] = useMutation(PublishNewsletterCampaignDocument);
@@ -127,16 +134,16 @@ function NewsletterCampaignEditor() {
       >({ query: NewsletterCampaignDocument, variables: { id } }),
       loadArticles().catch(() => []),
     ])
-      .then(async ([{ data }, articles]) => {
+      .then(async ([{ data }, loadedArticles]) => {
         const loaded = data!.newsletterCampaign;
         const document = loaded.document as NewsletterDocument;
 
         rememberImages(loaded.images);
         await loadArticlesByIds(articleIdsIn(document)).catch(() => undefined);
 
+        setArticles(loadedArticles);
         setCampaign(loaded);
         setTitle(loaded.title);
-        setConfig(createConfig(articles, t));
 
         const initial = toPuckData(document);
 
@@ -152,7 +159,7 @@ function NewsletterCampaignEditor() {
         setStatus(cause.message);
         setFailed(true);
       });
-  }, [id, measure, t]);
+  }, [id, measure]);
 
   /**
    * Write the current title and document. Returns the saved snapshot so `save`
@@ -252,7 +259,7 @@ function NewsletterCampaignEditor() {
     [id, publishCampaign, t, write]
   );
 
-  if (!data || !campaign || !config) {
+  if (!data || !campaign) {
     return (
       <EditorStyles>
         <p
@@ -292,15 +299,25 @@ function NewsletterCampaignEditor() {
                   >
                     {t('newsletter.editor.preview')}
                   </Link>
-                  <Actions
-                    title={title}
-                    save={save}
-                    saved={saved}
-                    synced={synced}
-                    editUrl={editUrl}
-                    status={status}
-                    failed={failed}
-                  />
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_UPDATE_NEWSLETTER_CAMPAIGN']}
+                  >
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_PUBLISH_NEWSLETTER_CAMPAIGN',
+                      ]}
+                    >
+                      <Actions
+                        title={title}
+                        save={save}
+                        saved={saved}
+                        synced={synced}
+                        editUrl={editUrl}
+                        status={status}
+                        failed={failed}
+                      />
+                    </PermissionControl>
+                  </PermissionControl>
                 </>
               ),
             }}

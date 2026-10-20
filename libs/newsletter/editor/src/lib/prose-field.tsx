@@ -30,7 +30,7 @@ import { filterTags, loadMergeTags } from './merge-tags';
 const BULLET = '- ';
 
 /** Elements that end the current line. Everything else accumulates inline. */
-const BLOCK = /^(P|DIV|UL|OL|LI|H[1-6]|BLOCKQUOTE|PRE|TABLE|TR|TD|LI)$/;
+const BLOCK = /^(P|DIV|UL|OL|LI|H[1-6]|BLOCKQUOTE|PRE|TABLE|TBODY|TR|TH|TD)$/;
 
 /* ------------------------------------------------------------------ markup → DOM */
 

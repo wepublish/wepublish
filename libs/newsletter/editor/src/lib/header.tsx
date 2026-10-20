@@ -99,7 +99,7 @@ export function Actions({
         className="editor-state"
         data-kind={
           failed ? 'error'
-          : status ?
+          : busy ?
             'busy'
           : inSync ?
             'clean'

@@ -107,6 +107,33 @@ describe('parseDocument', () => {
     ).toThrow(DocumentError);
   });
 
+  it('refuses a condition value renderToStaticMarkup would escape', () => {
+    expect(() =>
+      parseDocument(
+        withBlocks({
+          type: 'divider',
+          condition: { field: 'FNAME', operator: 'is', value: 'A & B' },
+        })
+      )
+    ).toThrow(DocumentError);
+  });
+
+  it('refuses an interest name renderToStaticMarkup would escape', () => {
+    expect(() =>
+      parseDocument(
+        withBlocks({
+          type: 'divider',
+          condition: {
+            kind: 'interest',
+            field: 'Marketing & Sales',
+            operator: 'is',
+            value: 'VIP',
+          },
+        })
+      )
+    ).toThrow(DocumentError);
+  });
+
   it('refuses a conditional footer', () => {
     expect(() =>
       parseDocument(

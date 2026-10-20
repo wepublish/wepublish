@@ -353,6 +353,14 @@ export const EditorStyles = styled.div`
     color: #8a5300;
   }
 
+  .editor-state[data-kind='busy'] {
+    color: #195a7d;
+  }
+
+  .editor-state[data-kind='clean'] {
+    color: #1a7f37;
+  }
+
   .editor-state[data-kind='error'] {
     color: #a12b2b;
   }

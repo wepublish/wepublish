@@ -137,6 +137,15 @@ describe('NewsletterMailchimpService', () => {
       'PATCH /campaigns/campaign-1',
       'PUT /campaigns/campaign-1/content',
     ]);
+    // A re-push patches the settings too, so a renamed issue (its subject) and
+    // an edited preview text reach the existing draft rather than only the first.
+    expect(calls[1].body).toEqual({
+      settings: {
+        title: 'Ausgabe 1',
+        subject_line: 'Ausgabe 1',
+        preview_text: 'Vorschau',
+      },
+    });
   });
 
   it.each([

@@ -133,15 +133,18 @@ export class NewsletterCampaignService {
     const parsed = parseDocument(document);
     const existing = await this.row(id);
 
-    const row = await this.prisma.newsletterCampaign.update({
-      where: { id },
-      data: {
-        title: title?.trim() || existing.title,
-        document: asJson(parsed),
-      },
-    });
+    const [row, editUrl] = await Promise.all([
+      this.prisma.newsletterCampaign.update({
+        where: { id },
+        data: {
+          title: title?.trim() || existing.title,
+          document: asJson(parsed),
+        },
+      }),
+      this.mailchimp.editUrls(),
+    ]);
 
-    return toCampaign(row);
+    return toCampaign(row, editUrl);
   }
 
   archive(id: string) {
@@ -160,12 +163,15 @@ export class NewsletterCampaignService {
   private async setStatus(id: string, status: NewsletterCampaignStatus) {
     const existing = await this.row(id);
 
-    const row = await this.prisma.newsletterCampaign.update({
-      where: { id },
-      data: { status, modifiedAt: existing.modifiedAt },
-    });
+    const [row, editUrl] = await Promise.all([
+      this.prisma.newsletterCampaign.update({
+        where: { id },
+        data: { status, modifiedAt: existing.modifiedAt },
+      }),
+      this.mailchimp.editUrls(),
+    ]);
 
-    return toCampaign(row);
+    return toCampaign(row, editUrl);
   }
 
   /**

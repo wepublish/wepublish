@@ -184,14 +184,14 @@ function asCondition(value: unknown, path: string): MergeCondition | undefined {
     if (!INTEREST_NAME.test(field)) {
       fail(
         `${path}.field`,
-        'darf als Gruppen-Kategorie keines der Zeichen : , * | enthalten'
+        'darf als Gruppen-Kategorie keines der Zeichen : , * | & < > " oder \' enthalten'
       );
     }
 
     if (!INTEREST_NAME.test(compared)) {
       fail(
         `${path}.value`,
-        'darf als Gruppenname keines der Zeichen : , * | enthalten'
+        'darf als Gruppenname keines der Zeichen : , * | & < > " oder \' enthalten'
       );
     }
   } else {
@@ -199,8 +199,14 @@ function asCondition(value: unknown, path: string): MergeCondition | undefined {
       fail(`${path}.field`, 'muss ein Merge-Feld wie FNAME sein');
     }
 
-    if (/[*|]/.test(compared)) {
-      fail(`${path}.value`, 'darf kein * und kein | enthalten');
+    // Same set as `INTEREST_NAME`'s additions: a condition value becomes a
+    // merge tag via a React text node, so a character `renderToStaticMarkup`
+    // escapes would reach Mailchimp in a form the editor never wrote.
+    if (/[*|&<>"']/.test(compared)) {
+      fail(
+        `${path}.value`,
+        'darf keines der Zeichen * | & < > " oder \' enthalten'
+      );
     }
   }
 

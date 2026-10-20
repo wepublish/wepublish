@@ -418,7 +418,9 @@ function BigTeaser({ teaser, gutter }: { teaser: Teaser; gutter: Gutter }) {
   }
 
   return (
-    <Block>
+    // `none` so the outer cell adds no `nl-pad` on mobile: the text column of
+    // `TwoColumn` carries it, and a second one would double the text's inset.
+    <Block gutter="none">
       <TwoColumn
         gutter={gutter}
         image={
@@ -584,8 +586,10 @@ function Panel({
   // Einzug themselves, so the frame sits flush with the panel's own inset.
   if (imageUrl) {
     return (
+      // `none` so the outer cell adds no `nl-pad` on mobile: `TwoColumn`'s text
+      // column carries it, and a second one would double the text's inset.
       <Block
-        gutter={gutter}
+        gutter="none"
         background={theme.color.highlight}
         style={vertical}
       >

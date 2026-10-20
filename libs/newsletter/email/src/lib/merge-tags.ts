@@ -282,13 +282,16 @@ export interface InterestCategory {
  *
  * `:` separates the category from the group and `,` separates several groups, so
  * a name carrying either cannot be addressed — and `*` and `|` are the tag's own
- * delimiters. Mailchimp's documentation says only that the category may not
- * contain a colon; the rest follows from the same parse. `fetchInterestCategories`
- * drops such a name rather than offering it, and `parseDocument` refuses one that
- * arrives from anywhere else — the alternative is a condition that reads as
- * complete in the editor and matches nobody in the send.
+ * delimiters. `&`, `<`, `>`, `"` and `'` are refused too: `renderBlock` emits a
+ * condition as a text node, so `renderToStaticMarkup` escapes them and the tag
+ * Mailchimp evaluates would no longer carry the name the editor picked.
+ * Mailchimp's documentation says only that the category may not contain a colon;
+ * the rest follows from the same parse. `fetchInterestCategories` drops such a
+ * name rather than offering it, and `parseDocument` refuses one that arrives from
+ * anywhere else — the alternative is a condition that reads as complete in the
+ * editor and matches nobody in the send.
  */
-export const INTEREST_NAME = /^[^:,*|]+$/;
+export const INTEREST_NAME = /^[^:,*|&<>"']+$/;
 
 /** How Mailchimp writes each comparison inside an `IF`. */
 const COMPARISON: Record<MergeComparison, string> = { is: '=', not: '!=' };
