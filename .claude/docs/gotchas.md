@@ -102,19 +102,20 @@ The second is a data-exposure guard, not a style preference. If you need
 
 ### ⚠️ Four apps are excluded from the typecheck CI job
 
-[tools/typecheck-websites.sh](../../tools/typecheck-websites.sh) skips
-`api-example`, `editor`, `bka`, and `media` — they do not currently typecheck
-cleanly, and `website-typecheck.yml` runs this script as-is.
+`website-typecheck.yml` runs the Nx `typecheck` target of every app that has
+one. `api-example`, `media` and `bka` have no such target, and `editor` (whose
+target checks its own `tsconfig.app.json`/`tsconfig.server.json`) is passed to
+`--exclude`. They do not currently typecheck cleanly against the website setup.
+No Nx plugin infers this target here (`@nx/vite` only does it for projects with
+a `vite.config.*`), so each website app declares it in its `project.json`. A new
+app needs one too, or CI silently skips it.
 
 Two failure modes to avoid:
 
-1. Do not "fix" the exclusion list as a side quest — those apps fail for
-   unrelated pre-existing reasons.
-2. Do not let your change push a **new** app onto that list. If an app you touched
-   stops typechecking, fix the app, not the script.
-
-Note the script uses `set -uo pipefail` (no `-e`) and collects failures, so it
-reports every failing app rather than stopping at the first.
+1. Do not "fix" the exclusion as a side quest — those apps fail for unrelated
+   pre-existing reasons.
+2. Do not drop an app's `typecheck` target to get CI green. If an app you
+   touched stops typechecking, fix the app.
 
 ---
 

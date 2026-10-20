@@ -26,7 +26,7 @@ pnpm nx build <project>                    # e.g. membership-api
 
 # 2b. Apps — not covered by lint, test, or any build target
 pnpm tsc -p ./apps/<app> --noEmit          # single app
-bash ./tools/typecheck-websites.sh        # all apps, as CI runs it
+pnpm nx affected -t typecheck --exclude=editor   # apps, as CI runs it (cached)
 ```
 
 `nx build <project>` runs `tsc` across the whole library rather than only the
@@ -69,7 +69,7 @@ still a broken change.
 | --- | --- | --- |
 | `lint.yml` | `nx-scoped.sh -t lint` | ESLint |
 | `test.yml` | `nx-scoped.sh -t test` | All Vitest projects (backend and website) + coverage, with Postgres 17. Split over 4 shard jobs, with Nx projects balanced by spec-file count, at `--parallel=6`. The `Test` job only reports whether all shards passed |
-| `website-typecheck.yml` | `typecheck-websites.sh $(nx-scoped.sh --list --type app)` | `tsc --noEmit` per app |
+| `website-typecheck.yml` | `nx-scoped.sh -t typecheck --exclude=editor` | Each website app's `typecheck` target (`tsc --noEmit`), cached by Nx, `--parallel=3` |
 
 All three go through [tools/ci/nx-scoped.sh](../../tools/ci/nx-scoped.sh).
 Pushes to `master` always run the full set. On PRs the
@@ -93,9 +93,8 @@ reports Success. Backend image builds are skipped by passing empty tags, so the
 required `Docker backend images / …` checks still report. Both secret scans
 always run. If the file list can't be read, everything runs.
 
-Note `website-typecheck.yml` **excludes** `api-example`, `editor`, `bka`, `media`
-— those are known not to typecheck cleanly. Do not "fix" that exclusion as a
-side quest, but do not let a change you make add a new app to that list either.
+`website-typecheck.yml` **skips** `api-example`, `editor`, `bka`, and `media`;
+see [gotchas.md](gotchas.md#️-four-apps-are-excluded-from-the-typecheck-ci-job).
 
 Coverage is uploaded by [tools/ci/codecov-upload.sh](../../tools/ci/codecov-upload.sh):
 one upload per Nx project, flagged with the project name, and a failed upload

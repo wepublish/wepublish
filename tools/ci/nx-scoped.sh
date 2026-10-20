@@ -1,13 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-usage='Usage: nx-scoped.sh [--list] <nx show projects filters...> [-- <nx run-many args...>]'
-
-list_only=false
-if [[ "${1:-}" == "--list" ]]; then
-  list_only=true
-  shift
-fi
+usage='Usage: nx-scoped.sh <nx show projects filters...> [-- <nx run-many args...>]'
 
 select_args=()
 while [[ $# -gt 0 && "$1" != "--" ]]; do
@@ -118,11 +112,6 @@ shard_count="$(grep -c . "$work/shard" || true)"
   echo "| This shard ($shard_index/$shard_total) | $shard_count |"
 } >>"$summary"
 echo "Scope $mode, shard $shard_index/$shard_total: $shard_count of $all_count projects (affected: $affected_count)." >&2
-
-if [[ "$list_only" == true ]]; then
-  cat "$work/shard"
-  exit 0
-fi
 
 if [[ "$shard_count" -eq 0 ]]; then
   echo "Nothing to run in this shard."
