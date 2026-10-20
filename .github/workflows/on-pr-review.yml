@@ -10,6 +10,9 @@ concurrency:
 
 jobs:
 
+  changes:
+    uses: ./.github/workflows/changes.yml
+
   check-review-deploy-label:
     runs-on: ubuntu-latest
     outputs:
@@ -49,27 +52,22 @@ jobs:
     secrets: inherit
 
   publish_docker_image:
-    needs: [publish_docker_base_image]
+    needs: [publish_docker_base_image, changes]
     name: Docker backend images
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
-      editor_tags: |
-        ghcr.io/wepublish/editor:${{ github.sha }}
-      api_tags: |
-        ghcr.io/wepublish/api:${{ github.sha }}
-      migration_tags: |
-        ghcr.io/wepublish/migration:${{ github.sha }}
-      storybook_tags: |
-        ghcr.io/wepublish/storybook:${{ github.sha }}
-      media_tags: |
-        ghcr.io/wepublish/media:${{ github.sha }}
+      editor_tags: ${{ needs.changes.outputs.code == 'true' && format('ghcr.io/wepublish/editor:{0}', github.sha) || '' }}
+      api_tags: ${{ needs.changes.outputs.code == 'true' && format('ghcr.io/wepublish/api:{0}', github.sha) || '' }}
+      migration_tags: ${{ needs.changes.outputs.code == 'true' && format('ghcr.io/wepublish/migration:{0}', github.sha) || '' }}
+      storybook_tags: ${{ needs.changes.outputs.code == 'true' && format('ghcr.io/wepublish/storybook:{0}', github.sha) || '' }}
+      media_tags: ${{ needs.changes.outputs.code == 'true' && format('ghcr.io/wepublish/media:{0}', github.sha) || '' }}
     secrets: inherit
 
 
   setup-website-matrix:
     runs-on: ubuntu-latest
-    if: needs.check-review-deploy-label.outputs.has_label == 'false'
-    needs: [ check-review-deploy-label ]
+    if: needs.check-review-deploy-label.outputs.has_label == 'false' && needs.changes.outputs.code == 'true'
+    needs: [ check-review-deploy-label, changes ]
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:

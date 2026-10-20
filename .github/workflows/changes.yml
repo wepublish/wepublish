@@ -1,0 +1,25 @@
+name: Changes
+
+on:
+  workflow_call:
+    outputs:
+      code:
+        description: "'false' when a pull request only touches docs and AI tooling files, 'true' otherwise"
+        value: ${{ jobs.changes.outputs.code }}
+
+jobs:
+  changes:
+    name: Detect code changes
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.detect.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/ci
+      - id: detect
+        run: bash ./tools/ci/changes.sh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          CHANGED_FILES: ${{ github.event.pull_request.changed_files }}

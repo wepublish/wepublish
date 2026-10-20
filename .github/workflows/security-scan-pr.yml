@@ -33,8 +33,13 @@ jobs:
           extra_args: >-
             --only-verified
 
+  changes:
+    uses: ./.github/workflows/changes.yml
+
   codeql:
     name: CodeQL (SAST)
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
 
     strategy:

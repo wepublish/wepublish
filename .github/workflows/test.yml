@@ -12,8 +12,13 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  changes:
+    uses: ./.github/workflows/changes.yml
+
   shard:
     name: Test shard ${{ matrix.shard }}/4
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -69,14 +74,20 @@ jobs:
         if: always()
 
   Test:
-    needs: shard
+    needs: [changes, shard]
     if: always()
     runs-on: ubuntu-latest
     steps:
       - run: |
+          if [[ "$CHANGES" == "success" && "$CODE" == "false" && "$SHARDS" == "skipped" ]]; then
+            echo "Only docs and AI tooling changed, no tests to run."
+            exit 0
+          fi
           if [[ "$SHARDS" != "success" ]]; then
-            echo "Test shards finished with '$SHARDS'."
+            echo "Test shards finished with '$SHARDS' (change detection: '$CHANGES')."
             exit 1
           fi
         env:
+          CHANGES: ${{ needs.changes.result }}
+          CODE: ${{ needs.changes.outputs.code }}
           SHARDS: ${{ needs.shard.result }}
