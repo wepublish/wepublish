@@ -17,7 +17,7 @@ jobs:
       project: ${{ steps.image_tag.outputs.project }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - id: image_tag
         run: ./deployment/get_production_tag.sh ${GITHUB_REF##*/}
 
@@ -51,7 +51,7 @@ jobs:
     if: ${{ needs.deploy-wepublish-production.result == 'success' }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - id: read-deployment-config
         run: ./deployment/read_deployment_config.sh '.website.production.deployment' true ${{ needs.get-tag.outputs.project }}
 
@@ -82,7 +82,7 @@ jobs:
     permissions:
       deployments: write
     steps:
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v9
         with:
           script: |
             const project = '${{ needs.get-tag.outputs.project }}';

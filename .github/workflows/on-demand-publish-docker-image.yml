@@ -29,9 +29,9 @@ jobs:
     outputs:
       hashed_tag: ${{ steps.hash.outputs.hashed_tag }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Log in to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
@@ -54,22 +54,26 @@ jobs:
       BUILD_IMAGE_TAG: ${{ needs.calculate-base-image-tag.outputs.hashed_tag }}
     if: inputs.api_tags != ''
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Create .version file
         run: echo "${{ github.sha }}" > .version
       - name: Log in to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - uses: docker/login-action@v1
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/setup-buildx-action@v1
-      - uses: docker/build-push-action@v2
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
+        env:
+          DOCKER_BUILD_SUMMARY: false
+          DOCKER_BUILD_RECORD_UPLOAD: false
         with:
+          provenance: false
           context: .
           target: api
           push: true
@@ -90,19 +94,23 @@ jobs:
       BUILD_IMAGE_TAG: ${{ needs.calculate-base-image-tag.outputs.hashed_tag }}
     if: inputs.editor_tags != ''
     steps:
-      - uses: docker/login-action@v1
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Log in to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - uses: docker/setup-buildx-action@v1
-      - uses: docker/build-push-action@v2
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
+        env:
+          DOCKER_BUILD_SUMMARY: false
+          DOCKER_BUILD_RECORD_UPLOAD: false
         with:
+          provenance: false
           target: editor
           push: true
           tags: |
@@ -119,19 +127,23 @@ jobs:
     runs-on: ubuntu-latest
     if: inputs.migration_tags != ''
     steps:
-      - uses: docker/login-action@v1
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Log in to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - uses: docker/setup-buildx-action@v1
-      - uses: docker/build-push-action@v2
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
+        env:
+          DOCKER_BUILD_SUMMARY: false
+          DOCKER_BUILD_RECORD_UPLOAD: false
         with:
+          provenance: false
           target: migration
           push: true
           tags: |
@@ -150,19 +162,23 @@ jobs:
       BUILD_IMAGE_TAG: ${{ needs.calculate-base-image-tag.outputs.hashed_tag }}
     if: inputs.media_tags != ''
     steps:
-      - uses: docker/login-action@v1
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Log in to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - uses: docker/setup-buildx-action@v1
-      - uses: docker/build-push-action@v2
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
+        env:
+          DOCKER_BUILD_SUMMARY: false
+          DOCKER_BUILD_RECORD_UPLOAD: false
         with:
+          provenance: false
           target: media
           push: true
           tags: |
@@ -183,19 +199,23 @@ jobs:
       BUILD_IMAGE_TAG: ${{ needs.calculate-base-image-tag.outputs.hashed_tag }}
     if: inputs.storybook_tags != ''
     steps:
-      - uses: docker/login-action@v1
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Log in to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - uses: docker/setup-buildx-action@v1
-      - uses: docker/build-push-action@v2
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
+        env:
+          DOCKER_BUILD_SUMMARY: false
+          DOCKER_BUILD_RECORD_UPLOAD: false
         with:
+          provenance: false
           target: storybook
           push: true
           tags: |

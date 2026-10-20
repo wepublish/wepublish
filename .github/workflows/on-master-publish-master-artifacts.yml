@@ -24,7 +24,7 @@ jobs:
       matrix: ${{ steps.set-matrix-with-tdl.outputs.matrix }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up matrix
         id: set-matrix
