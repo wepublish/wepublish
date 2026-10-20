@@ -1,0 +1,1 @@
+Throwaway file to measure CI in NX_AFFECTED_SCOPE=affected mode. Never merged.
