@@ -33,9 +33,10 @@ pkg binary. **Adding a runtime import to code these apps reach means adding the
 package to the catalog and to that app's `package.json`**; otherwise the
 image boots with `Cannot find module`. Each image build fails fast on that:
 `docker/check-runtime-deps.js` runs right after `nx build` and rejects both
-missing and unused entries (run it locally the same way:
+missing and unused entries — a listed peer of a loaded package counts as used,
+which is how lazily loaded optional peers pass (run it locally the same way:
 `node docker/check-runtime-deps.js dist/apps/<app> apps/<app>/package.json`;
-its spec runs with `node --test docker/`). It only counts double-quoted
+its spec runs with `node --test docker/check-runtime-deps.spec.js`). It only counts double-quoted
 `require("…")` / `import("…")`, which is how webpack and vite emit externals;
 single-quoted ones are third-party code inlined into the bundle, like
 node-fetch's optional `require('encoding')`. The API's Prisma client is generated inside the deploy

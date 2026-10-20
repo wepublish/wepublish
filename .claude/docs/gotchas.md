@@ -434,24 +434,18 @@ which guards the options shape but not the versions.
 [infrastructure.md](infrastructure.md)). Libraries that resolve an optional
 peer at runtime — Nest's `loadPackage` / `loadAdapter`, `ApolloDriver`,
 terminus's `import.meta.resolve` + `await import(...)` — never show up there,
-so `pnpm deploy` leaves the peer out and the image dies on boot with
-`No driver (HTTP) has been selected` or _The "<pkg>" package is missing_.
-Three have bitten: `@nestjs/platform-express` (named statically via
-`new ExpressAdapter()` in [main.ts](../../apps/api-example/src/main.ts)),
-`@as-integrations/express5` (from `ApolloDriver`) and `@nestjs/axios` (avoided:
-[http-ping.health.ts](../../libs/health/api/src/lib/http-ping.health.ts) pings
-with `HealthIndicatorService` + `fetch` instead of terminus's indicator).
+so unless the peer is listed too, `pnpm deploy` leaves it out and the image
+dies on boot with `No driver (HTTP) has been selected` or _The "<pkg>" package
+is missing_. The API lists three such peers: `@nestjs/platform-express`
+(`@nestjs/core`), `@as-integrations/express5` (`@nestjs/apollo`) and
+`@nestjs/axios` (`@nestjs/terminus`). `docker/check-runtime-deps.js` accepts a
+listed package the bundle never loads when a loaded package declares it as a
+peer (`peerDependencies` or `peerDependenciesMeta`), so they pass the check.
 
 **Before adding a library that lazily resolves an optional peer** — grep it for
 `loadPackage`, `assertPackages`, `loadAdapter`, `import.meta.resolve` and
-`await import(` — add that peer to the app's `package.json` as well.
-Re-run it after dependency changes — it is a point-in-time check, not a
-guarantee. As of 2026-10-06 only `@apollo/subgraph` and `@apollo/gateway`
-remain unbundled, unreachable because the API uses `ApolloDriver`, not the
-federation or gateway drivers.
-
-**Nothing type-checks or tests either failure** — both only appear in the
-packaged binary.
+`await import(` — add that peer to the app's `package.json` as well. Nothing
+type-checks or tests this; only booting the image shows it.
 
 ---
 

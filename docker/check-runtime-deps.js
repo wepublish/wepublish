@@ -18,7 +18,7 @@ function isBuiltin(specifier) {
   );
 }
 
-function compareRuntimeDeps(bundleSources, listed) {
+function compareRuntimeDeps(bundleSources, listed, peersOf = () => []) {
   const loaded = new Set();
 
   for (const source of bundleSources) {
@@ -29,10 +29,47 @@ function compareRuntimeDeps(bundleSources, listed) {
     }
   }
 
+  const peers = new Set([...loaded].flatMap(peersOf));
+
   return {
     missing: [...loaded].filter(name => !listed.includes(name)).sort(),
-    unused: listed.filter(name => !loaded.has(name)).sort(),
+    unused: listed
+      .filter(name => !loaded.has(name) && !peers.has(name))
+      .sort(),
   };
+}
+
+function peerNames(manifest) {
+  return [
+    ...new Set([
+      ...Object.keys(manifest.peerDependencies ?? {}),
+      ...Object.keys(manifest.peerDependenciesMeta ?? {}),
+    ]),
+  ];
+}
+
+function installedPeers(name) {
+  let dir;
+
+  try {
+    dir = path.dirname(require.resolve(name, { paths: [process.cwd()] }));
+  } catch {
+    return [];
+  }
+
+  for (; dir !== path.dirname(dir); dir = path.dirname(dir)) {
+    const manifestPath = path.join(dir, 'package.json');
+
+    if (fs.existsSync(manifestPath)) {
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+
+      if (manifest.name === name) {
+        return peerNames(manifest);
+      }
+    }
+  }
+
+  return [];
 }
 
 function main([distDir, manifestPath]) {
@@ -50,7 +87,8 @@ function main([distDir, manifestPath]) {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   const { missing, unused } = compareRuntimeDeps(
     bundleSources,
-    Object.keys(manifest.dependencies ?? {})
+    Object.keys(manifest.dependencies ?? {}),
+    installedPeers
   );
 
   if (missing.length) {
@@ -77,4 +115,4 @@ if (require.main === module) {
   main(process.argv.slice(2));
 }
 
-module.exports = { compareRuntimeDeps };
+module.exports = { compareRuntimeDeps, peerNames };
