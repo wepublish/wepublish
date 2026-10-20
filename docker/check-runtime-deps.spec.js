@@ -1,6 +1,24 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
-const { compareRuntimeDeps } = require('./check-runtime-deps');
+const { compareRuntimeDeps, peerNames } = require('./check-runtime-deps');
+
+describe('peerNames', () => {
+  it('includes optional peers declared only in peerDependenciesMeta', () => {
+    assert.deepEqual(
+      peerNames({
+        peerDependencies: { '@nestjs/core': '^12' },
+        peerDependenciesMeta: {
+          '@as-integrations/express5': { optional: true },
+        },
+      }),
+      ['@nestjs/core', '@as-integrations/express5']
+    );
+  });
+
+  it('copes with a manifest without peers', () => {
+    assert.deepEqual(peerNames({}), []);
+  });
+});
 
 describe('compareRuntimeDeps', () => {
   it('passes when the bundle loads exactly what the manifest lists', () => {
@@ -27,6 +45,33 @@ describe('compareRuntimeDeps', () => {
     assert.deepEqual(compareRuntimeDeps(bundle, ['express', 'react']).unused, [
       'react',
     ]);
+  });
+
+  it('accepts a listed package that a loaded package declares as a peer', () => {
+    const bundle = ['require("@nestjs/core");'];
+    const peersOf = name =>
+      name === '@nestjs/core' ? ['@nestjs/platform-express'] : [];
+
+    assert.deepEqual(
+      compareRuntimeDeps(
+        bundle,
+        ['@nestjs/core', '@nestjs/platform-express'],
+        peersOf
+      ),
+      { missing: [], unused: [] }
+    );
+  });
+
+  it('still reports a listed peer whose package the bundle never loads', () => {
+    const bundle = ['require("express");'];
+    const peersOf = name =>
+      name === '@nestjs/core' ? ['@nestjs/platform-express'] : [];
+
+    assert.deepEqual(
+      compareRuntimeDeps(bundle, ['express', '@nestjs/platform-express'], peersOf)
+        .unused,
+      ['@nestjs/platform-express']
+    );
   });
 
   it('reduces subpath imports to their package name', () => {
