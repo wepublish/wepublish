@@ -14,25 +14,25 @@ projects**, then **typecheck what you touched**.
 
 ```bash
 # 1. Lint + test everything your change touches (fast — Nx caches)
-npx nx affected -t lint test --uncommitted
+pnpm nx affected -t lint test --uncommitted
 
 # On a feature branch, compare against the base branch instead:
-npx nx affected -t lint test --base=origin/development
+pnpm nx affected -t lint test --base=origin/development
 ```
 
 ```bash
 # 2a. Libs — typecheck through the build target
-npx nx build <project>                    # e.g. membership-api
+pnpm nx build <project>                    # e.g. membership-api
 
 # 2b. Apps — not covered by lint, test, or any build target
-npx tsc -p ./apps/<app> --noEmit          # single app
+pnpm tsc -p ./apps/<app> --noEmit          # single app
 bash ./tools/typecheck-websites.sh        # all apps, as CI runs it
 ```
 
 `nx build <project>` runs `tsc` across the whole library rather than only the
 files a spec happens to import, so it is what catches a type error in a file no
 test reaches — including a **stale generated client**. If `@prisma/client` is
-missing fields you just added to `schema.prisma`, run `npx prisma generate`.
+missing fields you just added to `schema.prisma`, run `pnpm prisma generate`.
 When a lib has no `build` target, add one where it makes sense.
 
 If `--uncommitted` returns nothing but you know you changed files, you have
@@ -41,20 +41,20 @@ probably already staged or committed them — use `--base=origin/development`.
 ### Single project (while iterating)
 
 ```bash
-npx nx test <project>            # e.g. article-api, article-website
-npx nx lint <project>
-npx nx test <project> --watch    # Vitest projects only
+pnpm nx test <project>            # e.g. article-api, article-website
+pnpm nx lint <project>
+pnpm nx test <project> --watch    # Vitest projects only
 ```
 
-Nx project names are `<domain>-<layer>`. List them with `npx nx show projects`.
+Nx project names are `<domain>-<layer>`. List them with `pnpm nx show projects`.
 
 ### Whole workspace (rarely needed)
 
 ```bash
-npm run lint            # all projects
-npm run test            # all projects, serial — many minutes
-npm run test-backend    # NestJS/backend projects
-npm run test-website    # *website* projects
+pnpm run lint            # all projects
+pnpm run test            # all projects, serial — many minutes
+pnpm run test-backend    # NestJS/backend projects
+pnpm run test-website    # *website* projects
 ```
 
 Prefer `nx affected`. The full run is what CI is for; running it locally on every
@@ -67,9 +67,9 @@ still a broken change.
 
 | Workflow | Command | Covers |
 | --- | --- | --- |
-| `lint.yml` | `npm run lint` | ESLint, all projects |
-| `test.yml` | `npm run test-backend -- --configuration=ci` | Vitest backend/NestJS + coverage, with Postgres 17 |
-| `website-tests.yml` | `npm run test-website -- --configuration=ci` | Vitest website projects + coverage |
+| `lint.yml` | `pnpm run lint` | ESLint, all projects |
+| `test.yml` | `pnpm run test-backend --configuration=ci` | Vitest backend/NestJS + coverage, with Postgres 17 |
+| `website-tests.yml` | `pnpm run test-website --configuration=ci` | Vitest website projects + coverage |
 | `website-typecheck.yml` | `bash ./tools/typecheck-websites.sh` | `tsc --noEmit` per app |
 
 Note `website-typecheck.yml` **excludes** `api-example`, `editor`, `bka`, `media`
@@ -82,7 +82,7 @@ Coverage is uploaded to Codecov with `fail_ci_if_error: true`.
 
 State the actual outcome:
 
-- ✅ `npx nx affected -t lint test --uncommitted` — 4 projects, all passed
+- ✅ `pnpm nx affected -t lint test --uncommitted` — 4 projects, all passed
 - ❌ 2 tests fail in `article-api` — paste the failing assertion
 - ⚠️ Did not typecheck; change was library-only
 

@@ -133,17 +133,16 @@
       "@wepublish/user/website": ["libs/user/website/src/index.ts"],
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
-      "@wepublish/utils/sentry": ["libs/utils/sentry/instrumentation.ts"],
-      "@wepublish/utils/sentry/client": [
-        "libs/utils/sentry/instrumentation.client.ts"
-      ],
-      "@wepublish/utils/sentry/nestjs": [
-        "libs/utils/sentry/instrumentation.nestjs.ts"
-      ],
-      "@wepublish/utils/sentry/nextjs": [
-        "libs/utils/sentry/instrumentation.nextjs.ts"
+      "@wepublish/utils/api/sentry": [
+        "libs/utils/api/src/lib/sentry/instrumentation.ts"
       ],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
+      "@wepublish/utils/website/sentry": [
+        "libs/utils/website/src/lib/sentry/instrumentation.ts"
+      ],
+      "@wepublish/utils/website/sentry/client": [
+        "libs/utils/website/src/lib/sentry/instrumentation.client.ts"
+      ],
       "@wepublish/versionInformation/api": [
         "libs/versionInformation/api/src/index.ts"
       ],

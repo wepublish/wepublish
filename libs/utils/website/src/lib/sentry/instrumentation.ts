@@ -1,14 +1,10 @@
-/**
- * Sentry instrumentation for Next.js server-side.
- * Use in apps/.../instrumentation.ts files.
- *
- * @example
- * // apps/myapp/instrumentation.ts
- * export { onRequestError, register } from '@wepublish/utils/sentry/nextjs';
- */
 import * as Sentry from '@sentry/nextjs';
 
-import { getServerConfig, setCommonTags, withoutKeySpans } from './config';
+import {
+  getServerConfig,
+  setCommonTags,
+  withoutKeySpans,
+} from '@wepublish/utils';
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {

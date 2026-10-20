@@ -44,4 +44,4 @@ Align all code suggestions, architecture recommendations, and technical solution
   projects transform with swc via `createVitestConfig({nest: true})`
 - **@nestjs/testing** for backend service/resolver unit tests
 - **Testing Library** for frontend component tests
-- Test commands: `npm run test`, `npm run test-backend`, `npm run test-website`
+- Test commands: `pnpm run test`, `pnpm run test-backend`, `pnpm run test-website`

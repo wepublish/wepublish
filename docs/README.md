@@ -37,17 +37,17 @@
 ## apps/editor
 
 ### run app with nx
-`npx nx serve <app-name>`
+`pnpm nx serve <app-name>`
 
-example: `npx nx serve bajour`
+example: `pnpm nx serve bajour`
 
 ### How to call an api endpoint from the UI (.tsx file)?
 
 Prerequisite: In the API (packages/api) exists a corresponding GraphQL endpoint.
 
 1. In `editor/src/app/api` you have to create a corresponding graphql file or define your mutation or query in an existing one.
-2. Start the API (`npm run watch`)
-3. In your terminal run `npx nx generate-api`
+2. Start the API (`pnpm run watch`)
+3. In your terminal run `pnpm nx generate-api`
 4. Now the file `index.ts` will be generated automatically in `apps/editor/src/app/api`
 5. Now you can import your desired endpoint in your .tsx file. See for example `subscriptionEditPanel.tsx`
 

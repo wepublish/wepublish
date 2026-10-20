@@ -1,18 +1,10 @@
-/**
- * Sentry instrumentation for Next.js client-side.
- * Use in apps/.../instrumentation-client.ts files.
- *
- * @example
- * // apps/myapp/instrumentation-client.ts
- * import '@wepublish/utils/sentry/client';
- */
 import * as Sentry from '@sentry/nextjs';
 
 import {
   getBaseConfig,
   getBrowserTracePropagationTargets,
   setCommonTags,
-} from './config';
+} from '@wepublish/utils';
 
 Sentry.init({
   ...getBaseConfig(),

@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { createServer, ServerResponse, type RequestListener } from 'http';
 import { AddressInfo } from 'net';
 import { forbidCachingErrors } from './error-no-store';
