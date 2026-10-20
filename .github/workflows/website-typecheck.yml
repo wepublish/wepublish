@@ -40,19 +40,32 @@ jobs:
       - run: pnpm exec nx fix-ci
         if: always()
 
-  build-api:
-    name: Build api-example
+  build-apps:
+    name: Build apps
     needs: changes
     if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: '--max-old-space-size=4096'
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          filter: tree:0
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec nx run api-example:build --skip-nx-cache
+      - uses: nrwl/nx-set-shas@v5
+        if: github.event_name == 'pull_request'
+        with:
+          main-branch-name: master
+      - name: Build api-example
+        run: pnpm exec nx run api-example:build --skip-nx-cache
+      - name: Build editor and media
+        if: success() || failure()
+        run: bash ./tools/ci/nx-scoped.sh -t build --projects=editor,media -- -t build
         env:
-          NODE_OPTIONS: '--max-old-space-size=4096'
+          NX_SCOPE: ${{ github.event_name == 'pull_request' && (vars.NX_AFFECTED_SCOPE || 'shadow') || 'full' }}
