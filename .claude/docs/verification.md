@@ -68,11 +68,10 @@ still a broken change.
 | Workflow | Command | Covers |
 | --- | --- | --- |
 | `lint.yml` | `nx-scoped.sh -t lint` | ESLint |
-| `test.yml` | `nx-scoped.sh -t test --exclude='*website*'` | Vitest backend/NestJS + coverage, with Postgres 17; split over 3 shard jobs (Nx projects balanced by spec-file count), and the `Test` job only reports whether all shards passed |
-| `website-tests.yml` | `nx-scoped.sh -t test --projects='*website*'` | Vitest website projects + coverage |
+| `test.yml` | `nx-scoped.sh -t test --exclude='*website*'`, then `--projects='*website*'` | All Vitest projects + coverage, with Postgres 17. Split over 4 shard jobs; each suite's Nx projects are balanced by spec-file count. Each shard runs backend (`--parallel=10`) then website (`--parallel=3`). The `Test` job only reports whether all shards passed |
 | `website-typecheck.yml` | `typecheck-websites.sh $(nx-scoped.sh --list --type app)` | `tsc --noEmit` per app |
 
-All four go through [tools/ci/nx-scoped.sh](../../tools/ci/nx-scoped.sh).
+All three go through [tools/ci/nx-scoped.sh](../../tools/ci/nx-scoped.sh).
 Pushes to `master`/`development` always run the full set. On PRs the
 `NX_AFFECTED_SCOPE` repository variable picks the mode: `shadow` (the default
 when unset) still runs everything, logs what `nx affected` would have picked,
@@ -80,7 +79,7 @@ and warns if a failing project was outside that set; `affected` runs only what
 `nx affected` picks against the merge base from `nrwl/nx-set-shas`. Even in
 `affected` mode the script runs the full set when the base doesn't resolve, or
 when the diff touches non-Markdown files but affects no project besides the
-root `wepublish` project. The four workflow files are `sharedGlobals` in
+root `wepublish` project. The three workflow files are `sharedGlobals` in
 `nx.json`, so editing one marks every project affected.
 
 Note `website-typecheck.yml` **excludes** `api-example`, `editor`, `bka`, `media`

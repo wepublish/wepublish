@@ -126,7 +126,6 @@
       "{workspaceRoot}/babel.config.json",
       "{workspaceRoot}/.github/workflows/lint.yml",
       "{workspaceRoot}/.github/workflows/test.yml",
-      "{workspaceRoot}/.github/workflows/website-tests.yml",
       "{workspaceRoot}/.github/workflows/website-typecheck.yml"
     ]
   },
