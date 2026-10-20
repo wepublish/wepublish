@@ -18,7 +18,7 @@ Align all code suggestions, architecture recommendations, and technical solution
 ## Backend
 
 - **NestJS 11** as the server framework
-- **PostgreSQL 17** as the database
+- **PostgreSQL 18** as the database
 - **Prisma 7** as ORM — schema at `libs/api/prisma/schema.prisma`
 - **Apollo Server** for GraphQL API (code-first approach with NestJS decorators)
 - **Pino** for structured logging

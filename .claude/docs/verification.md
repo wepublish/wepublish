@@ -68,7 +68,7 @@ still a broken change.
 | Workflow | Command | Covers |
 | --- | --- | --- |
 | `lint.yml` | `nx-scoped.sh -t lint` | ESLint |
-| `test.yml` | `nx-scoped.sh -t test` | All Vitest projects (backend and website) + coverage, with Postgres 17. Split over 4 shard jobs, with Nx projects balanced by spec-file count, at `--parallel=6`. The `Test` job only reports whether all shards passed |
+| `test.yml` | `nx-scoped.sh -t test` | All Vitest projects (backend and website) + coverage, with Postgres 18. Split over 4 shard jobs, with Nx projects balanced by spec-file count, at `--parallel=6`. The `Test` job only reports whether all shards passed |
 | `website-typecheck.yml` | `nx-scoped.sh -t typecheck --exclude=editor`, plus `nx run api-example:build --skip-nx-cache` | Each website app's `typecheck` target (`tsc --noEmit`), cached by Nx, `--parallel=3`. The `Build api-example` job compiles the whole API on every code change, including `master` |
 
 All three go through [tools/ci/nx-scoped.sh](../../tools/ci/nx-scoped.sh).

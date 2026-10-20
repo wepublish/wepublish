@@ -89,7 +89,7 @@ documents (`libs/website/api/src/lib/schemas/sitemap.graphql`), never
 
 ## Database
 
-- **PostgreSQL 17** via **Prisma 5**
+- **PostgreSQL 18** via **Prisma 7**
 - Schema: `libs/api/prisma/schema.prisma`
 - Uses Prisma views for article revision states: `ArticleRevisionPublished`, `ArticleRevisionPending`, `ArticleRevisionDraft`
 - Full-text search via Prisma preview feature
