@@ -207,6 +207,7 @@ export const CREATE_COMMANDS: CommandDefinition[] = [
     titleKey: 'commandPalette.create.letterLayout',
     icon: <MdDescription />,
     permissions: [CanCreateMailTemplates.id],
+    feature: 'paper-letters',
     perform: ({ navigate }) => navigate('/letterlayouts/create'),
   },
   {

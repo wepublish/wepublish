@@ -5,6 +5,7 @@ import {
   CanGetMailTemplates,
   CanUpdateMailTemplates,
 } from '@wepublish/permissions';
+import { Feature } from '@wepublish/features/api';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   LetterLayoutInput,
@@ -18,6 +19,7 @@ import { LetterLayoutService } from './letter-layout.service';
  * Stationery is maintained by whoever maintains the mail templates, so it
  * shares their permissions rather than adding a set of its own.
  */
+@Feature('paper-letters')
 @Resolver(() => LetterLayoutModel)
 export class LetterLayoutResolver {
   constructor(private letterLayoutService: LetterLayoutService) {}
