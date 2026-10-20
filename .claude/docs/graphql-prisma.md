@@ -11,7 +11,7 @@ libs/<domain>/api  (NestJS resolvers/models, code-first)
       │  running the API writes the SDL
       ▼
 apps/api-example/schema-v2.graphql
-      │  npm run generate-api
+      │  pnpm run generate-api
       ▼
 libs/{editor,website}/api/src/lib/gql/  (+ schema-types.ts, possible-types.ts, index.ts)
       │
@@ -26,10 +26,10 @@ the root `package.json`). Migrations: `libs/api/prisma/migrations/` — 158 and
 counting, named `<timestamp>_<snake_case_description>`.
 
 ```bash
-npm run start:docker                       # Postgres + MinIO + Dragonfly
-npx prisma migrate dev --name add_foo_to_bar   # create + apply a new migration
-npx prisma generate                        # regenerate the client (also runs on `npm install`)
-npm run migrate                            # migrate deploy + seed (deploy path, CI/prod)
+pnpm run start:docker                       # Postgres + MinIO + Dragonfly
+pnpm prisma migrate dev --name add_foo_to_bar   # create + apply a new migration
+pnpm prisma generate                        # regenerate the client (also runs on `pnpm install`)
+pnpm run migrate                            # migrate deploy + seed (deploy path, CI/prod)
 ```
 
 - **Never hand-edit a migration that has already been merged.** Write a new one.
@@ -74,7 +74,7 @@ export class ArticleResolver {
 ## Frontend codegen
 
 ```bash
-npm run generate-api    # graphql-codegen -r dotenv/config --config codegen.yml
+pnpm run generate-api    # graphql-codegen -r dotenv/config --config codegen.yml
 ```
 
 Reads `apps/api-example/schema-v2.graphql` plus the `.graphql` documents in
@@ -97,10 +97,10 @@ the same run. Every output is listed in `.prettierignore`.
 
 Adding a field that reaches the website:
 
-1. `schema.prisma` → `npx prisma migrate dev --name ...`
+1. `schema.prisma` → `pnpm prisma migrate dev --name ...`
 2. Write the **failing test** in `libs/<domain>/api` (see [testing.md](testing.md))
 3. Model + resolver/service in `libs/<domain>/api` → test passes
 4. Start the API so `schema-v2.graphql` regenerates
-5. Add the field to the `.graphql` document, `npm run generate-api`
+5. Add the field to the `.graphql` document, `pnpm run generate-api`
 6. Story + failing test in `libs/<domain>/website`, then the component
-7. `npx nx affected -t lint test --uncommitted` — see [verification.md](verification.md)
+7. `pnpm nx affected -t lint test --uncommitted` — see [verification.md](verification.md)
