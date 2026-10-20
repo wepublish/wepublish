@@ -6,9 +6,9 @@ Install the [Development Container](https://marketplace.visualstudio.com/items?i
 
 ## Running servers
 
-* Run the editor: `npm run watch` (accessible on http://localhost:3000)
-* Run the API: `npx nx serve api-example` (accessible on http://localhost:4000)
-* Run the websites: `npx nx run bajour:serve` or `npx nx run tsri:serve` etc. (accessible on http://localhost:420x)
+* Run the editor: `pnpm run watch` (accessible on http://localhost:3000)
+* Run the API: `pnpm nx serve api-example` (accessible on http://localhost:4000)
+* Run the websites: `pnpm nx run bajour:serve` or `pnpm nx run tsri:serve` etc. (accessible on http://localhost:420x)
 
 ## Supporting services
 

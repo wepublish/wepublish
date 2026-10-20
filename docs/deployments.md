@@ -67,11 +67,11 @@ The configuration file contains three main sections: `production`, `staging`, an
     1. Check out the commit or branch you want to deploy to production (e.g., `master`).
     2. Run the following command:
        ```sh
-       npm run deploy:production ${project_name}
+       pnpm run deploy:production ${project_name}
        ```
        For example, to deploy the `bajour` project:
        ```sh
-       npm run deploy:production bajour
+       pnpm run deploy:production bajour
        ```
   The deployment process will then be automated.
 

@@ -9,11 +9,10 @@ const DEFAULT_TIMEOUT_MS = 5000;
 /**
  * Pings an HTTP endpoint using the global fetch.
  *
- * Terminus' own HttpHealthIndicator cannot be used here: it asserts its
- * optional peer with `import.meta.resolve('@nestjs/axios')` and loads it with
- * `await import(...)`, neither of which a @yao-pkg/pkg snapshot can resolve, so
- * the API aborted on boot with 'The "@nestjs/axios" package is missing' even
- * though the package was installed and used elsewhere.
+ * Terminus' own HttpHealthIndicator resolves its optional peer at runtime with
+ * `import.meta.resolve('@nestjs/axios')` + `await import(...)`, and aborted the
+ * API on boot with 'The "@nestjs/axios" package is missing' when it ran as a
+ * pkg binary; this needs no optional peer at all.
  */
 @Injectable()
 export class HttpPingHealthIndicator {

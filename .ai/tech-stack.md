@@ -12,7 +12,7 @@ before you start.
    the right reason, then implement. Never write implementation before a failing
    test exists. Details and per-stack patterns:
    [testing.md](.claude/docs/testing.md).
-2. **Verify before claiming done.** Run `npx nx affected -t lint test --uncommitted`
+2. **Verify before claiming done.** Run `pnpm nx affected -t lint test --uncommitted`
    (plus `tsc --noEmit` if you touched `apps/`) and read the output. Never say
    "done", "fixed", or "tests pass" without having run the command in this
    session: [verification.md](.claude/docs/verification.md).
@@ -45,10 +45,10 @@ before you start.
 
 | You are editing | Runner | Verify with |
 | --- | --- | --- |
-| `libs/*/api` (NestJS) | Vitest | `npx nx test <domain>-api` |
-| `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils` | Vitest | `npx nx test <domain>-website` |
-| `apps/<tenant>` (Next.js) | Vitest + tsc | `npx tsc -p ./apps/<app> --noEmit` |
-| `libs/api/prisma` | — | `npx prisma migrate dev --name ...` |
+| `libs/*/api` (NestJS) | Vitest | `pnpm nx test <domain>-api` |
+| `libs/*/website`, `libs/*/editor`, `libs/ui`, `libs/utils` | Vitest | `pnpm nx test <domain>-website` |
+| `apps/<tenant>` (Next.js) | Vitest + tsc | `pnpm tsc -p ./apps/<app> --noEmit` |
+| `libs/api/prisma` | — | `pnpm prisma migrate dev --name ...` |
 
 Every project runs on Vitest — use `vi.fn()` / `vi.mock()` everywhere. NestJS
 libs get their config from `createVitestConfig({nest: true})`.
@@ -91,7 +91,7 @@ drift, and two documents disagreeing is worse than neither existing.
 
 - For navigating/exploring the workspace, invoke the `nx-workspace` skill first - it has patterns for querying projects, targets, and dependencies
 - When running tasks (for example build, lint, test, e2e, etc.), always prefer running the task through `nx` (i.e. `nx run`, `nx run-many`, `nx affected`) instead of using the underlying tooling directly
-- Prefix nx commands with the workspace's package manager (e.g., `pnpm nx build`, `npm exec nx test`) - avoids using globally installed CLI
+- Prefix nx commands with the workspace's package manager (e.g., `pnpm nx build`, `pnpm nx test`) - avoids using globally installed CLI
 - You have access to the Nx MCP server and its tools, use them to help the user
 - For Nx plugin best practices, check `node_modules/@nx/<plugin>/PLUGIN.md`. Not all plugins have this file - proceed without it if unavailable.
 - NEVER guess CLI flags - always check nx_docs or `--help` first when unsure

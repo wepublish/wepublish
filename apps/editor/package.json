@@ -25,5 +25,10 @@
   "bin": "main.js",
   "main": "main.js",
   "type": "commonjs",
-  "license": "MIT"
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "cors": "catalog:",
+    "express": "catalog:"
+  }
 }
