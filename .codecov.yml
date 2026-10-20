@@ -8,21 +8,36 @@ coverage:
     changes:
       default:
         if_no_uploads: error
-        target: 35%
         if_not_found: success
         if_ci_failed: error
+comment:
+  layout: "condensed_header, diff, components, condensed_files, condensed_footer"
 flag_management:
   default_rules:
     carryforward: true
+component_management:
+  individual_components:
+    - component_id: api
+      name: API
+      paths:
+        - "libs/api/**"
+        - "libs/nest-modules/**"
+        - "libs/**/api/**"
+    - component_id: editor
+      name: Editor
+      paths:
+        - "libs/**/editor/**"
+    - component_id: website
+      name: Website
+      paths:
+        - "libs/website/**"
+        - "libs/**/website/**"
 ignore:
   - "apps"
-  - "build"
   - "config"
   - "deployment"
   - "docker"
-  - "docs"
   - "helm"
-  - "scripts"
   - "tools"
   - "**/*.stories.tsx"
   - "libs/testing"
