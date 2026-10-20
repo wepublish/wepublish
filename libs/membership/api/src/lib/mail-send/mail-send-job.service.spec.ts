@@ -13,6 +13,7 @@ import { MailSendJobService } from './mail-send-job.service';
 import { MailSendRecipientService } from './mail-send-recipient.service';
 import { MailRecipientBase } from './mail-send.model';
 import type { Mock } from 'vitest';
+import { version } from 'uuid';
 
 const makeService = (
   prisma: any,
@@ -396,6 +397,9 @@ describe('MailSendJobService', () => {
         mailType: mailLogType.Manual,
         optionalData: {},
       });
+      expect(
+        version((mailContext.sendMail as Mock).mock.calls[0][0].mailLogId)
+      ).toBe(7);
       expect(result.status).toBe('done');
       expect(result.sentCount).toBe(1);
       expect(prisma.entries[0]).toMatchObject({ state: 'sent', attempts: 1 });
