@@ -1826,6 +1826,12 @@
     },
     "peerList": {
       "overview": {
+        "status": "Status",
+        "active": "Aktiv",
+        "disabled": "Deaktiviert",
+        "name": "Name",
+        "hostURL": "API-URL",
+        "website": "Website",
         "disable": "Deaktivieren",
         "editProfile": "Profil bearbeiten",
         "enable": "Aktivieren",
