@@ -19,7 +19,7 @@ for dir in apps/*/; do
   fi
 
   echo "==> Type-checking $app"
-  if ! npx tsc -p "./apps/$app" --noEmit --incremental; then
+  if ! pnpm tsc -p "./apps/$app" --noEmit --incremental; then
     failed+=("$app")
   fi
 done

@@ -6,10 +6,10 @@ import * as expressFiveIntegration from '@as-integrations/express5';
  * Pre-loads the optional peers Nest would otherwise resolve lazily.
  *
  * `loadPackage` runs the loader it is given — for the Apollo driver that is
- * `() => import('@as-integrations/express5')`, a dynamic ESM import. The API
- * ships as a @yao-pkg/pkg snapshot, which cannot resolve one, so the import
- * throws and Nest exits with 'The "@as-integrations/express5" package is
- * missing' even though the package is installed and bundled.
+ * `() => import('@as-integrations/express5')`, a dynamic ESM import that never
+ * shows up as a `require` in the bundle, so apps/api-example/package.json (the
+ * bundle's runtime dependencies) would miss it and the image would exit with
+ * 'The "@as-integrations/express5" package is missing'.
  *
  * `loadPackage` checks its package cache before calling the loader, and
  * `loadPackageSync` fills that cache from a static reference, so seeding it

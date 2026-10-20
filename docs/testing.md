@@ -4,10 +4,10 @@ Automated testing is a crucial aspect of software development that helps to ensu
 automating the testing process.
 
 ## CLI
-**!Make sure database is running! `npm run dev`**
+**!Make sure database is running! `pnpm run dev`**
 
-- `npm run test`: run all tests locally
-- `npm run test-u`: run all tests and update snapshots
+- `pnpm run test`: run all tests locally
+- `pnpm run test-u`: run all tests and update snapshots
 
 ## API Unit Testing
 
@@ -52,6 +52,6 @@ The UI is tested using Storybook and Jest. For further help, consult the documen
 ## Troubleshooting
 ### Failing Snapshots
 - It might happen that your tests are failing. Try to update your snapshots
-by running (eventually in the package in question) `npm run test-u` For more information: 
+by running (eventually in the package in question) `pnpm run test-u` For more information: 
 [https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)
 

@@ -106,6 +106,7 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+          cache-dependency-path: config/package-lock.json
       - name: Create Deployment Text
         id: deploymentComment
         env:

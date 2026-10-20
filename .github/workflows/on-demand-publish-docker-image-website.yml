@@ -42,14 +42,14 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Calculate hash of package-lock.json
+      - name: Calculate hash of the pnpm lockfile
         id: hash
         run: |
-          if [ -f package-lock.json ]; then
-            HASH=$(cat package-lock.json Dockerfile | sha256sum | awk '{print $1}')
+          if [ -f pnpm-lock.yaml ]; then
+            HASH=$(cat pnpm-lock.yaml pnpm-workspace.yaml Dockerfile | sha256sum | awk '{print $1}')
             echo "BUILD_IMAGE_TAG=ghcr.io/wepublish/base-image:${HASH}" >> $GITHUB_ENV
           else
-            echo "package-lock.json not found, exiting."
+            echo "pnpm-lock.yaml not found, exiting."
             exit 1
           fi
       - name: Get environment variables
