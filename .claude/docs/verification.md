@@ -69,14 +69,18 @@ still a broken change.
 | --- | --- | --- |
 | `lint.yml` | `nx-scoped.sh -t lint` | ESLint |
 | `test.yml` | `nx-scoped.sh -t test` | All Vitest projects (backend and website) + coverage, with Postgres 17. Split over 4 shard jobs, with Nx projects balanced by spec-file count, at `--parallel=6`. The `Test` job only reports whether all shards passed |
-| `website-typecheck.yml` | `nx-scoped.sh -t typecheck --exclude=editor` | Each website app's `typecheck` target (`tsc --noEmit`), cached by Nx, `--parallel=3` |
+| `website-typecheck.yml` | `nx-scoped.sh -t typecheck --exclude=editor`, plus `nx run api-example:build --skip-nx-cache` | Each website app's `typecheck` target (`tsc --noEmit`), cached by Nx, `--parallel=3`. The `Build api-example` job compiles the whole API on every code change, including `master` |
 
 All three go through [tools/ci/nx-scoped.sh](../../tools/ci/nx-scoped.sh).
 Pushes to `master` always run the full set. On PRs the
-`NX_AFFECTED_SCOPE` repository variable picks the mode: `shadow` (the default
-when unset) still runs everything, logs what `nx affected` would have picked,
-and warns if a failing project was outside that set; `affected` runs only what
-`nx affected` picks against the merge base from `nrwl/nx-set-shas`. Even in
+`NX_AFFECTED_SCOPE` repository variable picks the mode. It is set to `affected`,
+which runs only what `nx affected` picks against the merge base from
+`nrwl/nx-set-shas`. `shadow` (also the default when unset) still runs
+everything, logs what `nx affected` would have picked, and warns if a failing
+project was outside that set. `.nxignore` hides `image/api`,
+`block-content/api`, `testing` and `storybook` from Nx, so `nx affected` never
+selects their dependents; the always-on `api-example` build is what catches
+breakage in the API ones. Even in
 `affected` mode the script runs the full set when the base doesn't resolve, or
 when the diff touches non-Markdown files but affects no project besides the
 root `wepublish` project. The three workflow files are `sharedGlobals` in
@@ -84,21 +88,22 @@ root `wepublish` project. The three workflow files are `sharedGlobals` in
 
 A PR that only touches docs and AI tooling (`docs/`, `agent/`, `.agents/`,
 `.ai/`, `.claude/`, any `*.md`, the editor rule files) skips lint, tests,
-typecheck, CodeQL and the review image builds. The reusable
+typecheck, the `api-example` build and CodeQL. The reusable
 [changes.yml](../../.github/workflows/changes.yml) workflow runs
 [tools/ci/changes.sh](../../tools/ci/changes.sh) to decide. The gate is a
 job-level `if:`, never an `on: paths` filter: a workflow skipped by a path
 filter leaves its required checks Pending forever, while a job skipped by `if:`
-reports Success. Backend image builds are skipped by passing empty tags, so the
-required `Docker backend images / …` checks still report. Both secret scans
-always run. If the file list can't be read, everything runs.
+reports Success. Both secret scans always run. If the file list can't be read,
+everything runs.
 
-On unlabelled PRs, `on-pr-review.yml` builds review website images only for
-the apps `nx-scoped.sh --list --type app` selects: all of them in `shadow`
-mode or when the base doesn't resolve, the affected ones in `affected` mode.
-Those images are only a Docker build check (review deploys build their own
-images in `on-pr-label-deploy-review.yml`), so a Docker-only break in an
-untouched app shows up on the `master` build instead.
+Docker images are only built when something deploys them: on `master`
+(`on-master-publish-master-artifacts.yml`), for a `review_<nn>_<project>`
+label (`on-pr-label-deploy-review.yml`), and for `deploy_*` tags. Unlabelled
+PRs build no images. `on-pr-review.yml` still calls the backend image workflow,
+but with no tags, so every build job is skipped. Branch protection on `master`
+requires the five `Docker backend images / Build and push …` checks, and a
+skipped job reports Success. A Docker-only break therefore shows up on the
+`master` build.
 
 `website-typecheck.yml` **skips** `api-example`, `editor`, `bka`, and `media`;
 see [gotchas.md](gotchas.md#️-four-apps-are-excluded-from-the-typecheck-ci-job).
