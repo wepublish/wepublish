@@ -93,6 +93,13 @@ reports Success. Backend image builds are skipped by passing empty tags, so the
 required `Docker backend images / …` checks still report. Both secret scans
 always run. If the file list can't be read, everything runs.
 
+On unlabelled PRs, `on-pr-review.yml` builds review website images only for
+the apps `nx-scoped.sh --list --type app` selects: all of them in `shadow`
+mode or when the base doesn't resolve, the affected ones in `affected` mode.
+Those images are only a Docker build check (review deploys build their own
+images in `on-pr-label-deploy-review.yml`), so a Docker-only break in an
+untouched app shows up on the `master` build instead.
+
 `website-typecheck.yml` **skips** `api-example`, `editor`, `bka`, and `media`;
 see [gotchas.md](gotchas.md#️-four-apps-are-excluded-from-the-typecheck-ci-job).
 
