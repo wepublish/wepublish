@@ -82,6 +82,8 @@ jobs:
           echo "Timed out waiting for version: ${SHA_HASH}"
           exit 1
       - uses: docker/setup-buildx-action@v4
+        with:
+          cleanup: false
       - name: Build and push ${{ inputs.website_project }}
         uses: docker/build-push-action@v7
         env:
