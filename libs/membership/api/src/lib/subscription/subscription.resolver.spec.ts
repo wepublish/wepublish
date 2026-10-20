@@ -10,6 +10,7 @@ const makeResolver = (prisma: unknown) =>
     null as any,
     null as any,
     null as any,
+    null as any,
     null as any
   );
 
