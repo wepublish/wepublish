@@ -13,7 +13,7 @@ through Dragonfly instead of writing them to disk.
 | Fresh | the page's own `revalidate` and the `website:pages` version it was rendered under; the api changes it ~4 s after a publication, at most once a minute ([kv-ttl-cache README](../../kv-ttl-cache/api/README.md)). Article pages (`/a/<slug>`, `/a/id/<id>`) use `website:layout` and their own `website:path:<path>` (looked up in lower case, as the api stores slugs) instead, so only the changed article rebuilds |
 | Stale | served once more while one pod rebuilds it (`SET NX` lock holding its start time, 10 s); the others serve it as fresh for 3 s, then rebuild it themselves — Next never rebuilds on a prefetch request, so a lock taken by one would otherwise keep the page old as long as prefetches arrive. A pod whose rebuild stored nothing (the api failed) serves it as fresh for 30 s before it tries again |
 | Stored | without the render's `sentry-trace` / `baggage` meta tags, so cached pages do not attach every visitor to one old trace |
-| Not found | never stored, an older copy is deleted; 404 and 5xx responses are `private, no-store` (`libs/utils/sentry/error-no-store.ts`) |
+| Not found | never stored, an older copy is deleted; 404 and 5xx responses are `private, no-store` (`libs/utils/website/src/lib/sentry/error-no-store.ts`) |
 
 Keep the 3 h well above the hour of `revalidate`: once the Dragonfly key is
 gone, a pod drops its own stale copy too and renders the page while the visitor

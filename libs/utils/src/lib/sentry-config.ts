@@ -1,6 +1,3 @@
-/**
- * Shared Sentry configuration options used across all instrumentation variants.
- */
 import type {
   Integration,
   SamplingContext,
