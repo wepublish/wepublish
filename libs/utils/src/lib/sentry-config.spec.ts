@@ -1,5 +1,5 @@
 import type { Integration, SamplingContext } from '@sentry/core';
-import { getServerConfig, withoutKeySpans } from './config';
+import { getServerConfig, withoutKeySpans } from './sentry-config';
 
 const sample = (context: Partial<SamplingContext>) =>
   getServerConfig().tracesSampler({
