@@ -3006,7 +3006,20 @@
         "articlePrefixInfo": "Der Teil der Adresse, der auf deiner Website vor dem Slug eines Artikels steht. Nur Aufrufe von Adressen, die so beginnen, zählen als Artikel-Aufrufe.",
         "propertyInfo": "Die numerische ID deiner Google-Analytics-4-Property (nicht die Mess-ID G-…). Du findest sie in Google Analytics unter «Verwaltung» → «Property-Details».",
         "credentialsInfo": "Die JSON-Schlüsseldatei eines Google-Cloud-Dienstkontos mit Lesezugriff auf deine Analytics-Property. Zieh die Datei ins Feld unten; gespeichert wird sie erst beim Speichern.",
-        "readFileError": "Die Datei konnte nicht gelesen werden."
+        "readFileError": "Die Datei konnte nicht gelesen werden.",
+        "hotAndTrending": "Für Hot & Trending verwenden",
+        "hotAndTrendingInfo": "Hot & Trending liest die Seitenaufrufe aus diesem Provider. Es kann nur ein Provider gleichzeitig verwendet werden, wählst du diesen, wird er bei den anderen ausgeschaltet.",
+        "apiKey": "API-Schlüssel",
+        "plausibleApiKeyInfo": "Ein Stats-API-Schlüssel aus deinen Plausible-Kontoeinstellungen («API Keys»). Bei Plausible Cloud braucht die Stats API ein Business-Abo.",
+        "umamiApiKeyInfo": "Ein API-Schlüssel aus Umami Cloud («Settings» → «API keys») oder bei einem selbst gehosteten Umami das Token eines Users mit Zugriff auf die Website.",
+        "plausibleSiteId": "Domain der Website",
+        "plausibleSiteIdInfo": "Die Domain der Website, wie du sie in Plausible hinzugefügt hast, z.B. example.com.",
+        "umamiWebsiteId": "Website-ID",
+        "umamiWebsiteIdInfo": "Die ID der Website in Umami. Du findest sie unter «Settings» → «Websites» → «Edit».",
+        "plausibleUrl": "Plausible-URL",
+        "plausibleUrlInfo": "Nur für ein selbst gehostetes Plausible nötig, z.B. https://plausible.example.com. Leer lassen, um plausible.io zu verwenden.",
+        "umamiUrl": "Umami-API-URL",
+        "umamiUrlInfo": "Nur für ein selbst gehostetes Umami nötig, z.B. https://umami.example.com/api. Leer lassen, um Umami Cloud zu verwenden."
       },
       "mailchimpSync": "Mailchimp-Sync",
       "mailchimpSyncSettings": {
@@ -3115,7 +3128,7 @@
       "paymentProviderInfo": "Dienste, über die Abos bezahlt werden, z. B. Payrexx, Stripe, Mollie oder Rechnungen über Bexio.",
       "trackingPixelInfo": "Fügt deinen Artikeln das Zählpixel von ProLitteris hinzu, damit die Zugriffe für deine Urheberrechtsvergütung gezählt werden.",
       "mailProviderInfo": "Der Dienst, über den We.Publish E-Mails verschickt – etwa Login-Links, Zahlungserinnerungen oder Abo-Bestätigungen.",
-      "analyticsInfo": "Liest die Seitenaufrufe aus Google Analytics, um zu ermitteln, welche Artikel gerade am meisten gelesen werden (Hot & Trending).",
+      "analyticsInfo": "Liest die Seitenaufrufe aus Google Analytics, Plausible oder Umami, um zu ermitteln, welche Artikel gerade am meisten gelesen werden (Hot & Trending).",
       "mailchimpSyncInfo": "Überträgt jede Nacht alle aktiven Benutzerkonten samt Abo-Daten in eine Mailchimp-Zielgruppe, damit du Newsletter gezielt nach Abo verschicken kannst.",
       "lastLoadedInfo": "Wann We.Publish diese Konfiguration zuletzt geladen hat, etwa um eine Zahlung zu verarbeiten. So siehst du, ob die Integration im Einsatz ist.",
       "setUp": "Einrichten",
@@ -3156,16 +3169,13 @@
           "pro": "<url>Piwik PRO</url> ist eine datenschutzfreundliche Analyse-Plattform und eine Alternative zu Google Analytics.",
           "proLocator": "Du findest es im Menü > Administration > Site > ID in deinem Verwaltungsbereich",
           "proInvalid": "Muss eine gültige Piwik-ID sein (z.B. xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
-        }
-      },
-      "mail": {
-        "title": "E-Mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Mailchimp aktivieren",
-          "mailchimp": "<url>Mailchimp</url> ist eine E-Mail-Marketing-Plattform, mit der du Newsletter und Abonnentenlisten verwalten kannst. Dies ermöglicht der Website den Zugriff auf deine Newsletter und deren Anzeige.",
-          "apiKeyLocator": "Du findest ihn im <url>API-Schlüssel-Bereich</url> deines Mailchimp-Kontos. Achte darauf, dass es ein Mailchimp- und kein Mandrill-Schlüssel ist.",
-          "apiKeyInvalid": "Muss ein gültiger Mailchimp-API-Schlüssel sein (z.B. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-us1)"
+        },
+        "umami": {
+          "title": "Umami",
+          "enable": "Umami aktivieren",
+          "um": "<url>Umami</url> ist eine datenschutzfreundliche Open-Source-Alternative zu Google Analytics.",
+          "umLocator": "Du findest sie in den <url>Website-Einstellungen</url> deines Umami-Dashboards",
+          "umInvalid": "Muss eine gültige Website-ID sein (z.B. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)"
         }
       },
       "ads": {

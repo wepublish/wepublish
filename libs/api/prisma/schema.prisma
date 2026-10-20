@@ -2120,7 +2120,9 @@ model ExternalApps {
 }
 
 enum AnalyticsProviderType {
-  GOOGLE @map("google")
+  GOOGLE    @map("google")
+  PLAUSIBLE @map("plausible")
+  UMAMI     @map("umami")
 }
 
 model SettingAnalyticsProvider {
@@ -2134,6 +2136,9 @@ model SettingAnalyticsProvider {
   credentials   String?
   property      String?
   articlePrefix String?
+  url           String?
+
+  hotAndTrending Boolean @default(false)
 
   @@map("settings.analyticsProvider")
 }
@@ -2205,13 +2210,12 @@ model WebsiteSettings {
   analyticsPiwikEnabled Boolean @default(false)
   analyticsPiwikId      String?
 
+  analyticsUmamiEnabled Boolean @default(false)
+  analyticsUmamiId      String?
+
   // Ads
   adsSparkLoopEnabled Boolean @default(false)
   adsSparkLoopId      String?
-
-  // Mails
-  mailMailchimpEnabled Boolean @default(false)
-  mailMailchimpKey     String?
 
   // Theme
   theme Json @default("{}")

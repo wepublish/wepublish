@@ -11,7 +11,11 @@ import { ActionModule } from '@wepublish/action/api';
 import { AuditLogModule } from '@wepublish/audit-log/api';
 import { V0Module } from '@wepublish/ai/api';
 import { NovaMediaAdapter } from '@wepublish/api';
-import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
+import {
+  AnalyticsProviderHotAndTrendingDataSource,
+  ArticleModule,
+  HotAndTrendingModule,
+} from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { BannerApiModule } from '@wepublish/banner/api';
@@ -36,6 +40,12 @@ import {
   GoogleAnalyticsModule,
   GoogleAnalyticsService,
 } from '@wepublish/google-analytics/api';
+import {
+  PlausibleDbConfig,
+  PlausibleModule,
+  PlausibleService,
+} from '@wepublish/plausible/api';
+import { UmamiDbConfig, UmamiModule, UmamiService } from '@wepublish/umami/api';
 import { HealthModule } from '@wepublish/health';
 import { MediaAdapterModule } from '@wepublish/image/api';
 import {
@@ -321,9 +331,46 @@ import { reconcileProviderRegistry } from './reconcile-provider-registry';
             return dbConfig;
           },
         }),
+        PlausibleModule.registerAsync({
+          imports: [PrismaModule, KvTtlCacheModule],
+          inject: [PrismaClient, KvTtlCacheService],
+          useFactory: async (prisma: PrismaClient, kv: KvTtlCacheService) => {
+            const dbConfig = new PlausibleDbConfig(prisma, kv, 'plausible');
+            await dbConfig.initDatabaseConfiguration();
+            return dbConfig;
+          },
+        }),
+        UmamiModule.registerAsync({
+          imports: [PrismaModule, KvTtlCacheModule],
+          inject: [PrismaClient, KvTtlCacheService],
+          useFactory: async (prisma: PrismaClient, kv: KvTtlCacheService) => {
+            const dbConfig = new UmamiDbConfig(prisma, kv, 'umami');
+            await dbConfig.initDatabaseConfiguration();
+            return dbConfig;
+          },
+        }),
+        PrismaModule,
+        KvTtlCacheModule,
       ],
-      useFactory: (datasource: GoogleAnalyticsService) => datasource,
-      inject: [GoogleAnalyticsService],
+      useFactory: (
+        prisma: PrismaClient,
+        kv: KvTtlCacheService,
+        googleAnalytics: GoogleAnalyticsService,
+        plausible: PlausibleService,
+        umami: UmamiService
+      ) =>
+        new AnalyticsProviderHotAndTrendingDataSource(prisma, kv, {
+          GOOGLE: googleAnalytics,
+          PLAUSIBLE: plausible,
+          UMAMI: umami,
+        }),
+      inject: [
+        PrismaClient,
+        KvTtlCacheService,
+        GoogleAnalyticsService,
+        PlausibleService,
+        UmamiService,
+      ],
     }),
     BannerApiModule,
     VersionInformationModule,

@@ -31,6 +31,17 @@ export class SettingAnalyticsProvider extends SettingProvider {
 
   @Field({ nullable: true })
   articlePrefix?: string;
+
+  @Field({
+    nullable: true,
+    description: 'Base url of the API, used for self hosted instances.',
+  })
+  url?: string;
+
+  @Field({
+    description: 'Whether this provider powers the Hot & Trending query.',
+  })
+  hotAndTrending!: boolean;
 }
 
 @InputType()
@@ -67,7 +78,14 @@ export class SettingAnalyticsCredentialsInput {
 @ArgsType()
 export class CreateSettingAnalyticsProviderInput extends OmitType(
   SettingAnalyticsProvider,
-  ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
+  [
+    'id',
+    'type',
+    'createdAt',
+    'lastLoadedAt',
+    'modifiedAt',
+    'hotAndTrending',
+  ] as const,
   ArgsType
 ) {
   @Field()
@@ -76,12 +94,28 @@ export class CreateSettingAnalyticsProviderInput extends OmitType(
   @Field(type => AnalyticsProviderType)
   type!: AnalyticsProviderType;
 
-  @Field(type => SettingAnalyticsCredentialsInput, { nullable: true })
+  @Field(type => SettingAnalyticsCredentialsInput, {
+    nullable: true,
+    description: 'Service account credentials of Google Analytics.',
+  })
   credentials?: SettingAnalyticsCredentialsInput;
+
+  @Field({
+    nullable: true,
+    description: 'Api key of Plausible or Umami.',
+  })
+  apiKey?: string;
 }
 
 @ArgsType()
 export class UpdateSettingAnalyticsProviderInput extends PartialType(
   OmitType(CreateSettingAnalyticsProviderInput, ['type'] as const, ArgsType),
   ArgsType
-) {}
+) {
+  @Field({
+    nullable: true,
+    description:
+      'Uses this provider for Hot & Trending instead of the current one.',
+  })
+  hotAndTrending?: boolean;
+}

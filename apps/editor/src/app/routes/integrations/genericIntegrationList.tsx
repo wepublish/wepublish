@@ -197,7 +197,8 @@ export function GenericIntegrationList<
       <GenericIntegrationGrid>
         {sortedSettings?.map(setting => (
           <SingleGenericIntegrationForm
-            key={setting.id}
+            // Remount when the setting changed, as the form only reads it once
+            key={`${setting.id}:${setting.modifiedAt ?? ''}`}
             setting={setting}
             renderActions={
               registry ?

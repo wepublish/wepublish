@@ -33,10 +33,25 @@ type or credentials on the existing row instead.
 
 ## Analytics Provider
 
+Website tracking (website settings, rendered in each app's `_app.tsx`):
+
 - Google Analytics
 - Google Tag Manager
 - Plausible
 - Piwik PRO
+- Umami (Umami Cloud script, key = website ID)
+
+Hot & Trending (analytics integrations, `settings.analyticsProvider`):
+
+- Google Analytics (`libs/google-analytics/api`, row `google-analytics`)
+- Plausible (`libs/plausible/api`, row `plausible`, Stats API v2)
+- Umami (`libs/umami/api`, row `umami`, `/websites/:id/metrics`)
+
+Each row is created on boot by its `*DbConfig.initDatabaseConfiguration()`.
+The `hotAndTrending` flag picks the provider that answers the `hotAndTrending`
+query (`AnalyticsProviderHotAndTrendingDataSource` in `libs/article/api`);
+setting it on one row clears it on the others. Plausible and Umami keep their
+api key encrypted in `credentials` and take an optional `url` for self-hosting.
 
 ## We.Publish One
 

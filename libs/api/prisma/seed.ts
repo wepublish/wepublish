@@ -245,6 +245,7 @@ const seedSettings = (prisma: PrismaClient) =>
           'v1.joXbh+gkDHyDSWR8.xx9rJ27ZN9VWALNkm3ET0w==.Hl8G9f69NSAH5A==',
         property: '1',
         articlePrefix: '/a/',
+        hotAndTrending: true,
       },
     }),
 
