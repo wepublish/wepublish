@@ -43,6 +43,31 @@ describe('Subscription Item', () => {
       expect(extend).toHaveBeenCalledWith('online');
     });
 
+    it('keeps the current payment method on the list when the plan no longer offers it', async () => {
+      const extend = vi.fn(async () => undefined);
+      render(<storiesCmp.ExtendWhenPlanOnlyOffersOnline extend={extend} />);
+
+      openExtendDialog();
+
+      expect(screen.getByLabelText('Rechnung')).toBeChecked();
+
+      fireEvent.click(screen.getByLabelText('Online (Karte, TWINT)'));
+      await submitExtendDialog();
+
+      expect(extend).toHaveBeenCalledWith('online');
+    });
+
+    it('passes no payment method when the reader keeps the current one', async () => {
+      const extend = vi.fn(async () => undefined);
+      render(<storiesCmp.ExtendWhenPlanOnlyOffersOnline extend={extend} />);
+
+      openExtendDialog();
+      await submitExtendDialog();
+
+      expect(extend).toHaveBeenCalledTimes(1);
+      expect(extend.mock.calls[0][0]).toBeUndefined();
+    });
+
     it('extends with the current payment method when the choice is not enabled', async () => {
       const extend = vi.fn(async () => undefined);
       render(<storiesCmp.Default extend={extend} />);

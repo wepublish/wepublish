@@ -127,21 +127,26 @@ export function SubscriptionListItem({
   const [confirmRevertUpgrade, setConfirmRevertUpgrade] = useState(false);
   const [confirmExtend, setConfirmExtend] = useState<boolean>(false);
 
-  // The plan's payment methods for this subscription's billing period, so the
-  // reader can e.g. switch from invoice to online payment when extending early.
+  // The subscription's current payment method plus the plan's methods for its
+  // billing period, so the reader can e.g. switch from invoice to online
+  // payment when extending early. The current one stays on the list even when
+  // the plan no longer offers it to new subscribers; keeping it needs no switch.
   const paymentMethodOptions = useMemo(() => {
     if (!allowPaymentMethodChoice) {
       return [];
     }
 
-    const options = (availablePaymentMethods ?? [])
-      .filter(
-        ({ paymentPeriodicities, forceAutoRenewal }) =>
-          (!paymentPeriodicity ||
-            paymentPeriodicities.includes(paymentPeriodicity)) &&
-          (!forceAutoRenewal || autoRenew)
-      )
-      .flatMap(({ paymentMethods }) => paymentMethods);
+    const options = [
+      ...(paymentMethod ? [paymentMethod] : []),
+      ...(availablePaymentMethods ?? [])
+        .filter(
+          ({ paymentPeriodicities, forceAutoRenewal }) =>
+            (!paymentPeriodicity ||
+              paymentPeriodicities.includes(paymentPeriodicity)) &&
+            (!forceAutoRenewal || autoRenew)
+        )
+        .flatMap(({ paymentMethods }) => paymentMethods),
+    ];
 
     return options.filter(
       (option, index) =>
@@ -149,6 +154,7 @@ export function SubscriptionListItem({
     );
   }, [
     allowPaymentMethodChoice,
+    paymentMethod,
     availablePaymentMethods,
     paymentPeriodicity,
     autoRenew,
@@ -435,7 +441,13 @@ export function SubscriptionListItem({
           setConfirmExtend(false);
           await callAction(async () => {
             await extend?.(
-              showPaymentMethodChoice ? selectedPaymentMethodId : undefined
+              // only a switch needs a method: the API checks it against the plan
+              (
+                showPaymentMethodChoice &&
+                  selectedPaymentMethodId !== paymentMethod?.id
+              ) ?
+                selectedPaymentMethodId
+              : undefined
             );
           })();
         }}
