@@ -43,7 +43,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Calculate hash of the pnpm lockfile
-        id: hash
         run: |
           if [ -f pnpm-lock.yaml ]; then
             HASH=$(cat pnpm-lock.yaml pnpm-workspace.yaml Dockerfile | sha256sum | awk '{print $1}')
@@ -60,7 +59,6 @@ jobs:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
       - name: Wait for api version to be deployed
         if: ${{ inputs.has_staging && inputs.environment != 'review' }}
-        id: wait-for-version
         run: |
           MAX_RETRIES=120
           RETRY_DELAY=10
@@ -83,7 +81,6 @@ jobs:
           done
           echo "Timed out waiting for version: ${SHA_HASH}"
           exit 1
-      - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
       - name: Build and push ${{ inputs.website_project }}
         uses: docker/build-push-action@v2
@@ -116,7 +113,6 @@ jobs:
           fi
           ./deployment/read_deployment_config.sh ".website.${ENVIRONMENT}.custom_domain" true ${PROJECT_NAME} getValue "https://${PROJECT_NAME}.${TDL}"
       - name: Wait for frontend to be deployed
-        id: wait-for-frontend-deployment
         if: ${{ inputs.has_staging && inputs.environment != 'review' && inputs.environment != 'review_deployed' }}
         run: |
           MAX_RETRIES=120
