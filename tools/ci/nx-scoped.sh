@@ -133,7 +133,12 @@ status=0
 "${nx[@]}" run-many --projects="$(paste -sd, "$work/shard")" --outputStyle=static "${run_args[@]}" 2>&1 | tee "$work/run.log" || status=$?
 
 if [[ "$mode" == "shadow" && "$status" -ne 0 ]]; then
-  sed -n '/^Failed tasks:/,$p' "$work/run.log" | grep -oE '^[[:space:]]*- [^[:space:]:]+:' | sed -E 's/^[[:space:]]*- //; s/:$//' | sort -u >"$work/failed" || true
+  sed -E $'s/\e\\[[0-9;]*m//g' "$work/run.log" | awk '
+    /^[[:space:]]*Failed tasks:/ { inside = 1; next }
+    inside && /^[[:space:]]*$/ { next }
+    inside && /^[[:space:]]*- [^[:space:]:]+:/ { sub(/^[[:space:]]*- /, ""); sub(/:.*/, ""); print; next }
+    inside { inside = 0 }
+  ' | sort -u >"$work/failed" || true
   missed="$(comm -23 "$work/failed" "$work/affected" | paste -sd' ' -)"
   if [[ ! -s "$work/failed" ]]; then
     echo "::warning::Shadow check could not read the failed projects from the Nx output."
