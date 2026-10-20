@@ -68,7 +68,7 @@ still a broken change.
 | Workflow | Command | Covers |
 | --- | --- | --- |
 | `lint.yml` | `nx-scoped.sh -t lint` | ESLint |
-| `test.yml` | `nx-scoped.sh -t test --exclude='*website*'` | Vitest backend/NestJS + coverage, with Postgres 17 |
+| `test.yml` | `nx-scoped.sh -t test --exclude='*website*'` | Vitest backend/NestJS + coverage, with Postgres 17; split over 3 shard jobs (Nx projects balanced by spec-file count), and the `Test` job only reports whether all shards passed |
 | `website-tests.yml` | `nx-scoped.sh -t test --projects='*website*'` | Vitest website projects + coverage |
 | `website-typecheck.yml` | `typecheck-websites.sh $(nx-scoped.sh --list --type app)` | `tsc --noEmit` per app |
 
