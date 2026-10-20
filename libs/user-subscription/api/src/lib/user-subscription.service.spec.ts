@@ -364,6 +364,46 @@ describe('UserSubscriptionService', () => {
         })
       );
     });
+
+    it('refuses to update a subscription of another user', async () => {
+      const foreignSubscription = {
+        id: 'foreignSubscriptionId',
+        userID: 'otherUserId',
+        paymentMethodID: 'currentPm',
+        paymentPeriodicity: PaymentPeriodicity.monthly,
+        extendable: true,
+        deactivation: null,
+      };
+      // only a lookup that is not scoped to the requesting user finds it
+      prismaMock.subscription.findUnique.mockImplementation(
+        async ({ where }: { where: { userID?: string } }) =>
+          where.userID === undefined || where.userID === 'otherUserId' ?
+            foreignSubscription
+          : null
+      );
+
+      await expect(
+        service.updateSubscription('foreignSubscriptionId', {
+          ...input,
+          paymentMethodID: 'currentPm',
+        })
+      ).rejects.toThrow();
+      expect(prismaMock.subscription.update).not.toHaveBeenCalled();
+    });
+
+    it('does not update when the payment configuration is invalid', async () => {
+      memberContextMock.validateSubscriptionPaymentConfiguration.mockRejectedValue(
+        new Error('payment configuration invalid')
+      );
+
+      await expect(
+        service.updateSubscription('subscriptionId', {
+          ...input,
+          paymentMethodID: 'currentPm',
+        })
+      ).rejects.toThrow('payment configuration invalid');
+      expect(prismaMock.subscription.update).not.toHaveBeenCalled();
+    });
   });
 
   describe('extendSubscription', () => {

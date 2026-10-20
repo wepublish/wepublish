@@ -18,8 +18,8 @@ tools/rsuite-to-mui/run.sh libs/ui/editor/src/lib/panel/authorEditPanel.tsx
 Then verify — always both, `tsc` alone misses mis-nested JSX:
 
 ```bash
-npx nx typecheck editor
-npx nx run-many -t test lint -p ui-editor editor membership-editor \
+pnpm nx typecheck editor
+pnpm nx run-many -t test lint -p ui-editor editor membership-editor \
   settings-editor banner-editor consent-editor crowdfunding-editor \
   event-import-editor
 ```

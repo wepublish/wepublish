@@ -6,7 +6,7 @@ static/
 # GraphQL codegen output (codegen.yml and its afterAllFileWrite hook
 # tools/generateApiIndex.js). Regenerate it, never format it: the pre-commit
 # hook (pretty-quick --staged) would rewrite it, and every later
-# `npm run generate-api` would then show a diff of the whole file.
+# `pnpm run generate-api` would then show a diff of the whole file.
 libs/editor/api/src/lib/gql/
 libs/editor/api/src/lib/schema-types.ts
 libs/editor/api/src/lib/possible-types.ts

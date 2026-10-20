@@ -4,12 +4,25 @@ on:
   push:
     branches:
       - master
-      - development
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-  Test:
+  changes:
+    uses: ./.github/workflows/changes.yml
+
+  shard:
+    name: Test shard ${{ matrix.shard }}/4
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     services:
       postgres:
         image: postgres:18
@@ -19,22 +32,66 @@ jobs:
           POSTGRES_USER: postgres
         ports:
           - 5432:5432
+    env:
+      NX_SCOPE: ${{ github.event_name == 'pull_request' && (vars.NX_AFFECTED_SCOPE || 'shadow') || 'full' }}
+      SHARD_INDEX: ${{ matrix.shard }}
+      SHARD_TOTAL: 4
+      NODE_OPTIONS: '--max-old-space-size=4096'
+      JWT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJWbdZ23hpurtFiEpnulSfJ1U4TwbkiDWmbGZSDVx3nR\n-----END PRIVATE KEY-----"
+      JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA93mjXbSful1W9nAVHuYHdRfgKEF+pvkwm4/5P27J4RA=\n-----END PUBLIC KEY-----"
+      DATABASE_URL: 'postgresql://postgres:test@localhost:5432/wepublish_test?schema=public'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          filter: tree:0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run test-backend -- --configuration=ci
-        env:
-          NODE_OPTIONS: '--max-old-space-size=4096'
-          JWT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJWbdZ23hpurtFiEpnulSfJ1U4TwbkiDWmbGZSDVx3nR\n-----END PRIVATE KEY-----"
-          JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA93mjXbSful1W9nAVHuYHdRfgKEF+pvkwm4/5P27J4RA=\n-----END PUBLIC KEY-----"
-          DATABASE_URL: 'postgresql://postgres:test@localhost:5432/wepublish_test?schema=public'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - uses: nrwl/nx-set-shas@v5
+        if: github.event_name == 'pull_request'
+        with:
+          main-branch-name: master
+
+      - name: Tests
+        run: bash ./tools/ci/nx-scoped.sh -t test -- -t test --configuration=ci --parallel=6
+
+      - name: Tests of libs hidden from Nx
+        if: matrix.shard == 1 && (success() || failure())
+        run: |
+          status=0
+          for lib in libs/image/api libs/block-content/api; do
+            pnpm exec vitest run --config "$lib/vitest.config.ts" --coverage.enabled --maxWorkers=1 || status=1
+          done
+          exit "$status"
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
+        run: bash ./tools/ci/codecov-upload.sh
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          FORK_BRANCH: ${{ github.event.pull_request.head.repo.fork && github.event.pull_request.head.label || '' }}
+
+      - run: pnpm exec nx fix-ci
+        if: always()
+
+  Test:
+    needs: [changes, shard]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          if [[ "$CHANGES" == "success" && "$CODE" == "false" && "$SHARDS" == "skipped" ]]; then
+            echo "Only docs and AI tooling changed, no tests to run."
+            exit 0
+          fi
+          if [[ "$SHARDS" != "success" ]]; then
+            echo "Test shards finished with '$SHARDS' (change detection: '$CHANGES')."
+            exit 1
+          fi
+        env:
+          CHANGES: ${{ needs.changes.result }}
+          CODE: ${{ needs.changes.outputs.code }}
+          SHARDS: ${{ needs.shard.result }}
