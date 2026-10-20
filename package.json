@@ -32,7 +32,7 @@
     "generate-api": "graphql-codegen -r dotenv/config --config codegen.yml && nx run-many -t build -p editor-api,website-api",
     "try": "docker-compose up database migration api editor media storage dragonfly",
     "prettier": "prettier --write \"{apps,libs}/**/*.{js,ts,tsx,json}\"",
-    "prepare": "prisma generate",
+    "prepare": "prisma generate && husky",
     "deploy:production": "node deployment/deploy_production.js",
     "deploy:production:tags": "bash deployment/clean_deploy_tags.sh",
     "setup:production:local": "bash tools/setup-local-production-database.sh"
@@ -169,7 +169,7 @@
     "globals": "^14.0.0",
     "graphql-sock": "^1.0.1",
     "html-webpack-plugin": "^5.5.0",
-    "husky": "^3.0.0",
+    "husky": "^9.1.7",
     "i18next-parser": "^9.3.0",
     "jest-util": "30.0.5",
     "nanoid": "catalog:",
@@ -183,7 +183,6 @@
     "prisma": "7.5.0",
     "querystring-es3": "^0.2.1",
     "react-refresh": "^0.10.0",
-    "run-node": "^1.0.0",
     "snapshot-diff": "^0.9.0",
     "storybook": "10.5.2",
     "storybook-addon-apollo-client": "^10.0.0",
@@ -215,11 +214,6 @@
   "prisma": {
     "schema": "libs/api/prisma/schema.prisma",
     "seed": "nx seed api-example --prod"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged --pattern \"{apps,libs}/**/*.{js,ts,tsx,json}\""
-    }
   },
   "dependencies": {
     "@apollo/client": "^4.3.1",

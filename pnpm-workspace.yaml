@@ -13,7 +13,6 @@ allowBuilds:
   '@sentry/node-cpu-profiler': true
   '@swc/core': true
   esbuild: true
-  husky: true
   nx: true
   prisma: true
   sharp: true
