@@ -58,17 +58,43 @@ jobs:
     if: needs.check-review-deploy-label.outputs.has_label == 'false' && needs.changes.outputs.code == 'true'
     needs: [ check-review-deploy-label, changes ]
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.affected.outputs.matrix }}
+      has_targets: ${{ steps.affected.outputs.has_targets }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          filter: tree:0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - uses: nrwl/nx-set-shas@v5
+        with:
+          main-branch-name: master
       - name: Set up matrix
         id: set-matrix
         run: deployment/read_deployment_config.sh '.website.review.deployment' true
+      - name: Keep the affected websites
+        id: affected
+        shell: bash
+        env:
+          NX_SCOPE: ${{ vars.NX_AFFECTED_SCOPE || 'shadow' }}
+          MATRIX: ${{ steps.set-matrix.outputs.matrix }}
+        run: |
+          affected="$(bash ./tools/ci/nx-scoped.sh --list --type app | jq -R . | jq -sc .)"
+          matrix="$(jq -c --argjson affected "$affected" '.target |= map(select(IN($affected[])))' <<<"$MATRIX")"
+          echo "matrix=$matrix" >>"$GITHUB_OUTPUT"
+          echo "has_targets=$(jq '.target | length > 0' <<<"$matrix")" >>"$GITHUB_OUTPUT"
+          echo "Websites to build: $(jq -r '.target | join(", ")' <<<"$matrix")"
 
   publish_docker_website_image:
     name: Build Docker Website
     needs: [setup-website-matrix, publish_docker_base_image]
+    if: needs.setup-website-matrix.outputs.has_targets == 'true'
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
       fail-fast: false
@@ -83,7 +109,7 @@ jobs:
   notify:
     name: Notify
     needs: [publish_docker_website_image, check-review-deploy-label, publish_docker_image]
-    if: ${{ needs.publish_docker_website_image.result == 'success' }}
+    if: ${{ !cancelled() && needs.publish_docker_image.result == 'success' && (needs.publish_docker_website_image.result == 'success' || needs.publish_docker_website_image.result == 'skipped') }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
