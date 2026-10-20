@@ -15,10 +15,14 @@ jobs:
       - id: version
         run: echo "version=${GITHUB_REF#refs/*/}" >> "$GITHUB_OUTPUT"
 
+  publish_docker_base_image:
+    name: Docker base image
+    uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
+    secrets: inherit
+
   alpha_release_docker:
-    if: |
-      contains(github.ref, 'tags/') && contains(github.ref, 'alpha')
-    needs: release_version
+    if: contains(github.ref, 'alpha')
+    needs: [release_version, publish_docker_base_image]
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
       editor_tags: |
@@ -44,9 +48,8 @@ jobs:
     secrets: inherit
 
   release_docker:
-    if: |
-      contains(github.ref, 'tags/') && !contains(github.ref, 'alpha')
-    needs: release_version
+    if: ${{ !contains(github.ref, 'alpha') }}
+    needs: [release_version, publish_docker_base_image]
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
       editor_tags: |
