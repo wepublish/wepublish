@@ -10,6 +10,7 @@ import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { MailchimpMailProvider } from './mail-provider/mailchimp-mail-provider';
 import { MailgunMailProvider } from './mail-provider/mailgun-mail-provider';
 import type { Mock } from 'vitest';
+import { version } from 'uuid';
 const kvMock = createKvMock();
 
 describe('MailController', () => {
@@ -236,6 +237,9 @@ describe('MailController', () => {
       mailType: mailLogType.SubscriptionFlow,
     }).sendMail();
     expect(mandrillNockScope.isDone()).toBeTruthy();
+    expect(
+      version((prismaMock.mailLog.create as Mock).mock.calls[0][0].data.id)
+    ).toBe(7);
 
     let mailLog = mockMailLog1;
     expect(mailLog).not.toBeUndefined();
