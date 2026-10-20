@@ -21,8 +21,7 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 │   └── <domain>/       # Domain modules (article, payment, membership, etc.)
 ├── deployment/         # Deployment scripts
 ├── helm/               # Kubernetes Helm charts
-├── docker/             # Docker build utilities
-└── docs/               # Project documentation
+└── docker/             # Docker build utilities
 ```
 
 ## Applications
