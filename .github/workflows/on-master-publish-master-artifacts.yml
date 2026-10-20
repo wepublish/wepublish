@@ -1,10 +1,9 @@
-name: Publish master or development artifacts
+name: Publish master artifacts
 
 on:
   push:
     branches:
       - master
-      - development
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -90,7 +89,7 @@ jobs:
     with:
       website_project: ${{ matrix.target }}
       api_url: https://api-${{ matrix.target }}.wepublish.works
-      environment: ${{ github.ref_name == 'master' && 'staging' || github.ref_name == 'development' && 'development' || 'staging' }}
+      environment: staging
       prerender: ${{ matrix.has_staging }}
       has_staging: ${{ matrix.has_staging }}
       website_tags: |
