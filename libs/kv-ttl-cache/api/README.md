@@ -283,7 +283,7 @@ never the key; `cache.hit`, for batches also `cache.keys` / `cache.misses`; a
 call that did not run its loader is a hit). Spans exist only inside sampled
 traces (`onlyIfParent`), so hit rates per namespace and GraphQL operation show
 under *Insights → Caches* from the 10 % of production requests Sentry samples.
-Sentry's own Redis integration is removed (`libs/utils/sentry/config.ts`,
+Sentry's own Redis integration is removed (`libs/utils/src/lib/sentry-config.ts`,
 `withoutKeySpans`): its spans carried full keys, session token hashes included.
 Root spans that are only database work outside a request (background version
 checks, cron queries) are not sampled (`getServerConfig().tracesSampler`).
@@ -291,7 +291,7 @@ checks, cron queries) are not sampled (`getServerConfig().tracesSampler`).
 ## Running unit tests
 
 ```bash
-npx nx test kv-ttl-cache.module-api
+pnpm nx test kv-ttl-cache.module-api
 ```
 
 Vitest, without a Dragonfly: `FakeDragonfly` (`kv-ttl-cache.testing.ts`) stands
