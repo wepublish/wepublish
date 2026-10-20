@@ -14,7 +14,7 @@ vi.mock('@sentry/profiling-node', () => ({
 }));
 
 const initOptions = async () => {
-  await import('./instrumentation.nestjs');
+  await import('./instrumentation');
 
   return init.mock.calls.at(-1)?.[0] ?? {};
 };
