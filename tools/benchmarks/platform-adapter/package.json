@@ -1,0 +1,22 @@
+{
+  "name": "platform-adapter-benchmark",
+  "private": true,
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "bench": "node run-bench.mjs"
+  },
+  "dependencies": {
+    "@nestjs/common": "12.1.1",
+    "@nestjs/core": "12.1.1",
+    "@nestjs/platform-express": "12.1.1",
+    "@nestjs/platform-node": "file:../../../vendor/nestjs-platform-node",
+    "autocannon": "^8.0.0",
+    "body-parser": "^2.2.0",
+    "helmet": "^8.0.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "tsx": "^4.19.2",
+    "typescript": "5.9.2"
+  }
+}
