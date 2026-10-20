@@ -3888,6 +3888,19 @@
       "reload": "Recharger l'éditeur"
     },
     "listView": {
+      "export": {
+        "download": "Télécharger",
+        "csv": "CSV (.csv)",
+        "xlsx": "Excel (.xlsx)",
+        "scope": {
+          "title": "Que faut-il télécharger ?",
+          "page": "Seulement cette page ({{count}} entrées)",
+          "all": "Toutes les {{count}} entrées"
+        },
+        "largeWarning": "Charger {{count}} entrées peut prendre un moment et produit un fichier volumineux.",
+        "confirm": "Télécharger",
+        "cancel": "Annuler"
+      },
       "table": {
         "empty": "Rien à afficher"
       },
