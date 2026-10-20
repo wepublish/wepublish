@@ -275,7 +275,7 @@ function PageEditor() {
   const [hasChanged, setChanged] = useState(false);
   const changeVersion = useRef(0);
   const skipRepopulate = useRef(false);
-  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
+  useUnsavedChangesDialog(hasChanged);
 
   const previewUrl = pageData?.page?.previewUrl;
   const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
@@ -617,11 +617,6 @@ function PageEditor() {
                 to="/pages"
                 title={t('back')}
                 aria-label={t('back')}
-                onClick={e => {
-                  if (!unsavedChangesDialog()) {
-                    e.preventDefault();
-                  }
-                }}
               >
                 <MdKeyboardBackspace />
               </IconButton>

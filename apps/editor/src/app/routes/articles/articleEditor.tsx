@@ -337,7 +337,7 @@ function ArticleEditor() {
   const changeVersion = useRef(0);
   const skipRepopulate = useRef(false);
 
-  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
+  useUnsavedChangesDialog(hasChanged);
 
   const previewUrl = articleData?.article?.previewUrl;
   const isPreviewDisabled = hasChanged || !id || !canPreview || !previewUrl;
@@ -808,11 +808,6 @@ function ArticleEditor() {
                 to="/articles"
                 title={t('articleEditor.overview.back')}
                 aria-label={t('articleEditor.overview.back')}
-                onClick={e => {
-                  if (!unsavedChangesDialog()) {
-                    e.preventDefault();
-                  }
-                }}
               >
                 <MdKeyboardBackspace />
               </IconButton>

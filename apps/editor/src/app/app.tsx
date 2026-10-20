@@ -43,7 +43,13 @@ import {
   useReportQueryErrors,
 } from '@wepublish/ui/editor';
 import { lazy, Suspense, useContext, useEffect } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  Navigate,
+  Route,
+  RouterProvider,
+  Routes,
+} from 'react-router-dom';
 
 import { Base } from './base';
 import { EditorCommandPaletteSurface } from './commandPalette/editorCommandPalette';
@@ -155,6 +161,993 @@ const Logout = () => {
   );
 };
 
+function AppRoutes() {
+  return (
+    <RouteErrorBoundary>
+      <EditorCommandPaletteSurface />
+
+      <Routes>
+        <Route
+          path="login"
+          element={<Login />}
+        />
+        <Route
+          path="login/jwt/:jwt"
+          element={<LoginJwt />}
+        />
+        <Route
+          path="login/impersonate/:jwt"
+          element={<LoginImpersonate />}
+        />
+        <Route
+          path="login/reset-password"
+          element={<ResetPassword />}
+        />
+        <Route
+          path="login/set-password"
+          element={<SetNewPassword />}
+        />
+        {/* Dashboard Routes */}
+        <Route
+          path="dashboard"
+          element={
+            <Base>
+              <Dashboard />
+            </Base>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <Base>
+              <Dashboard />
+            </Base>
+          }
+        />
+        <Route
+          path="notifications"
+          element={
+            <Base>
+              <NotificationsPage />
+            </Base>
+          }
+        />
+        <Route
+          path="audit-log"
+          element={
+            <Base>
+              <AuditLogList />
+            </Base>
+          }
+        />
+        {/* External Apps Routes */}
+        <Route
+          path="dashboard/apps"
+          element={
+            <Base>
+              <ExternalApps />
+            </Base>
+          }
+        />
+        <Route
+          path="external-app/:id"
+          element={
+            <Base>
+              <ExternalAppIframeView />
+            </Base>
+          }
+        />
+        {/* Articles Routes */}
+        <Route
+          path="articles"
+          element={
+            <Base>
+              <ArticleList />
+            </Base>
+          }
+        />
+        <Route
+          path="articles/create"
+          element={<ArticleEditor />}
+        />
+        <Route
+          path="articles/edit/:id"
+          element={<ArticleEditor />}
+        />
+        <Route
+          path="articles/peer"
+          element={
+            <Base>
+              <PeerArticleList />
+            </Base>
+          }
+        />
+        <Route
+          path="articles/tags"
+          element={
+            <Base>
+              <TagList type={TagType.Article} />
+            </Base>
+          }
+        />
+        <Route
+          path="articles/tags/create"
+          element={
+            <Base>
+              <TagCreateView type={TagType.Article} />
+            </Base>
+          }
+        />
+        <Route
+          path="articles/tags/edit/:id"
+          element={
+            <Base>
+              <TagEditView />
+            </Base>
+          }
+        />
+        <Route
+          path="articles/paywalls"
+          element={
+            <Base>
+              <PaywallList />
+            </Base>
+          }
+        />
+        <Route
+          path="articles/paywalls/edit/:id"
+          element={
+            <Base>
+              <PaywallEditView />
+            </Base>
+          }
+        />
+        <Route
+          path="articles/paywalls/create"
+          element={
+            <Base>
+              <PaywallCreateView />
+            </Base>
+          }
+        />
+        {/* Pages Routes */}
+        <Route
+          path="pages"
+          element={
+            <Base>
+              <PageList />
+            </Base>
+          }
+        />
+        <Route
+          path="pages/create"
+          element={<PageEditor />}
+        />
+        <Route
+          path="pages/edit/:id"
+          element={<PageEditor />}
+        />
+        <Route
+          path="pages/tags"
+          element={
+            <Base>
+              <TagList type={TagType.Page} />
+            </Base>
+          }
+        />
+        <Route
+          path="pages/tags/create"
+          element={
+            <Base>
+              <TagCreateView type={TagType.Page} />
+            </Base>
+          }
+        />
+        <Route
+          path="pages/tags/edit/:id"
+          element={
+            <Base>
+              <TagEditView />
+            </Base>
+          }
+        />
+        {/* BlockStyle Routes */}
+        <Route
+          path="block-content/styles"
+          element={
+            <Base>
+              <BlockStyleList />
+            </Base>
+          }
+        />
+        {/* BlockTemplate Routes */}
+        <Route
+          path="block-content/templates"
+          element={
+            <Base>
+              <BlockTemplateList />
+            </Base>
+          }
+        />
+        <Route
+          path="block-content/templates/create"
+          element={<BlockTemplateEditView />}
+        />
+        <Route
+          path="block-content/templates/edit/:id"
+          element={<BlockTemplateEditView />}
+        />
+
+        {/* Crowdfunding Routes */}
+        <Route
+          path="crowdfundings"
+          element={
+            <Base>
+              <CrowdfundingList />
+            </Base>
+          }
+        />
+        <Route
+          path="crowdfundings/create"
+          element={
+            <Base>
+              <CreateCrowdfundingForm />
+            </Base>
+          }
+        />
+        <Route
+          path="crowdfundings/edit/:id"
+          element={
+            <Base>
+              <EditCrowdfundingForm />
+            </Base>
+          }
+        />
+
+        {/* Poll Routes */}
+        <Route
+          path="polls"
+          element={
+            <Base>
+              <PollList />
+            </Base>
+          }
+        />
+        <Route
+          path="polls/edit/:id"
+          element={
+            <Base>
+              <PollEditView />
+            </Base>
+          }
+        />
+        <Route
+          path="polls/votes/:pollId"
+          element={
+            <Base>
+              <PollVoteListContainer />
+            </Base>
+          }
+        />
+
+        {/* Comments Routes */}
+        <Route
+          path="comments"
+          element={
+            <Base>
+              <CommentList />
+            </Base>
+          }
+        />
+
+        <Route
+          path="comments/edit/:id"
+          element={
+            <Base>
+              <CommentEditView />
+            </Base>
+          }
+        />
+
+        <Route
+          path="comments/tags"
+          element={
+            <Base>
+              <TagList type={TagType.Comment} />
+            </Base>
+          }
+        />
+        <Route
+          path="comments/tags/create"
+          element={
+            <Base>
+              <TagCreateView type={TagType.Comment} />
+            </Base>
+          }
+        />
+        <Route
+          path="comments/tags/edit/:id"
+          element={
+            <Base>
+              <TagEditView />
+            </Base>
+          }
+        />
+
+        <Route
+          path="comments/rating"
+          element={
+            <Base>
+              <CommentRatingEditView />
+            </Base>
+          }
+        />
+
+        {/* Events Routes */}
+        <Route
+          path="events"
+          element={
+            <Base>
+              <EventListView />
+            </Base>
+          }
+        />
+
+        <Route
+          path="events/create"
+          element={
+            <Base>
+              <EventCreateView />
+            </Base>
+          }
+        />
+
+        <Route
+          path="events/edit/:id"
+          element={
+            <Base>
+              <EventEditView />
+            </Base>
+          }
+        />
+
+        <Route
+          path="events/tags"
+          element={
+            <Base>
+              <TagList type={TagType.Event} />
+            </Base>
+          }
+        />
+        <Route
+          path="events/tags/create"
+          element={
+            <Base>
+              <TagCreateView type={TagType.Event} />
+            </Base>
+          }
+        />
+        <Route
+          path="events/tags/edit/:id"
+          element={
+            <Base>
+              <TagEditView />
+            </Base>
+          }
+        />
+
+        <Route
+          path="events/import"
+          element={
+            <Base>
+              <ImportableEventListView />
+            </Base>
+          }
+        />
+
+        {/* Images Routes */}
+        <Route
+          path="images"
+          element={
+            <Base>
+              <ImageList />
+            </Base>
+          }
+        />
+        <Route
+          path="/images/upload"
+          element={
+            <Base>
+              <ImageList />
+            </Base>
+          }
+        />
+        <Route
+          path="/images/edit/:id"
+          element={
+            <Base>
+              <ImageList />
+            </Base>
+          }
+        />
+        {/* Documents Routes */}
+        <Route
+          path="documents"
+          element={
+            <Base>
+              <DocumentList />
+            </Base>
+          }
+        />
+        <Route
+          path="/documents/upload"
+          element={
+            <Base>
+              <DocumentList />
+            </Base>
+          }
+        />
+        <Route
+          path="/documents/edit/:id"
+          element={
+            <Base>
+              <DocumentList />
+            </Base>
+          }
+        />
+        {/* Navigations Routes */}
+        <Route
+          path="navigations"
+          element={
+            <Base>
+              <NavigationList />
+            </Base>
+          }
+        />
+        <Route
+          path="navigations/create"
+          element={
+            <Base>
+              <NavigationList />
+            </Base>
+          }
+        />
+        <Route
+          path="navigations/edit/:id"
+          element={
+            <Base>
+              <NavigationList />
+            </Base>
+          }
+        />
+        {/* Newsletter Routes */}
+        <Route
+          path="newsletter"
+          element={
+            <Base>
+              <Suspense>
+                <NewsletterCampaignList />
+              </Suspense>
+            </Base>
+          }
+        />
+        <Route
+          path="newsletter/edit/:id"
+          element={
+            <Suspense>
+              <NewsletterCampaignEditor />
+            </Suspense>
+          }
+        />
+        <Route
+          path="newsletter/preview/:id"
+          element={
+            <Suspense>
+              <NewsletterCampaignPreview />
+            </Suspense>
+          }
+        />
+        <Route
+          path="banners"
+          element={
+            <Base>
+              <BannerList />
+            </Base>
+          }
+        />
+        <Route
+          path="banners/create"
+          element={
+            <Base>
+              <CreateBannerForm />
+            </Base>
+          }
+        />
+        <Route
+          path="banners/edit/:id"
+          element={
+            <Base>
+              <EditBannerForm />
+            </Base>
+          }
+        />
+        {/* Authors Routes */}
+        <Route
+          path="authors"
+          element={
+            <Base>
+              <AuthorList />
+            </Base>
+          }
+        />
+        <Route
+          path="authors/create"
+          element={
+            <Base>
+              <AuthorList />
+            </Base>
+          }
+        />
+        <Route
+          path="authors/edit/:id"
+          element={
+            <Base>
+              <AuthorList />
+            </Base>
+          }
+        />
+
+        <Route
+          path="authors/tags"
+          element={
+            <Base>
+              <TagList type={TagType.Author} />
+            </Base>
+          }
+        />
+        <Route
+          path="authors/tags/create"
+          element={
+            <Base>
+              <TagCreateView type={TagType.Author} />
+            </Base>
+          }
+        />
+        <Route
+          path="authors/tags/edit/:id"
+          element={
+            <Base>
+              <TagEditView />
+            </Base>
+          }
+        />
+
+        {/* Users Routes */}
+        <Route
+          path="users"
+          element={
+            <Base>
+              <UserList />
+            </Base>
+          }
+        />
+        <Route
+          path="users/create"
+          element={
+            <Base>
+              <UserEditView />
+            </Base>
+          }
+        />
+        <Route
+          path="users/edit/:id"
+          element={
+            <Base>
+              <UserEditView />
+            </Base>
+          }
+        />
+        {/* User Roles Routes */}
+        <Route
+          path="userroles"
+          element={
+            <Base>
+              <UserRoleList />
+            </Base>
+          }
+        />
+        <Route
+          path="userroles/create"
+          element={
+            <Base>
+              <UserRoleList />
+            </Base>
+          }
+        />
+        <Route
+          path="userroles/edit/:id"
+          element={
+            <Base>
+              <UserRoleList />
+            </Base>
+          }
+        />
+
+        {/* Audience Routes */}
+        <Route
+          path="audience/dashboard"
+          element={
+            <Base>
+              <AudienceDashboard persist />
+            </Base>
+          }
+        />
+
+        {/* Subscription Routes */}
+        <Route
+          path="subscriptions"
+          element={
+            <Base>
+              <SubscriptionList />
+            </Base>
+          }
+        />
+        <Route
+          path="subscriptions/create"
+          element={
+            <Base>
+              <SubscriptionEditView />
+            </Base>
+          }
+        />
+        <Route
+          path="subscriptions/edit/:id"
+          element={
+            <Base>
+              <SubscriptionEditView />
+            </Base>
+          }
+        />
+        {/* Member Plans Routes */}
+        <Route
+          path="memberplans"
+          element={
+            <Base>
+              <MemberPlanList />
+            </Base>
+          }
+        />
+        <Route
+          path="memberplans/create"
+          element={
+            <Base>
+              <MemberPlanEdit />
+            </Base>
+          }
+        />
+        <Route
+          path="memberplans/edit/:id"
+          element={
+            <Base>
+              <MemberPlanEdit />
+            </Base>
+          }
+        />
+        {/* Payment Methods Routes */}
+        <Route
+          path="paymentmethods"
+          element={
+            <Base>
+              <PaymentMethodList />
+            </Base>
+          }
+        />
+        <Route
+          path="paymentmethods/create"
+          element={
+            <Base>
+              <PaymentMethodList />
+            </Base>
+          }
+        />
+        <Route
+          path="paymentmethods/edit/:id"
+          element={
+            <Base>
+              <PaymentMethodList />
+            </Base>
+          }
+        />
+        {/* DiscountCode routes */}
+        <Route
+          path="discountCodes"
+          element={
+            <Base>
+              <DiscountCodeList />
+            </Base>
+          }
+        />
+        <Route
+          path="discountCodes/edit/:id"
+          element={
+            <Base>
+              <DiscountCodeEditView />
+            </Base>
+          }
+        />
+        <Route
+          path="discountCodes/create"
+          element={
+            <Base>
+              <DiscountCodeCreateView />
+            </Base>
+          }
+        />
+        <Route
+          path="discountCodes/usage/:id"
+          element={
+            <Base>
+              <DiscountCodeUsageView />
+            </Base>
+          }
+        />
+        <Route
+          path="goodies"
+          element={
+            <Base>
+              <GoodieList />
+            </Base>
+          }
+        />
+        <Route
+          path="goodies/edit/:id"
+          element={
+            <Base>
+              <GoodieEditView />
+            </Base>
+          }
+        />
+        <Route
+          path="goodies/create"
+          element={
+            <Base>
+              <GoodieCreateView />
+            </Base>
+          }
+        />
+        {/* Consents Routes */}
+        <Route
+          path="consents"
+          element={
+            <Base>
+              <ConsentList />
+            </Base>
+          }
+        />
+        <Route
+          path="consents/create"
+          element={
+            <Base>
+              <ConsentCreateView />
+            </Base>
+          }
+        />
+        <Route
+          path="consents/edit/:id"
+          element={
+            <Base>
+              <ConsentEditView />
+            </Base>
+          }
+        />
+        {/* Consents Routes */}
+        <Route
+          path="userConsents"
+          element={
+            <Base>
+              <UserConsentList />
+            </Base>
+          }
+        />
+        <Route
+          path="userConsents/create"
+          element={
+            <Base>
+              <UserConsentCreateView />
+            </Base>
+          }
+        />
+        <Route
+          path="userConsents/edit/:id"
+          element={
+            <Base>
+              <UserConsentEditView />
+            </Base>
+          }
+        />
+        <Route
+          path="communicationflows/edit/:id"
+          element={
+            <Base>
+              <SubscriptionFlowList />
+            </Base>
+          }
+        />
+        <Route
+          path="mailtemplates"
+          element={
+            <Base>
+              <MailTemplateList />
+            </Base>
+          }
+        />
+        <Route
+          path="mailtemplates/create"
+          element={
+            <Base>
+              <MailTemplateEdit />
+            </Base>
+          }
+        />
+        <Route
+          path="mailtemplates/edit/:id"
+          element={
+            <Base>
+              <MailTemplateEdit />
+            </Base>
+          }
+        />
+        {/* System mails are now part of the automatic mails view */}
+        <Route
+          path="systemmails"
+          element={
+            <Navigate
+              to="/communicationflows/edit/default"
+              replace
+            />
+          }
+        />
+        <Route
+          path="mailsend"
+          element={
+            <Base>
+              <MailSendPage />
+            </Base>
+          }
+        />
+        <Route
+          path="maillog"
+          element={
+            <Base>
+              <MailLogList />
+            </Base>
+          }
+        />
+        {/* Peering Routes */}
+        <Route
+          path="network"
+          element={
+            <Base>
+              <NetworkContentPage />
+            </Base>
+          }
+        />
+        <Route
+          path="peering"
+          element={
+            <Base>
+              <PeerList />
+            </Base>
+          }
+        />
+        <Route
+          path="peering/create"
+          element={
+            <Base>
+              <PeerList />
+            </Base>
+          }
+        />
+        <Route
+          path="peering/edit/:id"
+          element={
+            <Base>
+              <PeerList />
+            </Base>
+          }
+        />
+        <Route
+          path="peering/profile/edit"
+          element={
+            <Base>
+              <PeerList />
+            </Base>
+          }
+        />
+        {/* Tokens Routes */}
+        <Route
+          path="api-tokens"
+          element={
+            <Base>
+              <ApiTokenList />
+            </Base>
+          }
+        >
+          <Route
+            path="generate"
+            element={<ApiTokenGenerateRoute />}
+          />
+        </Route>
+        <Route
+          path="tokens"
+          element={
+            <Base>
+              <TokenList />
+            </Base>
+          }
+        />
+        <Route
+          path="tokens/generate"
+          element={
+            <Base>
+              <TokenList />
+            </Base>
+          }
+        />
+        {/* Integrations Routes */}
+        <Route
+          path="integrations"
+          element={
+            <Base>
+              <IntegrationList />
+            </Base>
+          }
+        />
+        <Route
+          path="integrations/:type"
+          element={
+            <Base>
+              <IntegrationEditView />
+            </Base>
+          }
+        />
+        {/* Settings Routes */}
+        <Route
+          path="settings"
+          element={
+            <Base>
+              <SettingList />
+            </Base>
+          }
+        />
+        <Route
+          path="settings/website"
+          element={
+            <Base>
+              <WebsiteSettingsList />
+            </Base>
+          }
+        />
+        <Route
+          path="settings/website/:category"
+          element={
+            <Base>
+              <WebsiteSettingsItem />
+            </Base>
+          }
+        />
+        {/* Logout */}
+        <Route
+          path="logout"
+          element={<Logout />}
+        />
+      </Routes>
+    </RouteErrorBoundary>
+  );
+}
+
+const router = createBrowserRouter([{ path: '*', element: <AppRoutes /> }]);
+
 export function App() {
   const { session } = useContext(AuthContext);
 
@@ -238,988 +1231,7 @@ export function App() {
       />
       <EditorGlobalStyles />
       <SnackbarHost />
-      <BrowserRouter>
-        <RouteErrorBoundary>
-          <EditorCommandPaletteSurface />
-
-          <Routes>
-            <Route
-              path="login"
-              element={<Login />}
-            />
-            <Route
-              path="login/jwt/:jwt"
-              element={<LoginJwt />}
-            />
-            <Route
-              path="login/impersonate/:jwt"
-              element={<LoginImpersonate />}
-            />
-            <Route
-              path="login/reset-password"
-              element={<ResetPassword />}
-            />
-            <Route
-              path="login/set-password"
-              element={<SetNewPassword />}
-            />
-            {/* Dashboard Routes */}
-            <Route
-              path="dashboard"
-              element={
-                <Base>
-                  <Dashboard />
-                </Base>
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <Base>
-                  <Dashboard />
-                </Base>
-              }
-            />
-            <Route
-              path="notifications"
-              element={
-                <Base>
-                  <NotificationsPage />
-                </Base>
-              }
-            />
-            <Route
-              path="audit-log"
-              element={
-                <Base>
-                  <AuditLogList />
-                </Base>
-              }
-            />
-            {/* External Apps Routes */}
-            <Route
-              path="dashboard/apps"
-              element={
-                <Base>
-                  <ExternalApps />
-                </Base>
-              }
-            />
-            <Route
-              path="external-app/:id"
-              element={
-                <Base>
-                  <ExternalAppIframeView />
-                </Base>
-              }
-            />
-            {/* Articles Routes */}
-            <Route
-              path="articles"
-              element={
-                <Base>
-                  <ArticleList />
-                </Base>
-              }
-            />
-            <Route
-              path="articles/create"
-              element={<ArticleEditor />}
-            />
-            <Route
-              path="articles/edit/:id"
-              element={<ArticleEditor />}
-            />
-            <Route
-              path="articles/peer"
-              element={
-                <Base>
-                  <PeerArticleList />
-                </Base>
-              }
-            />
-            <Route
-              path="articles/tags"
-              element={
-                <Base>
-                  <TagList type={TagType.Article} />
-                </Base>
-              }
-            />
-            <Route
-              path="articles/tags/create"
-              element={
-                <Base>
-                  <TagCreateView type={TagType.Article} />
-                </Base>
-              }
-            />
-            <Route
-              path="articles/tags/edit/:id"
-              element={
-                <Base>
-                  <TagEditView />
-                </Base>
-              }
-            />
-            <Route
-              path="articles/paywalls"
-              element={
-                <Base>
-                  <PaywallList />
-                </Base>
-              }
-            />
-            <Route
-              path="articles/paywalls/edit/:id"
-              element={
-                <Base>
-                  <PaywallEditView />
-                </Base>
-              }
-            />
-            <Route
-              path="articles/paywalls/create"
-              element={
-                <Base>
-                  <PaywallCreateView />
-                </Base>
-              }
-            />
-            {/* Pages Routes */}
-            <Route
-              path="pages"
-              element={
-                <Base>
-                  <PageList />
-                </Base>
-              }
-            />
-            <Route
-              path="pages/create"
-              element={<PageEditor />}
-            />
-            <Route
-              path="pages/edit/:id"
-              element={<PageEditor />}
-            />
-            <Route
-              path="pages/tags"
-              element={
-                <Base>
-                  <TagList type={TagType.Page} />
-                </Base>
-              }
-            />
-            <Route
-              path="pages/tags/create"
-              element={
-                <Base>
-                  <TagCreateView type={TagType.Page} />
-                </Base>
-              }
-            />
-            <Route
-              path="pages/tags/edit/:id"
-              element={
-                <Base>
-                  <TagEditView />
-                </Base>
-              }
-            />
-            {/* BlockStyle Routes */}
-            <Route
-              path="block-content/styles"
-              element={
-                <Base>
-                  <BlockStyleList />
-                </Base>
-              }
-            />
-            {/* BlockTemplate Routes */}
-            <Route
-              path="block-content/templates"
-              element={
-                <Base>
-                  <BlockTemplateList />
-                </Base>
-              }
-            />
-            <Route
-              path="block-content/templates/create"
-              element={<BlockTemplateEditView />}
-            />
-            <Route
-              path="block-content/templates/edit/:id"
-              element={<BlockTemplateEditView />}
-            />
-
-            {/* Crowdfunding Routes */}
-            <Route
-              path="crowdfundings"
-              element={
-                <Base>
-                  <CrowdfundingList />
-                </Base>
-              }
-            />
-            <Route
-              path="crowdfundings/create"
-              element={
-                <Base>
-                  <CreateCrowdfundingForm />
-                </Base>
-              }
-            />
-            <Route
-              path="crowdfundings/edit/:id"
-              element={
-                <Base>
-                  <EditCrowdfundingForm />
-                </Base>
-              }
-            />
-
-            {/* Poll Routes */}
-            <Route
-              path="polls"
-              element={
-                <Base>
-                  <PollList />
-                </Base>
-              }
-            />
-            <Route
-              path="polls/edit/:id"
-              element={
-                <Base>
-                  <PollEditView />
-                </Base>
-              }
-            />
-            <Route
-              path="polls/votes/:pollId"
-              element={
-                <Base>
-                  <PollVoteListContainer />
-                </Base>
-              }
-            />
-
-            {/* Comments Routes */}
-            <Route
-              path="comments"
-              element={
-                <Base>
-                  <CommentList />
-                </Base>
-              }
-            />
-
-            <Route
-              path="comments/edit/:id"
-              element={
-                <Base>
-                  <CommentEditView />
-                </Base>
-              }
-            />
-
-            <Route
-              path="comments/tags"
-              element={
-                <Base>
-                  <TagList type={TagType.Comment} />
-                </Base>
-              }
-            />
-            <Route
-              path="comments/tags/create"
-              element={
-                <Base>
-                  <TagCreateView type={TagType.Comment} />
-                </Base>
-              }
-            />
-            <Route
-              path="comments/tags/edit/:id"
-              element={
-                <Base>
-                  <TagEditView />
-                </Base>
-              }
-            />
-
-            <Route
-              path="comments/rating"
-              element={
-                <Base>
-                  <CommentRatingEditView />
-                </Base>
-              }
-            />
-
-            {/* Events Routes */}
-            <Route
-              path="events"
-              element={
-                <Base>
-                  <EventListView />
-                </Base>
-              }
-            />
-
-            <Route
-              path="events/create"
-              element={
-                <Base>
-                  <EventCreateView />
-                </Base>
-              }
-            />
-
-            <Route
-              path="events/edit/:id"
-              element={
-                <Base>
-                  <EventEditView />
-                </Base>
-              }
-            />
-
-            <Route
-              path="events/tags"
-              element={
-                <Base>
-                  <TagList type={TagType.Event} />
-                </Base>
-              }
-            />
-            <Route
-              path="events/tags/create"
-              element={
-                <Base>
-                  <TagCreateView type={TagType.Event} />
-                </Base>
-              }
-            />
-            <Route
-              path="events/tags/edit/:id"
-              element={
-                <Base>
-                  <TagEditView />
-                </Base>
-              }
-            />
-
-            <Route
-              path="events/import"
-              element={
-                <Base>
-                  <ImportableEventListView />
-                </Base>
-              }
-            />
-
-            {/* Images Routes */}
-            <Route
-              path="images"
-              element={
-                <Base>
-                  <ImageList />
-                </Base>
-              }
-            />
-            <Route
-              path="/images/upload"
-              element={
-                <Base>
-                  <ImageList />
-                </Base>
-              }
-            />
-            <Route
-              path="/images/edit/:id"
-              element={
-                <Base>
-                  <ImageList />
-                </Base>
-              }
-            />
-            {/* Documents Routes */}
-            <Route
-              path="documents"
-              element={
-                <Base>
-                  <DocumentList />
-                </Base>
-              }
-            />
-            <Route
-              path="/documents/upload"
-              element={
-                <Base>
-                  <DocumentList />
-                </Base>
-              }
-            />
-            <Route
-              path="/documents/edit/:id"
-              element={
-                <Base>
-                  <DocumentList />
-                </Base>
-              }
-            />
-            {/* Navigations Routes */}
-            <Route
-              path="navigations"
-              element={
-                <Base>
-                  <NavigationList />
-                </Base>
-              }
-            />
-            <Route
-              path="navigations/create"
-              element={
-                <Base>
-                  <NavigationList />
-                </Base>
-              }
-            />
-            <Route
-              path="navigations/edit/:id"
-              element={
-                <Base>
-                  <NavigationList />
-                </Base>
-              }
-            />
-            {/* Newsletter Routes */}
-            <Route
-              path="newsletter"
-              element={
-                <Base>
-                  <Suspense>
-                    <NewsletterCampaignList />
-                  </Suspense>
-                </Base>
-              }
-            />
-            <Route
-              path="newsletter/edit/:id"
-              element={
-                <Suspense>
-                  <NewsletterCampaignEditor />
-                </Suspense>
-              }
-            />
-            <Route
-              path="newsletter/preview/:id"
-              element={
-                <Suspense>
-                  <NewsletterCampaignPreview />
-                </Suspense>
-              }
-            />
-            <Route
-              path="banners"
-              element={
-                <Base>
-                  <BannerList />
-                </Base>
-              }
-            />
-            <Route
-              path="banners/create"
-              element={
-                <Base>
-                  <CreateBannerForm />
-                </Base>
-              }
-            />
-            <Route
-              path="banners/edit/:id"
-              element={
-                <Base>
-                  <EditBannerForm />
-                </Base>
-              }
-            />
-            {/* Authors Routes */}
-            <Route
-              path="authors"
-              element={
-                <Base>
-                  <AuthorList />
-                </Base>
-              }
-            />
-            <Route
-              path="authors/create"
-              element={
-                <Base>
-                  <AuthorList />
-                </Base>
-              }
-            />
-            <Route
-              path="authors/edit/:id"
-              element={
-                <Base>
-                  <AuthorList />
-                </Base>
-              }
-            />
-
-            <Route
-              path="authors/tags"
-              element={
-                <Base>
-                  <TagList type={TagType.Author} />
-                </Base>
-              }
-            />
-            <Route
-              path="authors/tags/create"
-              element={
-                <Base>
-                  <TagCreateView type={TagType.Author} />
-                </Base>
-              }
-            />
-            <Route
-              path="authors/tags/edit/:id"
-              element={
-                <Base>
-                  <TagEditView />
-                </Base>
-              }
-            />
-
-            {/* Users Routes */}
-            <Route
-              path="users"
-              element={
-                <Base>
-                  <UserList />
-                </Base>
-              }
-            />
-            <Route
-              path="users/create"
-              element={
-                <Base>
-                  <UserEditView />
-                </Base>
-              }
-            />
-            <Route
-              path="users/edit/:id"
-              element={
-                <Base>
-                  <UserEditView />
-                </Base>
-              }
-            />
-            {/* User Roles Routes */}
-            <Route
-              path="userroles"
-              element={
-                <Base>
-                  <UserRoleList />
-                </Base>
-              }
-            />
-            <Route
-              path="userroles/create"
-              element={
-                <Base>
-                  <UserRoleList />
-                </Base>
-              }
-            />
-            <Route
-              path="userroles/edit/:id"
-              element={
-                <Base>
-                  <UserRoleList />
-                </Base>
-              }
-            />
-
-            {/* Audience Routes */}
-            <Route
-              path="audience/dashboard"
-              element={
-                <Base>
-                  <AudienceDashboard persist />
-                </Base>
-              }
-            />
-
-            {/* Subscription Routes */}
-            <Route
-              path="subscriptions"
-              element={
-                <Base>
-                  <SubscriptionList />
-                </Base>
-              }
-            />
-            <Route
-              path="subscriptions/create"
-              element={
-                <Base>
-                  <SubscriptionEditView />
-                </Base>
-              }
-            />
-            <Route
-              path="subscriptions/edit/:id"
-              element={
-                <Base>
-                  <SubscriptionEditView />
-                </Base>
-              }
-            />
-            {/* Member Plans Routes */}
-            <Route
-              path="memberplans"
-              element={
-                <Base>
-                  <MemberPlanList />
-                </Base>
-              }
-            />
-            <Route
-              path="memberplans/create"
-              element={
-                <Base>
-                  <MemberPlanEdit />
-                </Base>
-              }
-            />
-            <Route
-              path="memberplans/edit/:id"
-              element={
-                <Base>
-                  <MemberPlanEdit />
-                </Base>
-              }
-            />
-            {/* Payment Methods Routes */}
-            <Route
-              path="paymentmethods"
-              element={
-                <Base>
-                  <PaymentMethodList />
-                </Base>
-              }
-            />
-            <Route
-              path="paymentmethods/create"
-              element={
-                <Base>
-                  <PaymentMethodList />
-                </Base>
-              }
-            />
-            <Route
-              path="paymentmethods/edit/:id"
-              element={
-                <Base>
-                  <PaymentMethodList />
-                </Base>
-              }
-            />
-            {/* DiscountCode routes */}
-            <Route
-              path="discountCodes"
-              element={
-                <Base>
-                  <DiscountCodeList />
-                </Base>
-              }
-            />
-            <Route
-              path="discountCodes/edit/:id"
-              element={
-                <Base>
-                  <DiscountCodeEditView />
-                </Base>
-              }
-            />
-            <Route
-              path="discountCodes/create"
-              element={
-                <Base>
-                  <DiscountCodeCreateView />
-                </Base>
-              }
-            />
-            <Route
-              path="discountCodes/usage/:id"
-              element={
-                <Base>
-                  <DiscountCodeUsageView />
-                </Base>
-              }
-            />
-            <Route
-              path="goodies"
-              element={
-                <Base>
-                  <GoodieList />
-                </Base>
-              }
-            />
-            <Route
-              path="goodies/edit/:id"
-              element={
-                <Base>
-                  <GoodieEditView />
-                </Base>
-              }
-            />
-            <Route
-              path="goodies/create"
-              element={
-                <Base>
-                  <GoodieCreateView />
-                </Base>
-              }
-            />
-            {/* Consents Routes */}
-            <Route
-              path="consents"
-              element={
-                <Base>
-                  <ConsentList />
-                </Base>
-              }
-            />
-            <Route
-              path="consents/create"
-              element={
-                <Base>
-                  <ConsentCreateView />
-                </Base>
-              }
-            />
-            <Route
-              path="consents/edit/:id"
-              element={
-                <Base>
-                  <ConsentEditView />
-                </Base>
-              }
-            />
-            {/* Consents Routes */}
-            <Route
-              path="userConsents"
-              element={
-                <Base>
-                  <UserConsentList />
-                </Base>
-              }
-            />
-            <Route
-              path="userConsents/create"
-              element={
-                <Base>
-                  <UserConsentCreateView />
-                </Base>
-              }
-            />
-            <Route
-              path="userConsents/edit/:id"
-              element={
-                <Base>
-                  <UserConsentEditView />
-                </Base>
-              }
-            />
-            <Route
-              path="communicationflows/edit/:id"
-              element={
-                <Base>
-                  <SubscriptionFlowList />
-                </Base>
-              }
-            />
-            <Route
-              path="mailtemplates"
-              element={
-                <Base>
-                  <MailTemplateList />
-                </Base>
-              }
-            />
-            <Route
-              path="mailtemplates/create"
-              element={
-                <Base>
-                  <MailTemplateEdit />
-                </Base>
-              }
-            />
-            <Route
-              path="mailtemplates/edit/:id"
-              element={
-                <Base>
-                  <MailTemplateEdit />
-                </Base>
-              }
-            />
-            {/* System mails are now part of the automatic mails view */}
-            <Route
-              path="systemmails"
-              element={
-                <Navigate
-                  to="/communicationflows/edit/default"
-                  replace
-                />
-              }
-            />
-            <Route
-              path="mailsend"
-              element={
-                <Base>
-                  <MailSendPage />
-                </Base>
-              }
-            />
-            <Route
-              path="maillog"
-              element={
-                <Base>
-                  <MailLogList />
-                </Base>
-              }
-            />
-            {/* Peering Routes */}
-            <Route
-              path="network"
-              element={
-                <Base>
-                  <NetworkContentPage />
-                </Base>
-              }
-            />
-            <Route
-              path="peering"
-              element={
-                <Base>
-                  <PeerList />
-                </Base>
-              }
-            />
-            <Route
-              path="peering/create"
-              element={
-                <Base>
-                  <PeerList />
-                </Base>
-              }
-            />
-            <Route
-              path="peering/edit/:id"
-              element={
-                <Base>
-                  <PeerList />
-                </Base>
-              }
-            />
-            <Route
-              path="peering/profile/edit"
-              element={
-                <Base>
-                  <PeerList />
-                </Base>
-              }
-            />
-            {/* Tokens Routes */}
-            <Route
-              path="api-tokens"
-              element={
-                <Base>
-                  <ApiTokenList />
-                </Base>
-              }
-            >
-              <Route
-                path="generate"
-                element={<ApiTokenGenerateRoute />}
-              />
-            </Route>
-            <Route
-              path="tokens"
-              element={
-                <Base>
-                  <TokenList />
-                </Base>
-              }
-            />
-            <Route
-              path="tokens/generate"
-              element={
-                <Base>
-                  <TokenList />
-                </Base>
-              }
-            />
-            {/* Integrations Routes */}
-            <Route
-              path="integrations"
-              element={
-                <Base>
-                  <IntegrationList />
-                </Base>
-              }
-            />
-            <Route
-              path="integrations/:type"
-              element={
-                <Base>
-                  <IntegrationEditView />
-                </Base>
-              }
-            />
-            {/* Settings Routes */}
-            <Route
-              path="settings"
-              element={
-                <Base>
-                  <SettingList />
-                </Base>
-              }
-            />
-            <Route
-              path="settings/website"
-              element={
-                <Base>
-                  <WebsiteSettingsList />
-                </Base>
-              }
-            />
-            <Route
-              path="settings/website/:category"
-              element={
-                <Base>
-                  <WebsiteSettingsItem />
-                </Base>
-              }
-            />
-            {/* Logout */}
-            <Route
-              path="logout"
-              element={<Logout />}
-            />
-          </Routes>
-        </RouteErrorBoundary>
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </>
   );
 }
