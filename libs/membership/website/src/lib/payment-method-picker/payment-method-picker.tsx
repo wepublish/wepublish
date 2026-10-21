@@ -51,7 +51,8 @@ const FormControlLabelNoMargin = styled(FormControlLabel)`
 `;
 
 const HiddenRadio = styled(Radio)`
-  visibility: hidden;
+  opacity: 0;
+  overflow: hidden;
   width: 0;
   height: 0;
   padding: 0;
@@ -115,7 +116,13 @@ export const PaymentMethodPicker = forwardRef<
             value={method.id}
             label=""
             control={
-              <PaymentRadio aria-label={`${method.description} ${method.name}`}>
+              <PaymentRadio
+                slotProps={{
+                  input: {
+                    'aria-label': `${method.description} ${method.name}`,
+                  },
+                }}
+              >
                 {method.image && (
                   <Image
                     image={method.image as unknown as FullImageFragment}

@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { articleToTeaser } from '@wepublish/article/website';
+import { EenewsPageShell, EenewsTeaserGrid } from '@wepublish/tenant/eenews';
 import { SearchPageGetServerSideProps } from '@wepublish/utils/website';
 import {
   FullArticleTeaserFragment,
@@ -16,9 +17,6 @@ import { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { MdSearch } from 'react-icons/md';
 import { z } from 'zod';
-
-import { EenewsTeaserGrid } from '../src/components/blocks/eenews-teaser-grid';
-import { EenewsPageShell } from '../src/components/eenews-page-shell';
 
 export { SearchPageGetServerSideProps as getServerSideProps };
 

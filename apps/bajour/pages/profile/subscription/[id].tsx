@@ -1,6 +1,5 @@
+import { BajourContainer as Container } from '@wepublish/tenant/bajour';
 import { SubscriptionPage } from '@wepublish/utils/website';
-
-import { Container } from '../../../src/components/layout/container';
 
 export default function Subscription() {
   return (

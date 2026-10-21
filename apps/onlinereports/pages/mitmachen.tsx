@@ -10,6 +10,7 @@ import {
   TransactionFeeIcon,
 } from '@wepublish/membership/website';
 import { PageContainer } from '@wepublish/page/website';
+import { useAdsContext } from '@wepublish/tenant/onlinereports';
 import {
   getApiUrl,
   getSessionTokenProps,
@@ -19,8 +20,6 @@ import {
 import { getApiClient, PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
 import { useEffect } from 'react';
-
-import { useAdsContext } from '../src/context/ads-context';
 
 const MitmachenPage = styled(PageContainer)`
   ${RichTextBlockWrapper} {

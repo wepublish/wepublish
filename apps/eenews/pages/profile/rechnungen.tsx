@@ -1,8 +1,6 @@
+import { EenewsOpenInvoices, EenewsPageShell } from '@wepublish/tenant/eenews';
 import { ProfilePage, withAuthGuard } from '@wepublish/utils/website';
 import { NextPage } from 'next';
-
-import { EenewsOpenInvoices } from '../../src/components/eenews-open-invoices';
-import { EenewsPageShell } from '../../src/components/eenews-page-shell';
 
 function Rechnungen() {
   return (

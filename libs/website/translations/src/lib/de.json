@@ -9,6 +9,9 @@
     "backToProfile": "Zurück zum Profil",
     "profile": "Profil"
   },
+  "banner": {
+    "close": "Banner schliessen"
+  },
   "paywall": {
     "subscribe": "Abonnent*in werden",
     "login": "Login"
@@ -209,6 +212,11 @@
     "saveSuccess": "Änderungen erfolgreich gespeichert!",
     "passwordWarning": "Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.",
     "pay": "Bezahlen",
+    "imageUpload": {
+      "delete": "Bild löschen",
+      "replace": "Neues Bild hochladen",
+      "upload": "Bild hochladen"
+    },
     "totp": {
       "title": "Zwei-Faktor-Authentifizierung",
       "enabled": "Zwei-Faktor-Authentifizierung ist aktiviert.",
@@ -255,7 +263,14 @@
     "loginForReaders": "Login für Leserinnen und Leser",
     "noAccountYet": "Noch keinen Account?",
     "registerNow": "Jetzt registrieren",
-    "notLoggedIn": "Du bist nicht eingeloggt"
+    "notLoggedIn": "Du bist nicht eingeloggt",
+    "name": "Name",
+    "namePlaceholder": "Dein Name",
+    "title": "Titel",
+    "titlePlaceholder": "Gib Deinem Beitrag einen Titel.",
+    "text": "Kommentar",
+    "textPlaceholder": "Beitrag verfassen",
+    "characterCount": "{{length}} / {{max}} Zeichen"
   },
   "comments": {
     "list": {
@@ -271,7 +286,7 @@
   "poll": {
     "totalVotes": "{count} Stimmen",
     "closesAt": "Schliesst am <time>{date}</time>",
-    "closed": "&ndash; Abstimmung beendet."
+    "closed": "Abstimmung beendet."
   },
   "registrationForm": {
     "register": "Registrieren",
@@ -395,6 +410,11 @@
       "map": "Map",
       "set": "Set"
     }
+  },
+  "contextBox": {
+    "defaultTitle": "Darum geht's",
+    "readMore": "Alles lesen",
+    "readLess": "Weniger lesen"
   },
   "slider": {
     "previous": "Zurück",

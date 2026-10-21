@@ -1,4 +1,5 @@
 import { PageContainer } from '@wepublish/page/website';
+import { EenewsPageShell } from '@wepublish/tenant/eenews';
 import {
   getApiUrl,
   getSessionTokenProps,
@@ -7,8 +8,6 @@ import {
 } from '@wepublish/utils/website';
 import { getApiClient, PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
-
-import { EenewsPageShell } from '../src/components/eenews-page-shell';
 
 export default function Mitmachen() {
   return (

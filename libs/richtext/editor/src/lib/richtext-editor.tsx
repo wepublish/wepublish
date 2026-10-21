@@ -15,6 +15,7 @@ import { FooterActions } from './editor/footer-actions';
 import { RichtextJSONDocument } from '@wepublish/richtext';
 import { forwardRef, useEffect, useMemo } from 'react';
 import { equals } from 'ramda';
+import { useTranslation } from 'react-i18next';
 
 export const RichtextEditorWrapper = styled(Paper)``;
 
@@ -173,6 +174,7 @@ type RichtextEditorProps = {
 
 export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
   ({ defaultValue, value, onChange, disabled, autofocus }, ref) => {
+    const { t } = useTranslation();
     const editor = useEditor({
       ...editorConfig,
       content: null,
@@ -223,6 +225,8 @@ export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
         >
           {editorReady && (
             <Box
+              role="toolbar"
+              aria-label={t('richtext.menuBar.label')}
               sx={{
                 display: 'flex',
                 flexWrap: 'wrap',
