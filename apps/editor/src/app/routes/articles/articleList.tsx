@@ -62,9 +62,12 @@ import {
   MdAddComment,
   MdContentCopy,
   MdDelete,
+  MdLink,
   MdUnpublished,
 } from 'react-icons/md';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
+import { copyLinkToClipboard } from '../../copyLink';
 
 interface State {
   state: string;
@@ -329,11 +332,22 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             {
               id: 'action',
               label: t('action'),
-              width: 220,
+              width: 260,
               align: 'center',
               fixed: true,
               render: rowData => (
                 <>
+                  <IconButtonTooltip caption={t('copyLink.button')}>
+                    <IconButton
+                      aria-label={t('copyLink.button')}
+                      disabled={!rowData.published}
+                      size="small"
+                      onClick={() => copyLinkToClipboard(rowData.url, t)}
+                    >
+                      <MdLink />
+                    </IconButton>
+                  </IconButtonTooltip>
+
                   <PermissionControl
                     qualifyingPermissions={[CanPublishArticle.id]}
                   >

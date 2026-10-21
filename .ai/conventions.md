@@ -124,6 +124,45 @@ hand-write a query hook; see
 Frontend errors surface through the Apollo `onError` link plus per-query error
 state, and report to Sentry alongside the backend.
 
+### Editor command palette
+
+Cmd/Ctrl+K opens a command palette over the whole editor. Its commands are
+plain data, split across `navigationCommands.tsx`, `createCommands.tsx` and
+`accountCommands.tsx`, and brought together by
+[apps/editor/src/app/commandPalette/commands.tsx](../apps/editor/src/app/commandPalette/commands.tsx).
+**Add a route to `app.tsx` and you add it here**, with the same
+`qualifyingPermissions` the sidebar uses, and the same `feature` wherever the
+sidebar wraps the entry in `FeatureControl`;
+`commands.spec.ts` runs every command's `perform` against a fake `navigate`
+and fails on any route the router serves that no command reaches (routes
+needing an `:id` are excluded by name).
+
+Every command carries its own `perform(context)`; navigation is just the
+common case of one (`perform: ({navigate}) => navigate('/articles')`), not a
+shape the registry privileges, so a command that opens a dialog or fires a
+mutation fits without changing anything. `context` carries `navigate` and
+`close`.
+
+Groups (`favourite`, `navigate`, `create`, `account`) are the headings; add one
+by extending `CommandGroup` and its `commandPalette.groups.*` translations.
+`favourite` is not a list of its own — it is `favourite: true` on a command,
+which promotes it out of whichever group it was declared in. It only forms a
+block while the query is empty, and folds back into `navigate` as soon as the
+reader types.
+
+The palette itself is generic and lives in
+[libs/ui/editor/src/lib/commandPalette](../libs/ui/editor/src/lib/commandPalette).
+
+### Website shell (header / footer per route)
+
+Every tenant `_app.tsx` renders `NavBar` / `FooterContainer` only when
+`getWebsiteShell(pageProps)` says so. A route hides them by returning
+`shell: {showNavigation?, showFooter?}` in its `getStaticProps` props, so
+don't hide them with CSS. Page routes (`[slug].tsx`, `index.tsx`) build
+`shell` from the page's `hideHeader` / `hideFooter` with `getPageShell`
+([website-shell.ts](../libs/utils/website/src/lib/website-shell.ts)). A new
+tenant has to do the same.
+
 ## File naming
 
 - Nest: `<name>.module.ts`, `<name>.service.ts`, `<name>.resolver.ts`,

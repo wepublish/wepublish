@@ -48,6 +48,7 @@ import {
   MailchimpFormInterestOptionValue,
   MailchimpFormStepValue,
   MailchimpFormSuccessOptionValue,
+  nameForPickedInterest,
 } from './types';
 
 const Panel = styled(Card)`
@@ -67,13 +68,14 @@ const Heading = styled('p')`
 
 const Row = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 `;
 
 const Field = styled.div`
   display: grid;
   gap: 4px;
+  min-width: 0;
 `;
 
 const Label = styled('label')`
@@ -116,7 +118,7 @@ const ToggleRow = styled.div`
 
 const OptionRow = styled.div`
   display: grid;
-  grid-template-columns: 160px 1fr;
+  grid-template-columns: 160px minmax(0, 1fr);
   gap: 12px;
 `;
 
@@ -352,10 +354,7 @@ function MailchimpFormInterestOptionItem({
                     const id = option.value;
                     onChange({
                       id: id ?? '',
-                      name:
-                        !value.name || value.name === interestLabel(value.id) ?
-                          (interestLabel(id) ?? '')
-                        : value.name,
+                      name: nameForPickedInterest(value, id, interestLabel),
                     });
                   }}
                   disableClearable

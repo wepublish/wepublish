@@ -60,8 +60,8 @@ See [testing.md](testing.md).
 > imported by a relative path.
 
 `vitest.shared.ts` in turn re-reads `tsconfig.base.json` and rebuilds the
-`@wepublish/*` aliases itself, so *"imports resolve to their source files instead
-of built output"*.
+`@wepublish/*` aliases itself, so _"imports resolve to their source files instead
+of built output"_.
 
 **Load-bearing.** Removing the exemption makes every `vitest.config.ts` fail
 lint; "fixing" the relative import to an alias breaks resolution, because the
@@ -90,8 +90,8 @@ cleanup task with its own PR — not something to flip while doing unrelated wor
 
 [eslint.config.mjs](../../eslint.config.mjs) errors on:
 
-- `styled` from `@mui/material` → *"Please import `styled` from `@emotion/styled`
-  instead."* Mixing the two produces components that ignore the Emotion theme.
+- `styled` from `@mui/material` → _"Please import `styled` from `@emotion/styled`
+  instead."_ Mixing the two produces components that ignore the Emotion theme.
 - `SensitiveDataUser` from `@wepublish/user/api` → import it **only** when the
   sensitive fields are genuinely required; otherwise use `User`.
 
@@ -102,19 +102,20 @@ The second is a data-exposure guard, not a style preference. If you need
 
 ### ⚠️ Four apps are excluded from the typecheck CI job
 
-[tools/typecheck-websites.sh](../../tools/typecheck-websites.sh) skips
-`api-example`, `editor`, `bka`, and `media` — they do not currently typecheck
-cleanly, and `website-typecheck.yml` runs this script as-is.
+`website-typecheck.yml` runs the Nx `typecheck` target of every app that has
+one. `api-example`, `media` and `bka` have no such target, and `editor` (whose
+target checks its own `tsconfig.app.json`/`tsconfig.server.json`) is passed to
+`--exclude`. They do not currently typecheck cleanly against the website setup.
+No Nx plugin infers this target here (`@nx/vite` only does it for projects with
+a `vite.config.*`), so each website app declares it in its `project.json`. A new
+app needs one too, or CI silently skips it.
 
 Two failure modes to avoid:
 
-1. Do not "fix" the exclusion list as a side quest — those apps fail for
-   unrelated pre-existing reasons.
-2. Do not let your change push a **new** app onto that list. If an app you touched
-   stops typechecking, fix the app, not the script.
-
-Note the script uses `set -uo pipefail` (no `-e`) and collects failures, so it
-reports every failing app rather than stopping at the first.
+1. Do not "fix" the exclusion as a side quest — those apps fail for unrelated
+   pre-existing reasons.
+2. Do not drop an app's `typecheck` target to get CI green. If an app you
+   touched stops typechecking, fix the app.
 
 ---
 
@@ -126,7 +127,7 @@ reports every failing app rather than stopping at the first.
 running the API in dev — never by hand.
 
 If codegen produces stale types, the fix is to **start the API** so the SDL is
-rewritten, then run `npm run generate-api`. Editing the `.graphql` file directly
+rewritten, then run `pnpm run generate-api`. Editing the `.graphql` file directly
 gets silently overwritten on the next dev boot. See
 [graphql-prisma.md](graphql-prisma.md).
 
@@ -154,6 +155,26 @@ database boundary.
 
 ---
 
+### ⚠️ CI runs one Vitest worker per project — `maxWorkers: 1` is load-bearing
+
+The `ci` configuration in [nx.json](../../nx.json) sets `maxWorkers: 1`.
+`test-backend` runs 10 Nx tasks at once on a 4-vCPU GitHub runner, and without
+the cap every task started its own pool of ~3 workers. With ~30 processes on 4
+cores and coverage on, a test was ~30× slower than locally, and MUI specs around
+0.7 s hit the 15 s `testTimeout` (`ui-editor`, 2026-10-16). Don't raise
+`testTimeout` or drop the cap to "speed CI up". Make a slow spec cheaper instead.
+Each uncached run (all 92 tasks) took ~11 min with the cap and 9 m 04 s
+without it, but the run without it failed. Two workers were tried and gave
+nothing: 11 m 24 s, and `membership-editor` timed out again (2026-10-16, one
+run each).
+In happy-dom the cost is mostly `getComputedStyle`, which MUI's Popper and
+`TextareaAutosize` call on every open or render.
+
+Local runs don't use `-c ci`. When reproducing CI locally with `-c ci`, add
+`--maxWorkers=4` to get your cores back.
+
+---
+
 ### ⚠️ Every Dragonfly key must start with `REDIS_KEY_PREFIX`
 
 All media share database 0; a medium's user may only touch `<prefix>:*` /
@@ -173,8 +194,8 @@ under the prefix; a new command needs a look at the ACL first.
 ### ⚠️ `KvTtlCacheModule` builds `CACHE_MANAGER` itself; only listed namespaces leave the process
 
 Not `CacheModule.register`: `@nestjs/cache-manager` checks `store instanceof
-Keyv`, which fails under Vitest (ESM vs CJS `keyv`) with *"Cannot read
-properties of undefined (reading 'includes')"*. Only `SHARED_NAMESPACES` go to
+Keyv`, which fails under Vitest (ESM vs CJS `keyv`) with _"Cannot read
+properties of undefined (reading 'includes')"_. Only `SHARED_NAMESPACES` go to
 Dragonfly; integration settings (`settings:*`) must never be added (startup
 throws). Values are JSON even in memory (master kept live objects):
 `kv-ttl-cache-serializer.ts` keeps `Date`s and Prisma `Decimal`s
@@ -217,7 +238,7 @@ loads `.env` too (`ConfigModule.forRoot()`), so to run it without Dragonfly set
 ### ⚠️ BullMQ on our Dragonfly needs three things
 
 Verified with bullmq 6.3.11 on v2.0.0 (2026-10-01): Dragonfly must run with
-`--lock_on_hashtags` (else *"script tried accessing undeclared key"*), the
+`--lock_on_hashtags` (else _"script tried accessing undeclared key"_), the
 queue `prefix` must be `{<REDIS_KEY_PREFIX>}`, and a node-redis `connection`
 must drop `name` in `duplicate()` — the worker's `CLIENT SETNAME` is denied by
 `-client`, and Dragonfly cannot allow single subcommands. The flag is not in
@@ -265,13 +286,13 @@ that cookie there. The JWT handshake then succeeds, but every following request
 goes out without a session and the banner says "Du siehst die veröffentlichte
 Version" (prod, 2026-10-06; reproduced in Chromium, Firefox and WebKit: cookie
 not stored, 0 authenticated API requests). Locally it works, because
-`localhost:3000` and `localhost:4204` are the *same site* — ports do not count.
+`localhost:3000` and `localhost:4204` are the _same site_ — ports do not count.
 Reproduce with a host page on `127.0.0.1` around `localhost:4204`.
 
 A framed page therefore also writes the token to `sessionStorage`, which
 `authLink` falls back to. Making the cookie `SameSite=None` instead would loosen
 it for every page and is partitioned or blocked in some browsers. Writing
-`sessionStorage` for *top-level* pages too breaks logout: it only clears the
+`sessionStorage` for _top-level_ pages too breaks logout: it only clears the
 browser side, so a per-tab copy would keep other tabs logged in (and in preview
 mode) after logging out in one.
 
@@ -310,10 +331,10 @@ not true. Pinned by `page-cache.spec.ts` and `page-cache-handler.spec.ts`.
 `Cache-Control` already set (`pages-handler.js`); without it Next still sends
 `s-maxage=1` for `notFound`, and a 500 (api down while a page renders for the
 first time) went out as `public, s-maxage=59` (verified end-to-end 2026-10-02).
-`register()` in `instrumentation.nextjs.ts` makes every 404 and 5xx `private,
-no-store, max-age=0` (`libs/utils/sentry/error-no-store.ts`) so Cloudflare
-never keeps one. Pinned by `error-no-store.spec.ts`; nothing checks the wiring
-in CI (verified end-to-end 2026-10-01).
+`register()` in `libs/utils/website/src/lib/sentry/instrumentation.ts` makes
+every 404 and 5xx `private, no-store, max-age=0` (`error-no-store.ts`, same
+folder) so Cloudflare never keeps one. Pinned by `error-no-store.spec.ts`;
+nothing checks the wiring in CI (verified end-to-end 2026-10-01).
 
 ---
 
@@ -355,12 +376,13 @@ than ~100 reads do not.
 Pinned by `fast-string-prototype.spec.ts` and `shared-store.fast-strings.spec.ts`
 (fresh `node --allow-natives-syntax`); a new place that loads `@keyv/redis` or
 `@redis/client` needs the same call.
+
 ### ⚠️ The Sentry packages must move as one, and must stay on 11+
 
 [package.json](../../package.json) keeps `@sentry/nestjs`, `@sentry/nextjs`,
-`@sentry/react` and `@sentry/profiling-node` on one major;
-[apps/media/package.json](../../apps/media/package.json) repeats the two it
-ships into its own image.
+`@sentry/react` and `@sentry/profiling-node` on one major; the ones the api and
+media images ship are `catalog:` entries in
+[pnpm-workspace.yaml](../../pnpm-workspace.yaml).
 
 **Why 11+.** On 10 the API died on boot: `TypeError: Cannot redefine property:
 Cron`. `@nestjs/schedule` 12 is ESM only, so its decorator exports are
@@ -380,12 +402,14 @@ v11 renames: `beforeSendSpan` gets a streamed span with `attributes`, not
 — a subpath export node10 `moduleResolution` cannot see, so every app needs
 `moduleResolution: bundler`.
 
-**The API boots with a warning, and it is accurate — leave it:** *"Failed to
+**Diagnostics-channel spans need a plain `node` process.** v11 instruments
+`express`, `graphql`, `@nestjs/*`, `pg` and Prisma via diagnostics channels
+injected by runtime module hooks. Until 2026-10-20 the API shipped as a
+`@yao-pkg/pkg` binary, which cannot register them, and booted with _"Failed to
 register diagnostics-channel injection hooks, so channel-based integrations
-will not record spans."* v11 instruments `express`, `graphql`, `@nestjs/*`,
-`pg` and Prisma via diagnostics channels injected by runtime module hooks,
-which the `@yao-pkg/pkg` binary cannot register. Errors still report; span
-detail is lost. Two fixes failed on 2026-10-05 — do not redo them:
+will not record spans."_ It now runs under plain `node`; if that warning comes
+back, the cause is something else. Two build-time workarounds failed on
+2026-10-05 — do not redo them:
 
 - `sentryOrchestrionWebpackPlugin` (build-time injection) builds clean and
   injects **nothing**: `@nx/webpack` externalizes node_modules, so webpack
@@ -395,64 +419,34 @@ detail is lost. Two fixes failed on 2026-10-05 — do not redo them:
 - Bundling them instead (`externalDependencies` listing only native/Prisma/pg)
   dies on Nest's dynamic loaders: `Can't resolve 'class-transformer/cjs/storage'`
   plus critical-dependency warnings from `load-package.util.js`,
-  `load-adapter.js`, `optional-require.js` — the `platform-express` failure
-  below, multiplied.
+  `load-adapter.js`, `optional-require.js`.
 
 `enableRuntimeChannelInjection: false` silences the warning without restoring
-spans, so it is deliberately unset. Unverified lead: Sentry uses in-process
-`module.registerHooks()` only on Node >=24.13, which may work in a snapshot.
+spans, so it is deliberately unset.
 
-Pinned by [libs/utils/sentry/instrumentation.nestjs.spec.ts](../../libs/utils/sentry/instrumentation.nestjs.spec.ts),
+Pinned by [libs/utils/api/src/lib/sentry/instrumentation.spec.ts](../../libs/utils/api/src/lib/sentry/instrumentation.spec.ts),
 which guards the options shape but not the versions.
 
 ---
 
-### ⚠️ Optional peer dependencies and the pkg binary: two different failures
+### ⚠️ Optional peers the bundle never names
 
-The API ships as a `@yao-pkg/pkg` snapshot, and libraries reach optional peers
-in two ways that both break there — with error messages that blame a missing
-install while the package is sitting in `node_modules`.
+`apps/<app>/package.json` lists what the webpack bundle `require()`s (see
+[infrastructure.md](infrastructure.md)). Libraries that resolve an optional
+peer at runtime — Nest's `loadPackage` / `loadAdapter`, `ApolloDriver`,
+terminus's `import.meta.resolve` + `await import(...)` — never show up there,
+so unless the peer is listed too, `pnpm deploy` leaves it out and the image
+dies on boot with `No driver (HTTP) has been selected` or _The "<pkg>" package
+is missing_. The API lists three such peers: `@nestjs/platform-express`
+(`@nestjs/core`), `@as-integrations/express5` (`@nestjs/apollo`) and
+`@nestjs/axios` (`@nestjs/terminus`). `docker/check-runtime-deps.js` accepts a
+listed package the bundle never loads when a loaded package declares it as a
+peer (`peerDependencies` or `peerDependenciesMeta`), so they pass the check.
 
-**1. Dynamic require, invisible to webpack.** Nest's `loadPackage` /
-`loadAdapter` never enters the bundle, so the binary dies with
-`No driver (HTTP) has been selected ... install "@nestjs/platform-express"`.
-Fixable by naming the dependency statically so webpack emits a real
-`require(...)` — hence `new ExpressAdapter()` passed to `NestFactory.create` in
-[main.ts](../../apps/api-example/src/main.ts). Verify by grepping the built
-bundle for `require("<pkg>")`.
-
-**2. ESM resolution, which a static require does NOT fix.** Terminus checks its
-peer with `import.meta.resolve('@nestjs/axios')` and loads it with
-`await import(...)`. Neither works inside a snapshot, and no amount of
-bundling changes that — adding `HttpModule` to the health module was tried on
-2026-10-05 and the binary still aborted on boot with *The "@nestjs/axios"
-package is missing*. `@nestjs/axios` was installed and working the whole time;
-`HttpService` is used normally via DI in provider-registry, user, image and
-event-import. The fix is to not instantiate the indicator at all:
-[http-ping.health.ts](../../libs/health/api/src/lib/http-ping.health.ts)
-reimplements the ping on `HealthIndicatorService` + global `fetch`, which is
-what the terminus docs now show anyway.
-
-**Before adding any library that lazily resolves an optional peer, check which
-of the two it does** — `grep` it for `import.meta.resolve` and `await import(`
-as well as `loadPackage`. Only the first kind is bundleable.
-
-Three have bitten so far: `@nestjs/platform-express`, `@nestjs/axios` and
-`@as-integrations/express5` (*The "@as-integrations/express5" package is
-missing*, from `ApolloDriver`). The last one also sat in **devDependencies**
-even though GraphQLModule needs it at runtime — a runtime peer belongs in
-`dependencies`, and a sweep that only reads `dependencies` will not see it.
-
-To sweep for the first kind: scan node_modules for
-`loadPackage`/`assertPackages`/`loadAdapter` string literals, keep those in
-`dependencies` **or `devDependencies`**, and check each against the bundle.
-Re-run it after dependency changes — it is a point-in-time check, not a
-guarantee. As of 2026-10-06 only `@apollo/subgraph` and `@apollo/gateway`
-remain unbundled, unreachable because the API uses `ApolloDriver`, not the
-federation or gateway drivers.
-
-**Nothing type-checks or tests either failure** — both only appear in the
-packaged binary.
+**Before adding a library that lazily resolves an optional peer** — grep it for
+`loadPackage`, `assertPackages`, `loadAdapter`, `import.meta.resolve` and
+`await import(` — add that peer to the app's `package.json` as well. Nothing
+type-checks or tests this; only booting the image shows it.
 
 ---
 
@@ -523,7 +517,7 @@ provider returned `null`, unmounted the editor, and every remounted query
 re-ran under the `network-only` default.
 
 **Load-bearing:** `loading && !data` (not `loading`) in the provider's return,
-and the `if (!isPageActive) return` guard, which keeps the tab *losing* focus
+and the `if (!isPageActive) return` guard, which keeps the tab _losing_ focus
 from triggering the same round trip.
 
 Pinned by [authContext.spec.tsx](../../libs/ui/editor/src/lib/authContext.spec.tsx).
@@ -598,14 +592,14 @@ Pinned by `feature.guard.spec.ts` and `featureContext.spec.tsx`.
 
 ### ⚠️ A backtick inside a CSS comment ends the Emotion template literal
 
-A `/* … */` comment inside a styled template is still *inside a JavaScript
-template literal*, so a backtick in it closes the string. Writing
+A `/* … */` comment inside a styled template is still _inside a JavaScript
+template literal_, so a backtick in it closes the string. Writing
 
 ```
   /* The channel var rather than `alpha()`, so the tint follows the scheme. */
 ```
 
-inside `styled.span\`…\`` produced `TS1005: ',' expected` three lines later
+inside `styled.span\`…\``produced`TS1005: ',' expected` three lines later
 (`userSubscriptionsList.tsx:185`), pointing at code that was perfectly fine —
 the parse had already gone off the rails at the backtick.
 
@@ -650,7 +644,7 @@ onClick={() => {
 ```
 
 `@typescript-eslint/no-non-null-assertion` warns on these; under the compiler
-the warnings on optional *state* are worth treating as errors.
+the warnings on optional _state_ are worth treating as errors.
 
 **Load-bearing:** `RouteErrorBoundary` in `apps/editor/src/app/app.tsx` is what
 makes this class of bug visible at all — without it React unmounts the tree and
@@ -667,10 +661,12 @@ memoises the call against it:
 ```js
 // what the compiler emits for `const a = watch('alpha')`
 if ($[0] !== watch) {
-  t0 = watch("alpha");   // never re-runs: `watch` never changes
+  t0 = watch('alpha'); // never re-runs: `watch` never changes
   $[0] = watch;
   $[1] = t0;
-} else { t0 = $[1]; }
+} else {
+  t0 = $[1];
+}
 ```
 
 The field is read on the first render and never again. On screen that is a
@@ -685,7 +681,7 @@ settings, `bypasses.${index}.token` — subscribe to the parent once with
 `useWatch({ control })` or `useWatch({control, name: 'bypasses'})` and index
 into the result.
 
-This is also why components taking `watch` were quietly *skipped* by the
+This is also why components taking `watch` were quietly _skipped_ by the
 compiler before ("Compilation Skipped: Use of incompatible library"); removing
 `watch` lets it compile them, which can surface fresh `set-state-in-effect`
 errors in code that was never checked.
@@ -748,7 +744,7 @@ leaves the caller's `columns` untouched.
 there for why dense did not suit). rsuite's `<Form fluid>` spaced its controls
 for you, and the codemod turned it into `<Stack sx={{ width: '100%' }}>`,
 which does not. With no margin and no gap the fields sit flush and the second
-field's floating label lands *on the border of the first* — visible on the
+field's floating label lands _on the border of the first_ — visible on the
 crowdfunding form, the poll editor, the article metadata panel and the
 settings page.
 
@@ -773,7 +769,7 @@ get spacing that `gap` should provide.
 
 ---
 
-### ⚠️ A row tint has to be a background *image*, not a background colour
+### ⚠️ A row tint has to be a background _image_, not a background colour
 
 The list row states (`approved`, `pending-approval`, `rejected`, …) are
 7-12% alphas defined in `editorGlobalStyles.tsx`. Painted as
@@ -782,7 +778,7 @@ The list row states (`approved`, `pending-approval`, `rejected`, …) are
 — so the pinned Actions column became translucent and the rows scrolling
 underneath showed straight through it on a narrow viewport.
 
-As `background-image: linear-gradient(tint, tint)` the tint layers *over* the
+As `background-image: linear-gradient(tint, tint)` the tint layers _over_ the
 cell's own background instead of replacing it: a pinned cell keeps its opaque
 `background.paper` underneath and comes out the same colour as its neighbours.
 Anything else pinned in a tinted row needs the same treatment.
@@ -807,7 +803,7 @@ every label.
 
 `set` in `libs/ui/src/lib/hooks/use-local-storage.ts` ends with
 `window.dispatchEvent(new StorageEvent('storage'))` so other hooks sharing the
-same key stay in sync. The listener fires for *every* mounted instance, whatever
+same key stay in sync. The listener fires for _every_ mounted instance, whatever
 key it holds, and each one re-reads its own entry and calls
 `setValue(deserialize(item))` — a brand new object for an untouched value.
 
@@ -829,6 +825,29 @@ reproduce.
 
 ---
 
+### ⚠️ An incomplete Apollo mock turns a story spec into a race
+
+Apollo 4's `MockLink` delays each response by a random 20–50 ms. When two
+queries return the same normalised object (a `PublicSubscription` in both
+`Subscriptions` and `Invoices`), and its mock lacks a fragment field
+(`Missing field 'goodie' while writing result` in stderr), the second response
+leaves the object incomplete. Apollo then refetches the first query, finds its
+mock used up, and the component shows "No more mocked responses" instead of its
+content. That depends on which response comes first and how fast the runner
+renders, so `membership-website`'s "should render Extend" failed now and then on
+CI and never locally (2026-10-16).
+
+Type a mock with `satisfies Exact<…Fragment>`, never `as`, so a missing field
+shows in the editor. Stories aren't type-checked in CI (excluded from
+`tsconfig.lib.json`). Write "no value" as `null`, not `undefined`. Treat any
+`Missing field` line in a spec's stderr as a bug. Fixed delays (`delay` on each
+mock) turn the race into a test that fails every time.
+
+Pinned by `subscription-list-container.spec.tsx` ("should keep the list when
+the invoices arrive after the subscriptions").
+
+---
+
 ### ⚠️ `theme.palette` is the light scheme, frozen
 
 The editor builds one theme with both colour schemes and `cssVariables`, so
@@ -841,7 +860,7 @@ A styled component that reads `theme.palette.background.paper` therefore paints
 white in dark mode: the dashboard's "Customize dashboard" dialog had white rows
 with grey-on-white labels until its five reads were switched to `theme.vars`.
 Exceptions are deliberate: `analyticsIntegrationForm` passes
-`theme.palette.success.light` through `lighten()` — a colour *function* cannot
+`theme.palette.success.light` through `lighten()` — a colour _function_ cannot
 take a CSS variable — and pairs it with an explicit
 `[data-mui-color-scheme='dark'] &` branch.
 
@@ -849,15 +868,38 @@ take a CSS variable — and pairs it with an explicit
 colour. A grep for `theme.palette.` outside a dark-mode branch is the check.
 
 Pinned by `apps/editor/src/app/routes/dashboard/dashboardConfig.spec.tsx`,
-which reads the *emitted* rule rather than the computed value — jsdom resolves
+which reads the _emitted_ rule rather than the computed value — jsdom resolves
 `var(--mui-palette-background-paper, #fff)` to the light fallback baked into
 it, so `getComputedStyle` cannot tell the two apart.
 
 ---
 
+### ⚠️ The newsletter renderer is shared, and several things keep it working
+
+`libs/newsletter/email` draws the Puck canvas *and* the mail. Load-bearing:
+`renderNewsletter` lives behind `@wepublish/newsletter/email/render`, outside
+the barrel, so the editor bundle never pulls in `react-dom/server`; and
+`apps/api-example/tsconfig.app.json` sets `jsx: react-jsx`, or the API build
+fails on the lib's TSX. The editor loads
+the newsletter routes with `React.lazy`: Puck's stylesheet `@import`s a font
+from rsms.me, and eagerly bundled it held up every editor page. Mail
+images are asked for as `format: 'jpeg'` (png/gif kept): the media server's
+default WebP is an empty frame in Outlook. `format` is deliberately not in the
+GraphQL `ImageTransformation`, so the public API cannot multiply cached variants.
+
+Pinned by `render.spec.tsx`, `newsletter-render.service.spec.ts`,
+`media.service.spec.ts` and `novaMediaAdapter.spec.ts`; Nx's
+`enforce-module-boundaries` rejects any static import of the lazy-loaded
+`newsletter-editor` in the editor app. The renderer's runtime packages (`react`,
+`react-dom`, `@react-email/components`, and `tslib`, because the API's webpack
+gives `.tsx` to ts-loader with `importHelpers`, not swc) must stay in
+`apps/api-example/package.json` — see [infrastructure.md](infrastructure.md).
+
+---
+
 ## Adding an entry
 
-Keep the house style: a future agent must be able to tell *why* the obvious
+Keep the house style: a future agent must be able to tell _why_ the obvious
 change is wrong without re-running your debugging session.
 
 ```markdown
@@ -875,7 +917,7 @@ refactor.>
 **Load-bearing:** <which specific lines must not be removed, and what happens
 if they are.>
 
-Pinned by `<path/to/the.spec.ts>`  ← if a test guards it. If nothing guards it,
+Pinned by `<path/to/the.spec.ts>` ← if a test guards it. If nothing guards it,
 say so explicitly: "Nothing guards this — a regression here is silent."
 ```
 

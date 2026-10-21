@@ -18,6 +18,7 @@ const execFileAsync = promisify(execFile);
 import {
   removeSignatureFromTransformations,
   getTransformationKey,
+  OutputFormat,
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
 import { JwksClientService } from '../authentication/jwks-client.service';
@@ -66,6 +67,28 @@ const fallbackImageRatios: FallbackImageRatio[] = [
     heightRatio: 16,
   },
 ];
+// Only these keep every frame; jpeg and png would get all frames stacked on top of each other.
+const ANIMATED_FORMATS: OutputFormat[] = ['webp', 'gif'];
+
+const encode = (
+  image: sharp.Sharp,
+  format: OutputFormat,
+  quality: number | undefined,
+  effort: number
+) => {
+  switch (format) {
+    case 'jpeg':
+      // jpeg has no alpha channel, sharp would otherwise fill it black
+      return image.flatten({ background: '#ffffff' }).jpeg({ quality });
+    case 'png':
+      return image.png();
+    case 'gif':
+      return image.gif();
+    case 'webp':
+      return image.webp({ quality, effort });
+  }
+};
+
 export type ImageURIObject = {
   uri: string;
   exists: boolean;
@@ -201,9 +224,10 @@ export class MediaService {
       );
     }
 
+    const format = transformations.format ?? 'webp';
     const sharpInstance = imageStream.pipe(
       sharp({
-        animated: true,
+        animated: ANIMATED_FORMATS.includes(format),
         failOn: 'error',
       })
     );
@@ -254,16 +278,19 @@ export class MediaService {
         sharpInstance.grayscale(transformations.grayscale);
       }
 
-      const transformedImage = sharpInstance.webp({
-        quality: transformations.quality,
-        effort,
-      });
+      const transformedImage = encode(
+        sharpInstance,
+        format,
+        transformations.quality,
+        effort
+      );
 
       const { data: transformedBuffer, info } = await transformedImage.toBuffer(
         { resolveWithObject: true }
       );
       transformGuard.checkImageSize({ size: info.size } as sharp.Metadata);
 
+<<<<<<< HEAD
       const exists = imageExists;
       const uri =
         imageExists ?
@@ -275,6 +302,30 @@ export class MediaService {
         contentLength: info.size,
       });
 
+=======
+      let uri;
+      let exists = true;
+      if (imageExists) {
+        uri = `images/${imageId}/${transformationsKey}`;
+        await this.storage.saveFile(
+          this.config.transformationBucket,
+          uri,
+          transformedBuffer,
+          info.size,
+          { 'Content-Type': `image/${format}` }
+        );
+      } else {
+        exists = false;
+        uri = `images/fallback/${transformationsKey}`;
+        await this.storage.saveFile(
+          this.config.transformationBucket,
+          uri,
+          transformedBuffer,
+          info.size,
+          { 'Content-Type': `image/${format}` }
+        );
+      }
+>>>>>>> origin/master
       return { uri, exists };
     } finally {
       imageStream.destroy();

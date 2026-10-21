@@ -1,14 +1,8 @@
 {
-  "name": "media",
-  "version": "1.0.0",
-  "main": "next.config.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "name": "@wepublish/media",
+  "private": true,
   "dependencies": {
+<<<<<<< HEAD
     "@nestjs/cache-manager": "^12.0.0",
     "@nestjs/common": "^12.1.0",
     "@nestjs/config": "^12.0.1",
@@ -34,5 +28,24 @@
   "devDependencies": {
     "@types/multer": "^2.2.0",
     "webpack": "^5.108.4"
+=======
+    "@nestjs/cache-manager": "catalog:",
+    "@nestjs/common": "catalog:",
+    "@nestjs/config": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/platform-express": "catalog:",
+    "@sentry/nestjs": "catalog:",
+    "@sentry/profiling-node": "catalog:",
+    "cache-manager": "catalog:",
+    "express": "catalog:",
+    "helmet": "catalog:",
+    "jose": "catalog:",
+    "minio": "catalog:",
+    "multer": "catalog:",
+    "nestjs-zod": "catalog:",
+    "sharp": "catalog:",
+    "tslib": "catalog:",
+    "zod": "catalog:"
+>>>>>>> origin/master
   }
 }

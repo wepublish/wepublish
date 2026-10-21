@@ -79,6 +79,21 @@ describe('PreviewFrame', () => {
     expect(screen.getByTitle('Preview').getAttribute('src')).toBe(PREVIEW_URL);
   });
 
+  it.each([
+    ['mobile', '390px', '844px'],
+    ['tablet', '820px', '1180px'],
+  ] as const)(
+    'renders the %s preview at the real device size',
+    (device, width, height) => {
+      renderFrame({ device });
+
+      const frame = getComputedStyle(screen.getByTitle('Preview'));
+
+      expect(frame.width).toBe(width);
+      expect(frame.height).toBe(height);
+    }
+  );
+
   it('shows a loader until the iframe has loaded', () => {
     renderFrame({});
 

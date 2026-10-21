@@ -1,79 +1,52 @@
-import { Permission } from '@wepublish/permissions';
-import { hasPermission } from './has-permission';
+import { CanGetArticle, CanGetPage } from '@wepublish/permissions';
 
-const mockPermission: Permission = {
-  id: 'Foo',
-  description: 'Foobar',
-  deprecated: false,
-};
+import { hasPermission, permissionsOf } from './has-permission';
 
-const mockPermission2: Permission = {
-  id: 'Bar',
-  description: 'Barfoo',
-  deprecated: false,
-};
+const role = (...permissionIDs: string[]) => ({ id: 'r', permissionIDs });
 
-it('should return true if permission is present', () => {
-  const result = hasPermission(mockPermission, [
-    {
-      permissionIDs: [mockPermission.id],
-    },
-    {
-      permissionIDs: [],
-    },
-  ] as any);
+describe('hasPermission', () => {
+  it('accepts roles, as every existing call site passes', () => {
+    expect(hasPermission(CanGetArticle, [role(CanGetArticle.id)])).toBe(true);
+    expect(hasPermission(CanGetArticle, [role(CanGetPage.id)])).toBe(false);
+  });
 
-  expect(result).toBeTruthy();
+  it('accepts a bare list of permission ids, as an api token carries', () => {
+    expect(hasPermission(CanGetArticle, [CanGetArticle.id])).toBe(true);
+    expect(hasPermission(CanGetArticle, [CanGetPage.id])).toBe(false);
+  });
+
+  it('requires every permission when given several', () => {
+    expect(hasPermission([CanGetArticle, CanGetPage], [CanGetArticle.id])).toBe(
+      false
+    );
+
+    expect(
+      hasPermission(
+        [CanGetArticle, CanGetPage],
+        [CanGetArticle.id, CanGetPage.id]
+      )
+    ).toBe(true);
+  });
+
+  it('denies when nothing is granted', () => {
+    expect(hasPermission(CanGetArticle, [])).toBe(false);
+  });
 });
 
-it('should return false if permission is not present', () => {
-  const result = hasPermission(mockPermission, [
-    {
-      permissionIDs: [],
-    },
-    {
-      permissionIDs: [],
-    },
-  ] as any);
+describe('permissionsOf', () => {
+  it('reads an api token session, which carries permissions directly', () => {
+    expect(permissionsOf({ permissions: [CanGetArticle.id] } as never)).toEqual(
+      [CanGetArticle.id]
+    );
+  });
 
-  expect(result).toBeFalsy();
-});
+  it('reads a user session, which carries them on its roles', () => {
+    expect(
+      permissionsOf({ roles: [role(CanGetArticle.id, CanGetPage.id)] } as never)
+    ).toEqual([CanGetArticle.id, CanGetPage.id]);
+  });
 
-it('should return true if permission is present in one of the roles a user has', () => {
-  const result = hasPermission(mockPermission, [
-    {
-      permissionIDs: [mockPermission2.id],
-    },
-    {
-      permissionIDs: [mockPermission.id],
-    },
-  ] as any);
-
-  expect(result).toBeTruthy();
-});
-
-it('should return true if multiple permissions are present', () => {
-  const result = hasPermission([mockPermission, mockPermission2], [
-    {
-      permissionIDs: [mockPermission.id, mockPermission2.id],
-    },
-    {
-      permissionIDs: [],
-    },
-  ] as any);
-
-  expect(result).toBeTruthy();
-});
-
-it('should return true if the permissions are spread in multiple roles', () => {
-  const result = hasPermission([mockPermission, mockPermission2], [
-    {
-      permissionIDs: [mockPermission2.id],
-    },
-    {
-      permissionIDs: [mockPermission.id],
-    },
-  ] as any);
-
-  expect(result).toBeTruthy();
+  it('is empty for no session at all', () => {
+    expect(permissionsOf(undefined)).toEqual([]);
+  });
 });

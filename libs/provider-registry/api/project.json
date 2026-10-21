@@ -21,7 +21,7 @@
     },
     "test": {
       "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}/report"],
       "options": {
         "command": "vitest run --passWithNoTests --config {projectRoot}/vitest.config.ts"
       },

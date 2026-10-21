@@ -226,8 +226,16 @@ export const createVitestConfig = ({
       reporters: process.env['CI'] ? ['default', 'github-actions'] : ['default'],
       coverage: {
         provider: 'v8',
-        reporter: ['html', 'text', 'lcov'],
-        reportsDirectory: join(workspaceRoot, 'coverage', relative(workspaceRoot, dir)),
+        reporter: ['html', 'text', ['lcov', { projectRoot: workspaceRoot }]],
+        // A leaf folder per project: Vitest empties `reportsDirectory` when a run
+        // starts, so `coverage/libs/richtext` would wipe the files of the
+        // `libs/richtext/api` run going on in parallel inside it.
+        reportsDirectory: join(
+          workspaceRoot,
+          'coverage',
+          relative(workspaceRoot, dir),
+          'report'
+        ),
         include: ['src/**/*.{js,jsx,ts,tsx}'],
         exclude: ['**/*.stories.{js,jsx,ts,tsx}'],
       },

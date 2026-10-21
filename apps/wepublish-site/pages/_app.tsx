@@ -14,8 +14,10 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getWebsiteShell,
   initWePublishTranslator,
   RoutedAdminBar,
+  WebsiteShellProps,
   withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
@@ -90,9 +92,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-export type CustomAppProps = AppProps<{
-  sessionToken?: FullSessionWithTokenWithoutUserFragment;
-}> & {
+export type CustomAppProps = AppProps<
+  {
+    sessionToken?: FullSessionWithTokenWithoutUserFragment;
+  } & WebsiteShellProps
+> & {
   emotionCache?: EmotionCache;
   websiteSettings?: WebsiteSettingsFragment;
   publicEnv?: { apiUrl: string };
@@ -114,6 +118,8 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const shell = getWebsiteShell(pageProps);
 
   return (
     <PlausibleProvider
@@ -157,15 +163,17 @@ function CustomApp({
               </Head>
 
               <Spacer>
-                <NavBar
-                  categorySlugs={[[localizeSlug('main-header', locale)]]}
-                  slug={localizeSlug('main', locale)}
-                  headerSlug={localizeSlug('header', locale)}
-                  iconSlug={localizeSlug('icons', locale)}
-                  profileBtn={null}
-                  subscribeBtn={null}
-                  loginBtn={null}
-                />
+                {shell.showNavigation && (
+                  <NavBar
+                    categorySlugs={[[localizeSlug('main-header', locale)]]}
+                    slug={localizeSlug('main', locale)}
+                    headerSlug={localizeSlug('header', locale)}
+                    iconSlug={localizeSlug('icons', locale)}
+                    profileBtn={null}
+                    subscribeBtn={null}
+                    loginBtn={null}
+                  />
+                )}
 
                 <main>
                   <MainSpacer maxWidth="lg">
@@ -173,18 +181,20 @@ function CustomApp({
                   </MainSpacer>
                 </main>
 
-                <FooterContainer
-                  slug={localizeSlug('footer', locale)}
-                  categorySlugs={[
-                    [
-                      localizeSlug('main-footer', locale),
-                      localizeSlug('categories', locale),
-                      localizeSlug('ueber-uns', locale),
-                      `sprachwahl`,
-                    ],
-                  ]}
-                  iconSlug={localizeSlug('icons', locale)}
-                />
+                {shell.showFooter && (
+                  <FooterContainer
+                    slug={localizeSlug('footer', locale)}
+                    categorySlugs={[
+                      [
+                        localizeSlug('main-footer', locale),
+                        localizeSlug('categories', locale),
+                        localizeSlug('ueber-uns', locale),
+                        `sprachwahl`,
+                      ],
+                    ]}
+                    iconSlug={localizeSlug('icons', locale)}
+                  />
+                )}
               </Spacer>
 
               <RoutedAdminBar />
