@@ -99,55 +99,57 @@ export const LightboxWrapper = styled('section')<{ fullscreen: boolean }>`
   ${({ fullscreen, theme }) =>
     fullscreen &&
     css`
-      position: fixed;
-      inset: 0;
-      z-index: ${theme.zIndex.modal};
-      margin: 0;
-      padding: ${theme.spacing(2)};
-      background-color: #000;
-      color: #fff;
-      grid-template-rows: minmax(0, 1fr);
-
-      ${LightboxStage} {
-        min-height: 0;
-        grid-template-rows: minmax(0, 1fr);
-      }
-
-      ${LightboxSlides} {
-        height: 100%;
-        min-height: 0;
-      }
-
-      ${LightboxSlide} {
-        grid-template-rows: minmax(0, 1fr);
-      }
-
-      ${LightboxImage} {
-        min-height: 0;
-        grid-template-rows: minmax(0, 1fr);
-      }
-
-      ${ImageBlockInnerWrapper} {
-        height: 100%;
-        min-height: 0;
-        grid-template-rows: 1fr auto;
-
-        &::before {
-          height: auto;
-          aspect-ratio: auto;
-          background-color: transparent;
-        }
-      }
-
-      ${ImageWrapper} {
-        width: 100%;
-        height: 100%;
-        min-height: 0;
-        object-fit: contain;
-      }
-
-      ${ImageBlockCaption} {
+      && {
+        position: fixed;
+        inset: 0;
+        z-index: ${theme.zIndex.modal};
+        margin: 0;
+        padding: ${theme.spacing(2)};
+        background-color: #000;
         color: #fff;
+        grid-template-rows: minmax(0, 1fr);
+
+        ${LightboxStage} {
+          min-height: 0;
+          grid-template-rows: minmax(0, 1fr);
+        }
+
+        ${LightboxSlides} {
+          height: 100%;
+          min-height: 0;
+        }
+
+        ${LightboxSlide} {
+          grid-template-rows: minmax(0, 1fr);
+        }
+
+        ${LightboxImage} {
+          min-height: 0;
+          grid-template-rows: minmax(0, 1fr);
+        }
+
+        ${ImageBlockInnerWrapper} {
+          height: 100%;
+          min-height: 0;
+          grid-template-rows: 1fr auto;
+
+          &::before {
+            height: auto;
+            aspect-ratio: auto;
+            background-color: transparent;
+          }
+        }
+
+        ${ImageWrapper} {
+          width: 100%;
+          height: 100%;
+          min-height: 0;
+          object-fit: contain;
+        }
+
+        ${ImageBlockCaption} {
+          color: #fff;
+        }
       }
     `}
 `;

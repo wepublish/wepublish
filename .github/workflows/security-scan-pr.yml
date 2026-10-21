@@ -2,7 +2,7 @@ name: Security (PR)
 
 on:
   pull_request:
-    branches: [master, development]
+    branches: [master]
     types: [opened, synchronize, reopened]
 
 concurrency:
@@ -21,53 +21,54 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Run TruffleHog (PR diff)
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@4c282f54c0160102ccbebba421b89f3c3af6404d # v3.98.1
         with:
+          version: 3.98.1
           base: ${{ github.event.pull_request.base.sha }}
           head: ${{ github.event.pull_request.head.sha }}
           extra_args: >-
             --only-verified
 
+  changes:
+    uses: ./.github/workflows/changes.yml
+
   codeql:
     name: CodeQL (SAST)
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ['javascript']
-
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
-          languages: ${{ matrix.language }}
+          languages: javascript
+          build-mode: none
           queries: security-extended
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-
       - name: Analyze
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: .github/workflows/security-scan-pr.yml:codeql/language:javascript
 
   dependency-scan:
     name: Dependency Scan
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Non-blocking: reports HIGH/CRITICAL dependency vulnerabilities without
       # failing the check (tracked for cleanup; most findings have fixed versions).
       - name: Run Trivy (vulnerabilities, non-blocking)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: fs
           scanners: vuln
@@ -77,7 +78,7 @@ jobs:
       # Blocking: committed secrets fail the check. Intentional dev keys are
       # allow-listed per path in trivy-secret.yaml at the repo root.
       - name: Run Trivy (secrets, blocking)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: fs
           scanners: secret

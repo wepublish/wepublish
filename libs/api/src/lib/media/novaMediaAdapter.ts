@@ -4,8 +4,8 @@ import fetch from 'node-fetch';
 import type { FileUpload } from 'graphql-upload';
 import {
   ArrayBufferUpload,
-  ImageTransformation,
   MediaAdapter,
+  ServerImageTransformation,
   UploadDocument,
   UploadImage,
 } from '@wepublish/image/api';
@@ -16,7 +16,7 @@ import {
 } from '@wepublish/media-transform-guard';
 import { validateImageDimension } from '@wepublish/media-transform-guard';
 import { SignJWT, importPKCS8, type KeyLike } from 'jose';
-import { v4 as uuidv4 } from 'uuid';
+import { v7 as uuidv7 } from 'uuid';
 import { Image } from '@prisma/client';
 
 export class MediaServerError extends Error {
@@ -92,7 +92,7 @@ export class NovaMediaAdapter implements MediaAdapter {
     // Related issue: https://github.com/form-data/form-data/issues/394
     form.hasKnownLength = () => false;
 
-    const imageId = uuidv4();
+    const imageId = uuidv7();
     const token = await this.generateAuthToken(imageId, 'upload');
     const uploadUrl = new URL(this.internalURL.toString());
     uploadUrl.searchParams.set('imageId', imageId);
@@ -188,7 +188,7 @@ export class NovaMediaAdapter implements MediaAdapter {
 
   async getImageURL(
     image: Image,
-    transformations?: ImageTransformation
+    transformations?: ServerImageTransformation
   ): Promise<string> {
     const queryParameters = [] as string[];
 
@@ -249,6 +249,10 @@ export class NovaMediaAdapter implements MediaAdapter {
     }
     **/
 
+    if (transformations?.format) {
+      queryParameters.push(`format=${transformations.format}`);
+    }
+
     // Max quality is 80 so 1 => 80
     queryParameters.push(`quality=${Math.ceil(this.config.quality * 80)}`);
 
@@ -286,7 +290,7 @@ export class NovaMediaAdapter implements MediaAdapter {
   async _uploadDocument(form: FormData): Promise<UploadDocument> {
     form.hasKnownLength = () => false;
 
-    const documentId = uuidv4();
+    const documentId = uuidv7();
     const token = await this.generateAuthToken(documentId, 'upload');
     const uploadUrl = new URL(`${this.internalURL}/document`);
     uploadUrl.searchParams.set('documentId', documentId);

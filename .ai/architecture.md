@@ -21,8 +21,7 @@ We.Publish is a headless CMS platform for publishers, built as an Nx monorepo. I
 │   └── <domain>/       # Domain modules (article, payment, membership, etc.)
 ├── deployment/         # Deployment scripts
 ├── helm/               # Kubernetes Helm charts
-├── docker/             # Docker build utilities
-└── docs/               # Project documentation
+└── docker/             # Docker build utilities
 ```
 
 ## Applications
@@ -69,7 +68,7 @@ libs/<domain>/
 
 ### Content Domain Libraries
 
-`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `gate` (with the `paywall`, `banner` and `content-gate` facades), `richtext`, `feed`
+`article`, `page`, `image`, `author`, `tag`, `category`, `navigation`, `comments`, `poll`, `gate` (with the `paywall`, `banner` and `content-gate` facades), `richtext`, `feed`, `newsletter`
 
 **Sitemaps:** every website serves `/api/sitemap` (plus `/api/sitemap/[chunk]`:
 `news`, `pages`, `articles-YYYY` per past year, `articles-YYYY-MM` per month
@@ -115,7 +114,7 @@ free and soft fetches the rest with `blocks(unlockContentGate: true)`.
 
 ## Database
 
-- **PostgreSQL 17** via **Prisma 5**
+- **PostgreSQL 18** via **Prisma 7**
 - Schema: `libs/api/prisma/schema.prisma`
 - Uses Prisma views for article revision states: `ArticleRevisionPublished`, `ArticleRevisionPending`, `ArticleRevisionDraft`
 - Full-text search via Prisma preview feature

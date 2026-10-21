@@ -10,6 +10,10 @@ const stringToJSONSchema = z.string().transform((str, ctx) => {
   }
 });
 
+export const OUTPUT_FORMATS = ['webp', 'jpeg', 'png', 'gif'] as const;
+
+export type OutputFormat = (typeof OUTPUT_FORMATS)[number];
+
 export const TransformationsSchema = z
   .object({
     sig: z.coerce.string(),
@@ -20,6 +24,7 @@ export const TransformationsSchema = z
     flip: z.coerce.boolean(),
     flop: z.coerce.boolean(),
     rotate: z.coerce.number(),
+    format: z.enum(OUTPUT_FORMATS),
     blur: z.coerce.number().or(z.coerce.boolean()),
     resize: stringToJSONSchema.pipe(
       z

@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { MailLogState, MailLogType, PrismaClient, User } from '@prisma/client';
-import { randomUUID } from 'crypto';
+import { v7 as uuidv7 } from 'uuid';
 import { MailContext } from './mail-context';
 
 export enum mailLogType {
@@ -113,7 +113,7 @@ export class MailController {
       return;
     }
 
-    const mailLogId = this.config.mailLogId ?? randomUUID();
+    const mailLogId = this.config.mailLogId ?? uuidv7();
 
     let subject: string | null = null;
     let providerMessageID: string | undefined;

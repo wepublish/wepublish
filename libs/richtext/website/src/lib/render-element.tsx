@@ -52,8 +52,8 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
       const headingProps = {
         id: element.attrs.id ?? undefined,
         style:
-          element.attrs.textAlign ?
-            { textAlign: element.attrs.textAlign }
+          element.attrs?.textAlign ?
+            { textAlign: element.attrs?.textAlign }
           : undefined,
       };
 
@@ -141,8 +141,8 @@ export const RenderElement = ({ element }: BuilderRenderElementProps) => {
         <Paragraph
           css={lastChildNoGutter}
           style={
-            element.attrs.textAlign ?
-              { textAlign: element.attrs.textAlign }
+            element.attrs?.textAlign ?
+              { textAlign: element.attrs?.textAlign }
             : undefined
           }
         >

@@ -1,18 +1,16 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import styled from '@emotion/styled';
 import {
-  Avatar as MuiAvatar,
+  Avatar,
   Button,
+  Card,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Drawer,
-  FormHelperText,
-  Grid,
-  IconButton,
-  List,
-  ListItem as MuiListItem,
+  Link,
   Typography,
 } from '@mui/material';
 import {
@@ -32,28 +30,30 @@ import {
 } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
+  DataTable,
   DescriptionList,
   DescriptionListItem,
   DRAWER_WIDTHS,
   enqueueSnackbar,
+  IconButton,
   IconButtonTooltip,
   InfoTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  NavigationBar,
   PageTitle,
   PeerEditPanel,
   PeerInfoEditPanel,
   PermissionControl,
-  useSeededState,
+  TableWrapper,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdAdd,
   MdDelete,
-  MdSettings,
+  MdEdit,
+  MdOutlineEdit,
   MdVisibility,
   MdVisibilityOff,
 } from 'react-icons/md';
@@ -64,34 +64,38 @@ import {
   useParams,
 } from 'react-router-dom';
 
-const MarginTop = styled.div`
-  margin-top: 20px;
+const ProfileCard = styled(Card)`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(2, 3)};
+  padding: ${({ theme }) => theme.spacing(3)};
+  margin-bottom: ${({ theme }) => theme.spacing(5)};
 `;
 
-const Avatar = styled(MuiAvatar)`
-  border: solid 2px ${({ theme }) => theme.vars.palette.primary.main};
+const ProfileText = styled.div`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+  flex: 1 1 240px;
+  min-width: 0;
 `;
 
-const AvatarWrapper = styled.div`
-  text-align: center;
+const NameCell = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(1.5)};
+  min-width: 0;
 `;
 
-const Wrapper = styled.div`
-  border: solid 2px ${({ theme }) => theme.vars.palette.primary.main};
-  padding: 12px;
-  border-radius: ${({ theme }) => theme.shape.borderRadius + 'px'};
-  margin: 1rem 0 2rem 0;
-`;
-
-const ListItem = styled(MuiListItem)<{ isDisabled?: boolean | null }>`
-  cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
-`;
-
-const FlexItem = styled(Grid)`
-  text-align: center;
+const Actions = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
 `;
 
 type Peer = NonNullable<PeerListQuery['peers']>[number];
+
+const initials = (name?: string | null) => name?.slice(0, 2).toUpperCase();
 
 function PeerList() {
   const location = useLocation();
@@ -101,18 +105,12 @@ function PeerList() {
 
   const isCreateRoute = location.pathname.includes('create');
   const isPeerEditRoute = location.pathname.includes('peering/edit');
-  const isPeerProfileEditRoute = location.pathname.includes(
+  const isPeerProfileEditModalOpen = location.pathname.includes(
     'peering/profile/edit'
   );
-  const isAuthorRoute = location.pathname.includes('author');
+  const isEditModalOpen = isCreateRoute || isPeerEditRoute;
+  const editID = isPeerEditRoute ? id : undefined;
 
-  const [isPeerProfileEditModalOpen, setPeerProfileEditModalOpen] = useState(
-    isPeerProfileEditRoute
-  );
-  const [isEditModalOpen, setEditModalOpen] = useState(isPeerProfileEditRoute);
-  const [editID, setEditID] = useState<string | undefined>(
-    isAuthorRoute ? id : undefined
-  );
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentPeer, setCurrentPeer] = useState<Peer>();
 
@@ -139,106 +137,6 @@ function PeerList() {
 
   const { t } = useTranslation();
 
-  useSeededState(
-    isPeerProfileEditRoute || isCreateRoute || isPeerEditRoute ?
-      location.pathname
-    : undefined,
-    () => {
-      if (isPeerProfileEditRoute) {
-        setPeerProfileEditModalOpen(true);
-        return;
-      }
-
-      setEditID(isPeerEditRoute ? id : undefined);
-      setEditModalOpen(true);
-    }
-  );
-
-  const peers = peerListData?.peers?.map(peer => {
-    const { id, name, profile, hostURL, isDisabled } = peer;
-    return (
-      <RouterLink
-        to={isDisabled ? '#' : `/peering/edit/${id}`}
-        key={name}
-      >
-        <ListItem isDisabled={isDisabled}>
-          <Grid
-            container
-            spacing={2}
-          >
-            <FlexItem size={{ xs: 1 }}>
-              <Avatar
-                src={
-                  profile?.squareLogo?.xxsSquare ??
-                  profile?.logo?.xxsSquare ??
-                  undefined
-                }
-                alt={profile?.name?.substr(0, 2)}
-              />
-            </FlexItem>
-            <Grid
-              size={{ xs: 9 }}
-              container
-              spacing={2}
-            >
-              <Typography variant="h5">{name}</Typography>
-              <Typography>
-                {profile && `${profile.name} - `}
-                {hostURL}
-              </Typography>
-            </Grid>
-
-            <Grid
-              size={{ xs: 2 }}
-              container
-              spacing={2}
-            >
-              <PermissionControl qualifyingPermissions={[CanCreatePeer.id]}>
-                <Button
-                  variant="contained"
-                  startIcon={
-                    isDisabled ? <MdVisibility /> : <MdVisibilityOff />
-                  }
-                  type="button"
-                  disabled={isUpdating}
-                  onClick={() =>
-                    updatePeer({
-                      variables: { id, isDisabled: !isDisabled },
-                    })
-                  }
-                >
-                  {isDisabled ?
-                    t('peerList.overview.enable')
-                  : t('peerList.overview.disable')}
-                </Button>
-              </PermissionControl>
-            </Grid>
-
-            <FlexItem size={{ xs: 1 }}>
-              <PermissionControl qualifyingPermissions={[CanDeletePeer.id]}>
-                <IconButtonTooltip caption={t('delete')}>
-                  <IconButton
-                    disabled={isPeerInfoLoading}
-                    size="small"
-                    color="error"
-                    aria-label={t('delete')}
-                    onClick={e => {
-                      e.preventDefault();
-                      setConfirmationDialogOpen(true);
-                      setCurrentPeer(peer);
-                    }}
-                  >
-                    <MdDelete />
-                  </IconButton>
-                </IconButtonTooltip>
-              </PermissionControl>
-            </FlexItem>
-          </Grid>
-        </ListItem>
-      </RouterLink>
-    );
-  });
-
   return (
     <>
       <PermissionControl qualifyingPermissions={[CanGetPeerProfile.id]}>
@@ -250,54 +148,62 @@ function PeerList() {
             </PageTitle>
           </ListViewHeader>
         </ListViewContainer>
-        <Wrapper>
-          <NavigationBar
-            centerChildren={
-              <AvatarWrapper>
-                <Avatar
-                  sx={{ width: 56, height: 56 }}
-                  src={
-                    peerInfoData?.peerProfile?.squareLogo?.squareURL ??
-                    peerInfoData?.peerProfile?.logo?.squareURL ??
-                    undefined
-                  }
-                  alt={peerInfoData?.peerProfile?.name?.substr(0, 2)}
-                />
-                <Typography variant="h5">
-                  {peerInfoData?.peerProfile.name ||
-                    t('peerList.panels.unnamed')}
-                </Typography>
-                <Typography>{peerInfoData?.peerProfile.hostURL}</Typography>
-                <FormHelperText>
-                  {t('peerList.panels.checkOwnPeerProfileHelpBlock')}{' '}
-                  <a
-                    href="https://wepublish.ch/peering-infos-preview/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {t('peerList.panels.peeringPreviewGuide')}
-                  </a>
-                </FormHelperText>
-              </AvatarWrapper>
+
+        <ProfileCard variant="outlined">
+          <Avatar
+            variant="rounded"
+            sx={{ width: 64, height: 64, bgcolor: 'action.hover' }}
+            slotProps={{ img: { style: { objectFit: 'contain' } } }}
+            src={
+              peerInfoData?.peerProfile?.squareLogo?.mediumURL ??
+              peerInfoData?.peerProfile?.logo?.mediumURL ??
+              undefined
             }
-            rightChildren={
-              <PermissionControl
-                qualifyingPermissions={[CanUpdatePeerProfile.id]}
+            alt=""
+          >
+            {initials(peerInfoData?.peerProfile?.name)}
+          </Avatar>
+
+          <ProfileText>
+            <Typography
+              variant="h6"
+              component="p"
+            >
+              {peerInfoData?.peerProfile.name || t('peerList.panels.unnamed')}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              noWrap
+            >
+              {peerInfoData?.peerProfile.hostURL}
+            </Typography>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+            >
+              {t('peerList.panels.checkOwnPeerProfileHelpBlock')}{' '}
+              <Link
+                href="https://wepublish.ch/peering-infos-preview/"
+                target="_blank"
+                rel="noreferrer"
               >
-                <IconButtonTooltip caption={t('peerList.overview.editProfile')}>
-                  <IconButton
-                    component={RouterLink}
-                    to="/peering/profile/edit"
-                    sx={{ width: 56, height: 56 }}
-                    aria-label={t('peerList.overview.editProfile')}
-                  >
-                    <MdSettings />
-                  </IconButton>
-                </IconButtonTooltip>
-              </PermissionControl>
-            }
-          />
-        </Wrapper>
+                {t('peerList.panels.peeringPreviewGuide')}
+              </Link>
+            </Typography>
+          </ProfileText>
+
+          <PermissionControl qualifyingPermissions={[CanUpdatePeerProfile.id]}>
+            <Button
+              component={RouterLink}
+              to="/peering/profile/edit"
+              variant="outlined"
+              startIcon={<MdEdit />}
+            >
+              {t('peerList.overview.editProfile')}
+            </Button>
+          </PermissionControl>
+        </ProfileCard>
       </PermissionControl>
 
       <ListViewContainer>
@@ -321,13 +227,172 @@ function PeerList() {
           </ListViewActions>
         </PermissionControl>
       </ListViewContainer>
-      <MarginTop>
-        {peerListData?.peers?.length ?
-          <List>{peers}</List>
-        : !isPeerListLoading ?
-          <Typography>{t('peerList.overview.noPeersFound')}</Typography>
-        : null}
-      </MarginTop>
+
+      <TableWrapper>
+        <DataTable
+          storageKey="peers"
+          data={peerListData?.peers ?? []}
+          loading={isPeerListLoading}
+          emptyMessage={t('peerList.overview.noPeersFound')}
+          getRowId={row => row.id}
+          columns={[
+            {
+              id: 'status',
+              alwaysVisible: true,
+              label: t('peerList.overview.status'),
+              width: 130,
+              align: 'left',
+              render: row =>
+                row.isDisabled ?
+                  <Chip
+                    size="small"
+                    label={t('peerList.overview.disabled')}
+                  />
+                : <Chip
+                    size="small"
+                    color="success"
+                    label={t('peerList.overview.active')}
+                  />,
+            },
+            {
+              id: 'name',
+              alwaysVisible: true,
+              label: t('peerList.overview.name'),
+              width: 260,
+              align: 'left',
+              render: row => (
+                <NameCell>
+                  <Avatar
+                    sx={{ width: 32, height: 32 }}
+                    src={
+                      row.profile?.squareLogo?.xxsSquare ??
+                      row.profile?.logo?.xxsSquare ??
+                      undefined
+                    }
+                    alt=""
+                  >
+                    {initials(row.name)}
+                  </Avatar>
+                  {row.name}
+                </NameCell>
+              ),
+            },
+            {
+              id: 'hostURL',
+              label: t('peerList.overview.hostURL'),
+              width: 300,
+              align: 'left',
+              render: row => (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  noWrap
+                >
+                  {row.hostURL}
+                </Typography>
+              ),
+            },
+            {
+              id: 'website',
+              label: t('peerList.overview.website'),
+              width: 260,
+              align: 'left',
+              render: row =>
+                row.profile?.websiteURL && (
+                  <Link
+                    href={row.profile.websiteURL}
+                    target="_blank"
+                    rel="noreferrer"
+                    underline="hover"
+                    variant="body2"
+                    noWrap
+                  >
+                    {row.profile.websiteURL.replace(/^https?:\/\//, '')}
+                  </Link>
+                ),
+            },
+            {
+              id: 'action',
+              label: t('action'),
+              width: 140,
+              align: 'center',
+              fixed: true,
+              render: row => (
+                <Actions>
+                  <IconButtonTooltip caption={t('peerList.panels.editPeer')}>
+                    {row.isDisabled ?
+                      <IconButton
+                        size="small"
+                        disabled
+                        aria-label={t('peerList.panels.editPeer')}
+                      >
+                        <MdOutlineEdit />
+                      </IconButton>
+                    : <IconButton
+                        component={RouterLink}
+                        to={`/peering/edit/${row.id}`}
+                        size="small"
+                        aria-label={t('peerList.panels.editPeer')}
+                      >
+                        <MdOutlineEdit />
+                      </IconButton>
+                    }
+                  </IconButtonTooltip>
+
+                  <PermissionControl qualifyingPermissions={[CanCreatePeer.id]}>
+                    <IconButtonTooltip
+                      caption={
+                        row.isDisabled ?
+                          t('peerList.overview.enable')
+                        : t('peerList.overview.disable')
+                      }
+                    >
+                      <IconButton
+                        size="small"
+                        disabled={isUpdating}
+                        aria-label={
+                          row.isDisabled ?
+                            t('peerList.overview.enable')
+                          : t('peerList.overview.disable')
+                        }
+                        onClick={() =>
+                          updatePeer({
+                            variables: {
+                              id: row.id,
+                              isDisabled: !row.isDisabled,
+                            },
+                          })
+                        }
+                      >
+                        {row.isDisabled ?
+                          <MdVisibility />
+                        : <MdVisibilityOff />}
+                      </IconButton>
+                    </IconButtonTooltip>
+                  </PermissionControl>
+
+                  <PermissionControl qualifyingPermissions={[CanDeletePeer.id]}>
+                    <IconButtonTooltip caption={t('delete')}>
+                      <IconButton
+                        size="small"
+                        color="error"
+                        disabled={isPeerInfoLoading}
+                        aria-label={t('delete')}
+                        onClick={() => {
+                          setConfirmationDialogOpen(true);
+                          setCurrentPeer(row);
+                        }}
+                      >
+                        <MdDelete />
+                      </IconButton>
+                    </IconButtonTooltip>
+                  </PermissionControl>
+                </Actions>
+              ),
+            },
+          ]}
+        />
+      </TableWrapper>
 
       <Drawer
         anchor="right"
@@ -341,13 +406,11 @@ function PeerList() {
         }}
         open={isPeerProfileEditModalOpen}
         onClose={() => {
-          setPeerProfileEditModalOpen(false);
           navigate('/peering');
         }}
       >
         <PeerInfoEditPanel
           onClose={() => {
-            setPeerProfileEditModalOpen(false);
             navigate('/peering');
           }}
         />
@@ -365,7 +428,6 @@ function PeerList() {
         }}
         open={isEditModalOpen}
         onClose={() => {
-          setEditModalOpen(false);
           navigate('/peering');
         }}
       >
@@ -374,11 +436,9 @@ function PeerList() {
             id={editID}
             hostURL={peerInfoData.peerProfile.hostURL}
             onClose={() => {
-              setEditModalOpen(false);
               navigate('/peering');
             }}
             onSave={() => {
-              setEditModalOpen(false);
               enqueueSnackbar(
                 editID ?
                   t('peerList.panels.peerUpdated')

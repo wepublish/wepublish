@@ -6,6 +6,6 @@ if (process.env.DATABASE_URL && !process.env.DIRECT_DATABASE_URL) {
   process.env.DIRECT_DATABASE_URL = process.env.DATABASE_URL.replace(':5432/', ':5433/');
 }
 
-execFileSync('node', ['node_modules/.bin/prisma', 'migrate', 'deploy'], { stdio: 'inherit' });
+execFileSync('node', ['node_modules/prisma/build/index.js', 'migrate', 'deploy'], { stdio: 'inherit' });
 execFileSync('node', ['dist/api/prisma/run-seed.js'], { stdio: 'inherit' });
 execFileSync('node', ['dist/changelog/run-sync-changelogs.js'], { stdio: 'inherit' });

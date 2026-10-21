@@ -11,10 +11,10 @@
       "options": {
         "commands": [
           {
-            "command": "npx nx server editor"
+            "command": "pnpm nx server editor"
           },
           {
-            "command": "npx nx run-many --target=browser,typecheck --projects=editor"
+            "command": "pnpm nx run-many --target=browser,typecheck --projects=editor"
           }
         ],
         "parallel": false

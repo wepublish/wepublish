@@ -52,7 +52,7 @@ import {
   graphQLSortOrderToPrisma,
   SortOrder,
 } from '@wepublish/utils/api';
-import { hasPermission } from '@wepublish/permissions/api';
+import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
 import { CanCreateApprovedComment } from '@wepublish/permissions';
 import { toPlaintext } from '@wepublish/richtext';
 
@@ -650,7 +650,7 @@ export class CommentService {
 
     const canSkipApproval = hasPermission(
       CanCreateApprovedComment,
-      session?.roles ?? []
+      permissionsOf(session)
     );
 
     // Challenge

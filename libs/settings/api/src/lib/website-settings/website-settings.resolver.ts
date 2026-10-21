@@ -23,7 +23,11 @@ import {
   WebsiteMail,
   WebsiteAds,
 } from './website-settings.model';
-import { hasPermission, Permissions } from '@wepublish/permissions/api';
+import {
+  hasPermission,
+  Permissions,
+  permissionsOf,
+} from '@wepublish/permissions/api';
 import {
   CanGetWebsiteSettings,
   CanUpdateWebsiteSettings,
@@ -109,7 +113,7 @@ export class WebsiteMailResolver {
     @AuthToken() authToken: string | null
   ) {
     const hasPerms =
-      hasPermission(CanGetWebsiteSettings, session?.roles ?? []) ||
+      hasPermission(CanGetWebsiteSettings, permissionsOf(session)) ||
       this.jwt.verifyScopedJWT(authToken ?? '', 'read:website-settings');
 
     if (!hasPerms) {

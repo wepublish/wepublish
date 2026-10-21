@@ -5,7 +5,7 @@ on:
     types: [labeled, opened, synchronize, reopened]
 
 concurrency:
-  group: review-label-${{ github.head_ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -60,7 +60,7 @@ jobs:
     if: needs.check-review-deploy-label.outputs.has_label == 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - id: read-deployment-config
         run: ./deployment/read_deployment_config.sh '.website.review.deployment' true ${{ needs.check-review-deploy-label.outputs.project_name }}
 
@@ -92,8 +92,8 @@ jobs:
 
   publish_docker_website_image:
     name: Build Docker Website
-    needs: [publish_docker_base_image, check-review-deploy-label, publish_docker_backend_images, date_sha_tag]
-    if: ${{ needs.publish_docker_backend_images.result == 'success' }}
+    needs: [check-review-deploy-label, check-if-website-deployment, publish_docker_backend_images, date_sha_tag]
+    if: ${{ needs.publish_docker_backend_images.result == 'success' && needs.check-if-website-deployment.outputs.has-website == 'true' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     with:
       website_project: ${{ needs.check-review-deploy-label.outputs.project_name }}
@@ -113,11 +113,12 @@ jobs:
     continue-on-error: true
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: npm
+          cache-dependency-path: config/package-lock.json
       - name: Create Deployment Text
         id: deploymentComment
         env:
@@ -136,7 +137,7 @@ jobs:
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
           echo "result=$OUTPUT" >> "$GITHUB_OUTPUT"
 
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         with:
           message: |
             ${{ steps.deploymentComment.outputs.result }}

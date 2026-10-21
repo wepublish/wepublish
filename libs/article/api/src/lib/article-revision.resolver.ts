@@ -8,7 +8,7 @@ import {
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { CanGetArticle } from '@wepublish/permissions';
-import { hasPermission } from '@wepublish/permissions/api';
+import { hasPermission, permissionsOf } from '@wepublish/permissions/api';
 import { SlotTeasersLoader, BlockContent } from '@wepublish/block-content/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { Property } from '@wepublish/property/api';
@@ -81,7 +81,7 @@ The website asks for the rest once the reader's meter allows it.`,
     const properties = revision.properties;
 
     return properties?.filter(
-      prop => prop.public || hasPermission(CanGetArticle, user?.roles ?? [])
+      prop => prop.public || hasPermission(CanGetArticle, permissionsOf(user))
     );
   }
 

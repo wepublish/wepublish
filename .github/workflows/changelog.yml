@@ -4,20 +4,25 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   Changelog:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # The check compares the branch against the pull request's base, so
           # the history both sides share has to be present.
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
-          cache: 'npm'
-      - run: npm ci
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
 
       - name: Check for a changelog entry
         # Labelling the pull request "no-changelog" drops the requirement, but
@@ -28,7 +33,7 @@ jobs:
         run: |
           if [ "$EXEMPT" = "true" ]; then
             echo "Labelled no-changelog — only validating the entries that exist."
-            npm run changelog:check
+            pnpm run changelog:check
           else
-            npm run changelog:check -- --since "origin/${{ github.base_ref }}"
+            pnpm run changelog:check --since "origin/${{ github.base_ref }}"
           fi

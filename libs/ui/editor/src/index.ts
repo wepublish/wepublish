@@ -6,6 +6,7 @@ export * from './lib/atoms/peer/peerAvatar';
 export * from './lib/authContext';
 export * from './lib/featureContext';
 export * from './lib/blocks';
+export * from './lib/commandPalette';
 export * from './lib/drawer';
 export * from './lib/hooks';
 export * from './lib/theme-vars';

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
-import { ImageTransformation } from './image-transformation.model';
+import { ServerImageTransformation } from './image-transformation.model';
 import { UploadImage } from './image-upload.service';
 import { Image } from '@prisma/client';
 
@@ -30,7 +30,7 @@ export abstract class MediaAdapter {
 
   abstract getImageURL(
     image: Image,
-    transformation?: ImageTransformation | undefined
+    transformation?: ServerImageTransformation | undefined
   ): Promise<string>;
 
   abstract uploadDocument(

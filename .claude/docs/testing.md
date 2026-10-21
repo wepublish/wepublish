@@ -23,7 +23,7 @@ type function fail. When setting up a new NestJS lib, copy the setup from
 
 `libs/block-content/api` and `libs/image/api` are in `.nxignore` (load-bearing:
 circular imports), so neither `nx test` nor CI runs their specs — run
-`npx vitest run --config libs/<lib>/api/vitest.config.ts` yourself.
+`pnpm vitest run --config libs/<lib>/api/vitest.config.ts` yourself.
 
 ## Test-driven development is mandatory
 
@@ -187,8 +187,8 @@ logic belongs in a lib and is tested there. What the app itself needs is a
 35 snapshot directories exist, mostly for website components. Update them with:
 
 ```bash
-npx nx test <project> --configuration=update    # single project
-npm run test-u                                  # entire workspace
+pnpm nx test <project> --configuration=update    # single project
+pnpm run test-u                                  # entire workspace
 ```
 
 **Read the snapshot diff before accepting it.** An updated snapshot that you did
@@ -206,7 +206,7 @@ JWT_PRIVATE_KEY / JWT_PUBLIC_KEY   # ed25519 pair, see .github/workflows/test.ym
 Both setup files delete `REDIS_URL`/`REDIS_KEY_PREFIX`, so tests use the
 in-memory cache even though nx loads them from `.env` — see [gotchas.md](gotchas.md).
 
-`npm run start:docker` brings up the local Postgres. Vitest sets `TZ=UTC`
+`pnpm run start:docker` brings up the local Postgres. Vitest sets `TZ=UTC`
 globally via `vitest.setup-tests.ts` — do not write tests that depend on local time.
 
 ## Running tests

@@ -5,7 +5,7 @@ on:
     types: [labeled, opened, synchronize, reopened]
 
 concurrency:
-  group: review-${{ github.head_ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -13,99 +13,44 @@ jobs:
   check-review-deploy-label:
     runs-on: ubuntu-latest
     outputs:
-      has_label: ${{ steps.extract_project_name.outputs.has_label }}
+      has_label: ${{ steps.review_label.outputs.has_label }}
     steps:
-      - name: Check for Deploy_ Label and Extract Project Name
-        id: extract_project_name
+      - name: Check for a review_ label
+        id: review_label
         run: |
-          project_name=""
-          review_version=""
           has_label="false"
           labels=$(echo '${{ toJSON(github.event.pull_request.labels) }}' | jq -r '.[].name')
           for label in $labels; do
             if [[ "$label" == review_* ]]; then
-                review_version=$(echo "$label" | cut -d'_' -f2)
-                project_name=$(echo "$label" | cut -d'_' -f3)
                 has_label="true"
+                echo "Review label found: $label"
                 break
             fi
           done
 
           echo "has_label=$has_label" >> "$GITHUB_OUTPUT"
-          echo "review_version=$review_version" >> "$GITHUB_OUTPUT"
-          echo "project_name=$project_name" >> "$GITHUB_OUTPUT"
-
-          if [[ "$has_label" == "false" ]]; then
-            echo "No review label found. Skipping."
-          else
-            echo "Review Build Found: $review_version and found project: $project_name"
-          fi
-
-  publish_docker_base_image:
-    name: Docker base image
-    if: needs.check-review-deploy-label.outputs.has_label == 'false'
-    needs: [ check-review-deploy-label ]
-    uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
-    secrets: inherit
 
   publish_docker_image:
-    needs: [publish_docker_base_image]
     name: Docker backend images
-    uses: ./.github/workflows/on-demand-publish-docker-image.yml
-    with:
-      editor_tags: |
-        ghcr.io/wepublish/editor:${{ github.sha }}
-      api_tags: |
-        ghcr.io/wepublish/api:${{ github.sha }}
-      migration_tags: |
-        ghcr.io/wepublish/migration:${{ github.sha }}
-      storybook_tags: |
-        ghcr.io/wepublish/storybook:${{ github.sha }}
-      media_tags: |
-        ghcr.io/wepublish/media:${{ github.sha }}
-    secrets: inherit
-
-
-  setup-website-matrix:
-    runs-on: ubuntu-latest
-    if: needs.check-review-deploy-label.outputs.has_label == 'false'
     needs: [ check-review-deploy-label ]
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up matrix
-        id: set-matrix
-        run: deployment/read_deployment_config.sh '.website.review.deployment' true
-
-  publish_docker_website_image:
-    name: Build Docker Website
-    needs: [setup-website-matrix, publish_docker_base_image]
-    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
-    strategy:
-      fail-fast: false
-      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
-    with:
-      website_project: ${{ matrix.target }}
-      api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.works
-      environment: review
-      website_tags: |
-        ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.sha }}
+    if: needs.check-review-deploy-label.outputs.has_label == 'false'
+    uses: ./.github/workflows/on-demand-publish-docker-image.yml
     secrets: inherit
+
   notify:
     name: Notify
-    needs: [publish_docker_website_image, check-review-deploy-label, publish_docker_image]
-    if: ${{ needs.publish_docker_website_image.result == 'success' }}
+    needs: [ check-review-deploy-label ]
+    if: needs.check-review-deploy-label.outputs.has_label == 'false'
     runs-on: ubuntu-latest
     continue-on-error: true
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: npm
+          cache-dependency-path: config/package-lock.json
       - name: Create Deployment Text
         id: deploymentComment
         env:
@@ -120,7 +65,7 @@ jobs:
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
           echo "result=$OUTPUT" >> "$GITHUB_OUTPUT"
 
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         with:
           message: |
             ${{ steps.deploymentComment.outputs.result }}

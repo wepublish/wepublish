@@ -4,15 +4,15 @@
 
 - Node.js 22
 - Docker & Docker Compose
-- npm (comes with Node.js)
+- pnpm (`corepack enable pnpm`; the version is pinned by `packageManager` in package.json)
 
 ## Local Setup
 
 ```bash
-npm i                        # Install dependencies
-npm run start:docker         # Start PostgreSQL + MinIO (S3) + Dragonfly
-npm run migrate              # Run Prisma migrations + seed
-npm run watch                # Start all services (API, editor, media, website)
+pnpm install                 # Install dependencies
+pnpm run start:docker         # Start PostgreSQL + MinIO (S3) + Dragonfly
+pnpm run migrate              # Run Prisma migrations + seed
+pnpm run watch                # Start all services (API, editor, media, website)
 ```
 
 ## Local Service URLs
@@ -28,7 +28,7 @@ npm run watch                # Start all services (API, editor, media, website)
 | Dragonfly | redis://localhost:6379 | Shared caches of `KvTtlCacheModule`; admin `default`/`dragonfly` |
 
 `docker-compose.yml` also defines `mailpit` for catching outbound mail locally,
-and a `migration` service used by the full-stack `npm run try` path.
+and a `migration` service used by the full-stack `pnpm run try` path.
 
 This table is the canonical one. For *when* to start these services and in what
 order, see [dev-environment.md](../.claude/docs/dev-environment.md).
@@ -36,19 +36,19 @@ order, see [dev-environment.md](../.claude/docs/dev-environment.md).
 ## Watch Individual Services
 
 ```bash
-npm run watch:api-example    # Only the API
-npm run watch:editor         # Only the editor
-npm run watch:website-example # Only the website
-npm run watch:media          # Only the media server
+pnpm run watch:api-example    # Only the API
+pnpm run watch:editor         # Only the editor
+pnpm run watch:website-example # Only the website
+pnpm run watch:media          # Only the media server
 ```
 
 ## Database
 
 ```bash
-npm run migrate                               # Apply migrations + seed
-npx prisma migrate dev --name <name>          # Create a new migration
-npx prisma generate                           # Regenerate Prisma client
-npx prisma studio                             # Open Prisma Studio (DB browser)
+pnpm run migrate                               # Apply migrations + seed
+pnpm prisma migrate dev --name <name>          # Create a new migration
+pnpm prisma generate                           # Regenerate Prisma client
+pnpm prisma studio                             # Open Prisma Studio (DB browser)
 ```
 
 The Prisma schema is at `libs/api/prisma/schema.prisma`.
@@ -56,7 +56,7 @@ The Prisma schema is at `libs/api/prisma/schema.prisma`.
 ## GraphQL Code Generation
 
 ```bash
-npm run generate-api         # Regenerate TypeScript types + hooks from GraphQL schema
+pnpm run generate-api         # Regenerate TypeScript types + hooks from GraphQL schema
 ```
 
 Configuration: `codegen.yml`
@@ -64,10 +64,10 @@ Configuration: `codegen.yml`
 ## Testing
 
 ```bash
-npm run test                 # All tests
-npm run test-backend         # Backend tests (parallel, excludes website)
-npm run test-website         # Website tests (parallel=3)
-npm run test-u               # All tests with snapshot update
+pnpm run test                 # All tests
+pnpm run test-backend         # Backend tests (parallel, excludes website)
+pnpm run test-website         # Website tests (parallel=3)
+pnpm run test-u               # All tests with snapshot update
 nx test <project-name>       # Test a specific library/app
 ```
 
@@ -79,25 +79,25 @@ these to run before claiming a change is done, see
 ## Linting & Formatting
 
 ```bash
-npm run lint                 # ESLint across all projects
+pnpm run lint                 # ESLint across all projects
 ```
 
 **Do not run Prettier manually.** A Husky `pre-commit` hook runs
-`pretty-quick --staged`. The `npm run prettier` script exists for tooling, but
+`pretty-quick --staged`. The `pnpm run prettier` script exists for tooling, but
 invoking it by hand reformats the whole repo and buries your change in an
 unrelated diff.
 
 ## Building
 
 ```bash
-npm run build                # Build all projects
+pnpm run build                # Build all projects
 nx build <project-name>      # Build a specific project
 ```
 
 ## Docker (Full Stack)
 
 ```bash
-npm run try                  # Start full stack via docker-compose (database, api, editor, media, storage)
+pnpm run try                  # Start full stack via docker-compose (database, api, editor, media, storage)
 ```
 
 ## Nx Commands

@@ -29,27 +29,26 @@ jobs:
     name: ${{inputs.website_project}}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Create .version file
         run: echo "${{ github.sha }}" > version
       - name: Log in to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - uses: docker/login-action@v1
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Calculate hash of package-lock.json
-        id: hash
+      - name: Calculate hash of the pnpm lockfile
         run: |
-          if [ -f package-lock.json ]; then
-            HASH=$(cat package-lock.json Dockerfile | sha256sum | awk '{print $1}')
+          if [ -f pnpm-lock.yaml ]; then
+            HASH=$(cat pnpm-lock.yaml pnpm-workspace.yaml Dockerfile | sha256sum | awk '{print $1}')
             echo "BUILD_IMAGE_TAG=ghcr.io/wepublish/base-image:${HASH}" >> $GITHUB_ENV
           else
-            echo "package-lock.json not found, exiting."
+            echo "pnpm-lock.yaml not found, exiting."
             exit 1
           fi
       - name: Get environment variables
@@ -59,8 +58,7 @@ jobs:
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
       - name: Wait for api version to be deployed
-        if: ${{ inputs.has_staging && inputs.environment != 'development' && inputs.environment != 'review' }}
-        id: wait-for-version
+        if: ${{ inputs.has_staging && inputs.environment != 'review' }}
         run: |
           MAX_RETRIES=120
           RETRY_DELAY=10
@@ -83,11 +81,16 @@ jobs:
           done
           echo "Timed out waiting for version: ${SHA_HASH}"
           exit 1
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v1
-      - name: Build and push ${{ inputs.website_project }}
-        uses: docker/build-push-action@v2
+      - uses: docker/setup-buildx-action@v4
         with:
+          cleanup: false
+      - name: Build and push ${{ inputs.website_project }}
+        uses: docker/build-push-action@v7
+        env:
+          DOCKER_BUILD_SUMMARY: false
+          DOCKER_BUILD_RECORD_UPLOAD: false
+        with:
+          provenance: false
           context: .
           target: website
           build-args: |
@@ -105,7 +108,7 @@ jobs:
             ${{ inputs.website_tags }}
       - name: Get frontend URL
         id: get-frontend-url
-        if: ${{ inputs.has_staging && inputs.environment != 'review' && inputs.environment != 'development' && inputs.environment != 'review_deployed' }}
+        if: ${{ inputs.has_staging && inputs.environment != 'review' && inputs.environment != 'review_deployed' }}
         run: |
           ENVIRONMENT=${{ inputs.environment }}
           PROJECT_NAME=${{ inputs.website_project }}
@@ -116,8 +119,7 @@ jobs:
           fi
           ./deployment/read_deployment_config.sh ".website.${ENVIRONMENT}.custom_domain" true ${PROJECT_NAME} getValue "https://${PROJECT_NAME}.${TDL}"
       - name: Wait for frontend to be deployed
-        id: wait-for-frontend-deployment
-        if: ${{ inputs.has_staging && inputs.environment != 'review' && inputs.environment != 'development' && inputs.environment != 'review_deployed' }}
+        if: ${{ inputs.has_staging && inputs.environment != 'review' && inputs.environment != 'review_deployed' }}
         run: |
           MAX_RETRIES=120
           RETRY_DELAY=10

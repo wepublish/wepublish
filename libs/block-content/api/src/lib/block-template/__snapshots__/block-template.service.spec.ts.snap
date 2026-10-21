@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`BlockTemplateService should create a block template 1`] = `
+exports[`BlockTemplateService > should create a block template 1`] = `
 [
   {
     "data": {
@@ -16,7 +16,7 @@ exports[`BlockTemplateService should create a block template 1`] = `
 ]
 `;
 
-exports[`BlockTemplateService should create a block template containing another block template 1`] = `
+exports[`BlockTemplateService > should create a block template containing another block template 1`] = `
 [
   {
     "data": {
@@ -32,7 +32,7 @@ exports[`BlockTemplateService should create a block template containing another 
 ]
 `;
 
-exports[`BlockTemplateService should delete a block template 1`] = `
+exports[`BlockTemplateService > should delete a block template 1`] = `
 [
   {
     "where": {
@@ -42,7 +42,7 @@ exports[`BlockTemplateService should delete a block template 1`] = `
 ]
 `;
 
-exports[`BlockTemplateService should update a block template 1`] = `
+exports[`BlockTemplateService > should update a block template 1`] = `
 [
   {
     "data": {
@@ -61,7 +61,7 @@ exports[`BlockTemplateService should update a block template 1`] = `
 ]
 `;
 
-exports[`BlockTemplateService should update a block template containing a non circular block template 1`] = `
+exports[`BlockTemplateService > should update a block template containing a non circular block template 1`] = `
 [
   {
     "data": {

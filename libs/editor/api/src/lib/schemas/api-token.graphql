@@ -1,0 +1,70 @@
+fragment FullApiToken on ApiToken {
+  id
+
+  createdAt
+  modifiedAt
+
+  name
+  prefix
+  scopes
+
+  expiresAt
+  revokedAt
+  lastUsedAt
+
+  createdById
+
+  createdBy {
+    id
+    name
+  }
+}
+
+query ApiTokenList(
+  $take: Int
+  $skip: Int
+  $cursorId: String
+  $createdById: String
+  $status: ApiTokenStatus
+) {
+  apiTokens(
+    take: $take
+    skip: $skip
+    cursorId: $cursorId
+    createdById: $createdById
+    status: $status
+  ) {
+    nodes {
+      ...FullApiToken
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+mutation CreateApiToken(
+  $name: String!
+  $scopes: [String!]!
+  $expiresAt: DateTime!
+) {
+  createApiToken(name: $name, scopes: $scopes, expiresAt: $expiresAt) {
+    token
+
+    apiToken {
+      ...FullApiToken
+    }
+  }
+}
+
+mutation RevokeApiToken($id: String!) {
+  revokeApiToken(id: $id) {
+    ...FullApiToken
+  }
+}
